@@ -265,8 +265,8 @@ class ir_ui_menu(osv.osv):
                 menu_needaction_res = osv.osv.get_needaction_info(cr, uid, menu.action.res_model, uid, domain=menu.action.domain, context=context)
             else:
                 menu_needaction_res = [False, 0]
-            res[menu.id]['uses_needaction'] = menu_needaction_res[0]
-            res[menu.id]['needaction_uid_ctr'] = menu_needaction_res[1]
+            res[menu.id]['needaction_enabled'] = menu_needaction_res[0]
+            res[menu.id]['needaction_counter'] = menu_needaction_res[1]
         return res
         
     _columns = {
@@ -285,8 +285,8 @@ class ir_ui_menu(osv.osv):
         'web_icon_hover':fields.char('Web Icon File (hover)', size=128),
         'web_icon_data': fields.function(_get_image_icon, string='Web Icon Image', type='binary', readonly=True, store=True, multi='icon'),
         'web_icon_hover_data':fields.function(_get_image_icon, string='Web Icon Image (hover)', type='binary', readonly=True, store=True, multi='icon'),
-        'uses_needaction': fields.function(_get_needaction, string='Related model uses the need action mechanism', type='boolean', help='If the menu entry is related to a act_window action, and this action is related to a model that uses the need_action mechanism, this field is set to true. Otherwise, it is false.', multi='_get_needaction'),
-        'needaction_uid_ctr': fields.function(_get_needaction, string='Number of actions the user has to perform', type='integer', help='If the related model uses the need action mechanism, this field gives the number of actions the current user has to perform.', multi='_get_needaction'),
+        'needaction_enabled': fields.function(_get_needaction, string='Related model uses the need action mechanism', type='boolean', help='If the menu entry is related to a act_window action, and this action is related to a model that uses the need_action mechanism, this field is set to true. Otherwise, it is false.', multi='_get_needaction'),
+        'needaction_counter': fields.function(_get_needaction, string='Number of actions the user has to perform', type='integer', help='If the related model uses the need action mechanism, this field gives the number of actions the current user has to perform.', multi='_get_needaction'),
         'action': fields.function(_action, fnct_inv=_action_inv,
             type='reference', string='Action',
             selection=[

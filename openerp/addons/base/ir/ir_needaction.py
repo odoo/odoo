@@ -23,7 +23,7 @@ import openerp.pooler as pooler
 from osv import osv, fields
 from tools.translate import _
 
-class base_needaction_users_rel(osv.osv):
+class ir_needaction_users_rel(osv.osv):
     '''
     base_needaction_users_rel holds data related to the needaction
     mechanism inside OpenERP. A needaction is characterized by:
@@ -33,7 +33,7 @@ class base_needaction_users_rel(osv.osv):
       has to perform the action
     '''
     
-    _name = 'base.needaction_users_rel'
+    _name = 'ir.needaction_users_rel'
     _description = 'Needaction relationship table'
     _rec_name = 'id'
     _order = 'res_model asc'
@@ -47,7 +47,7 @@ class base_needaction_users_rel(osv.osv):
     }
 
 
-class base_needaction(osv.osv):
+class ir_needaction(osv.osv):
     '''Mixin class for objects using the need action feature.
     
     Need action feature can be used by objects willing to be able to
@@ -81,7 +81,7 @@ class base_needaction(osv.osv):
       but returns only the number of action, not the ids (performs a
       search with count=True)
     '''
-    _name = 'base.needaction'
+    _name = 'ir.needaction'
     _description = 'Need action of users on records API'
     
     _columns = {
@@ -95,7 +95,7 @@ class base_needaction(osv.osv):
         """Given ids of model self._name, find the user_ids that have an action to perform"""
         if context is None:
             context = {}
-        needact_obj = self.pool.get('base.needaction_users_rel')
+        needact_obj = self.pool.get('ir.needaction_users_rel')
         needact_ids = needact_obj.search(cr, uid, [('res_model', '=', self._nanme), ('res_id', 'in', ids)], context=context)
         needacts = needact_obj.read(cr, uid, needact_ids, context=context)
         return [needact['user_id'] for needact in needacts]
@@ -104,7 +104,7 @@ class base_needaction(osv.osv):
         """Given ids of model self._name, add user_ids to the relationship table"""
         if context is None:
             context = {}
-        needact_obj = self.pool.get('base.needaction_users_rel')
+        needact_obj = self.pool.get('ir.needaction_users_rel')
         for id in ids:
             for user_id in user_ids:
                 needact_obj.create(cr, uid, {'res_model': self._name, 'res_id': id, 'user_id': user_id}, context=context)
@@ -114,7 +114,7 @@ class base_needaction(osv.osv):
         """Given ids of model self._name, delete all entries in the relationship table"""
         if context is None:
             context = {}
-        needact_obj = self.pool.get('base.needaction_users_rel')
+        needact_obj = self.pool.get('ir.needaction_users_rel')
         to_del_ids = needact_obj.search(cr, uid, [('res_model', '=', self._name), ('res_id', 'in', ids)], context=context)
         return needact_obj.unlink(cr, uid, to_del_ids, context=context)
     
@@ -139,7 +139,7 @@ class base_needaction(osv.osv):
         if context is None:
             context = {}
         # perform create
-        obj_id = super(base_needaction, self).create(cr, uid, values, context=context)
+        obj_id = super(ir_needaction, self).create(cr, uid, values, context=context)
         # link user_ids
         needaction_user_ids = self.get_needaction_user_ids(cr, uid, [obj_id], context=context)
         self._update_users(cr, uid, [obj_id], needaction_user_ids[obj_id], context=context)
@@ -149,7 +149,7 @@ class base_needaction(osv.osv):
         if context is None:
             context = {}
         # perform write
-        write_res = super(base_needaction, self).write(cr, uid, ids, values, context=context)
+        write_res = super(ir_needaction, self).write(cr, uid, ids, values, context=context)
         # get and update user_ids
         needaction_user_ids = self.get_needaction_user_ids(cr, uid, ids, context=context)
         for id in ids:
@@ -162,7 +162,7 @@ class base_needaction(osv.osv):
         # unlink user_ids
         self._unlink_users(cr, uid, ids, context=context)
         # perform unlink
-        return super(base_needaction, self).unlink(cr, uid, ids, context=context)
+        return super(ir_needaction, self).unlink(cr, uid, ids, context=context)
     
     #------------------------------------------------------
     # Need action API
@@ -174,7 +174,7 @@ class base_needaction(osv.osv):
            get the user_ids that have to perform at least one action"""
         if context is None:
             context = {}
-        need_act_obj = pooler.get_pool(cr.dbname).get('base.needaction_users_rel')
+        need_act_obj = pooler.get_pool(cr.dbname).get('ir.needaction_users_rel')
         need_act_ids = need_act_obj.search(cr, uid, [('res_model', '=', model)], context=context)
         need_acts = need_act_obj.read(cr, uid, need_act_ids, context=context)
         return list(set([need_act['user_id'] for need_act in need_acts]))
@@ -185,7 +185,7 @@ class base_needaction(osv.osv):
            get the number of actions it has to perform"""
         if context is None:
             context = {}
-        need_act_obj = pooler.get_pool(cr.dbname).get('base.needaction_users_rel')
+        need_act_obj = pooler.get_pool(cr.dbname).get('ir.needaction_users_rel')
         need_act_ids = need_act_obj.search(cr, uid, [('res_model', '=', model_name), ('user_id', '=', user_id)], limit=limit, context=context)
         return [need_act['res_id'] for need_act in need_act_obj.read(cr, uid, need_act_ids, context=context)]
     
@@ -195,7 +195,7 @@ class base_needaction(osv.osv):
            get the number of actions it has to perform"""
         if context is None:
             context = {}
-        need_act_obj = pooler.get_pool(cr.dbname).get('base.needaction_users_rel')
+        need_act_obj = pooler.get_pool(cr.dbname).get('ir.needaction_users_rel')
         return need_act_obj.search(cr, uid, [('res_model', '=', model_name), ('user_id', '=', user_id)], limit=limit, count=True, context=context)
     
     @classmethod
@@ -207,7 +207,7 @@ class base_needaction(osv.osv):
            This method is trans-model."""
         if context is None:
             context = {}
-        need_act_obj = pooler.get_pool(cr.dbname).get('base.needaction_users_rel')
+        need_act_obj = pooler.get_pool(cr.dbname).get('ir.needaction_users_rel')
         need_act_ids = need_act_obj.search(cr, uid, [('user_id', '=', user_id)], offset=offset, limit=limit, order=order, context=context)
         need_acts = need_act_obj.browse(cr, uid, need_act_ids, context=context)
         record_references = [(need_act.res_model, need_act.res_id) for need_act in need_acts]
