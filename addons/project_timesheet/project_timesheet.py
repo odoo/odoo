@@ -63,7 +63,7 @@ class project_project(osv.osv):
             search_view = data_obj.get_object_reference(cr, uid, 'project_timesheet', 'view_account_analytic_line_search_account_inherit')
             context.update({
                 #'search_default_user_id': uid,
-                'search_default_account_id':project.id,
+                'search_default_account_id':project.analytic_account_id.id,
                 #'search_default_open':1,
             })
             value = {
