@@ -544,49 +544,60 @@ openerp.mail = function(session) {
             this._super(parent);
             this.params = params || {};
             this.params.limit = params.limit || 50;
+            this.params.limit = 2;
+            this.params.domain = params.domain || [];
+            this.params.context = params.context || {};
+            this.params.search = {'domain': [], 'context': {}, 'groupby': {}}
             this.params.search_view_id = params.search_view_id || false;
             this.params.thread_level = params.thread_level || 1;
-            this.params.search = {};
-            this.params.domain = [];
             this.sorted_comments = {'models': {}};
+            this.comments_structure = {'models': {}};
             this.display_show_more = true;
-            /* DataSets */
+            // datasets
             this.ds_msg = new session.web.DataSet(this, 'mail.message');
             this.ds_groups = new session.web.DataSet(this, 'mail.group');
             this.ds_thread = new session.web.DataSet(this, 'mail.thread');
             this.ds_users = new session.web.DataSet(this, 'res.users');
         },
 
-        start: function() {
-            var self = this;
+        start: function () {
             this._super.apply(this, arguments);
-            /* events and buttons */
-            this.$element.find('button.oe_mail_wall_button_comment').bind('click', function () { self.do_comment(); });
-            this.$element.find('button.oe_mail_wall_button_more').bind('click', function () { self.do_more(); });
-            this.$element.find('p.oe_mail_wall_nomore').hide();
-            /* load mail.message search view */
-            var search_view_loaded = this.load_search_view(this.params.search_view_id, {}, false);
-            var search_view_ready = $.when(search_view_loaded).then(function () {
-                self.searchview.on_search.add(self.do_searchview_search);
-            });
-            /* fetch comments */
-            var comments_ready = this.init_comments(this.params.domain, {}, 0, this.params.limit);
+            var self = this;
+            // add events
+            this.add_event_handlers();
+            // load mail.message search view
+            var search_view_ready = this.load_search_view(this.params.search_view_id, {}, false);
+            // fetch first threads
+            var comments_ready = this.init_and_fetch_comments(this.params.limit, 0);
             return (search_view_ready && comments_ready);
         },
         
         stop: function () {
             this._super.apply(this, arguments);
         },
+        
+        /** Add events */
+        add_event_handlers: function () {
+            var self = this;
+            // post a comment
+            this.$element.find('button.oe_mail_wall_button_comment').click(function () { self.do_comment(); });
+            // display more threads
+            this.$element.find('button.oe_mail_wall_button_more').click(function () { self.do_more(); });
+        },
 
         /**
          * Loads the mail.message search view
          * @param {Number} view_id id of the search view to load
          * @param {Object} defaults ??
-         * @param {Boolean} hidden ??
+         * @param {Boolean} hidden some kind of trick we do not care here
          */
         load_search_view: function (view_id, defaults, hidden) {
+            var self = this;
             this.searchview = new session.web.SearchView(this, this.ds_msg, view_id || false, defaults || {}, hidden || false);
-            return this.searchview.appendTo(this.$element.find('div.oe_mail_wall_search'));
+            var search_view_loaded = this.searchview.appendTo(this.$element.find('div.oe_mail_wall_search'));
+            return $.when(search_view_loaded).then(function () {
+                self.searchview.on_search.add(self.do_searchview_search);
+            });
         },
 
         /**
@@ -604,45 +615,46 @@ openerp.mail = function(session) {
                 contexts: contexts || [],
                 group_by_seq: groupbys || []
             }, function (results) {
-                self.params.search['context'] = results.context;
-                self.params.search['domain'] = results.domain;
-                self.params.search['groupby'] = results.group_by;
-                self.init_comments(self.params.search['domain'], self.params.search['context'], 0, self.params.limit);
+                //self.params.search['context'] = results.context;
+                //self.params.search['domain'] = results.domain;
+                //self.params.search['groupby'] = results.group_by;
+                return self.init_and_fetch_comments(self.params.limit, 0, results.domain, results.context);
             });
         },
 
         /**
-         * Initializes Wall and calls fetch_comments
-         * @param {Array} domains
-         * @param {Array} contexts
-         * @param {Array} groupbys
-         * @param {Number} limit number of messages to fetch
+         * Initializes the wall and calls fetch_comments
+         * @param {Number} limit: number of notifications to fetch
+         * @param {Number} offset: offset in notifications search
+         * @param {Array} domain
+         * @param {Array} context
          */
-        init_comments: function(domain, context, offset, limit) {
-            this.params.domain = [];
+        init_and_fetch_comments: function(limit, offset, domain, context) {
+            this.params.search['domain'] = _.union(this.params.domain, domain || []);
+            this.params.search['context'] = _.extend(this.params.context, context || {});
             this.display_show_more = true;
             this.sorted_comments = {'models': {}};
             this.$element.find('div.oe_mail_wall_threads').empty();
-            return this.fetch_comments(domain, context, offset, limit);
+            return this.fetch_comments(limit, offset);
         },
 
         /**
-         * Fetches Wall comments (mail.thread.get_pushed_messages)
-         * @param {Array} domains
-         * @param {Array} contexts
-         * @param {Array} groupbys
-         * @param {Number} limit number of messages to fetch
+         * Fetches wall messages
+         * @param {Number} limit: number of notifications to fetch
+         * @param {Number} offset: offset in notifications search
+         * @param {Array} domain
+         * @param {Array} context
          */
-        fetch_comments: function (domain, context, offset, limit) {
+        fetch_comments: function (limit, offset, additional_domain, additional_context) {
             var self = this;
+            if (additional_domain) var fetch_domain = _.union(this.params.search['domain'], additional_domain);
+            else var fetch_domain = this.params.search['domain'];
+            if (additional_context) var fetch_context = _.extend(this.params.search['context'], additional_context);
+            else var fetch_context = this.params.search['context'];
             var load_res = this.ds_thread.call('get_pushed_messages', 
-                [[this.session.uid], (limit || 2), (offset || 0), (domain || []), true, [false], (context || null)]).then(function (records) {
-                    if (records.length < self.params.limit) self.display_show_more = false;
+                [[this.session.uid], (limit || 0), (offset || 0), fetch_domain, true, [false], fetch_context]).then(function (records) {
+                    self.do_update_show_more(records.length >= self.params.limit);
                     self.display_comments(records);
-                    if (! self.display_show_more) {
-                        self.$element.find('button.oe_mail_wall_button_more:last').hide();
-                        self.$element.find('p.oe_mail_wall_nomore:last').show();
-                    }
                 });
             return load_res;
         },
@@ -725,7 +737,9 @@ openerp.mail = function(session) {
 
         /**
          * Create a domain to fetch new comments according to
-         * comment already present in sorted_comments
+         * comments already present in sorted_comments
+         * - for each model:
+         * -- should not be child of already displayed ids
          * @param {Object} sorted_comments (see sort_comments)
          * @returns {Array} fetch_domain (OpenERP domain style)
          */
@@ -741,27 +755,24 @@ openerp.mail = function(session) {
             return domain;
         },
         
-        /**
-         * Action: Shows more discussions
-         */
+        /** Display update: show more button */
+        do_update_show_more: function (new_value) {
+            if (new_value != undefined) this.display_show_more = new_value;
+            if (this.display_show_more) this.$element.find('div.oe_mail_wall_more:last').show();
+            else this.$element.find('div.oe_mail_wall_more:last').hide();
+        },
+        
+        /** Action: Shows more discussions */
         do_more: function () {
             var domain = this.get_fetch_domain(this.sorted_comments);
-            return this.fetch_comments(domain);
+            return this.fetch_comments(this.params.limit, 0, domain);
         },
         
-        /**
-         * Action: Posts a comment
-         */
+        /** Action: Posts a comment */
         do_comment: function () {
             var body_text = this.$element.find('textarea.oe_mail_wall_action_textarea').val();
-            return this.ds_users.call('message_append_note', [[this.session.uid], 'Tweet', body_text, false, 'comment']).then(this.init_comments(this.params.domain, {}, 0, this.params.limit));
-        },
-        
-        /**
-         * Tools: get avatar mini (TODO: should be moved in some tools ?)
-         */
-        thread_get_mini: function(model, field, id) {
-            return this.session.prefix + '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + (id || '');
+            return this.ds_users.call('message_append_note', [[this.session.uid], 'Tweet', body_text, false, 'comment']).then(
+                this.init_and_fetch_comments(this.params.limit, 0));
         },
     });
 };
