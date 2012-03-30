@@ -25,11 +25,6 @@ from osv import osv
 class res_currency_account(osv.osv):
     _inherit = "res.currency"
 
-    def get_conversion_rate(self, cr, uid, from_currency, to_currency, context=None):
-        if context is None:
-            context = {}
-        return self._get_conversion_rate(cr, uid, from_currency, to_currency, context=context)
-
     def _get_conversion_rate(self, cr, uid, from_currency, to_currency, context=None):
         if context is None:
             context = {}

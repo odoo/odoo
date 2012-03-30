@@ -40,7 +40,7 @@ Main features :
     """,
     'author': 'OpenERP SA',
     'images': ['images/cash_registers.jpeg', 'images/pos_analysis.jpeg','images/register_analysis.jpeg','images/sale_order_pos.jpeg','images/product_pos.jpeg'],
-    'depends': ['sale','account'],
+    'depends': ['sale'],
     'init_xml': [],
 
     'update_xml': [
