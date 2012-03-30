@@ -54,12 +54,11 @@
                 </xpath>
 		<xpath expr="//td[@class='td_deadline']" position="inside">
 		    <div class="sequence">
-			<button name="open_timesheets" class="oe_to_invoice_buttons" type="object">
-			    <small>To invoice</small>
-			    <div class="manager">
-				<field name="amount_invoiced"/>
-			    </div>
-			</button>
+			<kbd class="user">To invoice</kbd>
+			<div class="manager"><field name="amount_invoiced"/></div>
+		    </div>
+		    <div class="sequence">
+			<button name="open_timesheets" class="oe_to_invoice_buttons" type="object">Invoice</button>
 		    </div>
 		</xpath>
             </field>
