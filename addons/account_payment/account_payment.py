@@ -219,7 +219,7 @@ class payment_line(osv.osv):
                 break
             partner = line.partner_id.name or ''
             if line.partner_id:
-                #for ads in line.partner_id.address:
+                #for ads in line.partner_id:
                     if line.partner_id.type == 'default':
                         st = line.partner_id.street and line.partner_id.street or ''
                         st1 = line.partner_id.street2 and line.partner_id.street2 or ''
