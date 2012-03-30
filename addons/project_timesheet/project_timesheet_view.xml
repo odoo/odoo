@@ -47,12 +47,10 @@
                     </t>
                 </xpath>
                 <xpath expr="//td[@class='td_image']" position="inside">
-		    
-
-			<div class="sequence">
-			    <kbd class="user">Hours</kbd>
-			    <div class="manager"><t t-esc="Math.round(record.total_hours.raw_value-record.effective_hours.raw_value)"/> h</div>
-			</div>
+		    <div class="sequence">
+			<kbd class="user">Hours</kbd>
+			<div class="manager"><t t-esc="Math.round(record.total_hours.raw_value-record.effective_hours.raw_value)"/> h</div>
+		    </div>
                 </xpath>
 		<xpath expr="//td[@class='td_deadline']" position="inside">
 		    <div class="sequence">
