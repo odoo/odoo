@@ -8,7 +8,8 @@
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
             	<xpath expr="//field[@name='task']" position='after'>
-		    <field name="timesheets"/>
+		    		<field name="timesheets"/>
+		    		<field name="to_amt_invoice" invisible="True"/>
                 </xpath>
             
                 <field name="warn_customer" position="after">
@@ -33,6 +34,7 @@
                     <field name="timesheets"/>
                     <field name="total_hours"/>
                     <field name="effective_hours"/>
+                    <field name="to_amt_invoice"/>
                 </field>
 		<xpath expr="//t[@t-name='tasks']" position="after">
                     <t t-name="timesheets">
@@ -45,6 +47,7 @@
                     <t t-if="record.timesheets.raw_value">
                         <button name="open_timesheets" class="oe_project_buttons" type="object" tooltip="timesheets"><img src="/project_timesheet/static/src/img/timesheet_icon.png" class="project_icon"/></button>
                     </t>
+                    <t t-esc = "to_amt_invoice"/>
                 </xpath>
                 <xpath expr="//td[@class='td_image']" position="inside">
 		    <div class="sequence">
@@ -55,7 +58,7 @@
 		<xpath expr="//td[@class='td_deadline']" position="inside">
 		    <div class="sequence">
 			<kbd class="user">To invoice</kbd>
-			<div class="manager"><b><field name="amount_invoiced"/> <field name="currency_id"/></b></div>
+			<div class="manager"><b><field name="to_amt_invoice"/> <field name="currency_id"/></b></div>
 		    </div>
 		    <div class="sequence">
 			<button name="open_timesheets" class="oe_to_invoice_buttons" type="object" context="{'btn':'invoice'}">Invoice</button>
