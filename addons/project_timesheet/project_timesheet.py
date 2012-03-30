@@ -70,15 +70,13 @@ class project_project(osv.osv):
             context = {}
         value = {}
         data_obj = self.pool.get('ir.model.data')
-        to_invoice = False
-        if context.get('invoice'):to_invoice = context.get('invoice')
+
         for project in self.browse(cr, uid, ids, context=context):
             # Get Timesheet views
             tree_view = data_obj.get_object_reference(cr, uid, 'project_timesheet', 'view_account_analytic_line_tree_inherit_account_id')
             form_view = data_obj.get_object_reference(cr, uid, 'project_timesheet', 'view_account_analytic_line_form_inherit_account_id')
             search_view = data_obj.get_object_reference(cr, uid, 'project_timesheet', 'view_account_analytic_line_search_account_inherit')
             context.update({
-                'search_default_to_invoice': to_invoice,
                 'search_default_account_id':project.analytic_account_id.id,
             })
             value = {

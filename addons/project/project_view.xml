@@ -218,14 +218,6 @@
                                                 </table>
                                             </div>
                                         </td>
-                                        <!--<td class="td_deadline">-->
-                                            <!--<t t-if="record.date.raw_value">-->
-                                            <!--    <div class="sequence">-->
-                                            <!--        <kbd class="user">Deadline</kbd>-->
-                                            <!--        <div class="manager"><b><field name="date"/></b></div>-->
-                                            <!--    </div>-->
-                                            <!--</t>-->
-                                        <!--</td>-->
                                     </tr>
                                 </table>
                                 <table class="project_table">
@@ -237,11 +229,6 @@
                                                 <t t-esc="Math.round(record.total_hours.raw_value)"/> hrs
                                             </div>
                                         </td>
-                                        <!--<td class="td_member">-->
-                                        <!--    <t t-foreach="record.members.raw_value" t-as="member">-->
-                                        <!--        <img t-att-src="kanban_image('res.users', 'avatar', member)" class="img_member"/>-->
-                                        <!--    </t>-->
-                                        <!--</td>-->
                                     </tr>
                                 </table>
                             </div>

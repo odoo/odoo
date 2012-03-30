@@ -43,13 +43,11 @@
                         </ul>
                    </t>
                 </xpath>
-		
 		<xpath expr="//h4[@class='oe_project_font1']" position="replace">
 		    <h4 class="oe_project_font1">
 			<a type="edit"><div class="oe_project_font"><t t-esc="record.name.value.substr(0,28)"/><t t-if="record.name.value.length > 28">...</t></div></a>
 		    </h4>
 		</xpath>
-		
                 <xpath expr="//td[@class='buttons']" position="inside">
                     <t t-if="record.timesheets.raw_value">
                         <button name="open_timesheets" class="oe_project_buttons" type="object" tooltip="timesheets"><img src="/project_timesheet/static/src/img/timesheet_icon.png" class="project_icon"/></button>
@@ -62,13 +60,10 @@
 			    <div class="manager"><b><field name="amt_to_invoice"/> <field name="currency_id"/></b></div>
 			</div>
 			<div class="sequence">
-			    <kbd class="user">Rem. Hours</kbd>
+			    <kbd class="user">Hr. to invoice</kbd>
 			    <div class="manager"><b><t t-esc="Math.round(record.total_hours.raw_value-record.effective_hours.raw_value)"/> h</b></div>
 			</div>
 		    </td>
-		<!--    <div class="sequence">-->
-		<!--	<button name="open_timesheets" class="oe_to_invoice_buttons" type="object" context="{'invoice':1}">Invoice</button>-->
-		<!--    </div>-->
 		</xpath>
             </field>
         </record>
