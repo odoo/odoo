@@ -189,7 +189,7 @@ class payment_line(osv.osv):
             result[line.id] = self._get_info_partner(cr, uid, owner, context=context)
         return result
 
-    def _get_info_partner(cr, uid, partner_record, context=None):
+    def _get_info_partner(self,cr, uid, partner_record, context=None):
         if not partner_record:
             return False
         st = partner_record.street or ''
