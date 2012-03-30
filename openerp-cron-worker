@@ -6,7 +6,26 @@ OpenERP cron jobs worker
 
 This script executes OpenERP cron jobs. Normally, cron jobs are handled by the
 OpenERP server but depending on deployment needs, independent worker processes
-can be used.
+can be used. This is especially the case when the server is run via Gunicorn.
+
+OpenERP cron jobs worker re-uses openerp-server command-line options but does
+not honor all of them.
+
+Meaningful options include:
+
+  -d, --database  comma-separated list of databases to monitor for cron jobs
+                  processing. If left empty, the worker monitors all databases
+                  (given by `psql -ls`).
+
+  --addons-path   as ususal.
+
+  --cpu-time-limte
+  --virtual-memory-limit
+  --virtual-memory-reset  Those three options have the same meaning the for
+                          the server with Gunicorn. The only catch is: To
+                          not enable rlimits by default, those options are
+                          honored only when --cpu-time-limte is different than
+                          60 (its default value).
 """
 
 import logging
@@ -79,6 +98,7 @@ if __name__ == '__main__':
     openerp.cron.enable_schedule_wakeup = False
     import openerp.addons.base
     print "OpenERP cron jobs worker. Hit Ctrl-C to exit."
+    print "Documentation is available at the top of the `opener-cron-worker` file."
     if config['db_name']:
         db_names = config['db_name'].split(',')
         print "Monitoring %s databases." % len(db_names)

@@ -391,7 +391,22 @@ class ir_cron(osv.osv):
                     return
                 t1 = time.time()
                 for db_name in names:
-                    while(cls._acquire_job(db_name)):
+                    while True:
+                        # Small hack to re-use the openerp-server config:
+                        # If the cpu_time_limit has not its default value, we
+                        # truly want to establish limits.
+                        if openerp.tools.config['cpu_time_limit'] != 60:
+                            openerp.wsgi.core.pre_request('dummy', 'dummy')
+                        acquired = cls._acquire_job(db_name)
+                        if openerp.tools.config['cpu_time_limit'] != 60:
+                            class W(object):
+                                alive = True
+                            worker = W()
+                            openerp.wsgi.core.post_request(worker, 'dummy', 'dummy')
+                            if not worker.alive:
+                                return
+                        if not acquired:
+                            break
                         if quit_signal_received:
                             return
                 t2 = time.time()
