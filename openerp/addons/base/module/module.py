@@ -368,12 +368,10 @@ class module(osv.osv):
         """Perform the various steps required to uninstall a module completely
         including the deletion of all database structures created by the module:
         tables, columns, constraints, etc."""
-
-        # uninstall must be done respecting the reverse-dependency order
         ir_model_data = self.pool.get('ir.model.data')
         modules_to_remove = [m.name for m in self.browse(cr, uid, ids, context)]
         data_ids = ir_model_data.search(cr, uid, [('module', 'in', modules_to_remove)])
-        ir_model_data._pre_process_unlink(cr, uid, data_ids, context)
+        ir_model_data._module_data_uninstall(cr, uid, data_ids, context)
         ir_model_data.unlink(cr, uid, data_ids, context)
         self.write(cr, uid, ids, {'state': 'uninstalled'})
         return True

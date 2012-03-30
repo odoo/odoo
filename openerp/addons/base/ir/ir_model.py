@@ -33,7 +33,7 @@ from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
-MODULE_UNINSTALL_FLAG = '_ir_module_uninstall'
+MODULE_UNINSTALL_FLAG = '_force_unlink'
 
 def _get_fields_type(self, cr, uid, context=None):
     # Avoid too many nested `if`s below, as RedHat's Python 2.6
@@ -829,7 +829,7 @@ class ir_model_data(osv.osv):
             cr.execute('UPDATE ir_values set value=%s WHERE model=%s and key=%s and name=%s'+where,(value, model, key, name))
         return True
 
-    def _pre_process_unlink(self, cr, uid, ids, context=None):
+    def _module_data_uninstall(self, cr, uid, ids, context=None):
         if uid != 1 and not self.pool.get('ir.model.access').check_groups(cr, uid, "base.group_system"):
             raise except_orm(_('Permission Denied'), (_('Administrator access is required to uninstall a module')))
 
@@ -908,7 +908,7 @@ class ir_model_data(osv.osv):
             cr.commit()
 
         for (model, res_id) in to_unlink:
-            if model not in ('ir.model.fields',):
+            if model != 'ir.model.fields':
                 continue
             external_ids = self.search(cr, uid, [('model', '=', model),('res_id', '=', res_id)])
             if (set(external_ids)-ids_set):
