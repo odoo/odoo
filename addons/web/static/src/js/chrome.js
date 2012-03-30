@@ -47,7 +47,7 @@ openerp.web.Notification =  openerp.web.OldWidget.extend(/** @lends openerp.web.
 
 openerp.web.dialog = function(element) {
     var result = element.dialog.apply(element, _.rest(_.toArray(arguments)));
-    result.dialog("widget").addClass("openerp openerp2");
+    result.dialog("widget").addClass("openerp2");
     return result;
 }
 
@@ -980,7 +980,7 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
     },
     start: function() {
         var self = this;
-        this.$element.addClass("openerp openerp2");
+        this.$element.addClass("openerp2");
         if (jQuery.param != undefined && jQuery.deparam(jQuery.param.querystring()).kitten != undefined) {
             this.$element.addClass("kitten-mode-activated");
             this.$element.delegate('img.oe-record-edit-link-img', 'hover', function(e) {
