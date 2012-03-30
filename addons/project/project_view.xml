@@ -192,7 +192,7 @@
                                         <td class="td_name">
                                             <div class="oe_project_border">
                                                 <h4 class="oe_project_font1">
-                                                    <a type="edit"><div class="oe_project_font"><t t-esc="record.name.value.substr(0,26)"/><t t-if="record.name.value.length > 26">...</t></div></a>
+                                                    <a type="edit"><div class="oe_project_font"><t t-esc="record.name.value.substr(0,28)"/><t t-if="record.name.value.length > 28">...</t></div></a>
                                                 </h4>
                                                 <table >
                                                     <tr class ="task">
@@ -216,7 +216,7 @@
                                             <t t-if="record.date.raw_value">
                                                 <div class="sequence">
                                                     <kbd class="user">Deadline</kbd>
-                                                    <div class="manager"><field name="date"/></div>
+                                                    <div class="manager"><b><field name="date"/></b></div>
                                                 </div>
                                             </t>
                                         </td>
@@ -224,7 +224,7 @@
                                 </table>
                                 <table class="project_table">
                                     <tr>
-                                        <td class="td_hours" align="right">
+                                        <td class="td_hours">
                                             <div class="progress invoiced">
                                                 <t t-esc="Math.round(record.effective_hours.raw_value)"/> hrs
                                                 <progress t-att-value="record.effective_hours.raw_value" t-att-max="record.total_hours.raw_value"></progress>
