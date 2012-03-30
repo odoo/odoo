@@ -174,6 +174,7 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
         var self = this;
         $('<div class="oe_vs_unfold_drawer">').appendTo(this.$element.find('.VS-search-box'));
         var $drawer = $('<div class="oe_searchview_drawer">').appendTo(this.$element);
+        var $filters = $('<div class="oe_searchview_filters">').appendTo($drawer);
 
         var running_count = 0;
         // get total filters count
@@ -222,8 +223,9 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
         });
 
         return $.when(
-            this.render_column(col1, $('<div>').appendTo($drawer)),
-            this.render_column(col2, $('<div>').appendTo($drawer)));
+            this.render_column(col1, $('<div>').appendTo($filters)),
+            this.render_column(col2, $('<div>').appendTo($filters)),
+            (new openerp.web.search.Advanced(this).appendTo($drawer)));
     },
     render_column: function (column, $el) {
         return $.when.apply(null, _(column).map(function (group) {
@@ -1251,113 +1253,57 @@ openerp.web.search.ManyToOneField = openerp.web.search.CharField.extend({
     }
 });
 
-openerp.web.search.ExtendedSearch = openerp.web.search.Input.extend({
-    template: 'SearchView.extended_search',
-    init: function (parent, model) {
-        this._super(parent);
-        this.model = model;
-    },
-    add_group: function() {
-        var group = new openerp.web.search.ExtendedSearchGroup(this, this.fields);
-        group.appendTo(this.$element.find('.searchview_extended_groups_list'));
-        this.check_last_element();
-    },
+openerp.web.search.Advanced = openerp.web.search.Input.extend({
+    template: 'SearchView.advanced',
     start: function () {
-        this._super();
-        this.$element.closest("table.oe-searchview-render-line").css("display", "none");
         var self = this;
-        this.rpc("/web/searchview/fields_get",
-            {"model": this.model}, function(data) {
-            self.fields = data.fields;
-            if (!('id' in self.fields)) {
-                self.fields.id = {
-                    string: 'ID',
-                    type: 'id'
-                }
-            }
-            openerp.web.search.add_expand_listener(self.$element);
-            self.$element.find('.searchview_extended_add_group').click(function (e) {
-                self.add_group();
+        this.propositions = [];
+        this.$element
+            .on('keypress keydown keyup', function (e) { e.stopPropagation(); })
+            .on('click', 'h4', function () {
+                self.$element.toggleClass('oe_opened');
+            }).on('click', 'button.oe_add_condition', function () {
+                self.append_proposition();
+            }).on('click', 'button.oe_apply', function () {
+                self.commit_search();
             });
+        return $.when(
+            this._super(),
+            this.rpc("/web/searchview/fields_get", {model: this.view.model}, function(data) {
+                self.fields = _.extend({
+                    id: { string: 'ID', type: 'id' }
+                }, data.fields);
+        })).then(function () {
+            self.append_proposition();
         });
     },
-    get_context: function() {
-        return null;
+    append_proposition: function () {
+        return (new openerp.web.search.ExtendedSearchProposition(this, this.fields))
+            .appendTo(this.$element.find('ul'));
     },
-    get_domain: function() {
-        if (!this.$element) {
-            return null; // not a logical state but sometimes it happens
+    commit_search: function () {
+        // Get domain sections from all propositions
+        var domain = _.invoke(this.getChildren(), 'get_proposition');
+        // OR all propositions in a single domain: prepend one | for each
+        // sliding pair of propositions
+        for(var i=domain.length; --i;) {
+            domain.unshift('|');
         }
-        if(this.$element.closest("table.oe-searchview-render-line").css("display") == "none") {
-            return null;
-        }
-        return _.reduce(this.getChildren(),
-            function(mem, x) { return mem.concat(x.get_domain());}, []);
-    },
-    on_activate: function() {
-        this.add_group();
-        var table = this.$element.closest("table.oe-searchview-render-line");
-        table.css("display", "");
-        if(this.$element.hasClass("folded")) {
-            this.$element.toggleClass("folded expanded");
-        }
-    },
-    hide: function() {
-        var table = this.$element.closest("table.oe-searchview-render-line");
-        table.css("display", "none");
-        if(this.$element.hasClass("expanded")) {
-            this.$element.toggleClass("folded expanded");
-        }
-    },
-    check_last_element: function() {
-        _.each(this.getChildren(), function(x) {x.set_last_group(false);});
-        if (this.getChildren().length >= 1) {
-            this.getChildren()[this.getChildren().length - 1].set_last_group(true);
-        }
-    }
-});
-
-openerp.web.search.ExtendedSearchGroup = openerp.web.OldWidget.extend({
-    template: 'SearchView.extended_search.group',
-    init: function (parent, fields) {
-        this._super(parent);
-        this.fields = fields;
-    },
-    add_prop: function() {
-        var prop = new openerp.web.search.ExtendedSearchProposition(this, this.fields);
-        var render = prop.render({'index': this.getChildren().length - 1});
-        this.$element.find('.searchview_extended_propositions_list').append(render);
-        prop.start();
-    },
-    start: function () {
-        var _this = this;
-        this.add_prop();
-        this.$element.find('.searchview_extended_add_proposition').click(function () {
-            _this.add_prop();
-        });
-        this.$element.find('.searchview_extended_delete_group').click(function () {
-            _this.destroy();
-        });
-    },
-    get_domain: function() {
-        var props = _(this.getChildren()).chain().map(function(x) {
-            return x.get_proposition();
-        }).compact().value();
-        var choice = this.$element.find(".searchview_extended_group_choice").val();
-        var op = choice == "all" ? "&" : "|";
-        return choice == "none" ? ['!'] : [].concat(
-            _.map(_.range(_.max([0,props.length - 1])), function() { return op; }),
-            props);
-    },
-    destroy: function() {
-        var parent = this.getParent();
-        if (this.getParent().getChildren().length == 1)
-            this.getParent().hide();
-        this._super();
-        parent.check_last_element();
-    },
-    set_last_group: function(is_last) {
-        this.$element.toggleClass('last_group', is_last);
+        // Create Filter (& FilterGroup around it) with that domain
+        var f = new openerp.web.search.FilterGroup([
+            new openerp.web.search.Filter({attrs: {
+                string: 'bobuse',
+                domain: domain
+            }}, this.view)
+        ], this.view);
+        // add FilterGroup to this.view.searchQuery
+        // FIXME: holy fucking crap shoot me now
+        f.toggle_filter({target: {parentNode: {}}});
+        // remove all propositions
+        _.invoke(this.getChildren(), 'destroy');
+        // add new empty proposition
+        this.append_proposition();
+        // ? close drawer?
     }
 });
 
@@ -1380,7 +1326,6 @@ openerp.web.search.ExtendedSearchProposition = openerp.web.OldWidget.extend(/** 
         this.value = null;
     },
     start: function () {
-        this.$element = $("#" + this.element_id);
         this.select_field(this.fields.length > 0 ? this.fields[0] : null);
         var _this = this;
         this.$element.find(".searchview_extended_prop_field").change(function() {
@@ -1389,14 +1334,6 @@ openerp.web.search.ExtendedSearchProposition = openerp.web.OldWidget.extend(/** 
         this.$element.find('.searchview_extended_delete_prop').click(function () {
             _this.destroy();
         });
-    },
-    destroy: function() {
-        var parent;
-        if (this.getParent().getChildren().length == 1)
-            parent = this.getParent();
-        this._super();
-        if (parent)
-            parent.destroy();
     },
     changed: function() {
         var nval = this.$element.find(".searchview_extended_prop_field").val();
@@ -1467,11 +1404,7 @@ openerp.web.search.ExtendedSearchProposition.Char = openerp.web.search.ExtendedS
         {value: "ilike", text: _lt("contains")},
         {value: "not ilike", text: _lt("doesn't contain")},
         {value: "=", text: _lt("is equal to")},
-        {value: "!=", text: _lt("is not equal to")},
-        {value: ">", text: _lt("greater than")},
-        {value: "<", text: _lt("less than")},
-        {value: ">=", text: _lt("greater or equal than")},
-        {value: "<=", text: _lt("less or equal than")}
+        {value: "!=", text: _lt("is not equal to")}
     ],
     get_value: function() {
         return this.$element.val();

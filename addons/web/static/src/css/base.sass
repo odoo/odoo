@@ -436,44 +436,78 @@ $colour4: #8a89ba
                 color: #ccc
                 cursor: pointer
                 &:before
-                    content: "▼"
+                    content: "▾"
 
         &.oe_searchview_open_drawer
             .oe_searchview_drawer
-                display: table
+                display: block
 
         .oe_searchview_drawer
             position: absolute
             top: 100%
             right: 0
             background-color: white
-            width: 432px
+            width: 500px
             display: none
             border: 1px solid #ccc
 
-            > div
-                @include unscrew-box
-                display: table-cell
-                width: 50%
+            .oe_searchview_filters
+                display: table
+                width: 100%
 
-            h3
-                margin: 2px 4px 2px 8px
-                color: $section-title-color
+                > div
+                    @include unscrew-box
+                    display: table-cell
+                    width: 50%
 
-            ul
-                margin: 0 12px 3px
-                padding: 0
-                list-style: none
+                h3
+                    margin: 2px 4px 2px 8px
+                    color: $section-title-color
 
-            li
-                list-style: none
-                padding: 3px 6px
-                height: 14px
-                color: inherit
-                cursor: pointer
+                ul
+                    margin: 0 12px 3px
+                    padding: 0
+                    list-style: none
 
-                &:hover
-                    background-color: #f0f0fa
+                li
+                    list-style: none
+                    padding: 3px 6px
+                    height: 14px
+                    color: inherit
+                    cursor: pointer
+
+                    &:hover
+                        background-color: #f0f0fa
+
+            .oe_searchview_advanced
+                h4
+                    border-top: 1px solid #ccc
+                    margin: 5px 0 3px
+                    cursor: pointer
+
+                h4:before
+                    content: "▸ "
+
+                div
+                    display: none
+
+                button.oe_add_condition:before
+                    content: "⊞ "
+                button.oe_apply:before
+                    content: "⚡ "
+
+                ul
+                    list-style: none
+                    padding: 0
+                li
+                    list-style: none
+                    margin: 0
+
+                &.oe_opened
+                    h4:before
+                        content: "▾ "
+                    div
+                        display: block
     // }}}
 
 .openerp
