@@ -722,7 +722,7 @@ class BaseModel(object):
         """Base method for needaction mechanism
            - see base.needaction for actual implementation
            - this method returns default values
-           :return: [has_needaction=False, needaction_ctr=0]
+           :return: [uses_needaction=False, needaction_uid_ctr=0]
         """
         model_obj = pooler.get_pool(cr.dbname).get(model_name)
         if hasattr(model_obj, 'needaction_get_record_ids'):
