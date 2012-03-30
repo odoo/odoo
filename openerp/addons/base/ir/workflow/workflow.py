@@ -19,9 +19,10 @@
 #
 ##############################################################################
 
-from osv import fields, osv
-from tools import graph
-import netsvc
+from openerp.osv import fields, osv
+from openerp.tools import graph
+from openerp.tools.translate import _
+from openerp import netsvc
 
 class workflow(osv.osv):
     _name = "workflow"
@@ -138,6 +139,14 @@ class wkf_activity(osv.osv):
         'join_mode': lambda *a: 'XOR',
         'split_mode': lambda *a: 'XOR',
     }
+
+    def unlink(self, cr, uid, ids, context=None):
+        if context is None: context = {}
+        if not context.get('_force_unlink') and self.pool.get('workflow.workitem').search(cr, uid, [('act_id', 'in', ids)]):
+            raise osv.except_osv(_('Operation forbidden'),
+                                 _('Please make sure no workitems refer to an activity before deleting it!'))
+        super(wkf_activity, self).unlink(cr, uid, ids, context=context)
+
 wkf_activity()
 
 class wkf_transition(osv.osv):
