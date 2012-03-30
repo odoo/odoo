@@ -544,14 +544,14 @@ openerp.mail = function(session) {
             this._super(parent);
             this.params = params || {};
             this.params.limit = params.limit || 50;
-            this.params.limit = 2;
+            this.params.limit = 10;
             this.params.domain = params.domain || [];
             this.params.context = params.context || {};
             this.params.search = {'domain': [], 'context': {}, 'groupby': {}}
             this.params.search_view_id = params.search_view_id || false;
             this.params.thread_level = params.thread_level || 1;
             this.sorted_comments = {'models': {}};
-            this.comments_structure = {'models': {}};
+            this.comments_structure = {'root_ids': [], 'new_root_ids': [], 'msgs': {}, 'tree_struct': {}};
             this.display_show_more = true;
             // datasets
             this.ds_msg = new session.web.DataSet(this, 'mail.message');
@@ -664,6 +664,9 @@ openerp.mail = function(session) {
          */
         display_comments: function (records) {
             var sorted_comments = this.sort_comments(records);
+            console.log('debut !');
+            this.sort_comments_new(records);
+            console.log('fin');
             //console.log(sorted_comments);
             var self = this;
             _(sorted_comments.model_list).each(function (model_name) {
@@ -679,6 +682,9 @@ openerp.mail = function(session) {
                     var thread_displayed = thread.appendTo(self.$element.find('div.oe_mail_wall_thread:last'));
                 });
             });
+            // update TODO
+            this.comments_structure['root_ids'] = _.union(this.comments_structure['root_ids'], this.comments_structure['new_root_ids']);
+            this.comments_structure['new_root_ids'] = [];
         },
 
         /**
@@ -692,6 +698,33 @@ openerp.mail = function(session) {
          *                          'msgs': {'root_id': [records]}, still sorted by date desc
          *                          }, for each model
          */
+        sort_comments_new: function(records) {
+            var cs = this.comments_structure;
+            var cur_iter = 0; var max_iter = 10; var modif = true;
+            while ( modif && (cur_iter++) < max_iter) {
+                modif = false;
+                _(records).each(function (record) {
+                    if (record.parent_id == false && (! cs['msgs'][record.id])) {
+                        cs['new_root_ids'].push(record.id);
+                        cs['tree_struct'][record.id] = {'level': 0, 'direct_childs': [], 'all_childs': []};
+                        cs['msgs'][record.id] = record;
+                        modif = true;
+                    }
+                    else if (! cs['msgs'][record.id]) {
+                        if ((cs['msgs'][record.parent_id[0]])  && (! cs['msgs'][record.id])) {
+                             cs['tree_struct'][record.parent_id[0]]['direct_childs'].push(record.id);
+                             for (ancestor_id in cs['tree_struct'][record.parent_id[0]]['ancestors']) {
+                                 cs['tree_struct'][ancestor_id]['all_childs'].push(record.id);
+                             }
+                             cs['msgs'][record.id] = record;
+                             modif = true;
+                        }
+                    }
+                });
+            }
+            console.log(this.comments_structure);
+        },
+        
         sort_comments: function (records) {
             var self = this;
             var sc = {'model_list': [], 'models': {}}
