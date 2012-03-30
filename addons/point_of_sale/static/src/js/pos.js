@@ -1334,9 +1334,7 @@ openerp.point_of_sale = function(db) {
                             var scannedPackaging = _.detect(allPackages, function(pack) { return pack.ean !== undefined && pack.ean.substring(0,7) === barcode;});
                             if (scannedPackaging !== undefined) {
                                 var scannedProductModel = _.detect(allProducts, function(pc) { return pc.id === scannedPackaging.product_id[0];});
-                                console.log(scannedProductModel.price);
-                                scannedProductModel.price = price;
-                                console.log('price: '+price);
+                                scannedProductModel.list_price = price;
                             }
                         } else if (barcode.substring(0,2) in {'21':'','23':'','27':'','29':'','25':''}) {
                             // WEIGHT barcode
