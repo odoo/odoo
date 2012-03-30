@@ -40,7 +40,6 @@
     ],
     'update_xml': [
         'base_update.xml',
-        'base_needaction_view.xml',
         'ir/wizard/wizard_menu_view.xml',
         'ir/ir.xml',
         'ir/ir_config_parameter_view.xml',
