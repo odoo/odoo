@@ -229,12 +229,12 @@ class mrp_repair(osv.osv):
             data['value']['guarantee_limit'] = limit.strftime('%Y-%m-%d')
             data['value']['location_id'] = move.location_dest_id.id
             data['value']['location_dest_id'] = move.location_dest_id.id
-            if move.address_id:
-                data['value']['partner_id'] = move.address_id and move.address_id.id
+            if move.partner_id:
+                data['value']['partner_id'] = move.partner_id and move.partner_id.id
             else:
                 data['value']['partner_id'] = False
-            data['value']['address_id'] = move.address_id and move.address_id.id
-            d = self.onchange_partner_id(cr, uid, ids, data['value']['partner_id'], data['value']['address_id'])
+            data['value']['partner_id'] = move.partner_id and move.partner_id.id
+            d = self.onchange_partner_id(cr, uid, ids, data['value']['partner_id'], data['value']['partner_id'])
             data['value'].update(d['value'])
         return data
 
@@ -515,7 +515,7 @@ class mrp_repair(osv.osv):
                     'product_id': move.product_id.id,
                     'product_qty': move.product_uom_qty,
                     'product_uom': move.product_uom.id,
-                    'address_id': repair.address_id and repair.address_id.id or False,
+                    'partner_id': repair.address_id and repair.address_id.id or False,
                     'location_id': move.location_id.id,
                     'location_dest_id': move.location_dest_id.id,
                     'tracking_id': False,
@@ -530,7 +530,7 @@ class mrp_repair(osv.osv):
                     'origin': repair.name,
                     'state': 'draft',
                     'move_type': 'one',
-                    'address_id': repair.address_id and repair.address_id.id or False,
+                    'partner_id': repair.address_id and repair.address_id.id or False,
                     'note': repair.internal_notes,
                     'invoice_state': 'none',
                     'type': 'out',
@@ -542,7 +542,7 @@ class mrp_repair(osv.osv):
                     'product_qty': move.product_uom_qty or 1.0,
                     'product_uom': repair.product_id.uom_id.id,
                     'prodlot_id': repair.prodlot_id and repair.prodlot_id.id or False,
-                    'address_id': repair.address_id and repair.address_id.id or False,
+                    'partner_id': repair.address_id and repair.address_id.id or False,
                     'location_id': repair.location_id.id,
                     'location_dest_id': repair.location_dest_id.id,
                     'tracking_id': False,
