@@ -170,7 +170,6 @@ class partner_vat_list(osv.osv_memory):
         obj_sequence = self.pool.get('ir.sequence')
         obj_users = self.pool.get('res.users')
         obj_partner = self.pool.get('res.partner')
-        obj_addr = self.pool.get('res.partner.address')
         obj_model_data = self.pool.get('ir.model.data')
         seq_declarantnum = obj_sequence.get(cr, uid, 'declarantnum')
         obj_cmpny = obj_users.browse(cr, uid, uid, context=context).company_id
@@ -187,12 +186,12 @@ class partner_vat_list(osv.osv_memory):
         street = city = country = ''
         addr = obj_partner.address_get(cr, uid, [obj_cmpny.partner_id.id], ['invoice'])
         if addr.get('invoice',False):
-            ads = obj_addr.browse(cr, uid, [addr['invoice']], context=context)[0]
+            ads = obj_partner.browse(cr, uid, [addr['invoice']], context=context)[0]
             phone = ads.phone.replace(' ','') or ''
             email = ads.email or ''
             name = ads.name or ''
-            city = obj_addr.get_city(cr, uid, ads.id)
-            zip = obj_addr.browse(cr, uid, ads.id, context=context).zip or ''
+            city = obj_partner.get_city(cr, uid, ads.id)
+            zip = obj_partner.browse(cr, uid, ads.id, context=context).zip or ''
             if not city:
                 city = ''
             if ads.street:

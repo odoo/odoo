@@ -20,7 +20,6 @@
                         </group>
                         <group col="4" colspan="4" attrs="{'invisible' : [('send_to','!=','partner')]}">
                             <field name="partner_id" attrs="{'required' : [('send_to','=','partner')]}" on_change="on_change_partner(partner_id)" colspan="2" />
-                            <field name="address_id" string="Contact" on_change="on_change_address(address_id)" colspan="2" />
                         </group>
                     </group>
                     <separator string="" colspan="4" />

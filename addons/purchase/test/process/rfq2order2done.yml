@@ -40,7 +40,7 @@
     assert len(purchase_order.picking_ids) >= 1, "You should have only one reception order"
     for picking in purchase_order.picking_ids:
       assert picking.state == "assigned", "Reception state should be in assigned state"
-      assert picking.address_id.id == purchase_order.partner_address_id.id, "Delivery address of reception id is different from order"
+      assert picking.partner_id.id == purchase_order.partner_id.id, "Delivery address of reception id is different from order"
       assert picking.company_id.id == purchase_order.company_id.id, "Company is not correspond with purchase order"
 -
   Reception is ready for process so now done the reception.
