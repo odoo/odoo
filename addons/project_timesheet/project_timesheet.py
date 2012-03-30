@@ -30,7 +30,7 @@ class project_project(osv.osv):
     _inherit = 'project.project'
 
     _columns = {
-        'timesheets' : fields.boolean('Timesheets',help = "If you check this field timesheets appears in kanban view")
+        'timesheets' : fields.boolean('Timesheets',help = "If you check this field timesheets appears in kanban view"),
     }
     _defaults = {
         'timesheets' : True,
@@ -56,6 +56,10 @@ class project_project(osv.osv):
             context = {}
         value = {}
         data_obj = self.pool.get('ir.model.data')
+        if context.get('btn'):
+            context.update({
+                'search_default_to_invoice':1,
+            })
         for project in self.browse(cr, uid, ids, context=context):
             # Get Timesheet views
             tree_view = data_obj.get_object_reference(cr, uid, 'project_timesheet', 'view_account_analytic_line_tree_inherit_account_id')
