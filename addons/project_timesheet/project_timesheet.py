@@ -29,23 +29,21 @@ from tools.translate import _
 class project_project(osv.osv):
     _inherit = 'project.project'
 
-    def _amt_to_invoiced(self, cr, uid, ids,field_name, arg, context=None):
+    def _amt_to_invoice(self, cr, uid, ids,field_name, arg, context=None):
         res = {}
-        task_pool=self.pool.get('project.task')
-        for id in ids:
-            task_ids = task_pool.search(cr, uid, [('project_id', '=', id)])
-            total = 0.0
-            project_record = self.browse(cr,uid,id)
-            acc_model = self.pool.get("account.analytic.line")
-            acc_id = acc_model.search(cr, uid, [('account_id', '=', project_record.analytic_account_id.id),('to_invoice', '=', 1),('invoice_id', '=', False)])
-            if acc_id:
-                for record in acc_model.browse(cr,uid,acc_id):
-                    total += record.amount
-            res[id]= total
+        aal_pool = self.pool.get("account.analytic.line")
+        for project in self.browse(cr,uid,ids,context=context):
+            line_ids = aal_pool.search(cr, uid, [('account_id','=',project.analytic_account_id.id),('to_invoice','=',1),('invoice_id','=',False)])
+            amt_to_invoice = 0.0
+            if line_ids:
+                for line in aal_pool.browse(cr,uid,line_ids,context=context):
+                    amt_to_invoice += line.amount
+            res[project.id] = (amt_to_invoice)*-1
         return res
+
     _columns = {
         'timesheets' : fields.boolean('Timesheets',help = "If you check this field timesheets appears in kanban view"),
-        'to_amt_invoice': fields.function(_amt_to_invoiced,string="Open Tasks")
+        'amt_to_invoice': fields.function(_amt_to_invoice,string="Amount to Invoice")
     }
     _defaults = {
         'timesheets' : True,

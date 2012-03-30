@@ -9,7 +9,7 @@
             <field name="arch" type="xml">
             	<xpath expr="//field[@name='task']" position='after'>
 		    		<field name="timesheets"/>
-		    		<field name="to_amt_invoice" invisible="True"/>
+		    		<field name="amt_to_invoice" invisible="True"/>
                 </xpath>
             
                 <field name="warn_customer" position="after">
@@ -34,7 +34,7 @@
                     <field name="timesheets"/>
                     <field name="total_hours"/>
                     <field name="effective_hours"/>
-                    <field name="to_amt_invoice"/>
+                    <field name="amt_to_invoice"/>
                 </field>
 		<xpath expr="//t[@t-name='tasks']" position="after">
                     <t t-name="timesheets">
@@ -54,13 +54,12 @@
                     <t t-if="record.timesheets.raw_value">
                         <button name="open_timesheets" class="oe_project_buttons" type="object" tooltip="timesheets"><img src="/project_timesheet/static/src/img/timesheet_icon.png" class="project_icon"/></button>
                     </t>
-                    <t t-esc = "to_amt_invoice"/>
                 </xpath>
 		<xpath expr="//td[@class='td_name']" position="after">
 		    <td class="td_deadline">
 			<div class="sequence">
 			    <kbd class="user">To invoice</kbd>
-			    <div class="manager"><b><field name="to_amt_invoice"/> <field name="currency_id"/></b></div>
+			    <div class="manager"><b><field name="amt_to_invoice"/> <field name="currency_id"/></b></div>
 			</div>
 			<div class="sequence">
 			    <kbd class="user">Rem. Hours</kbd>
