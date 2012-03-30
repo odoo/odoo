@@ -85,7 +85,8 @@ openerp.point_of_sale = function(db) {
                 }, this));
             }, this));
             $.when(this.fetch('pos.category', ['name', 'parent_id', 'child_id']),
-                this.fetch('product.product', ['name', 'list_price', 'pos_categ_id', 'taxes_id', 'product_image_small', 'ean13'], [['pos_categ_id', '!=', 'false']]),
+                this.fetch('product.product', ['name', 'list_price', 'pos_categ_id', 'taxes_id', 'product_image_small', 'ean13', 'id'], [['pos_categ_id', '!=', 'false']]),
+                this.fetch('product.packaging', ['product_id', 'ean']),
                 this.fetch('account.bank.statement', ['account_id', 'currency', 'journal_id', 'state', 'name'],
                     [['state', '=', 'open'], ['user_id', '=', this.session.uid]]),
                 this.fetch('account.journal', ['auto_cash', 'check_dtls', 'currency', 'name', 'type']),
@@ -1255,6 +1256,7 @@ openerp.point_of_sale = function(db) {
             this.categoryView.renderElement();
             this.categoryView.start();
             allProducts = pos.store.get('product.product');
+            allPackages = pos.store.get('product.packaging');
             products = pos.store.get('product.product').filter( function(p) {
                 var _ref;
                 return _ref = p.pos_categ_id[0], _.indexOf(c.subtree, _ref) >= 0;
@@ -1308,8 +1310,6 @@ openerp.point_of_sale = function(db) {
                     lastTimeStamp = new Date().getTime();
                     if (codeNumbers.length == 13) {
                         // a barcode reader
-                        var barcode = codeNumbers.join('');
-                        var selectedOrder = self.shop.get('selectedOrder');
                         if (!checkEan(codeNumbers)) {
                             // barcode read error, raise warning
                             $(QWeb.render('pos-scan-warning')).dialog({
@@ -1325,25 +1325,36 @@ openerp.point_of_sale = function(db) {
                                 }
                             });
                         }
+                        var barcode = codeNumbers.join('');
+                        var selectedOrder = self.shop.get('selectedOrder');
                         if (barcode.substring(0,2) in {'02':'', '22':'', '24':'', '26':'', '28':''}) {
-                            // product with a specific price - specified into the barcode
+                            // PRICE barcode
                             price = Number(barcode.substring(7,12))/100;
-                            barcode = barcode.substring(2,7);
-                            // TODO conversion euro - old local currencies
-                            new db.web.Model('res.currency').get_func('get_conversion_rate')([pos.session.uid,'FRF', pos.get('currency'), {}]).pipe(function(result){});
-                            weight = '';
+                            barcode = barcode.substring(0,7);
+                            var scannedPackaging = _.detect(allPackages, function(pack) { return pack.ean !== undefined && pack.ean.substring(0,7) === barcode;});
+                            if (scannedPackaging !== undefined) {
+                                var scannedProductModel = _.detect(allProducts, function(pc) { return pc.id === scannedPackaging.product_id[0];});
+                                console.log(scannedProductModel.price);
+                                scannedProductModel.price = price;
+                                console.log('price: '+price);
+                            }
                         } else if (barcode.substring(0,2) in {'21':'','23':'','27':'','29':'','25':''}) {
-                            // product sold by weight
+                            // WEIGHT barcode
                             weight = Number(barcode.substring(7,12))/1000;
-                            barcode = barcode.substring(2,7);
-                            price = '';
+                                console.log(weight);
+                            barcode = barcode.substring(0,7);
+                            var scannedPackaging = _.detect(allPackages, function(pack) { return pack.ean !== undefined && pack.ean.substring(0,7) === barcode;});
+                            if (scannedPackaging !== undefined) {
+                                var scannedProductModel = _.detect(allProducts, function(pc) { return pc.ean13 === scannedPackaging.product_id[0];});
+                                console.log(scannedProductModel.price);
+                                scannedProductModel.price *= weight;
+                                console.log(weight);
+                            }
                         } else {
-                            // product unit
-                            weight = '';
-                            price = '';
+                            // UNIT barcode
+                            var scannedProductModel = _.detect(allProducts, function(pc) { return pc.ean13 === barcode;});
                         }
-                        var scannedProductModel = _.detect(allProducts, function(pc) { return pc.ean13 === barcode;});
-                        if (scannedProductModel == undefined) {
+                        if (scannedProductModel === undefined) {
                             // product not recognized, raise warning
                             $(QWeb.render('pos-scan-warning')).dialog({
                                 resizable: false,
@@ -1357,16 +1368,9 @@ openerp.point_of_sale = function(db) {
                                     },
                                 }
                             });
+                        } else {
+                            selectedOrder.addProduct(new Product(scannedProductModel));
                         }
-                        if (weight === '' && price !== '') {
-                            // product sold by price
-                            scannedProductModel.price = price;
-                        } else if (weight !== '' && price === '') {
-                            // product sold by weight
-                            // TODO check how to calculate the price
-                            scannedProductModel.price *= weight;
-                        }
-                        selectedOrder.addProduct(new Product(scannedProductModel));
 
                         codeNumbers = [];
                     }
