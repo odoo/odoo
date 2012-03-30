@@ -188,9 +188,15 @@
                                                 <button name = "open_users" type="object" class="oe_project_buttons"><img t-att-src="kanban_image('res.users', 'avatar', record.user_id.raw_value[0])" class="avatar"/></button><br/>
                                                 <div class="manager"><field name="user_id"/></div>
                                             </div>
+                                            <t t-if="record.date.raw_value">
+                                                <div class="sequence">
+                                                    <kbd class="user">Deadline</kbd>
+                                                    <div class="manager"><b><field name="date"/></b></div>
+                                                </div>
+                                            </t>
                                           </td>
                                         <td class="td_name">
-                                            <div class="oe_project_border">
+                                            <div>
                                                 <h4 class="oe_project_font1">
                                                     <a type="edit"><div class="oe_project_font"><t t-esc="record.name.value.substr(0,28)"/><t t-if="record.name.value.length > 28">...</t></div></a>
                                                 </h4>
@@ -213,12 +219,12 @@
                                             </div>
                                         </td>
                                         <td class="td_deadline">
-                                            <t t-if="record.date.raw_value">
-                                                <div class="sequence">
-                                                    <kbd class="user">Deadline</kbd>
-                                                    <div class="manager"><b><field name="date"/></b></div>
-                                                </div>
-                                            </t>
+                                            <!--<t t-if="record.date.raw_value">-->
+                                            <!--    <div class="sequence">-->
+                                            <!--        <kbd class="user">Deadline</kbd>-->
+                                            <!--        <div class="manager"><b><field name="date"/></b></div>-->
+                                            <!--    </div>-->
+                                            <!--</t>-->
                                         </td>
                                     </tr>
                                 </table>
