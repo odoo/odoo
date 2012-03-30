@@ -37,7 +37,6 @@ class res_company(osv.osv):
                     an empty dict if no address can be found
         """
         res_partner = self.pool.get('res.partner')
-#        res_partner_address = self.pool.get('res.partner.address')
         addresses = res_partner.address_get(cr, uid, [company.partner_id.id], ['default', 'contact', 'invoice'])
         addr_id = addresses['invoice'] or addresses['contact'] or addresses['default']
         result = {}

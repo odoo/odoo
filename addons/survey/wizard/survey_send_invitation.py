@@ -163,7 +163,7 @@ class survey_send_invitation(osv.osv_memory):
                 ans = mail_message.schedule_with_attach(cr, uid, record['mail_from'], [partner.email], \
                                        record['mail_subject'], mail, attachments=attachments, context=context)
                 if ans:
-                    res_data = {'name': partner.name or 'Unknown',
+                    res_data = {'name': partner.name or _('Unknown'),
                                 'login': partner.email,
                                 'password': passwd,
                                 'address_id': partner.id,
@@ -174,10 +174,10 @@ class survey_send_invitation(osv.osv_memory):
                     user = user_ref.create(cr, uid, res_data)
                     if user not in new_user:
                         new_user.append(user)
-                    created+= "- %s (Login: %s,  Password: %s)\n" % (partner.name or 'Unknown',\
+                    created+= "- %s (Login: %s,  Password: %s)\n" % (partner.name or _('Unknown'),\
                                                                       partner.email, passwd)
                 else:
-                    error+= "- %s (Login: %s,  Password: %s)\n" % (partner.name or 'Unknown',\
+                    error+= "- %s (Login: %s,  Password: %s)\n" % (partner.name or _('Unknown'),\
                                                                     partner.email, passwd)
 
         new_vals = {}

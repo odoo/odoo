@@ -86,16 +86,6 @@ class crm_phonecall(crm_base, osv.osv):
         'active': 1,
     }
 
-    # From crm.case
-    def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
-        res = super(crm_phonecall, self).onchange_partner_address_id(cr, uid, ids, add, email)
-        res.setdefault('value', {})
-        if add:
-            address = self.pool.get('res.partner').browse(cr, uid, add)
-            res['value']['partner_phone'] = address.phone
-            res['value']['partner_mobile'] = address.mobile
-        return res
-
     def case_close(self, cr, uid, ids, *args):
         """Overrides close for crm_case for setting close date
         """

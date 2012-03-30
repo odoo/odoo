@@ -448,7 +448,7 @@
                         <separator orientation="vertical"/>
                         <field name="event_id" widget="selection"/>
                         <field name="name" string="Participant"
-                            filter_domain="['|','|','|', ('name','ilike',self), ('partner_id','ilike',self), ('email','ilike',self)]"/>
+                            filter_domain="['|','|', ('name','ilike',self), ('partner_id','ilike',self), ('email','ilike',self)]"/>
                         <field name="user_id" groups="base.group_extended">
                         <filter icon="terp-personal"
                               string="My Registrations"

@@ -60,13 +60,6 @@ class crm_lead(crm_case, osv.osv):
         'stage_id': _read_group_stage_ids
     }
 
-    # especially if base_contact is installed.
-    def name_get(self, cr, user, ids, context=None):
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        return [(r['id'], tools.ustr(r[self._rec_name]))
-                    for r in self.read(cr, user, ids, [self._rec_name], context)]
-
     def _compute_day(self, cr, uid, ids, fields, args, context=None):
         """
         @param cr: the current row, from the database cursor,
@@ -170,7 +163,7 @@ class crm_lead(crm_case, osv.osv):
         'contact_name': fields.char('Contact Name', size=64),
         'partner_name': fields.char("Customer Name", size=64,help='The name of the future partner company that will be created while converting the lead into opportunity', select=1),
         'optin': fields.boolean('Opt-In', help="If opt-in is checked, this contact has accepted to receive emails."),
-        'opt_out': fields.boolean('Opt-Out', help="If opt-out is checked, this contact has refused to receive emails or unsubscribed to a campaign."),
+        'optout': fields.boolean('Opt-Out', help="If opt-out is checked, this contact has refused to receive emails or unsubscribed to a campaign."),
         'type':fields.selection([ ('lead','Lead'), ('opportunity','Opportunity'), ],'Type', help="Type is used to separate Leads and Opportunities"),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
         'date_closed': fields.datetime('Closed', readonly=True),
@@ -222,19 +215,11 @@ class crm_lead(crm_case, osv.osv):
         'color': 0,
     }
 
-    def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
-        """This function returns value of partner email based on Partner Address
-        """
-        if not add:
-            return {'value': {'email_from': False, 'country_id': False}}
-        address = self.pool.get('res.partner').browse(cr, uid, add)
-        return {'value': {'email_from': address.email, 'phone': address.phone, 'country_id': address.country_id.id}}
-
     def on_change_optin(self, cr, uid, ids, optin):
-        return {'value':{'optin':optin,'opt_out':False}}
+        return {'value':{'optin':optin,'optout':False}}
 
     def on_change_optout(self, cr, uid, ids, optout):
-        return {'value':{'opt_out':optout,'optin':False}}
+        return {'value':{'optout':optout,'optin':False}}
 
     def onchange_stage_id(self, cr, uid, ids, stage_id, context={}):
         if not stage_id:

@@ -217,12 +217,6 @@ class account_analytic_account(osv.osv):
         default['line_ids'] = []
         return super(account_analytic_account, self).copy(cr, uid, id, default, context=context)
 
-    def on_change_partner_id(self, cr, uid, id, partner_id, context={}):
-        if not partner_id:
-            return {'value': {'partner_id': False}}
-        addr = self.pool.get('res.partner').address_get(cr, uid, [partner_id], ['invoice'])
-        return {'value': {'partner_id': addr.get('invoice', False)}}
-
     def on_change_company(self, cr, uid, id, company_id):
         if not company_id:
             return {}
@@ -241,13 +235,6 @@ class account_analytic_account(osv.osv):
         if partner:
             res['value']['partner_id'] = partner
         return res
-
-    def onchange_partner_id(self, cr, uid, ids, partner, context=None):
-        partner_obj = self.pool.get('res.partner')
-        if not partner:
-            return {'value':{'partner_id': False}}
-        address = partner_obj.address_get(cr, uid, [partner], ['contact'])
-        return {'value':{'partner_id': address['contact']}}
 
     def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
         if not args:

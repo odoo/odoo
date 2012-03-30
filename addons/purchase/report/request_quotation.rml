@@ -100,14 +100,14 @@
           </para>
         </td>
         <td>
-          <para style="terp_default_9">[[ (order.partner_id and order.partner_id.title and order.partner_id.title.name) or '' ]] [[ order.partner_id.name ]]</para>
-          <para style="terp_default_9">[[ order.partner_id and display_address(order.partner_id) ]] </para>
+          <para style="terp_default_9">[[ (order.partner_id.title and order.partner_id.title.name) or '' ]] [[ order.partner_id.name ]]</para>
+          <para style="terp_default_9">[[ display_address(order.partner_id) ]] </para>
           <para style="terp_default_9">
             <font color="white"> </font>
           </para>
-          <para style="terp_default_9">Tel.: [[ (order.partner_id and order.partner_id.phone) or removeParentNode('para') ]]</para>
-          <para style="terp_default_9">Fax: [[ (order.partner_id and order.partner_id.fax) or removeParentNode('para') ]]</para>
-          <para style="terp_default_9">TVA: [[ (order.partner_id and order.partner_id.vat) or removeParentNode('para') ]]</para>
+          <para style="terp_default_9">Tel.: [[ (order.partner_id.phone) or removeParentNode('para') ]]</para>
+          <para style="terp_default_9">Fax: [[ (order.partner_id.fax) or removeParentNode('para') ]]</para>
+          <para style="terp_default_9">TVA: [[ (order.partner_id.vat) or removeParentNode('para') ]]</para>
         </td>
       </tr>
     </blockTable>

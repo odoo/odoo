@@ -183,8 +183,6 @@ class hr_expense_expense(osv.osv):
                 }))
             if not exp.employee_id.address_home_id:
                 raise osv.except_osv(_('Error !'), _('The employee must have a Home address.'))
-            if not exp.employee_id.address_home_id:
-                raise osv.except_osv(_('Error !'), _("The employee's home address must have a partner linked."))
             acc = exp.employee_id.address_home_id.property_account_payable.id
             payment_term_id = exp.employee_id.address_home_id.property_payment_term.id
             inv = {

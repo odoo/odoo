@@ -161,7 +161,7 @@ class purchase_order(osv.osv):
         'date_order':fields.date('Order Date', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)]}, select=True, help="Date on which this document has been created."),
         'date_approve':fields.date('Date Approved', readonly=1, select=True, help="Date on which purchase order has been approved"),
         'partner_id':fields.many2one('res.partner', 'Supplier', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]}, change_default=True),
-        'dest_address_id':fields.many2one('res.partner', 'Destination Address', domain="[('parent_id','=',partner_id)]",
+        'dest_address_id':fields.many2one('res.partner', 'Customer Address (Direct Delivery)',
             states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]},
             help="Put an address if you want to deliver directly from the supplier to the customer." \
                 "In this case, it will remove the warehouse link and set the customer location."
@@ -569,7 +569,6 @@ class purchase_order(osv.osv):
                     'origin': porder.origin,
                     'date_order': porder.date_order,
                     'partner_id': porder.partner_id.id,
-#                    'partner_address_id': porder.partner_id.id,
                     'dest_address_id': porder.dest_address_id.id,
                     'warehouse_id': porder.warehouse_id.id,
                     'location_id': porder.location_id.id,

@@ -2100,7 +2100,7 @@ class account_tax(osv.osv):
             "Deprecated, use compute_all(...)['taxes'] instead of compute(...) to manage prices with tax included")
         return self._compute(cr, uid, taxes, price_unit, quantity, product, partner)
 
-    def _compute(self, cr, uid, taxes, price_unit, quantity,product=None, partner=None):
+    def _compute(self, cr, uid, taxes, price_unit, quantity, product=None, partner=None):
         """
         Compute tax values for given PRICE_UNIT, QUANTITY and a buyer/seller ADDRESS_ID.
 

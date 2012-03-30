@@ -76,7 +76,7 @@ class res_partner(osv.osv, EDIMixin):
         if edi_bank_ids:
             contact = self.browse(cr, uid, contact_id, context=context)
             import_ctx = dict((context or {}),
-                              default_partner_id=contact.id,
+                              default_partner_id = contact.id,
                               default_state=self._get_bank_type(cr, uid, context))
             for ext_bank_id, bank_name in edi_bank_ids:
                 try:

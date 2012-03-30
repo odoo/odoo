@@ -183,56 +183,30 @@ class payment_line(osv.osv):
                 "reference": "ref"}.get(orig, orig)
 
     def info_owner(self, cr, uid, ids, name=None, args=None, context=None):
-        if not ids: return {}
-        partner_zip_obj = self.pool.get('res.partner.zip')
-
         result = {}
-        info=''
         for line in self.browse(cr, uid, ids, context=context):
             owner = line.order_id.mode.bank_id.partner_id
-            result[line.id] = False
-            if owner:
-                if owner.type == 'default':
-                    st = owner.street and owner.street or ''
-                    st1 = owner.street2 and owner.street2 or ''
-                    if 'zip_id' in owner:
-                        zip_city = owner.zip_id and partner_zip_obj.name_get(cr, uid, [owner.zip_id.id])[0][1] or ''
-                    else:
-                        zip = owner.zip and owner.zip or ''
-                        city = owner.city and owner.city or  ''
-                        zip_city = zip + ' ' + city
-                    cntry = owner.country_id and owner.country_id.name or ''
-                    info = owner.name + "\n" + st + " " + st1 + "\n" + zip_city + "\n" +cntry
-                    result[line.id] = info
-                    break
+            result[line.id] = self._get_info_partner(cr, uid, owner, context=context)
         return result
 
-    def info_partner(self, cr, uid, ids, name=None, args=None, context=None):
-        if not ids: return {}
-        partner_zip_obj = self.pool.get('res.partner.zip')
-        result = {}
-        info = ''
+    def _get_info_partner(cr, uid, partner_record, context=None):
+        if not partner_record:
+            return False
+        st = partner_record.street or ''
+        st1 = partner_record.street2 or ''
+        zip = partner_record.zip or ''
+        city = partner_record.city or  ''
+        zip_city = zip + ' ' + city
+        cntry = partner_record.country_id and partner_record.country_id.name or ''
+        return partner_record.name + "\n" + st + " " + st1 + "\n" + zip_city + "\n" +cntry
 
+    def info_partner(self, cr, uid, ids, name=None, args=None, context=None):
+        result = {}
         for line in self.browse(cr, uid, ids, context=context):
             result[line.id] = False
             if not line.partner_id:
                 break
-            partner = line.partner_id.name or ''
-            if line.partner_id:
-                #for ads in line.partner_id:
-                    if line.partner_id.type == 'default':
-                        st = line.partner_id.street and line.partner_id.street or ''
-                        st1 = line.partner_id.street2 and line.partner_id.street2 or ''
-                        if 'zip_id' in line.partner_id:
-                            zip_city = line.partner_id.zip_id and partner_zip_obj.name_get(cr, uid, [line.partner_id.zip_id.id])[0][1] or ''
-                        else:
-                            zip = line.partner_id.zip and line.partner_id.zip or ''
-                            city = line.partner_id.city and line.partner_id.city or  ''
-                            zip_city = zip + ' ' + city
-                        cntry = line.partner_id.country_id and line.partner_id.country_id.name or ''
-                        info = partner + "\n" + st + " " + st1 + "\n" + zip_city + "\n" +cntry
-                        result[line.id] = info
-                        break
+            result[line.id] = self._get_info_partner(cr, uid, line.partner_id, context=context)
         return result
 
     #dead code
@@ -419,7 +393,6 @@ class payment_line(osv.osv):
 
     def onchange_partner(self, cr, uid, ids, partner_id, payment_type, context=None):
         data = {}
-        partner_zip_obj = self.pool.get('res.partner.zip')
         partner_obj = self.pool.get('res.partner')
         payment_mode_obj = self.pool.get('payment.mode')
         data['info_partner'] = data['bank_id'] = False
@@ -427,23 +400,7 @@ class payment_line(osv.osv):
         if partner_id:
             part_obj = partner_obj.browse(cr, uid, partner_id, context=context)
             partner = part_obj.name or ''
-            if part_obj:
-                #for ads in part_obj.address:
-                if part_obj.type == 'default':
-                    st = part_obj.street and part_obj.street or ''
-                    st1 = part_obj.street2 and part_obj.street2 or ''
-
-                    if 'zip_id' in part_obj:
-                        zip_city = part_obj.zip_id and partner_zip_obj.name_get(cr, uid, [part_obj.zip_id.id])[0][1] or ''
-                    else:
-                        zip = part_obj.zip and part_obj.zip or ''
-                        city = part_obj.city and part_obj.city or  ''
-                        zip_city = zip + ' ' + city
-
-                    cntry = part_obj.country_id and part_obj.country_id.name or ''
-                    info = partner + "\n" + st + " " + st1 + "\n" + zip_city + "\n" +cntry
-
-                    data['info_partner'] = info
+            data['info_partner'] = self._get_info_partner(cr, uid, part_obj, context=context)
 
             if part_obj.bank_ids and payment_type:
                 bank_type = payment_mode_obj.suitable_bank_types(cr, uid, payment_type, context=context)

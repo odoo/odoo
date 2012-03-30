@@ -1073,7 +1073,7 @@ class stock_picking(osv.osv):
 
         invoice_obj = self.pool.get('account.invoice')
         invoice_line_obj = self.pool.get('account.invoice.line')
-        parnter_obj = self.pool.get('res.partner')
+        partner_obj = self.pool.get('res.partner')
         invoices_group = {}
         res = {}
         inv_type = type
@@ -1082,7 +1082,7 @@ class stock_picking(osv.osv):
                 continue
             partner = self._get_partner_to_invoice(cr, uid, picking, context=context)
             if isinstance(partner, int):
-                partner=parnter_obj.browse(cr,uid,[partner])[0]
+                partner = partner_obj.browse(cr, uid, [partner], context=context)[0]
             if not partner:
                 raise osv.except_osv(_('Error, no partner !'),
                     _('Please put a partner on the picking list if you want to generate invoice.'))
@@ -1098,7 +1098,7 @@ class stock_picking(osv.osv):
             else:
                 invoice_vals = self._prepare_invoice(cr, uid, picking, partner, inv_type, journal_id, context=context)
                 invoice_id = invoice_obj.create(cr, uid, invoice_vals, context=context)
-                invoices_group[partner] = invoice_id
+                invoices_group[partner.id] = invoice_id
             res[picking.id] = invoice_id
             for move_line in picking.move_lines:
                 if move_line.state == 'cancel':

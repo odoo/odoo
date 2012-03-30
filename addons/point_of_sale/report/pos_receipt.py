@@ -42,7 +42,7 @@ class order(report_sxw.rml_parse):
             'disc': self.discount,
             'net': self.netamount,
             'get_journal_amt': self._get_journal_amt,
-            'address': partner  or False,
+            'address': partner or False,
             'titlize': titlize
         })
 
