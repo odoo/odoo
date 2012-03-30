@@ -500,7 +500,7 @@ class project(osv.osv):
         'project_escalation_id' : fields.many2one('project.project','Project Escalation', help='If any issue is escalated from the current Project, it will be listed under the project selected here.', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'reply_to' : fields.char('Reply-To Email Address', size=256),
         'issues' : fields.boolean('Issues',help = "If you check this field issues are appears in kanban view"),
-        'open_issues': fields.function(_compute_issue , store=True,type='integer',string="Issue"),
+        'total_issues': fields.function(_compute_issue , store=True,type='integer',string="Issue"),
     }
     
     _defaults = {
