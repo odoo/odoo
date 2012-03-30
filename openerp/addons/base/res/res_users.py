@@ -234,7 +234,7 @@ class users(osv.osv):
         img = Image.open(image_stream)
         img.thumbnail((height, width), Image.ANTIALIAS)
         img_stream = StringIO.StringIO()
-        img.save(img_stream, "JPEG")
+        img.save(img_stream, "PNG")
         return img_stream.getvalue().encode('base64')
     
     def _get_avatar(self, cr, uid, ids, name, args, context=None):
@@ -391,7 +391,7 @@ class users(osv.osv):
 
     def _get_avatar(self, cr, uid, context=None):
         # default avatar file name: avatar0 -> avatar6.jpg, choose randomly
-        avatar_path = openerp.modules.get_module_resource('base', 'images', 'avatar%d.jpg' % random.randint(0, 6))
+        avatar_path = openerp.modules.get_module_resource('base', 'static/src/img', 'avatar%d.png' % random.randint(0, 6))
         return self._avatar_resize(cr, uid, open(avatar_path, 'rb').read().encode('base64'), context=context)
     
     _defaults = {
