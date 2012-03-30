@@ -74,27 +74,24 @@ class base_module_upgrade(osv.osv_memory):
 
         # install/upgrade: double-check preconditions
         ids = ir_module.search(cr, uid, [('state', 'in', ['to upgrade', 'to install'])])
-        unmet_packages = []
-        mod_dep_obj = self.pool.get('ir.module.module.dependency')
-        # TODO: Replace the following loop with a single SQL query to make it much faster!
-        for mod in ir_module.browse(cr, uid, ids):
-            depends_mod_ids = mod_dep_obj.search(cr, uid, [('module_id', '=', mod.id)])
-            for dep_mod in mod_dep_obj.browse(cr, uid, depends_mod_ids):
-                if dep_mod.state in ('unknown','uninstalled'):
-                    unmet_packages.append(dep_mod.name)
-        if unmet_packages:
-            raise osv.except_osv(_('Unmet dependency !'), _('Following modules are not installed or unknown: %s') % ('\n\n' + '\n'.join(unmet_packages)))
-        ir_module.download(cr, uid, ids, context=context)
+        if ids:
+            cr.execute("""SELECT d.name FROM ir_module_module m
+                                        JOIN ir_module_module_dependency d ON (m.id = d.module_id)
+                                        LEFT JOIN ir_module_module m2 ON (d.name = m2.name)
+                          WHERE m.id in %s and (m2.state IS NULL or m2.state IN %s)""",
+                      (tuple(ids), ('uninstalled',))) 
+            unmet_packages = [x[0] for x in cr.fetchall()]
+            if unmet_packages:
+                raise osv.except_osv(_('Unmet dependency !'),
+                                     _('Following modules are not installed or unknown: %s') % ('\n\n' + '\n'.join(unmet_packages)))
 
-        # uninstall: double-check preconditions
-        # TODO: check all dependent modules are uninstalled
-        # XXX mod_ids_to_uninstall = ir_module.search(cr, uid, [('state', '=', 'to remove')])
+            ir_module.download(cr, uid, ids, context=context)
+            cr.commit() # save before re-creating cursor below 
 
-        cr.commit() # persist changes before reopening a cursor
         pooler.restart_pool(cr.dbname, update_module=True)
 
         ir_model_data = self.pool.get('ir.model.data')
-        _, res_id = ir_model_data.get_object_reference(cr, uid, 'base', 'view_base_module_upgrade_install')
+        __, res_id = ir_model_data.get_object_reference(cr, uid, 'base', 'view_base_module_upgrade_install')
         return {
                 'view_type': 'form',
                 'view_mode': 'form',

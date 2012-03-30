@@ -677,8 +677,12 @@ class module_dependency(osv.osv):
         return result
 
     _columns = {
+        # The dependency name
         'name': fields.char('Name',  size=128, select=True),
+
+        # The module that depends on it
         'module_id': fields.many2one('ir.module.module', 'Module', select=True, ondelete='cascade'),
+
         'state': fields.function(_state, type='selection', selection=[
             ('uninstallable','Uninstallable'),
             ('uninstalled','Not Installed'),
