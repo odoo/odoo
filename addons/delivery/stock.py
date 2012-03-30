@@ -84,7 +84,7 @@ class stock_picking(osv.osv):
                 for inv_line in invoice.invoice_line):
             return None
         grid_id = carrier_obj.grid_get(cr, uid, [picking.carrier_id.id],
-                picking.address_id.id, context=context)
+                picking.partner_id.id, context=context)
         if not grid_id:
             raise osv.except_osv(_('Warning'),
                     _('The carrier %s (id: %d) has no delivery grid!') \
@@ -99,7 +99,7 @@ class stock_picking(osv.osv):
                     .property_account_income_categ.id
 
         taxes = picking.carrier_id.product_id.taxes_id
-        partner = picking.address_id or False
+        partner = picking.partner_id or False
         if partner:
             account_id = self.pool.get('account.fiscal.position').map_account(cr, uid, partner.property_account_position, account_id)
             taxes_ids = self.pool.get('account.fiscal.position').map_tax(cr, uid, partner.property_account_position, taxes)
