@@ -365,6 +365,10 @@ class module(osv.osv):
         return True
 
     def module_uninstall(self, cr, uid, ids, context=None):
+        """Perform the various steps required to uninstall a module completely
+        including the deletion of all database structures created by the module:
+        tables, columns, constraints, etc."""
+
         # uninstall must be done respecting the reverse-dependency order
         ir_model_data = self.pool.get('ir.model.data')
         modules_to_remove = [m.name for m in self.browse(cr, uid, ids, context)]
@@ -372,8 +376,6 @@ class module(osv.osv):
         ir_model_data._pre_process_unlink(cr, uid, data_ids, context)
         ir_model_data.unlink(cr, uid, data_ids, context)
         self.write(cr, uid, ids, {'state': 'uninstalled'})
-
-        # should we call process_end instead of loading, or both ?
         return True
 
     def downstream_dependencies(self, cr, uid, ids, known_dep_ids=None,

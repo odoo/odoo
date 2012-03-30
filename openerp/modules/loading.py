@@ -40,6 +40,7 @@ import openerp.release as release
 import openerp.tools as tools
 import openerp.tools.assertion_report as assertion_report
 
+from openerp import SUPERUSER_ID
 from openerp.tools.translate import _
 from openerp.modules.module import initialize_sys_path, \
     load_openerp_module, init_module_models
@@ -161,7 +162,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
         modobj = pool.get('ir.module.module')
 
         if perform_checks:
-            modobj.check(cr, 1, [module_id])
+            modobj.check(cr, SUPERUSER_ID, [module_id])
 
         idref = {}
 
@@ -172,7 +173,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
         if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
             if package.state=='to upgrade':
                 # upgrading the module information
-                modobj.write(cr, 1, [module_id], modobj.get_values_from_terp(package.data))
+                modobj.write(cr, SUPERUSER_ID, [module_id], modobj.get_values_from_terp(package.data))
             load_init_xml(module_name, idref, mode)
             load_update_xml(module_name, idref, mode)
             load_data(module_name, idref, mode)
@@ -201,9 +202,9 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
 
             ver = release.major_version + '.' + package.data['version']
             # Set new modules and dependencies
-            modobj.write(cr, 1, [module_id], {'state': 'installed', 'latest_version': ver})
+            modobj.write(cr, SUPERUSER_ID, [module_id], {'state': 'installed', 'latest_version': ver})
             # Update translations for all installed languages
-            modobj.update_translations(cr, 1, [module_id], None)
+            modobj.update_translations(cr, SUPERUSER_ID, [module_id], None)
 
             package.state = 'installed'
             for kind in ('init', 'demo', 'update'):
@@ -304,15 +305,15 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
             mods = [k for k in tools.config['init'] if tools.config['init'][k]]
             if mods:
-                ids = modobj.search(cr, 1, ['&', ('state', '=', 'uninstalled'), ('name', 'in', mods)])
+                ids = modobj.search(cr, SUPERUSER_ID, ['&', ('state', '=', 'uninstalled'), ('name', 'in', mods)])
                 if ids:
-                    modobj.button_install(cr, 1, ids)
+                    modobj.button_install(cr, SUPERUSER_ID, ids)
 
             mods = [k for k in tools.config['update'] if tools.config['update'][k]]
             if mods:
-                ids = modobj.search(cr, 1, ['&', ('state', '=', 'installed'), ('name', 'in', mods)])
+                ids = modobj.search(cr, SUPERUSER_ID, ['&', ('state', '=', 'installed'), ('name', 'in', mods)])
                 if ids:
-                    modobj.button_upgrade(cr, 1, ids)
+                    modobj.button_upgrade(cr, SUPERUSER_ID, ids)
 
             cr.execute("update ir_module_module set state=%s where name=%s", ('installed', 'base'))
 
@@ -322,7 +323,11 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         #            partially installed modules (i.e. installed/to upgrade), to
         #            offer a consistent system to the second part: installing
         #            newly selected modules.
-        states_to_load = ['installed', 'to upgrade']
+        #            We include the modules 'to remove' in the first step, because
+        #            they are part of the "currently installed" modules. They will
+        #            be dropped in STEP 6 later, before restarting the loading
+        #            process.
+        states_to_load = ['installed', 'to upgrade', 'to remove']
         processed = load_marked_modules(cr, graph, states_to_load, force, status, report, loaded_modules)
         processed_modules.extend(processed)
         if update_module:
@@ -333,9 +338,9 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         # load custom models
         cr.execute('select model from ir_model where state=%s', ('manual',))
         for model in cr.dictfetchall():
-            pool.get('ir.model').instanciate(cr, 1, model['model'], {})
+            pool.get('ir.model').instanciate(cr, SUPERUSER_ID, model['model'], {})
 
-        # STEP 4: Finish and cleanup
+        # STEP 4: Finish and cleanup installations
         if processed_modules:
             cr.execute("""select model,name from ir_model where id NOT IN (select distinct model_id from ir_model_access)""")
             for (model, name) in cr.fetchall():
@@ -360,53 +365,46 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                     _logger.warning("Model %s is declared but cannot be loaded! (Perhaps a module was partially removed or renamed)", model)
 
             # Cleanup orphan records
-            pool.get('ir.model.data')._process_end(cr, 1, processed_modules)
+            pool.get('ir.model.data')._process_end(cr, SUPERUSER_ID, processed_modules)
 
         for kind in ('init', 'demo', 'update'):
             tools.config[kind] = {}
 
         cr.commit()
-#        if update_module:
+
+        # STEP 5: Cleanup menus 
+        # Remove menu items that are not referenced by any of other
+        # (child) menu item, ir_values, or ir_model_data.
+        # TODO: This code could be a method of ir_ui_menu. Remove menu without actions of children
+        if update_module:
+            while True:
+                cr.execute('''delete from
+                        ir_ui_menu
+                    where
+                        (id not IN (select parent_id from ir_ui_menu where parent_id is not null))
+                    and
+                        (id not IN (select res_id from ir_values where model='ir.ui.menu'))
+                    and
+                        (id not IN (select res_id from ir_model_data where model='ir.ui.menu'))''')
+                cr.commit()
+                if not cr.rowcount:
+                    break
+                else:
+                    _logger.info('removed %d unused menus', cr.rowcount)
+
+        # STEP 6: Uninstall modules to remove
+        if update_module:
             # Remove records referenced from ir_model_data for modules to be
             # removed (and removed the references from ir_model_data).
-            #cr.execute("select id,name from ir_module_module where state=%s", ('to remove',))
-            #remove_modules = map(lambda x: x['name'], cr.dictfetchall())
-            # Cleanup orphan records
-            #pool.get('ir.model.data')._process_end(cr, 1, remove_modules, noupdate=None)
-#            for mod_id, mod_name in cr.fetchall():
-#                cr.execute('select model,res_id from ir_model_data where noupdate=%s and module=%s order by id desc', (False, mod_name,))
-#                for rmod, rid in cr.fetchall():
-#                    uid = 1
-#                    rmod_module= pool.get(rmod)
-#                    if rmod_module:
-#                        rmod_module.unlink(cr, uid, [rid])
-#                    else:
-#                        _logger.error('Could not locate %s to remove res=%d' % (rmod,rid))
-#                cr.execute('delete from ir_model_data where  module=%s', (mod_name,))
-#                cr.commit()
-
-            # Remove menu items that are not referenced by any of other
-            # (child) menu item, ir_values, or ir_model_data.
-            # This code could be a method of ir_ui_menu.
-            # TODO: remove menu without actions of children
-#            while True:
-#                cr.execute('''delete from
-#                        ir_ui_menu
-#                    where
-#                        (id not IN (select parent_id from ir_ui_menu where parent_id is not null))
-#                    and
-#                        (id not IN (select res_id from ir_values where model='ir.ui.menu'))
-#                    and
-#                        (id not IN (select res_id from ir_model_data where model='ir.ui.menu'))''')
-#                cr.commit()
-#                if not cr.rowcount:
-#                    break
-#                else:
-#                    _logger.info('removed %d unused menus', cr.rowcount)
-
-            # Pretend that modules to be removed are actually uninstalled.
-            #cr.execute("update ir_module_module set state=%s where state=%s", ('uninstalled', 'to remove',))
-            #cr.commit()
+            cr.execute("SELECT id FROM ir_module_module WHERE state=%s", ('to remove',))
+            mod_ids_to_remove = [x[0] for x in cr.fetchall()]
+            if mod_ids_to_remove:
+                pool.get('ir.module.module').module_uninstall(cr, SUPERUSER_ID, mod_ids_to_remove)
+                # Recursive reload, should only happen once, because there should be no
+                # modules to remove next time
+                cr.commit()
+                _logger.info('Reloading registry once more after uninstalling modules')
+                return pooler.restart_pool(cr.dbname, force_demo, status, update_module)
 
         if report.failures:
             _logger.error('At least one test failed when loading the modules.')

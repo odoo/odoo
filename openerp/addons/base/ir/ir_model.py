@@ -161,7 +161,11 @@ class ir_model(osv.osv):
 
         self._drop_table(cr, user, ids, context)
         res = super(ir_model, self).unlink(cr, user, ids, context)
-        pooler.restart_pool(cr.dbname)
+        if not context.get(MODULE_UNINSTALL_FLAG):
+            # only reload pool for normal unlink. For module uninstall the
+            # reload is done independently in openerp.modules.loading
+            pooler.restart_pool(cr.dbname)
+
         return res
 
     def write(self, cr, user, ids, vals, context=None):
@@ -832,6 +836,7 @@ class ir_model_data(osv.osv):
         context = dict(context or {})
         context[MODULE_UNINSTALL_FLAG] = True # enable model/field deletion
 
+        ids_set = set(ids)
         wkf_todo = []
         to_unlink = []
         to_drop_table = []
@@ -867,8 +872,11 @@ class ir_model_data(osv.osv):
                     _logger.info('Drop CONSTRAINT %s@%s', name[11:], model)
                 continue
 
-            to_unlink.append((model, res_id))
-            if model=='workflow.activity':
+            pair_to_unlink = (model, res_id)
+            if pair_to_unlink not in to_unlink:
+                to_unlink.append(pair_to_unlink)
+
+            if model == 'workflow.activity':
                 cr.execute('select res_type,res_id from wkf_instance where id IN (select inst_id from wkf_workitem where act_id=%s)', (res_id,))
                 wkf_todo.extend(cr.fetchall())
                 cr.execute("update wkf_transition set condition='True', group_id=NULL, signal=NULL,act_to=act_from,act_from=%s where act_to=%s", (res_id,res_id))
@@ -888,13 +896,13 @@ class ir_model_data(osv.osv):
         for (model, res_id) in to_unlink:
             if model in ('ir.model','ir.model.fields', 'ir.model.data'):
                 continue
-            model_ids = self.search(cr, uid, [('model', '=', model),('res_id', '=', res_id)])
-            if len(model_ids) > 1:
+            external_ids = self.search(cr, uid, [('model', '=', model),('res_id', '=', res_id)])
+            if (set(external_ids)-ids_set):
                 # if other modules have defined this record, we do not delete it
                 continue
             _logger.info('Deleting %s@%s', res_id, model)
             try:
-                self.pool.get(model).unlink(cr, uid, res_id, context=context)
+                self.pool.get(model).unlink(cr, uid, [res_id], context=context)
             except:
                 _logger.info('Unable to delete %s@%s', res_id, model, exc_info=True)
             cr.commit()
@@ -902,18 +910,18 @@ class ir_model_data(osv.osv):
         for (model, res_id) in to_unlink:
             if model not in ('ir.model.fields',):
                 continue
-            model_ids = self.search(cr, uid, [('model', '=', model),('res_id', '=', res_id)])
-            if len(model_ids) > 1:
+            external_ids = self.search(cr, uid, [('model', '=', model),('res_id', '=', res_id)])
+            if (set(external_ids)-ids_set):
                 # if other modules have defined this record, we do not delete it
                 continue
             _logger.info('Deleting %s@%s', res_id, model)
-            self.pool.get(model).unlink(cr, uid, res_id, context=context)
+            self.pool.get(model).unlink(cr, uid, [res_id], context=context)
 
         for (model, res_id) in to_unlink:
             if model != 'ir.model':
                 continue
-            model_ids = self.search(cr, uid, [('model', '=', model),('res_id', '=', res_id)])
-            if len(model_ids) > 1:
+            external_ids = self.search(cr, uid, [('model', '=', model),('res_id', '=', res_id)])
+            if (set(external_ids)-ids_set):
                 # if other modules have defined this record, we do not delete it
                 continue
             _logger.info('Deleting %s@%s', res_id, model)
