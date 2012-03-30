@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#
+#    OpenERP, Open Source Business Applications
+#    Copyright (C) 2004-2012 OpenERP S.A. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,12 +15,11 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 from openerp.osv import fields, osv
-from openerp.tools import graph
 from openerp.tools.translate import _
 from openerp import netsvc
 
@@ -28,7 +27,6 @@ class workflow(osv.osv):
     _name = "workflow"
     _table = "wkf"
     _order = "name"
-  #  _log_access = False
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'osv': fields.char('Resource Object', size=64, required=True,select=True),
@@ -47,64 +45,19 @@ class workflow(osv.osv):
         return super(workflow, self).write(cr, user, ids, vals, context=context)
 
     def get_active_workitems(self, cr, uid, res, res_id, context=None):
-        
         cr.execute('select * from wkf where osv=%s limit 1',(res,))
         wkfinfo = cr.dictfetchone()
         workitems = []
-        
         if wkfinfo:
             cr.execute('SELECT id FROM wkf_instance \
                             WHERE res_id=%s AND wkf_id=%s \
                             ORDER BY state LIMIT 1',
                             (res_id, wkfinfo['id']))
             inst_id = cr.fetchone()
-         
+
             cr.execute('select act_id,count(*) from wkf_workitem where inst_id=%s group by act_id', (inst_id,))
-            workitems = dict(cr.fetchall())        
-         
+            workitems = dict(cr.fetchall())
         return {'wkf': wkfinfo, 'workitems':  workitems}
-
-
-    #
-    # scale =  (vertical-distance, horizontal-distance, min-node-width(optional), min-node-height(optional), margin(default=20))
-    #
-
-
-#    def graph_get(self, cr, uid, id, scale, context={}):
-#
-#        nodes= []
-#        nodes_name = []
-#        transitions = []
-#        start = []
-#        tres = {}
-#        no_ancester = []
-#        workflow = self.browse(cr, uid, id, context)
-#        for a in workflow.activities:
-#            nodes_name.append((a.id,a.name))
-#            nodes.append(a.id)
-#            if a.flow_start:
-#                start.append(a.id)
-#            else:
-#                if not a.in_transitions:
-#                    no_ancester.append(a.id)
-#
-#            for t in a.out_transitions:
-#                transitions.append((a.id, t.act_to.id))
-#                tres[t.id] = (a.id, t.act_to.id)
-#
-#
-#        g  = graph(nodes, transitions, no_ancester)
-#        g.process(start)
-#        g.scale(*scale)
-#        result = g.result_get()
-#        results = {}
-#
-#        for node in nodes_name:
-#            results[str(node[0])] = result[node[0]]
-#            results[str(node[0])]['name'] = node[1]
-#
-#        return {'nodes': results, 'transitions': tres}
-
 
     def create(self, cr, user, vals, context=None):
         if not context:
@@ -112,13 +65,13 @@ class workflow(osv.osv):
         wf_service = netsvc.LocalService("workflow")
         wf_service.clear_cache(cr, user)
         return super(workflow, self).create(cr, user, vals, context=context)
+
 workflow()
 
 class wkf_activity(osv.osv):
     _name = "workflow.activity"
     _table = "wkf_activity"
     _order = "name"
-   # _log_access = False
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'wkf_id': fields.many2one('workflow', 'Workflow', required=True, select=True, ondelete='cascade'),
@@ -152,17 +105,16 @@ wkf_activity()
 class wkf_transition(osv.osv):
     _table = "wkf_transition"
     _name = "workflow.transition"
-   # _log_access = False
     _rec_name = 'signal'
     _columns = {
         'trigger_model': fields.char('Trigger Object', size=128),
         'trigger_expr_id': fields.char('Trigger Expression', size=128),
-        'signal': fields.char('Signal (button Name)', size=64, 
+        'signal': fields.char('Signal (button Name)', size=64,
                               help="When the operation of transition comes from a button pressed in the client form, "\
                               "signal tests the name of the pressed button. If signal is NULL, no button is necessary to validate this transition."),
-        'group_id': fields.many2one('res.groups', 'Group Required', 
+        'group_id': fields.many2one('res.groups', 'Group Required',
                                    help="The group that a user must have to be authorized to validate this transition."),
-        'condition': fields.char('Condition', required=True, size=128, 
+        'condition': fields.char('Condition', required=True, size=128,
                                  help="Expression to be satisfied if we want the transition done."),
         'act_from': fields.many2one('workflow.activity', 'Source Activity', required=True, select=True, ondelete='cascade',
                                     help="Source activity. When this activity is over, the condition is tested to determine if we can start the ACT_TO activity."),
