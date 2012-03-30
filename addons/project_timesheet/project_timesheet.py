@@ -29,23 +29,29 @@ from tools.translate import _
 class project_project(osv.osv):
     _inherit = 'project.project'
 
-    def _amt_to_invoiced(self, cr, uid, ids,field_name, arg, context=None):
+    def _amt_to_invoice(self, cr, uid, ids,field_name, arg, context=None):
         res = {}
-        task_pool=self.pool.get('project.task')
-        for id in ids:
-            task_ids = task_pool.search(cr, uid, [('project_id', '=', id)])
-            total = 0.0
-            project_record = self.browse(cr,uid,id)
-            acc_model = self.pool.get("account.analytic.line")
-            acc_id = acc_model.search(cr, uid, [('account_id', '=', project_record.analytic_account_id.id),('to_invoice', '=', 1),('invoice_id', '=', False)])
-            if acc_id:
-                for record in acc_model.browse(cr,uid,acc_id):
-                    total += record.amount
-            res[id]= total
+        aal_pool = self.pool.get("account.analytic.line")
+        for project in self.browse(cr,uid,ids,context=context):
+            line_ids = aal_pool.search(cr, uid, [('account_id','=',project.analytic_account_id.id),('to_invoice','=',1),('invoice_id','=',False)])
+            res[project.id] = {
+                    'amt_to_invoice': 0.0,
+                    'hrs_to_invoice': 0.0,
+                }
+            if line_ids:
+                amt_to_invoice,hrs_to_invoice = 0.0,0.0
+                for line in aal_pool.browse(cr,uid,line_ids,context=context):
+                    amt_to_invoice += line.amount
+                    hrs_to_invoice += line.unit_amount
+                res[project.id]['amt_to_invoice'] = (amt_to_invoice)*-1
+                res[project.id]['hrs_to_invoice'] = hrs_to_invoice
+            
         return res
+
     _columns = {
         'timesheets' : fields.boolean('Timesheets',help = "If you check this field timesheets appears in kanban view"),
-        'to_amt_invoice': fields.function(_amt_to_invoiced,string="Open Tasks")
+        'amt_to_invoice': fields.function(_amt_to_invoice,string="Amount to Invoice",multi="sums"),
+        'hrs_to_invoice': fields.function(_amt_to_invoice,string="Hours to Invoice",multi="sums")
     }
     _defaults = {
         'timesheets' : True,
@@ -72,19 +78,14 @@ class project_project(osv.osv):
             context = {}
         value = {}
         data_obj = self.pool.get('ir.model.data')
-        if context.get('btn'):
-            context.update({
-                'search_default_to_invoice':1,
-            })
+
         for project in self.browse(cr, uid, ids, context=context):
             # Get Timesheet views
             tree_view = data_obj.get_object_reference(cr, uid, 'project_timesheet', 'view_account_analytic_line_tree_inherit_account_id')
             form_view = data_obj.get_object_reference(cr, uid, 'project_timesheet', 'view_account_analytic_line_form_inherit_account_id')
             search_view = data_obj.get_object_reference(cr, uid, 'project_timesheet', 'view_account_analytic_line_search_account_inherit')
             context.update({
-                #'search_default_user_id': uid,
                 'search_default_account_id':project.analytic_account_id.id,
-                #'search_default_open':1,
             })
             value = {
                 'name': _('Bill Tasks Works'),
@@ -93,8 +94,6 @@ class project_project(osv.osv):
                 'view_mode': 'form,tree',
                 'res_model': 'account.analytic.line',
                 'view_id': False,
-            #    'domain':[('project_id','=', context.get('active_id',False))],
-                #'context': context,
                 'views': [(tree_view and tree_view[1] or False, 'tree'),(form_view and form_view[1] or False, 'form')],
                 'type': 'ir.actions.act_window',
                 'search_view_id': search_view and search_view[1] or False,

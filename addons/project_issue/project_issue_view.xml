@@ -388,11 +388,12 @@
             <field name="arch" type="xml">
                 <field name="task" position="after">
                     <field name="issues"/>
+                    <field name="total_issues" invisible="1"/>
                 </field>
                 <xpath expr="//t[@t-name='tasks']" position="after">
                     <t t-name="issues">
                         <ul class="oe_kanban_tooltip">
-                            <li><b>Issues:</b> <field name="open_issues"/></li>
+                            <li><b>Issues:</b> <field name="total_issues"/></li>
                         </ul>
                    </t>
                 </xpath>
