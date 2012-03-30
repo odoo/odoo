@@ -1339,14 +1339,12 @@ openerp.point_of_sale = function(db) {
                         } else if (barcode.substring(0,2) in {'21':'','23':'','27':'','29':'','25':''}) {
                             // WEIGHT barcode
                             weight = Number(barcode.substring(7,12))/1000;
-                                console.log(weight);
                             barcode = barcode.substring(0,7);
                             var scannedPackaging = _.detect(allPackages, function(pack) { return pack.ean !== undefined && pack.ean.substring(0,7) === barcode;});
                             if (scannedPackaging !== undefined) {
-                                var scannedProductModel = _.detect(allProducts, function(pc) { return pc.ean13 === scannedPackaging.product_id[0];});
-                                console.log(scannedProductModel.price);
-                                scannedProductModel.price *= weight;
-                                console.log(weight);
+                                var scannedProductModel = _.detect(allProducts, function(pc) { return pc.id === scannedPackaging.product_id[0];});
+                                scannedProductModel.list_price *= weight;
+                                scannedProductModel.name += ' - ' + weight + ' Kg.'
                             }
                         } else {
                             // UNIT barcode
