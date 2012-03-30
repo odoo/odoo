@@ -34,7 +34,7 @@
                         <field name="parent_id" />
                         </group>
                         <group colspan="2" col="1">
-                          <field name="photo" widget='image' nolabel="1"/>
+                          <field name="photo" widget='image' nolabel="1" on_change="onchange_photo(photo)"/>
                         </group>
                     </group>
                     <notebook colspan="6">
@@ -131,7 +131,6 @@
         <field name="model">hr.employee</field>
         <field name="type">kanban</field>
         <field name="arch" type="xml">
-
             <kanban>
                 <templates>
                     <t t-name="kanban-box">
