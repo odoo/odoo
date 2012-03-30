@@ -324,7 +324,7 @@ class audittrail_objects_proxy(object_proxy):
                     "object_id": model.id,
                     "user_id": uid_orig,
                     "res_id": resource['id'],
-                    "name": resource['name'],
+                    "name": resource.get('name', ''),
             }
             if 'id' in resource:
                 del resource['id']
@@ -389,7 +389,7 @@ class audittrail_objects_proxy(object_proxy):
                     "object_id": model.id,
                     "user_id": uid_orig,
                     "res_id": res_id,
-                    "name" : v['name'],
+                    "name" : v.get('name', ''),
                 }
                 log_id = log_pool.create(cr, uid, vals)
                 lines = []
@@ -444,7 +444,7 @@ class audittrail_objects_proxy(object_proxy):
                         "object_id": model.id,
                         "user_id": uid_orig,
                         "res_id": resource_id,
-                        "name": resource['name'],
+                        "name": resource.get('name', ''),
                     }
 
 
