@@ -198,7 +198,7 @@
                                         <td class="td_name">
                                             <div>
                                                 <h4 class="oe_project_font1">
-                                                    <a type="edit"><div class="oe_project_font"><t t-esc="record.name.value.substr(0,28)"/><t t-if="record.name.value.length > 28">...</t></div></a>
+                                                    <a type="edit"><div class="oe_project_font"><t t-esc="record.name.value.substr(0,35)"/><t t-if="record.name.value.length > 35">...</t></div></a>
                                                 </h4>
                                                 <table >
                                                     <tr class ="task">
@@ -218,14 +218,14 @@
                                                 </table>
                                             </div>
                                         </td>
-                                        <td class="td_deadline">
+                                        <!--<td class="td_deadline">-->
                                             <!--<t t-if="record.date.raw_value">-->
                                             <!--    <div class="sequence">-->
                                             <!--        <kbd class="user">Deadline</kbd>-->
                                             <!--        <div class="manager"><b><field name="date"/></b></div>-->
                                             <!--    </div>-->
                                             <!--</t>-->
-                                        </td>
+                                        <!--</td>-->
                                     </tr>
                                 </table>
                                 <table class="project_table">
