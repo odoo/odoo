@@ -433,7 +433,7 @@ class purchase_order(osv.osv):
             'origin': order.name + ((order.origin and (':' + order.origin)) or ''),
             'date': order.date_order,
             'type': 'in',
-            'force_assign_in': True,
+            'force_assign_picking': True,
             'address_id': order.dest_address_id.id or order.partner_address_id.id,
             'invoice_state': '2binvoiced' if order.invoice_method == 'picking' else 'none',
             'purchase_id': order.id,

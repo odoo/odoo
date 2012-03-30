@@ -90,7 +90,7 @@
     location_dest_id: location_delivery_counter
 -
  !record {model: stock.picking, id: incomming_shipment}:
-    force_assign_in: True
+    force_assign_picking: True
     type: in
     invoice_state: 2binvoiced
     address_id: base.res_partner_address_9
