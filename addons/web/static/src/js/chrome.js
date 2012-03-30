@@ -141,6 +141,11 @@ openerp.web.Dialog = openerp.web.OldWidget.extend(/** @lends openerp.web.Dialog#
     },
     on_resized: function() {
         //openerp.log("Dialog resized to %d x %d", this.$element.width(), this.$element.height());
+        var $dialog = this.$element.parent(".ui-dialog");
+        var btnpane_height = $dialog.find(".ui-dialog-buttonpane").height();
+        var content_height = ($dialog.height() - btnpane_height - 62) + "px";
+        
+        this.$element.css({ 'max-height':content_height, 'height':content_height});
     },
     stop: function () {
         // Destroy widget
