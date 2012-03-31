@@ -75,7 +75,7 @@ class ir_model(osv.osv):
     def _search_osv_memory(self, cr, uid, model, name, domain, context=None):
         if not domain:
             return []
-        _, operator, value = domain[0]
+        __, operator, value = domain[0]
         if operator not in ['=', '!=']:
             raise osv.except_osv(_('Invalid search criterions'), _('The osv_memory field can only be compared with = and != operator.'))
         value = bool(value) if operator == '=' else not bool(value)
@@ -452,7 +452,7 @@ class ir_model_fields(osv.osv):
             ctx = context.copy()
             ctx.update({'select': vals.get('select_level','0'),'update_custom_fields':True})
 
-            for _, patch_struct in models_patch.items():
+            for __, patch_struct in models_patch.items():
                 obj = patch_struct[0]
                 for col_name, col_prop, val in patch_struct[1]:
                     setattr(obj._columns[col_name], col_prop, val)
