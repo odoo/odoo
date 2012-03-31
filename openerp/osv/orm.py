@@ -70,6 +70,11 @@ _schema = logging.getLogger(__name__ + '.schema')
 # List of etree._Element subclasses that we choose to ignore when parsing XML.
 from openerp.tools import SKIPPED_ELEMENT_TYPES
 
+# Prefixes for external IDs of schema elements
+EXT_ID_PREFIX_FK = "_foreign_key_"
+EXT_ID_PREFIX_M2M_TABLE = "_m2m_rel_table_"
+EXT_ID_PREFIX_CONSTRAINT = "_constraint_"
+
 regex_order = re.compile('^(([a-z0-9_]+|"[a-z0-9_]+")( *desc| *asc)?( *, *|))+$', re.I)
 regex_object_name = re.compile(r'^[a-z0-9_.]+$')
 
@@ -100,10 +105,10 @@ def transfer_node_to_modifiers(node, modifiers, context=None, in_tree_view=False
 
     if node.get('states'):
         if 'invisible' in modifiers and isinstance(modifiers['invisible'], list):
-             # TODO combine with AND or OR, use implicit AND for now.
-             modifiers['invisible'].append(('state', 'not in', node.get('states').split(',')))
+            # TODO combine with AND or OR, use implicit AND for now.
+            modifiers['invisible'].append(('state', 'not in', node.get('states').split(',')))
         else:
-             modifiers['invisible'] = [('state', 'not in', node.get('states').split(','))]
+            modifiers['invisible'] = [('state', 'not in', node.get('states').split(','))]
 
     for a in ('invisible', 'readonly', 'required'):
         if node.get(a):
@@ -2713,6 +2718,14 @@ class BaseModel(object):
                 _schema.debug("Table '%s': column '%s': dropped NOT NULL constraint",
                               self._table, column['attname'])
 
+    # quick creation of ir.model.data entry to make uninstall of schema elements easier
+    def _make_ext_id(self, cr, ext_id):
+        cr.execute('SELECT 1 FROM ir_model_data WHERE name=%s AND module=%s', (ext_id, self._module))
+        if not cr.rowcount:
+            cr.execute("""INSERT INTO ir_model_data (name,date_init,date_update,module,model)
+                                 VALUES (%s, now() AT TIME ZONE 'UTC', now() AT TIME ZONE 'UTC', %s, %s)""",
+                       (ext_id, self._module, self._name))
+
     # checked version: for direct m2o starting from `self`
     def _m2o_add_foreign_key_checked(self, source_field, dest_model, ondelete):
         assert self.is_transient() or not dest_model.is_transient(), \
@@ -3052,12 +3065,7 @@ class BaseModel(object):
         """ Create the foreign keys recorded by _auto_init. """
         for t, k, r, d in self._foreign_keys:
             cr.execute('ALTER TABLE "%s" ADD FOREIGN KEY ("%s") REFERENCES "%s" ON DELETE %s' % (t, k, r, d))
-            name_id = "foreign_key_"+t+"_"+k+"_fkey"
-            cr.execute('select * from ir_model_data where name=%s and module=%s', (name_id, self._module))
-            if not cr.rowcount:
-                cr.execute("INSERT INTO ir_model_data (name,date_init,date_update,module, model) VALUES (%s, now(), now(), %s, %s)", \
-                    (name_id, self._module, t)
-                )
+            self._make_ext_id(cr,  "%s%s_%s_fkey" % (EXT_ID_PREFIX_FK, t, k))
         cr.commit()
         del self._foreign_keys
 
@@ -3146,6 +3154,7 @@ class BaseModel(object):
 
     def _m2m_raise_or_create_relation(self, cr, f):
         m2m_tbl, col1, col2 = f._sql_names(self)
+        self._make_ext_id(cr,  EXT_ID_PREFIX_M2M_TABLE + m2m_tbl)
         cr.execute("SELECT relname FROM pg_class WHERE relkind IN ('r','v') AND relname=%s", (m2m_tbl,))
         if not cr.dictfetchall():
             if not self.pool.get(f._obj):
@@ -3153,14 +3162,6 @@ class BaseModel(object):
             dest_model = self.pool.get(f._obj)
             ref = dest_model._table
             cr.execute('CREATE TABLE "%s" ("%s" INTEGER NOT NULL, "%s" INTEGER NOT NULL, UNIQUE("%s","%s")) WITH OIDS' % (m2m_tbl, col1, col2, col1, col2))
-            #create many2many references
-            name_id = 'table_'+m2m_tbl
-            cr.execute('select * from ir_model_data where name=%s and module=%s', (name_id, self._module))
-            if not cr.rowcount:
-                cr.execute("INSERT INTO ir_model_data (name,date_init,date_update,module, model) VALUES (%s, now(), now(), %s, %s)", \
-                    (name_id, self._module, self._name)
-                )
-         #   self.pool.get('ir.model.data')._update(cr, 1, self._name,  self._module, {}, 'table_'+m2m_tbl, store=True, noupdate=False, mode='init', res_id=False, context=None)
             # create foreign key references with ondelete=cascade, unless the targets are SQL views
             cr.execute("SELECT relkind FROM pg_class WHERE relkind IN ('v') AND relname=%s", (ref,))
             if not cr.fetchall():
@@ -3189,6 +3190,7 @@ class BaseModel(object):
         for (key, con, _) in self._sql_constraints:
             conname = '%s_%s' % (self._table, key)
 
+            self._make_ext_id(cr, EXT_ID_PREFIX_CONSTRAINT + conname)
             cr.execute("SELECT conname, pg_catalog.pg_get_constraintdef(oid, true) as condef FROM pg_constraint where conname=%s", (conname,))
             existing_constraints = cr.dictfetchall()
             sql_actions = {
@@ -3229,12 +3231,6 @@ class BaseModel(object):
                     cr.execute(sql_action['query'])
                     cr.commit()
                     _schema.debug(sql_action['msg_ok'])
-                    name_id = 'constraint_'+ conname
-                    cr.execute('select * from ir_model_data where name=%s and module=%s', (name_id, module))
-                    if  not cr.rowcount:                    
-                        cr.execute("INSERT INTO ir_model_data (name,date_init,date_update,module, model) VALUES (%s, now(), now(), %s, %s)", \
-                            (name_id, module, self._name)
-                        )
                 except:
                     _schema.warning(sql_action['msg_err'])
                     cr.rollback()

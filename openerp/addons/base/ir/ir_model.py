@@ -26,10 +26,11 @@ import types
 
 from openerp.osv import fields,osv
 from openerp import netsvc, pooler, tools
-from openerp.osv.orm import except_orm, browse_record
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools import config
 from openerp.tools.translate import _
+from openerp.osv.orm import except_orm, browse_record, EXT_ID_PREFIX_FK, \
+                            EXT_ID_PREFIX_M2M_TABLE, EXT_ID_PREFIX_CONSTRAINT
 
 _logger = logging.getLogger(__name__)
 
@@ -830,6 +831,16 @@ class ir_model_data(osv.osv):
         return True
 
     def _module_data_uninstall(self, cr, uid, ids, context=None):
+        """Deletes all the records referenced by the ir.model.data entries
+        ``ids`` along with their corresponding database backed (including
+        dropping tables, columns, FKs, etc, as long as there is no other
+        ir.model.data entry holding a reference to them (which indicates that
+        they are still owned by another module). 
+        Attempts to perform the deletion in an appropriate order to maximize
+        the chance of gracefully deleting all records.
+        This step is performed as part of the full uninstallation of a module.
+        """ 
+
         if uid != 1 and not self.pool.get('ir.model.access').check_groups(cr, uid, "base.group_system"):
             raise except_orm(_('Permission Denied'), (_('Administrator access is required to uninstall a module')))
 
@@ -846,30 +857,42 @@ class ir_model_data(osv.osv):
             model = data.model
             res_id = data.res_id
             model_obj = self.pool.get(model)
-            name = data.name
-            # FIXME: replace custom keys with constants
-            if str(name).startswith('foreign_key_'):
-                name = name[12:]
-                # test if FK exists
-                cr.execute('select conname from pg_constraint where contype=%s and conname=%s',('f', name),)
-                if cr.fetchall():
-                    cr.execute('ALTER TABLE "%s" DROP CONSTRAINT "%s"' % (model,name),)
-                    _logger.info('Drop FK CONSTRAINT %s@%s', name, model)
+            name = tools.ustr(data.name)
+
+            if name.startswith(EXT_ID_PREFIX_FK) or name.startswith(EXT_ID_PREFIX_M2M_TABLE)\
+                 or name.startswith(EXT_ID_PREFIX_CONSTRAINT):
+                # double-check we are really going to delete all the owners of this schema element
+                cr.execute("""SELECT id from ir_model_data where name = %s and res_id IS NULL""", (data.name,))
+                external_ids = [x[0] for x in cr.fetchall()]
+                if (set(external_ids)-ids_set):
+                    # as installed modules have defined this element we must not delete it!
+                    continue
+
+            if name.startswith(EXT_ID_PREFIX_FK):
+                name = name[len(EXT_ID_PREFIX_FK):]
+                # test if FK exists on this table (it could be on a related m2m table, in which case we ignore it)
+                cr.execute("""SELECT 1 from pg_constraint cs JOIN pg_class cl ON (cs.conrelid = cl.oid)
+                              WHERE cs.contype=%s and cs.conname=%s and cl.relname=%s""", ('f', name, model_obj._table))
+                if cr.fetchone():
+                    cr.execute('ALTER TABLE "%s" DROP CONSTRAINT "%s"' % (model_obj._table, name),)
+                    _logger.info('Dropped FK CONSTRAINT %s@%s', name, model)
                 continue
 
-            if str(name).startswith('table_'):
-                cr.execute("SELECT table_name FROM information_schema.tables WHERE table_name='%s'"%(name[6:]))
-                column_name = cr.fetchone()
-                if column_name:
-                    to_drop_table.append(name[6:])
+            if name.startswith(EXT_ID_PREFIX_M2M_TABLE):
+                name = name[len(EXT_ID_PREFIX_M2M_TABLE):]
+                cr.execute("SELECT 1 FROM information_schema.tables WHERE table_name=%s", (name,))
+                if cr.fetchone() and not name in to_drop_table:
+                    to_drop_table.append(name)
                 continue
 
-            if str(name).startswith('constraint_'):
+            if name.startswith(EXT_ID_PREFIX_CONSTRAINT):
+                name = name[len(EXT_ID_PREFIX_CONSTRAINT):]
                 # test if constraint exists
-                cr.execute('select conname from pg_constraint where contype=%s and conname=%s',('u', name),)
-                if cr.fetchall():
-                    cr.execute('ALTER TABLE "%s" DROP CONSTRAINT "%s"' % (model_obj._table,name[11:]),)
-                    _logger.info('Drop CONSTRAINT %s@%s', name[11:], model)
+                cr.execute("""SELECT 1 from pg_constraint cs JOIN pg_class cl ON (cs.conrelid = cl.oid)
+                              WHERE cs.contype=%s and cs.conname=%s and cl.relname=%s""", ('u', name, model_obj._table))
+                if cr.fetchone():
+                    cr.execute('ALTER TABLE "%s" DROP CONSTRAINT "%s"' % (model_obj._table, name),)
+                    _logger.info('Dropped CONSTRAINT %s@%s', name, model)
                 continue
 
             pair_to_unlink = (model, res_id)
@@ -877,21 +900,24 @@ class ir_model_data(osv.osv):
                 to_unlink.append(pair_to_unlink)
 
             if model == 'workflow.activity':
+                # Special treatment for workflow activities: temporarily revert their
+                # incoming transition and trigger an update to force all workflow items
+                # to move out before deleting them
                 cr.execute('select res_type,res_id from wkf_instance where id IN (select inst_id from wkf_workitem where act_id=%s)', (res_id,))
                 wkf_todo.extend(cr.fetchall())
                 cr.execute("update wkf_transition set condition='True', group_id=NULL, signal=NULL,act_to=act_from,act_from=%s where act_to=%s", (res_id,res_id))
 
+        wf_service = netsvc.LocalService("workflow")
         for model,res_id in wkf_todo:
-            wf_service = netsvc.LocalService("workflow")
             try:
                 wf_service.trg_write(uid, model, res_id, cr)
             except:
-                _logger.info('Unable to process workflow %s@%s', res_id, model)
+                _logger.info('Unable to force processing of workflow for item %s@%s in order to leave activity to be deleted', res_id, model)
 
-        # drop relation .table
-        for model in to_drop_table:
-            cr.execute('DROP TABLE %s CASCADE'% (model),)
-            _logger.info('Dropping table %s', model)
+        # drop m2m relation tables
+        for table in to_drop_table:
+            cr.execute('DROP TABLE %s CASCADE'% (table),)
+            _logger.info('Dropped table %s', table)
 
         for (model, res_id) in to_unlink:
             if model in ('ir.model','ir.model.fields', 'ir.model.data'):
@@ -938,13 +964,11 @@ class ir_model_data(osv.osv):
         """
         if not modules:
             return True
-        modules = list(modules)
-        module_in = ",".join(["%s"] * len(modules))
-        process_query = 'select id,name,model,res_id,module from ir_model_data where module IN (' + module_in + ')'
-        process_query+= ' and noupdate=%s'
         to_unlink = []
-        cr.execute(process_query, modules + [False])
-        for (id, name, model, res_id,module) in cr.fetchall():
+        cr.execute("""SELECT id,name,model,res_id,module FROM ir_model_data
+                      WHERE module IN %s AND res_id IS NOT NULL AND noupdate=%s""",
+                      (tuple(modules), False))
+        for (id, name, model, res_id, module) in cr.fetchall():
             if (module,name) not in self.loads:
                 to_unlink.append((model,res_id))
         if not config.get('import_partial'):
