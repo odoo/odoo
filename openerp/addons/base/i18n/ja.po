@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-server\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:44+0000\n"
-"PO-Revision-Date: 2012-03-30 02:15+0000\n"
+"PO-Revision-Date: 2012-03-31 01:32+0000\n"
 "Last-Translator: Akira Hiyama <Unknown>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-03-30 04:34+0000\n"
+"X-Launchpad-Export-Date: 2012-03-31 05:08+0000\n"
 "X-Generator: Launchpad (build 15032)\n"
 
 #. module: base
@@ -25,7 +25,7 @@ msgstr "セントヘレナ"
 #. module: base
 #: view:ir.actions.report.xml:0
 msgid "Other Configuration"
-msgstr "その他コンフィギュレーション"
+msgstr "その他の設定"
 
 #. module: base
 #: selection:ir.property,type:0
@@ -448,7 +448,7 @@ msgstr ""
 #. module: base
 #: view:ir.actions.todo:0
 msgid "Config Wizard Steps"
-msgstr "コンフィグウィザードステップ"
+msgstr "設定ウィザードステップ"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_ui_view_sc
@@ -586,7 +586,7 @@ msgstr "ここをチェックした場合、ユーザが同じ名前で２回目
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_layout
 msgid "Sales Orders Print Layout"
-msgstr "受注のプリントレイアウト"
+msgstr "受注オーダーのプリントレイアウト"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -1404,10 +1404,10 @@ msgid ""
 "    * Effective Date\n"
 msgstr ""
 "\n"
-"注文のための追加の日付情報を追加してください。\n"
+"受注オーダーのための追加の日付情報を追加してください。\n"
 "===================================================\n"
 "\n"
-"注文のために以下のような日付情報を加えることができます：\n"
+"受注オーダーのために以下のような日付情報を加えることができます：\n"
 " ・ 要求日\n"
 " ・ 確認日\n"
 " ・ 有効日\n"
@@ -1848,7 +1848,7 @@ msgstr ""
 " ・ デフォルトでは国のための知られている検査ルール、通常は簡単なチェックディジットを\n"
 "　　使って簡便なオフラインチェックが実行されます。これは簡単でいつでも利用できますが、\n"
 "　　割り当て済みの番号や正しくない値を許してしまいます。\n"
-" ・ 'VAT VIES Check' オプションが使用可能（ユーザの会社のコンフィギュレーションにある）な\n"
+" ・ 'VAT VIES Check' オプションが使用可能（ユーザの会社の設定にある）な\n"
 "　　時は、VAT番号はEU VIESデータベースに問い合わせて、その番号がEU会社として実際に割り当て\n"
 "　　られているかを検査します。これは単純なオフラインチェックに比較して多少時間がかり、\n"
 "　　インターネット接続も必要です。全ての時間に利用可能ではないため、サービスが利用可能でき\n"
@@ -1981,7 +1981,7 @@ msgstr "左括弧"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_mrp
 msgid "Create Tasks on SO"
-msgstr "タスク作成（受注）"
+msgstr "タスク作成（受注オーダー）"
 
 #. module: base
 #: field:ir.attachment,res_model:0
@@ -2293,18 +2293,15 @@ msgstr ""
 "このモジュールは部門を持つ大きな会社にとても役立ちます。\n"
 "\n"
 "以下のような異なる目的のためにジャーナルを使うことができます：\n"
-"\n"
-"    ・ 別部門の販売の分離\n"
+"    ・ 別部門の受注の分離\n"
 "    ・ 配達がトラックなのかUPSなのかの仕訳\n"
 "\n"
 "ジャーナルは責任を持ち、異なる状態に展開する：\n"
-"\n"
 "    ・ ドラフト、オープン、キャンセル、完了\n"
 "\n"
-"バッチ操作は一度に全ての販売の確認、有効化、請求書の梱包といった異なるジャーナルを処理できます。\n"
+"バッチ操作は一度に全ての受注の確認、有効化、請求書の梱包といった異なるジャーナルを処理できます。\n"
 "\n"
-"バッチ請求方法はパートナごとや受注ごとに構成することもできます。例：\n"
-"\n"
+"バッチ請求方法はパートナごとや受注オーダーごとに構成することもできます。例：\n"
 "    ・ 日々の送付\n"
 "    ・ 月次の送付など\n"
 "\n"
@@ -2584,6 +2581,15 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"リソース管理のためのモジュール\n"
+"===============================\n"
+"\n"
+"リソースはスケジュールすることのできるものを意味します（タスクの開発者や製造オーダーのワークセンタ）。\n"
+"このモジュールは全てのリソースのためにカレンダーに関連するリソースを管理します。\n"
+"また、全てのリソースに対する許可も管理します。\n"
+"\n"
+"    "
 
 #. module: base
 #: view:ir.rule:0
@@ -2681,10 +2687,10 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"分析的な流通と受注管理のための基本モジュール\n"
+"分析的な流通と受注オーダーを管理するための基本モジュール\n"
 "=================================================================\n"
 "\n"
-"このモジュールを使うことで、受注に対して分析アカウントを結びつけることができます。\n"
+"このモジュールを使うことで、受注オーダーに対して分析アカウントを結びつけることができます。\n"
 "    "
 
 #. module: base
@@ -3329,7 +3335,7 @@ msgid ""
 "separated list of valid field names (optionally followed by asc/desc for the "
 "direction)"
 msgstr ""
-"無効な注文が指定されました。正しい注文の仕様は正しい項目名によるカンマ区切りのリストです（オプションで asc / desc が続きます）。"
+"無効なオーダーが指定されました。正しいオーダーの仕様は正しい項目名によるカンマ区切りのリストです（オプションで asc / desc が続きます）。"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_module_module_dependency
@@ -3590,16 +3596,16 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"この基本モジュールは見積りと受注を管理します。\n"
+"この基本モジュールは見積りと受注オーダーを管理します。\n"
 "======================================================\n"
 "\n"
 "確認のワークフロー：\n"
 "-------------------------------\n"
-"    ・ 見積り -> 受注 -> 請求書\n"
+"    ・ 見積り -> 受注オーダー -> 請求書\n"
 "\n"
 "請求方法：\n"
 "------------------\n"
-"    ・ 注文時に請求（発送前または発送後）\n"
+"    ・ オーダー時に請求（発送前または発送後）\n"
 "    ・ 配達時に請求\n"
 "    ・ タイムシートによる請求\n"
 "    ・ 前請求\n"
@@ -3878,7 +3884,7 @@ msgstr ""
 "\n"
 "次のような機能があります：\n"
 "--------------------------------\n"
-"    ・ 請求書の全行の注文\n"
+"    ・ 請求書の全行のオーダー\n"
 "    ・ タイトル、コメント欄、小計の追加\n"
 "    ・ 罫線の描画、改ページ\n"
 "\n"
@@ -4661,15 +4667,15 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"仕入モジュールは仕入先から商品購入のために仕入注文を生成します。\n"
+"発注モジュールは仕入先から商品の購入のために発注オーダーを生成します。\n"
 "============================================================================="
 "============\n"
 "\n"
-"特定の仕入注文に応じた仕入先の請求が作成されます。\n"
+"特定の発注オーダーに応じた仕入先の請求が作成されます。\n"
 "\n"
 "発注管理のダッシュボードは以下を含みます：\n"
-"    ・ 最新の仕入注文\n"
-"    ・ ドラフトの仕入注文\n"
+"    ・ 最新の発注オーダー\n"
+"    ・ ドラフトの発注オーダー\n"
 "    ・ 月別の発注量と金額のグラフ\n"
 "\n"
 "    "
@@ -5160,7 +5166,7 @@ msgstr "アブハジア語 / аҧсуа"
 #. module: base
 #: view:base.module.configuration:0
 msgid "System Configuration Done"
-msgstr "システムコンフィギュレーション完了"
+msgstr "システム設定完了"
 
 #. module: base
 #: code:addons/orm.py:1459
@@ -5176,7 +5182,7 @@ msgstr "一般的"
 #. module: base
 #: view:ir.actions.server:0
 msgid "SMS Configuration"
-msgstr "SMSコンフィギュレーション"
+msgstr "SMSの設定"
 
 #. module: base
 #: model:ir.module.module,description:base.module_document_webdav
@@ -5212,8 +5218,8 @@ msgstr ""
 "\n"
 "その後、OpenObjectに装着されたものを遠隔地からどの互換ブラウザからでも見ることができます。\n"
 "\n"
-"インストールの後、WebDAVサーバはサーバコンフィグの[webdav]セクションによってコントロールが可能です。\n"
-"サーバーコンフィギュレーションパラメータ：\n"
+"インストールの後、WebDAVサーバはサーバ設定の[webdav]セクションによってコントロールが可能です。\n"
+"サーバ設定パラメータ：\n"
 "\n"
 "     [webdav]\n"
 "    ; enable = True ; Serve webdav over the http(s) servers\n"
@@ -5227,7 +5233,7 @@ msgstr ""
 "    ; these options on\n"
 "\n"
 "httpサーバのサービスディスカバリのためにIETF RFC 5785が実装されます。\n"
-"これは openerp-server.conf に明確なコンフィギュレーションを必要とします。\n"
+"これは openerp-server.conf に明確な設定を必要とします。\n"
 
 #. module: base
 #: model:res.country,name:base.sm
@@ -5424,11 +5430,11 @@ msgid ""
 "order all your purchase orders.\n"
 msgstr ""
 "\n"
-"このモジュールは仕入要求を管理します。\n"
+"このモジュールは発注要求を管理します。\n"
 "===========================================================\n"
 "\n"
-"仕入注文が作られるときに、あなたは関連する要求を保存する機会を持ちます。\n"
-"新しいオブジェクトは再グループ化され容易に追跡を続けることができるので、全ての仕入注文をすることができます。\n"
+"発注オーダーが作られるときに、関連する要求を保存する機会を持ちます。\n"
+"新しいオブジェクトは再グループ化され容易に追跡を続けることができるので、全ての発注オーダーをオーダーすることができます。\n"
 
 #. module: base
 #: model:res.country,name:base.hu
@@ -5525,8 +5531,8 @@ msgstr ""
 "============================================================================="
 "=======\n"
 "\n"
-"受注から生成された生産注文を追跡したい時に基本的に利用されます。\n"
-"これは生産注文の販売名や販売リファレンスを追加します。\n"
+"受注オーダーから生成された製造オーダーを追跡したい時に基本的に利用されます。\n"
+"これは製造オーダーの販売名や販売リファレンスを追加します。\n"
 "    "
 
 #. module: base
@@ -5739,7 +5745,7 @@ msgstr ""
 "============================================================================="
 "=\n"
 "\n"
-"このモジュールをインストール後、会計のコンフィギュレーションウィザードが自動起動します。\n"
+"このモジュールをインストール後、会計の設定ウィザードが自動起動します。\n"
 "    ・ 会計表作成を補助する会計テンプレートがあります。\n"
 "    ・ "
 "特定のウィザードでは会社の名前、従うべき表のテンプレート、生成するための桁数、あなたのアカウントと銀行口座、ジャーナル作成のための通貨が尋ねられます。\n"
@@ -5789,7 +5795,7 @@ msgstr "ザンビア"
 #. module: base
 #: view:ir.actions.todo:0
 msgid "Launch Configuration Wizard"
-msgstr "起動コンフィギュレーションウィザード"
+msgstr "起動設定ウィザード"
 
 #. module: base
 #: help:res.partner,user_id:0
@@ -6672,7 +6678,7 @@ msgstr "ジャーナル入力のキャンセル"
 #. module: base
 #: view:ir.actions.server:0
 msgid "Client Action Configuration"
-msgstr "クライアントアクションのコンフィギュレーション"
+msgstr "クライアントアクションの設定"
 
 #. module: base
 #: model:ir.model,name:base.model_res_partner_address
@@ -8200,7 +8206,7 @@ msgstr ""
 "最低額を超える購入のための二重検証\n"
 "=========================================================\n"
 "\n"
-"このモジュールは、コンフィギュレーションウィザードによって設定される最低額を超えた購入を\n"
+"このモジュールは、設定ウィザードによって設定される最低額を超えた購入を\n"
 "検証するための購入ワークフローを変更します。\n"
 "    "
 
@@ -8463,10 +8469,10 @@ msgstr ""
 "しかし、これは製品ごとに改良されません。\n"
 "\n"
 "プッシュプローの仕様は、どの場所がどの場所と何のパラメータでつながれているかを示します。\n"
-"製品の所定の量が供給元の場所で動きがあるや否や結び付けられた動作がフロー定義\n"
+"製品の所定の量が供給元の場所で動きがあるや否や、結び付けられた動作が、フロー定義\n"
 "（目的地の場所、遅延、移動の種類、ジャーナル他）でセットされたパラメータにしたがって\n"
 "自動的に予測されます。\n"
-"この新しい動きはパラメータにしたがって自動的に実行されるか、手動確認を要求します。\n"
+"この新しい動きは、パラメータにしたがって自動的に実行されるか、手動確認を要求します。\n"
 "\n"
 "プルフロー\n"
 "----------\n"
@@ -8476,22 +8482,22 @@ msgstr ""
 "\n"
 "  [ 顧客 ] <- A - [ アウトレット ] <- B - [ 親会社 ] <~ C ~ [ 仕入先 ]\n"
 "\n"
-"新しい調達注文（A：注文の確認がくる例）がアウトレットに到着すると、それは親会社から要求されたもう一つの調達注文に変換されます（B：プルフローのタイプは'"
-"move'）。親会社により調達注文Bが処理される時、そしてその製品が在庫切れの時、それは仕入先からの仕入注文（C：プルフローのタイプは仕入）に変換されます"
-"。結果として調達注文、ニーズは顧客と仕入先の間の全てにプッシュされます。\n"
+"新しい調達オーダー（A：例として受注オーダーの確認がくる）がアウトレットに到着すると、それは親会社から要求されたもう一つの調達に変換されます（B：プルフロ"
+"ーのタイプは'move'）。親会社により調達オーダーBが処理される時、そしてその製品が在庫切れの時、それは仕入先への発注オーダー（C：プルフローのタイプは"
+"発注）に変換されます。結果として調達オーダー、ニーズは顧客と仕入先の間の全てにプッシュされます。\n"
 "\n"
-"技術的には、プルフローは調達注文と別に処理することを許します。製品に対しての考慮に依存するのみならず、その製品のニーズを持つ場所（即ち調達注文の目的地）に"
-"依存します。\n"
+"専門的には、プルフローは調達オーダーと別に処理することを許します。製品に対しての考慮に依存するのみならず、その製品のニーズを持つ場所（即ち調達オーダーの目"
+"的地）に依存します。\n"
 "\n"
 "使用例\n"
 "--------\n"
 "\n"
 "以下のデモデータを使います：\n"
 "  CPU1：ショップ1からいくらかのCPU1を売り、スケジューラを走らせます。\n"
-"     - 倉庫：配達注文，ショップ1: 受付\n"
+"     - 倉庫：配達オーダー，ショップ1: 受付\n"
 "  CPU3:\n"
 "     - 商品を受け取る時、それは品質管理場所に行き、棚2に保管されます。\n"
-"     - 顧客に配達する時：ピックリスト -> 梱包 -> GateAから配達注文\n"
+"     - 顧客に配達する時：ピックリスト -> 梱包 -> GateAから配達オーダー\n"
 "    "
 
 #. module: base
@@ -8558,23 +8564,23 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"自動的に調達ラインからプロジェクトタスクの生成します。\n"
+"自動的に調達行からプロジェクトタスクを生成します。\n"
 "==========================================================\n"
 "\n"
-"対応する製品が以下の特徴を満たす場合、このモジュールはそれぞれの調達注文ライン\n"
-"（例えば販売注文ライン）のための新しいタスクを作成します。\n"
+"対応する製品が以下の特徴を満たす場合、このモジュールはそれぞれの調達オーダー行\n"
+"（例えば受注オーダー行）のための新しいタスクを作成します。\n"
 "\n"
 "  ・ タイプ ＝ サービス\n"
-"  ・ 調達手法（注文実現） ＝ MTO（受注生産）\n"
-"  ・ 供給 / 調達手法 ＝ 産物\n"
+"  ・ 調達手法（オーダー実現） ＝ MTO（受注生産）\n"
+"  ・ 供給 / 調達方法 ＝ 製造\n"
 "\n"
 "もし先頭のプロジェクトが製品フォーム（調達タブ）で定義されているなら、新しいタスクは\n"
 "その特定のプロジェクトの中に作られます。\n"
 "それ以外の場合は、新しいタスクはどんなプロジェクトにも属さず、後で手作業でプロジェクトに\n"
 "追加されるかも知れません。\n"
 "\n"
-"プロジェクトのタスクが完了するか、中止される時、調達ラインに対応するワークフローはそれに応じて更新されます。\n"
-"例えば、もしこの調達が受注ラインに対応するなら、仕事が完了する時に受注ラインは配達されたと考えられます。\n"
+"プロジェクトのタスクが完了するか、中止される時、調達行に対応するワークフローはそれに応じて更新されます。\n"
+"例えば、もしこの調達が受注オーダー行に対応するなら、仕事が完了する時に受注オーダー行は配達されたと考えられます。\n"
 "\n"
 
 #. module: base
@@ -9393,13 +9399,13 @@ msgstr ""
 "このモジュールはコンピュータ調達のためのモジュールです。\n"
 "==============================================\n"
 "\n"
-"MRPプロセスでは、製造注文、仕入注文、在庫割り当てなどを起動されるために調達指示が作成されます。\n"
-"調達注文はシステムにより自動的に生成され、そして問題がある場合を除きユーザには通知されません。\n"
+"MRPプロセスでは、製造オーダー、発注オーダー、在庫割り当てなどを起動されるために調達オーダーが作成されます。\n"
+"調達オーダーはシステムにより自動的に生成され、そして問題がある場合を除きユーザには通知されません。\n"
 "問題は生じた場合には、システムは手作業で解決されるべき阻害要因について（組み立てBoM（部品表）の欠如、仕入先の欠落の類い）、ユーザに知らせるために幾つか"
 "の調達例外を発生させます。\n"
 "\n"
-"調達指示は補充を必要とする製品の自動調達のための提案をスケジュールします。この調達は仕入先の仕入注文書かまたは製品の構成に応じてた製造注文のタスクを開始し"
-"ます。\n"
+"調達オーダーは補充を必要とする製品の自動調達のための提案をスケジュールします。この調達は仕入先の発注オーダーかまたは製品の構成に応じてた製造オーダーのタス"
+"クを開始します。\n"
 "    "
 
 #. module: base
@@ -10159,14 +10165,14 @@ msgstr ""
 "--------------\n"
 "このモジュールは以下の３つのステップでなされます：\n"
 "\n"
-"・ 在庫期間を作成　倉庫 > コンフィギュレーション > 在庫期間メニュー（必須のステップ）\n"
+"・ 在庫期間を作成　倉庫 > 設定 > 在庫期間メニュー（必須のステップ）\n"
 "・ 予測数量を埋めた販売予測の作成　販売 > 販売予測メニュー\n"
 "　　（オプションのステップ。しかし将来計画に役立つ）\n"
 "・ 実際のMPS計画の作成、残高をチェック、必要な調達を行う。実際の調達は在庫期間の最後のステップ\n"
 "\n"
-"在庫期間のコンフィギュレーション\n"
+"在庫期間の設定\n"
 "--------------------------\n"
-"倉庫 > コンフィギュレーション > 在庫期間 に期間のために２つのメニューがあります：\n"
+"倉庫 > 設定 > 在庫期間 に期間のために２つのメニューがあります：\n"
 "\n"
 "・ 在庫期間作成 - 日次、週次、月次の自動作成が可能\n"
 "・ 在庫期間 - どんな期間のタイプの作成も日付の変更も期間の状態の変更も可能\n"
@@ -10188,7 +10194,7 @@ msgstr ""
 "・ 同じ製品に対して重複する期間を使う場合、倉庫と会社の結果は予測できません。\n"
 "・ 現在日付がどの期間にも属さない場合や期間の間に空きがある場合にはその結果は予測できません。\n"
 "\n"
-"販売予測コンフィギュレーション\n"
+"販売予測の設定\n"
 "-----------------------------\n"
 "販売 > 販売予測 に販売予測のための幾つかのメニューがあります：\n"
 "\n"
@@ -10242,9 +10248,7 @@ msgstr ""
 "In）の数量はいつでも変更できます。そして、もし所定の期間でもっと多くの製品を入手する必要があるかどうかを決めるために\"在庫シミュレーション\"の値の結"
 "果を注視して下さい。\n"
 "\"計画出庫\"は、最初にすでに計画された期間と倉庫のために全て出て行く在庫の動きの合計である\"倉庫予測\"を基にします。\n"
-"もちろん、あなた自身の数量を与えるためにその値を変更することができます。予測を持つ必要はありません\n"
-"\n"
-"。\n"
+"もちろん、あなた自身の数量を与えるためにその値を変更することができます。予測を持つ必要はありません。\n"
 "\"計画入庫\"の数量は期間の終わりにおける\"在庫シミュレーション\"に到達するために入手されるべき数量である項目の\"入って来る残り\"を計算するため"
 "に使われます。\n"
 "\"在庫シミュレーション\"数量とフォーム上に見える最小在庫ルールを比較することができます。\n"
@@ -10624,7 +10628,7 @@ msgstr ""
 "\n"
 "特徴：\n"
 "---------\n"
-"　・ 在庫の作成 / 注文の作成（ラインによる）\n"
+"　・ 在庫の作成 / オーダーの作成（ラインによる）\n"
 "　・ 複数レベルのBoMs（Mill of Materials：部品表）、制限なし\n"
 "　・ 複数レベルの経路、制限なし\n"
 "　・ 経路とワークセンターが分析的な会計とともに統合されます。\n"
@@ -10897,7 +10901,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_margin
 msgid "Margins in Sales Orders"
-msgstr "販売注文のマージン"
+msgstr "受注オーダーのマージン"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_9
@@ -11203,7 +11207,7 @@ msgstr ""
 "隠されたレポーティングのインストーラ\n"
 "==============================\n"
 "\n"
-"レポーティングの隠されたコンフィグレーションを有効にすることで、base_report_designer や base_report_creator "
+"レポーティングの隠された設定を有効にすることで、base_report_designer や base_report_creator "
 "のようなモジュールのインストールが可能です。\n"
 "    "
 
@@ -11475,8 +11479,7 @@ msgstr "スペイン語（コロンビア）/ Español (CO)"
 msgid ""
 "All pending configuration wizards have been executed. You may restart "
 "individual wizards via the list of configuration wizards."
-msgstr ""
-"全ての保留中のコンフィギュレーションウィザードは実行されました。あなたはコンフィグレーションウィザードのリストを介して、個別ウィザードの再起動ができます。"
+msgstr "全ての保留中の設定ウィザードは実行されました。あなたは設定ウィザードのリストを介して、個別ウィザードの再起動ができます。"
 
 #. module: base
 #: view:ir.sequence:0
@@ -11827,10 +11830,10 @@ msgid ""
 "Adds a Claim link to the delivery order.\n"
 msgstr ""
 "\n"
-"配達注文からクレームを作成します。\n"
+"配達オーダーからクレームを作成します。\n"
 "=====================================\n"
 "\n"
-"配達注文にクレームのリンクを加えます。\n"
+"配達オーダーにクレームのリンクを加えます。\n"
 
 #. module: base
 #: view:ir.model:0
@@ -12133,7 +12136,7 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_todo_category
 msgid "Configuration Wizard Category"
-msgstr "コンフィギュレーションウィザードの分類"
+msgstr "設定ウィザードの分類"
 
 #. module: base
 #: view:base.module.update:0
@@ -12520,7 +12523,7 @@ msgstr "子ID"
 #: code:addons/base/ir/ir_actions.py:751
 #, python-format
 msgid "Problem in configuration `Record Id` in Server Action!"
-msgstr "サーバアクションのレコードIDコンフィギュレーションの問題です。"
+msgstr "サーバアクションのレコードID設定の問題です。"
 
 #. module: base
 #: code:addons/orm.py:2682
@@ -12547,7 +12550,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"このモジュールは販売注文に\"マージン\"を追加します。\n"
+"このモジュールは受注オーダーに\"マージン\"を追加します。\n"
 "=============================================\n"
 "\n"
 "ユニット価格とコスト価格の差を計算し利益を求めます。\n"
@@ -12755,7 +12758,7 @@ msgstr ""
 #. module: base
 #: view:ir.actions.configuration.wizard:0
 msgid "Next Configuration Step"
-msgstr "次のコンフィギュレーションステップ"
+msgstr "次の設定ステップ"
 
 #. module: base
 #: field:res.groups,comment:0
@@ -13001,7 +13004,7 @@ msgstr "グレナダ"
 #. module: base
 #: view:ir.actions.server:0
 msgid "Trigger Configuration"
-msgstr "トリガーコンフィギュレーション"
+msgstr "トリガー設定"
 
 #. module: base
 #: view:base.language.install:0
@@ -13024,7 +13027,7 @@ msgstr ""
 "OpenERPオブジェクトの中の警告トリガーのモジュール\n"
 "==============================================\n"
 "\n"
-"警告メッセージは購入注文、仕入注文、収集、請求のようなオブジェクトのために表示させることができます。\n"
+"警告メッセージは受注オーダー、発注オーダー、収集、請求書のようなオブジェクトのために表示させることができます。\n"
 "このメッセージはフォームのonChangeイベントによってトリガーとなります。\n"
 "    "
 
@@ -13217,7 +13220,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"このモジュールでは、パートナの価格リストを基に販売注文の行や請求書の行での割引計算ができます。\n"
+"このモジュールでは、パートナの価格リストを基に受注オーダーの行や請求書の行での割引計算ができます。\n"
 "============================================================================="
 "==================================\n"
 "\n"
@@ -13225,8 +13228,8 @@ msgstr ""
 "\n"
 "例：\n"
 "　製品PC1とパートナAsustek：リスト価格＝450で、Asustekの価格リストを使って計算された価格＝225の場合\n"
-"　チェックボックスがチェックありの時、販売注文の行：ユニット価格＝450、割引＝50.00、ネット価格＝225\n"
-"　チェックボックスがチェックなしの時、販売注文と請求書の行：ユニット価格＝225、割引＝0.00、ネット価格＝225\n"
+"　チェックボックスがチェックありの時、受注オーダーの行：ユニット価格＝450、割引＝50.00、ネット価格＝225\n"
+"　チェックボックスがチェックなしの時、受注オーダーと請求書の行：ユニット価格＝225、割引＝0.00、ネット価格＝225\n"
 "    "
 
 #. module: base
@@ -13287,50 +13290,50 @@ msgstr "月：%(month)s"
 #: field:res.widget.user,sequence:0
 #: field:wizard.ir.model.menu.create.line,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "順序"
 
 #. module: base
 #: model:res.country,name:base.tn
 msgid "Tunisia"
-msgstr ""
+msgstr "チュニジア"
 
 #. module: base
 #: view:ir.actions.todo:0
 msgid "Wizards to be Launched"
-msgstr ""
+msgstr "ウィザードの開始"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_manufacturing
 #: model:ir.ui.menu,name:base.menu_mrp_root
 msgid "Manufacturing"
-msgstr ""
+msgstr "製造"
 
 #. module: base
 #: model:res.country,name:base.km
 msgid "Comoros"
-msgstr ""
+msgstr "コモロ"
 
 #. module: base
 #: view:res.request:0
 msgid "Draft and Active"
-msgstr ""
+msgstr "ドラフトとアクティブ"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_server_action
 #: view:ir.actions.server:0
 #: model:ir.ui.menu,name:base.menu_server_action
 msgid "Server Actions"
-msgstr ""
+msgstr "サーバーアクション"
 
 #. module: base
 #: field:res.partner.bank.type,format_layout:0
 msgid "Format Layout"
-msgstr ""
+msgstr "フォーマットレイアウト"
 
 #. module: base
 #: field:ir.model.fields,selection:0
 msgid "Selection Options"
-msgstr ""
+msgstr "選択オプション"
 
 #. module: base
 #: field:res.partner.category,parent_right:0
@@ -13340,7 +13343,7 @@ msgstr "右括弧"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auth_openid
 msgid "OpenID Authentification"
-msgstr ""
+msgstr "OpenID認証"
 
 #. module: base
 #: model:ir.module.module,description:base.module_plugin_thunderbird
@@ -13356,33 +13359,42 @@ msgid ""
 "HR Applicant and Project Issue from selected mails.\n"
 "      "
 msgstr ""
+"\n"
+"このモジュールは適切に動作するためにThuderbird プラグインが必要とされます。\n"
+"====================================================================\n"
+"\n"
+"プラグインは選択されたOpenERPオブジェクトにEメールと添付ファイルのアーカイブを許可します。\n"
+"パートナ、タスク、プロジェクト、分析アカウント、またはどんな他のオブジェクトでも選択して、\n"
+"選択されたメールを 選択されたレコードの添付ファイルの中に.emlファイルとして添付できます。\n"
+"選択されたメールからCRMのリード、HRの応募者、プロジェクトの問題のドキュメントを作成できます。\n"
+"      "
 
 #. module: base
 #: view:res.lang:0
 msgid "Legends for Date and Time Formats"
-msgstr ""
+msgstr "日付と時刻フォーマットの凡例"
 
 #. module: base
 #: selection:ir.actions.server,state:0
 msgid "Copy Object"
-msgstr ""
+msgstr "オブジェクトのコピー"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mail
 msgid "Emails Management"
-msgstr ""
+msgstr "Eメール管理"
 
 #. module: base
 #: field:ir.actions.server,trigger_name:0
 msgid "Trigger Signal"
-msgstr ""
+msgstr "トリガーのシグナル"
 
 #. module: base
 #: code:addons/base/res/res_users.py:119
 #, python-format
 msgid ""
 "Group(s) cannot be deleted, because some user(s) still belong to them: %s !"
-msgstr ""
+msgstr "グループの削除はできません。なぜなら一部のユーザはまだそのグループに属しています：%s"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_repair
@@ -13400,18 +13412,29 @@ msgid ""
 "    * Repair quotation report\n"
 "    * Notes for the technician and for the final customer\n"
 msgstr ""
+"\n"
+"全ての製品修理管理の完全なモジュールを持つことを目的にしています。以下のトピックはこのモジュールでカバーする必要があります：\n"
+"============================================================================="
+"==============================================\n"
+"\n"
+"　・ 賠償製品の追加と削除\n"
+"　・ 在庫の影響\n"
+"　・ 請求書（製品またはサービス）\n"
+"　・ 保証のコンセプト\n"
+"　・ 修理見積書\n"
+"　・ 技術者のため、最終顧客のための記録\n"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_country_state
 #: model:ir.ui.menu,name:base.menu_country_state_partner
 msgid "Fed. States"
-msgstr ""
+msgstr "連邦"
 
 #. module: base
 #: view:ir.model:0
 #: view:res.groups:0
 msgid "Access Rules"
-msgstr ""
+msgstr "アクセスルール"
 
 #. module: base
 #: model:ir.module.module,description:base.module_knowledge
@@ -13425,11 +13448,17 @@ msgid ""
 "document and Wiki based Hidden.\n"
 "    "
 msgstr ""
+"\n"
+"知識ベースHiddenのインストーラ\n"
+"====================================\n"
+"\n"
+"Hiddenに基づくドキュメントやWikiのインストールすることで、知識アプリケーション設定が提供されます。\n"
+"    "
 
 #. module: base
 #: field:res.groups,trans_implied_ids:0
 msgid "Transitively inherits"
-msgstr ""
+msgstr "推移的継承"
 
 #. module: base
 #: field:ir.default,ref_table:0
@@ -13440,7 +13469,7 @@ msgstr "テーブルの参照"
 #: code:addons/base/ir/ir_mail_server.py:443
 #, python-format
 msgid "Mail delivery failed"
-msgstr ""
+msgstr "メールの配信が失敗しました。"
 
 #. module: base
 #: field:ir.actions.act_window,res_model:0
@@ -13463,7 +13492,7 @@ msgstr ""
 #: field:res.request.link,object:0
 #: field:workflow.triggers,model:0
 msgid "Object"
-msgstr ""
+msgstr "オブジェクト"
 
 #. module: base
 #: code:addons/osv.py:147
@@ -13473,6 +13502,9 @@ msgid ""
 "\n"
 "[object with reference: %s - %s]"
 msgstr ""
+"\n"
+"\n"
+"[オブジェクトの参照： %s - %s]"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_analytic_plans
@@ -13493,21 +13525,29 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"タイムシートエントリーとプロジェクトタスクワークエントリーの同期\n"
+"====================================================================\n"
+"\n"
+"このモジュールは特定の日付の特定のユーザのタイムシート行エントリーの作成、編集、削除\n"
+"の反映とともに、プロジェクト管理のために定義されたタスクの元にそのエントリーの転送ができます。\n"
+"\n"
+"    "
 
 #. module: base
 #: view:ir.sequence:0
 msgid "Minute: %(min)s"
-msgstr ""
+msgstr "分：%(min)s"
 
 #. module: base
 #: model:ir.ui.menu,name:base.next_id_10
 msgid "Scheduler"
-msgstr ""
+msgstr "スケジューラ"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_tools
 msgid "Base Tools"
-msgstr ""
+msgstr "基本ツール"
 
 #. module: base
 #: help:res.country,address_format:0
@@ -13526,6 +13566,18 @@ msgid ""
 "            \n"
 "%(country_code)s: the code of the country"
 msgstr ""
+"ここでは、この国に属する住所に使うための通常のフォーマットを決めることができます。\n"
+"\n"
+"住所の全ての項目にPythonスタイルの文字パターンを使うことができます（例：'%(street)s'を使うと\"street\"項目を表示します）。加え"
+"て\n"
+"            \n"
+"%(state_name)s：州の名前\n"
+"            \n"
+"%(state_code)s：州のコード\n"
+"            \n"
+"%(country_name)s：国の名前\n"
+"            \n"
+"%(country_code)s：国のコード"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pad
@@ -13539,6 +13591,13 @@ msgid ""
 "(by default, http://ietherpad.com/).\n"
 "    "
 msgstr ""
+"\n"
+"WebクライアントにEtherPadのための拡張をサポートします。\n"
+"===================================================================\n"
+"\n"
+"PADはカスタマイズできます。Padのインストールは新しいPadのためのリンクを使って下さい。\n"
+"デフォルトでは http://ietherpad.com/ です。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_uk
@@ -13574,6 +13633,30 @@ msgid ""
 "    * http://controlchaos.com\n"
 "    "
 msgstr ""
+"\n"
+"このモジュールはIT会社のためにScrumプロジェクト管理により定義された全てのコンセプトを実装しています。\n"
+"============================================================================="
+"============================\n"
+"\n"
+"　・ スプリントプロジェクト、プロダクトオーナー、スクラムマスター\n"
+"　・スプリントの レビュー、デイリーミーティング、フィードバック\n"
+"　・ 製品バックログ\n"
+"　・ スプリントバックログ\n"
+"\n"
+"それは、プロジェクト管理モジュールに幾つかのコンセプトを追加します：\n"
+"　・ 中期、長期のロードマップ\n"
+"　・ 顧客 / 機能の要求 VS 技術的な要求\n"
+"\n"
+"それは新しいレポートも作成します：\n"
+"　・ バーンダウンチャート\n"
+"\n"
+"Scrumプロジェクトとタスクは実際のプロジェクトとタスクから継承されています。\n"
+"通常のタスクにはScrumプロジェクトからのタスクも含まれているため、その仕事を\n"
+"続ける事ができます。\n"
+"\n"
+"方法論についてのさらなる情報：\n"
+"　・ http://controlchaos.com\n"
+"    "
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:371
@@ -13581,7 +13664,7 @@ msgstr ""
 msgid ""
 "Changing the type of a column is not yet supported. Please drop it and "
 "create it again!"
-msgstr ""
+msgstr "列のタイプの変更は現在サポートされていません。削除後、再作成して下さい。"
 
 #. module: base
 #: field:ir.ui.view_sc,user_id:0
@@ -13592,12 +13675,12 @@ msgstr "ユーザの参照"
 #: code:addons/base/res/res_users.py:118
 #, python-format
 msgid "Warning !"
-msgstr ""
+msgstr "警告!"
 
 #. module: base
 #: model:res.widget,title:base.google_maps_widget
 msgid "Google Maps"
-msgstr ""
+msgstr "Google マップ"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_base_config
@@ -13609,7 +13692,7 @@ msgstr ""
 #: view:res.company:0
 #: model:res.groups,name:base.group_system
 msgid "Configuration"
-msgstr ""
+msgstr "設定"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in
@@ -13619,12 +13702,12 @@ msgstr "インド－会計"
 #. module: base
 #: field:ir.actions.server,expression:0
 msgid "Loop Expression"
-msgstr ""
+msgstr "ループ式"
 
 #. module: base
 #: field:publisher_warranty.contract,date_start:0
 msgid "Starting Date"
-msgstr ""
+msgstr "開始日"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_gt
@@ -13634,12 +13717,12 @@ msgstr "グアテマラ－会計"
 #. module: base
 #: help:ir.cron,args:0
 msgid "Arguments to be passed to the method, e.g. (uid,)."
-msgstr ""
+msgstr "メソッドに渡される引数、例（UID）。"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_5
 msgid "Gold Partner"
-msgstr ""
+msgstr "ゴールドパートナ"
 
 #. module: base
 #: model:ir.model,name:base.model_res_partner
@@ -13649,34 +13732,34 @@ msgstr ""
 #: selection:res.partner.title,domain:0
 #: model:res.request.link,name:base.req_link_partner
 msgid "Partner"
-msgstr ""
+msgstr "パートナ"
 
 #. module: base
 #: field:ir.model.fields,complete_name:0
 #: field:ir.ui.menu,complete_name:0
 msgid "Complete Name"
-msgstr ""
+msgstr "完全な名前"
 
 #. module: base
 #: model:res.country,name:base.tr
 msgid "Turkey"
-msgstr ""
+msgstr "トルコ"
 
 #. module: base
 #: model:res.country,name:base.fk
 msgid "Falkland Islands"
-msgstr ""
+msgstr "フォークランド諸島"
 
 #. module: base
 #: model:res.country,name:base.lb
 msgid "Lebanon"
-msgstr ""
+msgstr "レバノン"
 
 #. module: base
 #: view:ir.actions.report.xml:0
 #: field:ir.actions.report.xml,report_type:0
 msgid "Report Type"
-msgstr ""
+msgstr "レポートタイプ"
 
 #. module: base
 #: field:ir.actions.todo,state:0
@@ -13689,7 +13772,7 @@ msgstr ""
 #: field:workflow.instance,state:0
 #: field:workflow.workitem,state:0
 msgid "State"
-msgstr ""
+msgstr "状態"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_evaluation
@@ -13707,6 +13790,16 @@ msgid ""
 "in the form of pdf file. Implements a dashboard for My Current Evaluations\n"
 "         "
 msgstr ""
+"\n"
+"従業員の評価を作成する機能\n"
+"=======================================\n"
+"\n"
+"評価は彼の管理者と同様に部下や後輩のために従業員によって作成することができます。\n"
+"その評価は様々な調査を作成され、そして従業員階層のどのレベルが何を満たすかを定義\n"
+"された計画の下で実行されます。そして最終レビューと評価は管理者によって実行されます。\n"
+"全ての評価は従業員によってファイルされ、それはPDFファイルの形式で見ることができます。\n"
+"自身の現在の評価のためにダッシュボードを実装しています。\n"
+"         "
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -13716,7 +13809,7 @@ msgstr "ガリラヤ語 / Galego"
 #. module: base
 #: model:res.country,name:base.no
 msgid "Norway"
-msgstr ""
+msgstr "ノルウェー"
 
 #. module: base
 #: view:res.lang:0
@@ -13727,17 +13820,17 @@ msgstr ""
 #: view:base.language.install:0
 #: model:ir.ui.menu,name:base.menu_view_base_language_install
 msgid "Load an Official Translation"
-msgstr ""
+msgstr "公式の翻訳をロード"
 
 #. module: base
 #: view:res.currency:0
 msgid "Miscelleanous"
-msgstr ""
+msgstr "その他"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_10
 msgid "Open Source Service Company"
-msgstr ""
+msgstr "オープンソースサービス会社"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -13747,12 +13840,12 @@ msgstr "シンハラ語 / සිංහල"
 #. module: base
 #: selection:res.request,state:0
 msgid "waiting"
-msgstr ""
+msgstr "待機中"
 
 #. module: base
 #: field:ir.actions.report.xml,report_file:0
 msgid "Report file"
-msgstr ""
+msgstr "レポートファイル"
 
 #. module: base
 #: model:ir.model,name:base.model_workflow_triggers
@@ -13763,24 +13856,24 @@ msgstr ""
 #: code:addons/base/ir/ir_model.py:74
 #, python-format
 msgid "Invalid search criterions"
-msgstr ""
+msgstr "検索基準が無効です。"
 
 #. module: base
 #: view:ir.mail_server:0
 msgid "Connection Information"
-msgstr ""
+msgstr "接続情報"
 
 #. module: base
 #: view:ir.attachment:0
 msgid "Created"
-msgstr ""
+msgstr "作成済"
 
 #. module: base
 #: help:ir.actions.wizard,multi:0
 msgid ""
 "If set to true, the wizard will not be displayed on the right toolbar of a "
 "form view."
-msgstr ""
+msgstr "Trueにセットする場合、ウィザードはフォームビューの右のツールバー上には表示されません。"
 
 #. module: base
 #: view:base.language.import:0
@@ -13790,7 +13883,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.hm
 msgid "Heard and McDonald Islands"
-msgstr ""
+msgstr "ハード島とマクドナルド諸島"
 
 #. module: base
 #: help:ir.model.data,name:0
@@ -15067,11 +15160,11 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"この基本モジュールは分析的な分類と仕入注文を管理します。\n"
+"この基本モジュールは分析的な分類と発注オーダーを管理します。\n"
 "====================================================================\n"
 "\n"
 "ユーザは複数の分析計画を維持することができます。\n"
-"これはあなたに仕入先の仕入注文のラインを複数のアカウントと分析計画に分割させます。\n"
+"仕入先の発注オーダーのラインを複数のアカウントと分析計画に分割します。\n"
 "    "
 
 #. module: base
@@ -15668,8 +15761,8 @@ msgid ""
 "Check this box if the partner is a supplier. If it's not checked, purchase "
 "people will not see it when encoding a purchase order."
 msgstr ""
-"パートナが仕入先である場合は、このチェックボックスをオンにして下さい。それをチェックしない場合は、仕入注文をエンコードする際に、仕入の人々はそれを見ること"
-"はできません。"
+"パートナが仕入先である場合は、このチェックボックスをオンにして下さい。それをチェックしない場合は、発注オーダーをエンコードする際に、仕入の人々はそれを見る"
+"ことはできません。"
 
 #. module: base
 #: field:ir.actions.server,trigger_obj_id:0
