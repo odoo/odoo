@@ -917,39 +917,26 @@ class ir_model_data(osv.osv):
             cr.execute('DROP TABLE %s CASCADE'% (table),)
             _logger.info('Dropped table %s', table)
 
-        for (model, res_id) in to_unlink:
-            if model in ('ir.model','ir.model.fields', 'ir.model.data'):
-                continue
-            external_ids = self.search(cr, uid, [('model', '=', model),('res_id', '=', res_id)])
-            if (set(external_ids)-ids_set):
-                # if other modules have defined this record, we do not delete it
-                continue
-            _logger.info('Deleting %s@%s', res_id, model)
-            try:
-                self.pool.get(model).unlink(cr, uid, [res_id], context=context)
-            except:
-                _logger.info('Unable to delete %s@%s', res_id, model, exc_info=True)
-            cr.commit()
+        def unlink_if_refcount(to_unlink):
+            for model, res_id in to_unlink:
+                external_ids = self.search(cr, uid, [('model', '=', model),('res_id', '=', res_id)])
+                if (set(external_ids)-ids_set):
+                    # if other modules have defined this record, we must not delete it
+                    return
+                _logger.info('Deleting %s@%s', res_id, model)
+                try:
+                    self.pool.get(model).unlink(cr, uid, [res_id], context=context)
+                except:
+                    _logger.info('Unable to delete %s@%s', res_id, model, exc_info=True)
 
-        for (model, res_id) in to_unlink:
-            if model != 'ir.model.fields':
-                continue
-            external_ids = self.search(cr, uid, [('model', '=', model),('res_id', '=', res_id)])
-            if (set(external_ids)-ids_set):
-                # if other modules have defined this record, we do not delete it
-                continue
-            _logger.info('Deleting %s@%s', res_id, model)
-            self.pool.get(model).unlink(cr, uid, [res_id], context=context)
+        # Remove non-model records first, then model fields, and finish with models
+        unlink_if_refcount((model, res_id) for model, res_id in to_unlink
+                                if model not in ('ir.model','ir.model.fields'))
+        unlink_if_refcount((model, res_id) for model, res_id in to_unlink
+                                if model == 'ir.model.fields')
+        unlink_if_refcount((model, res_id) for model, res_id in to_unlink
+                                if model == 'ir.model')
 
-        for (model, res_id) in to_unlink:
-            if model != 'ir.model':
-                continue
-            external_ids = self.search(cr, uid, [('model', '=', model),('res_id', '=', res_id)])
-            if (set(external_ids)-ids_set):
-                # if other modules have defined this record, we do not delete it
-                continue
-            _logger.info('Deleting %s@%s', res_id, model)
-            self.pool.get(model).unlink(cr, uid, [res_id], context=context)
         cr.commit()
 
     def _process_end(self, cr, uid, modules):
