@@ -141,8 +141,6 @@ class ir_model(osv.osv):
     def _drop_table(self, cr, uid, ids, context=None):
         for model in self.browse(cr, uid, ids, context):
             model_pool = self.pool.get(model.model)
-            # this test should be removed, but check if drop view instead of drop table
-            # just check if table or view exists
             cr.execute('select relkind from pg_class where relname=%s', (model_pool._table,))
             result = cr.fetchone()
             if result and result[0] == 'v':

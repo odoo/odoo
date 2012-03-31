@@ -59,7 +59,7 @@ class groups(osv.osv):
 
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
-        'users': fields.many2many('res.users', 'res_groups_users_rel', 'gid', 'uid', 'Users', ondelete='CASCADE'),
+        'users': fields.many2many('res.users', 'res_groups_users_rel', 'gid', 'uid', 'Users'),
         'model_access': fields.one2many('ir.model.access', 'group_id', 'Access Controls'),
         'rule_groups': fields.many2many('ir.rule', 'rule_group_rel',
             'group_id', 'rule_group_id', 'Rules', domain=[('global', '=', False)]),
