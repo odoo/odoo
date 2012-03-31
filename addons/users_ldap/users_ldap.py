@@ -256,8 +256,10 @@ class users(osv.osv):
                 user_id = ldap_obj.get_or_create_user(
                     cr, SUPERUSER_ID, conf, login, entry)
                 if user_id:
-                    cr.execute('UPDATE res_users SET date=now() WHERE '
-                               'login=%s', (tools.ustr(login),))
+                    cr.execute("""UPDATE res_users
+                                    SET date=now() AT TIME ZONE 'UTC'
+                                    WHERE login=%s""",
+                               (tools.ustr(login),))
                     cr.commit()
                     break
         cr.close()
