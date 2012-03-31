@@ -597,18 +597,13 @@
             <field name="view_id" ref="view_partner_form"/>
             <field name="act_window_id" ref="action_partner_form"/>
         </record>
-
         <record id="action_partner_tree_view1" model="ir.actions.act_window.view">
             <field name="sequence" eval="1"/>
             <field name="view_mode">tree</field>
             <field name="view_id" ref="view_partner_tree"/>
             <field name="act_window_id" ref="action_partner_form"/>
         </record>
-        <menuitem
-            action="action_partner_form"
-            id="menu_partner_form"
-            parent="base.menu_sales"
-            sequence="8"/>
+        <menuitem id="menu_partner_form" parent="base.menu_sales" action="action_partner_form" sequence="1"/>
 
         <record id="action_partner_customer_form" model="ir.actions.act_window">
             <field name="name">Customers</field>
