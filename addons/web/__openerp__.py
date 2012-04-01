@@ -21,6 +21,7 @@
         "static/lib/jquery.form/jquery.form.js",
         "static/lib/jquery.validate/jquery.validate.js",
         "static/lib/jquery.ba-bbq/jquery.ba-bbq.js",
+        "static/lib/jquery.bootstrap/js/bootstrap.js",
         "static/lib/jquery.contextmenu/jquery.contextmenu.r2.packed.js",
         "static/lib/jquery.blockUI/jquery.blockUI.js",
         "static/lib/jquery.superfish/js/hoverIntent.js",

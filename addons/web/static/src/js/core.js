@@ -14,7 +14,6 @@ openerp.web.core = function(openerp) {
 // a function to override the "extend()" method of JR's inheritance, allowing
 // the usage of "include()"
 // al: Either move it into novajs or make sure we dont use include, i dont want 2 diff implementations of 'extend'
-
 oe_override_class = function(claz){
     var initializing = false, fnTest = /xyz/.test(function(){xyz;}) ?
     /\b_super\b/ : /.*/;

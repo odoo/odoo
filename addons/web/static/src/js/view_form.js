@@ -108,13 +108,11 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         this.$form_header.find('button.oe_form_button_cancel').click(this.on_button_cancel);
 
         if (!this.sidebar && this.options.sidebar && this.options.sidebar_id) {
-            this.sidebar = new openerp.web.Sidebar(this, this.options.sidebar_id);
-            this.sidebar.start();
-            this.sidebar.do_unfold();
+            this.sidebar = new openerp.web.Sidebar(this);
+            this.sidebar.appendTo(this.$element.find(".oe_form_sidebar"));
             this.sidebar.attachments = new openerp.web.form.SidebarAttachments(this.sidebar, this);
             this.sidebar.add_toolbar(this.fields_view.toolbar);
             this.set_common_sidebar_sections(this.sidebar);
-
             this.sidebar.add_section(_t('Customize'), 'customize');
             this.sidebar.add_items('customize', [{
                 label: _t('Set Default'),
@@ -156,17 +154,11 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             result.pipe(function() {
                 self.$element.css('visibility', 'visible');
             });
-            if (self.sidebar) {
-                self.sidebar.$element.show();
-            }
             return result;
         });
     },
     do_hide: function () {
         this._super();
-        if (this.sidebar) {
-            this.sidebar.$element.hide();
-        }
     },
     on_record_loaded: function(record) {
         var self = this, set_values = [];

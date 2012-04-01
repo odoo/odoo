@@ -786,25 +786,21 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
     }
 });
 
-session.web.Sidebar = session.web.OldWidget.extend({
-    init: function(parent, element_id) {
-        this._super(parent, element_id);
+session.web.Sidebar = session.web.Widget.extend({
+    template: 'Sidebar',
+    init: function(parent) {
+        this._super(parent);
         this.items = {};
         this.sections = {};
     },
     start: function() {
         this._super(this);
-        var self = this;
-        this.$element.html(session.web.qweb.render('Sidebar'));
-        this.$element.find(".toggle-sidebar").click(function(e) {
-            self.do_toggle();
-        });
     },
     add_default_sections: function() {
-        var self = this,
-            view = this.getParent(),
-            view_manager = view.getParent(),
-            action = view_manager.action;
+        var self = this;
+        var view = this.getParent();
+        var view_manager = view.getParent();
+        var action = view_manager.action;
         if (this.session.uid === 1) {
             this.add_section(_t('Customize'), 'customize');
             this.add_items('customize', [{
@@ -825,7 +821,6 @@ session.web.Sidebar = session.web.OldWidget.extend({
             }
         ]);
     },
-
     add_toolbar: function(toolbar) {
         var self = this;
         _.each([['print', _t("Reports")], ['action', _t("Actions")], ['relate', _t("Links")]], function(type) {
@@ -843,7 +838,6 @@ session.web.Sidebar = session.web.OldWidget.extend({
             }
         });
     },
-
     add_section: function(name, code) {
         if(!code) code = _.str.underscored(name);
         var $section = this.sections[code];
@@ -948,15 +942,6 @@ session.web.Sidebar = session.web.OldWidget.extend({
             });
         });
     },
-    do_fold: function() {
-        this.$element.addClass('closed-sidebar').removeClass('open-sidebar');
-    },
-    do_unfold: function() {
-        this.$element.addClass('open-sidebar').removeClass('closed-sidebar');
-    },
-    do_toggle: function() {
-        this.$element.toggleClass('open-sidebar closed-sidebar');
-    }
 });
 
 session.web.TranslateDialog = session.web.Dialog.extend({

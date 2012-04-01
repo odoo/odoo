@@ -508,7 +508,6 @@
 </t>
 
 <t t-name="Sidebar">
-    <a class="toggle-sidebar"></a>
     <div class="sidebar-content">
         <div class="sidebar-actions">
         </div>
@@ -726,6 +725,9 @@
             <div class="oe_form_buttons" t-if="widget.options.action_buttons !== false">
                 <button type="button" class="oe_button oe_form_button_save">Save</button>
                 <button type="button" class="oe_button oe_form_button_cancel">Cancel</button>
+            </div>
+            <div class="oe_form_sidebar">
+                Sidebar
             </div>
             <div class="oe_form_pager" t-if="widget.options.pager !== false">
                 <t t-call="ViewPager">
