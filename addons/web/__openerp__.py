@@ -57,7 +57,7 @@
     ],
     'css' : [
         "static/lib/jquery.superfish/css/superfish.css",
-        "static/lib/jquery.ui/css/smoothness/jquery-ui-1.8.17.custom.css",
+        #"static/lib/jquery.ui/css/smoothness/jquery-ui-1.8.17.custom.css",
         "static/lib/jquery.ui.timepicker/css/jquery-ui-timepicker-addon.css",
         "static/lib/jquery.ui.notify/css/ui.notify.css",
         "static/lib/jquery.tipsy/tipsy.css",
