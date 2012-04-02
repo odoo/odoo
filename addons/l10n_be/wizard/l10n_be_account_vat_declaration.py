@@ -94,18 +94,18 @@ class l10n_be_vat_declaration(osv.osv_memory):
         tax_info = obj_tax_code.read(cr, uid, tax_code_ids, ['code','sum_period'], context=ctx)
 
         name = email = phone = address = post_code = city = country_code = ''
-        name, email, phone, city, post_code, address, country_code = self.pool.get('res.company')._get_default_ad(obj_company.partner_id.address)
+        name, email, phone, city, post_code, address, country_code = self.pool.get('res.company')._get_default_ad(obj_company.partner_id)
 
         account_period = obj_acc_period.browse(cr, uid, data['period_id'][0], context=context)
-        issued_by = vat_no[:2] 
+        issued_by = vat_no[:2]
         comments = data['comments'] or ''
-            
+
         send_ref = str(obj_company.partner_id.id) + str(account_period.date_start[5:7]) + str(account_period.date_stop[:4])
-        
+
         starting_month = account_period.date_start[5:7]
         ending_month = account_period.date_stop[5:7]
         quarter = str(((int(starting_month) - 1) / 3) + 1)
-    
+
         if not email:
             raise osv.except_osv(_('Data Insufficient!'),_('No email address associated with the company.'))
         if not phone:

@@ -35,7 +35,7 @@ class report_stock_move(osv.osv):
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
             ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
             ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
-        'partner_id':fields.many2one('res.partner.address', 'Partner', readonly=True),
+        'partner_id':fields.many2one('res.partner', 'Partner', readonly=True),
         'product_id':fields.many2one('product.product', 'Product', readonly=True),
         'company_id':fields.many2one('res.company', 'Company', readonly=True),
         'picking_id':fields.many2one('stock.picking', 'Packing', readonly=True),
@@ -76,7 +76,7 @@ class report_stock_move(osv.osv):
                         al.product_qty,
                         al.out_qty as product_qty_out,
                         al.in_qty as product_qty_in,
-                        al.address_id as partner_id,
+                        al.partner_id as partner_id,
                         al.product_id as product_id,
                         al.state as state ,
                         al.product_uom as product_uom,
@@ -113,7 +113,7 @@ class report_stock_move(osv.osv):
                         sm.location_dest_id as location_dest_id,
                         sum(sm.product_qty) as product_qty,
                         pt.categ_id as categ_id ,
-                        sm.address_id as address_id,
+                        sm.partner_id as partner_id,
                         sm.product_id as product_id,
                         sm.picking_id as picking_id,
                             sm.company_id as company_id,
@@ -129,7 +129,7 @@ class report_stock_move(osv.osv):
                           LEFT JOIN product_uom pu2 ON (sm.product_uom=pu2.id)
                         LEFT JOIN product_template pt ON (pp.product_tmpl_id=pt.id)
                     GROUP BY
-                        sm.id,sp.type, sm.date,sm.address_id,
+                        sm.id,sp.type, sm.date,sm.partner_id,
                         sm.product_id,sm.state,sm.product_uom,sm.date_expected,
                         sm.product_id,pt.standard_price, sm.picking_id, sm.product_qty,
                         sm.company_id,sm.product_qty, sm.location_id,sm.location_dest_id,pu.factor,pt.categ_id, sp.stock_journal_id)
@@ -137,7 +137,7 @@ class report_stock_move(osv.osv):
                     GROUP BY
                         al.out_qty,al.in_qty,al.curr_year,al.curr_month,
                         al.curr_day,al.curr_day_diff,al.curr_day_diff1,al.curr_day_diff2,al.dp,al.location_id,al.location_dest_id,
-                        al.address_id,al.product_id,al.state,al.product_uom,
+                        al.partner_id,al.product_id,al.state,al.product_uom,
                         al.picking_id,al.company_id,al.type,al.product_qty, al.categ_id, al.stock_journal
                )
         """)
@@ -154,7 +154,7 @@ class report_stock_inventory(osv.osv):
         'year': fields.char('Year', size=4, readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
             ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September')]),
-        'partner_id':fields.many2one('res.partner.address', 'Partner', readonly=True),
+        'partner_id':fields.many2one('res.partner', 'Partner', readonly=True),
         'product_id':fields.many2one('product.product', 'Product', readonly=True),
         'product_categ_id':fields.many2one('product.category', 'Product Category', readonly=True),
         'location_id': fields.many2one('stock.location', 'Location', readonly=True),
@@ -173,7 +173,7 @@ class report_stock_inventory(osv.osv):
 CREATE OR REPLACE view report_stock_inventory AS (
     (SELECT
         min(m.id) as id, m.date as date,
-        m.address_id as partner_id, m.location_id as location_id,
+        m.partner_id as partner_id, m.location_id as location_id,
         m.product_id as product_id, pt.categ_id as product_categ_id, l.usage as location_type,
         m.company_id,
         m.state as state, m.prodlot_id as prodlot_id,
@@ -190,12 +190,12 @@ CREATE OR REPLACE view report_stock_inventory AS (
             LEFT JOIN product_uom u ON (m.product_uom=u.id)
             LEFT JOIN stock_location l ON (m.location_id=l.id)
     GROUP BY
-        m.id, m.product_id, m.product_uom, pt.categ_id, m.address_id, m.location_id,  m.location_dest_id,
+        m.id, m.product_id, m.product_uom, pt.categ_id, m.partner_id, m.location_id,  m.location_dest_id,
         m.prodlot_id, m.date, m.state, l.usage, m.company_id, pt.uom_id
 ) UNION ALL (
     SELECT
         -m.id as id, m.date as date,
-        m.address_id as partner_id, m.location_dest_id as location_id,
+        m.partner_id as partner_id, m.location_dest_id as location_id,
         m.product_id as product_id, pt.categ_id as product_categ_id, l.usage as location_type,
         m.company_id,
         m.state as state, m.prodlot_id as prodlot_id,
@@ -211,7 +211,7 @@ CREATE OR REPLACE view report_stock_inventory AS (
             LEFT JOIN product_uom u ON (m.product_uom=u.id)
             LEFT JOIN stock_location l ON (m.location_dest_id=l.id)
     GROUP BY
-        m.id, m.product_id, m.product_uom, pt.categ_id, m.address_id, m.location_id, m.location_dest_id,
+        m.id, m.product_id, m.product_uom, pt.categ_id, m.partner_id, m.location_id, m.location_dest_id,
         m.prodlot_id, m.date, m.state, l.usage, m.company_id, pt.uom_id
     )
 );

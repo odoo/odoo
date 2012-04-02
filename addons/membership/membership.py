@@ -427,7 +427,6 @@ class Partner(osv.osv):
 
             invoice_id = invoice_obj.create(cr, uid, {
                 'partner_id': partner.id,
-                'address_invoice_id': addr.get('invoice', False),
                 'account_id': account_id,
                 'fiscal_position': fpos_id or False
                 }, context=context)

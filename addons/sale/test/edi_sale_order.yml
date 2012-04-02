@@ -4,7 +4,6 @@
   !record {model: sale.order, id: sale_order_edi_1}:
     partner_id: base.res_partner_agrolait
     partner_invoice_id: base.res_partner_address_8invoice
-    partner_order_id: base.res_partner_address_8invoice
     partner_shipping_id: base.res_partner_address_8invoice
     pricelist_id: 1
     order_line:
@@ -56,7 +55,7 @@
         "company_address": {
                 "__id": "base:5af1272e-dd26-11e0-b65e-701a04e25543.some_address",
                 "__module": "base",
-                "__model": "res.partner.address",
+                "__model": "res.partner",
                 "phone": "(+32).81.81.37.00",
                 "street": "Chaussee de Namur 40",
                 "city": "Gerompont",
@@ -67,16 +66,6 @@
                 ],
         },
         "partner_id": ["purchase:5af1272e-dd26-11e0-b65e-701a04e25543.res_partner_test20", "jones white"],
-        "partner_address": {
-                "__id": "base:5af1272e-dd26-11e0-b65e-701a04e25543.res_partner_address_7wdsjasdjh",
-                "__module": "base",
-                "__model": "res.partner.address",
-                "phone": "(+32).81.81.37.00",
-                "street": "Chaussee de Namur 40",
-                "city": "Gerompont",
-                "zip": "1367",
-                "country_id": ["base:5af1272e-dd26-11e0-b65e-701a04e25543.be", "Belgium"],
-        },
         "order_line": [{
                 "__id": "purchase:5af1272e-dd26-11e0-b65e-701a04e25543.purchase_order_line-AlhsVDZGoKvJ",
                 "__module": "purchase",

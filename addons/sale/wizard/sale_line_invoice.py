@@ -66,8 +66,6 @@ class sale_order_line_make_invoice(osv.osv_memory):
                 'reference': "P%dSO%d" % (order.partner_id.id, order.id),
                 'account_id': a,
                 'partner_id': order.partner_id.id,
-                'address_invoice_id': order.partner_invoice_id.id,
-                'address_contact_id': order.partner_invoice_id.id,
                 'invoice_line': [(6, 0, lines)],
                 'currency_id' : order.pricelist_id.currency_id.id,
                 'comment': order.note,

@@ -18,9 +18,8 @@
                     <newline/>
                     <field name="partner_id" readonly="True"/>
                     <field name="categ_id" string="Type" widget="selection" domain="[('object_id.model', '=', 'crm.phonecall')]"/>
-                    <field name="contact_name"/>
                     <field name="phone"/>
-                    <field name="user_id" attrs="{'invisible': [('action','=','log')]}"/>                    
+                    <field name="user_id" attrs="{'invisible': [('action','=','log')]}"/>
                     <field name="section_id" widget="selection" attrs="{'invisible': [('action','=','log')]}"/>
                     <separator string="Notes" colspan="4"/>
                     <field name="note" colspan="4" nolabel="1"/>
