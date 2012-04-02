@@ -11,7 +11,6 @@
             <field ref="base.res_partner_agrolait" name="partner_id"/>
             <field ref="base.res_partner_address_8" name="partner_invoice_id"/>
             <field ref="base.res_partner_address_8" name="partner_shipping_id"/>
-            <field ref="base.res_partner_address_8" name="partner_order_id"/>
             <field name="order_policy">picking</field>
             <field name="invoice_quantity">procurement</field> 
             <field name="note">Invoice after delivery</field>          
@@ -68,7 +67,6 @@
             <field name="partner_id" ref="base.res_partner_2"/>
             <field name="partner_invoice_id" ref="base.res_partner_address_9"/>
             <field name="partner_shipping_id" ref="base.res_partner_address_9"/>
-            <field name="partner_order_id" ref="base.res_partner_address_9"/>
             <field name="invoice_quantity">order</field>
             <field name="order_policy">postpaid</field>
             
@@ -104,7 +102,6 @@
             <field name="partner_id" ref="base.res_partner_agrolait"/>
             <field name="partner_invoice_id" ref="base.res_partner_address_8"/>
             <field name="partner_shipping_id" ref="base.res_partner_address_8"/>
-            <field name="partner_order_id" ref="base.res_partner_address_8"/>
             <field name="order_policy">prepaid</field>
         </record>
         <record id="line5" model="sale.order.line">
@@ -137,7 +134,6 @@
             <field name="partner_id" ref="base.res_partner_5"/>
             <field name="partner_invoice_id" ref="base.res_partner_address_10"/>
             <field name="partner_shipping_id" ref="base.res_partner_address_10"/>
-            <field name="partner_order_id" ref="base.res_partner_address_10"/>
         </record>
         <record id="line7" model="sale.order.line">
             <field name="order_id" ref="order4"/>
@@ -170,7 +166,6 @@
             <field name="partner_id" ref="base.res_partner_3"/>
             <field name="partner_invoice_id" ref="base.res_partner_address_zen"/>
             <field name="partner_shipping_id" ref="base.res_partner_address_zen"/>
-            <field name="partner_order_id" ref="base.res_partner_address_zen"/>
         </record>
         <record id="line9" model="sale.order.line">
             <field name="order_id" ref="order5"/>
@@ -203,7 +198,6 @@
             <field name="partner_id" ref="base.res_partner_maxtor"/>
             <field name="partner_invoice_id" ref="base.res_partner_address_wong"/>
             <field name="partner_shipping_id" ref="base.res_partner_address_wong"/>
-            <field name="partner_order_id" ref="base.res_partner_address_wong"/>
         </record>
         <record id="order6_line0" model="sale.order.line">
             <field name="order_id" ref="order6"/>
@@ -237,7 +231,6 @@
             <field name="partner_id" ref="base.res_partner_desertic_hispafuentes"/>
             <field name="partner_invoice_id" ref="base.res_partner_address_3000"/>
             <field name="partner_shipping_id" ref="base.res_partner_address_3000"/>
-            <field name="partner_order_id" ref="base.res_partner_address_3000"/>
         </record>
         <record id="order7_line0" model="sale.order.line">
             <field name="order_id" ref="order7"/>

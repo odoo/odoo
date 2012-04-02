@@ -69,7 +69,6 @@
                         </page>
                         <page string="Billing" groups="account.group_account_invoice">
                             <field colspan="4" name="partner_id" on_change="onchange_partner_id(partner_id)" select="1" string="Customer"/>
-                            <field domain="[('partner_id','=',partner_id)]" name="contact_id" string="Contact Address"/>
                             <field name="warn_customer"/>
                             <field name="currency_id" select="1" groups="base.group_multi_company" required="1"/>
                             <newline/>
@@ -354,7 +353,8 @@
                                             <field name="name"/>
                                         </td>
                                         <td valign="top" width="22">
-                                            <img t-att-src="kanban_gravatar(record.user_email.value, 22)" class="oe_kanban_gravatar" t-att-title="record.user_id.value"/>
+                                            <img t-att-src="kanban_image('res.users', 'avatar', record.user_id.raw_value[0])"  t-att-title="record.user_id.value"
+                                            width="22" height="22" class="oe_kanban_gravatar"/>
                                         </td>
                                     </tr>
                                     </table>

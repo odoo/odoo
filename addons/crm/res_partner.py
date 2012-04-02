@@ -50,21 +50,18 @@ class res_partner(osv.osv):
         return value
 
     def make_opportunity(self, cr, uid, ids, opportunity_summary, planned_revenue=0.0, probability=0.0, partner_id=None, context=None):
-        categ = self.pool.get('crm.case.categ')
-        address = self.address_get(cr, uid, ids)
-        categ_ids = categ.search(cr, uid, [('object_id.model','=','crm.lead')])
-        lead = self.pool.get('crm.lead')
+        categ_obj = self.pool.get('crm.case.categ')
+        categ_ids = categ_obj.search(cr, uid, [('object_id.model','=','crm.lead')])
+        lead_obj = self.pool.get('crm.lead')
         opportunity_ids = {}
         for partner in self.browse(cr, uid, ids, context=context):
-            address = self.address_get(cr, uid, [partner.id])['default']
             if not partner_id:
                 partner_id = partner.id
-            opportunity_id = lead.create(cr, uid, {
+            opportunity_id = lead_obj.create(cr, uid, {
                 'name' : opportunity_summary,
                 'planned_revenue' : planned_revenue,
                 'probability' : probability,
                 'partner_id' : partner_id,
-                'partner_address_id' : address,
                 'categ_id' : categ_ids and categ_ids[0] or '',
                 'state' :'draft',
                 'type': 'opportunity'
