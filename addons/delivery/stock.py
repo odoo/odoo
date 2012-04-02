@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -50,7 +50,7 @@ class stock_picking(osv.osv):
         for line in self.pool.get('stock.move').browse(cr, uid, ids, context=context):
             result[line.picking_id.id] = True
         return result.keys()
-    
+
     _columns = {
         'carrier_id':fields.many2one("delivery.carrier","Carrier"),
         'volume': fields.float('Volume'),
@@ -84,7 +84,7 @@ class stock_picking(osv.osv):
                 for inv_line in invoice.invoice_line):
             return None
         grid_id = carrier_obj.grid_get(cr, uid, [picking.carrier_id.id],
-                picking.address_id.id, context=context)
+                picking.partner_id.id, context=context)
         if not grid_id:
             raise osv.except_osv(_('Warning'),
                     _('The carrier %s (id: %d) has no delivery grid!') \
@@ -99,7 +99,7 @@ class stock_picking(osv.osv):
                     .property_account_income_categ.id
 
         taxes = picking.carrier_id.product_id.taxes_id
-        partner = picking.address_id.partner_id or False
+        partner = picking.partner_id or False
         if partner:
             account_id = self.pool.get('account.fiscal.position').map_account(cr, uid, partner.property_account_position, account_id)
             taxes_ids = self.pool.get('account.fiscal.position').map_tax(cr, uid, partner.property_account_position, taxes)
@@ -121,7 +121,7 @@ class stock_picking(osv.osv):
             group=False, type='out_invoice', context=None):
         invoice_obj = self.pool.get('account.invoice')
         picking_obj = self.pool.get('stock.picking')
-        invoice_line_obj = self.pool.get('account.invoice.line') 
+        invoice_line_obj = self.pool.get('account.invoice.line')
         result = super(stock_picking, self).action_invoice_create(cr, uid,
                 ids, journal_id=journal_id, group=group, type=type,
                 context=context)

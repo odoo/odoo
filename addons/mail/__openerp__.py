@@ -62,8 +62,10 @@ The main features are:
         "mail_thread_view.xml",
         "mail_group_view.xml",
         "res_partner_view.xml",
+        'security/mail_security.xml',
         'security/ir.model.access.csv',
         'mail_data.xml',
+        'res_users_view.xml',
     ],
     'installable': True,
     'auto_install': False,
@@ -73,6 +75,7 @@ The main features are:
         'images/messages_form.jpeg',
         'images/messages_list.jpeg',
         'static/src/img/email_icong.png',
+        'static/src/img/groupdefault.png',
     ],
     'css': [
         'static/src/css/mail.css',

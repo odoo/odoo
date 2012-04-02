@@ -11,14 +11,14 @@
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
-    
+
         <menuitem
-            name="Synchronize This Calendar"
+            name="Synchronize Your Meetings"
             action="action_caldav_browse"
             id="menu_caldav_browse"
             icon="STOCK_EXECUTE"
-            parent="crm.menu_meeting_sale" sequence="1"/>
-            
-        
+            parent="base.menu_import_crm" sequence="10"/>
+
+
     </data>
-</openerp> 
+</openerp>

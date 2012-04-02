@@ -141,8 +141,6 @@ class hr_applicant(crm.crm_case, osv.osv):
         'email_cc': fields.text('Watchers Emails', size=252, help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
         'probability': fields.float('Probability'),
         'partner_id': fields.many2one('res.partner', 'Partner'),
-        'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \
-                                 domain="[('partner_id','=',partner_id)]"),
         'create_date': fields.datetime('Creation Date', readonly=True, select=True),
         'write_date': fields.datetime('Update Date', readonly=True),
         'stage_id': fields.many2one ('hr.recruitment.stage', 'Stage'),

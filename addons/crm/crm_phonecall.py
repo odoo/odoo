@@ -45,8 +45,6 @@ class crm_phonecall(crm_base, osv.osv):
                         select=True, help='Sales team to which Case belongs to.'),
         'user_id': fields.many2one('res.users', 'Responsible'),
         'partner_id': fields.many2one('res.partner', 'Partner'),
-        'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \
-                                 domain="[('partner_id','=',partner_id)]"),
         'company_id': fields.many2one('res.company', 'Company'),
         'description': fields.text('Description'),
         'state': fields.selection([
@@ -68,8 +66,6 @@ class crm_phonecall(crm_base, osv.osv):
                         domain="['|',('section_id','=',section_id),('section_id','=',False),\
                         ('object_id.model', '=', 'crm.phonecall')]"),
         'partner_phone': fields.char('Phone', size=32),
-        'partner_contact': fields.related('partner_address_id', 'name', \
-                                 type="char", string="Contact", size=128),
         'partner_mobile': fields.char('Mobile', size=32),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
         'date_closed': fields.datetime('Closed', readonly=True),
@@ -211,7 +207,6 @@ class crm_phonecall(crm_base, osv.osv):
                     'date' : schedule_time,
                     'section_id' : section_id or False,
                     'partner_id': call.partner_id and call.partner_id.id or False,
-                    'partner_address_id': call.partner_address_id and call.partner_address_id.id or False,
                     'partner_phone' : call.partner_phone,
                     'partner_mobile' : call.partner_mobile,
                     'priority': call.priority,
@@ -237,9 +232,9 @@ class crm_phonecall(crm_base, osv.osv):
         self.set_partner_send_note(cr, uid, ids, context)
 
     def _call_create_partner_address(self, cr, uid, phonecall, partner_id, context=None):
-        address = self.pool.get('res.partner.address')
+        address = self.pool.get('res.partner')
         return address.create(cr, uid, {
-                    'partner_id': partner_id,
+                    'parent_id': partner_id,
                     'name': phonecall.name,
                     'phone': phonecall.partner_phone,
         })
@@ -284,7 +279,6 @@ class crm_phonecall(crm_base, osv.osv):
 
     def convert_opportunity(self, cr, uid, ids, opportunity_summary=False, partner_id=False, planned_revenue=0.0, probability=0.0, context=None):
         partner = self.pool.get('res.partner')
-        address = self.pool.get('res.partner.address')
         opportunity = self.pool.get('crm.lead')
         opportunity_dict = {}
         default_contact = False
@@ -294,7 +288,7 @@ class crm_phonecall(crm_base, osv.osv):
             if partner_id:
                 address_id = partner.address_get(cr, uid, [partner_id])['default']
                 if address_id:
-                    default_contact = address.browse(cr, uid, address_id, context=context)
+                    default_contact = partner.browse(cr, uid, address_id, context=context)
             opportunity_id = opportunity.create(cr, uid, {
                             'name': opportunity_summary or call.name,
                             'planned_revenue': planned_revenue,

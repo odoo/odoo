@@ -34,6 +34,7 @@ import tools
 from osv import osv
 from osv import fields
 from tools.translate import _
+from openerp import SUPERUSER_ID
 
 _logger = logging.getLogger('mail')
 
@@ -68,6 +69,35 @@ class mail_message_common(osv.osv_memory):
        database model or wizard screen that needs to hold a kind of
        message"""
 
+    def get_body(self, cr, uid, ids, name, arg, context=None):
+        if context is None:
+            context = {}
+        result = dict.fromkeys(ids, '')
+        for message in self.browse(cr, uid, ids, context=context):
+            if message.subtype == 'html':
+                result[message.id] = message.body_html
+            else:
+                result[message.id] = message.body_text
+        return result
+    
+    def search_body(self, cr, uid, obj, name, args, context=None):
+        """should have:
+           - obj: mail.message object
+           - name: 'body'
+           - args: [('body', 'ilike', 'blah')]"""
+        return ['|', '&', ('subtype', '=', 'html'), ('body_html', args[0][1], args[0][2]), ('body_text', args[0][1], args[0][2])]
+    
+    def get_record_name(self, cr, uid, ids, name, arg, context=None):
+        if context is None:
+            context = {}
+        result = dict.fromkeys(ids, '')
+        for message in self.browse(cr, uid, ids, context=context):
+            if not message.model or not message.res_id:
+                continue
+            model = self.pool.get(message.model)
+            result[message.id] = model.name_get(cr, uid, [message.res_id], context=context)[0][1]
+        return result
+    
     _name = 'mail.message.common'
     _rec_name = 'subject'
     _columns = {
@@ -81,18 +111,26 @@ class mail_message_common(osv.osv_memory):
         'email_bcc': fields.char('Bcc', size=256, help='Blind carbon copy message recipients'),
         'reply_to':fields.char('Reply-To', size=256, help='Preferred response address for the message'),
         'headers': fields.text('Message headers', readonly=1,
-                               help="Full message headers, e.g. SMTP session headers "
-                                    "(usually available on inbound messages only)"),
+                        help="Full message headers, e.g. SMTP session headers (usually available on inbound messages only)"),
         'message_id': fields.char('Message-Id', size=256, help='Message unique identifier', select=1, readonly=1),
         'references': fields.text('References', help='Message references, such as identifiers of previous messages', readonly=1),
         'subtype': fields.char('Message type', size=32, help="Type of message, usually 'html' or 'plain', used to "
                                                              "select plaintext or rich text contents accordingly", readonly=1),
         'body_text': fields.text('Text contents', help="Plain-text version of the message"),
         'body_html': fields.text('Rich-text contents', help="Rich-text/HTML version of the message"),
+        'body': fields.function(get_body, fnct_search = search_body, string='Message content', type='text',
+                        help="Content of the message. This content equals the body_text field for plain-test messages, and body_html for rich-text/HTML messages. This allows having one field if we want to access the content matching the message subtype."),
         'parent_id': fields.many2one('mail.message', 'Parent message', help="Parent message, used for displaying as threads with hierarchy"),
+        'type': fields.selection([
+                        ('email', 'e-mail'),
+                        ('comment', 'Comment'),
+                        ('notification', 'System notification'),
+                        ], 'Type', help="Message type: e-mail for e-mail message, notification for system message, comment for other messages such as user replies"),
+        'record_name': fields.function(get_record_name, type='string', string='Message record name', help="Name of the record, matching the result of the name_get."),
     }
 
     _defaults = {
+        'type': 'comment',
         'subtype': 'plain',
         'date': (lambda *a: fields.datetime.now()),
     }
@@ -101,18 +139,16 @@ class mail_message(osv.osv):
     '''Model holding messages: system notification (replacing res.log
        notifications), comments (for OpenSocial feature) and
        RFC2822 email messages. This model also provides facilities to
-       parse, queue and send new email messages.
-
-       Messages that do not have a value for the email_from column
-       are simple log messages (e.g. document state changes), while
-       actual e-mails have the email_from value set.
+       parse, queue and send new email messages. Type of messages
+       are differentiated using the 'type' column.
+       
        The ``display_text`` field will have a slightly different
        presentation for real emails and for log messages.
        '''
 
     _name = 'mail.message'
     _inherit = 'mail.message.common'
-    _description = 'Generic Message (Email, Comment, Notification)'
+    _description = 'Mail Message (Email, Comment, Notification)'
     _order = 'date desc'
 
     # XXX to review - how to determine action to use?
@@ -154,7 +190,9 @@ class mail_message(osv.osv):
             context = {}
         tz = context.get('tz')
         result = {}
-        for message in self.browse(cr, uid, ids, context=context):
+
+        # Read message as UID 1 to allow viewing author even if from different company
+        for message in self.browse(cr, SUPERUSER_ID, ids):
             msg_txt = ''
             if message.email_from:
                 msg_txt += _('%s wrote on %s: \n Subject: %s \n\t') % (message.email_from or '/', format_date_tz(message.date, tz), message.subject)
@@ -181,17 +219,11 @@ class mail_message(osv.osv):
                         ], 'State', readonly=True),
         'auto_delete': fields.boolean('Auto Delete', help="Permanently delete this email after sending it, to save space"),
         'original': fields.binary('Original', help="Original version of the message, as it was sent on the network", readonly=1),
-        'type': fields.selection([
-                        ('email', 'e-mail'),
-                        ('comment', 'Comment'),
-                        ('notification', 'System notification'),
-                        ], 'Type', help="Message type: e-mail for e-mail message, notification for system message, comment for other messages such as user replies"),
         
     }
         
     _defaults = {
         'state': 'received',
-        'type': 'comment',
     }
     
     #------------------------------------------------------
@@ -258,6 +290,7 @@ class mail_message(osv.osv):
                 'user_id': uid,
                 'model': model,
                 'res_id': res_id,
+                'type': 'email',
                 'body_text': body if subtype != 'html' else False,
                 'body_html': body if subtype == 'html' else False,
                 'email_from': email_from,
@@ -280,7 +313,7 @@ class mail_message(osv.osv):
             attachment_data = {
                     'name': fname,
                     'datas_fname': fname,
-                    'datas': fcontent,
+                    'datas': fcontent and fcontent.encode('base64'),
                     'res_model': self._name,
                     'res_id': email_msg_id,
             }
@@ -460,6 +493,7 @@ class mail_message(osv.osv):
                         msg['body_html'] = content
                         msg['subtype'] = 'html' # html version prevails
                         body = tools.ustr(tools.html2plaintext(content))
+                        body = body.replace('&#13;', '')
                     elif part.get_content_subtype() == 'plain':
                         body = content
                 elif part.get_content_maintype() in ('application', 'image'):
@@ -477,6 +511,23 @@ class mail_message(osv.osv):
         msg['sub_type'] = msg['subtype'] or 'plain'
         return msg
 
+    def _postprocess_sent_message(self, cr, uid, message, context=None):
+        """Perform any post-processing necessary after sending ``message``
+        successfully, including deleting it completely along with its
+        attachment if the ``auto_delete`` flag of the message was set.
+        Overridden by subclasses for extra post-processing behaviors. 
+
+        :param browse_record message: the message that was just sent
+        :return: True
+        """
+        if message.auto_delete:
+            self.pool.get('ir.attachment').unlink(cr, uid,
+                                                  [x.id for x in message.attachment_ids \
+                                                        if x.res_model == self._name and \
+                                                           x.res_id == message.id],
+                                                  context=context)
+            message.unlink()
+        return True
 
     def send(self, cr, uid, ids, auto_commit=False, context=None):
         """Sends the selected emails immediately, ignoring their current
@@ -534,14 +585,9 @@ class mail_message(osv.osv):
                     message.write({'state':'sent', 'message_id': res})
                 else:
                     message.write({'state':'exception'})
-
-                # if auto_delete=True then delete that sent messages as well as attachments
                 message.refresh()
-                if message.state == 'sent' and message.auto_delete:
-                    self.pool.get('ir.attachment').unlink(cr, uid,
-                                                          [x.id for x in message.attachment_ids],
-                                                          context=context)
-                    message.unlink()
+                if message.state == 'sent':
+                    self._postprocess_sent_message(cr, uid, message, context=context)
             except Exception:
                 _logger.exception('failed sending mail.message %s', message.id)
                 message.write({'state':'exception'})

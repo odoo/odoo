@@ -95,7 +95,7 @@ class mail_compose_message(osv.osv_memory):
                     for fname, fcontent in attachment.iteritems():
                         data_attach = {
                             'name': fname,
-                            'datas': base64.b64encode(fcontent),
+                            'datas': fcontent,
                             'datas_fname': fname,
                             'description': fname,
                             'res_model' : self._name,

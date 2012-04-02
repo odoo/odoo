@@ -32,6 +32,7 @@ class mail_subscription(osv.osv):
     _name = 'mail.subscription'
     _rec_name = 'id'
     _order = 'res_model asc'
+    _description = 'Mail subscription'
     _columns = {
         'res_model': fields.char('Related Document Model', size=128,
                         select=1, required=True),
@@ -49,6 +50,7 @@ class mail_notification(osv.osv):
     _rec_name = 'id'
     _log_access = False
     _order = 'message_id desc'
+    _description = 'Mail notification'
     _columns = {
         'user_id': fields.many2one('res.users', string='User',
                         ondelete='cascade', required=True, select=1),

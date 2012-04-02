@@ -47,8 +47,6 @@ class crm_meeting(crm_base, osv.osv):
         # From crm.case
         'name': fields.char('Summary', size=124, required=True, states={'done': [('readonly', True)]}),
         'partner_id': fields.many2one('res.partner', 'Partner', states={'done': [('readonly', True)]}),
-        'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \
-                                 domain="[('partner_id','=',partner_id)]", states={'done': [('readonly', True)]}),
         'section_id': fields.many2one('crm.case.section', 'Sales Team', states={'done': [('readonly', True)]}, \
                         select=True, help='Sales team to which Case belongs to.'),
         'email_from': fields.char('Email', size=128, states={'done': [('readonly', True)]}, help="These people will receive email."),

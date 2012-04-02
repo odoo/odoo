@@ -5,6 +5,7 @@
         <!-- toplevel menu -->
         <record id="mail_feeds_main" model="ir.ui.menu">
           <field name="name">Feeds</field>
+          <field name="sequence">0</field>
           <field name="action" ref="action_mail_all_feeds"/>
         </record>
 
@@ -22,11 +23,5 @@
           <field name="action" ref="action_mail_my_feeds"/>
           <field name="parent_id" ref="mail_feeds"/>
         </record>
-        <!-- left-side menu: Tmp !-->
-        <menuitem id="mail_debug" name="Debug/Tmp" sequence="20" parent="mail_feeds_main"/>
-        <menuitem id="mail_debug_msgs" name="Messages" parent="mail_debug" action="action_view_all_messages_short"/>
-        <menuitem id="mail_debug_subs" name="Subscriptions" parent="mail_debug" action="action_view_subscriptions"/>
-        <menuitem id="mail_debug_notifs" name="Pushed notif" parent="mail_debug" action="action_view_notifications"/>
-
     </data>
 </openerp>

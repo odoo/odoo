@@ -1,34 +1,34 @@
-- 
+-
   In order to test BVR printing. I create Partner data .
-- 
+-
   !record {model: res.partner.category, id: res_partner_category_bvr}:
     name: Customers
 -
   I create BVR DUMMY Customer.
-- 
+-
   !record {model: res.partner, id: res_partner_bvr}:
     category_id:
       - res_partner_category_bvr
     name: BVR DUMMY
-- 
+-
   I create contact address for BVR DUMMY.
-- 
-  !record {model: res.partner.address, id: res_partner_address_1}:
-    partner_id: res_partner_bvr
+-
+  !record {model: res.partner, id: res_partner_address_1}:
+    parent_id: res_partner_bvr
     street: Route de Bélario
     type: contact
-- 
+-
   I create invoice address for BVR DUMMY.
-- 
-  !record {model: res.partner.address, id: res_partner_address_2}:
-    partner_id: res_partner_bvr
+-
+  !record {model: res.partner, id: res_partner_address_2}:
+    parent_id: res_partner_bvr
     street: Route de Bélario
     type: invoice
-- 
+-
   I create delivery address for BVR DUMMY.
-- 
-  !record {model: res.partner.address, id: res_partner_address_3}:
-    partner_id: res_partner_bvr
+-
+  !record {model: res.partner, id: res_partner_address_3}:
+    parent_id: res_partner_bvr
     street: Route de Bélario
     type: delivery
 
@@ -38,13 +38,11 @@
   !record {model: account.invoice, id: l10n_ch_invoice, view: False}:
     currency_id: base.CHF
     company_id: base.main_company
-    address_invoice_id: res_partner_address_2
     partner_id: res_partner_bvr
     state: draft
     type: out_invoice
     account_id: account.a_recv
     name: BVR test invoice
-    address_contact_id: res_partner_address_1
 
 -
   In order to test the BVR report, I will assign a bank to the invoice

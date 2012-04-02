@@ -64,9 +64,7 @@ class account_analytic_line(osv.osv):
                 raise osv.except_osv(_('Analytic Account incomplete'),
                         _('Please fill in the Partner or Customer and Sale Pricelist fields in the Analytic Account:\n%s') % (account.name,))
 
-            if not partner.address:
-                raise osv.except_osv(_('Partner incomplete'),
-                        _('Please fill in the Address field in the Partner: %s.') % (partner.name,))
+
 
             date_due = False
             if partner.property_payment_term:
@@ -81,10 +79,6 @@ class account_analytic_line(osv.osv):
             curr_invoice = {
                 'name': time.strftime('%d/%m/%Y')+' - '+account.name,
                 'partner_id': account.partner_id.id,
-                'address_contact_id': res_partner_obj.address_get(cr, uid,
-                    [account.partner_id.id], adr_pref=['contact'])['contact'],
-                'address_invoice_id': res_partner_obj.address_get(cr, uid,
-                    [account.partner_id.id], adr_pref=['invoice'])['invoice'],
                 'payment_term': partner.property_payment_term.id or False,
                 'account_id': partner.property_account_receivable.id,
                 'currency_id': account.pricelist_id.currency_id.id,

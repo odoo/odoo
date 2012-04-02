@@ -126,7 +126,7 @@
         </record>
 
         <menuitem name="Association" id="base.menu_association" icon="terp-calendar" sequence="9"/>
-        <menuitem name="Membership" id="menu_membership" sequence="0" parent="base.menu_association"/>
+        <menuitem name="Members" id="menu_membership" sequence="0" parent="base.menu_association"/>
         <menuitem name="Configuration" id="base.menu_marketing_config_association"
             parent="base.menu_association" sequence="30" groups="base.group_extended"/>
 
@@ -215,7 +215,7 @@
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_tree"/>
             <field name="arch" type="xml">
-                <tree string="Partners">
+                <tree string="Contacts">
                     <field name="category_id" position="after"/>
                     <field name="membership_state"/>
                 </tree>
