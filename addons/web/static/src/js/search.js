@@ -1283,7 +1283,12 @@ openerp.web.search.Advanced = openerp.web.search.Input.extend({
     },
     commit_search: function () {
         // Get domain sections from all propositions
-        var domain = _.invoke(this.getChildren(), 'get_proposition');
+        var children = this.getChildren(),
+            domain = _.invoke(children, 'get_proposition'),
+            label = _(domain).map(function (section) {
+                return _.str.sprintf('%s(%s)%s',
+                    section[0], section[1], section[2]);
+            }).join(', ');
         // OR all propositions in a single domain: prepend one | for each
         // sliding pair of propositions
         for(var i=domain.length; --i;) {
@@ -1292,7 +1297,7 @@ openerp.web.search.Advanced = openerp.web.search.Input.extend({
         // Create Filter (& FilterGroup around it) with that domain
         var f = new openerp.web.search.FilterGroup([
             new openerp.web.search.Filter({attrs: {
-                string: 'bobuse',
+                string: label,
                 domain: domain
             }}, this.view)
         ], this.view);
@@ -1300,7 +1305,7 @@ openerp.web.search.Advanced = openerp.web.search.Input.extend({
         // FIXME: holy fucking crap shoot me now
         f.toggle_filter({target: {parentNode: {}}});
         // remove all propositions
-        _.invoke(this.getChildren(), 'destroy');
+        _.invoke(children, 'destroy');
         // add new empty proposition
         this.append_proposition();
         // ? close drawer?
