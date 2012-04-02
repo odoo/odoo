@@ -77,13 +77,12 @@ class res_company(osv.osv):
         """ Read the 'address' functional fields. """
         result = {}
         part_obj = self.pool.get('res.partner')
-        address_obj = self.pool.get('res.partner.address')
         for company in self.browse(cr, uid, ids, context=context):
             result[company.id] = {}.fromkeys(field_names, False)
             if company.partner_id:
                 address_data = part_obj.address_get(cr, uid, [company.partner_id.id], adr_pref=['default'])
                 if address_data['default']:
-                    address = address_obj.read(cr, uid, address_data['default'], field_names, context=context)
+                    address = part_obj.read(cr, uid, address_data['default'], field_names, context=context)
                     for field in field_names:
                         result[company.id][field] = address[field] or False
         return result
@@ -105,13 +104,12 @@ class res_company(osv.osv):
         company = self.browse(cr, uid, company_id, context=context)
         if company.partner_id:
             part_obj = self.pool.get('res.partner')
-            address_obj = self.pool.get('res.partner.address')
             address_data = part_obj.address_get(cr, uid, [company.partner_id.id], adr_pref=['default'])
             address = address_data['default']
             if address:
-                address_obj.write(cr, uid, [address], {name: value or False})
+                part_obj.write(cr, uid, [address], {name: value or False})
             else:
-                address_obj.create(cr, uid, {name: value or False, 'partner_id': company.partner_id.id}, context=context)
+                part_obj.create(cr, uid, {name: value or False, 'parent_id': company.partner_id.id}, context=context)
         return True
 
 
@@ -126,7 +124,7 @@ class res_company(osv.osv):
         'rml_header': fields.text('RML Header', required=True),
         'rml_header2': fields.text('RML Internal Header', required=True),
         'rml_header3': fields.text('RML Internal Header', required=True),
-        'logo': fields.binary('Logo'),
+        'logo': fields.related('partner_id', 'photo', string="Logo", type="binary"),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True),
         'currency_ids': fields.one2many('res.currency', 'company_id', 'Currency'),
         'user_ids': fields.many2many('res.users', 'res_company_users_rel', 'cid', 'user_id', 'Accepted Users'),
@@ -229,7 +227,7 @@ class res_company(osv.osv):
             self.cache_restart(cr)
             return super(res_company, self).create(cr, uid, vals, context=context)
         obj_partner = self.pool.get('res.partner')
-        partner_id = obj_partner.create(cr, uid, {'name': vals['name']}, context=context)
+        partner_id = obj_partner.create(cr, uid, {'name': vals['name'], 'is_company':True}, context=context)
         vals.update({'partner_id': partner_id})
         self.cache_restart(cr)
         company_id = super(res_company, self).create(cr, uid, vals, context=context)
@@ -296,12 +294,12 @@ class res_company(osv.osv):
 
 
             <drawString x="1.3cm" y="%s">[[ company.partner_id.name ]]</drawString>
-            <drawString x="1.3cm" y="%s">[[ company.partner_id.address and company.partner_id.address[0].street or  '' ]]</drawString>
-            <drawString x="1.3cm" y="%s">[[ company.partner_id.address and company.partner_id.address[0].zip or '' ]] [[ company.partner_id.address and company.partner_id.address[0].city or '' ]] - [[ company.partner_id.address and company.partner_id.address[0].country_id and company.partner_id.address[0].country_id.name  or '']]</drawString>
+            <drawString x="1.3cm" y="%s">[[ company.partner_id.street or  '' ]]</drawString>
+            <drawString x="1.3cm" y="%s">[[ company.partner_id.city or '' ]] - [[ company.partner_id.country_id and company.partner_id.country_id.name  or '']]</drawString>
             <drawString x="1.3cm" y="%s">Phone:</drawString>
-            <drawRightString x="7cm" y="%s">[[ company.partner_id.address and company.partner_id.address[0].phone or '' ]]</drawRightString>
+            <drawRightString x="7cm" y="%s">[[ company.partner_id.phone or '' ]]</drawRightString>
             <drawString x="1.3cm" y="%s">Mail:</drawString>
-            <drawRightString x="7cm" y="%s">[[ company.partner_id.address and company.partner_id.address[0].email or '' ]]</drawRightString>
+            <drawRightString x="7cm" y="%s">[[ company.partner_id.email or '' ]]</drawRightString>
             <lines>1.3cm %s 7cm %s</lines>
 
             <!--page bottom-->

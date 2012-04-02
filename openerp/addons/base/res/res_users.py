@@ -112,21 +112,6 @@ class groups(osv.osv):
                 aid.write({'groups_id': [(4, gid)]})
         return gid
 
-    def unlink(self, cr, uid, ids, context=None):
-        group_users = []
-        for record in self.read(cr, uid, ids, ['users'], context=context):
-            if record['users']:
-                group_users.extend(record['users'])
-        if group_users:
-            user_names = [user.name for user in self.pool.get('res.users').browse(cr, uid, group_users, context=context)]
-            user_names = list(set(user_names))
-            if len(user_names) >= 5:
-                user_names = user_names[:5] + ['...']
-            raise osv.except_osv(_('Warning !'),
-                        _('Group(s) cannot be deleted, because some user(s) still belong to them: %s !') % \
-                            ', '.join(user_names))
-        return super(groups, self).unlink(cr, uid, ids, context=context)
-
     def get_extended_interface_group(self, cr, uid, context=None):
         data_obj = self.pool.get('ir.model.data')
         extended_group_data_id = data_obj._get_id(cr, uid, 'base', 'group_extended')
