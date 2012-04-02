@@ -429,6 +429,7 @@ class purchase_order(osv.osv):
             'date': order.date_order,
             'partner_id': order.dest_address_id.id or order.partner_id.id,
             'invoice_state': '2binvoiced' if order.invoice_method == 'picking' else 'none',
+            'type': 'in',
             'purchase_id': order.id,
             'company_id': order.company_id.id,
             'move_lines' : [],
