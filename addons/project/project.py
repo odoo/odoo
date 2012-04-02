@@ -75,9 +75,8 @@ class project(osv.osv):
     def onchange_partner_id(self, cr, uid, ids, part=False, context=None):
         partner_obj = self.pool.get('res.partner')
         if not part:
-            return {'value':{'contact_id': False}}
-        addr = partner_obj.address_get(cr, uid, [part], ['contact'])
-        val = {'contact_id': addr['contact']}
+            return {'value':{}}
+        val = {}
         if 'pricelist_id' in self.fields_get(cr, uid, context=context):
             pricelist = partner_obj.read(cr, uid, part, ['property_product_pricelist'], context=context)
             pricelist_id = pricelist.get('property_product_pricelist', False) and pricelist.get('property_product_pricelist')[0] or False

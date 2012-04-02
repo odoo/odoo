@@ -19,9 +19,12 @@
 #
 ##############################################################################
 
-from osv import fields, osv
-import logging
 import addons
+import io
+import logging
+from osv import fields, osv
+from PIL import Image
+import StringIO
 
 class hr_employee_category(osv.osv):
 
@@ -145,6 +148,34 @@ class hr_employee(osv.osv):
     _name = "hr.employee"
     _description = "Employee"
     _inherits = {'resource.resource': "resource_id"}
+
+    def onchange_photo(self, cr, uid, ids, value, context=None):
+        if not value:
+            return {'value': {'photo_big': value, 'photo': value} }
+        return {'value': {'photo_big': self._photo_resize(cr, uid, value, 540, 450, context=context), 'photo': self._photo_resize(cr, uid, value, context=context)} }
+    
+    def _set_photo(self, cr, uid, id, name, value, args, context=None):
+        if not value:
+            vals = {'photo_big': value}
+        else:
+            vals = {'photo_big': self._photo_resize(cr, uid, value, 540, 450, context=context)}
+        return self.write(cr, uid, [id], vals, context=context)
+    
+    def _photo_resize(self, cr, uid, photo, heigth=180, width=150, context=None):
+        image_stream = io.BytesIO(photo.decode('base64'))
+        img = Image.open(image_stream)
+        img.thumbnail((heigth, width), Image.ANTIALIAS)
+        img_stream = StringIO.StringIO()
+        img.save(img_stream, "JPEG")
+        return img_stream.getvalue().encode('base64')
+    
+    def _get_photo(self, cr, uid, ids, name, args, context=None):
+        result = dict.fromkeys(ids, False)
+        for hr_empl in self.browse(cr, uid, ids, context=context):
+            if hr_empl.photo_big:
+                result[hr_empl.id] = self._photo_resize(cr, uid, hr_empl.photo_big, context=context)
+        return result
+    
     _columns = {
         'country_id': fields.many2one('res.country', 'Nationality'),
         'birthday': fields.date("Date of Birth"),
@@ -155,10 +186,9 @@ class hr_employee(osv.osv):
         'gender': fields.selection([('male', 'Male'),('female', 'Female')], 'Gender'),
         'marital': fields.selection([('single', 'Single'), ('married', 'Married'), ('widower', 'Widower'), ('divorced', 'Divorced')], 'Marital Status'),
         'department_id':fields.many2one('hr.department', 'Department'),
-        'address_id': fields.many2one('res.partner.address', 'Working Address'),
-        'address_home_id': fields.many2one('res.partner.address', 'Home Address'),
-        'partner_id': fields.related('address_home_id', 'partner_id', type='many2one', relation='res.partner', readonly=True, help="Partner that is related to the current employee. Accounting transaction will be written on this partner belongs to employee."),
-        'bank_account_id':fields.many2one('res.partner.bank', 'Bank Account Number', domain="[('partner_id','=',partner_id)]", help="Employee bank salary account"),
+        'address_id': fields.many2one('res.partner', 'Working Address'),
+        'address_home_id': fields.many2one('res.partner', 'Home Address'),
+        'bank_account_id':fields.many2one('res.partner.bank', 'Bank Account Number', domain="[('partner_id','=',address_home_id)]", help="Employee bank salary account"),
         'work_phone': fields.char('Work Phone', size=32, readonly=False),
         'mobile_phone': fields.char('Work Mobile', size=32, readonly=False),
         'work_email': fields.char('Work E-mail', size=240),
@@ -170,7 +200,11 @@ class hr_employee(osv.osv):
         'resource_id': fields.many2one('resource.resource', 'Resource', ondelete='cascade', required=True),
         'coach_id': fields.many2one('hr.employee', 'Coach'),
         'job_id': fields.many2one('hr.job', 'Job'),
-        'photo': fields.binary('Photo'),
+        'photo_big': fields.binary('Big-sized employee photo', help="This field holds the photo of the employee. The photo field is used as an interface to access this field. The image is base64 encoded, and PIL-supported. Full-sized photo are however resized to 540x450 px."),
+        'photo': fields.function(_get_photo, fnct_inv=_set_photo, string='Employee photo', type="binary",
+            store = {
+                'hr.employee': (lambda self, cr, uid, ids, c={}: ids, ['photo_big'], 10),
+            }, help="Image used as photo for the employee. It is automatically resized as a 180x150 px image. A larger photo is stored inside the photo_big field."),
         'passport_id':fields.char('Passport No', size=64),
         'color': fields.integer('Color Index'),
         'city': fields.related('address_id', 'city', type='char', string='City'),
@@ -190,7 +224,7 @@ class hr_employee(osv.osv):
 
     def onchange_address_id(self, cr, uid, ids, address, context=None):
         if address:
-            address = self.pool.get('res.partner.address').browse(cr, uid, address, context=context)
+            address = self.pool.get('res.partner').browse(cr, uid, address, context=context)
             return {'value': {'work_email': address.email, 'work_phone': address.phone, 'mobile_phone': address.mobile}}
         return {'value': {}}
 
@@ -217,7 +251,7 @@ class hr_employee(osv.osv):
 
     def _get_photo(self, cr, uid, context=None):
         photo_path = addons.get_module_resource('hr','images','photo.png')
-        return open(photo_path, 'rb').read().encode('base64')
+        return self._photo_resize(cr, uid, open(photo_path, 'rb').read().encode('base64'), context=context)
 
     _defaults = {
         'active': 1,

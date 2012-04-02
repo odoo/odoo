@@ -107,9 +107,10 @@
 
     <record id="partner_record1" model="res.partner">
         <field name="name">Unknown</field>
+        <field name="is_company">1</field>
     </record>
 
-    <record id="res_partner_unknown_address_1" model="res.partner.address">
+    <record id="res_partner_unknown_address_1" model="res.partner">
         <field name="city">Bruxelles1</field>
         <field name="name">Benoit Mortie1r1</field>
         <field name="zip">1030</field>
@@ -118,22 +119,24 @@
         <field name="phone">(+32)2 211 34 83</field>
         <field name="street">Rue des Palais 44, bte 33</field>
         <field name="type">default</field>
-        <field name="partner_id" ref="partner_record1"/>
+        <field name="use_parent_address" eval="0"/>
+        <field name="parent_id" ref="partner_record1"/>
     </record>
 
-    <record id="res_partner_unknown_address_2" model="res.partner.address">
+    <record id="res_partner_unknown_address_2" model="res.partner">
         <field name="city">Avignon CEDEX 091</field>
-        <field name="name">Laurent Jacot1</field>
+        <field name="name">Lara</field>
         <field name="zip">84911</field>
         <field name="country_id" model="res.country" search="[('name','=','France')]"/>
         <field name="email">contact@tecsas.fr</field>
         <field name="phone">(+33)4.32.74.10.57</field>
         <field name="street">85 rue du traite de Rome</field>
         <field name="type">default</field>
-        <field name="partner_id" ref="partner_record1"/>
+        <field name="use_parent_address" eval="0"/>
+        <field name="parent_id" ref="partner_record1"/>
     </record>
 
-    <record id="res_partner_unknown_address_3" model="res.partner.address">
+    <record id="res_partner_unknown_address_3" model="res.partner">
         <field name="city">Louvain-la-Neuve</field>
         <field name="name">Thomas Passot</field>
         <field name="zip">1348</field>
@@ -141,7 +144,8 @@
         <field name="email">info@mediapole.net</field>
         <field name="phone">(+32).10.45.17.73</field>
         <field name="street">Rue de l'Angelique, 1</field>
-        <field name="partner_id" ref="partner_record1"/>
+        <field name="use_parent_address" eval="0"/>
+        <field name="parent_id" ref="partner_record1"/>
     </record>
 
         <!-- demo data for the auction_artist object-->
