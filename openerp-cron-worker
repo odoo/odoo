@@ -96,6 +96,7 @@ if __name__ == '__main__':
     openerp.modules.loading.open_openerp_namespace()
     openerp.netsvc.init_logger()
     openerp.cron.enable_schedule_wakeup = False
+    openerp.multi_process = True # enable multi-process signaling
     import openerp.addons.base
     print "OpenERP cron jobs worker. Hit Ctrl-C to exit."
     print "Documentation is available at the top of the `opener-cron-worker` file."

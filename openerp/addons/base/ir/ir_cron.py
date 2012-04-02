@@ -351,8 +351,10 @@ class ir_cron(osv.osv):
 
                 # Got the lock on the job row, run its code
                 _logger.debug('Starting job `%s`.', job['name'])
+                openerp.modules.registry.RegistryManager.check_registry_signaling(db_name)
                 registry = openerp.pooler.get_pool(db_name)
                 registry[cls._name]._process_job(task_cr, job)
+                openerp.modules.registry.RegistryManager.signal_caches_change(db_name)
                 return True
 
         except psycopg2.ProgrammingError, e:
