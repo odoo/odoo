@@ -45,8 +45,8 @@
             <field name="body_html"><![CDATA[
 <div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); ">
 
-    <p>Hello${object.partner_order_id.name and ' ' or ''}${object.partner_order_id.name or ''},</p>
-
+    <p>Hello${object.partner_id.name and ' ' or ''}${object.partner_id.name or ''},</p>
+    
     <p>Here is your order confirmation for ${object.partner_id.name}: </p>
 
     <p style="border-left: 1px solid #8e0000; margin-left: 30px;">
@@ -127,7 +127,7 @@
 </div>
             ]]></field>
             <field name="body_text"><![CDATA[
-Hello${object.partner_order_id.name and ' ' or ''}${object.partner_order_id.name or ''},
+Hello${object.partner_id.name and ' ' or ''}${object.partner_id.name or ''},
 
 Here is your order confirmation for ${object.partner_id.name}:
        | Order number: *${object.name}*

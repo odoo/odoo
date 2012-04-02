@@ -26,7 +26,6 @@
        
        assert total_new_qty == total_qty,"product quantities are not correspond" 
        assert order.partner_id == order3.partner_id ,"partner is not correspond"
-       assert order.partner_address_id == order3.partner_address_id ,"Partner address is not correspond"
        assert order.warehouse_id == order3.warehouse_id or order7.warehouse_id,"Warehouse is not correspond"
        assert order.state == 'draft',"New created order state should be in draft"
        assert order.pricelist_id == order3.pricelist_id,"Price list is not correspond"

@@ -204,8 +204,6 @@ class project_issue(crm.crm_case, osv.osv):
                         select=True, help='Sales team to which Case belongs to.\
                              Define Responsible user and Email account for mail gateway.'),
         'partner_id': fields.many2one('res.partner', 'Partner', select=1),
-        'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \
-                                 domain="[('partner_id','=',partner_id)]"),
         'company_id': fields.many2one('res.company', 'Company'),
         'description': fields.text('Description'),
         'state': fields.selection([('draft', 'New'), ('open', 'In Progress'), ('cancel', 'Cancelled'), ('done', 'Done'),('pending', 'Pending'), ], 'State', size=16, readonly=True,
@@ -264,7 +262,6 @@ class project_issue(crm.crm_case, osv.osv):
     _defaults = {
         'active': 1,
         'partner_id': crm.crm_case._get_default_partner,
-        'partner_address_id': crm.crm_case._get_default_partner_address,
         'email_from': crm.crm_case._get_default_email,
         'state': 'draft',
         'section_id': crm.crm_case._get_section,

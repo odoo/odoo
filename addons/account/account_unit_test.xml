@@ -5,14 +5,12 @@
         <record id="test_invoice_1" model="account.invoice">
             <field name="currency_id" ref="base.EUR"/>
             <field name="company_id" ref="base.main_company"/>
-            <field name="address_invoice_id" ref="base.res_partner_address_tang"/>
             <field name="partner_id" ref="base.res_partner_asus"/>
             <field name="journal_id" ref="account.sales_journal"/>
             <field name="state">draft</field>
             <field name="type">out_invoice</field>
             <field name="account_id" ref="account.a_recv"/>
             <field name="name">Test invoice 1</field>
-            <field name="address_contact_id" ref="base.res_partner_address_tang"/>
         </record>
         <record id="test_tax_line" model="account.invoice.tax">
             <field name="name">Test Tax</field>

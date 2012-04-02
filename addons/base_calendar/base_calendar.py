@@ -250,8 +250,8 @@ class calendar_attendee(osv.osv):
             if name == 'cn':
                 if attdata.user_id:
                     result[id][name] = attdata.user_id.name
-                elif attdata.partner_address_id:
-                    result[id][name] = attdata.partner_address_id.name or attdata.partner_id.name
+                elif attdata.partner_id:
+                    result[id][name] = attdata.partner_id.name or False
                 else:
                     result[id][name] = attdata.email or ''
 
@@ -365,9 +365,7 @@ that points to the directory information corresponding to the attendee."),
                     store=True, help="To specify the language for text values in a\
 property or property parameter."),
         'user_id': fields.many2one('res.users', 'User'),
-        'partner_address_id': fields.many2one('res.partner.address', 'Contact'),
-        'partner_id': fields.related('partner_address_id', 'partner_id', type='many2one', \
-                        relation='res.partner', string='Partner', help="Partner related to contact"),
+        'partner_id': fields.many2one('res.partner', 'Contact'),
         'email': fields.char('Email', size=124, help="Email of Invited Person"),
         'event_date': fields.function(_compute_data, string='Event Date', \
                             type="datetime", multi='event_date'),

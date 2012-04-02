@@ -73,8 +73,8 @@ class account_invoice_line(osv.osv):
     _inherit = "account.invoice.line"
     _description = "Invoice Line"
 
-    def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, address_invoice_id=False, currency_id=False, context=None, company_id=None):
-        res_prod = super(account_invoice_line, self).product_id_change(cr, uid, ids, product, uom, qty, name, type, partner_id, fposition_id, price_unit, address_invoice_id, currency_id=currency_id, context=context, company_id=company_id)
+    def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, currency_id=False, context=None, company_id=None):
+        res_prod = super(account_invoice_line, self).product_id_change(cr, uid, ids, product, uom, qty, name, type, partner_id, fposition_id, price_unit, currency_id=currency_id, context=context, company_id=company_id)
         rec = self.pool.get('account.analytic.default').account_get(cr, uid, product, partner_id, uid, time.strftime('%Y-%m-%d'), context=context)
         if rec:
             res_prod['value'].update({'account_analytic_id': rec.analytic_id.id})
@@ -89,8 +89,8 @@ class stock_picking(osv.osv):
     _inherit = "stock.picking"
 
     def _get_account_analytic_invoice(self, cursor, user, picking, move_line):
-        partner_id = picking.address_id and picking.address_id.partner_id or False
-        rec = self.pool.get('account.analytic.default').account_get(cursor, user, move_line.product_id.id, partner_id and partner_id.id, user, time.strftime('%Y-%m-%d'), context={})
+        partner_id = picking.partner_id and picking.partner_id.id or False
+        rec = self.pool.get('account.analytic.default').account_get(cursor, user, move_line.product_id.id, partner_id , user, time.strftime('%Y-%m-%d'), context={})
 
         if rec:
             return rec.analytic_id.id
