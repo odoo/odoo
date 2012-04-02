@@ -108,13 +108,11 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         this.$form_header.find('button.oe_form_button_cancel').click(this.on_button_cancel);
 
         if (!this.sidebar && this.options.sidebar && this.options.sidebar_id) {
-            this.sidebar = new openerp.web.Sidebar(this, this.options.sidebar_id);
-            this.sidebar.start();
-            this.sidebar.do_unfold();
+            this.sidebar = new openerp.web.Sidebar(this);
+            this.sidebar.appendTo(this.$element.find(".oe_form_sidebar"));
             this.sidebar.attachments = new openerp.web.form.SidebarAttachments(this.sidebar, this);
             this.sidebar.add_toolbar(this.fields_view.toolbar);
             this.set_common_sidebar_sections(this.sidebar);
-
             this.sidebar.add_section(_t('Customize'), 'customize');
             this.sidebar.add_items('customize', [{
                 label: _t('Set Default'),
@@ -156,17 +154,11 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             result.pipe(function() {
                 self.$element.css('visibility', 'visible');
             });
-            if (self.sidebar) {
-                self.sidebar.$element.show();
-            }
             return result;
         });
     },
     do_hide: function () {
         this._super();
-        if (this.sidebar) {
-            this.sidebar.$element.hide();
-        }
     },
     on_record_loaded: function(record) {
         var self = this, set_values = [];
@@ -983,12 +975,12 @@ openerp.web.FormRenderingEngine = nova.Class.extend({
         var self = this;
         var pages = [];
         $notebook.find('> page').each(function() {
-            var $page = $(this),
-                page_attrs = $page.getAttributes();
+            var $page = $(this);
+            var page_attrs = $page.getAttributes();
             page_attrs.id = _.uniqueId('notebook_page_');
             pages.push(page_attrs);
-            var $new_page = self.render_element('FormRenderingNotebookPage', page_attrs),
-                $dst = self.legacy_mode ? $new_page.find('group:first') : $new_page;
+            var $new_page = self.render_element('FormRenderingNotebookPage', page_attrs);
+            var $dst = self.legacy_mode ? $new_page.find('group:first') : $new_page;
             $page.children().appendTo($dst);
             $page.before($new_page).remove();
             self.handle_common_properties($new_page, $page);
@@ -1243,8 +1235,7 @@ openerp.web.form.InvisibilityChanger = nova.Class.extend(_.extend({}, nova.Gette
     },
 }));
 
-openerp.web.form.Widget = openerp.web.Widget.extend(/** @lends openerp.web.form.Widget# */
-                                                    _.extend({}, openerp.web.form.InvisibilityChangerMixin, {
+openerp.web.form.Widget = openerp.web.Widget.extend(_.extend({}, openerp.web.form.InvisibilityChangerMixin, {
     /**
      * @constructs openerp.web.form.Widget
      * @extends openerp.web.Widget
@@ -1455,7 +1446,6 @@ openerp.web.form.WidgetButton = openerp.web.form.Widget.extend({
  *     - view_content_has_changed : when the values of the fields have changed. When
  *     this event is triggered all fields should reprocess their modifiers.
  */
-
 openerp.web.form.FieldManagerInterface = {
 
 };

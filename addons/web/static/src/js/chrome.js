@@ -846,6 +846,8 @@ openerp.web.UserMenu =  openerp.web.Widget.extend(/** @lends openerp.web.UserMen
                 // TODO: Show company if multicompany is in use
                 var topbar_name = _.str.sprintf("%s (%s)", res.name, openerp.connection.db, res.company_id[1]);
                 self.$element.find('.oe_topbar_name').text(topbar_name);
+                var avatar_src = _.str.sprintf('%s/web/binary/image?session_id=%s&model=res.users&field=avatar&id=%s', self.session.prefix, self.session.session_id, self.session.uid);
+                $avatar.attr('src', avatar_src);
                 return self.shortcut_load();
             });
         };

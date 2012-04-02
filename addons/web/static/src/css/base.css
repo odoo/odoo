@@ -600,6 +600,56 @@
 .openerp2 .oe_layout_debug_cell {
   display: none;
 }
+.openerp2 .oe_form_notebook {
+  margin: 8px 0;
+  padding: 0 8px;
+  list-style: none;
+  zoom: 1;
+}
+.openerp2 .oe_form_notebook:before, .openerp2 .oe_form_notebook:after {
+  display: table;
+  content: "";
+  zoom: 1;
+}
+.openerp2 .oe_form_notebook:after {
+  clear: both;
+}
+.openerp2 .oe_form_notebook > li {
+  float: left;
+}
+.openerp2 .oe_form_notebook > li > a {
+  display: block;
+  color: #4c4c4c;
+}
+.openerp2 .oe_form_notebook {
+  border-color: #dddddd;
+  border-style: solid;
+  border-width: 0 0 1px;
+}
+.openerp2 .oe_form_notebook > li {
+  position: relative;
+  margin-bottom: -1px;
+}
+.openerp2 .oe_form_notebook > li > a {
+  padding: 0 12px;
+  margin-right: 2px;
+  line-height: 30px;
+  border: 1px solid transparent;
+  -moz-border-radius: 4px 4px 0 0;
+  -webkit-border-radius: 4px 4px 0 0;
+  border-radius: 4px 4px 0 0;
+}
+.openerp2 .oe_form_notebook > li > a:hover {
+  text-decoration: none;
+  background-color: #eeeeee;
+  border-color: #eeeeee #eeeeee #dddddd;
+}
+.openerp2 .oe_form_notebook > li.ui-state-active > a, .openerp2 .oe_form_notebook > li.ui-state-active > a:hover {
+  background-color: white;
+  border: 1px solid #dddddd;
+  border-bottom-color: transparent;
+  cursor: default;
+}
 .openerp2 .oe_form_label_help[for], .openerp2 .oe_form_label[for] {
   white-space: nowrap;
 }

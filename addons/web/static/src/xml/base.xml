@@ -508,7 +508,6 @@
 </t>
 
 <t t-name="Sidebar">
-    <a class="toggle-sidebar"></a>
     <div class="sidebar-content">
         <div class="sidebar-actions">
         </div>
@@ -727,6 +726,9 @@
                 <button type="button" class="oe_button oe_form_button_save">Save</button>
                 <button type="button" class="oe_button oe_form_button_cancel">Cancel</button>
             </div>
+            <div class="oe_form_sidebar">
+                Sidebar
+            </div>
             <div class="oe_form_pager" t-if="widget.options.pager !== false">
                 <t t-call="ViewPager">
                     <span class="oe_pager_index">0</span><span class="oe_pager_separator"> / </span><span class="oe_pager_count">0</span>
@@ -863,8 +865,8 @@
     </t>
 </t>
 <t t-name="FormRenderingNotebook">
-    <div class="oe_form_notebook">
-        <ul>
+    <div>
+        <ul class="oe_form_notebook">
             <li t-foreach="pages" t-as="page">
                 <a t-attf-href="##{page.id}">
                     <t t-esc="page.string"/>

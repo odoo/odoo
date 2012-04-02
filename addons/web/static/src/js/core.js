@@ -13,6 +13,7 @@ openerp.web.core = function(openerp) {
 
 // a function to override the "extend()" method of JR's inheritance, allowing
 // the usage of "include()"
+// al: Either move it into novajs or make sure we dont use include, i dont want 2 diff implementations of 'extend'
 oe_override_class = function(claz){
     var initializing = false, fnTest = /xyz/.test(function(){xyz;}) ?
     /\b_super\b/ : /.*/;
@@ -93,6 +94,7 @@ oe_override_class = function(claz){
         return Class;
     };
 };
+
 oe_override_class(nova.Class);
 oe_override_class(nova.Widget);
 
@@ -1370,24 +1372,6 @@ openerp.web.TranslationDataBase = openerp.web.Class.extend(/** @lends openerp.we
     }
 });
 
-/** Configure blockui */
-if ($.blockUI) {
-    $.blockUI.defaults.baseZ = 1100;
-    $.blockUI.defaults.message = '<img src="/web/static/src/img/throbber2.gif">';
-}
-
-/** Custom jQuery plugins */
-$.fn.getAttributes = function() {
-    var o = {};
-    if (this.length) {
-        for (var attr, i = 0, attrs = this[0].attributes, l = attrs.length; i < l; i++) {
-            attr = attrs.item(i)
-            o[attr.nodeName] = attr.nodeValue;
-        }
-    }
-    return o;
-}
-
 /** Configure default qweb */
 openerp.web._t = new openerp.web.TranslationDataBase().build_translation_function();
 /**
@@ -1440,22 +1424,23 @@ openerp.web.qweb.preprocess_node = function() {
     }
 };
 
-/**
- * A small utility function to check if a class implements correctly an interface, assuming that
- * interface is simply specified using a dictionary containing methods and attributes with the
- * correct type. It only performs the check when in debug mode and the only effect of an invalid
- * check is messages in the console.
- */
-openerp.web.check_interface = function(_class, _interface) {
-    if (! openerp.web.check_interface.debug)
-        return;
-    for (var member in _interface) {
-        if ( (typeof _class.prototype[member] != typeof _interface[member]) ) {
-            console.error("class failed to implement interface member '" + member + "'");
+/** Configure blockui */
+if ($.blockUI) {
+    $.blockUI.defaults.baseZ = 1100;
+    $.blockUI.defaults.message = '<img src="/web/static/src/img/throbber2.gif">';
+}
+
+/** Custom jQuery plugins */
+$.fn.getAttributes = function() {
+    var o = {};
+    if (this.length) {
+        for (var attr, i = 0, attrs = this[0].attributes, l = attrs.length; i < l; i++) {
+            attr = attrs.item(i)
+            o[attr.nodeName] = attr.nodeValue;
         }
     }
+    return o;
 }
-openerp.web.check_interface.debug = ($.deparam($.param.querystring()).debug != undefined);
 
 /** Jquery extentions */
 $.Mutex = (function() {
@@ -1477,7 +1462,6 @@ $.Mutex = (function() {
 /** Setup default connection */
 openerp.connection = new openerp.web.Connection();
 openerp.web.qweb.default_dict['__debug__'] = openerp.connection.debug;
-
 
 $.async_when = function() {
     var async = false;

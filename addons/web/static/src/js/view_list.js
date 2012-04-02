@@ -276,10 +276,10 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
                         .val(self._limit || 'NaN');
                 });
         if (!this.sidebar && this.options.sidebar && this.options.sidebar_id) {
-            this.sidebar = new openerp.web.Sidebar(this, this.options.sidebar_id);
-            this.sidebar.start();
-            this.sidebar.add_toolbar(this.fields_view.toolbar);
-            this.set_common_sidebar_sections(this.sidebar);
+            //this.sidebar = new openerp.web.Sidebar(this, this.options.sidebar_id);
+            //this.sidebar.start();
+            //this.sidebar.add_toolbar(this.fields_view.toolbar);
+            //this.set_common_sidebar_sections(this.sidebar);
         }
     },
     /**
