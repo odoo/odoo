@@ -710,17 +710,7 @@ class BaseModel(object):
     CONCURRENCY_CHECK_FIELD = '__last_update'
 
     def log(self, cr, uid, id, message, secondary=False, context=None):
-        if context and context.get('disable_log'):
-            return True
-        return self.pool.get('res.log').create(cr, uid,
-                {
-                    'name': message,
-                    'res_model': self._name,
-                    'secondary': secondary,
-                    'res_id': id,
-                },
-                context=context
-        )
+        return _logger.warning("log() is deprecated. Please use OpenChatter notification system instead of the res.log mechanism.")
 
     @staticmethod
     def get_needaction_info(cr, uid, model_name, user_id, limit=None, order=None, domain=False, context=None):

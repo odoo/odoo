@@ -187,6 +187,7 @@ class publisher_warranty_contract(osv.osv):
 
 
             limit_date = (datetime.datetime.now() - _PREVIOUS_LOG_CHECK).strftime(misc.DEFAULT_SERVER_DATETIME_FORMAT)
+            # TODO: must be updated with OpenChatter ?
             for message in result["messages"]:
                 ids = self.pool.get("res.log").search(cr, uid, [("res_model", "=", "publisher_warranty.contract"),
                                                           ("create_date", ">=", limit_date),
