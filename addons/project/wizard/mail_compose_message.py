@@ -41,7 +41,7 @@ class mail_compose_message(osv.osv_memory):
             partner = task_data.partner_id or task_data.project_id.partner_id
             if task_data.project_id.warn_manager and (not task_data.project_id.user_id or task_data.project_id.user_id and not task_data.project_id.user_id.user_email) :
                 raise osv.except_osv(_('Error'), _("Please specify the Project Manager or email address of Project Manager."))
-            elif task_data.project_id.warn_customer and (not partner or not len(partner.address) or (partner and len(partner.address) and not partner.address[0].email)):
+            elif task_data.project_id.warn_customer and (not partner or (partner and not partner.email)):
                 raise osv.except_osv(_('Error'), _("Please specify the Customer or email address of Customer."))
 
             result.update({'email_from': task_data.user_id and task_data.user_id.user_email or False})
@@ -56,8 +56,8 @@ class mail_compose_message(osv.osv_memory):
             header = (task_data.project_id.warn_header or '') % val
             footer = (task_data.project_id.warn_footer or '') % val
             description = u'%s\n %s\n %s\n\n \n%s' % (header, task_data.description or '', footer, task_data.user_id and task_data.user_id.signature)
-            if partner and len(partner.address):
-                result.update({'email_to': result.get('email_to',False) and result.get('email_to') + ',' + partner.address[0].email})
+            if partner :
+                result.update({'email_to': result.get('email_to',False) and result.get('email_to') + ',' + partner.email})
             result.update({
                        'body_text': description or False,
                        'email_to':   task_data.project_id.user_id and task_data.project_id.user_id.user_email or False,

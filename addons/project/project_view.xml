@@ -69,7 +69,6 @@
                         </page>
                         <page string="Billing" groups="account.group_account_invoice">
                             <field colspan="4" name="partner_id" on_change="onchange_partner_id(partner_id)" select="1" string="Customer"/>
-                            <field domain="[('partner_id','=',partner_id)]" name="contact_id" string="Contact Address"/>
                             <field name="warn_customer"/>
                             <field name="currency_id" select="1" groups="base.group_multi_company" required="1"/>
                             <newline/>
@@ -354,7 +353,8 @@
                                             <field name="name"/>
                                         </td>
                                         <td valign="top" width="22">
-                                            <img t-att-src="kanban_gravatar(record.user_email.value, 22)" class="oe_kanban_gravatar" t-att-title="record.user_id.value"/>
+                                            <img t-att-src="kanban_image('res.users', 'avatar', record.user_id.raw_value[0])"  t-att-title="record.user_id.value"
+                                            width="22" height="22" class="oe_kanban_gravatar"/>
                                         </td>
                                     </tr>
                                     </table>
@@ -622,12 +622,12 @@
             <field name="help">Define the steps that will be used in the project from the creation of the task, up to the closing of the task or issue. You will use these stages in order to track the progress in solving a task or an issue.</field>
         </record>
 
-        <menuitem id="menu_tasks_config" name="Tasks" parent="project.menu_definitions" sequence="1"/>
+        <menuitem id="menu_tasks_config" name="GTD" parent="project.menu_definitions" sequence="1"/>
 
         <menuitem id="menu_project_config_project" name="Projects and Stages" parent="menu_definitions" sequence="1"/>
 
-        <menuitem action="open_task_type_form" id="menu_task_types_view" parent="menu_project_config_project" sequence="2"/>
-        <menuitem action="open_view_project_all" id="menu_open_view_project_all" parent="menu_project_management" sequence="1"/>
+        <menuitem action="open_task_type_form" id="menu_task_types_view" parent="menu_project_config_project" sequence="2" groups="base.group_no_one"/>
+        <menuitem action="open_view_project_all" id="menu_open_view_project_all" parent="menu_project_config_project" sequence="1" groups="base.group_no_one"/>
 
         <act_window context="{'search_default_user_id': [active_id], 'default_user_id': active_id}" id="act_res_users_2_project_project" name="User's projects" res_model="project.project" src_model="res.users" view_mode="tree,form" view_type="form"/>
 

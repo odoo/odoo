@@ -38,17 +38,13 @@ class crm_phonecall2partner(osv.osv_memory):
 
         phonecall_obj = self.pool.get('crm.phonecall')
         partner_obj = self.pool.get('res.partner')
-        contact_obj = self.pool.get('res.partner.address')
         rec_ids = context and context.get('active_ids', [])
         value = {}
-
+        partner_id = False
         for phonecall in phonecall_obj.browse(cr, uid, rec_ids, context=context):
             partner_ids = partner_obj.search(cr, uid, [('name', '=', phonecall.name or phonecall.name)])
-            if not partner_ids and phonecall.email_from:
-                address_ids = contact_obj.search(cr, uid, ['|', ('phone', '=', phonecall.partner_phone), ('mobile','=',phonecall.partner_mobile)])
-                if address_ids:
-                    addresses = contact_obj.browse(cr, uid, address_ids)
-                    partner_ids = addresses and [addresses[0].partner_id.id] or False
+            if not partner_ids and (phonecall.partner_phone or phonecall.partner_mobile):
+                partner_ids = partner_obj.search(cr, uid, ['|', ('phone', '=', phonecall.partner_phone), ('mobile','=',phonecall.partner_mobile)])
 
             partner_id = partner_ids and partner_ids[0] or False
         return partner_id

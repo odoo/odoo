@@ -53,6 +53,7 @@ Note that:
     ],
     'demo_xml': ['event_demo.xml'],
     'test': ['test/process/event_draft2done.yml'],
+    'css': ['static/src/css/event.css'],
     'installable': True,
     'application': True,
     'auto_install': False,
