@@ -668,7 +668,7 @@ class purchase_order(osv.osv):
         for obj in self.browse(cr, uid, ids, context=context):
             self.message_subscribe(cr, uid, [obj.id], [obj.validator.id], context=context)
             self.message_append_note(cr, uid, [obj.id], _('System notification'),
-                        _("""Quotation <em>%s</em> <b>converted</b> to a Purchase Order of  %s %s.""")
+                        _("""Quotation for <em>%s</em> <b>converted</b> to a Purchase Order of %s %s.""")
                         % (obj.partner_id.name, obj.amount_total, obj.pricelist_id.currency_id.symbol), type='notification', context=context)
         
     def shipment_send_note(self, cr, uid, ids, picking_id, context=None):
@@ -683,7 +683,7 @@ class purchase_order(osv.osv):
         for order in self.browse(cr, uid, ids, context=context):
             for invoice in (inv for inv in order.invoice_ids if inv.id == invoice_id):
                 self.message_append_note(cr, uid, [order.id], _('System notification'),
-                        _("""Draft Invoice of %s %s <b>waiting for validation</b>.""")
+                        _("""Draft Invoice of %s %s is <b>waiting for validation</b>.""")
                         % (invoice.amount_total, invoice.currency_id.symbol), type='notification', context=context)
     
     def shipment_done_send_note(self, cr, uid, ids, context=None):
