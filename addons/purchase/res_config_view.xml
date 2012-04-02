@@ -7,24 +7,19 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Configure Purchases">
-                    <group colspan="4" col="6">
-                        <separator string="Invoicing" colspan="6"/>
-                        <field name="default_invoice_method" />
+                    <separator string="Invoicing" colspan="4"/>
+                    <field name="default_invoice_method" />
 
-                        <separator string="Purchase Order" colspan="6"/>
-                        <field name="group_purchase_pricelist"/>
-                        <field name="module_purchase_double_validation"/>
-                        <newline/>
-                        <field name="group_uom"/>
-                        <field name="module_purchase_requisition"/>
-                        <newline/>
-                        <field name="module_warning"/>
-                        <field name="module_purchase_analytic_plans"/>
-                        <newline/>
+                    <separator string="Purchase Order" colspan="4"/>
+                    <field name="group_purchase_pricelist"/>
+                    <field name="group_uom"/>
+                    <field name="module_purchase_double_validation"/>
+                    <field name="module_purchase_requisition"/>
+                    <field name="module_warning"/>
+                    <field name="module_purchase_analytic_plans"/>
 
-                        <separator string="Products" colspan="6"/>
-                        <field name="module_product_manufacturer"/>
-                    </group>
+                    <separator string="Products" colspan="4"/>
+                    <field name="module_product_manufacturer"/>
                 </form>
             </field>
         </record>
