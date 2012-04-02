@@ -4165,8 +4165,7 @@ class BaseModel(object):
                 upd1 = upd1 + ',' + self._columns[field]._symbol_set[0]
                 upd2.append(self._columns[field]._symbol_set[1](vals[field]))
             else:
-                if not isinstance(self._columns[field], fields.related):
-                    upd_todo.append(field)
+                upd_todo.append(field)
             if field in self._columns \
                     and hasattr(self._columns[field], 'selection') \
                     and vals[field]:
