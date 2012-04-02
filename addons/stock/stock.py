@@ -1378,17 +1378,17 @@ class stock_picking(osv.osv):
     def create_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             self.message_append_note(cr, uid, [obj.id], _('System notification'),
-                    _("""%s <b>created</b>.""") % (self._get_document_type(obj.type)),
+                    _("""%s has been <b>created</b>.""") % (self._get_document_type(obj.type)),
                       type='notification', context=context)
     
     def scrap_send_note(self, cr, uid, ids, quantity, name, context=None):
         self.message_append_note(cr, uid, ids, _('System notification'),
-                    _("""%s  %s <b>moved to</b> scrap.""")
+                    _("""%s %s have been <b>moved to</b> scrap.""")
                     % (quantity, name), type='notification', context=context)
     
     def back_order_send_note(self, cr, uid, ids, back_name, context=None):
         self.message_append_note(cr, uid, ids, _('System notification'),
-                    _("""Back order <em>%s</em> <b>created</b>.""")
+                    _("""Back order has been <em>%s</em> <b>created</b>.""")
                     % (back_name), type='notification', context=context)
     
     def ship_done_send_note(self, cr, uid, ids, context=None):
@@ -1399,13 +1399,13 @@ class stock_picking(osv.osv):
         }
         for obj in self.browse(cr, uid, ids, context=context):
             self.message_append_note(cr, uid, [obj.id], _('System notification'),
-                        _("""Product <b>%s</b>.""") % (type_dict.get(obj.type, 'move done')),
+                        _("""Products have been <b>%s</b>.""") % (type_dict.get(obj.type, 'move done')),
                          type='notification', context=context)
     
     def ship_cancel_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             self.message_append_note(cr, uid, [obj.id], _('System notification'),
-                        _("""%s <b>cancelled</b>.""") % (self._get_document_type(obj.type)),
+                        _("""%s has been <b>cancelled</b>.""") % (self._get_document_type(obj.type)),
                          type='notification', context=context)
             
 
