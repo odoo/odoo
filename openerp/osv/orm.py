@@ -743,14 +743,14 @@ class BaseModel(object):
         if hasattr(model_obj, 'needaction_get_record_ids'):
             ids = model_obj.needaction_get_record_ids(cr, uid, model_name, user_id, limit=8096, context=context)
             if not ids:
-                return [True, 0, []]
+                return (True, 0, [])
             if domain:
                 new_domain = eval(domain) + [('id', 'in', ids)]
             else:
                 new_domain = [('ids', 'in', ids)]
-            return [True, model_obj.search(cr, uid, new_domain, limit=limit, order=order, count=True), ids]
+            return (True, model_obj.search(cr, uid, new_domain, limit=limit, order=order, count=True), ids)
         else:
-            return [False, 0, []]
+            return (False, 0, [])
     
     def view_init(self, cr, uid, fields_list, context=None):
         """Override this method to do specific things when a view on the object is opened."""
