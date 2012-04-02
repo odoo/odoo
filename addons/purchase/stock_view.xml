@@ -78,15 +78,12 @@
                             domain="[('invoice_state', '=', '2binvoiced')]"/>
                         <separator orientation="vertical"/>
                         <field name="name"/>
-                        <field name="partner_id"/>
                         <field name="origin"/>
                         <field name="stock_journal_id" groups="base.group_extended" widget="selection"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                     </group>                    
                     <newline/>
                     <group expand="0" string="Group By..." colspan="4" col="8">
-                        <filter string="Partner" icon="terp-partner"
-                            domain="[]" context="{'group_by':'partner_id'}"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-stock_effects-object-colorize" name="state" string="State"
                             domain="[]" context="{'group_by':'state'}"/>

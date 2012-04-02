@@ -90,8 +90,6 @@
                                     <separator colspan="2" string="Claim Reporter"/>
                                     <field name="partner_id" string="Partner"
                                         on_change="onchange_partner_id(partner_id)" />
-                                    <field name="partner_address_id" string="Contact"
-                                        on_change="onchange_partner_address_id(partner_address_id, email_from)" />
                                     <field name="partner_phone"/>
                                     <field name="email_from" widget="email"/>
                                 </group>
@@ -288,16 +286,6 @@
             view_mode="tree,form"
             res_model="crm.claim"
             src_model="res.partner"/>
-
-
-        <act_window
-            domain="[('partner_address_id', '=', active_id)]"
-            context="{'default_partner_address_id': active_id}"
-            id="act_claim_partner_address"
-            name="Claims"
-            view_mode="tree,form"
-            res_model="crm.claim"
-            src_model="res.partner.address"/>
 
      </data>
 </openerp>

@@ -50,7 +50,7 @@ class pos_order(osv.osv):
     _name = "pos.order"
     _description = "Point of Sale"
     _order = "id desc"
-    
+
     def create_from_ui(self, cr, uid, orders, context=None):
         #_logger.info("orders: %r", orders)
         list = []
@@ -205,7 +205,7 @@ class pos_order(osv.osv):
             addr = order.partner_id and partner_obj.address_get(cr, uid, [order.partner_id.id], ['delivery']) or {}
             picking_id = picking_obj.create(cr, uid, {
                 'origin': order.name,
-                'address_id': addr.get('delivery',False),
+                'partner_id': addr.get('delivery',False),
                 'type': 'out',
                 'company_id': order.company_id.id,
                 'move_type': 'direct',
@@ -414,7 +414,7 @@ class pos_order(osv.osv):
             wf_service.trg_validate(uid, 'pos.order', order.id, 'invoice', cr)
 
         if not inv_ids: return {}
-        
+
         mod_obj = self.pool.get('ir.model.data')
         res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')
         res_id = res and res[1] or False
