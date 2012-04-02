@@ -793,9 +793,22 @@ session.web.Sidebar = session.web.Widget.extend({
         this.items = {};
         this.sections = {};
     },
+
     start: function() {
+        var self = this;
         this._super(this);
+        this.$element.find('.oe_dropdown_toggle').click(function() {
+            self.$element.find('.oe_dropdown_menu').toggle();
+            return false;
+        });
+        this.$element.on('click', '.oe_dropdown_menu li a', function() {
+            var f = self['on_menu_' + $(this).data('menu')];
+            f && f($(this));
+            self.$element.find('.oe_dropdown_menu').hide();
+            return false;
+        });
     },
+
     add_default_sections: function() {
         var self = this;
         var view = this.getParent();
@@ -905,7 +918,7 @@ session.web.Sidebar = session.web.Widget.extend({
 
             var $ul = $section.find('ul');
             if(!$ul.length) {
-                $ul = $('<ul/>').appendTo($section);
+                $ul = $('<ul class="oe_dropdown_menu"/>').appendTo($section);
             }
             $items.appendTo($ul);
         }

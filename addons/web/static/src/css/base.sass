@@ -587,6 +587,59 @@ $colour4: #8a89ba
         border-bottom-color: transparent
         cursor: default
 
+
+    .oe_form_dropdown_section
+        position: relative
+        display: inline-block
+        margin-right: 4px
+
+    .oe_dropdown_toggle:after
+        width: 0
+        height: 0
+        display: inline-block
+        content: "&darr"
+        text-indent: -99999px
+        vertical-align: top
+        border-left: 4px solid transparent
+        border-right: 4px solid transparent
+        border-top: 4px solid white
+        @include opacity(0.5)
+
+        margin-top: 7px
+        margin-left: 6px
+        border-top-color: #404040
+
+    .oe_dropdown_menu
+        display: none
+        position: absolute
+        top: 28px
+        left: 0px
+        padding: 8px
+        border: 1px solid #afafb6
+        width: 120px
+        overflow-x: hidden
+        z-index: 900
+        background: white
+        @include radius(3px)
+        @include box-shadow(0 1px 4px rgba(0,0,0,0.3))
+        li
+            list-style-type: none
+            float: none
+            display: block
+            background-color: none
+            a
+                display: block
+                padding: 3px 6px
+                clear: both
+                font-weight: normal
+                line-height: 14px
+                color: #4c4c4c
+                text-decoration: none
+                &:hover
+                    text-decoration: none
+                    @include vertical-gradient(#f0f0fa, #eeeef6)
+                    @include box-shadow(none)
+
     // }}}
     // Kanban view {{{
     .oe_kanban_group_title

@@ -514,8 +514,8 @@
     </div>
 </t>
 <t t-name="Sidebar.section">
-    <div t-att-id="section_id" t-att-class="classname">
-        <h2><t t-esc="name"/></h2>
+    <div t-att-id="section_id" t-attf-class="#{classname} oe_form_dropdown_section ">
+        <button class="oe_dropdown_toggle"><t t-esc="name"/></button>
     </div>
 </t>
 <t t-name="Sidebar.section.items">
