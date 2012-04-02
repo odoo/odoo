@@ -44,7 +44,7 @@ class account_config_settings(osv.osv_memory):
         'paypal_account': fields.related('company_id', 'paypal_account', type='char', size=128,
             string='Paypal account', help="Paypal username (usually email) for receiving online payments."),
         'company_footer': fields.related('company_id', 'rml_footer2', type='char', size=250, readonly=True,
-            string='Footer of reports', help="Footer of reports based on your bank accounts."),
+            string='Bank Accounts on Reports', help="Bank accounts as printed on footer of reports."),
 
         'has_chart_of_accounts': fields.boolean('Company has a chart of accounts'),
         'chart_template_id': fields.many2one('account.chart.template', 'Chart Template', domain="[('visible','=', True)]"),
@@ -247,27 +247,28 @@ class account_config_settings(osv.osv_memory):
     def set_fiscalyear(self, cr, uid, ids, context=None):
         """ create a fiscal year for the given company (if necessary) """
         config = self.browse(cr, uid, ids[0], context)
-        fiscalyear = self.pool.get('account.fiscalyear')
-        fiscalyear_count = fiscalyear.search_count(cr, uid,
-            [('date_start', '<=', config.date_start), ('date_stop', '>=', config.date_stop),
-             ('company_id', '=', config.company_id.id)],
-            context=context)
-        if not fiscalyear_count:
-            name = code = config.date_start[:4]
-            if int(name) != int(config.date_stop[:4]):
-                name = config.date_start[:4] +'-'+ config.date_stop[:4]
-                code = config.date_start[2:4] +'-'+ config.date_stop[2:4]
-            vals = {
-                'name': name,
-                'code': code,
-                'date_start': config.date_start,
-                'date_stop': config.date_stop,
-                'company_id': config.company_id.id,
-            }
-            fiscalyear_id = fiscalyear.create(cr, uid, vals, context=context)
-            if config.period == 'month':
-                fiscalyear.create_period(cr, uid, [fiscalyear_id])
-            elif config.period == '3months':
-                fiscalyear.create_period3(cr, uid, [fiscalyear_id])
+        if config.has_chart_of_accounts or config.chart_template_id:
+            fiscalyear = self.pool.get('account.fiscalyear')
+            fiscalyear_count = fiscalyear.search_count(cr, uid,
+                [('date_start', '<=', config.date_start), ('date_stop', '>=', config.date_stop),
+                 ('company_id', '=', config.company_id.id)],
+                context=context)
+            if not fiscalyear_count:
+                name = code = config.date_start[:4]
+                if int(name) != int(config.date_stop[:4]):
+                    name = config.date_start[:4] +'-'+ config.date_stop[:4]
+                    code = config.date_start[2:4] +'-'+ config.date_stop[2:4]
+                vals = {
+                    'name': name,
+                    'code': code,
+                    'date_start': config.date_start,
+                    'date_stop': config.date_stop,
+                    'company_id': config.company_id.id,
+                }
+                fiscalyear_id = fiscalyear.create(cr, uid, vals, context=context)
+                if config.period == 'month':
+                    fiscalyear.create_period(cr, uid, [fiscalyear_id])
+                elif config.period == '3months':
+                    fiscalyear.create_period3(cr, uid, [fiscalyear_id])
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
