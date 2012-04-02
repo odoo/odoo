@@ -1,0 +1,16 @@
+<openerp>
+    <data>
+	    	
+        <record id="view_document_ftp_configuration" model="ir.ui.view">
+            <field name="name">Knowledge Application</field>
+            <field name="model">knowledge.configuration</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="document.view_knowledge_configuration"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='module_document_ftp']" position="after">
+                    <field name="server_address_port"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>
