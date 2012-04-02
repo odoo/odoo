@@ -26,8 +26,9 @@ class mail_subscription(osv.osv):
     """
     mail_subscription holds the data related to the follow mechanism inside OpenERP.
     A subscription is characterized by:
-    - res_model: model of the followed objects
-    - res_id: ID of resource (may be 0 for every objects)
+        :param: res_model: model of the followed objects
+        :param: res_id: ID of resource (may be 0 for every objects)
+        :param: user_id: user_id of the follower
     """
     _name = 'mail.subscription'
     _rec_name = 'id'
@@ -35,16 +36,18 @@ class mail_subscription(osv.osv):
     _description = 'Mail subscription'
     _columns = {
         'res_model': fields.char('Related Document Model', size=128,
-                        select=1, required=True),
-        'res_id': fields.integer('Related Document ID', select=1),
-        'user_id': fields.many2one('res.users', string='Related User ID',
+                        required=True, select=1,
+                        help='Model of the followed resource'),
+        'res_id': fields.integer('Related Document ID', select=1,
+                        help='Id of the followed resource'),
+        'user_id': fields.many2one('res.users', string='Related User',
                         ondelete='cascade', required=True, select=1),
     }
 
 class mail_notification(osv.osv):
     """
     mail_notification is a relational table modeling messages pushed to users.
-    - read: todo
+        :param: read: not used currently
     """
     _name = 'mail.notification'
     _rec_name = 'id'
@@ -56,7 +59,7 @@ class mail_notification(osv.osv):
                         ondelete='cascade', required=True, select=1),
         'message_id': fields.many2one('mail.message', string='Message',
                         ondelete='cascade', required=True, select=1),
-        'read': fields.boolean('Read'),
+        'read': fields.boolean('Read', help="Not used currently",),
         # TODO: add a timestamp ? or use message date ?
     }
     _defaults = {

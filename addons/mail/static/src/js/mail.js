@@ -115,7 +115,7 @@ openerp.mail = function(session) {
                 var msg_id = event.srcElement.dataset.id;
                 if (! msg_id) return false;
                 //console.log(msg_id);
-                var call_defer = self.ds.call('message_remove_pushed_notif', [[self.params.res_id], [parseInt(msg_id)], true]);
+                var call_defer = self.ds.call('message_remove_pushed_notifications', [[self.params.res_id], [parseInt(msg_id)], true]);
                 $(event.srcElement).parents('li.oe_mail_thread_msg').eq(0).hide();
                 if (self.params.thread_level > 0) {
                     $(event.srcElement).parents('ul.oe_mail_thread').eq(0).hide();
@@ -296,7 +296,7 @@ openerp.mail = function(session) {
             var comment_node = this.$element.find('textarea');
             var body_text = comment_node.val();
             comment_node.val('');
-            return this.ds.call('message_append_note', [[this.params.res_id], 'Reply comment', body_text, this.params.parent_id, 'comment']).then(
+            return this.ds.call('message_add_note', [[this.params.res_id], body_text, 'comment', this.params.parent_id]).then(
                 this.proxy('init_comments'));
         },
         
@@ -652,7 +652,7 @@ openerp.mail = function(session) {
             if (additional_context) var fetch_context = _.extend(this.params.search['context'], additional_context);
             else var fetch_context = this.params.search['context'];
             var load_res = this.ds_thread.call('get_pushed_messages', 
-                [[this.session.uid], (limit || 0), (offset || 0), fetch_domain, true, [false], fetch_context]).then(function (records) {
+                [[this.session.uid], (limit || 0), (offset || 0), [], fetch_domain, true, [], fetch_context]).then(function (records) {
                     self.do_update_show_more(records.length >= self.params.limit);
                     self.display_comments(records);
                 });
@@ -804,7 +804,7 @@ openerp.mail = function(session) {
         /** Action: Posts a comment */
         do_comment: function () {
             var body_text = this.$element.find('textarea.oe_mail_wall_action_textarea').val();
-            return this.ds_users.call('message_append_note', [[this.session.uid], 'Tweet', body_text, false, 'comment']).then(
+            return this.ds_users.call('message_add_note', [[this.session.uid], body_text, 'comment', false, 'Tweet', 'html']).then(
                 this.init_and_fetch_comments(this.params.limit, 0));
         },
     });
