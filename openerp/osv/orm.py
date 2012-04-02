@@ -71,6 +71,11 @@ _schema = logging.getLogger(__name__ + '.schema')
 # List of etree._Element subclasses that we choose to ignore when parsing XML.
 from openerp.tools import SKIPPED_ELEMENT_TYPES
 
+# Prefixes for external IDs of schema elements
+EXT_ID_PREFIX_FK = "_foreign_key_"
+EXT_ID_PREFIX_M2M_TABLE = "_m2m_rel_table_"
+EXT_ID_PREFIX_CONSTRAINT = "_constraint_"
+
 regex_order = re.compile('^(([a-z0-9_]+|"[a-z0-9_]+")( *desc| *asc)?( *, *|))+$', re.I)
 regex_object_name = re.compile(r'^[a-z0-9_.]+$')
 
@@ -101,10 +106,10 @@ def transfer_node_to_modifiers(node, modifiers, context=None, in_tree_view=False
 
     if node.get('states'):
         if 'invisible' in modifiers and isinstance(modifiers['invisible'], list):
-             # TODO combine with AND or OR, use implicit AND for now.
-             modifiers['invisible'].append(('state', 'not in', node.get('states').split(',')))
+            # TODO combine with AND or OR, use implicit AND for now.
+            modifiers['invisible'].append(('state', 'not in', node.get('states').split(',')))
         else:
-             modifiers['invisible'] = [('state', 'not in', node.get('states').split(','))]
+            modifiers['invisible'] = [('state', 'not in', node.get('states').split(','))]
 
     for a in ('invisible', 'readonly', 'required'):
         if node.get(a):
@@ -895,7 +900,10 @@ class BaseModel(object):
                 parent_names = [parent_names]
             else:
                 name = cls._name
-
+            # for res.parnter.address compatiblity, should be remove in v7
+            if 'res.partner.address' in parent_names:
+                parent_names.pop(parent_names.index('res.partner.address'))
+                parent_names.append('res.partner')
             if not name:
                 raise TypeError('_name is mandatory in case of multiple inheritance')
 
@@ -933,6 +941,7 @@ class BaseModel(object):
                                     # If new class defines a constraint with
                                     # same function name, we let it override
                                     # the old one.
+                                    
                                     new[c2] = c
                                     exist = True
                                     break
@@ -2743,6 +2752,14 @@ class BaseModel(object):
                 _schema.debug("Table '%s': column '%s': dropped NOT NULL constraint",
                               self._table, column['attname'])
 
+    # quick creation of ir.model.data entry to make uninstall of schema elements easier
+    def _make_ext_id(self, cr, ext_id):
+        cr.execute('SELECT 1 FROM ir_model_data WHERE name=%s AND module=%s', (ext_id, self._module))
+        if not cr.rowcount:
+            cr.execute("""INSERT INTO ir_model_data (name,date_init,date_update,module,model)
+                                 VALUES (%s, now() AT TIME ZONE 'UTC', now() AT TIME ZONE 'UTC', %s, %s)""",
+                       (ext_id, self._module, self._name))
+
     # checked version: for direct m2o starting from `self`
     def _m2o_add_foreign_key_checked(self, source_field, dest_model, ondelete):
         assert self.is_transient() or not dest_model.is_transient(), \
@@ -2833,7 +2850,6 @@ class BaseModel(object):
         update_custom_fields = context.get('update_custom_fields', False)
         self._field_create(cr, context=context)
         create = not self._table_exist(cr)
-
         if getattr(self, '_auto', True):
 
             if create:
@@ -3068,7 +3084,7 @@ class BaseModel(object):
 
         cr.commit()     # start a new transaction
 
-        self._add_sql_constraints(cr)
+        self._add_sql_constraints(cr, context["module"])
 
         if create:
             self._execute_sql(cr)
@@ -3079,11 +3095,11 @@ class BaseModel(object):
 
         return todo_end
 
-
     def _auto_end(self, cr, context=None):
         """ Create the foreign keys recorded by _auto_init. """
         for t, k, r, d in self._foreign_keys:
             cr.execute('ALTER TABLE "%s" ADD FOREIGN KEY ("%s") REFERENCES "%s" ON DELETE %s' % (t, k, r, d))
+            self._make_ext_id(cr,  "%s%s_%s_fkey" % (EXT_ID_PREFIX_FK, t, k))
         cr.commit()
         del self._foreign_keys
 
@@ -3162,6 +3178,7 @@ class BaseModel(object):
 
     def _o2m_raise_on_missing_reference(self, cr, f):
         # TODO this check should be a method on fields.one2many.
+        
         other = self.pool.get(f._obj)
         if other:
             # TODO the condition could use fields_get_keys().
@@ -3169,9 +3186,9 @@ class BaseModel(object):
                 if f._fields_id not in other._inherit_fields.keys():
                     raise except_orm('Programming Error', ("There is no reference field '%s' found for '%s'") % (f._fields_id, f._obj,))
 
-
     def _m2m_raise_or_create_relation(self, cr, f):
         m2m_tbl, col1, col2 = f._sql_names(self)
+        self._make_ext_id(cr,  EXT_ID_PREFIX_M2M_TABLE + m2m_tbl)
         cr.execute("SELECT relname FROM pg_class WHERE relkind IN ('r','v') AND relname=%s", (m2m_tbl,))
         if not cr.dictfetchall():
             if not self.pool.get(f._obj):
@@ -3179,7 +3196,6 @@ class BaseModel(object):
             dest_model = self.pool.get(f._obj)
             ref = dest_model._table
             cr.execute('CREATE TABLE "%s" ("%s" INTEGER NOT NULL, "%s" INTEGER NOT NULL, UNIQUE("%s","%s")) WITH OIDS' % (m2m_tbl, col1, col2, col1, col2))
-
             # create foreign key references with ondelete=cascade, unless the targets are SQL views
             cr.execute("SELECT relkind FROM pg_class WHERE relkind IN ('v') AND relname=%s", (ref,))
             if not cr.fetchall():
@@ -3195,7 +3211,7 @@ class BaseModel(object):
             _schema.debug("Create table '%s': m2m relation between '%s' and '%s'", m2m_tbl, self._table, ref)
 
 
-    def _add_sql_constraints(self, cr):
+    def _add_sql_constraints(self, cr, module):
         """
 
         Modify this model's database table constraints so they match the one in
@@ -3208,9 +3224,9 @@ class BaseModel(object):
         for (key, con, _) in self._sql_constraints:
             conname = '%s_%s' % (self._table, key)
 
+            self._make_ext_id(cr, EXT_ID_PREFIX_CONSTRAINT + conname)
             cr.execute("SELECT conname, pg_catalog.pg_get_constraintdef(oid, true) as condef FROM pg_constraint where conname=%s", (conname,))
             existing_constraints = cr.dictfetchall()
-
             sql_actions = {
                 'drop': {
                     'execute': False,
@@ -3763,7 +3779,7 @@ class BaseModel(object):
         wf_service = netsvc.LocalService("workflow")
         for oid in ids:
             wf_service.trg_delete(uid, self._name, oid, cr)
-
+            
 
         self.check_access_rule(cr, uid, ids, 'unlink', context=context)
         pool_model_data = self.pool.get('ir.model.data')

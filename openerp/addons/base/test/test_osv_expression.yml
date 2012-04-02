@@ -68,20 +68,20 @@
 -
     Testing that some domain expressions work
 -
-    !python {model: res.partner.address }: |
-        ids = self.search(cr, uid, [('partner_id','=','Agrolait')])
+    !python {model: res.partner }: |
+        ids = self.search(cr, uid, [('parent_id','=','Agrolait')])
         assert len(ids) >= 1, ids
 -
     Trying the "in" operator, for scalar value
 -
-    !python {model: res.partner.address }: |
-        ids = self.search(cr, uid, [('partner_id','in','Agrolait')])
+    !python {model: res.partner }: |
+        ids = self.search(cr, uid, [('parent_id','in','Agrolait')])
         assert len(ids) >= 1, ids
 -
     Trying the "in" operator for list value
 -
-    !python {model: res.partner.address }: |
-        ids = self.search(cr, uid, [('partner_id','in',['Agrolait','ASUStek'])])
+    !python {model: res.partner }: |
+        ids = self.search(cr, uid, [('parent_id','in',['Agrolait','ASUStek'])])
         assert len(ids) >= 1, ids
 -
     Check we can use "in" operator for plain fields.
@@ -92,11 +92,11 @@
 -
     Test one2many operator with empty search list
 -
-    !assert {model: res.partner, search: "[('address', 'in', [])]", count: 0, string: "Ids should be empty"}
+    !assert {model: res.partner, search: "[('child_ids', 'in', [])]", count: 0, string: "Ids should be empty"}
 -
     Test one2many operator with False
 -
-    !assert {model: res.partner, search: "[('address', '=', False)]"}:
+    !assert {model: res.partner, search: "[('child_ids', '=', False)]"}:
         - address in (False, None, [])
 -
     Test many2many operator with empty search list
@@ -110,7 +110,7 @@
 -
     Filtering on invalid value across x2many relationship should return an empty set
 -
-    !assert {model: res.partner, search: "[('address.city','=','foo')]", count: 0, string: "Searching for address.city = foo should give empty results"}
+    !assert {model: res.partner, search: "[('child_ids.city','=','foo')]", count: 0, string: "Searching for address.city = foo should give empty results"}
 -
     Check if many2one works with empty search list
 -
@@ -515,7 +515,7 @@
         vals = {'category_id': [(6, 0, [ref("base.res_partner_category_8")])],
                 'name': 'OpenERP Test',
                 'active': False,
-                'address': [(0, 0, {'country_id': ref("base.be")})]
+                'child_ids': [(0, 0, {'name': 'address of OpenERP Test', 'country_id': ref("base.be")})]
                 }
         self.create(cr, uid, vals, context=context)
         res_ids = self.search(cr, uid, [('category_id', 'ilike', 'supplier'), ('active', '=', False)])
@@ -524,6 +524,6 @@
     Testing for One2Many field with country Belgium and active=False
 -
     !python {model: res.partner }: |
-        res_ids = self.search(cr, uid, [('address.country_id','=','Belgium'),('active','=',False)])
+        res_ids = self.search(cr, uid, [('child_ids.country_id','=','Belgium'),('active','=',False)])
         assert len(res_ids) != 0, "Record not Found with country Belgium and active False."
 
