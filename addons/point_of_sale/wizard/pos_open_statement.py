@@ -52,9 +52,9 @@ class pos_open_statement(osv.osv_memory):
             ids = statement_obj.search(cr, uid, [('state', '!=', 'confirm'), ('user_id', '=', uid), ('journal_id', '=', journal.id)], context=context)
 
             if journal.sequence_id:
-                number = sequence_obj.next_by_id(cr, uid, journal.sequence_id.id)
+                number = sequence_obj.next_by_id(cr, uid, journal.sequence_id.id, context=context)
             else:
-                number = sequence_obj.next_by_code(cr, uid, 'account.cash.statement')
+                number = sequence_obj.next_by_code(cr, uid, 'account.cash.statement', context=context)
 
             data.update({
                 'journal_id': journal.id,

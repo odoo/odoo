@@ -67,8 +67,6 @@ class crm_lead2opportunity_partner(osv.osv_memory):
             ids = lead_obj.search(cr, uid, [('partner_id', '=', partner_id), ('type', '=', 'opportunity'), '!', ('state', 'in', ['done', 'cancel'])])
             if ids:
                 opportunities.append(ids[0])
-                
-                
         if not partner_id:
             label = False
             opp_ids = []

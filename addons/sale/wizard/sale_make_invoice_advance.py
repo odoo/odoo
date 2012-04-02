@@ -92,8 +92,6 @@ class sale_advance_payment_inv(osv.osv_memory):
                     'reference': False,
                     'account_id': sale.partner_id.property_account_receivable.id,
                     'partner_id': sale.partner_id.id,
-                    'address_invoice_id': sale.partner_invoice_id.id,
-                    'address_contact_id': sale.partner_order_id.id,
                     'invoice_line': [(6, 0, create_ids)],
                     'currency_id': sale.pricelist_id.currency_id.id,
                     'comment': '',

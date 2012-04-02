@@ -3,8 +3,8 @@
  <data>
           <menuitem
             id="hr.menu_hr_reporting"
-            name="Reporting"
-            parent="hr.menu_hr_root"
+            name="Human Resources"
+            parent="base.menu_reporting"
             sequence="40" />
 
         <!-- Report for Users' Timesheet and Task Hours per Month -->
@@ -43,7 +43,7 @@
                         <filter icon="terp-go-month"
                             string=" Month-1 "
                             domain="[('name','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('name','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
-                            help="Task hours of last month"/>            		
+                            help="Task hours of last month"/>
 	            		<separator orientation="vertical"/>
 	                    <field name="user_id"/>
                 	</group>
@@ -58,7 +58,7 @@
             	</search>
             </field>
         </record>
-        
+
         <record id="view_task_hour_per_month_graph" model="ir.ui.view">
             <field name="name">report.timesheet.task.user.graph</field>
             <field name="model">report.timesheet.task.user</field>
@@ -71,7 +71,7 @@
                  </graph>
             </field>
         </record>
-                
+
         <record id="action_report_timesheet_task_user" model="ir.actions.act_window">
             <field name="name">Task Hours Per Month</field>
             <field name="res_model">report.timesheet.task.user</field>

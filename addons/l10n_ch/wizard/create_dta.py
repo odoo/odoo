@@ -388,7 +388,7 @@ def _create_dta(obj, cr, uid, data, context=None):
     user = pool.get('res.users').browse(cr,uid,[uid])[0]
     company = user.company_id
     #XXX dirty code use get_addr
-    co_addr = company.partner_id.address[0]
+    co_addr = company.partner_id
     v['comp_country'] = co_addr.country_id and co_addr.country_id.name or ''
     v['comp_street'] = co_addr.street or ''
     v['comp_zip'] = co_addr.zip
@@ -479,20 +479,19 @@ def _create_dta(obj, cr, uid, data, context=None):
         else:
             v['partner_name'] = pline.partner_id and pline.partner_id.name or ''
 
-        if pline.partner_id and pline.partner_id.address \
-                and pline.partner_id.address[0]:
-            v['partner_street'] = pline.partner_id.address[0].street
-            v['partner_city'] = pline.partner_id.address[0].city
-            v['partner_zip'] = pline.partner_id.address[0].zip
+        if pline.partner_id and pline.partner_id:
+            v['partner_street'] = pline.partner_id.street
+            v['partner_city'] = pline.partner_id.city
+            v['partner_zip'] = pline.partner_id.zip
             # If iban => country=country code for space reason
             elec_pay = pline.bank_id.state #Bank type
             if elec_pay == 'iban':
-                v['partner_country']= pline.partner_id.address[0].country_id \
-                        and pline.partner_id.address[0].country_id.code+'-' \
+                v['partner_country']= pline.partner_id.country_id \
+                        and pline.partner_id.country_id.code+'-' \
                         or ''
             else:
-                v['partner_country']= pline.partner_id.address[0].country_id \
-                        and pline.partner_id.address[0].country_id.name \
+                v['partner_country']= pline.partner_id.country_id \
+                        and pline.partner_id.country_id.name \
                         or ''
         else:
             v['partner_street'] =''

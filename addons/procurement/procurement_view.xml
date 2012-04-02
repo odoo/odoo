@@ -273,7 +273,7 @@
             <menuitem action="action_compute_schedulers" id="menu_stock_proc_schedulers" parent="menu_stock_sched" sequence="20" groups="stock.group_stock_manager"/>
             <menuitem action="procurement_exceptions" id="menu_stock_procurement_action" parent="menu_stock_sched" sequence="50" groups="stock.group_stock_manager"/>
         <menuitem id="menu_stock_procurement" name="Automatic Procurements" parent="stock.menu_stock_configuration" sequence="5"/>
-            <menuitem action="action_orderpoint_form" id="menu_stock_order_points" parent="menu_stock_procurement" sequence="10"/>
+            <menuitem action="action_orderpoint_form" id="menu_stock_order_points" parent="stock.menu_stock_configuration" sequence="10"/>
 
 
         <record id="product_normal_form_view" model="ir.ui.view">

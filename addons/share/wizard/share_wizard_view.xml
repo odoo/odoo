@@ -30,16 +30,23 @@
             <field name="arch" type="xml">
                 <form>
                     <field name="user_type" invisible="1"/>
-                    <group colspan="4" name="emails_group" attrs="{'invisible':[('user_type', '!=', 'emails')]}">
+                    <field name="invite" invisible="1"/>
+                    <group colspan="4" name="emails_group" attrs="{'invisible':['|', ('user_type', '!=', 'emails'), ('invite', '=', True)]}">
                         <separator colspan="4" string="Share with these people (one e-mail per line)"/>
-                        <field colspan="4" nolabel="1" name="new_users" attrs="{'required':[('user_type','=','emails')]}"/>
+                        <field colspan="4" nolabel="1" name="new_users" attrs="{'required':[('user_type','=','emails'), ('invite', '!=', True)]}"/>
+                    </group>
+                    <group colspan="4" col="2" name="email_lines" attrs="{'invisible':[('invite', '!=', True)]}">
+                        <separator colspan="4" string="Share with these people (one e-mail per line)"/>
+                        <field name="email_1"/>
+                        <field name="email_2"/>
+                        <field name="email_3"/>
                     </group>
                     <group colspan="4" col="4" attrs="{'invisible':[('user_type', '=', 'embedded')]}">
-                        <separator colspan="4" string="Optional: include a personal message"/>
+                        <separator colspan="4" string="Include an optional personal message"/>
                         <field name="message" colspan="4" nolabel="1"/>
                     </group>
-                    <separator colspan="4" string="Sharing Options"/>
-                    <group colspan="4" col="4">
+                    <group colspan="4" col="4" attrs="{'invisible':[('invite', '=', True)]}">
+                        <separator colspan="4" string="Sharing Options"/>
                         <field name="name" colspan="4"/>
                         <field name="access_mode" colspan="4"/>
                     </group>

@@ -99,7 +99,6 @@ class job2phonecall(osv.osv_memory):
                         'date': form.deadline,
                         'description': job.description,
                         'partner_id': job.partner_id.id,
-                        'partner_address_id': job.partner_address_id.id,
                         'partner_phone': job.partner_phone,
                         'partner_mobile': job.partner_mobile,
                         'description': job.description,

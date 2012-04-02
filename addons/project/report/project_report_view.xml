@@ -2,10 +2,10 @@
 <openerp>
     <data>
 
-        <menuitem id="base.menu_project_report" name="Reporting"
+        <menuitem id="base.menu_project_report" name="Project"
             groups="project.group_project_manager"
-            parent="base.menu_main_pm" sequence="50"/>
-        <menuitem id="project_report_task" name="Tasks"
+            parent="base.menu_reporting" sequence="25"/>
+        <menuitem id="project_report_task" name="Tasks Analysis"
             parent="base.menu_project_report"/>
 
         <record id="view_task_project_user_tree" model="ir.ui.view">

@@ -78,24 +78,22 @@ class account_analytic_account(osv.osv):
         'pricelist_id': lambda self, cr, uid, ctx: ctx.get('pricelist_id', False),
     }
     def on_change_partner_id(self, cr, uid, id, partner_id, context={}):
-        res = super(account_analytic_account, self).on_change_partner_id(cr, uid, id, partner_id, context)
-        if (not res.get('value', False)) or not partner_id:
-            return res
+        res={}
         part = self.pool.get('res.partner').browse(cr, uid, partner_id)
         pricelist = part.property_product_pricelist and part.property_product_pricelist.id or False
         if pricelist:
-            res['value']['pricelist_id'] = pricelist
-        return res
+            res['pricelist_id'] = pricelist
+        return {'value': res}
 
     def set_close(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state':'close'}, context=context)
-    
+
     def set_cancel(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state':'cancelled'}, context=context)
-    
+
     def set_open(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state':'open'}, context=context)
-      
+
     def set_pending(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state':'pending'}, context=context)
 
