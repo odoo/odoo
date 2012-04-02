@@ -206,15 +206,15 @@ class account_config_settings(osv.osv_memory):
                 res['value']['code_digits'] = chart_template.code_digits
         return res
 
-    def on_change_start_date(self, cr, uid, id, start_date):
+    def onchange_tax_rate(self, cr, uid, ids, rate, context=None):
+        return {'value': {'purchase_tax_rate': rate or False}}
+
+    def onchange_start_date(self, cr, uid, id, start_date):
         if start_date:
             start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
             end_date = (start_date + relativedelta(months=12)) - relativedelta(days=1)
             return {'value': {'date_stop': end_date.strftime('%Y-%m-%d')}}
         return {}
-
-    def onchange_tax_rate(self, cr, uid, ids, rate, context=None):
-        return {'value': {'purchase_tax_rate': rate or False}}
 
     def set_default_taxes(self, cr, uid, ids, context=None):
         """ set default sale and purchase taxes for products """

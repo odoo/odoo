@@ -33,7 +33,7 @@
 
                     <field name="has_fiscal_year" invisible="1"/>
                     <group string="No Fiscal Year exists for this Company" colspan="4" attrs="{'invisible': ['|', ('expects_chart_of_accounts','=',False), ('has_fiscal_year','=',True)]}">
-                        <field name="date_start" on_change="on_change_start_date(date_start)"/>
+                        <field name="date_start" on_change="onchange_start_date(date_start)"/>
                         <field name="date_stop"/>
                         <field name="period" colspan="4"/>
                     </group>
