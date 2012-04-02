@@ -37,28 +37,28 @@ class purchase_config_settings(osv.osv_memory):
             implied_group='product.group_purchase_pricelist',
             help="""Allows to manage different prices based on rules per category of Supplier.
                 Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
-        'group_uom':fields.boolean("Allow different UoM per product",
+        'group_uom':fields.boolean("Allow Different UoM per Product",
             implied_group='product.group_uom',
             help="""Allows you to select and maintain different unit of measures per product."""),
-        'module_purchase_analytic_plans': fields.boolean('Purchase analytic plan',
+        'module_purchase_analytic_plans': fields.boolean('Purchase Analytic Plan',
             help ="""Allows the user to maintain several analysis plans. These let you split
                 lines on a purchase order between several accounts and analytic plans.
                 This installs the module purchase_analytic_plans."""),
-        'module_warning': fields.boolean("Alerts by products or supplier",
+        'module_warning': fields.boolean("Alerts by Products or Supplier",
             help="""To trigger warnings in OpenERP objects.
                 Warning messages can be displayed for objects like sale order, purchase order, picking and invoice.
                 This installs the module warning."""),
-        'module_product_manufacturer': fields.boolean("Define a manufacturer of products",
+        'module_product_manufacturer': fields.boolean("Define a Manufacturer of Products",
             help="""This allows you to define the following for a product:
                     * Manufacturer
                     * Manufacturer Product Name
                     * Manufacturer Product Code
                     * Product Attributes.
                 This installs the module product_manufacturer."""),
-        'module_purchase_double_validation': fields.boolean("Configure limit amount",
+        'module_purchase_double_validation': fields.boolean("Configure Limit Amount",
             help="""Provide a double validation mechanism for purchases exceeding minimum amount.
                 This installs the module purchase_double_validation."""),
-        'module_purchase_requisition': fields.boolean("Track the best price with Purchase Requisition",
+        'module_purchase_requisition': fields.boolean("Purchase Requisition",
             help="""When a purchase order is created, you have the opportunity to save the related requisition.
                 This object regroups and allows you to keep track and order all your purchase orders.
                 This installs the module purchase_requisition."""),
