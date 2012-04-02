@@ -172,6 +172,7 @@
                     <field name="members"/>
                     <field name="task"/>
                     <field name="user_id"/>
+                    <field name="date"/>
                     <templates>
                         <t t-name="tasks">
                             <ul class="oe_kanban_tooltip">
@@ -180,10 +181,28 @@
                         </t>
                         <t t-name="kanban-box">
                             <div class="oe_module_vignette oe_kanban_box oe_kanban_color_border">
-                                <table class="project_table">
+                            <script type="text/javascript">
+                                    function showElement(layer){
+                                        var myLayer = document.getElementById(layer);
+                                        if(myLayer.style.display=="none"){
+                                        myLayer.style.display="block";
+                                        myLayer.backgroundPosition="top";
+                                        } else { 
+                                        myLayer.style.display="none";
+                                        }
+                                    }
+                                </script>
+                                <a href="#" class="button" onclick="javascript:showElement('v-menu')">
+                                    <span>Click Here</span>
+                                </a>
+                                <ul id="v-menu" class="v-menu" style="display:none;">
+                                    <li><a type="edit">Edit</a></li>
+                                    <li><a type="delete">Delete</a></li>
+                                </ul>
+                                <table class="project_table" >
                                     <tr>
-                                        <td class="td_image">
-                                            <div class="sequence">
+                                       <!--<td class="td_image" >
+                                              <div class="sequence">
                                                 <button name = "open_users" type="object" class="oe_project_buttons"><img t-att-src="kanban_image('res.users', 'avatar', record.user_id.raw_value[0])" class="avatar"/></button><br/>
                                                 <div class="manager"><field name="user_id"/></div>
                                             </div>
@@ -193,33 +212,51 @@
                                                     <div class="manager"><b><field name="date"/></b></div>
                                                 </div>
                                             </t>
-                                          </td>
-                                        <td class="td_name">
+                                          </td>-->
+                                        <td class="td_name" align="left">
                                             <div>
                                                 <h4 class="oe_project_font1">
                                                     <a type="edit"><div class="oe_project_font"><t t-esc="record.name.value.substr(0,35)"/><t t-if="record.name.value.length > 35">...</t></div></a>
                                                 </h4>
-                                                <table >
-                                                    <tr class ="task">
+                                                <table class ="task">
+                                                    <tr>
                                                         <td class="buttons">
                                                             <t t-if="record.task.raw_value">
                                                                 <button name="open_tasks" class="oe_project_buttons" type="object" tooltip="tasks"><img src="/project/static/src/img/tasks_icon.png" class="project_icon"/></button>
                                                             </t>
                                                         </td>
                                                     </tr>
-                                                    <tr>
-                                                        <td height="45px" class="oe_project_members">
-                                                            <t t-foreach="record.members.raw_value" t-as="member">
-                                                                <img t-att-src="kanban_image('res.users', 'avatar', member)" class="img_member"/>
-                                                            </t>
-                                                        </td>
-                                                    </tr>
                                                 </table>
+                                                <table id = "deadline">
+                                                 	<t t-if="record.date.raw_value">
+														<tr ><td width="100px"><strong >Deadline</strong></td><td class="sequence" ></td>
+														<td>
+														<t t-esc="record.date.raw_value.toString('MMMM')"/> 
+													    <t t-esc="record.date.raw_value.getMonth()"/>,
+                             							<t t-esc="record.date.raw_value.getFullYear()"/>
+													    </td>
+													    </tr>
+													    </t>
+													    <t t-if= "Math.round(record.effective_hours.raw_value) !== 0">
+													    <tr ><td width="100px"><strong >Progress</strong></td><td class="sequence"></td>
+															<td>
+														    <t t-esc="Math.round(record.effective_hours.raw_value)"/>/<t t-esc="Math.round(record.total_hours.raw_value)"/> days
+														    </td>
+													    </tr>
+													    </t>
+												</table>
+                                                <table >
+    		                                            <td height="55px" class="oe_project_members">
+	                                                          <t t-foreach="record.members.raw_value" t-as="member">
+                                                              <img t-att-src="kanban_image('res.users', 'avatar', member)" class="img_member"/>
+                                                          </t>
+                                                         </td>
+                                                    </table>
                                             </div>
                                         </td>
                                     </tr>
                                 </table>
-                                <table class="project_table">
+                              <!--<table class="project_table">
                                     <tr>
                                         <td class="td_hours">
                                             <div class="progress invoiced">
@@ -229,7 +266,7 @@
                                             </div>
                                         </td>
                                     </tr>
-                                </table>
+                                </table>  -->  
                             </div>
                         </t>
                     </templates>

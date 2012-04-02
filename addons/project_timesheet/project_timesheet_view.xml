@@ -47,25 +47,25 @@
 			<a type="edit"><div class="oe_project_font"><t t-esc="record.name.value.substr(0,28)"/><t t-if="record.name.value.length > 28">...</t></div></a>
 		    </h4>
 		</xpath>
-                <xpath expr="//td[@class='buttons']" position="inside">
-                    <t t-if="record.timesheets.raw_value">
-                        <button name="open_timesheets" class="oe_project_buttons" type="object" tooltip="timesheets"><img src="/project_timesheet/static/src/img/timesheet_icon.png" class="project_icon"/></button>
-                    </t>
-                </xpath>
-		<xpath expr="//td[@class='td_name']" position="after">
-		    <td class="td_deadline">
-			<div class="sequence">
-			    <strong>To invoice</strong>
-			</div>
-			<div class="sequence">
-			    <kbd class="user">Amount</kbd>
-			    <div class="manager"><b><field name="amt_to_invoice"/> <t t-esc="record.currency_id.raw_value[1].split(' ')[1][1]"/></b></div>
-			</div>
-			<div class="sequence">
-			    <kbd class="user">Hours</kbd>
-			    <div class="manager"><b><field name="hrs_to_invoice"/> h</b></div>
-			</div>
-		    </td>
+        <xpath expr="//td[@class='buttons']" position="inside">
+            <t t-if="record.timesheets.raw_value">
+                <button name="open_timesheets" class="oe_project_buttons" type="object" tooltip="timesheets"><img src="/project_timesheet/static/src/img/timesheet_icon.png" class="project_icon"/></button>
+            </t>
+        </xpath>
+		<xpath expr="//table[@id='deadline']" position="inside">
+		<table border = "0">
+			<tr ><td ><strong >To invoiced</strong></td><td class="sequence"></td>
+				<td>
+			    <field name="amt_to_invoice"/> <t t-esc="record.currency_id.raw_value[1].split(' ')[1][1]"/>
+			    </td>
+			    </tr>
+			    <tr >
+			<td ><strong>To hours</strong></td><td class="sequence"></td>
+			<td>
+			    <field name="hrs_to_invoice"/> h
+			</td>
+			</tr>
+		</table>
 		</xpath>
             </field>
         </record>
