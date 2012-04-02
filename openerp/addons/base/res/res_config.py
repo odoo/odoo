@@ -436,7 +436,6 @@ class res_config_settings(osv.osv_memory):
         current values for other fields.
     """
     _name = 'res.config.settings'
-    _inherit = 'res.config'
 
     def create(self, cr, uid, values, context=None):
         id = super(res_config_settings, self).create(cr, uid, values, context)
