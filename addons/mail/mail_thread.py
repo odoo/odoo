@@ -656,7 +656,7 @@ class mail_thread(osv.osv):
     
     def log(self, cr, uid, id, message, secondary=False, context=None):
         _logger.warning("log() is deprecated. Please use OpenChatter notification system instead of the res.log mechanism.")
-        self.message_append_note(cr, uid, [id], message, context=context)
+        self.message_append_note(cr, uid, [id], 'res.log', message, context=context)
     
     # tmp stuff
     def message_add_note(self, cr, uid, ids, body, type='notification', parent_id=False, subject=False, subtype='html', context=None):
