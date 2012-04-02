@@ -743,7 +743,7 @@ class BaseModel(object):
         if hasattr(model_obj, 'needaction_get_record_ids'):
             ids = model_obj.needaction_get_record_ids(cr, uid, model_name, user_id, limit=8096, context=context)
             if not ids:
-                return [True, 0]
+                return [True, 0, []]
             if domain:
                 new_domain = eval(domain) + [('id', 'in', ids)]
             else:
