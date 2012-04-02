@@ -23,6 +23,7 @@ import datetime as DT
 import io
 import openerp
 import openerp.tools as tools
+from operator import itemgetter
 from osv import osv
 from osv import fields
 from PIL import Image
@@ -40,12 +41,6 @@ class mail_group(osv.osv):
     _description = 'Discussion group'
     _name = 'mail.group'
     _inherit = ['mail.thread']
-    
-    def action_group_join(self, cr, uid, ids, context={}):
-        return self.message_subscribe(cr, uid, ids, context=context);
-    
-    def action_group_leave(self, cr, uid, ids, context={}):
-        return self.message_unsubscribe(cr, uid, ids, context=context);
 
     def onchange_photo(self, cr, uid, ids, value, context=None):
         if not value:
@@ -80,8 +75,8 @@ class mail_group(osv.osv):
         for id in ids:
             result[id] = {}
             result[id]['member_ids'] = self.message_get_subscribers_ids(cr, uid, [id], context=context)
-            result[id]['member_nbr'] = len(result[id]['member_ids'])
-            result[id]['is_member'] = uid in result[id]['member_ids']
+            result[id]['member_count'] = len(result[id]['member_ids'])
+            result[id]['is_subscriber'] = uid in result[id]['member_ids']
         return result
     
     def search_member_ids(self, cr, uid, obj, name, args, context=None):
@@ -90,8 +85,7 @@ class mail_group(osv.osv):
         sub_obj = self.pool.get('mail.subscription')
         sub_ids = sub_obj.search(cr, uid, ['&', ('res_model', '=', obj._name), ('user_id', '=', args[0][2])], context=context)
         subs = sub_obj.read(cr, uid, sub_ids, context=context)
-        obj_ids = [sub['res_id'] for sub in subs]
-        return [('id', 'in', obj_ids)]
+        return [('id', 'in', map(itemgetter('res_id'), subs))]
     
     def get_last_month_msg_nbr(self, cr, uid, ids, name, args, context=None):
         result = {}
@@ -109,17 +103,18 @@ class mail_group(osv.osv):
         'name': fields.char('Name', size=64, required=True),
         'description': fields.text('Description'),
         'responsible_id': fields.many2one('res.users', string='Responsible',
-                            ondelete='set null', required=True, select=1),
-        'public': fields.boolean('Public', help='This group is visible by non members'),
+                            ondelete='set null', required=True, select=1,
+                            help="Responsible of the group that has all rights on the record."),
+        'public': fields.boolean('Public', help='This group is visible by non members. Invisible groups can add members through the invite button.'),
         'photo_big': fields.binary('Full-size photo', help='Field holding the full-sized PIL-supported and base64 encoded version of the group image. The photo field is used as an interface for this field.'),
         'photo': fields.function(_get_photo, fnct_inv=_set_photo, string='Photo', type="binary",
             store = {
                 'mail.group': (lambda self, cr, uid, ids, c={}: ids, ['photo_big'], 10),
             }, help='Field holding the automatically resized (128x128) PIL-supported and base64 encoded version of the group image.'),
         'member_ids': fields.function(get_member_ids, fnct_search=search_member_ids, type='many2many',
-                        relation='res.users', string='Members', multi='get_member_ids'),
-        'member_nbr': fields.function(get_member_ids, type='integer', string='Member count', multi='get_member_ids'),
-        'is_member': fields.function(get_member_ids, type='boolean', string='Joined', multi='get_member_ids'),
+                        relation='res.users', string='Group members', multi='get_member_ids'),
+        'member_count': fields.function(get_member_ids, type='integer', string='Member count', multi='get_member_ids'),
+        'is_subscriber': fields.function(get_member_ids, type='boolean', string='Joined', multi='get_member_ids'),
         'last_month_msg_nbr': fields.function(get_last_month_msg_nbr, type='integer', string='Messages count for last month'),
     }
 
@@ -128,5 +123,3 @@ class mail_group(osv.osv):
         'responsible_id': (lambda s, cr, uid, ctx: uid),
         'photo': _get_default_photo,
     }
-
-mail_group()
