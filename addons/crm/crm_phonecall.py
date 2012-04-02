@@ -152,7 +152,6 @@ class crm_phonecall(crm_base, osv.osv):
                 data.update({'duration': duration.seconds/float(60)})
             res = super(crm_phonecall, self).case_close(cr, uid, [phone_id], context)
             self.write(cr, uid, [phone_id], data)
-            self.case_close_send_note(cr, uid, [phone_id], context);
         return res
 
     def case_reset(self, cr, uid, ids, context=None):
