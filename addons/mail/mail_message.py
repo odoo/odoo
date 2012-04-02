@@ -81,7 +81,7 @@ class mail_message_common(osv.osv_memory):
         return result
     
     def search_body(self, cr, uid, obj, name, args, context=None):
-        """should have:
+        """will receive:
            - obj: mail.message object
            - name: 'body'
            - args: [('body', 'ilike', 'blah')]"""
@@ -94,8 +94,7 @@ class mail_message_common(osv.osv_memory):
         for message in self.browse(cr, uid, ids, context=context):
             if not message.model or not message.res_id:
                 continue
-            model = self.pool.get(message.model)
-            result[message.id] = model.name_get(cr, uid, [message.res_id], context=context)[0][1]
+            result[message.id] = self.pool.get(message.model).name_get(cr, uid, [message.res_id], context=context)[0][1]
         return result
     
     _name = 'mail.message.common'
@@ -104,6 +103,8 @@ class mail_message_common(osv.osv_memory):
         'subject': fields.char('Subject', size=512, required=True),
         'model': fields.char('Related Document model', size=128, select=1),
         'res_id': fields.integer('Related Document ID', select=1),
+        'record_name': fields.function(get_record_name, type='string', string='Message record name',
+                        help="Name of the record, matching the result of the name_get."),
         'date': fields.datetime('Date'),
         'email_from': fields.char('From', size=128, help='Message sender, taken from user preferences.'),
         'email_to': fields.char('To', size=256, help='Message recipients'),
@@ -120,13 +121,13 @@ class mail_message_common(osv.osv_memory):
         'body_html': fields.text('Rich-text contents', help="Rich-text/HTML version of the message"),
         'body': fields.function(get_body, fnct_search = search_body, string='Message content', type='text',
                         help="Content of the message. This content equals the body_text field for plain-test messages, and body_html for rich-text/HTML messages. This allows having one field if we want to access the content matching the message subtype."),
-        'parent_id': fields.many2one('mail.message', 'Parent message', help="Parent message, used for displaying as threads with hierarchy"),
+        'parent_id': fields.many2one('mail.message', 'Parent message', help="Parent message, used for displaying as threads with hierarchy",
+                        select=True, ondelete='set null',),
         'type': fields.selection([
                         ('email', 'e-mail'),
                         ('comment', 'Comment'),
                         ('notification', 'System notification'),
                         ], 'Type', help="Message type: e-mail for e-mail message, notification for system message, comment for other messages such as user replies"),
-        'record_name': fields.function(get_record_name, type='string', string='Message record name', help="Name of the record, matching the result of the name_get."),
     }
 
     _defaults = {
@@ -148,7 +149,7 @@ class mail_message(osv.osv):
 
     _name = 'mail.message'
     _inherit = 'mail.message.common'
-    _description = 'Mail Message (Email, Comment, Notification)'
+    _description = 'Mail Message (email, comment, notification)'
     _order = 'date desc'
 
     # XXX to review - how to determine action to use?
@@ -219,7 +220,6 @@ class mail_message(osv.osv):
                         ], 'State', readonly=True),
         'auto_delete': fields.boolean('Auto Delete', help="Permanently delete this email after sending it, to save space"),
         'original': fields.binary('Original', help="Original version of the message, as it was sent on the network", readonly=1),
-        
     }
         
     _defaults = {
