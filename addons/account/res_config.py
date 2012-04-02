@@ -42,7 +42,7 @@ class account_config_settings(osv.osv_memory):
         'currency_id': fields.related('company_id', 'currency_id', type='many2one', relation='res.currency',
             string='Main currency', help="Main currency of the company."),
         'paypal_account': fields.related('company_id', 'paypal_account', type='char', size=128,
-            string='Paypal account', help="Paypal username (usually email) for receiving online payments."),
+            string='Paypal account', help="Paypal account (email) for receiving online payments (credit card, etc.)"),
         'company_footer': fields.related('company_id', 'rml_footer2', type='char', size=250, readonly=True,
             string='Bank Accounts on Reports', help="Bank accounts as printed on footer of reports."),
 
@@ -63,16 +63,16 @@ class account_config_settings(osv.osv_memory):
 
         'sale_journal_id': fields.many2one('account.journal', 'Sale Journal'),
         'sale_sequence_prefix': fields.related('sale_journal_id', 'sequence_id', 'prefix', type='char', string='Invoice Sequence'),
-        'sale_sequence_next': fields.related('sale_journal_id', 'sequence_id', 'number_next', type='integer', string='Invoice Sequence Next Number'),
+        'sale_sequence_next': fields.related('sale_journal_id', 'sequence_id', 'number_next', type='integer', string='Next Invoice Number'),
         'sale_refund_journal_id': fields.many2one('account.journal', 'Sale Refund Journal'),
         'sale_refund_sequence_prefix': fields.related('sale_refund_journal_id', 'sequence_id', 'prefix', type='char', string='Refund Sequence'),
-        'sale_refund_sequence_next': fields.related('sale_refund_journal_id', 'sequence_id', 'number_next', type='integer', string='Refund Sequence Next Number'),
+        'sale_refund_sequence_next': fields.related('sale_refund_journal_id', 'sequence_id', 'number_next', type='integer', string='Next Refund Number'),
         'purchase_journal_id': fields.many2one('account.journal', 'Purchase Journal'),
         'purchase_sequence_prefix': fields.related('purchase_journal_id', 'sequence_id', 'prefix', type='char', string='Supplier Invoice Sequence'),
-        'purchase_sequence_next': fields.related('purchase_journal_id', 'sequence_id', 'number_next', type='integer', string='Supplier Invoice Sequence Next Number'),
+        'purchase_sequence_next': fields.related('purchase_journal_id', 'sequence_id', 'number_next', type='integer', string='Next Supplier Invoice Number'),
         'purchase_refund_journal_id': fields.many2one('account.journal', 'Purchase Refund Journal'),
         'purchase_refund_sequence_prefix': fields.related('purchase_refund_journal_id', 'sequence_id', 'prefix', type='char', string='Supplier Refund Sequence'),
-        'purchase_refund_sequence_next': fields.related('purchase_refund_journal_id', 'sequence_id', 'number_next', type='integer', string='Supplier Refund Sequence Next Number'),
+        'purchase_refund_sequence_next': fields.related('purchase_refund_journal_id', 'sequence_id', 'number_next', type='integer', string='Next Supplier Refund Number'),
 
         'module_account_check_writing': fields.boolean('Support check writings',
             help="""This allows you to check writing and printing.

@@ -62,38 +62,27 @@
                             <field name="module_account_budget"/>
                         </group>
                     </group>
-                    <group colspan="2">
-                        <separator string="Customer Invoices" colspan="4"/>
+                    <group colspan="2" col="2">
+                        <separator string="Customer Invoices" colspan="2"/>
                         <field name="sale_journal_id" invisible="1"/>
-                        <field name="sale_sequence_prefix" attrs="{'readonly': [('sale_journal_id','=',False)]}"/>
-                        <field name="sale_sequence_next" nolabel="1" attrs="{'readonly': [('sale_journal_id','=',False)]}"/>
-                        <newline/>
+                        <field name="sale_sequence_next" attrs="{'readonly': [('sale_journal_id','=',False)]}"/>
                         <field name="sale_refund_journal_id" invisible="1"/>
-                        <field name="sale_refund_sequence_prefix" attrs="{'readonly': [('sale_refund_journal_id','=',False)]}"/>
-                        <field name="sale_refund_sequence_next" nolabel="1" attrs="{'readonly': [('sale_refund_journal_id','=',False)]}"/>
-                        <newline/>
+                        <field name="sale_refund_sequence_next" attrs="{'readonly': [('sale_refund_journal_id','=',False)]}"/>
                         <field name="module_account_invoice_layout"/>
-                        <newline/>
                         <field name="module_account_voucher"/>
-                        <newline/>
                         <field name="module_account_followup"/>
-                        <newline/>
                         <field name="group_proforma_invoices"/>
                     </group>
-                    <group colspan="2">
-                        <separator string="Supplier Invoices" colspan="4"/>
+                    <group colspan="2" col="2">
+                        <separator string="Supplier Invoices" colspan="2"/>
                         <field name="purchase_journal_id" invisible="1"/>
-                        <field name="purchase_sequence_prefix" attrs="{'readonly': [('purchase_journal_id','=',False)]}"/>
-                        <field name="purchase_sequence_next" nolabel="1" attrs="{'readonly': [('purchase_journal_id','=',False)]}"/>
-                        <newline/>
+                        <field name="purchase_sequence_next" attrs="{'readonly': [('purchase_journal_id','=',False)]}"/>
                         <field name="purchase_refund_journal_id" invisible="1"/>
-                        <field name="purchase_refund_sequence_prefix" attrs="{'readonly': [('purchase_refund_journal_id','=',False)]}"/>
-                        <field name="purchase_refund_sequence_next" nolabel="1" attrs="{'readonly': [('purchase_refund_journal_id','=',False)]}"/>
-                        <newline/>
+                        <field name="purchase_refund_sequence_next" attrs="{'readonly': [('purchase_refund_journal_id','=',False)]}"/>
                         <field name="module_account_payment"/>
                     </group>
-                    <group colspan="2">
-                        <separator string="Electronic Payments" colspan="4"/>
+                    <group colspan="2" col="2">
+                        <separator string="Electronic Payments" colspan="2"/>
                         <field name="paypal_account"/>
                     </group>
                     <group colspan="2" col="2">
