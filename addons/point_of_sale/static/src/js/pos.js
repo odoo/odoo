@@ -208,7 +208,6 @@ openerp.point_of_sale = function(db) {
      Models
      ---
      */
-    console.log("Fva Tools Reloaded");
 
     var CashRegister = Backbone.Model.extend({
     });
