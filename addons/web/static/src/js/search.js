@@ -875,10 +875,11 @@ openerp.web.search.FilterGroup = openerp.web.search.Input.extend(/** @lends open
         });
     },
     toggle_filter: function (e) {
+        this.toggle(this.filters[$(e.target).index()]);
+    },
+    toggle: function (filter) {
         // FIXME: oh god, my eyes, they hurt
         var self = this, fs;
-        var filter = this.filters[$(e.target).index()];
-
         var facet = this.view.vs.searchQuery.detect(function (f) {
             return f.get('field') === self; });
         if (facet) {
@@ -1282,28 +1283,21 @@ openerp.web.search.Advanced = openerp.web.search.Input.extend({
             .appendTo(this.$element.find('ul'));
     },
     commit_search: function () {
+        var self = this;
         // Get domain sections from all propositions
         var children = this.getChildren(),
-            domain = _.invoke(children, 'get_proposition'),
-            label = _(domain).map(function (section) {
-                return _.str.sprintf('%s(%s)%s',
-                    section[0], section[1], section[2]);
-            }).join(', ');
-        // OR all propositions in a single domain: prepend one | for each
-        // sliding pair of propositions
-        for(var i=domain.length; --i;) {
-            domain.unshift('|');
-        }
+            domain = _.invoke(children, 'get_proposition');
+        var filters = _(domain).map(function (section) {
+            return new openerp.web.search.Filter({attrs: {
+                string: _.str.sprintf('%s(%s)%s',
+                    section[0], section[1], section[2]),
+                domain: [section]
+            }}, self.view);
+        });
         // Create Filter (& FilterGroup around it) with that domain
-        var f = new openerp.web.search.FilterGroup([
-            new openerp.web.search.Filter({attrs: {
-                string: label,
-                domain: domain
-            }}, this.view)
-        ], this.view);
+        var f = new openerp.web.search.FilterGroup(filters, this.view);
         // add FilterGroup to this.view.searchQuery
-        // FIXME: holy fucking crap shoot me now
-        f.toggle_filter({target: {parentNode: {}}});
+        _(filters).each(function (filter) { f.toggle(filter); });
         // remove all propositions
         _.invoke(children, 'destroy');
         // add new empty proposition
