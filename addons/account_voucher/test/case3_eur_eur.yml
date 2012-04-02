@@ -33,8 +33,6 @@
 -
   !record {model: account.invoice, id: account_first_invoice_jan_eur}:
     account_id: account.a_recv
-    address_contact_id: base.res_partner_address_3000
-    address_invoice_id: base.res_partner_address_3000
     company_id: base.main_company
     currency_id: base.EUR
     date_invoice: !eval "'%s-01-01' %(datetime.now().year)"
@@ -68,8 +66,6 @@
 -
   !record {model: account.invoice, id: account_second_invoice_feb_eur}:
     account_id: account.a_recv
-    address_contact_id: base.res_partner_address_3000
-    address_invoice_id: base.res_partner_address_3000
     company_id: base.main_company
     currency_id: base.EUR
     date_invoice: !eval "'%s-02-01' %(datetime.now().year)"

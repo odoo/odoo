@@ -312,7 +312,7 @@ class mrp_bom(osv.osv):
         phantom = False
         if bom.type == 'phantom' and not bom.bom_lines:
             newbom = self._bom_find(cr, uid, bom.product_id.id, bom.product_uom.id, properties)
-            
+
             if newbom:
                 res = self._bom_explode(cr, uid, self.browse(cr, uid, [newbom])[0], factor*bom.product_qty, properties, addthis=True, level=level+10)
                 result = result + res[0]
@@ -670,9 +670,9 @@ class mrp_production(osv.osv):
         return res
 
     def _get_subproduct_factor(self, cr, uid, production_id, move_id=None, context=None):
-        """ Compute the factor to compute the qty of procucts to produce for the given production_id. By default, 
-            it's always equal to the quantity encoded in the production order or the production wizard, but if the 
-            module mrp_subproduct is installed, then we must use the move_id to identify the product to produce 
+        """ Compute the factor to compute the qty of procucts to produce for the given production_id. By default,
+            it's always equal to the quantity encoded in the production order or the production wizard, but if the
+            module mrp_subproduct is installed, then we must use the move_id to identify the product to produce
             and its quantity.
         :param production_id: ID of the mrp.order
         :param move_id: ID of the stock move that needs to be produced. Will be used in mrp_subproduct.
@@ -733,7 +733,7 @@ class mrp_production(osv.osv):
                         prod_name = scheduled.product_id.name_get()[0][1]
                         raise osv.except_osv(_('Warning!'), _('You are going to consume total %s quantities of "%s".\nBut you can only consume up to total %s quantities.') % (qty, prod_name, qty_avail))
                     if qty <= 0.0:
-                        # we already have more qtys consumed than we need 
+                        # we already have more qtys consumed than we need
                         continue
 
                     raw_product[0].action_consume(qty, raw_product[0].location_id.id, context=context)
@@ -890,21 +890,21 @@ class mrp_production(osv.osv):
                         'state': 'waiting',
                         'company_id': production.company_id.id,
                 })
-          
+
     def _make_production_internal_shipment(self, cr, uid, production, context=None):
         ir_sequence = self.pool.get('ir.sequence')
         stock_picking = self.pool.get('stock.picking')
         routing_loc = None
         pick_type = 'internal'
-        address_id = False
-        
+        partner_id = False
+
         # Take routing address as a Shipment Address.
         # If usage of routing location is a internal, make outgoing shipment otherwise internal shipment
         if production.bom_id.routing_id and production.bom_id.routing_id.location_id:
             routing_loc = production.bom_id.routing_id.location_id
             if routing_loc.usage <> 'internal':
                 pick_type = 'out'
-            address_id = routing_loc.address_id and routing_loc.address_id.id or False
+            partner_id = routing_loc.partner_id and routing_loc.partner_id.id or False
 
         # Take next Sequence number of shipment base on type
         pick_name = ir_sequence.get(cr, uid, 'stock.picking.' + pick_type)
@@ -915,7 +915,7 @@ class mrp_production(osv.osv):
             'type': pick_type,
             'move_type': 'one',
             'state': 'auto',
-            'address_id': address_id,
+            'partner_id': partner_id,
             'auto_picking': self._get_auto_picking(cr, uid, production),
             'company_id': production.company_id.id,
         })
@@ -926,7 +926,7 @@ class mrp_production(osv.osv):
         stock_move = self.pool.get('stock.move')
         source_location_id = production.product_id.product_tmpl_id.property_stock_production.id
         destination_location_id = production.location_dest_id.id
-        move_name = _('PROD: %s') + production.name 
+        move_name = _('PROD: %s') + production.name
         data = {
             'name': move_name,
             'date': production.date_planned,
@@ -983,7 +983,7 @@ class mrp_production(osv.osv):
         for production in self.browse(cr, uid, ids, context=context):
             shipment_id = self._make_production_internal_shipment(cr, uid, production, context=context)
             produce_move_id = self._make_production_produce_line(cr, uid, production, context=context)
-            
+
             # Take routing location as a Source Location.
             source_location_id = production.location_src_id.id
             if production.bom_id.routing_id and production.bom_id.routing_id.location_id:
@@ -994,7 +994,7 @@ class mrp_production(osv.osv):
                 shipment_move_id = self._make_production_internal_shipment_line(cr, uid, line, shipment_id, consume_move_id,\
                                  destination_location_id=source_location_id, context=context)
                 self._make_production_line_procurement(cr, uid, line, shipment_move_id, context=context)
-                    
+
             wf_service.trg_validate(uid, 'stock.picking', shipment_id, 'button_confirm', cr)
             production.write({'state':'confirmed'}, context=context)
             message = _("Manufacturing order '%s' is scheduled for the %s.") % (
