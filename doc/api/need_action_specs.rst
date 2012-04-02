@@ -20,9 +20,10 @@ This class also offers several global services,:
 Menu modification
 +++++++++++++++++
 
-This revision adds two functional fields to ``ir.ui.menu`` model :
- - ``uses_needaction``: boolean field. If the menu entry is related to a act_window action, and this action is related to a model that uses the need_action mechanism, this field is set to true. Otherwise, it is false.
- - ``needaction_uid_ctr``: integer field. If the related model uses the need action mechanism, this field gives the number of actions the current user has to perform.
+This revision adds three functional fields to ``ir.ui.menu`` model :
+ - ``uses_needaction``: boolean field. If the menu entry action is an act_window action, and if this action is related to a model that uses the need_action mechanism, this field is set to true. Otherwise, it is false.
+ - ``needaction_uid_ctr``: integer field. If the target model uses the need action mechanism, this field gives the number of actions the current user has to perform.
+ - ``needaction_record_ids``: many2many field. If the target model uses the need action mechanism, this field holds the ids of the record requesting the user to perform an action.
 
 Those fields are functional, because they must be recalculated for each user, and each time menus are displayed. ``needaction_uid_ctr`` takes into account the domain of the action, in order to display accurate numbers.
 
