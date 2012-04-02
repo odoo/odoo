@@ -95,7 +95,7 @@ class crm_meeting(crm_base, osv.osv):
 
     def create_send_note(self, cr, uid, ids, context=None):
         # update context: if come from phonecall, default state values can make the message_append_note crash
-        context.pop('default_state')
+        context.pop('default_state', False)
         lead_obj = self.pool.get('crm.lead')
         phonecall_obj = self.pool.get('crm.phonecall')
         for meeting in self.browse(cr, uid, ids, context=context):
