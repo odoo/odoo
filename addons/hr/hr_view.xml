@@ -34,7 +34,7 @@
                         <field name="parent_id" />
                         </group>
                         <group colspan="2" col="1">
-                          <field name="photo" widget='image' nolabel="1"/>
+                          <field name="photo" widget='image' nolabel="1" on_change="onchange_photo(photo)"/>
                         </group>
                     </group>
                     <notebook colspan="6">
@@ -57,8 +57,7 @@
                             <group col="2" colspan="2">
                                 <separator string="Contact Information" colspan="2"/>
                                 <field name="address_home_id" colspan="2"/>
-                                <field name="partner_id" invisible="1" />
-                                <field name="address_id" colspan="2" on_change="onchange_address_id(address_id)" domain="[('partner_id', '=', partner_id)]"/>
+                                <field name="address_id" colspan="2" on_change="onchange_address_id(address_id)" />
                                 <field name="work_phone"/>
                                 <field name="mobile_phone"/>
                                 <field name="work_email" widget="email" />
@@ -131,7 +130,6 @@
         <field name="model">hr.employee</field>
         <field name="type">kanban</field>
         <field name="arch" type="xml">
-
             <kanban>
                 <templates>
                     <t t-name="kanban-box">

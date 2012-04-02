@@ -22,10 +22,8 @@
                             <group colspan="4" col="4">
                                 <field name="user_id" string="Invited User"/>
                                 <newline/>
-                                <field name="partner_address_id"
-                                    string="Contact" />
                                 <field name="partner_id"
-                                    string="Partner" readonly="1" />
+                                    string="Contact" />
                             </group>
                             <separator string="Event Detail" colspan="4" />
                             <group colspan="4" col="4">
@@ -78,7 +76,7 @@
                     <field name="sent_by_uid" string="Invitation From" />
                     <field name="role" string="My Role"/>
                     <field name="user_id" invisible="1"/>
-                    <field name="partner_address_id" invisible="1"/>
+                    <field name="partner_id" invisible="1"/>
                     <field name="cutype" string="Invitation type"/>
                     <field name="state" />
                     <field name="rsvp" string="Required to Join"/>
@@ -132,7 +130,7 @@
                         <filter string="Responsible" icon="terp-personal" domain="[]"
                             context="{'group_by':'user_id'}" />
                         <filter string="Contact" icon="terp-personal" domain="[]"
-                            context="{'group_by':'partner_address_id'}" />
+                            context="{'group_by':'partner_id'}" />
                         <separator orientation="vertical" />
                         <filter string="Type" icon="terp-stock_symbol-selection" help="Invitation Type"
                             domain="[]" context="{'group_by':'cutype'}" />
