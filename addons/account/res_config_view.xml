@@ -11,30 +11,28 @@
                     <field name="has_default_company" invisible="1" />
                     <field name="company_id" widget="selection" on_change="onchange_company_id(company_id)"
                         attrs="{'invisible': [('has_default_company', '=', True)]}"/>
+                    <field name="expects_chart_of_accounts"/>
 
-                    <field name="has_account_chart" invisible="1"/>
-                    <group string="Configure your Chart of Accounts" colspan="4" attrs="{'invisible': [('has_account_chart','=',True)]}">
-                        <label string="You have no chart of accounts or taxes defined for this company.  Please select a chart of accounts to proceed." colspan="4"/>
+                    <field name="has_chart_of_accounts" invisible="1"/>
+                    <group string="No Chart of Accounts exists for this Company" colspan="4" attrs="{'invisible': ['|', ('expects_chart_of_accounts','=',False), ('has_chart_of_accounts','=',True)]}">
+                        <label string="Please select a chart template to install a chart of accounts." colspan="4"/>
                         <field name="chart_template_id" widget="selection" on_change="onchange_chart_template_id(chart_template_id)" domain="[('visible','=', True)]"/>
                         <button string="Other Chart Templates" icon="gtk-jump-to"
                             name="%(action_account_configuration_installer)d" type="action" context="{'default_company_id': company_id}"/>
-                        <button name="install_chartofaccounts" string="Create Chart of Accounts" icon="gtk-execute" type="object"/>
                         <field name ="code_digits" groups="account.group_account_user"/>
                         <field name ="seq_journal" groups="base.group_extended"/>
                         <newline/>
                         <field name ="complete_tax_set" invisible="1"/>
-                        <field name="sale_tax" attrs="{'invisible': [('complete_tax_set', '!=', True)]}" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('sale','all'))]"/>
-                        <field name="purchase_tax" attrs="{'invisible': [('complete_tax_set', '!=', True)]}" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('purchase', 'all'))]"/>
-                        <field name ="sale_tax_rate" attrs="{'invisible': [('complete_tax_set', '=', True)]}" on_change="onchange_tax_rate(sale_tax_rate)"/>
-                        <field name ="purchase_tax_rate" attrs="{'invisible': [('complete_tax_set', '=', True)]}"/>
+                        <field name="sale_tax" attrs="{'invisible': ['|', ('chart_template_id','=',False), ('complete_tax_set','=',False)]}"
+                            domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('sale','all'))]"/>
+                        <field name="purchase_tax" attrs="{'invisible': ['|', ('chart_template_id','=',False), ('complete_tax_set','=',False)]}"
+                            domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('purchase', 'all'))]"/>
+                        <field name ="sale_tax_rate" attrs="{'invisible': ['|', ('chart_template_id','=',False), ('complete_tax_set','=',True)]}" on_change="onchange_tax_rate(sale_tax_rate)"/>
+                        <field name ="purchase_tax_rate" attrs="{'invisible': ['|', ('chart_template_id','=',False), ('complete_tax_set','=',True)]}"/>
                     </group>
 
                     <field name="has_fiscal_year" invisible="1"/>
-                    <group string="Configure your Fiscal Year" colspan="4" attrs="{'invisible': [('has_fiscal_year','=',True)]}">
-                        <group colspan="4">
-                            <label string="You have no fiscal year/period open for this date."/>
-                            <button name="configure_fiscalyear" string="Configure" icon="gtk-execute" type="object"/>
-                        </group>
+                    <group string="No Fiscal Year exists for this Company" colspan="4" attrs="{'invisible': ['|', ('expects_chart_of_accounts','=',False), ('has_fiscal_year','=',True)]}">
                         <field name="date_start" on_change="on_change_start_date(date_start)"/>
                         <field name="date_stop"/>
                         <field name="period" colspan="4"/>

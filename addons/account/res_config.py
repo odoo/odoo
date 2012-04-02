@@ -37,6 +37,8 @@ class account_config_settings(osv.osv_memory):
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'has_default_company': fields.boolean('Has default company', readonly=True),
 
+        'expects_chart_of_accounts': fields.related('company_id', 'expects_chart_of_accounts', type='boolean',
+            string='Chart of Accounts for this Company'),
         'currency_id': fields.related('company_id', 'currency_id', type='many2one', relation='res.currency',
             string='Main currency', help="Main currency of the company."),
         'paypal_account': fields.related('company_id', 'paypal_account', type='char', size=128,
@@ -44,7 +46,7 @@ class account_config_settings(osv.osv_memory):
         'company_footer': fields.related('company_id', 'rml_footer2', type='char', size=250, readonly=True,
             string='Footer of reports', help="Footer of reports based on your bank accounts."),
 
-        'has_account_chart': fields.boolean('Has a chart of accounts'),
+        'has_chart_of_accounts': fields.boolean('Company has a chart of accounts'),
         'chart_template_id': fields.many2one('account.chart.template', 'Chart Template', domain="[('visible','=', True)]"),
         'code_digits': fields.integer('# of Digits', help="No. of Digits to use for account code"),
         'seq_journal': fields.boolean('Separated Journal Sequences', help="Check this box if you want to use a different sequence for each created journal. Otherwise, all will use the same sequence."),
@@ -54,7 +56,7 @@ class account_config_settings(osv.osv_memory):
         'purchase_tax_rate': fields.float('Purchase Tax (%)'),
         'complete_tax_set': fields.boolean('Complete Set of Taxes', help='This boolean helps you to choose if you want to propose to the user to encode the sales and purchase rates or use the usual m2o fields. This last choice assumes that the set of tax defined for the chosen template is complete'),
 
-        'has_fiscal_year': fields.boolean('Has a fiscal year'),
+        'has_fiscal_year': fields.boolean('Company has a fiscal year'),
         'date_start': fields.date('Start Date', required=True),
         'date_stop': fields.date('End Date', required=True),
         'period': fields.selection([('month', 'Monthly'), ('3months','3 Monthly')], 'Periods', required=True),
@@ -141,28 +143,21 @@ class account_config_settings(osv.osv_memory):
         'period': 'month',
     }
 
-    def set_default_taxes(self, cr, uid, ids, context=None):
-        ir_values = self.pool.get('ir.values')
-        config = self.browse(cr, uid, ids[0], context)
-        ir_values.set_default(cr, uid, 'product.product', 'taxes_id',
-            config.default_sale_tax and [config.default_sale_tax.id] or False, company_id=config.company_id.id)
-        ir_values.set_default(cr, uid, 'product.product', 'supplier_taxes_id',
-            config.default_purchase_tax and [config.default_purchase_tax.id] or False, company_id=config.company_id.id)
-
     def onchange_company_id(self, cr, uid, ids, company_id):
         # update related fields
         company = self.pool.get('res.company').browse(cr, uid, company_id)
-        has_account_chart = company_id not in self.pool.get('account.installer').get_unconfigured_cmp(cr, uid)
-        has_fiscal_year = self.pool.get('account.fiscalyear').search_count(cr, uid,
+        has_chart_of_accounts = company_id not in self.pool.get('account.installer').get_unconfigured_cmp(cr, uid)
+        fiscalyear_count = self.pool.get('account.fiscalyear').search_count(cr, uid,
             [('date_start', '<=', time.strftime('%Y-%m-%d')), ('date_stop', '>=', time.strftime('%Y-%m-%d')),
              ('company_id', '=', company_id)])
         values = {
+            'expects_chart_of_accounts': company.expects_chart_of_accounts,
             'currency_id': company.currency_id.id,
             'paypal_account': company.paypal_account,
             'company_footer': company.rml_footer2,
-            'has_account_chart': has_account_chart,
-            'complete_tax_set': has_account_chart,
-            'has_fiscal_year': has_fiscal_year,
+            'has_chart_of_accounts': has_chart_of_accounts,
+            'has_fiscal_year': bool(fiscalyear_count),
+            'chart_template_id': False,
         }
         # update journals and sequences
         for journal_type in ('sale', 'sale_refund', 'purchase', 'purchase_refund'):
@@ -194,6 +189,7 @@ class account_config_settings(osv.osv_memory):
             'sale_tax_rate': 15, 'purchase_tax_rate': 15,
         }}
         if chart_template_id:
+            # update complete_tax_set, sale_tax and purchase_tax
             chart_template = self.pool.get('account.chart.template').browse(cr, uid, chart_template_id, context=context)
             res['value'].update({'complete_tax_set': chart_template.complete_tax_set})
             if chart_template.complete_tax_set:
@@ -220,40 +216,43 @@ class account_config_settings(osv.osv_memory):
     def onchange_tax_rate(self, cr, uid, ids, rate, context=None):
         return {'value': {'purchase_tax_rate': rate or False}}
 
-    def install_chartofaccounts(self, cr, uid, ids, context=None):
+    def set_default_taxes(self, cr, uid, ids, context=None):
+        """ set default sale and purchase taxes for products """
+        ir_values = self.pool.get('ir.values')
+        config = self.browse(cr, uid, ids[0], context)
+        ir_values.set_default(cr, uid, 'product.product', 'taxes_id',
+            config.default_sale_tax and [config.default_sale_tax.id] or False, company_id=config.company_id.id)
+        ir_values.set_default(cr, uid, 'product.product', 'supplier_taxes_id',
+            config.default_purchase_tax and [config.default_purchase_tax.id] or False, company_id=config.company_id.id)
+
+    def set_chart_of_accounts(self, cr, uid, ids, context=None):
+        """ install a chart of accounts for the given company (if required) """
         config = self.browse(cr, uid, ids[0], context)
         if config.chart_template_id:
+            assert config.expects_chart_of_accounts and not config.has_chart_of_accounts
             wizard = self.pool.get('wizard.multi.charts.accounts')
             wizard_id = wizard.create(cr, uid, {
-                    'company_id': config.company_id.id,
-                    'chart_template_id': config.chart_template_id.id,
-                    'code_digits': config.code_digits or 6,
-                    'seq_journal': config.seq_journal,
-                    'sale_tax': config.sale_tax.id,
-                    'purchase_tax': config.purchase_tax.id,
-                    'sale_tax_rate': config.sale_tax_rate,
-                    'purchase_tax_rate': config.purchase_tax_rate,
-                    'complete_tax_set': config.complete_tax_set,
-                }, context)
+                'company_id': config.company_id.id,
+                'chart_template_id': config.chart_template_id.id,
+                'code_digits': config.code_digits or 6,
+                'seq_journal': config.seq_journal,
+                'sale_tax': config.sale_tax.id,
+                'purchase_tax': config.purchase_tax.id,
+                'sale_tax_rate': config.sale_tax_rate,
+                'purchase_tax_rate': config.purchase_tax_rate,
+                'complete_tax_set': config.complete_tax_set,
+            }, context)
             wizard.execute(cr, uid, [wizard_id], context)
-            self.configure_fiscalyear(cr, uid, ids, context)
-        # reopen the current wizard to refresh the view
-        return {
-            'type': 'ir.actions.act_window',
-            'res_model': 'account.config.settings',
-            'view_type': 'form',
-            'view_mode': 'form',
-            'context': str({'default_company_id': config.company_id.id}),
-        }
 
-    def configure_fiscalyear(self, cr, uid, ids, context=None):
+    def set_fiscalyear(self, cr, uid, ids, context=None):
+        """ create a fiscal year for the given company (if necessary) """
         config = self.browse(cr, uid, ids[0], context)
-        fy_obj = self.pool.get('account.fiscalyear')
-        fy_count = fy_obj.search_count(cr, uid,
+        fiscalyear = self.pool.get('account.fiscalyear')
+        fiscalyear_count = fiscalyear.search_count(cr, uid,
             [('date_start', '<=', config.date_start), ('date_stop', '>=', config.date_stop),
              ('company_id', '=', config.company_id.id)],
             context=context)
-        if not fy_count:
+        if not fiscalyear_count:
             name = code = config.date_start[:4]
             if int(name) != int(config.date_stop[:4]):
                 name = config.date_start[:4] +'-'+ config.date_stop[:4]
@@ -265,18 +264,10 @@ class account_config_settings(osv.osv_memory):
                 'date_stop': config.date_stop,
                 'company_id': config.company_id.id,
             }
-            fiscal_id = fy_obj.create(cr, uid, vals, context=context)
+            fiscalyear_id = fiscalyear.create(cr, uid, vals, context=context)
             if config.period == 'month':
-                fy_obj.create_period(cr, uid, [fiscal_id])
+                fiscalyear.create_period(cr, uid, [fiscalyear_id])
             elif config.period == '3months':
-                fy_obj.create_period3(cr, uid, [fiscal_id])
-        # reopen the current wizard to refresh the view
-        return {
-            'type': 'ir.actions.act_window',
-            'res_model': 'account.config.settings',
-            'view_type': 'form',
-            'view_mode': 'form',
-            'context': str({'default_company_id': config.company_id.id}),
-        }
+                fiscalyear.create_period3(cr, uid, [fiscalyear_id])
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
