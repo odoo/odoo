@@ -652,7 +652,7 @@ openerp.mail = function(session) {
             if (additional_context) var fetch_context = _.extend(this.params.search['context'], additional_context);
             else var fetch_context = this.params.search['context'];
             var load_res = this.ds_thread.call('get_pushed_messages', 
-                [[this.session.uid], (limit || 0), (offset || 0), fetch_domain, true, [false], fetch_context]).then(function (records) {
+                [[this.session.uid], (limit || 0), (offset || 0), [], fetch_domain, true, [], fetch_context]).then(function (records) {
                     self.do_update_show_more(records.length >= self.params.limit);
                     self.display_comments(records);
                 });
