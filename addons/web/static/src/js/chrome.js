@@ -172,7 +172,7 @@ openerp.web.CrashManager = openerp.web.CallbackEnabled.extend({
         }
     },
     on_managed_error: function(error) {
-    	openerp.web.dialog($('<div>' + QWeb.render('CrashManagerWarning', {error: error}) + '</div>'), {
+    	openerp.web.dialog($('<div>' + QWeb.render('CrashManager.warning', {error: error}) + '</div>'), {
             title: "OpenERP " + _.str.capitalize(error.type),
             buttons: [
                 {text: _t("Ok"), click: function() { $(this).dialog("close"); }}
@@ -213,7 +213,7 @@ openerp.web.CrashManager = openerp.web.CallbackEnabled.extend({
             min_height: '600px',
             buttons: buttons
         }).open();
-        dialog.$element.html(QWeb.render('CrashManagerError', {session: openerp.connection, error: error}));
+        dialog.$element.html(QWeb.render('CrashManager.error', {session: openerp.connection, error: error}));
     }
 });
 
@@ -277,7 +277,7 @@ openerp.web.Loading = openerp.web.OldWidget.extend(/** @lends openerp.web.Loadin
 });
 
 openerp.web.Database = openerp.web.OldWidget.extend(/** @lends openerp.web.Database# */{
-    template: "DatabaseManager",
+    template: "Database",
     /**
      * @constructs openerp.web.Database
      * @extends openerp.web.OldWidget
@@ -408,7 +408,7 @@ openerp.web.Database = openerp.web.OldWidget.extend(/** @lends openerp.web.Datab
     },
     do_drop: function() {
         var self = this;
-       	self.$option_id.html(QWeb.render("DropDB", self));
+       	self.$option_id.html(QWeb.render("Database.DropDB", self));
        	self.$option_id.find("form[name=drop_db_form]").validate({
             submitHandler: function (form) {
                 var $form = $(form),
@@ -437,7 +437,7 @@ openerp.web.Database = openerp.web.OldWidget.extend(/** @lends openerp.web.Datab
     do_backup: function() {
         var self = this;
        	self.$option_id
-            .html(QWeb.render("BackupDB", self))
+            .html(QWeb.render("Database.BackupDB", self))
             .find("form[name=backup_db_form]").validate({
             submitHandler: function (form) {
                 self.blockUI();
@@ -457,7 +457,7 @@ openerp.web.Database = openerp.web.OldWidget.extend(/** @lends openerp.web.Datab
     },
     do_restore: function() {
         var self = this;
-       	self.$option_id.html(QWeb.render("RestoreDB", self));
+       	self.$option_id.html(QWeb.render("Database.RestoreDB", self));
 
        	self.$option_id.find("form[name=restore_db_form]").validate({
             submitHandler: function (form) {
@@ -496,7 +496,7 @@ openerp.web.Database = openerp.web.OldWidget.extend(/** @lends openerp.web.Datab
     },
     do_change_password: function() {
         var self = this;
-       	self.$option_id.html(QWeb.render("Change_DB_Pwd", self));
+       	self.$option_id.html(QWeb.render("Database.Change_DB_Pwd", self));
 
         self.$option_id.find("form[name=change_pwd_form]").validate({
             messages: {
@@ -571,7 +571,7 @@ openerp.web.Login =  openerp.web.OldWidget.extend(/** @lends openerp.web.Login# 
     },
     set_db_list: function (list) {
         this.$element.find("[name=db]").replaceWith(
-            openerp.web.qweb.render('Login_dblist', {
+            openerp.web.qweb.render('Login.dblist', {
                 db_list: list, selected_db: this.selected_db}))
     },
     on_submit: function(ev) {
