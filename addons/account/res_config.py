@@ -39,7 +39,7 @@ class account_config_settings(osv.osv_memory):
 
         'expects_chart_of_accounts': fields.related('company_id', 'expects_chart_of_accounts', type='boolean',
             string='Chart of Accounts for this Company'),
-        'currency_id': fields.related('company_id', 'currency_id', type='many2one', relation='res.currency',
+        'currency_id': fields.related('company_id', 'currency_id', type='many2one', relation='res.currency', required=True,
             string='Main currency', help="Main currency of the company."),
         'paypal_account': fields.related('company_id', 'paypal_account', type='char', size=128,
             string='Paypal account', help="Paypal account (email) for receiving online payments (credit card, etc.)"),
