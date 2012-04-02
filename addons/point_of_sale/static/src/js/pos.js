@@ -2,22 +2,6 @@ openerp.point_of_sale = function(db) {
     
     db.point_of_sale = {};
 
-    var __extends = function(child, parent) {
-        var __hasProp = Object.prototype.hasOwnProperty;
-        for (var key in parent) {
-            if (__hasProp.call(parent, key))
-                child[key] = parent[key];
-        }
-        function ctor() {
-            this.constructor = child;
-        }
-
-        ctor.prototype = parent.prototype;
-        child.prototype = new ctor;
-        child.__super__ = parent.prototype;
-        return child;
-    };
-
     var QWeb = db.web.qweb;
     var qweb_template = function(template) {
         return function(ctx) {
@@ -719,6 +703,7 @@ openerp.point_of_sale = function(db) {
         },
         on_selected: function() {},
     });
+
     var OrderWidget = db.web.OldWidget.extend({
         init: function(parent, options) {
             this._super(parent);
@@ -800,6 +785,7 @@ openerp.point_of_sale = function(db) {
             $('#total').html(total.toFixed(2)).hide().fadeIn();
         },
     });
+
     /*
      "Products" step.
      */
@@ -838,6 +824,7 @@ openerp.point_of_sale = function(db) {
         },
         on_change_category: function(id) {},
     });
+
     var ProductWidget = db.web.OldWidget.extend({
         tagName:'li',
         template_fct: qweb_template('pos-product-template'),
@@ -860,6 +847,7 @@ openerp.point_of_sale = function(db) {
             return this;
         },
     });
+
     var ProductListWidget = db.web.OldWidget.extend({
         init: function(parent, options) {
             this._super(parent);
@@ -1011,6 +999,7 @@ openerp.point_of_sale = function(db) {
         	this.currentPaymentLines.last().set({amount: val});
         },
     });
+
     var ReceiptWidget = db.web.OldWidget.extend({
         init: function(parent, options) {
             this._super(parent);
@@ -1053,6 +1042,7 @@ openerp.point_of_sale = function(db) {
             $('.pos-receipt-container', this.$element).html(qweb_template('pos-ticket')({widget:this}));
         },
     });
+
     var OrderButtonWidget = db.web.OldWidget.extend({
         tagName: 'li',
         template_fct: qweb_template('pos-order-selector-button-template'),
@@ -1092,6 +1082,7 @@ openerp.point_of_sale = function(db) {
             this.$element.addClass('order-selector-button');
         }
     });
+
     var ShopWidget = db.web.OldWidget.extend({
         init: function(parent, options) {
             this._super(parent);
@@ -1172,7 +1163,9 @@ openerp.point_of_sale = function(db) {
         	}
         },
     });
+
     var App = (function() {
+
         function App($element) {
             this.initialize($element);
         }
@@ -1188,16 +1181,18 @@ openerp.point_of_sale = function(db) {
             this.categoryView.on_change_category.add_last(_.bind(this.category, this));
             this.category();
         };
+
         App.prototype.category = function(id) {
-            var c, products;
-            if (id == null) {
-                id = 0;
-            }
+            var c, products, self = this;
+
+            id = !id ? 0 : id; 
+
             c = pos.categories[id];
             this.categoryView.ancestors = c.ancestors;
             this.categoryView.children = c.children;
             this.categoryView.renderElement();
             this.categoryView.start();
+
             allProducts = pos.store.get('product.product');
             allPackages = pos.store.get('product.packaging');
             products = pos.store.get('product.product').filter( function(p) {
@@ -1205,8 +1200,9 @@ openerp.point_of_sale = function(db) {
                 return _ref = p.pos_categ_id[0], _.indexOf(c.subtree, _ref) >= 0;
             });
             (this.shop.get('products')).reset(products);
+            
+            //returns true if the code is a valid EAN codebar number by checking the control digit.
             var checkEan = function(code) {
-                // EAN control digit calculation
                 var st1 = code.slice();
                 var st2 = st1.slice(0,st1.length-1).reverse();
                 // some EAN13 barcodes have a length of 12, as they start by 0
@@ -1234,12 +1230,18 @@ openerp.point_of_sale = function(db) {
                 var cd = (10 - (st5%10)) % 10;
                 return code[code.length-1] === cd;
             }
-            var self = this;
-            // bind barcode reader event
+
+            // The barcode readers acts as a keyboard, we catch all keyup events and try to find a 
+            // barcode sequence in the typed keys, then act accordingly.
+
             var codeNumbers = [];
             $('body').delegate('','keyup', function (e){
+
+                //We only care about numbers
                 if (!isNaN(Number(String.fromCharCode(e.keyCode)))) {
-                    // a number
+
+                    // The barcode reader sends keystrokes with a specific interval.
+                    // We look if the typed keys fit in the interval. 
                     if (codeNumbers.length==0) {
                         timeStamp = new Date().getTime();
                     } else {
@@ -1291,7 +1293,7 @@ openerp.point_of_sale = function(db) {
                             }
                         } else {
                             // UNIT barcode
-                            var scannedProductModel = _.detect(allProducts, function(pc) { return pc.ean13 === barcode;});
+                            var scannedProductModel = _.detect(allProducts, function(pc) { return pc.ean13 === barcode;});  //TODO DOES NOT SCALE
                         }
                         if (scannedProductModel === undefined) {
                             // product not recognized, raise warning
@@ -1318,6 +1320,7 @@ openerp.point_of_sale = function(db) {
                     codeNumbers = [];
                 }
             });
+
             $('.searchbox input').keyup(function() {
                 var m, s;
                 s = $(this).val().toLowerCase();
