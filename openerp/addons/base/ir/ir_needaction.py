@@ -97,7 +97,7 @@ class ir_needaction(osv.osv):
             context = {}
         needact_obj = self.pool.get('ir.needaction_users_rel')
         needact_ids = needact_obj.search(cr, uid, [('res_model', '=', self._name), ('res_id', 'in', ids)], context=context)
-        return needact_obj.read(cr, uid, cur_needact_ids, context=context)
+        return needact_obj.read(cr, uid, needact_ids, context=context)
     
     def _link_users(self, cr, uid, ids, user_ids, context=None):
         """Given ids of model self._name, add user_ids to the relationship table"""
