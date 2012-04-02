@@ -47,8 +47,6 @@ class crm_fundraising(crm.crm_case, osv.osv):
                             select=True, help='Sales team to which Case belongs to. Define Responsible user and Email account for mail gateway.'),
             'company_id': fields.many2one('res.company', 'Company'),
             'partner_id': fields.many2one('res.partner', 'Partner'),
-            'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \
-                                 domain="[('partner_id','=',partner_id)]"),
             'email_cc': fields.text('Watchers Emails', size=252 , help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
             'email_from': fields.char('Email', size=128, help="These people will receive email."),
             'date_closed': fields.datetime('Closed', readonly=True),
@@ -100,7 +98,6 @@ class crm_fundraising(crm.crm_case, osv.osv):
             'active': 1,
             'user_id': crm.crm_case._get_default_user,
             'partner_id': crm.crm_case._get_default_partner,
-            'partner_address_id': crm.crm_case._get_default_partner_address,
             'email_from': crm.crm_case. _get_default_email,
             'state': 'draft',
             'section_id': crm.crm_case. _get_section,

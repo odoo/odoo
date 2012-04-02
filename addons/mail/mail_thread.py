@@ -455,18 +455,14 @@ class mail_thread(osv.osv):
                       { 'partner_address_id': id or False,
                         'partner_id': pid or False }
         """
-        address_pool = self.pool.get('res.partner.address')
-        res = {
-            'partner_address_id': False,
-            'partner_id': False
-        }
+        partner_pool = self.pool.get('res.partner')
+        res = {'partner_id': False}
         if email:
             email = to_email(email)[0]
-            address_ids = address_pool.search(cr, uid, [('email', '=', email)])
-            if address_ids:
-                address = address_pool.browse(cr, uid, address_ids[0])
-                res['partner_address_id'] = address_ids[0]
-                res['partner_id'] = address.partner_id.id
+            contact_ids = partner_pool.search(cr, uid, [('email', '=', email)])
+            if contact_ids:
+                contact = partner_pool.browse(cr, uid, contact_ids[0])
+                res['partner_id'] = contact.id
         return res
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

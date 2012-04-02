@@ -68,7 +68,7 @@ class product_pulled_flow(osv.osv):
         'procure_method': fields.selection([('make_to_stock','Make to Stock'),('make_to_order','Make to Order')], 'Procure Method', required=True, help="'Make to Stock': When needed, take from the stock or wait until re-supplying. 'Make to Order': When needed, purchase or produce for the procurement request."),
         'type_proc': fields.selection([('produce','Produce'),('buy','Buy'),('move','Move')], 'Type of Procurement', required=True),
         'company_id': fields.many2one('res.company', 'Company', help="Is used to know to which company belong packings and moves"),
-        'partner_address_id': fields.many2one('res.partner.address', 'Partner Address'),
+        'partner_address_id': fields.many2one('res.partner', 'Partner Address'),
         'picking_type': fields.selection([('out','Sending Goods'),('in','Getting Goods'),('internal','Internal')], 'Shipping Type', required=True, select=True, help="Depending on the company, choose whatever you want to receive or send products"),
         'product_id':fields.many2one('product.product','Product'),
         'invoice_state': fields.selection([
