@@ -508,7 +508,14 @@ $colour4: #8a89ba
             display: block
     .oe_layout_debug_cell
         display: none
+    // }}}
 
+    // FormView Widgets {{{
+    .oe_form_label_help[for], .oe_form_label[for]
+        white-space: nowrap
+    // }}}
+
+    // FormView Notebook {{{
     .oe_form_notebook
         margin: 8px 0
         padding: 0 8px
@@ -547,11 +554,9 @@ $colour4: #8a89ba
         border: 1px solid #ddd
         border-bottom-color: transparent
         cursor: default
+    .ui-tabs-hide
+        display: none
 
-    // }}}
-    // FormView Widgets {{{
-    .oe_form_label_help[for], .oe_form_label[for]
-        white-space: nowrap
     // }}}
 
 // Transitional overrides for old styles {{{
