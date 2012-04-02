@@ -667,7 +667,14 @@ class mail_thread(osv.osv):
                 subject = _('Reply on %s at %s') % (self._name, fields.datetime.now())
         return self.message_append(cr, uid, ids, subject, body_text=body, parent_id=parent_id, type=type, context=context)
     
-    def message_append_note(self, cr, uid, ids, subject, body, parent_id=False, type='notification', context=None):
+    def message_append_note(self, cr, uid, ids, subject=None, body=None, parent_id=False, type='notification', subtype='html', context=None):
+        if subject is None:
+            if type == 'notification':
+                subject = _('System notification')
+            elif type == 'comment' and not parent_id:
+                subject = _('Comment')
+            elif type == 'comment' and parent_id:
+                subject = _('Reply')
         return self.message_append(cr, uid, ids, subject, body_text=body, parent_id=parent_id, type=type, context=context)
     
     #------------------------------------------------------
