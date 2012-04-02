@@ -655,7 +655,7 @@ class stock_picking(osv.osv):
                  store=True, type='datetime', string='Max. Expected Date', select=2),
         'move_lines': fields.one2many('stock.move', 'picking_id', 'Internal Moves', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}),
         'auto_picking': fields.boolean('Auto-Picking', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
-        'partner_id': fields.many2one('res.partner', 'Partner'),
+        'partner_id': fields.many2one('res.partner', 'Partner', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
         'invoice_state': fields.selection([
             ("invoiced", "Invoiced"),
             ("2binvoiced", "To Be Invoiced"),
@@ -675,7 +675,7 @@ class stock_picking(osv.osv):
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per Company!'),
     ]
-
+    
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         if context is None:
             context = {}
@@ -722,7 +722,7 @@ class stock_picking(osv.osv):
                     res['fields']['state']['selection'] = [(x[0], _state[x[0]]) for x in PICK_STATE]
                     res['fields']['state']['help'] = self._tooltip_picking_state(_state)
                 # To update the fields tooltips according to shipping type
-                if field == 'address_id':
+                if field == 'partner_id':
                     _tooltip = ''
                     if type == 'in':
                         _tooltip = _('supplier')
@@ -730,7 +730,7 @@ class stock_picking(osv.osv):
                         _tooltip = _('warehouse')
                     elif type == 'out':
                         _tooltip = _('customer')
-                    res['fields']['address_id']['help'] = _("Address of %s") %(_tooltip)
+                    res['fields']['partner_id']['help'] = _("Address of %s") %(_tooltip)
         return res
 
     def action_process(self, cr, uid, ids, context=None):
@@ -889,10 +889,13 @@ class stock_picking(osv.osv):
         #TOFIX: assignment of move lines should be call before testing assigment otherwise picking never gone in assign state
         ok = True
         for pick in self.browse(cr, uid, ids):
-            if pick.type == 'in':
-                return True
             mt = pick.move_type
             for move in pick.move_lines:
+                if pick.type == 'in':
+                    if move.state == 'waiting':
+                        return False
+                    if move.product_id.type == 'consu' or move.location_id.usage == 'supplier':
+                        return True
                 if (move.state in ('confirmed', 'draft')) and (mt == 'one'):
                     return False
                 if (mt == 'direct') and (move.state == 'assigned') and (move.product_qty):

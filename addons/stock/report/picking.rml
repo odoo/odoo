@@ -158,8 +158,8 @@
     <blockTable colWidths="269.0,269.0" style="Table_Address_detail">
       <tr>
         <td>
-          <para style="terp_default_Bold_9">Supplier Address : [[ (picking.type == 'out' or removeParentNode('para')) and '' ]]</para>
-          <para style="terp_default_Bold_9">Customer Address : [[ (picking.type == 'in' or removeParentNode('para')) and '' ]]</para>
+          <para style="terp_default_Bold_9">Supplier Address : [[ (picking.type == 'in' or removeParentNode('para')) and '' ]]</para>
+          <para style="terp_default_Bold_9">Customer Address : [[ (picking.type == 'out' or removeParentNode('para')) and '' ]]</para>
           <para style="terp_default_Bold_9">Warehouse Address : [[ (picking.type == 'internal' or removeParentNode('para')) and '' ]]</para>
           <para style="terp_default_9">[[ (picking.partner_id and picking.partner_id.id and picking.partner_id.title.name) or '' ]] [[ picking.partner_id and picking.partner_id.id and picking.partner_id.name ]]</para>
           <para style="terp_default_9">[[ picking.partner_id and display_address(picking.partner_id,'delivery') ]]</para>
