@@ -108,10 +108,6 @@ class crm_phonecall(crm_base, osv.osv):
         message = 'Phonecall has been <b>reset and set as open</b>.'
         return self.message_append_note(cr, uid, ids, 'System Notification', message, context=context)
 
-    def case_close_send_note(self, cr, uid, ids, context=None):
-        message = _("Phonecall has been <b>done</b>.")
-        return self.message_append_note(cr, uid, ids, 'System Notification', message, context=context)
-
     def case_open_send_note(self, cr, uid, ids, context=None):
         lead_obj = self.pool.get('crm.lead')
         for phonecall in self.browse(cr, uid, ids, context=context):
@@ -159,7 +155,6 @@ class crm_phonecall(crm_base, osv.osv):
         """
         res = super(crm_phonecall, self).case_reset(cr, uid, ids, context)
         self.write(cr, uid, ids, {'duration': 0.0, 'state':'open'})
-        self.case_reset_send_note(cr, uid, ids, context=context)
         return res
 
 

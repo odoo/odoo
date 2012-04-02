@@ -90,6 +90,9 @@ class crm_meeting(crm_base, osv.osv):
                 result[obj.id] = [obj.user_id.id]
         return result
 
+    def case_get_note_msg_prefix(self, cr, uid, id, context=None):
+        return 'Meeting'
+
     def create_send_note(self, cr, uid, ids, context=None):
         lead_obj = self.pool.get('crm.lead')
         phonecall_obj = self.pool.get('crm.phonecall')
@@ -108,13 +111,9 @@ class crm_meeting(crm_base, osv.osv):
             if parent_message:
                 meeting.message_append_note(_('System Notification'), parent_message)
         return True
-    
+
     def case_close_send_note(self, cr, uid, ids, context=None):
         message = _("Meeting has been <b>done</b>.")
-        return self.message_append_note(cr, uid, ids, _('System Notification'), message, context=context)
-
-    def case_reset_send_note(self, cr, uid, ids, context=None):
-        message = _("Meeting has been <b>renewed</b>.")
         return self.message_append_note(cr, uid, ids, _('System Notification'), message, context=context)
 
     def case_open_send_note(self, cr, uid, ids, context=None):
