@@ -4,7 +4,7 @@
 
         <menuitem id="menu_config_claim" name="Claim"
             groups="base.group_extended"
-            parent="base.menu_base_config" sequence="6" />
+            parent="base.menu_base_config" sequence="55" />
 
         <!-- Claims categories  -->
 
@@ -19,7 +19,7 @@
         </record>
 
         <menuitem action="crm_claim_categ_action" name="Categories"
-            id="menu_crm_case_claim-act" parent="menu_config_claim" />
+            id="menu_crm_case_claim-act" parent="menu_config_claim" groups="base.group_no_one"/>
 
         <!-- Claim Stages -->
 
@@ -90,8 +90,6 @@
                                     <separator colspan="2" string="Claim Reporter"/>
                                     <field name="partner_id" string="Partner"
                                         on_change="onchange_partner_id(partner_id)" />
-                                    <field name="partner_address_id" string="Contact"
-                                        on_change="onchange_partner_address_id(partner_address_id, email_from)" />
                                     <field name="partner_phone"/>
                                     <field name="email_from" widget="email"/>
                                 </group>
@@ -130,7 +128,7 @@
                                     <field name="date_action_next"/>
                                     <field name="action_next"/>
                                 </group>
-                                <group colspan="2" col="2">
+                                <group colspan="2" col="2" groups="base.group_no_one">
                                     <separator colspan="2" string="Dates"/>
                                     <field name="create_date"/>
                                     <field name="date_closed"/>
@@ -245,7 +243,7 @@
                             context="{'group_by':'date_deadline'}" />
                         <filter string="Closure" icon="terp-go-month"
                             domain="[]" help="Date Closed"
-                            context="{'group_by':'date_closed'}" />
+                            context="{'group_by':'date_closed'}"  groups="base.group_no_one"/>
                     </group>
                 </search>
             </field>
@@ -261,7 +259,7 @@
                     <attribute name="invisible">False</attribute>
                 </xpath>
             </field>
-        </record>    
+        </record>
         <record id="view_claim_partner_info_form1" model="ir.ui.view">
             <field name="name">res.partner.claim.info.form</field>
             <field name="model">res.partner</field>
@@ -279,7 +277,7 @@
                     </xpath>
                 </data>
             </field>
-        </record>        
+        </record>
 
         <act_window
             context="{'search_default_partner_id': [active_id], 'default_partner_id': active_id}"
@@ -288,16 +286,6 @@
             view_mode="tree,form"
             res_model="crm.claim"
             src_model="res.partner"/>
-
-
-        <act_window
-            domain="[('partner_address_id', '=', active_id)]"
-            context="{'default_partner_address_id': active_id}"
-            id="act_claim_partner_address"
-            name="Claims"
-            view_mode="tree,form"
-            res_model="crm.claim"
-            src_model="res.partner.address"/>
 
      </data>
 </openerp>

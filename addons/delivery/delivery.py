@@ -80,7 +80,7 @@ class delivery_carrier(osv.osv):
     }
 
     def grid_get(self, cr, uid, ids, contact_id, context=None):
-        contact = self.pool.get('res.partner.address').browse(cr, uid, contact_id, context=context)
+        contact = self.pool.get('res.partner').browse(cr, uid, contact_id, context=context)
         for carrier in self.browse(cr, uid, ids, context=context):
             for grid in carrier.grids_id:
                 get_id = lambda x: x.id
@@ -106,7 +106,7 @@ class delivery_carrier(osv.osv):
             # if using advanced pricing per destination: do not change
             if record.use_detailed_pricelist:
                 continue
-			
+
             # not using advanced pricing per destination: override grid
             grid_id = grid_pool.search(cr, uid, [('carrier_id', '=', record.id)], context=context)
 

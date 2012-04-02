@@ -157,7 +157,7 @@
       <tr>
         <td>
           <para style="terp_default_Bold_9">Shipping address :</para>
-          <para style="terp_default_9">[[ (o.partner_id and o.partner_id.title and o.partner_id.title.name) or '' ]] [[ (o.partner_id and o.partner_id.name) or '' ]]</para>
+          <para style="terp_default_9">[[ (o.partner_shipping_id and o.partner_id.title and o.partner_shipping_id.title.name) or '' ]] [[ (o.partner_shipping_id and o.partner_shipping_id.name) or '' ]]</para>
           <para style="terp_default_9">[[ o.partner_shipping_id and display_address(o.partner_shipping_id) ]]</para>
           <para style="terp_default_9">
             <font color="white"> </font>
@@ -173,13 +173,13 @@
         </td>
         <td>
           <para style="terp_default_9">[[ (o.partner_id and o.partner_id.title and o.partner_id.title.name) or '' ]] [[ (o.partner_id and o.partner_id.name) or '' ]]</para>
-          <para style="terp_default_9">[[ o.partner_order_id and display_address(o.partner_order_id) ]] </para>
+          <para style="terp_default_9">[[ o.partner_id and display_address(o.partner_id) ]] </para>
           <para style="terp_default_9">
             <font color="white"> </font>
           </para>
-          <para style="terp_default_9">Tel. : [[ (o.partner_order_id and o.partner_order_id.phone) or removeParentNode('para') ]]</para>
-          <para style="terp_default_9">Fax : [[ (o.partner_order_id and o.partner_order_id.fax) or removeParentNode('para') ]]</para>
-          <para style="terp_default_9">TVA : [[ (o.partner_id and o.partner_id.vat) or removeParentNode('para') ]]</para>
+          <para style="terp_default_9">Tel. : [[ (o.partner_id.phone) or removeParentNode('para') ]]</para>
+          <para style="terp_default_9">Fax : [[ (o.partner_id.fax) or removeParentNode('para') ]]</para>
+          <para style="terp_default_9">TVA : [[ (o.partner_id.vat) or removeParentNode('para') ]]</para>
           <para style="terp_default_9">
             <font color="white"> </font>
           </para>
@@ -351,12 +351,8 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
+    <para style="terp_default_9">[[ format(o.note or '') ]]</para>
     <blockTable colWidths="533.0" style="Table7">
-      <tr>
-        <td>
-          <para style="terp_default_9">[[ format(o.note or '') ]]</para>
-        </td>
-      </tr>
       <tr>
         <td>
           <para style="terp_default_9">[[ format(o.payment_term and o.payment_term.note or (o.partner_id.property_payment_term and o.partner_id.property_payment_term.note or '')) ]]</para>

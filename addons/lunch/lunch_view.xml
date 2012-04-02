@@ -7,9 +7,9 @@
           <menuitem name="Reporting" parent="base.menu_tools"
               id="base.menu_lunch_reporting" sequence="6" groups="base.group_tool_manager"/>
 
-          <menuitem name="Lunch Orders"
-              parent="base.menu_lunch_reporting"
-              id="menu_lunch_reporting_order" sequence="1" />
+          <menuitem name="Lunch"
+              parent="base.menu_reporting"
+              id="menu_lunch_reporting_order" sequence="55" />
 
           <menuitem name="Configuration" parent="base.menu_tools"
               id="base.menu_lunch_survey_root" sequence="20" groups="base.group_tool_manager"/>
@@ -266,7 +266,7 @@
                           <field name="price" />
                      </group>
                      <notebook colspan="4">
-                         <page string="General Information"> 
+                         <page string="General Information">
                               <field name="active"/>
                               <separator string="Description" colspan="4" />
                               <field name="description" nolabel="1" colspan="4" />
@@ -287,6 +287,7 @@
                     <field name="name"/>
                     <field name="category_id"/>
                     <field name="price"/>
+                    <field name="description"/>
                 </tree>
             </field>
         </record>

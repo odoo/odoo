@@ -75,9 +75,8 @@ class project(osv.osv):
     def onchange_partner_id(self, cr, uid, ids, part=False, context=None):
         partner_obj = self.pool.get('res.partner')
         if not part:
-            return {'value':{'contact_id': False}}
-        addr = partner_obj.address_get(cr, uid, [part], ['contact'])
-        val = {'contact_id': addr['contact']}
+            return {'value':{}}
+        val = {}
         if 'pricelist_id' in self.fields_get(cr, uid, context=context):
             pricelist = partner_obj.read(cr, uid, part, ['property_product_pricelist'], context=context)
             pricelist_id = pricelist.get('property_product_pricelist', False) and pricelist.get('property_product_pricelist')[0] or False
@@ -251,7 +250,7 @@ class project(osv.osv):
             message = _("The project '%s' has been opened.") % name
             self.log(cr, uid, id, message)
         return res
-    
+
     def map_tasks(self, cr, uid, old_project_id, new_project_id, context=None):
         """ copy and map tasks from old to new project """
         if context is None:
@@ -913,7 +912,7 @@ class task(osv.osv):
         for attachment_id in attachment_ids:
             new_attachment_ids.append(attachment.copy(cr, uid, attachment_id, default={'res_id': delegated_task_id}, context=context))
         return new_attachment_ids
-        
+
 
     def do_delegate(self, cr, uid, ids, delegate_data={}, context=None):
         """
@@ -1099,7 +1098,7 @@ class task(osv.osv):
             new_stage = vals.get('type_id')
             vals_reset_kstate = dict(vals, kanban_state='normal')
             for t in self.browse(cr, uid, ids, context=context):
-                write_vals = vals_reset_kstate if t.type_id != new_stage else vals 
+                write_vals = vals_reset_kstate if t.type_id != new_stage else vals
                 super(task,self).write(cr, uid, [t.id], write_vals, context=context)
             result = True
         else:
@@ -1236,7 +1235,7 @@ class project_task_history(osv.osv):
         for history in self.browse(cr, uid, ids, context=context):
             cr.execute('''select
                     id
-                from 
+                from
                     project_task_history
                 where
                     task_id=%s and

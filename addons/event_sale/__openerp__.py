@@ -37,8 +37,8 @@ It defines a new kind of service products that offers you the possibility to cho
     'depends': ['event','sale','sale_crm'],
     'update_xml': [
         'event_sale_view.xml',
-        'event_demo.xml',
     ],
+    'demo_xml': ['event_demo.xml'],
     'test':['test/confirm.yml'],
     'installable': True,
     'active': False,

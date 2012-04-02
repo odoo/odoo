@@ -122,7 +122,7 @@
     </record>
 
     <menuitem name="Campaigns" id="menu_marketing_campaign" parent="base.marketing_menu"/>
-    <menuitem id="menu_marketing_campaign_form" parent="menu_marketing_campaign" action="action_marketing_campaign_form" sequence="10" />
+    <menuitem id="menu_marketing_campaign_form" parent="menu_marketing_campaign" action="action_marketing_campaign_form" sequence="30" />
 
     <!--
     ======================
@@ -224,7 +224,7 @@
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="view_marketing_campaign_segment_tree"/>
         <field name="search_view_id" ref="view_marketing_campaign_segment_search"/>
-        <field name="context">{'group_by': [], 'search_default_running': 1}</field>
+        <field name="context">{'group_by': []}</field>
     </record>
 
     <menuitem id="menu_marketing_campaign_segment_form" parent="menu_marketing_campaign" action="action_marketing_campaign_segment_form" sequence="20" />
@@ -399,6 +399,7 @@
            <search string="Marketing Campaign Activities">
                <group>
                 <filter icon="terp-go-today" string="Today" name="today" domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d 23:59:59')), ('date','&gt;=', time.strftime('%%Y-%%m-%%d 00:00:00'))]"/>
+                <separator orientation="vertical"/>
                 <filter icon="terp-gtk-go-back-rtl" string="To Do" name="todo" domain="[('state','=','todo')]"/>
                 <filter icon="terp-emblem-important" string="Exception" domain="[('state','=','exception')]"/>
                 <separator orientation="vertical"/>
@@ -436,10 +437,10 @@
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="view_marketing_campaign_workitem_tree"/>
         <field name="search_view_id" ref="view_marketing_campaign_workitem_search"/>
-        <field name="context">{'group_by': [], 'search_default_todo': 1, 'search_default_today': 1}</field>
+        <field name="context">{'group_by': []}</field>
     </record>
 
-    <menuitem id="menu_action_marketing_campaign_workitem" parent="menu_marketing_campaign" action="action_marketing_campaign_workitem" sequence="30"/>
+    <menuitem id="menu_action_marketing_campaign_workitem" parent="menu_marketing_campaign" action="action_marketing_campaign_workitem" sequence="10"/>
 
     <act_window name="All Segments"
         res_model="marketing.campaign.segment"
