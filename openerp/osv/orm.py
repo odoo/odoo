@@ -725,9 +725,9 @@ class BaseModel(object):
     @staticmethod
     def get_needaction_info(cr, uid, model_name, user_id, limit=None, order=None, domain=False, context=None):
         """Base method for needaction mechanism
-           - see base.needaction for actual implementation
+           - see ir.needaction for actual implementation
            - if the model uses the need action mechanism
-             (hasattr(model_obj, 'needaction_get_record_ids'):
+             (hasattr(model_obj, 'needaction_get_record_ids')):
               - get the record ids on which the user has actions to perform
               - evaluate the menu domain
               - compose a new domain: menu domain, limited to ids of
