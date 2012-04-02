@@ -17,24 +17,25 @@
                             </div>
                         </t>
                         <t t-name="kanban-box">
-                            <div t-attf-class="{record.joined.raw_value} oe_group_vignette">
+                            <div t-attf-class="{record.is_subscriber.raw_value} oe_group_vignette">
                                 <div class="oe_group_image">
                                     <a type="edit"><img t-att-src="kanban_image('mail.group', 'photo', record.id.value)" class="oe_group_photo" tooltip="kanban-description"/></a>
                                 </div>
                                 <div class="oe_group_details">
                                     <h4><a type="edit"><field name="name"/></a></h4>
-                                    <span style="display: none;"><field name="joined"/></span>
+                                    <span style="display: none;"><field name="is_subscriber"/></span>
                                     <ul>
-                                        <li><field name="members_nbr"/> members</li>
-                                        <li t-if="record.joined.raw_value"><b>Joined</b></li>
-                                        <li t-if="! record.joined.raw_value"><a name="action_group_join" string="Join" type="object">Join</a></li>
-                                        <li t-if="record.joined.raw_value"><a name="action_group_leave" string="Join" type="object">Leave</a></li>
-                                        <li><field name="messages_nbr"/> messages in <field name="discussions_nbr"/> discussions</li>
+                                        <li><field name="member_count"/> members</li>
+                                        <li t-if="! record.is_subscriber.raw_value"><a name="message_subscribe" string="Join" type="object" class="oe_group_join">Not following</a></li>
+                                        <li t-if="record.is_subscriber.raw_value"><a name="message_unsubscribe" string="Join" type="object" class="oe_group_leave">Following</a></li>
+                                        <li><field name="last_month_msg_nbr"/> messages last month</li>
                                     </ul>
                                 </div>
                             </div>
                             <script>
                                 $('.oe_group_photo').load(function() { if($(this).width() > $(this).height()) { $(this).addClass('oe_group_photo_wide') } });
+                                $('.oe_group_join').mouseover(function () { $(this).html('Follow'); }).mouseleave(function () { $(this).html('Not following'); });
+                                $('.oe_group_leave').mouseover(function () { $(this).html('Unfollow'); }).mouseleave(function () { $(this).html('Following'); });
                             </script>
                         </t>
                     </templates>
@@ -60,7 +61,7 @@
                         </group>
                         <group colspan="1" col="2">
                             <separator string="Group image" colspan="2"/>
-                            <field name="photo_mini" widget='image' nolabel="1" on_change="onchange_photo_mini(photo_mini)"/>
+                            <field name="photo" widget='image' nolabel="1" on_change="onchange_photo(photo)"/>
                         </group>
                         <group colspan="1" col="2">
                             <separator string="Privacy settings" colspan="2"/>
@@ -81,8 +82,8 @@
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <tree string="Groups">
-                    <field name="name" colspan="2"/>
-                    <field name="responsible_id" colspan="2"/>
+                    <field name="name"/>
+                    <field name="responsible_id"/>
                 </tree>
             </field>
         </record>
@@ -95,8 +96,8 @@
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <search string="Search groups">
-                    <field name="name" colspan="2"/>
-                    <field name="responsible_id" colspan="2"/>
+                    <field name="name"/>
+                    <field name="responsible_id"/>
                 </search>
             </field>
         </record>
@@ -111,7 +112,6 @@
         </record>
 
         <!-- left-side menu: Groups !-->
-        <menuitem id="mail_groups" name="Groups" sequence="15" parent="mail_feeds_main"/>
-        <menuitem id="mail_allgroups" name="All groups" parent="mail_groups" action="action_view_groups"/>
+        <menuitem id="mail_allgroups" name="All groups" parent="mail_feeds" sequence="12" action="action_view_groups"/>
     </data>
 </openerp>

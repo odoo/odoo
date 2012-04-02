@@ -250,8 +250,8 @@ class calendar_attendee(osv.osv):
             if name == 'cn':
                 if attdata.user_id:
                     result[id][name] = attdata.user_id.name
-                elif attdata.partner_address_id:
-                    result[id][name] = attdata.partner_address_id.name or attdata.partner_id.name
+                elif attdata.partner_id:
+                    result[id][name] = attdata.partner_id.name or False
                 else:
                     result[id][name] = attdata.email or ''
 
@@ -365,9 +365,7 @@ that points to the directory information corresponding to the attendee."),
                     store=True, help="To specify the language for text values in a\
 property or property parameter."),
         'user_id': fields.many2one('res.users', 'User'),
-        'partner_address_id': fields.many2one('res.partner.address', 'Contact'),
-        'partner_id': fields.related('partner_address_id', 'partner_id', type='many2one', \
-                        relation='res.partner', string='Partner', help="Partner related to contact"),
+        'partner_id': fields.many2one('res.partner', 'Contact'),
         'email': fields.char('Email', size=124, help="Email of Invited Person"),
         'event_date': fields.function(_compute_data, string='Event Date', \
                             type="datetime", multi='event_date'),
@@ -1618,20 +1616,13 @@ class ir_attachment(osv.osv):
     _inherit = 'ir.attachment'
 
     def search_count(self, cr, user, args, context=None):
-        """
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param user: the current user’s ID for security checks,
-        @param args: list of tuples of form [(‘name_of_the_field’, ‘operator’, value), ...].
-        @param context: A standard dictionary for contextual values
-        """
-
-        args1 = []
-        for arg in args:
-            args1.append(map(lambda x:str(x).split('-')[0], arg))
-        return super(ir_attachment, self).search_count(cr, user, args1, context)
-
-
+        new_args = []
+        for domain_item in args:
+            if isinstance(domain_item, (list, tuple)) and len(domain_item) == 3 and domain_item[0] == 'res_id':
+                new_args.append((domain_item[0], domain_item[1], base_calendar_id2real_id(domain_item[2])))
+            else:
+                new_args.append(domain_item)
+        return super(ir_attachment, self).search_count(cr, user, new_args, context)
 
     def create(self, cr, uid, vals, context=None):
         if context:
@@ -1641,21 +1632,12 @@ class ir_attachment(osv.osv):
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False):
-        """
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param args: list of tuples of form [(‘name_of_the_field’, ‘operator’, value), ...].
-        @param offset: The Number of Results to pass,
-        @param limit: The Number of Results to Return,
-        @param context: A standard dictionary for contextual values
-        """
-
-        new_args = args
-        for i, arg in enumerate(new_args):
-            if arg[0] == 'res_id':
-                new_args[i] = (arg[0], arg[1], base_calendar_id2real_id(arg[2]))
-
+        new_args = []
+        for domain_item in args:
+            if isinstance(domain_item, (list, tuple)) and len(domain_item) == 3 and domain_item[0] == 'res_id':
+                new_args.append((domain_item[0], domain_item[1], base_calendar_id2real_id(domain_item[2])))
+            else:
+                new_args.append(domain_item)
         return super(ir_attachment, self).search(cr, uid, new_args, offset=offset,
                             limit=limit, order=order, context=context, count=False)
 ir_attachment()

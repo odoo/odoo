@@ -748,7 +748,7 @@
         </record>
 
         <!--  Miscelleanous Operations/Reporting -->
-        <menuitem name="Reporting" parent="menu_point_root" id="menu_point_rep" sequence="20" groups="group_pos_manager"/>
+        <menuitem name="Point of Sale" parent="base.menu_reporting" id="menu_point_rep" sequence="50" groups="group_pos_manager"/>
         <!-- Invoice -->
 
         <record model="ir.actions.act_window" id="action_pos_sale_all">
@@ -770,8 +770,10 @@
             <field name="domain">[('origin','like','POS')]</field>
         </record>
 
+		<menuitem name="Reporting" id="menu_point_of_sale_reporting" parent="menu_point_root" sequence="20" />
+		
         <menuitem icon="STOCK_PRINT" action="action_report_pos_details"
-                id="menu_pos_details" parent="menu_point_rep" sequence="6" />
+                id="menu_pos_details" parent="menu_point_of_sale_reporting" sequence="6" />
 
         <record model="ir.actions.client" id="action_pos_pos">
           <field name="name">Start Point of Sale</field>

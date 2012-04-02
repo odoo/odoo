@@ -32,7 +32,7 @@
             <field name="view_type">form</field>
             <field name="help">You can use the issues tracker in OpenERP to handle bugs in the software development project, to handle claims in after-sales services, etc. Define here the different versions of your products on which you can work on issues.</field>
         </record>
-        <menuitem action="project_issue_version_action" id="menu_project_issue_version_act" parent="menu_project_confi" />
+        <menuitem action="project_issue_version_action" id="menu_project_issue_version_act" parent="menu_project_confi" groups="base.group_no_one"/>
 
         <record id="project_issue_categ_action" model="ir.actions.act_window">
             <field name="name">Issue Categories</field>
@@ -43,7 +43,7 @@
             <field name="context" eval="{'object_id': ref('model_project_issue')}"/>
         </record>
 
-        <menuitem action="project_issue_categ_action" name="Categories" id="menu_project_issue_category_act" parent="menu_project_confi" />
+        <menuitem action="project_issue_categ_action" name="Categories" id="menu_project_issue_category_act" parent="menu_project_confi" groups="base.group_no_one"/>
 
         <record model="ir.ui.view" id="project_issue_form_view">
             <field name="name">Project Issue Tracker Form</field>
@@ -68,7 +68,6 @@
                             <group col="2" colspan="2">
                             <separator colspan="2" string="Contact Information"/>
                             <field name="partner_id"  on_change="onchange_partner_id(partner_id, email_from)"/>
-                            <field name="partner_address_id"  string="Contact" on_change="onchange_partner_address_id(partner_address_id, email_from)"/>
                             <field name="email_from"/>
                             </group>
                             <group col="3" colspan="2">
@@ -94,7 +93,7 @@
                         </page>
                         <page string="Communication &amp; History" groups="base.group_extended">
                             <group colspan="4">
-                            <field colspan="4" name="email_cc" string="Global CC" widget="url"/>
+                            <field colspan="4" name="email_cc" string="Global CC" widget="email"/>
                             </group>
                             <field name="message_ids" colspan="4" nolabel="1" mode="tree" readonly="1">
                                 <tree string="History">
@@ -116,23 +115,23 @@
                                 name="%(mail.action_email_compose_message_wizard)d"
                                 icon="terp-mail-message-new" type="action"/>
                         </page>
-                           <page string="Extra Info" groups="base.group_extended">
+                           <page string="Extra Info" groups="base.group_no_one">
                             <group col="2" colspan="2">
-                            <separator colspan="2" string="Date"/>
-                            <field name="create_date"/>
-                            <field name="write_date" />
-                            <field name="date_closed"/>
-                            <field name="date_open"/>
-                            <field name="date_action_last"/>
+                                <separator colspan="2" string="Date"/>
+                               <field name="create_date"/>
+                                <field name="write_date" />
+                                <field name="date_closed"/>
+                                <field name="date_open"/>
+                                <field name="date_action_last"/>
                             </group>
                             <group colspan="2" col="2">
-                            <separator string="Statistics" colspan="2" col="2"/>
-                            <field name="day_open"/>
-                            <field name="day_close"/>
-                            <field name="working_hours_open" widget="float_time"/>
-                            <field name="working_hours_close" widget="float_time"/>
-                            <field name="inactivity_days"/>
-                            <field name="days_since_creation"/>
+                                <separator string="Statistics" colspan="2" col="2"/>
+                                <field name="day_open"/>
+                                <field name="day_close"/>
+                                <field name="working_hours_open" widget="float_time"/>
+                                <field name="working_hours_close" widget="float_time"/>
+                                <field name="inactivity_days"/>
+                                <field name="days_since_creation"/>
                             </group>
                             <group colspan="2" col="2">
                             <separator string="References" colspan="2"/>
@@ -152,7 +151,7 @@
             <field name="arch" type="xml">
                 <tree string="Issue Tracker Tree" colors="black:state=='open';blue:state=='pending';grey:state in ('cancel', 'done')">
                     <field name="id"/>
-                    <field name="create_date"/>
+                    <field name="create_date" groups="base.group_no_one"/>
                     <field name="name"/>
                     <field name="partner_id" groups="base.group_extended"/>
                     <field name="project_id" />
