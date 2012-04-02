@@ -311,9 +311,6 @@ class document_file(osv.osv):
         elif 'partner_id' in obj_model._columns and obj_model._columns['partner_id']._obj == 'res.partner':
             bro = obj_model.browse(cr, uid, res_id, context=context)
             return bro.partner_id.id
-        elif 'address_id' in obj_model._columns and obj_model._columns['address_id']._obj == 'res.partner.address':
-            bro = obj_model.browse(cr, uid, res_id, context=context)
-            return bro.address_id.partner_id.id
         return False
 
     def unlink(self, cr, uid, ids, context=None):
