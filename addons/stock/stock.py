@@ -722,7 +722,7 @@ class stock_picking(osv.osv):
                     res['fields']['state']['selection'] = [(x[0], _state[x[0]]) for x in PICK_STATE]
                     res['fields']['state']['help'] = self._tooltip_picking_state(_state)
                 # To update the fields tooltips according to shipping type
-                if field == 'address_id':
+                if field == 'partner_id':
                     _tooltip = ''
                     if type == 'in':
                         _tooltip = _('supplier')
@@ -730,7 +730,7 @@ class stock_picking(osv.osv):
                         _tooltip = _('warehouse')
                     elif type == 'out':
                         _tooltip = _('customer')
-                    res['fields']['address_id']['help'] = _("Address of %s") %(_tooltip)
+                    res['fields']['partner_id']['help'] = _("Address of %s") %(_tooltip)
         return res
 
     def action_process(self, cr, uid, ids, context=None):
@@ -891,6 +891,11 @@ class stock_picking(osv.osv):
         for pick in self.browse(cr, uid, ids):
             mt = pick.move_type
             for move in pick.move_lines:
+                if pick.type == 'in':
+                    if move.state == 'waiting':
+                        return False
+                    if move.product_id.type == 'consu' or move.location_id.usage == 'supplier':
+                        return True
                 if (move.state in ('confirmed', 'draft')) and (mt == 'one'):
                     return False
                 if (mt == 'direct') and (move.state == 'assigned') and (move.product_qty):
