@@ -1105,6 +1105,7 @@ class task(osv.osv):
             result = super(task,self).write(cr, uid, ids, vals, context=context)
         if ('type_id' in vals) or ('remaining_hours' in vals) or ('user_id' in vals) or ('state' in vals) or ('kanban_state' in vals):
             self._store_history(cr, uid, ids, context=context)
+            self.state_change_send_note(cr, uid, ids, context)
         return result
 
     def unlink(self, cr, uid, ids, context=None):
