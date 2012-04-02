@@ -127,11 +127,12 @@ class mail_thread(osv.osv):
         if context is None:
             context = {}
         user_to_push_ids = []
+        message_obj = self.pool.get('mail.message')
         subscription_obj = self.pool.get('mail.subscription')
         notification_obj = self.pool.get('mail.notification')
         
         # create message
-        msg_id = self.pool.get('mail.message').create(cr, uid, vals, context=context)
+        msg_id = message_obj.create(cr, uid, vals, context=context)
         
         # automatically subscribe the writer of the message
         if vals['user_id']:
@@ -365,8 +366,7 @@ class mail_thread(osv.osv):
                            is interesting when dealing with threaded display
             :param ascent: performs an ascended search; will add to fetched msgs
                            all their parents until root_ids
-                           example: in combinaison with a child_of domain
-                           ['id', 'child_of', [32, 33]], root_ids=[32,33]
+            :param root_ids: for ascent search
             :param root_ids: root_ids when performing an ascended search
         """
         if context is None:
@@ -383,38 +383,32 @@ class mail_thread(osv.osv):
         msg_ids = self.message_load_ids(cr, uid, ids, limit, offset, domain, ascent, root_ids, context=context)
         return self.pool.get('mail.message').read(cr, uid, msg_ids, context=context)
     
-    def get_pushed_messages(self, cr, uid, ids, limit=100, offset=0, domain=[], ascent=False, root_ids=[], context=None):
+    def get_pushed_messages(self, cr, uid, ids, limit=100, offset=0, notif_search_domain=[], msg_search_domain=[], ascent=False, root_ids=[], context=None):
         """ OpenChatter: wall: get messages to display (=pushed notifications)
-            :param domain: domain to add to the search; especially child_of is interesting when dealing with threaded display
-            :param deep: performs an ascended search; will add to fetched msgs all their parents until root_ids
-                            WARNING: must be used in combinaison with a child_of domain
-                            EXAMPLE: domain = ['id', 'child_of', [32, 33]], root_ids=[32,33]
-            :param root_ids: root_ids when performing an ascended search
-            :return: list of mail.messages sorted by date
+            :param domain: domain to add to the search; especially child_of
+                           is interesting when dealing with threaded display
+            :param ascent: performs an ascended search; will add to fetched msgs
+                           all their parents until root_ids
+            :param root_ids: for ascent search
+            :return list of mail.messages sorted by date
         """
         if context is None: context = {}
         notification_obj = self.pool.get('mail.notification')
         msg_obj = self.pool.get('mail.message')
-        # get user notifications
-        notification_ids = notification_obj.search(cr, uid, [('user_id', '=', uid)], context=context)
+        # update message search
+        for arg in msg_search_domain:
+            if isinstance(arg, (tuple, list)):
+                arg[0] = 'message_id.' + arg[0]
+        # compose final domain
+        domain = [('user_id', '=', uid)] + notif_search_domain + msg_search_domain
+        # get notifications
+        notification_ids = notification_obj.search(cr, uid, domain, limit=limit, offset=offset, context=context)
         notifications = notification_obj.browse(cr, uid, notification_ids, context=context)
         msg_ids = [notification.message_id.id for notification in notifications]
-        # search messages: ids in notifications, add domain coming from wall search view
-        search_domain = [('id', 'in', msg_ids)] + domain
-        msg_ids = msg_obj.search(cr, uid, search_domain, limit=limit, offset=offset, context=context)
+        # get messages
+        msg_ids = msg_obj.search(cr, uid, [('id', 'in', msg_ids)], context=context)
         if (ascent): msg_ids = self._message_add_ancestor_ids(cr, uid, ids, msg_ids, root_ids, context=context)
         msgs = msg_obj.read(cr, uid, msg_ids, context=context)
-        
-        #cr.execute(
-             #'''
-             #select * from mail_notification notif
-             #left join mail_message mes
-             #on (notif.message_id=mes.id)
-             #where notif.user_id=%s
-             #''',
-             #(str(uid)),)
-        #print res
-        
         return msgs
         
     #------------------------------------------------------
@@ -663,6 +657,10 @@ class mail_thread(osv.osv):
     def log(self, cr, uid, id, message, secondary=False, context=None):
         _logger.warning("log() is deprecated. Please use OpenChatter notification system instead of the res.log mechanism.")
         self.message_append_note(cr, uid, [id], message, context=context)
+    
+    # tmp stuff
+    def message_add_note(self, cr, uid, ids, body, subject=_('System notification'), subtype='html', parent_id=False, type='notification', context=None):
+        return self.message_append(cr, uid, ids, subject, body_text=body, parent_id=parent_id, type=type, context=context)
     
     def message_append_note(self, cr, uid, ids, subject, body, parent_id=False, type='notification', context=None):
         return self.message_append(cr, uid, ids, subject, body_text=body, parent_id=parent_id, type=type, context=context)
