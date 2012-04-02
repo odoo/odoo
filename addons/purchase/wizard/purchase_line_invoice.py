@@ -86,8 +86,6 @@ class purchase_line_invoice(osv.osv_memory):
                     'reference' : partner.ref,
                     'account_id': a,
                     'partner_id': partner.id,
-                    'address_invoice_id': orders[0].partner_address_id.id,
-                    'address_contact_id': orders[0].partner_address_id.id,
                     'invoice_line': [(6,0,lines_ids)],
                     'currency_id' : orders[0].pricelist_id.currency_id.id,
                     'comment': multiple_order_invoice_notes(orders),

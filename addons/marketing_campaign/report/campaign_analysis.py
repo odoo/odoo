@@ -60,7 +60,7 @@ class campaign_analysis(osv.osv):
         'segment_id': fields.many2one('marketing.campaign.segment', 'Segment',
                                                                 readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
-        'country_id': fields.related('partner_id','address', 'country_id',
+        'country_id': fields.related('partner_id', 'country_id',
                     type='many2one', relation='res.country',string='Country'),
         'total_cost' : fields.function(_total_cost, string='Cost',
                                     type="float", digits_compute=dp.get_precision('Purchase Price')),

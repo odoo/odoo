@@ -70,9 +70,6 @@ class crm_claim(crm.crm_case, osv.osv):
                                 " mail gateway."),
         'company_id': fields.many2one('res.company', 'Company'),
         'partner_id': fields.many2one('res.partner', 'Partner'),
-        'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \
-                                # domain="[('partner_id','=',partner_id)]"
-                                 ),
         'email_cc': fields.text('Watchers Emails', size=252, help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
         'email_from': fields.char('Email', size=128, help="These people will receive email."),
         'partner_phone': fields.char('Phone', size=32),
@@ -89,7 +86,6 @@ class crm_claim(crm.crm_case, osv.osv):
     _defaults = {
         'user_id': crm.crm_case._get_default_user,
         'partner_id': crm.crm_case._get_default_partner,
-        'partner_address_id': crm.crm_case._get_default_partner_address,
         'email_from':crm.crm_case. _get_default_email,
         'state': lambda *a: 'draft',
         'section_id':crm.crm_case. _get_section,
@@ -105,23 +101,11 @@ class crm_claim(crm.crm_case, osv.osv):
            :param email: ignored
         """
         if not part:
-            return {'value': {'partner_address_id': False,
-                            'email_from': False,
-                            'partner_phone': False
-                            }}
-        addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['contact'])
-        data = {'partner_address_id': addr['contact']}
-        data.update(self.onchange_partner_address_id(cr, uid, ids, addr['contact'])['value'])
-        return {'value': data}
-
-    def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
-        """This function returns value of partner email based on Partner Address
-           :param part: Partner's id
-           :param email: ignored
-        """
-        if not add:
-            return {'value': {'email_from': False}}
-        address = self.pool.get('res.partner.address').browse(cr, uid, add)
+            return {'value': {'email_from': False,
+                              'partner_phone': False
+                            }
+                   }
+        address = self.pool.get('res.partner').browse(cr, uid, part)
         return {'value': {'email_from': address.email, 'partner_phone': address.phone}}
 
     def case_open(self, cr, uid, ids, *args):

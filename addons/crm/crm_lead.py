@@ -40,7 +40,7 @@ class crm_lead(crm_case, osv.osv):
     _name = "crm.lead"
     _description = "Lead/Opportunity"
     _order = "priority,date_action,id desc"
-    _inherit = ['mail.thread','res.partner.address']
+    _inherit = ['mail.thread','res.partner']
 
     def _read_group_stage_ids(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
         access_rights_uid = access_rights_uid or uid
@@ -59,14 +59,6 @@ class crm_lead(crm_case, osv.osv):
     _group_by_full = {
         'stage_id': _read_group_stage_ids
     }
-
-    # overridden because res.partner.address has an inconvenient name_get,
-    # especially if base_contact is installed.
-    def name_get(self, cr, user, ids, context=None):
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        return [(r['id'], tools.ustr(r[self._rec_name]))
-                    for r in self.read(cr, user, ids, [self._rec_name], context)]
 
     def _compute_day(self, cr, uid, ids, fields, args, context=None):
         """
@@ -147,7 +139,6 @@ class crm_lead(crm_case, osv.osv):
         return res
 
     _columns = {
-        # Overridden from res.partner.address:
         'partner_id': fields.many2one('res.partner', 'Partner', ondelete='set null',
             select=True, help="Optional linked partner, usually after conversion of the lead"),
 
@@ -170,7 +161,7 @@ class crm_lead(crm_case, osv.osv):
             domain="['|',('section_id','=',section_id),('section_id','=',False)]", help="From which campaign (seminar, marketing campaign, mass mailing, ...) did this contact come from?"),
         'channel_id': fields.many2one('crm.case.channel', 'Channel', help="Communication channel (mail, direct, phone, ...)"),
         'contact_name': fields.char('Contact Name', size=64),
-        'partner_name': fields.char("Customer Name", size=64,help='The name of the future partner that will be created while converting the lead into opportunity', select=1),
+        'partner_name': fields.char("Customer Name", size=64,help='The name of the future partner company that will be created while converting the lead into opportunity', select=1),
         'optin': fields.boolean('Opt-In', help="If opt-in is checked, this contact has accepted to receive emails."),
         'optout': fields.boolean('Opt-Out', help="If opt-out is checked, this contact has refused to receive emails or unsubscribed to a campaign."),
         'type':fields.selection([ ('lead','Lead'), ('opportunity','Opportunity'), ],'Type', help="Type is used to separate Leads and Opportunities"),
@@ -194,7 +185,6 @@ class crm_lead(crm_case, osv.osv):
 
 
         # Only used for type opportunity
-        'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', domain="[('partner_id','=',partner_id)]"),
         'probability': fields.float('Probability (%)',group_operator="avg"),
         'planned_revenue': fields.float('Expected Revenue'),
         'ref': fields.reference('Reference', selection=crm._links_get, size=128),
@@ -205,8 +195,8 @@ class crm_lead(crm_case, osv.osv):
         'title_action': fields.char('Next Action', size=64),
         'stage_id': fields.many2one('crm.case.stage', 'Stage', domain="[('section_ids', '=', section_id)]"),
         'color': fields.integer('Color Index'),
-        'partner_address_name': fields.related('partner_address_id', 'name', type='char', string='Partner Contact Name', readonly=True),
-        'partner_address_email': fields.related('partner_address_id', 'email', type='char', string='Partner Contact Email', readonly=True),
+        'partner_address_name': fields.related('partner_id', 'name', type='char', string='Partner Contact Name', readonly=True),
+        'partner_address_email': fields.related('partner_id', 'email', type='char', string='Partner Contact Email', readonly=True),
         'company_currency': fields.related('company_id', 'currency_id', 'symbol', type='char', string='Company Currency', readonly=True),
         'user_email': fields.related('user_id', 'user_email', type='char', string='User Email', readonly=True),
         'user_login': fields.related('user_id', 'login', type='char', string='User Login', readonly=True),
@@ -224,14 +214,6 @@ class crm_lead(crm_case, osv.osv):
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
         'color': 0,
     }
-
-    def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
-        """This function returns value of partner email based on Partner Address
-        """
-        if not add:
-            return {'value': {'email_from': False, 'country_id': False}}
-        address = self.pool.get('res.partner.address').browse(cr, uid, add)
-        return {'value': {'email_from': address.email, 'phone': address.phone, 'country_id': address.country_id.id}}
 
     def on_change_optin(self, cr, uid, ids, optin):
         return {'value':{'optin':optin,'optout':False}}
@@ -501,8 +483,7 @@ class crm_lead(crm_case, osv.osv):
             first_opportunity = opportunities_list[0]
             tail_opportunities = opportunities_list[1:]
 
-        fields = ['partner_id', 'title', 'name', 'categ_id', 'channel_id', 'city', 'company_id', 'contact_name', 'country_id',
-            'partner_address_id', 'type_id', 'user_id', 'section_id', 'state_id', 'description', 'email', 'fax', 'mobile',
+        fields = ['partner_id', 'title', 'name', 'categ_id', 'channel_id', 'city', 'company_id', 'contact_name', 'country_id', 'type_id', 'user_id', 'section_id', 'state_id', 'description', 'email', 'fax', 'mobile',
             'partner_name', 'phone', 'probability', 'planned_revenue', 'street', 'street2', 'zip', 'create_date', 'date_action_last',
             'date_action_next', 'email_from', 'email_cc', 'partner_name']
 
@@ -546,7 +527,6 @@ class crm_lead(crm_case, osv.osv):
                 'stage_id': stage_id or False,
                 'date_action': time.strftime('%Y-%m-%d %H:%M:%S'),
                 'date_open': time.strftime('%Y-%m-%d %H:%M:%S'),
-                'partner_address_id': contact_id,
         }
 
     def _convert_opportunity_notification(self, cr, uid, lead, context=None):
@@ -580,15 +560,42 @@ class crm_lead(crm_case, osv.osv):
                     }, context=context)
         return True
 
-    def _lead_create_partner(self, cr, uid, lead, context=None):
+    def _lead_create_contact(self, cr, uid, lead, name, is_company, parent_id=False, context=None):
         partner = self.pool.get('res.partner')
-        partner_id = partner.create(cr, uid, {
-                    'name': lead.partner_name or lead.contact_name or lead.name,
-                    'user_id': lead.user_id.id,
-                    'comment': lead.description,
-                    'section_id': lead.section_id.id or False,
-                    'address': []
-        })
+        vals = { 'name': name,
+            'user_id': lead.user_id.id,
+            'comment': lead.description,
+            'section_id': lead.section_id.id or False,
+            'parent_id': parent_id,
+            'phone': lead.phone,
+            'mobile': lead.mobile,
+            'email': lead.email_from and to_email(lead.email_from)[0],
+            'fax': lead.fax,
+            'title': lead.title and lead.title.id or False,
+            'function': lead.function,
+            'street': lead.street,
+            'street2': lead.street2,
+            'zip': lead.zip,
+            'city': lead.city,
+            'country_id': lead.country_id and lead.country_id.id or False,
+            'state_id': lead.state_id and lead.state_id.id or False,
+            'is_company': is_company,
+            'type': 'contact'
+        }
+        partner = partner.create(cr, uid,vals, context)
+        return partner
+
+    def _create_lead_partner(self, cr, uid, lead, context=None):
+        partner_id =  False
+        if lead.partner_name and lead.contact_name:
+            partner_id = self._lead_create_contact(cr, uid, lead, lead.partner_name, True, context=context)
+            self._lead_create_contact(cr, uid, lead, lead.contact_name, False, partner_id, context=context)
+        elif lead.partner_name and not lead.contact_name:
+            partner_id = self._lead_create_contact(cr, uid, lead, lead.partner_name, True, context=context)
+        elif not lead.partner_name and lead.contact_name:
+            partner_id = self._lead_create_contact(cr, uid, lead, lead.contact_name, False, context=context)
+        else:
+            partner_id = self._lead_create_contact(cr, uid, lead, lead.name, False, context=context)
         return partner_id
 
     def _lead_set_partner(self, cr, uid, lead, partner_id, context=None):
@@ -597,28 +604,8 @@ class crm_lead(crm_case, osv.osv):
         if partner_id:
             res_partner.write(cr, uid, partner_id, {'section_id': lead.section_id.id or False})
             contact_id = res_partner.address_get(cr, uid, [partner_id])['default']
-            res = lead.write({'partner_id' : partner_id, 'partner_address_id': contact_id}, context=context)
-
+            res = lead.write({'partner_id' : partner_id, }, context=context)
         return res
-
-    def _lead_create_partner_address(self, cr, uid, lead, partner_id, context=None):
-        address = self.pool.get('res.partner.address')
-        return address.create(cr, uid, {
-                    'partner_id': partner_id,
-                    'name': lead.contact_name,
-                    'phone': lead.phone,
-                    'mobile': lead.mobile,
-                    'email': lead.email_from and to_email(lead.email_from)[0],
-                    'fax': lead.fax,
-                    'title': lead.title and lead.title.id or False,
-                    'function': lead.function,
-                    'street': lead.street,
-                    'street2': lead.street2,
-                    'zip': lead.zip,
-                    'city': lead.city,
-                    'country_id': lead.country_id and lead.country_id.id or False,
-                    'state_id': lead.state_id and lead.state_id.id or False,
-                })
 
     def convert_partner(self, cr, uid, ids, action='create', partner_id=False, context=None):
         """
@@ -632,8 +619,7 @@ class crm_lead(crm_case, osv.osv):
         for lead in self.browse(cr, uid, ids, context=context):
             if action == 'create':
                 if not partner_id:
-                    partner_id = self._lead_create_partner(cr, uid, lead, context=context)
-                self._lead_create_partner_address(cr, uid, lead, partner_id, context=context)
+                    partner_id = self._create_lead_partner(cr, uid, lead, context)
             self._lead_set_partner(cr, uid, lead, partner_id, context=context)
             partner_ids[lead.id] = partner_id
         return partner_ids
@@ -694,9 +680,8 @@ class crm_lead(crm_case, osv.osv):
                     'date' : schedule_time,
                     'section_id' : section_id or False,
                     'partner_id': lead.partner_id and lead.partner_id.id or False,
-                    'partner_address_id': lead.partner_address_id and lead.partner_address_id.id or False,
-                    'partner_phone' : phone or lead.phone or (lead.partner_address_id and lead.partner_address_id.phone or False),
-                    'partner_mobile' : lead.partner_address_id and lead.partner_address_id.mobile or False,
+                    'partner_phone' : phone or lead.phone or (lead.partner_id and lead.partner_id.phone or False),
+                    'partner_mobile' : lead.partner_id and lead.partner_id.mobile or False,
                     'priority': lead.priority,
             }
 

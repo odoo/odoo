@@ -89,8 +89,8 @@ class account_followup_stat_by_partner(osv.osv):
         tools.drop_view_if_exists(cr, 'account_followup_stat_by_partner')
         # Here we don't have other choice but to create a virtual ID based on the concatenation
         # of the partner_id and the company_id, because if a partner is shared between 2 companies,
-        # we want to see 2 lines for him in this table. It means that both company should be able 
-        # to send him followups separately . An assumption that the number of companies will not 
+        # we want to see 2 lines for him in this table. It means that both company should be able
+        # to send him followups separately . An assumption that the number of companies will not
         # reach 10 000 records is made, what should be enough for a time.
         cr.execute("""
             create or replace view account_followup_stat_by_partner as (
@@ -234,14 +234,13 @@ class account_followup_print_all(osv.osv_memory):
                 for line in data_lines:
                     total_amt += line.debit - line.credit
                 dest = False
-                if partner.address:
-                    for adr in partner.address:
-                        if adr.type=='contact':
-                            if adr.email:
-                                dest = [adr.email]
-                        if (not dest) and adr.type=='default':
-                            if adr.email:
-                                dest = [adr.email]
+                if partner:
+                    if partner.type=='contact':
+                        if adr.email:
+                            dest = [partner.email]
+                    if (not dest) and partner.type=='default':
+                        if partner.email:
+                            dest = [partner.email]
                 src = tools.config.options['email_from']
                 if not data.partner_lang:
                     body = data.email_body

@@ -42,7 +42,6 @@ class hr_recruitment_partner_create(osv.osv_memory):
     def make_order(self, cr, uid, ids, context=None):
         mod_obj = self.pool.get('ir.model.data')
         partner_obj = self.pool.get('res.partner')
-        contact_obj = self.pool.get('res.partner.address')
         case_obj = self.pool.get('hr.applicant')
 
         if context is None:
@@ -59,10 +58,6 @@ class hr_recruitment_partner_create(osv.osv_memory):
                 'name': case.partner_name or case.name,
                 'user_id': case.user_id.id,
                 'comment': case.description,
-            }, context=context)
-            contact_id = contact_obj.create(cr, uid, {
-                'partner_id': partner_id,
-                'name': case.partner_name,
                 'phone': case.partner_phone,
                 'mobile': case.partner_mobile,
                 'email': case.email_from
@@ -70,7 +65,6 @@ class hr_recruitment_partner_create(osv.osv_memory):
 
             case_obj.write(cr, uid, case.id, {
                 'partner_id': partner_id,
-                'partner_address_id': contact_id
             }, context=context)
         if data['close']:
             case_obj.case_close(cr, uid, context['active_ids'])
