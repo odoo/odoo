@@ -92,7 +92,7 @@ class ir_needaction(osv.osv):
     # need action relationship management
     #------------------------------------------------------
     
-    def _get_users(self, cr, uid, ids, user_ids, context=None):
+    def _get_users(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
         needact_obj = self.pool.get('ir.needaction_users_rel')
