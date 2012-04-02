@@ -137,6 +137,66 @@
   background-image: -o-linear-gradient(top, #dc5f59, #b33630);
   background-image: linear-gradient(to bottom, #dc5f59, #b33630);
 }
+.openerp2 table {
+  padding: 0;
+  font-size: 13px;
+  border-collapse: collapse;
+}
+.openerp2 thead {
+  font-weight: bold;
+  background-color: #f0f0f0;
+}
+.openerp2 thead th {
+  border-right: 1px dotted #afafb6;
+}
+.openerp2 thead th:last-child {
+  border-right: none;
+}
+.openerp2 th, .openerp2 td {
+  padding: 0;
+  line-height: 18px;
+  text-align: left;
+}
+.openerp2 th {
+  font-weight: bold;
+  vertical-align: middle;
+}
+.openerp2 td {
+  vertical-align: top;
+}
+.openerp2 .zebra tbody tr:nth-child(odd) td {
+  background-color: #f0f0fa;
+  background-color: #f0f0fa;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#f0f0fa), to(#eeeef6));
+  background-image: -webkit-linear-gradient(top, #f0f0fa, #eeeef6);
+  background-image: -moz-linear-gradient(top, #f0f0fa, #eeeef6);
+  background-image: -ms-linear-gradient(top, #f0f0fa, #eeeef6);
+  background-image: -o-linear-gradient(top, #f0f0fa, #eeeef6);
+  background-image: linear-gradient(to bottom, #f0f0fa, #eeeef6);
+}
+.openerp2 .zebra tbody tr:hover td {
+  background-color: #eeeeee;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#eeeeee), to(#dedede));
+  background-image: -webkit-linear-gradient(top, #eeeeee, #dedede);
+  background-image: -moz-linear-gradient(top, #eeeeee, #dedede);
+  background-image: -ms-linear-gradient(top, #eeeeee, #dedede);
+  background-image: -o-linear-gradient(top, #eeeeee, #dedede);
+  background-image: linear-gradient(to bottom, #eeeeee, #dedede);
+}
+.openerp2 .numeric {
+  text-align: right;
+  width: 82px;
+}
+.openerp2 .numeric input {
+  text-align: right;
+}
+.openerp2 ul, .openerp2 li {
+  margin: 0;
+  padding: 0;
+}
+.openerp2 li {
+  list-style-type: none;
+}
 .openerp2 .oe_left {
   float: left;
 }
@@ -337,7 +397,6 @@
   margin: 0;
 }
 .openerp2 .oe_menu li {
-  list-style-type: none;
   float: left;
 }
 .openerp2 .oe_menu a {
@@ -396,7 +455,6 @@
 .openerp2 .oe_secondary_submenu li {
   position: relative;
   padding: 1px 0 1px 16px;
-  list-style-type: none;
 }
 .openerp2 .oe_secondary_submenu li a {
   display: block;
@@ -517,7 +575,6 @@
 .openerp2 .oe_form_topbar ul li {
   padding: 0;
   margin: 0;
-  list-style-type: none;
   float: left;
   vertical-align: top;
   border-right: 1px solid #cacaca;
@@ -655,6 +712,129 @@
 }
 .openerp2 .ui-tabs-hide {
   display: none;
+}
+.openerp2 .oe_form_dropdown_section {
+  position: relative;
+  display: inline-block;
+  margin-right: 4px;
+}
+.openerp2 .oe_dropdown_toggle:after {
+  width: 0;
+  height: 0;
+  display: inline-block;
+  content: "&darr";
+  text-indent: -99999px;
+  vertical-align: top;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 4px solid white;
+  filter: alpha(opacity=50);
+  opacity: 0.5;
+  margin-top: 7px;
+  margin-left: 6px;
+  border-top-color: #404040;
+}
+.openerp2 .oe_dropdown_menu {
+  display: none;
+  position: absolute;
+  top: 28px;
+  left: 0px;
+  padding: 8px;
+  border: 1px solid #afafb6;
+  width: 120px;
+  overflow-x: hidden;
+  z-index: 900;
+  background: white;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  -box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+.openerp2 .oe_dropdown_menu li {
+  list-style-type: none;
+  float: none;
+  display: block;
+  background-color: none;
+}
+.openerp2 .oe_dropdown_menu li a {
+  display: block;
+  padding: 3px 6px;
+  clear: both;
+  font-weight: normal;
+  line-height: 14px;
+  color: #4c4c4c;
+  text-decoration: none;
+}
+.openerp2 .oe_dropdown_menu li a:hover {
+  text-decoration: none;
+  background-color: #f0f0fa;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#f0f0fa), to(#eeeef6));
+  background-image: -webkit-linear-gradient(top, #f0f0fa, #eeeef6);
+  background-image: -moz-linear-gradient(top, #f0f0fa, #eeeef6);
+  background-image: -ms-linear-gradient(top, #f0f0fa, #eeeef6);
+  background-image: -o-linear-gradient(top, #f0f0fa, #eeeef6);
+  background-image: linear-gradient(to bottom, #f0f0fa, #eeeef6);
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  -box-shadow: none;
+}
+.openerp2 .oe_kanban_group_title {
+  margin: 1px 1px 4px;
+  font-size: 15px;
+  font-weight: bold;
+  text-shadow: 0 1px 0 white;
+}
+.openerp2 .oe_kanban_column, .openerp2 .oe_kanban_group_header {
+  width: 240px;
+  vertical-align: top;
+  padding: 6px 7px 6px 6px;
+  background: #f0eeee;
+  border-left: 1px solid #f0f8f8;
+  border-right: 1px solid #b9b9b9;
+}
+.openerp2 .oe_kanban_record {
+  position: relative;
+  display: block;
+  min-height: 50px;
+  background: white;
+  border: 1px solid #d8d8d8;
+  border-bottom-color: #b9b9b9;
+  padding: 6px;
+  margin: 6px 0;
+  display: block;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+}
+.openerp2 .oe_kanban_record:last-child {
+  margin-bottom: 0;
+}
+.openerp2 .oe_kanban_record:hover {
+  -moz-box-shadow: 0 0 3px rgba(0, 0, 0, 0.6);
+  -webkit-box-shadow: 0 0 3px rgba(0, 0, 0, 0.6);
+  -box-shadow: 0 0 3px rgba(0, 0, 0, 0.6);
+}
+.openerp2 .oe_kanban_record .oe_kanban_title {
+  font-weight: bold;
+  margin: 2px 4px;
+}
+.openerp2 .oe_kanban_gravatar {
+  width: 20px;
+  height: 20px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  -box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+.openerp2 .oe_application a {
+  color: #8a89ba;
+}
+.openerp2 .oe_application a:hover {
+  text-decoration: underline;
 }
 
 .openerp .oe_form_field_many2one td:first-child {

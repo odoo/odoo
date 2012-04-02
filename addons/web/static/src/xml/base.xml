@@ -532,8 +532,8 @@
     </div>
 </t>
 <t t-name="Sidebar.section">
-    <div t-att-id="section_id" t-att-class="classname">
-        <h2><t t-esc="name"/></h2>
+    <div t-att-id="section_id" t-attf-class="#{classname} oe_form_dropdown_section ">
+        <button class="oe_dropdown_toggle"><t t-esc="name"/></button>
     </div>
 </t>
 <t t-name="Sidebar.section.items">
@@ -1142,6 +1142,16 @@
     </div>
 </t>
 <t t-name="FieldStatus.content">
+    <ul class="oe-arrow-list">
+        <t t-set="size" t-value="widget.to_show.length"/>
+        <t t-foreach="_.range(size)" t-as="i">
+            <li t-att-class="widget.to_show[i][0] === widget.selected_value ? 'oe-arrow-list-selected' : ''">
+                <span class="oe-arrow-list-before" t-if="i &gt; 0"></span><span><t t-esc="widget.to_show[i][1]"/></span><span class="oe-arrow-list-after" t-if="i &lt; size - 1"></span>
+            </li>
+        </t>
+    </ul>
+</t>
+<t t-name="FieldStatus.content">
     <ul class="oe_form_steps">
         <t t-set="size" t-value="widget.to_show.length"/>
         <t t-foreach="_.range(size)" t-as="i">
@@ -1263,16 +1273,6 @@
             <a href="javascript:void(0)" class="oe_form_uri"/>
         </div>
     </t>
-</t>
-<t t-name="FieldStatus.content">
-    <ul class="oe-arrow-list">
-        <t t-set="size" t-value="widget.to_show.length"/>
-        <t t-foreach="_.range(size)" t-as="i">
-            <li t-att-class="widget.to_show[i][0] === widget.selected_value ? 'oe-arrow-list-selected' : ''">
-                <span class="oe-arrow-list-before" t-if="i &gt; 0"></span><span><t t-esc="widget.to_show[i][1]"/></span><span class="oe-arrow-list-after" t-if="i &lt; size - 1"></span>
-            </li>
-        </t>
-    </ul>
 </t>
 <t t-name="WidgetButton">
     <button type="button" class="oe_button oe_form_button"

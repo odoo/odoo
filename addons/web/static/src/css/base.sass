@@ -124,7 +124,49 @@ $colour4: #8a89ba
         color: white
         width: 90px
         @include vertical-gradient(#dc5f59, #b33630)
-  
+
+    // Tag reset {{{
+    table
+        padding: 0
+        font-size: 13px
+        border-collapse: collapse
+    thead
+        font-weight: bold
+        background-color: #f0f0f0
+        th
+            border-right: 1px dotted #afafb6
+            &:last-child
+                border-right: none
+    th, td
+        padding: 0
+        line-height: 18px
+        text-align: left
+    th
+        font-weight: bold
+        vertical-align: middle
+
+    td
+        vertical-align: top
+
+    .zebra tbody tr:nth-child(odd) td
+        background-color: #f0f0fa
+        @include vertical-gradient(#f0f0fa, #eeeef6)
+
+    .zebra tbody tr:hover td
+        @include vertical-gradient(#eee, #dedede)
+
+    .numeric
+        text-align: right
+        width: 82px
+        input
+            text-align: right
+    ul, li
+        margin: 0
+        padding: 0
+    
+    li
+        list-style-type: none
+    // }}}
 
     
     // }}}
@@ -289,7 +331,6 @@ $colour4: #8a89ba
         padding: 0
         margin: 0
         li
-            list-style-type: none
             float: left
         a
             display: block
@@ -334,7 +375,6 @@ $colour4: #8a89ba
         li
             position: relative
             padding: 1px 0 1px 16px
-            list-style-type: none
             a
                 display: block
                 color: #4c4c4c
@@ -430,7 +470,6 @@ $colour4: #8a89ba
             li   
                 padding: 0
                 margin: 0
-                list-style-type: none
                 float: left 
                 vertical-align: top
                 border-right: 1px solid #cacaca
@@ -557,6 +596,105 @@ $colour4: #8a89ba
     .ui-tabs-hide
         display: none
 
+    // FormView Dropdown {{{
+
+    .oe_form_dropdown_section
+        position: relative
+        display: inline-block
+        margin-right: 4px
+
+    .oe_dropdown_toggle:after
+        width: 0
+        height: 0
+        display: inline-block
+        content: "&darr"
+        text-indent: -99999px
+        vertical-align: top
+        border-left: 4px solid transparent
+        border-right: 4px solid transparent
+        border-top: 4px solid white
+        @include opacity(0.5)
+
+        margin-top: 7px
+        margin-left: 6px
+        border-top-color: #404040
+
+    .oe_dropdown_menu
+        display: none
+        position: absolute
+        top: 28px
+        left: 0px
+        padding: 8px
+        border: 1px solid #afafb6
+        width: 120px
+        overflow-x: hidden
+        z-index: 900
+        background: white
+        @include radius(3px)
+        @include box-shadow(0 1px 4px rgba(0,0,0,0.3))
+        li
+            list-style-type: none
+            float: none
+            display: block
+            background-color: none
+            a
+                display: block
+                padding: 3px 6px
+                clear: both
+                font-weight: normal
+                line-height: 14px
+                color: #4c4c4c
+                text-decoration: none
+                &:hover
+                    text-decoration: none
+                    @include vertical-gradient(#f0f0fa, #eeeef6)
+                    @include box-shadow(none)
+
+    // }}}
+    // Kanban view {{{
+    .oe_kanban_group_title
+        margin: 1px 1px 4px
+        font-size: 15px
+        font-weight: bold
+        text-shadow: 0 1px 0 white
+    .oe_kanban_column, .oe_kanban_group_header
+        width: 240px
+        vertical-align: top
+        padding: 6px 7px 6px 6px
+        background: #f0eeee
+        border-left: 1px solid #f0f8f8
+        border-right: 1px solid #b9b9b9
+    .oe_kanban_record
+        position: relative
+        display: block
+        min-height: 50px
+        background: white
+        border: 1px solid #d8d8d8
+        border-bottom-color: #b9b9b9
+        padding: 6px
+        margin: 6px 0
+        display: block
+        @include radius(4px)
+        &:last-child
+            margin-bottom: 0
+        &:hover
+            @include box-shadow(0 0 3px rgba(0,0,0,0.6))
+        .oe_kanban_title
+            font-weight: bold
+            margin: 2px 4px
+    .oe_kanban_gravatar
+        width: 20px
+        height: 20px
+        @include radius(3px)
+        @include box-shadow(0 1px 2px rgba(0,0,0,0.2))
+    // }}}
+
+    // Application to rename into action {{{
+    .oe_application
+        a
+            color: $colour4
+            &:hover
+                text-decoration: underline
     // }}}
 
 // Transitional overrides for old styles {{{
