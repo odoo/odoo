@@ -70,12 +70,12 @@ class mrp_repair(osv.osv):
             for line in repair.operations:
                 #manage prices with tax included use compute_all instead of compute
                 if line.to_invoice:
-                    tax_calculate = tax_obj.compute_all(cr, uid, line.tax_id, line.price_unit, line.product_uom_qty, repair.partner_invoice_id.id, line.product_id, repair.partner_id)
+                    tax_calculate = tax_obj.compute_all(cr, uid, line.tax_id, line.price_unit, line.product_uom_qty, line.product_id, repair.partner_id)
                     for c in tax_calculate['taxes']:
                         val += c['amount']
             for line in repair.fees_lines:
                 if line.to_invoice:
-                    tax_calculate = tax_obj.compute_all(cr, uid, line.tax_id, line.price_unit, line.product_uom_qty, repair.partner_invoice_id.id, line.product_id, repair.partner_id)
+                    tax_calculate = tax_obj.compute_all(cr, uid, line.tax_id, line.price_unit, line.product_uom_qty,  line.product_id, repair.partner_id)
                     for c in tax_calculate['taxes']:
                         val += c['amount']
             res[repair.id] = cur_obj.round(cr, uid, cur, val)
@@ -117,8 +117,8 @@ class mrp_repair(osv.osv):
         'name': fields.char('Repair Reference',size=24, required=True),
         'product_id': fields.many2one('product.product', string='Product to Repair', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'partner_id' : fields.many2one('res.partner', 'Partner', select=True, help='This field allow you to choose the parner that will be invoiced and delivered'),
-        'address_id': fields.many2one('res.partner.address', 'Delivery Address', domain="[('partner_id','=',partner_id)]"),
-        'default_address_id': fields.function(_get_default_address, type="many2one", relation="res.partner.address"),
+        'address_id': fields.many2one('res.partner', 'Delivery Address', domain="[('parent_id','=',partner_id)]"),
+        'default_address_id': fields.function(_get_default_address, type="many2one", relation="res.partner"),
         'prodlot_id': fields.many2one('stock.production.lot', 'Lot Number', select=True, domain="[('product_id','=',product_id)]"),
         'state': fields.selection([
             ('draft','Quotation'),
@@ -142,7 +142,7 @@ class mrp_repair(osv.osv):
         'guarantee_limit': fields.date('Guarantee limit', help="The guarantee limit is computed as: last move date + warranty defined on selected product. If the current date is below the guarantee limit, each operation and fee you will add will be set as 'not to invoiced' by default. Note that you can change manually afterwards."),
         'operations' : fields.one2many('mrp.repair.line', 'repair_id', 'Operation Lines', readonly=True, states={'draft':[('readonly',False)]}),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', help='The pricelist comes from the selected partner, by default.'),
-        'partner_invoice_id':fields.many2one('res.partner.address', 'Invoicing Address',  domain="[('partner_id','=',partner_id)]"),
+        'partner_invoice_id':fields.many2one('res.partner', 'Invoicing Address'),
         'invoice_method':fields.selection([
             ("none","No Invoice"),
             ("b4repair","Before Repair"),
@@ -229,12 +229,12 @@ class mrp_repair(osv.osv):
             data['value']['guarantee_limit'] = limit.strftime('%Y-%m-%d')
             data['value']['location_id'] = move.location_dest_id.id
             data['value']['location_dest_id'] = move.location_dest_id.id
-            if move.address_id:
-                data['value']['partner_id'] = move.address_id.partner_id and move.address_id.partner_id.id
+            if move.partner_id:
+                data['value']['partner_id'] = move.partner_id and move.partner_id.id
             else:
                 data['value']['partner_id'] = False
-            data['value']['address_id'] = move.address_id and move.address_id.id
-            d = self.onchange_partner_id(cr, uid, ids, data['value']['partner_id'], data['value']['address_id'])
+            data['value']['partner_id'] = move.partner_id and move.partner_id.id
+            d = self.onchange_partner_id(cr, uid, ids, data['value']['partner_id'], data['value']['partner_id'])
             data['value'].update(d['value'])
         return data
 
@@ -261,7 +261,7 @@ class mrp_repair(osv.osv):
         partner = part_obj.browse(cr, uid, part)
         pricelist = partner.property_product_pricelist and partner.property_product_pricelist.id or False
         return {'value': {
-                    'address_id': address_id or addr['delivery'],
+                    'address_id': addr['delivery'] or addr['default'],
                     'partner_invoice_id': addr['invoice'],
                     'pricelist_id': pricelist
                 }
@@ -389,7 +389,6 @@ class mrp_repair(osv.osv):
                         'type': 'out_invoice',
                         'account_id': account_id,
                         'partner_id': repair.partner_id.id,
-                        'address_invoice_id': repair.address_id.id,
                         'currency_id': repair.pricelist_id.currency_id.id,
                         'comment': repair.quotation_notes,
                         'fiscal_position': repair.partner_id.property_account_position.id
@@ -516,7 +515,7 @@ class mrp_repair(osv.osv):
                     'product_id': move.product_id.id,
                     'product_qty': move.product_uom_qty,
                     'product_uom': move.product_uom.id,
-                    'address_id': repair.address_id and repair.address_id.id or False,
+                    'partner_id': repair.address_id and repair.address_id.id or False,
                     'location_id': move.location_id.id,
                     'location_dest_id': move.location_dest_id.id,
                     'tracking_id': False,
@@ -531,7 +530,7 @@ class mrp_repair(osv.osv):
                     'origin': repair.name,
                     'state': 'draft',
                     'move_type': 'one',
-                    'address_id': repair.address_id and repair.address_id.id or False,
+                    'partner_id': repair.address_id and repair.address_id.id or False,
                     'note': repair.internal_notes,
                     'invoice_state': 'none',
                     'type': 'out',
@@ -543,7 +542,7 @@ class mrp_repair(osv.osv):
                     'product_qty': move.product_uom_qty or 1.0,
                     'product_uom': repair.product_id.uom_id.id,
                     'prodlot_id': repair.prodlot_id and repair.prodlot_id.id or False,
-                    'address_id': repair.address_id and repair.address_id.id or False,
+                    'partner_id': repair.address_id and repair.address_id.id or False,
                     'location_id': repair.location_id.id,
                     'location_dest_id': repair.location_dest_id.id,
                     'tracking_id': False,
@@ -684,7 +683,7 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
         location_id = location_id and location_id[0] or False
 
         if type == 'add':
-            # TOCHECK: Find stock location for user's company warehouse or 
+            # TOCHECK: Find stock location for user's company warehouse or
             # repair order's company's warehouse (company_id field is added in fix of lp:831583)
             args = company_id and [('company_id', '=', company_id)] or []
             warehouse_ids = warehouse_obj.search(cr, uid, args, context=context)

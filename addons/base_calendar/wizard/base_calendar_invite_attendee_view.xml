@@ -27,7 +27,7 @@
                                 <field name="partner_id" colspan="2" on_change="onchange_partner_id(partner_id)" attrs="{'required': [('type', '=', 'partner')]}"/>
                                 <newline/>
                                 <separator string="Partner Contacts" colspan="6"/>
-                                <field name="contact_ids" select="1" colspan="4" nolabel="1" domain="[('partner_id', '=', partner_id)]" attrs="{'readonly': [('type', '!=', 'partner')]}"/>
+                                <field name="contact_ids" select="1" colspan="4" nolabel="1" domain="[('id', 'child_of', [partner_id])]" attrs="{'readonly': [('type', '!=', 'partner')]}"/>
                             </group>
                         </page>
                     </notebook>

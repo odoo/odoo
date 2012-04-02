@@ -47,18 +47,16 @@ class auction_lots_sms_send(osv.osv_memory):
         if context is None: context = {}
         lot_obj = self.pool.get('auction.lots')
         partner_obj = self.pool.get('res.partner')
-        partner_address_obj = self.pool.get('res.partner.address')
         for data in self.read(cr, uid, ids, context=context):
             lots = lot_obj.read(cr, uid, context.get('active_ids', []), ['obj_num','obj_price','ach_uid'])
             res = partner_obj.read(cr, uid, [l['ach_uid'][0] for l in lots if l['ach_uid']], ['gsm'], context)
-            
             nbr = 0
             for r in res:
                 add = partner_obj.address_get(cr, uid, [r['id']])['default']
-                addr = partner_address_obj.browse(cr, uid, add, context=context)
+                addr = partner_obj.browse(cr, uid, add, context=context)
                 to = addr.mobile
                 if to:
-                    tools.smssend(data['user'], data['password'], data['app_id'], unicode(data['text'], 'utf-8').encode('latin1'), to)
+                    tools.sms_send(data['user'], data['password'], data['app_id'], unicode(data['text'], 'utf-8').encode('latin1'), to)
                     nbr += 1
             return {'sms_sent': nbr}
 auction_lots_sms_send()

@@ -93,7 +93,7 @@ class hr_holidays(osv.osv):
     _name = "hr.holidays"
     _description = "Leave"
     _order = "type desc, date_from asc"
-    _inherit = ['mail.thread']
+    _inherit = ['ir.needaction', 'mail.thread']
 
     def _employee_get(self, cr, uid, context=None):
         ids = self.pool.get('hr.employee').search(cr, uid, [('user_id', '=', uid)], context=context)
@@ -363,7 +363,7 @@ class hr_holidays(osv.osv):
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.state == 'confirm' and obj.employee_id.parent_id:
                 result[obj.id] = [obj.employee_id.parent_id.user_id.id]
-            elif obj.state == 'validate1' or obj.state == 'validate':
+            elif obj.state == 'validate1':
                 # get group_hr_manager: everyone will be warned of second validation
                 res = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'group_hr_manager') or False
                 obj_id = res and res[1] or False

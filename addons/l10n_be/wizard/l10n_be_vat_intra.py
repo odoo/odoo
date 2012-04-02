@@ -92,7 +92,6 @@ class partner_vat_intra(osv.osv_memory):
         obj_user = self.pool.get('res.users')
         obj_sequence = self.pool.get('ir.sequence')
         obj_partner = self.pool.get('res.partner')
-        obj_partner_add = self.pool.get('res.partner.address')
 
         xmldict = {}
         post_code = street = city = country = data_clientinfo = ''
@@ -131,7 +130,7 @@ class partner_vat_intra(osv.osv_memory):
         phone = data_company.partner_id.phone or ''
 
         if addr.get('invoice',False):
-            ads = obj_partner_add.browse(cr, uid, [addr['invoice']])[0]
+            ads = obj_partner.browse(cr, uid, [addr['invoice']])[0]
             city = (ads.city or '')
             post_code = (ads.zip or '')
             if ads.street:
