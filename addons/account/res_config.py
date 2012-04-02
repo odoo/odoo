@@ -143,6 +143,17 @@ class account_config_settings(osv.osv_memory):
         'period': 'month',
     }
 
+    def create(self, cr, uid, values, context=None):
+        id = super(account_config_settings, self).create(cr, uid, values, context)
+        # Hack: to avoid some nasty bug, related fields are not written upon record creation.
+        # Hence we write on those fields here.
+        vals = {}
+        for fname, field in self._columns.iteritems():
+            if isinstance(field, fields.related) and fname in values:
+                vals[fname] = values[fname]
+        self.write(cr, uid, [id], vals, context)
+        return id
+
     def onchange_company_id(self, cr, uid, ids, company_id):
         # update related fields
         company = self.pool.get('res.company').browse(cr, uid, company_id)
