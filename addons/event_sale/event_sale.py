@@ -92,4 +92,32 @@ class sale_order_line(osv.osv):
                 message = _("The registration %s has been created from the Sale Order %s.") % (registration_id, order_line.order_id.name)
                 registration_obj.log(cr, uid, registration_id, message)
         return super(sale_order_line, self).button_confirm(cr, uid, ids, context=context)
-
+    
+class event_event(osv.osv):
+    _inherit = 'event.event'
+    _columns = {
+        'event_item_ids': fields.one2many('event.items','event_id', 'Event Items'),
+    }
+    
+class event_items(osv.osv):
+    _name = "event.items"
+    _columns = {
+        'product_id': fields.many2one('product.product', 'Product', required=True),
+        'qty': fields.integer('Quantity'),
+        'price': fields.integer('Price'),
+        'uom_id': fields.many2one('product.uom', 'Unit of Measure'),
+        'discount': fields.integer('Discount'),
+        'event_id': fields.many2one('event.event', 'Event'),
+        'sales_end_date': fields.date('Sales End')
+        }
+    
+    def onchange_product_id(self, cr, uid, ids, product, context=None):
+        product_obj = self.pool.get('product.product')
+        data = {}
+        if not product:
+            return {'value': data}
+        price = product_obj.browse(cr, uid, product).list_price
+        uom = product_obj.browse(cr, uid, product).uom_id.id
+        data['price'] = price
+        data['uom_id'] = uom
+        return {'value': data}
