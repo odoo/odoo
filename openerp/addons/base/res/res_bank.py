@@ -219,11 +219,11 @@ class res_partner_bank(osv.osv):
         if partner_id:
             part = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
             result['owner_name'] = part.name
-            result['street'] = part.address and part.address[0].street or False
-            result['city'] = part.address and part.address[0].city or False
-            result['zip'] =  part.address and part.address[0].zip or False
-            result['country_id'] =  part.address and part.address[0].country_id and part.address[0].country_id.id or False
-            result['state_id'] = part.address and part.address[0].state_id and part.address[0].state_id.id or False
+            result['street'] = part.street or False
+            result['city'] = part.city or False
+            result['zip'] =  part.zip or False
+            result['country_id'] =  part.country_id.id
+            result['state_id'] = part.state_id.id
         return {'value': result}
 
 res_partner_bank()

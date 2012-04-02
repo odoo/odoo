@@ -299,7 +299,7 @@ class rml_parse(object):
                 parse_format = DEFAULT_SERVER_DATETIME_FORMAT
             if isinstance(value, basestring):
                 # FIXME: the trimming is probably unreliable if format includes day/month names
-                #        and those would need to be translated anyway. 
+                #        and those would need to be translated anyway.
                 date = datetime.strptime(value[:get_date_length(parse_format)], parse_format)
             elif isinstance(value, time.struct_time):
                 date = datetime(*value[:6])
@@ -321,7 +321,7 @@ class rml_parse(object):
         return res
 
     def display_address(self, address_browse_record):
-        return self.pool.get('res.partner.address')._display_address(self.cr, self.uid, address_browse_record)
+        return self.pool.get('res.partner')._display_address(self.cr, self.uid, address_browse_record)
 
     def repeatIn(self, lst, name,nodes_parent=False):
         ret_lst = []
