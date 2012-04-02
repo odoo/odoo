@@ -23,7 +23,7 @@ from osv import osv, fields
 
 class hr_timeshee_settings(osv.osv_memory):
     _name = 'human.resources.configuration'
-    _inherit = ['human.resources.configuration','res.company']
+    _inherit = 'human.resources.configuration'
 
     _columns = {
         'timesheet_range': fields.selection(
@@ -35,11 +35,12 @@ class hr_timeshee_settings(osv.osv_memory):
     }
   
 
-    def default_get(self, cr, uid, fields, context):
+    def default_get(self, cr, uid, fields, context=None):
         ir_values = self.pool.get('ir.values')
-        res = super(hr_timeshee_settings, self).default_get(cr, uid, fields, context=context)
-        
-        res_cmp = ir_values.get_default(cr, uid, 'res.company', 'timesheet_range')
-         
-        print "----------", res_cmp 
+        res = super(hr_timeshee_settings, self).default_get(cr, uid, fields, context)
+        timesheet = ir_values.get_default(cr, uid, 'res.company', 'timesheet_range')
+        companies = self.pool.get('res.company').search(cr, uid, [], context=context)
+        for time_diff in self.pool.get('res.company').browse(cr, uid, companies, context=context):
+            res['timesheet_range']=time_diff.timesheet_range
+            res['timesheet_max_difference']=time_diff.timesheet_max_difference
         return res
