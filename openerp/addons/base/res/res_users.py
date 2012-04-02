@@ -753,18 +753,20 @@ class groups_view(osv.osv):
             xml1, xml2 = [], []
             xml1.append('<separator string="%s" colspan="4"/>' % _('Applications'))
             for app, kind, gs in self.get_groups_by_application(cr, uid, context):
+                # hide groups in category 'Hidden' (except to group_no_one)
+                attrs = 'groups="base.group_no_one"' if app and app.xml_id == 'base.module_category_hidden' else ''
                 if kind == 'selection':
                     # application name with a selection field
                     field_name = name_selection_groups(map(int, gs))
-                    xml1.append('<field name="%s"/>' % field_name)
+                    xml1.append('<field name="%s" %s/>' % (field_name, attrs))
                     xml1.append('<newline/>')
                 else:
                     # application separator with boolean fields
                     app_name = app and app.name or _('Other')
-                    xml2.append('<separator string="%s" colspan="4"/>' % app_name)
+                    xml2.append('<separator string="%s" colspan="4" %s/>' % (app_name, attrs))
                     for g in gs:
                         field_name = name_boolean_group(g.id)
-                        xml2.append('<field name="%s"/>' % field_name)
+                        xml2.append('<field name="%s" %s/>' % (field_name, attrs))
             view.write({'arch': xml % ('\n'.join(xml1), '\n'.join(xml2))})
         return True
 
