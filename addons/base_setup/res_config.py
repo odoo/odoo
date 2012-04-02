@@ -26,9 +26,8 @@ class general_configuration(osv.osv_memory):
     _inherit = 'res.config.settings'
     
     _columns = {
-        'group_multi_company': fields.boolean('Active Multi company',
-                           implied_group='base.group_multi_company',
-                           help ="""It allow to set the multi company."""),
+        'module_multi_company': fields.boolean('Active Multi company',
+                           help ="""It allow to installs the multi_company module."""),
         'module_portal': fields.boolean('Customer Portal',
                            help ="""It installs the portal module."""),
         'module_share': fields.boolean('Share',
