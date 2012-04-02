@@ -186,10 +186,9 @@ class hr_employee(osv.osv):
         'gender': fields.selection([('male', 'Male'),('female', 'Female')], 'Gender'),
         'marital': fields.selection([('single', 'Single'), ('married', 'Married'), ('widower', 'Widower'), ('divorced', 'Divorced')], 'Marital Status'),
         'department_id':fields.many2one('hr.department', 'Department'),
-        'address_id': fields.many2one('res.partner.address', 'Working Address'),
-        'address_home_id': fields.many2one('res.partner.address', 'Home Address'),
-        'partner_id': fields.related('address_home_id', 'partner_id', type='many2one', relation='res.partner', readonly=True, help="Partner that is related to the current employee. Accounting transaction will be written on this partner belongs to employee."),
-        'bank_account_id':fields.many2one('res.partner.bank', 'Bank Account Number', domain="[('partner_id','=',partner_id)]", help="Employee bank salary account"),
+        'address_id': fields.many2one('res.partner', 'Working Address'),
+        'address_home_id': fields.many2one('res.partner', 'Home Address'),
+        'bank_account_id':fields.many2one('res.partner.bank', 'Bank Account Number', domain="[('partner_id','=',address_home_id)]", help="Employee bank salary account"),
         'work_phone': fields.char('Work Phone', size=32, readonly=False),
         'mobile_phone': fields.char('Work Mobile', size=32, readonly=False),
         'work_email': fields.char('Work E-mail', size=240),
@@ -225,7 +224,7 @@ class hr_employee(osv.osv):
 
     def onchange_address_id(self, cr, uid, ids, address, context=None):
         if address:
-            address = self.pool.get('res.partner.address').browse(cr, uid, address, context=context)
+            address = self.pool.get('res.partner').browse(cr, uid, address, context=context)
             return {'value': {'work_email': address.email, 'work_phone': address.phone, 'mobile_phone': address.mobile}}
         return {'value': {}}
 

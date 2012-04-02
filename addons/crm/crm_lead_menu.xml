@@ -27,15 +27,7 @@
         <field name="act_window_id" ref="crm_case_category_act_leads_all"/>
     </record>
 
-    <menuitem id="base.menu_sales" name="Sales"
-        parent="base.menu_base_partner" sequence="1" />
-
-    <menuitem parent="base.menu_sales" name="Leads"
-        id="menu_crm_case_categ0_act_leads"
-        action="crm_case_category_act_leads_all" sequence="1" />
-
-
-     <act_window
+    <act_window
             id="act_crm_opportunity_crm_phonecall_new"
             name="Phone calls"
             groups="base.group_extended"
@@ -97,12 +89,9 @@ You and your team(s) will be able to plan meetings and phone calls from opportun
           <field name="act_window_id" ref="crm_case_category_act_oppor11"/>
      </record>
 
-     <menuitem id="base.menu_sales" name="Sales"
-         parent="base.menu_base_partner" sequence="1" />
-
-     <menuitem name="Opportunities" id="menu_crm_case_opp"
-         parent="base.menu_sales" action="crm_case_category_act_oppor11"
-         sequence="2" />
+    <menuitem name="Sales" id="base.menu_sales" parent="base.menu_base_partner" sequence="1" />
+    <menuitem name="Leads" id="menu_crm_leads" parent="base.menu_sales" action="crm_case_category_act_leads_all" sequence="2" />
+    <menuitem name="Opportunities" id="menu_crm_opportunities" parent="base.menu_sales" action="crm_case_category_act_oppor11" sequence="3" />
 
 </data>
 </openerp>
