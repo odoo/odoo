@@ -32,5 +32,21 @@
            <field name="category_id" ref="hr.category_hr_management_config"/>
            <field name="sequence">3</field>
        </record>
+	   
+        <!-- Hr Configuration wizard -->
+
+        <record id="view_expenseconfig_wizard_inherit" model="ir.ui.view">
+            <field name="name">human.expense.resources.configuration.form.inherit</field>
+            <field name="model">human.resources.configuration</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="hr.view_human_resources_configuration"/>
+            <field name="arch" type="xml">
+                <field name="module_hr_expense" position="after">
+	            	<label string="Create Expenses Products :" />
+	            	<button name="%(product_normal_form_view_installer)d" string="Expenses Products" type="action" icon="gtk-apply"/>
+                </field>
+            </field>
+        </record>	   
+		
     </data>
 </openerp>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_hr_timehseet_config_settings" model="ir.ui.view">
+            <field name="name">Human Resources Application</field>
+            <field name="model">human.resources.configuration</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="hr.view_human_resources_configuration"/>
+            <field name="arch" type="xml">
+            <xpath expr="//field[@name='module_hr_timesheet_sheet']" position="after">
+                <label string="Create Your Timesheet Accounts :"/>
+                <button name="%(hr_timesheet.action_define_analytic_structure)d" string="Timesheet Accounts" type="action" icon="gtk-apply"/>
+        	</xpath>      
+            <xpath expr="//field[@name='module_hr_contract']" position="after"> 
+                <newline/>        	
+                <group name="Timesheets" colspan="4" col="8">
+                     <separator string="Timesheets" colspan="12"/>
+                     <field name="timesheet_range"/>
+                     <field name="timesheet_max_difference"/>
+                </group>	
+            </xpath>						
+            </field>
+        </record>
+    </data>
+</openerp>

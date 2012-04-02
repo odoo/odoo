@@ -1,0 +1,42 @@
+<openerp>
+    <data>
+
+        <record id="view_human_resources_configuration" model="ir.ui.view">
+            <field name="name">Human Resources Application</field>
+            <field name="model">human.resources.configuration</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string ="HR Application">
+                    <separator string="Human Resources" colspan="4"/>
+                    <group colspan="4" col="4">
+                    	<label string="Create Your Departments :" />
+                        <button name="%(view_department_form_installer)d" string="Departments" type="action" icon="gtk-apply"/>
+                        <label string="Create Your Employees :" />
+                        <button name="%(action_create_hr_employee_installer)d" string="Employees" type="action" icon="gtk-apply"/>
+                        <field name="module_hr_timesheet_sheet"/>
+                        <field name="module_hr_holidays"/>
+                    </group>
+                    <separator string="Additional Features" colspan="4"/>
+                    <group colspan="4" col="4">
+                        <field name="module_hr_expense"/>
+                        <field name="module_hr_recruitment"/>
+                        <field name="module_hr_evaluation"/>
+                        <field name="module_hr_contract"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_human_resources_configuration" model="ir.actions.act_window">
+            <field name="name">Configure Human Resources Application</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">human.resources.configuration</field>
+            <field name="view_id" ref="view_human_resources_configuration"/>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+        </record>
+
+        <menuitem id="menu_human_resources_configuration" name="Human Resources" parent="base.menu_config" sequence="13" action="action_human_resources_configuration"/>
+
+    </data>
+</openerp>
