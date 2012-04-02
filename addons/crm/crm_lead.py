@@ -214,20 +214,19 @@ class crm_lead(crm_case, osv.osv):
         'color': 0,
     }
 
+    def get_needaction_user_ids(self, cr, uid, ids, context=None):
+        result = dict.fromkeys(ids, [])
+        for obj in self.browse(cr, uid, ids, context=context):
+            # salesman must perform an action when in draft mode
+            if obj.state == 'draft' and obj.user_id:
+                result[obj.id] = [obj.user_id.id]
+        return result
+    
     def create(self, cr, uid, vals, context=None):
         obj_id = super(crm_lead, self).create(cr, uid, vals, context)
         self.create_send_note(cr, uid, [obj_id], context=context)
         return obj_id
-
-
-    def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
-        """This function returns value of partner email based on Partner Address
-        """
-        if not add:
-            return {'value': {'email_from': False, 'country_id': False}}
-        address = self.pool.get('res.partner.address').browse(cr, uid, add)
-        return {'value': {'email_from': address.email, 'phone': address.phone, 'country_id': address.country_id.id}}
-
+    
     def on_change_optin(self, cr, uid, ids, optin):
         return {'value':{'optin':optin,'optout':False}}
 
@@ -260,54 +259,6 @@ class crm_lead(crm_case, osv.osv):
 
     def stage_find_won(self, cr, uid, section_id):
         return self.stage_find_percent(cr, uid, 100.0, section_id)
-
-    def get_needaction_user_ids(self, cr, uid, ids, context=None):
-        result = dict.fromkeys(ids, [])
-        for obj in self.browse(cr, uid, ids, context=context):
-            # salesman must perform an action when in draft mode
-            if obj.state == 'draft' and obj.user_id:
-                result[obj.id] = [obj.user_id.id]
-        return result
-
-    def message_get_subscribers(self, cr, uid, ids, context=None):
-        sub_ids = self.message_get_subscribers_ids(cr, uid, ids, context=context)
-        # add salesman to the subscribers
-        for obj in self.browse(cr, uid, ids, context=context):
-            if obj.user_id:
-                sub_ids.append(obj.user_id.id)
-        return self.pool.get('res.users').read(cr, uid, sub_ids, context=context)
-
-    def create_send_note(self, cr, uid, ids, context=None):
-        for id in ids:
-            message = _("%s has been <b>created</b>.")% (self.case_get_note_msg_prefix(cr, uid, id, context=context))
-            self.message_append_note(cr, uid, [id], _('System notification'),
-                        message, type='notification', context=context)
-        return True
-
-    def case_get_note_msg_prefix(self, cr, uid, id, context=None):
-		lead = self.browse(cr, uid, [id], context=context)[0]
-		return ('Opportunity' if lead.type == 'opportunity' else 'Lead')
-
-    def case_mark_lost_send_note(self, cr, uid, ids, context=None):
-        message = _("Opportunity has been <b>lost</b>.")
-        return self.message_append_note(cr, uid, ids, _('System notification'), message, context=context)
-
-    def case_mark_won_send_note(self, cr, uid, ids, context=None):
-        message = _("Opportunity has been <b>won</b>.")
-        return self.message_append_note(cr, uid, ids, _('System notification'), message, context=context)
-
-    def schedule_phonecall_send_note(self, cr, uid, ids, phonecall_id, action, context=None):
-        phonecall = self.pool.get('crm.phonecall').browse(cr, uid, [phonecall_id], context=context)[0]
-        if action == 'log': prefix = 'Logged'
-        else: prefix = 'Scheduled'
-        message = _("<b>%s a call</b> for the <em>%s</em>.") % (prefix, phonecall.date)
-        return self. message_append_note(cr, uid, ids, _('System notification'), message, context=context)
-
-    def _lead_set_partner_send_note(self, cr, uid, ids, context=None):
-        for lead in self.browse(cr, uid, ids, context=context):
-            message = _("%s <b>partner</b> is now set to <em>%s</em>." % (self.case_get_note_msg_prefix(cr, uid, lead.id, context=context), lead.partner_id.name))
-            lead.message_append_note(_('System notification'), message)
-        return True
 
     def case_open(self, cr, uid, ids, context=None):
         for lead in self.browse(cr, uid, ids, context=context):
@@ -466,7 +417,7 @@ class crm_lead(crm_case, osv.osv):
 
         subject = subject[0] + ", ".join(subject[1:])
         details = "\n\n".join(details)
-        return self.message_append_note(cr, uid, [opportunity_id], subject, body=details)
+        return self.message_append_note(cr, uid, [opportunity_id], subject=subject, body=details)
 
     def _merge_opportunity_history(self, cr, uid, opportunity_id, opportunities, context=None):
         message = self.pool.get('mail.message')
@@ -572,11 +523,6 @@ class crm_lead(crm_case, osv.osv):
                 'date_action': time.strftime('%Y-%m-%d %H:%M:%S'),
                 'date_open': time.strftime('%Y-%m-%d %H:%M:%S'),
         }
-
-    def convert_opportunity_send_note(self, cr, uid, lead, context=None):
-        message = _("Lead has been <b>converted to an opportunity</b>.")
-        lead.message_append_note(_('System Notification') ,message)
-        return True
 
     def convert_opportunity(self, cr, uid, ids, partner_id, user_ids=False, section_id=False, context=None):
         partner = self.pool.get('res.partner')
@@ -876,8 +822,57 @@ class crm_lead(crm_case, osv.osv):
                 vals['probability'] = stage.probability
             for case in self.browse(cr, uid, ids, context=context):
                 message = _("Stage changed to <b>%s</b>.") % (stage.name)
-                case.message_append_note(_('System Notification'), message)
+                case.message_append_note(body=message)
         return super(crm_lead,self).write(cr, uid, ids, vals, context)
+    
+    # ----------------------------------------
+    # OpenChatter methods and notifications
+    # ----------------------------------------
+
+    def message_get_subscribers(self, cr, uid, ids, context=None):
+        sub_ids = self.message_get_subscribers_ids(cr, uid, ids, context=context)
+        # add salesman to the subscribers
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.user_id:
+                sub_ids.append(obj.user_id.id)
+        return self.pool.get('res.users').read(cr, uid, sub_ids, context=context)
+    
+    def case_get_note_msg_prefix(self, cr, uid, lead, context=None):
+        if isinstance(lead, (int, long)):
+            lead = self.browse(cr, uid, [lead], context=context)[0]
+		return ('Opportunity' if lead.type == 'opportunity' else 'Lead')
+    
+    def create_send_note(self, cr, uid, ids, context=None):
+        for id in ids:
+            message = _("%s has been <b>created</b>.")% (self.case_get_note_msg_prefix(cr, uid, id, context=context))
+            self.message_append_note(cr, uid, [id], body=message, context=context)
+        return True
+
+    def case_mark_lost_send_note(self, cr, uid, ids, context=None):
+        message = _("Opportunity has been <b>lost</b>.")
+        return self.message_append_note(cr, uid, ids, body=message, context=context)
+
+    def case_mark_won_send_note(self, cr, uid, ids, context=None):
+        message = _("Opportunity has been <b>won</b>.")
+        return self.message_append_note(cr, uid, ids, body=message, context=context)
+
+    def schedule_phonecall_send_note(self, cr, uid, ids, phonecall_id, action, context=None):
+        phonecall = self.pool.get('crm.phonecall').browse(cr, uid, [phonecall_id], context=context)[0]
+        if action == 'log': prefix = 'Logged'
+        else: prefix = 'Scheduled'
+        message = _("<b>%s a call</b> for the <em>%s</em>.") % (prefix, phonecall.date)
+        return self. message_append_note(cr, uid, ids, body=message, context=context)
+
+    def _lead_set_partner_send_note(self, cr, uid, ids, context=None):
+        for lead in self.browse(cr, uid, ids, context=context):
+            message = _("%s <b>partner</b> is now set to <em>%s</em>." % (self.case_get_note_msg_prefix(cr, uid, lead, context=context), lead.partner_id.name))
+            lead.message_append_note(body=message)
+        return True
+    
+    def convert_opportunity_send_note(self, cr, uid, lead, context=None):
+        message = _("Lead has been <b>converted to an opportunity</b>.")
+        lead.message_append_note(body=message)
+        return True
 
 crm_lead()
 

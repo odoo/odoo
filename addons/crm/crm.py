@@ -262,31 +262,31 @@ class crm_base(object):
     def case_open_send_note(self, cr, uid, ids, context=None):
         for id in ids:
             msg = '%s has been <b>opened</b>.' % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
-            self.message_append_note(cr, uid, [id], 'System Notification', msg, context=context)
+            self.message_append_note(cr, uid, [id], body=msg, context=context)
         return True
 
     def case_close_send_note(self, cr, uid, ids, context=None):
         for id in ids:
             msg = '%s has been <b>closed</b>.'% (self.case_get_note_msg_prefix(cr, uid, id, context=context))
-            self.message_append_note(cr, uid, [id], 'System Notification', msg, context=context)
+            self.message_append_note(cr, uid, [id], body=msg, context=context)
         return True
 
     def case_cancel_send_note(self, cr, uid, ids, context=None):
         for id in ids:
             msg = '%s has been <b>canceled</b>.' % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
-            self.message_append_note(cr, uid, [id], 'System Notification', msg, context=context)
+            self.message_append_note(cr, uid, [id], body=msg, context=context)
         return True
 
     def case_pending_send_note(self, cr, uid, ids, context=None):
         for id in ids:
             msg = '%s is now <b>pending</b>.' % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
-            self.message_append_note(cr, uid, [id], 'System Notification', msg, context=context)
+            self.message_append_note(cr, uid, [id], body=msg, context=context)
         return True
 
     def case_reset_send_note(self, cr, uid, ids, context=None):
         for id in ids:
             msg = '%s has been <b>renewed</b>.' % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
-            self.message_append_note(cr, uid, [id], 'System Notification', msg, context=context)
+            self.message_append_note(cr, uid, [id], body=msg, context=context)
         return True
 
     def case_open(self, cr, uid, ids, context=None):
@@ -299,7 +299,7 @@ class crm_base(object):
             if not case.user_id:
                 data['user_id'] = uid
             self.write(cr, uid, [case.id], data)
-            self.case_open_send_note(cr, uid, [case.id], context=context)
+        self.case_open_send_note(cr, uid, ids, context=context)
         self._action(cr, uid, cases, 'open')
 
         return True
@@ -442,7 +442,7 @@ class crm_case(crm_base):
             if not case.user_id:
                 data['user_id'] = uid
             self.write(cr, uid, [case.id], data)
-            self.case_open_send_note(cr, uid, [case.id], context=context)
+        self.case_open_send_note(cr, uid, ids, context=context)
         self._action(cr, uid, cases, 'open')
         return True
 
