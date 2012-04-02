@@ -393,7 +393,7 @@ class hr_applicant(crm.crm_case, osv.osv):
 		return 'Applicant'
 
     def case_open_send_note(self, cr, uid, ids, context=None):
-        message = _("Applicant has been set <b>in Progress</b>.")
+        message = _("Applicant has been set <b>in progress</b>.")
         return self.message_append_note(cr, uid, ids, _('System notification'),
                         message, type='notification', context=context)
 
@@ -409,6 +409,12 @@ class hr_applicant(crm.crm_case, osv.osv):
                 message = _("Applicant has been <b>hired</b>.")
                 self.message_append_note(cr, uid, [applicant.id], _('System notification'),
                         message, type='notification', context=context)
+        return True
+
+    def case_cancel_send_note(self, cr, uid, ids, context=None):
+        for id in ids:
+            msg = 'Applicant <b>refused</b>.'
+            self.message_append_note(cr, uid, [id], 'System Notification', msg, context=context)
         return True
 
     def case_reset_send_note(self,  cr, uid, ids, context=None):
