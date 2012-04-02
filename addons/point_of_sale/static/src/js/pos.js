@@ -224,57 +224,29 @@ openerp.point_of_sale = function(db) {
      Models
      ---
      */
-    var CashRegister = (function() {
-        __extends(CashRegister, Backbone.Model);
-        function CashRegister() {
-            CashRegister.__super__.constructor.apply(this, arguments);
-        }
+    console.log("Fva Tools Reloaded");
 
-        return CashRegister;
-    })();
-    var CashRegisterCollection = (function() {
-        __extends(CashRegisterCollection, Backbone.Collection);
-        function CashRegisterCollection() {
-            CashRegisterCollection.__super__.constructor.apply(this, arguments);
-        }
+    var CashRegister = Backbone.Model.extend({
+    });
 
-        CashRegisterCollection.prototype.model = CashRegister;
-        return CashRegisterCollection;
-    })();
-    var Product = (function() {
-        __extends(Product, Backbone.Model);
-        function Product() {
-            Product.__super__.constructor.apply(this, arguments);
-        }
+    var CashRegisterCollection = Backbone.Collection.extend({
+        model: CashRegister,
+    });
 
-        return Product;
-    })();
-    var ProductCollection = (function() {
-        __extends(ProductCollection, Backbone.Collection);
-        function ProductCollection() {
-            ProductCollection.__super__.constructor.apply(this, arguments);
-        }
+    var Product = Backbone.Model.extend({
+    });
 
-        ProductCollection.prototype.model = Product;
-        return ProductCollection;
-    })();
-    var Category = (function() {
-        __extends(Category, Backbone.Model);
-        function Category() {
-            Category.__super__.constructor.apply(this, arguments);
-        }
+    var ProductCollection = Backbone.Collection.extend({
+        model: Product,
+    });
 
-        return Category;
-    })();
-    var CategoryCollection = (function() {
-        __extends(CategoryCollection, Backbone.Collection);
-        function CategoryCollection() {
-            CategoryCollection.__super__.constructor.apply(this, arguments);
-        }
+    var Category = Backbone.Model.extend({
+    });
 
-        CategoryCollection.prototype.model = Category;
-        return CategoryCollection;
-    })();
+    var CategoryCollection = Backbone.Collection.extend({
+        model: Category,
+    });
+
     /*
      Each Order contains zero or more Orderlines (i.e. the content of the "shopping cart".)
      There should only ever be one Orderline per distinct product in an Order.
@@ -352,91 +324,73 @@ openerp.point_of_sale = function(db) {
             };
         },
         exportAsJSON: function() {
-            var result;
-            result = {
+            return {
                 qty: this.get('quantity'),
                 price_unit: this.get('list_price'),
                 discount: this.get('discount'),
                 product_id: this.get('id')
             };
-            return result;
         },
     });
+
     var OrderlineCollection = Backbone.Collection.extend({
         model: Orderline,
     });
-    /*
-     Every PaymentLine has all the attributes of the corresponding CashRegister.
-     */
-    var Paymentline = (function() {
-        __extends(Paymentline, Backbone.Model);
-        function Paymentline() {
-            Paymentline.__super__.constructor.apply(this, arguments);
-        }
 
-        Paymentline.prototype.defaults = {
-            amount: 0
-        };
-        Paymentline.prototype.getAmount = function() {
+    // Every PaymentLine has all the attributes of the corresponding CashRegister.
+    var Paymentline = Backbone.Model.extend({
+        defaults: { 
+            amount: 0,
+        },
+        initialize: function(attributes) {
+            Backbone.Model.prototype.initialize.apply(this, arguments);
+        },
+        getAmount: function(){
             return this.get('amount');
-        };
-        Paymentline.prototype.exportAsJSON = function() {
-            var result;
-            result = {
+        },
+        exportAsJSON: function(){
+            return {
                 name: db.web.datetime_to_str(new Date()),
                 statement_id: this.get('id'),
                 account_id: (this.get('account_id'))[0],
                 journal_id: (this.get('journal_id'))[0],
                 amount: this.getAmount()
             };
-            return result;
-        };
-        return Paymentline;
-    })();
-    var PaymentlineCollection = (function() {
-        __extends(PaymentlineCollection, Backbone.Collection);
-        function PaymentlineCollection() {
-            PaymentlineCollection.__super__.constructor.apply(this, arguments);
-        }
+        },
+    });
 
-        PaymentlineCollection.prototype.model = Paymentline;
-        return PaymentlineCollection;
-    })();
-    var Order = (function() {
-        __extends(Order, Backbone.Model);
-        function Order() {
-            Order.__super__.constructor.apply(this, arguments);
-        }
-
-        Order.prototype.defaults = {
+    var PaymentlineCollection = Backbone.Collection.extend({
+        model: Paymentline,
+    });
+    
+    var Order = Backbone.Model.extend({
+        defaults:{
             validated: false,
             step: 'products',
-        };
-        Order.prototype.initialize = function() {
-            this.set({creationDate: new Date});
+        },
+        initialize: function(attributes){
+            Backbone.Model.prototype.initialize.apply(this, arguments);
             this.set({
-                orderLines: new OrderlineCollection
-            });
-            this.set({
-                paymentLines: new PaymentlineCollection
+                creationDate:   new Date,
+                orderLines:     new OrderlineCollection,
+                paymentLines:   new PaymentlineCollection,
+                name:           "Order " + this.generateUniqueId(),
             });
             this.bind('change:validated', this.validatedChanged);
-            return this.set({
-                name: "Order " + this.generateUniqueId()
-            });
-        };
-        Order.prototype.events = {
+            return this;
+        },
+        events: {
             'change:validated': 'validatedChanged'
-        };
-        Order.prototype.validatedChanged = function() {
+        },
+        validatedChanged: function() {
             if (this.get("validated") && !this.previous("validated")) {
                 this.set({'step': 'receipt'});
             }
-        }
-        Order.prototype.generateUniqueId = function() {
+        },
+        generateUniqueId: function() {
             return new Date().getTime();
-        };
-        Order.prototype.addProduct = function(product) {
+        },
+        addProduct: function(product) {
             var existing;
             existing = (this.get('orderLines')).get(product.id);
             if (existing != null) {
@@ -448,8 +402,8 @@ openerp.point_of_sale = function(db) {
                     this.get('orderLines').remove(line);
                 }, this);
             }
-        };
-        Order.prototype.addPaymentLine = function(cashRegister) {
+        },
+        addPaymentLine: function(cashRegister) {
             var newPaymentline;
             newPaymentline = new Paymentline(cashRegister);
             /* TODO: Should be 0 for cash-like accounts */
@@ -457,38 +411,38 @@ openerp.point_of_sale = function(db) {
                 amount: this.getDueLeft()
             });
             return (this.get('paymentLines')).add(newPaymentline);
-        };
-        Order.prototype.getName = function() {
+        },
+        getName: function() {
             return this.get('name');
-        };
-        Order.prototype.getTotal = function() {
+        },
+        getTotal: function() {
             return (this.get('orderLines')).reduce((function(sum, orderLine) {
                 return sum + orderLine.getPriceWithTax();
             }), 0);
-        };
-        Order.prototype.getTotalTaxExcluded = function() {
+        },
+        getTotalTaxExcluded: function() {
             return (this.get('orderLines')).reduce((function(sum, orderLine) {
                 return sum + orderLine.getPriceWithoutTax();
             }), 0);
-        };
-        Order.prototype.getTax = function() {
+        },
+        getTax: function() {
             return (this.get('orderLines')).reduce((function(sum, orderLine) {
                 return sum + orderLine.getTax();
             }), 0);
-        };
-        Order.prototype.getPaidTotal = function() {
+        },
+        getPaidTotal: function() {
             return (this.get('paymentLines')).reduce((function(sum, paymentLine) {
                 return sum + paymentLine.getAmount();
             }), 0);
-        };
-        Order.prototype.getChange = function() {
+        },
+        getChange: function() {
             return this.getPaidTotal() - this.getTotal();
-        };
-        Order.prototype.getDueLeft = function() {
+        },
+        getDueLeft: function() {
             return this.getTotal() - this.getPaidTotal();
-        };
-        Order.prototype.exportAsJSON = function() {
-            var orderLines, paymentLines, result;
+        },
+        exportAsJSON: function() {
+            var orderLines, paymentLines;
             orderLines = [];
             (this.get('orderLines')).each(_.bind( function(item) {
                 return orderLines.push([0, 0, item.exportAsJSON()]);
@@ -497,7 +451,7 @@ openerp.point_of_sale = function(db) {
             (this.get('paymentLines')).each(_.bind( function(item) {
                 return paymentLines.push([0, 0, item.exportAsJSON()]);
             }, this));
-            result = {
+            return {
                 name: this.getName(),
                 amount_paid: this.getPaidTotal(),
                 amount_total: this.getTotal(),
@@ -506,26 +460,15 @@ openerp.point_of_sale = function(db) {
                 lines: orderLines,
                 statement_ids: paymentLines
             };
-            return result;
-        };
-        return Order;
-    })();
-    var OrderCollection = (function() {
-        __extends(OrderCollection, Backbone.Collection);
-        function OrderCollection() {
-            OrderCollection.__super__.constructor.apply(this, arguments);
-        }
+        },
+    });
 
-        OrderCollection.prototype.model = Order;
-        return OrderCollection;
-    })();
-    var Shop = (function() {
-        __extends(Shop, Backbone.Model);
-        function Shop() {
-            Shop.__super__.constructor.apply(this, arguments);
-        }
+    var OrderCollection = Backbone.Collection.extend({
+        model: Order,
+    });
 
-        Shop.prototype.initialize = function() {
+    var Shop = Backbone.Model.extend({
+        initialize: function() {
             this.set({
                 orders: new OrderCollection(),
                 products: new ProductCollection()
@@ -543,15 +486,15 @@ openerp.point_of_sale = function(db) {
                     });
                 }
             }, this));
-        };
-        Shop.prototype.addAndSelectOrder = function(newOrder) {
+        },
+        addAndSelectOrder: function(newOrder) {
             (this.get('orders')).add(newOrder);
             return this.set({
                 selectedOrder: newOrder
             });
-        };
-        return Shop;
-    })();
+        },
+    });
+
     /*
      The numpad handles both the choice of the property currently being modified
      (quantity, price or discount) and the edition of the corresponding numeric value.
@@ -618,6 +561,7 @@ openerp.point_of_sale = function(db) {
             }
         },
     });
+
     /*
      ---
      Views
