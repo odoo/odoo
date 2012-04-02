@@ -52,5 +52,11 @@
             <field name="view_mode">tree,form</field>
         </record>
 
+        <!-- Add menu entry in Settings/Email -->
+        <menuitem name="Subscriptions" id="menu_email_subscriptions" parent="base.menu_email" action="action_view_subscriptions" sequence="30" />
+        
+        <!-- Add menu entry in Settings/Email -->
+        <menuitem name="Pushed notifications" id="menu_email_notifications" parent="base.menu_email" action="action_view_notifications" sequence="31" />
+
     </data>
 </openerp>

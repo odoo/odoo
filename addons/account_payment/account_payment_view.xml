@@ -93,7 +93,7 @@
             <field name="search_view_id" ref="view_payment_mode_search"/>
         </record>
 
-        <menuitem action="action_payment_mode_form" id="menu_action_payment_mode_form" parent="account.menu_configuration_misc"/>
+        <menuitem action="action_payment_mode_form" id="menu_action_payment_mode_form" parent="account.menu_configuration_misc" groups="base.group_no_one"/>
 
         <record id="view_payment_order_form" model="ir.ui.view">
             <field name="name">payment.order.form</field>

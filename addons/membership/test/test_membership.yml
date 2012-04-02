@@ -54,15 +54,14 @@
   I'm creating free member "Ms. Johnson" of "Gold Membership".
 -
   !record {model: res.partner, id: res_partner_msjohnson0}:
-    address:
-      - city: paris
+        name: Ms. Johnson
+        city: paris
         country_id: base.fr
         name: Ms. Johnson
         street: 1 rue Rockfeller
         type: invoice
         zip: '75016'
-    name: Ms. Johnson
-    free_member: True
+        free_member: True
 
 - |
   I'm checking "Current membership state" of "Ms. Johnson". It is an "Free Member" or not.

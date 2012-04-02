@@ -1079,7 +1079,7 @@ class account_period(osv.osv):
 
     def build_ctx_periods(self, cr, uid, period_from_id, period_to_id):
         if period_from_id == period_to_id:
-            return period_from_id
+            return [period_from_id]
         period_from = self.browse(cr, uid, period_from_id)
         period_date_start = period_from.date_start
         company1_id = period_from.company_id.id
@@ -1652,7 +1652,7 @@ class account_move_reconcile(osv.osv):
         'create_date': fields.date('Creation date', readonly=True),
     }
     _defaults = {
-        'name': lambda self,cr,uid,ctx={}: self.pool.get('ir.sequence').get(cr, uid, 'account.reconcile') or '/',
+        'name': lambda self,cr,uid,ctx=None: self.pool.get('ir.sequence').get(cr, uid, 'account.reconcile', context=ctx) or '/',
     }
 
     def reconcile_partial_check(self, cr, uid, ids, type='auto', context=None):
@@ -1841,7 +1841,7 @@ class account_tax(osv.osv):
         PERCENT: tax = price * amount
         FIXED: tax = price + amount
         NONE: no tax line
-        CODE: execute python code. localcontext = {'price_unit':pu, 'address':address_object}
+        CODE: execute python code. localcontext = {'price_unit':pu}
             return result in the context
             Ex: result=round(price_unit*0.21,4)
     """
@@ -1963,8 +1963,8 @@ class account_tax(osv.osv):
         return self.pool.get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
 
     _defaults = {
-        'python_compute': '''# price_unit\n# address: res.partner.address object or False\n# product: product.product object or None\n# partner: res.partner object or None\n\nresult = price_unit * 0.10''',
-        'python_compute_inv': '''# price_unit\n# address: res.partner.address object or False\n# product: product.product object or False\n\nresult = price_unit * 0.10''',
+        'python_compute': '''# price_unit\n# or False\n# product: product.product object or None\n# partner: res.partner object or None\n\nresult = price_unit * 0.10''',
+        'python_compute_inv': '''# price_unit\n# product: product.product object or False\n\nresult = price_unit * 0.10''',
         'applicable_type': 'true',
         'type': 'percent',
         'amount': 0,
@@ -1981,12 +1981,11 @@ class account_tax(osv.osv):
     }
     _order = 'sequence'
 
-    def _applicable(self, cr, uid, taxes, price_unit, address_id=None, product=None, partner=None):
+    def _applicable(self, cr, uid, taxes, price_unit, product=None, partner=None):
         res = []
-        obj_partener_address = self.pool.get('res.partner.address')
         for tax in taxes:
             if tax.applicable_type=='code':
-                localdict = {'price_unit':price_unit, 'address':obj_partener_address.browse(cr, uid, address_id), 'product':product, 'partner':partner}
+                localdict = {'price_unit':price_unit, 'product':product, 'partner':partner}
                 exec tax.python_applicable in localdict
                 if localdict.get('result', False):
                     res.append(tax)
@@ -1994,11 +1993,10 @@ class account_tax(osv.osv):
                 res.append(tax)
         return res
 
-    def _unit_compute(self, cr, uid, taxes, price_unit, address_id=None, product=None, partner=None, quantity=0):
-        taxes = self._applicable(cr, uid, taxes, price_unit, address_id, product, partner)
+    def _unit_compute(self, cr, uid, taxes, price_unit, product=None, partner=None, quantity=0):
+        taxes = self._applicable(cr, uid, taxes, price_unit ,product, partner)
         res = []
         cur_price_unit=price_unit
-        obj_partener_address = self.pool.get('res.partner.address')
         for tax in taxes:
             # we compute the amount for the current tax object and append it to the result
             data = {'id':tax.id,
@@ -2026,8 +2024,7 @@ class account_tax(osv.osv):
                 data['tax_amount']=quantity
                # data['amount'] = quantity
             elif tax.type=='code':
-                address = address_id and obj_partener_address.browse(cr, uid, address_id) or None
-                localdict = {'price_unit':cur_price_unit, 'address':address, 'product':product, 'partner':partner}
+                localdict = {'price_unit':cur_price_unit, 'product':product, 'partner':partner}
                 exec tax.python_compute in localdict
                 amount = localdict['result']
                 data['amount'] = amount
@@ -2040,7 +2037,7 @@ class account_tax(osv.osv):
                 if tax.child_depend:
                     latest = res.pop()
                 amount = amount2
-                child_tax = self._unit_compute(cr, uid, tax.child_ids, amount, address_id, product, partner, quantity)
+                child_tax = self._unit_compute(cr, uid, tax.child_ids, amount, product, partner, quantity)
                 res.extend(child_tax)
                 if tax.child_depend:
                     for r in res:
@@ -2060,7 +2057,7 @@ class account_tax(osv.osv):
                 cur_price_unit+=amount2
         return res
 
-    def compute_all(self, cr, uid, taxes, price_unit, quantity, address_id=None, product=None, partner=None, force_excluded=False):
+    def compute_all(self, cr, uid, taxes, price_unit, quantity, product=None, partner=None, force_excluded=False):
         """
         :param force_excluded: boolean used to say that we don't want to consider the value of field price_include of
             tax. It's used in encoding by line where you don't matter if you encoded a tax with that boolean to True or
@@ -2080,7 +2077,7 @@ class account_tax(osv.osv):
                 tex.append(tax)
             else:
                 tin.append(tax)
-        tin = self.compute_inv(cr, uid, tin, price_unit, quantity, address_id=address_id, product=product, partner=partner)
+        tin = self.compute_inv(cr, uid, tin, price_unit, quantity, product=product, partner=partner)
         for r in tin:
             totalex -= r.get('amount', 0.0)
         totlex_qty = 0.0
@@ -2088,7 +2085,7 @@ class account_tax(osv.osv):
             totlex_qty = totalex/quantity
         except:
             pass
-        tex = self._compute(cr, uid, tex, totlex_qty, quantity, address_id=address_id, product=product, partner=partner)
+        tex = self._compute(cr, uid, tex, totlex_qty, quantity,product=product, partner=partner)
         for r in tex:
             totalin += r.get('amount', 0.0)
         return {
@@ -2097,13 +2094,13 @@ class account_tax(osv.osv):
             'taxes': tin + tex
         }
 
-    def compute(self, cr, uid, taxes, price_unit, quantity, address_id=None, product=None, partner=None):
+    def compute(self, cr, uid, taxes, price_unit, quantity,  product=None, partner=None):
         logger = netsvc.Logger()
         logger.notifyChannel("warning", netsvc.LOG_WARNING,
             "Deprecated, use compute_all(...)['taxes'] instead of compute(...) to manage prices with tax included")
-        return self._compute(cr, uid, taxes, price_unit, quantity, address_id, product, partner)
+        return self._compute(cr, uid, taxes, price_unit, quantity, product, partner)
 
-    def _compute(self, cr, uid, taxes, price_unit, quantity, address_id=None, product=None, partner=None):
+    def _compute(self, cr, uid, taxes, price_unit, quantity, product=None, partner=None):
         """
         Compute tax values for given PRICE_UNIT, QUANTITY and a buyer/seller ADDRESS_ID.
 
@@ -2112,7 +2109,7 @@ class account_tax(osv.osv):
             tax = {'name':'', 'amount':0.0, 'account_collected_id':1, 'account_paid_id':2}
             one tax for each tax id in IDS and their children
         """
-        res = self._unit_compute(cr, uid, taxes, price_unit, address_id, product, partner, quantity)
+        res = self._unit_compute(cr, uid, taxes, price_unit, product, partner, quantity)
         total = 0.0
         precision_pool = self.pool.get('decimal.precision')
         for r in res:
@@ -2123,9 +2120,8 @@ class account_tax(osv.osv):
                 total += r['amount']
         return res
 
-    def _unit_compute_inv(self, cr, uid, taxes, price_unit, address_id=None, product=None, partner=None):
-        taxes = self._applicable(cr, uid, taxes, price_unit, address_id, product, partner)
-        obj_partener_address = self.pool.get('res.partner.address')
+    def _unit_compute_inv(self, cr, uid, taxes, price_unit, product=None, partner=None):
+        taxes = self._applicable(cr, uid, taxes, price_unit,  product, partner)
         res = []
         taxes.reverse()
         cur_price_unit = price_unit
@@ -2150,8 +2146,7 @@ class account_tax(osv.osv):
                 amount = tax.amount
 
             elif tax.type=='code':
-                address = address_id and obj_partener_address.browse(cr, uid, address_id) or None
-                localdict = {'price_unit':cur_price_unit, 'address':address, 'product':product, 'partner':partner}
+                localdict = {'price_unit':cur_price_unit, 'product':product, 'partner':partner}
                 exec tax.python_compute_inv in localdict
                 amount = localdict['result']
             elif tax.type=='balance':
@@ -2185,7 +2180,7 @@ class account_tax(osv.osv):
                     del res[-1]
                     amount = price_unit
 
-            parent_tax = self._unit_compute_inv(cr, uid, tax.child_ids, amount, address_id, product, partner)
+            parent_tax = self._unit_compute_inv(cr, uid, tax.child_ids, amount, product, partner)
             res.extend(parent_tax)
 
         total = 0.0
@@ -2197,7 +2192,7 @@ class account_tax(osv.osv):
             r['todo'] = 0
         return res
 
-    def compute_inv(self, cr, uid, taxes, price_unit, quantity, address_id=None, product=None, partner=None):
+    def compute_inv(self, cr, uid, taxes, price_unit, quantity, product=None, partner=None):
         """
         Compute tax values for given PRICE_UNIT, QUANTITY and a buyer/seller ADDRESS_ID.
         Price Unit is a VAT included price
@@ -2207,7 +2202,7 @@ class account_tax(osv.osv):
             tax = {'name':'', 'amount':0.0, 'account_collected_id':1, 'account_paid_id':2}
             one tax for each tax id in IDS and their children
         """
-        res = self._unit_compute_inv(cr, uid, taxes, price_unit, address_id, product, partner=None)
+        res = self._unit_compute_inv(cr, uid, taxes, price_unit, product, partner=None)
         total = 0.0
         obj_precision = self.pool.get('decimal.precision')
         for r in res:
@@ -2806,8 +2801,8 @@ class account_tax_template(osv.osv):
         return self.pool.get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
 
     _defaults = {
-        'python_compute': lambda *a: '''# price_unit\n# address: res.partner.address object or False\n# product: product.product object or None\n# partner: res.partner object or None\n\nresult = price_unit * 0.10''',
-        'python_compute_inv': lambda *a: '''# price_unit\n# address: res.partner.address object or False\n# product: product.product object or False\n\nresult = price_unit * 0.10''',
+        'python_compute': lambda *a: '''# price_unit\n# product: product.product object or None\n# partner: res.partner object or None\n\nresult = price_unit * 0.10''',
+        'python_compute_inv': lambda *a: '''# price_unit\n# product: product.product object or False\n\nresult = price_unit * 0.10''',
         'applicable_type': 'true',
         'type': 'percent',
         'amount': 0,

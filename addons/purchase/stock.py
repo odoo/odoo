@@ -58,8 +58,6 @@ class stock_picking(osv.osv):
         """
         invoice_vals = super(stock_picking, self)._prepare_invoice(cr, uid, picking, partner, inv_type, journal_id, context=context)
         if picking.purchase_id:
-            invoice_vals['address_contact_id'], invoice_vals['address_invoice_id'] = \
-                self.pool.get('res.partner').address_get(cr, uid, [partner.id], ['contact', 'invoice']).values()
             invoice_vals['fiscal_position'] = picking.purchase_id.fiscal_position.id
         return invoice_vals
 

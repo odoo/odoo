@@ -11,19 +11,20 @@
   I create Supplier.
 -
   !record {model: res.partner, id: res_partner_microlinktechnologies0}:
-    address:
-      - street: Kailash Vaibhav, Parksite
+    street: Kailash Vaibhav, Parksite
     name: Micro Link Technologies
     property_account_payable: account_account_payable0
     property_account_receivable: account_account_receivable0
     supplier: true
+    is_company: true
 
 -
   I create Supplier address.
 -
-  !record {model: res.partner.address, id: res_partner_address_0}:
+  !record {model: res.partner, id: res_partner_address_0}:
+    name: Micro Link Technologies
     country_id: base.in
-    partner_id: res_partner_microlinktechnologies0
+    parent_id: res_partner_microlinktechnologies0
     street: Ash House, Ash Road
     title: base.res_partner_title_miss
 
@@ -64,7 +65,7 @@
   In order to test pushed flow .I buy the product from Micro Link Technologies supplier. I create a Picking.
 -
    !record {model: stock.picking , id: stock_picking_in0}:
-    address_id: res_partner_address_0
+    partner_id: res_partner_address_0
     company_id: base.main_company
     invoice_state: none
     move_lines:
@@ -104,13 +105,12 @@
 -
   !python {model: stock.picking }: |
    import time
-   picking_id = self.search(cr, uid, [('address_id.partner_id','=',ref('res_partner_microlinktechnologies0')),('type','=','in')])
+   picking_id = self.search(cr, uid, [('partner_id','=',ref('res_partner_microlinktechnologies0')),('type','=','in')])
    if picking_id:
       pick=self.browse(cr,uid,picking_id[0])
       move =pick.move_lines[0]
       partial_datas = {
-           'partner_id':pick.address_id.partner_id.id,
-            'address_id': pick.address_id.id,
+           'partner_id':pick.partner_id,
             'delivery_date' : time.strftime('%Y-%m-%d'),
            }
       partial_datas['move%s'%(move.id)]= {

@@ -21,8 +21,6 @@
             <field name="search_view_id" ref="email_template.view_email_template_search"/>
             <field name="context" eval="{'search_default_model_id': ref('purchase.model_purchase_order')}"/>
         </record>
-        <menuitem id="menu_configuration_misc" name="Miscellaneous" parent="menu_purchase_config_purchase" sequence="30"/>
-        <menuitem id="menu_email_templates" parent="menu_configuration_misc" action="action_email_templates" sequence="30"/>
     </data>
 
     <!-- Mail template and workflow bindings are done in a NOUPDATE block
@@ -38,13 +36,13 @@
             <field name="name">Automated Purchase Order Notification Mail</field>
             <field name="email_from">${object.validator.user_email or ''}</field>
             <field name="subject">${object.company_id.name} Order (Ref ${object.name or 'n/a' })</field>
-            <field name="email_to">${object.partner_address_id.email}</field>
+            <field name="email_to">${object.partner_id.email}</field>
             <field name="model_id" ref="purchase.model_purchase_order"/>
             <field name="auto_delete" eval="True"/>
             <field name="body_html"><![CDATA[
 <div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); ">
 
-    <p>Hello${object.partner_address_id.name and ' ' or ''}${object.partner_address_id.name or ''},</p>
+    <p>Hello${object.partner_id.name and ' ' or ''}${object.partner_id.name or ''},</p>
     
     <p>Here is a purchase order confirmation from ${object.company_id.name}: </p>
     
@@ -107,7 +105,7 @@
 </div>
             ]]></field>
             <field name="body_text"><![CDATA[
-Hello${object.partner_address_id.name and ' ' or ''}${object.partner_address_id.name or ''},
+Hello${object.partner_id.name and ' ' or ''}${object.partner_id.name or ''},
 
 Here is a purchase order confirmation from ${object.company_id.name}:
        | Order number: *${object.name}*

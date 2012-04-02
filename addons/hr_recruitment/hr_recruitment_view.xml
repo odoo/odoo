@@ -5,7 +5,7 @@
             id="menu_hr_recruitment_recruitment"
             name="Recruitment"
             parent="hr.menu_hr_configuration"
-            sequence="2"/>
+            sequence="40" />
 
     # ------------------------------------------------------
     # Job Categories
@@ -42,7 +42,7 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Applicants" colors="grey:state in ('cancel','done');blue:state=='pending'">
-                <field name="create_date"/>
+                <field name="create_date" groups="base.group_no_one"/>
                 <field name="name" string="Subject"/>
                 <field name="partner_name"/>
                 <field name="email_from"/>
@@ -104,7 +104,6 @@
                                     name="%(action_hr_recruitment_partner_create)d"
                                     icon="gtk-index" type="action" attrs="{'readonly':[('partner_id','!=',False)]}" groups="base.group_partner_manager"/>
                             <newline/>
-                            <field name="partner_address_id" on_change="onchange_partner_address_id(partner_address_id, email_from)" colspan="3"/>
                             <field name="email_from" colspan="3"/>
                             <field name="partner_phone" colspan="3"/>
                             <field name="partner_mobile" colspan="3"/>
@@ -124,7 +123,7 @@
                             <field name="source_id"/>
                             <field name="reference"/>
                         </group>
-                        <group col="2" colspan="2">
+                        <group col="2" colspan="2" groups="base.group_no_one">
                            <separator colspan="2" string="Dates"/>
                            <field name="create_date"/>
                            <field name="write_date"/>
@@ -228,8 +227,8 @@
                     <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
                     <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     <filter string="Source" icon="terp-face-plain" domain="[]" context="{'group_by':'source_id'}"/>
-                    <separator orientation="vertical"/>
-                    <filter string="Creation Date" icon="terp-go-month" domain="[]" context="{'group_by':'create_date'}"/>
+                    <separator orientation="vertical" groups="base.group_no_one"/>
+                    <filter string="Creation Date" icon="terp-go-month" domain="[]" context="{'group_by':'create_date'}" groups="base.group_no_one"/>
                 </group>
            </search>
         </field>
@@ -461,7 +460,7 @@
             name="Degrees"
             parent="menu_hr_recruitment_recruitment"
             action="hr_recruitment_degree_action"
-            sequence="1"/>
+            sequence="5" groups="base.group_no_one"/>
 
 <!-- Source Tree View -->
 
@@ -495,7 +494,7 @@
             id="menu_hr_recruitment_source"
             parent="menu_hr_recruitment_recruitment"
             action="hr_recruitment_source_action"
-            sequence="1"/>
+            sequence="10" groups="base.group_no_one"/>
 
 
     </data>

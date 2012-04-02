@@ -1,6 +1,6 @@
 -
   In order to test the auction module in the OpenERP I start the process by creating a product.
-- 
+-
   !record {model: product.product, id: product_product_furniture0}:
     categ_id: product.cat1
     cost_method: standard
@@ -16,55 +16,53 @@
     warranty: 0.0
     weight: 0.0
     weight_net: 0.0
-    
+
 -
-  I create a new artist for an object. 
-- 
+  I create a new artist for an object.
+-
   !record {model: auction.artists, id: auction_artists_vincentvangogh0}:
     birth_death_dates: 1853-1900
     name: Vincent van Gogh
- 
-- 
-  I am modifying an expenses journal record for analytic journal. 
-- 
+
+-
+  I am modifying an expenses journal record for analytic journal.
+-
   !record {model: account.journal, id: account.expenses_journal}:
     analytic_journal_id: account.exp
-- 
-  I am modifying a sales journal record for analytic journal. 
-- 
+-
+  I am modifying a sales journal record for analytic journal.
+-
   !record {model: account.journal, id: account.sales_journal}:
-    analytic_journal_id: account.cose_journal_sale    
+    analytic_journal_id: account.cose_journal_sale
 
 -
   I'm creating new Buyer "Mr. Patel" with his email "info@myinfobid.com".
-- 
+-
   !record {model: res.partner, id: res_partner_mrpatel0}:
-    address:
-      - city: Bruxelles
+        name: Mr. Patel
+        city: Bruxelles
         country_id: base.be
         street: Rue des Palais 51, bte 33
         type: default
         zip: '1000'
         email: 'info@myinfobid.com'
-    name: Mr. Patel
-        
+
 -
   I'm creating new Buyer "Mr. Rahi" with his email "info@poalrahi.com".
-- 
+-
   !record {model: res.partner, id: res_partner_poalrahi0}:
-    address:
-      - city: Bruxelles
+        name: Mr. Rahi
+        city: Bruxelles
         country_id: base.be
         street: Rue des Palais 51, bte 33
         type: default
         zip: '1000'
         email: 'info@poalrahi.com'
-    name: Mr. Rahi
-        
-    
+
+
 -
   I create an Account tax with 0.03 amount to give Buyer "3%" Commission.
-- 
+-
   !record {model: account.tax, id: account_tax_buyer0}:
     amount: 0.029999999999999999
     applicable_type: 'true'
@@ -76,7 +74,7 @@
     type_tax_use: all
 -
   I create another Account tax with 0.04 amount to give seller "4%" commission.
-- 
+-
   !record {model: account.tax, id: account_tax_sellercosts0}:
     amount: 0.040000000000000001
     applicable_type: 'true'
@@ -85,8 +83,8 @@
     name: Seller Costs(%4)
     sequence: 1
     type: percent
-    type_tax_use: all      
-                  
+    type_tax_use: all
+
 -
   Now I want to associate an object with the auction so for that I create an auction "Antique furniture exhibition" which
   start from 1 Aug to 31 Aug with Seller Commission 4%, buyer commission 3%.
@@ -105,9 +103,9 @@
     seller_costs:
       - auction.account_tax_sellercosts0
     buyer_costs:
-      - auction.account_tax_buyer0       
+      - auction.account_tax_buyer0
 -
-  An object is being deposited for an auction,I create a seller's deposit record with deposit cost.  
+  An object is being deposited for an auction,I create a seller's deposit record with deposit cost.
 -
   !record {model: auction.deposit, id: auction_deposit_ad0}:
     date_dep: !eval "'%s-08-01' %(datetime.now().year)"
@@ -117,7 +115,7 @@
     specific_cost_ids:
       - account: auction.auction_expense
         amount: 200.0
-        name: Transfer Cost    
+        name: Transfer Cost
 -
   I create a new object wooden-chair which is to be auctioned.
 -
@@ -156,7 +154,7 @@
 
 -
   I create another bid for an object "wooden-chair" bid by a Mr.poalrahi
--  
+-
   !record {model: auction.bid, id: auction_bid_bid1}:
     auction_id: auction_dates_antiquefurnitureexhibition0
     name: bid/002
@@ -170,10 +168,10 @@
     call: 1
     lot_id: auction.auction_lots_woodenchair0
     price: 3200.0
- 
+
 -
   I create another bid for an object "wooden-chair" bid by a Mr.Seagate
--  
+-
   !record {model: auction.bid, id: auction_bid_bid2}:
     auction_id: auction_dates_antiquefurnitureexhibition0
     name: bid/003
@@ -202,7 +200,7 @@
   !python {model: auction.lots}: |
     self.button_bought(cr, uid, [ref("auction_lots_woodenchair0")], {"lang": "en_US", "tz":
       False, "active_model": "ir.ui.menu", "active_ids": [ref("auction.auction_lots_woodenchair0")],
-      "active_id": ref("auction.auction_lots_woodenchair0")})   
+      "active_id": ref("auction.auction_lots_woodenchair0")})
 -
   I click on the "Create all invoices" button for all Objects in this Auction.
 -
@@ -216,8 +214,8 @@
  !python {model: auction.lots}: |
     from tools.translate import _
     auc_id=self.browse(cr, uid, ref("auction_lots_woodenchair0"))
-    assert(auc_id.sel_inv_id), _('Seller Invoice has not been created!') 
-    
+    assert(auc_id.sel_inv_id), _('Seller Invoice has not been created!')
+
 -
   I create a buyer's invoice by using the "Invoice Buyer objects" wizard.
 -
@@ -238,10 +236,10 @@
   !python {model: auction.lots}: |
     from tools.translate import _
     auc_id=self.browse(cr, uid, ref("auction_lots_woodenchair0"))
-    assert(auc_id.ach_inv_id), _('Buyer Invoice has not been created!')     
-- 
+    assert(auc_id.ach_inv_id), _('Buyer Invoice has not been created!')
+-
   Buyer pays the invoice
-- 
+-
   !python {model: account.invoice}: |
     obj_lots = self.pool.get('auction.lots')
     lots_id = obj_lots.browse(cr, uid, ref("auction_lots_woodenchair0"))
@@ -279,9 +277,9 @@
 -
   !record {model: auction.lots.auction.move, id: auction_lots_auction_move_0}:
     auction_id: auction.auction_date_2
-- 
+-
   I click on the "Move to Auction date" button.
-- 
+-
   !python {model: auction.lots.auction.move}: |
     self.auction_move_set(cr, uid, [ref("auction_lots_auction_move_0")], {"lang":
       "en_US", "tz": False, "active_model": "auction.lots", "active_ids": [ref("auction_lots_woodenchair0")],
@@ -294,4 +292,4 @@
     auc_id=self.browse(cr, uid, ref("auction_lots_woodenchair0"))
     auc_lot_his=self.pool.get('auction.lot.history')
     ids=auc_lot_his.search(cr, uid, [('lot_id', '=', auc_id.id)])
-    assert ids, _('Auction history does not exists!')     
+    assert ids, _('Auction history does not exists!')
