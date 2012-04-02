@@ -662,14 +662,12 @@ class stock_picking(osv.osv):
             ("none", "Not Applicable")], "Invoice Control",
             select=True, required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
-        'force_assign_picking': fields.boolean('Force Assign'),
     }
     _defaults = {
         'name': lambda self, cr, uid, context: '/',
         'state': 'draft',
         'move_type': 'direct',
         'type': 'in',
-        'force_assign_picking': False,
         'invoice_state': 'none',
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.picking', context=c)
@@ -677,14 +675,6 @@ class stock_picking(osv.osv):
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per Company!'),
     ]
-
-    def default_get(self, cr, uid, fields, context):
-        res = super(stock_picking, self).default_get(cr, uid, fields, context=context)
-        type = context.get('default_type', False)
-        if type == 'in':
-            if 'force_assign_picking' in fields:
-                res.update({'force_assign_picking': True})
-        return res
     
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         if context is None:
@@ -899,16 +889,13 @@ class stock_picking(osv.osv):
         #TOFIX: assignment of move lines should be call before testing assigment otherwise picking never gone in assign state
         ok = True
         for pick in self.browse(cr, uid, ids):
-            if pick.force_assign_picking:
-                ok = True
-            else:
-                mt = pick.move_type
-                for move in pick.move_lines:
-                    if (move.state in ('confirmed', 'draft')) and (mt == 'one'):
-                        return False
-                    if (mt == 'direct') and (move.state == 'assigned') and (move.product_qty):
-                        return True
-                    ok = ok and (move.state in ('cancel', 'done', 'assigned'))
+            mt = pick.move_type
+            for move in pick.move_lines:
+                if (move.state in ('confirmed', 'draft')) and (mt == 'one'):
+                    return False
+                if (mt == 'direct') and (move.state == 'assigned') and (move.product_qty):
+                    return True
+                ok = ok and (move.state in ('cancel', 'done', 'assigned'))
         return ok
 
     def action_cancel(self, cr, uid, ids, context=None):
