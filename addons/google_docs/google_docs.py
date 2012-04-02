@@ -105,9 +105,11 @@ class google_docs(osv.osv):
         pool_gdoc_config = self.pool.get('google.docs.config')
         google_docs_config = pool_gdoc_config.search(cr, uid, [('model_id', '=', model)])
         name_gdocs=''
+        model_fields_dic = self.pool.get(model).read(cr,uid,id,[])
+        
         if google_docs_config:
             name_gdocs = pool_gdoc_config.browse(cr,uid,google_docs_config,context=context)[0].name_template
-            print name_gdocs
+            name_gdocs = name_gdocs % model_fields_dic[0]
         
         # check if a model is configurate with a template
         if google_docs_config:
@@ -130,22 +132,17 @@ class config(osv.osv):
     }
 
     _defaults = {
-        'name_template': 'pr_%(name)',
+        'name_template': 'pr_%(name)s',
     }
-    def get_config(self, cr, uid, model):
+    def get_config(self, cr, uid, ids, model,context=None):
         '''
         Method use with the js to hidde or show the add google doc button 
         @return : list of configuration ids or false
         '''
-        domain = [('model_id', '=', model)]
-        if self.search_count(cr, uid, domain) != 0:
-            return False
-        # attached only one document to a model 
-        if self.pool.get('ir.attachment').search_count(cr,uid,[('url','like','https://docs.google.com/document%')]) !=0:
-            return False
+        if self.pool.get('ir.attachment').search_count(cr,uid,[('url','like','https://docs.google.com/document%'),('res_model','=',model),('res_id','=',ids[0])]) !=0:
+            return  False
         else:
-            return self.search(cr, uid, domain)
-
+            return True
 config()
 
 
