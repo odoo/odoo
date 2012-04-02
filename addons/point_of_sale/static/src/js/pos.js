@@ -1250,7 +1250,6 @@ openerp.point_of_sale = function(db) {
                 id = 0;
             }
             c = pos.categories[id];
-            currency = pos.get('currency');
             this.categoryView.ancestors = c.ancestors;
             this.categoryView.children = c.children;
             this.categoryView.renderElement();
