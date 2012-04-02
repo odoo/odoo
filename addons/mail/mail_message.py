@@ -123,15 +123,9 @@ class mail_message_common(osv.osv_memory):
                         help="Content of the message. This content equals the body_text field for plain-test messages, and body_html for rich-text/HTML messages. This allows having one field if we want to access the content matching the message subtype."),
         'parent_id': fields.many2one('mail.message', 'Parent message', help="Parent message, used for displaying as threads with hierarchy",
                         select=True, ondelete='set null',),
-        'type': fields.selection([
-                        ('email', 'e-mail'),
-                        ('comment', 'Comment'),
-                        ('notification', 'System notification'),
-                        ], 'Type', help="Message type: e-mail for e-mail message, notification for system message, comment for other messages such as user replies"),
     }
 
     _defaults = {
-        'type': 'comment',
         'subtype': 'plain',
         'date': (lambda *a: fields.datetime.now()),
     }
@@ -206,6 +200,11 @@ class mail_message(osv.osv):
         return result
     
     _columns = {
+        'type': fields.selection([
+                        ('email', 'e-mail'),
+                        ('comment', 'Comment'),
+                        ('notification', 'System notification'),
+                        ], 'Type', help="Message type: e-mail for e-mail message, notification for system message, comment for other messages such as user replies"),
         'partner_id': fields.many2one('res.partner', 'Related partner'),
         'user_id': fields.many2one('res.users', 'Related user', readonly=1),
         'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel', 'message_id', 'attachment_id', 'Attachments'),
@@ -223,6 +222,7 @@ class mail_message(osv.osv):
     }
         
     _defaults = {
+        'type': 'comment',
         'state': 'received',
     }
     
