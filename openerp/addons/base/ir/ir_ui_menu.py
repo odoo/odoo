@@ -264,9 +264,10 @@ class ir_ui_menu(osv.osv):
             if menu.action and menu.action.type == 'ir.actions.act_window' and menu.action.res_model:
                 menu_needaction_res = osv.osv.get_needaction_info(cr, uid, menu.action.res_model, uid, domain=menu.action.domain, context=context)
             else:
-                menu_needaction_res = [False, 0]
+                menu_needaction_res = [False, 0, ()]
             res[menu.id]['needaction_enabled'] = menu_needaction_res[0]
             res[menu.id]['needaction_counter'] = menu_needaction_res[1]
+            res[menu.id]['needaction_record_ids'] = menu_needaction_res[2]
         return res
         
     _columns = {
@@ -287,6 +288,7 @@ class ir_ui_menu(osv.osv):
         'web_icon_hover_data':fields.function(_get_image_icon, string='Web Icon Image (hover)', type='binary', readonly=True, store=True, multi='icon'),
         'needaction_enabled': fields.function(_get_needaction, string='Target model uses the need action mechanism', type='boolean', help='If the menu entry action is an act_window action, and if this action is related to a model that uses the need_action mechanism, this field is set to true. Otherwise, it is false.', multi='_get_needaction'),
         'needaction_counter': fields.function(_get_needaction, string='Number of actions the user has to perform', type='integer', help='If the target model uses the need action mechanism, this field gives the number of actions the current user has to perform.', multi='_get_needaction'),
+        'needaction_record_ids': fields.function(_get_needaction, string='Ids of records requesting an action from the user', type='many2many', help='', multi='_get_needaction'),
         'action': fields.function(_action, fnct_inv=_action_inv,
             type='reference', string='Action',
             selection=[

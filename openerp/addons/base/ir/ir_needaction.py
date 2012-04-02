@@ -37,7 +37,7 @@ class ir_needaction_users_rel(osv.osv):
     _name = 'ir.needaction_users_rel'
     _description = 'Needaction relationship table'
     _rec_name = 'id'
-    _order = 'res_model asc'
+    _order = 'id desc'
     _columns = {
         'res_model': fields.char('Related Document Model', size=128,
                         select=1, required=True),
