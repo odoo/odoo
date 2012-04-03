@@ -122,7 +122,7 @@
                     <field name="reference" invisible="1"/>
                     <field name="name" invisible="1"/>
                     <field name="journal_id" invisible="1"/>
-                    <field name="period_id" invisible="1" groups="account.group_dates_periods"/>
+                    <field name="period_id" invisible="1" groups="account.group_account_user"/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     <field name="user_id"/>
                     <field name="date_due"/>
@@ -157,7 +157,7 @@
                         <field name="fiscal_position" groups="base.group_extended" widget="selection"/>
                         <newline/>
                         <field name="date_invoice"/>
-                        <field name="period_id" domain="[('state', '=', 'draft')]" groups="account.group_dates_periods" widget="selection"/>
+                        <field name="period_id" domain="[('state', '=', 'draft')]" groups="account.group_account_user" widget="selection"/>
                         <group colspan="2" col="1" groups="account.group_account_user">
                             <label align="0.0" string="(keep empty to use the current period)"/>
                         </group>
@@ -267,7 +267,7 @@
                     <field name="fiscal_position" groups="base.group_extended" widget="selection" options='{"quick_create": false}'/>
                     <newline/>
                     <field name="date_invoice"/>
-                    <field name="period_id" domain="[('state', '=', 'draft')]" groups="account.group_dates_periods" widget="selection"/>
+                    <field name="period_id" domain="[('state', '=', 'draft')]" groups="account.group_account_user" widget="selection"/>
                     <field name="payment_term" widget="selection"/>
                     <newline/>
                     <field domain="[('company_id', '=', company_id),('type','=', 'receivable')]" name="account_id" groups="account.group_account_user"/>
@@ -371,7 +371,7 @@
                     <newline/>
                     <group>
                         <field name="journal_id" widget="selection"/>
-                        <field name="period_id" string="Period" groups="account.group_dates_periods"/>
+                        <field name="period_id" string="Period"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
