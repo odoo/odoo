@@ -536,6 +536,7 @@ stock_tracking()
 #----------------------------------------------------------
 class stock_picking(osv.osv):
     _name = "stock.picking"
+    _inherit = ['mail.thread']
     _description = "Picking List"
 
     def _set_maximum_date(self, cr, uid, ids, name, value, arg, context=None):
@@ -610,6 +611,8 @@ class stock_picking(osv.osv):
             seq_obj_name =  'stock.picking.' + vals['type']
             vals['name'] = self.pool.get('ir.sequence').get(cr, user, seq_obj_name)
         new_id = super(stock_picking, self).create(cr, user, vals, context)
+        if new_id:
+            self.create_send_note(cr, user, [new_id], context=context)
         return new_id
 
     _columns = {
@@ -722,7 +725,6 @@ class stock_picking(osv.osv):
                 if r.state == 'draft':
                     todo.append(r.id)
 
-        self.log_picking(cr, uid, ids, context=context)
 
         todo = self.action_explode(cr, uid, todo, context)
         if len(todo):
@@ -795,7 +797,6 @@ class stock_picking(osv.osv):
         @return: True
         """
         self.write(cr, uid, ids, {'state': 'assigned'})
-        self.log_picking(cr, uid, ids, context=context)
         return True
 
     def test_finished(self, cr, uid, ids):
@@ -836,7 +837,7 @@ class stock_picking(osv.osv):
             ids2 = [move.id for move in pick.move_lines]
             self.pool.get('stock.move').action_cancel(cr, uid, ids2, context)
         self.write(cr, uid, ids, {'state': 'cancel', 'invoice_state': 'none'})
-        self.log_picking(cr, uid, ids, context=context)
+        self.ship_cancel_send_note(cr, uid, ids, context)
         return True
 
     #
@@ -1309,14 +1310,17 @@ class stock_picking(osv.osv):
                 wf_service.trg_validate(uid, 'stock.picking', new_picking, 'button_done', cr)
                 wf_service.trg_write(uid, 'stock.picking', pick.id, cr)
                 delivered_pack_id = new_picking
+                back_order_name = self.browse(cr, uid, delivered_pack_id, context=context).name
+                self.back_order_send_note(cr, uid, ids, back_order_name, context)
             else:
                 self.action_move(cr, uid, [pick.id])
                 wf_service.trg_validate(uid, 'stock.picking', pick.id, 'button_done', cr)
                 delivered_pack_id = pick.id
+                self.ship_done_send_note(cr, uid, ids, context)
 
             delivered_pack = self.browse(cr, uid, delivered_pack_id, context=context)
             res[pick.id] = {'delivered_picking': delivered_pack.id or False}
-
+            
         return res
 
     def log_picking(self, cr, uid, ids, context=None):
@@ -1357,8 +1361,43 @@ class stock_picking(osv.osv):
             res = data_obj.get_object_reference(cr, uid, 'stock', view_list.get(pick.type, 'view_picking_form'))
             context.update({'view_id': res and res[1] or False})
             message += state_list[pick.state]
-            self.log(cr, uid, pick.id, message, context=context)
         return True
+    
+    # -----------------------------------------
+    # OpenChatter methods and notifications
+    # -----------------------------------------
+    
+    def _get_document_type(self, type):
+        type_dict = {
+                'out': 'Delivery order',
+                'in': 'Shipment',
+                'internal': 'Internal picking',
+        }
+        return type_dict.get(type, 'Stock picking')
+    
+    def create_send_note(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            self.message_append_note(cr, uid, [obj.id], body=_("%s has been <b>created</b>.") % (self._get_document_type(obj.type)), context=context)
+    
+    def scrap_send_note(self, cr, uid, ids, quantity, uom, name, context=None):
+        return self.message_append_note(cr, uid, ids, body= _("%s %s %s has been <b>moved to</b> scrap.") % (quantity, uom, name), context=context)
+    
+    def back_order_send_note(self, cr, uid, ids, back_name, context=None):
+        return self.message_append_note(cr, uid, ids, body=_("Back order <em>%s</em> has been <b>created</b>.") % (back_name), context=context)
+    
+    def ship_done_send_note(self, cr, uid, ids, context=None):
+        type_dict = {
+                'out': 'delivered',
+                'in': 'received',
+                'internal': 'moved',
+        }
+        for obj in self.browse(cr, uid, ids, context=context):
+            self.message_append_note(cr, uid, [obj.id], body=_("Products have been <b>%s</b>.") % (type_dict.get(obj.type, 'move done')), context=context)
+    
+    def ship_cancel_send_note(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            self.message_append_note(cr, uid, [obj.id], body=_("%s has been <b>cancelled</b>.") % (self._get_document_type(obj.type)), context=context)
+            
 
 stock_picking()
 
@@ -2357,8 +2396,8 @@ class stock_move(osv.osv):
 
             res += [new_move]
             product_obj = self.pool.get('product.product')
-            for (id, name) in product_obj.name_get(cr, uid, [move.product_id.id]):
-                self.log(cr, uid, move.id, "%s x %s %s" % (quantity, name, _("were scrapped")))
+            for product in product_obj.browse(cr, uid, [move.product_id.id], context=context):
+                move.picking_id.scrap_send_note(quantity, product.uom_id.name, product.name, context=context)
 
         self.action_done(cr, uid, res, context=context)
         return res
@@ -2479,12 +2518,12 @@ class stock_move(osv.osv):
                         'location_id': location_id or move.location_id.id,
                 }
                 self.write(cr, uid, [move.id], update_val)
-
-            product_obj = self.pool.get('product.product')
-            for new_move in self.browse(cr, uid, res, context=context):
-                for (id, name) in product_obj.name_get(cr, uid, [new_move.product_id.id]):
-                    message = _("Product  '%s' is consumed with '%s' quantity.") %(name, new_move.product_qty)
-                    self.log(cr, uid, new_move.id, message)
+        
+        product_obj = self.pool.get('product.product')
+        for new_move in self.browse(cr, uid, res, context=context):
+            message = _("Product has been consumed with '%s' quantity.") % (product_qty)
+            product_obj.message_append_note(cr, uid, [new_move.product_id.id], body=message, context=context)
+        
         self.action_done(cr, uid, res, context=context)
 
         return res
@@ -2694,8 +2733,6 @@ class stock_inventory(osv.osv):
                             'location_dest_id': location_id,
                         })
                     move_ids.append(self._inventory_line_hook(cr, uid, line, value))
-            message = _("Inventory '%s' is done.") %(inv.name)
-            self.log(cr, uid, inv.id, message)
             self.write(cr, uid, [inv.id], {'state': 'confirm', 'move_ids': [(6, 0, move_ids)]})
             self.pool.get('stock.move').action_confirm(cr, uid, move_ids, context=context)
         return True
