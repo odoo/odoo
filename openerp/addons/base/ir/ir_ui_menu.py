@@ -262,7 +262,7 @@ class ir_ui_menu(osv.osv):
         for menu in self.browse(cr, uid, ids, context=context):
             res[menu.id] = {}
             if menu.action and menu.action.type == 'ir.actions.act_window' and menu.action.res_model:
-                menu_needaction_res = osv.osv.get_needaction_info(cr, uid, menu.action.res_model, uid, domain=menu.action.domain, context=context)
+                menu_needaction_res = self.pool.get(menu.action.res_model).get_needaction_info(cr, uid, uid, domain=menu.action.domain, context=context)
             else:
                 menu_needaction_res = [False, 0, ()]
             res[menu.id]['needaction_enabled'] = menu_needaction_res[0]

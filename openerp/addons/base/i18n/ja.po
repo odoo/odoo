@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-server\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:44+0000\n"
-"PO-Revision-Date: 2012-03-31 07:17+0000\n"
+"PO-Revision-Date: 2012-04-02 21:12+0000\n"
 "Last-Translator: Akira Hiyama <Unknown>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-04-01 04:38+0000\n"
-"X-Generator: Launchpad (build 15032)\n"
+"X-Launchpad-Export-Date: 2012-04-03 04:53+0000\n"
+"X-Generator: Launchpad (build 15052)\n"
 
 #. module: base
 #: model:res.country,name:base.sh
@@ -13889,7 +13889,7 @@ msgstr "ハード島とマクドナルド諸島"
 msgid ""
 "External Key/Identifier that can be used for data integration with third-"
 "party systems"
-msgstr ""
+msgstr "サードパーティのシステムとのデータ統合のために利用する外部キー / 識別子"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_operations
@@ -13924,6 +13924,31 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"このモジュールは製造オーダー行（\"ワークセンタ\"のタブ内）の中に状態、開始日付、中止日付を追加します。\n"
+"============================================================================="
+"================================\n"
+"\n"
+"状態：ドラフト、確認、完了、キャンセル\n"
+"終了する、確認する、キャンセルする時に、製造オーダーは全ての状態行を状態に応じて設定する。\n"
+"\n"
+"メニューの作成：\n"
+"　　製造 > 製造 > ワークオーダー\n"
+"\n"
+"これは、製造オーダーのワークセンタ行のビューです。\n"
+"\n"
+"ワークセンタタブの下に製造オーダーのフォームビューにボタンを追加して下さい：\n"
+"　・ 開始（確認状態に設定）、開始日付の設定\n"
+"　・ 完了（完了状態に設定）、中止日付の設定\n"
+"　・ ドラフトに設定（ドラフト状態に設定）\n"
+"　・ キャンセル（キャンセル状態に設定）\n"
+"\n"
+"製造オーダーが\"製造可能\"になった時、操作は確認済になります。製造オーダーが終了した時、操作は完了になります。\n"
+"\n"
+"項目の遅れは遅れ（中止日付 - 開始日付）です。\n"
+"それで、理論的な遅れと実際の遅れを比較できます。\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_auction
@@ -13947,6 +13972,21 @@ msgid ""
 "    * Objects By Day (graph)\n"
 "    "
 msgstr ""
+"\n"
+"このモジュールはオークションの品物、売り手と買い手の記録を管理します。\n"
+"============================================================================="
+"====\n"
+"\n"
+"入札の管理、支払いや売れた品物の追跡、品物の配達を含む未払いなどのオークションを完全に管理します。\n"
+"\n"
+"オークションのためのダッシュボードは以下を含みます：\n"
+"　・ 最新のオブジェクト（リスト）\n"
+"　・ 最新の預り金（リスト）\n"
+"　・ オブジェクトの統計（リスト）\n"
+"　・ 合計落札（グラフ）\n"
+"　・ 最小 / 平均 / 最大（グラフ）\n"
+"　・ 日別のオブジェクト（グラフ）\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_crypt
@@ -13983,6 +14023,33 @@ msgid ""
 "\n"
 "                    "
 msgstr ""
+"\n"
+"データベースの中のクリアテキストパスワードを安全なハッシュにより置き換えます。\n"
+"===============================================================\n"
+"\n"
+"存在するユーザベースのために、base_cryptをインストールした場合、即座にクリアテキストパスワードの除去を行います。\n"
+"\n"
+"全てのパスワードは誰かがデータベースの中のオリジナルのパスワードを読むことを防止\n"
+"するために、安全、ハッシュ暗号化で処理され置き換えられます。\n"
+"\n"
+"このモジュールをインストール後は、ユーザがパスワードを忘れた場合はそれを取り戻すことは\n"
+"できません。その場合はアドミンによって新しいパスワードをセットするのが唯一の方法です。\n"
+"\n"
+"セキュリティの警告\n"
+"++++++++++++++++\n"
+"このモジュールをインストールしても、XML -RPCS、あるいはHTTPのような安全なプロトコル\n"
+"を使っていないなら、パスワードはネットワーク上を暗号化されないで転送されますので、\n"
+"他のセキュリティ対策を無視して良いということではありません。\n"
+"また、データベースに格納された他を保護しません。それは重要なデータを含むかもしれません。\n"
+"全てのエリアに対して、システム管理者によって以下のような適切なセキュリティ対策の実装が要求されます。\n"
+"データベースバックアップ、システムファイル、リモートシェルアクセス、物理サーバアクセスなどに対する保護\n"
+"\n"
+"LDAP認証との統合\n"
+"+++++++++++++++++++++++++++++++++++\n"
+"このモジュールは現在、user_ldapモジュールと互換性はありません。同時にインストールをした場合、\n"
+"完全にLDAP認証を無効にするでしょう。\n"
+"\n"
+"                    "
 
 #. module: base
 #: field:ir.actions.act_window,view_id:0
@@ -13992,22 +14059,22 @@ msgstr "ビューの参照"
 #. module: base
 #: model:ir.module.category,description:base.module_category_sales_management
 msgid "Helps you handle your quotations, sale orders and invoicing."
-msgstr ""
+msgstr "見積書、販売注文書、請求書の処理に役立ちます。"
 
 #. module: base
 #: field:res.groups,implied_ids:0
 msgid "Inherits"
-msgstr ""
+msgstr "継承"
 
 #. module: base
 #: selection:ir.translation,type:0
 msgid "Selection"
-msgstr ""
+msgstr "選択"
 
 #. module: base
 #: field:ir.module.module,icon:0
 msgid "Icon URL"
-msgstr ""
+msgstr "アイコンのURL"
 
 #. module: base
 #: field:ir.actions.act_window,type:0
@@ -14021,12 +14088,12 @@ msgstr ""
 #: field:ir.actions.url,type:0
 #: field:ir.actions.wizard,type:0
 msgid "Action Type"
-msgstr ""
+msgstr "アクションタイプ"
 
 #. module: base
 #: model:res.country,name:base.vn
 msgid "Vietnam"
-msgstr ""
+msgstr "ベトナム"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_syscohada
@@ -14042,32 +14109,37 @@ msgid ""
 "Chad, Togo.\n"
 "    "
 msgstr ""
+"このモジュールはOHADA領域の会計表を実装しています。\n"
+"　任意の会社や団体が財務会計の管理ができます。OHADAを使用する国は次のとおりです：\n"
+"　ベナン、ブルキナファソ、カメルーン、中央アフリカ共和国、コモロ、コンゴ、コートジボワール、\n"
+"　ガボン、ギニア、ギニアビサウ、赤道ギニア、マリ、ニジェール、コンゴ民主共和国、チャド、トーゴ\n"
+"    "
 
 #. module: base
 #: view:base.language.import:0
 #: model:ir.actions.act_window,name:base.action_view_base_import_language
 #: model:ir.ui.menu,name:base.menu_view_base_import_language
 msgid "Import Translation"
-msgstr ""
+msgstr "翻訳のインポート"
 
 #. module: base
 #: field:res.partner.bank.type,field_ids:0
 msgid "Type fields"
-msgstr ""
+msgstr "項目のタイプ"
 
 #. module: base
 #: view:ir.actions.todo:0
 #: field:ir.actions.todo,category_id:0
 #: field:ir.module.module,category_id:0
 msgid "Category"
-msgstr ""
+msgstr "分類"
 
 #. module: base
 #: view:ir.attachment:0
 #: selection:ir.attachment,type:0
 #: selection:ir.property,type:0
 msgid "Binary"
-msgstr ""
+msgstr "二進数"
 
 #. module: base
 #: field:ir.actions.server,sms:0
@@ -14078,12 +14150,12 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.cr
 msgid "Costa Rica"
-msgstr ""
+msgstr "コスタリカ"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_module_doc_rst
 msgid "Generate Docs of Modules"
-msgstr ""
+msgstr "モジュールのドキュメントの生成"
 
 #. module: base
 #: model:res.company,overdue_msg:base.main_company
@@ -14095,6 +14167,10 @@ msgid ""
 "queries regarding your account, please contact us.\n"
 "Thank you in advance.\n"
 msgstr ""
+"われわれの記録によれば、次の支払がまだ行われておりません。既に金額が支払われている\n"
+"場合には、どうぞ、この通知を無視して下さい。\n"
+"アカウントに関して何かご質問がありましたら、どうぞ、お問い合わせ下さい。\n"
+"よろしくお願いいたします。\n"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_users_ldap
