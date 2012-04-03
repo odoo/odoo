@@ -580,7 +580,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
             openerp.webclient.notification.warn('Context fail, report to xmo',
                 _.str.sprintf(fail_template, {
                     error: e.message,
-                    source: source.contexts
+                    source: JSON.stringify(source.contexts)
                 }), true);
         }
 
@@ -598,7 +598,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
             openerp.webclient.notification.warn('Domain fail, report to xmo',
                 _.str.sprintf(fail_template, {
                     error: e.message,
-                    source: source.domains
+                    source: JSON.stringify(source.domains)
                 }), true);
         }
 
@@ -616,7 +616,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
             openerp.webclient.notification.warn('GroupBy fail, report to xmo',
                 _.str.sprintf(fail_template, {
                     error: e.message,
-                    source: source.group_by_seq
+                    source: JSON.stringify(source.group_by_seq)
                 }), true);
         }
     },
