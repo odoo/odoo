@@ -138,6 +138,13 @@ class sale_configuration(osv.osv_memory):
 
         return {}
 
+    def onchange_invoice_methods(self, cr, uid, ids, group_invoice_so_lines, group_invoice_deli_orders, context=None):
+        if not group_invoice_deli_orders:
+            return {'value': {'default_order_policy': 'manual'}}
+        if not group_invoice_so_lines:
+            return {'value': {'default_order_policy': 'picking'}}
+        return {}
+
     def onchange_task_work(self, cr, uid, ids, task_work, context=None):
         return {'value': {
             'module_project_timesheet': task_work,
