@@ -35,37 +35,25 @@
                     <field name="timesheets"/>
 		    <field name="currency_id"/>
                 </field>
-		<xpath expr="//t[@t-name='tasks']" position="after">
-                    <t t-name="timesheets">
-                        <ul class="oe_kanban_tooltip">
-                            <li><b>Timesheets</b></li>
-                        </ul>
-                   </t>
-                </xpath>
-		<xpath expr="//h4[@class='oe_project_font1']" position="replace">
-		    <h4 class="oe_project_font1">
-			<a type="edit"><div class="oe_project_font"><t t-esc="record.name.value.substr(0,28)"/><t t-if="record.name.value.length > 28">...</t></div></a>
-		    </h4>
-		</xpath>
-        <xpath expr="//td[@class='buttons']" position="inside">
+        <xpath expr="//p[@id='list']" position="inside">
+        <a>
             <t t-if="record.timesheets.raw_value">
-                <button name="open_timesheets" class="oe_project_buttons" type="object" tooltip="timesheets"><img src="/project_timesheet/static/src/img/timesheet_icon.png" class="project_icon"/></button>
+                <button name="open_timesheets" class="oe_project_buttons" type="object">, Timesheet</button>
             </t>
+            </a>
         </xpath>
-		<xpath expr="//table[@id='deadline']" position="inside">
-		<table border = "0">
-			<tr ><td ><strong >To invoiced</strong></td><td class="sequence"></td>
+		<xpath expr="//table[@class='fields']" position="inside">
+			<tr ><th >To invoiced</th>
 				<td>
 			    <field name="amt_to_invoice"/> <t t-esc="record.currency_id.raw_value[1].split(' ')[1][1]"/>
 			    </td>
 			    </tr>
 			    <tr >
-			<td ><strong>To hours</strong></td><td class="sequence"></td>
+			<th>To hours</th>
 			<td>
 			    <field name="hrs_to_invoice"/> h
 			</td>
 			</tr>
-		</table>
 		</xpath>
             </field>
         </record>

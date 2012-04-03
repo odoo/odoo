@@ -200,7 +200,7 @@
                                 </ul>
                                 <h4><a><t t-esc="record.name.value"/></a></h4>
                                 <p id="list"><a><t t-if="record.task.raw_value">
-                                 <field name="open_task"/> <button name="open_tasks" class="oe_project_buttons" type="object">Tasks</button>
+                                 <button name="open_tasks" class="oe_project_buttons" type="object"><field name="open_task"/> Tasks</button>
                                  </t></a></p>
                                  <table class="fields">
 						              <tr t-if="record.date.raw_value"> <th>Deadline</th><td><t t-esc="record.date.raw_value.toString('MMMM')"/> 
