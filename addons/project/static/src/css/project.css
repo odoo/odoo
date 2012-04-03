@@ -1,140 +1,137 @@
-.oe_to_invoice_buttons {
-    min-height: 33px;
-    min-width: 70px;
-    vertical-align: top;
-  
-}
+.vignettes {
+  margin: 4px; }
+  .vignettes li {
+    float: left; }
+  .vignettes .avatar {
+    margin-right: 2px;
+    width: 32px;
+    height: 32px; }
+  .vignettes .fields {
+    width: 100%; }
+    .vignettes .fields th {
+      font-weight: normal; }
+    .vignettes .fields td {
+      color: #888888; }
+  .vignettes h4 a {
+    color: #4c4c4c; }
 
-.oe_to_invoice_buttons:hover {
-  cursor: pointer;
-}
-
-
-.oe_project_border{
-  border-right: groove;
-  border-left: groove;
-}
-.oe_project_font:hover{
-  text-decoration: underline;
-}
-.oe_project_members{
-  padding-left: 5px !important;
-  text-align: left;
-}
-.oe_project_desc{
+.vignettes > li {
+  height: 160px;
   width: 250px;
-}
-.progress{
-  width: auto;
-}
-.oe_project_font{
-  color: #000000;
-  padding-left: 5px !important;
-  
-}
-.sequence {
- 
-  border-right: groove;
-  /*font-size: 20px;*/
-  text-align: center;
-}
+  padding: 8px;
+  margin: 4px; }
+  .vignettes > li h4 {
+    margin-bottom: 2px; }
 
 
-.project_icon{
-    width: 30px;
+.i {
+  font-family: "mnmliconsRegular" !important;
+  font-size: 21px;
+  font-weight: 300 !important; }
+
+.dropdown-menu {
+  display: none;
+  position: absolute; }
+
+.dropdown-toggle:after {
+  width: 0;
+  height: 0;
+  display: inline-block;
+  content: "&darr";
+  text-indent: -99999px;
+  vertical-align: top;
+  margin-top: 8px;
+  margin-left: 4px;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 4px solid white;
+  filter: alpha(opacity=50);
+  -khtml-opacity: 0.5;
+  -moz-opacity: 0.5;
+  opacity: 0.5; }
+
+.open {
+  display: block;
+  background: #333333; }
+  .open .dropdown-menu {
+    display: block; }
+
+
+a.oe_kanban_action {
+  position: absolute;
+  right: 0;
+ }
+  a.oe_kanban_action:hover {
+    text-decoration: none;
+    }
+  a.oe_kanban_action .i {
+    color: #4c4c4c; }
+
+
+.oe_kanban_vignette {
+  position: relative;
+  display: block;
+  min-height: 50px;
+  background: white;
+  border: 1px solid #d8d8d8;
+  border-bottom-color: #b9b9b9;
+  padding: 6px;
+  margin: 6px 0;
+  display: block;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px; }
+  .oe_kanban_vignette:last-child {
+    margin-bottom: 0; }
+  .oe_kanban_vignette:hover {
+    -moz-box-shadow: 0 0 3px rgba(0, 0, 0, 0.6);
+    -webkit-box-shadow: 0 0 3px rgba(0, 0, 0, 0.6);
+    -box-shadow: 0 0 3px rgba(0, 0, 0, 0.6); }
+  .oe_kanban_vignette h4 {
+    margin: 0 0 2px; }
+
+
+.oe_kanban_vignette .dropdown-menu {
+  top: 30px;
+  right: -140px;
+  padding: 4px;
+  border: 1px solid #afafb6;
+  width: 160px;
+  overflow-x: hidden;
+  z-index: 900;
+  background: white;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  -box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3); }
+  .oe_kanban_vignette .dropdown-menu p {
+    margin-left: 12px; }
+  .oe_kanban_vignette .dropdown-menu li {
+    float: none;
     display: block;
-    height: 30px;
-    text-align: center;
-}
+    background-color: none; }
+    .oe_kanban_vignette .dropdown-menu li a {
+      display: block;
+      padding: 3px 6px;
+      clear: both;
+      font-weight: normal;
+      line-height: 14px;
+      color: #4c4c4c;
+      text-decoration: none; }
+      .oe_kanban_vignette .dropdown-menu li a:hover {
+        background: #f0f0fa;
+        background: -moz-linear-gradient(#f0f0fa, #eeeef6);
+        background: -webkit-gradient(linear, left top, left bottom, from(#f0f0fa), to(#eeeef6));
+        background: -webkit-linear-gradient(#f0f0fa, #eeeef6);
+        -moz-box-shadow: none;
+        -webkit-box-shadow: none;
+        -box-shadow: none; }
 
-.project_icon:hover {
-  cursor: pointer;
-  display:  block;
-  height: 40px;
-  width: 40px;
-  text-align: center;
-}
-
-.project_table{
-  width:350px;
-}
-.td_image{
-  width:60px;
-  text-align:center;
-  vertical-align:top;
-}
-.avatar{
-    height:40px;
-    width:40px;
-}
-.td_name{
-    text-align:left;
-    vertical-align:middle;
-    width:220px;
-}
-.td_deadline{
-    width:70px;
-    text-align:left;
-}
-.td_member{
-    text-align:right;
-    vertical-align:bottom;
-    width:130px;
-    height:20px;
-}
-.td_member_img{
-    height:22px;
-    width:22px;
-}
-.img_member{
-    height:35px;
-    width:35px;
-}
-.td_hours{
-    text-align:center;
-    vertical-align:bottom;
-    width:120px
-}
-.task{
-    text-align:left;
-    vertical-align:middle;
-}
-.invoiced{
-  font-size: 10px;
-}
-.oe_project {
-  width: 55px; 
-}
-.user {
-  color:rgb(192,192,192);
-  font-size: 10px;
-}
-.manager {
-  font-size: 9px;
-}
-
-.oe_project_buttons {
-    display: inline-block;
-    padding: 0px 0px;
-    background-color: transparent;
-    border: hidden;
-    color: #0000FF;
-    min-height: 40px;
-    min-width: 40px;
-    text-align: center;
-}
-
-.oe_project_buttons:hover {
-  cursor: pointer;
-  background-size: 100% 100%;
-}
-
-.oe_project_font1{
-  padding-left: 2px !important;
-  -webkit-margin-before: 0em;
-  -webkit-margin-after: 0em;
-}
-
-div.oe_fold_column{
-  padding:2px !important;
-}
+.oe_kanban_vignette .dropdown-menu .color-chooser {
+  padding: 0 3px; }
+  .oe_kanban_vignette .dropdown-menu .color-chooser li {
+    float: left; }
+    .oe_kanban_vignette .dropdown-menu .color-chooser li a {
+      padding: 2px; }
