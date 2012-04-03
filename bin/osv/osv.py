@@ -303,12 +303,23 @@ class osv_memory(osv_base, orm.orm_memory):
                         for c in new.keys():
                             if new[c].manual:
                                 del new[c]
+                        # Duplicate float fields because they have a .digits
+                        # cache (which must be per-pool, not server-wide).
+                        for c in new.keys():
+                            if new[c]._type == 'float':
+                                new[c] = copy.copy(new[c])
                     if hasattr(new, 'update'):
                         new.update(cls.__dict__.get(s, {}))
                     else:
                         new.extend(cls.__dict__.get(s, []))
                     nattr[s] = new
                 cls = type(name, (cls, parent_class), nattr)
+        else:
+            # Duplicate float fields because they have a .digits
+            # cache (which must be per-pool, not server-wide).
+            for field_name, field in cls._columns.items():
+                if field._type == 'float':
+                    cls._columns[field_name] = copy.copy(field)
 
         obj = object.__new__(cls)
         obj.__init__(pool, cr)
@@ -342,6 +353,12 @@ class osv(osv_base, orm.orm):
                         for c in new.keys():
                             if new[c].manual:
                                 del new[c]
+                        # Duplicate float fields because they have a .digits
+                        # cache (which must be per-pool, not server-wide).
+                        for c in new.keys():
+                            if new[c]._type == 'float':
+                                new[c] = copy.copy(new[c])
+
                     if hasattr(new, 'update'):
                         new.update(cls.__dict__.get(s, {}))
                     else:
@@ -365,6 +382,12 @@ class osv(osv_base, orm.orm):
                             new.extend(cls.__dict__.get(s, []))
                     nattr[s] = new
                 cls = type(name, (cls, parent_class), nattr)
+        else:
+            # Duplicate float fields because they have a .digits
+            # cache (which must be per-pool, not server-wide).
+            for field_name, field in cls._columns.items():
+                if field._type == 'float':
+                    cls._columns[field_name] = copy.copy(field)
         obj = object.__new__(cls)
         obj.__init__(pool, cr)
         return obj
