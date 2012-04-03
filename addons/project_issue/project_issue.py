@@ -46,7 +46,7 @@ class project_issue(crm.crm_case, osv.osv):
     _name = "project.issue"
     _description = "Project Issue"
     _order = "priority, create_date desc"
-    _inherit = ['mail.thread']
+    _inherit = ['ir.needaction', 'mail.thread']
 
     def _compute_day(self, cr, uid, ids, fields, args, context=None):
         """
