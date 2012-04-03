@@ -547,17 +547,6 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
             }
         }
 
-        var $res_logs = this.$element.find('.oe-view-manager-logs:first');
-        $res_logs.delegate('a.oe-more-logs', 'click', function () {
-            $res_logs.removeClass('oe-folded');
-            return false;
-        }).delegate('a.oe-remove-everything', 'click', function () {
-            $res_logs.removeClass('oe-has-more').find('ul').empty();
-            $res_logs.css('display','none');
-            return false;
-        });
-        $res_logs.css('display','none');
-
         return manager_ready;
     },
     on_debug_changed: function (evt) {
@@ -661,8 +650,6 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
         return $.when(this._super(view_type, no_store)).then(function () {
             self.shortcut_check(self.views[view_type]);
 
-            self.$element.find('.oe-view-manager-logs:first').addClass('oe-folded').removeClass('oe-has-more').css('display','none').find('ul').empty();
-
             var controller = self.views[self.active_view].controller,
                 fvg = controller.fields_view,
                 view_id = (fvg && fvg.view_id) || '--';
@@ -743,43 +730,6 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
                     $shortcut_toggle.addClass("oe-shortcut-remove");
                 }
             });
-    },
-    /**
-     * Intercept do_action resolution from children views
-     */
-    on_action_executed: function () {
-        return new session.web.DataSet(this, 'res.log')
-                .call('get', [], this.do_display_log);
-    },
-    /**
-     * @param {Array<Object>} log_records
-     */
-    do_display_log: function (log_records) {
-        var self = this;
-        var cutoff = 3;
-        var $logs = this.$element.find('.oe-view-manager-logs:first').addClass('oe-folded').css('display', 'block');
-        var $logs_list = $logs.find('ul').empty();
-        $logs.toggleClass('oe-has-more', log_records.length > cutoff);
-        _(log_records.reverse()).each(function (record) {
-            var context = {};
-            if (record.context) {
-                try { context = py.eval(record.context); }
-                catch (e) { /* TODO: what do I do now? */ }
-            }
-            $(_.str.sprintf('<li><a href="#">%s</a></li>', record.name))
-                .appendTo($logs_list)
-                .delegate('a', 'click', function () {
-                    self.do_action({
-                        type: 'ir.actions.act_window',
-                        res_model: record.res_model,
-                        res_id: record.res_id,
-                        // TODO: need to have an evaluated context here somehow
-                        context: context,
-                        views: [[context.view_id || false, 'form']]
-                    });
-                    return false;
-                });
-        });
     },
     display_title: function () {
         return this.action.name;
