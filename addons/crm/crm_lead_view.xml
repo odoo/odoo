@@ -143,29 +143,6 @@
                             type="object" icon="gtk-convert" />
                     </group>
                  </page>
-                 <page string="Communication &amp; History" groups="base.group_extended">
-                   <group colspan="4">
-                       <field colspan="4" name="email_cc" widget="char" size="512"/>
-                   </group>
-                    <field name="message_ids" colspan="4" nolabel="1" mode="tree" readonly="1">
-                        <tree string="History">
-                            <field name="display_text" string="History Information"/>
-                            <field name="email_from" invisible="1"/>
-                            <button
-                                string="Reply" attrs="{'invisible': [('email_from', '=', False)]}"
-                                name="%(mail.action_email_compose_message_wizard)d"
-                                context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
-                                icon="terp-mail-replied" type="action" />
-                        </tree>
-                    </field>
-                    <button string="Add Internal Note"
-                        name="%(crm.action_crm_add_note)d"
-                        context="{'model': 'crm.lead' }"
-                        icon="terp-document-new" type="action" />
-                    <button string="Send New Email"
-                        name="%(mail.action_email_compose_message_wizard)d"
-                        icon="terp-mail-message-new" type="action"/>
-                 </page>
                  <page string="Extra Info" groups="base.group_extended">
                     <group colspan="2" col="2">
                         <separator string="Categorization" colspan="2" col="2"/>
@@ -175,13 +152,6 @@
                         <field name="type_id" select="1" widget="selection"/>
                         <field name="channel_id" select="1" widget="selection"/>
                         <field name="referred"/>
-                    </group>
-                    <group colspan="2" col="2" groups="base.group_no_one">
-                        <separator string="Dates" colspan="2" col="2"/>
-                        <field name="create_date"/>
-                        <field name="write_date"/>
-                        <field name="date_open"/>
-                        <field name="date_closed"/>
                     </group>
                     <group colspan="2" col="2">
                         <separator string="Mailings" colspan="2" col="2"/>
@@ -195,6 +165,7 @@
                     </group>
                  </page>
                 </notebook>
+                <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
             </form>
         </field>
     </record>
@@ -545,37 +516,7 @@
                         <field name="optout" on_change="on_change_optout(optout)"/>
                     </group>
                 </page>
-                <page string="Communication &amp; History" groups="base.group_extended">
-                    <group colspan="4">
-                      <field colspan="4" name="email_cc" widget="char" size="512"/>
-                    </group>
-                    <field name="message_ids" colspan="4" nolabel="1" mode="tree" readonly="1">
-                        <tree string="History">
-                            <field name="display_text" string="History Information"/>
-                            <field name="email_from" invisible="1"/>
-                            <button
-                                string="Reply" attrs="{'invisible': [('email_from', '=', False)]}"
-                                name="%(mail.action_email_compose_message_wizard)d"
-                                context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
-                                icon="terp-mail-replied" type="action" />
-                        </tree>
-                    </field>
-                    <button string="Add Internal Note"
-                        name="%(crm.action_crm_add_note)d"
-                        context="{'model': 'crm.lead' }"
-                        icon="terp-document-new" type="action" />
-                    <button string="Send New Email"
-                        name="%(mail.action_email_compose_message_wizard)d"
-                        icon="terp-mail-message-new" type="action"/>
-                </page>
                 <page string="Extra Info" groups="base.group_extended">
-                    <group col="2" colspan="2" groups="base.group_no_one">
-                        <separator string="Dates" colspan="2"/>
-                        <field name="create_date"/>
-                        <field name="write_date"/>
-                        <field name="date_closed"/>
-                        <field name="date_open"/>
-                    </group>
                     <group col="2" colspan="2">
                         <separator string="Misc" colspan="2"/>
                         <field name="active"/>
@@ -588,6 +529,7 @@
                     <field name="ref2"/>
                 </page>
                 </notebook>
+                <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
             </form>
         </field>
     </record>

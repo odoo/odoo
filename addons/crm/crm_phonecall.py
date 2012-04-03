@@ -32,6 +32,7 @@ class crm_phonecall(crm_base, osv.osv):
     _name = "crm.phonecall"
     _description = "Phonecall"
     _order = "id desc"
+    _inherit = ['ir.needaction', 'mail.thread']
     _columns = {
         # From crm.case
         'id': fields.integer('ID', readonly=True),
@@ -47,12 +48,12 @@ class crm_phonecall(crm_base, osv.osv):
         'company_id': fields.many2one('res.company', 'Company'),
         'description': fields.text('Description'),
         'state': fields.selection([
-                                    ('draft', 'Draft'), 
-                                    ('open', 'Todo'), 
-                                    ('cancel', 'Cancelled'), 
-                                    ('done', 'Held'), 
+                                    ('draft', 'Draft'),
+                                    ('open', 'Todo'),
+                                    ('cancel', 'Cancelled'),
+                                    ('done', 'Held'),
                                     ('pending', 'Not Held'),
-                                ], 'State', size=16, readonly=True, 
+                                ], 'State', size=16, readonly=True,
                                   help='The state is set to \'Todo\', when a case is created.\
                                   \nIf the case is in progress the state is set to \'Open\'.\
                                   \nWhen the call is over, the state is set to \'Held\'.\
@@ -67,9 +68,9 @@ class crm_phonecall(crm_base, osv.osv):
         'partner_phone': fields.char('Phone', size=32),
         'partner_mobile': fields.char('Mobile', size=32),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
-        'date_closed': fields.datetime('Closed', readonly=True), 
-        'date': fields.datetime('Date'), 
-        'opportunity_id': fields.many2one ('crm.lead', 'Lead/Opportunity'), 
+        'date_closed': fields.datetime('Closed', readonly=True),
+        'date': fields.datetime('Date'),
+        'opportunity_id': fields.many2one ('crm.lead', 'Lead/Opportunity'),
         'message_ids': fields.one2many('mail.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
     }
 
@@ -80,13 +81,30 @@ class crm_phonecall(crm_base, osv.osv):
 
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
-        'priority': crm.AVAILABLE_PRIORITIES[2][0], 
-        'state':  _get_default_state, 
+        'priority': crm.AVAILABLE_PRIORITIES[2][0],
+        'state':  _get_default_state,
         'user_id': lambda self,cr,uid,ctx: uid,
         'active': 1,
     }
 
-    def case_close(self, cr, uid, ids, *args):
+    def create(self, cr, uid, vals, context=None):
+        obj_id = super(crm_phonecall, self).create(cr, uid, vals, context)
+        for phonecall in self.browse(cr, uid, [obj_id], context=context):
+            if not phonecall.opportunity_id:
+                self.case_open_send_note(cr, uid, [obj_id], context=context)
+        return obj_id
+
+    # From crm.case
+    def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
+        res = super(crm_phonecall, self).onchange_partner_address_id(cr, uid, ids, add, email)
+        res.setdefault('value', {})
+        if add:
+            address = self.pool.get('res.partner.address').browse(cr, uid, add)
+            res['value']['partner_phone'] = address.phone
+            res['value']['partner_mobile'] = address.mobile
+        return res
+
+    def case_close(self, cr, uid, ids, context=None):
         """Overrides close for crm_case for setting close date
         """
         res = True
@@ -96,22 +114,22 @@ class crm_phonecall(crm_base, osv.osv):
             if phone.duration <=0:
                 duration = datetime.now() - datetime.strptime(phone.date, '%Y-%m-%d %H:%M:%S')
                 data.update({'duration': duration.seconds/float(60)})
-            res = super(crm_phonecall, self).case_close(cr, uid, [phone_id], args)
+            res = super(crm_phonecall, self).case_close(cr, uid, [phone_id], context)
             self.write(cr, uid, [phone_id], data)
         return res
 
-    def case_reset(self, cr, uid, ids, *args):
+    def case_reset(self, cr, uid, ids, context=None):
         """Resets case as Todo
         """
-        res = super(crm_phonecall, self).case_reset(cr, uid, ids, args, 'crm.phonecall')
+        res = super(crm_phonecall, self).case_reset(cr, uid, ids, context)
         self.write(cr, uid, ids, {'duration': 0.0, 'state':'open'})
         return res
 
 
-    def case_open(self, cr, uid, ids, *args):
+    def case_open(self, cr, uid, ids, context=None):
         """Overrides cancel for crm_case for setting Open Date
         """
-        res = super(crm_phonecall, self).case_open(cr, uid, ids, *args)
+        res = super(crm_phonecall, self).case_open(cr, uid, ids, context)
         self.write(cr, uid, ids, {'date_open': time.strftime('%Y-%m-%d %H:%M:%S')})
         return res
 
@@ -143,9 +161,7 @@ class crm_phonecall(crm_base, osv.osv):
                     'partner_mobile' : call.partner_mobile,
                     'priority': call.priority,
             }
-            
             new_id = self.create(cr, uid, vals, context=context)
-            self.case_open(cr, uid, [new_id])
             if action == 'log':
                 self.case_close(cr, uid, [new_id])
             phonecall_dict[call.id] = new_id
@@ -162,7 +178,9 @@ class crm_phonecall(crm_base, osv.osv):
         return partner_id
 
     def _call_set_partner(self, cr, uid, ids, partner_id, context=None):
-        return self.write(cr, uid, ids, {'partner_id' : partner_id}, context=context)
+        write_res = self.write(cr, uid, ids, {'partner_id' : partner_id}, context=context)
+        self._call_set_partner_send_note(cr, uid, ids, context)
+        return write_res
 
     def _call_create_partner_address(self, cr, uid, phonecall, partner_id, context=None):
         address = self.pool.get('res.partner')
@@ -231,7 +249,7 @@ class crm_phonecall(crm_base, osv.osv):
                             'section_id': call.section_id and call.section_id.id or False,
                             'description': call.description or False,
                             'priority': call.priority,
-                            'type': 'opportunity', 
+                            'type': 'opportunity',
                             'phone': call.partner_phone or False,
                             'email_from': default_contact and default_contact.email,
                         })
@@ -243,7 +261,7 @@ class crm_phonecall(crm_base, osv.osv):
             self.case_close(cr, uid, [call.id])
             opportunity.case_open(cr, uid, [opportunity_id])
             opportunity_dict[call.id] = opportunity_id
-        return opportunity_dict   
+        return opportunity_dict
 
     def action_make_meeting(self, cr, uid, ids, context=None):
         """
@@ -289,6 +307,41 @@ class crm_phonecall(crm_base, osv.osv):
                 }
 
         return value
+    
+    # ----------------------------------------
+    # OpenChatter methods and notifications
+    # ----------------------------------------
+    
+    def get_needaction_user_ids(self, cr, uid, ids, context=None):
+        result = dict.fromkeys(ids)
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = []
+            if (obj.state == 'draft' and obj.user_id):
+                result[obj.id] = [obj.user_id.id]
+        return result
+
+    def case_get_note_msg_prefix(self, cr, uid, id, context=None):
+        return 'Phonecall'
+    
+    def case_reset_send_note(self, cr, uid, ids, context=None):
+        message = _('Phonecall has been <b>reset and set as open</b>.')
+        return self.message_append_note(cr, uid, ids, body=message, context=context)
+
+    def case_open_send_note(self, cr, uid, ids, context=None):
+        lead_obj = self.pool.get('crm.lead')
+        for phonecall in self.browse(cr, uid, ids, context=context):
+            phonecall.message_subscribe([phonecall.user_id.id], context=context)
+            if phonecall.opportunity_id:
+                lead = phonecall.opportunity_id
+                message = _("Phonecall linked to the opportunity <em>%s</em> has been <b>created</b> and <b>scheduled</b> on <em>%s</em>.") % (lead.name, phonecall.date)
+            else:
+                message = _("Phonecall has been <b>created and opened</b>.")
+            phonecall.message_append_note(body=message)
+        return True
+
+    def _call_set_partner_send_note(self, cr, uid, ids, context=None):
+        return self.message_append_note(cr, uid, ids, body=_("Partner has been <b>created</b>"), context=context)
+    
 
 crm_phonecall()
 

@@ -304,6 +304,7 @@ class mail_message(osv.osv):
                 'headers': headers, # serialize the dict on the fly
                 'mail_server_id': mail_server_id,
                 'state': 'outgoing',
+                'type': 'email',
                 'auto_delete': auto_delete
             }
         email_msg_id = self.create(cr, uid, msg_vals, context)
