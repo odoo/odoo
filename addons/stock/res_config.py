@@ -52,13 +52,13 @@ class stock_config_settings(osv.osv_memory):
                 manage product manufacturing chains, manage default locations per product,
                 define routes within your warehouse according to business needs, etc.
                 This installs the module stock_location."""),
-        'group_uom': fields.boolean("Allow Different UoM per Product",
+        'group_uom': fields.boolean("Manage Different UoM for Products",
             implied_group='product.group_uom',
-            help="""Allows you to select and maintain different unit of measures per product."""),
-        'group_uos': fields.boolean("Manage Secondary UoM on Products (for Sale)",
+            help="""Allows you to select and maintain different units of measure for products."""),
+        'group_uos': fields.boolean("Manage Secondary UoM (for Sale)",
             implied_group='product.group_uos',
-            help="""Allows you to sell units of a product, but invoice following a different UoM.
-                For instance, you can sell pieces of meat that you invoice per their weight."""),
+            help="""Allows you to sell units of a product, but invoice based on a different unit of measure.
+                For instance, you can sell pieces of meat that you invoice based on their weight."""),
         'group_stock_packaging': fields.boolean("Manage Product Packaging",
             implied_group='product.group_stock_packaging',
             help="""Allows you to create and manage your packaging dimensions and types you want to be maintained in your system."""),
@@ -66,7 +66,7 @@ class stock_config_settings(osv.osv_memory):
             implied_group='stock.group_production_lot',
             help="""This allows you to manage products by using serial numbers.
                 When you select a lot, you can get the upstream or downstream traceability of the products contained in lot."""),
-        'group_stock_tracking_lot': fields.boolean("Serial Numbers on Palets (Logistic Units)",
+        'group_stock_tracking_lot': fields.boolean("Serial Numbers on Pallets (Logistic Units)",
             implied_group='stock.group_tracking_lot',
             help="""Allows you to get the upstream or downstream traceability of the products contained in lot."""),
         'group_stock_inventory_valuation': fields.boolean("Accounting Entries per Stock Movement",

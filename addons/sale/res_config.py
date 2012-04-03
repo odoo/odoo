@@ -59,9 +59,9 @@ class sale_configuration(osv.osv_memory):
             implied_group='product.group_sale_pricelist',
             help="""Allows to manage different prices based on rules per category of customers. 
                 Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
-        'group_uom':fields.boolean("Allow Different Units of Measure per Product",
+        'group_uom':fields.boolean("Manage Different UoM for Products",
             implied_group='product.group_uom',
-            help="""Allows you to select and maintain different units of measure per product."""),
+            help="""Allows you to select and maintain different units of measure for products."""),
         'group_sale_delivery_address': fields.boolean("Allow Different Addresses for Delivery and Invoice",
             implied_group='sale.group_delivery_invoice_address',
             help="Allows you to specify different delivery and invoice addresses on a sale order."),
