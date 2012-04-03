@@ -37,13 +37,12 @@ class res_company(osv.osv):
                     an empty dict if no address can be found
         """
         res_partner = self.pool.get('res.partner')
-        res_partner_address = self.pool.get('res.partner.address')
         addresses = res_partner.address_get(cr, uid, [company.partner_id.id], ['default', 'contact', 'invoice'])
         addr_id = addresses['invoice'] or addresses['contact'] or addresses['default']
         result = {}
         if addr_id:
-            address = res_partner_address.browse(cr, uid, addr_id, context=context)
-            result = res_partner_address.edi_export(cr, uid, [address], edi_struct=edi_address_struct, context=context)[0]
+            address = res_partner.browse(cr, uid, addr_id, context=context)
+            result = res_partner.edi_export(cr, uid, [address], edi_struct=edi_address_struct, context=context)[0]
         if company.logo:
             result['logo'] = company.logo # already base64-encoded
         if company.paypal_account:
@@ -52,7 +51,7 @@ class res_company(osv.osv):
         res_partner_bank = self.pool.get('res.partner.bank')
         bank_ids = res_partner_bank.search(cr, uid, [('company_id','=',company.id),('footer','=',True)], context=context)
         if bank_ids:
-            result['bank_ids'] = res_partner_address.edi_m2m(cr, uid,
+            result['bank_ids'] = res_partner.edi_m2m(cr, uid,
                                                              res_partner_bank.browse(cr, uid, bank_ids, context=context),
                                                              context=context)
         return result

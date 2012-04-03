@@ -33,6 +33,7 @@ import tools
 from osv import osv
 from osv import fields
 from tools.translate import _
+from openerp import SUPERUSER_ID
 
 _logger = logging.getLogger('mail')
 
@@ -149,7 +150,9 @@ class mail_message(osv.osv):
             context = {}
         tz = context.get('tz')
         result = {}
-        for message in self.browse(cr, uid, ids, context=context):
+
+        # Read message as UID 1 to allow viewing author even if from different company
+        for message in self.browse(cr, SUPERUSER_ID, ids):
             msg_txt = ''
             if message.email_from:
                 msg_txt += _('%s wrote on %s: \n Subject: %s \n\t') % (message.email_from or '/', format_date_tz(message.date, tz), message.subject)
@@ -263,7 +266,7 @@ class mail_message(osv.osv):
             attachment_data = {
                     'name': fname,
                     'datas_fname': fname,
-                    'datas': fcontent,
+                    'datas': fcontent and fcontent.encode('base64'),
                     'res_model': self._name,
                     'res_id': email_msg_id,
             }
@@ -443,6 +446,7 @@ class mail_message(osv.osv):
                         msg['body_html'] = content
                         msg['subtype'] = 'html' # html version prevails
                         body = tools.ustr(tools.html2plaintext(content))
+                        body = body.replace('&#13;', '')
                     elif part.get_content_subtype() == 'plain':
                         body = content
                 elif part.get_content_maintype() in ('application', 'image'):
@@ -460,6 +464,23 @@ class mail_message(osv.osv):
         msg['sub_type'] = msg['subtype'] or 'plain'
         return msg
 
+    def _postprocess_sent_message(self, cr, uid, message, context=None):
+        """Perform any post-processing necessary after sending ``message``
+        successfully, including deleting it completely along with its
+        attachment if the ``auto_delete`` flag of the message was set.
+        Overridden by subclasses for extra post-processing behaviors. 
+
+        :param browse_record message: the message that was just sent
+        :return: True
+        """
+        if message.auto_delete:
+            self.pool.get('ir.attachment').unlink(cr, uid,
+                                                  [x.id for x in message.attachment_ids \
+                                                        if x.res_model == self._name and \
+                                                           x.res_id == message.id],
+                                                  context=context)
+            message.unlink()
+        return True
 
     def send(self, cr, uid, ids, auto_commit=False, context=None):
         """Sends the selected emails immediately, ignoring their current
@@ -517,14 +538,9 @@ class mail_message(osv.osv):
                     message.write({'state':'sent', 'message_id': res})
                 else:
                     message.write({'state':'exception'})
-
-                # if auto_delete=True then delete that sent messages as well as attachments
                 message.refresh()
-                if message.state == 'sent' and message.auto_delete:
-                    self.pool.get('ir.attachment').unlink(cr, uid,
-                                                          [x.id for x in message.attachment_ids],
-                                                          context=context)
-                    message.unlink()
+                if message.state == 'sent':
+                    self._postprocess_sent_message(cr, uid, message, context=context)
             except Exception:
                 _logger.exception('failed sending mail.message %s', message.id)
                 message.write({'state':'exception'})

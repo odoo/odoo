@@ -5,7 +5,7 @@
            groups="group_purchase_manager,group_purchase_user"
            web_icon="images/purchases.png"
            web_icon_hover="images/purchases-hover.png"/>
-       <menuitem id="menu_procurement_management" name="Purchase Management"
+       <menuitem id="menu_procurement_management" name="Purchase"
             parent="base.menu_purchase_root" sequence="1" />
 
         <menuitem id="menu_purchase_config_purchase" name="Configuration"
@@ -18,11 +18,11 @@
 
         <menuitem
             action="product.product_pricelist_action" id="menu_product_pricelist_action_purhase"
-            parent="menu_purchase_config_pricelist" sequence="20"/>
+            parent="menu_purchase_config_pricelist" sequence="20" groups="base.group_no_one"/>
 
         <menuitem
             action="product.product_pricelist_action_for_purchase" id="menu_product_pricelist_action2_purchase"
-            parent="menu_purchase_config_pricelist" sequence="10"/>
+            parent="menu_purchase_config_pricelist" sequence="10" />
 
         <!--<menuitem
             action="product.product_pricelist_type_action" id="menu_purchase_product_pricelist_type"
@@ -31,11 +31,11 @@
 
         <menuitem
             id="menu_product_in_config_purchase" name="Products"
-            parent="menu_purchase_config_purchase" sequence="30"/>
+            parent="menu_purchase_config_purchase" sequence="30" groups="base.group_no_one"/>
 
         <menuitem
             action="product.product_category_action_form" id="menu_product_category_config_purchase"
-            parent="purchase.menu_product_in_config_purchase" sequence="10"/>
+            parent="purchase.menu_product_in_config_purchase" sequence="1" />
 
         <menuitem
             id="menu_purchase_unit_measure_purchase" name="Units of Measure"
@@ -43,11 +43,11 @@
 
         <menuitem
              action="product.product_uom_categ_form_action" id="menu_purchase_uom_categ_form_action"
-             parent="menu_purchase_unit_measure_purchase" sequence="30"/>
+             parent="purchase.menu_product_in_config_purchase" sequence="5" />
 
         <menuitem
               action="product.product_uom_form_action" id="menu_purchase_uom_form_action"
-              parent="menu_purchase_unit_measure_purchase" sequence="30"/>
+              parent="purchase.menu_product_in_config_purchase" sequence="10"/>
 
         <menuitem
             id="menu_purchase_partner_cat" name="Address Book"
@@ -55,38 +55,12 @@
 
         <menuitem
             action="base.action_partner_category_form" id="menu_partner_categories_in_form" name="Partner Categories"
-            parent="purchase.menu_purchase_partner_cat"/>
-
-
-        <!--supplier addresses action-->
-        <record id="action_supplier_address_form" model="ir.actions.act_window">
-            <field name="name">Addresses</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.partner.address</field>
-            <field name="view_type">form</field>
-            <field name="context">{"search_default_supplier":1}</field>
-            <field name="search_view_id" ref="base.view_res_partner_address_filter"/>
-            <field name="help">Access your supplier records and maintain a good relationship with your suppliers. You can track all your interactions with them through the History tab: emails, orders, meetings, etc.</field>
-        </record>
-        <record id="action_supplier_address_form_view1" model="ir.actions.act_window.view">
-            <field eval="10" name="sequence"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="base.view_partner_address_tree"/>
-            <field name="act_window_id" ref="action_supplier_address_form"/>
-        </record>
-        <record id="action_supplier_address_form_view2" model="ir.actions.act_window.view">
-            <field eval="20" name="sequence"/>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="base.view_partner_address_form1"/>
-            <field name="act_window_id" ref="action_supplier_address_form"/>
-        </record>
+            parent="purchase.menu_purchase_partner_cat" groups="base.group_no_one"/>
 
      <!--supplier menu-->
-      <menuitem id="base.menu_procurement_management_supplier" name="Address Book"
-            parent="base.menu_purchase_root" sequence="3"/>
-      <menuitem id="base.menu_procurement_management_supplier_name" name="Suppliers"
-            parent="base.menu_procurement_management_supplier"
-            action="base.action_partner_supplier_form" sequence="1"/>
+    <menuitem id="base.menu_procurement_management_supplier_name" name="Suppliers"
+            parent="menu_procurement_management"
+            action="base.action_partner_supplier_form" sequence="15"/>
 
           <!--Inventory control-->
       <menuitem id="menu_procurement_management_inventory" name="Receive Products"
@@ -173,7 +147,6 @@
                     <notebook colspan="4">
                         <page string="Purchase Order">
                             <field name="partner_id" on_change="onchange_partner_id(partner_id)" context="{'search_default_supplier':1,'default_supplier':1,'default_customer':0}"  options='{"quick_create": false}'/>
-                            <field name="partner_address_id" options='{"quick_create": false}'/>
                             <field domain="[('type','=','purchase')]" name="pricelist_id" groups="base.group_extended"/>
                             <field name="origin" groups="base.group_extended"/>
                             <newline/>
@@ -220,9 +193,11 @@
                                 <field name="fiscal_position" widget="selection"/>
                             </group>
                             <newline/>
-                            <separator string="Purchase Control" colspan="4"/>
-                            <field name="validator"/>
-                            <field name="date_approve"/>
+                            <group colspan="2" col="2" groups="base.group_no_one">
+                                <separator string="Purchase Control" colspan="4"/>
+                                <field name="validator"/>
+                                <field name="date_approve"/>
+                            </group>
                             <separator string="Invoices" colspan="4"/>
                             <newline/>
                             <field name="invoice_ids" groups="base.group_extended" nolabel="1" colspan="4" context="{'type':'in_invoice', 'journal_type':'purchase'}"/>
@@ -304,7 +279,7 @@
               </search>
             </field>
         </record>
-        
+
         <record id="purchase_order_tree" model="ir.ui.view">
             <field name="name">purchase.order.tree</field>
             <field name="model">purchase.order</field>

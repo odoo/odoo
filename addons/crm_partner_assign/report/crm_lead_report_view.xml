@@ -12,7 +12,7 @@
                     <group>
                         <filter string="Last 30 Days" icon="terp-go-month" name="this_month"
                             domain="[('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"/>
-                        <filter icon="terp-go-week" string="7 Days" 
+                        <filter icon="terp-go-week" string="7 Days"
                             domain="[('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"/>
                         <separator orientation="vertical" />
                         <filter icon="terp-check"
@@ -152,17 +152,17 @@
             <field name="view_id" ref="view_report_crm_opportunity_assign_tree"/>
             <field name="act_window_id" ref="action_report_crm_opportunity_assign"/>
        </record>
-       
+
        <record model="ir.actions.act_window.view" id="action_report_crm_lead_assign_graph">
             <field name="sequence" eval="2"/>
             <field name="view_mode">graph</field>
             <field name="view_id" ref="view_report_crm_lead_assign_graph"/>
             <field name="act_window_id" ref="action_report_crm_opportunity_assign"/>
-       </record>       
+       </record>
 
        <menuitem id="menu_report_crm_opportunities_assign_tree"
            groups="base.group_extended"
-           parent="base.next_id_64" action="action_report_crm_opportunity_assign" sequence="5"/>
+           parent="base.next_id_64" action="action_report_crm_opportunity_assign" sequence="20"/>
 
     </data>
 </openerp>

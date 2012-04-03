@@ -194,7 +194,7 @@ class mail_compose_message(osv.osv_memory):
         for mail in self.browse(cr, uid, ids, context=context):
             attachment = {}
             for attach in mail.attachment_ids:
-                attachment[attach.datas_fname] = attach.datas
+                attachment[attach.datas_fname] = attach.datas and attach.datas.decode('base64')
             references = None
             headers = {}
 

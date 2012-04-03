@@ -8,8 +8,9 @@
             groups="base.group_hr_manager,base.group_hr_user,base.group_user"/>
         <menuitem id="menu_hr_main" parent="menu_hr_root" name="Human Resources" sequence="0"/>
         <menuitem id="menu_hr_configuration" name="Configuration" parent="hr.menu_hr_root" groups="base.group_hr_manager" sequence="50"/>
-        <menuitem id="menu_hr_management" name="Human Resources" parent="hr.menu_hr_configuration" sequence="1"/>
+        <menuitem id="menu_hr_management" name="Human Resources" parent="hr.menu_hr_configuration" sequence="25" groups="base.group_no_one"/>
         <menuitem id="menu_view_employee_category_configuration_form" parent="hr.menu_hr_management" name="Employees" sequence="1" />
+        <menuitem id="base.menu_hr_reports" parent="hr.menu_hr_root" sequence="40" name="Reporting"/>
 
         <!--
         ==========
@@ -33,7 +34,7 @@
                         <field name="parent_id" />
                         </group>
                         <group colspan="2" col="1">
-                          <field name="photo" widget='image' nolabel="1"/>
+                          <field name="photo" widget='image' nolabel="1" on_change="onchange_photo(photo)"/>
                         </group>
                     </group>
                     <notebook colspan="6">
@@ -56,8 +57,7 @@
                             <group col="2" colspan="2">
                                 <separator string="Contact Information" colspan="2"/>
                                 <field name="address_home_id" colspan="2"/>
-                                <field name="partner_id" invisible="1" />
-                                <field name="address_id" colspan="2" on_change="onchange_address_id(address_id)" domain="[('partner_id', '=', partner_id)]"/>
+                                <field name="address_id" colspan="2" on_change="onchange_address_id(address_id)" />
                                 <field name="work_phone"/>
                                 <field name="mobile_phone"/>
                                 <field name="work_email" widget="email" />
@@ -130,7 +130,6 @@
         <field name="model">hr.employee</field>
         <field name="type">kanban</field>
         <field name="arch" type="xml">
-
             <kanban>
                 <templates>
                     <t t-name="kanban-box">
@@ -313,7 +312,7 @@
         </record>
 
         <menuitem action="open_view_categ_form" id="menu_view_employee_category_form"
-            parent="menu_view_employee_category_configuration_form" sequence="1"/>
+            parent="hr.menu_hr_configuration" sequence="1"/>
 
         <record id="open_view_categ_tree" model="ir.actions.act_window">
             <field name="name">Categories structure</field>
@@ -340,7 +339,7 @@
         </record>
 
         <menuitem action="open_view_categ_tree"
-            id="menu_view_employee_category_tree" parent="menu_view_employee_category_configuration_form" sequence="2"/>
+            id="menu_view_employee_category_tree" parent="menu_hr_management" sequence="2"/>
 
         <record id="view_hr_job_form" model="ir.ui.view">
             <field name="name">hr.job.form</field>
@@ -434,7 +433,7 @@
         </record>
 
         <menuitem name="Recruitment" id="base.menu_crm_case_job_req_main" parent="menu_hr_root" groups="base.group_hr_user"/>
-        <menuitem parent="hr.menu_view_employee_category_configuration_form" id="menu_hr_job" action="action_hr_job" sequence="2"/>
+        <menuitem parent="hr.menu_hr_management" id="menu_hr_job" action="action_hr_job" sequence="6"/>
 
     </data>
 </openerp>

@@ -37,7 +37,7 @@ The most appropriate partner can be assigned.
 You can also use the geolocalization without using the GPS coordinates.
     """,
     'author': 'OpenERP SA',
-    'depends': ['crm'],
+    'depends': ['crm', 'account'],
     'demo_xml': [
         'res_partner_demo.xml',
     ],

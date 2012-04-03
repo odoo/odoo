@@ -123,6 +123,7 @@ class account_common_report(osv.osv_memory):
 
     _defaults = {
             'fiscalyear_id': _get_fiscalyear,
+            'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.common.report',context=c),
             'journal_ids': _get_all_journal,
             'filter': 'filter_no',
             'chart_account_id': _get_account,
