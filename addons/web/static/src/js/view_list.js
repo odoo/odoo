@@ -749,8 +749,9 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         }
     },
     no_result: function () {
-        var help = this.options.action.help;
-        if (this.groups.group_by || !help) {
+        if (this.groups.group_by
+            || !this.options.action
+            || !this.options.action.help) {
             return;
         }
         this.$element.children('table').replaceWith(
@@ -758,7 +759,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
                 .append($('<img>', {
                     src: '/web/static/src/img/empty-list-arrow.png',
                     alt: _t("This list is empty")}))
-                .append($('<div>').html(help)));
+                .append($('<div>').html(this.options.action.help)));
     }
 });
 openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.ListView.List# */{
