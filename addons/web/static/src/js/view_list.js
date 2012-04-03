@@ -83,7 +83,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             self.compute_aggregates();
         });
         this.no_leaf = false;
-        var domain = [['res_model','=', this.model]];
+        var domain = [['res_model','=', this.model], ['user_id' , '=', this.session.uid]];
         new openerp.web.DataSetSearch(
            this, 'ir.needaction_users_rel', this.dataset.get_context(), domain)
         .read_slice().done(function(result) {
