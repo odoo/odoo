@@ -254,6 +254,12 @@ Widgets API
   :js:class:`~VS.model.SearchFacet` as parameter, from which it's
   their job to get whatever value they want
 
+* :js:func:`~openerp.web.search.Input.get_groupby` has been added. It returns
+  an :js:class:`Array` of context-like constructs. By default, it does not do
+  anything in :js:class:`~openerp.web.search.Field` and it returns the various
+  contexts of its enabled filters in
+  :js:class:`~openerp.web.search.FilterGroup`.
+
 Filters
 +++++++
 

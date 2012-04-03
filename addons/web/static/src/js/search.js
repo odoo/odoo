@@ -593,7 +593,10 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
                 var context = field.get_context(facet);
                 if (context) {
                     contexts.push(context);
-                    groupbys.push(context);
+                }
+                var group_by = field.get_groupby(facet);
+                if (group_by) {
+                    groupbys.push.apply(groupbys, group_by);
                 }
             } catch (e) {
                 if (e instanceof openerp.web.search.Invalid) {
@@ -798,6 +801,10 @@ openerp.web.search.Input = openerp.web.search.Widget.extend( /** @lends openerp.
         throw new Error(
             "get_context not implemented for widget " + this.attrs.type);
     },
+    get_groupby: function () {
+        throw new Error(
+            "get_groupby not implemented for widget " + this.attrs.type);
+    },
     get_domain: function () {
         throw new Error(
             "get_domain not implemented for widget " + this.attrs.type);
@@ -864,6 +871,18 @@ openerp.web.search.FilterGroup = openerp.web.search.Input.extend(/** @lends open
         return _.extend(new openerp.web.CompoundContext, {
             __contexts: contexts
         });
+    },
+    /**
+     * Fetches group_by sequence for all enabled filters in the group
+     *
+     * @param {VS.model.SearchFacet} facet
+     * @return {Array} enabled filters in this group
+     */
+    get_groupby: function (facet) {
+        return  _(facet.get('json')).chain()
+            .map(function (filter) { return filter.attrs.context; })
+            .reject(_.isEmpty)
+            .value();
     },
     /**
      * Handles domains-fetching for all the filters within it: groups them.
@@ -948,7 +967,7 @@ openerp.web.search.Filter = openerp.web.search.Input.extend(/** @lends openerp.w
     },
     facet_for: function () { return $.when(null); },
     get_context: function () { },
-    get_domain: function () { }
+    get_domain: function () { },
 });
 openerp.web.search.Field = openerp.web.search.Input.extend( /** @lends openerp.web.search.Field# */ {
     template: 'SearchView.field',
@@ -989,6 +1008,7 @@ openerp.web.search.Field = openerp.web.search.Input.extend( /** @lends openerp.w
         return new openerp.web.CompoundContext(context)
                 .set_eval_context({self: val});
     },
+    get_groupby: function () { },
     /**
      * Function creating the returned domain for the field, override this
      * methods in children if you only need to customize the field's domain
