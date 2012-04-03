@@ -13,7 +13,7 @@ openerp.google_docs = function(instance, session) {
                var config = new instance.web.DataSet(this, 'google.docs.config', this.view.dataset.get_context());
                config.call('get_config', [[this.view.datarecord.id],this.view.dataset.model,this.view.dataset.get_context()], function(r) {
                if (r == false){
-               $('.oe_google_docs_text_button',this.$element).hide();
+                    $('.oe_google_docs_text_button',this.$element).hide();
                }
                });
            },

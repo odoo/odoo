@@ -139,7 +139,7 @@ class config(osv.osv):
         Method use with the js to hidde or show the add google doc button 
         @return : list of configuration ids or false
         '''
-        if self.pool.get('ir.attachment').search_count(cr,uid,[('url','like','https://docs.google.com/document%'),('res_model','=',model),('res_id','=',ids[0])]) !=0:
+        if self.pool.get('ir.attachment').search_count(cr,uid,[('url','like','https://docs.google.com/%'),('res_model','=',model),('res_id','=',ids[0])]) !=0:
             return  False
         else:
             return True
