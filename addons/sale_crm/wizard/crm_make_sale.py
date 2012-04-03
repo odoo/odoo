@@ -105,8 +105,8 @@ class crm_make_sale(osv.osv_memory):
                 sale_order = sale_obj.browse(cr, uid, new_id, context=context)
                 case_obj.write(cr, uid, [case.id], {'ref': 'sale.order,%s' % new_id})
                 new_ids.append(new_id)
-                message = _("Opportunity has been <b>converted to Quotation</b> <em>%s</em>.") % (sale_order.name)
-                case.message_append_note('', message)
+                message = _("Opportunity has been <b>converted</b> to the quotation <em>%s</em>.") % (sale_order.name)
+                case.message_append_note(body=message)
 
             if make.close:
                 case_obj.case_close(cr, uid, data)

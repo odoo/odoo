@@ -42,7 +42,7 @@ class crm_meeting(crm_base, osv.osv):
     _name = 'crm.meeting'
     _description = "Meeting"
     _order = "id desc"
-    _inherit = ["calendar.event","mail.thread"]
+    _inherit = ["calendar.event", 'ir.needaction', "mail.thread"]
     _columns = {
         # From crm.case
         'name': fields.char('Summary', size=124, required=True, states={'done': [('readonly', True)]}),
@@ -98,8 +98,6 @@ class crm_meeting(crm_base, osv.osv):
             context = {}
         # update context: if come from phonecall, default state values can make the message_append_note crash
         context.pop('default_state', False)
-        lead_obj = self.pool.get('crm.lead')
-        phonecall_obj = self.pool.get('crm.phonecall')
         for meeting in self.browse(cr, uid, ids, context=context):
             message = _("A meeting has been <b>scheduled</b> on <em>%s</em>.") % (meeting.date)
             if meeting.opportunity_id: # meeting can be create from phonecalls or opportunities, therefore checking for the parent
@@ -109,23 +107,23 @@ class crm_meeting(crm_base, osv.osv):
             elif meeting.phonecall_id:
                 phonecall = meeting.phonecall_id
                 parent_message = _("Meeting linked to the phonecall <em>%s</em> has been <b>created</b> and <b>cscheduled</b> on <em>%s</em>.") % (phonecall.name, meeting.date)
-                phonecall.message_append_note(_('System Notification'), message)
+                phonecall.message_append_note(body=message)
             else:
                 parent_message = message
             if parent_message:
-                meeting.message_append_note(_('System Notification'), parent_message)
+                meeting.message_append_note(body=parent_message)
         return True
 
     def case_close_send_note(self, cr, uid, ids, context=None):
         message = _("Meeting has been <b>done</b>.")
-        return self.message_append_note(cr, uid, ids, _('System Notification'), message, context=context)
+        return self.message_append_note(cr, uid, ids, body=message, context=context)
 
     def case_open_send_note(self, cr, uid, ids, context=None):
         for meeting in self.browse(cr, uid, ids, context=context):
             if meeting.state != 'draft':
                 return False
             message = _("Meeting has been <b>confirmed</b>.")
-            meeting.message_append_note(_('System Notification'), message)
+            meeting.message_append_note(body=message)
         return True
 
     def case_open(self, cr, uid, ids, context=None):

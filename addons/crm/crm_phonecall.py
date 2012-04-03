@@ -32,7 +32,7 @@ class crm_phonecall(crm_base, osv.osv):
     _name = "crm.phonecall"
     _description = "Phonecall"
     _order = "id desc"
-    _inherit = ['mail.thread']
+    _inherit = ['ir.needaction', 'mail.thread']
     _columns = {
         # From crm.case
         'id': fields.integer('ID', readonly=True),
@@ -87,44 +87,12 @@ class crm_phonecall(crm_base, osv.osv):
         'active': 1,
     }
 
-    def case_get_note_msg_prefix(self, cr, uid, id, context=None):
-        return 'Phonecall'
-
     def create(self, cr, uid, vals, context=None):
         obj_id = super(crm_phonecall, self).create(cr, uid, vals, context)
         for phonecall in self.browse(cr, uid, [obj_id], context=context):
             if not phonecall.opportunity_id:
                 self.case_open_send_note(cr, uid, [obj_id], context=context)
         return obj_id
-
-    def get_needaction_user_ids(self, cr, uid, ids, context=None):
-        result = dict.fromkeys(ids, [])
-        for obj in self.browse(cr, uid, ids, context=context):
-            if (obj.state == 'draft' and obj.user_id):
-                result[obj.id] = [obj.user_id.id]
-        return result
-
-    def case_reset_send_note(self, cr, uid, ids, context=None):
-        message = 'Phonecall has been <b>reset and set as open</b>.'
-        return self.message_append_note(cr, uid, ids, 'System Notification', message, context=context)
-
-    def case_open_send_note(self, cr, uid, ids, context=None):
-        lead_obj = self.pool.get('crm.lead')
-        for phonecall in self.browse(cr, uid, ids, context=context):
-            phonecall.message_subscribe([phonecall.user_id.id], context=context)
-            if phonecall.opportunity_id:
-                lead = phonecall.opportunity_id
-                message = _("Phonecall linked to the opportunity <em>%s</em> has been <b>created</b> and <b>scheduled</b> on <em>%s</em>.") % (lead.name, phonecall.date)
-            else:
-                message = _("Phonecall has been <b>created and opened</b>.")
-            phonecall.message_append_note('System Notification' ,message)
-        return True
-
-    def _call_set_partner_send_note(self, cr, uid, ids, context=None):
-        for phonecall in self.browse(cr, uid, ids, context=context):
-            message = _("Partner has been <b>created</b>")
-            phonecall.message_append_note('' ,message)
-        return True
 
     # From crm.case
     def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
@@ -339,6 +307,41 @@ class crm_phonecall(crm_base, osv.osv):
                 }
 
         return value
+    
+    # ----------------------------------------
+    # OpenChatter methods and notifications
+    # ----------------------------------------
+    
+    def get_needaction_user_ids(self, cr, uid, ids, context=None):
+        result = dict.fromkeys(ids)
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = []
+            if (obj.state == 'draft' and obj.user_id):
+                result[obj.id] = [obj.user_id.id]
+        return result
+
+    def case_get_note_msg_prefix(self, cr, uid, id, context=None):
+        return 'Phonecall'
+    
+    def case_reset_send_note(self, cr, uid, ids, context=None):
+        message = _('Phonecall has been <b>reset and set as open</b>.')
+        return self.message_append_note(cr, uid, ids, body=message, context=context)
+
+    def case_open_send_note(self, cr, uid, ids, context=None):
+        lead_obj = self.pool.get('crm.lead')
+        for phonecall in self.browse(cr, uid, ids, context=context):
+            phonecall.message_subscribe([phonecall.user_id.id], context=context)
+            if phonecall.opportunity_id:
+                lead = phonecall.opportunity_id
+                message = _("Phonecall linked to the opportunity <em>%s</em> has been <b>created</b> and <b>scheduled</b> on <em>%s</em>.") % (lead.name, phonecall.date)
+            else:
+                message = _("Phonecall has been <b>created and opened</b>.")
+            phonecall.message_append_note(body=message)
+        return True
+
+    def _call_set_partner_send_note(self, cr, uid, ids, context=None):
+        return self.message_append_note(cr, uid, ids, body=_("Partner has been <b>created</b>"), context=context)
+    
 
 crm_phonecall()
 
