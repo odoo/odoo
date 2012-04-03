@@ -2521,9 +2521,9 @@ class stock_move(osv.osv):
         
         product_obj = self.pool.get('product.product')
         for new_move in self.browse(cr, uid, res, context=context):
-            message = _("Product has been consumed with '%s' quantity.") % (product_qty)
+            message = _("Product has been consumed with '%s' quantity.") % (new_move.product_qty)
             product_obj.message_append_note(cr, uid, [new_move.product_id.id], body=message, context=context)
-        
+
         self.action_done(cr, uid, res, context=context)
 
         return res
