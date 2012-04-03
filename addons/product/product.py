@@ -534,7 +534,7 @@ class product_product(osv.osv):
         return obj_id
 
     def create_send_note(self, cr, uid, ids, context=None):
-        return self.message_append_note(cr, uid, ids, _('System notification'), _("Product has been <b>created</b>."), type='notification', context=context)
+        return self.message_append_note(cr, uid, ids, body=_("Product has been <b>created</b>."), context=context)
 
     def unlink(self, cr, uid, ids, context=None):
         unlink_ids = []

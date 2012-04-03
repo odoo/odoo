@@ -368,8 +368,7 @@ class mrp_bom(osv.osv):
         prod_obj = self.pool.get('product.product')
         for obj in self.browse(cr, uid, ids, context=context):
             for prod in prod_obj.browse(cr, uid, [obj.product_id], context=context):
-                self.message_append_note(cr, uid, [obj.id], _('System notification'),
-                        _("Bill of Material has been <b>created</b> for <em>%s</em> product.") % (prod.id.name_template), type='notification', context=context)
+                self.message_append_note(cr, uid, [obj.id], body=_("Bill of Material has been <b>created</b> for <em>%s</em> product.") % (prod.id.name_template), context=context)
         return True
 
 mrp_bom()
@@ -407,7 +406,7 @@ class mrp_production(osv.osv):
     _name = 'mrp.production'
     _description = 'Manufacturing Order'
     _date_name  = 'date_planned'
-    _inherit = ['mail.thread']
+    _inherit = ['ir.needaction', 'mail.thread']
 
     def _production_calc(self, cr, uid, ids, prop, unknow_none, context=None):
         """ Calculates total hours and total no. of cycles for a production order.
@@ -522,50 +521,6 @@ class mrp_production(osv.osv):
             if production.state not in ('draft', 'cancel'):
                 raise osv.except_osv(_('Invalid action !'), _('Cannot delete a manufacturing order in state \'%s\'') % production.state)
         return super(mrp_production, self).unlink(cr, uid, ids, context=context)
-
-    def get_needaction_user_ids(self, cr, uid, ids, context=None):
-        result = dict.fromkeys(ids, [])
-        for obj in self.browse(cr, uid, ids, context=context):
-            if obj.state == 'draft' and obj.user_id:
-                result[obj.id] = [obj.user_id.id]
-        return result
-
-    def message_get_subscribers(self, cr, uid, ids, context=None):
-        sub_ids = self.message_get_subscribers_ids(cr, uid, ids, context=context);
-        for obj in self.browse(cr, uid, ids, context=context):
-            if obj.user_id:
-                sub_ids.append(obj.user_id.id)
-        return self.pool.get('res.users').read(cr, uid, sub_ids, context=context)
-
-    def create_send_note(self, cr, uid, ids, context=None):
-        self.message_append_note(cr, uid, ids, _('System Notification'), _("Manufacturing order has been <b>created</b>."), context=context)
-        return True
-
-    def action_cancel_send_note(self, cr, uid, ids, context=None):
-        message = _("Manufacturing order has been <b>canceled</b>.")
-        self.message_append_note(cr, uid, ids, _('System Notification'), message, context=context)
-        return True
-
-    def action_ready_send_note(self, cr, uid, ids, context=None):
-        message = _("Manufacturing order is <b>ready to produce</b>.")
-        self.message_append_note(cr, uid, ids, _('System Notification'), message, context=context)
-        return True
-
-    def action_in_production_send_note(self, cr, uid, ids, context=None):
-        message = _("Manufacturing order is <b>in production</b>.")
-        self.message_append_note(cr, uid, ids, _('System Notification'), message, context=context)
-        return True
-
-    def action_done_send_note(self, cr, uid, ids, context=None):
-        message = _("Manufacturing order has been <b>done</b>.")
-        self.message_append_note(cr, uid, ids, _('System Notification'), message, context=context)
-        return True
-
-    def action_confirm_send_note(self, cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids, context=context):
-            message = _("Manufacturing order has been <b>confirmed</b> and is <b>scheduled</b> for the <em>%s</em>.") % (obj.date_planned)
-            self.message_append_note(cr, uid, [obj.id], _('System Notification'), message, context=context)
-        return True
 
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
@@ -1073,6 +1028,55 @@ class mrp_production(osv.osv):
         pick_obj = self.pool.get('stock.picking')
         pick_obj.force_assign(cr, uid, [prod.picking_id.id for prod in self.browse(cr, uid, ids)])
         return True
+    
+    # ---------------------------------------------------
+    # OpenChatter methods and notifications
+    # ---------------------------------------------------
+    
+    def get_needaction_user_ids(self, cr, uid, ids, context=None):
+        result = dict.fromkeys(ids, [])
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.state == 'draft' and obj.user_id:
+                result[obj.id] = [obj.user_id.id]
+        return result
+
+    def message_get_subscribers(self, cr, uid, ids, context=None):
+        sub_ids = self.message_get_subscribers_ids(cr, uid, ids, context=context);
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.user_id:
+                sub_ids.append(obj.user_id.id)
+        return self.pool.get('res.users').read(cr, uid, sub_ids, context=context)
+
+    def create_send_note(self, cr, uid, ids, context=None):
+        self.message_append_note(cr, uid, ids, body=_("Manufacturing order has been <b>created</b>."), context=context)
+        return True
+
+    def action_cancel_send_note(self, cr, uid, ids, context=None):
+        message = _("Manufacturing order has been <b>canceled</b>.")
+        self.message_append_note(cr, uid, ids, body=message, context=context)
+        return True
+
+    def action_ready_send_note(self, cr, uid, ids, context=None):
+        message = _("Manufacturing order is <b>ready to produce</b>.")
+        self.message_append_note(cr, uid, ids, body=message, context=context)
+        return True
+
+    def action_in_production_send_note(self, cr, uid, ids, context=None):
+        message = _("Manufacturing order is <b>in production</b>.")
+        self.message_append_note(cr, uid, ids, body=message, context=context)
+        return True
+
+    def action_done_send_note(self, cr, uid, ids, context=None):
+        message = _("Manufacturing order has been <b>done</b>.")
+        self.message_append_note(cr, uid, ids, body=message, context=context)
+        return True
+
+    def action_confirm_send_note(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            message = _("Manufacturing order has been <b>confirmed</b> and is <b>scheduled</b> for the <em>%s</em>.") % (obj.date_planned)
+            self.message_append_note(cr, uid, [obj.id], body=message, context=context)
+        return True
+
 
 mrp_production()
 
