@@ -846,6 +846,8 @@ openerp.web.UserMenu =  openerp.web.Widget.extend(/** @lends openerp.web.UserMen
                 // TODO: Show company if multicompany is in use
                 var topbar_name = _.str.sprintf("%s (%s)", res.name, openerp.connection.db, res.company_id[1]);
                 self.$element.find('.oe_topbar_name').text(topbar_name);
+                var avatar_src = _.str.sprintf('%s/web/binary/image?session_id=%s&model=res.users&field=avatar&id=%s', self.session.prefix, self.session.session_id, self.session.uid);
+                $avatar.attr('src', avatar_src);
                 return self.shortcut_load();
             });
         };
@@ -987,7 +989,7 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
                 self.$element.toggleClass('clark-gable');
             });
         }
-        this.session.bind_session().then(function() {
+        this.session.session_bind().then(function() {
             if (!self.session.session_is_valid()) {
                 self.show_login();
             }
@@ -1164,7 +1166,7 @@ openerp.web.embed = function (origin, dbname, login, key, action, options) {
         var sc = document.getElementsByTagName('script');
         currentScript = sc[sc.length-1];
     }
-    openerp.connection.bind_session(origin).then(function () {
+    openerp.connection.session_bind(origin).then(function () {
         openerp.connection.session_authenticate(dbname, login, key, true).then(function () {
             var client = new openerp.web.EmbeddedClient(action, options);
             client.insertAfter(currentScript);
