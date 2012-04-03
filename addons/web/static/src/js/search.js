@@ -1280,7 +1280,8 @@ openerp.web.search.Advanced = openerp.web.search.Input.extend({
                 self.$element.toggleClass('oe_opened');
             }).on('click', 'button.oe_add_condition', function () {
                 self.append_proposition();
-            }).on('click', 'button.oe_apply', function () {
+            }).on('submit', 'form', function (e) {
+                e.preventDefault();
                 self.commit_search();
             });
         return $.when(
