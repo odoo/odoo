@@ -718,7 +718,7 @@ class ir_model_data(osv.osv):
         if not context:
             context = {}
         # TODO: records created during module install should not display the messages of OpenChatter
-        context = dict(context)
+        context = dict(context, install_mode=True)
         if xml_id and ('.' in xml_id):
             assert len(xml_id.split('.'))==2, _("'%s' contains too many dots. XML ids should not contain dots ! These are used to refer to other modules data, as in module.reference_id") % (xml_id)
             module, xml_id = xml_id.split('.')
