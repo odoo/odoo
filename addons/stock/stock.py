@@ -1381,10 +1381,10 @@ class stock_picking(osv.osv):
                     _("""%s has been <b>created</b>.""") % (self._get_document_type(obj.type)),
                       type='notification', context=context)
     
-    def scrap_send_note(self, cr, uid, ids, quantity, name, context=None):
+    def scrap_send_note(self, cr, uid, ids, quantity, uom, name, context=None):
         self.message_append_note(cr, uid, ids, _('System notification'),
-                    _("""%s %s have been <b>moved to</b> scrap.""")
-                    % (quantity, name), type='notification', context=context)
+                    _("""%s %s %s has been <b>moved to</b> scrap.""")
+                    % (quantity, uom, name), type='notification', context=context)
     
     def back_order_send_note(self, cr, uid, ids, back_name, context=None):
         self.message_append_note(cr, uid, ids, _('System notification'),
@@ -2406,9 +2406,8 @@ class stock_move(osv.osv):
 
             res += [new_move]
             product_obj = self.pool.get('product.product')
-            for (id, name) in product_obj.name_get(cr, uid, [move.product_id.id]):
-                if move.picking_id:
-                    move.picking_id.scrap_send_note(quantity, name, context=context)
+            for product in product_obj.browse(cr, uid, [move.product_id.id], context=context):
+                move.picking_id.scrap_send_note(quantity, product.uom_id.name, product.name, context=context)
 
         self.action_done(cr, uid, res, context=context)
         return res
