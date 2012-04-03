@@ -2,22 +2,6 @@ openerp.point_of_sale = function(db) {
     
     db.point_of_sale = {};
 
-    var __extends = function(child, parent) {
-        var __hasProp = Object.prototype.hasOwnProperty;
-        for (var key in parent) {
-            if (__hasProp.call(parent, key))
-                child[key] = parent[key];
-        }
-        function ctor() {
-            this.constructor = child;
-        }
-
-        ctor.prototype = parent.prototype;
-        child.prototype = new ctor;
-        child.__super__ = parent.prototype;
-        return child;
-    };
-
     var QWeb = db.web.qweb;
     var qweb_template = function(template) {
         return function(ctx) {
@@ -85,7 +69,8 @@ openerp.point_of_sale = function(db) {
                 }, this));
             }, this));
             $.when(this.fetch('pos.category', ['name', 'parent_id', 'child_id']),
-                this.fetch('product.product', ['name', 'list_price', 'pos_categ_id', 'taxes_id', 'product_image_small'], [['pos_categ_id', '!=', 'false']]),
+                this.fetch('product.product', ['name', 'list_price', 'pos_categ_id', 'taxes_id', 'product_image_small', 'ean13', 'id'], [['pos_categ_id', '!=', 'false']]),
+                this.fetch('product.packaging', ['product_id', 'ean']),
                 this.fetch('account.bank.statement', ['account_id', 'currency', 'journal_id', 'state', 'name'],
                     [['state', '=', 'open'], ['user_id', '=', this.session.uid]]),
                 this.fetch('account.journal', ['auto_cash', 'check_dtls', 'currency', 'name', 'type']),
@@ -223,57 +208,28 @@ openerp.point_of_sale = function(db) {
      Models
      ---
      */
-    var CashRegister = (function() {
-        __extends(CashRegister, Backbone.Model);
-        function CashRegister() {
-            CashRegister.__super__.constructor.apply(this, arguments);
-        }
 
-        return CashRegister;
-    })();
-    var CashRegisterCollection = (function() {
-        __extends(CashRegisterCollection, Backbone.Collection);
-        function CashRegisterCollection() {
-            CashRegisterCollection.__super__.constructor.apply(this, arguments);
-        }
+    var CashRegister = Backbone.Model.extend({
+    });
 
-        CashRegisterCollection.prototype.model = CashRegister;
-        return CashRegisterCollection;
-    })();
-    var Product = (function() {
-        __extends(Product, Backbone.Model);
-        function Product() {
-            Product.__super__.constructor.apply(this, arguments);
-        }
+    var CashRegisterCollection = Backbone.Collection.extend({
+        model: CashRegister,
+    });
 
-        return Product;
-    })();
-    var ProductCollection = (function() {
-        __extends(ProductCollection, Backbone.Collection);
-        function ProductCollection() {
-            ProductCollection.__super__.constructor.apply(this, arguments);
-        }
+    var Product = Backbone.Model.extend({
+    });
 
-        ProductCollection.prototype.model = Product;
-        return ProductCollection;
-    })();
-    var Category = (function() {
-        __extends(Category, Backbone.Model);
-        function Category() {
-            Category.__super__.constructor.apply(this, arguments);
-        }
+    var ProductCollection = Backbone.Collection.extend({
+        model: Product,
+    });
 
-        return Category;
-    })();
-    var CategoryCollection = (function() {
-        __extends(CategoryCollection, Backbone.Collection);
-        function CategoryCollection() {
-            CategoryCollection.__super__.constructor.apply(this, arguments);
-        }
+    var Category = Backbone.Model.extend({
+    });
 
-        CategoryCollection.prototype.model = Category;
-        return CategoryCollection;
-    })();
+    var CategoryCollection = Backbone.Collection.extend({
+        model: Category,
+    });
+
     /*
      Each Order contains zero or more Orderlines (i.e. the content of the "shopping cart".)
      There should only ever be one Orderline per distinct product in an Order.
@@ -351,91 +307,73 @@ openerp.point_of_sale = function(db) {
             };
         },
         exportAsJSON: function() {
-            var result;
-            result = {
+            return {
                 qty: this.get('quantity'),
                 price_unit: this.get('list_price'),
                 discount: this.get('discount'),
                 product_id: this.get('id')
             };
-            return result;
         },
     });
+
     var OrderlineCollection = Backbone.Collection.extend({
         model: Orderline,
     });
-    /*
-     Every PaymentLine has all the attributes of the corresponding CashRegister.
-     */
-    var Paymentline = (function() {
-        __extends(Paymentline, Backbone.Model);
-        function Paymentline() {
-            Paymentline.__super__.constructor.apply(this, arguments);
-        }
 
-        Paymentline.prototype.defaults = {
-            amount: 0
-        };
-        Paymentline.prototype.getAmount = function() {
+    // Every PaymentLine has all the attributes of the corresponding CashRegister.
+    var Paymentline = Backbone.Model.extend({
+        defaults: { 
+            amount: 0,
+        },
+        initialize: function(attributes) {
+            Backbone.Model.prototype.initialize.apply(this, arguments);
+        },
+        getAmount: function(){
             return this.get('amount');
-        };
-        Paymentline.prototype.exportAsJSON = function() {
-            var result;
-            result = {
+        },
+        exportAsJSON: function(){
+            return {
                 name: db.web.datetime_to_str(new Date()),
                 statement_id: this.get('id'),
                 account_id: (this.get('account_id'))[0],
                 journal_id: (this.get('journal_id'))[0],
                 amount: this.getAmount()
             };
-            return result;
-        };
-        return Paymentline;
-    })();
-    var PaymentlineCollection = (function() {
-        __extends(PaymentlineCollection, Backbone.Collection);
-        function PaymentlineCollection() {
-            PaymentlineCollection.__super__.constructor.apply(this, arguments);
-        }
+        },
+    });
 
-        PaymentlineCollection.prototype.model = Paymentline;
-        return PaymentlineCollection;
-    })();
-    var Order = (function() {
-        __extends(Order, Backbone.Model);
-        function Order() {
-            Order.__super__.constructor.apply(this, arguments);
-        }
-
-        Order.prototype.defaults = {
+    var PaymentlineCollection = Backbone.Collection.extend({
+        model: Paymentline,
+    });
+    
+    var Order = Backbone.Model.extend({
+        defaults:{
             validated: false,
             step: 'products',
-        };
-        Order.prototype.initialize = function() {
-            this.set({creationDate: new Date});
+        },
+        initialize: function(attributes){
+            Backbone.Model.prototype.initialize.apply(this, arguments);
             this.set({
-                orderLines: new OrderlineCollection
-            });
-            this.set({
-                paymentLines: new PaymentlineCollection
+                creationDate:   new Date,
+                orderLines:     new OrderlineCollection,
+                paymentLines:   new PaymentlineCollection,
+                name:           "Order " + this.generateUniqueId(),
             });
             this.bind('change:validated', this.validatedChanged);
-            return this.set({
-                name: "Order " + this.generateUniqueId()
-            });
-        };
-        Order.prototype.events = {
+            return this;
+        },
+        events: {
             'change:validated': 'validatedChanged'
-        };
-        Order.prototype.validatedChanged = function() {
+        },
+        validatedChanged: function() {
             if (this.get("validated") && !this.previous("validated")) {
                 this.set({'step': 'receipt'});
             }
-        }
-        Order.prototype.generateUniqueId = function() {
+        },
+        generateUniqueId: function() {
             return new Date().getTime();
-        };
-        Order.prototype.addProduct = function(product) {
+        },
+        addProduct: function(product) {
             var existing;
             existing = (this.get('orderLines')).get(product.id);
             if (existing != null) {
@@ -447,8 +385,8 @@ openerp.point_of_sale = function(db) {
                     this.get('orderLines').remove(line);
                 }, this);
             }
-        };
-        Order.prototype.addPaymentLine = function(cashRegister) {
+        },
+        addPaymentLine: function(cashRegister) {
             var newPaymentline;
             newPaymentline = new Paymentline(cashRegister);
             /* TODO: Should be 0 for cash-like accounts */
@@ -456,38 +394,38 @@ openerp.point_of_sale = function(db) {
                 amount: this.getDueLeft()
             });
             return (this.get('paymentLines')).add(newPaymentline);
-        };
-        Order.prototype.getName = function() {
+        },
+        getName: function() {
             return this.get('name');
-        };
-        Order.prototype.getTotal = function() {
+        },
+        getTotal: function() {
             return (this.get('orderLines')).reduce((function(sum, orderLine) {
                 return sum + orderLine.getPriceWithTax();
             }), 0);
-        };
-        Order.prototype.getTotalTaxExcluded = function() {
+        },
+        getTotalTaxExcluded: function() {
             return (this.get('orderLines')).reduce((function(sum, orderLine) {
                 return sum + orderLine.getPriceWithoutTax();
             }), 0);
-        };
-        Order.prototype.getTax = function() {
+        },
+        getTax: function() {
             return (this.get('orderLines')).reduce((function(sum, orderLine) {
                 return sum + orderLine.getTax();
             }), 0);
-        };
-        Order.prototype.getPaidTotal = function() {
+        },
+        getPaidTotal: function() {
             return (this.get('paymentLines')).reduce((function(sum, paymentLine) {
                 return sum + paymentLine.getAmount();
             }), 0);
-        };
-        Order.prototype.getChange = function() {
+        },
+        getChange: function() {
             return this.getPaidTotal() - this.getTotal();
-        };
-        Order.prototype.getDueLeft = function() {
+        },
+        getDueLeft: function() {
             return this.getTotal() - this.getPaidTotal();
-        };
-        Order.prototype.exportAsJSON = function() {
-            var orderLines, paymentLines, result;
+        },
+        exportAsJSON: function() {
+            var orderLines, paymentLines;
             orderLines = [];
             (this.get('orderLines')).each(_.bind( function(item) {
                 return orderLines.push([0, 0, item.exportAsJSON()]);
@@ -496,7 +434,7 @@ openerp.point_of_sale = function(db) {
             (this.get('paymentLines')).each(_.bind( function(item) {
                 return paymentLines.push([0, 0, item.exportAsJSON()]);
             }, this));
-            result = {
+            return {
                 name: this.getName(),
                 amount_paid: this.getPaidTotal(),
                 amount_total: this.getTotal(),
@@ -505,26 +443,15 @@ openerp.point_of_sale = function(db) {
                 lines: orderLines,
                 statement_ids: paymentLines
             };
-            return result;
-        };
-        return Order;
-    })();
-    var OrderCollection = (function() {
-        __extends(OrderCollection, Backbone.Collection);
-        function OrderCollection() {
-            OrderCollection.__super__.constructor.apply(this, arguments);
-        }
+        },
+    });
 
-        OrderCollection.prototype.model = Order;
-        return OrderCollection;
-    })();
-    var Shop = (function() {
-        __extends(Shop, Backbone.Model);
-        function Shop() {
-            Shop.__super__.constructor.apply(this, arguments);
-        }
+    var OrderCollection = Backbone.Collection.extend({
+        model: Order,
+    });
 
-        Shop.prototype.initialize = function() {
+    var Shop = Backbone.Model.extend({
+        initialize: function() {
             this.set({
                 orders: new OrderCollection(),
                 products: new ProductCollection()
@@ -542,15 +469,15 @@ openerp.point_of_sale = function(db) {
                     });
                 }
             }, this));
-        };
-        Shop.prototype.addAndSelectOrder = function(newOrder) {
+        },
+        addAndSelectOrder: function(newOrder) {
             (this.get('orders')).add(newOrder);
             return this.set({
                 selectedOrder: newOrder
             });
-        };
-        return Shop;
-    })();
+        },
+    });
+
     /*
      The numpad handles both the choice of the property currently being modified
      (quantity, price or discount) and the edition of the corresponding numeric value.
@@ -617,6 +544,7 @@ openerp.point_of_sale = function(db) {
             }
         },
     });
+
     /*
      ---
      Views
@@ -774,6 +702,7 @@ openerp.point_of_sale = function(db) {
         },
         on_selected: function() {},
     });
+
     var OrderWidget = db.web.OldWidget.extend({
         init: function(parent, options) {
             this._super(parent);
@@ -855,6 +784,7 @@ openerp.point_of_sale = function(db) {
             $('#total').html(total.toFixed(2)).hide().fadeIn();
         },
     });
+
     /*
      "Products" step.
      */
@@ -893,6 +823,7 @@ openerp.point_of_sale = function(db) {
         },
         on_change_category: function(id) {},
     });
+
     var ProductWidget = db.web.OldWidget.extend({
         tag_name:'li',
         template_fct: qweb_template('pos-product-template'),
@@ -915,6 +846,7 @@ openerp.point_of_sale = function(db) {
             return this;
         },
     });
+
     var ProductListWidget = db.web.OldWidget.extend({
         init: function(parent, options) {
             this._super(parent);
@@ -1066,6 +998,7 @@ openerp.point_of_sale = function(db) {
         	this.currentPaymentLines.last().set({amount: val});
         },
     });
+
     var ReceiptWidget = db.web.OldWidget.extend({
         init: function(parent, options) {
             this._super(parent);
@@ -1108,6 +1041,7 @@ openerp.point_of_sale = function(db) {
             $('.pos-receipt-container', this.$element).html(qweb_template('pos-ticket')({widget:this}));
         },
     });
+
     var OrderButtonWidget = db.web.OldWidget.extend({
         tag_name: 'li',
         template_fct: qweb_template('pos-order-selector-button-template'),
@@ -1147,6 +1081,7 @@ openerp.point_of_sale = function(db) {
             this.$element.addClass('order-selector-button');
         }
     });
+
     var ShopWidget = db.web.OldWidget.extend({
         init: function(parent, options) {
             this._super(parent);
@@ -1227,7 +1162,9 @@ openerp.point_of_sale = function(db) {
         	}
         },
     });
+
     var App = (function() {
+
         function App($element) {
             this.initialize($element);
         }
@@ -1243,22 +1180,153 @@ openerp.point_of_sale = function(db) {
             this.categoryView.on_change_category.add_last(_.bind(this.category, this));
             this.category();
         };
+
         App.prototype.category = function(id) {
-            var c, products;
-            if (id == null) {
-                id = 0;
-            }
+            var c, products, self = this;
+
+            id = !id ? 0 : id; 
+
             c = pos.categories[id];
             this.categoryView.ancestors = c.ancestors;
             this.categoryView.children = c.children;
             this.categoryView.render_element();
             this.categoryView.start();
+            allProducts = pos.store.get('product.product');
+            allPackages = pos.store.get('product.packaging');
             products = pos.store.get('product.product').filter( function(p) {
                 var _ref;
                 return _ref = p.pos_categ_id[0], _.indexOf(c.subtree, _ref) >= 0;
             });
             (this.shop.get('products')).reset(products);
-            var self = this;
+
+
+            //returns true if the code is a valid EAN codebar number by checking the control digit.
+            var checkEan = function(code) {
+                var st1 = code.slice();
+                var st2 = st1.slice(0,st1.length-1).reverse();
+                // some EAN13 barcodes have a length of 12, as they start by 0
+                while (st2.length < 12) {
+                    st2.push(0);
+                }
+                var countSt3 = 1;
+                var st3 = 0;
+                $.each(st2, function() {
+                    if (countSt3%2 === 1) {
+                        st3 +=  this;
+                    }
+                    countSt3 ++;
+                });
+                st3 *= 3;
+                var st4 = 0;
+                var countSt4 = 1;
+                $.each(st2, function() {
+                    if (countSt4%2 === 0) {
+                        st4 += this;
+                    }
+                    countSt4 ++;
+                });
+                var st5 = st3 + st4;
+                var cd = (10 - (st5%10)) % 10;
+                return code[code.length-1] === cd;
+            }
+
+            var codeNumbers = [];
+
+            // returns a product that has a packaging with an EAN matching to provided ean string. 
+            // returns undefined if no such product is found.
+            var getProductByEAN = function(ean) {
+                var prefix = ean.substring(0,2);
+                var scannedProductModel = undefined;
+                if (prefix in {'02':'', '22':'', '24':'', '26':'', '28':''}) {
+                    // PRICE barcode
+                    var itemCode = ean.substring(0,7);
+                    var scannedPackaging = _.detect(allPackages, function(pack) { return pack.ean !== undefined && pack.ean.substring(0,7) === itemCode;});
+                    if (scannedPackaging !== undefined) {
+                        scannedProductModel = _.detect(allProducts, function(pc) { return pc.id === scannedPackaging.product_id[0];});
+                        scannedProductModel.list_price = Number(ean.substring(7,12))/100;
+                    }
+                } else if (prefix in {'21':'','23':'','27':'','29':'','25':''}) {
+                    // WEIGHT barcode
+                    var weight = Number(barcode.substring(7,12))/1000;
+                    var itemCode = ean.substring(0,7);
+                    var scannedPackaging = _.detect(allPackages, function(pack) { return pack.ean !== undefined && pack.ean.substring(0,7) === itemCode;});
+                    if (scannedPackaging !== undefined) {
+                        scannedProductModel = _.detect(allProducts, function(pc) { return pc.id === scannedPackaging.product_id[0];});
+                        scannedProductModel.list_price *= weight;
+                        scannedProductModel.name += ' - ' + weight + ' Kg.';
+                    }
+                } else {
+                    // UNIT barcode
+                    scannedProductModel = _.detect(allProducts, function(pc) { return pc.ean13 === ean;});   //TODO DOES NOT SCALE
+                }
+                return scannedProductModel;
+            }
+
+            // The barcode readers acts as a keyboard, we catch all keyup events and try to find a 
+            // barcode sequence in the typed keys, then act accordingly.
+            $('body').delegate('','keyup', function (e){
+
+                //We only care about numbers
+                if (!isNaN(Number(String.fromCharCode(e.keyCode)))) {
+
+                    // The barcode reader sends keystrokes with a specific interval.
+                    // We look if the typed keys fit in the interval. 
+                    if (codeNumbers.length==0) {
+                        timeStamp = new Date().getTime();
+                    } else {
+                        if (lastTimeStamp + 30 < new Date().getTime()) {
+                            // not a barcode reader
+                            codeNumbers = [];
+                            timeStamp = new Date().getTime();
+                        }
+                    }
+                    codeNumbers.push(e.keyCode - 48);
+                    lastTimeStamp = new Date().getTime();
+                    if (codeNumbers.length == 13) {
+                        // a barcode reader
+                        if (!checkEan(codeNumbers)) {
+                            // barcode read error, raise warning
+                            $(QWeb.render('pos-scan-warning')).dialog({
+                                resizable: false,
+                                height:220,
+                                modal: true,
+                                title: "Warning",
+                                buttons: {
+                                    "OK": function() {
+                                        $( this ).dialog( "close" );
+                                        return;
+                                    },
+                                }
+                            });
+                        }
+                        var selectedOrder = self.shop.get('selectedOrder');
+                        var scannedProductModel = getProductByEAN(codeNumbers.join(''));
+                        if (scannedProductModel === undefined) {
+                            // product not recognized, raise warning
+                            $(QWeb.render('pos-scan-warning')).dialog({
+                                resizable: false,
+                                height:220,
+                                modal: true,
+                                title: "Warning",
+                                buttons: {
+                                    "OK": function() {
+                                        $( this ).dialog( "close" );
+                                        return;
+                                    },
+                                }
+                            });
+                        } else {
+                            selectedOrder.addProduct(new Product(scannedProductModel));
+                        }
+
+                        codeNumbers = [];
+                    }
+                } else {
+                    // NaN
+                    codeNumbers = [];
+                }
+            });
+
             $('.searchbox input').keyup(function() {
                 var m, s;
                 s = $(this).val().toLowerCase();
@@ -1274,7 +1342,7 @@ openerp.point_of_sale = function(db) {
                 return (self.shop.get('products')).reset(m);
             });
             return $('.search-clear').click( function() {
-                (this.shop.get('products')).reset(products);
+                (self.shop.get('products')).reset(products);
                 $('.searchbox input').val('').focus();
                 return $('.search-clear').fadeOut();
             });
@@ -1374,6 +1442,9 @@ openerp.point_of_sale = function(db) {
             }, this));
         },
         close: function() {
+            // remove barcode reader event listener
+            $('body').undelegate('', 'keyup')
+
             return new db.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_pos_close_statement']], ['res_id']).pipe(
                     _.bind(function(res) {
                 return this.rpc('/web/action/load', {'action_id': res[0]['res_id']}).pipe(_.bind(function(result) {
