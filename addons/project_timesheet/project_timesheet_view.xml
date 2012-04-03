@@ -35,7 +35,7 @@
                     <field name="timesheets"/>
 		    <field name="currency_id"/>
                 </field>
-        <xpath expr="//p[@id='list']" position="inside">
+        <xpath expr="//h4[@id='list']" position="inside">
         <a>
             <t t-if="record.timesheets.raw_value">
                 <button name="open_timesheets" class="oe_project_buttons" type="object">, Timesheet</button>

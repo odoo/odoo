@@ -186,7 +186,6 @@
                             <li class="oe_kanban_vignette">
                                 <a href="#" class="oe_kanban_action dropdown-toggle" onclick="javascript:showElement()"><span class="i">B</span></a>
                                 <ul class="dropdown-menu">
-                                <table>
                                   <li ><a type="edit" >Edit...</a></li>
                                   <li ><a type="delete">Delete</a></li>
                                   <li>
@@ -200,9 +199,9 @@
                                   </li>
                                 </ul>
                                 <h4><a><t t-esc="record.name.value"/></a></h4>
-                                <p id="list" height="10px"><a><t t-if="record.task.raw_value">
+                                <h4 id="list" height="10px"><a><t t-if="record.task.raw_value">
                                  <button name="open_tasks" class="oe_project_buttons" type="object"><field name="open_task"/> Tasks</button>
-                                 </t></a></p>
+                                 </t></a></h4>
                                  <table class="fields">
 						              <tr t-if="record.date.raw_value"> <th align="left">Deadline</th><td align="left"><t t-esc="record.date.raw_value.toString('MMMM')"/> 
 													    <t t-esc="record.date.raw_value.getDate()"/>,
