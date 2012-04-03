@@ -132,9 +132,10 @@
                                                 context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'shop':parent.shop_id, 'uom':product_uom}"
                                                 name="product_uom_qty"
                                                 on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, False, parent.date_order, product_packaging, parent.fiscal_position, True, context)"/>
-                                            <field name="product_uom"
-                                                on_change="product_uom_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, False, parent.date_order, context)"
-                                                nolabel="1" groups="product.group_uom"/>
+                                            <group colspan="1">
+                                                <field name="product_uom" nolabel="1" groups="product.group_uom"
+                                                    on_change="product_uom_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, False, parent.date_order, context)"/>
+                                            </group>
                                             <field name="price_unit"/>
 
                                             <field groups="product.group_uos" name="product_uos_qty"/>
@@ -382,6 +383,7 @@
                         <field name="product_id" readonly="1"/>
                         <field name="product_uom_qty" readonly="1"/>
                         <field name="product_uom" groups="product.group_uom"/>
+                        <newline/>
 
                         <field colspan="4" name="name" groups="base.group_extended"/>
                         <field name="company_id" groups="base.group_multi_company" readonly="1"/>
