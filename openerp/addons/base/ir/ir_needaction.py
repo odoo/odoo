@@ -92,7 +92,7 @@ class ir_needaction(osv.osv):
     validation by a manager, this mechanism allows to set a list of
     users asked to perform an action.
     
-    This class wraps a table (ir.needaction_users) that behaves
+    This class wraps a class (ir.needaction_users) that behaves
     like a many2many field. However, no field is added to the model
     inheriting from base.needaction. The mixin class manages the low-level
     considerations of updating relationships. Every change made on the
