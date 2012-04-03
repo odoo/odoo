@@ -211,7 +211,7 @@ class OpenIDController(openerpweb.Controller):
                         # TODO fill empty fields with the ones from sreg/ax
                         cr.commit()
 
-                        u = req.session.login(dbname, login, key)
+                        u = req.session.authenticate(dbname, login, key, {})
 
             if not user_id:
                 session['message'] = 'This OpenID identifier is not associated to any active users'
