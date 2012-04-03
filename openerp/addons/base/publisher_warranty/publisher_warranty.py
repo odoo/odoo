@@ -216,21 +216,13 @@ class publisher_warranty_contract(osv.osv):
         @return: A list of html messages with ids, can be False or empty.
         @rtype: list of tuples(int,string)
         """
-        ids = self.pool.get('res.log').search(cr, uid, [("res_model", "=", "publisher_warranty.contract")]
-                                        , order="create_date desc", limit=limit)
+        ids = []
+        #ids = self.pool.get('res.log').search(cr, uid, [("res_model", "=", "publisher_warranty.contract")]
+                                        #, order="create_date desc", limit=limit)
         if not ids:
             return []
-        messages = [(x.id, x.name) for x in self.pool.get('res.log').browse(cr, uid, ids)]
-
+        messages = [(x.id, x.name) for x in self.pool.get('res.log').browse(cr, uid, ids), context=context]
         return messages
-
-    def del_user_message(self, cr, uid, id, context=None):
-        """
-        Delete a message.
-        """
-        self.pool.get('res.log').unlink(cr, uid, [id])
-
-        return True
 
     _columns = {
         'name' : fields.char('Serial Key', size=384, required=True, help="Your OpenERP Publisher's Warranty Contract unique key, also called serial number."),
