@@ -37,7 +37,8 @@
     "demo_xml" : [ 
     ],
     "update_xml" : [
-        "portal_customer_view.xml"
+        "portal_customer_view.xml",
+        "email_template.xml"
     ],
     'installable': True,
 }

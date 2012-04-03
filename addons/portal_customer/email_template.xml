@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+    
+        <record id="customer_portal_user_confirmation" model="email.template">
+            <field name="name">Customer Portal User Confirmation</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="email_from" >${object.user_id.user_email or object.company_id.email or 'noreply@' + object.company_id.name + '.com'}</field>
+            <field name="email_to" >${object.email}</field>
+            <field name="subject">You are registered as a Customer Portal User</field>
+            <field name="body_text">
+                Hello ${object.name},
+                
+                Welcome to our customer portal, now you are a member of our customer portal.
+                You can access our portal system through following Username and Password:
+                Your Username : ${object.email}
+                Your Password : ${object.email}
+                
+                For now, your password is same as Username, kindly change as per your convenience.
+                
+                Thanks and Warm Regards,
+                ${object.user_id.name}
+            </field>
+        </record>
+        
+        <record model="ir.values" id="default_value_customer_portal_user_confirmation">
+            <field name="name">default_email_customer_portal_user</field>
+            <field name="key">default</field>
+            <field name="key2"></field>
+            <field eval="ref('customer_portal_user_confirmation')" name="value_unpickle"/>
+            <field name="model">res.partner</field>
+        </record>
+
+    </data>
+</openerp>

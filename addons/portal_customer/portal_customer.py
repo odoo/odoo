@@ -30,12 +30,24 @@ class res_partner(osv.osv):
             'customer_portal_access': fields.boolean('Portal'),
         }
     
-    def onchange_portal_create_user(self, cr, uid, ids, field, context=None):
+    def mail_user_confirm(self, cr, uid, ids, context=None):
+        """
+        Send email to user when the event is confirmed
+        """
+        email_template_obj = self.pool.get('email.template')
+        portal_user_id = self.browse(cr, uid, ids, context=context)[0].id
+        template_id = email_template_obj.search(cr, uid, [('name','=','Customer Portal User Confirmation')], context=context)[0]
+        if template_id:
+            mail_message = email_template_obj.send_mail(cr,uid,template_id,portal_user_id)
+        return True
+    
+    def onchange_portal_create_user(self, cr, uid, ids, customer_portal_access, context=None):
         res_users_obj = self.pool.get('res.users')
-        if field == 1:
+        self.mail_user_confirm(cr, uid, ids)
+        if customer_portal_access:
             name = self.browse(cr, uid, ids, context=context)[0].name
             login = self.browse(cr, uid, ids, context=context)[0].email
             res_users_obj.create(cr, uid, {'name':name, 'login':login, 'new_password':login}, context=context)
-        return True
+        return {}
     
 res_partner()
