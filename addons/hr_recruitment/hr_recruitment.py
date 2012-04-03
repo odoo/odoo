@@ -389,58 +389,6 @@ class hr_applicant(crm.crm_case, osv.osv):
         self.message_append_dict(cr, uid, ids, msg, context=context)
         return res
 
-    def case_get_note_msg_prefix(self, cr, uid, id, context=None):
-		return 'Applicant'
-
-    def case_open_send_note(self, cr, uid, ids, context=None):
-        message = _("Applicant has been set <b>in progress</b>.")
-        return self.message_append_note(cr, uid, ids, _('System notification'),
-                        message, type='notification', context=context)
-
-    def case_close_send_note(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        for applicant in self.browse(cr, uid, ids, context=context):
-            if applicant.emp_id:
-                message = _("Applicant has been <b>hired</b> and created as an employee.")
-                self.message_append_note(cr, uid, [applicant.id], _('System notification'),
-                        message, type='notification', context=context)
-            else:
-                message = _("Applicant has been <b>hired</b>.")
-                self.message_append_note(cr, uid, [applicant.id], _('System notification'),
-                        message, type='notification', context=context)
-        return True
-
-    def case_cancel_send_note(self, cr, uid, ids, context=None):
-        for id in ids:
-            msg = 'Applicant <b>refused</b>.'
-            self.message_append_note(cr, uid, [id], 'System Notification', msg, context=context)
-        return True
-
-    def case_reset_send_note(self,  cr, uid, ids, context=None):
-        message =_("Applicant has been set as <b>new</b>.")
-        return self.message_append_note(cr, uid, ids, _('System notification'),
-                        message, type='notification', context=context)
-
-    def message_get_subscribers(self, cr, uid, ids, context=None):
-        sub_ids = self.message_get_subscribers_ids(cr, uid, ids, context=context);
-        for obj in self.browse(cr, uid, ids, context=context):
-            if obj.user_id:
-                sub_ids.append(obj.user_id.id)
-        return self.pool.get('res.users').read(cr, uid, sub_ids, context=context)
-
-    def get_needaction_user_ids(self, cr, uid, ids, context=None):
-        result = dict.fromkeys(ids, [])
-        for obj in self.browse(cr, uid, ids, context=context):
-            if obj.state == 'draft' and obj.user_id:
-                result[obj.id] = [obj.user_id.id]
-        return result
-
-    def create_send_note(self, cr, uid, ids, context=None):
-        message = _("Applicant has been <b>created</b>.")
-        return self.message_append_note(cr, uid, ids, _('System notification'),
-                        message, type='notification', context=context)
-
     def create(self, cr, uid, vals, context=None):
         obj_id = super(hr_applicant, self).create(cr, uid, vals, context=context)
         self.create_send_note(cr, uid, [obj_id], context=context)
@@ -528,9 +476,57 @@ class hr_applicant(crm.crm_case, osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         if 'stage_id' in vals and vals['stage_id']:
             stage = self.pool.get('hr.recruitment.stage').browse(cr, uid, vals['stage_id'], context=context)
-            self.message_append_note(cr, uid, ids, _('System notification'),
-                        _("changed stage to <b>%s</b>.") % stage.name, type='notification')
+            self.message_append_note(cr, uid, ids, _body=_("Stage changed to <b>%s</b>.") % stage.name, context=context)
         return super(hr_applicant,self).write(cr, uid, ids, vals, context=context)
+
+    # -------------------------------------------------------
+    # OpenChatter methods and notifications
+    # -------------------------------------------------------
+    
+    def message_get_subscribers(self, cr, uid, ids, context=None):
+        sub_ids = self.message_get_subscribers_ids(cr, uid, ids, context=context);
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.user_id:
+                sub_ids.append(obj.user_id.id)
+        return self.pool.get('res.users').read(cr, uid, sub_ids, context=context)
+
+    def get_needaction_user_ids(self, cr, uid, ids, context=None):
+        result = dict.fromkeys(ids, [])
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.state == 'draft' and obj.user_id:
+                result[obj.id] = [obj.user_id.id]
+        return result
+    
+    def case_get_note_msg_prefix(self, cr, uid, id, context=None):
+		return 'Applicant'
+
+    def case_open_send_note(self, cr, uid, ids, context=None):
+        message = _("Applicant has been set <b>in progress</b>.")
+        return self.message_append_note(cr, uid, ids, body=message, context=context)
+
+    def case_close_send_note(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        for applicant in self.browse(cr, uid, ids, context=context):
+            if applicant.emp_id:
+                message = _("Applicant has been <b>hired</b> and created as an employee.")
+                self.message_append_note(cr, uid, [applicant.id], body=message, context=context)
+            else:
+                message = _("Applicant has been <b>hired</b>.")
+                self.message_append_note(cr, uid, [applicant.id], body=message, context=context)
+        return True
+
+    def case_cancel_send_note(self, cr, uid, ids, context=None):
+        msg = 'Applicant <b>refused</b>.'
+        return self.message_append_note(cr, uid, ids, body=msg, context=context)
+
+    def case_reset_send_note(self,  cr, uid, ids, context=None):
+        message =_("Applicant has been set as <b>new</b>.")
+        return self.message_append_note(cr, uid, ids, body=message, context=context)
+
+    def create_send_note(self, cr, uid, ids, context=None):
+        message = _("Applicant has been <b>created</b>.")
+        return self.message_append_note(cr, uid, ids, body=message, context=context)
 
 hr_applicant()
 
