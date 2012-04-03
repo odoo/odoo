@@ -40,6 +40,27 @@ class general_configuration(osv.osv_memory):
                            help ="""It installs the report_webkit_sample module."""),                
     }
 
+    def base_setup_company(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        data_obj = self.pool.get('ir.model.data')
+        user = self.pool.get('res.users').browse(cr, uid, uid)
+        context.update({'res_id': user.company_id.id})
+        company_view_id = data_obj.get_object_reference(cr, uid, 'base', 'view_company_form')
+        if company_view_id:
+            company_view_id = company_view_id and company_view_id[1] or False
+        return {
+            'view_mode': 'form',
+            'view_type': 'form',
+            'res_model': 'res.company',
+            'res_id': int(context.get('res_id')),
+            'views': [(company_view_id, 'form')],
+            'type': 'ir.actions.act_window',
+            'target': 'current',
+            'nodestroy':True,
+            'context': context,
+        }
+
 general_configuration()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
