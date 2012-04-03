@@ -83,11 +83,11 @@
     
     <t t-name="EmailDisplay">
         <p class="oe_mail_msg oe_mail_msg_p_email_header">
-            <span class="oe_mail_oe_bold">From:</span> <t t-esc="email_from"/> on <span class="oe_mail_oe_fade"><t t-raw="record.date"/></span><br />
-            <span>To:</span> <t t-sec="mail_to"/><br />
-            <span>Subject:</span> <t t-sec="subject"/><br />
+            <span class="oe_mail_oe_bold">From:</span> <t t-esc="record.email_from"/> on <span class="oe_mail_oe_fade"><t t-raw="record.date"/></span><br />
+            <span class="oe_mail_oe_bold">To:</span> <t t-esc="record.email_to"/><br />
+            <span class="oe_mail_oe_bold">Subject:</span> <t t-esc="record.subject"/><br />
         </p>
-        <p class="oe_mail_msg_p">
+        <p class="oe_mail_msg">
             <span class="oe_mail_msg_body"><t t-raw="record.body_text"/></span>
         </p>
     </t>
