@@ -173,7 +173,42 @@
                     <field name="task"/>
                     <field name="user_id"/>
                     <templates>
-                        <t t-name="tasks">
+                        <t t-name="kanban-box">
+                            <script type="text/javascript">
+                                function showElement(){
+                                    $('.dropdown-toggle').dropdown();
+                                    
+                                    }
+                            </script>
+                            <!--<div class="content">-->
+                            <div class="vignettes">
+                            <li class="oe_kanban_vignette">
+                                <a href="#" class="oe_kanban_action dropdown-toggle" onclick="javascript:showElement()"><span class="i">B</span></a>
+                                <ul class="dropdown-menu">
+                                  <li><a href="#">Edit...</a></li>
+                                  <li><a href="#">Delete</a></li>
+                                  <li>
+                                    <ul class="color-chooser">
+                                      <li><a><span class="steelblue square"></span></a></li>
+                                      <li><a><span class="firebrick square"></span></a></li>
+                                      <li><a><span class="khaki square"></span></a></li>
+                                      <li><a><span class="thistle square"></span></a></li>
+                                      <li><a><span class="orange square"></span></a></li>
+                                    </ul>
+                                  </li>
+                                </ul>
+                                <h4><a href="project.html">Groupe S HRWeb</a></h4>
+                                <p><a href="tasks.html">2 Tasks</a>, <a href="issues.html">3 Issues</a>, <a href="timesheets.html">1 Timesheet</a></p>
+                            </li>
+                            </div>
+                            <!--</div>-->
+                        </t>
+                        
+                        
+                        
+                        
+                        
+                        <!--<t t-name="tasks">
                             <ul class="oe_kanban_tooltip">
                                 <li><b>Tasks:</b> <field name="open_task"/></li>
                             </ul>
@@ -231,7 +266,7 @@
                                     </tr>
                                 </table>
                             </div>
-                        </t>
+                        </t>-->
                     </templates>
                 </kanban>
             </field>

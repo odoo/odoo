@@ -71,6 +71,7 @@ Dashboard for project members that includes:
     'auto_install': False,
     'application': True,
     'css': ['static/src/css/project.css'],
+    'js': ['static/src/js/dropdown.js'],
     'certificate': '0075116868317',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
