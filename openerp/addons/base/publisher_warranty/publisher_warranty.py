@@ -221,7 +221,7 @@ class publisher_warranty_contract(osv.osv):
                                         #, order="create_date desc", limit=limit)
         if not ids:
             return []
-        messages = [(x.id, x.name) for x in self.pool.get('res.log').browse(cr, uid, ids), context=context]
+        messages = [(x.id, x.name) for x in self.pool.get('res.log').browse(cr, uid, ids, context=context)]
         return messages
 
     _columns = {
