@@ -456,7 +456,7 @@ class task(osv.osv):
     _description = "Task"
     _log_create = True
     _date_name = "date_start"
-    _inherit = ['mail.thread']
+    _inherit = ['ir.needaction', 'mail.thread']
 
 
     def _resolve_project_id_from_context(self, cr, uid, context=None):
@@ -1005,10 +1005,10 @@ class task(osv.osv):
         return True
 
     def next_type(self, cr, uid, ids, context=None):
-        return self._change_type(cr, uid, ids, True, context)
+        return self._change_type(cr, uid, ids, True, context=context)
 
     def prev_type(self, cr, uid, ids, context=None):
-        return self._change_type(cr, uid, ids, False, context)
+        return self._change_type(cr, uid, ids, False, context=context)
 
     def _store_history(self, cr, uid, ids, context=None):
         for task in self.browse(cr, uid, ids, context=context):
@@ -1024,70 +1024,11 @@ class task(osv.osv):
             }, context=context)
         return True
 
-    def get_needaction_user_ids(self, cr, uid, ids, context=None):
-        result = dict.fromkeys(ids, [])
-        for obj in self.browse(cr, uid, ids, context=context):
-            if obj.state == 'draft' and obj.user_id:
-                result[obj.id] = [obj.user_id.id]
-        return result
-
-    def message_get_subscribers(self, cr, uid, ids, context=None):
-        sub_ids = self.message_get_subscribers_ids(cr, uid, ids, context=context);
-        for obj in self.browse(cr, uid, ids, context=context):
-            if obj.user_id:
-                sub_ids.append(obj.user_id.id)
-            if obj.manager_id:
-                sub_ids.append(obj.manager_id.id)
-        return self.pool.get('res.users').read(cr, uid, sub_ids, context=context)
-
-
     def create(self, cr, uid, vals, context=None):
-        result = super(task, self).create(cr, uid, vals, context=context)
-        self._store_history(cr, uid, [result], context=context)
-        self.create_send_note(cr, uid, [result], context=context)
-        return result
-
-    def create_send_note(self, cr, uid, ids, context=None):
-        self.message_append_note(cr, uid, ids, _('System notification'), _("Task has been <b>created</b>."), type='notification', context=context)
-        return True
-
-    def do_pending_send_note(self, cr, uid, ids, context=None):
-        if not isinstance(ids,list): ids = [ids]
-        msg = 'Task is now <b>pending</b>.'
-        self.message_append_note(cr, uid, ids, 'System Notification', msg, context=context)
-        return True
-
-    def do_open_send_note(self, cr, uid, ids, context=None):
-        msg = 'Task has been <b>opened</b>.'
-        self.message_append_note(cr, uid, ids, 'System Notification', msg, context=context)
-        return True
-
-    def do_cancel_send_note(self, cr, uid, ids, context=None):
-        msg = 'Task has been <b>canceled</b>.'
-        self.message_append_note(cr, uid, ids, 'System Notification', msg, context=context)
-        return True
-
-    def do_close_send_note(self, cr, uid, ids, context=None):
-        msg = 'Task has been <b>closed</b>.'
-        self.message_append_note(cr, uid, ids, 'System Notification', msg, context=context)
-        return True
-
-    def do_draft_send_note(self, cr, uid, ids, context=None):
-        msg = 'Task has been <b>renewed</b>.'
-        self.message_append_note(cr, uid, ids, 'System Notification', msg, context=context)
-        return True
-
-    def do_delegation_send_note(self, cr, uid, ids, context=None):
-        for task in self.browse(cr, uid, ids, context=context):
-            msg = 'Task has been <b>delegated</b> to <em>%s</em>.' % (task.user_id.name)
-            self.message_append_note(cr, uid, [task.id], 'System Notification', msg, context=context)
-        return True
-
-    def state_change_send_note(self, cr, uid, ids, context=None):
-        for task in self.browse(cr, uid, ids, context=context):
-            msg = 'Stage changed to <b>%s</b>' % (task.type_id.name)
-            self.message_append_note(cr, uid, [task.id], 'System Notification', msg, context=context)
-        return True
+        task_id = super(task, self).create(cr, uid, vals, context=context)
+        self._store_history(cr, uid, [task_id], context=context)
+        self.create_send_note(cr, uid, [task_id], context=context)
+        return task_id
 
     # Overridden to reset the kanban_state to normal whenever
     # the stage (type_id) of the task changes.
@@ -1141,6 +1082,62 @@ class task(osv.osv):
 
         result += "\n"
         return result
+    
+    # ---------------------------------------------------
+    # OpenChatter methods and notifications
+    # ---------------------------------------------------
+    
+    def get_needaction_user_ids(self, cr, uid, ids, context=None):
+        result = dict.fromkeys(ids, [])
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.state == 'draft' and obj.user_id:
+                result[obj.id] = [obj.user_id.id]
+        return result
+
+    def message_get_subscribers(self, cr, uid, ids, context=None):
+        sub_ids = self.message_get_subscribers_ids(cr, uid, ids, context=context);
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.user_id:
+                sub_ids.append(obj.user_id.id)
+            if obj.manager_id:
+                sub_ids.append(obj.manager_id.id)
+        return self.pool.get('res.users').read(cr, uid, sub_ids, context=context)
+
+    def create_send_note(self, cr, uid, ids, context=None):
+        return self.message_append_note(cr, uid, ids, body=_("Task has been <b>created</b>."), context=context)
+
+    def do_pending_send_note(self, cr, uid, ids, context=None):
+        if not isinstance(ids,list): ids = [ids]
+        msg = _('Task is now <b>pending</b>.')
+        return self.message_append_note(cr, uid, ids, body=msg, context=context)
+
+    def do_open_send_note(self, cr, uid, ids, context=None):
+        msg = _('Task has been <b>opened</b>.')
+        return self.message_append_note(cr, uid, ids, body=msg, context=context)
+
+    def do_cancel_send_note(self, cr, uid, ids, context=None):
+        msg = _('Task has been <b>canceled</b>.')
+        return self.message_append_note(cr, uid, ids, body=msg, context=context)
+
+    def do_close_send_note(self, cr, uid, ids, context=None):
+        msg = _('Task has been <b>closed</b>.')
+        return self.message_append_note(cr, uid, ids, body=msg, context=context)
+
+    def do_draft_send_note(self, cr, uid, ids, context=None):
+        msg = _('Task has been <b>renewed</b>.')
+        return self.message_append_note(cr, uid, ids, body=msg, context=context)
+
+    def do_delegation_send_note(self, cr, uid, ids, context=None):
+        for task in self.browse(cr, uid, ids, context=context):
+            msg = _('Task has been <b>delegated</b> to <em>%s</em>.') % (task.user_id.name)
+            self.message_append_note(cr, uid, [task.id], body=msg, context=context)
+        return True
+
+    def state_change_send_note(self, cr, uid, ids, context=None):
+        for task in self.browse(cr, uid, ids, context=context):
+            msg = _('Stage changed to <b>%s</b>') % (task.type_id.name)
+            self.message_append_note(cr, uid, [task.id], body=msg, context=context)
+        return True
 
 task()
 
