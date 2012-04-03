@@ -1273,7 +1273,6 @@ openerp.web.search.Advanced = openerp.web.search.Input.extend({
     template: 'SearchView.advanced',
     start: function () {
         var self = this;
-        this.propositions = [];
         this.$element
             .on('keypress keydown keyup', function (e) { e.stopPropagation(); })
             .on('click', 'h4', function () {
