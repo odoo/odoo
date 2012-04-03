@@ -433,7 +433,8 @@ class project_issue(crm.crm_case, osv.osv):
 
         res_id = self.create(cr, uid, vals, context)
         self.message_append_dict(cr, uid, [res_id], msg, context=context)
-        self.convert_to_bug(cr, uid, [res_id], context=context)
+        if 'categ_id' not in vals:
+            self.convert_to_bug(cr, uid, [res_id], context=context)
         return res_id
 
     def message_update(self, cr, uid, ids, msg, vals=None, default_act='pending', context=None):
