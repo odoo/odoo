@@ -53,7 +53,7 @@ class project(osv.osv):
     _name = "project.project"
     _description = "Project"
     _inherits = {'account.analytic.account': "analytic_account_id"}
-    _inherit = ['ir.needaction', 'mail.thread']
+    _inherit = ['ir.needaction_mixin', 'mail.thread']
 
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
         if user == 1:
@@ -500,7 +500,7 @@ class task(osv.osv):
     _description = "Task"
     _log_create = True
     _date_name = "date_start"
-    _inherit = ['ir.needaction', 'mail.thread']
+    _inherit = ['ir.needaction_mixin', 'mail.thread']
 
 
     def _resolve_project_id_from_context(self, cr, uid, context=None):

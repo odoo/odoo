@@ -219,7 +219,7 @@ class purchase_order(osv.osv):
         ('name_uniq', 'unique(name, company_id)', 'Order Reference must be unique per Company!'),
     ]
     _name = "purchase.order"
-    _inherit = ['mail.thread']
+    _inherit = ['ir.needaction_mixin', 'mail.thread']
     _description = "Purchase Order"
     _order = "name desc"
     
@@ -649,9 +649,10 @@ class purchase_order(osv.osv):
                 wf_service.trg_validate(uid, 'purchase.order', old_id, 'purchase_cancel', cr)
         return orders_info
         
-    # -----------------------------
-    # OpenChatter and notifications
-    # -----------------------------
+    # --------------------------------------
+    # OpenChatter methods and notifications
+    # --------------------------------------
+    
     def get_needaction_user_ids(self, cr, uid, ids, context=None):
         result = dict.fromkeys(ids, [])
         for obj in self.browse(cr, uid, ids, context=context):

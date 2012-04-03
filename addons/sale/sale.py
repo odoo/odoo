@@ -48,7 +48,7 @@ sale_shop()
 
 class sale_order(osv.osv):
     _name = "sale.order"
-    _inherit = ['mail.thread']
+    _inherit = ['ir.needaction_mixin', 'mail.thread']
     _description = "Sales Order"
     
 

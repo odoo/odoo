@@ -42,7 +42,7 @@ class crm_meeting(crm_base, osv.osv):
     _name = 'crm.meeting'
     _description = "Meeting"
     _order = "id desc"
-    _inherit = ["calendar.event", 'ir.needaction', "mail.thread"]
+    _inherit = ["calendar.event", 'ir.needaction_mixin', "mail.thread"]
     _columns = {
         # From crm.case
         'name': fields.char('Summary', size=124, required=True, states={'done': [('readonly', True)]}),

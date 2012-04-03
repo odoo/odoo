@@ -96,7 +96,7 @@ class hr_applicant(crm.crm_case, osv.osv):
     _name = "hr.applicant"
     _description = "Applicant"
     _order = "id desc"
-    _inherit = ['ir.needaction', 'mail.thread']
+    _inherit = ['ir.needaction_mixin', 'mail.thread']
 
     def _compute_day(self, cr, uid, ids, fields, args, context=None):
         """
