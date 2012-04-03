@@ -57,7 +57,6 @@ from lxml import etree
 import fields
 import openerp
 import openerp.netsvc as netsvc
-import openerp.pooler as pooler
 import openerp.tools as tools
 from openerp.tools.config import config
 from openerp.tools.safe_eval import safe_eval as eval
@@ -4901,7 +4900,7 @@ class BaseModel(object):
                 new_domain = eval(domain) + [('id', 'in', ids)]
             else:
                 new_domain = [('id', 'in', ids)]
-            return (True, self.search(cr, uid, new_domain, limit=limit, order=order, count=True), ids)
+            return (True, self.search(cr, uid, new_domain, limit=limit, order=order, count=True, context=context), ids)
         else:
             return (False, 0, [])
             
