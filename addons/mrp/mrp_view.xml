@@ -410,6 +410,8 @@
                             <field colspan="4" name="property_ids" nolabel="1" groups="base.group_extended"/>
                         </page>
                     </notebook>
+                    <newline/>
+                    <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
                 </form>
             </field>
         </record>
@@ -644,6 +646,7 @@
                         <label string="" colspan="2"/>
                         <field name="product_uos_qty" groups="product.group_uos"/>
                         <field name="product_uos" groups="product.group_uos"/>
+                        <field name="user_id"/>
                     </group>
 
                     <notebook colspan="4">
@@ -773,7 +776,6 @@
                             <field colspan="4" name="product_lines" nolabel="1" widget="one2many_list"/>
                         </page>
                         <page string="Extra Information">
-                            <field name="user_id"/>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             <field name="priority" groups="base.group_extended"/>
                             <newline/>
@@ -783,6 +785,7 @@
                             <field name="move_prod_id" groups="base.group_extended"/>
                         </page>
                     </notebook>
+                    <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
                 </form>
             </field>
         </record>

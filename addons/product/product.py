@@ -167,7 +167,7 @@ class product_uom(osv.osv):
         if value == 'reference':
             return {'value': {'factor': 1, 'factor_inv': 1}}
         return {}
-    
+
     def write(self, cr, uid, ids, vals, context=None):
         if 'category_id' in vals:
             for uom in self.browse(cr, uid, ids, context=context):
@@ -231,7 +231,7 @@ class product_category(osv.osv):
     _parent_store = True
     _parent_order = 'sequence, name'
     _order = 'parent_left'
-    
+
     def _check_recursion(self, cr, uid, ids, context=None):
         level = 100
         while len(ids):
@@ -259,7 +259,7 @@ class product_template(osv.osv):
     _description = "Product Template"
 
     def _get_main_product_supplier(self, cr, uid, product, context=None):
-        """Determines the main (best) product supplier for ``product``, 
+        """Determines the main (best) product supplier for ``product``,
         returning the corresponding ``supplierinfo`` record, or False
         if none were found. The default strategy is to select the
         supplier with the highest priority (i.e. smallest sequence).
@@ -503,6 +503,7 @@ class product_product(osv.osv):
     _description = "Product"
     _table = "product_product"
     _inherits = {'product.template': 'product_tmpl_id'}
+    _inherit = ['mail.thread']
     _order = 'default_code,name_template'
     _columns = {
         'qty_available': fields.function(_product_qty_available, type='float', string='Quantity On Hand'),
@@ -526,7 +527,15 @@ class product_product(osv.osv):
         'color': fields.integer('Color Index'),
         'product_image': fields.binary('Image'),
     }
-    
+
+    def create(self, cr, uid, vals, context=None):
+        obj_id = super(product_product, self).create(cr, uid, vals, context=context)
+        self.create_send_note(cr, uid, [obj_id], context=context)
+        return obj_id
+
+    def create_send_note(self, cr, uid, ids, context=None):
+        return self.message_append_note(cr, uid, ids, body=_("Product has been <b>created</b>."), context=context)
+
     def unlink(self, cr, uid, ids, context=None):
         unlink_ids = []
         unlink_product_tmpl_ids = []
