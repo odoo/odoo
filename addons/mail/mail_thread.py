@@ -126,18 +126,10 @@ class mail_thread(osv.osv):
         """
         if context is None:
             context = {}
-        if context.get('install_mode', False):
-            print 'zpfinzpefinzofinzoiznef'
-            return True
-        else:
-            print 'ooooooooooh' + str(context) + str(vals)
-        
-        user_to_push_ids = []
-        
-        res_users_obj = self.pool.get('res.users')
         message_obj = self.pool.get('mail.message')
         subscription_obj = self.pool.get('mail.subscription')
         notification_obj = self.pool.get('mail.notification')
+        res_users_obj = self.pool.get('res.users')
         
         # automatically subscribe the writer of the message
         if vals['user_id']:
@@ -147,28 +139,30 @@ class mail_thread(osv.osv):
         user_to_push_ids = self.message_create_get_notification_user_ids(cr, uid, [thread_id], vals, context=context)
         
         # set email_from and email_to for comments and notifications
-        if vals['type'] == 'comment' or vals['type'] == 'notification':
+        if vals.get('type', False) and vals['type'] == 'comment' or vals['type'] == 'notification':
             current_user = res_users_obj.browse(cr, uid, [uid], context=context)[0]
             if not vals.get('email_from', False):
                 vals['email_from'] = current_user.user_email
             if not vals.get('email_to', False):
                 email_to = ''
                 for user in res_users_obj.browse(cr, uid, user_to_push_ids, context=context):
-                    if user.message_email_pref == 'all' or user.message_email_pref == 'comments' and vals['type'] == 'comment':
-                        if (user.user_email):
-                            if email_to:
-                                email_to = '%s, ' % (email_to)
-                            email_to = '%s%s' % (email_to, user.user_email)
-                if email_to:
-                    vals['email_to'] = email_to
-                print vals['email_from']
-                print vals['email_to']
+                    if not user.message_email_pref == 'all' and not (user.message_email_pref == 'comments' and vals['type'] == 'comment'):
+                        continue
+                    if not user.user_email:
+                        continue
+                    if email_to:
+                        email_to = '%s, ' % (email_to)
+                    email_to = '%s%s' % (email_to, user.user_email)
                 if email_to:
                     vals['email_to'] = email_to
                     vals['state'] = 'outgoing'
         
         # create message
         msg_id = message_obj.create(cr, uid, vals, context=context)
+        
+        # special: if install mode, do not push demo data
+        if context.get('install_mode', False):
+            return True
         
         # push to users
         for id in user_to_push_ids:
