@@ -142,10 +142,6 @@ class project_work(osv.osv):
                 vals_line['name'] = '%s: %s' % (tools.ustr(task.task_id.name), tools.ustr(vals['name']) or '/')
             if 'user_id' in vals:
                 vals_line['user_id'] = vals['user_id']
-                result = self.get_user_related_details(cr, uid, vals['user_id'])
-                for fld in ('product_id', 'general_account_id', 'journal_id', 'product_uom_id'):
-                    if result.get(fld, False):
-                        vals_line[fld] = result[fld]
                         
             if 'date' in vals:
                 vals_line['date'] = vals['date'][:10]
@@ -153,6 +149,10 @@ class project_work(osv.osv):
                 default_uom = self.pool.get('res.users').browse(cr, uid, uid).company_id.project_time_mode_id.id
                 vals_line['unit_amount'] = vals['hours']
                 prod_id = vals_line.get('product_id', line_id.product_id.id) # False may be set
+                result = self.get_user_related_details(cr, uid, vals.get('user_id', uid))
+                for fld in ('product_id', 'general_account_id', 'journal_id', 'product_uom_id'):
+                    if result.get(fld, False):
+                        vals_line[fld] = result[fld]
 
                 if result.get('product_uom_id',False) and (not result['product_uom_id'] == default_uom):
                     vals_line['unit_amount'] = uom_obj._compute_qty(cr, uid, default_uom, vals['hours'], result['product_uom_id'])
