@@ -72,12 +72,10 @@ class stock_config_settings(osv.osv_memory):
         'group_stock_inventory_valuation': fields.boolean("Accounting Entries per Stock Movement",
             implied_group='stock.group_inventory_valuation',
             help="""This allows to split stock inventory lines according to production lots."""),
-        'group_stock_counterpart_location': fields.boolean("Manage your stock counterpart by products",
-            implied_group='stock.group_counterpart_location',
-            help="""This allows to use different stock locations instead of the default one for procurement, production and inventory."""),
-        'group_stock_inventory_properties': fields.boolean("Define stock locations",
-            implied_group='stock.group_inventory_properties',
-            help="""This allows you to set destination location for goods you send to partner, or goods you receive from the current partner."""),
+        'group_stock_multiple_locations': fields.boolean("Manage Multiple Locations and Warehouses",
+            implied_group='stock.group_locations',
+            help="""This allows to configure and use multiple stock locations and warehouses,
+                instead of having a single default one."""),
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
