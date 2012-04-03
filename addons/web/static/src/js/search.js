@@ -1311,8 +1311,15 @@ openerp.web.search.Advanced = openerp.web.search.Input.extend({
         });
         // Create Filter (& FilterGroup around it) with that domain
         var f = new openerp.web.search.FilterGroup(filters, this.view);
-        // add FilterGroup to this.view.searchQuery
-        _(filters).each(function (filter) { f.toggle(filter); });
+        // add group to query
+        this.view.vs.searchQuery.add({
+            category: 'q',
+            value: _(filters).map(function (f) {
+                return f.attrs.string || f.attrs.name }).join(' | '),
+            json: filters,
+            field: f,
+            app: this.view.vs
+        });
         // remove all propositions
         _.invoke(children, 'destroy');
         // add new empty proposition
