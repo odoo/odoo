@@ -92,6 +92,7 @@ class sale_configuration(osv.osv_memory):
                 This installs the module analytic_journal_billing_rate."""),
         'module_project_timesheet': fields.boolean("Project Timesheet"),
         'module_project_mrp': fields.boolean("Project MRP"),
+        'module_project': fields.boolean("Project"),
     }
 
     def default_get(self, cr, uid, fields, context=None):
@@ -99,7 +100,10 @@ class sale_configuration(osv.osv_memory):
         res = super(sale_configuration, self).default_get(cr, uid, fields, context)
         # task_work, time_unit depend on other fields
         res['task_work'] = res.get('module_project_mrp') and res.get('module_project_timesheet')
-        if res.get('module_account_analytic_analysis'):
+        if res.get('module_project'):
+            user = self.pool.get('res.users').browse(cr, uid, uid, context)
+            res['time_unit'] = user.company_id.project_time_mode_id.id
+        else:
             product = ir_model_data.get_object(cr, uid, 'product', 'product_consultant')
             res['time_unit'] = product.uom_id.id
         return res
@@ -132,7 +136,7 @@ class sale_configuration(osv.osv_memory):
             product = ir_model_data.get_object(cr, uid, 'product', 'product_consultant')
             product.write({'uom_id': wizard.time_unit.id, 'uom_po_id': wizard.time_unit.id})
 
-        if wizard.task_work and wizard.time_unit:
+        if wizard.module_project and wizard.time_unit:
             user = self.pool.get('res.users').browse(cr, uid, uid, context)
             user.company_id.write({'project_time_mode_id': wizard.time_unit.id})
 
