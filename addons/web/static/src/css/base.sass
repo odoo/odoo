@@ -337,6 +337,20 @@ $colour4: #8a89ba
                         @include box-shadow(none)
     // }}}
 
+
+    // ListView {{{
+    .oe-listview
+        .oe_listview_nocontent
+            > img
+                float: left
+                margin-right: 1.5em
+            > div
+                // don't encroach on my arrow
+                overflow: hidden
+                font-size: 150%
+                width: 60ex
+    // }}}
+
 .openerp
     // Transitional overrides for old styles {{{
     // }}}

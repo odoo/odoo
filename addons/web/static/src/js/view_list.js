@@ -747,6 +747,18 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
                     .attr('colspan', this.previous_colspan);
             this.previous_colspan = null;
         }
+    },
+    no_result: function () {
+        var help = this.options.action.help;
+        if (this.groups.group_by || !help) {
+            return;
+        }
+        this.$element.children('table').replaceWith(
+            $('<div class="oe_listview_nocontent">')
+                .append($('<img>', {
+                    src: '/web/static/src/img/empty-list-arrow.png',
+                    alt: _t("This list is empty")}))
+                .append($('<div>').html(help)));
     }
 });
 openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.ListView.List# */{
@@ -1344,6 +1356,9 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
             self.records.add(records, {silent: true});
             list.render();
             d.resolve(list);
+            if (_.isEmpty(records)) {
+                view.no_result();
+            }
         });});
         return d.promise();
     },
