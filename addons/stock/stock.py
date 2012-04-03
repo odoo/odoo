@@ -111,47 +111,42 @@ class stock_location(osv.osv):
         @param field_names: Name of field
         @return: Dictionary of values
         """
-        prod_id = context and context.get('product_id', False)
-        if not prod_id:
-            return dict([(i, {}.fromkeys(field_names, 0.0)) for i in ids])
-        product_product_obj = self.pool.get('product.product')
+        if not context:
+            context = {}
 
-        cr.execute('select distinct product_id, location_id from stock_move where location_id in %s', (tuple(ids), ))
-        dict1 = cr.dictfetchall()
-        cr.execute('select distinct product_id, location_dest_id as location_id from stock_move where location_dest_id in %s', (tuple(ids), ))
-        dict2 = cr.dictfetchall()
-        res_products_by_location = sorted(dict1+dict2, key=itemgetter('location_id'))
-        products_by_location = dict((k, [v['product_id'] for v in itr]) for k, itr in groupby(res_products_by_location, itemgetter('location_id')))
-
-        result = dict([(i, {}.fromkeys(field_names, 0.0)) for i in ids])
-        result.update(dict([(i, {}.fromkeys(field_names, 0.0)) for i in list(set([aaa['location_id'] for aaa in res_products_by_location]))]))
-
+        #Find currency
         currency_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.currency_id.id
         currency_obj = self.pool.get('res.currency')
         currency = currency_obj.browse(cr, uid, currency_id, context=context)
-        for loc_id, product_ids in products_by_location.items():
-            if prod_id:
-                product_ids = [prod_id]
-            c = (context or {}).copy()
-            c['location'] = loc_id
-            for prod in product_product_obj.browse(cr, uid, product_ids, context=c):
-                for f in field_names:
-                    if f == 'stock_real':
-                        if loc_id not in result:
-                            result[loc_id] = {}
-                        result[loc_id][f] += prod.qty_available
-                    elif f == 'stock_virtual':
-                        result[loc_id][f] += prod.virtual_available
-                    elif f == 'stock_real_value':
-                        amount = prod.qty_available * prod.standard_price
-                        amount = currency_obj.round(cr, uid, currency, amount)
-                        result[loc_id][f] += amount
-                    elif f == 'stock_virtual_value':
-                        amount = prod.virtual_available * prod.standard_price
-                        amount = currency_obj.round(cr, uid, currency, amount)
-                        result[loc_id][f] += amount
-        return result
+        #Find list of product
+        prod_id = context.get('product_id', False)
+        if prod_id:
+            product_ids = [prod_id]
+        else:
+            cr.execute('select distinct product_id from stock_move where location_id in %s', (tuple(ids), ))
+            moves = cr.dictfetchall()
+            product_ids = [move['product_id'] for move in moves]
 
+        #Compute result for all location
+        result = dict([(i, dict.fromkeys(field_names, 0.0)) for i in ids])
+        for loc_id in ids:
+            c = context.copy()
+            c['location'] = loc_id
+            for prod in self.pool.get('product.product').browse(cr, uid, product_ids, context=c):
+                if 'stock_real' in field_names:
+                    result[loc_id]['stock_real'] += prod.qty_available
+                if 'stock_virtual' in field_names:
+                    result[loc_id]['stock_virtual'] += prod.virtual_available
+                if 'stock_real_value' in field_names:
+                    amount = prod.qty_available * prod.standard_price
+                    amount = currency_obj.round(cr, uid, currency, amount)
+                    result[loc_id]['stock_real_value'] += amount
+                if 'stock_virtual_value' in field_names:
+                    amount = prod.virtual_available * prod.standard_price
+                    amount = currency_obj.round(cr, uid, currency, amount)
+                    result[loc_id]['stock_virtual_value'] += amount
+        return result
+    
     _columns = {
         'name': fields.char('Location Name', size=64, required=True, translate=True),
         'active': fields.boolean('Active', help="By unchecking the active field, you may hide a location without deleting it."),
