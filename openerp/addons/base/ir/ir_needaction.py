@@ -117,7 +117,7 @@ class ir_needaction_mixin(osv.osv):
       the records that ask this user to perform an action. Records
       are given as references, a list of tuples (model_name, record_id)
     '''
-    _name = 'ir.ir_needaction_mixin'
+    _name = 'ir.needaction_mixin'
     _description = 'Need action of users on records API'
     
     #------------------------------------------------------
