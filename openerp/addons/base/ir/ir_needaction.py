@@ -83,7 +83,7 @@ class ir_needaction_users(osv.osv):
         return True
 
 
-class ir_needaction(osv.osv):
+class ir_needaction_mixin(osv.osv):
     '''Mixin class for objects using the need action feature.
     
     Need action feature can be used by objects willing to be able to
@@ -106,7 +106,7 @@ class ir_needaction(osv.osv):
     that have to do it, in every possible situation.
     
     This class also offers several global services,:
-    - ``needaction_get_record_ids``: for a given model_name and uid, get
+    - ``needaction_get_record_ids``: for the current model and uid, get
       all record ids that ask this user to perform an action. This
       mechanism is used for instance to display the number of pending
       actions in menus, such as Leads (12)
@@ -117,7 +117,7 @@ class ir_needaction(osv.osv):
       the records that ask this user to perform an action. Records
       are given as references, a list of tuples (model_name, record_id)
     '''
-    _name = 'ir.needaction'
+    _name = 'ir.ir_needaction_mixin'
     _description = 'Need action of users on records API'
     
     #------------------------------------------------------
@@ -125,6 +125,9 @@ class ir_needaction(osv.osv):
     #------------------------------------------------------
     
     def get_needaction_user_ids(self, cr, uid, ids, context=None):
+        """ Returns the user_ids that have to perform an action
+            :return: dict { record_id: [user_ids], }
+        """
         return dict.fromkeys(ids, [])
     
     def create(self, cr, uid, values, context=None):
