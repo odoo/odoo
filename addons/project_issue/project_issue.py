@@ -254,14 +254,13 @@ class project_issue(crm.crm_case, osv.osv):
         return self.set_priority(cr, uid, ids, '3')
 
     def convert_issue_task(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        
         case_obj = self.pool.get('project.issue')
         data_obj = self.pool.get('ir.model.data')
         task_obj = self.pool.get('project.task')
-
-
-        if context is None:
-            context = {}
-
+        
         result = data_obj._get_id(cr, uid, 'project', 'view_task_search_form')
         res = data_obj.read(cr, uid, result, ['res_id'])
         id2 = data_obj._get_id(cr, uid, 'project', 'view_task_form2')
@@ -287,10 +286,9 @@ class project_issue(crm.crm_case, osv.osv):
                 'task_id': new_task_id,
                 'state':'pending'
             }
-            self.convert_to_task_send_note(cr, uid, ids, context)
-            cases = self.browse(cr, uid, ids)
-            self.case_pending_send_note(cr, uid, ids, context)
-            case_obj.write(cr, uid, [bug.id], vals)
+            self.convert_to_task_send_note(cr, uid, [bug.id], context=context)
+            case_obj.write(cr, uid, [bug.id], vals, context=context)
+            self.case_pending_send_note(cr, uid, [bug.id], context=context)
 
         return  {
             'name': _('Tasks'),
@@ -322,16 +320,6 @@ class project_issue(crm.crm_case, osv.osv):
     def convert_to_bug(self, cr, uid, ids, context=None):
         return self._convert(cr, uid, ids, 'bug_categ', context=context)
 
-    def prev_type(self, cr, uid, ids, context=None):
-        for task in self.browse(cr, uid, ids):
-            typeid = task.type_id.id
-            types = map(lambda x:x.id, task.project_id and task.project_id.type_ids or [])
-            if types:
-                if typeid and typeid in types:
-                    index = types.index(typeid)
-                    self.write(cr, uid, [task.id], {'type_id': index and types[index-1] or False})
-        return True
-
     def next_type(self, cr, uid, ids, context=None):
         for task in self.browse(cr, uid, ids):
             typeid = task.type_id.id
@@ -344,15 +332,24 @@ class project_issue(crm.crm_case, osv.osv):
                     self.write(cr, uid, [task.id], {'type_id': types[index+1]})
         return True
 
+    def prev_type(self, cr, uid, ids, context=None):
+        for task in self.browse(cr, uid, ids):
+            typeid = task.type_id.id
+            types = map(lambda x:x.id, task.project_id and task.project_id.type_ids or [])
+            if types:
+                if typeid and typeid in types:
+                    index = types.index(typeid)
+                    self.write(cr, uid, [task.id], {'type_id': index and types[index-1] or False})
+        return True
+
     def write(self, cr, uid, ids, vals, context=None):
         #Update last action date every time the user change the stage, the state or send a new email
         logged_fields = ['type_id', 'state', 'message_ids']
         if any([field in vals for field in logged_fields]):
             vals['date_action_last'] = time.strftime('%Y-%m-%d %H:%M:%S')
-        if 'type_id' in vals and vals['type_id']:
+        if vals.get('type_id', False):
             stage = self.pool.get('project.task.type').browse(cr, uid, vals['type_id'], context=context)
-            self.message_append_note(cr, uid, ids, _('System notification'),
-                        _("changed stage to <b>%s</b>.") % stage.name, type='notification')
+            self.message_append_note(cr, uid, ids, body=_("Stage changed to <b>%s</b>.") % stage.name, context=context)
         return super(project_issue, self).write(cr, uid, ids, vals, context)
 
     def onchange_task_id(self, cr, uid, ids, task_id, context=None):
@@ -361,51 +358,6 @@ class project_issue(crm.crm_case, osv.osv):
             return {'value':{}}
         task = self.pool.get('project.task').browse(cr, uid, task_id, context=context)
         return {'value':{'user_id': task.user_id.id,}}
-
-    def case_open_send_note(self, cr, uid, ids, context=None):
-        for id in ids:
-            message = _("has been <b>opened</b>.")
-            self.message_append_note(cr, uid, [id],'System Notification', message, context=context)
-        return True
-
-    def convert_to_task_send_note(self, cr, uid, ids, context=None):
-        for id in ids:
-            message = _("has been <b>converted</b> in to task.")
-            self.message_append_note(cr, uid, [id], 'System notification', message, context=context)
-        return True
-
-    def case_get_note_msg_prefix(self, cr, uid, id, context=None):
-        return ''
-
-    def get_needaction_user_ids(self, cr, uid, ids, context=None):
-        result = dict.fromkeys(ids, [])
-        for obj in self.browse(cr, uid, ids, context=context):
-            if obj.state == 'draft' and obj.user_id:
-                result[obj.id] = [obj.user_id.id]
-        return result
-
-    def message_get_subscribers(self, cr, uid, ids, context=None):
-        sub_ids = self.message_get_subscribers_ids(cr, uid, ids, context=context);
-        for obj in self.browse(cr, uid, ids, context=context):
-            if obj.user_id:
-                sub_ids.append(obj.user_id.id)
-        return self.pool.get('res.users').read(cr, uid, sub_ids, context=context)
-
-    def create_send_note(self, cr, uid, ids, context=None):
-        message = _("has been <b>created</b>.")
-        self.message_append_note(cr, uid, ids, _('System notification'),
-                        message, type='notification', context=context)
-        return True
-
-    def case_escalate_send_note(self, cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids, context=context):
-            if obj.project_id:
-                message = _("has been <b>escalated</b> to <em>'%s'</em>.") % (obj.project_id.name)
-                obj.message_append_note('' ,message, type='notification', context=context)
-            else:
-                message = _("has been <b>escalated</b>.")
-                obj.message_append_note('' ,message, type='notification', context=context)
-        return True
 
     def case_reset(self, cr, uid, ids, context=None):
         """Resets case as draft
@@ -420,23 +372,11 @@ class project_issue(crm.crm_case, osv.osv):
         return obj_id
 
     def case_open(self, cr, uid, ids, context=None):
-        """
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of case's Ids
-        """
         res = super(project_issue, self).case_open(cr, uid, ids, context)
         self.write(cr, uid, ids, {'date_open': time.strftime('%Y-%m-%d %H:%M:%S'), 'user_id' : uid})
         return res
 
     def case_escalate(self, cr, uid, ids, context=None):
-        """Escalates case to top level
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of case Ids
-        """
         cases = self.browse(cr, uid, ids)
         for case in cases:
             data = {'state' : 'draft'}
@@ -525,6 +465,45 @@ class project_issue(crm.crm_case, osv.osv):
         default['name'] = issue['name'] + _(' (copy)')
         return super(project_issue, self).copy(cr, uid, id, default=default,
                 context=context)
+    
+    # -------------------------------------------------------
+    # OpenChatter methods and notifications
+    # -------------------------------------------------------
+    
+    def get_needaction_user_ids(self, cr, uid, ids, context=None):
+        result = dict.fromkeys(ids, [])
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.state == 'draft' and obj.user_id:
+                result[obj.id] = [obj.user_id.id]
+        return result
+    
+    def message_get_subscribers(self, cr, uid, ids, context=None):
+        sub_ids = self.message_get_subscribers_ids(cr, uid, ids, context=context);
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.user_id:
+                sub_ids.append(obj.user_id.id)
+        return self.pool.get('res.users').read(cr, uid, sub_ids, context=context)
+    
+    def case_get_note_msg_prefix(self, cr, uid, id, context=None):
+        return 'Project issue '
+
+    def convert_to_task_send_note(self, cr, uid, ids, context=None):
+        message = _("Project issue has been <b>converted</b> in to task.")
+        return self.message_append_note(cr, uid, ids, body=message, context=context)
+
+    def create_send_note(self, cr, uid, ids, context=None):
+        message = _("Project issue has been <b>created</b>.")
+        return self.message_append_note(cr, uid, ids, body=message, context=context)
+
+    def case_escalate_send_note(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.project_id:
+                message = _("has been <b>escalated</b> to <em>'%s'</em>.") % (obj.project_id.name)
+                obj.message_append_note(body=message, context=context)
+            else:
+                message = _("has been <b>escalated</b>.")
+                obj.message_append_note(body=message, context=context)
+        return True
 
 project_issue()
 
