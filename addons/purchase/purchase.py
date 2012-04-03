@@ -151,7 +151,6 @@ class purchase_order(osv.osv):
         ('done', 'Done'),
         ('cancel', 'Cancelled')
     ]
-
     _columns = {
         'name': fields.char('Order Reference', size=64, required=True, select=True, help="unique number of the purchase order,computed automatically when the purchase order is created"),
         'origin': fields.char('Source Document', size=64,
@@ -220,9 +219,16 @@ class purchase_order(osv.osv):
         ('name_uniq', 'unique(name, company_id)', 'Order Reference must be unique per Company!'),
     ]
     _name = "purchase.order"
+    _inherit = ['mail.thread']
     _description = "Purchase Order"
     _order = "name desc"
-
+    
+    def create(self, cr, uid, vals, context=None):
+        order =  super(purchase_order, self).create(cr, uid, vals, context=context)
+        if order:
+            self.create_send_note(cr, uid, [order], context=context)
+        return order
+    
     def unlink(self, cr, uid, ids, context=None):
         purchase_orders = self.read(cr, uid, ids, ['state'], context=context)
         unlink_ids = []
@@ -289,6 +295,7 @@ class purchase_order(osv.osv):
         self.pool.get('purchase.order.line').action_confirm(cr, uid, todo, context)
         for id in ids:
             self.write(cr, uid, [id], {'state' : 'confirmed', 'validator' : uid})
+        self.confirm_send_note(cr, uid, ids, context)
         return True
 
     def _prepare_inv_line(self, cr, uid, account_id, order_line, context=None):
@@ -388,8 +395,15 @@ class purchase_order(osv.osv):
             # Link this new invoice to related purchase order
             order.write({'invoice_ids': [(4, inv_id)]}, context=context)
             res = inv_id
+        if res:
+            self.invoice_send_note(cr, uid, ids, res, context)
         return res
-
+    
+    def invoice_done(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'state':'approved'}, context=context)
+        self.invoice_done_send_note(cr, uid, ids, context=context)
+        return True
+        
     def has_stockable_product(self,cr, uid, ids, *args):
         for order in self.browse(cr, uid, ids):
             for order_line in order.order_line:
@@ -492,7 +506,7 @@ class purchase_order(osv.osv):
         stock_move.force_assign(cr, uid, todo_moves)
         wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
         return [picking_id]
-
+    
     def action_picking_create(self,cr, uid, ids, context=None):
         picking_ids = []
         for order in self.browse(cr, uid, ids):
@@ -502,7 +516,14 @@ class purchase_order(osv.osv):
         # In case of multiple (split) pickings, we should return the ID of the critical one, i.e. the
         # one that should trigger the advancement of the purchase workflow.
         # By default we will consider the first one as most important, but this behavior can be overridden.
+        if picking_ids:
+            self.shipment_send_note(cr, uid, ids, picking_ids[0], context=context)
         return picking_ids[0] if picking_ids else False
+
+    def picking_done(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'shipped':1,'state':'approved'}, context=context)
+        self.shipment_done_send_note(cr, uid, ids, context=context)
+        return True
 
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
@@ -627,6 +648,45 @@ class purchase_order(osv.osv):
                 wf_service.trg_redirect(uid, 'purchase.order', old_id, neworder_id, cr)
                 wf_service.trg_validate(uid, 'purchase.order', old_id, 'purchase_cancel', cr)
         return orders_info
+        
+    # -----------------------------
+    # OpenChatter and notifications
+    # -----------------------------
+    def get_needaction_user_ids(self, cr, uid, ids, context=None):
+        result = dict.fromkeys(ids, [])
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.state == 'approved':
+                result[obj.id] = [obj.validator.id]
+        return result
+    
+    def create_send_note(self, cr, uid, ids, context=None):
+        return self.message_append_note(cr, uid, ids, body=_("Request for quotation <b>created</b>."), context=context)
+
+    def confirm_send_note(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            self.message_subscribe(cr, uid, [obj.id], [obj.validator.id], context=context)
+            self.message_append_note(cr, uid, [obj.id], body=_("Quotation for <em>%s</em> <b>converted</b> to a Purchase Order of %s %s.") % (obj.partner_id.name, obj.amount_total, obj.pricelist_id.currency_id.symbol), context=context)
+        
+    def shipment_send_note(self, cr, uid, ids, picking_id, context=None):
+        for order in self.browse(cr, uid, ids, context=context):
+            for picking in (pck for pck in order.picking_ids if pck.id == picking_id):
+                pck_date =  datetime.strptime(picking.min_date, '%Y-%m-%d %H:%M:%S').strftime('%m/%d/%Y')
+                self.message_append_note(cr, uid, [order.id], body=_("Shipment <em>%s</em> <b>scheduled</b> for %s.") % (picking.name, pck_date), context=context)
+    
+    def invoice_send_note(self, cr, uid, ids, invoice_id, context=None):
+        for order in self.browse(cr, uid, ids, context=context):
+            for invoice in (inv for inv in order.invoice_ids if inv.id == invoice_id):
+                self.message_append_note(cr, uid, [order.id], body=_("Draft Invoice of %s %s is <b>waiting for validation</b>.") % (invoice.amount_total, invoice.currency_id.symbol), context=context)
+    
+    def shipment_done_send_note(self, cr, uid, ids, context=None):
+        self.message_append_note(cr, uid, ids, body=_("""Shipment <b>received</b>."""), context=context)
+     
+    def invoice_done_send_note(self, cr, uid, ids, context=None):
+        self.message_append_note(cr, uid, ids, body=_("Invoice <b>paid</b>."), context=context)
+    
+    def cancel_send_note(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            self.message_append_note(cr, uid, [obj.id], body=_("Purchase Order for <em>%s</em> <b>cancelled</b>.") % (obj.partner_id.name), context=context)
 
 purchase_order()
 
