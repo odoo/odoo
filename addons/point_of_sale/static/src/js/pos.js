@@ -1234,6 +1234,35 @@ openerp.point_of_sale = function(db) {
             // barcode sequence in the typed keys, then act accordingly.
 
             var codeNumbers = [];
+
+            var getProductByEAN = function(ean) {
+                var prefix = ean.substring(0,2);
+                var scannedProductModel = undefined;
+                if (prefix in {'02':'', '22':'', '24':'', '26':'', '28':''}) {
+                    // PRICE barcode
+                    var itemCode = ean.substring(0,7);
+                    var scannedPackaging = _.detect(allPackages, function(pack) { return pack.ean !== undefined && pack.ean.substring(0,7) === itemCode;});
+                    if (scannedPackaging !== undefined) {
+                        scannedProductModel = _.detect(allProducts, function(pc) { return pc.id === scannedPackaging.product_id[0];});
+                        scannedProductModel.list_price = Number(ean.substring(7,12))/100;
+                    }
+                } else if (prefix in {'21':'','23':'','27':'','29':'','25':''}) {
+                    // WEIGHT barcode
+                    var weight = Number(barcode.substring(7,12))/1000;
+                    var itemCode = ean.substring(0,7);
+                    var scannedPackaging = _.detect(allPackages, function(pack) { return pack.ean !== undefined && pack.ean.substring(0,7) === itemCode;});
+                    if (scannedPackaging !== undefined) {
+                        scannedProductModel = _.detect(allProducts, function(pc) { return pc.id === scannedPackaging.product_id[0];});
+                        scannedProductModel.list_price *= weight;
+                        scannedProductModel.name += ' - ' + weight + ' Kg.';
+                    }
+                } else {
+                    // UNIT barcode
+                    scannedProductModel = _.detect(allProducts, function(pc) { return pc.ean13 === ean;});   //TODO DOES NOT SCALE
+                }
+                return scannedProductModel;
+            }
+
             $('body').delegate('','keyup', function (e){
 
                 //We only care about numbers
@@ -1269,31 +1298,8 @@ openerp.point_of_sale = function(db) {
                                 }
                             });
                         }
-                        var barcode = codeNumbers.join('');
                         var selectedOrder = self.shop.get('selectedOrder');
-                        if (barcode.substring(0,2) in {'02':'', '22':'', '24':'', '26':'', '28':''}) {
-                            // PRICE barcode
-                            price = Number(barcode.substring(7,12))/100;
-                            barcode = barcode.substring(0,7);
-                            var scannedPackaging = _.detect(allPackages, function(pack) { return pack.ean !== undefined && pack.ean.substring(0,7) === barcode;});
-                            if (scannedPackaging !== undefined) {
-                                var scannedProductModel = _.detect(allProducts, function(pc) { return pc.id === scannedPackaging.product_id[0];});
-                                scannedProductModel.list_price = price;
-                            }
-                        } else if (barcode.substring(0,2) in {'21':'','23':'','27':'','29':'','25':''}) {
-                            // WEIGHT barcode
-                            weight = Number(barcode.substring(7,12))/1000;
-                            barcode = barcode.substring(0,7);
-                            var scannedPackaging = _.detect(allPackages, function(pack) { return pack.ean !== undefined && pack.ean.substring(0,7) === barcode;});
-                            if (scannedPackaging !== undefined) {
-                                var scannedProductModel = _.detect(allProducts, function(pc) { return pc.id === scannedPackaging.product_id[0];});
-                                scannedProductModel.list_price *= weight;
-                                scannedProductModel.name += ' - ' + weight + ' Kg.'
-                            }
-                        } else {
-                            // UNIT barcode
-                            var scannedProductModel = _.detect(allProducts, function(pc) { return pc.ean13 === barcode;});  //TODO DOES NOT SCALE
-                        }
+                        var scannedProductModel = getProductByEAN(codeNumbers.join(''));
                         if (scannedProductModel === undefined) {
                             // product not recognized, raise warning
                             $(QWeb.render('pos-scan-warning')).dialog({
