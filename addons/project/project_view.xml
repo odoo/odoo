@@ -291,12 +291,7 @@
                                 <field name="priority"/>
                                 <field name="sequence"/>
                             </group>
-                            <group colspan="2" col="2" groups="base.group_no_one">
-                                <separator string="Dates" colspan="2"/>
-                                <field name="date_start"/>
-                                <field name="date_end"/>
-                                <field name="create_date"/>
-                            </group>
+
                             <separator string="Miscelleanous" colspan="4"/>
                             <field name="partner_id" />
                             <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
@@ -309,6 +304,7 @@
                             <field colspan="4" name="notes" nolabel="1"/>
                         </page>
                     </notebook>
+                    <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
                 </form>
             </field>
         </record>
