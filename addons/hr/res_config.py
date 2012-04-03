@@ -41,33 +41,7 @@ class human_resources_configuration(osv.osv_memory):
                            help ="""It installs the hr_contract module."""),
         'module_hr_evaluation': fields.boolean('Manage Appraisals Process',
                            help ="""It installs the hr_evaluation module."""),
-        'module_l10n_be_hr_payroll': fields.boolean('Allow to change Payroll Rules',
-                           help ="""It allow to change payroll Rules."""),                                                                                                               
                 }
-
-    
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        
-        ir_module = self.pool.get('ir.module.module')
-        
-        payroll_id= ir_module.search(cr, uid, [('name','=','hr_payroll')])
-        recruitment_id= ir_module.search(cr, uid, [('name','=','hr_recruitment')])
-        timesheet_id= ir_module.search(cr, uid, [('name','=','hr_timesheet_sheet')])
-        
-        payroll_modle_state = ir_module.browse(cr,uid, payroll_id[0],context=context).state
-        recruitment_modle_state = ir_module.browse(cr,uid, recruitment_id[0],context=context).state
-        timesheet_modle_state = ir_module.browse(cr,uid, timesheet_id[0],context=context).state
-        
-        
-        res = super(human_resources_configuration, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=False)
-        doc = etree.XML(res['arch'])
-        
-        if recruitment_modle_state == 'uninstalled':
-            for node in doc.xpath("//group[@name='Recruitment']"):
-                node.set('invisible', '1')
-            res['arch'] = etree.tostring(doc)
-            
-        return res
 
 human_resources_configuration()
 

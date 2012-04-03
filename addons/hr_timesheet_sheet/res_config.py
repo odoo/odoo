@@ -20,7 +20,7 @@
 ##############################################################################
 
 from osv import osv, fields
-
+import pooler
 class hr_timeshee_settings(osv.osv_memory):
     _name = 'human.resources.configuration'
     _inherit = 'human.resources.configuration'
@@ -34,13 +34,17 @@ class hr_timeshee_settings(osv.osv_memory):
                  "computation for one sheet. Set this to 0 if you do not want any control."),
     }
   
-
     def default_get(self, cr, uid, fields, context=None):
-        ir_values = self.pool.get('ir.values')
         res = super(hr_timeshee_settings, self).default_get(cr, uid, fields, context)
-        timesheet = ir_values.get_default(cr, uid, 'res.company', 'timesheet_range')
-        companies = self.pool.get('res.company').search(cr, uid, [], context=context)
-        for time_diff in self.pool.get('res.company').browse(cr, uid, companies, context=context):
-            res['timesheet_range']=time_diff.timesheet_range
-            res['timesheet_max_difference']=time_diff.timesheet_max_difference
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        res['timesheet_range']=user.company_id.timesheet_range 
+        res['timesheet_max_difference']=user.company_id.timesheet_max_difference
         return res
+
+    def set_timesheet_defaults(self, cr, uid, ids, context=None):
+        wizard = self.browse(cr, uid, ids)[0]
+        tm_range = wizard.timesheet_range
+        tm_diff = wizard.timesheet_max_difference
+        user = self.pool.get('res.users').browse(cr, uid, uid, context)
+        user.company_id.write({'timesheet_range': tm_range,'timesheet_max_difference': tm_diff})  
+        return {}  
