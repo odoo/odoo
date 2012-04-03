@@ -123,13 +123,13 @@
                                 <field name="product_manager"/>
                             </group>
 
-                            <group colspan="2" col="2" name="uom">
+                            <group colspan="2" col="2" name="uom" groups="product.group_uom">
                                 <separator string="Unit of Measure" colspan="2"/>
-                                <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)" groups="product.group_uom"/>
-                                <field name="uom_po_id" groups="base.group_extended"/>
+                                <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)"/>
+                                <field name="uom_po_id"/>
                             </group>
 
-                            <group colspan="2" col="2" name="uos" groups="product.group_uom">
+                            <group colspan="2" col="2" name="uos" groups="product.group_uos">
                                 <separator string="Second UoM" colspan="2"/>
                                 <field name="uos_id"/>
                                 <field name="uos_coeff"/>
