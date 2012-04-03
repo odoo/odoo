@@ -18,10 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 from osv import fields, osv
-from tools import config
-from lxml import etree
 
 class knowledge_configuration(osv.osv_memory):
     _name = 'knowledge.configuration'
@@ -36,10 +33,7 @@ class knowledge_configuration(osv.osv_memory):
                            help ="""It install the document_ftp."""),
         'module_document_webdav': fields.boolean('Share Repositories (WebDAV)',
                            help ="""It install the document_webdav."""),                                   
-                             
     }
-    
-    
 knowledge_configuration()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

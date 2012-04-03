@@ -8,7 +8,10 @@
             <field name="inherit_id" ref="document.view_knowledge_configuration"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='module_document_ftp']" position="after">
-                    <field name="server_address_port"/>
+                	<group  colspan="4" col="4">
+	                    <field name="url" widget="url" colspan="2"/>
+						<button name="document_ftp" string="Browse" type="object" icon="gtk-ok"/>
+					</group>
                 </xpath>
             </field>
         </record>

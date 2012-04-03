@@ -21,19 +21,39 @@
 
 from osv import fields, osv
 from tools import config
-from lxml import etree
 
-class documnet_ftp_configuration(osv.osv_memory):
+class documnet_ftp_setting(osv.osv_memory):
     _name = 'knowledge.configuration'
     _inherit = 'knowledge.configuration'
     _columns = {
-        'server_address_port': fields.char('Server address/IP and port',size=128,
-                           help ="""It assign server address/IP and port."""),               
+        'url': fields.char('Borwse Documents',size=64,
+                           help ="""It allow to browse the document from the relative URL""", readonly=True),               
     }
-    
 
-    _defaults = {
-        'server_address_port': config.get('ftp_server_host', 'localhost') + ':' + config.get('ftp_server_port', '8021'),
-    }
-    
+    def get_default_ftp_config(self, cr, uid, ids, context=None):
+        ir_values = self.pool.get('ir.actions.url')
+        user_pool = self.pool.get('res.users')
+        current_user = user_pool.browse(cr, uid, uid, context=context)
+        data_pool = self.pool.get('ir.model.data')
+        aid = data_pool._get_id(cr, uid, 'document_ftp', 'action_document_browse')
+        aid = data_pool.browse(cr, uid, aid, context=context).res_id
+        ftp_url = self.pool.get('ir.actions.url').browse(cr, uid, aid, context=context)
+        url = ftp_url.url and ftp_url.url.split('ftp://') or []
+        if url:
+            url = url[1]
+            if url[-1] == '/':
+                url = url[:-1]
+        else:
+            url = '%s:%s' %(ftpserver.HOST, ftpserver.PORT) 
+        return {'url':'ftp://%s@%s'%(current_user.login, url)}
+                            
+    def document_ftp(self, cr, uid, ids, context=None):
+        data_id = ids and ids[0] or False
+        data = self.browse(cr, uid, data_id, context=context)
+        return {
+        'type': 'ir.actions.act_url',
+        'url':data.url,
+        'nodestroy':True,
+        } 
+     
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
