@@ -763,7 +763,7 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
         _(log_records.reverse()).each(function (record) {
             var context = {};
             if (record.context) {
-                try { context = py.eval(record.context).toJSON(); }
+                try { context = py.eval(record.context); }
                 catch (e) { /* TODO: what do I do now? */ }
             }
             $(_.str.sprintf('<li><a href="#">%s</a></li>', record.name))

@@ -393,7 +393,7 @@ openerp.web.Database = openerp.web.OldWidget.extend(/** @lends openerp.web.Datab
                     if (self.db_list) {
                         self.db_list.push(self.to_object(fields)['db_name']);
                         self.db_list.sort();
-                        self.widget_parent.set_db_list(self.db_list);
+                        self.getParent().set_db_list(self.db_list);
                     }
 
                     var form_obj = self.to_object(fields);
@@ -416,7 +416,7 @@ openerp.web.Database = openerp.web.OldWidget.extend(/** @lends openerp.web.Datab
                     $db_list = $form.find('[name=drop_db]'),
                     db = $db_list.val();
 
-                if (!confirm("Do you really want to delete the database: " + db + " ?")) {
+                if (!db || !confirm("Do you really want to delete the database: " + db + " ?")) {
                     return;
                 }
                 self.rpc("/web/database/drop", {'fields': fields}, function(result) {
@@ -635,11 +635,13 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
     init: function() {
         this._super.apply(this, arguments);
         this.has_been_loaded = $.Deferred();
+        this.maximum_visible_links = 'auto'; // # of menu to show. 0 = do not crop, 'auto' = algo
     },
     start: function() {
         this._super.apply(this, arguments);
         this.$secondary_menus = this.getParent().$element.find('.oe_secondary_menus_container');
         this.$secondary_menus.on('click', 'a[data-menu]', this.on_menu_click);
+        $('html').bind('click', this.do_hide_more);
     },
     do_reload: function() {
         var self = this;
@@ -650,13 +652,39 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
         });
     },
     on_loaded: function(data) {
+        var self = this;
         this.data = data;
         this.renderElement();
+        this.limit_entries();
         this.$element.on('click', 'a[data-menu]', this.on_menu_click);
+        this.$element.on('click', 'a.oe_menu_more_link', function() {
+            self.$element.find('.oe_menu_more').toggle();
+            return false;
+        });
         this.$secondary_menus.html(QWeb.render("Menu.secondary", { widget : this }));
         // Hide second level submenus
         this.$secondary_menus.find('.oe_menu_toggler').siblings('.oe_secondary_submenu').hide();
         this.has_been_loaded.resolve();
+    },
+    limit_entries: function() {
+        var maximum_visible_links = this.maximum_visible_links;
+        if (maximum_visible_links === 'auto') {
+            maximum_visible_links = this.auto_limit_entries();
+        }
+        if (maximum_visible_links < this.data.data.children.length) {
+            var $more = $(QWeb.render('Menu.more')),
+                $index = this.$element.find('li').eq(maximum_visible_links - 1);
+            $index.after($more);
+            $more.find('.oe_menu_more').append($index.next().nextAll());
+        }
+    },
+    auto_limit_entries: function() {
+        // TODO: auto detect overflow and bind window on resize
+        var width = $(window).width();
+        return Math.floor(width / 125);
+    },
+    do_hide_more: function() {
+        this.$element.find('.oe_menu_more').hide();
     },
     /**
      * Opens a given menu by id, as if a user had browsed to that menu by hand
@@ -702,6 +730,7 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
         }
     },
     on_menu_click: function(ev, id) {
+        this.do_hide_more();
         id = id || 0;
         var $clicked_menu, manual = false;
 
@@ -814,8 +843,11 @@ openerp.web.UserMenu =  openerp.web.Widget.extend(/** @lends openerp.web.UserMen
                 return;
             var func = new openerp.web.Model("res.users").get_func("read");
             return func(self.session.uid, ["name", "company_id"]).pipe(function(res) {
-                // TODO: Only show company if multicompany in use
-                self.$element.find('.oe_topbar_name').text(res.name + '/' + res.company_id[1]);
+                // TODO: Show company if multicompany is in use
+                var topbar_name = _.str.sprintf("%s (%s)", res.name, openerp.connection.db, res.company_id[1]);
+                self.$element.find('.oe_topbar_name').text(topbar_name);
+                var avatar_src = _.str.sprintf('%s/web/binary/image?session_id=%s&model=res.users&field=avatar&id=%s', self.session.prefix, self.session.session_id, self.session.uid);
+                $avatar.attr('src', avatar_src);
                 return self.shortcut_load();
             });
         };
@@ -908,7 +940,7 @@ openerp.web.UserMenu =  openerp.web.Widget.extend(/** @lends openerp.web.UserMen
                 }
             ]
         }).open();
-       action_manager.appendTo(this.dialog);
+       action_manager.appendTo(this.dialog.$element);
        action_manager.render(this.dialog);
     },
     on_menu_about: function() {
@@ -957,7 +989,7 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
                 self.$element.toggleClass('clark-gable');
             });
         }
-        this.session.bind_session().then(function() {
+        this.session.session_bind().then(function() {
             if (!self.session.session_is_valid()) {
                 self.show_login();
             }
@@ -1134,7 +1166,7 @@ openerp.web.embed = function (origin, dbname, login, key, action, options) {
         var sc = document.getElementsByTagName('script');
         currentScript = sc[sc.length-1];
     }
-    openerp.connection.bind_session(origin).then(function () {
+    openerp.connection.session_bind(origin).then(function () {
         openerp.connection.session_authenticate(dbname, login, key, true).then(function () {
             var client = new openerp.web.EmbeddedClient(action, options);
             client.insertAfter(currentScript);

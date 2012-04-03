@@ -194,6 +194,20 @@ $colour4: #8a89ba
             font-weight: bold
             color: white
             @include box-shadow(0 1px 2px rgba(255,255,255,0.3) inset)
+    .oe_menu_more_container
+        position: relative
+        .oe_menu_more
+            position: absolute
+            padding: 0
+            background-color: #646060
+            z-index: 1
+            border: 1px solid black
+            border-bottom-left-radius: 5px
+            border-bottom-right-radius: 5px
+            li
+                float: none
+                a
+                    white-space: nowrap
     .oe_secondary_menu_section
         font-weight: bold
         margin-left: 8px
@@ -261,6 +275,23 @@ $colour4: #8a89ba
     // }}}
 
     // UserMenu {{{
+    .oe_dropdown
+        position: relative
+
+    .oe_dropdown_toggle:after
+        width: 0
+        height: 0
+        display: inline-block
+        content: "&darr"
+        text-indent: -99999px
+        vertical-align: top
+        margin-top: 8px
+        margin-left: 4px
+        border-left: 4px solid transparent
+        border-right: 4px solid transparent
+        border-top: 4px solid white
+        @include opacity(0.5)
+
     .oe_user_menu
         float: right
         padding: 0
@@ -268,22 +299,6 @@ $colour4: #8a89ba
         li
             list-style-type: none
             float: left
-        .oe_dropdown
-            position: relative
-
-        .oe_dropdown_toggle:after
-            width: 0
-            height: 0
-            display: inline-block
-            content: "&darr"
-            text-indent: -99999px
-            vertical-align: top
-            margin-top: 8px
-            margin-left: 4px
-            border-left: 4px solid transparent
-            border-right: 4px solid transparent
-            border-top: 4px solid white
-            @include opacity(0.5)
 
         .oe_dropdown_options
             float: left

@@ -1605,7 +1605,7 @@ openerp.web.form.FieldFloat = openerp.web.form.FieldChar.extend({
     init: function (view, node) {
         this._super(view, node);
         if (node.attrs.digits) {
-            this.digits = py.eval(node.attrs.digits).toJSON();
+            this.digits = py.eval(node.attrs.digits);
         } else {
             this.digits = view.fields_view.fields[node.attrs.name].digits;
         }

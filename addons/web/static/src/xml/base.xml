@@ -332,6 +332,12 @@
         </li>
     </ul>
 </t>
+<t t-name="Menu.more">
+    <li class="oe_menu_more_container">
+        <a href="#" class="oe_menu_more_link oe_dropdown_toggle">More</a>
+        <ul class="oe_menu_more" style="display: none;"/>
+    </li>
+</t>
 <t t-name="Menu.secondary">
     <div t-foreach="widget.data.data.children" t-as="menu" style="display: none" class="oe_secondary_menu" t-att-data-menu-parent="menu.id">
         <t t-foreach="menu.children" t-as="menu">

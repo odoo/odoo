@@ -11,6 +11,91 @@ if (!console.debug) {
 
 openerp.web.core = function(openerp) {
 
+// a function to override the "extend()" method of JR's inheritance, allowing
+// the usage of "include()"
+oe_override_class = function(claz){
+    var initializing = false, fnTest = /xyz/.test(function(){xyz;}) ?
+    /\b_super\b/ : /.*/;
+    
+    // Create a new Class that inherits from this class
+    claz.extend = function(prop) {
+        var _super = this.prototype;
+        
+        // Instantiate a base class (but only create the instance, don't run the
+        // init constructor)
+        initializing = true; var prototype = new this(); initializing = false;
+        
+        // Copy the properties over onto the new prototype
+        for (var name in prop) {
+          // Check if we're overwriting an existing function
+          prototype[name] = typeof prop[name] == "function" &&
+            typeof _super[name] == "function" && fnTest.test(prop[name]) ?
+            (function(name, fn){
+              return function() {
+                var tmp = this._super;
+                
+                // Add a new ._super() method that is the same method but on the
+                // super-class
+                this._super = _super[name];
+                
+                // The method only need to be bound temporarily, so we remove it
+                // when we're done executing
+                var ret = fn.apply(this, arguments); this._super = tmp;
+                
+                return ret;
+              };
+            })(name, prop[name]) : prop[name];
+        }
+        
+        // The dummy class constructor
+        function Class() {
+            // All construction is actually done in the init method
+            if (!initializing && this.init) {
+                var ret = this.init.apply(this, arguments); if (ret) { return ret;}
+            } return this;
+        }
+        
+        Class.include = function (properties) {
+            for (var name in properties) {
+                if (typeof properties[name] !== 'function'
+                        || !fnTest.test(properties[name])) {
+                    prototype[name] = properties[name];
+                } else if (typeof prototype[name] === 'function'
+                           && prototype.hasOwnProperty(name)) {
+                    prototype[name] = (function (name, fn, previous) {
+                        return function () {
+                            var tmp = this._super; this._super = previous; var
+                            ret = fn.apply(this, arguments); this._super = tmp;
+                            return ret;
+                        }
+                    })(name, properties[name], prototype[name]);
+                } else if (typeof _super[name] === 'function') {
+                    prototype[name] = (function (name, fn) {
+                        return function () {
+                            var tmp = this._super; this._super = _super[name];
+                            var ret = fn.apply(this, arguments); this._super =
+                            tmp; return ret;
+                        }
+                    })(name, properties[name]);
+                }
+            }
+        };
+        
+        // Populate our constructed prototype object
+        Class.prototype = prototype;
+        
+        // Enforce the constructor to be what we expect
+        Class.prototype.constructor = Class;
+    
+        // And make this class extendable
+        Class.extend = arguments.callee;
+        
+        return Class;
+    };
+};
+oe_override_class(nova.Class);
+oe_override_class(nova.Widget);
+
 openerp.web.Class = nova.Class;
 
 openerp.web.callback = function(obj, method) {
@@ -298,7 +383,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         this.name = openerp._session_id;
         this.qweb_mutex = new $.Mutex();
     },
-    bind_session: function(origin) {
+    session_bind: function(origin) {
         var window_origin = location.protocol+"//"+location.host, self=this;
         this.origin = origin ? _.str.rtrim(origin,'/') : window_origin;
         this.prefix = this.origin;
@@ -472,52 +557,67 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
      * FIXME: Huge testing hack, especially the evaluation context, rewrite + test for real before switching
      */
     test_eval: function (source, expected) {
+        var match_template = '<ul>' +
+                '<li>Source: %(source)s</li>' +
+                '<li>Local: %(local)s</li>' +
+                '<li>Remote: %(remote)s</li>' +
+            '</ul>',
+            fail_template = '<ul>' +
+                '<li>Error: %(error)s</li>' +
+                '<li>Source: %(source)s</li>' +
+            '</ul>';
         try {
             var ctx = this.test_eval_contexts(source.contexts);
             if (!_.isEqual(ctx, expected.context)) {
-                console.group('Local context does not match remote, nothing is broken but please report to R&D (xmo)');
-                console.warn('source', source.contexts);
-                console.warn('local', ctx);
-                console.warn('remote', expected.context);
-                console.groupEnd();
+                openerp.webclient.notification.warn('Context mismatch, report to xmo',
+                    _.str.sprintf(match_template, {
+                        source: JSON.stringify(source.contexts),
+                        local: JSON.stringify(ctx),
+                        remote: JSON.stringify(expected.context)
+                    }), true);
             }
         } catch (e) {
-            console.group('Failed to evaluate contexts, nothing is broken but please report to R&D (xmo)');
-            console.error(e);
-            console.log('source', source.contexts);
-            console.groupEnd();
+            openerp.webclient.notification.warn('Context fail, report to xmo',
+                _.str.sprintf(fail_template, {
+                    error: e.message,
+                    source: source.contexts
+                }), true);
         }
 
         try {
             var dom = this.test_eval_domains(source.domains, this.test_eval_get_context());
             if (!_.isEqual(dom, expected.domain)) {
-                console.group('Local domain does not match remote, nothing is broken but please report to R&D (xmo)');
-                console.warn('source', source.domains);
-                console.warn('local', dom);
-                console.warn('remote', expected.domain);
-                console.groupEnd();
+                openerp.webclient.notification.warn('Domains mismatch, report to xmo',
+                    _.str.sprintf(match_template, {
+                        source: JSON.stringify(source.domains),
+                        local: JSON.stringify(dom),
+                        remote: JSON.stringify(expected.domain)
+                    }), true);
             }
         } catch (e) {
-            console.group('Failed to evaluate domains, nothing is broken but please report to R&D (xmo)');
-            console.error(e);
-            console.log('source', source.domains);
-            console.groupEnd();
+            openerp.webclient.notification.warn('Domain fail, report to xmo',
+                _.str.sprintf(fail_template, {
+                    error: e.message,
+                    source: source.domains
+                }), true);
         }
 
         try {
             var groups = this.test_eval_groupby(source.group_by_seq);
             if (!_.isEqual(groups, expected.group_by)) {
-                console.group('Local groupby does not match remote, nothing is broken but please report to R&D (xmo)');
-                console.warn('source', source.group_by_seq);
-                console.warn('local', groups);
-                console.warn('remote', expected.group_by);
-                console.groupEnd();
+                openerp.webclient.notification.warn('GroupBy mismatch, report to xmo',
+                    _.str.sprintf(match_template, {
+                        source: JSON.stringify(source.group_by_seq),
+                        local: JSON.stringify(groups),
+                        remote: JSON.stringify(expected.group_by)
+                    }), true);
             }
         } catch (e) {
-            console.group('Failed to evaluate groupby, nothing is broken but please report to R&D (xmo)');
-            console.error(e);
-            console.log('source', source.group_by_seq);
-            console.groupEnd();
+            openerp.webclient.notification.warn('GroupBy fail, report to xmo',
+                _.str.sprintf(fail_template, {
+                    error: e.message,
+                    source: source.group_by_seq
+                }), true);
         }
     },
     test_eval_contexts: function (contexts) {
