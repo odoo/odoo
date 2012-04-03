@@ -1001,7 +1001,7 @@ openerp.web.search.Field = openerp.web.search.Input.extend( /** @lends openerp.w
      * @returns {Array<Array>} domain to include in the resulting search
      */
     make_domain: function (name, operator, facet) {
-        return [[name, operator, facet.value()]];
+        return [[name, operator, this.get_value(facet)]];
     },
     get_domain: function (facet) {
         var val = this.get_value(facet);
@@ -1176,20 +1176,24 @@ openerp.web.search.BooleanField = openerp.web.search.SelectionField.extend(/** @
  * @extends openerp.web.search.DateField
  */
 openerp.web.search.DateField = openerp.web.search.Field.extend(/** @lends openerp.web.search.DateField# */{
-    template: "SearchView.date",
-    start: function () {
-        this._super();
-        // FIXME: this insanity puts a div inside a span
-        this.datewidget = new openerp.web.DateWidget(this);
-        this.datewidget.prependTo(this.$element);
-        this.datewidget.$element.find("input")
-            .attr("size", 15)
-            .attr("autofocus", this.attrs.default_focus === '1' ? 'autofocus' : null)
-            .removeAttr('style');
-        this.datewidget.set_value(this.defaults[this.attrs.name] || false);
+    get_value: function (facet) {
+        return openerp.web.date_to_str(facet.get('json'));
     },
-    get_value: function () {
-        return this.datewidget.get_value() || null;
+    complete: function (needle) {
+        var d = Date.parse(needle);
+        if (!d) { return $.when(null); }
+        var value = openerp.web.format_value(d, this.attrs);
+        var label = _.str.sprintf(_.str.escapeHTML(
+            _t("Search %(field)s at: %(value)s")), {
+                field: '<em>' + this.attrs.string + '</em>',
+                value: '<strong>' + value + '</strong>'});
+        return $.when([{
+            category: this.attrs.string,
+            label: label,
+            value: value,
+            json: d,
+            field: this
+        }]);
     }
 });
 /**
@@ -1204,9 +1208,8 @@ openerp.web.search.DateField = openerp.web.search.Field.extend(/** @lends opener
  * @extends openerp.web.DateField
  */
 openerp.web.search.DateTimeField = openerp.web.search.DateField.extend(/** @lends openerp.web.search.DateTimeField# */{
-    make_domain: function (name, operator, value) {
-        return ['&', [name, '>=', value + ' 00:00:00'],
-                     [name, '<=', value + ' 23:59:59']];
+    get_value: function (facet) {
+        return openerp.web.datetime_to_str(facet.get('json'));
     }
 });
 openerp.web.search.ManyToOneField = openerp.web.search.CharField.extend({
