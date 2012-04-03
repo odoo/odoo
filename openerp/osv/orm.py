@@ -715,9 +715,9 @@ class BaseModel(object):
     @staticmethod
     def get_needaction_info(cr, uid, model_name, user_id, limit=None, order=None, domain=False, context=None):
         """Base method for needaction mechanism
-           - see base.needaction for actual implementation
+           - see ir.needaction for actual implementation
            - if the model uses the need action mechanism
-             (hasattr(model_obj, 'needaction_get_record_ids'):
+             (hasattr(model_obj, 'needaction_get_record_ids')):
               - get the record ids on which the user has actions to perform
               - evaluate the menu domain
               - compose a new domain: menu domain, limited to ids of
@@ -731,16 +731,16 @@ class BaseModel(object):
         """
         model_obj = pooler.get_pool(cr.dbname).get(model_name)
         if hasattr(model_obj, 'needaction_get_record_ids'):
-            ids = model_obj.needaction_get_record_ids(cr, uid, model_name, user_id, context=context)
+            ids = model_obj.needaction_get_record_ids(cr, uid, model_name, user_id, limit=8096, context=context)
             if not ids:
-                return [True, 0]
+                return (True, 0, [])
             if domain:
                 new_domain = eval(domain) + [('id', 'in', ids)]
             else:
-                new_domain = [('ids', 'in', ids)]
-            return [True, model_obj.search(cr, uid, new_domain, limit=limit, order=order, count=True)]
+                new_domain = [('id', 'in', ids)]
+            return (True, model_obj.search(cr, uid, new_domain, limit=limit, order=order, count=True), ids)
         else:
-            return [False, 0]
+            return (False, 0, [])
     
     def view_init(self, cr, uid, fields_list, context=None):
         """Override this method to do specific things when a view on the object is opened."""
