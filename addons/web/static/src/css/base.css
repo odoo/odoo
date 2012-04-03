@@ -300,7 +300,7 @@
     .openerp2 .oe_searchview .VS-search .VS-search-box {
       min-height: 0;
       border-width: 1px;
-      padding: 1px 0; }
+      padding: 0; }
     .openerp2 .oe_searchview .VS-search .VS-icon {
       top: 5px; }
     .openerp2 .oe_searchview .VS-search .VS-icon-search {
@@ -318,14 +318,14 @@
         padding: 0; }
       .openerp2 .oe_searchview .VS-search .VS-search-inner .search_input {
         margin-left: 0;
-        height: 20px; }
+        height: 22px; }
         .openerp2 .oe_searchview .VS-search .VS-search-inner .search_input input, .openerp2 .oe_searchview .VS-search .VS-search-inner .search_input .VS-input-width-tester {
           padding: 0 2px;
           height: inherit;
           margin: 0; }
       .openerp2 .oe_searchview .VS-search .VS-search-inner .search_facet {
         padding: 0;
-        margin: 0;
+        margin: 1px 0;
         border: 1px solid #afafb6;
         -moz-border-radius: 3px;
         -webkit-border-radius: 3px;
@@ -333,7 +333,10 @@
         background: #f0f0fa;
         height: 18px; }
         .openerp2 .oe_searchview .VS-search .VS-search-inner .search_facet.is_selected {
-          border-color: #a6a6fe; }
+          border-color: #a6a6fe;
+          -moz-box-shadow: 0 0 3px 1px #a6a6fe;
+          -webkit-box-shadow: 0 0 3px 1px #a6a6fe;
+          box-shadow: 0 0 3px 1px #a6a6fe; }
           .openerp2 .oe_searchview .VS-search .VS-search-inner .search_facet.is_selected .category {
             margin-left: 0; }
           .openerp2 .oe_searchview .VS-search .VS-search-inner .search_facet.is_selected .VS-icon-cancel {

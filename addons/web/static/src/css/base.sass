@@ -354,7 +354,7 @@ $colour4: #8a89ba
             .VS-search-box
                 min-height: 0
                 border-width: 1px
-                padding: 1px 0
+                padding: 0
 
             .VS-icon
                 top: 5px
@@ -378,7 +378,7 @@ $colour4: #8a89ba
 
                 .search_input
                     margin-left: 0
-                    height: 20px
+                    height: 22px
                     input, .VS-input-width-tester
                         padding: 0 2px
                         height: inherit
@@ -386,7 +386,7 @@ $colour4: #8a89ba
 
                 .search_facet
                     padding: 0
-                    margin: 0
+                    margin: 1px 0
                     border: 1px solid $facets-border
                     @include radius(3px)
                     background: #f0f0fa
@@ -394,6 +394,7 @@ $colour4: #8a89ba
 
                     &.is_selected
                         border-color: $facets-border-selected
+                        @include box-shadow(0 0 3px 1px $facets-border-selected)
 
                         .category
                             margin-left: 0
