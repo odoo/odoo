@@ -1324,7 +1324,8 @@ openerp.web.search.Advanced = openerp.web.search.Input.extend({
         _.invoke(children, 'destroy');
         // add new empty proposition
         this.append_proposition();
-        // ? close drawer?
+        // TODO: API on searchview
+        this.view.$element.removeClass('oe_searchview_open_drawer');
     }
 });
 
