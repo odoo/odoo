@@ -2397,7 +2397,8 @@ class stock_move(osv.osv):
             res += [new_move]
             product_obj = self.pool.get('product.product')
             for product in product_obj.browse(cr, uid, [move.product_id.id], context=context):
-                move.picking_id.scrap_send_note(quantity, product.uom_id.name, product.name, context=context)
+                uom = product.uom_id.name if product.uom_id else ''
+                move.picking_id.scrap_send_note(quantity, uom, product.name, context=context)
 
         self.action_done(cr, uid, res, context=context)
         return res
