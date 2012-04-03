@@ -224,16 +224,11 @@
                                 <field name="user_id"/>
                                 <field groups="base.group_extended" name="origin"/>
                             </group>
-                            <group colspan="2" col="2" groups="base.group_extended">
+                            <group name="sale_pay" colspan="2" col="2" groups="base.group_extended" >
                                 <separator string="Conditions" colspan="2"/>
                                 <field name="payment_term" widget="selection"/>
                                 <field name="fiscal_position" widget="selection"/>
                                 <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                            </group>
-                            <group colspan="2" col="2" groups="base.group_no_one">
-                                <separator string="Dates" colspan="2"/>
-                                <field name="create_date"/>
-                                <field name="date_confirm"/>
                             </group>
                             <separator colspan="4" string="Notes"/>
                             <field colspan="4" name="note" nolabel="1"/>
@@ -245,6 +240,7 @@
                             <field colspan="4" name="picking_ids" nolabel="1"/>
                         </page>
                     </notebook>
+                <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
                 </form>
             </field>
         </record>

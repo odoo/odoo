@@ -48,7 +48,9 @@ sale_shop()
 
 class sale_order(osv.osv):
     _name = "sale.order"
+    _inherit = ['mail.thread']
     _description = "Sales Order"
+    
 
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
@@ -307,7 +309,7 @@ class sale_order(osv.osv):
                 v['pricelist_id'] = shop.pricelist_id.id
         return {'value': v}
 
-    def action_cancel_draft(self, cr, uid, ids, *args):
+    def action_cancel_draft(self, cr, uid, ids, context=None):
         if not len(ids):
             return False
         cr.execute('select id from sale_order_line where order_id IN %s and state=%s', (tuple(ids), 'cancel'))
@@ -319,9 +321,7 @@ class sale_order(osv.osv):
             # Deleting the existing instance of workflow for SO
             wf_service.trg_delete(uid, 'sale.order', inv_id, cr)
             wf_service.trg_create(uid, 'sale.order', inv_id, cr)
-        for (id,name) in self.name_get(cr, uid, ids):
-            message = _("The sales order '%s' has been set in draft state.") %(name,)
-            self.log(cr, uid, id, message)
+            self.action_cancel_draft_send_note(cr, uid, ids, context=context)
         return True
 
     def onchange_pricelist_id(self, cr, uid, ids, pricelist_id, order_lines, context={}):
@@ -388,7 +388,10 @@ class sale_order(osv.osv):
                 vals.update({'invoice_quantity': 'order'})
             if vals['order_policy'] == 'picking':
                 vals.update({'invoice_quantity': 'procurement'})
-        return super(sale_order, self).create(cr, uid, vals, context=context)
+        order =  super(sale_order, self).create(cr, uid, vals, context=context)
+        if order:
+            self.create_send_note(cr, uid, [order], context=context)
+        return order
 
     def button_dummy(self, cr, uid, ids, context=None):
         return True
@@ -482,7 +485,6 @@ class sale_order(osv.osv):
 
         res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')
         res_id = res and res[1] or False,
-
         return {
             'name': _('Customer Invoices'),
             'view_type': 'form',
@@ -551,6 +553,8 @@ class sale_order(osv.osv):
                     if order.order_policy == 'picking':
                         picking_obj.write(cr, uid, map(lambda x: x.id, order.picking_ids), {'invoice_state': 'invoiced'})
                     cr.execute('insert into sale_order_invoice_rel (order_id,invoice_id) values (%s,%s)', (order.id, res))
+        if res:
+            self.invoice_send_note(cr, uid, ids, res, context)
         return res
 
     def action_invoice_cancel(self, cr, uid, ids, context=None):
@@ -602,6 +606,7 @@ class sale_order(osv.osv):
             #
             if order.state == 'invoice_except':
                 self.write(cr, uid, [order.id], {'state': 'progress'}, context=context)
+        self.invoice_paid_send_note(cr, uid, ids, context=None)
         return True
 
     def action_cancel(self, cr, uid, ids, context=None):
@@ -635,8 +640,7 @@ class sale_order(osv.osv):
                     wf_service.trg_validate(uid, 'account.invoice', inv, 'invoice_cancel', cr)
             sale_order_line_obj.write(cr, uid, [l.id for l in  sale.order_line],
                     {'state': 'cancel'})
-            message = _("The sales order '%s' has been cancelled.") % (sale.name,)
-            self.log(cr, uid, sale.id, message)
+            self.cancel_send_note(cr, uid, [sale.id], context=None)
         self.write(cr, uid, ids, {'state': 'cancel'})
         return True
 
@@ -649,8 +653,7 @@ class sale_order(osv.osv):
             else:
                 self.write(cr, uid, [o.id], {'state': 'progress', 'date_confirm': fields.date.context_today(self, cr, uid, context=context)})
             self.pool.get('sale.order.line').button_confirm(cr, uid, [x.id for x in o.order_line])
-            message = _("The quotation '%s' has been converted to a sales order.") % (o.name,)
-            self.log(cr, uid, o.id, message)
+            self.confirm_send_note(cr, uid, ids, context)
         return True
 
     def procurement_lines_get(self, cr, uid, ids, *args):
@@ -835,6 +838,8 @@ class sale_order(osv.osv):
         wf_service = netsvc.LocalService("workflow")
         if picking_id:
             wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
+            self.delivery_send_note(cr, uid, [order.id], picking_id, context)
+
 
         for proc_id in proc_ids:
             wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
@@ -873,7 +878,9 @@ class sale_order(osv.osv):
                     towrite.append(line.id)
                 if towrite:
                     self.pool.get('sale.order.line').write(cr, uid, towrite, {'state': 'done'}, context=context)
-            self.write(cr, uid, [order.id], val)
+            res = self.write(cr, uid, [order.id], val)
+            if res:
+                self.delivery_end_send_note(cr, uid, [order.id], context=context)
         return True
 
     def _log_event(self, cr, uid, ids, factor=0.7, name='Open Order'):
@@ -905,6 +912,52 @@ class sale_order(osv.osv):
                 if order_line.product_id and order_line.product_id.product_tmpl_id.type in ('product', 'consu'):
                     return True
         return False
+    
+    # ------------------------------------------------
+    # OpenChatter methods and notifications
+    # ------------------------------------------------
+    
+    def get_needaction_user_ids(self, cr, uid, ids, context=None):
+        result = dict.fromkeys(ids, [])
+        for obj in self.browse(cr, uid, ids, context=context):
+            if (obj.state == 'manual' or obj.state == 'progress'):
+                result[obj.id] = [obj.user_id.id]
+        return result
+ 
+    def create_send_note(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            self.message_subscribe(cr, uid, [obj.id], [obj.user_id.id], context=context)
+            self.message_append_note(cr, uid, [obj.id], body=_("Quotation for <em>%s</em> has been <b>created</b>.") % (obj.partner_id.name), context=context)
+        
+    def confirm_send_note(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            self.message_append_note(cr, uid, [obj.id], body=_("Quotation for <em>%s</em> <b>converted</b> to Sale Order of %s %s.") % (obj.partner_id.name, obj.amount_total, obj.pricelist_id.currency_id.symbol), context=context)
+    
+    def cancel_send_note(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            self.message_append_note(cr, uid, [obj.id], body=_("Sale Order for <em>%s</em> <b>cancelled</b>.") % (obj.partner_id.name), context=context)
+        
+    def delivery_send_note(self, cr, uid, ids, picking_id, context=None):
+        for order in self.browse(cr, uid, ids, context=context):
+            for picking in (pck for pck in order.picking_ids if pck.id == picking_id):
+                pck_date =  datetime.strptime(picking.min_date, '%Y-%m-%d %H:%M:%S').strftime('%m/%d/%Y')
+                self.message_append_note(cr, uid, [order.id], body=_("Delivery Order <em>%s</em> <b>scheduled</b> for %s.") % (picking.name, pck_date), context=context)
+    
+    def delivery_end_send_note(self, cr, uid, ids, context=None):
+        self.message_append_note(cr, uid, ids, body=_("Order <b>delivered</b>."), context=context)
+     
+    def invoice_paid_send_note(self, cr, uid, ids, context=None):
+        self.message_append_note(cr, uid, ids, body=_("Invoice <b>paid</b>."), context=context)
+        
+    def invoice_send_note(self, cr, uid, ids, invoice_id, context=None):
+        for order in self.browse(cr, uid, ids, context=context):
+            for invoice in (inv for inv in order.invoice_ids if inv.id == invoice_id):
+                self.message_append_note(cr, uid, [order.id], body=_("Draft Invoice of %s %s <b>waiting for validation</b>.") % (invoice.amount_total, invoice.currency_id.symbol), context=context)
+    
+    def action_cancel_draft_send_note(cr, uid, ids, context=context):
+        return self.message_append_note(cr, uid, ids, body='Sale order has been set in draft.', context=context)
+            
+        
 sale_order()
 
 # TODO add a field price_unit_uos
