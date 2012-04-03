@@ -434,6 +434,9 @@ class crm_case(crm_base):
             self.message_append_note(cr, uid, [id], 'System Notification', msg, context=context)
         return True
 
+    def case_get_note_msg_prefix(self, cr, uid, id, context=None):
+        return ''
+    
     def case_open(self, cr, uid, ids, context=None):
         """Opens Case"""
         cases = self.browse(cr, uid, ids)
