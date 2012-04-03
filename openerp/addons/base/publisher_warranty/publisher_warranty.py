@@ -188,21 +188,21 @@ class publisher_warranty_contract(osv.osv):
 
             limit_date = (datetime.datetime.now() - _PREVIOUS_LOG_CHECK).strftime(misc.DEFAULT_SERVER_DATETIME_FORMAT)
             # TODO: must be updated with OpenChatter ?
-            for message in result["messages"]:
-                ids = self.pool.get("res.log").search(cr, uid, [("res_model", "=", "publisher_warranty.contract"),
-                                                          ("create_date", ">=", limit_date),
-                                                          ("name", "=", message)])
-                if ids:
-                    continue
-                self.pool.get('res.log').create(cr, uid,
-                        {
-                            'name': message,
-                            'res_model': "publisher_warranty.contract",
-                            "read": True,
-                            "user_id": False,
-                        },
-                        context=context
-                )
+            #for message in result["messages"]:
+                #ids = self.pool.get("res.log").search(cr, uid, [("res_model", "=", "publisher_warranty.contract"),
+                                                          #("create_date", ">=", limit_date),
+                                                          #("name", "=", message)])
+                #if ids:
+                    #continue
+                #self.pool.get('res.log').create(cr, uid,
+                        #{
+                            #'name': message,
+                            #'res_model': "publisher_warranty.contract",
+                            #"read": True,
+                            #"user_id": False,
+                        #},
+                        #context=context
+                #)
         except Exception:
             if cron_mode:
                 return False # we don't want to see any stack trace in cron
