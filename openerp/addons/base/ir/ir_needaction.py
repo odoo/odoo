@@ -135,7 +135,7 @@ class ir_needaction_mixin(osv.osv):
             context = {}
         needact_table_obj = self.pool.get('ir.needaction_users')
         # perform create
-        obj_id = super(ir_needaction, self).create(cr, uid, values, context=context)
+        obj_id = super(ir_needaction_mixin, self).create(cr, uid, values, context=context)
         # link user_ids
         needaction_user_ids = self.get_needaction_user_ids(cr, uid, [obj_id], context=context)
         needact_table_obj.create_users(cr, uid, [obj_id], self._name, needaction_user_ids[obj_id], context=context)
@@ -146,7 +146,7 @@ class ir_needaction_mixin(osv.osv):
             context = {}
         needact_table_obj = self.pool.get('ir.needaction_users')
         # perform write
-        write_res = super(ir_needaction, self).write(cr, uid, ids, values, context=context)
+        write_res = super(ir_needaction_mixin, self).write(cr, uid, ids, values, context=context)
         # get and update user_ids
         needaction_user_ids = self.get_needaction_user_ids(cr, uid, ids, context=context)
         for id in ids:
@@ -160,7 +160,7 @@ class ir_needaction_mixin(osv.osv):
         needact_table_obj = self.pool.get('ir.needaction_users')
         needact_table_obj.unlink_users(cr, uid, ids, self._name, context=context)
         # perform unlink
-        return super(ir_needaction, self).unlink(cr, uid, ids, context=context)
+        return super(ir_needaction_mixin, self).unlink(cr, uid, ids, context=context)
     
     #------------------------------------------------------
     # Need action API
