@@ -53,7 +53,7 @@ class project(osv.osv):
     _name = "project.project"
     _description = "Project"
     _inherits = {'account.analytic.account': "analytic_account_id"}
-    _inherit = ['mail.thread']
+    _inherit = ['ir.needaction', 'mail.thread']
 
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
         if user == 1:
@@ -203,49 +203,6 @@ class project(osv.osv):
         'sequence': 10,
         'type_ids': _get_type_common
     }
-
-    def get_needaction_user_ids(self, cr, uid, ids, context=None):
-        result = dict.fromkeys(ids, [])
-        for obj in self.browse(cr, uid, ids, context=context):
-            if obj.state == 'draft' and obj.user_id:
-                result[obj.id] = [obj.user_id.id]
-        return result
-
-    def message_get_subscribers(self, cr, uid, ids, context=None):
-        sub_ids = self.message_get_subscribers_ids(cr, uid, ids, context=context);
-        for obj in self.browse(cr, uid, ids, context=context):
-            if obj.user_id:
-                sub_ids.append(obj.user_id.id)
-        return self.pool.get('res.users').read(cr, uid, sub_ids, context=context)
-
-    def create(self, cr, uid, vals, context=None):
-        obj_id = super(project, self).create(cr, uid, vals, context=context)
-        self.create_send_note(cr, uid, [obj_id], context=context)
-        return obj_id
-
-    def create_send_note(self, cr, uid, ids, context=None):
-        self.message_append_note(cr, uid, ids, 'System Notification', _("Project has been <b>created</b>."), context=context)
-        return True
-
-    def set_open_send_note(self, cr, uid, ids, context=None):
-        message = _("Project has been <b>opened</b>.")
-        self.message_append_note(cr, uid, ids, '', message, context=context)
-        return True
-
-    def set_pending_send_note(self, cr, uid, ids, context=None):
-        message = _("Project is <b>pending</b>.")
-        self.message_append_note(cr, uid, ids, '', message, context=context)
-        return True
-
-    def set_cancel_send_note(self, cr, uid, ids, context=None):
-        message = _("Project has been <b>cancelled</b>.")
-        self.message_append_note(cr, uid, ids, '', message, context=context)
-        return True
-
-    def set_close_send_note(self, cr, uid, ids, context=None):
-        message = _("Project has been <b>closed</b>.")
-        self.message_append_note(cr, uid, ids, '', message, context=context)
-        return True
 
     # TODO: Why not using a SQL contraints ?
     def _check_dates(self, cr, uid, ids, context=None):
@@ -485,6 +442,50 @@ def Project():
                         'user_id': int(p.booked_resource[0].name[5:]),
                     }, context=context)
         return True
+
+    # ------------------------------------------------
+    # OpenChatter methods and notifications
+    # ------------------------------------------------
+    
+    def get_needaction_user_ids(self, cr, uid, ids, context=None):
+        result = dict.fromkeys(ids)
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = []
+            if obj.state == 'draft' and obj.user_id:
+                result[obj.id] = [obj.user_id.id]
+        return result
+
+    def message_get_subscribers(self, cr, uid, ids, context=None):
+        sub_ids = self.message_get_subscribers_ids(cr, uid, ids, context=context);
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.user_id:
+                sub_ids.append(obj.user_id.id)
+        return self.pool.get('res.users').read(cr, uid, sub_ids, context=context)
+
+    def create(self, cr, uid, vals, context=None):
+        obj_id = super(project, self).create(cr, uid, vals, context=context)
+        self.create_send_note(cr, uid, [obj_id], context=context)
+        return obj_id
+
+    def create_send_note(self, cr, uid, ids, context=None):
+        return self.message_append_note(cr, uid, ids, body=_("Project has been <b>created</b>."), context=context)
+
+    def set_open_send_note(self, cr, uid, ids, context=None):
+        message = _("Project has been <b>opened</b>.")
+        return self.message_append_note(cr, uid, ids, body=message, context=context)
+
+    def set_pending_send_note(self, cr, uid, ids, context=None):
+        message = _("Project is now <b>pending</b>.")
+        return self.message_append_note(cr, uid, ids, body=message, context=context)
+
+    def set_cancel_send_note(self, cr, uid, ids, context=None):
+        message = _("Project has been <b>cancelled</b>.")
+        return self.message_append_note(cr, uid, ids, body=message, context=context)
+
+    def set_close_send_note(self, cr, uid, ids, context=None):
+        message = _("Project has been <b>closed</b>.")
+        return self.message_append_note(cr, uid, ids, body=message, context=context)
+    
 project()
 
 class users(osv.osv):
@@ -1277,4 +1278,3 @@ class project_task_history_cumulative(osv.osv):
         )
         """)
 project_task_history_cumulative()
-
