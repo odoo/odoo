@@ -383,7 +383,7 @@ class mail_thread(osv.osv):
         msg_ids = self.message_load_ids(cr, uid, ids, limit, offset, domain, ascent, root_ids, context=context)
         return self.pool.get('mail.message').read(cr, uid, msg_ids, context=context)
     
-    def get_pushed_messages(self, cr, uid, ids, limit=100, offset=0, notif_search_domain=[], msg_search_domain=[], ascent=False, root_ids=[], context=None):
+    def get_pushed_messages(self, cr, uid, ids, limit=100, offset=0, msg_search_domain=[], ascent=False, root_ids=[], context=None):
         """ OpenChatter: wall: get messages to display (=pushed notifications)
             :param domain: domain to add to the search; especially child_of
                            is interesting when dealing with threaded display
@@ -400,8 +400,7 @@ class mail_thread(osv.osv):
             if isinstance(arg, (tuple, list)):
                 arg[0] = 'message_id.' + arg[0]
         # compose final domain
-        domain = [('user_id', '=', uid)] + notif_search_domain + msg_search_domain
-        #print domain
+        domain = [('user_id', '=', uid)] + msg_search_domain
         # get notifications
         notification_ids = notification_obj.search(cr, uid, domain, limit=limit, offset=offset, context=context)
         notifications = notification_obj.browse(cr, uid, notification_ids, context=context)
