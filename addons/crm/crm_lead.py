@@ -840,7 +840,7 @@ class crm_lead(crm_case, osv.osv):
     def case_get_note_msg_prefix(self, cr, uid, lead, context=None):
         if isinstance(lead, (int, long)):
             lead = self.browse(cr, uid, [lead], context=context)[0]
-		return ('Opportunity' if lead.type == 'opportunity' else 'Lead')
+        return ('Opportunity' if lead.type == 'opportunity' else 'Lead')
     
     def create_send_note(self, cr, uid, ids, context=None):
         for id in ids:
