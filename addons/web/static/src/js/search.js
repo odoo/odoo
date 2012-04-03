@@ -664,6 +664,18 @@ openerp.web.search.FilterGroupFacet = VS.ui.SearchFacet.extend({
         this.box = $('<input>').val(value);
 
         return this;
+    },
+    enableEdit: function () {
+        this.selectFacet()
+    },
+    keydown: function (e) {
+        var key = VS.app.hotkeys.key(e);
+        if (key !== 'right') {
+            return VS.ui.SearchFacet.prototype.keydown.call(this, e);
+        }
+        e.preventDefault();
+        this.deselectFacet();
+        this.options.app.searchBox.focusNextFacet(this, 1);
     }
 });
 /**
