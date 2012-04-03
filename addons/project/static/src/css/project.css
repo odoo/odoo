@@ -68,10 +68,14 @@ table {
   display: none;
   position: absolute; }
 
+.dropdown {
+  position: relative; }
+
 .dropdown-toggle:after {
   width: 0;
   height: 0;
   display: inline-block;
+  content: "&darr";
   text-indent: -99999px;
   vertical-align: top;
   margin-top: 8px;
@@ -84,6 +88,7 @@ table {
   -moz-opacity: 0.5;
   opacity: 0.5; }
 
+
  .oe_kanban_vignette .dropdown-menu .color-chooser {
   padding: 0 3px; }
   .oe_kanban_vignette .dropdown-menu .color-chooser li {
@@ -93,7 +98,7 @@ table {
 a.oe_kanban_action {
   position: absolute;
   right: 0;
-  display: none; }
+   }
   a.oe_kanban_action:hover {
     text-decoration: none; }
   a.oe_kanban_action .i {
