@@ -747,7 +747,7 @@ class BaseModel(object):
             if domain:
                 new_domain = eval(domain) + [('id', 'in', ids)]
             else:
-                new_domain = [('ids', 'in', ids)]
+                new_domain = [('id', 'in', ids)]
             return (True, model_obj.search(cr, uid, new_domain, limit=limit, order=order, count=True), ids)
         else:
             return (False, 0, [])
