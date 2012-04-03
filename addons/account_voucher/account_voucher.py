@@ -227,17 +227,18 @@ class account_voucher(osv.osv):
     def _paid_amount_in_company_currency(self, cr, uid, ids, name, args, context=None):
         if not ids: return {}
         res = {}
-        voucher_rate = company_currency_rate = 1.0
+        rate = 1.0
         for voucher in self.browse(cr, uid, ids, context=context):
             if voucher.currency_id:
-                ctx = context.copy()
-                ctx.update({'date': voucher.date})
-                voucher_rate = self.browse(cr, uid, voucher.id, context=ctx).currency_id.rate
                 if voucher.company_id.currency_id.id == voucher.payment_rate_currency_id.id:
-                    company_currency_rate =  voucher.payment_rate
+                    rate =  1 / voucher.payment_rate
                 else:
+                    ctx = context.copy()
+                    ctx.update({'date': voucher.date})
+                    voucher_rate = self.browse(cr, uid, voucher.id, context=ctx).currency_id.rate
                     company_currency_rate = voucher.company_id.currency_id.rate
-            res[voucher.id] =  voucher.amount / voucher_rate * company_currency_rate
+                    rate = voucher_rate * company_currency_rate
+            res[voucher.id] =  voucher.amount / rate
         return res
 
     _name = 'account.voucher'
@@ -993,9 +994,7 @@ class account_voucher(osv.osv):
         res = amount
         if voucher.payment_rate_currency_id.id == voucher.company_id.currency_id.id:
             # the rate specified on the voucher is for the company currency
-            rate_between_voucher_and_base = voucher.currency_id.rate or 1.0
-            rate_between_base_and_company = voucher.payment_rate or 1.0
-            res = currency_obj.round(cr, uid, voucher.company_id.currency_id, (amount / rate_between_voucher_and_base * rate_between_base_and_company))
+            res = currency_obj.round(cr, uid, voucher.company_id.currency_id, (amount * voucher.payment_rate))
         else:
             # the rate specified on the voucher is not relevant, we use all the rates in the system
             res = currency_obj.compute(cr, uid, voucher.currency_id.id, voucher.company_id.currency_id.id, amount, context=context)
