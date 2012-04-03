@@ -166,6 +166,9 @@ class res_partner(osv.osv):
             check = 0
         return True
 
+    __check_vat_ch_re1 = re.compile(r'(MWST|TVA|IVA)[0-9]{6}$')
+    __check_vat_ch_re2 = re.compile(r'E([0-9]{9}|-[0-9]{3}\.[0-9]{3}\.[0-9]{3})(MWST|TVA|IVA)$')
+
     def check_vat_ch(self, vat):
         '''
         Check Switzerland VAT number.
@@ -175,9 +178,10 @@ class res_partner(osv.osv):
         # Old format is "TVA 123456" we will admit the user has to enter ch before the number
         # Format will becomes such as "CHE-999.999.99C TVA"
         # Both old and new format will be accepted till end of 2013
-        # Accepted format are:
-        #     CHTVA######
+        # Accepted format are: (spaces are ignored)
         #     CH TVA ######
+        #     CH IVA ######
+        #     CH MWST #######
         #
         #     CHE#########MWST
         #     CHE#########TVA
@@ -186,31 +190,17 @@ class res_partner(osv.osv):
         #     CHE-###.###.### TVA
         #     CHE-###.###.### IVA
         #     
-
-        vat = vat.replace('-','').replace('.','')
-        if len(vat) in (13,14):
-            if not vat[0] == 'E':
-                return False
-            if vat[10:] not in ('TVA','IVA','MWST'):
-                return False
-            num = vat[1:10]
-        elif len(vat) in (9,10):
-            if vat[:-6] not in ('TVA','IVA','MWST'):
-                return False
-            num = vat[-6:]
-        else:
-            return False
-        # For new TVA numbers, do a mod11 check
-        if len(num) == 9:
-            def is_mod11(num):
-                factor = (5,4,3,2,7,6,5,4)
-                csum = sum([int(num[i]) * factor[i] for i in range(8)])
-                check = 11 - (csum % 11)
-                return check == int(num[8])
-
-            if not is_mod11(num):
-                return False
-        return True
+        if self.__check_vat_ch_re1.match(vat):
+            return True
+        match = self.__check_vat_ch_re2.match(vat) 
+        if match:
+            # For new TVA numbers, do a mod11 check
+            num = filter(lambda s: s.isdigit(), match.group(1))        # get the digits only
+            factor = (5,4,3,2,7,6,5,4)
+            csum = sum([int(num[i]) * factor[i] for i in range(8)])
+            check = 11 - (csum % 11)
+            return check == int(num[8])
+        return False
 
     def check_vat_cy(self, vat):
         '''
