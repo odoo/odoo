@@ -568,7 +568,6 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
             '</ul>';
         try {
             var ctx = this.test_eval_contexts(source.contexts);
-            ctx = null;
             if (!_.isEqual(ctx, expected.context)) {
                 openerp.webclient.notification.warn('Context mismatch, report to xmo',
                     _.str.sprintf(match_template, {
