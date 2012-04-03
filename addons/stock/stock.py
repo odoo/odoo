@@ -680,6 +680,7 @@ class stock_picking(osv.osv):
         if context is None:
             context = {}
         mod_obj = self.pool.get('ir.model.data')
+        # To get the right view of shipment based on type from stock move and Back order.
         if context.get('default_picking_id', False):
             picking_type = self.browse(cr, uid, context['default_picking_id'], context=context).type
             if picking_type == 'out':
