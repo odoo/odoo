@@ -267,7 +267,8 @@ class procurement_order(osv.osv):
                         if op.procurement_draft_ids:
                         # Check draft procurement related to this order point
                             pro_ids = [x.id for x in op.procurement_draft_ids]
-                            procure_datas = procurement_obj.read(cr, uid, pro_ids, ['id','product_qty'], context=context, order='product_qty desc')
+                            procure_datas = procurement_obj.read(
+                                cr, uid, pro_ids, ['id', 'product_qty'], context=context)
                             to_generate = qty
                             for proc_data in procure_datas:
                                 if to_generate >= proc_data['product_qty']:

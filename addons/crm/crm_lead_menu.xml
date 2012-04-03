@@ -9,7 +9,7 @@
         <field name="domain">['|', ('type','=','lead'), ('type','=',False)]</field>
         <field name="view_id" ref="crm_case_tree_view_leads"/>
         <field name="search_view_id" ref="crm.view_crm_case_leads_filter"/>
-        <field name="context">{'search_default_new':1, 'default_type': 'lead', 'search_default_section_id': section_id, 'stage_type': 'lead'}</field>
+        <field name="context">{'default_type': 'lead', 'search_default_section_id': section_id, 'stage_type': 'lead'}</field>
         <field name="help">Leads allow you to manage and keep track of all initial contacts with a prospect or partner showing interest in your products or services. A lead is usually the first step in your sales cycle. Once qualified, a lead may be converted into a business opportunity, while creating the related partner for further detailed tracking of any linked activities. You can import a database of prospects, keep track of your business cards or integrate your website's contact form with the OpenERP Leads. Leads can be connected to the email gateway: new emails may create leads, each of them automatically gets the history of the conversation with the prospect.</field>
     </record>
 
@@ -27,15 +27,7 @@
         <field name="act_window_id" ref="crm_case_category_act_leads_all"/>
     </record>
 
-    <menuitem id="base.menu_sales" name="Sales"
-        parent="base.menu_base_partner" sequence="1" />
-
-    <menuitem parent="base.menu_sales" name="Leads"
-        id="menu_crm_case_categ0_act_leads"
-        action="crm_case_category_act_leads_all" sequence="1" />
-
-
-     <act_window
+    <act_window
             id="act_crm_opportunity_crm_phonecall_new"
             name="Phone calls"
             groups="base.group_extended"
@@ -97,12 +89,9 @@ You and your team(s) will be able to plan meetings and phone calls from opportun
           <field name="act_window_id" ref="crm_case_category_act_oppor11"/>
      </record>
 
-     <menuitem id="base.menu_sales" name="Sales"
-         parent="base.menu_base_partner" sequence="1" />
-
-     <menuitem name="Opportunities" id="menu_crm_case_opp"
-         parent="base.menu_sales" action="crm_case_category_act_oppor11"
-         sequence="2" />
+    <menuitem name="Sales" id="base.menu_sales" parent="base.menu_base_partner" sequence="1" />
+    <menuitem name="Leads" id="menu_crm_leads" parent="base.menu_sales" action="crm_case_category_act_leads_all" sequence="2" />
+    <menuitem name="Opportunities" id="menu_crm_opportunities" parent="base.menu_sales" action="crm_case_category_act_oppor11" sequence="3" />
 
 </data>
 </openerp>

@@ -211,9 +211,11 @@ class users(osv.osv):
         encrypted_pw = encrypt_md5(password, salt)
     
         # Check if the encrypted password matches against the one in the db.
-        cr.execute('UPDATE res_users SET date=now() ' \
-                'WHERE id=%s AND password=%s AND active RETURNING id', 
-            (int(id), encrypted_pw.encode('utf-8')))
+        cr.execute("""UPDATE res_users
+                        SET date=now() AT TIME ZONE 'UTC'
+                        WHERE id=%s AND password=%s AND active
+                        RETURNING id""", 
+                   (int(id), encrypted_pw.encode('utf-8')))
         res = cr.fetchone()
         cr.commit()
     

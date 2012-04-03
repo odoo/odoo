@@ -32,7 +32,7 @@
     </record>
 
     <menuitem name="Contexts" id="menu_open_gtd_time_contexts"
-                parent="project.menu_tasks_config" action="open_gtd_context_tree"/>
+                parent="project.menu_tasks_config" action="open_gtd_context_tree" groups="base.group_no_one"/>
 
     <record model="ir.ui.view" id="view_gtd_timebox_tree">
         <field name="name">project.gtd.timebox.tree</field>
@@ -70,7 +70,7 @@
         <field name="help">Timeboxes are defined in the "Getting Things Done" methodology. A timebox defines a period of time in order to categorize your tasks: today, this week, this month, long term.</field>
     </record>
 
-    <menuitem name="Timeboxes" id="menu_open_gtd_time_timeboxes" parent="project.menu_tasks_config" action="open_gtd_timebox_tree"/>
+    <menuitem name="Timeboxes" id="menu_open_gtd_time_timeboxes" parent="project.menu_tasks_config" action="open_gtd_timebox_tree" groups="base.group_no_one"/>
 
     <record model="ir.ui.view" id="project_task_tree">
         <field name="name">project.task.tree.timebox</field>
@@ -140,7 +140,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form,calendar,gantt,graph,kanban</field>
     </record>
-    <menuitem action="open_gtd_task" id="menu_open_gtd_timebox_tree" parent="project.menu_project_management" sequence="4"/>
+    <menuitem action="open_gtd_task" id="menu_open_gtd_timebox_tree" parent="project.menu_project_management" sequence="10"/>
 
 
     </data>

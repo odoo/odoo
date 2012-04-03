@@ -172,7 +172,7 @@
     </record>
 
 
-    <menuitem id="base.next_id_73" name="Reporting" parent="base.menu_purchase_root" sequence="8"
+    <menuitem id="base.next_id_73" name="Purchase" parent="base.menu_reporting" sequence="10"
         groups="purchase.group_purchase_manager"/>
     <menuitem action="action_purchase_order_report_all" id="menu_action_purchase_order_report_all" parent="base.next_id_73" sequence="3"/>
 
@@ -185,7 +185,7 @@
         <field name="context">{'full':'1','contact_display': 'partner','search_default_done':1, 'search_default_month':1, 'search_default_group_type':1, 'group_by': [], 'group_by_no_leaf':1,'search_default_year':1,}</field>
         <field name="help">Reception Analysis allows you to easily check and analyse your company order receptions and the performance of your supplier's deliveries.</field>
     </record>
-    <menuitem action="action_stock_move_report_po" id="menu_action_stock_move_report_po" parent="base.next_id_73" sequence="8"/>
+    <menuitem action="action_stock_move_report_po" id="menu_action_stock_move_report_po" parent="stock.next_id_61" sequence="1"/>
 
     </data>
 </openerp>

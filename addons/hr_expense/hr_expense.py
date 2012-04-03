@@ -183,24 +183,20 @@ class hr_expense_expense(osv.osv):
                 }))
             if not exp.employee_id.address_home_id:
                 raise osv.except_osv(_('Error !'), _('The employee must have a Home address.'))
-            if not exp.employee_id.address_home_id.partner_id:
-                raise osv.except_osv(_('Error !'), _("The employee's home address must have a partner linked."))
-            acc = exp.employee_id.address_home_id.partner_id.property_account_payable.id
-            payment_term_id = exp.employee_id.address_home_id.partner_id.property_payment_term.id
+            acc = exp.employee_id.address_home_id.property_account_payable.id
+            payment_term_id = exp.employee_id.address_home_id.property_payment_term.id
             inv = {
                 'name': exp.name,
                 'reference': sequence_obj.get(cr, uid, 'hr.expense.invoice'),
                 'account_id': acc,
                 'type': 'in_invoice',
-                'partner_id': exp.employee_id.address_home_id.partner_id.id,
-                'address_invoice_id': exp.employee_id.address_home_id.id,
-                'address_contact_id': exp.employee_id.address_home_id.id,
+                'partner_id': exp.employee_id.address_home_id.id,
                 'company_id': company_id,
                 'origin': exp.name,
                 'invoice_line': lines,
                 'currency_id': exp.currency_id.id,
                 'payment_term': payment_term_id,
-                'fiscal_position': exp.employee_id.address_home_id.partner_id.property_account_position.id
+                'fiscal_position': exp.employee_id.address_home_id.property_account_position.id
             }
             if payment_term_id:
                 to_update = invoice_obj.onchange_payment_term_date_invoice(cr, uid, [], payment_term_id, None)

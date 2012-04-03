@@ -69,7 +69,6 @@
                         </page>
                         <page string="Billing" groups="account.group_account_invoice">
                             <field colspan="4" name="partner_id" on_change="onchange_partner_id(partner_id)" select="1" string="Customer"/>
-                            <field domain="[('partner_id','=',partner_id)]" name="contact_id" string="Contact Address"/>
                             <field name="warn_customer"/>
                             <field name="currency_id" select="1" groups="base.group_multi_company" required="1"/>
                             <newline/>
@@ -173,7 +172,7 @@
             <field name="view_mode">tree,form,gantt</field>
             <field name="view_id" ref="view_project"/>
             <field name="search_view_id" ref="view_project_project_filter"/>
-            <field name="context">{'search_default_Current':1}</field>
+            <field name="context">{}</field>
             <field name="help">A project contains a set of tasks or issues that will be performed by your resources assigned to it. A project can be hierarchically structured, as a child of a Parent Project. This allows you to design large project structures with different phases spread over the project duration cycle. Each user can set his default project in his own preferences to automatically filter the tasks or issues he usually works on. If you choose to invoice the time spent on a project task, you can find project tasks to be invoiced in the billing section.</field>
         </record>
 
@@ -291,7 +290,7 @@
                                 <field name="priority"/>
                                 <field name="sequence"/>
                             </group>
-                            <group colspan="2" col="2">
+                            <group colspan="2" col="2" groups="base.group_no_one">
                                 <separator string="Dates" colspan="2"/>
                                 <field name="date_start"/>
                                 <field name="date_end"/>
@@ -354,7 +353,8 @@
                                             <field name="name"/>
                                         </td>
                                         <td valign="top" width="22">
-                                            <img t-att-src="kanban_gravatar(record.user_email.value, 22)" class="oe_kanban_gravatar" t-att-title="record.user_id.value"/>
+                                            <img t-att-src="kanban_image('res.users', 'avatar', record.user_id.raw_value[0])"  t-att-title="record.user_id.value"
+                                            width="22" height="22" class="oe_kanban_gravatar"/>
                                         </td>
                                     </tr>
                                     </table>
@@ -430,8 +430,8 @@
                         icon="gtk-go-forward"
                         groups="base.group_extended"
                         help="Change Type"/>
-                    <field name="date_start" invisible="1"/>
-                    <field name="date_end" invisible="1"/>
+                    <field name="date_start" invisible="1" groups="base.group_no_one"/>
+                    <field name="date_end" invisible="1" groups="base.group_no_one"/>
                     <field name="progress" widget="progressbar" invisible="context.get('set_visible',False)"/>
                     <field name="state" invisible="context.get('set_visible',False)"/>
                     <button name="do_open" states="pending,draft,done,cancelled" string="Start Task" type="object" icon="gtk-media-play" help="For changing to open state" invisible="context.get('set_visible',False)"/>
@@ -510,9 +510,9 @@
                         <filter string="State" name="group_state" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Deadline" icon="terp-gnome-cpu-frequency-applet+" domain="[]" context="{'group_by':'date_deadline'}"/>
-                        <separator orientation="vertical"/>
-                        <filter string="Start Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_start'}"/>
-                        <filter string="End Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_end'}"/>
+                        <separator orientation="vertical" groups="base.group_no_one"/>
+                        <filter string="Start Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_start'}" groups="base.group_no_one"/>
+                        <filter string="End Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_end'}" groups="base.group_no_one"/>
                     </group>
                 </search>
             </field>
@@ -525,7 +525,7 @@
             <field name="view_mode">kanban,tree,form,calendar,gantt,graph</field>
             <field eval="False" name="filter"/>
             <field name="view_id" eval="False"/>
-            <field name="context">{"search_default_draft": 1, "search_default_open":1, "search_default_project_id": project_id}</field>
+            <field name="context">{"search_default_project_id": project_id}</field>
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="help">A task represents a work that has to be done. Each user works in his own list of tasks where he can record his task work in hours. He can work and close the task itself or delegate it to another user. If you delegate a task to another user, you get a new task in pending state, which will be reopened when you have to review the work achieved. If you install the project_timesheet module, task work can be invoiced based on the project configuration. With the project_mrp module, sales orders can create tasks automatically when they are confirmed.</field>
         </record>
@@ -540,7 +540,7 @@
             <field name="act_window_id" ref="action_view_task"/>
         </record>
 
-        <menuitem action="action_view_task" id="menu_action_view_task" parent="project.menu_project_management" sequence="3"/>
+        <menuitem action="action_view_task" id="menu_action_view_task" parent="project.menu_project_management" sequence="5"/>
 
         <record id="action_view_task_overpassed_draft" model="ir.actions.act_window">
             <field name="name">Overpassed Tasks</field>
@@ -622,12 +622,12 @@
             <field name="help">Define the steps that will be used in the project from the creation of the task, up to the closing of the task or issue. You will use these stages in order to track the progress in solving a task or an issue.</field>
         </record>
 
-        <menuitem id="menu_tasks_config" name="Tasks" parent="project.menu_definitions" sequence="1"/>
+        <menuitem id="menu_tasks_config" name="GTD" parent="project.menu_definitions" sequence="1"/>
 
         <menuitem id="menu_project_config_project" name="Projects and Stages" parent="menu_definitions" sequence="1"/>
 
-        <menuitem action="open_task_type_form" id="menu_task_types_view" parent="menu_project_config_project" sequence="2"/>
-        <menuitem action="open_view_project_all" id="menu_open_view_project_all" parent="menu_project_config_project" sequence="1"/>
+        <menuitem action="open_task_type_form" id="menu_task_types_view" parent="menu_project_config_project" sequence="2" groups="base.group_no_one"/>
+        <menuitem action="open_view_project_all" id="menu_open_view_project_all" parent="menu_project_config_project" sequence="1" groups="base.group_no_one"/>
 
         <act_window context="{'search_default_user_id': [active_id], 'default_user_id': active_id}" id="act_res_users_2_project_project" name="User's projects" res_model="project.project" src_model="res.users" view_mode="tree,form" view_type="form"/>
 
@@ -676,7 +676,7 @@
          <field eval="18" name="priority"/>
          <field name="arch" type="xml">
             <group name="default_filters" position="inside">
-                <field name="context_project_id" context="{'user_preference':True}" widget="selection"/>
+                <field name="context_project_id" context="{'user_preference':True}" widget="selection" readonly="0"/>
             </group>
        </field>
     </record>

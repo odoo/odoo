@@ -80,7 +80,7 @@
             <field name="view_mode">tree,form</field>
             <field name="help">Define your company's financial year according to your needs. A financial year is a period at the end of which a company's accounts are made up (usually 12 months). The financial year is usually referred to by the date in which it ends. For example, if a company's financial year ends November 30, 2011, then everything between December 1, 2010 and November 30, 2011  would be referred to as FY 2011. You are not obliged to follow the actual calendar year.</field>
         </record>
-        <menuitem id="next_id_23" name="Periods" parent="account.menu_finance_accounting" sequence="8" />
+        <menuitem id="next_id_23" name="Periods" parent="account.menu_finance_configuration" sequence="5" />
         <menuitem action="action_account_fiscalyear_form" id="menu_action_account_fiscalyear_form" parent="next_id_23"/>
 
         <!--
@@ -149,7 +149,7 @@
             <field name="context">{'search_default_draft': 1}</field>
             <field name="help">Here you can define a financial period, an interval of time in your company's financial year. An accounting period typically is a month or a quarter. It usually corresponds to the periods of the tax declaration. Create and manage periods from here and decide whether a period should be closed or left open depending on your company's activities over a specific period.</field>
         </record>
-        <menuitem action="action_account_period_form" id="menu_action_account_period_form" parent="account.next_id_23"/>
+        <menuitem action="action_account_period_form" id="menu_action_account_period_form" parent="account.next_id_23" groups="base.group_no_one"/>
 
 
         <!--
@@ -265,7 +265,7 @@
             <field name="view_id" ref="view_account_list"/>
             <field name="help">Create and manage the accounts you need to record journal entries. An account is part of a ledger allowing your company to register all kinds of debit and credit transactions. Companies present their annual accounts in two main parts: the balance sheet and the income statement (profit and loss account). The annual accounts of a company are required by law to disclose a certain amount of information. They have to be certified by an external auditor annually.</field>
         </record>
-        <menuitem id="account_account_menu" name="Accounts" parent="menu_finance_accounting"/>
+        <menuitem id="account_account_menu" name="Accounts" parent="account.menu_finance_configuration" sequence="15"/>
         <menuitem action="action_account_form" id="menu_action_account_form" parent="account_account_menu"/>
 
         <record id="view_account_tree" model="ir.ui.view">
@@ -740,7 +740,7 @@
         </record>
 
         <menuitem string="Bank Statements" action="action_bank_statement_tree" id="menu_bank_statement_tree" parent="menu_finance_bank_and_cash" sequence="7"/>
-        <menuitem name="Statements Reconciliation" action="action_bank_statement_periodic_tree" id="menu_menu_Bank_process" parent="account.menu_account_pp_statements" sequence="7"/>
+        <menuitem name="Statements Reconciliation" action="action_bank_statement_periodic_tree" id="menu_menu_Bank_process" parent="account.periodical_processing_reconciliation" sequence="15"/>
 
 
         <record id="action_bank_statement_draft_tree" model="ir.actions.act_window">
@@ -810,7 +810,7 @@
             <field name="search_view_id" ref="view_account_type_search"/>
             <field name="help">An account type is used to determine how an account is used in each journal. The deferral method of an account type determines the process for the annual closing. Reports such as the Balance Sheet and the Profit and Loss report use the category (profit/loss or balance sheet). For example, the account type could be linked to an asset account, expense account or payable account. From this view, you can create and manage the account types you need for your company.</field>
         </record>
-        <menuitem action="action_account_type_form" sequence="20" id="menu_action_account_type_form" parent="account_account_menu" groups="base.group_extended"/>
+        <menuitem action="action_account_type_form" sequence="20" id="menu_action_account_type_form" parent="account_account_menu" groups="base.group_no_one"/>
         <!--
     Entries
     -->
@@ -923,8 +923,8 @@
             <field name="search_view_id" ref="view_tax_code_search"/>
             <field name="help">The tax code definition depends on the tax declaration of your country. OpenERP allows you to define the tax structure and manage it from this menu. You can define both numeric and alphanumeric tax codes.</field>
         </record>
-       <menuitem id="next_id_27" name="Taxes" parent="account.menu_finance_accounting"/>
-       <menuitem action="action_tax_code_list" id="menu_action_tax_code_list" parent="next_id_27" sequence="12"/>
+       <menuitem id="next_id_27" name="Taxes" parent="account.menu_finance_configuration" sequence="20"/>
+       <menuitem action="action_tax_code_list" id="menu_action_tax_code_list" parent="next_id_27" sequence="12" groups="base.group_no_one"/>
 
 
         <!--
