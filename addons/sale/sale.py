@@ -730,11 +730,12 @@ class sale_order(osv.osv):
 
     def action_quotation_sent(self, cr, uid, ids, context=None):
         mod_obj = self.pool.get('ir.model.data')
-        template_id = self.pool.get('email.template').search(cr, uid, [('model_id', '=', 'sale.order')], context=context)[0]
+        template = mod_obj.get_object_reference(cr, uid, 'sale', 'email_template_edi_sale')
+        template_id = template and template[1] or False
         res = mod_obj.get_object_reference(cr, uid, 'mail', 'email_compose_message_wizard_form')
         res_id = res and res[1] or False
-        ctx = context.copy()
-        ctx.update({'active_model': 'sale.order', 'active_id': ids[0], 'mail.compose.template_id': template_id})
+        ctx = dict(context, active_model='sale.order', active_id=ids[0])
+        ctx.update({'mail.compose.template_id': template_id})
         return {
             'view_type': 'form',
             'view_mode': 'form',

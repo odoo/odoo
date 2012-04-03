@@ -2,6 +2,7 @@
 <openerp>
     <data>
         <!-- EDI Export + Send email Action  -->
+        <!--
         <record id="ir_actions_server_edi_invoice" model="ir.actions.server">
             <field name="code">if (object.type in ('out_invoice', 'out_refund')) and not object.partner_id.opt_out: object.edi_export_and_email(template_ext_id='account.email_template_edi_invoice', context=context)</field>
             <field eval="6" name="sequence"/>
@@ -11,6 +12,7 @@
             <field name="condition">True</field>
             <field name="name">Auto-email confirmed invoices</field>
         </record>
+        -->
 
         <!-- EDI related Email Templates menu -->
         <record model="ir.actions.act_window" id="action_email_templates">
@@ -31,9 +33,11 @@
          so users can freely customize/delete them -->
     <data noupdate="1">
         <!-- bind the mailing server action to invoice open activity -->
+        <!--
         <record id="account.act_open" model="workflow.activity">
             <field name="action_id" ref="ir_actions_server_edi_invoice"/>
         </record>
+        -->
 
         <!--Email template -->
         <record id="email_template_edi_invoice" model="email.template">
