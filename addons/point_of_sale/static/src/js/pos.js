@@ -1230,11 +1230,10 @@ openerp.point_of_sale = function(db) {
                 return code[code.length-1] === cd;
             }
 
-            // The barcode readers acts as a keyboard, we catch all keyup events and try to find a 
-            // barcode sequence in the typed keys, then act accordingly.
-
             var codeNumbers = [];
 
+            // returns a product that has a packaging with an EAN matching to provided ean string. 
+            // returns undefined if no such product is found.
             var getProductByEAN = function(ean) {
                 var prefix = ean.substring(0,2);
                 var scannedProductModel = undefined;
@@ -1263,6 +1262,8 @@ openerp.point_of_sale = function(db) {
                 return scannedProductModel;
             }
 
+            // The barcode readers acts as a keyboard, we catch all keyup events and try to find a 
+            // barcode sequence in the typed keys, then act accordingly.
             $('body').delegate('','keyup', function (e){
 
                 //We only care about numbers
