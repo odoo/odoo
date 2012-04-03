@@ -926,7 +926,7 @@ class sale_order(osv.osv):
         for obj in self.browse(cr, uid, ids, context=context):
             self.message_subscribe(cr, uid, [obj.id], [obj.user_id.id], context=context)
             self.message_append_note(cr, uid, [obj.id], _('System notification'),
-          _("""Quotation for <em>%s</em> <b>created</b>.""")
+          _("""Quotation for <em>%s</em> has been <b>created</b>.""")
           % (obj.partner_id.name), type='notification', context=context)
         
     def confirm_send_note(self, cr, uid, ids, context=None):
