@@ -260,7 +260,7 @@ class project(osv.osv):
         proj = self.browse(cr, uid, old_project_id, context=context)
         for task in proj.tasks:
             map_task_id[task.id] =  task_obj.copy(cr, uid, task.id, {}, context=context)
-        self.write(cr, uid, new_project_id, {'tasks':[(6,0, map_task_id.values())]})
+        self.write(cr, uid, [new_project_id], {'tasks':[(6,0, map_task_id.values())]})
         task_obj.duplicate_task(cr, uid, map_task_id, context=context)
         return True
 
