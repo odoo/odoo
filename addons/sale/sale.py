@@ -954,7 +954,7 @@ class sale_order(osv.osv):
             for invoice in (inv for inv in order.invoice_ids if inv.id == invoice_id):
                 self.message_append_note(cr, uid, [order.id], body=_("Draft Invoice of %s %s <b>waiting for validation</b>.") % (invoice.amount_total, invoice.currency_id.symbol), context=context)
     
-    def action_cancel_draft_send_note(cr, uid, ids, context=None):
+    def action_cancel_draft_send_note(self, cr, uid, ids, context=None):
         return self.message_append_note(cr, uid, ids, body='Sale order has been set in draft.', context=context)
             
         
