@@ -43,14 +43,14 @@
             </a>
         </xpath>
 		<xpath expr="//table[@class='fields']" position="inside">
-			<tr ><th >To invoiced</th>
-				<td>
+			<tr ><th align="left">To invoiced</th>
+				<td align="left">
 			    <field name="amt_to_invoice"/> <t t-esc="record.currency_id.raw_value[1].split(' ')[1][1]"/>
 			    </td>
 			    </tr>
 			    <tr >
-			<th>To hours</th>
-			<td>
+			<th align="left">To hours</th>
+			<td align="left">
 			    <field name="hrs_to_invoice"/> h
 			</td>
 			</tr>
