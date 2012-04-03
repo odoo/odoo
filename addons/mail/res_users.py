@@ -32,11 +32,12 @@ class res_users(osv.osv):
     
     _columns = {
         'message_email_pref': fields.selection([
-                        ('all', 'Everytime'),
-                        ('comments', 'Only for comments'),
-                        ('me', 'Only when sent directly to me'),
+                        ('all', 'All feeds'),
+                        ('comments', 'Only comments'),
+                        ('to_me', 'Only when sent directly to me'),
                         ('none', 'Never'),
-                        ], 'New feeds email', help="Choose whether you want to receive an email when you receive new feeds."),
+                        ], string='Receive feeds by email', required=True,
+                        help="Choose whether you want to receive an email when you receive new feeds."),
     }
     
     _default = {

@@ -126,6 +126,7 @@
                         </page>
                         <page string="Advanced" groups="base.group_extended">
                             <group col="2" colspan="4">
+                                <field name="type"/>
                                 <field name="mail_server_id" attrs="{'invisible':[('mail_server_id', '=', False)]}"/>
                                 <field name="subtype" attrs="{'invisible':[('subtype', '=', False)]}"/>
                                 <field name="auto_delete"/>
@@ -208,7 +209,9 @@
             <field name="res_model">mail.message</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+<!--
             <field name="domain">[('type', '=', 'email')]</field>
+-->
             <field name="context">{'search_default_received': 1, 'search_default_exception': 1}</field>
             <field name="search_view_id" ref="view_email_message_search"/>
         </record>

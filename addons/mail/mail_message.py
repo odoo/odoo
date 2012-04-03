@@ -222,7 +222,7 @@ class mail_message(osv.osv):
     }
         
     _defaults = {
-        'type': 'comment',
+        'type': 'email',
         'state': 'received',
     }
     

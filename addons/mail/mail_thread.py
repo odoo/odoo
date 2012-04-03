@@ -126,26 +126,57 @@ class mail_thread(osv.osv):
         """
         if context is None:
             context = {}
+        if context.get('install_mode', False):
+            print 'zpfinzpefinzofinzoiznef'
+            return True
+        else:
+            print 'ooooooooooh' + str(context) + str(vals)
+        
         user_to_push_ids = []
+        
+        res_users_obj = self.pool.get('res.users')
         message_obj = self.pool.get('mail.message')
         subscription_obj = self.pool.get('mail.subscription')
         notification_obj = self.pool.get('mail.notification')
-        
-        # create message
-        msg_id = message_obj.create(cr, uid, vals, context=context)
         
         # automatically subscribe the writer of the message
         if vals['user_id']:
             self.message_subscribe(cr, uid, [thread_id], [vals['user_id']], context=context)
         
-        # push message to users
-        user_to_push_ids = self.message_create_get_notification_user_ids(cr, uid, [thread_id], msg_id, vals, context=context)
+        # get users that will get a notification pushed
+        user_to_push_ids = self.message_create_get_notification_user_ids(cr, uid, [thread_id], vals, context=context)
+        
+        # set email_from and email_to for comments and notifications
+        if vals['type'] == 'comment' or vals['type'] == 'notification':
+            current_user = res_users_obj.browse(cr, uid, [uid], context=context)[0]
+            if not vals.get('email_from', False):
+                vals['email_from'] = current_user.user_email
+            if not vals.get('email_to', False):
+                email_to = ''
+                for user in res_users_obj.browse(cr, uid, user_to_push_ids, context=context):
+                    if user.message_email_pref == 'all' or user.message_email_pref == 'comments' and vals['type'] == 'comment':
+                        if (user.user_email):
+                            if email_to:
+                                email_to = '%s, ' % (email_to)
+                            email_to = '%s%s' % (email_to, user.user_email)
+                if email_to:
+                    vals['email_to'] = email_to
+                print vals['email_from']
+                print vals['email_to']
+                if email_to:
+                    vals['email_to'] = email_to
+                    vals['state'] = 'outgoing'
+        
+        # create message
+        msg_id = message_obj.create(cr, uid, vals, context=context)
+        
+        # push to users
         for id in user_to_push_ids:
             notification_obj.create(cr, uid, {'user_id': id, 'message_id': msg_id}, context=context)
         
         return msg_id
     
-    def message_create_get_notification_user_ids(self, cr, uid, thread_ids, msg_id, new_msg_vals, context=None):
+    def message_create_get_notification_user_ids(self, cr, uid, thread_ids, new_msg_vals, context=None):
         if context is None:
             context = {}
         
