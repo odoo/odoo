@@ -401,6 +401,7 @@ class mail_thread(osv.osv):
                 arg[0] = 'message_id.' + arg[0]
         # compose final domain
         domain = [('user_id', '=', uid)] + notif_search_domain + msg_search_domain
+        #print domain
         # get notifications
         notification_ids = notification_obj.search(cr, uid, domain, limit=limit, offset=offset, context=context)
         notifications = notification_obj.browse(cr, uid, notification_ids, context=context)
@@ -657,15 +658,6 @@ class mail_thread(osv.osv):
     def log(self, cr, uid, id, message, secondary=False, context=None):
         _logger.warning("log() is deprecated. Please use OpenChatter notification system instead of the res.log mechanism.")
         self.message_append_note(cr, uid, [id], 'res.log', message, context=context)
-    
-    # tmp stuff
-    def message_add_note(self, cr, uid, ids, body, type='notification', parent_id=False, subject=False, subtype='html', context=None):
-        if not subject:
-            if type == 'notification':
-                subject = _('System notification on %s') % (self._name, fields.datetime.now())
-            elif type == 'comment':
-                subject = _('Reply on %s at %s') % (self._name, fields.datetime.now())
-        return self.message_append(cr, uid, ids, subject, body_text=body, parent_id=parent_id, type=type, context=context)
     
     def message_append_note(self, cr, uid, ids, subject=None, body=None, parent_id=False, type='notification', subtype='html', context=None):
         if subject is None:

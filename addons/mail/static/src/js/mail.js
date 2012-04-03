@@ -296,7 +296,7 @@ openerp.mail = function(session) {
             var comment_node = this.$element.find('textarea');
             var body_text = comment_node.val();
             comment_node.val('');
-            return this.ds.call('message_add_note', [[this.params.res_id], body_text, 'comment', this.params.parent_id]).then(
+            return this.ds.call('message_append_note', [[this.params.res_id], 'Reply', body_text, this.params.parent_id, 'comment']).then(
                 this.proxy('init_comments'));
         },
         
@@ -804,7 +804,7 @@ openerp.mail = function(session) {
         /** Action: Posts a comment */
         do_comment: function () {
             var body_text = this.$element.find('textarea.oe_mail_wall_action_textarea').val();
-            return this.ds_users.call('message_add_note', [[this.session.uid], body_text, 'comment', false, 'Tweet', 'html']).then(
+            return this.ds_users.call('message_append_note', [[this.session.uid], 'Tweet', body_text, false, 'comment', 'html']).then(
                 this.init_and_fetch_comments(this.params.limit, 0));
         },
     });
