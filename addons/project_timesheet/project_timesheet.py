@@ -47,11 +47,20 @@ class project_project(osv.osv):
                 res[project.id]['hrs_to_invoice'] = hrs_to_invoice
             
         return res
+    
+    def _compute_timesheet(self, cr, uid, ids, field_name, arg, context=None):
+        res={}
+        aal_pool=self.pool.get('account.analytic.line')
+        for project in self.browse(cr, uid, ids, context=context):
+            timesheet = aal_pool.search(cr, uid, [("account_id","=", project.analytic_account_id.id)])
+            res[project.id] = len(timesheet)
+        return res
 
     _columns = {
         'timesheets' : fields.boolean('Timesheets',help = "If you check this field timesheets appears in kanban view"),
         'amt_to_invoice': fields.function(_to_invoice,string="Amount to Invoice",multi="sums"),
-        'hrs_to_invoice': fields.function(_to_invoice,string="Hours to Invoice",multi="sums")
+        'hrs_to_invoice': fields.function(_to_invoice,string="Hours to Invoice",multi="sums"),
+        'total_timesheet': fields.function(_compute_timesheet , type='integer',string="Issue"),
     }
     _defaults = {
         'timesheets' : True,
