@@ -1014,7 +1014,8 @@ class account_voucher(osv.osv):
         for line in voucher_brw.line_ids:
             #create one move line per voucher line where amount is not 0.0
             if not line.amount:
-                continue
+                if line.amount != line_total:
+                    continue
             # convert the amount set on the voucher line into the currency of the voucher's company
             amount = self._convert_amount(cr, uid, line.untax_amount or line.amount, voucher_brw.id, context=ctx)
             # if the amount encoded in voucher is equal to the amount unreconciled, we need to compute the
