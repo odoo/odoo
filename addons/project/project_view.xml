@@ -218,14 +218,14 @@
                                     </table>
 
                                     <t t-if="record.members.raw_value.length > 7">
-                                                                            <img t-att-src="kanban_image('res.users', 'avatar', record.user_id.raw_value[0])" class="project_avatar"/>
+                                        <img t-att-src="kanban_image('res.users', 'avatar', record.user_id.raw_value[0])"  t-att-title="record.user_id.value" class="project_avatar"/>
                                         <t t-foreach="record.members.raw_value" t-as="member">
                                             <img t-att-src="kanban_image('res.users', 'avatar', member)"  t-att-title="member" class="project_avatar"/>
                                         </t>
                                     </t>
                                     <t t-if="record.members.raw_value.length &lt;= 7">
                                         <br/><br/>
-                                                                            <img t-att-src="kanban_image('res.users', 'avatar', record.user_id.raw_value[0])" class="project_avatar"/>
+                                        <img t-att-src="kanban_image('res.users', 'avatar', record.user_id.raw_value[0])"  t-att-title="record.user_id.value" class="project_avatar"/>
                                         <t t-foreach="record.members.raw_value" t-as="member">
                                             <img t-att-src="kanban_image('res.users', 'avatar', member)"  t-att-title="member" class="project_avatar"/>
                                         </t>
