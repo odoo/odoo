@@ -1,0 +1,154 @@
+# Serbian Latin translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"PO-Revision-Date: 2012-03-19 12:08+0000\n"
+"Last-Translator: Milan Milosevic <Unknown>\n"
+"Language-Team: Serbian Latin <sr@latin@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2012-03-20 04:56+0000\n"
+"X-Generator: Launchpad (build 14969)\n"
+
+#. module: l10n_be_invoice_bba
+#: sql_constraint:account.invoice:0
+msgid "Invoice Number must be unique per Company!"
+msgstr "Broj fakture mora biti jedinstven po kompaniji"
+
+#. module: l10n_be_invoice_bba
+#: model:ir.model,name:l10n_be_invoice_bba.model_account_invoice
+msgid "Invoice"
+msgstr "Faktura"
+
+#. module: l10n_be_invoice_bba
+#: constraint:res.partner:0
+msgid "Error ! You cannot create recursive associated members."
+msgstr "Greška ! Ne možete praviti rekurzivne povezane članove."
+
+#. module: l10n_be_invoice_bba
+#: constraint:account.invoice:0
+msgid "Invalid BBA Structured Communication !"
+msgstr "Nepravilno BBA struktuirana komunikacija !"
+
+#. module: l10n_be_invoice_bba
+#: selection:res.partner,out_inv_comm_algorithm:0
+msgid "Random"
+msgstr "Nasumično"
+
+#. module: l10n_be_invoice_bba
+#: help:res.partner,out_inv_comm_type:0
+msgid "Select Default Communication Type for Outgoing Invoices."
+msgstr "Izaberi tip komunikacije po default-u za izlazne fakture."
+
+#. module: l10n_be_invoice_bba
+#: help:res.partner,out_inv_comm_algorithm:0
+msgid ""
+"Select Algorithm to generate the Structured Communication on Outgoing "
+"Invoices."
+msgstr ""
+"Izaberi algoritam za generisanje struktuirane komunkiacije za izlazne račune."
+
+#. module: l10n_be_invoice_bba
+#: code:addons/l10n_be_invoice_bba/invoice.py:114
+#: code:addons/l10n_be_invoice_bba/invoice.py:140
+#, python-format
+msgid ""
+"The daily maximum of outgoing invoices with an automatically generated BBA "
+"Structured Communications has been exceeded!\n"
+"Please create manually a unique BBA Structured Communication."
+msgstr ""
+"Dnevni maksimum izlaznih faktura sa automatski generisanim BBA struktuiranim "
+"komunikacijama je pređen!\n"
+"Molimo da ručno napravite jedinstvenu BBA struktuiranu komunikaciju"
+
+#. module: l10n_be_invoice_bba
+#: code:addons/l10n_be_invoice_bba/invoice.py:155
+#, python-format
+msgid "Error!"
+msgstr "Greška!"
+
+#. module: l10n_be_invoice_bba
+#: code:addons/l10n_be_invoice_bba/invoice.py:126
+#, python-format
+msgid ""
+"The Partner should have a 3-7 digit Reference Number for the generation of "
+"BBA Structured Communications!\n"
+"Please correct the Partner record."
+msgstr ""
+"Partner bi trebalo da ima referentni broj od 3 do 7 cifara za generisanje "
+"BBA struktuirane komunikacije!\n"
+"Molimo ispravite zapis o partneru."
+
+#. module: l10n_be_invoice_bba
+#: code:addons/l10n_be_invoice_bba/invoice.py:113
+#: code:addons/l10n_be_invoice_bba/invoice.py:125
+#: code:addons/l10n_be_invoice_bba/invoice.py:139
+#: code:addons/l10n_be_invoice_bba/invoice.py:167
+#: code:addons/l10n_be_invoice_bba/invoice.py:177
+#: code:addons/l10n_be_invoice_bba/invoice.py:202
+#, python-format
+msgid "Warning!"
+msgstr "Upozorenje!"
+
+#. module: l10n_be_invoice_bba
+#: selection:res.partner,out_inv_comm_algorithm:0
+msgid "Customer Reference"
+msgstr "Referentni broj potrošača"
+
+#. module: l10n_be_invoice_bba
+#: field:res.partner,out_inv_comm_type:0
+msgid "Communication Type"
+msgstr "Tip komunikacije"
+
+#. module: l10n_be_invoice_bba
+#: code:addons/l10n_be_invoice_bba/invoice.py:178
+#: code:addons/l10n_be_invoice_bba/invoice.py:203
+#, python-format
+msgid ""
+"The BBA Structured Communication has already been used!\n"
+"Please create manually a unique BBA Structured Communication."
+msgstr ""
+"BBA struktuirana komunikacija je već upotrebljena!\n"
+"Molimo ručno napravite jedinstvenu BBA struktuiranu komunikaciju."
+
+#. module: l10n_be_invoice_bba
+#: selection:res.partner,out_inv_comm_algorithm:0
+msgid "Date"
+msgstr "Datum"
+
+#. module: l10n_be_invoice_bba
+#: model:ir.model,name:l10n_be_invoice_bba.model_res_partner
+msgid "Partner"
+msgstr "Partner"
+
+#. module: l10n_be_invoice_bba
+#: code:addons/l10n_be_invoice_bba/invoice.py:156
+#, python-format
+msgid ""
+"Unsupported Structured Communication Type Algorithm '%s' !\n"
+"Please contact your OpenERP support channel."
+msgstr ""
+"Nepodržan algoritam BBA struktuirane komunikacije  '%s' !\n"
+"Molimo kontaktirajte OpenERP-ovu podršku."
+
+#. module: l10n_be_invoice_bba
+#: field:res.partner,out_inv_comm_algorithm:0
+msgid "Communication Algorithm"
+msgstr "Algoritam komunikacije"
+
+#. module: l10n_be_invoice_bba
+#: code:addons/l10n_be_invoice_bba/invoice.py:168
+#, python-format
+msgid ""
+"Empty BBA Structured Communication!\n"
+"Please fill in a unique BBA Structured Communication."
+msgstr ""
+"Prazna BBA struktuirana komunikacija!\n"
+"Molimo unesite jedinstvenu BBA struktuiranu komunikaciju."

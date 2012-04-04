@@ -153,13 +153,13 @@
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page/field[@name='bank_ids']/tree/field[@name='acc_number']" position="before">
+                <xpath expr="//page/field[@name='bank_ids']/tree/field[@name='acc_number']" position="before">
                     <field name="state" />
-                    <field name="bank" /> 
+                    <field name="bank" />
                 </xpath>
             </field>
         </record>
-        
+
         <!-- res.partner form bank list-->
         <!-- Adding Type and bank name -->
         <record id="l10nch_view_partner_bank_invoice_tree" model="ir.ui.view">

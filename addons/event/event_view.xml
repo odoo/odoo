@@ -2,7 +2,7 @@
 <openerp>
     <data>
 
-       <menuitem  name="Events" id="event_main_menu"/>
+        <menuitem  name="Events" id="event_main_menu"/>
         <menuitem name="Events Organisation" id="base.menu_event_main" parent="event_main_menu" />
 
     <!-- EVENTS  -->
@@ -41,7 +41,7 @@
             <field name="view_type">form</field>
         </record>
         <menuitem name="Configuration" id="base.menu_marketing_config_root" parent="event_main_menu" sequence="30"/>
-        <menuitem name="Types of Events" id="menu_event_type" action="action_event_type" parent="base.menu_marketing_config_root"/>
+        <menuitem name="Types of Events" id="menu_event_type" action="action_event_type" parent="base.menu_marketing_config_root" groups="base.group_no_one"/>
 
     <!-- Events Organisation/CONFIGURATION/EVENTS -->
 
@@ -63,7 +63,7 @@
                     <page string="Event">
                         <separator string="Description" colspan="4"/>
                         <field name="note" colspan="4" nolabel="1"/>
-                        <field name="registration_ids" colspan="4" nolabel="1">
+                        <field name="registration_ids" colspan="4" nolabel="1" groups="event.group_event_manager,event.group_event_user">
                             <tree string="Registration" editable="top">
                                 <field name="name" />
                                 <field name="email" />
@@ -156,6 +156,71 @@
                 </tree>
             </field>
         </record>
+        
+        <!-- Event Kanban View -->
+	
+	<record model="ir.ui.view" id="view_event_kanban">
+            <field name="name">event.event.kanban</field>
+            <field name="model">event.event</field>
+            <field name="type">kanban</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="register_max"/>
+                    <field name="type"/>
+                    <field name="user_id"/>
+                    <field name="register_current"/>
+                    <field name="is_subscribed"/>
+                    <field name="country_id"/>
+                    <field name="date_begin"/>
+                    <field name="state"/>
+                    <field name="register_avail"/>
+                    <templates>
+                    <t t-name="kanban-box">
+                      <div class="oe_module_vignette">
+                        <a type="edit" class="oe_module_icon">
+                           <div class="oe_event_date "><t t-esc="record.date_begin.raw_value.getDate()"/></div>
+                           <div class="oe_event_month_year">
+                             <t t-esc="record.date_begin.raw_value.toString('MMM')"/>
+                             <t t-esc="record.date_begin.raw_value.getFullYear()"/>
+                           </div>
+                           <div class="oe_event_time"><t t-esc="record.date_begin.raw_value.toString('hh:mm tt')"/></div>
+                        </a>
+                        <div class="oe_module_desc">
+                            <h4><a type="edit"><field name="name"/></a></h4>
+                            <p>
+                              <t t-if="record.country_id.raw_value">@<field name="country_id"/><br/></t>
+                              <t t-if="record.user_id.raw_value">Organized by <field name="user_id"/><br/></t>
+                              <t t-if="record.register_avail.raw_value lte 10 and record.register_avail.raw_value gt 0"><i>Only</i></t>
+                              <t t-if="record.register_avail.raw_value == 0"><i>No ticket available.</i></t>
+                              <t t-if="record.register_avail.raw_value != 0">
+                                <i><b><t t-if="record.register_avail.raw_value != 9999"><field name="register_avail"/></t></b></i>
+                                <i>
+                                    <t t-if="record.register_avail.raw_value > 1">tickets </t>
+                                    <t t-if="record.register_avail.raw_value == 1 || !record.register_avail.raw_value > 1">ticket </t>
+                                    available.
+                                </i>
+                              </t>
+                            </p>
+                            <t t-if="record.register_avail.raw_value != 0">
+                              <t t-if="!record.is_subscribed.raw_value">
+                                  <button type="object" name="subscribe_to_event" class="subscribe_button oe_event_button_subscribe">
+                                  <span >Subscribe</span>
+                                  </button>
+                              </t>
+                            </t>
+                            <t t-if="record.is_subscribed.raw_value">
+                              <button type="object" name="unsubscribe_to_event" class="unsubscribe_button oe_event_button_unsubscribe">
+                                <span>Subscribed</span>
+                                <span class="unsubscribe">Unsubscribe</span>
+                              </button>
+                            </t>
+                        </div>
+                      </div>
+                    </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
 
       <!-- Events  Calendar  View -->
 
@@ -199,6 +264,10 @@
                         <filter icon="terp-check" string="Unconfirmed" name="draft" domain="[('state','=','draft')]" help="Events in New state"/>
                         <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=','confirm')]" help="Confirmed events"/>
                         <separator orientation="vertical"/>
+                        <filter icon="terp-go-today" string="Upcoming"
+                                name="upcoming"
+                                domain="[('date_begin','&gt;=', time.strftime('%%Y-%%m-%%d 00:00:00'))]"
+                                help="Upcoming events from today" />
                         <field name="name"/>
                         <field name="type" widget="selection"/>
                         <field name="user_id" widget="selection">
@@ -229,7 +298,8 @@
            <field name="type">ir.actions.act_window</field>
            <field name="res_model">event.event</field>
            <field name="view_type">form</field>
-           <field name="view_mode">calendar,tree,form,graph</field>
+           <field name="view_mode">kanban,calendar,tree,form,graph</field>
+           <field name="context">{"search_default_upcoming":1}</field>
            <field name="search_view_id" ref="view_event_search"/>
            <field name="help">Event is the low level object used by meeting and others documents that should be synchronized with mobile devices or calendar applications through caldav. Most of the users should work in the Calendar menu, and not in the list of events.</field>
        </record>
@@ -254,7 +324,8 @@
 
        <menuitem name="Events" id="menu_event_event" action="action_event_view" parent="base.menu_event_main" />
 
-        <!-- EVENTS/REGISTRATIONS/EVENTS  -->
+    <!-- EVENTS/REGISTRATIONS/EVENTS  -->
+
         <record model="ir.ui.view" id="view_event_registration_tree">
             <field name="name">event.registration.tree</field>
             <field name="model">event.registration</field>
@@ -286,7 +357,6 @@
                     <group col="6" colspan="4">
                         <field name="event_id" on_change="onchange_event(event_id, context)" domain="[('state','in',('draft','confirm'))]"/>
                         <field name="partner_id" attrs="{'readonly':[('state','!=', 'draft')]}" on_change="onchange_partner_id(partner_id, context)"/>
-                        <field name="contact_id" attrs="{'readonly':[('state','!=', 'draft')]}" domain="[('partner_id','=',partner_id)]" on_change="onchange_contact_id(contact_id, context)"/>
                         <field name="nb_register"/>
                         <field name="user_id" attrs="{'readonly':[('state','!=', 'draft')]}"/>
                         <field name="origin"/>
@@ -299,7 +369,7 @@
                                 <field name="email"/>
                                 <field name="phone"/>
                             </group>
-                            <group colspan="2" col="2" groups="base.group_extended">
+                            <group colspan="2" col="2" groups="base.group_no_one">
                                 <separator string="Dates" colspan="2"/>
                                 <field name="create_date"/>
                                 <field name="date_closed"/>
@@ -378,7 +448,7 @@
                         <separator orientation="vertical"/>
                         <field name="event_id" widget="selection"/>
                         <field name="name" string="Participant"
-                            filter_domain="['|','|','|', ('name','ilike',self), ('contact_id','ilike',self), ('partner_id','ilike',self), ('email','ilike',self)]"/>
+                            filter_domain="['|','|', ('name','ilike',self), ('partner_id','ilike',self), ('email','ilike',self)]"/>
                         <field name="user_id" groups="base.group_extended">
                         <filter icon="terp-personal"
                               string="My Registrations"
@@ -413,7 +483,7 @@
         <menuitem
             name="Registrations"
             id="menu_action_registration" parent="base.menu_event_main"
-            action="action_registration"/>
+            action="action_registration" groups="event.group_event_manager,event.group_event_user"/>
 
 
         <menuitem name="Reporting" id="base.menu_report_association" parent="event_main_menu" sequence="20"/>

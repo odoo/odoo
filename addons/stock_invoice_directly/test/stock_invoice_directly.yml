@@ -5,7 +5,7 @@
   I create an Outgoing Picking order.
 -
   !record {model: stock.picking, id: stock_picking_out0}:
-    address_id: base.res_partner_address_3000
+    partner_id: base.res_partner_address_3000
     invoice_state: 2binvoiced
     move_lines:
       - company_id: base.main_company
@@ -55,7 +55,7 @@
   !python {model: account.invoice}: |
     picking_obj = self.pool.get('stock.picking')
     picking = picking_obj.browse(cr, uid, [ref('stock_picking_out0')])
-    partner = picking[0].address_id.partner_id.id
+    partner = picking[0].partner_id.id
     inv_ids = self.search(cr, uid, [('type','=','out_invoice'),('partner_id','=',partner)])
     assert inv_ids, 'No Invoice is generated!'
 

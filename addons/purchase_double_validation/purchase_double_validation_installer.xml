@@ -7,8 +7,8 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="purchase.view_purchase_configuration"/>
             <field name="arch" type="xml">
-                <field name="module_purchase_double_validation" position="after">
-                    <field name="limit_amount" nolabel="1"/>
+                <field name="module_purchase_double_validation" position="replace">
+                    <field name="limit_amount"/>
                 </field>
             </field>
         </record>
