@@ -35,25 +35,26 @@
                     <field name="timesheets"/>
 		    <field name="currency_id"/>
                 </field>
-        <xpath expr="//h4[@id='list']" position="inside">
-        <a>
-            <t t-if="record.timesheets.raw_value">
-                <button name="open_timesheets" class="oe_project_buttons" type="object">, Timesheet</button>
-            </t>
-            </a>
-        </xpath>
+		<xpath expr="//h4[@id='list']" position="inside">
+		    <a>
+			<t t-if="record.timesheets.raw_value">
+			    <button name="open_timesheets" class="oe_project_buttons" type="object">, Timesheets</button>
+			</t>
+		    </a>
+		</xpath>
 		<xpath expr="//table[@class='project_fields']" position="inside">
-			<tr ><th align="left">To invoiced</th>
-				<td align="left">
+		    <tr >
+			<th align="left">To invoice</th>
+			<td align="left">
 			    <field name="amt_to_invoice"/> <t t-esc="record.currency_id.raw_value[1].split(' ')[1][1]"/>
-			    </td>
-			    </tr>
-			    <tr >
+			</td>
+		    </tr>
+		    <tr>
 			<th align="left">To hours</th>
 			<td align="left">
 			    <field name="hrs_to_invoice"/> h
 			</td>
-			</tr>
+		    </tr>
 		</xpath>
             </field>
         </record>
