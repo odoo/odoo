@@ -31,17 +31,17 @@ class res_users(osv.osv):
     _inherit = ['res.users', 'mail.thread']
     
     _columns = {
-        'message_email_pref': fields.selection([
+        'notification_email_pref': fields.selection([
                         ('all', 'All feeds'),
                         ('comments', 'Only comments'),
                         ('to_me', 'Only when sent directly to me'),
-                        ('none', 'Never'),
-                        ], string='Receive feeds by email', required=True,
+                        ('none', 'Never')
+                        ], 'Receive feeds by email', required=True,
                         help="Choose whether you want to receive an email when you receive new feeds."),
     }
     
     _default = {
-        'message_email_pref': 'all',
+        'notification_email_pref': 'all',
     }
     
     def create(self, cr, uid, data, context=None):

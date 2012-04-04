@@ -10,7 +10,7 @@
             <field name="arch" type="xml">
             <data>
                 <xpath expr="/form/group/group[@name='preferences']/field[@name='menu_tips']" position="after">
-                    <field name="message_email_pref"/>
+                    <field name="notification_email_pref"/>
                 </xpath>
             </data>
             </field>
@@ -24,7 +24,7 @@
             <field name="arch" type="xml">
             <data>
                 <xpath expr="/form/notebook/page[@string='User']/group/group/group[@name='preferences']/field[@name='menu_tips']" position="after">
-                    <field name="message_email_pref"/>
+                    <field name="notification_email_pref"/>
                 </xpath>
                 <xpath expr="/form/notebook" position="after">
                     <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
