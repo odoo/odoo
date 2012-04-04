@@ -413,8 +413,7 @@ class res_config_settings(osv.osv_memory):
                     'other_field': fields.type(...),
                 }
 
-        The method ``execute`` is automatically called after creating and writing on records.
-        It provides some support based on a naming convention:
+        The method ``execute`` provides some support based on a naming convention:
 
         *   For a field like 'default_XXX', ``execute`` sets the (global) default value of
             the field 'XXX' in the model named by ``default_model`` to the field's value.
@@ -436,16 +435,6 @@ class res_config_settings(osv.osv_memory):
         current values for other fields.
     """
     _name = 'res.config.settings'
-
-    def create(self, cr, uid, values, context=None):
-        id = super(res_config_settings, self).create(cr, uid, values, context)
-        self.execute(cr, uid, [id], context)
-        return id
-
-    def write(self, cr, uid, ids, values, context=None):
-        res = super(res_config_settings, self).write(cr, uid, ids, values, context)
-        self.execute(cr, uid, ids, context)
-        return res
 
     def copy(self, cr, uid, id, values, context=None):
         raise osv.except_osv(_("Cannot duplicate configuration!"), "")
@@ -551,7 +540,13 @@ class res_config_settings(osv.osv_memory):
         if to_install_ids:
             ir_module.button_immediate_install(cr, uid, to_install_ids, context)
 
-        return {}
+        # open the root menu Settings, and force client-side refresh
+        menu = ir_model_data.get_object(cr, uid, 'base', 'menu_administration', context)
+        return {
+            'type': 'ir.ui.menu',
+            'menu_id': menu.id,
+            'reload' : True,
+        }
 
 res_config_settings()
 
