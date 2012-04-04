@@ -60,7 +60,7 @@ class mrp_config_settings(osv.osv_memory):
                 within your work centers in order to produce a product. They are attached to bills of materials
                 that will define the required raw materials."""),
         'group_mrp_properties': fields.boolean("Manage Properties",
-            implied_group='mrp.group_mrp_properties',
+            implied_group='product.group_mrp_properties',
             help="""Allows to define specific property that can be assigned to your bill of materials."""),
     }
 
