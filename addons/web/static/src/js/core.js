@@ -620,17 +620,21 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
                 }), true);
         }
     },
-    test_eval_contexts: function (contexts) {
+    test_eval_contexts: function (contexts, evaluation_context) {
+        evaluation_context = evaluation_context || {};
         var result_context = _.extend({}, this.user_context),
             self = this;
         _(contexts).each(function (ctx) {
             switch(ctx.__ref) {
             case 'context':
-                _.extend(result_context, py.eval(ctx.__debug));
+                _.extend(result_context, py.eval(
+                    ctx.__debug, evaluation_context));
                 break;
             case 'compound_context':
                 _.extend(
-                    result_context, self.test_eval_contexts(ctx.__contexts));
+                    result_context, self.test_eval_contexts(
+                        ctx.__contexts, _.extend(
+                            {}, evaluation_context, ctx.__eval_context)));
                 break;
             default:
                 _.extend(result_context, ctx);
@@ -649,7 +653,8 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
             case 'compound_domain':
                 result_domain.push.apply(
                     result_domain, self.test_eval_domains(
-                            dom.__domains, eval_context));
+                        dom.__domains, _.extend(
+                            {}, eval_context, dom.__eval_context)));
                 break;
             default:
                 result_domain.push.apply(
@@ -667,7 +672,8 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
                 group = py.eval(ctx.__debug).group_by;
                 break;
             case 'compound_context':
-                group = self.test_eval_contexts(ctx.__contexts).group_by;
+                group = self.test_eval_contexts(
+                    ctx.__contexts, ctx.__eval_context).group_by;
                 break;
             default:
                 group = ctx.group_by
