@@ -542,17 +542,16 @@ openerp.mail = function(session) {
          */
         init: function (parent, params) {
             this._super(parent);
-            this.params = params || {};
-            this.params.limit = params.limit || 50;
-            this.params.limit = 10;
+            this.params = {};
+            this.params.limit = params.limit || 25;
             this.params.domain = params.domain || [];
             this.params.context = params.context || {};
             this.params.search = {'domain': [], 'context': {}, 'groupby': {}}
             this.params.search_view_id = params.search_view_id || false;
             this.params.thread_level = params.thread_level || 1;
-            this.sorted_comments = {'models': {}};
-            this.comments_structure = {'root_ids': [], 'new_root_ids': [], 'msgs': {}, 'tree_struct': {}};
+            this.comments_structure = {'root_ids': [], 'new_root_ids': [], 'msgs': {}, 'tree_struct': {}, 'model_to_root_ids': {}};
             this.display_show_more = true;
+            this.thread_list = [];
             // datasets
             this.ds_msg = new session.web.DataSet(this, 'mail.message');
             this.ds_groups = new session.web.DataSet(this, 'mail.group');
@@ -663,24 +662,20 @@ openerp.mail = function(session) {
          * @param {Array} records records to show in threads
          */
         display_comments: function (records) {
-            var sorted_comments = this.sort_comments(records);
-            console.log('debut !');
-            this.sort_comments_new(records);
-            console.log('fin');
-            //console.log(sorted_comments);
+            this.sort_comments(records);
             var self = this;
-            _(sorted_comments.model_list).each(function (model_name) {
-                _(sorted_comments.models[model_name].root_ids).each(function (id) {
-                    var records = sorted_comments.models[model_name].msgs[id];
-                    var template = 'WallThreadContainer';
-                    var render_res = session.web.qweb.render(template, {});
-                    $('<div class="oe_mail_wall_thread">').html(render_res).appendTo(self.$element.find('div.oe_mail_wall_threads'));
-                    var thread = new mail.Thread(self, {
-                        'res_model': model_name, 'res_id': records[0]['res_id'], 'uid': self.session.uid, 'records': records,
-                        'parent_id': false, 'thread_level': self.params.thread_level, 'show_hide': true}
-                        );
-                    var thread_displayed = thread.appendTo(self.$element.find('div.oe_mail_wall_thread:last'));
-                });
+            _(this.comments_structure['new_root_ids']).each(function (root_id) {
+                var records = self.comments_structure.tree_struct[root_id]['for_thread_msgs'];
+                var model_name = self.comments_structure.msgs[root_id]['model'];
+                var res_id = self.comments_structure.msgs[root_id]['res_id'];
+                var render_res = session.web.qweb.render('WallThreadContainer', {});
+                $('<div class="oe_mail_wall_thread">').html(render_res).appendTo(self.$element.find('div.oe_mail_wall_threads'));
+                var thread = new mail.Thread(self, {
+                    'res_model': model_name, 'res_id': res_id, 'uid': self.session.uid, 'records': records,
+                    'parent_id': false, 'thread_level': self.params.thread_level, 'show_hide': true}
+                    );
+                var thread_displayed = thread.appendTo(self.$element.find('div.oe_mail_wall_thread:last'));
+                self.thread_list.push(thread);
             });
             // update TODO
             this.comments_structure['root_ids'] = _.union(this.comments_structure['root_ids'], this.comments_structure['new_root_ids']);
@@ -698,74 +693,42 @@ openerp.mail = function(session) {
          *                          'msgs': {'root_id': [records]}, still sorted by date desc
          *                          }, for each model
          */
-        sort_comments_new: function(records) {
+        sort_comments: function(records) {
             var cs = this.comments_structure;
             var cur_iter = 0; var max_iter = 10; var modif = true;
             while ( modif && (cur_iter++) < max_iter) {
                 modif = false;
                 _(records).each(function (record) {
+                    // root and not yet recorded
                     if (record.parent_id == false && (! cs['msgs'][record.id])) {
+                        // add to model -> root_list ids
+                        if (! cs['model_to_root_ids'][record.model]) cs['model_to_root_ids'][record.model] = [record.id];
+                        else cs['model_to_root_ids'][record.model].push(record.id);
+                        // add root data
                         cs['new_root_ids'].push(record.id);
-                        cs['tree_struct'][record.id] = {'level': 0, 'direct_childs': [], 'all_childs': []};
+                        // add record
+                        cs['tree_struct'][record.id] = {'level': 0, 'direct_childs': [], 'all_childs': [], 'for_thread_msgs': [record], 'msg_nbr': -1, 'ancestors': []};
                         cs['msgs'][record.id] = record;
                         modif = true;
                     }
+                    // not yet recorded
                     else if (! cs['msgs'][record.id]) {
-                        if ((cs['msgs'][record.parent_id[0]])  && (! cs['msgs'][record.id])) {
-                             cs['tree_struct'][record.parent_id[0]]['direct_childs'].push(record.id);
-                             for (ancestor_id in cs['tree_struct'][record.parent_id[0]]['ancestors']) {
-                                 cs['tree_struct'][ancestor_id]['all_childs'].push(record.id);
-                             }
-                             cs['msgs'][record.id] = record;
-                             modif = true;
+                        // parent is recorded
+                        if (cs['msgs'][record.parent_id[0]]) {
+                            var parent_level = cs['tree_struct'][record.parent_id[0]]['level']
+                            cs['tree_struct'][record.parent_id[0]]['direct_childs'].push(record.id);
+                            cs['tree_struct'][record.parent_id[0]]['for_thread_msgs'].push(record);
+                            cs['tree_struct'][record.id] = {'level': parent_level+1, 'direct_childs': [], 'all_childs': [], 'msg_nbr': -1, 'ancestors': []};
+                            for (ancestor_id in cs['tree_struct'][record.parent_id[0]]['ancestors']) {
+                                cs['tree_struct'][ancestor_id]['all_childs'].push(record.id);
+                            }
+                            cs['msgs'][record.id] = record;
+                            modif = true;
                         }
                     }
                 });
             }
-            console.log(this.comments_structure);
-        },
-        
-        sort_comments: function (records) {
-            var self = this;
-            var sc = {'model_list': [], 'models': {}}
-            var cur_iter = 0; var max_iter = 10; var modif = true;
-            /* step1: get roots */
-            while ( modif && (cur_iter++) < max_iter) {
-                modif = false;
-                _(records).each(function (record) {
-                    if (_.indexOf(sc['model_list'], record.model) == -1) {
-                        sc['model_list'].push(record.model);
-                        sc['models'][record.model] = {'root_ids': [], 'id_to_root': {}, 'msgs': {}};
-                    }
-                    if (! self.sorted_comments['models'][record.model]) {
-                        self.sorted_comments['models'][record.model] = {'root_ids': []};
-                    }
-                    var rmod = sc['models'][record.model];
-                    if (record.parent_id == false && (_.indexOf(rmod['root_ids'], record.id) == -1)) {
-                        rmod['root_ids'].push(record.id);
-                        rmod['msgs'][record.id] = [];
-                        self.sorted_comments['models'][record.model]['root_ids'].push(record.id);
-                        modif = true;
-                    } 
-                    else {
-                        if ((_.indexOf(rmod['root_ids'], record.parent_id[0]) != -1)  && (! rmod['id_to_root'][record.id])) {
-                             rmod['id_to_root'][record.id] = record.parent_id[0];
-                             modif = true;
-                        }
-                        else if ( rmod['id_to_root'][record.parent_id[0]]  && (! rmod['id_to_root'][record.id])) {
-                             rmod['id_to_root'][record.id] = rmod['id_to_root'][record.parent_id[0]];
-                             modif = true;
-                        }
-                    }
-                });
-            }
-            /* step2: add records */
-            _(records).each(function (record) {
-                var root_id = sc['models'][record.model]['id_to_root'][record.id];
-                if (! root_id) root_id = record.id;
-                sc['models'][record.model]['msgs'][root_id].push(record);
-            });
-            return sc;
+            //console.log(this.comments_structure);
         },
 
         /**
@@ -776,16 +739,15 @@ openerp.mail = function(session) {
          * @param {Object} sorted_comments (see sort_comments)
          * @returns {Array} fetch_domain (OpenERP domain style)
          */
-        get_fetch_domain: function (sorted_comments) {
-            var domain = [];
-            _(sorted_comments.models).each(function (sc_model, model_name) { //each model
-                var ids = [];
-                _(sc_model.root_ids).each(function (id) { // each record
-                    ids.push(id);
-                });
-                domain.push('|', ['model', '!=', model_name], '!', ['id', 'child_of', ids]);
+        get_fetch_domain: function () {
+            var self = this;
+            var model_to_root = {};
+            var fetch_domain = [];
+            _(this.comments_structure['model_to_root_ids']).each(function (sc_model, model_name) {
+                console.log(model_name);
+                fetch_domain.push('|', ['model', '!=', model_name], '!', ['id', 'child_of', sc_model]);
             });
-            return domain;
+            return fetch_domain;
         },
         
         /** Display update: show more button */
@@ -797,7 +759,7 @@ openerp.mail = function(session) {
         
         /** Action: Shows more discussions */
         do_more: function () {
-            var domain = this.get_fetch_domain(this.sorted_comments);
+            var domain = this.get_fetch_domain();
             return this.fetch_comments(this.params.limit, 0, domain);
         },
         
