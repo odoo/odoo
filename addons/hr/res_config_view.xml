@@ -1,6 +1,13 @@
 <openerp>
     <data>
 
+        <record id="open_payroll1_modules" model="ir.actions.act_window">
+            <field name="name">Payroll</field>
+            <field name="res_model">ir.module.module</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="domain">[('shortdesc','ilike','Payroll'),('state','=','uninstalled')]</field>
+        </record>
+
         <record id="view_human_resources_configuration" model="ir.ui.view">
             <field name="name">Human Resources Application</field>
             <field name="model">human.resources.configuration</field>
@@ -16,6 +23,7 @@
                         <field name="module_hr_timesheet_sheet"/>
                         <field name="module_hr_holidays"/>
                         <field name="module_hr_payroll"/>
+                        <button string="Install payroll" icon="gtk-go-forward" name="%(open_payroll1_modules)d" type="action" attrs="{'invisible': [('module_hr_payroll','=',False)]}"/>
                     </group>
                     <separator string="Additional Features" colspan="4"/>
                     <group colspan="4" col="4">
