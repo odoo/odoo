@@ -40,7 +40,7 @@ class res_users(osv.osv):
                         help="Choose whether you want to receive an email when you receive new feeds."),
     }
     
-    _default = {
+    _defaults = {
         'notification_email_pref': 'all',
     }
     
