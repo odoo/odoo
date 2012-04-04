@@ -32,12 +32,6 @@ class general_configuration(osv.osv_memory):
                            help ="""It installs the portal module."""),
         'module_share': fields.boolean('Share',
                            help ="""It installs the share module."""),
-        'module_base_report_designer': fields.boolean('Customise your OpenERP Report with OpenOffice',
-                           help ="""It installs the base_report_designer module."""),
-        'module_report_webkit': fields.boolean('Design OpenERP report in HTML',
-                           help ="""It installs the report_webkit module."""),
-        'module_report_webkit_sample': fields.boolean('Samples of HTML report design',
-                           help ="""It installs the report_webkit_sample module."""),                
     }
 
     def base_setup_company(self, cr, uid, ids, context=None):
