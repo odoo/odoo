@@ -874,7 +874,7 @@ openerp.web.ViewEditor =   openerp.web.OldWidget.extend({
             'colors' : {'name':'colors', 'string': 'Colors', 'type': 'char'},
             'editable' : {'name':'editable', 'string': 'Editable', 'type': 'selection', 'selection': [["",""],["top","Top"],["bottom", "Bottom"]]},
             'groups' : {'name':'groups', 'string': 'Groups', 'type': 'selection_multi'},
-            'fontbold' : {'name':'fontbold', 'string': 'fontbold', 'type': 'char'},
+            'fonts' : {'name':'fonts', 'string': 'fonts', 'type': 'char'},
         };
         var arch_val = self.get_object_by_id(this.one_object.clicked_tr_id,this.one_object['main_object'], []);
         this.edit_node_dialog.$element.append('<table id="rec_table"  style="width:400px" class="oe_forms"></table>');
@@ -1150,7 +1150,7 @@ var _PROPERTIES = {
     'board': ['style'],
     'column' : [],
     'action' : ['name', 'string', 'colspan', 'groups'],
-    'tree' : ['string', 'colors', 'editable', 'link', 'limit', 'min_rows', 'fontbold'],
+    'tree' : ['string', 'colors', 'editable', 'link', 'limit', 'min_rows', 'fonts'],
     'graph' : ['string', 'type'],
     'calendar' : ['string', 'date_start', 'date_stop', 'date_delay', 'day_length', 'color', 'mode']
 };

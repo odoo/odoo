@@ -56,7 +56,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         this.view_id = view_id;
         this.previous_colspan = null;
         this.colors = null;
-        this.fontbold = null;
+        this.fonts = null;
 
         this.columns = [];
 
@@ -149,19 +149,26 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
      * @returns {String} CSS color declaration
      */
     color_for: function (record) {
-        if (!this.colors) { return ''; }
-        var context = _.extend({}, record.attributes, {
+       var style= '';
+
+       var context = _.extend({}, record.attributes, {
             uid: this.session.uid,
             current_date: new Date().toString('yyyy-MM-dd')
             // TODO: time, datetime, relativedelta
         });
-        var style= '';
-        for(var i=0, len=this.fontbold.length; i<len; ++i) {
-            if(record.attributes.state == this.fontbold[i]) {
-                style = 'font-weight: bold;';
-            }
-        }
 
+        if (this.fonts) {
+	        for(var i=0, len=this.fonts.length; i<len; ++i) {
+	            var pair = this.fonts[i],
+                    font = pair[0],
+                    expression = pair[1];
+                if (py.evaluate(expression, context).toJSON()) {
+                    style = 'font-weight: bold;';
+                }
+	        }
+	    }
+
+        if (!this.colors) { return style; }
         for(var i=0, len=this.colors.length; i<len; ++i) {
             var pair = this.colors[i],
                 color = pair[0],
@@ -213,10 +220,13 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
                 }).value();
         }
 
-        if (this.fields_view.arch.attrs.fontbold) {
-            this.fontbold = _(this.fields_view.arch.attrs.fontbold.split(',')).chain().compact()
-                .map(function(fontbold_pair) {
-                    return fontbold_pair;
+        if (this.fields_view.arch.attrs.fonts) {
+            this.fonts = _(this.fields_view.arch.attrs.fonts.split(',')).chain().compact()
+                .map(function(font_pair) {
+                    var pair = font_pair.split(':'),
+                        font = pair[0],
+                        expr = pair[1];
+                    return [font, py.parse(py.tokenize(expr)), expr];
                 }).value();
         }
 
