@@ -13,7 +13,7 @@ openerp.web.core = function(openerp) {
 
 // a function to override the "extend()" method of JR's inheritance, allowing
 // the usage of "include()"
-oe_override_class = function(claz){
+var oe_override_class = function(claz){
     var initializing = false, fnTest = /xyz/.test(function(){xyz;}) ?
     /\b_super\b/ : /.*/;
     
@@ -625,16 +625,20 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         var result_context = _.extend({}, this.user_context),
             self = this;
         _(contexts).each(function (ctx) {
+            // __eval_context evaluations can lead to some of `contexts`'s
+            // values being null, skip them as well as empty contexts
+            if (_.isEmpty(ctx)) { return; }
             switch(ctx.__ref) {
             case 'context':
                 _.extend(result_context, py.eval(
                     ctx.__debug, evaluation_context));
                 break;
             case 'compound_context':
+                var eval_context = self.test_eval_contexts([ctx.__eval_context]);
                 _.extend(
                     result_context, self.test_eval_contexts(
                         ctx.__contexts, _.extend(
-                            {}, evaluation_context, ctx.__eval_context)));
+                            {}, evaluation_context, eval_context)));
                 break;
             default:
                 _.extend(result_context, ctx);
@@ -642,19 +646,20 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         });
         return result_context;
     },
-    test_eval_domains: function (domains, eval_context) {
+    test_eval_domains: function (domains, evaluation_context) {
         var result_domain = [], self = this;
         _(domains).each(function (dom) {
             switch(dom.__ref) {
             case 'domain':
                 result_domain.push.apply(
-                    result_domain, py.eval(dom.__debug, eval_context));
+                    result_domain, py.eval(dom.__debug, evaluation_context));
                 break;
             case 'compound_domain':
+                var eval_context = self.test_eval_contexts([dom.__eval_context]);
                 result_domain.push.apply(
                     result_domain, self.test_eval_domains(
                         dom.__domains, _.extend(
-                            {}, eval_context, dom.__eval_context)));
+                            {}, evaluation_context, eval_context)));
                 break;
             default:
                 result_domain.push.apply(
