@@ -26,7 +26,7 @@ class documnet_ftp_setting(osv.osv_memory):
     _name = 'knowledge.configuration'
     _inherit = 'knowledge.configuration'
     _columns = {
-        'url': fields.char('Borwse Documents',size=64,
+        'url': fields.char('Browse Documents',size=64,
                            help ="""It allow to browse the document from the relative URL""", readonly=True),               
     }
 
@@ -46,14 +46,4 @@ class documnet_ftp_setting(osv.osv_memory):
         else:
             url = '%s:%s' %(ftpserver.HOST, ftpserver.PORT) 
         return {'url':'ftp://%s@%s'%(current_user.login, url)}
-                            
-    def document_ftp(self, cr, uid, ids, context=None):
-        data_id = ids and ids[0] or False
-        data = self.browse(cr, uid, data_id, context=context)
-        return {
-        'type': 'ir.actions.act_url',
-        'url':data.url,
-        'nodestroy':True,
-        } 
-     
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
