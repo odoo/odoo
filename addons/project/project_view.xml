@@ -222,7 +222,7 @@
                                         </tr>
                                     </table>
                                     <t t-foreach="record.members.raw_value" t-as="member">
-                                        <img t-att-src="kanban_image('res.users', 'avatar', member)" class="project_avatar"/>
+                                        <img t-att-src="kanban_image('res.users', 'avatar', member)"  t-att-title="member" class="project_avatar"/>
                                     </t>					            
                                 </li>
                             </div>
