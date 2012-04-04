@@ -123,6 +123,7 @@ class mail_message_common(osv.osv_memory):
                         help="Content of the message. This content equals the body_text field for plain-test messages, and body_html for rich-text/HTML messages. This allows having one field if we want to access the content matching the message subtype."),
         'parent_id': fields.many2one('mail.message', 'Parent message', help="Parent message, used for displaying as threads with hierarchy",
                         select=True, ondelete='set null',),
+        'child_ids': fields.one2many('mail.message', 'parent_id', 'Child messages'),
     }
 
     _defaults = {
