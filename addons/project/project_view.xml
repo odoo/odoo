@@ -217,7 +217,7 @@
                                         <tr>
                                             <th align="left">Progress</th>
                                             <td align="left">
-                                                <t t-esc="Math.round(record.effective_hours.raw_value)"/>/<t t-esc="Math.round(record.total_hours.raw_value)"/> days
+                                                <t t-esc="Math.round(record.effective_hours.raw_value/24)"/>/<t t-esc="Math.round(record.total_hours.raw_value/24)"/> days
                                             </td>
                                         </tr>
                                     </table>
