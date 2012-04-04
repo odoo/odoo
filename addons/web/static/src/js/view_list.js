@@ -83,12 +83,6 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             self.compute_aggregates();
         });
         this.no_leaf = false;
-        var domain = [['res_model','=', this.model], ['user_id' , '=', this.session.uid]];
-        new openerp.web.DataSetSearch(
-           this, 'ir.needaction_users', this.dataset.get_context(), domain)
-        .read_slice().done(function(result) {
-            self.needaction_ids = _.pluck(result, 'res_id');
-        })
     },
     /**
      * Retrieves the view's number of records per page (|| section)
@@ -159,21 +153,16 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             current_date: new Date().toString('yyyy-MM-dd')
             // TODO: time, datetime, relativedelta
         });
-        var style= '';
-        if(this.needaction_ids.indexOf(record.attributes.id) >= 0) {
-            style = 'font-weight: bold;';
-        }
         for(var i=0, len=this.colors.length; i<len; ++i) {
             var pair = this.colors[i],
                 color = pair[0],
                 expression = pair[1];
             if (py.evaluate(expression, context).toJSON()) {
-                style += 'color: ' + color + ';'
-                return style;
+                return 'color: ' + color + ';';
             }
             // TODO: handle evaluation errors
         }
-        return style;
+        return '';
     },
     /**
      * Called after loading the list view's description, sets up such things
