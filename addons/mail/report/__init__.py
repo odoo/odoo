@@ -19,14 +19,7 @@
 #
 ##############################################################################
 
-import mail_message
-import mail_thread
-import mail_group
-import mail_subscription
-import res_users
-import res_partner
-import report
-import wizard
+import mail_message_report
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
