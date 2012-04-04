@@ -24,18 +24,14 @@ from osv import fields, osv
 class marketing_configuration(osv.osv_memory):
     _name = 'marketing.configuration'
     _inherit = 'res.config.settings'
-    
     _columns = {
-        'module_marketing': fields.boolean('Marketing',
+        'module_marketing_campaign': fields.boolean('Marketing Campaigns',
                            help ="""It installs the marketing_campaign module."""),
-        'module_marketing_campaign': fields.boolean('Marketing Campaign',
-                           help ="""It installs the marketing_campaign module."""),
-        'module_marketing_campaign_crm_demo': fields.boolean('Demo data for the module Marketing Campaign',
+        'module_marketing_campaign_crm_demo': fields.boolean('Demo data for the module Marketing Campaigns',
                            help ="""It installs the marketing_campaign_crm_demo module."""),
         'module_crm_profiling': fields.boolean('Track customer profile to focus your campaigns',
                            help ="""It install the crm_profiling module."""), 
     }
-
 marketing_configuration()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
