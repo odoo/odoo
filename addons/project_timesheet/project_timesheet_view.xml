@@ -39,7 +39,7 @@
         <xpath expr="//h4[@id='list']" position="inside">
         <a>
             <t t-if="record.timesheets.raw_value">
-                <button name="open_timesheets" class="oe_project_buttons" type="object"><t t-if="record.total_timesheet.value &lt;= 1"> Timesheet</t><t t-if="record.total_timesheet.value > 1"> Timesheets</t>(<t t-esc="record.total_timesheet.value"/>)</button>
+                <button name="open_timesheets" class="oe_project_buttons" type="object"><t t-if="record.total_timesheet.value &lt;= 1"> Timesheet</t><t t-if="record.total_timesheet.value &gt; 1"> Timesheets</t>(<t t-esc="record.total_timesheet.value"/>)</button>
             </t>
             </a>
         </xpath>
