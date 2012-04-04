@@ -56,6 +56,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         this.view_id = view_id;
         this.previous_colspan = null;
         this.colors = null;
+        this.fontbold = null;
 
         this.columns = [];
 
@@ -154,16 +155,21 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             current_date: new Date().toString('yyyy-MM-dd')
             // TODO: time, datetime, relativedelta
         });
+        var style= '';
+        if(record.attributes.state == this.fontbold) {
+            style = 'font-weight: bold;';
+        }
         for(var i=0, len=this.colors.length; i<len; ++i) {
             var pair = this.colors[i],
                 color = pair[0],
                 expression = pair[1];
             if (py.evaluate(expression, context).toJSON()) {
-                return 'color: ' + color + ';';
+                style += 'color: ' + color + ';'
+                return style;
             }
             // TODO: handle evaluation errors
         }
-        return '';
+        return style;
     },
     /**
      * Called after loading the list view's description, sets up such things
@@ -192,6 +198,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         var self = this;
         this.fields_view = data;
         this.name = "" + this.fields_view.arch.attrs.string;
+        this.fontbold = this.fields_view.arch.attrs.fontbold
 
         if (this.fields_view.arch.attrs.colors) {
             this.colors = _(this.fields_view.arch.attrs.colors.split(';')).chain()
