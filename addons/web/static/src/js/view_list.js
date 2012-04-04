@@ -85,7 +85,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         this.no_leaf = false;
         var domain = [['res_model','=', this.model], ['user_id' , '=', this.session.uid]];
         new openerp.web.DataSetSearch(
-           this, 'ir.needaction_users_rel', this.dataset.get_context(), domain)
+           this, 'ir.needaction_users', this.dataset.get_context(), domain)
         .read_slice().done(function(result) {
             self.needaction_ids = _.pluck(result, 'res_id');
         })
