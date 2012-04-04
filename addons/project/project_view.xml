@@ -206,7 +206,7 @@
                                         </a>
                                     </h4>
                                     <table class="project_fields">
-                                        <tr t-if="record.date.raw_value">
+                                        <tr id="deadline" t-if="record.date.raw_value">
                                             <th align="left">Deadline</th>
                                             <td align="left">
                                                 <t t-esc="record.date.raw_value.toString('MMMM')"/> 
@@ -215,7 +215,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <th align="left">Progress</th>
+                                            <th align="left" width="70px">Progress</th>
                                             <td align="left">
                                                 <t t-esc="Math.round(record.effective_hours.raw_value/24)"/>/<t t-esc="Math.round(record.total_hours.raw_value/24)"/> days
                                             </td>
