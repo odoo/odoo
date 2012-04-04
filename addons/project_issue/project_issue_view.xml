@@ -389,19 +389,12 @@
                     <field name="issues"/>
                     <field name="total_issues" invisible="1"/>
                 </field>
-                <!--  <xpath expr="//t[@t-name='tasks']" position="after">
-                    <t t-name="issues">
-                        <ul class="oe_kanban_tooltip">
-                            <li><b>Issues:</b> <field name="total_issues"/></li>
-                        </ul>
-                   </t>
-                </xpath>-->
                 <xpath expr="//h4[@id='list']" position="inside">
-                	<a>
-                    <t t-if="record.issues.raw_value">
-                        <button name="open_issues" class="oe_project_buttons" type="object">,<field name="total_issues"/> Issue</button>
-                    </t>
-                 </a>
+                    <a>
+                        <t t-if="record.issues.raw_value">
+                            <button name="open_issues" class="oe_project_buttons" type="object">, <field name="total_issues"/> Issues</button>
+                        </t>
+                    </a>
                 </xpath>
             </field>
         </record>
