@@ -790,5 +790,81 @@
         <menuitem id="menu_point_root_touchscreen"
             web_icon="images/pos.png" web_icon_hover="images/pos-hover.png" groups="point_of_sale.group_pos_manager,point_of_sale.group_pos_user"/>
 
+        <record model="ir.ui.view" id="view_pos_config_form">
+            <field name="name">pos.config.form.view</field>
+            <field name="model">pos.config</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="PoS Configuration">
+                    <field name="name" />
+                    <notebook colspan="4">
+                        <page string="Payment Methods">
+                            <field name="journal_ids" colspan="4" nolabel="1"/>
+                        </page>
+                        <page string="Accounting">
+                            <separator string="Accounting" colspan="4" />
+                            <field name="shop_id" widget="selection" />
+                            <field name="journal_id" widget="selection" />
+
+                            <separator string="Cash Differences" colspan="4" />
+                            <field name="profit_account_id" widget="selection" />
+                            <field name="loss_account_id" widget="selection" />
+                            <field name="authorized_cashbox_diff" />
+                            <field name="authorized_cashbox_diff_fixed" />
+
+                        </page>
+                        <page string="Interfaces">
+                            <field name="iface_self_checkout" />
+                            <field name="iface_websql" />
+                            <field name="iface_led" />
+                            <field name="iface_cashdrawer" />
+                            <field name="iface_payment_terminal" />
+                            <field name="iface_electronic_scale" />
+                            <field name="iface_barscan" />
+                            <field name="iface_vkeyboard" />
+                        </page>
+
+
+                    </notebook>
+
+                    <group colspan="4" col="6">
+                        <field name="state" />
+                        <button string="Set to Draft" name="set_draft" type="object" states="deprecated"/>
+                        <button string="Set to Active" name="set_active" type="object" states="draft,inactive"/>
+                        <button string="Set to Inactive" name="set_inactive" type="object" states="active" />
+                        <button string="Set to Deprecated" name="set_deprecate" type="object" states="active,inactive" />
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_pos_config_tree">
+            <field name="name">pos.config.tree.view</field>
+            <field name="model">pos.config</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="PoS Configuration">
+                    <field name="name" />
+                    <field name="state" />
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_pos_config_pos">
+            <field name="name">Point of Sales</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">pos.config</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem
+            parent="menu_point_config_product"
+            action="action_pos_config_pos"
+            id="menu_pos_config_pos"
+            groups="group_pos_manager"/>
+
+
+
     </data>
 </openerp>

@@ -33,6 +33,63 @@ import decimal_precision as dp
 
 _logger = logging.getLogger(__name__)
 
+class pos_config(osv.osv):
+    _name = 'pos.config'
+
+    POS_CONFIG_STATE = [('draft', 'Draft'),('active', 'Active'),('inactive', 'Inactive'),('deprecated', 'Deprecated')]
+
+    _columns = {
+        'name' : fields.char('Name', size=32, select=1, required=True),
+        'journal_ids' : fields.many2many('account.journal', 'pos_config_journal_rel', 'pos_config_id', 'journal_id', 'Payment Methods'),
+        'shop_id' : fields.many2one('sale.shop', 'Shop', required=True, select=1),
+        'journal_id' : fields.many2one('account.journal', 'Journal', required=True, select=1),
+        'profit_account_id' : fields.many2one('account.account', 'Profit Account', required=True, select=1),
+        'loss_account_id' : fields.many2one('account.account', 'Loss Account', required=True, select=1),
+
+        'authorized_cashbox_diff' : fields.integer('Authorized Cashbox Difference (%)'),
+        'authorized_cashbox_diff_fixed' : fields.integer('Authorized Cashbox Difference (Fixed Amount)'),
+
+
+        'iface_self_checkout' : fields.boolean('Self Checkout Mode'),
+        'iface_websql' : fields.boolean('WebSQL (to store data)'),
+        'iface_led' : fields.boolean('LED Interface'),
+        'iface_cashdrawer' : fields.boolean('Cashdrawer Interface'),
+        'iface_payment_terminal' : fields.boolean('Payment Terminal Interface'),
+        'iface_electronic_scale' : fields.boolean('Electronic Scale Interface'),
+        'iface_barscan' : fields.boolean('BarScan Interface'), 
+        'iface_vkeyboard' : fields.boolean('Virtual KeyBoard Interface'),
+
+        'state' : fields.selection(POS_CONFIG_STATE, 'State', required=True, readonly=True),
+
+    }
+
+    _defaults = {
+        'state' : 'draft',
+    }
+
+    def set_draft(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state' : 'draft'}, context=context)
+
+    def set_active(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state' : 'active'}, context=context)
+
+    def set_inactive(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state' : 'inactive'}, context=context)
+
+    def set_deprecate(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state' : 'deprecated'}, context=context)
+
+pos_config()
+
+class pos_session(osv.osv):
+    _name = 'pos.session'
+
+    _columns = {
+        'config_id' : fields.many2one('pos.config', 'Configuration', required=True, select=1),
+    }
+
+pos_session()
+
 class pos_config_journal(osv.osv):
     """ Point of Sale journal configuration"""
     _name = 'pos.config.journal'
