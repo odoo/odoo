@@ -130,6 +130,7 @@ class mail_thread(osv.osv):
         subscription_obj = self.pool.get('mail.subscription')
         notification_obj = self.pool.get('mail.notification')
         res_users_obj = self.pool.get('res.users')
+        body = vals.get('body_html', '') if vals.get('subtype', 'plain') == 'html' else vals.get('body_text', '')
         
         # automatically subscribe the writer of the message
         if vals['user_id']:
@@ -137,6 +138,7 @@ class mail_thread(osv.osv):
         
         # get users that will get a notification pushed
         user_to_push_ids = self.message_create_get_notification_user_ids(cr, uid, [thread_id], vals, context=context)
+        user_to_push_from_parse_ids = self.message_parse_users(cr, uid, [thread_id], body, context=context)
         
         # set email_from and email_to for comments and notifications
         if vals.get('type', False) and vals['type'] == 'comment' or vals['type'] == 'notification':
@@ -146,13 +148,14 @@ class mail_thread(osv.osv):
             if not vals.get('email_to', False):
                 email_to = ''
                 for user in res_users_obj.browse(cr, uid, user_to_push_ids, context=context):
-                    if not user.notification_email_pref == 'all' and not (user.notification_email_pref == 'comments' and vals['type'] == 'comment'):
+                    if not user.notification_email_pref == 'all' and \
+                        not (user.notification_email_pref == 'comments' and vals['type'] == 'comment') and \
+                        not (user.notification_email_pref == 'to_me' and user.id in user_to_push_from_parse_ids):
                         continue
                     if not user.user_email:
                         continue
-                    if email_to:
-                        email_to = '%s, ' % (email_to)
-                    email_to = '%s%s' % (email_to, user.user_email)
+                    email_to = '%s, %s' % (email_to, user.user_email)
+                email_to = email_to.lstrip(', ')
                 if email_to:
                     vals['email_to'] = email_to
                     vals['state'] = 'outgoing'
@@ -175,17 +178,17 @@ class mail_thread(osv.osv):
             context = {}
         
         notif_user_ids = []
+        body = new_msg_vals.get('body_html', '') if new_msg_vals.get('subtype', 'plain') == 'html' else new_msg_vals.get('body_text', '')
         for thread_id in thread_ids:
             # add subscribers
-            users = self.message_get_subscribers(cr, uid, [thread_id], context=context)
-            notif_user_ids += [user['id'] for user in users]
+            notif_user_ids += [user['id'] for user in self.message_get_subscribers(cr, uid, [thread_id], context=context)]
             # add users requested via parsing message (@login)
-            notif_user_ids += self.message_parse_users(cr, uid, [thread_id], new_msg_vals['body_text'], context=context)
+            notif_user_ids += self.message_parse_users(cr, uid, [thread_id], body, context=context)
             # add users requested to perform an action (need_action mechanism)
             if hasattr(self, 'get_needaction_user_ids'):
                 notif_user_ids += self.get_needaction_user_ids(cr, uid, [thread_id], context=context)[thread_id]
             # add users notified of the parent messages (because: if parent message contains @login, login must receive the replies)
-            if new_msg_vals.get('parent_id', False):
+            if new_msg_vals.get('parent_id'):
                 notif_obj = self.pool.get('mail.notification')
                 parent_notif_ids = notif_obj.search(cr, uid, [('message_id', '=', new_msg_vals.get('parent_id'))], context=context)
                 parent_notifs = notif_obj.read(cr, uid, parent_notif_ids, context=context)
@@ -317,7 +320,6 @@ class mail_thread(osv.osv):
                         param = ", ".join(param)
                 data.update({
                     'subject': subject or _('History'),
-                    'body_text': body_text or '',
                     'email_to': email_to,
                     'email_from': email_from or \
                         (hasattr(thread, 'user_id') and thread.user_id and thread.user_id.user_email),
