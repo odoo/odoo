@@ -353,7 +353,7 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
 
         var missing_fields = _.difference(this.required_fields, selected_fields);
         if (missing_fields.length) {
-            this.$element.find("#result").before('<div id="message" style="color:red">*Required Fields are not selected : ' + missing_fields + '.</div>');
+            this.$element.find("#result").before('<div id="message" style="color:red">' + _t("*Required Fields are not selected :") + missing_fields + '.</div>');
             return false;
         }
         return true;
