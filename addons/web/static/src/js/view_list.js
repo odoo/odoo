@@ -163,7 +163,9 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
                     font = pair[0],
                     expression = pair[1];
                 if (py.evaluate(expression, context).toJSON()) {
-                    style = 'font-weight: bold;';
+                    if (font == 'bold'){style = 'font-weight: bold;';}
+                    if (font == 'italic'){style = 'font-style: italic;';}
+                    if (font == 'underline'){style = 'text-decoration: underline;';}
                 }
 	        }
 	    }
