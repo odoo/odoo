@@ -22,6 +22,7 @@
                         <button name="%(action_create_hr_employee_installer)d" string="Employees" type="action" icon="gtk-apply"/>
                         <field name="module_hr_timesheet_sheet"/>
                         <field name="module_hr_holidays"/>
+                        <field name="module_hr_payroll"/>
                         <label string="Configure Your Salary Rules :"/>
                         <button string="Salary Rules" icon="gtk-go-forward" name="%(open_payroll1_modules)d" type="action" />
                     </group>
@@ -32,7 +33,7 @@
                         <field name="module_hr_evaluation"/>
                         <field name="module_hr_contract"/>
                     </group>
-                    <group colspan="4" col="4">
+                    <group name="Account Payroll" colspan="4" col="4" attrs="{'invisible': [('module_hr_payroll','=',False)]}">
                         <separator string="Account Payroll" colspan="4"/>
                         <field name="module_hr_payroll_account"/>
                     </group>
