@@ -26,8 +26,8 @@
                                     <span style="display: none;"><field name="is_subscriber"/></span>
                                     <ul>
                                         <li><field name="member_count"/> members</li>
-                                        <li t-if="! record.is_subscriber.raw_value"><a name="message_subscribe" string="Join" type="object" class="oe_group_join">Not following</a></li>
-                                        <li t-if="record.is_subscriber.raw_value"><a name="message_unsubscribe" string="Join" type="object" class="oe_group_leave">Following</a></li>
+                                        <li t-if="! record.is_subscriber.raw_value"><a name="action_group_join" string="Join" type="object" class="oe_group_join">Not following</a></li>
+                                        <li t-if="record.is_subscriber.raw_value"><a name="action_group_leave" string="Join" type="object" class="oe_group_leave">Following</a></li>
                                         <li><field name="last_month_msg_nbr"/> messages last month</li>
                                     </ul>
                                 </div>

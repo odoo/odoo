@@ -218,7 +218,7 @@ class mail_thread(osv.osv):
         return ret_dict
 
     def message_append(self, cr, uid, threads, subject, body_text=None, body_html=None,
-                        parent_id=False, type='email', subtype=None, state=None,
+                        parent_id=False, type='email', subtype='plain', state='received',
                         email_to=False, email_from=False, email_cc=None, email_bcc=None,
                         reply_to=None, email_date=None, message_id=False, references=None,
                         attachments=None, headers=None, original=None, context=None):
@@ -698,7 +698,7 @@ class mail_thread(osv.osv):
                 subject = _('Comment')
             elif type == 'comment' and parent_id:
                 subject = _('Reply')
-        return self.message_append(cr, uid, ids, subject, body_text=body, parent_id=parent_id, type=type, context=context)
+        return self.message_append(cr, uid, ids, subject, body_text=body, parent_id=parent_id, type=type, subtype=subtype, context=context)
     
     #------------------------------------------------------
     # Subscription mechanism

@@ -88,7 +88,7 @@ openerp.mail = function(session) {
             this.$element.find('textarea.oe_mail_action_textarea').keyup(function (event) {
                 var charCode = (event.which) ? event.which : window.event.keyCode;
                 if (event.shiftKey && charCode == 13) { this.value = this.value+"\n"; }
-                else if (charCode == 13) { self.do_comment(); }
+                else if (charCode == 13) { return self.do_comment(); }
             });
             // event: click on 'reply' in msg
             this.$element.find('div.oe_mail_thread_display').delegate('a.oe_mail_msg_reply', 'click', function (event) {
@@ -290,7 +290,7 @@ openerp.mail = function(session) {
             var comment_node = this.$element.find('textarea');
             var body_text = comment_node.val();
             comment_node.val('');
-            return this.ds.call('message_append_note', [[this.params.res_id], 'Reply', body_text, this.params.parent_id, 'comment']).then(
+            return this.ds.call('message_append_note', [[this.params.res_id], 'Reply', body_text, this.params.parent_id, 'comment', 'html']).then(
                 this.proxy('init_comments'));
         },
         
@@ -573,9 +573,9 @@ openerp.mail = function(session) {
         add_event_handlers: function () {
             var self = this;
             // post a comment
-            this.$element.find('button.oe_mail_wall_button_comment').click(function () { self.do_comment(); });
+            this.$element.find('button.oe_mail_wall_button_comment').click(function () { return self.do_comment(); });
             // display more threads
-            this.$element.find('button.oe_mail_wall_button_more').click(function () { self.do_more(); });
+            this.$element.find('button.oe_mail_wall_button_more').click(function () { return self.do_more(); });
         },
 
         /**
@@ -644,20 +644,17 @@ openerp.mail = function(session) {
             else var fetch_domain = this.params.search['domain'];
             if (additional_context) var fetch_context = _.extend(this.params.search['context'], additional_context);
             else var fetch_context = this.params.search['context'];
-            var load_res = this.ds_thread.call('get_pushed_messages', 
-                [[this.session.uid], (limit || 0), (offset || 0), fetch_domain, true, [], fetch_context]).then(function (records) {
-                    self.do_update_show_more(records.length >= self.params.limit);
-                    self.display_comments(records);
-                });
-            return load_res;
+            return this.ds_thread.call('get_pushed_messages', 
+                [[this.session.uid], (limit || 0), (offset || 0), fetch_domain, true, [], fetch_context]).then(this.proxy('display_comments'));
         },
 
         /**
          * @param {Array} records records to show in threads
          */
         display_comments: function (records) {
-            this.sort_comments(records);
             var self = this;
+            this.do_update_show_more(records.length >= self.params.limit);
+            this.sort_comments(records);
             _(this.comments_structure['new_root_ids']).each(function (root_id) {
                 var records = self.comments_structure.tree_struct[root_id]['for_thread_msgs'];
                 var model_name = self.comments_structure.msgs[root_id]['model'];
@@ -668,8 +665,8 @@ openerp.mail = function(session) {
                     'res_model': model_name, 'res_id': res_id, 'uid': self.session.uid, 'records': records,
                     'parent_id': false, 'thread_level': self.params.thread_level, 'show_hide': true}
                     );
-                var thread_displayed = thread.appendTo(self.$element.find('div.oe_mail_wall_thread:last'));
                 self.thread_list.push(thread);
+                return thread.appendTo(self.$element.find('div.oe_mail_wall_thread:last'));
             });
             // update TODO
             this.comments_structure['root_ids'] = _.union(this.comments_structure['root_ids'], this.comments_structure['new_root_ids']);
