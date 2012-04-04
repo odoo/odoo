@@ -202,13 +202,12 @@ class account_move_line(osv.osv):
             context = {}
         period_obj = self.pool.get('account.period')
         #check if the period_id changed in the context from client side
-        if context.get('period_id', False):
-            period_id = context.get('period_id')
-            if type(period_id) == str:
-                ids = period_obj.search(cr, uid, [('name', 'ilike', period_id)])
-                context.update({
-                    'period_id': ids[0]
-                })
+        period_id = context.get('period_id', False)
+        if period_id and isinstance(period_id, basestring):
+            ids = period_obj.search(cr, uid, [('name', 'ilike', period_id)])
+            context.update({
+                'period_id': ids[0]
+            })
         return context
 
     def _default_get(self, cr, uid, fields, context=None):
