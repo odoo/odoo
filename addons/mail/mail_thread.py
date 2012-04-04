@@ -214,11 +214,11 @@ class mail_thread(osv.osv):
                 ret_dict[model_name] = model._description        
         return ret_dict
 
-    def message_append(self, cr, uid, threads, subject, parent_id=False, body_text=None,
-                        type='email', email_to=False, email_from=False, email_cc=None,
-                        email_bcc=None, reply_to=None, email_date=None, message_id=False,
-                        references=None, attachments=None, body_html=None, subtype=None,
-                        headers=None, original=None, context=None):
+    def message_append(self, cr, uid, threads, subject, body_text=None, body_html=None,
+                        parent_id=False, type='email', subtype=None, state=None,
+                        email_to=False, email_from=False, email_cc=None, email_bcc=None,
+                        reply_to=None, email_date=None, message_id=False, references=None,
+                        attachments=None, headers=None, original=None, context=None):
         """Creates a new mail.message attached to the current mail.thread,
            containing all the details passed as parameters.  All attachments
            will be attached to the thread record as well as to the actual
@@ -233,6 +233,13 @@ class mail_thread(osv.osv):
                         threads to which a new message should be attached
         :param subject: subject of the message, or description of the event if this
                         is an *event log* entry.
+        :param body_text: plaintext contents of the mail or log message
+        :param body_html: html contents of the mail or log message
+        :param parent_id: id of the parent message (threaded messaging model)
+        :param type: optional type of message: 'email', 'comment', 'notification'
+        :param subtype: optional subtype of message: 'plain' or 'html', corresponding to the main
+                        body contents (body_text or body_html).
+        :param state: optional state of message; 'received' by default
         :param email_to: Email-To / Recipient address
         :param email_from: Email From / Sender address if any
         :param email_cc: Comma-Separated list of Carbon Copy Emails To addresse if any
@@ -241,10 +248,6 @@ class mail_thread(osv.osv):
         :param email_date: email date string if different from now, in server timezone
         :param message_id: optional email identifier
         :param references: optional email references
-        :param body_text: plaintext contents of the mail or log message
-        :param body_html: html contents of the mail or log message
-        :param subtype: optional type of message: 'plain' or 'html', corresponding to the main
-                        body contents (body_text or body_html).
         :param headers: mail headers to store
         :param dict attachments: map of attachment filenames to binary contents, if any.
         :param str original: optional full source of the RFC2822 email, for reference
@@ -271,6 +274,7 @@ class mail_thread(osv.osv):
         ir_attachment = self.pool.get('ir.attachment')
         mail_message = self.pool.get('mail.message')
 
+        new_msg_ids = []
         for thread in threads:
             to_attach = []
             for attachment in attachments:
@@ -292,25 +296,25 @@ class mail_thread(osv.osv):
                 partner_id = thread.id
             data = {
                 'subject': subject,
-                'user_id': uid,
-                'parent_id': parent_id,
-                'model' : thread._name,
-                'partner_id': partner_id,
-                'res_id': thread.id,
-                'date': email_date or fields.datetime.now(),
-                'message_id': message_id,
                 'body_text': body_text or (hasattr(thread, 'description') and thread.description or ''),
                 'body_html': body_html or '',
-                'attachment_ids': [(6, 0, to_attach)],
+                'parent_id': parent_id,
+                'date': email_date or fields.datetime.now(),
                 'type': type,
                 'subtype': subtype,
+                'state': state,
+                'message_id': message_id,
+                'attachment_ids': [(6, 0, to_attach)],
+                'user_id': uid,
+                'model' : thread._name,
+                'res_id': thread.id,
+                'partner_id': partner_id,
             }
 
             if email_from or type == 'email':
                 for param in (email_to, email_cc, email_bcc):
                     if isinstance(param, list):
                         param = ", ".join(param)
-                
                 data.update({
                     'subject': subject or _('History'),
                     'body_text': body_text or '',
@@ -324,8 +328,8 @@ class mail_thread(osv.osv):
                     'reply_to': reply_to,
                     'original': original, })
             
-            self.message_create(cr, uid, thread.id, data, context=context)
-        return True
+            new_msg_ids.append(self.message_create(cr, uid, thread.id, data, context=context))
+        return new_msg_ids
 
     def message_append_dict(self, cr, uid, ids, msg_dict, context=None):
         """Creates a new mail.message attached to the given threads (``ids``),
@@ -345,9 +349,12 @@ class mail_thread(osv.osv):
         """
         return self.message_append(cr, uid, ids,
                             subject = msg_dict.get('subject'),
+                            body_text = msg_dict.get('body_text'),
+                            body_html= msg_dict.get('body_html'),
                             parent_id = msg_dict.get('parent_id', False),
-                            body_text = msg_dict.get('body_text', None),
                             type = msg_dict.get('type', 'email'),
+                            subtype = msg_dict.get('subtype', 'plain'),
+                            state = msg_dict.get('state', 'received'),
                             email_from = msg_dict.get('from', msg_dict.get('email_from')),
                             email_to = msg_dict.get('to', msg_dict.get('email_to')),
                             email_cc = msg_dict.get('cc', msg_dict.get('email_cc')),
@@ -358,8 +365,6 @@ class mail_thread(osv.osv):
                             references = msg_dict.get('references')\
                                       or msg_dict.get('in-reply-to'),
                             attachments = msg_dict.get('attachments'),
-                            body_html= msg_dict.get('body_html'),
-                            subtype = msg_dict.get('subtype', 'plain'),
                             headers = msg_dict.get('headers'),
                             original = msg_dict.get('original'),
                             context = context)
