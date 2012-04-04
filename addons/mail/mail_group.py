@@ -35,12 +35,25 @@ class mail_group(osv.osv):
     """
     A mail_group is a collection of users sharing messages in a discussion
     group. Group users are users that follow the mail group, using the
-    subscription/follow mechanism of OpenSocial.
+    subscription/follow mechanism of OpenSocial. A mail group has nothing
+    in common wih res.users.group.
+    Additional information on fields:
+        - ``member_ids``: user member of the groups are calculated with
+          ``message_get_subscribers`` method from mail.thread
+        - ``member_count``: calculated with member_ids
+        - ``is_subscriber``: calculated with member_ids
+        
     """
     
     _description = 'Discussion group'
     _name = 'mail.group'
     _inherit = ['mail.thread']
+
+    def action_group_join(self, cr, uid, ids, context={}):
+        return self.message_subscribe(cr, uid, ids, context=context);
+    
+    def action_group_leave(self, cr, uid, ids, context={}):
+        return self.message_unsubscribe(cr, uid, ids, context=context);
 
     def onchange_photo(self, cr, uid, ids, value, context=None):
         if not value:
