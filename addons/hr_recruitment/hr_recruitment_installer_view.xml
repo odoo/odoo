@@ -16,20 +16,5 @@
             <field name="sequence">3</field>
         </record>
 		
-        <!-- Hr Configuration wizard -->
-
-        <record id="view_recruitment_config_wizard_inherit" model="ir.ui.view">
-            <field name="name">human.recruitment.resources.configuration.form.inherit</field>
-            <field name="model">human.resources.configuration</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="hr.view_human_resources_configuration"/>
-            <field name="arch" type="xml">
-                <field name="module_hr_recruitment" position="after">
-                	<label string="Create Recruitment Stages :" />
-                	<button name="%(hr_recruitment_stage_form_installer)d" string="Recruitment Stages" type="action" icon="gtk-apply"/>
-                </field>
-            </field>
-        </record>
-				
     </data>
 </openerp>

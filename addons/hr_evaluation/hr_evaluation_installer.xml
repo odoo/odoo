@@ -24,8 +24,10 @@
             <field name="inherit_id" ref="hr.view_human_resources_configuration"/>
             <field name="arch" type="xml">
                 <field name="module_hr_evaluation" position="after">
-                	<label string="Create Appraisal Plans :" />
-                	<button name="%(action_evaluation_plans_installer)d" string="Appraisal Plans" type="action" icon="gtk-apply"/>
+                   	<group colspan="2" col="2">
+                	    <label string="Create Appraisal Plans  : " />
+                	    <button name="%(action_evaluation_plans_installer)d" string="Appraisal Plans" type="action" icon="gtk-apply"/>
+                   	</group>
                 </field>
             </field>
         </record>
