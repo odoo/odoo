@@ -97,22 +97,6 @@ class groups(osv.osv):
         self.pool.get('ir.model.access').call_cache_clearing_methods(cr)
         return res
 
-    def create(self, cr, uid, vals, context=None):
-        if 'name' in vals:
-            if vals['name'].startswith('-'):
-                raise osv.except_osv(_('Error'),
-                        _('The name of the group can not start with "-"'))
-        gid = super(groups, self).create(cr, uid, vals, context=context)
-        if context and context.get('noadmin', False):
-            pass
-        else:
-            # assign this new group to user_root
-            user_obj = self.pool.get('res.users')
-            aid = user_obj.browse(cr, 1, user_obj._get_admin_id(cr))
-            if aid:
-                aid.write({'groups_id': [(4, gid)]})
-        return gid
-
     def get_extended_interface_group(self, cr, uid, context=None):
         data_obj = self.pool.get('ir.model.data')
         extended_group_data_id = data_obj._get_id(cr, uid, 'base', 'group_extended')
