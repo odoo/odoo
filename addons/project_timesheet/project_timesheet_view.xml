@@ -42,7 +42,7 @@
             </t>
             </a>
         </xpath>
-		<xpath expr="//table[@class='fields']" position="inside">
+		<xpath expr="//table[@class='project_fields']" position="inside">
 			<tr ><th align="left">To invoiced</th>
 				<td align="left">
 			    <field name="amt_to_invoice"/> <t t-esc="record.currency_id.raw_value[1].split(' ')[1][1]"/>
