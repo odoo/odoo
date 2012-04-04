@@ -25,14 +25,14 @@ from lxml import etree
 class human_resources_configuration(osv.osv_memory):
     _name = 'human.resources.configuration'
     _inherit = 'res.config.settings'
-    
+
     _columns = {
         'module_hr_timesheet_sheet': fields.boolean('Manage Timesheet and Attendances',
                            help ="""It installs the hr_timesheet_sheet module."""),
         'module_hr_holidays': fields.boolean('Manage Holidays',
-                           help ="""It installs the hr_holidays module."""),  
-        'module_hr_payroll': fields.boolean('Configure Your Payroll Structure',
-                           help ="""It installs the hr_payroll module."""),  
+                           help ="""It installs the hr_holidays module."""),
+        'module_hr_payroll_account': fields.boolean('Manage Account Payroll',
+                           help ="""It installs the hr_payroll_account module."""),
         'module_hr_expense': fields.boolean('Manage Employees Expenses',
                            help ="""It installs the hr_expense module."""),
         'module_hr_recruitment': fields.boolean('Manage Recruitment Process',
