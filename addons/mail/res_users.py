@@ -23,10 +23,10 @@ from osv import osv, fields
 from tools.translate import _
 
 class res_users(osv.osv):
-    '''Update of res.users class
-    - add a preference about sending emails about notificatoins
-    - make a new user follow itself
-    '''
+    """ Update of res.users class
+        - add a preference about sending emails about notificatoins
+        - make a new user follow itself
+    """
     _name = 'res.users'
     _inherit = ['res.users', 'mail.thread']
     
@@ -37,7 +37,7 @@ class res_users(osv.osv):
                         ('to_me', 'Only when sent directly to me'),
                         ('none', 'Never')
                         ], 'Receive feeds by email', required=True,
-                        help="Choose whether you want to receive an email when you receive new feeds."),
+                        help="Choose in which case you want to receive an email when you receive new feeds."),
     }
     
     _defaults = {
@@ -51,7 +51,7 @@ class res_users(osv.osv):
         self.message_subscribe(cr, uid, [user_id], [user_id], context=context)
         # create a welcome message to broadcast
         company_name = user.company_id.name if user.company_id else 'the company'
-        message = _('%s has joined %s! You may leave him a message to celebrate his arrival and help him doing its first steps !') % (user.name, company_name)
+        message = _('%s has joined %s! You may leave him/her a message to celebrate a new arrival in the company ! You can help him/her doing its first steps on OpenERP.') % (user.name, company_name)
         self.message_append_note(cr, uid, [user.id], 'Welcome notification', message, context=context)
         return user_id
 
@@ -64,5 +64,5 @@ class res_users(osv.osv):
         for x_id in range(0, len(ids)):
             msg_ids += msg_obj.search(cr, uid, ['|', ('body_text', 'like', '@%s' % (user_data[x_id]['login'])), '&', ('res_id', '=', ids[x_id]), ('model', '=', self._name)] + domain,
             limit=limit, offset=offset, context=context)
-        if (ascent): msg_ids = self._message_get_parent_ids(cr, uid, ids, msg_ids, root_ids, context=context)
+        if (ascent): msg_ids = self._message_add_ancestor_ids(cr, uid, ids, msg_ids, root_ids, context=context)
         return msg_ids
