@@ -22,7 +22,7 @@
 {
     'name' : "Portal Customer",
     'version' : "1.0",
-    'depends' : ["sale"],
+    'depends' : ["sale","portal"],
     'author' : "OpenERP SA",
     'category': 'Portal',
     'description': """
@@ -37,8 +37,10 @@
     "demo_xml" : [ 
     ],
     "update_xml" : [
+#        "security/ir.model.access.csv",
         "portal_customer_view.xml",
-        "email_template.xml"
+        "email_template.xml",
+        "portal_demo.xml"
     ],
     'installable': True,
 }
