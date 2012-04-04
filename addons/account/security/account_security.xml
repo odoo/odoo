@@ -16,6 +16,11 @@
         <field name="implied_ids" eval="[(4, ref('group_account_user'))]"/>
     </record>
 
+    <record id="group_proforma_invoices" model="res.groups">
+        <field name="name">Pro-forma Invoices</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
     <record id="account_move_comp_rule" model="ir.rule">
         <field name="name">Account Entry</field>
         <field ref="model_account_move" name="model_id"/>

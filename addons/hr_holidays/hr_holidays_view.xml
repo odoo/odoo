@@ -12,9 +12,9 @@
                         <filter icon="terp-camera_test" domain="[('state','=','confirm')]" string="To Approve" name="approve"/>
                         <filter icon="terp-camera_test" domain="[('state','=','validate')]" string="Validated" name="validated"/>
                         <separator orientation="vertical"/>
-                        <filter icon="terp-go-year" name="year" string="Year" domain="[('date_from','&gt;=',time.strftime('%%Y-1-1')),('date_from','&lt;=',time.strftime('%%Y-12-31'))]"/>
+                        <filter icon="terp-go-year" name="year" string="Year" domain="[('holiday_status_id.active','=',True)]" help="Filters only on allocations and requests that belong to an holiday type that is 'active' (active field is True)"/>
                         <filter icon="terp-go-month" name="This Month" string="Month" domain="[('date_from','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date_from','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"/>
-                        <filter icon="terp-go-month" name="This Month-1" string=" Month-1" 
+                        <filter icon="terp-go-month" name="This Month-1" string=" Month-1"
                          domain="[('date_from','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('date_from','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
                          help="Holidays during last month"/>
                         <separator orientation="vertical"/>
@@ -50,7 +50,7 @@
             <field name="model">hr.holidays</field>
             <field name="type">calendar</field>
             <field name="arch" type="xml">
-                <calendar string="Leave Request" color="name" date_start="date_from" date_stop="date_to">
+                <calendar string="Leave Request" color="user_id" date_start="date_from" date_stop="date_to">
                     <field name="holiday_status_id"/>
                 </calendar>
             </field>
@@ -251,7 +251,7 @@
         </record>
 
         <!-- My leave dashboard -->
-        <menuitem name="Leaves" parent="hr.menu_hr_root" id="menu_open_ask_holidays" sequence="5"/>
+        <menuitem name="Leaves" parent="hr.menu_hr_root" id="menu_open_ask_holidays" sequence="20"/>
 
         <record model="ir.actions.act_window" id="open_ask_holidays">
             <field name="name">Leave Requests</field>
@@ -442,7 +442,7 @@
         </record>
 
         <menuitem sequence="3" id="hr.menu_open_view_attendance_reason_config" parent="hr.menu_hr_configuration" name="Leaves"/>
-        <menuitem name="Leave Type" action="open_view_holiday_status" id="menu_open_view_holiday_status" parent="hr.menu_open_view_attendance_reason_config"/>
+        <menuitem name="Leave Type" action="open_view_holiday_status" id="menu_open_view_holiday_status" parent="hr.menu_hr_configuration" sequence="10" />
 
     <!-- holiday on resource leave -->
         <record id="resource_calendar_leave_form_inherit" model="ir.ui.view">

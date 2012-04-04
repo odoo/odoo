@@ -103,7 +103,6 @@
             <field name="type">normal</field>
             <field name="state">open</field>
             <field name="partner_id" ref="base.res_partner_seagate"/>
-            <field name="contact_id" ref="base.res_partner_address_seagate"/>
         </record>
         <record id="analytic_seagate_p2" model="account.analytic.account">
             <field name="name">Seagate P2</field>
@@ -112,7 +111,6 @@
             <field name="parent_id" ref="analytic_integration"/>
             <field name="state">open</field>
             <field name="partner_id" ref="base.res_partner_seagate"/>
-            <field name="contact_id" ref="base.res_partner_address_seagate"/>
         </record>
         <record id="analytic_magasin_bml_1" model="account.analytic.account">
             <field name="name">Magasin BML 1</field>
@@ -120,7 +118,6 @@
             <field name="parent_id" ref="analytic_integration"/>
             <field name="type">normal</field>
             <field name="partner_id" ref="base.res_partner_15"/>
-            <field name="contact_id" ref="base.res_partner_address_14"/>
         </record>
         <record id="analytic_integration_c2c" model="account.analytic.account">
             <field name="name">CampToCamp</field>
@@ -130,7 +127,6 @@
             <field eval="time.strftime('%Y-12-31')" name="date"/>
             <field name="parent_id" ref="analytic_integration"/>
             <field name="partner_id" ref="base.res_partner_c2c"/>
-            <field name="contact_id" ref="base.res_partner_address_Camptocamp"/>
             <field name="state">open</field>
         </record>
         <record id="analytic_agrolait" model="account.analytic.account">
@@ -139,7 +135,6 @@
             <field name="parent_id" ref="analytic_customers"/>
             <field name="type">normal</field>
             <field name="partner_id" ref="base.res_partner_agrolait"/>
-            <field name="contact_id" ref="base.res_partner_address_8"/>
         </record>
         <record id="analytic_asustek" model="account.analytic.account">
             <field name="name">Asustek</field>
@@ -147,7 +142,6 @@
             <field name="type">normal</field>
             <field name="parent_id" ref="analytic_customers"/>
             <field name="partner_id" ref="base.res_partner_asus"/>
-            <field name="contact_id" ref="base.res_partner_address_tang"/>
         </record>
         <record id="analytic_distripc" model="account.analytic.account">
             <field name="name">DistriPC</field>
@@ -155,7 +149,6 @@
             <field name="parent_id" ref="analytic_customers"/>
             <field name="type">normal</field>
             <field name="partner_id" ref="base.res_partner_4"/>
-            <field name="contact_id" ref="base.res_partner_address_7"/>
         </record>
         <record id="analytic_sednacom" model="account.analytic.account">
             <field name="name">Sednacom</field>
@@ -165,7 +158,6 @@
             <field name="parent_id" ref="analytic_partners"/>
             <field name="type">normal</field>
             <field name="partner_id" ref="base.res_partner_sednacom"/>
-            <field name="contact_id" ref="base.res_partner_address_11"/>
             <field name="state">open</field>
         </record>
         <record id="analytic_thymbra" model="account.analytic.account">
@@ -176,7 +168,6 @@
             <field name="type">normal</field>
             <field name="parent_id" ref="analytic_partners"/>
             <field name="partner_id" ref="base.res_partner_thymbra"/>
-            <field name="contact_id" ref="base.res_partner_address_thymbra"/>
             <field name="state">open</field>
         </record>
         <record id="analytic_leclerc" model="account.analytic.account">
@@ -187,7 +178,6 @@
             <field name="type">normal</field>
             <field name="parent_id" ref="analytic_partners"/>
             <field name="partner_id" ref="base.res_partner_11"/>
-            <field name="contact_id" ref="base.res_partner_address_15"/>
         </record>
         <record id="analytic_desertic_hispafuentes" model="account.analytic.account">
             <field name="name">Desertic - Hispafuentes</field>
@@ -197,7 +187,6 @@
             <field name="type">normal</field>
             <field name="parent_id" ref="analytic_partners"/>
             <field name="partner_id" ref="base.res_partner_desertic_hispafuentes"/>
-            <field name="contact_id" ref="base.res_partner_address_3000"/>
         </record>
         <record id="analytic_tiny_at_work" model="account.analytic.account">
             <field name="name">OpenERP SA AT Work</field>
@@ -205,7 +194,6 @@
             <field name="type">normal</field>
             <field name="parent_id" ref="analytic_partners"/>
             <field name="partner_id" ref="base.res_partner_tinyatwork"/>
-            <field name="contact_id" ref="base.res_partner_address_tinyatwork"/>
         </record>
         <record id="analytic_partners_camp_to_camp" model="account.analytic.account">
             <field name="name">Camp to Camp</field>
@@ -215,7 +203,6 @@
             <field name="type">normal</field>
             <field name="parent_id" ref="analytic_partners"/>
             <field name="partner_id" ref="base.res_partner_c2c"/>
-            <field name="contact_id" ref="base.res_partner_address_Camptocamp"/>
             <field name="state">open</field>
         </record>
         <record id="analytic_project_2_support" model="account.analytic.account">

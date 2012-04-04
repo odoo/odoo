@@ -5,7 +5,7 @@
         <menuitem id="base.menu_sale_config_sales" name="Sales"
             parent="base.menu_base_config" sequence="0" groups="base.group_extended"/>
         <menuitem id="menu_product_pricelist_main" name="Pricelists" 
-            parent="base.menu_base_config" groups="product.group_sale_pricelist" sequence="50"/>
+            parent="base.menu_base_config" groups="product.group_sale_pricelist" sequence="70"/>
 
         <record id="product_pricelist_version_form_view" model="ir.ui.view">
             <field name="name">product.pricelist.version.form</field>
@@ -181,7 +181,7 @@
         </record>
         <menuitem
             action="product_pricelist_action2" id="menu_product_pricelist_action2"
-            parent="product.menu_product_pricelist_main" sequence="1"/>
+            parent="base.menu_base_config" sequence="20"/>
 
         <record id="product_price_type_view" model="ir.ui.view">
             <field name="name">product.price.type.form</field>
@@ -207,7 +207,7 @@
 
         <menuitem
             action="product_price_type_action" id="menu_product_price_type"
-            parent="product.menu_product_pricelist_main" sequence="4"/>
+            parent="product.menu_product_pricelist_main" sequence="4" groups="base.group_no_one"/>
 
         <!-- Moved to extra module 'sale_pricelist_type_menu':
         <record id="product_pricelist_type_view" model="ir.ui.view">

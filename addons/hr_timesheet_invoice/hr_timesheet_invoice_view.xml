@@ -7,6 +7,9 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="account.view_account_analytic_account_form"/>
             <field name="arch" type="xml">
+                <field name="partner_id" position="replace">
+                    <field name="partner_id" on_change="on_change_partner_id(partner_id, context)"/>
+                </field>
                 <group name="contract" position="after">
                     <group colspan="2" col="2" name="invoice_data">
                         <separator colspan="2" string="Invoicing Data"/>
@@ -185,7 +188,7 @@
         <menuitem
             action="action_hr_timesheet_invoice_factor_form"
             id="hr_timesheet_invoice_factor_view"
-            parent="account.menu_configuration_misc" sequence="25"/>
+            parent="account.menu_configuration_misc" sequence="25" groups="base.group_no_one"/>
 
     </data>
 </openerp>

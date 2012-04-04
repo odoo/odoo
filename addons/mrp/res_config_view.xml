@@ -2,24 +2,22 @@
     <data>
 
         <record id="view_mrp_config" model="ir.ui.view">
-            <field name="name">Configure Manufacturing</field>
+            <field name="name">mrp settings</field>
             <field name="model">mrp.config.settings</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Configure Manufacturing">
                     <separator string="Manufacturing Order" colspan="4"/>
-                    <field name="group_mrp_routings"/>
                     <field name="module_mrp_operations"/>
                     <field name="module_stock_planning"/>
                     <field name="module_mrp_subproduct"/>
                     <field name="module_mrp_repair"/>
 
 		            <separator string="Logistics" colspan="4"/>
-                    <field name="module_stock_location"/>
-                    <newline/>
                     <field name="module_mrp_jit"/>
 
 		            <separator string="Bill Of Material" colspan="4"/>
+                    <field name="group_mrp_routings"/>
                     <field name="group_mrp_properties"/>
                 </form>
             </field>

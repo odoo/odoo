@@ -1,21 +1,6 @@
 <openerp>
   <data>
 
-     <!-- Import or create customers configartion view  -->
-     <record id="action_import_create_installer" model="ir.actions.act_window">
-         <field name="name">Create or Import Customers</field>
-         <field name="type">ir.actions.act_window</field>
-         <field name="res_model">res.partner</field>
-         <field name="view_type">form</field>
-         <field name="view_mode">tree,form</field>
-         <field name="view_id" ref="base.view_partner_tree"/>
-         <field name="help">Create or Import Customers  and their contacts manually from this form or you can import your existing partners by CSV spreadsheet from "Import Data" wizard</field>
-     </record>
-     <record id="config_wizard_action_import_create_installer" model="ir.actions.todo">
-         <field name="action_id" ref="action_import_create_installer"/>
-         <field name="category_id" ref="base.category_sales_management_config"/>
-    </record>
-
      <!-- Define default users preferences-->
      <record id="view_user_preferences_config_form" model="ir.ui.view">
           <field name="name">Set default users preferences</field>
@@ -117,7 +102,7 @@
           <field name="view_mode">form</field>
           <field name="target">new</field>
       </record>
-   <!-- 
+   <!--
       <record id="config_action_partner_terminology_config_form" model="ir.actions.todo">
           <field name="action_id" ref="action_partner_terminology_config_form"/>
           <field name="category_id" ref="base.category_administration_config"/>
@@ -143,21 +128,29 @@
     </record>
 
     <record id="base.view_sale_config_settings" model="ir.ui.view">
-        <field name="name">sale.config.settings</field>
+        <field name="name">sale settings</field>
         <field name="model">sale.config.settings</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Configure Sales &amp; CRM">
+            <form string="Configure Sales">
                 <group name="config_sale" colspan="4"/>
-                <group name="config_contracts" colspan="4"/>
-                <group name="config_emails" colspan="4"/>
+
+                <!-- this part is necessary to allow the plugins to extend the view -->
+                <field name="module_crm" invisible="1"/>
+                <group name="config_fetchmail" colspan="4" attrs="{'invisible': [('module_crm','=',False)]}">
+                    <separator string="Emails"/>
+                </group>
+                <field name="module_plugin_thunderbird" attrs="{'invisible': [('module_crm','=',False)]}"/>
+                <newline/>
+                <field name="module_plugin_outlook" attrs="{'invisible': [('module_crm','=',False)]}"/>
+
                 <group name="config_crm" colspan="4"/>
             </form>
         </field>
     </record>
     
     <record id="base.action_sale_config" model="ir.actions.act_window">
-        <field name="name">Configure Sales &amp; CRM</field>
+        <field name="name">Configure Sales</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">sale.config.settings</field>
         <field name="view_id" ref="base.view_sale_config_settings"/>

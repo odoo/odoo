@@ -141,7 +141,8 @@
             <field name="act_window_id" ref="action_report_event_registration"/>
        </record>
 
-        <menuitem parent="base.menu_report_association" action="action_report_event_registration" id="menu_report_event_registration" sequence="3" groups="event.group_event_manager"/>
+        <menuitem parent="base.menu_reporting" id="menu_reporting_events" sequence="30" groups="event.group_event_manager" name="Events"/>
+        <menuitem parent="menu_reporting_events" action="action_report_event_registration" id="menu_report_event_registration" sequence="3" groups="event.group_event_manager"/>
 
     </data>
 </openerp>

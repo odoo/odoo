@@ -41,7 +41,7 @@ class base_calendar_invite_attendee(osv.osv_memory):
                                   'invite_id', 'user_id', 'Users'),
         'partner_id': fields.many2one('res.partner', 'Partner'),
         'email': fields.char('Email', size=124, help="Provide external email address who will receive this invitation."),
-        'contact_ids': fields.many2many('res.partner.address', 'invite_contact_rel',
+        'contact_ids': fields.many2many('res.partner', 'invite_contact_rel',
                                   'invite_id', 'contact_id', 'Contacts'),
         'send_mail': fields.boolean('Send mail?', help='Check this if you want to \
 send an Email to Invited Person')
@@ -112,10 +112,10 @@ send an Email to Invited Person')
                 mail_to.append(datas['email'])
 
             elif  type == 'partner':
-                add_obj = self.pool.get('res.partner.address')
+                add_obj = self.pool.get('res.partner')
                 for contact in  add_obj.browse(cr, uid, datas['contact_ids']):
                     res = {
-                           'partner_address_id': contact.id,
+                           'partner_id': contact.id,
                            'email': contact.email
                            }
                     res.update(ref)
@@ -159,8 +159,8 @@ send an Email to Invited Person')
 
         if not partner_id:
             return {'value': {'contact_ids': []}}
-        cr.execute('SELECT id FROM res_partner_address \
-                         WHERE partner_id=%s', (partner_id,))
+        cr.execute('SELECT id FROM res_partner \
+                         WHERE id=%s or parent_id =%s' , (partner_id,partner_id,))
         contacts = map(lambda x: x[0], cr.fetchall())
         return {'value': {'contact_ids': contacts}}
 

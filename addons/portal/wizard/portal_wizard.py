@@ -94,27 +94,21 @@ class wizard(osv.osv_memory):
             return {    # a user config based on a contact (address)
                 'name': address.name,
                 'user_email': extract_email(address.email),
-                'lang': address.partner_id and address.partner_id.lang or 'en_US',
-                'partner_id': address.partner_id and address.partner_id.id,
+                'lang': address.parent_id and address.parent_id.lang or 'en_US',
+                'partner_id': address.parent_id and address.parent_id.id,
             }
         
         user_ids = []
-        if context.get('active_model') == 'res.partner.address':
-            address_obj = self.pool.get('res.partner.address')
-            address_ids = context.get('active_ids', [])
-            addresses = address_obj.browse(cr, uid, address_ids, context)
-            user_ids = map(create_user_from_address, addresses)
-        
-        elif context.get('active_model') == 'res.partner':
+        if context.get('active_model') == 'res.partner':
             partner_obj = self.pool.get('res.partner')
             partner_ids = context.get('active_ids', [])
             partners = partner_obj.browse(cr, uid, partner_ids, context)
             for p in partners:
                 # add one user per contact, or one user if no contact
-                if p.address:
-                    user_ids.extend(map(create_user_from_address, p.address))
+                if p.child_ids:
+                    user_ids.extend(map(create_user_from_address, p.child_ids))
                 else:
-                    user_ids.append({'lang': p.lang or 'en_US', 'partner_id': p.id})
+                    user_ids.append({'lang': p.lang or 'en_US', 'parent_id': p.id})
         
         return user_ids
 
@@ -151,6 +145,7 @@ class wizard(osv.osv_memory):
                     'password': random_password(),
                     'user_email': u.user_email,
                     'context_lang': u.lang,
+                    'share': True,
                     'partner_id': u.partner_id and u.partner_id.id,
                 } for u in wiz.user_ids if u.user_email not in existing_logins ]
             portal_obj.write(cr, ROOT_UID, [wiz.portal_id.id],

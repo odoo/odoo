@@ -375,8 +375,7 @@ class audittrail_objects_proxy(object_proxy):
               }
 
         The reason why the structure returned is build as above is because when modifying an existing 
-        record (res.partner, for example), we may have to log a change done in a x2many field (on 
-        res.partner.address, for example)
+        record, we may have to log a change done in a x2many field of that object
         """
         key = (model.id, resource_id)
         lines = {

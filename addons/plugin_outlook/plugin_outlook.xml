@@ -53,10 +53,10 @@
             <field name="name">Sales Application</field>
             <field name="model">sale.config.settings</field>
             <field name="type">form</field>
-            <field name="inherit_id" ref="mail.view_sales_config_plugin"/>
+            <field name="inherit_id" ref="base.view_sale_config_settings"/>
             <field name="arch" type="xml">
                 <field name="module_plugin_outlook" position="after">
-                    <group colspan="2">
+                    <group colspan="2" attrs="{'invisible': [('module_crm','=',False)]}">
                         <button name="%(action_outlook_installer)d" type="action"
                             string="Configure Outlook plugin" icon="gtk-execute"/>
                     </group>
@@ -75,8 +75,8 @@
             <field name="context">{'menu':True}</field>
         </record>
 
-        <menuitem id="base.menu_base_config_plugins" name="Plugins" parent="base.menu_base_config" sequence="10"/>
-        <menuitem id="menu_base_config_plugins_outlook" action="action_outlook_wizard" parent="base.menu_base_config_plugins" sequence="10"/>
+  <!--        <menuitem id="base.menu_base_config_plugins" name="Plugins" parent="base.menu_base_config" sequence="10"/>-->
+        <menuitem id="menu_base_config_plugins_outlook" action="action_outlook_wizard" parent="base.menu_base_config" sequence="5"/>
 
     </data>
 </openerp>

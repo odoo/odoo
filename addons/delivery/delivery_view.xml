@@ -1,7 +1,7 @@
 <openerp>
     <data>
         <!-- Delivery Carriers -->
-        <menuitem id="menu_delivery" name="Delivery" parent="stock.menu_stock_configuration" sequence="4"/>
+        <menuitem id="menu_delivery" name="Delivery" parent="stock.menu_stock_configuration" groups="base.group_no_one" sequence="50"/>
 
         <record id="view_delivery_carrier_tree" model="ir.ui.view">
             <field name="name">delivery.carrier.tree</field>
@@ -72,16 +72,7 @@
             <field name="help">Define the delivery methods you are using and their pricing in order to reinvoice the delivery costs when you are doing invoicing based on delivery orders</field>
         </record>
 
-        <record id="action_delivery_carrier_form1" model="ir.actions.act_window">
-            <field name="name">Define Delivery Methods</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">delivery.carrier</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="help">Define your delivery methods and their pricing. The delivery costs can be added on the sale order form or in the invoice, based on the delivery orders.</field>
-        </record>
-
-        <menuitem action="action_delivery_carrier_form" id="menu_action_delivery_carrier_form" parent="menu_delivery"/>
+        <menuitem action="action_delivery_carrier_form" id="menu_action_delivery_carrier_form" parent="stock.menu_stock_configuration" sequence="15"/>
 
         <!-- Delivery Grids -->
         <record id="view_delivery_grid_tree" model="ir.ui.view">
@@ -131,7 +122,7 @@
             <field name="view_mode">tree,form</field>
             <field name="help">The delivery price list allows you to compute the cost and sales price of the delivery according to the weight of the products and other criteria. You can define several price lists for one delivery method, per country or a zone in a specific country defined by a postal code range.</field>
         </record>
-        <menuitem action="action_delivery_grid_form" id="menu_action_delivery_grid_form" parent="menu_delivery" groups="base.group_extended"/>
+        <menuitem action="action_delivery_grid_form" id="menu_action_delivery_grid_form" parent="menu_delivery"/>
 
         <record id="view_delivery_grid_line_form" model="ir.ui.view">
             <field name="name">delivery.grid.line.form</field>
@@ -189,7 +180,7 @@
             <field name="model">stock.picking</field>
             <field name="inherit_id" ref="stock.view_picking_out_form"/>
             <field name="arch" type="xml">
-                <field name="address_id" position="after">
+                <field name="partner_id" position="after">
                     <field name="carrier_id"/>
                     <field name="carrier_tracking_ref" groups="base.group_extended"/>
                     <field name="number_of_packages" groups="base.group_extended"/>
@@ -330,12 +321,6 @@
                 </xpath>
             </field>
         </record>
-
-       <record id="delivery_method_form_view_todo" model="ir.actions.todo">
-           <field name="action_id" ref="action_delivery_carrier_form1"/>
-           <field name="category_id" ref="stock.category_stock_management_config" />
-           <field name="sequence">10</field>
-       </record>
 
     </data>
 </openerp>

@@ -190,9 +190,13 @@
             <field name="act_window_id" ref="action_report_crm_claim"/>
         </record>
 
+        <menuitem id="base.menu_project_report" name="Project"
+            groups="base.group_extended"
+            parent="base.menu_reporting" sequence="30"/>
+
         <menuitem name="Claims Analysis" id="menu_report_crm_claim_tree"
             groups="base.group_extended"
-            action="action_report_crm_claim" parent="base.next_id_64" sequence="6"/>
+            action="action_report_crm_claim" parent="base.menu_project_report" sequence="15"/>
 
 
     </data>

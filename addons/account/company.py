@@ -24,6 +24,7 @@ from osv import fields, osv
 class res_company(osv.osv):
     _inherit = "res.company"
     _columns = {
+        'expects_chart_of_accounts': fields.boolean('Expects a Chart of Accounts'),
         'paypal_account': fields.char("Paypal Account", size=128, help="Paypal username (usually email) for receiving online payments."),
         'overdue_msg': fields.text('Overdue Payments Message', translate=True),
         'property_reserve_and_surplus_account': fields.property(
@@ -37,6 +38,7 @@ class res_company(osv.osv):
     }
 
     _defaults = {
+        'expects_chart_of_accounts': True,
         'overdue_msg': '''Our records indicate that the following payments are still due. If the amount
 has already been paid, please disregard this notice. However, if you have any
 queries regarding your account, please contact us.

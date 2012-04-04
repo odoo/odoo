@@ -24,8 +24,8 @@ from osv import fields, osv
 class purchase_config_settings(osv.osv_memory):
     _inherit = 'purchase.config.settings'
     _columns = {
-        'limit_amount': fields.integer('Maximum Purchase Amount',required=True,
-            help="Maximum amount after which validation of purchase is required."),
+        'limit_amount': fields.integer('Double Validation Limit',required=True,
+            help="Amount after which validation of purchase is required."),
     }
 
     _defaults = {
