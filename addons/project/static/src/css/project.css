@@ -1,11 +1,11 @@
-.fields {
+.project_fields {
   margin-top: 1px;
   margin-bottom: 1px;
   }
-.fields td {
+.project_fields td {
     border: none;
     padding: 2px 0 2px 8px; }
-.fields th {
+.project_fields th {
     padding: 0;
     border-right: 1px solid #dddddd;
     vertical-align: top;
@@ -16,29 +16,29 @@ table {
   font-size: 13px;
   border-collapse: collapse; }
   
-.vignettes {
+.project_vignettes {
   margin: 4px; }
-  .vignettes li {
+  .project_vignettes li {
     float: left; }
-  .vignettes .avatar {
+  .project_vignettes .project_avatar {
     margin-right: 2px;
     width: 32px;
     height: 32px; }
-  .vignettes .fields {
+  .project_vignettes .project_fields {
     width: 100%; }
-    .vignettes .fields th {
+    .project_vignettes .project_fields th {
       font-weight: normal; }
-    .vignettes .fields td {
+    .project_vignettes .project_fields td {
       color: #888888; }
-  .vignettes h4 a {
+  .project_vignettes h4 a {
     color: #4c4c4c; }
 
-.vignettes > li {
+.project_vignettes > li {
   height: 160px;
   width: 250px;
   padding: 8px;
   margin: 4px; }
-  .vignettes > li h4 {
+  .project_vignettes > li h4 {
     margin-bottom: 2px; }
     
 .oe_project_buttons {
@@ -50,7 +50,7 @@ table {
 
 }
 
-.avatar {
+.project_avatar {
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
   border-radius: 3px;
@@ -89,19 +89,19 @@ table {
   opacity: 0.5; }
 
 
- .oe_kanban_vignette .dropdown-menu .color-chooser {
+ .oe_project_kanban_vignette .dropdown-menu .color-chooser {
   padding: 0 3px; }
-  .oe_kanban_vignette .dropdown-menu .color-chooser li {
+  .oe_project_kanban_vignette .dropdown-menu .color-chooser li {
     float: left; }
-    .oe_kanban_vignette .dropdown-menu .color-chooser li a {
+    .oe_project_kanban_vignette .dropdown-menu .color-chooser li a {
       padding: 2px; }
-a.oe_kanban_action {
+a.oe_project_kanban_action {
   position: absolute;
   right: 0;
    }
-  a.oe_kanban_action:hover {
+  a.oe_project_kanban_action:hover {
     text-decoration: none; }
-  a.oe_kanban_action .i {
+  a.oe_project_kanban_action .i {
     color: #4c4c4c; }
 .square {
   display: inline-block;
@@ -129,18 +129,18 @@ a.oe_kanban_action {
     display: block; }
 
 
-a.oe_kanban_action {
+a.oe_project_kanban_action {
   position: absolute;
   right: 0;
  }
-  a.oe_kanban_action:hover {
+  a.oe_project_kanban_action:hover {
     text-decoration: none;
     }
-  a.oe_kanban_action .i {
+  a.oe_project_kanban_action .i {
     color: #4c4c4c; }
 
 
-.oe_kanban_vignette {
+.oe_project_kanban_vignette {
   position: relative;
   display: block;
   min-height: 50px;
@@ -153,17 +153,17 @@ a.oe_kanban_action {
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
   border-radius: 4px; }
-  .oe_kanban_vignette:last-child {
+  .oe_project_kanban_vignette:last-child {
     margin-bottom: 0; }
-  .oe_kanban_vignette:hover {
+  .oe_project_kanban_vignette:hover {
     -moz-box-shadow: 0 0 3px rgba(0, 0, 0, 0.6);
     -webkit-box-shadow: 0 0 3px rgba(0, 0, 0, 0.6);
     -box-shadow: 0 0 3px rgba(0, 0, 0, 0.6); }
-  .oe_kanban_vignette h4 {
+  .oe_project_kanban_vignette h4 {
     margin: 0 0 2px; }
 
 
-.oe_kanban_vignette .dropdown-menu {
+.oe_project_kanban_vignette .dropdown-menu {
   top: 30px;
   right: -140px;
   padding: 4px;
@@ -178,13 +178,13 @@ a.oe_kanban_action {
   -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
   -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
   -box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3); }
-  .oe_kanban_vignette .dropdown-menu p {
+  .oe_project_kanban_vignette .dropdown-menu p {
     margin-left: 12px; }
-  .oe_kanban_vignette .dropdown-menu li {
+  .oe_project_kanban_vignette .dropdown-menu li {
     float: none;
     display: block;
     background-color: none; }
-    .oe_kanban_vignette .dropdown-menu li a {
+    .oe_project_kanban_vignette .dropdown-menu li a {
       display: block;
       padding: 3px 6px;
       clear: both;
@@ -192,7 +192,7 @@ a.oe_kanban_action {
       line-height: 14px;
       color: #4c4c4c;
       text-decoration: none; }
-      .oe_kanban_vignette .dropdown-menu li a:hover {
+      .oe_project_kanban_vignette .dropdown-menu li a:hover {
         background: #f0f0fa;
         background: -moz-linear-gradient(#f0f0fa, #eeeef6);
         background: -webkit-gradient(linear, left top, left bottom, from(#f0f0fa), to(#eeeef6));
@@ -201,9 +201,9 @@ a.oe_kanban_action {
         -webkit-box-shadow: none;
         -box-shadow: none; }
 
-.oe_kanban_vignette .dropdown-menu .color-chooser {
+.oe_project_kanban_vignette .dropdown-menu .color-chooser {
   padding: 0 3px; }
-  .oe_kanban_vignette .dropdown-menu .color-chooser li {
+  .oe_project_kanban_vignette .dropdown-menu .color-chooser li {
     float: left; }
-    .oe_kanban_vignette .dropdown-menu .color-chooser li a {
+    .oe_project_kanban_vignette .dropdown-menu .color-chooser li a {
       padding: 2px; }
