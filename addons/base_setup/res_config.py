@@ -19,28 +19,21 @@
 #
 ##############################################################################
 
+from osv import fields, osv
 
-{
-    'name': 'Initial Setup Tools',
-    'version': '1.0',
-    'category': 'Hidden',
-    'complexity': "easy",
-    'description': """
-This module helps to configure the system at the installation of a new database.
-================================================================================
+class general_configuration(osv.osv_memory):
+    _name = 'general.configuration'
+    _inherit = 'res.config.settings'
+    
+    _columns = {
+        'module_base_report_designer': fields.boolean('Customise your OpenERP Report with OpenOffice',
+                           help ="""It installs the base_report_designer module."""),
+        'module_report_webkit': fields.boolean('Design OpenERP report in HTML',
+                           help ="""It installs the report_webkit module."""),
+        'module_report_webkit_sample': fields.boolean('Samples of HTML report design',
+                           help ="""It installs the report_webkit_sample module."""),
+    }
 
-Shows you a list of applications features to install from.
+general_configuration()
 
-    """,
-    'author': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
-    'depends': ['base'],
-    'init_xml': [],
-    'update_xml': ['security/ir.model.access.csv', 'base_setup_views.xml','res_config_view.xml'],
-    'demo_xml': [],
-    'installable': True,
-    'auto_install': True,
-    'certificate': '0086711085869',
-    'images': ['images/base_setup1.jpeg','images/base_setup2.jpeg','images/base_setup3.jpeg','images/base_setup4.jpeg',],
-}
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
