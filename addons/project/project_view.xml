@@ -175,15 +175,9 @@
                     <field name="date"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <script type="text/javascript">
-                                function showElement(){
-                                    $('.dropdown-toggle').dropdown();
-                                    
-                                    }
-                            </script>
                             <div class="project_vignettes">
                                 <li class="oe_project_kanban_vignette">
-                                    <a href="#" class="oe_project_kanban_action dropdown-toggle" onclick="javascript:showElement()"><span class="i">B</span></a>
+                                    <a href="#" class="oe_project_kanban_action dropdown-toggle"><span class="i">B</span></a>
                                     <ul class="dropdown-menu">
                                       <li ><a type="edit" >Edit...</a></li>
                                       <li ><a type="delete">Delete</a></li>
