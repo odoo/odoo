@@ -173,6 +173,7 @@
                     <field name="task"/>
                     <field name="user_id"/>
                     <field name="date"/>
+                    <field name="open_task"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div class="project_vignettes">
@@ -195,7 +196,7 @@
                                     <h4 id="list" height="10px">
                                         <a>
                                             <t t-if="record.task.raw_value">
-                                                <button name="open_tasks" class="oe_project_buttons" type="object"><field name="open_task"/> Tasks</button>
+                                                <button name="open_tasks" class="oe_project_buttons" type="object"><t t-esc="record.open_task.value" t-if="record.open_task.value &lt;= 1"> Task,</t><t t-esc="record.open_task.value" t-if="record.open_task.value > 1"> Tasks,</t></button>
                                             </t>
                                         </a>
                                     </h4>
