@@ -23,7 +23,10 @@
                         <field name="module_hr_timesheet_sheet"/>
                         <field name="module_hr_holidays"/>
                         <field name="module_hr_payroll"/>
-                        <button string="Install payroll" icon="gtk-go-forward" name="%(open_payroll1_modules)d" type="action" attrs="{'invisible': [('module_hr_payroll','=',False)]}"/>
+                        <group colspan="2" col="2" attrs="{'invisible': [('module_hr_payroll','=',False)]}">
+                            <label string="Configure Your Salary Rules :"/>
+                            <button string="Salary Rules" icon="gtk-go-forward" name="%(open_payroll1_modules)d" type="action" />
+                        </group>
                     </group>
                     <separator string="Additional Features" colspan="4"/>
                     <group colspan="4" col="4">
