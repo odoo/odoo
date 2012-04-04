@@ -35,37 +35,25 @@
                     <field name="timesheets"/>
 		    <field name="currency_id"/>
                 </field>
-		<xpath expr="//t[@t-name='tasks']" position="after">
-                    <t t-name="timesheets">
-                        <ul class="oe_kanban_tooltip">
-                            <li><b>Timesheets</b></li>
-                        </ul>
-                   </t>
-                </xpath>
-		<xpath expr="//h4[@class='oe_project_font1']" position="replace">
-		    <h4 class="oe_project_font1">
-			<a type="edit"><div class="oe_project_font"><t t-esc="record.name.value.substr(0,28)"/><t t-if="record.name.value.length > 28">...</t></div></a>
-		    </h4>
-		</xpath>
-                <xpath expr="//td[@class='buttons']" position="inside">
-                    <t t-if="record.timesheets.raw_value">
-                        <button name="open_timesheets" class="oe_project_buttons" type="object" tooltip="timesheets"><img src="/project_timesheet/static/src/img/timesheet_icon.png" class="project_icon"/></button>
-                    </t>
-                </xpath>
-		<xpath expr="//td[@class='td_name']" position="after">
-		    <td class="td_deadline">
-			<div class="sequence">
-			    <strong>To invoice</strong>
-			</div>
-			<div class="sequence">
-			    <kbd class="user">Amount</kbd>
-			    <div class="manager"><b><field name="amt_to_invoice"/> <t t-esc="record.currency_id.raw_value[1].split(' ')[1][1]"/></b></div>
-			</div>
-			<div class="sequence">
-			    <kbd class="user">Hours</kbd>
-			    <div class="manager"><b><field name="hrs_to_invoice"/> h</b></div>
-			</div>
-		    </td>
+        <xpath expr="//h4[@id='list']" position="inside">
+        <a>
+            <t t-if="record.timesheets.raw_value">
+                <button name="open_timesheets" class="oe_project_buttons" type="object">, Timesheet</button>
+            </t>
+            </a>
+        </xpath>
+		<xpath expr="//table[@class='fields']" position="inside">
+			<tr ><th align="left">To invoiced</th>
+				<td align="left">
+			    <field name="amt_to_invoice"/> <t t-esc="record.currency_id.raw_value[1].split(' ')[1][1]"/>
+			    </td>
+			    </tr>
+			    <tr >
+			<th align="left">To hours</th>
+			<td align="left">
+			    <field name="hrs_to_invoice"/> h
+			</td>
+			</tr>
 		</xpath>
             </field>
         </record>

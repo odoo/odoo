@@ -119,17 +119,19 @@
                 <field name="task" position="after">
                     <field name="phases"/>
                 </field>
-                <xpath expr="//t[@t-name='tasks']" position="after">
+                <!-- <xpath expr="//t[@t-name='tasks']" position="after">
                     <t t-name="phases">
                         <ul class="oe_kanban_tooltip">
                             <li><b>Phases</b></li>
                         </ul>
                    </t>
-                </xpath>
-                <xpath expr="//td[@class='buttons']" position="inside">
-                    <t t-if="record.phases.raw_value">
-                	<button name="open_phase" class="oe_project_buttons" type="object" tooltip="phases"><img src="/project_long_term/static/src/img/phases_icon.jpg" class="project_icon"/></button>
+                </xpath> -->
+                <xpath expr="//h4[@id='list']" position="inside">
+                	<a>
+                   	<t t-if="record.phases.raw_value">
+                       <button name="open_phase" class="oe_project_buttons" type="object">,<field name="open_phases"/> Phase</button>
                     </t>
+                 </a>
                 </xpath>
             </field>
         </record>

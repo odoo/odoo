@@ -1,3 +1,21 @@
+.fields {
+  margin-top: 1px;
+  margin-bottom: 1px;
+  }
+.fields td {
+    border: none;
+    padding: 2px 0 2px 8px; }
+.fields th {
+    padding: 0;
+    border-right: 1px solid #dddddd;
+    vertical-align: top;
+    margin-right: 8px; }
+    
+table {
+  padding: 0;
+  font-size: 13px;
+  border-collapse: collapse; }
+  
 .vignettes {
   margin: 4px; }
   .vignettes li {
@@ -22,6 +40,23 @@
   margin: 4px; }
   .vignettes > li h4 {
     margin-bottom: 2px; }
+    
+.oe_project_buttons {
+    display: inline-block;
+    padding: 0px 0px;
+    background-color: transparent;
+    border: hidden;
+    color: #8A89BA;
+
+}
+
+.avatar {
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  -box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); }
 
 
 .i {
@@ -32,6 +67,9 @@
 .dropdown-menu {
   display: none;
   position: absolute; }
+
+.dropdown {
+  position: relative; }
 
 .dropdown-toggle:after {
   width: 0;
@@ -50,6 +88,40 @@
   -moz-opacity: 0.5;
   opacity: 0.5; }
 
+
+ .oe_kanban_vignette .dropdown-menu .color-chooser {
+  padding: 0 3px; }
+  .oe_kanban_vignette .dropdown-menu .color-chooser li {
+    float: left; }
+    .oe_kanban_vignette .dropdown-menu .color-chooser li a {
+      padding: 2px; }
+a.oe_kanban_action {
+  position: absolute;
+  right: 0;
+   }
+  a.oe_kanban_action:hover {
+    text-decoration: none; }
+  a.oe_kanban_action .i {
+    color: #4c4c4c; }
+.square {
+  display: inline-block;
+  width: 18px;
+  height: 18px; }
+
+.steelblue {
+  background: steelblue; }
+
+.firebrick {
+  background: firebrick; }
+
+.khaki {
+  background: khaki; }
+
+.thistle {
+  background: thistle; }
+
+.orange {
+  background: orange; }
 .open {
   display: block;
   background: #333333; }
