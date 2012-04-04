@@ -1014,7 +1014,7 @@
         </record>
 
         <menuitem id="menu_pm_resources_config" name="Resources" parent="menu_mrp_configuration"/>
-        <menuitem action="mrp_workcenter_action" id="menu_view_resource_search_mrp" parent="mrp.menu_mrp_bom" sequence="25"/>
+        <menuitem action="mrp_workcenter_action" id="menu_view_resource_search_mrp" groups="mrp.group_mrp_routings" parent="mrp.menu_mrp_bom" sequence="25"/>
         <menuitem action="resource.action_resource_calendar_form" id="menu_view_resource_calendar_search_mrp" parent="menu_pm_resources_config" sequence="1" groups="base.group_no_one"/>
         <menuitem action="resource.action_resource_calendar_leave_tree" id="menu_view_resource_calendar_leaves_search_mrp" parent="menu_pm_resources_config" sequence="1" groups="base.group_no_one"/>
 
