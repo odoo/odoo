@@ -20,13 +20,16 @@
 ##############################################################################
 import logging
 
-from osv import fields,osv 
+from osv import fields,osv
 from edi import EDIMixin
 from openerp import SUPERUSER_ID
 from tools.translate import _
 
-RES_PARTNER_ADDRESS_EDI_STRUCT = {
+RES_PARTNER_EDI_STRUCT = {
     'name': True,
+    'ref': True,
+    'lang': True,
+    'website': True,
     'email': True,
     'street': True,
     'street2': True,
@@ -39,14 +42,6 @@ RES_PARTNER_ADDRESS_EDI_STRUCT = {
     'mobile': True,
 }
 
-RES_PARTNER_EDI_STRUCT = {
-    'name': True,
-    'ref': True,
-    'lang': True,
-    'website': True,
-    'address': RES_PARTNER_ADDRESS_EDI_STRUCT
-}
-
 class res_partner(osv.osv, EDIMixin):
     _inherit = "res.partner"
 
@@ -55,9 +50,6 @@ class res_partner(osv.osv, EDIMixin):
                                                   edi_struct or dict(RES_PARTNER_EDI_STRUCT),
                                                   context=context)
 
-class res_partner_address(osv.osv, EDIMixin):
-    _inherit = "res.partner.address"
-
     def _get_bank_type(self, cr, uid, context=None):
         # first option: the "normal" bank type, installed by default
         res_partner_bank_type = self.pool.get('res.partner.bank.type')
@@ -65,7 +57,6 @@ class res_partner_address(osv.osv, EDIMixin):
             return self.pool.get('ir.model.data').get_object(cr, uid, 'base', 'bank_normal', context=context).code
         except ValueError:
             pass
-
         # second option: create a new custom type for EDI or use it if already created, as IBAN type is
         # not always appropriate: we need a free-form bank type for max flexibility (users can correct
         # data manually after import)
@@ -78,19 +69,14 @@ class res_partner_address(osv.osv, EDIMixin):
                                                                  'code': label})
         return code
 
-    def edi_export(self, cr, uid, records, edi_struct=None, context=None):
-        return super(res_partner_address,self).edi_export(cr, uid, records,
-                                                          edi_struct or dict(RES_PARTNER_ADDRESS_EDI_STRUCT),
-                                                          context=context)
-
     def edi_import(self, cr, uid, edi_document, context=None):
         # handle bank info, if any
         edi_bank_ids = edi_document.pop('bank_ids', None)
-        address_id = super(res_partner_address,self).edi_import(cr, uid, edi_document, context=context)
+        contact_id = super(res_partner,self).edi_import(cr, uid, edi_document, context=context)
         if edi_bank_ids:
-            address = self.browse(cr, uid, address_id, context=context)
+            contact = self.browse(cr, uid, contact_id, context=context)
             import_ctx = dict((context or {}),
-                              default_partner_id=address.partner_id.id,
+                              default_partner_id = contact.id,
                               default_state=self._get_bank_type(cr, uid, context))
             for ext_bank_id, bank_name in edi_bank_ids:
                 try:
@@ -101,5 +87,7 @@ class res_partner_address(osv.osv, EDIMixin):
                     logging.getLogger('edi.res_partner').warning('Failed to import bank account using'
                                                                  'bank type: %s, ignoring', import_ctx['default_state'],
                                                                  exc_info=True)
-        return address_id
+        return contact_id
+
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

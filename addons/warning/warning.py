@@ -57,7 +57,7 @@ class sale_order(osv.osv):
     _inherit = 'sale.order'
     def onchange_partner_id(self, cr, uid, ids, part):
         if not part:
-            return {'value':{'partner_invoice_id': False, 'partner_shipping_id':False, 'partner_order_id':False, 'payment_term' : False}}
+            return {'value':{'partner_invoice_id': False, 'partner_shipping_id':False, 'payment_term' : False}}
         warning = {}
         title = False
         message = False
@@ -117,8 +117,6 @@ class account_invoice(osv.osv):
             date_invoice=False, payment_term=False, partner_bank_id=False, company_id=False):
         if not partner_id:
             return {'value': {
-            'address_contact_id': False ,
-            'address_invoice_id': False,
             'account_id': False,
             'payment_term': False,
             }
@@ -154,7 +152,7 @@ class stock_picking(osv.osv):
     def onchange_partner_in(self, cr, uid, context, partner_id=None):
         if not partner_id:
             return {}
-        partner = self.pool.get('res.partner.address').browse(cr, uid, [partner_id])[0].partner_id
+        partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
         warning = {}
         title = False
         message = False

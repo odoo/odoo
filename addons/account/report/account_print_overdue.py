@@ -38,7 +38,6 @@ class Overdue(report_sxw.rml_parse):
     def _adr_get(self, partner, type):
         res = []
         res_partner = pooler.get_pool(self.cr.dbname).get('res.partner')
-        res_partner_address = pooler.get_pool(self.cr.dbname).get('res.partner.address')
         addresses = res_partner.address_get(self.cr, self.uid, [partner.id], [type])
         adr_id = addresses and addresses[type] or False
         result = {
@@ -51,7 +50,7 @@ class Overdue(report_sxw.rml_parse):
                   'country_id': False,
                  }
         if adr_id:
-            result = res_partner_address.read(self.cr, self.uid, [adr_id], context=self.context.copy())
+            result = res_partner.read(self.cr, self.uid, [adr_id], context=self.context.copy())
             result[0]['country_id'] = result[0]['country_id'] and result[0]['country_id'][1] or False
             result[0]['state_id'] = result[0]['state_id'] and result[0]['state_id'][1] or False
             return result
@@ -62,7 +61,6 @@ class Overdue(report_sxw.rml_parse):
     def _tel_get(self,partner):
         if not partner:
             return False
-        res_partner_address = pooler.get_pool(self.cr.dbname).get('res.partner.address')
         res_partner = pooler.get_pool(self.cr.dbname).get('res.partner')
         addresses = res_partner.address_get(self.cr, self.uid, [partner.id], ['invoice'])
         adr_id = addresses and addresses['invoice'] or False
@@ -70,7 +68,7 @@ class Overdue(report_sxw.rml_parse):
             adr=res_partner_address.read(self.cr, self.uid, [adr_id])[0]
             return adr['phone']
         else:
-            return partner.address and partner.address[0].phone or False
+            return partner.phone or False
         return False
 
     def _lines_get(self, partner):

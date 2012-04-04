@@ -10,10 +10,10 @@
             <field name="arch" type="xml">
                 <group name="config_sale" position="after">
                     <separator string="Picking and Invoice Policy" colspan="4"/>
-                    <field name="group_invoice_so_lines"/>
+                    <field name="group_invoice_so_lines" on_change="onchange_invoice_methods(group_invoice_so_lines, group_invoice_deli_orders)"/>
                     <field name="default_order_policy" attrs="{'invisible':['|',('group_invoice_so_lines','=',False),('group_invoice_deli_orders','=',False)]}"/>
                     <newline/>
-                    <field name="group_invoice_deli_orders"/>
+                    <field name="group_invoice_deli_orders" on_change="onchange_invoice_methods(group_invoice_so_lines, group_invoice_deli_orders)"/>
                     <field name="module_delivery" attrs="{'invisible':[('group_invoice_so_lines','=',False), ('group_invoice_deli_orders','=',False)]}"/>
                     <newline/>
                     <field name="task_work" on_change="onchange_task_work(task_work)"/>
@@ -21,31 +21,41 @@
                     <field name="module_project_mrp" invisible="1"/>
                     <field name="default_picking_policy" attrs="{'invisible':[('group_invoice_deli_orders','=',False)]}"/>
                     <newline/>
-                    <field name="module_account_analytic_analysis"/>
-                    <field name="time_unit" domain="[('category_id.name','=','Working Time')]" attrs="{'invisible':[('task_work','=',False),('module_account_analytic_analysis','=',False)],'required': [('module_account_analytic_analysis','=',True)]}"/>
+                    <field name="timesheet" on_change="onchange_timesheet(timesheet)"/>
+                    <field name="time_unit" domain="[('category_id.name','=','Working Time')]"
+                        attrs="{'invisible': [('task_work','=',False), ('module_account_analytic_analysis','=',False)],'required': ['|', ('task_work','=',True), ('module_account_analytic_analysis','=',True)]}"/>
 
                     <separator string="Sale Order" colspan="4"/>
                     <field name="group_sale_pricelist"/>
                     <field name="group_uom"/>
-                    <newline/>
-                    <field name="tax_policy" on_change="onchange_tax_policy(tax_policy)"/>
-                    <field name="group_sale_taxes_global_on_order" invisible="1"/>
-                    <field name="group_sale_taxes_on_order_line" invisible="1"/>
                     <field name="group_sale_delivery_address"/>
-                    <newline/>
-                    <field name="module_sale_margin"/>
                     <field name="group_discount_per_so_line"/>
-                    <newline/>
-                    <field name="module_warning"/>
+                    <field name="module_sale_margin"/>
                     <field name="module_sale_layout"/>
-                    <newline/>
-                    <label colspan="2"/>
+                    <field name="module_warning"/>
                     <field name="module_sale_journal"/>
+
+                    <separator string="Contracts" colspan="4"/>
+                    <field name="module_account_analytic_analysis" on_change="onchange_timesheet(module_account_analytic_analysis)"/>
+                    <field name="module_analytic_user_function"/>
+                    <field name="module_analytic_journal_billing_rate"/>
                 </group>
             </field>
         </record>
 
         <menuitem id="base.menu_sale_config" name="Sales" parent="base.menu_config" sequence="1" action="base.action_sale_config"/>
+
+        <record id="view_account_config" model="ir.ui.view">
+            <field name="name">account settings</field>
+            <field name="model">account.config.settings</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="account.view_account_config_settings"/>
+            <field name="arch" type="xml">
+                <group name="analytic_accounting" position="after">
+                    <field name="group_analytic_account_for_sales"/>
+                </group>
+            </field>
+        </record>
 
     </data>
 </openerp>

@@ -55,4 +55,4 @@
     assert partner_id, "Customer is not found in regular customer list."
     data = self.browse(cr, uid, partner_id, context=context)[0]
     assert data.user_id.id == ref("base.user_root"), "User not assign properly"
-    assert data.name == "Bad time", "User not assign properly"
+    assert data.name == "Bad time", "Bad partner name"

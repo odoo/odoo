@@ -115,7 +115,7 @@
                     <field name="review"/>
                     <field name="create_uid" invisible="context.get('create_uid',False)"/>
                     <field name="write_uid"/>
-                    <field name="write_date"/>
+                    <field name="write_date" groups="base.group_no_one"/>
                 </tree>
             </field>
         </record>
@@ -141,7 +141,7 @@
                     </notebook>
                     <group col="2" colspan="2">
                         <separator colspan="4" string="Modification Information"/>
-                        <field name="write_date" readonly="1"/>
+                        <field name="write_date" readonly="1" groups="base.group_no_one"/>
                         <field name="minor_edit" groups="base.group_extended"/>
                         <field name="review" select="1" groups="base.group_extended"/>
                     </group>
@@ -168,7 +168,7 @@
                     <field name="tags"/>
                     <field name="section" groups="base.group_extended"/>
                     <field name="write_uid"/>
-                    <field name="write_date"/>
+                    <field name="write_date" groups="base.group_no_one"/>
                     <newline/>
                     <group expand="0" string="Group By...">
                         <filter icon="terp-folder-blue" string="Wiki Group" domain="[]" context="{'group_by':'group_id'}"/>

@@ -288,7 +288,7 @@
         </field>
     </record>
 
-    <menuitem id="menu_finance_assets" name="Assets" parent="account.menu_finance"/>
+    <menuitem id="menu_finance_assets" name="Assets" parent="account.menu_finance" sequence="9"/>
     <menuitem parent="menu_finance_assets" id="menu_action_account_asset_asset_tree"
         groups="base.group_extended"
         sequence="100"
@@ -306,7 +306,7 @@
 
     <act_window id="act_entries_open" name="Entries" res_model="account.move.line" src_model="account.asset.asset" context="{'search_default_asset_id': [active_id], 'default_asset_id': active_id}"/>
 
-    <menuitem id="menu_finance_config_assets" name="Assets" parent="account.menu_finance_accounting"/>
+    <menuitem id="menu_finance_config_assets" name="Assets" parent="account.menu_finance_configuration" sequence="25"/>
     <record model="ir.actions.act_window" id="action_account_asset_asset_list_normal">
         <field name="name">Asset Categories</field>
         <field name="res_model">account.asset.category</field>
@@ -315,19 +315,6 @@
     </record>
 
     <menuitem parent="menu_finance_config_assets" id="menu_action_account_asset_asset_list_normal" action="action_account_asset_asset_list_normal"/>
-
-    <record model="ir.actions.act_window" id="action_account_asset_asset_form_normal">
-        <field name="name">Review Asset Categories</field>
-        <field name="res_model">account.asset.category</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
-    </record>
-
-    <record id="asset_category_form_view_todo" model="ir.actions.todo">
-        <field name="action_id" ref="action_account_asset_asset_form_normal"/>
-        <field name="category_id" ref="account.category_accounting_configuration"/>
-        <field name="sequence">3</field>
-    </record>
 
 </data>
 </openerp>

@@ -2,13 +2,13 @@
 <openerp>
     <data>
 
-        <record id="view_sales_config_crm" model="ir.ui.view">
+        <record id="view_sale_config_settings" model="ir.ui.view">
             <field name="name">crm settings</field>
             <field name="model">sale.config.settings</field>
             <field name="type">form</field>
             <field name="inherit_id" ref="base.view_sale_config_settings"/>
             <field name="arch" type="xml">
-                <group name="config_emails" position="after">
+                <group name="config_fetchmail" position="after">
                     <field name="fetchmail_lead"/>
                     <group colspan="2" attrs="{'invisible': [('fetchmail_lead','=',False)]}">
                         <field name="lead_server" attrs="{'required': [('fetchmail_lead','=',True)]}"/>
@@ -18,7 +18,9 @@
                         <field name="lead_user" attrs="{'required': [('fetchmail_lead','=',True)]}"/>
                         <field name="lead_password" password="True" attrs="{'required': [('fetchmail_lead','=',True)]}"/>
                     </group>
+                    <newline/>
                 </group>
+
                 <group name="config_crm" position="after">
                     <separator string="Import and Synchronize data from an other application" colspan="4"/>
                     <field name="module_import_sugarcrm"/>
@@ -29,7 +31,6 @@
                     <field name="module_wiki_sale_faq" />
 
                     <separator string="Customer Form" colspan="4"/>
-                    <field name="module_base_contact"/>
                     <field name="module_google_map"/>
                 </group>
             </field>

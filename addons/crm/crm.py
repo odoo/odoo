@@ -178,7 +178,6 @@ class crm_base(object):
         date_closed
         user_id
         partner_id
-        partner_address_id
     """
     def _get_default_partner_address(self, cr, uid, context=None):
         """Gives id of default address for current user
@@ -238,7 +237,7 @@ class crm_base(object):
         """
         data = {'value': {'email_from': False, 'phone':False}}
         if add:
-            address = self.pool.get('res.partner.address').browse(cr, uid, add)
+            address = self.pool.get('res.partner').browse(cr, uid, add)
             data['value'] = {'email_from': address and address.email or False ,
                              'phone':  address and address.phone or False}
         if 'phone' not in self._columns:
@@ -254,7 +253,6 @@ class crm_base(object):
         data={}
         if  part:
             addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['contact'])
-            data = {'partner_address_id': addr['contact']}
             data.update(self.onchange_partner_address_id(cr, uid, ids, addr['contact'])['value'])
         return {'value': data}
 
@@ -488,8 +486,8 @@ class crm_case(crm_base):
             dest = case.user_id.user_email or ""
             body = case.description or ""
             for message in case.message_ids:
-                if message.email_from:
-                    body = message.description
+                if message.email_from and message.body_text:
+                    body = message.body_text
                     break
 
             if not destination:
@@ -516,7 +514,7 @@ class crm_case(crm_base):
                 [dest],
                 subject,
                 body,
-                model='crm.case',
+                model=self._name,
                 reply_to=case.section_id.reply_to,
                 res_id=case.id,
                 attachments=attach_to_send,
