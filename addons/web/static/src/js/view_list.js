@@ -156,9 +156,12 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             // TODO: time, datetime, relativedelta
         });
         var style= '';
-        if(record.attributes.state == this.fontbold) {
-            style = 'font-weight: bold;';
+        for(var i=0, len=this.fontbold.length; i<len; ++i) {
+            if(record.attributes.state == this.fontbold[i]) {
+                style = 'font-weight: bold;';
+            }
         }
+
         for(var i=0, len=this.colors.length; i<len; ++i) {
             var pair = this.colors[i],
                 color = pair[0],
@@ -198,7 +201,6 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         var self = this;
         this.fields_view = data;
         this.name = "" + this.fields_view.arch.attrs.string;
-        this.fontbold = this.fields_view.arch.attrs.fontbold
 
         if (this.fields_view.arch.attrs.colors) {
             this.colors = _(this.fields_view.arch.attrs.colors.split(';')).chain()
@@ -208,6 +210,13 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
                         color = pair[0],
                         expr = pair[1];
                     return [color, py.parse(py.tokenize(expr)), expr];
+                }).value();
+        }
+
+        if (this.fields_view.arch.attrs.fontbold) {
+            this.fontbold = _(this.fields_view.arch.attrs.fontbold.split(',')).chain().compact()
+                .map(function(fontbold_pair) {
+                    return fontbold_pair;
                 }).value();
         }
 
