@@ -606,7 +606,6 @@ class sale_order(osv.osv):
             #
             if order.state == 'invoice_except':
                 self.write(cr, uid, [order.id], {'state': 'progress'}, context=context)
-        self.invoice_paid_send_note(cr, uid, ids, context=None)
         return True
 
     def action_cancel(self, cr, uid, ids, context=None):
