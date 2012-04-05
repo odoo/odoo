@@ -2189,7 +2189,6 @@ openerp.web.form.FieldMany2One = openerp.web.form.AbstractField.extend(_.extend(
         
         this.$drop_down = this.$element.find(".oe-m2o-drop-down-button");
         this.$follow_button = $(".oe-m2o-cm-button", this.$element);
-        debugger;
         
         this.$follow_button.click(function() {
             if (!self.value) {
