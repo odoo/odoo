@@ -250,7 +250,7 @@
         </record>
         <menuitem id="menu_traceability" name="Traceability" parent="menu_stock_root" sequence="3"/>
         <menuitem action="action_tracking_form" id="menu_action_tracking_form"
-            groups="stock.group_tracking_lot"
+            groups="product.group_stock_packaging"
             sequence="6"
             parent="menu_traceability"/>
 
@@ -585,7 +585,8 @@
             <field name="context">{'search_default_in_location':1}</field>
             <field name="help">Define your locations to reflect your warehouse structure and organization. OpenERP is able to manage physical locations (warehouses, shelves, bin, etc), partner locations (customers, suppliers) and virtual locations which are the counterpart of the stock operations like the manufacturing orders consumptions, inventories, etc. Every stock operation in OpenERP moves the products from one location to another one. For instance, if you receive products from a supplier, OpenERP will move products from the Supplier location to the Stock location. Each report can be performed on physical, partner or virtual locations.</field>
         </record>
-        <menuitem action="action_location_form" id="menu_action_location_form" parent="menu_stock_configuration" sequence="5"/>
+        <menuitem action="action_location_form" id="menu_action_location_form" groups="stock.group_locations"
+            parent="menu_stock_configuration" sequence="5"/>
 
         <record id="view_location_tree" model="ir.ui.view">
             <field name="name">stock.location.tree</field>
@@ -650,7 +651,8 @@
             <field name="view_id" ref="view_warehouse_tree"/>
             <field name="help">Create and manage your warehouses and assign them a location from here</field>
         </record>
-        <menuitem action="action_warehouse_form" id="menu_action_warehouse_form" parent="menu_stock_configuration" sequence="1"/>
+        <menuitem action="action_warehouse_form" id="menu_action_warehouse_form" groups="stock.group_locations"
+            parent="menu_stock_configuration" sequence="1"/>
 
         <record model="ir.ui.view" id="stock_picking_calendar">
             <field name="name">stock.picking.calendar</field>

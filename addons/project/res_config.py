@@ -40,13 +40,6 @@ class project_configuration(osv.osv_memory):
                 the timesheet line entries for particular date and user, with the effect of creating,
                 editing and deleting either ways.
                 This installs the module project_timesheet."""),
-        'module_project_scrum': fields.boolean("SCRUM Methodology",
-            help="""This allows to implement all concepts defined by the scrum project management methodology for IT companies.
-                    * Project with sprints, product owner, scrum master;
-                    * Sprints with reviews, daily meetings, feedbacks;
-                    * Product backlog;
-                    * Sprint backlog.
-                This installs the module project_scrum."""),
         'module_project_long_term': fields.boolean("Manage Gantt and Resource Planning",
             help="""A long term project management module that tracks planning, scheduling, and resource allocation.
                 This installs the module project_long_term."""),
