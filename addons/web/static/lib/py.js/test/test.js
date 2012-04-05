@@ -377,3 +377,12 @@ describe('numerical protocols', function () {
         });
     });
 });
+describe('Type converter', function () {
+    it('should convert bare objects to objects', function () {
+        expect(py.eval('foo.bar', {foo: {bar: 3}})).to.be(3);
+    });
+    it('should convert arrays to lists', function () {
+        expect(py.eval('foo[3]', {foo: [9, 8, 7, 6, 5]}))
+            .to.be(6);
+    });
+});

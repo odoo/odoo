@@ -384,6 +384,21 @@ var py = {};
             return new py.def(val);
         }
 
+        switch(val.constructor) {
+        case Object:
+            var o = new py.object();
+            for (var prop in val) {
+                if (val.hasOwnProperty(prop)) {
+                    o[prop] = val[prop];
+                }
+            }
+            return o;
+        case Array:
+            var a = new py.list();
+            a.values = val;
+            return a;
+        }
+
         throw new Error("Could not convert " + val + " to a pyval");
     }
     // Builtins
@@ -448,7 +463,7 @@ var py = {};
         __getattribute__: function (name) {
             if (name in this) {
                 var val = this[name];
-                if ('__get__' in val) {
+                if (typeof val === 'object' && '__get__' in val) {
                     // TODO: second argument should be class
                     return val.__get__(this);
                 }
@@ -626,6 +641,9 @@ var py = {};
                 }
             }
             return py.False;
+        },
+        __getitem__: function (index) {
+            return PY_ensurepy(this.values[index.toJSON()]);
         },
         toJSON: function () {
             var out = [];
@@ -846,7 +864,7 @@ var py = {};
         case '[':
             if (expr.second) {
                 return py.evaluate(expr.first, context)
-                    .__getitem__(expr.evaluate(expr.second, context));
+                    .__getitem__(py.evaluate(expr.second, context));
             }
             var list_exprs = expr.first, list_values = [];
             for (var k=0; k<list_exprs.length; ++k) {
