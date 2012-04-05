@@ -1102,7 +1102,7 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
         } else {
             var context = new session.web.CompoundContext(this.dataset.get_context());
             if (! this.view_type)
-                console.warn("view_type is not defined");
+                console.warn("view_type is not defined", this);
             return this.rpc("/web/view/load", {
                 "model": this.dataset.model,
                 "view_id": this.view_id,
