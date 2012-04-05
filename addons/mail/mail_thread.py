@@ -692,6 +692,11 @@ class mail_thread(osv.osv):
         notification_obj = self.pool.get('mail.notification')
         # write message
         msg_ids = self.message_append_note(cr, uid, ids, subject=subject, body=body, parent_id=parent_id, type=type, subtype=subtype, context=context)
+        # escape if in install mode or note writing was not successfull
+        if 'install_mode' in context:
+            return True
+        if not isinstance(msg_ids(list)):
+            return True
         # get already existing notigications
         notification_ids = notification_obj.search(cr, uid, [('message_id', 'in', msg_ids)], context=context)
         already_pushed_user_ids = map(itemgetter('user_id'), notification_obj.read(cr, uid, notification_ids, context=context))
