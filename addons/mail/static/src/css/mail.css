@@ -22,7 +22,7 @@ div.oe_mail_wall_right {
     width: 34%;
 }
 
-.oe_mail_wall_thread div.oe_mail_thread_act .oe_mail_action_textarea {
+.oe_mail_wall_thread div.oe_mail_thread_act .oe_mail_action_textarea, div.oe_mail_thread_subthread .oe_mail_action_textarea {
     height: 20px;
     padding: 2px;
 }
@@ -113,6 +113,11 @@ div.oe_mail_thread_more {
 }
 
 li.oe_mail_thread_msg {
+    padding: 1px;
+}
+
+.notification, .email {
+    background: #E0E0E0;
     padding: 4px;
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
@@ -121,12 +126,14 @@ li.oe_mail_thread_msg {
     border-radius: 4px;
 }
 
-li.notification {
-    background: #E0E0E0;
+.comment {
+    padding: 4px;
 }
 
-li.email {
-    background: #E0E0E0;
+.notification:after, .email:after, .comment:after {
+    content: "";
+    display: block;
+    clear: both; 
 }
 
 li.oe_mail_thread_msg:after, div.oe_mail_thread_act:after {

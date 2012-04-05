@@ -52,13 +52,15 @@
         </div>
     </ul>
 
-    <li t-name="ThreadMsg" t-attf-class="{record.type} oe_mail_thread_msg oe_mail">
-        <img class="oe_mail_msg_image oe_mail_oe_left" t-att-src="record.mini_url"/>
-        <div class="oe_mail_msg_content">
-            <t t-if="record.type == 'email'"><t t-call="EmailDisplay" /></t>
-            <t t-if="record.type == 'notification' || record.type == 'comment'"><t t-call="NoteDisplay" /></t>
+    <li t-name="ThreadMsg" t-attf-class="oe_mail_thread_msg oe_mail">
+        <div t-attf-class="{record.type}">
+            <img class="oe_mail_msg_image oe_mail_oe_left" t-att-src="record.mini_url"/>
+            <div class="oe_mail_msg_content">
+                <t t-if="record.type == 'email'"><t t-call="EmailDisplay" /></t>
+                <t t-if="record.type == 'notification' || record.type == 'comment'"><t t-call="NoteDisplay" /></t>
+            </div>
+            <t t-if="record.type == 'tmp'"><t t-call="ThreadDisplay" /></t>
         </div>
-        <t t-if="record.type == 'tmp'"><t t-call="ThreadDisplay" /></t>
     </li>
     
     <t t-name="NoteDisplay">

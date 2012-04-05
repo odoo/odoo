@@ -147,6 +147,7 @@ openerp.mail = function(session) {
             this.$element.find('div.oe_mail_thread_display').delegate('a.oe_mail_msg_reply', 'click', function (event) {
                 var act_dom = $(this).parents('div.oe_mail_thread_display').find('div.oe_mail_thread_act:first');
                 act_dom.toggle();
+                event.preventDefault();
             });
             // event: click on 'delete' in msg
             this.$element.find('div.oe_mail_thread_display').delegate('a.oe_mail_msg_delete', 'click', function (event) {
@@ -505,8 +506,9 @@ openerp.mail = function(session) {
             // create and render Thread widget
             this.$element.find('div.oe_mail_recthread_left').empty();
             if (this.thread) this.thread.destroy();
-            // hack: for groups
+            // hack: for groups and users
             if (this.view.model == 'mail.group') thread_level = 1;
+            if (this.view.model == 'res.users') thread_level = 1;
             else thread_level = 0;
             this.thread = new mail.Thread(this, {'res_model': this.view.model, 'res_id': this.view.datarecord.id, 'uid': this.session.uid,
                                                     'thread_level': thread_level, 'show_post_comment': true, 'limit': 15});
