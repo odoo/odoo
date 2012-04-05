@@ -2,8 +2,6 @@
 <openerp>
 <data>
 
-    <menuitem id="base.menu_aftersale_pm" name="After-Sale Services" sequence="2" parent="base.menu_main_pm" />
-
     <!--
         ALL BUGS
     -->
@@ -56,7 +54,7 @@
             view_mode="tree,form,calendar,graph"
             view_type="form"/>
 
-    <menuitem name="Issues" id="menu_project_issue_track"  parent="base.menu_aftersale_pm"
+    <menuitem name="Issues" id="menu_project_issue_track"  parent="project.menu_project_management"
             action="project_issue_categ_act0" sequence="15"/>
 </data>
 </openerp>
