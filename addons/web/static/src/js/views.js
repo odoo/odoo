@@ -112,12 +112,13 @@ session.web.ActionManager = session.web.OldWidget.extend({
         }
         var type = action.type.replace(/\./g,'_');
         var popup = action.target === 'new';
+        var inline = action.target === 'inline';
         action.flags = _.extend({
-            views_switcher : !popup,
-            search_view : !popup,
-            action_buttons : !popup,
-            sidebar : !popup,
-            pager : !popup,
+            views_switcher : !popup && !inline,
+            search_view : !popup && !inline,
+            action_buttons : !popup && !inline,
+            sidebar : !popup && !inline,
+            pager : !popup && !inline,
             display_title : !popup
         }, action.flags || {});
         if (!(type in this)) {
@@ -1077,12 +1078,43 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
     template: "EmptyComponent",
     // name displayed in view switchers
     display_name: '',
+    /**
+     * Define a view type for each view to allow automatic call to fields_view_get.
+     */
+    view_type: undefined,
     init: function(parent, dataset, view_id, options) {
         this._super(parent);
         this.dataset = dataset;
         this.view_id = view_id;
         this.set_default_options(options);
     },
+    start: function() {
+        return this.load_view();
+    },
+    load_view: function() {
+        if (this.embedded_view) {
+            var def = $.Deferred().pipe(this.on_loaded);
+            var self = this;
+            $.async_when().then(function() {def.resolve(self.embedded_view);});
+            return def.promise();
+        } else {
+            var context = new session.web.CompoundContext(this.dataset.get_context());
+            if (! this.view_type)
+                console.warn("view_type is not defined", this);
+            return this.rpc("/web/view/load", {
+                "model": this.dataset.model,
+                "view_id": this.view_id,
+                "view_type": this.view_type,
+                toolbar: this.options.sidebar,
+                context: context
+                }).pipe(this.on_loaded);
+        }
+    },
+    /**
+     * Called after a successful call to fields_view_get.
+     * Must return a promise.
+     */
+    on_loaded: function(fields_view_get) {},
     set_default_options: function(options) {
         this.options = options || {};
         _.defaults(this.options, {

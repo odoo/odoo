@@ -10,20 +10,19 @@ openerp.web.views.add('gantt', 'openerp.web_gantt.GanttView');
 openerp.web_gantt.GanttView = openerp.web.View.extend({
     display_name: _lt('Gantt'),
     template: "GanttView",
+    view_type: "gantt",
     init: function() {
         this._super.apply(this, arguments);
         this.has_been_loaded = $.Deferred();
         this.chart_id = _.uniqueId();
     },
-    start: function() {
-        return $.when(this.rpc("/web/view/load", {"model": this.dataset.model, "view_id": this.view_id, "view_type": "gantt"}),
-            this.rpc("/web/searchview/fields_get", {"model": this.dataset.model})).pipe(this.on_loaded);
-    },
-    on_loaded: function(fields_view, fields_get) {
-        this.fields_view = fields_view[0];
-        this.fields = fields_get[0].fields;
-        
-        this.has_been_loaded.resolve();
+    on_loaded: function(fields_view_get, fields_get) {
+        var self = this;
+        this.fields_view = fields_view_get;
+        return this.rpc("/web/searchview/fields_get", {"model": this.dataset.model}).pipe(function(fields_get) {
+            self.fields = fields_get.fields;
+            self.has_been_loaded.resolve();
+        });
     },
     do_search: function (domains, contexts, group_bys) {
         var self = this;

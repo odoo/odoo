@@ -13,8 +13,9 @@ openerp.web.core = function(openerp) {
 
 // a function to override the "extend()" method of JR's inheritance, allowing
 // the usage of "include()"
-// al: Either move it into novajs or make sure we dont use include, i dont want 2 diff implementations of 'extend'
-oe_override_class = function(claz){
+// TODO: remove usage of include everywhere, not meant to be included in novajs because we don't
+// include rotten cadavers in novajs
+var oe_override_class = function(claz){
     var initializing = false, fnTest = /xyz/.test(function(){xyz;}) ?
     /\b_super\b/ : /.*/;
     
@@ -622,36 +623,44 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
                 }), true);
         }
     },
-    test_eval_contexts: function (contexts) {
-        var result_context = _.extend({}, this.user_context),
-            self = this;
-        _(contexts).each(function (ctx) {
+    test_eval_contexts: function (contexts, evaluation_context) {
+        evaluation_context = evaluation_context || {};
+        var self = this;
+        return _(contexts).reduce(function (result_context, ctx) {
+            // __eval_context evaluations can lead to some of `contexts`'s
+            // values being null, skip them as well as empty contexts
+            if (_.isEmpty(ctx)) { return result_context; }
+            var evaluated = ctx;
             switch(ctx.__ref) {
             case 'context':
-                _.extend(result_context, py.eval(ctx.__debug));
+                evaluated = py.eval(ctx.__debug, evaluation_context);
                 break;
             case 'compound_context':
-                _.extend(
-                    result_context, self.test_eval_contexts(ctx.__contexts));
+                var eval_context = self.test_eval_contexts([ctx.__eval_context]);
+                evaluated = self.test_eval_contexts(
+                    ctx.__contexts, _.extend({}, evaluation_context, eval_context));
                 break;
-            default:
-                _.extend(result_context, ctx);
             }
-        });
-        return result_context;
+            // add newly evaluated context to evaluation context for following
+            // siblings
+            _.extend(evaluation_context, evaluated);
+            return _.extend(result_context, evaluated);
+        }, _.extend({}, this.user_context));
     },
-    test_eval_domains: function (domains, eval_context) {
+    test_eval_domains: function (domains, evaluation_context) {
         var result_domain = [], self = this;
         _(domains).each(function (dom) {
             switch(dom.__ref) {
             case 'domain':
                 result_domain.push.apply(
-                    result_domain, py.eval(dom.__debug, eval_context));
+                    result_domain, py.eval(dom.__debug, evaluation_context));
                 break;
             case 'compound_domain':
+                var eval_context = self.test_eval_contexts([dom.__eval_context]);
                 result_domain.push.apply(
                     result_domain, self.test_eval_domains(
-                            dom.__domains, eval_context));
+                        dom.__domains, _.extend(
+                            {}, evaluation_context, eval_context)));
                 break;
             default:
                 result_domain.push.apply(
@@ -669,7 +678,8 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
                 group = py.eval(ctx.__debug).group_by;
                 break;
             case 'compound_context':
-                group = self.test_eval_contexts(ctx.__contexts).group_by;
+                group = self.test_eval_contexts(
+                    ctx.__contexts, ctx.__eval_context).group_by;
                 break;
             default:
                 group = ctx.group_by

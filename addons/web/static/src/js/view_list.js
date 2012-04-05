@@ -136,7 +136,6 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
      * @returns {$.Deferred} loading promise
      */
     start: function() {
-        this._super();
         this.$element.addClass('oe-listview');
         return this.reload_view(null, null, true);
     },

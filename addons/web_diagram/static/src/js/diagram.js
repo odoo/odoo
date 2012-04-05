@@ -22,7 +22,6 @@ openerp.web.DiagramView = openerp.web.View.extend({
         this.ids = this.dataset.ids;
     },
     start: function() {
-        this._super();
         return this.rpc("/web_diagram/diagram/load", {"model": this.model, "view_id": this.view_id}, this.on_loaded);
     },
 

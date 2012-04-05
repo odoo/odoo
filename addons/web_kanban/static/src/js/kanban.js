@@ -9,6 +9,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
     template: "KanbanView",
     display_name: _lt('Kanban'),
     default_nr_columns: 3,
+    view_type: "kanban",
     init: function (parent, dataset, view_id, options) {
         this._super(parent);
         this.set_default_options(options);
@@ -34,23 +35,14 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         this.currently_dragging = {};
         this.limit = options.limit || 80;
     },
-    start: function() {
-        this._super();
+    on_loaded: function(data) {
         this.$element.find('button.oe_kanban_button_new').click(this.do_add_record);
         this.$groups = this.$element.find('.oe_kanban_groups tr');
-        var context = new openerp.web.CompoundContext(this.dataset.get_context());
-        return this.rpc('/web/view/load', {
-                'model': this.dataset.model,
-                'view_id': this.view_id,
-                'view_type': 'kanban',
-                context: context
-            }, this.on_loaded);
-    },
-    on_loaded: function(data) {
         this.fields_view = data;
         this.fields_keys = _.keys(this.fields_view.fields);
         this.add_qweb_template();
         this.has_been_loaded.resolve();
+        return $.when();
     },
     add_qweb_template: function() {
         for (var i=0, ii=this.fields_view.arch.children.length; i < ii; i++) {

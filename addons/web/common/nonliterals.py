@@ -45,29 +45,20 @@ class NonLiteralEncoder(simplejson.encoder.JSONEncoder):
         raise TypeError('Could not encode unknown non-literal %s' % object)
     
 _ALLOWED_KEYS = frozenset(['__ref', "__id", '__domains', '__debug',
-                           '__contexts', '__eval_context', 'own_values'])
+                           '__contexts', '__eval_context'])
 
 def non_literal_decoder(dct):
     """ Decodes JSON dicts into :class:`Domain` and :class:`Context` based on
     magic attribute tags.
-
-    Also handles private context section for the domain or section via the
-    ``own_values`` dict key.
     """
     if '__ref' in dct:
         for x in dct:
             if x not in _ALLOWED_KEYS:
                 raise ValueError("'%s' key not allowed in non literal domain/context" % x)
         if dct['__ref'] == 'domain':
-            domain = Domain(None, key=dct['__id'])
-            if 'own_values' in dct:
-                domain.own = dct['own_values']
-            return domain
+            return Domain(None, key=dct['__id'])
         elif dct['__ref'] == 'context':
-            context = Context(None, key=dct['__id'])
-            if 'own_values' in dct:
-                context.own = dct['own_values']
-            return context
+            return Context(None, key=dct['__id'])
         elif dct["__ref"] == "compound_domain":
             cdomain = CompoundDomain()
             for el in dct["__domains"]:
@@ -111,7 +102,6 @@ class Domain(BaseDomain):
                              "and a domain string")
 
         self.session = session
-        self.own = {}
         if domain_string:
             self.key = binascii.hexlify(
                 hashlib.sha256(domain_string).digest()[:SHORT_HASH_BYTES_SIZE])
@@ -131,8 +121,7 @@ class Domain(BaseDomain):
         evaluated result.
         """
         ctx = self.session.evaluation_context(context)
-        if self.own:
-            ctx.update(self.own)
+
         try:
             return eval(self.get_domain_string(), SuperDict(ctx))
         except NameError as e:
@@ -159,7 +148,7 @@ class Context(BaseContext):
                              "and a domain string")
 
         self.session = session
-        self.own = {}
+
         if context_string:
             self.key = binascii.hexlify(
                 hashlib.sha256(context_string).digest()[:SHORT_HASH_BYTES_SIZE])
@@ -179,8 +168,7 @@ class Context(BaseContext):
         evaluated result.
         """
         ctx = self.session.evaluation_context(context)
-        if self.own:
-            ctx.update(self.own)
+
         try:
             return eval(self.get_context_string(), SuperDict(ctx))
         except NameError as e:
