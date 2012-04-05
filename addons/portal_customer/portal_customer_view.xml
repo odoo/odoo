@@ -2,29 +2,31 @@
 <openerp>
 
     <data>
-        <menuitem name="Partners Portal" id="customer_portal_address_book" />
+      <menuitem name="Customer Portal" id="customer_portal" />
         
-        <menuitem name="Track Orders" id="customer_portal_track_orders" />
+        <menuitem name="Address Book" id="customer_portal_address_book" parent="customer_portal"/>
+        
+        <menuitem name="Track Orders" id="customer_portal_track_orders" parent="customer_portal"/>
             <menuitem name="Quotation" id="customer_portal_quotation" parent="customer_portal_track_orders"/>
             <menuitem name="Sales Orders" id="customer_portal_sales_orders" parent="customer_portal_track_orders"/>
             <menuitem name="Delivery Orders" id="customer_portal_delivery" parent="customer_portal_track_orders"/>
             <menuitem name="Registration" id="customer_portal_registration" parent="customer_portal_track_orders"/>
         
-        <menuitem name="Invoice and Payments" id="customer_portal_invoice_payements" />
+        <menuitem name="Invoice and Payments" id="customer_portal_invoice_payements" parent="customer_portal"/>
             <menuitem name="Invoice" id="customer_portal_invoice" parent="customer_portal_invoice_payements"/>
             <menuitem name="Payments" id="customer_portal_payments" parent="customer_portal_invoice_payements"/>
             
-        <menuitem name="Services" id="customer_portal_services" />
+        <menuitem name="Services" id="customer_portal_services" parent="customer_portal"/>
             <menuitem name="Events" id="customer_portal_events" parent="customer_portal_services"/>
             <menuitem name="Products" id="customer_portal_products" parent="customer_portal_services"/>
             <menuitem name="Tasks" id="customer_portal_tasks" parent="customer_portal_services"/>
         
-        <menuitem name="After Sales Services" id="customer_portal_after_sales" />
+        <menuitem name="After Sales Services" id="customer_portal_after_sales" parent="customer_portal"/>
             <menuitem name="Issues" id="customer_portal_issues" parent="customer_portal_after_sales"/>
             <menuitem name="Claims" id="customer_portal_claims" parent="customer_portal_after_sales"/>
             <menuitem name="Feedback" id="customer_portal_feedback" parent="customer_portal_after_sales"/>
 
-        <menuitem name="Contact Us" id="customer_portal_contact" />
+        <menuitem name="Contact Us" id="customer_portal_contact" parent="customer_portal"/>
         
             
     </data>
