@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_hr_config_inherit" model="ir.ui.view">
+            <field name="name">Account Payroll Application</field>
+            <field name="model">human.resources.configuration</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="hr.view_human_resources_configuration"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='additional features']" position="after">
+                	<group name="Account Payroll" colspan="4" col="4">
+                            <separator string="Account Payroll" colspan="4"/>
+                            <field name="module_hr_payroll_account"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>
