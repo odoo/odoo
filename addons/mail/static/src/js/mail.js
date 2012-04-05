@@ -626,7 +626,7 @@ openerp.mail = function(session) {
             this.params.search['domain'] = _.union(this.params.domain, domain || []);
             this.params.search['context'] = _.extend(this.params.context, context || {});
             this.display_show_more = true;
-            this.sorted_comments = {'models': {}};
+            this.comments_structure = {'root_ids': [], 'new_root_ids': [], 'msgs': {}, 'tree_struct': {}, 'model_to_root_ids': {}};
             this.$element.find('div.oe_mail_wall_threads').empty();
             return this.fetch_comments(limit, offset);
         },
