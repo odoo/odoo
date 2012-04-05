@@ -242,22 +242,14 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         var date_start = openerp.web.str_to_datetime(evt[this.date_start]),
             date_stop = this.date_stop ? openerp.web.str_to_datetime(evt[this.date_stop]) : null,
             date_delay = evt[this.date_delay] || 1.0,
-            res_text = '',
-            res_description = [];
+            res_text = '';
 
         if (this.info_fields) {
-            var fld = evt[this.info_fields[0]];
-            res_text = (typeof fld == 'object') ? fld[fld.length -1] : res_text = fld;
-
-            var sliced_info_fields = this.info_fields.slice(1);
-            for (var sl_fld in sliced_info_fields) {
-                var slc_fld = evt[sliced_info_fields[sl_fld]];
-                if (typeof slc_fld == 'object') {
-                    res_description.push(slc_fld[slc_fld.length - 1]);
-                } else if (slc_fld) {
-                    res_description.push(slc_fld);
-                }
-            }
+            res_text = _.map(this.info_fields, function(fld) {
+                if(evt[fld] instanceof Array)
+                    return evt[fld][1];
+                return evt[fld];
+            });
         }
         if (!date_stop && date_delay) {
             date_stop = date_start.clone().addHours(date_delay);
@@ -265,9 +257,8 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         var r = {
             'start_date': date_start.toString('yyyy-MM-dd HH:mm:ss'),
             'end_date': date_stop.toString('yyyy-MM-dd HH:mm:ss'),
-            'text': res_text,
-            'id': evt.id,
-            'title': res_description.join()
+            'text': res_text.join(),
+            'id': evt.id
         };
         if (evt.color) {
             r.color = evt.color;
