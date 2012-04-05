@@ -78,6 +78,7 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
         }, this);
         this.ordinate = this.columns[0].name;
         this.is_loaded.resolve();
+        return $.when();
     },
     schedule_chart: function(results) {
         var self = this;
