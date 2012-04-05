@@ -238,6 +238,16 @@ $colour4: #8a89ba
                 text-shadow: 0 1px 1px rgba(0,0,0,0.2)
                 @include radius(4px)
                 @include box-shadow(inset 0 1px 1px rgba(0, 0, 0, 0.2))
+        .oe_menu_counter 
+            float: right
+            background: #8a89ba
+            color: #eee
+            font-size: 12px
+            border: 1px solid lightgray
+            padding: 0px 4px 0px 4px
+            text-shadow: 0 1px 1px rgba(0,0,0,0.2)
+            margin: 0px
+            @include radius(4px)
         .oe_active
             background: $colour4
             border-top: 1px solid lightGray
@@ -251,6 +261,9 @@ $colour4: #8a89ba
                 color: $colour4
                 text-shadow: 0 1px 1px white
                 @include box-shadow(0 1px 1px rgba(0, 0, 0, 0.2))
+            .oe_menu_counter 
+                background: #eee
+                color: #8a89ba
         .oe_menu_toggler:before
             width: 0
             height: 0
