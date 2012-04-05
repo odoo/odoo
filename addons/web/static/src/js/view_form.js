@@ -2167,7 +2167,6 @@ openerp.web.form.FieldMany2One = openerp.web.form.AbstractField.extend(_.extend(
         this._super(view, node);
         this.limit = 7;
         this.value = null;
-        this.cm_id = _.uniqueId('m2o_cm_');
         this.last_search = [];
         this.tmp_value = undefined;
     },
@@ -2180,72 +2179,25 @@ openerp.web.form.FieldMany2One = openerp.web.form.AbstractField.extend(_.extend(
         var self = this;
         this.$input = this.$element.find("input");
         this.$drop_down = this.$element.find(".oe-m2o-drop-down-button");
-        this.$menu_btn = this.$element.find(".oe-m2o-cm-button");
-
-        // context menu
-        var init_context_menu_def = $.Deferred().then(function(e) {
-            var rdataset = new openerp.web.DataSetStatic(self, "ir.values", self.build_context());
-            rdataset.call("get", ['action', 'client_action_relate',
-                [[self.field.relation, false]], false, rdataset.get_context()], false, 0)
-                .then(function(result) {
-                self.related_entries = result;
-
-                var $cmenu = $("#" + self.cm_id);
-                $cmenu.append(QWeb.render("FieldMany2One.context_menu", {widget: self}));
-                var bindings = {};
-                bindings[self.cm_id + "_search"] = function() {
-                    if (self.get("effective_readonly"))
-                        return;
-                    self._search_create_popup("search");
-                };
-                bindings[self.cm_id + "_create"] = function() {
-                    if (self.get("effective_readonly"))
-                        return;
-                    self._search_create_popup("form");
-                };
-                bindings[self.cm_id + "_open"] = function() {
-                    if (!self.value) {
-                        return;
-                    }
-                    var pop = new openerp.web.form.FormOpenPopup(self.view);
-                    pop.show_element(
-                        self.field.relation,
-                        self.value[0],
-                        self.build_context(),
-                        {
-                            title: _t("Open: ") + (self.string || self.name)
-                        }
-                    );
-                    pop.on_write_completed.add_last(function() {
-                        self.set_value(self.value[0]);
-                    });
-                };
-                _.each(_.range(self.related_entries.length), function(i) {
-                    bindings[self.cm_id + "_related_" + i] = function() {
-                        self.open_related(self.related_entries[i]);
-                    };
-                });
-                var cmenu = self.$menu_btn.contextMenu(self.cm_id, {'noRightClick': true,
-                    bindings: bindings, itemStyle: {"color": ""},
-                    onContextMenu: function() {
-                        if(self.value) {
-                            $("#" + self.cm_id + " .oe_m2o_menu_item_mandatory").removeClass("oe-m2o-disabled-cm");
-                        } else {
-                            $("#" + self.cm_id + " .oe_m2o_menu_item_mandatory").addClass("oe-m2o-disabled-cm");
-                        }
-                        if (!self.get("effective_readonly")) {
-                            $("#" + self.cm_id + " .oe_m2o_menu_item_noreadonly").removeClass("oe-m2o-disabled-cm");
-                        } else {
-                            $("#" + self.cm_id + " .oe_m2o_menu_item_noreadonly").addClass("oe-m2o-disabled-cm");
-                        }
-                        return true;
-                    }, menuStyle: {width: "200px"}
-                });
-                $.async_when().then(function() {self.$menu_btn.trigger(e);});
+        this.$follow_button = (".oe-m2o-cm-button", this.$element);
+        
+        this.$follow_button.click(function() {
+            if (!self.value) {
+                return;
+            }
+            var pop = new openerp.web.form.FormOpenPopup(self.view);
+            pop.show_element(
+                self.field.relation,
+                self.value[0],
+                self.build_context(),
+                {
+                    title: _t("Open: ") + (self.string || self.name)
+                }
+            );
+            pop.on_write_completed.add_last(function() {
+                self.set_value(self.value[0]);
             });
         });
-        var ctx_callback = function(e) {init_context_menu_def.resolve(e); e.preventDefault()};
-        this.$menu_btn.click(ctx_callback);
 
         // some behavior for input
         this.$input.keyup(function() {

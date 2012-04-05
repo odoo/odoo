@@ -1082,15 +1082,13 @@
                     <img t-att-src='_s + "/web/static/src/img/down-arrow.png"' /></span>
             </td>
             <td width="16">
-                <button class="oe_button oe_field_button oe-m2o-cm-button" t-att-id="widget.name + '_open'">
-                    <img t-att-src='_s + "/web/static/src/img/icons/STOCK_DIRECTORY_MENU.png"'/>
+                <button class="oe_button oe_field_button oe-m2o-cm-button">
+                    <img t-att-src='_s + "/web/static/src/img/icons/gtk-go-forward.png"'/>
                 </button>
-                <div t-att-id="widget.cm_id" class="contextMenu" style="display:none">
-                </div>
             </td>
         </tr>
         </table>
-        </t>
+    </t>
     <t t-if="widget.get('effective_readonly')">
         <div>
             <a href="#" class="oe_form_uri"/>
