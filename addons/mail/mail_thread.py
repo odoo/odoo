@@ -698,7 +698,13 @@ class mail_thread(osv.osv):
                 subject = _('Comment')
             elif type == 'comment' and parent_id:
                 subject = _('Reply')
-        return self.message_append(cr, uid, ids, subject, body_text=body, parent_id=parent_id, type=type, subtype=subtype, context=context)
+        if subtype == 'html':
+            body_html = body
+            body_text = body
+        else:
+            body_html = body
+            body_text = body
+        return self.message_append(cr, uid, ids, subject, body_html=body_html, body_text=body_text, parent_id=parent_id, type=type, subtype=subtype, context=context)
     
     #------------------------------------------------------
     # Subscription mechanism
