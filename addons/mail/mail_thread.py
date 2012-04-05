@@ -19,18 +19,18 @@
 #
 ##############################################################################
 
-import time
-import tools
 import base64
 import email
 from email.utils import parsedate
-
-import re
 import logging
-import xmlrpclib
-from osv import osv, fields
-from tools.translate import _
 from mail_message import decode, to_email
+from operator import itemgetter
+from osv import osv, fields
+import re
+import time
+import tools
+from tools.translate import _
+import xmlrpclib
 
 _logger = logging.getLogger(__name__)
 
@@ -685,6 +685,26 @@ class mail_thread(osv.osv):
     #------------------------------------------------------
     # Note specific
     #------------------------------------------------------
+    
+    def message_broadcast(self, cr, uid, ids, subject=None, body=None, parent_id=False, type='notification', subtype='html', context=None):
+        if context is None:
+            context = {}
+        notification_obj = self.pool.get('mail.notification')
+        # write message
+        msg_ids = self.message_append_note(cr, uid, ids, subject=subject, body=body, parent_id=parent_id, type=type, subtype=subtype, context=context)
+        # get already existing notigications
+        notification_ids = notification_obj.search(cr, uid, [('message_id', 'in', msg_ids)], context=context)
+        already_pushed_user_ids = map(itemgetter('user_id'), notification_obj.read(cr, uid, notification_ids, context=context))
+        # get base.group_user group
+        res = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'group_user') or False
+        group_id = res and res[1] or False
+        if not group_id: return True
+        group = self.pool.get('res.groups').browse(cr, uid, [group_id], context=context)[0]
+        for user in group.users:
+            if user.id in already_pushed_user_ids: continue
+            for msg_id in msg_ids:
+                notification_obj.create(cr, uid, {'user_id': user.id, 'message_id': msg_id}, context=context)
+        return True
     
     def log(self, cr, uid, id, message, secondary=False, context=None):
         _logger.warning("log() is deprecated. Please use OpenChatter notification system instead of the res.log mechanism.")
