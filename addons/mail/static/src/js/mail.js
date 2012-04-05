@@ -581,15 +581,16 @@ openerp.mail = function(session) {
         init: function (parent, params) {
             this._super(parent);
             this.params = {};
-            this.params.limit = params.limit || 1;
+            this.params.limit = params.limit || 5;
             this.params.domain = params.domain || [];
             this.params.context = params.context || {};
-            this.params.search = {'domain': [], 'context': {}, 'groupby': {}}
             this.params.search_view_id = params.search_view_id || false;
             this.params.thread_level = params.thread_level || 1;
             this.comments_structure = {'root_ids': [], 'new_root_ids': [], 'msgs': {}, 'tree_struct': {}, 'model_to_root_ids': {}};
             this.display_show_more = true;
             this.thread_list = [];
+            this.search = {'domain': [], 'context': {}, 'groupby': {}}
+            this.search_results = {'domain': [], 'context': {}, 'groupby': {}}
             // datasets
             this.ds_msg = new session.web.DataSet(this, 'mail.message');
             this.ds_groups = new session.web.DataSet(this, 'mail.group');
@@ -652,10 +653,10 @@ openerp.mail = function(session) {
                 contexts: contexts || [],
                 group_by_seq: groupbys || []
             }, function (results) {
-                //self.params.search['context'] = results.context;
-                //self.params.search['domain'] = results.domain;
-                //self.params.search['groupby'] = results.group_by;
-                return self.init_and_fetch_comments(self.params.limit, 0, results.domain, results.context);
+                self.search_results['context'] = results.context;
+                self.search_results['domain'] = results.domain;
+                self.search_results['groupby'] = results.group_by;
+                return self.init_and_fetch_comments();
             });
         },
 
@@ -666,13 +667,13 @@ openerp.mail = function(session) {
          * @param {Array} domain
          * @param {Array} context
          */
-        init_and_fetch_comments: function(limit, offset, domain, context) {
-            this.params.search['domain'] = _.union(this.params.domain, domain || []);
-            this.params.search['context'] = _.extend(this.params.context, context || {});
+        init_and_fetch_comments: function() {
+            this.search['domain'] = _.union(this.params.domain, this.search_results.domain);
+            this.search['context'] = _.extend(this.params.context, this.search_results.context);
             this.display_show_more = true;
             this.comments_structure = {'root_ids': [], 'new_root_ids': [], 'msgs': {}, 'tree_struct': {}, 'model_to_root_ids': {}};
             this.$element.find('div.oe_mail_wall_threads').empty();
-            return this.fetch_comments(limit, offset);
+            return this.fetch_comments(this.params.limit, 0);
         },
 
         /**
@@ -684,10 +685,10 @@ openerp.mail = function(session) {
          */
         fetch_comments: function (limit, offset, additional_domain, additional_context) {
             var self = this;
-            if (additional_domain) var fetch_domain = this.params.search['domain'].concat(additional_domain);
-            else var fetch_domain = this.params.search['domain'];
-            if (additional_context) var fetch_context = _.extend(this.params.search['context'], additional_context);
-            else var fetch_context = this.params.search['context'];
+            if (additional_domain) var fetch_domain = this.search['domain'].concat(additional_domain);
+            else var fetch_domain = this.search['domain'];
+            if (additional_context) var fetch_context = _.extend(this.search['context'], additional_context);
+            else var fetch_context = this.search['context'];
             return this.ds_thread.call('get_pushed_messages', 
                 [[this.session.uid], (limit || 0), (offset || 0), fetch_domain, true, [], fetch_context]).then(this.proxy('display_comments'));
         },
@@ -722,6 +723,7 @@ openerp.mail = function(session) {
          */
         sort_comments: function(records) {
             tools_sort_comments(this.comments_structure, records, false);
+            console.log(this.comments_structure);
         },
 
         /**
@@ -758,8 +760,7 @@ openerp.mail = function(session) {
         /** Action: Posts a comment */
         do_comment: function () {
             var body_text = this.$element.find('textarea.oe_mail_wall_action_textarea').val();
-            return this.ds_users.call('message_append_note', [[this.session.uid], 'Tweet', body_text, false, 'comment', 'html']).then(
-                this.init_and_fetch_comments(this.params.limit, 0));
+            var call_done = this.ds_users.call('message_append_note', [[this.session.uid], 'Tweet', body_text, false, 'comment', 'html']).then(this.proxy('init_and_fetch_comments'));
         },
     });
 };
