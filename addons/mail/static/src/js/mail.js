@@ -580,7 +580,7 @@ openerp.mail = function(session) {
         init: function (parent, params) {
             this._super(parent);
             this.params = {};
-            this.params.limit = params.limit || 5;
+            this.params.limit = params.limit || 25;
             this.params.domain = params.domain || [];
             this.params.context = params.context || {};
             this.params.search_view_id = params.search_view_id || false;
