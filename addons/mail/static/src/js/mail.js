@@ -4,6 +4,59 @@ openerp.mail = function(session) {
     
     var mail = session.mail = {};
 
+    /**
+    * Add records to sorted_comments array
+    * @param {Array} records records from mail.message sorted by date desc
+    * @returns {Object} cs comments_structure: dict
+    *                      cs.model_to_root_ids = {model: [root_ids], }
+    *                      cs.new_root_ids = [new_root_ids]
+    *                      cs.root_ids = [root_ids]
+    *                      cs.msgs = {record.id: record,}
+    *                      cs.tree_struct = {record.id: {
+    *                          'level': record_level in hierarchy, 0 is root,
+    *                          'msg_nbr': number of childs,
+    *                          'direct_childs': [msg_ids],
+    *                          'all_childs': [msg_ids],
+    *                          'for_thread_msgs': [records],
+    *                          'ancestors': [msg_ids], } }
+    */
+    function tools_sort_comments(cs, records, parent_id) {
+        var cur_iter = 0; var max_iter = 10; var modif = true;
+        while ( modif && (cur_iter++) < max_iter) {
+            modif = false;
+            _(records).each(function (record) {
+                // root and not yet recorded
+                if ( (record.parent_id == false || record.parent_id[0] == parent_id) && ! cs['msgs'][record.id]) {
+                    // add to model -> root_list ids
+                    if (! cs['model_to_root_ids'][record.model]) cs['model_to_root_ids'][record.model] = [record.id];
+                    else cs['model_to_root_ids'][record.model].push(record.id);
+                    // add root data
+                    cs['new_root_ids'].push(record.id);
+                    // add record
+                    cs['tree_struct'][record.id] = {'level': 0, 'direct_childs': [], 'all_childs': [], 'for_thread_msgs': [record], 'msg_nbr': -1, 'ancestors': []};
+                    cs['msgs'][record.id] = record;
+                    modif = true;
+                }
+                // not yet recorded, but parent is recorded
+                else if (! cs['msgs'][record.id] && cs['msgs'][record.parent_id[0]]) {
+                    var parent_level = cs['tree_struct'][record.parent_id[0]]['level'];
+                    // update parent structure
+                    cs['tree_struct'][record.parent_id[0]]['direct_childs'].push(record.id);
+                    cs['tree_struct'][record.parent_id[0]]['for_thread_msgs'].push(record);
+                    // update ancestors structure
+                    for (ancestor_id in cs['tree_struct'][record.parent_id[0]]['ancestors']) {
+                        cs['tree_struct'][ancestor_id]['all_childs'].push(record.id);
+                    }
+                    // add record
+                    cs['tree_struct'][record.id] = {'level': parent_level+1, 'direct_childs': [], 'all_childs': [], 'for_thread_msgs': [], 'msg_nbr': -1, 'ancestors': []};
+                    cs['msgs'][record.id] = record;
+                    modif = true;
+                }
+            });
+        }
+        return cs;
+    }
+
     /* Add ThreadDisplay widget to registry */
     session.web.form.widgets.add(
         'Thread', 'openerp.mail.Thread');
@@ -537,7 +590,7 @@ openerp.mail = function(session) {
         init: function (parent, params) {
             this._super(parent);
             this.params = {};
-            this.params.limit = params.limit || 25;
+            this.params.limit = params.limit || 1;
             this.params.domain = params.domain || [];
             this.params.context = params.context || {};
             this.params.search = {'domain': [], 'context': {}, 'groupby': {}}
@@ -674,52 +727,10 @@ openerp.mail = function(session) {
         },
 
         /**
-         * Add records to sorted_comments array
-         * @param {Array} records records from mail.message sorted by date desc
-         * @returns {Object} sc sorted_comments: dict
-         *                      sc.model_list = [record.model names]
-         *                      sc.models[model_name] = {
-         *                          'root_ids': [root record.ids],
-         *                          'id_to_root': {record.id: root.id, ..},
-         *                          'msgs': {'root_id': [records]}, still sorted by date desc
-         *                          }, for each model
+         * Add records to comments_structure object: see function for details
          */
         sort_comments: function(records) {
-            var cs = this.comments_structure;
-            var cur_iter = 0; var max_iter = 10; var modif = true;
-            while ( modif && (cur_iter++) < max_iter) {
-                modif = false;
-                _(records).each(function (record) {
-                    // root and not yet recorded
-                    if (record.parent_id == false && (! cs['msgs'][record.id])) {
-                        // add to model -> root_list ids
-                        if (! cs['model_to_root_ids'][record.model]) cs['model_to_root_ids'][record.model] = [record.id];
-                        else cs['model_to_root_ids'][record.model].push(record.id);
-                        // add root data
-                        cs['new_root_ids'].push(record.id);
-                        // add record
-                        cs['tree_struct'][record.id] = {'level': 0, 'direct_childs': [], 'all_childs': [], 'for_thread_msgs': [record], 'msg_nbr': -1, 'ancestors': []};
-                        cs['msgs'][record.id] = record;
-                        modif = true;
-                    }
-                    // not yet recorded
-                    else if (! cs['msgs'][record.id]) {
-                        // parent is recorded
-                        if (cs['msgs'][record.parent_id[0]]) {
-                            var parent_level = cs['tree_struct'][record.parent_id[0]]['level']
-                            cs['tree_struct'][record.parent_id[0]]['direct_childs'].push(record.id);
-                            cs['tree_struct'][record.parent_id[0]]['for_thread_msgs'].push(record);
-                            cs['tree_struct'][record.id] = {'level': parent_level+1, 'direct_childs': [], 'all_childs': [], 'msg_nbr': -1, 'ancestors': []};
-                            for (ancestor_id in cs['tree_struct'][record.parent_id[0]]['ancestors']) {
-                                cs['tree_struct'][ancestor_id]['all_childs'].push(record.id);
-                            }
-                            cs['msgs'][record.id] = record;
-                            modif = true;
-                        }
-                    }
-                });
-            }
-            //console.log(this.comments_structure);
+            tools_sort_comments(this.comments_structure, records, false);
         },
 
         /**
