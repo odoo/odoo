@@ -99,7 +99,6 @@ openerp.mail = function(session) {
             this.params.thread_level = this.params.thread_level || 0;
             this.params.msg_more_limit = this.params.msg_more_limit || 100;
             this.params.limit = this.params.limit || 100;
-            this.params.limit = 1;
             this.params.offset = this.params.offset || 0;
             this.params.records = this.params.records || null;
             // datasets and internal vars
@@ -235,9 +234,7 @@ openerp.mail = function(session) {
         
         display_comments: function (records) {
             var self = this;
-            if (this.params.thread_level > 0) {
-                this.cs = this.sort_comments_tmp(records);
-            }
+            this.cs = this.sort_comments_tmp(records);
             
             /* WIP: map matched regexp -> records to browse with name */
             //_(records).each(function (record) {
@@ -249,7 +246,7 @@ openerp.mail = function(session) {
                 if ((record.parent_id == false || record.parent_id[0] == self.params.parent_id) && self.params.thread_level > 0 ) {
                     var sub_list = self.cs['tree_struct'][record.id]['direct_childs'];
                     _(records).each(function (record) {
-                        if (record.parent_id == false || record.parent_id[0] == self.params.parent_id) return;
+                        //if (record.parent_id == false || record.parent_id[0] == self.params.parent_id) return;
                         if (_.indexOf(sub_list, record.id) != -1) {
                             sub_msgs.push(record);
                         }
@@ -257,7 +254,7 @@ openerp.mail = function(session) {
                     self.display_comment(record);
                     self.thread = new mail.Thread(self, {'res_model': self.params.res_model, 'res_id': self.params.res_id, 'uid': self.params.uid,
                                                             'records': sub_msgs, 'thread_level': (self.params.thread_level-1), 'parent_id': record.id});
-                    self.$element.find('div.oe_mail_thread_display:last').append('<div class="oe_mail_thread_subthread"/>');
+                    self.$element.find('li.oe_mail_thread_msg:last').append('<div class="oe_mail_thread_subthread"/>');
                     self.thread.appendTo(self.$element.find('div.oe_mail_thread_subthread:last'));
                 }
                 else if (self.params.thread_level == 0) {
@@ -389,7 +386,6 @@ openerp.mail = function(session) {
         
         do_more: function () {
             domain = this.get_fetch_domain(this.sorted_comments);
-            console.log(domain);
             return this.fetch_comments(this.params.limit, this.params.offset, domain);
         },
         
@@ -509,8 +505,11 @@ openerp.mail = function(session) {
             // create and render Thread widget
             this.$element.find('div.oe_mail_recthread_left').empty();
             if (this.thread) this.thread.destroy();
+            // hack: for groups
+            if (this.view.model == 'mail.group') thread_level = 1;
+            else thread_level = 0;
             this.thread = new mail.Thread(this, {'res_model': this.view.model, 'res_id': this.view.datarecord.id, 'uid': this.session.uid,
-                            'show_post_comment': true, 'limit': 15});
+                                                    'thread_level': thread_level, 'show_post_comment': true, 'limit': 15});
             var thread_done = this.thread.appendTo(this.$element.find('div.oe_mail_recthread_left'));
             return fetch_sub_done && thread_done;
         },
@@ -593,7 +592,6 @@ openerp.mail = function(session) {
             this.search_results = {'domain': [], 'context': {}, 'groupby': {}}
             // datasets
             this.ds_msg = new session.web.DataSet(this, 'mail.message');
-            this.ds_groups = new session.web.DataSet(this, 'mail.group');
             this.ds_thread = new session.web.DataSet(this, 'mail.thread');
             this.ds_users = new session.web.DataSet(this, 'res.users');
         },
@@ -723,7 +721,6 @@ openerp.mail = function(session) {
          */
         sort_comments: function(records) {
             tools_sort_comments(this.comments_structure, records, false);
-            console.log(this.comments_structure);
         },
 
         /**
