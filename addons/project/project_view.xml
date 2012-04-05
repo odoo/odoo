@@ -196,39 +196,39 @@
                                     <h4 id="list" height="10px">
                                         <a>
                                             <t t-if="record.task.raw_value">
-                                                <button name="open_tasks" class="oe_project_buttons" type="object"><t t-if="record.open_task.value &lt;= 1"> Task</t><t t-if="record.open_task.value &gt; 1"> Tasks</t>(<t t-esc="record.open_task.value"/>)</button>
+                                                <button name="open_tasks" id = "open_tasks" class="oe_project_buttons" type="object"><t t-if="record.open_task.value &lt;= 1"> Task</t><t t-if="record.open_task.value &gt; 1"> Tasks</t>(<t t-esc="record.open_task.value"/>)</button>
                                             </t>
                                         </a>
                                     </h4>
-                                    <table class="project_fields">
-                                        <tr id="deadline" t-if="record.date.raw_value">
-                                            <th align="left">Deadline</th>
-                                            <td align="left">
-                                                <t t-esc="record.date.raw_value.toString('MMMM')"/> 
-                                                <t t-esc="record.date.raw_value.getDate()"/>,
-                                                <t t-esc="record.date.raw_value.getFullYear()"/>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th align="left" width="70px">Progress</th>
-                                            <td align="left">
-                                                <t t-esc="Math.round(record.effective_hours.raw_value/24)"/>/<t t-esc="Math.round(record.total_hours.raw_value/24)"/> days
-                                            </td>
-                                        </tr>
-                                    </table>
-                                    <t t-if="record.members.raw_value.length > 7">
-                                        <img t-att-src="kanban_image('res.users', 'avatar', record.user_id.raw_value[0])"  t-att-title="record.user_id.value" t-att-id="record.user_id.raw_value[0]" class="project_avatar"/>
-                                        <t t-foreach="record.members.raw_value" t-as="member">
-                                            <img t-att-src="kanban_image('res.users', 'avatar', member)"  t-att-title="member" t-att-id="member" class="project_avatar"/>
+                                    <button class="click_button" type="object">
+                                        <table class="project_fields">
+                                            <tr id="deadline" t-if="record.date.raw_value">
+                                                <th align="left">Deadline</th>
+                                                <td align="left">
+                                                    <t t-esc="record.date.raw_value.toString('MMMM')"/> 
+                                                    <t t-esc="record.date.raw_value.getDate()"/>,
+                                                    <t t-esc="record.date.raw_value.getFullYear()"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th align="left" width="70px">Progress</th>
+                                                <td align="left">
+                                                    <t t-esc="Math.round(record.effective_hours.raw_value/24)"/>/<t t-esc="Math.round(record.total_hours.raw_value/24)"/> days
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <t t-if="record.members.raw_value.length > 7">
+                                            <t t-foreach="record.members.raw_value" t-as="member">
+                                                <img t-att-src="kanban_image('res.users', 'avatar', member)"  t-att-title="member" t-att-id="member" class="project_avatar"/>
+                                            </t>
                                         </t>
-                                    </t>
-                                    <t t-if="record.members.raw_value.length &lt;= 7">
-                                        <br/><br/>
-                                        <img t-att-src="kanban_image('res.users', 'avatar', record.user_id.raw_value[0])"  t-att-title="record.user_id.value" t-att-id="record.user_id.raw_value[0]" class="project_avatar"/>
-                                        <t t-foreach="record.members.raw_value" t-as="member">
-                                            <img t-att-src="kanban_image('res.users', 'avatar', member)"  t-att-title="member" t-att-id="member" class="project_avatar"/>
+                                        <t t-if="record.members.raw_value.length &lt;= 7">
+                                            <br/><br/>
+                                            <t t-foreach="record.members.raw_value" t-as="member">
+                                                <img t-att-src="kanban_image('res.users', 'avatar', member)"  t-att-title="member" t-att-id="member" class="project_avatar"/>
+                                            </t>
                                         </t>
-                                    </t>
+                                    </button>
                                 </li>
                             </div>
                         </t>

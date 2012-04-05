@@ -19,6 +19,7 @@ openerp.project = function(openerp) {
                 });
                 
             });
+            $('.click_button').attr('data-name','open_tasks');
         }
     });
 }
