@@ -2170,6 +2170,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.AbstractField.extend(_.extend(
         this.display_value = {};
         this.last_search = [];
         this.floating = false;
+        this.inhibit_on_change = false;
     },
     start: function() {
         this._super();
@@ -2177,6 +2178,9 @@ openerp.web.form.FieldMany2One = openerp.web.form.AbstractField.extend(_.extend(
         this.on("change:value", this, function() {
             this.floating = false;
             this.render_value();
+            if (! this.inhibit_on_change) {
+                this.on_ui_change();
+            }
         });
     },
     initialize_content: function() {
@@ -2452,7 +2456,10 @@ openerp.web.form.FieldMany2One = openerp.web.form.AbstractField.extend(_.extend(
             value = value[0];
         }
         value = value || false;
+        this.inhibit_on_change = true;
         this.set({value: value});
+        this.inhibit_on_change = false;
+        this._super(value);
     },
     get_value: function() {
         return this.get("value");
