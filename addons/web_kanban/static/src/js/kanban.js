@@ -35,7 +35,6 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         this.limit = options.limit || 80;
     },
     start: function() {
-        this._super();
         this.$element.find('button.oe_kanban_button_new').click(this.do_add_record);
         this.$groups = this.$element.find('.oe_kanban_groups tr');
         var context = new openerp.web.CompoundContext(this.dataset.get_context());

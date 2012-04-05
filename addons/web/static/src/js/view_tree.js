@@ -39,7 +39,6 @@ openerp.web.TreeView = openerp.web.View.extend(/** @lends openerp.web.TreeView# 
     },
 
     start: function () {
-        this._super();
         return this.rpc("/web/treeview/load", {
             model: this.model,
             view_id: this.view_id,

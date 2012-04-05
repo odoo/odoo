@@ -14,6 +14,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
     readonly : false,
     form_template: "FormView",
     display_name: _lt('Form'),
+    view_type: "form",
     /**
      * @constructs openerp.web.FormView
      * @extends openerp.web.View
@@ -52,27 +53,6 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         this.mutating_mutex = new $.Mutex();
         this.on_change_mutex = new $.Mutex();
         this.reload_mutex = new $.Mutex();
-    },
-    start: function() {
-        this._super();
-        return this.init_view();
-    },
-    init_view: function() {
-        if (this.embedded_view) {
-            var def = $.Deferred().then(this.on_loaded);
-            var self = this;
-            $.async_when().then(function() {def.resolve(self.embedded_view);});
-            return def.promise();
-        } else {
-            var context = new openerp.web.CompoundContext(this.dataset.get_context());
-            return this.rpc("/web/view/load", {
-                "model": this.model,
-                "view_id": this.view_id,
-                "view_type": "form",
-                toolbar: this.options.sidebar,
-                context: context
-                }, this.on_loaded);
-        }
     },
     destroy: function() {
         if (this.sidebar) {
@@ -134,6 +114,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             }]);
         }
         this.has_been_loaded.resolve();
+        return $.when();
     },
 
     do_load_state: function(state, warm) {
