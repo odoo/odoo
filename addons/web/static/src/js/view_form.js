@@ -2178,6 +2178,15 @@ openerp.web.form.FieldMany2One = openerp.web.form.AbstractField.extend(_.extend(
     render_editable: function() {
         var self = this;
         this.$input = this.$element.find("input");
+        
+        self.$input.tipsy({
+            title: function() {
+                return "No element was selected, you should create or select one from the dropdown list.";
+            },
+            trigger:'manual',
+            fade: true,
+        });
+        
         this.$drop_down = this.$element.find(".oe-m2o-drop-down-button");
         this.$follow_button = (".oe-m2o-cm-button", this.$element);
         
@@ -2221,6 +2230,10 @@ openerp.web.form.FieldMany2One = openerp.web.form.AbstractField.extend(_.extend(
                 self.$input.focus();
             }
         });
+        var tip_def = $.Deferred();
+        var untip_def = $.Deferred();
+        var tip_delay = 200;
+        var tip_duration = 3000;
         var anyoneLoosesFocus = function() {
             if (!self.$input.is(":focus") &&
                     !self.$input.autocomplete("widget").is(":visible") &&
@@ -2230,6 +2243,25 @@ openerp.web.form.FieldMany2One = openerp.web.form.AbstractField.extend(_.extend(
                 } else {
                     self._change_int_ext_value(null);
                 }
+            }
+            if (! self.value) {
+                tip_def.reject();
+                untip_def.reject();
+                tip_def = $.Deferred();
+                tip_def.then(function() {
+                    self.$input.tipsy("show");
+                });
+                setTimeout(function() {
+                    tip_def.resolve();
+                    untip_def.reject();
+                    untip_def = $.Deferred();
+                    untip_def.then(function() {
+                        self.$input.tipsy("hide");
+                    });
+                    setTimeout(function() {untip_def.resolve();}, tip_duration);
+                }, tip_delay);
+            } else {
+                tip_def.reject();
             }
         };
         this.$input.focusout(anyoneLoosesFocus);
