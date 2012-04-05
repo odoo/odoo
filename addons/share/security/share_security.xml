@@ -12,6 +12,7 @@
             <field name="comment">
 Members of this groups have access to the sharing wizard, which allows them to invite external users to view or edit some of their documents.</field>
             <field name="category_id" ref="module_category_share"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
         </record>
     </data>
 </openerp>
