@@ -7,13 +7,21 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
 	        <form string ="General Application">
-	            <separator string="General Setting" colspan="4"/>
-                   <group colspan="4" col="4">
+                <separator string="Company Settings" colspan="4"/>
+                <group colspan="4" col="4">
+                    <group colspan="2" col="2">
                         <label string="Set Company Header and Footer :"/>
                         <button name="base_setup_company" string="Header and Footer" type="object" icon="gtk-go-forward"/>
+                    </group>
+                    <group colspan="2" col="2">
                         <field name="module_multi_company"/>
-                        <field name="module_share"/>
-                   </group>
+                    </group>
+                </group>
+                <separator string="Others" colspan="4"/>
+                    <group colspan="4" col="4">
+                       <field name="module_share"/>
+                       <field name="module_portal"/>
+                    </group>
                 </form>
             </field>
         </record>
