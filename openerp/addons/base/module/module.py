@@ -69,6 +69,7 @@ class module_category(osv.osv):
         'description' : fields.text("Description", translate=True),
         'sequence' : fields.integer('Sequence'),
         'visible' : fields.boolean('Visible'),
+        'xml_id': fields.function(osv.osv.get_external_id, type='char', size=128, string="External ID"),
     }
     _order = 'name'
 
