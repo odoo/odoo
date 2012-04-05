@@ -196,7 +196,7 @@
                                     <h4 id="list" height="10px">
                                         <a>
                                             <t t-if="record.task.raw_value">
-                                                <button name="open_tasks" class="oe_project_buttons" type="object"><t t-esc="record.open_task.value" t-if="record.open_task.value &lt;= 1"> Task</t><t t-esc="record.open_task.value" t-if="record.open_task.value > 1"> Tasks</t></button>
+                                                <button name="open_tasks" class="oe_project_buttons" type="object"><t t-if="record.open_task.value &lt;= 1"> Task</t><t t-if="record.open_task.value &gt; 1"> Tasks</t>(<t t-esc="record.open_task.value"/>)</button>
                                             </t>
                                         </a>
                                     </h4>
@@ -216,18 +216,17 @@
                                             </td>
                                         </tr>
                                     </table>
-
                                     <t t-if="record.members.raw_value.length > 7">
-                                        <img t-att-src="kanban_image('res.users', 'avatar', record.user_id.raw_value[0])"  t-att-title="record.user_id.value" class="project_avatar"/>
+                                        <img t-att-src="kanban_image('res.users', 'avatar', record.user_id.raw_value[0])"  t-att-title="record.user_id.value" t-att-id="record.user_id.raw_value[0]" class="project_avatar"/>
                                         <t t-foreach="record.members.raw_value" t-as="member">
-                                            <img t-att-src="kanban_image('res.users', 'avatar', member)"  t-att-title="member" class="project_avatar"/>
+                                            <img t-att-src="kanban_image('res.users', 'avatar', member)"  t-att-title="member" t-att-id="member" class="project_avatar"/>
                                         </t>
                                     </t>
                                     <t t-if="record.members.raw_value.length &lt;= 7">
                                         <br/><br/>
-                                        <img t-att-src="kanban_image('res.users', 'avatar', record.user_id.raw_value[0])"  t-att-title="record.user_id.value" class="project_avatar"/>
+                                        <img t-att-src="kanban_image('res.users', 'avatar', record.user_id.raw_value[0])"  t-att-title="record.user_id.value" t-att-id="record.user_id.raw_value[0]" class="project_avatar"/>
                                         <t t-foreach="record.members.raw_value" t-as="member">
-                                            <img t-att-src="kanban_image('res.users', 'avatar', member)"  t-att-title="member" class="project_avatar"/>
+                                            <img t-att-src="kanban_image('res.users', 'avatar', member)"  t-att-title="member" t-att-id="member" class="project_avatar"/>
                                         </t>
                                     </t>
                                 </li>
