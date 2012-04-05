@@ -112,12 +112,13 @@ session.web.ActionManager = session.web.OldWidget.extend({
         }
         var type = action.type.replace(/\./g,'_');
         var popup = action.target === 'new';
+        var inline = action.target === 'inline';
         action.flags = _.extend({
-            views_switcher : !popup,
-            search_view : !popup,
-            action_buttons : !popup,
-            sidebar : !popup,
-            pager : !popup,
+            views_switcher : !popup && !inline,
+            search_view : !popup && !inline,
+            action_buttons : !popup && !inline,
+            sidebar : !popup && !inline,
+            pager : !popup && !inline,
             display_title : !popup
         }, action.flags || {});
         if (!(type in this)) {
