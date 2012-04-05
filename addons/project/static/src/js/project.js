@@ -9,6 +9,9 @@ openerp.project = function(openerp) {
                 }).mouseout(function() {
                 return $(this).find('.oe_project_kanban_action').hide();
             });
+            $('.test').click(function(){
+        			$('#open_tasks').click()
+            });
             _.each($('.oe_project_kanban_vignette'),function(record){
                 _.each(record.getElementsByTagName('img'),function(img){
                     var domain = [['id','=',img.getAttribute("id")]]; 

@@ -196,10 +196,11 @@
                                     <h4 id="list" height="10px">
                                         <a>
                                             <t t-if="record.task.raw_value">
-                                                <button name="open_tasks" class="oe_project_buttons" type="object"><t t-if="record.open_task.value &lt;= 1"> Task</t><t t-if="record.open_task.value &gt; 1"> Tasks</t>(<t t-esc="record.open_task.value"/>)</button>
+                                                <button name="open_tasks" id = "open_tasks" class="oe_project_buttons" type="object"><t t-if="record.open_task.value &lt;= 1"> Task</t><t t-if="record.open_task.value &gt; 1"> Tasks</t>(<t t-esc="record.open_task.value"/>)</button>
                                             </t>
                                         </a>
                                     </h4>
+                                    <button class="test" >
                                     <table class="project_fields">
                                         <tr id="deadline" t-if="record.date.raw_value">
                                             <th align="left">Deadline</th>
@@ -229,6 +230,7 @@
                                             <img t-att-src="kanban_image('res.users', 'avatar', member)"  t-att-title="member" t-att-id="member" class="project_avatar"/>
                                         </t>
                                     </t>
+                                    </button>
                                 </li>
                             </div>
                         </t>
