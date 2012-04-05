@@ -625,24 +625,22 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         var result_context = _.extend({}, this.user_context),
             self = this;
         _(contexts).each(function (ctx) {
+            var evaluated = ctx;
             // __eval_context evaluations can lead to some of `contexts`'s
             // values being null, skip them as well as empty contexts
             if (_.isEmpty(ctx)) { return; }
             switch(ctx.__ref) {
             case 'context':
-                _.extend(result_context, py.eval(
-                    ctx.__debug, evaluation_context));
+                evaluated = py.eval(ctx.__debug, evaluation_context);
                 break;
             case 'compound_context':
                 var eval_context = self.test_eval_contexts([ctx.__eval_context]);
-                _.extend(
-                    result_context, self.test_eval_contexts(
-                        ctx.__contexts, _.extend(
-                            {}, evaluation_context, eval_context)));
+                evaluated = self.test_eval_contexts(
+                    ctx.__contexts, _.extend({}, evaluation_context, eval_context));
                 break;
-            default:
-                _.extend(result_context, ctx);
             }
+            _.extend(evaluation_context, evaluated);
+            _.extend(result_context, evaluated);
         });
         return result_context;
     },

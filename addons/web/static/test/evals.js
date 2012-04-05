@@ -7,6 +7,53 @@ $(document).ready(function () {
             window.openerp.web.core(openerp);
         }
     });
+    test('context_sequences', function () {
+        // Context n should have base evaluation context + all of contexts
+        // 0..n-1 in its own evaluation context
+        var active_id = 4;
+        var result = openerp.connection.test_eval_contexts([
+            {
+                "__contexts": [
+                    {
+                        "department_id": false,
+                        "lang": "en_US",
+                        "project_id": false,
+                        "section_id": false,
+                        "tz": false,
+                        "uid": 1
+                    },
+                    { "search_default_create_uid": 1 },
+                    {}
+                ],
+                "__eval_context": null,
+                "__ref": "compound_context"
+            },
+            {
+                "active_id": active_id,
+                "active_ids": [ active_id ],
+                "active_model": "purchase.requisition"
+            },
+            {
+                "__debug": "{'record_id' : active_id}",
+                "__id": "63e8e9bff8a6",
+                "__ref": "context"
+            }
+        ]);
+
+        deepEqual(result, {
+            department_id: false,
+            lang: 'en_US',
+            project_id: false,
+            section_id: false,
+            tz: false,
+            uid: 1,
+            search_default_create_uid: 1,
+            active_id: active_id,
+            active_ids: [active_id],
+            active_model: 'purchase.requisition',
+            record_id: active_id
+        });
+    });
     test('non-literal_eval_contexts', function () {
         var result = openerp.connection.test_eval_contexts([{
             "__ref": "compound_context",
