@@ -368,6 +368,11 @@
         t-att-data-action-model="menu.action ? menu.action.split(',')[0] : ''"
         t-att-data-action-id="menu.action ? menu.action.split(',')[1] : ''">
         <t t-esc="menu.name"/>
+        <t t-if="menu.needaction_enabled">
+            <div class="oe_menu_counter">
+                <t t-esc="menu.needaction_counter"/>
+            </div>
+        </t>
     </a>
 </t>
 
