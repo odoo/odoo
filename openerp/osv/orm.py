@@ -4887,7 +4887,7 @@ class BaseModel(object):
             if not ids:
                 return (True, 0, [])
             if domain:
-                new_domain = eval(domain) + [('id', 'in', ids)]
+                new_domain = eval(domain, locals_dict={'uid': user_id}) + [('id', 'in', ids)]
             else:
                 new_domain = [('id', 'in', ids)]
             return (True, self.search(cr, uid, new_domain, limit=limit, order=order, count=True, context=context), ids)
