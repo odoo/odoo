@@ -2419,7 +2419,6 @@ openerp.web.form.FieldMany2One = openerp.web.form.AbstractField.extend(_.extend(
             return;
         }
         if (! no_recurse) {
-            debugger;
             var dataset = new openerp.web.DataSetStatic(this, this.field.relation, self.view.dataset.get_context());
             dataset.name_get([self.get("value")], function(data) {
                 self.display_value["" + self.get("value")] = data[0][1];
