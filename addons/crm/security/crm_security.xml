@@ -17,9 +17,10 @@
         <field name="name">Manager</field>
         <field name="category_id" ref="base.module_category_sales_management"/>
         <field name="implied_ids" eval="[(4, ref('base.group_sale_salesman_all_leads'))]"/>
+        <field name="users" eval="[(4, ref('base.user_root'))]"/>
     </record>
 
-    <record model="res.users" id="base.user_admin">
+    <record model="res.users" id="base.user_root">
         <field eval="[(4,ref('base.group_partner_manager'))]" name="groups_id"/>
     </record>
 

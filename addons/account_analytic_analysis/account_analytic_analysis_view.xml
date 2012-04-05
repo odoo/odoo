@@ -111,19 +111,5 @@
             </field>
         </record>
 
-        <record id="view_contract_installation" model="ir.ui.view">
-            <field name="name">Sales Application</field>
-            <field name="model">sale.config.settings</field>
-            <field name="inherit_id" ref="sale.view_sales_config"/>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <group name="config_contracts" position="inside">
-                    <separator string="Contracts" colspan="4"/>
-                    <field name="module_analytic_user_function"/>
-                    <field name="module_analytic_journal_billing_rate"/>
-                </group>
-            </field>
-        </record>
-
     </data>
 </openerp>

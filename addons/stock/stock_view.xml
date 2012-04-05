@@ -6,33 +6,33 @@
                   groups="group_stock_manager,group_stock_user" sequence="5"
                   web_icon="images/warehouse.png"
                   web_icon_hover="images/warehouse-hover.png"/>
-        <menuitem id="menu_stock_warehouse_mgmt" name="Warehouse Management" parent="menu_stock_root" sequence="1"/>
-        <menuitem id="menu_stock_products_moves" name="Products Moves" parent="menu_stock_root" sequence="2" groups="base.group_extended"/>
+        <menuitem id="menu_stock_warehouse_mgmt" name="Receive/Deliver By Orders" parent="menu_stock_root" sequence="1"/>
+        <menuitem id="menu_stock_products_moves" name="Receive/Deliver Products" parent="menu_stock_root" sequence="2" groups="base.group_extended"/>
         <menuitem id="menu_stock_product" name="Products" parent="menu_stock_root" sequence="6"/>
         <menuitem name="Products by Category" id="menu_product_by_category_stock_form" action="product.product_category_action"
            parent="stock.menu_stock_product" sequence="0"/>
         <menuitem action="product.product_normal_action" id="menu_stock_products_menu" parent="menu_stock_product" sequence="1"/>
         <menuitem id="menu_stock_configuration" name="Configuration" parent="menu_stock_root" sequence="15" groups="group_stock_manager"/>
-        <menuitem id="menu_warehouse_config" name="Warehouse Management" parent="menu_stock_configuration" sequence="1"/>
+        <menuitem id="menu_warehouse_config" name="Warehouse Management" parent="menu_stock_configuration" sequence="40" groups="base.group_no_one"/>
         <menuitem id="menu_stock_inventory_control" name="Inventory Control" parent="menu_stock_root" sequence="4"/>
         <menuitem
             id="menu_product_in_config_stock" name="Products"
-            parent="stock.menu_stock_configuration" sequence="2"/>
+            parent="stock.menu_stock_configuration" sequence="45" groups="base.group_no_one"/>
         <menuitem
             action="product.product_category_action_form" id="menu_product_category_config_stock"
-            parent="stock.menu_product_in_config_stock" sequence="0"/>
+            parent="stock.menu_product_in_config_stock" sequence="0" />
         <menuitem
             action="product.product_ul_form_action" groups="product.group_stock_packaging"
             id="menu_product_packaging_stock_action" parent="stock.menu_product_in_config_stock" sequence="1"/>
          <menuitem
             id="menu_stock_unit_measure_stock" name="Units of Measure"
-            parent="stock.menu_product_in_config_stock"  sequence="2" groups="product.group_uom"/>
+            parent="stock.menu_product_in_config_stock"  sequence="35" groups="product.group_uom"/>
          <menuitem
              action="product.product_uom_categ_form_action" id="menu_stock_uom_categ_form_action"
-             parent="stock.menu_stock_unit_measure_stock" sequence="0"/>
+             parent="menu_stock_configuration" sequence="30"/>
          <menuitem
               action="product.product_uom_form_action" id="menu_stock_uom_form_action"
-              parent="stock.menu_stock_unit_measure_stock" sequence="1"/>
+              parent="menu_stock_configuration" sequence="35"/>
 
         <record id="stock_inventory_line_tree" model="ir.ui.view">
             <field name="name">stock.inventory.line.tree</field>
@@ -250,7 +250,7 @@
         </record>
         <menuitem id="menu_traceability" name="Traceability" parent="menu_stock_root" sequence="3"/>
         <menuitem action="action_tracking_form" id="menu_action_tracking_form"
-            groups="stock.group_tracking_lot"
+            groups="product.group_stock_packaging"
             sequence="6"
             parent="menu_traceability"/>
 
@@ -343,7 +343,6 @@
                                 <tree  string="Stock Moves">
                                     <field name="picking_id" string="Reference"/>
                                     <field name="origin"/>
-                                    <field name="partner_id"/>
                                     <field name="product_id"/>
                                     <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
                                     <field name="product_uom" string="UoM" groups="product.group_uom"/>
@@ -406,7 +405,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_production_lot_tree"/>
             <field name="search_view_id" ref="search_product_lot_filter" />
-            <field name="context">{"search_default_available":1}</field>
+            <field name="context">{}</field>
             <field name="help">This is the list of all the production lots (serial numbers) you recorded. When you select a lot, you can get the upstream or downstream traceability of the products contained in lot. By default, the list is filtred on the serial numbers that are available in your warehouse but you can uncheck the 'Available' button to get all the lots you produced, received or delivered to customers.</field>
         </record>
         <menuitem action="action_production_lot_form" id="menu_action_production_lot_form"
@@ -432,8 +431,8 @@
                     <field name="picking_id"/>
                     <field name="location_id" />
                     <field name="location_dest_id" />
-                    <field name="create_date"/>
-                    <field name="date" string="Date"/>
+                    <field name="create_date" groups="base.group_no_one"/>
+                    <field name="date" string="Date" groups="base.group_no_one"/>
                     <field name="date_expected" string="Date Expected"/>
                     <field name="state"/>
                 </tree>
@@ -456,8 +455,8 @@
                     <field name="picking_id"/>
                     <field name="location_id" />
                     <field name="location_dest_id" />
-                    <field name="create_date" />
-                    <field name="date" string="Date"/>
+                    <field name="create_date" groups="base.group_no_one"/>
+                    <field name="date" string="Date" groups="base.group_no_one"/>
                      <field name="date_expected" string="Date Expected"/>
                     <field name="state"/>
                 </tree>
@@ -510,7 +509,7 @@
                     </group>
                     <group col="4" colspan="2">
                         <separator string="Additional Information" colspan="4"/>
-                        <field name="address_id" context="{'contact_display':'partner'}" colspan="4"/>
+                        <field name="partner_id" colspan="4"/>
                         <field name="company_id" groups="base.group_multi_company" widget="selection" colspan="4"/>
                         <field name="icon" groups="base.group_extended" colspan="4"/>
                         <field name="scrap_location" groups="base.group_extended"/>
@@ -586,7 +585,8 @@
             <field name="context">{'search_default_in_location':1}</field>
             <field name="help">Define your locations to reflect your warehouse structure and organization. OpenERP is able to manage physical locations (warehouses, shelves, bin, etc), partner locations (customers, suppliers) and virtual locations which are the counterpart of the stock operations like the manufacturing orders consumptions, inventories, etc. Every stock operation in OpenERP moves the products from one location to another one. For instance, if you receive products from a supplier, OpenERP will move products from the Supplier location to the Stock location. Each report can be performed on physical, partner or virtual locations.</field>
         </record>
-        <menuitem action="action_location_form" id="menu_action_location_form" parent="menu_warehouse_config"/>
+        <menuitem action="action_location_form" id="menu_action_location_form" groups="stock.group_locations"
+            parent="menu_stock_configuration" sequence="5"/>
 
         <record id="view_location_tree" model="ir.ui.view">
             <field name="name">stock.location.tree</field>
@@ -625,7 +625,7 @@
                     <field name="lot_output_id"/>
                     <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     <newline/>
-                    <field name="partner_address_id" context="{'contact_display':'partner'}"/>
+                    <field name="partner_id"/>
                 </form>
             </field>
         </record>
@@ -639,7 +639,7 @@
                     <field name="lot_input_id"/>
                     <field name="lot_stock_id"/>
                     <field name="lot_output_id"/>
-                    <field name="partner_address_id" context="{'contact_display':'partner'}"/>
+                    <field name="partner_id"/>
                 </tree>
             </field>
         </record>
@@ -651,7 +651,8 @@
             <field name="view_id" ref="view_warehouse_tree"/>
             <field name="help">Create and manage your warehouses and assign them a location from here</field>
         </record>
-        <menuitem action="action_warehouse_form" id="menu_action_warehouse_form" parent="menu_warehouse_config"/>
+        <menuitem action="action_warehouse_form" id="menu_action_warehouse_form" groups="stock.group_locations"
+            parent="menu_stock_configuration" sequence="1"/>
 
         <record model="ir.ui.view" id="stock_picking_calendar">
             <field name="name">stock.picking.calendar</field>
@@ -659,10 +660,10 @@
             <field name="type">calendar</field>
             <field name="priority" eval="2"/>
             <field name="arch" type="xml">
-                <calendar string="Calendar View" date_start="min_date" date_stop="max_date" color="address_id">
+                <calendar string="Calendar View" date_start="min_date" date_stop="max_date" color="partner_id">
                     <field name="origin"/>
                     <field name="type"/>
-                    <field name="address_id"/>
+                    <field name="partner_id"/>
                 </calendar>
             </field>
         </record>
@@ -673,7 +674,6 @@
             <field name="arch" type="xml">
                 <tree colors="blue:state == 'draft';grey:state == 'cancel';red:state not in ('cancel', 'done') and date &lt; current_date" string="Picking list">
                     <field name="name"/>
-                    <field name="partner_id" invisible="True"/>
                     <field name="backorder_id" groups="base.group_extended"/>
                     <field name="origin"/>
                     <field name="date"/>
@@ -696,7 +696,7 @@
                         <group colspan="4" col="4">
                             <field name="name" readonly="1"/>
                             <field name="origin"/>
-                            <field name="address_id" on_change="onchange_partner_in(address_id)" context="{'contact_display':'partner'}" colspan="4"/>
+                            <field name="partner_id" on_change="onchange_partner_in(partner_id)" colspan="4"/>
                             <field name="invoice_state" string="Invoice Control" groups="base.group_extended"/>
                             <field name="backorder_id" readonly="1" groups="base.group_extended"/>
                         </group>
@@ -708,7 +708,7 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Products">
-                            <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list" context="{'address_in_id': address_id}">
+                            <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list" context="{'address_in_id': partner_id}">
                                 <tree colors="grey:scrapped == True" string="Stock Moves">
                                     <field name="product_id"/>
                                     <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
@@ -745,7 +745,7 @@
                                     <group colspan="2" col="4">
                                         <separator colspan="4" string="Move Information"/>
                                         <field name="name" invisible="1" colspan="4"/>
-                                        <field name="product_id" on_change="onchange_product_id(product_id,location_id,location_dest_id, parent.address_id)" colspan="4"/>
+                                        <field name="product_id" on_change="onchange_product_id(product_id,location_id,location_dest_id, parent.partner_id)" colspan="4"/>
                                         <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)" colspan="3"/>
                                         <button name="%(stock.move_scrap)d"
                                                 string="Scrap" type="action" groups="base.group_extended"
@@ -838,12 +838,11 @@
                         <filter icon="terp-dolar" name="to_invoice" string="To Invoice" domain="[('invoice_state','=','2binvoiced')]" help="Internal Pickings to invoice"/>
                         <separator orientation="vertical"/>
                         <field name="name"/>
-                        <field name="address_id"/>
+                        <field name="partner_id"/>
                         <field name="stock_journal_id" groups="base.group_extended" widget="selection"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
-                        <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <separator orientation="vertical" />
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                         <separator orientation="vertical" />
@@ -867,7 +866,6 @@
             <field name="arch" type="xml">
                 <tree colors="blue:state == 'draft';grey:state == 'cancel';red:state not in ('cancel', 'done') and min_date &lt; current_date" string="Delivery Orders">
                     <field name="name"/>
-                    <field name="partner_id"/>
                     <field name="origin"/>
                     <field name="date"/>
                     <field name="min_date"/>
@@ -889,7 +887,7 @@
                         <group colspan="4" col="4">
                             <field name="name" readonly="1"/>
                             <field name="origin" readonly="1"/>
-                            <field name="address_id" on_change="onchange_partner_in(address_id)" context="{'contact_display':'partner'}" colspan="4"/>
+                            <field name="partner_id" on_change="onchange_partner_in(partner_id)"  colspan="4"/>
                             <field name="invoice_state"/>
                             <field name="backorder_id" readonly="1" groups="base.group_extended"/>
                         </group>
@@ -901,7 +899,7 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Products">
-                            <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list" context="{'address_out_id': address_id, 'picking_type': type}" >
+                            <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list" context="{'address_out_id': partner_id, 'picking_type': type}" >
                                 <tree colors="grey:scrapped==True" string="Stock Moves">
                                     <field name="product_id"/>
                                     <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
@@ -936,7 +934,7 @@
                                     <group colspan="2" col="4">
                                         <separator colspan="4" string="Move Information"/>
                                         <field name="name" invisible="1" colspan="4" />
-                                        <field name="product_id" on_change="onchange_product_id(product_id,location_id,location_dest_id, parent.address_id)" colspan="4" />
+                                        <field name="product_id" on_change="onchange_product_id(product_id,location_id,location_dest_id, parent.partner_id)" colspan="4" />
                                         <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)" colspan="3" />
                                         <button name="%(stock.move_scrap)d"
                                                 string="Scrap" type="action"
@@ -1030,14 +1028,12 @@
                         <filter icon="terp-dolar" name="to_invoice" string="To Invoice" domain="[('invoice_state','=','2binvoiced')]" help="Delivery orders to invoice"/>
                         <separator orientation="vertical"/>
                         <field name="name"/>
-                        <field name="partner_id" />
                         <field name="origin"/>
                         <field name="stock_journal_id" groups="base.group_extended" widget="selection"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                    </group>
                     <newline/>
                     <group expand="0" string="Group By...">
-                        <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <separator orientation="vertical" />
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                         <separator orientation="vertical" />
@@ -1057,7 +1053,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>
             <field name="domain">[('type','=','out')]</field>
-            <field name="context">{'default_type': 'out', 'contact_display': 'partner_address', 'search_default_confirmed': 1, 'search_default_available': 1}</field>
+            <field name="context">{'default_type': 'out', 'contact_display': 'partner_address'}</field>
             <field name="search_view_id" ref="view_picking_out_search"/>
             <field name="help">This is the list of all delivery orders that have to be prepared, according to your different sales orders and your logistics rules.</field>
         </record>
@@ -1087,7 +1083,6 @@
             <field name="arch" type="xml">
                 <tree colors="blue:state == 'draft';grey:state == 'done';red:state not in ('cancel', 'done') and date &lt; current_date" string="Picking list">
                     <field name="name"/>
-                    <field name="partner_id" />
                     <field name="backorder_id" groups="base.group_extended"/>
                     <field name="origin"/>
                     <field name="date"/>
@@ -1110,7 +1105,7 @@
                         <group colspan="4" col="4">
                             <field name="name" readonly="1"/>
                             <field name="origin"/>
-                            <field name="address_id" on_change="onchange_partner_in(address_id)" context="{'contact_display':'partner'}" domain="[('partner_id','&lt;&gt;',False)]" colspan="4"/>
+                            <field name="partner_id" on_change="onchange_partner_in(partner_id)"  colspan="4"/>
                             <field name="invoice_state" string="Invoice Control"/>
                             <field name="backorder_id" readonly="1" groups="base.group_extended"/>
                         </group>
@@ -1122,7 +1117,7 @@
                     </group>
                     <notebook colspan="4">
                         <page string="General Information">
-                            <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list" context="{'address_in_id': address_id, 'picking_type': type}" >
+                            <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list" context="{'address_in_id': partner_id, 'picking_type': type}" >
                                 <tree colors="grey:scrapped==True" string="Stock Moves">
                                     <field name="product_id" />
                                     <field name="product_qty" />
@@ -1156,7 +1151,7 @@
                                     <group colspan="2" col="4">
                                         <separator colspan="4" string="Move Information"/>
                                         <field name="name" invisible="1" colspan="4"/>
-                                        <field name="product_id" on_change="onchange_product_id(product_id,location_id,location_dest_id, parent.address_id)" colspan="4"/>
+                                        <field name="product_id" on_change="onchange_product_id(product_id,location_id,location_dest_id, parent.partner_id)" colspan="4"/>
                                         <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)" colspan="3"/>
                                         <button name="%(stock.move_scrap)d"
                                                 string="Scrap" type="action" groups="base.group_extended"
@@ -1246,14 +1241,12 @@
                         <filter string="To invoice" name="to_invoice" icon="terp-dolar" domain="[('invoice_state', '=', '2binvoiced')]" />
                         <separator orientation="vertical"/>
                         <field name="name"/>
-                        <field name="partner_id"/>
                         <field name="origin"/>
                         <field name="stock_journal_id" groups="base.group_extended" widget="selection"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company" />
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
-                        <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <separator orientation="vertical" />
                         <filter icon="terp-stock_effects-object-colorize" name="state" string="State" domain="[]" context="{'group_by':'state'}"/>
                         <separator orientation="vertical" />
@@ -1274,7 +1267,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>
             <field name="domain">[('type','=','in')]</field>
-            <field name="context">{'contact_display': 'partner_address',"search_default_available":1}</field>
+            <field name="context">{'contact_display': 'partner_address'}</field>
             <field name="search_view_id" ref="view_picking_in_search"/>
             <field name="help">The Incoming Shipments is the list of all orders you will receive from your suppliers. An incoming shipment contains a list of products to be received according to the original purchase order. You can validate the shipment totally or partially.</field>
         </record>
@@ -1366,8 +1359,7 @@
                     <field name="name"/>
                     <field name="picking_id" string="Reference"/>
                     <field name="origin"/>
-                    <field name="create_date" invisible="1"/>
-                    <field name="partner_id"/>
+                    <field name="create_date" invisible="1" groups="base.group_no_one"/>
                     <field name="product_id"/>
                     <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
                     <field name="product_uom" string="UoM" groups="product.group_uom"/>
@@ -1393,7 +1385,7 @@
                         states="draft,assigned,confirmed,done"/>
                     <field name="location_id"/>
                     <field name="location_dest_id"/>
-                    <field name="date"/>
+                    <field name="date" groups="base.group_no_one"/>
                     <field name="date_expected"/>
                     <field name="state"/>
                     <button name="action_done" states="confirmed,assigned" string="Process" type="object" icon="gtk-go-forward"/>
@@ -1421,7 +1413,7 @@
                         <newline/>
                         <field name="location_id"/>
                         <field name="location_dest_id"/>
-                        <field name="address_id" context="{'contact_display':'partner'}"/>
+                        <field name="partner_id" context="{'contact_display':'partner'}"/>
 
                     </group>
                     <group colspan="2" col="2">
@@ -1439,8 +1431,8 @@
 
                     <group colspan="2" col="2">
                         <separator string="Dates" colspan="2" />
-                        <field name="create_date" groups="base.group_extended"/>
-                        <field name="date" groups="base.group_extended"/>
+                        <field name="create_date" groups="base.group_no_one" />
+                        <field name="date" groups="base.group_no_one" />
                         <field name="date_expected" on_change="onchange_date(date,date_expected)"/>
                     </group>
 
@@ -1489,8 +1481,8 @@
                         <separator orientation="vertical"/>
                         <field name="product_id"/>
                         <field name="location_id" string="Location" filter_domain="['|',('location_id','ilike',self),('location_dest_id','ilike',self)]"/>
-                        <field name="address_id" string="Partner" context="{'contact_display':'partner'}" filter_domain="[('picking_id.address_id','ilike',self)]"/>
-                        <field name="date"/>
+                        <field name="partner_id" string="Partner"  filter_domain="[('picking_id.partner_id','ilike',self)]"/>
+                        <field name="date" groups="base.group_no_one"/>
                         <field name="origin"/>
                         <field name="prodlot_id"/>
                     </group>
@@ -1506,7 +1498,7 @@
                         <separator orientation="vertical"/>
                         <filter icon="terp-stock_effects-object-colorize" string="State" domain="[]" context="{'group_by':'state'}" />
                         <separator orientation="vertical"/>
-                        <filter string="Creation" name="groupby_create_date" icon="terp-go-month" domain="[]" context="{'group_by':'create_date'}"/>
+                        <filter string="Creation" name="groupby_create_date" icon="terp-go-month" domain="[]" context="{'group_by':'create_date'}" groups="base.group_no_one"/>
                         <filter string="Expected" name="groupby_date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}"/>
                     </group>
                 </search>
@@ -1520,7 +1512,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_move_tree"/>
             <field name="search_view_id" ref="view_move_search"/>
-            <field name="context">{'search_default_ready':1}</field>
+            <field name="context">{}</field>
             <field name="help">This menu gives you the full traceability of inventory operations on a specific product. You can filter on the product to see all the past or future movements for the product.</field>
         </record>
         <menuitem action="action_move_form2" id="menu_action_move_form2" parent="menu_traceability" sequence="3"/>
@@ -1541,7 +1533,6 @@
                 <tree colors="grey:state == 'cancel'" string="Moves">
                     <field name="picking_id" string="Reference"/>
                     <field name="origin"/>
-                    <field name="partner_id" string="Partner"/>
                     <field name="product_id"/>
                     <field name="product_qty" />
                     <field name="product_uom" string="UoM" groups="product.group_uom"/>
@@ -1564,7 +1555,7 @@
                         groups="product.group_stock_packaging"
                         icon="terp-stock_effects-object-colorize"
                         states="draft,assigned,confirmed,done"/>
-                    <field name="date"/>
+                    <field name="date" groups="base.group_no_one"/>
                     <field name="state"/>
                     <button name="action_assign" states="confirmed" string="Set Available" type="object" icon="gtk-yes"/>
                     <button name="action_done" string="Process" type="object" states="confirmed,assigned" icon="gtk-go-forward"/>
@@ -1580,11 +1571,10 @@
             <field name="arch" type="xml">
                 <tree string="Moves">
                     <field name="picking_id" string="Reference"/>
-                    <field name="partner_id" string="Partner"/>
                     <field name="product_id"/>
                     <field name="product_qty" />
                     <field name="product_uom" string="UoM" groups="product.group_uom"/>
-                    <field name="date"/>
+                    <field name="date" groups="base.group_no_one" />
                     <button name="action_done" states="confirmed,assigned" string="Process" type="object" icon="gtk-go-forward"/>
                 </tree>
             </field>
@@ -1609,7 +1599,7 @@
                         <newline/>
                         <field name="location_id"/>
                         <field name="location_dest_id"/>
-                        <field name="address_id" context="{'contact_display':'partner'}"/>
+                        <field name="partner_id"/>
 
                     </group>
                     <group colspan="2" col="2">
@@ -1627,8 +1617,8 @@
 
                     <group colspan="2" col="2">
                         <separator string="Dates" colspan="2" />
-                        <field name="create_date" groups="base.group_extended"/>
-                        <field name="date" groups="base.group_extended"/>
+                        <field name="create_date" groups="base.group_no_one" />
+                        <field name="date" groups="base.group_no_one" />
                         <field name="date_expected" on_change="onchange_date(date,date_expected)"/>
                     </group>
 
@@ -1676,19 +1666,17 @@
                         <filter icon="terp-go-today" string="Today" domain="[('date','&lt;=',time.strftime('%%Y-%%m-%%d 23:59:59')),('date','&gt;=',time.strftime('%%Y-%%m-%%d 00:00:00'))]" help="Orders planned for today"/>
                         <separator orientation="vertical"/>
                         <field name="origin"/>
-                        <field name="partner_id" string="Partner"/>
                         <field name="product_id"/>
                         <field name="prodlot_id"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By..." groups="base.group_extended">
-                        <filter string="Supplier" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Order" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                        <separator orientation="vertical"/>
-                        <filter string="Order Date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}" />
+                        <separator orientation="vertical" groups="base.group_no_one"/>
+                        <filter string="Order Date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}" groups="base.group_no_one"/>
                     </group>
                 </search>
             </field>
@@ -1709,19 +1697,17 @@
                         <filter icon="terp-go-today" string="Today" domain="[('date','&lt;=',time.strftime('%%Y-%%m-%%d 23:59:59')),('date','&gt;=',time.strftime('%%Y-%%m-%%d 00:00:00'))]" help="Orders planned for today"/>
                         <separator orientation="vertical"/>
                         <field name="origin"/>
-                        <field name="partner_id" string="Partner"/>
                         <field name="product_id"/>
                         <field name="prodlot_id"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By..." groups="base.group_extended">
-                        <filter string="Customer" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
                         <filter string="Order" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                        <separator orientation="vertical"/>
-                        <filter string="Order Date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}" />
+                        <separator orientation="vertical" groups="base.group_no_one"/>
+                        <filter string="Order Date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}" groups="base.group_no_one"/>
                     </group>
                 </search>
             </field>
@@ -1735,7 +1721,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">['|','&amp;',('picking_id','=',False),('location_id.usage', 'in', ['customer','supplier']),'&amp;',('picking_id','!=',False),('picking_id.type','=','in')]</field>
             <field name="view_id" ref="view_move_tree_reception_picking"/>
-            <field name="context" eval="'{\'search_default_receive\':1, \'search_default_available\':1, \'product_receive\' : True, \'default_location_id\':%d, \'default_location_dest_id\':%d}' % (ref('stock_location_suppliers'),ref('stock_location_stock') )"/>
+            <field name="context" eval="'{\'product_receive\' : True, \'default_location_id\':%d, \'default_location_dest_id\':%d}' % (ref('stock_location_suppliers'),ref('stock_location_stock') )"/>
             <field name="search_view_id" ref="view_move_search_reception_incoming_picking"/>
             <field name="help">Here you can receive individual products, no matter what purchase order or picking order they come from. You will find the list of all products you are waiting for. Once you receive an order, you can filter based on the name of the supplier or the purchase order reference. Then you can confirm all products received using the buttons on the right of each line.</field>
         </record>
@@ -1787,7 +1773,7 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem action="action_incoterms_tree" id="menu_action_incoterm_open" parent="menu_warehouse_config" sequence="7"/>
+        <menuitem action="action_incoterms_tree" id="menu_action_incoterm_open" parent="menu_warehouse_config" sequence="1"/>
 
         <act_window
             context="{'location': active_id}"
@@ -1870,7 +1856,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">['|','&amp;',('picking_id','=',False),('location_dest_id.usage', 'in', ['customer','supplier']),'&amp;',('picking_id','!=',False),('picking_id.type','=','out')]</field>
             <field name="view_id" ref="view_move_tree_reception_picking"/>
-            <field name="context" eval="'{\'search_default_receive\':1,\'search_default_available\':1, \'default_location_id\':%d, \'default_location_dest_id\':%d}' % (ref('stock_location_stock'),ref('stock_location_customers'))"/>
+            <field name="context" eval="'{\'default_location_id\':%d, \'default_location_dest_id\':%d}' % (ref('stock_location_stock'),ref('stock_location_customers'))"/>
             <field name="search_view_id" ref="view_move_search_reception_outcoming_picking"/>
             <field name="help">You will find in this list all products you have to deliver to your customers. You can process the deliveries directly from this list using the buttons on the right of each line. You can filter the products to deliver by customer, products or sale order (using the Origin field).</field>
         </record>
@@ -1935,8 +1921,7 @@
         <menuitem
             action="action_stock_journal_form"
             id="menu_action_stock_journal_form"
-            groups="base.group_extended"
-            parent="menu_warehouse_config" />
+            parent="menu_warehouse_config" sequence="1"/>
 
         <record model="ir.actions.todo.category" id="category_stock_management_config">
             <field name="name">Stock Management</field>

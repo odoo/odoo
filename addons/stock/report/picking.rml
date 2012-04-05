@@ -162,13 +162,13 @@
       <tr>
         <td>
           <para style="terp_default_Bold_9">Shipping Address :</para>
-          <para style="terp_default_9">[[ (picking.address_id and picking.address_id.partner_id and picking.address_id.partner_id.title.name) or '' ]] [[ picking.address_id and picking.address_id.partner_id and picking.address_id.partner_id.name ]]</para>
-          <para style="terp_default_9">[[ picking.address_id and display_address(picking.address_id) ]]</para>
+          <para style="terp_default_9">[[ (picking.partner_id and picking.partner_id.id and picking.partner_id.title.name) or '' ]] [[ picking.partner_id and picking.partner_id.id and picking.partner_id.name ]]</para>
+          <para style="terp_default_9">[[ picking.partner_id and display_address(picking.partner_id,'delivery') ]]</para>
         </td>
         <td>
           <para style="terp_default_Bold_9">Contact Address :</para>
-          <para style="terp_default_9">[[ picking.address_id and picking.address_id.title.name or '' ]] [[ picking.address_id and picking.address_id.name or '' ]]</para>
-          <para style="terp_default_9">[[ picking.address_id and display_address(picking.address_id) ]] </para>
+          <para style="terp_default_9">[[ picking.partner_id and picking.partner_id.title.name or '' ]] [[ picking.partner_id and picking.partner_id.name or '' ]]</para>
+          <para style="terp_default_9">[[ picking.partner_id and display_address(picking.partner_id,'default') ]] </para>
         </td>
       </tr>
     </blockTable>
@@ -218,7 +218,7 @@
           <para style="terp_default_Centre_8">[[ picking.origin or '']]</para>
         </td>
         <td>
-          <para style="terp_default_Centre_8">[[ (picking.address_id and picking.address_id.title.name) or '' ]] [[ (picking.address_id and picking.address_id.name) or '' ]] </para>
+          <para style="terp_default_Centre_8">[[ (picking.partner_id and picking.partner_id.title.name) or '' ]] [[ (picking.partner_id and picking.partner_id.name) or '' ]] </para>
         </td>
         <td>
           <para style="terp_default_Centre_8">[[ formatLang(picking.min_date,date_time = True) ]]</para>

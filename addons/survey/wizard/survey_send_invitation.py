@@ -138,48 +138,47 @@ class survey_send_invitation(osv.osv_memory):
             os.remove(addons.get_module_resource('survey', 'report') + id.title +".pdf")
 
         for partner in self.pool.get('res.partner').browse(cr, uid, partner_ids):
-            for addr in partner.address:
-                if not addr.email:
-                    skipped+= 1
-                    continue
-                user = user_ref.search(cr, uid, [('login', "=", addr.email)])
-                if user:
-                    if user[0] not in new_user:
-                        new_user.append(user[0])
-                    user = user_ref.browse(cr, uid, user[0])
-                    user_ref.write(cr, uid, user.id, {'survey_id':[[6, 0, survey_ids]]})
-                    mail = record['mail']%{'login':addr.email, 'passwd':user.password, \
-                                                'name' : addr.name}
-                    if record['send_mail_existing']:
-                        mail_message.schedule_with_attach(cr, uid, record['mail_from'], [addr.email] , \
-                                         record['mail_subject_existing'] , mail, context=context)
-                        existing+= "- %s (Login: %s,  Password: %s)\n" % (user.name, addr.email, \
-                                                                          user.password)
-                    continue
+            if not partner.email:
+                skipped+= 1
+                continue
+            user = user_ref.search(cr, uid, [('login', "=", partner.email)])
+            if user:
+                if user[0] not in new_user:
+                    new_user.append(user[0])
+                user = user_ref.browse(cr, uid, user[0])
+                user_ref.write(cr, uid, user.id, {'survey_id':[[6, 0, survey_ids]]})
+                mail = record['mail']%{'login':partner.email, 'passwd':user.password, \
+                                            'name' : partner.name}
+                if record['send_mail_existing']:
+                    mail_message.schedule_with_attach(cr, uid, record['mail_from'], [partner.email] , \
+                                     record['mail_subject_existing'] , mail, context=context)
+                    existing+= "- %s (Login: %s,  Password: %s)\n" % (user.name, partner.email, \
+                                                                      user.password)
+                continue
 
-                passwd= self.genpasswd()
-                out+= addr.email + ',' + passwd + '\n'
-                mail= record['mail'] % {'login' : addr.email, 'passwd' : passwd, 'name' : addr.name}
-                if record['send_mail']:
-                    ans = mail_message.schedule_with_attach(cr, uid, record['mail_from'], [addr.email], \
-                                           record['mail_subject'], mail, attachments=attachments, context=context)
-                    if ans:
-                        res_data = {'name': addr.name or 'Unknown',
-                                    'login': addr.email,
-                                    'password': passwd,
-                                    'address_id': addr.id,
-                                    'groups_id': [[6, 0, [group_id]]],
-                                    'action_id': act_id[0],
-                                    'survey_id': [[6, 0, survey_ids]]
-                                   }
-                        user = user_ref.create(cr, uid, res_data)
-                        if user not in new_user:
-                            new_user.append(user)
-                        created+= "- %s (Login: %s,  Password: %s)\n" % (addr.name or 'Unknown',\
-                                                                          addr.email, passwd)
-                    else:
-                        error+= "- %s (Login: %s,  Password: %s)\n" % (addr.name or 'Unknown',\
-                                                                        addr.email, passwd)
+            passwd= self.genpasswd()
+            out+= partner.email + ',' + passwd + '\n'
+            mail= record['mail'] % {'login' : partner.email, 'passwd' : passwd, 'name' : partner.name}
+            if record['send_mail']:
+                ans = mail_message.schedule_with_attach(cr, uid, record['mail_from'], [partner.email], \
+                                       record['mail_subject'], mail, attachments=attachments, context=context)
+                if ans:
+                    res_data = {'name': partner.name or _('Unknown'),
+                                'login': partner.email,
+                                'password': passwd,
+                                'address_id': partner.id,
+                                'groups_id': [[6, 0, [group_id]]],
+                                'action_id': act_id[0],
+                                'survey_id': [[6, 0, survey_ids]]
+                               }
+                    user = user_ref.create(cr, uid, res_data)
+                    if user not in new_user:
+                        new_user.append(user)
+                    created+= "- %s (Login: %s,  Password: %s)\n" % (partner.name or _('Unknown'),\
+                                                                      partner.email, passwd)
+                else:
+                    error+= "- %s (Login: %s,  Password: %s)\n" % (partner.name or _('Unknown'),\
+                                                                    partner.email, passwd)
 
         new_vals = {}
         new_vals.update({'invited_user_ids':[[6,0,new_user]]})

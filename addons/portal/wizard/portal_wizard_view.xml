@@ -10,15 +10,6 @@
             key2="client_action_multi" target="new"
             groups="group_portal_officer"/>
 
-        <!-- wizard action on res.partner.address -->
-        <act_window id="address_wizard_action"
-            name="Add Portal Access"
-            src_model="res.partner.address"
-            res_model="res.portal.wizard"
-            view_type="form" view_mode="form"
-            key2="client_action_multi" target="new"
-            groups="group_portal_officer"/>
-
         <!-- wizard view -->
         <record id="wizard_view" model="ir.ui.view">
             <field name="name">Add Portal Access</field>

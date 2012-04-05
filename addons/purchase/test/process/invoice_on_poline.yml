@@ -21,7 +21,6 @@
 -
   I set the default invoicing control method "Based on Purchase Order Lines".
 -
-  !python {model: purchase.config.wizard}: |
-    new_id = self.create(cr ,uid, {'default_method': 'manual'})
+  !python {model: purchase.config.settings}: |
+    new_id = self.create(cr, uid, {'default_invoice_method': 'manual'})
     self.execute(cr, uid, [new_id])
-

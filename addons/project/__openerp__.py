@@ -52,7 +52,6 @@ Dashboard for project members that includes:
         "project_data.xml",
         "project_view.xml",
         "process/task_process.xml",
-        "project_installer.xml",
         "res_partner_view.xml",
         "report/project_report_view.xml",
         "board_project_view.xml",

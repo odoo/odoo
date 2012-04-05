@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    OpenERP, Open Source Business Applications
+#    Copyright (C) 2004-2012 OpenERP S.A. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -52,12 +52,6 @@ class crm_configuration(osv.osv_memory):
         'module_wiki_sale_faq': fields.boolean("Install a sales FAQ",
             help="""This provides demo data, thereby creating a Wiki Group and a Wiki Page for Wiki Sale FAQ.
                 This installs the module wiki_sale_faq."""),
-        'module_base_contact': fields.boolean("Manage a several addresses per customer",
-            help="""Lets you define:
-                    * contacts unrelated to a partner,
-                    * contacts working at several addresses (possibly for different partners),
-                    * contacts with possibly different job functions.
-                This installs the module base_contact."""),
         'module_google_map': fields.boolean("Google maps on customer",
             help="""Locate customers on Google Map.
                 This installs the module google_map."""),

@@ -80,7 +80,7 @@ class delivery_carrier(osv.osv):
     }
 
     def grid_get(self, cr, uid, ids, contact_id, context=None):
-        contact = self.pool.get('res.partner.address').browse(cr, uid, contact_id, context=context)
+        contact = self.pool.get('res.partner').browse(cr, uid, contact_id, context=context)
         for carrier in self.browse(cr, uid, ids, context=context):
             for grid in carrier.grids_id:
                 get_id = lambda x: x.id

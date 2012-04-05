@@ -10,28 +10,30 @@
                 <form string ="Configure Warehouse">
                     <separator string="Traceability" colspan="4"/>
                     <field name="group_stock_production_lot"/>
+                    <field name="module_product_expiry"
+                        attrs="{'invisible': [('group_stock_production_lot','=',False), ('group_stock_tracking_lot','=',False)]}"/>
                     <newline/>
                     <field name="group_stock_tracking_lot"/>
-                    <newline/>
-                    <field name="module_product_expiry"/>
-                    <newline/>
 
                     <separator string="Logistics" colspan="4"/>
+                    <field name="group_stock_multiple_locations"/>
                     <field name="module_stock_no_autopicking"/>
-                    <newline/>
+                    <field name="module_stock_location"/>
                     <field name="module_stock_invoice_directly"/>
-                    <newline/>
 
                     <separator string="Products" colspan="4"/>
                     <field name="group_stock_packaging"/>
                     <field name="group_stock_inventory_valuation"/>
                     <field name="group_uom"/>
-                    <field name="group_stock_counterpart_location"/>
+                    <field name="group_uos"/>
 
                     <separator string="Partners" colspan="4"/>
-                    <field name="group_stock_inventory_properties"/>
-                    <newline/>
                     <field name="module_claim_from_delivery"/>
+
+                    <newline/>
+                    <label colspan="2"/>
+                    <button string="Cancel" icon="gtk-cancel" special="cancel"/>
+                    <button string="Apply" icon="gtk-apply" type="object" name="execute"/>
                 </form>
             </field>
         </record>
