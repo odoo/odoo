@@ -385,7 +385,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         this.name = openerp._session_id;
         this.qweb_mutex = new $.Mutex();
     },
-    bind_session: function(origin) {
+    session_bind: function(origin) {
         var window_origin = location.protocol+"//"+location.host, self=this;
         this.origin = origin ? _.str.rtrim(origin,'/') : window_origin;
         this.prefix = this.origin;
@@ -559,52 +559,67 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
      * FIXME: Huge testing hack, especially the evaluation context, rewrite + test for real before switching
      */
     test_eval: function (source, expected) {
+        var match_template = '<ul>' +
+                '<li>Source: %(source)s</li>' +
+                '<li>Local: %(local)s</li>' +
+                '<li>Remote: %(remote)s</li>' +
+            '</ul>',
+            fail_template = '<ul>' +
+                '<li>Error: %(error)s</li>' +
+                '<li>Source: %(source)s</li>' +
+            '</ul>';
         try {
             var ctx = this.test_eval_contexts(source.contexts);
             if (!_.isEqual(ctx, expected.context)) {
-                console.group('Local context does not match remote, nothing is broken but please report to R&D (xmo)');
-                console.warn('source', source.contexts);
-                console.warn('local', ctx);
-                console.warn('remote', expected.context);
-                console.groupEnd();
+                openerp.webclient.notification.warn('Context mismatch, report to xmo',
+                    _.str.sprintf(match_template, {
+                        source: JSON.stringify(source.contexts),
+                        local: JSON.stringify(ctx),
+                        remote: JSON.stringify(expected.context)
+                    }), true);
             }
         } catch (e) {
-            console.group('Failed to evaluate contexts, nothing is broken but please report to R&D (xmo)');
-            console.error(e);
-            console.log('source', source.contexts);
-            console.groupEnd();
+            openerp.webclient.notification.warn('Context fail, report to xmo',
+                _.str.sprintf(fail_template, {
+                    error: e.message,
+                    source: JSON.stringify(source.contexts)
+                }), true);
         }
 
         try {
             var dom = this.test_eval_domains(source.domains, this.test_eval_get_context());
             if (!_.isEqual(dom, expected.domain)) {
-                console.group('Local domain does not match remote, nothing is broken but please report to R&D (xmo)');
-                console.warn('source', source.domains);
-                console.warn('local', dom);
-                console.warn('remote', expected.domain);
-                console.groupEnd();
+                openerp.webclient.notification.warn('Domains mismatch, report to xmo',
+                    _.str.sprintf(match_template, {
+                        source: JSON.stringify(source.domains),
+                        local: JSON.stringify(dom),
+                        remote: JSON.stringify(expected.domain)
+                    }), true);
             }
         } catch (e) {
-            console.group('Failed to evaluate domains, nothing is broken but please report to R&D (xmo)');
-            console.error(e);
-            console.log('source', source.domains);
-            console.groupEnd();
+            openerp.webclient.notification.warn('Domain fail, report to xmo',
+                _.str.sprintf(fail_template, {
+                    error: e.message,
+                    source: JSON.stringify(source.domains)
+                }), true);
         }
 
         try {
             var groups = this.test_eval_groupby(source.group_by_seq);
             if (!_.isEqual(groups, expected.group_by)) {
-                console.group('Local groupby does not match remote, nothing is broken but please report to R&D (xmo)');
-                console.warn('source', source.group_by_seq);
-                console.warn('local', groups);
-                console.warn('remote', expected.group_by);
-                console.groupEnd();
+                openerp.webclient.notification.warn('GroupBy mismatch, report to xmo',
+                    _.str.sprintf(match_template, {
+                        source: JSON.stringify(source.group_by_seq),
+                        local: JSON.stringify(groups),
+                        remote: JSON.stringify(expected.group_by)
+                    }), true);
             }
         } catch (e) {
-            console.group('Failed to evaluate groupby, nothing is broken but please report to R&D (xmo)');
-            console.error(e);
-            console.log('source', source.group_by_seq);
-            console.groupEnd();
+            openerp.webclient.notification.warn('GroupBy fail, report to xmo',
+                _.str.sprintf(fail_template, {
+                    error: e.message,
+                    source: JSON.stringify(source.group_by_seq)
+                }), true);
         }
     },
     test_eval_contexts: function (contexts) {
