@@ -622,13 +622,12 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
     },
     test_eval_contexts: function (contexts, evaluation_context) {
         evaluation_context = evaluation_context || {};
-        var result_context = _.extend({}, this.user_context),
-            self = this;
-        _(contexts).each(function (ctx) {
-            var evaluated = ctx;
+        var self = this;
+        return _(contexts).reduce(function (result_context, ctx) {
             // __eval_context evaluations can lead to some of `contexts`'s
             // values being null, skip them as well as empty contexts
-            if (_.isEmpty(ctx)) { return; }
+            if (_.isEmpty(ctx)) { return result_context; }
+            var evaluated = ctx;
             switch(ctx.__ref) {
             case 'context':
                 evaluated = py.eval(ctx.__debug, evaluation_context);
@@ -639,10 +638,11 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
                     ctx.__contexts, _.extend({}, evaluation_context, eval_context));
                 break;
             }
+            // add newly evaluated context to evaluation context for following
+            // siblings
             _.extend(evaluation_context, evaluated);
-            _.extend(result_context, evaluated);
-        });
-        return result_context;
+            return _.extend(result_context, evaluated);
+        }, _.extend({}, this.user_context));
     },
     test_eval_domains: function (domains, evaluation_context) {
         var result_domain = [], self = this;
