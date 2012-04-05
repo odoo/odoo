@@ -266,8 +266,8 @@ class ir_ui_menu(osv.osv):
             else:
                 menu_needaction_res = [False, 0, ()]
             res[menu.id]['needaction_enabled'] = menu_needaction_res[0]
-            res[menu.id]['needaction_counter'] = menu_needaction_res[1]
-            res[menu.id]['needaction_record_ids'] = menu_needaction_res[2]
+            res[menu.id]['needaction_counter'] = int(menu_needaction_res[1])
+            res[menu.id]['needaction_record_ids'] = []
         return res
         
     _columns = {
