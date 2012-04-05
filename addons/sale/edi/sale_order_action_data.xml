@@ -21,8 +21,7 @@
             <field name="search_view_id" ref="email_template.view_email_template_search"/>
             <field name="context" eval="{'search_default_model_id': ref('sale.model_sale_order')}"/>
         </record>
-        <menuitem id="menu_sales_configuration_misc" name="Miscellaneous" parent="base.menu_base_config" sequence="30"/>
-        <menuitem id="menu_email_templates" parent="menu_sales_configuration_misc" action="action_email_templates" sequence="30"/>
+        <menuitem id="base.menu_sales_configuration_misc" name="Miscellaneous" parent="base.menu_base_config" sequence="75"/>
     </data>
 
 
@@ -46,10 +45,10 @@
             <field name="body_html"><![CDATA[
 <div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); ">
 
-    <p>Hello${object.partner_order_id.name and ' ' or ''}${object.partner_order_id.name or ''},</p>
+    <p>Hello${object.partner_id.name and ' ' or ''}${object.partner_id.name or ''},</p>
     
     <p>Here is your order confirmation for ${object.partner_id.name}: </p>
-    
+
     <p style="border-left: 1px solid #8e0000; margin-left: 30px;">
        &nbsp;&nbsp;<strong>REFERENCES</strong><br />
        &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />
@@ -67,7 +66,7 @@
     <p>
     You can view the order confirmation document, download it and pay online using the following link:
     </p>
-            <a style="display:block; width: 150px; height:20px; margin-left: 120px; color: #FFF; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;" 
+            <a style="display:block; width: 150px; height:20px; margin-left: 120px; color: #FFF; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;"
                href="${ctx.get('edi_web_url_view') or ''}">View Order</a>
 
     % if object.order_policy in ('prepaid','manual') and object.company_id.paypal_account:
@@ -128,7 +127,7 @@
 </div>
             ]]></field>
             <field name="body_text"><![CDATA[
-Hello${object.partner_order_id.name and ' ' or ''}${object.partner_order_id.name or ''},
+Hello${object.partner_id.name and ' ' or ''}${object.partner_id.name or ''},
 
 Here is your order confirmation for ${object.partner_id.name}:
        | Order number: *${object.name}*
@@ -146,7 +145,7 @@ You can view the order confirmation, download it and even pay online using the f
     ${ctx.get('edi_web_url_view') or 'n/a'}
 
 % if object.order_policy in ('prepaid','manual') and object.company_id.paypal_account:
-<% 
+<%
 comp_name = quote(object.company_id.name)
 order_name = quote(object.name)
 paypal_account = quote(object.company_id.paypal_account)

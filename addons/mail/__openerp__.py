@@ -62,7 +62,6 @@ The main features are:
         "res_partner_view.xml",
         'security/ir.model.access.csv',
         'mail_data.xml',
-        'res_config_view.xml',
     ],
     'installable': True,
     'auto_install': False,

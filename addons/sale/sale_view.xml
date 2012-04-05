@@ -4,10 +4,6 @@
             id="base.menu_base_partner" name="Sales"
             sequence="0" groups="base.group_sale_salesman,base.group_sale_manager"/>
 
-        <menuitem id="base.menu_sales" name="Sales"
-            parent="base.menu_base_partner" sequence="1"
-            />
-
         <menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" sequence="9"/>
 
         <record id="view_shop_form" model="ir.ui.view">
@@ -50,7 +46,7 @@
             <field name="help">If you have more than one shop reselling your company products, you can create and manage that from here. Whenever you will record a new quotation or sales order, it has to be linked to a shop. The shop also defines the warehouse from which the products will be delivered for each particular sales.</field>
         </record>
 
-        <menuitem action="action_shop_form" id="menu_action_shop_form" parent="base.menu_sale_config_sales" sequence="0"/>
+        <menuitem action="action_shop_form" id="menu_action_shop_form" parent="base.menu_base_config" sequence="35"/>
 
         <record id="view_sale_order_calendar" model="ir.ui.view">
             <field name="name">sale.order.calendar</field>
@@ -115,12 +111,11 @@
                     </group>
                     <notebook colspan="5">
                         <page string="Sales Order">
-                            <field name="partner_id" options='{"quick_create": false}' on_change="onchange_partner_id(partner_id)" domain="[('customer','=',True)]" context="{'search_default_customer':1}" required="1"/>
-                            <field domain="[('partner_id','=',partner_id)]" name="partner_order_id" on_change="onchange_partner_order_id(partner_order_id, partner_invoice_id, partner_shipping_id)" options='{"quick_create": false}'/>
-                            <field domain="[('partner_id','=',partner_id)]" name="partner_invoice_id" groups="sale.group_delivery_invoice_address" options='{"quick_create": false}'/>
-                            <field domain="[('partner_id','=',partner_id)]" name="partner_shipping_id" groups="sale.group_delivery_invoice_address" options='{"quick_create": false}'/>
+                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" domain="[('customer','=',True)]" context="{'search_default_customer':1}" required="1"/>
+                            <field domain="[('parent_id','=',partner_id)]" name="partner_invoice_id" groups="sale.group_delivery_invoice_address" options='{"quick_create": false}'/>
+                            <field domain="[('parent_id','=',partner_id)]" name="partner_shipping_id" groups="sale.group_delivery_invoice_address" options='{"quick_create": false}'/>
                             <field domain="[('type','=','sale')]" name="pricelist_id" groups="product.group_sale_pricelist" on_change="onchange_pricelist_id(pricelist_id,order_line)"/>
-                            <field name="project_id" context="{'partner_id':partner_id, 'contact_id':partner_order_id, 'pricelist_id':pricelist_id, 'default_name':name}" groups="analytic.group_analytic_accounting" domain="[('parent_id','!=',False)]"/>
+                            <field name="project_id" context="{'partner_id':partner_id, 'pricelist_id':pricelist_id, 'default_name':name}" groups="sale.group_analytic_accounting" domain="[('parent_id','!=',False)]"/>
                             <newline/>
                             <field colspan="4" name="order_line" nolabel="1" widget="one2many_list">
                                 <form string="Sales Order Lines">
@@ -137,9 +132,10 @@
                                                 context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'shop':parent.shop_id, 'uom':product_uom}"
                                                 name="product_uom_qty"
                                                 on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, False, parent.date_order, product_packaging, parent.fiscal_position, True, context)"/>
-                                            <field name="product_uom"
-                                                on_change="product_uom_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, False, parent.date_order, context)"
-                                                nolabel="1" groups="product.group_uom"/>
+                                            <group colspan="1">
+                                                <field name="product_uom" nolabel="1" groups="product.group_uom"
+                                                    on_change="product_uom_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, False, parent.date_order, context)"/>
+                                            </group>
                                             <field name="price_unit"/>
 
                                             <field groups="product.group_uos" name="product_uos_qty"/>
@@ -152,9 +148,8 @@
                                             <field name="discount" groups="sale.group_discount_per_so_line"/>
                                             <separator colspan="5" string="Notes" groups="base.group_sale_notes_subtotal"/>
                                             <field colspan="5" name="notes" nolabel="1" groups="base.group_sale_notes_subtotal"/>
-                                            <separator colspan="5" string="Taxes" groups="sale.group_taxes_on_order_line"/>
-                                            <field colspan="5" name="tax_id" nolabel="1" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]" 
-                                                groups="sale.group_taxes_on_order_line" />
+                                            <separator colspan="5" string="Taxes"/>
+                                            <field colspan="5" name="tax_id" nolabel="1" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
                                             <group colspan="5" col="5" groups="base.group_extended">
                                                 <separator colspan="5" string="States"/>
                                                 <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done" statusbar_colors='{"exception":"red","cancel":"red"}'/>
@@ -165,7 +160,7 @@
                                             </group>
                                         </group>
                                         </page>
-                                        <page groups="base.group_extended" string="Extra Info">
+                                        <page string="Extra Info" groups="product.group_mrp_properties">
                                             <field name="type"/>
                                             <field name="delay"/>
                                             <field name="th_weight"/>
@@ -194,8 +189,8 @@
                             </field>
                             <newline/>
                             <group col="13" colspan="10">
-                                <field name="amount_untaxed" sum="Untaxed amount" groups="sale.group_taxes_on_order_line,sale.group_taxes_global_on_order"/>
-                                <field name="amount_tax" groups="sale.group_taxes_on_order_line,sale.group_taxes_global_on_order"/>
+                                <field name="amount_untaxed" sum="Untaxed amount"/>
+                                <field name="amount_tax"/>
                                 <field name="amount_total"/>
                                 <button name="button_dummy" states="draft" string="Compute" type="object" icon="gtk-execute"/>
                                 <button name="%(action_view_sale_advance_payment_inv)d" string="Advance Invoice" type="action" icon="gtk-execute" states="draft,manual" groups="base.group_extended"/>
@@ -236,7 +231,7 @@
                                 <field name="fiscal_position" widget="selection"/>
                                 <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                             </group>
-                            <group colspan="2" col="2" groups="base.group_extended">
+                            <group colspan="2" col="2" groups="base.group_no_one">
                                 <separator string="Dates" colspan="2"/>
                                 <field name="create_date"/>
                                 <field name="date_confirm"/>
@@ -261,8 +256,8 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Sales Order">
-                    <filter icon="terp-document-new" string="Quotations" domain="[('state','=','draft')]" help="Sales Order that haven't yet been confirmed"/>
-                    <filter icon="terp-check" string="Sales" domain="[('state','in',('manual','progress'))]"/>
+                    <filter icon="terp-document-new" string="Quotations" name="draft" domain="[('state','=','draft')]" help="Sales Order that haven't yet been confirmed"/>
+                    <filter icon="terp-check" string="Sales" name="sales" domain="[('state','in',('manual','progress'))]"/>
                     <separator orientation="vertical"/>
                     <filter icon="terp-dolar_ok!" string="To Invoice" domain="[('state','=','manual')]" help="Sales Order ready to be invoiced"/>
                     <separator orientation="vertical"/>
@@ -292,10 +287,10 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="search_view_id" ref="view_sales_order_filter"/>
-            <field name="context">{}</field>
+            <field name="context">{"search_default_sales":1}</field>
             <field name="help">Sales Orders help you manage quotations and orders from your customers. OpenERP suggests that you start by creating a quotation. Once it is confirmed, the quotation will be converted into a Sales Order. OpenERP can handle several types of products so that a sales order may trigger tasks, delivery orders, manufacturing orders, purchases and so on. Based on the configuration of the sales order, a draft invoice will be generated so that you just have to confirm it when you want to bill your customer.</field>
         </record>
-        <menuitem action="action_order_form" id="menu_sale_order" parent="base.menu_sales" sequence="3" groups="base.group_sale_salesman,base.group_sale_manager"/>
+        <menuitem action="action_order_form" id="menu_sale_order" parent="base.menu_sales" sequence="4" groups="base.group_sale_salesman,base.group_sale_manager"/>
 
         <record id="action_order_tree2" model="ir.actions.act_window">
             <field name="name">Sales in Exception</field>
@@ -320,14 +315,18 @@
 
 
         <record id="action_order_tree5" model="ir.actions.act_window">
-            <field name="name">All Quotations</field>
+            <field name="name">Quotations</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="domain">[('state','=','draft')]</field>
+            <field name="context">{"search_default_draft":1}</field>
             <field name="search_view_id" ref="view_sales_order_filter"/>
         </record>
+
+        <menuitem id="menu_sale_quotations"
+        action="action_order_tree5" parent="base.menu_sales"
+        sequence="3" />
 
         <record id="action_order_tree" model="ir.actions.act_window">
             <field name="name">Old Quotations</field>
@@ -384,6 +383,7 @@
                         <field name="product_id" readonly="1"/>
                         <field name="product_uom_qty" readonly="1"/>
                         <field name="product_uom" groups="product.group_uom"/>
+                        <newline/>
 
                         <field colspan="4" name="name" groups="base.group_extended"/>
                         <field name="company_id" groups="base.group_multi_company" readonly="1"/>
@@ -462,7 +462,7 @@
         </record>
 
         <record id="action_order_line_tree2" model="ir.actions.act_window">
-            <field name="name">Lines to Invoice</field>
+            <field name="name">Order Lines to Invoice</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order.line</field>
             <field name="view_type">form</field>
@@ -500,7 +500,7 @@
             groups="base.group_sale_salesman"/>
 
         <menuitem id="base.menu_invoiced" name="Invoicing" parent="base.menu_base_partner" sequence="5"/>
-        <menuitem id="menu_invoicing_sales_order_lines" parent="base.menu_invoiced" action="action_order_line_tree2" sequence="2" groups="sale.group_invoice_so_lines"/>
+        <menuitem id="menu_invoicing_sales_order_lines" parent="base.menu_invoiced" action="action_order_line_tree2" sequence="10" groups="sale.group_invoice_so_lines"/>
 
     </data>
 </openerp>

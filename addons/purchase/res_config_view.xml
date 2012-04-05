@@ -7,27 +7,24 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Configure Purchases">
-                    <group colspan="4" col="6">
-                        <separator string="Invoicing" colspan="6"/>
-                        <field name="default_invoice_method" />
+                    <separator string="Invoicing" colspan="4"/>
+                    <field name="default_invoice_method" />
 
-                        <separator string="Purchase Order" colspan="6"/>
-                        <field name="group_purchase_pricelist"/>
-                        <field name="group_purchase_taxes_global_on_order" invisible="1"/>
-                        <field name="group_purchase_taxes_on_order_line" invisible="1"/>
-                        <field name="group_uom"/>
-                        <newline/>
-                        <field name="tax_policy" on_change="onchange_tax_policy(tax_policy)"/>
-                        <field name="module_purchase_double_validation"/>
-                        <newline/>
-                        <field name="module_warning"/>
-                        <field name="module_purchase_requisition"/>
-                        <newline/>
-                        <field name="module_purchase_analytic_plans"/>
+                    <separator string="Purchase Order" colspan="4"/>
+                    <field name="group_purchase_pricelist"/>
+                    <field name="group_uom"/>
+                    <field name="module_purchase_double_validation"/>
+                    <field name="module_purchase_requisition"/>
+                    <field name="module_warning"/>
+                    <field name="module_purchase_analytic_plans"/>
 
-                        <separator string="Products" colspan="6"/>
-                        <field name="module_product_manufacturer"/>
-                    </group>
+                    <separator string="Products" colspan="4"/>
+                    <field name="module_product_manufacturer"/>
+
+                    <newline/>
+                    <label colspan="2"/>
+                    <button string="Cancel" icon="gtk-cancel" special="cancel"/>
+                    <button string="Apply" icon="gtk-apply" type="object" name="execute"/>
                 </form>
             </field>
         </record>
@@ -41,6 +38,18 @@
 
         <menuitem id="menu_purchase_config" name="Purchases" parent="base.menu_config"
             sequence="2" action="action_purchase_configuration"/>
+
+        <record id="view_account_config" model="ir.ui.view">
+            <field name="name">account settings</field>
+            <field name="model">account.config.settings</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="account.view_account_config_settings"/>
+            <field name="arch" type="xml">
+                <group name="analytic_accounting" position="after">
+                    <field name="group_analytic_account_for_purchases"/>
+                </group>
+            </field>
+        </record>
 
     </data>
 </openerp>

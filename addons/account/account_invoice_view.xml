@@ -51,12 +51,12 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Invoice Line">
-                    <field name="product_id" on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.address_invoice_id, parent.currency_id, context, parent.company_id)"/>
+                    <field name="product_id" on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.currency_id, context, parent.company_id)"/>
                     <field colspan="2" name="name"/>
                     <label string="Quantity :" align="1.0"/>
                     <group colspan="1" col="2">
                         <field name="quantity" nolabel="1"/>
-                        <field name="uos_id" on_change="uos_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.address_invoice_id, parent.currency_id, context, parent.company_id)" nolabel="1"/>
+                        <field name="uos_id" on_change="uos_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.currency_id, context, parent.company_id)" nolabel="1"/>
                     </group>
                     <field name="price_unit"/>
                     <field domain="[('company_id', '=', parent.company_id), ('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id" on_change="onchange_account_id(product_id, parent.partner_id, parent.type, parent.fiscal_position,account_id)"/>
@@ -153,7 +153,6 @@
                         <button name="%(action_account_change_currency)d" type="action" icon="terp-stock_effects-object-colorize" string="Change" attrs="{'invisible':[('state','!=','draft')]}" groups="account.group_account_user"/>
                         <newline/>
                         <field string="Supplier" name="partner_id" on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank_id,company_id)" context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}" options='{"quick_create": false}' domain="[('supplier', '=', True)]"/>
-                        <field domain="[('partner_id','=',partner_id)]" name="address_invoice_id" context="{'default_partner_id': partner_id}" options='{"quick_create": false}'/>
                         <field name="fiscal_position" groups="base.group_extended" widget="selection"/>
                         <newline/>
                         <field name="date_invoice"/>
@@ -168,9 +167,9 @@
                             <field name="reference_type" nolabel="1" size="0"/>
                             <field name="reference" nolabel="1"/>
                             <field name="date_due"/>
-                            <field colspan="4" context="{'address_invoice_id': address_invoice_id, 'partner_id': partner_id, 'price_type': 'price_type' in dir() and price_type or False, 'type': type}" name="invoice_line" nolabel="1">
+                            <field colspan="4" context="{'partner_id': partner_id, 'price_type': 'price_type' in dir() and price_type or False, 'type': type}" name="invoice_line" nolabel="1">
                                 <tree string="Invoice lines">
-                                    <field name="product_id" on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.address_invoice_id, parent.currency_id, context, parent.company_id)"/>
+                                    <field name="product_id" on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.currency_id, context, parent.company_id)"/>
                                     <field domain="[('company_id', '=', parent.company_id), ('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id" on_change="onchange_account_id(product_id,parent.partner_id,parent.type,parent.fiscal_position,account_id)"/>
                                     <field name="invoice_line_tax_id" view_mode="2" context="{'type':parent.type}" domain="[('parent_id','=',False)]"/>
                                     <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id), ('parent_id', '!=', False)]" name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
@@ -223,7 +222,6 @@
                             <field name="name"/>
                             <newline/>
                             <field name="origin" groups="base.group_extended"/>
-                            <field domain="[('partner_id','=',partner_id)]" name="address_contact_id" groups="base.group_extended"/>
                             <field name="user_id"/>
                             <field name="move_id" groups="account.group_account_user"/>
                             <separator colspan="4" string="Additional Information"/>
@@ -263,7 +261,6 @@
                     <button name="%(action_account_change_currency)d" type="action" icon="terp-stock_effects-object-colorize" string="Change" attrs="{'invisible':[('state','!=','draft')]}" groups="account.group_account_user"/>
                     <newline/>
                     <field string="Customer" name="partner_id" on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank_id,company_id)" groups="base.group_user" context="{'search_default_customer': 1}" options='{"quick_create": false}' domain="[('customer', '=', True)]"/>
-                    <field domain="[('partner_id','=',partner_id)]" name="address_invoice_id" context="{'default_partner_id': partner_id}" options='{"quick_create": false}'/>
                     <field name="fiscal_position" groups="base.group_extended" widget="selection" options='{"quick_create": false}'/>
                     <newline/>
                     <field name="date_invoice"/>
@@ -306,7 +303,7 @@
                                     <button name="action_cancel_draft" states="cancel" string="Reset to Draft" type="object" icon="terp-stock_effects-object-colorize"/>
                                     <button name='%(action_account_state_open)d' type='action' string='Re-Open' groups="account.group_account_invoice" attrs="{'invisible':['|', ('state','&lt;&gt;','paid'), ('reconciled', '=', True)]}" icon="gtk-convert" help="This button only appears when the state of the invoice is 'paid' (showing that it has been fully reconciled) and auto-computed boolean 'reconciled' is False (depicting that it's not the case anymore). In other words, the invoice has been dereconciled and it does not fit anymore the 'paid' state. You should press this button to re-open it and let it continue its normal process after having resolved the eventual exceptions it may have created."/>
                                     <button name="%(action_account_invoice_refund)d" type='action' string='Refund' states='open,paid' icon="gtk-execute"/>
-                                    <button name="invoice_proforma2" states="draft" string="PRO-FORMA" icon="terp-gtk-media-pause" groups="account.group_account_user"/>
+                                    <button name="invoice_proforma2" states="draft" string="PRO-FORMA" icon="terp-gtk-media-pause" groups="account.group_proforma_invoices"/>
                                     <button name="invoice_open" states="draft,proforma2" string="Validate" icon="gtk-go-forward"/>
                                     <button name="%(account_invoices)d" string="Print Invoice" type="action" icon="gtk-print" states="open,paid,proforma,sale,proforma2"/>
                                 </group>
@@ -321,8 +318,6 @@
                             <field domain="[('partner_id.ref_companies', 'in', [company_id])]" name="partner_bank_id"
                                 groups="base.group_extended"/>
                             <field name="origin"/>
-                            <field colspan="4" domain="[('partner_id','=',partner_id)]" name="address_contact_id"
-                                groups="base.group_extended"/>
                             <field name="move_id" groups="account.group_account_user"/>
                             <separator colspan="4" string="Additional Information"/>
                             <field colspan="4" name="comment" nolabel="1"/>
@@ -355,7 +350,7 @@
                 <search string="Search Invoice">
                    <group>
                         <filter name="draft" icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Invoices"/>
-                        <filter name="proforma" icon="terp-gtk-media-pause" string="Proforma" domain="[('state','=','proforma2')]" help="Proforma Invoices"/>
+                        <filter name="proforma" icon="terp-gtk-media-pause" string="Proforma" domain="[('state','=','proforma2')]" help="Proforma Invoices" groups="account.group_proforma_invoices"/>
                         <filter name="invoices" icon="terp-dolar" string="Invoices" domain="[('state','not in',['draft','cancel'])]" help="Proforma/Open/Paid Invoices"/>
                         <separator orientation="vertical"/>
                         <filter name="unpaid" icon="terp-dolar_ok!" string="Unpaid" domain="[('state','=','open')]" help="Unpaid Invoices"/>

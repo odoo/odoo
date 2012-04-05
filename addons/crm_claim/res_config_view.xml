@@ -9,7 +9,7 @@
             <field name="inherit_id" ref="base.view_sale_config_settings"/>
             <field name="priority" eval="12"/>       <!-- to put fetchmail_lead before fetchmail_claim -->
             <field name="arch" type="xml">
-                <group name="config_emails" position="after">
+                <group name="config_fetchmail" position="after">
                     <field name="fetchmail_claim"/>
                     <group colspan="2" attrs="{'invisible': [('fetchmail_claim','=',False)]}">
                         <field name="claim_server" attrs="{'required': [('fetchmail_claim','=',True)]}"/>
@@ -19,6 +19,7 @@
                         <field name="claim_user" attrs="{'required': [('fetchmail_claim','=',True)]}"/>
                         <field name="claim_password" password="True" attrs="{'required': [('fetchmail_claim','=',True)]}"/>
                     </group>
+                    <newline/>
                 </group>
             </field>
         </record>

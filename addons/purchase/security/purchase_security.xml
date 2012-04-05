@@ -11,16 +11,13 @@
         <field name="name">Manager</field>
         <field name="category_id" ref="base.module_category_purchase_management"/>
         <field name="implied_ids" eval="[(4, ref('group_purchase_user'))]"/>
+        <field name="users" eval="[(4, ref('base.user_root'))]"/>
     </record>
 
-    <record id="group_taxes_global_on_order" model="res.groups">
-        <field name="name">Purchase Taxes Global on Order</field>
+    <record id="group_analytic_accounting" model="res.groups">
+        <field name="name">Analytic Accounting for Purchases</field>
         <field name="category_id" ref="base.module_category_hidden"/>
-    </record>
-
-    <record id="group_taxes_on_order_line" model="res.groups">
-        <field name="name">Purchase Taxes on Order Lines</field>
-        <field name="category_id" ref="base.module_category_hidden"/>
+        <field name="implied_ids" eval="[(4, ref('analytic.group_analytic_accounting'))]"/>
     </record>
 
     <record model="ir.rule" id="purchase_order_comp_rule">

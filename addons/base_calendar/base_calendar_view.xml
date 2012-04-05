@@ -22,10 +22,8 @@
                             <group colspan="4" col="4">
                                 <field name="user_id" string="Invited User"/>
                                 <newline/>
-                                <field name="partner_address_id"
-                                    string="Contact" />
                                 <field name="partner_id"
-                                    string="Partner" readonly="1" />
+                                    string="Contact" />
                             </group>
                             <separator string="Event Detail" colspan="4" />
                             <group colspan="4" col="4">
@@ -78,7 +76,7 @@
                     <field name="sent_by_uid" string="Invitation From" />
                     <field name="role" string="My Role"/>
                     <field name="user_id" invisible="1"/>
-                    <field name="partner_address_id" invisible="1"/>
+                    <field name="partner_id" invisible="1"/>
                     <field name="cutype" string="Invitation type"/>
                     <field name="state" />
                     <field name="rsvp" string="Required to Join"/>
@@ -132,7 +130,7 @@
                         <filter string="Responsible" icon="terp-personal" domain="[]"
                             context="{'group_by':'user_id'}" />
                         <filter string="Contact" icon="terp-personal" domain="[]"
-                            context="{'group_by':'partner_address_id'}" />
+                            context="{'group_by':'partner_id'}" />
                         <separator orientation="vertical" />
                         <filter string="Type" icon="terp-stock_symbol-selection" help="Invitation Type"
                             domain="[]" context="{'group_by':'cutype'}" />
@@ -159,7 +157,7 @@
 
         <!-- Calenadar's menu -->
         <menuitem id="base.menu_calendar_configuration" name="Calendar"
-            parent="base.menu_base_config" sequence="6" groups="base.group_sale_manager" />
+            parent="base.menu_base_config" sequence="50" groups="base.group_sale_manager" />
 
         <!-- Invitation menu -->
 
@@ -215,9 +213,9 @@
         <!--        Menu for Alarms-->
 
          <menuitem id="menu_crm_meeting_avail_alarm"
-            groups="base.group_extended"
+            groups="base.group_no_one"
             action="base_calendar.action_res_alarm_view"
-            parent="base.menu_calendar_configuration" />
+            parent="base.menu_calendar_configuration" sequence="5"/>
 
         <!-- Event Form View-->
 
@@ -350,9 +348,9 @@
                             <group col="4" colspan="4">
                                 <field name="rrule_type" string="Recurrency period"
                                    attrs="{'readonly':[('recurrent_uid','!=',False)]}" />
-                                <field name="interval" />                               
-                                                       
-                                
+                                <field name="interval" />
+
+
                                 <separator string="End of recurrency" colspan="4"/>
                                 <field name="end_type" />
                                 <label string=" " colspan="2" />
@@ -362,8 +360,8 @@
                                 <newline />
                                 <field name="end_date" attrs="{'invisible' : [('end_type', '!=', 'end_date')] }"/>
                                 <newline />
-                           
-                      
+
+
                             </group>
                             <group col="8" colspan="4" name="Select weekdays" attrs="{'invisible' :[('rrule_type','not in', ['weekly'])]}">
                                 <separator string="Choose day where repeat the meeting" colspan="8"/>
@@ -501,7 +499,7 @@
         <menuitem id="menu_events"
                 name="Events" parent="base.menu_calendar_configuration"
                 groups="base.group_extended"
-                sequence="5" action="action_view_event" />
+                sequence="15" action="action_view_event" />
 
      </data>
  </openerp>

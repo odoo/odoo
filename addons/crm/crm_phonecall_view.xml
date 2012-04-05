@@ -15,7 +15,7 @@
     </record>
 
     <menuitem action="crm_phonecall_categ_action" name="Categories"
-        id="menu_crm_case_phonecall-act" parent="menu_crm_config_phonecall" />
+        id="menu_crm_case_phonecall-act" parent="menu_crm_config_phonecall" groups="base.group_no_one"/>
 
 <!--  PhoneCalls Tree View -->
 
@@ -28,7 +28,6 @@
                 <field name="date"/>
                 <field name="name"/>
                 <field name="partner_id"/>
-                <field name="partner_contact"/>
                 <field name="partner_phone"/>
                 <field name="user_id"/>
                 <field name="categ_id" invisible="1"/>
@@ -88,11 +87,9 @@
                         icon="terp-partner"
                         name="%(action_crm_phonecall2partner)d"
                         type="action"
-                        attrs="{'invisible':[('partner_id','!=',False)]}" 
+                        attrs="{'invisible':[('partner_id','!=',False)]}"
                         groups="base.group_partner_manager"/>
                     <newline/>
-                    <field name="partner_address_id"
-                        on_change="onchange_partner_address_id(partner_address_id)" />
                     <newline/>
                     <field name="partner_mobile" />
                 </group>
@@ -140,9 +137,6 @@
                 <field name="partner_id"
                     on_change="onchange_partner_id(partner_id)"
                     string="Partner" />
-                <field name="partner_address_id"
-                        on_change="onchange_partner_address_id(partner_address_id)"
-                        invisible="1"/>
                 <field name="partner_phone"
                     invisible="1"/>
                 <field name="user_id" groups="base.group_extended"/>
@@ -239,7 +233,7 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Scheduled Phonecalls">
-               <filter icon="terp-gtk-go-back-rtl" string="To Do" name="current" domain="[('state','=','open')]"/>    
+               <filter icon="terp-gtk-go-back-rtl" string="To Do" name="current" domain="[('state','=','open')]"/>
                <separator orientation="vertical"/>
                <filter icon="terp-go-today" string="Today"
                    domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d 23:59:59')),
@@ -281,7 +275,7 @@
                </group>
            </search>
         </field>
-    </record>   
+    </record>
 
     </data>
 </openerp>

@@ -687,9 +687,9 @@ class auction_lots(osv.osv):
             if (lot.auction_id.id, lot.ach_uid.id) in invoices:
                 inv_id = invoices[(lot.auction_id.id, lot.ach_uid.id)]
             else:
-                add = res_obj.read(cr, uid, [lot.ach_uid.id], ['address'])[0]['address']
-                if not len(add):
-                    raise orm.except_orm(_('Missed Address !'), _('The Buyer has no Invoice Address.'))
+                add = res_obj.address_get(cr, uid, [lot.ach_uid.id], ['default'])['default']
+                if not add:
+                    raise orm.except_orm(_('Missed Address !'), _('The Buyer has no Address.'))
                 inv = {
                     'name':lot.auction_id.name or '',
                     'reference': lot.ach_login,
@@ -751,8 +751,8 @@ class auction_bid(osv.osv):
         if not partner_id:
             return {'value': {'contact_tel':False}}
         contact = self.pool.get('res.partner').browse(cr, uid, partner_id)
-        if len(contact.address):
-            v_contact=contact.address[0] and contact.address[0].phone
+        if contact:
+            v_contact=contact.phone
         else:
             v_contact = False
         return {'value': {'contact_tel': v_contact}}

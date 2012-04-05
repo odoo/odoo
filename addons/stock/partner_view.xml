@@ -6,19 +6,19 @@
   -->
 
     <record id="view_partner_property_form" model="ir.ui.view">
-      <field name="name">res.partner.stock.property.form.inherit</field>
-      <field name="model">res.partner</field>
-      <field name="type">form</field>
-      <field name="inherit_id" ref="base.view_partner_form"/>
-      <field name="arch" type="xml">
-        <page string="Sales &amp; Purchases" position="inside">
-          <group colspan="2" col="2" groups="stock.group_inventory_properties">
-            <separator string="Inventory Properties" colspan="2"/>
-            <field name="property_stock_customer" domain="[('usage','=','customer')]" groups="stock.group_inventory_properties" />
-            <field name="property_stock_supplier" domain="[('usage','=','supplier')]" groups="stock.group_inventory_properties"/>
-          </group>
-        </page>
-      </field>
+        <field name="name">res.partner.stock.property.form.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="type">form</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <page string="Sales &amp; Purchases" position="inside">
+                <group colspan="2" col="2" groups="stock.group_locations">
+                    <separator string="Inventory Properties" colspan="2"/>
+                    <field name="property_stock_customer" domain="[('usage','=','customer')]"/>
+                    <field name="property_stock_supplier" domain="[('usage','=','supplier')]"/>
+                </group>
+            </page>
+        </field>
     </record>
 
   </data>

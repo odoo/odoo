@@ -4,7 +4,7 @@
            <!-- Fund Raising Configuration Menu -->
         <menuitem id="menu_config_fundrising" name="Fund Raising"
             groups="base.group_extended"
-            parent="base.menu_base_config" sequence="8" />
+            parent="base.menu_base_config" sequence="65" />
 
         <!-- Fund Raising Categories Form View -->
 
@@ -19,7 +19,7 @@
         </record>
 
         <menuitem action="crm_fund_categ_action" name="Categories"
-            id="menu_crm_case_fundraising-act" groups="base.group_extended"
+            id="menu_crm_case_fundraising-act" groups="base.group_no_one"
             parent="menu_config_fundrising" />
 
         <!-- Fund Stage Form View -->
@@ -94,10 +94,6 @@
                                 <field name="partner_id" select="1"
                                     on_change="onchange_partner_id(partner_id, email_from)"
                                     colspan="2" />
-                                <field name="partner_address_id"
-                                    string="Contact"
-                                    on_change="onchange_partner_address_id(partner_address_id, email_from)"
-                                    colspan="1" />
                                 <field name="email_from" colspan="2"/>
                             </group>
                             <group colspan="2" col="2">
@@ -162,7 +158,7 @@
                                 <field name="id" select="1"/>
                                 <field name="priority" string="Priority"/>
                             </group>
-                            <group col="2" colspan="2">
+                            <group col="2" colspan="2" groups="base.group_no_one">
                                 <separator colspan="4" string="Dates"/>
                                 <field name="create_date"/>
                                 <field name="date_closed"/>

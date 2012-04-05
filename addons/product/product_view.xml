@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem groups="base.group_extended" id="prod_config_main" name="Products" parent="base.menu_base_config" sequence="9"/>
+        <menuitem groups="base.group_extended" id="prod_config_main" name="Products" parent="base.menu_base_config" sequence="70"/>
 
         <record id="product_search_form_view" model="ir.ui.view">
             <field name="name">product.search.form</field>
@@ -123,13 +123,13 @@
                                 <field name="product_manager"/>
                             </group>
 
-                            <group colspan="2" col="2" name="uom">
+                            <group colspan="2" col="2" name="uom" groups="product.group_uom">
                                 <separator string="Unit of Measure" colspan="2"/>
-                                <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)" groups="product.group_uom"/>
-                                <field name="uom_po_id" groups="base.group_extended"/>
+                                <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)"/>
+                                <field name="uom_po_id"/>
                             </group>
 
-                            <group colspan="2" col="2" name="uos" groups="product.group_uom">
+                            <group colspan="2" col="2" name="uos" groups="product.group_uos">
                                 <separator string="Second UoM" colspan="2"/>
                                 <field name="uos_id"/>
                                 <field name="uos_coeff"/>
@@ -362,7 +362,7 @@
             <field name="view_id" ref="product_category_list_view"/>
         </record>
         <menuitem action="product_category_action_form"
-            groups="base.group_extended"
+            groups="base.group_no_one"
             id="menu_product_category_action_form"
             parent="prod_config_main" sequence="2"/>
 
@@ -440,8 +440,8 @@
             <field name="view_id" ref="product_uom_tree_view"/>
             <field name="help">Create and manage the units of measure you want to be used in your system. You can define a conversion rate between several Units of Measure within the same category.</field>
         </record>
-        <menuitem id="next_id_16" name="Units of Measure" parent="prod_config_main" sequence="65" groups="product.group_uom"/>
-        <menuitem action="product_uom_form_action" id="menu_product_uom_form_action" parent="next_id_16"/>
+        <menuitem id="next_id_16" name="Units of Measure" parent="prod_config_main" sequence="30" groups="product.group_uom"/>
+        <menuitem action="product_uom_form_action" id="menu_product_uom_form_action" parent="base.menu_base_config" sequence="30"/>
 
         <record id="product_uom_categ_form_view" model="ir.ui.view">
             <field name="name">product.uom.categ.form</field>
@@ -461,7 +461,7 @@
             <field name="view_mode">tree,form</field>
             <field name="help">Create and manage the units of measure categories you want to be used in your system. If several units of measure are in the same category, they can be converted to each other. For example, in the unit of measure category "Time", you will have the following UoM: Hours, Days.</field>
         </record>
-        <menuitem action="product_uom_categ_form_action" id="menu_product_uom_categ_form_action" parent="product.next_id_16" sequence="5"/>
+        <menuitem action="product_uom_categ_form_action" id="menu_product_uom_categ_form_action" parent="base.menu_base_config" sequence="25"/>
 
         <record id="product_ul_form_view" model="ir.ui.view">
             <field name="name">product.ul.form.view</field>

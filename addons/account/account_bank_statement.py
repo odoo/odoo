@@ -341,11 +341,11 @@ class account_bank_statement(osv.osv):
             if not st.name == '/':
                 st_number = st.name
             else:
+                c = {'fiscalyear_id': st.period_id.fiscalyear_id.id}
                 if st.journal_id.sequence_id:
-                    c = {'fiscalyear_id': st.period_id.fiscalyear_id.id}
                     st_number = obj_seq.next_by_id(cr, uid, st.journal_id.sequence_id.id, context=c)
                 else:
-                    st_number = obj_seq.next_by_code(cr, uid, 'account.bank.statement')
+                    st_number = obj_seq.next_by_code(cr, uid, 'account.bank.statement', context=c)
 
             for line in st.move_line_ids:
                 if line.state <> 'valid':

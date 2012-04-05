@@ -128,7 +128,6 @@ class purchase_requisition(osv.osv):
         res_partner = self.pool.get('res.partner')
         fiscal_position = self.pool.get('account.fiscal.position')
         supplier = res_partner.browse(cr, uid, partner_id, context=context)
-        delivery_address_id = res_partner.address_get(cr, uid, [supplier.id], ['delivery'])['delivery']
         supplier_pricelist = supplier.property_product_pricelist_purchase or False
         res = {}
         for requisition in self.browse(cr, uid, ids, context=context):
@@ -138,7 +137,6 @@ class purchase_requisition(osv.osv):
             purchase_id = purchase_order.create(cr, uid, {
                         'origin': requisition.name,
                         'partner_id': supplier.id,
-                        'partner_address_id': delivery_address_id,
                         'pricelist_id': supplier_pricelist.id,
                         'location_id': location_id,
                         'company_id': requisition.company_id.id,
