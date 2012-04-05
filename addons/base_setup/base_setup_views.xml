@@ -145,6 +145,11 @@
                 <field name="module_plugin_outlook" attrs="{'invisible': [('module_crm','=',False)]}"/>
 
                 <group name="config_crm" colspan="4"/>
+
+                <newline/>
+                <label colspan="2"/>
+                <button string="Cancel" icon="gtk-cancel" special="cancel"/>
+                <button string="Apply" icon="gtk-apply" type="object" name="execute"/>
             </form>
         </field>
     </record>

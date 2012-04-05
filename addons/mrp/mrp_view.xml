@@ -105,17 +105,17 @@
         <menuitem name="Master Bill of Materials"
             id="menu_mrp_property"
             parent="menu_mrp_configuration"
-            groups="mrp.group_mrp_routings,mrp.group_mrp_properties"
+            groups="mrp.group_mrp_routings,product.group_mrp_properties"
             sequence="20" />
         <menuitem
             action="mrp_property_action"
             id="menu_mrp_property_action"
-            groups="mrp.group_mrp_properties"
+            groups="product.group_mrp_properties"
             parent="menu_mrp_property"/>
         <menuitem
             action="mrp_property_group_action"
             parent="menu_mrp_property"
-            groups="mrp.group_mrp_properties"
+            groups="product.group_mrp_properties"
             id="menu_mrp_property_group_action"/>
 
         <!--
@@ -377,7 +377,7 @@
                                     <page string="Revisions" groups="base.group_extended" attrs="{'invisible': [('bom_id','!=',False)]}">
                                         <field colspan="4" name="revision_ids" nolabel="1" widget="one2many_list"/>
                                     </page>
-                                    <page string="Properties" groups="mrp.group_mrp_properties">
+                                    <page string="Properties" groups="product.group_mrp_properties">
                                         <field name="position"/>
                                         <field name="active"/>
                                         <field name="sequence"/>
@@ -397,7 +397,7 @@
                         <page string="Revisions" groups="base.group_extended" attrs="{'invisible': [('bom_id','!=',False)]}">
                             <field colspan="4" name="revision_ids" nolabel="1" widget="one2many_list"/>
                         </page>
-                        <page string="Properties" groups="mrp.group_mrp_properties">
+                        <page string="Properties" groups="product.group_mrp_properties">
                             <field name="position"/>
                             <field name="active"/>
                             <field name="sequence"/>
@@ -963,7 +963,7 @@
                     <field name="bom_id" domain="[('product_id','=',product_id),('bom_id','=',False)]"/>
                 </xpath>
                 <xpath expr="/form/notebook/page/field[@name='close_move']" position="after">
-                    <group colspan="4"  groups="mrp.group_mrp_properties">
+                    <group colspan="4"  groups="product.group_mrp_properties">
                     <separator colspan="4" string="Properties" />
                     <field colspan="4" name="property_ids" nolabel="1"/>
                      </group>
@@ -1014,7 +1014,7 @@
         </record>
 
         <menuitem id="menu_pm_resources_config" name="Resources" parent="menu_mrp_configuration"/>
-        <menuitem action="mrp_workcenter_action" id="menu_view_resource_search_mrp" parent="mrp.menu_mrp_bom" sequence="25"/>
+        <menuitem action="mrp_workcenter_action" id="menu_view_resource_search_mrp" groups="mrp.group_mrp_routings" parent="mrp.menu_mrp_bom" sequence="25"/>
         <menuitem action="resource.action_resource_calendar_form" id="menu_view_resource_calendar_search_mrp" parent="menu_pm_resources_config" sequence="1" groups="base.group_no_one"/>
         <menuitem action="resource.action_resource_calendar_leave_tree" id="menu_view_resource_calendar_leaves_search_mrp" parent="menu_pm_resources_config" sequence="1" groups="base.group_no_one"/>
 
