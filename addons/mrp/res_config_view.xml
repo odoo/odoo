@@ -1,0 +1,43 @@
+<openerp>
+    <data>
+
+        <record id="view_mrp_config" model="ir.ui.view">
+            <field name="name">mrp settings</field>
+            <field name="model">mrp.config.settings</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Configure Manufacturing">
+                    <separator string="Manufacturing Order" colspan="4"/>
+                    <field name="module_mrp_operations"/>
+                    <field name="module_stock_planning"/>
+                    <field name="module_mrp_subproduct"/>
+                    <field name="module_mrp_repair"/>
+
+		            <separator string="Logistics" colspan="4"/>
+                    <field name="module_mrp_jit"/>
+
+		            <separator string="Bill Of Material" colspan="4"/>
+                    <field name="group_mrp_routings"/>
+                    <field name="group_mrp_properties"/>
+
+                    <newline/>
+                    <label colspan="2"/>
+                    <button string="Cancel" icon="gtk-cancel" special="cancel"/>
+                    <button string="Apply" icon="gtk-apply" type="object" name="execute"/>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_mrp_configuration" model="ir.actions.act_window">
+            <field name="name">Configure Manufacturing</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mrp.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+        </record>
+
+        <menuitem id="base.menu_mrp_config" name="Manufacturing" parent="base.menu_config"
+            sequence="4" action="action_mrp_configuration"/>
+
+    </data>
+</openerp>

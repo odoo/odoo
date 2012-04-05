@@ -1,51 +1,17 @@
 <openerp>
     <data>
-        <!-- configartion view -->
 
-        <record id="view_config_purchase_limit_amount" model="ir.ui.view">
-            <field name="name">Configure Limit Amount for Purchase</field>
-            <field name="model">purchase.double.validation.installer</field>
+        <record id="view_double_purchase_configuration" model="ir.ui.view">
+            <field name="name">Purchase Application</field>
+            <field name="model">purchase.config.settings</field>
             <field name="type">form</field>
-            <field name="inherit_id" ref="base.res_config_view_base"/>
+            <field name="inherit_id" ref="purchase.view_purchase_configuration"/>
             <field name="arch" type="xml">
-              <data>
-                <form position="attributes">
-                  <attribute name="string">Purchase Application Configuration</attribute>
-                </form>
-                <separator string="title" position="attributes">
-                <attribute name="string">Configure Limit Amount for Purchase</attribute>
-                  </separator>
-                  <xpath expr="//label[@string='description']" position="attributes">
-                    <attribute name="string">Define minimum amount after which puchase is needed to be validated.</attribute>
-                  </xpath>
-                <xpath expr="//separator[@string=&quot;vsep&quot;]" position="attributes">
-                      <attribute name="rowspan">15</attribute>
-                      <attribute name="string"/>
-                  </xpath>
-                <group string="res_config_contents" position="replace">
-                  <field name="limit_amount"/>
-                  <newline/>
-                </group>
-              </data>
+                <field name="module_purchase_double_validation" position="replace">
+                    <field name="limit_amount"/>
+                </field>
             </field>
         </record>
 
-        <record id="action_config_purchase_limit_amount" model="ir.actions.act_window">
-            <field name="name">Configure Limit Amount for Purchase</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">purchase.double.validation.installer</field>
-            <field name="view_id" ref="view_config_purchase_limit_amount"/>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-        </record>
-
-        <!-- register configuration wizard -->
-        <record id="config_wizard_step_purchase_limit_amount" model="ir.actions.todo">
-            <field name="action_id" ref="action_config_purchase_limit_amount"/>
-            <field name="category_id" ref="purchase.category_purchase_config"/>
-            <field name="type">once</field>
-        </record>
-        
     </data>
 </openerp>
