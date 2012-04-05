@@ -82,6 +82,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             }
             self.compute_aggregates();
         });
+
         this.no_leaf = false;
     },
     /**
@@ -775,7 +776,7 @@ openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.Lis
      *
      * @constructs openerp.web.ListView.List
      * @extends openerp.web.Class
-     *
+     * 
      * @param {Object} opts display options, identical to those of :js:class:`openerp.web.ListView`
      */
     init: function (group, opts) {
@@ -1513,7 +1514,7 @@ var Record = openerp.web.Class.extend(/** @lends Record# */{
     /**
      * @constructs Record
      * @extends openerp.web.Class
-     *
+     * 
      * @mixes Events
      * @param {Object} [data]
      */
@@ -1595,11 +1596,11 @@ var Collection = openerp.web.Class.extend(/** @lends Collection# */{
      * Smarter collections, with events, very strongly inspired by Backbone's.
      *
      * Using a "dumb" array of records makes synchronization between the
-     * various serious
+     * various serious 
      *
      * @constructs Collection
      * @extends openerp.web.Class
-     *
+     * 
      * @mixes Events
      * @param {Array} [records] records to initialize the collection with
      * @param {Object} [options]
