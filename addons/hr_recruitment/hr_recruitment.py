@@ -69,10 +69,16 @@ class hr_recruitment_stage(osv.osv):
         'name': fields.char('Name', size=64, required=True, translate=True),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of stages."),
         'department_id':fields.many2one('hr.department', 'Specific to a Department', help="Stages of the recruitment process may be different per department. If this stage is common to all departments, keep tempy this field."),
+        'state': fields.selection(AVAILABLE_STATES, 'State', size=16,
+                                  help='The state is set to \'Draft\', when a case is created.\
+                                  \nIf the case is in progress the state is set to \'Open\'.\
+                                  \nWhen the case is over, the state is set to \'Done\'.\
+                                  \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
         'requirements': fields.text('Requirements')
     }
     _defaults = {
         'sequence': 1,
+        'state': lambda *a: 'draft',
     }
 hr_recruitment_stage()
 
@@ -144,11 +150,7 @@ class hr_applicant(crm.crm_case, osv.osv):
         'create_date': fields.datetime('Creation Date', readonly=True, select=True),
         'write_date': fields.datetime('Update Date', readonly=True),
         'stage_id': fields.many2one ('hr.recruitment.stage', 'Stage'),
-        'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True,
-                                  help='The state is set to \'Draft\', when a case is created.\
-                                  \nIf the case is in progress the state is set to \'Open\'.\
-                                  \nWhen the case is over, the state is set to \'Done\'.\
-                                  \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
+        'state': fields.related('stage_id','state', type='char', selection=AVAILABLE_STATES, string="State", store=True, readonly=True),
         'company_id': fields.many2one('res.company', 'Company'),
         'user_id': fields.many2one('res.users', 'Responsible'),
         # Applicant Columns
@@ -169,7 +171,6 @@ class hr_applicant(crm.crm_case, osv.osv):
         'partner_mobile': fields.char('Mobile', size=32),
         'type_id': fields.many2one('hr.recruitment.degree', 'Degree'),
         'department_id': fields.many2one('hr.department', 'Department'),
-        'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
         'survey': fields.related('job_id', 'survey_id', type='many2one', relation='survey', string='Survey'),
         'response': fields.integer("Response"),
         'reference': fields.char('Refered By', size=128),
