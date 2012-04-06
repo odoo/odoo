@@ -69,27 +69,26 @@
             <field eval="7" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Product">
-                   <group colspan="4" col="8">
-                    <group colspan="4" col="2">
-                        <separator string="Name" colspan="2"/>
-                        <field name="name"/>
-                        <field groups="product.group_product_variant" name="variants" />
+                    <group colspan="4" col="8">
+                        <group colspan="4" col="2">
+                            <separator string="Name" colspan="2"/>
+                            <field name="name"/>
+                            <field groups="product.group_product_variant" name="variants" />
+                        </group>
+                        <group colspan="1" col="2">
+                            <separator string="Codes" colspan="2"/>
+                            <field name="default_code"/>
+                            <field name="ean13" groups="base.group_extended"/>
+                        </group>
+                        <group colspan="1" col="2">
+                            <separator string="Characteristics" colspan="2"/>
+                            <field name="sale_ok"/>
+                            <field name="purchase_ok"/>
+                        </group>
+                        <group colspan="1" col="1">
+                            <field name="product_image" widget='image' nolabel="1"/>
+                        </group>
                     </group>
-                    <group colspan="1" col="2">
-                        <separator string="Codes" colspan="2"/>
-                        <field name="default_code"/>
-                        <field name="ean13" groups="base.group_extended"/>
-                    </group>
-                    <group colspan="1" col="2">
-                        <separator string="Characteristics" colspan="2"/>
-                        <field name="sale_ok"/>
-                        <field name="purchase_ok"/>
-                    </group>
-                    <group colspan="1" col="1">
-                        <field name="product_image" widget='image' nolabel="1"/>
-                    </group>
-                   </group>
-
                     <notebook colspan="4">
                         <page string="Information">
                             <group colspan="2" col="2">
@@ -192,6 +191,7 @@
                             </field>
                         </page>
                     </notebook>
+                    <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
                 </form>
             </field>
         </record>
