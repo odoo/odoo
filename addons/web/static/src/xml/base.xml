@@ -457,13 +457,6 @@
     <t t-jquery="h2.oe_view_title" t-operation="after">
         <select t-if="self.session.debug" class="oe_debug_view"/>
     </t>
-    <t t-jquery=".oe-view-manager-header" t-operation="after">
-        <div class="oe-view-manager-logs oe-folded">
-            <ul></ul>
-            <a class="oe-more-logs" href="#">More…</a>
-            <a class="oe-remove-everything ui-icon ui-icon-closethick"/>
-        </div>
-    </t>
 </t>
 <t t-name="ViewManagerDebug">
     <option value="">Debug View#<t t-esc="view.fields_view.view_id"/></option>
