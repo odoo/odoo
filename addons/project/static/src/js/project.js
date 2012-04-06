@@ -9,7 +9,7 @@ openerp.project = function(openerp) {
                 }).mouseout(function() {
                 return $(this).find('.oe_project_kanban_action').hide();
             });
-            if(self.record.task.raw_value)$('.click_button').attr('data-name','open_tasks');
+            $('.click_button').attr('data-name','open_tasks');
             	
             _.each($('.oe_project_kanban_vignette'),function(record){
                 _.each(record.getElementsByTagName('img'),function(img){

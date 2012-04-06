@@ -20,7 +20,7 @@
                    <field name="categ_id" widget="selection" operator="child_of" groups="base.group_extended"/>
                    <newline/>
                    <group expand="0" string="Context..." groups="base.group_extended">
-                       <field name="pricelist_id" widget="selection" context="{'pricelist': self}" />
+                       <field name="pricelist_id" widget="selection" context="{'pricelist': self}" groups="product.group_sale_pricelist"/>
                        <separator orientation="vertical" groups="base.group_multi_company" />
                        <field name="company_id" widget="selection" groups="base.group_multi_company" />
                    </group>
@@ -50,7 +50,7 @@
                     <field name="name"/>
                     <field name="categ_id" invisible="1"/>
                     <field name="variants" groups="product.group_product_variant"/>
-                    <field name="uom_id" string="UoM"/>
+                    <field name="uom_id" string="UoM" groups="product.group_uom"/>
                     <field name="type"/>
                     <field name="qty_available"/>
                     <field name="virtual_available"/>
@@ -123,10 +123,10 @@
                                 <field name="product_manager"/>
                             </group>
 
-                            <group colspan="2" col="2" name="uom">
+                            <group colspan="2" col="2" name="uom" groups="product.group_uom">
                                 <separator string="Unit of Measure" colspan="2"/>
                                 <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)"/>
-                                <field name="uom_po_id" groups="base.group_extended"/>
+                                <field name="uom_po_id"/>
                             </group>
 
                             <group colspan="2" col="2" name="uos" groups="product.group_uos">
@@ -169,7 +169,7 @@
                             <separator string="Purchase Description"/>
                             <field colspan="4" name="description_purchase" nolabel="1"/>
                         </page>
-                        <page groups="base.group_extended" string="Packaging">
+                        <page groups="product.group_stock_packaging" string="Packaging">
                             <field colspan="4" name="packaging" nolabel="1">
                                 <form string="Packaging">
                                     <field name="ean"/>
@@ -440,7 +440,7 @@
             <field name="view_id" ref="product_uom_tree_view"/>
             <field name="help">Create and manage the units of measure you want to be used in your system. You can define a conversion rate between several Units of Measure within the same category.</field>
         </record>
-        <menuitem id="next_id_16" name="Units of Measure" parent="prod_config_main" sequence="30"/>
+        <menuitem id="next_id_16" name="Units of Measure" parent="prod_config_main" sequence="30" groups="product.group_uom"/>
         <menuitem action="product_uom_form_action" id="menu_product_uom_form_action" parent="base.menu_base_config" sequence="30"/>
 
         <record id="product_uom_categ_form_view" model="ir.ui.view">
@@ -494,7 +494,7 @@
             <field name="help">Create and manage your packaging dimensions and types you want to be maintained in your system.</field>
         </record>
         <menuitem
-            action="product_ul_form_action" groups="base.group_no_one" id="menu_product_ul_form_action" parent="prod_config_main" sequence="3" />
+            action="product_ul_form_action" groups="product.group_stock_packaging" id="menu_product_ul_form_action" parent="prod_config_main" sequence="3"/>
 
         <record id="product_packaging_tree_view" model="ir.ui.view">
             <field name="name">product.packaging.tree.view</field>
@@ -552,7 +552,7 @@
                     <field name="product_uom"/>
                     <field name="delay"/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                    <field colspan="4" groups="base.group_extended" name="pricelist_ids" nolabel="1" widget="one2many_list">
+                    <field colspan="4" groups="product.group_sale_pricelist" name="pricelist_ids" nolabel="1" widget="one2many_list">
                         <tree editable="bottom" string="Pricelist">
                             <field name="min_quantity"/>
                             <field name="price"/>
@@ -674,11 +674,11 @@
 
                             <group colspan="2" col="2" name="uom">
                                 <separator string="UOM" colspan="2"/>
-                                <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)"/>
+                                <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)" groups="product.group_uom"/>
                                 <field name="uom_po_id" groups="base.group_extended"/>
                             </group>
 
-                            <group colspan="2" col="2" name="uos" groups="product.group_uos">
+                            <group colspan="2" col="2" name="uos" groups="product.group_uom">
                                 <separator string="Second UoM" colspan="2"/>
                                 <field name="uos_id"/>
                                 <field name="uos_coeff"/>
