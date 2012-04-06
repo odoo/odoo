@@ -2,38 +2,31 @@ openerp.project = function(openerp) {
     openerp.web_kanban.ProjectKanban = openerp.web_kanban.KanbanRecord.include({
         bind_events: function() {
             self = this;
-            self._super();
-            $('.dropdown-toggle').dropdown();
-            $('.oe_project_kanban_vignette').mouseover(function() {
-                return $(this).find('.oe_project_kanban_action').show();
-                }).mouseout(function() {
-                return $(this).find('.oe_project_kanban_action').hide();
-            });
-            
-            
-            $('.click_button').mouseover(function() {
-                click_button = this
-                var domain = [['id','=',this.getAttribute("id")]]; 
-                var dataset = new openerp.web.DataSetSearch(self, 'project.project', self.session.context, domain);
-                dataset.read_slice([]).then(function(result){
-                    if(result[0].task){
-                        click_button.setAttribute('data-name','open_tasks');
-                    }
-                    else
-                    {
-                        click_button.setAttribute('data-name','dummy');
-                    }
-                    });
-            });
-            	
-            $('.project_avatar').mouseover(function() {
-                avatar = this
-                var dataset = new openerp.web.DataSetSearch(this, 'res.users', self.session.context, [['id','=',avatar.getAttribute("id")]]);
-                dataset.read_slice([]).then(function(result){
-                    avatar.setAttribute("title",result[0].name)
+            if(this.view.dataset.model == 'project.project') {
+                //open dropdwon when click on the icon.
+                $('.dropdown-toggle').dropdown();
+                
+                //show and hide the dropdown icon when mouseover and mouseour.
+                $('.oe_project_kanban_vignette').mouseover(function() {
+                    return $(this).find('.oe_project_kanban_action').show();
+                    }).mouseout(function() {
+                    return $(this).find('.oe_project_kanban_action').hide();
                 });
-            });
-            
+                
+                //set avatar title for members.
+                _.each($(this.$element).find('.project_avatar'),function(avatar){
+                    console.log(avatar.id)
+                    var dataset = new openerp.web.DataSetSearch(this, 'res.users', self.session.context, [['id','=',avatar.id]]);
+                        dataset.read_slice([]).then(function(result){
+                            avatar.setAttribute("title",result[0].name)
+                    });
+                 });
+                
+                //if task is true , then open the task when clickd on the anywhere in the box.
+                if(this.record.task.raw_value)$(this.$element).find('.click_button').attr('data-name','open_tasks');
+                if(!this.record.task.raw_value)$(this.$element).find('.click_button').attr('data-name','dummy');
+            };
+            self._super();
         }
     });
 }
