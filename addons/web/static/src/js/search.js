@@ -848,7 +848,7 @@ openerp.web.search.FilterGroup = openerp.web.search.Input.extend(/** @lends open
         });
         if (_.isEmpty(fs)) { return $.when(null); }
         return $.when(new VS.model.SearchFacet({
-            category: 'q',
+            category: _t("Filter"),
             value: _(fs).map(function (f) {
                 return f.attrs.string || f.attrs.name }).join(' | '),
             json: fs,
@@ -938,7 +938,7 @@ openerp.web.search.FilterGroup = openerp.web.search.Input.extend(/** @lends open
         }
 
         this.view.vs.searchQuery.add({
-            category: 'q',
+            category: _t("Filter"),
             value: _(fs).map(function (f) {
                 return f.attrs.string || f.attrs.name }).join(' | '),
             json: fs,
