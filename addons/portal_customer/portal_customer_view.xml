@@ -2,42 +2,32 @@
 <openerp>
 
     <data>
-    
-        <!-- Partner Form View -->
+      <menuitem name="Customer Portal" id="customer_portal" />
+        
+        <menuitem name="Address Book" id="customer_portal_address_book" parent="customer_portal"/>
+        
+        <menuitem name="Track Orders" id="customer_portal_track_orders" parent="customer_portal"/>
+            <menuitem name="Quotation" id="customer_portal_quotation" parent="customer_portal_track_orders"/>
+            <menuitem name="Sales Orders" id="customer_portal_sales_orders" parent="customer_portal_track_orders"/>
+            <menuitem name="Delivery Orders" id="customer_portal_delivery" parent="customer_portal_track_orders"/>
+            <menuitem name="Registration" id="customer_portal_registration" parent="customer_portal_track_orders"/>
+        
+        <menuitem name="Invoice and Payments" id="customer_portal_invoice_payements" parent="customer_portal"/>
+            <menuitem name="Invoice" id="customer_portal_invoice" parent="customer_portal_invoice_payements"/>
+            <menuitem name="Payments" id="customer_portal_payments" parent="customer_portal_invoice_payements"/>
             
-            <record id="view_res_partner_form" model="ir.ui.view">
-                <field name="name">res.partner.form</field>
-                <field name="model">res.partner</field>
-                <field name="inherit_id" ref="base.view_partner_form"/>
-                <field name="type">form</field>
-                <field name="arch" type="xml">
-                    <field name="supplier" position="after">
-                        <field name="customer_portal_access" on_change="onchange_portal_create_user(customer_portal_access)"/>
-                    </field>
-                </field>
-            </record>
-            
-            <record id="action_res_partner_form" model="ir.actions.act_window">
-                <field name="name">Contacts</field>
-                <field name="res_model">res.partner</field>
-                <field name="view_type">form</field>
-                <field name="view_mode">tree,form</field>
-            </record>
-            
-            <menuitem id="base.menu_partner_form" parent="base.menu_sales" action="base.action_partner_form" sequence="1" groups="base.group_sale_salesman"/>
-            <menuitem id="base.menu_base_config" name="Configuration" parent="base.menu_base_partner" sequence="30" groups="base.group_sale_salesman"/>
-            <menuitem action="product.product_uom_categ_form_action" id="product.menu_product_uom_categ_form_action" parent="base.menu_base_config" sequence="25" groups="base.group_sale_salesman"/>
-            <menuitem action="sale.action_shop_form" id="sale.menu_action_shop_form" parent="base.menu_base_config" sequence="35" groups="base.group_sale_salesman"/>
-            <menuitem action="product.product_pricelist_action2" id="product.menu_product_pricelist_action2" parent="base.menu_base_config" sequence="20" groups="base.group_sale_salesman"/>
-            <menuitem action="product.product_uom_form_action" id="product.menu_product_uom_form_action" parent="base.menu_base_config" sequence="30" groups="base.group_sale_salesman"/>
-            <menuitem action="stock.action_picking_tree4" id="stock.menu_action_picking_tree4" parent="stock.menu_stock_warehouse_mgmt" sequence="1" groups="base.group_sale_salesman"/>
-            <menuitem action="stock.action_location_tree" id="stock.menu_action_location_tree" parent="stock.menu_stock_inventory_control" sequence="20" groups="stock.group_stock_user"/>
-            <menuitem name="Products by Category" id="stock.menu_product_by_category_stock_form" action="product.product_category_action" parent="stock.menu_stock_product" sequence="0" groups="stock.group_stock_user"/>
-            <menuitem action="product.product_normal_action" id="stock.menu_stock_products_menu" parent="stock.menu_stock_product" sequence="1" groups="stock.group_stock_user"/>
-            <menuitem id="account.menu_account_customer" name="Customers" parent="account.menu_finance_receivables" action="base.action_partner_customer_form" sequence="100" groups="account.group_account_user"/>
-            <menuitem action="account.action_invoice_tree2" id="account.menu_action_invoice_tree2" parent="account.menu_finance_payables" groups="account.group_account_user"/>
-            <menuitem action="account.action_invoice_tree4" id="account.menu_action_invoice_tree4" parent="account.menu_finance_payables" groups="account.group_account_user"/>
-            <menuitem id="account.menu_account_supplier" name="Suppliers" parent="account.menu_finance_payables" action="base.action_partner_supplier_form" sequence="100" groups="account.group_account_user"/>
+        <menuitem name="Services" id="customer_portal_services" parent="customer_portal"/>
+            <menuitem name="Events" id="customer_portal_events" parent="customer_portal_services"/>
+            <menuitem name="Products" id="customer_portal_products" parent="customer_portal_services"/>
+            <menuitem name="Tasks" id="customer_portal_tasks" parent="customer_portal_services"/>
+        
+        <menuitem name="After Sales Services" id="customer_portal_after_sales" parent="customer_portal"/>
+            <menuitem name="Issues" id="customer_portal_issues" parent="customer_portal_after_sales"/>
+            <menuitem name="Claims" id="customer_portal_claims" parent="customer_portal_after_sales"/>
+            <menuitem name="Feedback" id="customer_portal_feedback" parent="customer_portal_after_sales"/>
+
+        <menuitem name="Contact Us" id="customer_portal_contact" parent="customer_portal"/>
+        
             
     </data>
     
