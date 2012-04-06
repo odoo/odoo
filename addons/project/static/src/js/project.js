@@ -16,12 +16,12 @@ openerp.project = function(openerp) {
                 //set avatar title for members.
                 _.each($(this.$element).find('.project_avatar'),function(avatar){
                     var dataset = new openerp.web.DataSetSearch(this, 'res.users', self.session.context, [['id','=',avatar.id]]);
-                        dataset.read_slice([]).then(function(result){
-                            avatar.setAttribute("title",result[0].name)
+                    dataset.read_slice([]).then(function(result){
+                    avatar.setAttribute("title",result[0].name)
                     });
                  });
                 
-                //if task is true , then open the task when clickd on the anywhere in the box.
+                //if task is true , then open the task when click on the anywhere in the box.
                 if(this.record.task.raw_value)$(this.$element).find('.click_button').attr('data-name','open_tasks');
                 if(!this.record.task.raw_value)$(this.$element).find('.click_button').attr('data-name','dummy');
             };
