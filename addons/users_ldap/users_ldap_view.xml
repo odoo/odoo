@@ -7,13 +7,13 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="base.view_company_form"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page[@string='Configuration']" position="inside">                    
+                <xpath expr="/form/notebook/page[@string='Configuration']" position="inside">
                     <field name="ldaps" nolabel="1" colspan="4">
                         <form string="LDAP Configuration">
                             <field name="ldap_server"/>
                             <field name="ldap_server_port"/>
                             <field name="ldap_binddn"/>
-                            <field name="ldap_password"/>
+                            <field name="ldap_password" password="True"/>
                             <field name="ldap_base"/>
                             <field name="ldap_filter"/>
                             <field name="create_user"/>
