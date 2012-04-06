@@ -1370,7 +1370,6 @@ openerp.web.search.ExtendedSearchProposition = openerp.web.OldWidget.extend(/** 
         this.value = null;
     },
     start: function () {
-        this.select_field(this.fields.length > 0 ? this.fields[0] : null);
         var _this = this;
         this.$element.find(".searchview_extended_prop_field").change(function() {
             _this.changed();
@@ -1378,6 +1377,7 @@ openerp.web.search.ExtendedSearchProposition = openerp.web.OldWidget.extend(/** 
         this.$element.find('.searchview_extended_delete_prop').click(function () {
             _this.destroy();
         });
+        this.changed();
     },
     changed: function() {
         var nval = this.$element.find(".searchview_extended_prop_field").val();
