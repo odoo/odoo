@@ -250,7 +250,14 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
     do_show: function() {
         this.do_push_state({});
         return this._super();
-    }
+    },
+    open_record: function(id) {
+        if (this.dataset.select_id(id)) {
+            this.do_switch_view('form');
+        } else {
+            this.do_warn("Kanban: could not find id#" + id);
+        }
+    },
 });
 
 openerp.web_kanban.KanbanGroup = openerp.web.OldWidget.extend({
@@ -473,11 +480,7 @@ openerp.web_kanban.KanbanRecord = openerp.web.OldWidget.extend({
                 self.view.form_dialog.open();
             });
         } else {
-            if (self.view.dataset.select_id(this.id)) {
-                this.view.do_switch_view('form');
-            } else {
-                this.do_warn("Kanban: could not find id#" + id);
-            }
+            this.view.open_record(this.id);
         }
     },
     do_action_color: function($action) {

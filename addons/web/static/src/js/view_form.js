@@ -2317,6 +2317,7 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
     multi_selection: false,
     init: function(view, node) {
         this._super(view, node);
+        lazy_build_o2m_kanban_view();
         this.is_loaded = $.Deferred();
         this.initial_is_loaded = this.is_loaded;
         this.is_setted = $.Deferred();
@@ -2388,7 +2389,8 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
         this.viewmanager.registry = openerp.web.views.extend({
             list: 'openerp.web.form.One2ManyListView',
             form: 'openerp.web.form.One2ManyFormView',
-            page: 'openerp.web.PageView'
+            page: 'openerp.web.PageView',
+            kanban: 'openerp.web.form.One2ManyKanbanView',
         });
         var once = $.Deferred().then(function() {
             self.init_form_last_update.resolve();
@@ -2397,8 +2399,8 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
             self.initial_is_loaded.resolve();
         });
         this.viewmanager.on_controller_inited.add_last(function(view_type, controller) {
+            controller.o2m = self;
             if (view_type == "list") {
-                controller.o2m = self;
                 if (self.is_readonly())
                     controller.set_editable(false);
             } else if (view_type == "form" || view_type == 'page') {
@@ -2685,6 +2687,35 @@ openerp.web.form.One2ManyFormView = openerp.web.FormView.extend({
         }
     }
 });
+
+var lazy_build_o2m_kanban_view = function() {
+if (! openerp.web_kanban || openerp.web.form.One2ManyKanbanView)
+    return;
+openerp.web.form.One2ManyKanbanView = openerp.web_kanban.KanbanView.extend({
+    open_record: function(id) {
+        var self = this;
+        var pop = new openerp.web.form.FormOpenPopup(self.o2m.view);
+        pop.show_element(self.o2m.field.relation, id, self.o2m.build_context(), {
+            title: _t("Open: ") + self.name,
+            auto_write: false,
+            alternative_form_view: self.o2m.field.views ? self.o2m.field.views["form"] : undefined,
+            parent_view: self.o2m.view,
+            child_name: self.o2m.name,
+            read_function: function() {
+                return self.o2m.dataset.read_ids.apply(self.o2m.dataset, arguments);
+            },
+            form_view_options: {'not_interactible_on_create':true},
+            readonly: self.o2m.is_readonly()
+        });
+        pop.on_write.add(function(id, data) {
+            self.o2m.dataset.write(id, data, {}, function(r) {
+                self.o2m.reload_current_view();
+            });
+        });
+        
+    },
+});
+}
 
 openerp.web.form.FieldMany2Many = openerp.web.form.Field.extend({
     form_template: 'FieldMany2Many',
