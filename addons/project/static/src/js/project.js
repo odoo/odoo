@@ -26,15 +26,12 @@ openerp.project = function(openerp) {
                     });
             });
             	
-            _.each($('.oe_project_kanban_vignette'),function(record){
-                _.each(record.getElementsByTagName('img'),function(img){
-                    var domain = [['id','=',img.getAttribute("id")]]; 
-                    var dataset = new openerp.web.DataSetSearch(this, 'res.users', self.session.context, domain);
-                    dataset.read_slice([]).then(function(result){
-                        img.setAttribute("title",result[0].name)
-                    });
+            $('.project_avatar').mouseover(function() {
+                avatar = this
+                var dataset = new openerp.web.DataSetSearch(this, 'res.users', self.session.context, [['id','=',avatar.getAttribute("id")]]);
+                dataset.read_slice([]).then(function(result){
+                    avatar.setAttribute("title",result[0].name)
                 });
-                
             });
             
         }

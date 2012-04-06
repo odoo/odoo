@@ -64,6 +64,7 @@ and decide on their status as they evolve.
     'installable': True,
     'auto_install': False,
     'application': True,
+    'js': ['static/src/js/project_issue.js'],
     'certificate' : '001236490750848623845',
 }
 
