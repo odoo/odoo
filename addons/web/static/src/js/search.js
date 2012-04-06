@@ -1335,7 +1335,7 @@ openerp.web.search.Advanced = openerp.web.search.Input.extend({
         var f = new openerp.web.search.FilterGroup(filters, this.view);
         // add group to query
         this.view.vs.searchQuery.add({
-            category: 'q',
+            category: _t("Advanced"),
             value: _(filters).map(function (f) {
                 return f.attrs.string || f.attrs.name }).join(' | '),
             json: filters,
