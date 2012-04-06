@@ -16,7 +16,7 @@
                 <field name="warn_customer" position="after">
                     <group colspan="4" col="4">
                         <separator colspan="4" string="Invoicing Data"/>
-                        <field name="pricelist_id" domain="[('type','=','sale')]" widget="selection"/>
+                        <field name="pricelist_id" groups="product.group_sale_pricelist" domain="[('type','=','sale')]" widget="selection"/>
                         <field name="to_invoice" widget="selection" string="Invoice Task Work"/>
                         <field name="amount_max" groups="base.group_extended"/>
                         <field name="amount_invoiced" groups="base.group_extended"/>
