@@ -44,6 +44,17 @@ class res_users(osv.osv):
         'notification_email_pref': 'all',
     }
     
+    def __init__(self, pool, cr):
+        """ Override of __init__ to add access rights on notification_email_pref
+            field. Access rights are disabled by default, but allowed on
+            fields defined in self.SELF_WRITEABLE_FIELDS.
+        """
+        init_res = super(res_users, self).__init__(pool, cr)
+        # duplicate list to avoid modifying the original reference
+        self.SELF_WRITEABLE_FIELDS = list(self.SELF_WRITEABLE_FIELDS)
+        self.SELF_WRITEABLE_FIELDS.append('notification_email_pref')
+        return init_res
+    
     def create(self, cr, uid, data, context=None):
         user_id = super(res_users, self).create(cr, uid, data, context=context)
         user = self.browse(cr, uid, [user_id], context=context)[0]
