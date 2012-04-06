@@ -7,13 +7,13 @@
         <menuitem name="Address Book" id="customer_portal_address_book" parent="customer_portal"/>
         
         <menuitem name="Track Orders" id="customer_portal_track_orders" parent="customer_portal"/>
-            <menuitem name="Quotation" id="customer_portal_quotation" parent="customer_portal_track_orders"/>
-            <menuitem name="Sales Orders" id="customer_portal_sales_orders" parent="customer_portal_track_orders"/>
-            <menuitem name="Delivery Orders" id="customer_portal_delivery" parent="customer_portal_track_orders"/>
+            <menuitem name="Quotation" id="customer_portal_quotation" parent="customer_portal_track_orders" action="sale.action_order_tree5"/>
+            <menuitem name="Sales Orders" id="customer_portal_sales_orders" parent="customer_portal_track_orders" action="sale.action_order_form"/>
+            <menuitem name="Delivery Orders" id="customer_portal_delivery" parent="customer_portal_track_orders" action="stock.action_picking_tree"/>
             <menuitem name="Registration" id="customer_portal_registration" parent="customer_portal_track_orders"/>
         
         <menuitem name="Invoice and Payments" id="customer_portal_invoice_payements" parent="customer_portal"/>
-            <menuitem name="Invoice" id="customer_portal_invoice" parent="customer_portal_invoice_payements"/>
+            <menuitem name="Invoice" id="customer_portal_invoice" parent="customer_portal_invoice_payements" action="account.action_invoice_tree1"/>
             <menuitem name="Payments" id="customer_portal_payments" parent="customer_portal_invoice_payements"/>
             
         <menuitem name="Services" id="customer_portal_services" parent="customer_portal"/>
