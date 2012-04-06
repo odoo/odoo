@@ -273,15 +273,16 @@ openerp.mail = function(session) {
             if (record.type == 'email') { record.mini_url = ('/mail/static/src/img/email_icon.png'); }
             else { record.mini_url = this.thread_get_avatar('res.users', 'avatar', record.user_id[0]); }    
             // body text manipulation
-            record.body_text = this.do_clean_text(record.body_text);
-            record.tr_body_text = this.do_truncate_string(record.body_text, this.params.msg_more_limit);
-            record.body_text = this.do_replace_internal_links(record.body_text);
-            if (record.tr_body_text) record.tr_body_text = this.do_replace_internal_links(record.tr_body_text);
+            record.body = this.do_clean_text(record.body);
+            record.tr_body = this.do_truncate_string(record.body, this.params.msg_more_limit);
+            record.body = this.do_replace_internal_links(record.body);
+            if (record.tr_body) record.tr_body = this.do_replace_internal_links(record.tr_body);
+            console.log(record.body);
             // render
             $(session.web.qweb.render('ThreadMsg', {'record': record, 'thread': this, 'params': this.params, 'display': this.display})
                     ).appendTo(this.$element.children('div.oe_mail_thread_display:first'));
             // truncated: hide full-text, show summary, add buttons
-            if (record.tr_body_text) {
+            if (record.tr_body) {
                 var node_body = this.$element.find('span.oe_mail_msg_body:last').append(' <a href="#" class="reduce">[ ... Show less]</a>');
                 var node_body_short = this.$element.find('span.oe_mail_msg_body_short:last').append(' <a href="#" class="expand">[ ... Show more]</a>');
                 node_body.hide();

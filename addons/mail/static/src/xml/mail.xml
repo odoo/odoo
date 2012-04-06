@@ -66,8 +66,8 @@
     <t t-name="NoteDisplay">
         <p class="oe_mail_msg">
             <a href="#" class="intlink oe_mail_oe_intlink" t-attf-data-res-model='{params.res_model}' t-attf-data-res-id='{params.res_id}'><t t-raw="record.record_name"/></a>
-            <span class="oe_mail_msg_body"><t t-raw="record.body_text"/></span>
-            <t t-if="record.tr_body_text"><span class="oe_mail_msg_body_short"><t t-raw="record.tr_body_text"/></span></t>
+            <span class="oe_mail_msg_body"><t t-raw="record.body"/></span>
+            <t t-if="record.tr_body"><span class="oe_mail_msg_body_short"><t t-raw="record.tr_body"/></span></t>
             <br />
             <span class="oe_mail_oe_fade">
                 <a href="#" class="intlink oe_mail_oe_intlink" data-res-model='res.users' t-attf-data-res-id='{record.user_id[0]}'><t t-raw="record.user_id[1]"/></a>
@@ -90,7 +90,8 @@
             <span class="oe_mail_oe_bold">Subject:</span> <t t-esc="record.subject"/><br />
         </p>
         <p class="oe_mail_msg">
-            <span class="oe_mail_msg_body"><t t-raw="record.body_text"/></span>
+            <span class="oe_mail_msg_body"><t t-raw="record.body"/></span>
+            <t t-if="record.tr_body"><span class="oe_mail_msg_body_short"><t t-raw="record.tr_body"/></span></t>
         </p>
     </t>
 
