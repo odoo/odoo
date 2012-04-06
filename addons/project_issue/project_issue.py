@@ -42,6 +42,8 @@ class project_issue_version(osv.osv):
     }
 project_issue_version()
 
+_ISSUE_STATE= [('draft', 'New'), ('open', 'In Progress'), ('cancel', 'Cancelled'), ('done', 'Done'),('pending', 'Pending')]
+
 class project_issue(crm.crm_case, osv.osv):
     _name = "project.issue"
     _description = "Project Issue"
@@ -206,11 +208,7 @@ class project_issue(crm.crm_case, osv.osv):
         'partner_id': fields.many2one('res.partner', 'Partner', select=1),
         'company_id': fields.many2one('res.company', 'Company'),
         'description': fields.text('Description'),
-        'state': fields.selection([('draft', 'New'), ('open', 'In Progress'), ('cancel', 'Cancelled'), ('done', 'Done'),('pending', 'Pending'), ], 'State', size=16, readonly=True,
-                                  help='The state is set to \'Draft\', when a case is created.\
-                                  \nIf the case is in progress the state is set to \'Open\'.\
-                                  \nWhen the case is over, the state is set to \'Done\'.\
-                                  \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
+        'state': fields.related('type_id','state', type='selection', selection=_ISSUE_STATE, string="State", readonly=True, store=True),
         'email_from': fields.char('Email', size=128, help="These people will receive email.", select=1),
         'email_cc': fields.char('Watchers Emails', size=256, help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
         'date_open': fields.datetime('Opened', readonly=True,select=True),
