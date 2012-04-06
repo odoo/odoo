@@ -231,7 +231,7 @@
         <menuitem name="Messages" id="menu_email_message" parent="base.menu_email" action="action_view_mail_message" />
         
         <!-- Add menu entry in Settings/Email -->
-        <menuitem name="Feeds" id="menu_email_message_all" parent="base.menu_email" action="action_view_all_messages_short" />
+        <menuitem name="Feeds" id="menu_email_message_all" parent="base.menu_email" action="action_view_all_messages_short" groups="base.group_no_one"/>
 
         <record id="action_mail_all_feeds" model="ir.actions.client">
             <field name="name">All Feeds</field>
