@@ -58,7 +58,6 @@
         'module/wizard/base_update_translations_view.xml',
         'res/res_request_view.xml',
         'res/res_lang_view.xml',
-        'res/res_log_view.xml',
         'res/res_partner_report.xml',
         'res/res_partner_view.xml',
         'res/res_partner_shortcut_data.xml',

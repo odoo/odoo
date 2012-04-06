@@ -219,7 +219,7 @@
             <field name="view_id" ref="sequence_view_tree"/>
             <field name="context">{'active_test': False}</field>
         </record>
-        <menuitem id="next_id_5" name="Sequences &amp; Identifiers" parent="base.menu_config"/>
+        <menuitem id="next_id_5" name="Sequences &amp; Identifiers" parent="base.menu_config" sequence="21" groups="base.group_no_one"/>
         <menuitem action="ir_sequence_form" id="menu_ir_sequence_form" parent="next_id_5"/>
 
         <!-- Sequences Types -->
@@ -683,7 +683,7 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="menu_needaction_users" name="Need actions" parent="base.menu_users" sequence="20" action="action_view_needaction_users" groups="base.group_extended"/>
+        <menuitem id="menu_needaction_users" name="Need actions" parent="base.menu_users" sequence="20" action="action_view_needaction_users" groups="base.group_no_one"/>
         
         <!-- Companies -->
         <menuitem id="menu_res_company_global"
@@ -1574,7 +1574,7 @@
             <field name="view_id" ref="ir_cron_view_tree"/>
         </record>
 
-        <menuitem id="next_id_10" name="Scheduler" parent="base.menu_config"  groups="base.group_extended" sequence="11"/>
+        <menuitem id="next_id_10" name="Scheduler" parent="base.menu_config"  groups="base.group_extended" sequence="23"/>
         <menuitem action="ir_cron_act" id="menu_ir_cron_act" parent="next_id_10"/>
 
 
@@ -1950,7 +1950,7 @@
             <field name="view_type">form</field>
             <field name="help">The configuration wizards are used to help you configure a new instance of OpenERP. They are launched during the installation of new modules, but you can choose to restart some wizards manually from this menu.</field>
         </record>
-        <menuitem id="next_id_11" name="Configuration Wizards" parent="base.menu_config" sequence="2"
+        <menuitem id="next_id_11" name="Configuration Wizards" parent="base.menu_config" sequence="20"
             groups="base.group_extended"/>
 
         <menuitem action="act_ir_actions_todo_form" id="menu_ir_actions_todo_form"
@@ -2071,8 +2071,8 @@
             <field name="search_view_id" ref="view_ir_mail_server_search"/>
         </record>
 
-        <menuitem id="menu_email" name="Email" parent="base.menu_config" groups="base.group_extended"/>
-        <menuitem id="menu_mail_servers" parent="menu_email" action="action_ir_mail_server_list" sequence="15"/>
+        <menuitem id="menu_email" name="Email" parent="base.menu_config" sequence="22"/>
+        <menuitem id="menu_mail_servers" parent="menu_email" action="action_ir_mail_server_list" sequence="15" groups="base.group_no_one"/>
 
     </data>
 </openerp>

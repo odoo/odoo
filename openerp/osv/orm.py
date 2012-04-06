@@ -709,17 +709,7 @@ class BaseModel(object):
     CONCURRENCY_CHECK_FIELD = '__last_update'
 
     def log(self, cr, uid, id, message, secondary=False, context=None):
-        if context and context.get('disable_log'):
-            return True
-        return self.pool.get('res.log').create(cr, uid,
-                {
-                    'name': message,
-                    'res_model': self._name,
-                    'secondary': secondary,
-                    'res_id': id,
-                },
-                context=context
-        )
+        return _logger.warning("log() is deprecated. Please use OpenChatter notification system instead of the res.log mechanism.")
     
     def view_init(self, cr, uid, fields_list, context=None):
         """Override this method to do specific things when a view on the object is opened."""
@@ -4895,14 +4885,14 @@ class BaseModel(object):
         if hasattr(self, 'needaction_get_record_ids'):
             ids = self.needaction_get_record_ids(cr, uid, user_id, limit=8192, context=context)
             if not ids:
-                return (True, 0, [])
+                return [True, 0, []]
             if domain:
-                new_domain = eval(domain) + [('id', 'in', ids)]
+                new_domain = eval(domain, locals_dict={'uid': user_id}) + [('id', 'in', ids)]
             else:
                 new_domain = [('id', 'in', ids)]
-            return (True, self.search(cr, uid, new_domain, limit=limit, order=order, count=True, context=context), ids)
+            return [True, self.search(cr, uid, new_domain, limit=limit, order=order, count=True, context=context), ids]
         else:
-            return (False, 0, [])
+            return [False, 0, []]
             
     # Transience
     def is_transient(self):

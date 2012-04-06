@@ -212,10 +212,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                     delattr(package, kind)
 
         cr.commit()
-
-    # mark new res_log records as read
-    cr.execute("update res_log set read=True where create_date >= %s", (dt_before_load,))
-
+    
     cr.commit()
 
     return loaded_modules, processed_modules

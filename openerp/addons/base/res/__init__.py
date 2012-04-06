@@ -32,7 +32,6 @@ import res_company
 import res_users
 import res_request
 import res_lang
-import res_log
 import res_widget
 import ir_property
 
