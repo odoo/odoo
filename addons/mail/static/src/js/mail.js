@@ -392,12 +392,25 @@ openerp.mail = function(session) {
         
         do_replace_internal_links: function (string) {
             var self = this;
+            var icon_list = ['al', 'pinky']
             /* shortcut to user: @login */
-            var regex_login = new RegExp(/(^|\s)@(\w*)/g);
+            var regex_login = new RegExp(/(^|\s)@((\w|@|\.)*)/g);
             var regex_res = regex_login.exec(string);
             while (regex_res != null) {
                 var login = regex_res[2];
-                string = string.replace(regex_res[0], '<a href="#" class="intlink oe_mail_oe_intlink" data-res-model="res.users" data-res-login = ' + login + '>@' + login + '</a>');
+                string = string.replace(regex_res[0], regex_res[1] + '<a href="#" class="intlink oe_mail_oe_intlink" data-res-model="res.users" data-res-login = ' + login + '>@' + login + '</a>');
+                regex_res = regex_login.exec(string);
+            }
+            /* special shortcut: :name, try to find an icon if in list */
+            var regex_login = new RegExp(/(^|\s):((\w)*)/g);
+            var regex_res = regex_login.exec(string);
+            while (regex_res != null) {
+                var icon_name = regex_res[2];
+                console.log(regex_res);
+                console.log(icon_name);
+                console.log(icon_list);
+                if (_.include(icon_list, icon_name))
+                    string = string.replace(regex_res[0], regex_res[1] + '<img src="/mail/static/src/img/_' + icon_name + '.png" width="22px" height="22px" alt="' + icon_name + '"/>');
                 regex_res = regex_login.exec(string);
             }
             return string;
@@ -420,12 +433,12 @@ openerp.mail = function(session) {
         /**
          *
          * var regex_login = new RegExp(/(^|\s)@(\w*[a-zA-Z_.]+\w*\s)/g);
-         * var regex_login = new RegExp(/(^|\s)@(\w*)/g);
+         * var regex_login = new RegExp(/(^|\s)@((\w|@|\.)*)/g);
          * var regex_intlink = new RegExp(/(^|\s)#(\w*[a-zA-Z_]+\w*)\.(\w+[a-zA-Z_]+\w*),(\w+)/g);
          */
         do_check_internal_links: function(string) {
             /* shortcut to user: @login */
-            var regex_login = new RegExp(/(^|\s)@(\w*)/g);
+            var regex_login = new RegExp(/(^|\s)@((\w|@|\.)*)/g);
             var regex_res = regex_login.exec(string);
             while (regex_res != null) {
                 var login = regex_res[2];

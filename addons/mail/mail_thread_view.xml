@@ -4,9 +4,11 @@
 
         <!-- toplevel menu -->
         <record id="mail_feeds_main" model="ir.ui.menu">
-          <field name="name">Feeds</field>
-          <field name="sequence">0</field>
-          <field name="action" ref="action_mail_all_feeds"/>
+            <field name="name">Feeds</field>
+            <field name="sequence">0</field>
+            <field name="web_icon" eval="static/src/img/feeds.png"/>
+            <field name="web_icon_hover" eval="static/src/img/feeds-hover.png"/>
+            <field name="action" ref="action_mail_all_feeds"/>
         </record>
 
         <!-- left-side menu: Feeds !-->

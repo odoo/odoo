@@ -76,6 +76,10 @@ The main features are:
         'images/messages_form.jpeg',
         'images/messages_list.jpeg',
         'static/src/img/email_icong.png',
+        'static/src/img/_al.png',
+        'static/src/img/_pincky.png',
+        'static/src/img/feeds.png',
+        'static/src/img/feeds-hover.png',
         'static/src/img/groupdefault.png',
     ],
     'css': [
