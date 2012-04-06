@@ -771,7 +771,9 @@ openerp.mail = function(session) {
         
         /** Action: Posts a comment */
         do_comment: function () {
-            var body_text = this.$element.find('textarea.oe_mail_wall_action_textarea').val();
+            var comment_node = this.$element.find('textarea.oe_mail_wall_action_textarea');
+            var body_text = comment_node.val();
+            comment_node.val('');
             var call_done = this.ds_users.call('message_append_note', [[this.session.uid], 'Tweet', body_text, false, 'comment', 'html']).then(this.proxy('init_and_fetch_comments'));
         },
     });
