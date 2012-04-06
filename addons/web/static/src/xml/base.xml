@@ -1298,17 +1298,8 @@
     </t>
 </t>
 
-<t t-name="SearchView">
-    <form class="oe_forms">
-        <t t-call="SearchView.render_lines"/>
-        <div class="oe_search-view-buttons">
-            <button class="oe_button">Search</button>
-            <button class="oe_button" type="reset">Clear</button>
-            <select class="oe_search-view-filters-management">
-            </select>
-        </div>
-    </form>
-</t>
+<div t-name="SearchView" class="oe_searchview"/>
+
 <t t-name="SearchView.managed-filters">
     <option class="oe-filters-title" value="">Filters</option>
     <optgroup label="-- Filters --">
@@ -1364,10 +1355,28 @@
     <br t-if="attrs.string"/>
     <t t-esc="attrs.string"/>
 </button>
-<span t-name="SearchView.filters" class="filter_label_group"
-    ><t t-foreach="filters" t-as="filter"
-        ><t t-raw="filter.render(defaults)"/></t
-></span>
+<ul t-name="SearchView.filters">
+    <li t-foreach="widget.filters" t-as="filter">
+        <t t-esc="filter.attrs.string or filter.attrs.name or 'Ω'"/>
+    </li>
+</ul>
+<t t-name="SearchView.filters.facet">
+    <div class="category oe_filter_category"><t t-esc="facet.get('category')"/></div>
+
+    <t t-set="val" t-value="facet.get('json')"/>
+
+    <div t-if="!(val instanceof Array)" class="search_facet_input_container">
+        <t t-esc="facet.get('value')"/>
+    </div>
+    <t t-if="val instanceof Array">
+        <div class="search_facet_input_container"
+                t-foreach="facet.get('json')" t-as="filter">
+            <t t-esc="filter.attrs.string || filter.attrs.name"/>
+        </div>
+    </t>
+
+    <div class="search_facet_remove VS-icon VS-icon-cancel"/>
+</t>
 <t t-name="SearchView.field">
     <label t-att-class="'oe_label' + (attrs.help ? '_help' : '')"
            t-att-title="attrs.help"
@@ -1425,8 +1434,7 @@
     </div>
 </t>
 <t t-name="SearchView.util.expand">
-    <div t-att-class="'searchview_group ' + (expand == '0' ? 'folded' : 'expanded')"
-         t-att-id="element_id">
+    <div t-att-class="'searchview_group ' + (expand == '0' ? 'folded' : 'expanded')">
         <a t-if="label" class="searchview_group_string" href="#">
             <t t-esc="label"/>
         </a>
@@ -1444,34 +1452,18 @@
         </t>
     </t>
 </t>
-<t t-name="SearchView.extended_search">
-    <t t-call="SearchView.util.expand">
-        <t t-set="expand" t-value="false"/>
-        <t t-set="label">Advanced Filters</t>
-        <t t-set="content">
-            <div class="searchview_extended_groups_list">
-            </div>
-        </t>
-    </t>
-</t>
-<t t-name="SearchView.extended_search.group">
-    <div t-att-id="widget.element_id" class="searchview_extended_group">
-        <select class="searchview_extended_group_choice">
-            <option value="any">Any of the following conditions must match</option>
-            <option value="all">All the following conditions must match</option>
-            <option value="none">None of the following conditions must match</option>
-        </select>
-        <a class="searchview_extended_delete_group"
-                href="javascript:void(0)"><span></span></a>
-        <div class="searchview_extended_propositions_list">
-        </div>
-        <a class="searchview_extended_add_proposition" href="javascript:void(0)">
-            <span>Add condition</span></a>
-        <div class="oe_adv_filters_and"><span>and</span></div>
-    </div>
-</t>
+<div t-name="SearchView.advanced" class="oe_searchview_advanced">
+    <h4>Advanced Search...</h4>
+    <form>
+        <ul>
+
+        </ul>
+        <button class="oe_add_condition" type="button">Add a condition</button>
+        <button class="oe_apply" type="submit">Apply</button>
+    </form>
+</div>
 <t t-name="SearchView.extended_search.proposition">
-    <div t-att-id="widget.element_id">
+    <li>
         <select class="searchview_extended_prop_field">
             <t t-foreach="widget.attrs.fields" t-as="field">
                 <option t-if="typeof field.store === 'undefined' || field.store || field.fnct_search"
@@ -1485,7 +1477,7 @@
         <span class="searchview_extended_prop_value"/>
         <a class="searchview_extended_delete_prop"
                 href="javascript:void(0)"><span> </span></a>
-    </div>
+    </li>
 </t>
 <t t-name="SearchView.extended_search.proposition.char">
     <input t-att-id="widget.element_id" class="field_char"/>

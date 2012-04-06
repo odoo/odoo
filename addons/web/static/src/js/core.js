@@ -13,8 +13,6 @@ openerp.web.core = function(openerp) {
 
 // a function to override the "extend()" method of JR's inheritance, allowing
 // the usage of "include()"
-// TODO: remove usage of include everywhere, not meant to be included in novajs because we don't
-// include rotten cadavers in novajs
 var oe_override_class = function(claz){
     var initializing = false, fnTest = /xyz/.test(function(){xyz;}) ?
     /\b_super\b/ : /.*/;

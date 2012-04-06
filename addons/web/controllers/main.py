@@ -79,7 +79,7 @@ def concat_files(file_list, reader=None, intersperse=""):
 
     if reader is None:
         def reader(f):
-            with open(f) as fp:
+            with open(f, 'rb') as fp:
                 return fp.read()
 
     files_content = []
@@ -261,8 +261,8 @@ class WebClient(openerpweb.Controller):
 
         def reader(f):
             """read the a css file and absolutify all relative uris"""
-            with open(f) as fp:
-                data = fp.read()
+            with open(f, 'rb') as fp:
+                data = fp.read().decode('utf-8')
 
             path = file_map[f]
             # convert FS path into web path
@@ -279,7 +279,7 @@ class WebClient(openerpweb.Controller):
                 r"""url(\1%s/""" % (web_dir,),
                 data,
             )
-            return data
+            return data.encode('utf-8')
 
         content, checksum = concat_files((f[0] for f in files), reader)
 

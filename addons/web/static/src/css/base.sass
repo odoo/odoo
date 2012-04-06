@@ -1,5 +1,8 @@
 
 // Variables {{{
+$section-title-color: #8786b7
+$facets-border: #afafb6
+$facets-border-selected: #a6a6fe
 $colour4: #8a89ba
 //$colour4: #d14836
 // }}}
@@ -29,7 +32,7 @@ $colour4: #8a89ba
 @mixin box-shadow($bsval: 0px 1px 4px #777)
     -moz-box-shadow: $bsval
     -webkit-box-shadow: $bsval
-    -box-shadow: $bsval
+    box-shadow: $bsval
 
 @mixin transition($transval: (border linear 0.2s, box-shadow linear 0.2s))
     -webkit-transition: $transval
@@ -46,6 +49,12 @@ $colour4: #8a89ba
     -webkit-background-clip: $clip
     -moz-background-clip: $clip
     background-clip: $clip
+
+@mixin unscrew-box
+    -moz-box-sizing: border-box
+    -webkit-box-sizing: border-box
+    box-sizing: border-box
+
 // }}}
 
 .openerp2
@@ -695,6 +704,172 @@ $colour4: #8a89ba
             color: $colour4
             &:hover
                 text-decoration: underline
+    // }}}
+
+    // Search View {{{
+    .oe_searchview
+        position: relative
+
+        .VS-search
+            .VS-search-box
+                min-height: 0
+                border-width: 1px
+                padding: 0
+
+            .VS-icon
+                top: 5px
+
+            .VS-icon-search
+                left: 5px
+
+            .VS-search-inner
+                margin: 0 40px 0 17px
+                font-size: 13px
+
+                input
+                    font-size: inherit
+                    line-height: inherit
+                    height: auto
+                    padding: 0
+
+                .VS-input-width-tester
+                    font-size: inherit
+                    padding: 0
+
+                .search_input
+                    margin-left: 0
+                    height: 22px
+                    input, .VS-input-width-tester
+                        padding: 0 2px
+                        height: inherit
+                        margin: 0
+
+                .search_facet
+                    padding: 0
+                    margin: 1px 0
+                    border: 1px solid $facets-border
+                    @include radius(3px)
+                    background: #f0f0fa
+                    height: 18px
+
+                    &.is_selected
+                        border-color: $facets-border-selected
+                        @include box-shadow(0 0 3px 1px $facets-border-selected)
+
+                        .category
+                            margin-left: 0
+                        .VS-icon-cancel
+                            // don't change the icon on selection
+                            @include opacity(1.0)
+                            background-position: center 0
+
+                    .category
+                        padding: 0 4px 0 14px
+                        color: white
+                        background: #8786b7
+                        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4)
+                        font-weight: normal
+                        text-transform: none
+                        height: 18px
+                        line-height: 18px
+                        font-size: inherit
+
+                    .search_facet_input_container
+                        border-left: 1px solid $facets-border
+                        height: 18px
+                        line-height: 18px
+                        padding: 0 4px
+                        cursor: pointer
+
+                    .search_facet_remove
+                        left: 1px
+                        top: 3px
+
+            .VS-icon-cancel
+                right: 24px
+
+            .oe_vs_unfold_drawer
+                position: absolute
+                top: 0
+                right: 0
+                height: 100%
+                line-height: 23px
+                padding: 0 7px 0 4px
+                color: #ccc
+                cursor: pointer
+                &:before
+                    content: "▾"
+
+        &.oe_searchview_open_drawer
+            .oe_searchview_drawer
+                display: block
+
+        .oe_searchview_drawer
+            position: absolute
+            top: 100%
+            right: 0
+            background-color: white
+            width: 500px
+            display: none
+            border: 1px solid #ccc
+
+            .oe_searchview_filters
+                display: table
+                width: 100%
+
+                > div
+                    @include unscrew-box
+                    display: table-cell
+                    width: 50%
+
+                h3
+                    margin: 2px 4px 2px 8px
+                    color: $section-title-color
+
+                ul
+                    margin: 0 12px 3px
+                    padding: 0
+                    list-style: none
+
+                li
+                    list-style: none
+                    padding: 3px 6px
+                    height: 14px
+                    color: inherit
+                    cursor: pointer
+
+                    &:hover
+                        background-color: #f0f0fa
+
+            .oe_searchview_advanced
+                h4
+                    border-top: 1px solid #ccc
+                    margin: 5px 0 3px
+                    cursor: pointer
+
+                h4:before
+                    content: "▸ "
+
+                div
+                    display: none
+
+                button.oe_add_condition:before
+                    content: "⊞ "
+                button.oe_apply:before
+                    content: "⚡ "
+
+                ul
+                    list-style: none
+                    padding: 0
+                li
+                    list-style: none
+                    margin: 0
+
+                &.oe_opened
+                    h4:before
+                        content: "▾ "
+                    div
+                        display: block
     // }}}
 
 // Transitional overrides for old styles {{{
