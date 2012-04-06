@@ -201,7 +201,9 @@ class project(osv.osv):
         'task': fields.boolean('Task',help = "If you check this field tasks appears in kanban view"),
         'open_task': fields.function(_open_task , type='integer',string="Open Tasks"),
      }
-    
+    def dummy(self, cr, uid, ids, context=None):
+            return False
+         
     def open_tasks(self, cr, uid, ids, context=None):
         #Open the View for the Tasks for the project
         """
