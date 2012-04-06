@@ -15,7 +15,6 @@ openerp.project = function(openerp) {
                 
                 //set avatar title for members.
                 _.each($(this.$element).find('.project_avatar'),function(avatar){
-                    console.log(avatar.id)
                     var dataset = new openerp.web.DataSetSearch(this, 'res.users', self.session.context, [['id','=',avatar.id]]);
                         dataset.read_slice([]).then(function(result){
                             avatar.setAttribute("title",result[0].name)
