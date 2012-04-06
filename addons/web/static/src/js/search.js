@@ -314,10 +314,12 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
      * @param {VS.model.SearchFacet} options.model facet object to render
      */
     make_visualsearch_facet: function (options) {
-        if (options.model.get('field') instanceof openerp.web.search.FilterGroup) {
-            return new openerp.web.search.FilterGroupFacet(options);
-        }
-        return new VS.ui.SearchFacet(options);
+        return new openerp.web.search.FilterGroupFacet(options);
+
+//        if (options.model.get('field') instanceof openerp.web.search.FilterGroup) {
+//            return new openerp.web.search.FilterGroupFacet(options);
+//        }
+//        return new VS.ui.SearchFacet(options);
     },
     /**
      * Proxies searches on a SearchInput to the search view's global completion
