@@ -1095,10 +1095,10 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
     },
     load_view: function() {
         if (this.embedded_view) {
-            var def = $.Deferred().pipe(this.on_loaded);
+            var def = $.Deferred();
             var self = this;
             $.async_when().then(function() {def.resolve(self.embedded_view);});
-            return def.promise();
+            return def.pipe(this.on_loaded);
         } else {
             var context = new session.web.CompoundContext(this.dataset.get_context());
             if (! this.view_type)

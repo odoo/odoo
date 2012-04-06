@@ -2445,7 +2445,7 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
                 };
                 self.form_last_update = self.form_last_update.pipe(act, act);
                 return self.form_last_update;
-            } else if (active_view === "graph") {
+            } else if (view.do_search) {
                 return view.do_search(self.build_domain(), self.dataset.get_context(), []);
             }
         }, undefined);
