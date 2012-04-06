@@ -695,7 +695,7 @@ class mail_thread(osv.osv):
         # escape if in install mode or note writing was not successfull
         if 'install_mode' in context:
             return True
-        if not isinstance(msg_ids(list)):
+        if not isinstance(msg_ids, (list)):
             return True
         # get already existing notigications
         notification_ids = notification_obj.search(cr, uid, [('message_id', 'in', msg_ids)], context=context)
