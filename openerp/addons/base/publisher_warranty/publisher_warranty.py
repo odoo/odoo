@@ -187,21 +187,21 @@ class publisher_warranty_contract(osv.osv):
 
 
             limit_date = (datetime.datetime.now() - _PREVIOUS_LOG_CHECK).strftime(misc.DEFAULT_SERVER_DATETIME_FORMAT)
-            for message in result["messages"]:
-                ids = self.pool.get("res.log").search(cr, uid, [("res_model", "=", "publisher_warranty.contract"),
-                                                          ("create_date", ">=", limit_date),
-                                                          ("name", "=", message)])
-                if ids:
-                    continue
-                self.pool.get('res.log').create(cr, uid,
-                        {
-                            'name': message,
-                            'res_model': "publisher_warranty.contract",
-                            "read": True,
-                            "user_id": False,
-                        },
-                        context=context
-                )
+            
+            # old behavior based on res.log; now on mail.message, that is not necessarily installed
+            mail_message_obj = self.pool.get('mail.message')
+            if mail_message_obj:
+                for message in result["messages"]:
+                    ids = mail_message_obj.search(cr, uid, [("model", "=", "publisher_warranty.contract"),
+                                                                        ("create_date", ">=", limit_date),
+                                                                        ("body_text", "=", message)])
+                    if ids:
+                        continue
+                    mail_message_obj.create(cr, uid, {
+                                    'name': message,
+                                    'model': "publisher_warranty.contract",
+                                    'user_id': False,
+                                    }, context=context)
         except Exception:
             if cron_mode:
                 return False # we don't want to see any stack trace in cron
@@ -215,21 +215,14 @@ class publisher_warranty_contract(osv.osv):
         @return: A list of html messages with ids, can be False or empty.
         @rtype: list of tuples(int,string)
         """
-        ids = self.pool.get('res.log').search(cr, uid, [("res_model", "=", "publisher_warranty.contract")]
-                                        , order="create_date desc", limit=limit)
+        if not self.pool.get('mail.message'):
+            return []
+        ids = self.pool.get('mail.message').search(cr, uid, [("model", "=", "publisher_warranty.contract")]
+                                                            , order="create_date desc", limit=limit, context=context)
         if not ids:
             return []
-        messages = [(x.id, x.name) for x in self.pool.get('res.log').browse(cr, uid, ids)]
-
+        messages = [(x.id, x.name) for x in self.pool.get('mail.message').browse(cr, uid, ids, context=context)]
         return messages
-
-    def del_user_message(self, cr, uid, id, context=None):
-        """
-        Delete a message.
-        """
-        self.pool.get('res.log').unlink(cr, uid, [id])
-
-        return True
 
     _columns = {
         'name' : fields.char('Serial Key', size=384, required=True, help="Your OpenERP Publisher's Warranty Contract unique key, also called serial number."),
