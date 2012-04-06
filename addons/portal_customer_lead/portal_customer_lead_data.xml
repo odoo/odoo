@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="portal_customer_lead_access_right" model="ir.model.access">
+            <field name="name">customer lead</field>
+            <field ref="crm.model_crm_lead" name="model_id"/>
+            <field name="perm_read">True</field>
+            <field name="perm_write">True</field>
+            <field name="perm_create">True</field>
+        </record>
+
+        <record id="customer_own_lead" model="ir.rule">
+            <field name="name">customer lead</field>
+            <field ref="crm.model_crm_lead" name="model_id"/>
+            <field eval="1" name="global"/>
+            <field name="domain_force">[('partner_id.email','=',user.login)]</field>
+        </record>
+
+         <record model="res.portal" id="res_portal_lead">
+            <field name="name">portal customer lead</field>
+            <field name="model_access" eval="[(6,0,[ref('portal_customer_lead_access_right')])]"/>
+            <field name="menu_access" eval="[(4,ref('menu_customer_portal_leads'))]"/>
+            <field name="rule_groups" eval="[(4,ref('customer_own_lead'))]"/>
+         </record>
+
+    </data>
+</openerp>
