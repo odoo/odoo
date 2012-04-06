@@ -277,7 +277,6 @@ openerp.mail = function(session) {
             record.tr_body = this.do_truncate_string(record.body, this.params.msg_more_limit);
             record.body = this.do_replace_internal_links(record.body);
             if (record.tr_body) record.tr_body = this.do_replace_internal_links(record.tr_body);
-            console.log(record.body);
             // render
             $(session.web.qweb.render('ThreadMsg', {'record': record, 'thread': this, 'params': this.params, 'display': this.display})
                     ).appendTo(this.$element.children('div.oe_mail_thread_display:first'));
@@ -407,9 +406,6 @@ openerp.mail = function(session) {
             var regex_res = regex_login.exec(string);
             while (regex_res != null) {
                 var icon_name = regex_res[2];
-                console.log(regex_res);
-                console.log(icon_name);
-                console.log(icon_list);
                 if (_.include(icon_list, icon_name))
                     string = string.replace(regex_res[0], regex_res[1] + '<img src="/mail/static/src/img/_' + icon_name + '.png" width="22px" height="22px" alt="' + icon_name + '"/>');
                 regex_res = regex_login.exec(string);
