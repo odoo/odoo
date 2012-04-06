@@ -1319,6 +1319,22 @@ class stock_picking(osv.osv):
             res[pick.id] = {'delivered_picking': delivered_pack.id or False}
 
         return res
+    
+    # views associated to each picking type
+    _VIEW_LIST = {
+        'out': 'view_picking_out_form',
+        'in': 'view_picking_in_form',
+        'internal': 'view_picking_form',
+    }
+    def _get_view_id(self, cr, uid, type):
+        """Get the view id suiting the given type
+        
+        @param type: the picking type as a string
+        @return: view i, or False if no view found
+        """
+        res = self.pool.get('ir.model.data').get_object_reference(cr, uid, 
+            'stock', self._VIEW_LIST.get(type, 'view_picking_form'))            
+        return res and res[1] or False
 
     def log_picking(self, cr, uid, ids, context=None):
         """ This function will create log messages for picking.
@@ -1329,7 +1345,6 @@ class stock_picking(osv.osv):
         """
         if context is None:
             context = {}
-        data_obj = self.pool.get('ir.model.data')
         for pick in self.browse(cr, uid, ids, context=context):
             msg=''
             if pick.auto_picking:
@@ -1338,11 +1353,6 @@ class stock_picking(osv.osv):
                 'out':_("Delivery Order"),
                 'in':_('Reception'),
                 'internal': _('Internal picking'),
-            }
-            view_list = {
-                'out': 'view_picking_out_form',
-                'in': 'view_picking_in_form',
-                'internal': 'view_picking_form',
             }
             message = type_list.get(pick.type, _('Document')) + " '" + (pick.name or '?') + "' "
             if pick.min_date:
@@ -1355,8 +1365,7 @@ class stock_picking(osv.osv):
                 'auto': _('is waiting.'),
                 'draft': _('is in draft state.'),
             }
-            res = data_obj.get_object_reference(cr, uid, 'stock', view_list.get(pick.type, 'view_picking_form'))
-            context.update({'view_id': res and res[1] or False})
+            context['view_id'] = self._get_view_id(cr, uid, pick.type)
             message += state_list[pick.state]
             self.log(cr, uid, pick.id, message, context=context)
         return True
