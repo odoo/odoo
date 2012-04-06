@@ -37,10 +37,10 @@
     "demo_xml" : [ 
     ],
     "update_xml" : [
-#        "security/ir.model.access.csv",
         "portal_customer_view.xml",
-        "email_template.xml",
-        "portal_demo.xml"
+#        "email_template.xml",
+        "portal_demo.xml",
+        "security/ir.model.access.csv",
     ],
     'installable': True,
 }
