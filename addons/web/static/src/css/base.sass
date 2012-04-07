@@ -1,5 +1,12 @@
 @charset "utf-8"
 
+// Variables {{{
+$section-title-color: #8786b7
+$facets-border: #afafb6
+$facets-border-selected: #a6a6fe
+$colour4: #8a89ba
+// }}}
+// Mixins {{{
 @font-face
     font-family: 'mnmliconsRegular'
     src: url('/web/static/src/font/mnmliconsv21-webfont.eot') format('eot')
@@ -9,14 +16,6 @@
     font-weight: normal
     font-style: normal
 
-// Variables {{{
-$section-title-color: #8786b7
-$facets-border: #afafb6
-$facets-border-selected: #a6a6fe
-$colour4: #8a89ba
-//$colour4: #d14836
-// }}}
-// Mixins {{{
 @mixin vertical-gradient($startColor: #555, $endColor: #333)
     background-color: $startColor
     background-image: -webkit-gradient(linear, left top, left bottom, from($startColor), to($endColor)) /* Saf4+, Chrome */
@@ -68,14 +67,6 @@ $colour4: #8a89ba
 // }}}
 
 .openerp2
-
-    // Global style {{{
-    .oe_i
-        font-family: "mnmliconsRegular" !important
-        font-size: 21px
-        font-weight: 300 !important
-    // }}}
-
     // Global style {{{
     padding: 0
     margin: 0
@@ -85,10 +76,65 @@ $colour4: #8a89ba
     background: white
     position: relative
     height: 100%
+
     a
         text-decoration: none
+    // }}}
+    // Tag reset {{{
+    table
+        padding: 0
+        font-size: 13px
+        border-collapse: collapse
+    thead
+        font-weight: bold
+        background-color: #f0f0f0
+        th
+            border-right: 1px dotted #afafb6
+            &:last-child
+                border-right: none
+    th, td
+        padding: 0
+        line-height: 18px
+        text-align: left
+    th
+        font-weight: bold
+        vertical-align: middle
 
-    // buttons
+    td
+        vertical-align: top
+
+    .zebra tbody tr:nth-child(odd) td
+        background-color: #f0f0fa
+        @include vertical-gradient(#f0f0fa, #eeeef6)
+
+    .zebra tbody tr:hover td
+        @include vertical-gradient(#eee, #dedede)
+
+    .numeric
+        text-align: right
+        width: 82px
+        input
+            text-align: right
+    ul, li
+        margin: 0
+        padding: 0
+    
+    li
+        list-style-type: none
+    // }}}
+    // Generic classes {{{
+    .oe_i
+        font-family: "mnmliconsRegular" !important
+        font-size: 21px
+        font-weight: 300 !important
+    .oe_left
+        float: left
+    .oe_right
+        float: right
+    .oe_clear
+        clear: both
+    // }}}
+    // Button style {{{
     a.button:link, a.button:visited, button, input[type='submit']
         display: inline-block
         border: 1px solid #ababab
@@ -152,58 +198,6 @@ $colour4: #8a89ba
         width: 90px
         @include vertical-gradient(#dc5f59, #b33630)
 
-    // Tag reset {{{
-    table
-        padding: 0
-        font-size: 13px
-        border-collapse: collapse
-    thead
-        font-weight: bold
-        background-color: #f0f0f0
-        th
-            border-right: 1px dotted #afafb6
-            &:last-child
-                border-right: none
-    th, td
-        padding: 0
-        line-height: 18px
-        text-align: left
-    th
-        font-weight: bold
-        vertical-align: middle
-
-    td
-        vertical-align: top
-
-    .zebra tbody tr:nth-child(odd) td
-        background-color: #f0f0fa
-        @include vertical-gradient(#f0f0fa, #eeeef6)
-
-    .zebra tbody tr:hover td
-        @include vertical-gradient(#eee, #dedede)
-
-    .numeric
-        text-align: right
-        width: 82px
-        input
-            text-align: right
-    ul, li
-        margin: 0
-        padding: 0
-    
-    li
-        list-style-type: none
-    // }}}
-
-    
-    // }}}
-    // Generic classes {{{
-    .oe_left
-        float: left
-    .oe_right
-        float: right
-    .oe_clear
-        clear: both
     // }}}
     // Fullscreen mode {{{
     .oe_content_full_screen
@@ -472,12 +466,10 @@ $colour4: #8a89ba
         width: 100%
         height: 100%
         border-spacing: 0px
-    // }}}
-    // Main {{{
     .view-manager-main-table
         width: 100%
     // }}}
-    // Application to rename into action {{{
+    // ActionManager {{{
     .oe_application
         width: 100%
         a
@@ -485,486 +477,7 @@ $colour4: #8a89ba
             &:hover
                 text-decoration: underline
     // }}}
-
-
-    // Content Header {{{
-    .oe-view-manager-header
-        border-top: 1px solid #cacaca
-        border-bottom: 1px solid #cacaca
-        @include vertical-gradient(#fcfcfc, #dedede)
-        @include box-shadow((0 1px 0 rgba(255,255,255,0.4), 0 0 9px rgba(0,0,0,0.1)))
-        h2
-            float: left
-            font-size: 18px
-            margin: 1px 0
-            a
-                color: $colour4
-        .buttons
-            padding-right: 8px
-            li
-                float: left
-                margin-right: 12px
-        .filter
-            vertical-align: top
-            li
-                height: 24px
-                line-height: 24px
-                padding: 0 8px
-        .header-row
-            height: 26px
-            line-height: 26px
-            margin: 8px
-            clear: both
-            text-shadow: 0 1px 1px white
-            .dropdown-toggle:after
-                margin-top: 7px
-                margin-left: 6px
-                border-top-color: #404040
-        .oe_vm_switch
-            li
-                padding-left: 1px
-                text-align: center
-                width: 24px
-                height: 24px
-                line-height: 24px
-        .pagination
-            li
-                height: 24px
-                line-height: 24px
-                padding: 0 8px
-  
-        .button-group
-            display: inline-block
-            border: 1px solid #ababab
-            @include radius(5px)
-            li
-                float: left
-                border-right: 1px solid #ababab
-                &:last-child
-                    border: none
-            a
-                color: #4c4c4c
-                &:hover
-                    text-decoration: none
-            .active
-                background: #999
-                @include box-shadow(0 1px 4px rgba(0,0,0,0.3) inset)
-                a
-                    color: #fff
-                    text-shadow: 0 1px 2px rgba(0,0,0,0.4)
-    // }}}
-
-
-
-    // FormView Layout {{{
-    .searcharea
-        position: relative
-        float: right
-        .toggle-button
-            position: absolute
-            top: 10px
-            right: 8px
-            width: 0
-            height: 0
-            display: inline-block
-            content: "&darr"
-            vertical-align: top
-            border-top: 5px solid #4c4c4c
-            border-left: 5px solid transparent
-            border-right: 5px solid transparent
-            @include opacity(0.5)
-            &:hover
-                @include opacity(0.8)
-        .searchmenu
-            display: none
-            position: absolute
-            top: 30px
-            right: 7px
-            border: 1px solid #afafb6
-            width: 432px
-            overflow-x: hidden
-            z-index: 900
-            background: white
-            @include radius(5px)
-            @include box-shadow(0 1px 4px rgba(0,0,0,0.3))
-            .dropdown-menu
-                input
-                    width: 120px
-            input
-                width: 25px
-            .toggle:before
-                margin-left: 0
-                margin-top: 9px
-            .open:before
-                margin-top: 14px
-            .menu
-                &:last-child
-                    margin-bottom: 0
-                li
-                    padding-left: 12px
-                    margin-right: 8px
-            .custom-filters
-                a:hover:after
-                    content: 'd'
-                    font-family: "mnmliconsRegular" !important
-                    font-size: 18px
-                    font-weight: 300 !important
-                    float: right
-                    margin-top: -1px
-            a
-                height: 14px
-                line-height: 14px
-                padding: 3px 6px
-                color: #4c4c4c
-                &:hover
-                    text-decoration: none
-                    @include vertical-gradient(#f0f0fa, #eeeef6)
-            p
-                margin-left: 12px
-            input, textarea
-                height: 14px
-                padding: 2px
-                font-size: 11px
-                line-height: 18px
-                border: 1px solid #ccc
-                @include radius(3px)
-            .column
-                width: 48%
-            .full-column
-                margin: 8px 0
-                padding: 4px
-
-    input.searchbox
-        width: 410px
-        border: 1px solid #ababab
-        margin-top: 0
-        margin-bottom: 0
-        padding: 4px 19px
-        font-size: 13px
-        background: url('/web/static/src/img/search.png') no-repeat 5px
-        background-color: white
-        @include radius(13px)
-        @include box-shadow(0 1px 2px rgba(0,0,0,0.2) inset)
-
-    .search-clear
-        position: absolute
-        top: 7px
-        right: 24px
-        width: 12px
-        height: 12px
-        cursor: pointer
-        display: none
-    // }}}
-
-    // FormView Layout {{{
-    .oe_form
-        label
-            font-weight: bold
-    .oe_form_topbar
-        border-bottom: 1px solid #cacaca
-        @include vertical-gradient(#fcfcfc, #dedede)
-        padding: 0 8px
-        line-height: 30px 
-        button
-            font-size: 12px 
-            height: 24px 
-            line-height: 24px 
-            vertical-align: top
-            padding: 0 10px 
-            margin: 3px 0
-            span.i
-                line-height: 20px 
-                height: 24px 
-        ul
-            height: 30px
-            padding: 0
-            margin: 0
-            text-shadow: 0 1px 1px white
-            border-left: 1px solid #cacaca
-            border-right: 1px solid #cacaca
-            li   
-                padding: 0
-                margin: 0
-                float: left 
-                vertical-align: top
-                border-right: 1px solid #cacaca
-                height: 30px 
-                padding: 0 12px 
-                &:first-child
-                    border-left: 1px solid #cacaca
-                a    
-                    color: #4c4c4c
-                    &:hover
-                        color: black
-        .oe_form_steps
-            img  
-                margin: 0 8px
-                vertical-align: top
-            li   
-                border-right: none 
-                padding: 0
-                &:first-child
-                    margin-left: 12px 
-                    border-left: none 
-                &:last-child
-                    margin-right: 12px 
-        .oe_form_steps_active
-            font-weight: bold 
-            color: #b33630
-    .oe_form_sheetbg
-        background: url(/web/static/src/img/form_sheetbg.png)
-        padding: 8px
-        border-bottom: 1px solid #ddd 
-    .oe_form_sheet_width
-        min-width: 650px
-        max-width: 880px
-        margin: 0 auto
-    .oe_form_sheet
-        padding-top: 8px
-        background: white
-        min-height: 420px
-        border: 1px solid #afafb6
-        @include box-shadow(0 0 10px rgba(0,0,0,0.3))
-        //.avatar
-        //    max-height: 52px
-        //.contacts
-        //    li
-        //        float: left
-        //        width: 33%
-        //        margin-bottom: 4px
-        //    .avatar
-        //        height: 40px
-        //        width: 40px
-        //        border: 1px solid
-        //        border-color: #e5e5e5 #dbdbdb #d2d2d2
-        //    .data
-        //        padding: 2px
-        //        line-height: 18px
-    .oe_form_header
-        padding: 4px 16px
-    .oe_form_group_cell
-        line-height: 18px
-        .oe_form_button
-            width: 100%
-            white-space: nowrap
-    .oe_layout_debugging
-        .oe_form_group
-            border: 2px dashed red
-        .oe_form_group_cell
-            border: 1px solid blue
-            padding-bottom: 1em
-        .oe_layout_debug_cell
-            color: white
-            background: #696
-            font-size: 80%
-            text-align: center
-        .oe_layout_debug_cell
-            display: block
-    .oe_layout_debug_cell
-        display: none
-    // }}}
-
-    // FormView Widgets {{{
-    .oe_form_label_help[for], .oe_form_label[for]
-        white-space: nowrap
-    // }}}
-
-    // FormView Notebook {{{
-    .oe_form_notebook
-        margin: 8px 0
-        padding: 0 8px
-        list-style: none
-        zoom: 1
-    .oe_form_notebook:before, .oe_form_notebook:after
-        display: table
-        content: ""
-        zoom: 1
-    .oe_form_notebook:after
-        clear: both
-    .oe_form_notebook > li
-        float: left
-    .oe_form_notebook > li > a
-        display: block
-        color: #4c4c4c
-    .oe_form_notebook
-        border-color: #ddd
-        border-style: solid
-        border-width: 0 0 1px
-    .oe_form_notebook > li
-        position: relative
-        margin-bottom: -1px
-    .oe_form_notebook > li > a
-        padding: 0 12px
-        margin-right: 2px
-        line-height: 30px
-        border: 1px solid transparent
-        @include radius(4px 4px 0 0)
-    .oe_form_notebook > li > a:hover
-        text-decoration: none
-        background-color: #eee
-        border-color: #eee #eee #ddd
-    .oe_form_notebook > li.ui-state-active > a, .oe_form_notebook > li.ui-state-active > a:hover
-        background-color: #ffffff
-        border: 1px solid #ddd
-        border-bottom-color: transparent
-        cursor: default
-    .ui-tabs-hide
-        display: none
-
-    // FormView Dropdown {{{
-
-    .oe_form_dropdown_section
-        position: relative
-        display: inline-block
-        margin-right: 4px
-
-    .oe_dropdown_toggle:after
-        width: 0
-        height: 0
-        display: inline-block
-        content: "&darr"
-        text-indent: -99999px
-        vertical-align: top
-        border-left: 4px solid transparent
-        border-right: 4px solid transparent
-        border-top: 4px solid white
-        @include opacity(0.5)
-
-        margin-top: 7px
-        margin-left: 6px
-        border-top-color: #404040
-
-    .oe_dropdown_menu
-        display: none
-        position: absolute
-        top: 28px
-        left: 0px
-        padding: 8px
-        border: 1px solid #afafb6
-        width: 120px
-        overflow-x: hidden
-        z-index: 900
-        background: white
-        @include radius(3px)
-        @include box-shadow(0 1px 4px rgba(0,0,0,0.3))
-        li
-            list-style-type: none
-            float: none
-            display: block
-            background-color: none
-            a
-                display: block
-                padding: 3px 6px
-                clear: both
-                font-weight: normal
-                line-height: 14px
-                color: #4c4c4c
-                text-decoration: none
-                &:hover
-                    text-decoration: none
-                    @include vertical-gradient(#f0f0fa, #eeeef6)
-                    @include box-shadow(none)
-
-    // List view {{{
-    .oe-listview-content
-        width: 100%
-        thead, tfoot
-            border-bottom: 2px solid #cacaca
-            background: #eee
-        tfoot
-            border-top: 1px solid #cacaca
-            border-top: 2px solid #cacaca
-            border-bottom: 1px solid #cacaca
-            font-weight: bold
-        tbody
-            cursor: pointer
-            background: white
-        thead
-            vertical-align: top
-        td:first-child, th:first-child
-            width: 17px
-            &:after
-                border-width: 0
-        tbody tr:nth-child(odd) td, tbody tr:nth-child(odd) th
-            background-color: #f0f0fa
-            @include vertical-gradient(#f0f0fa, #eeeef6)
-        tbody tr:hover td, tbody tr:hover th
-            @include vertical-gradient(#eee, #dedede)
-        td, th
-            padding: 3px 6px
-            line-height: 18px
-        .numeric
-            text-align: right
-            width: 82px
-            input
-                text-align: right
-        //thead th:after
-            //content: ""
-            //float: right
-            //margin-top: 7px
-            //border-width: 0 4px 4px
-            //border-style: solid
-            //border-color: #000 transparent
-            //visibility: hidden
-        table .sortdown:after, table .sortdown:hover:after
-            visibility: visible
-            @include opacity(0.6)
-        table .sortup:after
-            border-bottom: none
-            border-left: 4px solid transparent
-            border-right: 4px solid transparent
-            border-top: 4px solid #000
-            visibility: visible
-            @include box-shadow(none)
-            @include opacity(0.6)
-    // }}}
-    // Kanban view {{{
-    .oe_kanban_group_title
-        margin: 1px 1px 4px
-        font-size: 15px
-        font-weight: bold
-        text-shadow: 0 1px 0 white
-    .oe_kanban_column, .oe_kanban_group_header
-        width: 240px
-        vertical-align: top
-        padding: 6px 7px 6px 6px
-        background: #f0eeee
-        border-left: 1px solid #f0f8f8
-        border-right: 1px solid #b9b9b9
-    .oe_kanban_record
-        position: relative
-        display: block
-        min-height: 50px
-        background: white
-        border: 1px solid #d8d8d8
-        border-bottom-color: #b9b9b9
-        padding: 6px
-        margin: 6px 0
-        display: block
-        @include radius(4px)
-        &:last-child
-            margin-bottom: 0
-        &:hover
-            @include box-shadow(0 0 3px rgba(0,0,0,0.6))
-        .oe_kanban_title
-            font-weight: bold
-            margin: 2px 4px
-    .oe_kanban_gravatar
-        width: 20px
-        height: 20px
-        @include radius(3px)
-        @include box-shadow(0 1px 2px rgba(0,0,0,0.2))
-    // }}}
-
-    // Application to rename into action {{{
-    .oe_application
-        a
-            color: $colour4
-            &:hover
-                text-decoration: underline
-    // }}}
-
-    // Search View {{{
+    // SearchView {{{
     .oe_searchview
         position: relative
 
@@ -1128,6 +641,469 @@ $colour4: #8a89ba
                         content: "▾ "
                     div
                         display: block
+    // }}}
+    // Content Header {{{
+    .oe-view-manager-header
+        border-top: 1px solid #cacaca
+        border-bottom: 1px solid #cacaca
+        @include vertical-gradient(#fcfcfc, #dedede)
+        @include box-shadow((0 1px 0 rgba(255,255,255,0.4), 0 0 9px rgba(0,0,0,0.1)))
+        h2
+            float: left
+            font-size: 18px
+            margin: 1px 0
+            a
+                color: $colour4
+        .buttons
+            padding-right: 8px
+            li
+                float: left
+                margin-right: 12px
+        .filter
+            vertical-align: top
+            li
+                height: 24px
+                line-height: 24px
+                padding: 0 8px
+        .header-row
+            height: 26px
+            line-height: 26px
+            margin: 8px
+            clear: both
+            text-shadow: 0 1px 1px white
+            .dropdown-toggle:after
+                margin-top: 7px
+                margin-left: 6px
+                border-top-color: #404040
+        .oe_vm_switch
+            li
+                padding-left: 1px
+                text-align: center
+                width: 24px
+                height: 24px
+                line-height: 24px
+        .pagination
+            li
+                height: 24px
+                line-height: 24px
+                padding: 0 8px
+  
+        .button-group
+            display: inline-block
+            border: 1px solid #ababab
+            @include radius(5px)
+            li
+                float: left
+                border-right: 1px solid #ababab
+                &:last-child
+                    border: none
+            a
+                color: #4c4c4c
+                &:hover
+                    text-decoration: none
+            .active
+                background: #999
+                @include box-shadow(0 1px 4px rgba(0,0,0,0.3) inset)
+                a
+                    color: #fff
+                    text-shadow: 0 1px 2px rgba(0,0,0,0.4)
+    // }}}
+    // ViewManager SearchView v2 Layout {{{
+    .searcharea
+        position: relative
+        float: right
+        .toggle-button
+            position: absolute
+            top: 10px
+            right: 8px
+            width: 0
+            height: 0
+            display: inline-block
+            content: "&darr"
+            vertical-align: top
+            border-top: 5px solid #4c4c4c
+            border-left: 5px solid transparent
+            border-right: 5px solid transparent
+            @include opacity(0.5)
+            &:hover
+                @include opacity(0.8)
+        .searchmenu
+            display: none
+            position: absolute
+            top: 30px
+            right: 7px
+            border: 1px solid #afafb6
+            width: 432px
+            overflow-x: hidden
+            z-index: 900
+            background: white
+            @include radius(5px)
+            @include box-shadow(0 1px 4px rgba(0,0,0,0.3))
+            .dropdown-menu
+                input
+                    width: 120px
+            input
+                width: 25px
+            .toggle:before
+                margin-left: 0
+                margin-top: 9px
+            .open:before
+                margin-top: 14px
+            .menu
+                &:last-child
+                    margin-bottom: 0
+                li
+                    padding-left: 12px
+                    margin-right: 8px
+            .custom-filters
+                a:hover:after
+                    content: 'd'
+                    font-family: "mnmliconsRegular" !important
+                    font-size: 18px
+                    font-weight: 300 !important
+                    float: right
+                    margin-top: -1px
+            a
+                height: 14px
+                line-height: 14px
+                padding: 3px 6px
+                color: #4c4c4c
+                &:hover
+                    text-decoration: none
+                    @include vertical-gradient(#f0f0fa, #eeeef6)
+            p
+                margin-left: 12px
+            input, textarea
+                height: 14px
+                padding: 2px
+                font-size: 11px
+                line-height: 18px
+                border: 1px solid #ccc
+                @include radius(3px)
+            .column
+                width: 48%
+            .full-column
+                margin: 8px 0
+                padding: 4px
+
+    input.searchbox
+        width: 410px
+        border: 1px solid #ababab
+        margin-top: 0
+        margin-bottom: 0
+        padding: 4px 19px
+        font-size: 13px
+        background: url('/web/static/src/img/search.png') no-repeat 5px
+        background-color: white
+        @include radius(13px)
+        @include box-shadow(0 1px 2px rgba(0,0,0,0.2) inset)
+
+    .search-clear
+        position: absolute
+        top: 7px
+        right: 24px
+        width: 12px
+        height: 12px
+        cursor: pointer
+        display: none
+    // }}}
+    // ViewManager Dropdown {{{
+    .oe_form_dropdown_section
+        position: relative
+        display: inline-block
+        margin-right: 4px
+
+    .oe_dropdown_toggle:after
+        width: 0
+        height: 0
+        display: inline-block
+        content: "&darr"
+        text-indent: -99999px
+        vertical-align: top
+        border-left: 4px solid transparent
+        border-right: 4px solid transparent
+        border-top: 4px solid white
+        @include opacity(0.5)
+
+        margin-top: 7px
+        margin-left: 6px
+        border-top-color: #404040
+
+    .oe_dropdown_menu
+        display: none
+        position: absolute
+        top: 28px
+        left: 0px
+        padding: 8px
+        border: 1px solid #afafb6
+        width: 120px
+        overflow-x: hidden
+        z-index: 900
+        background: white
+        @include radius(3px)
+        @include box-shadow(0 1px 4px rgba(0,0,0,0.3))
+        li
+            list-style-type: none
+            float: none
+            display: block
+            background-color: none
+            a
+                display: block
+                padding: 3px 6px
+                clear: both
+                font-weight: normal
+                line-height: 14px
+                color: #4c4c4c
+                text-decoration: none
+                &:hover
+                    text-decoration: none
+                    @include vertical-gradient(#f0f0fa, #eeeef6)
+                    @include box-shadow(none)
+
+    // }}}
+    // FormView Layout {{{
+    .oe_form
+        label
+            font-weight: bold
+    .oe_form_topbar
+        border-bottom: 1px solid #cacaca
+        @include vertical-gradient(#fcfcfc, #dedede)
+        padding: 0 8px
+        line-height: 30px 
+        button
+            font-size: 12px 
+            height: 24px 
+            line-height: 24px 
+            vertical-align: top
+            padding: 0 10px 
+            margin: 3px 0
+            span.i
+                line-height: 20px 
+                height: 24px 
+        ul
+            height: 30px
+            padding: 0
+            margin: 0
+            text-shadow: 0 1px 1px white
+            border-left: 1px solid #cacaca
+            border-right: 1px solid #cacaca
+            li   
+                padding: 0
+                margin: 0
+                float: left 
+                vertical-align: top
+                border-right: 1px solid #cacaca
+                height: 30px 
+                padding: 0 12px 
+                &:first-child
+                    border-left: 1px solid #cacaca
+                a    
+                    color: #4c4c4c
+                    &:hover
+                        color: black
+        .oe_form_steps
+            img  
+                margin: 0 8px
+                vertical-align: top
+            li   
+                border-right: none 
+                padding: 0
+                &:first-child
+                    margin-left: 12px 
+                    border-left: none 
+                &:last-child
+                    margin-right: 12px 
+        .oe_form_steps_active
+            font-weight: bold 
+            color: #b33630
+    .oe_form_sheetbg
+        background: url(/web/static/src/img/form_sheetbg.png)
+        padding: 8px
+        border-bottom: 1px solid #ddd 
+    .oe_form_sheet_width
+        min-width: 650px
+        max-width: 880px
+        margin: 0 auto
+    .oe_form_sheet
+        padding-top: 8px
+        background: white
+        min-height: 420px
+        border: 1px solid #afafb6
+        @include box-shadow(0 0 10px rgba(0,0,0,0.3))
+        //.avatar
+        //    max-height: 52px
+        //.contacts
+        //    li
+        //        float: left
+        //        width: 33%
+        //        margin-bottom: 4px
+        //    .avatar
+        //        height: 40px
+        //        width: 40px
+        //        border: 1px solid
+        //        border-color: #e5e5e5 #dbdbdb #d2d2d2
+        //    .data
+        //        padding: 2px
+        //        line-height: 18px
+    .oe_form_header
+        padding: 4px 16px
+    .oe_form_group_cell
+        line-height: 18px
+        .oe_form_button
+            width: 100%
+            white-space: nowrap
+    .oe_layout_debugging
+        .oe_form_group
+            border: 2px dashed red
+        .oe_form_group_cell
+            border: 1px solid blue
+            padding-bottom: 1em
+        .oe_layout_debug_cell
+            color: white
+            background: #696
+            font-size: 80%
+            text-align: center
+        .oe_layout_debug_cell
+            display: block
+    .oe_layout_debug_cell
+        display: none
+    // }}}
+    // FormView Label {{{
+    .oe_form_label_help[for], .oe_form_label[for]
+        white-space: nowrap
+    // }}}
+    // FormView Notebook {{{
+    .oe_form_notebook
+        margin: 8px 0
+        padding: 0 8px
+        list-style: none
+        zoom: 1
+    .oe_form_notebook:before, .oe_form_notebook:after
+        display: table
+        content: ""
+        zoom: 1
+    .oe_form_notebook:after
+        clear: both
+    .oe_form_notebook > li
+        float: left
+    .oe_form_notebook > li > a
+        display: block
+        color: #4c4c4c
+    .oe_form_notebook
+        border-color: #ddd
+        border-style: solid
+        border-width: 0 0 1px
+    .oe_form_notebook > li
+        position: relative
+        margin-bottom: -1px
+    .oe_form_notebook > li > a
+        padding: 0 12px
+        margin-right: 2px
+        line-height: 30px
+        border: 1px solid transparent
+        @include radius(4px 4px 0 0)
+    .oe_form_notebook > li > a:hover
+        text-decoration: none
+        background-color: #eee
+        border-color: #eee #eee #ddd
+    .oe_form_notebook > li.ui-state-active > a, .oe_form_notebook > li.ui-state-active > a:hover
+        background-color: #ffffff
+        border: 1px solid #ddd
+        border-bottom-color: transparent
+        cursor: default
+    .ui-tabs-hide
+        display: none
+
+    // }}}
+    // ListView {{{
+    .oe-listview-content
+        width: 100%
+        thead, tfoot
+            border-bottom: 2px solid #cacaca
+            background: #eee
+        tfoot
+            border-top: 1px solid #cacaca
+            border-top: 2px solid #cacaca
+            border-bottom: 1px solid #cacaca
+            font-weight: bold
+        tbody
+            cursor: pointer
+            background: white
+        thead
+            vertical-align: top
+        td:first-child, th:first-child
+            width: 17px
+            &:after
+                border-width: 0
+        tbody tr:nth-child(odd) td, tbody tr:nth-child(odd) th
+            background-color: #f0f0fa
+            @include vertical-gradient(#f0f0fa, #eeeef6)
+        tbody tr:hover td, tbody tr:hover th
+            @include vertical-gradient(#eee, #dedede)
+        td, th
+            padding: 3px 6px
+            line-height: 18px
+        .numeric
+            text-align: right
+            width: 82px
+            input
+                text-align: right
+        //thead th:after
+            //content: ""
+            //float: right
+            //margin-top: 7px
+            //border-width: 0 4px 4px
+            //border-style: solid
+            //border-color: #000 transparent
+            //visibility: hidden
+        table .sortdown:after, table .sortdown:hover:after
+            visibility: visible
+            @include opacity(0.6)
+        table .sortup:after
+            border-bottom: none
+            border-left: 4px solid transparent
+            border-right: 4px solid transparent
+            border-top: 4px solid #000
+            visibility: visible
+            @include box-shadow(none)
+            @include opacity(0.6)
+    // }}}
+    // KanbanView {{{
+    .oe_kanban_group_title
+        margin: 1px 1px 4px
+        font-size: 15px
+        font-weight: bold
+        text-shadow: 0 1px 0 white
+    .oe_kanban_column, .oe_kanban_group_header
+        width: 240px
+        vertical-align: top
+        padding: 6px 7px 6px 6px
+        background: #f0eeee
+        border-left: 1px solid #f0f8f8
+        border-right: 1px solid #b9b9b9
+    .oe_kanban_record
+        position: relative
+        display: block
+        min-height: 50px
+        background: white
+        border: 1px solid #d8d8d8
+        border-bottom-color: #b9b9b9
+        padding: 6px
+        margin: 6px 0
+        display: block
+        @include radius(4px)
+        &:last-child
+            margin-bottom: 0
+        &:hover
+            @include box-shadow(0 0 3px rgba(0,0,0,0.6))
+        .oe_kanban_title
+            font-weight: bold
+            margin: 2px 4px
+    .oe_kanban_gravatar
+        width: 20px
+        height: 20px
+        @include radius(3px)
+        @include box-shadow(0 1px 2px rgba(0,0,0,0.2))
     // }}}
 
 // Transitional overrides for old styles {{{
