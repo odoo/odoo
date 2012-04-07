@@ -58,7 +58,7 @@
                             <group col="2" colspan="2">
                                 <separator colspan="4" string="Categorization"/>
                                 <field name="priority"/>
-                                <field name="categ_id" context="{'object_id':'crm.helpdesk'}"/>
+                                <field name="categ_id" domain="[('object_id.model', '=', 'crm.helpdesk')]" widget="selection"/>
                                 <field name="channel_id"/>
                             </group>
 
