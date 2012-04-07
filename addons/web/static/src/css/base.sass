@@ -1,3 +1,13 @@
+@charset "utf-8"
+
+@font-face
+    font-family: 'mnmliconsRegular'
+    src: url('/web/static/src/font/mnmliconsv21-webfont.eot') format('eot')
+    src: url('/web/static/src/font/mnmliconsv21-webfont.woff') format('woff')
+    src: url('/web/static/src/font/mnmliconsv21-webfont.ttf') format('truetype')
+    src: url('/web/static/src/font/mnmliconsv21-webfont.svg') format('svg') active
+    font-weight: normal
+    font-style: normal
 
 // Variables {{{
 $section-title-color: #8786b7
@@ -32,7 +42,7 @@ $colour4: #8a89ba
 @mixin box-shadow($bsval: 0px 1px 4px #777)
     -moz-box-shadow: $bsval
     -webkit-box-shadow: $bsval
-    box-shadow: $bsval
+    -box-shadow: $bsval
 
 @mixin transition($transval: (border linear 0.2s, box-shadow linear 0.2s))
     -webkit-transition: $transval
@@ -58,6 +68,14 @@ $colour4: #8a89ba
 // }}}
 
 .openerp2
+
+    // Global style {{{
+    .oe_i
+        font-family: "mnmliconsRegular" !important
+        font-size: 21px
+        font-weight: 300 !important
+    // }}}
+
     // Global style {{{
     padding: 0
     margin: 0
@@ -66,7 +84,7 @@ $colour4: #8a89ba
     font-size: 13px
     background: white
     position: relative
-
+    height: 100%
     a
         text-decoration: none
 
@@ -455,6 +473,10 @@ $colour4: #8a89ba
         height: 100%
         border-spacing: 0px
     // }}}
+    // Main {{{
+    .view-manager-main-table
+        width: 100%
+    // }}}
     // Application to rename into action {{{
     .oe_application
         width: 100%
@@ -463,6 +485,177 @@ $colour4: #8a89ba
             &:hover
                 text-decoration: underline
     // }}}
+
+
+    // Content Header {{{
+    .oe-view-manager-header
+        border-top: 1px solid #cacaca
+        border-bottom: 1px solid #cacaca
+        @include vertical-gradient(#fcfcfc, #dedede)
+        @include box-shadow((0 1px 0 rgba(255,255,255,0.4), 0 0 9px rgba(0,0,0,0.1)))
+        h2
+            float: left
+            font-size: 18px
+            margin: 1px 0
+            a
+                color: $colour4
+        .buttons
+            padding-right: 8px
+            li
+                float: left
+                margin-right: 12px
+        .filter
+            vertical-align: top
+            li
+                height: 24px
+                line-height: 24px
+                padding: 0 8px
+        .header-row
+            height: 26px
+            line-height: 26px
+            margin: 8px
+            clear: both
+            text-shadow: 0 1px 1px white
+            .dropdown-toggle:after
+                margin-top: 7px
+                margin-left: 6px
+                border-top-color: #404040
+        .oe_vm_switch
+            li
+                padding-left: 1px
+                text-align: center
+                width: 24px
+                height: 24px
+                line-height: 24px
+        .pagination
+            li
+                height: 24px
+                line-height: 24px
+                padding: 0 8px
+  
+        .button-group
+            display: inline-block
+            border: 1px solid #ababab
+            @include radius(5px)
+            li
+                float: left
+                border-right: 1px solid #ababab
+                &:last-child
+                    border: none
+            a
+                color: #4c4c4c
+                &:hover
+                    text-decoration: none
+            .active
+                background: #999
+                @include box-shadow(0 1px 4px rgba(0,0,0,0.3) inset)
+                a
+                    color: #fff
+                    text-shadow: 0 1px 2px rgba(0,0,0,0.4)
+    // }}}
+
+
+
+    // FormView Layout {{{
+    .searcharea
+        position: relative
+        float: right
+        .toggle-button
+            position: absolute
+            top: 10px
+            right: 8px
+            width: 0
+            height: 0
+            display: inline-block
+            content: "&darr"
+            vertical-align: top
+            border-top: 5px solid #4c4c4c
+            border-left: 5px solid transparent
+            border-right: 5px solid transparent
+            @include opacity(0.5)
+            &:hover
+                @include opacity(0.8)
+        .searchmenu
+            display: none
+            position: absolute
+            top: 30px
+            right: 7px
+            border: 1px solid #afafb6
+            width: 432px
+            overflow-x: hidden
+            z-index: 900
+            background: white
+            @include radius(5px)
+            @include box-shadow(0 1px 4px rgba(0,0,0,0.3))
+            .dropdown-menu
+                input
+                    width: 120px
+            input
+                width: 25px
+            .toggle:before
+                margin-left: 0
+                margin-top: 9px
+            .open:before
+                margin-top: 14px
+            .menu
+                &:last-child
+                    margin-bottom: 0
+                li
+                    padding-left: 12px
+                    margin-right: 8px
+            .custom-filters
+                a:hover:after
+                    content: 'd'
+                    font-family: "mnmliconsRegular" !important
+                    font-size: 18px
+                    font-weight: 300 !important
+                    float: right
+                    margin-top: -1px
+            a
+                height: 14px
+                line-height: 14px
+                padding: 3px 6px
+                color: #4c4c4c
+                &:hover
+                    text-decoration: none
+                    @include vertical-gradient(#f0f0fa, #eeeef6)
+            p
+                margin-left: 12px
+            input, textarea
+                height: 14px
+                padding: 2px
+                font-size: 11px
+                line-height: 18px
+                border: 1px solid #ccc
+                @include radius(3px)
+            .column
+                width: 48%
+            .full-column
+                margin: 8px 0
+                padding: 4px
+
+    input.searchbox
+        width: 410px
+        border: 1px solid #ababab
+        margin-top: 0
+        margin-bottom: 0
+        padding: 4px 19px
+        font-size: 13px
+        background: url('/web/static/src/img/search.png') no-repeat 5px
+        background-color: white
+        @include radius(13px)
+        @include box-shadow(0 1px 2px rgba(0,0,0,0.2) inset)
+
+    .search-clear
+        position: absolute
+        top: 7px
+        right: 24px
+        width: 12px
+        height: 12px
+        cursor: pointer
+        display: none
+    // }}}
+
     // FormView Layout {{{
     .oe_form
         label
@@ -672,6 +865,58 @@ $colour4: #8a89ba
                     @include vertical-gradient(#f0f0fa, #eeeef6)
                     @include box-shadow(none)
 
+    // List view {{{
+    .oe-listview-content
+        width: 100%
+        thead, tfoot
+            border-bottom: 2px solid #cacaca
+            background: #eee
+        tfoot
+            border-top: 1px solid #cacaca
+            border-top: 2px solid #cacaca
+            border-bottom: 1px solid #cacaca
+            font-weight: bold
+        tbody
+            cursor: pointer
+            background: white
+        thead
+            vertical-align: top
+        td:first-child, th:first-child
+            width: 17px
+            &:after
+                border-width: 0
+        tbody tr:nth-child(odd) td, tbody tr:nth-child(odd) th
+            background-color: #f0f0fa
+            @include vertical-gradient(#f0f0fa, #eeeef6)
+        tbody tr:hover td, tbody tr:hover th
+            @include vertical-gradient(#eee, #dedede)
+        td, th
+            padding: 3px 6px
+            line-height: 18px
+        .numeric
+            text-align: right
+            width: 82px
+            input
+                text-align: right
+        //thead th:after
+            //content: ""
+            //float: right
+            //margin-top: 7px
+            //border-width: 0 4px 4px
+            //border-style: solid
+            //border-color: #000 transparent
+            //visibility: hidden
+        table .sortdown:after, table .sortdown:hover:after
+            visibility: visible
+            @include opacity(0.6)
+        table .sortup:after
+            border-bottom: none
+            border-left: 4px solid transparent
+            border-right: 4px solid transparent
+            border-top: 4px solid #000
+            visibility: visible
+            @include box-shadow(none)
+            @include opacity(0.6)
     // }}}
     // Kanban view {{{
     .oe_kanban_group_title
