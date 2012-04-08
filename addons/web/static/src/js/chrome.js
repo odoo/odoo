@@ -5,7 +5,7 @@ openerp.web.chrome = function(openerp) {
 var QWeb = openerp.web.qweb,
     _t = openerp.web._t;
 
-openerp.web.Notification =  openerp.web.OldWidget.extend({
+openerp.web.Notification =  openerp.web.Widget.extend({
     template: 'Notification',
     init: function() {
         this._super.apply(this, arguments);
@@ -48,15 +48,8 @@ openerp.web.dialog = function(element) {
     return result;
 }
 
-openerp.web.Dialog = openerp.web.OldWidget.extend(/** @lends openerp.web.Dialog# */{
+openerp.web.Dialog = openerp.web.Widget.extend({
     dialog_title: "",
-    /**
-     * @constructs openerp.web.Dialog
-     * @extends openerp.web.OldWidget
-     *
-     * @param parent
-     * @param options
-     */
     init: function (parent, options, content) {
         var self = this;
         this._super(parent);
@@ -146,7 +139,6 @@ openerp.web.Dialog = openerp.web.OldWidget.extend(/** @lends openerp.web.Dialog#
         //openerp.log("Dialog resized to %d x %d", this.$element.width(), this.$element.height());
     },
     destroy: function () {
-        // Destroy widget
         this.close();
         this.$element.dialog('destroy');
         this._super();
@@ -265,18 +257,10 @@ openerp.web.Loading = openerp.web.Widget.extend({
     }
 });
 
-openerp.web.Database = openerp.web.OldWidget.extend(/** @lends openerp.web.Database# */{
-    template: "Database",
-    /**
-     * @constructs openerp.web.Database
-     * @extends openerp.web.OldWidget
-     *
-     * @param parent
-     * @param element_id
-     * @param option_id
-     */
-    init: function(parent, element_id, option_id) {
-        this._super(parent, element_id);
+openerp.web.DatabaseManager = openerp.web.Widget.extend({
+    template: "DatabaseManager",
+    init: function(parent) {
+        this._super(parent);
         this.unblockUIFunction = $.unblockUI;
         $.validator.addMethod('matches', function (s, _, re) {
             return new RegExp(re).test(s);
@@ -303,28 +287,12 @@ openerp.web.Database = openerp.web.OldWidget.extend(/** @lends openerp.web.Datab
         this.$element.find('#db-backup').click(this.do_backup);
         this.$element.find('#db-restore').click(this.do_restore);
         this.$element.find('#db-change-password').click(this.do_change_password);
-       	this.$element.find('#back-to-login').click(function() {
-            self.hide();
-        });
+       	this.$element.find('#back-to-login').click(this.do_exit);
     },
     destroy: function () {
-        this.hide();
         this.$option_id.empty();
-
-        this.$element
-            .find('#db-create, #db-drop, #db-backup, #db-restore, #db-change-password, #back-to-login')
-                .unbind('click')
-            .end()
-            .empty();
+        this.$element.find('#db-create, #db-drop, #db-backup, #db-restore, #db-change-password, #back-to-login').unbind('click').end().empty();
         this._super();
-    },
-    show: function () {
-        this.$element.closest(".login")
-                .addClass("database_block");
-    },
-    hide: function () {
-        this.$element.closest(".login")
-                .removeClass("database_block")
     },
     /**
      * Converts a .serializeArray() result into a dict. Does not bother folding
@@ -508,20 +476,14 @@ openerp.web.Database = openerp.web.OldWidget.extend(/** @lends openerp.web.Datab
                 });
             }
         });
+    },
+    do_exit: function () {
     }
 });
 
-openerp.web.Login =  openerp.web.OldWidget.extend(/** @lends openerp.web.Login# */{
-    remember_credentials: true,
-
+openerp.web.Login =  openerp.web.Widget.extend({
     template: "Login",
-    /**
-     * @constructs openerp.web.Login
-     * @extends openerp.web.OldWidget
-     *
-     * @param parent
-     * @param element_id
-     */
+    remember_credentials: true,
     init: function(parent) {
         this._super(parent);
         this.has_local_storage = typeof(localStorage) != 'undefined';
@@ -538,24 +500,28 @@ openerp.web.Login =  openerp.web.OldWidget.extend(/** @lends openerp.web.Login# 
     },
     start: function() {
         var self = this;
-        this.database = new openerp.web.Database(this);
-        this.database.appendTo(this.$element);
 
-        this.$element.find('#oe-db-config').click(function() {
-            self.database.show();
+        self.$element.find("form").submit(self.on_submit);
+
+        self.$element.find('.oe_login_manage_db').click(function() {
+            self.$element.find('.oe_login_bottom').hide();
+            self.$element.find('.oe_login_pane').hide();
+            self.databasemanager = new openerp.web.DatabaseManager(self);
+            self.databasemanager.appendTo(self.$element);
+            self.databasemanager.do_exit.add_last(function() {
+                self.databasemanager.destroy();
+                self.$element.find('.oe_login_bottom').show();
+                self.$element.find('.oe_login_pane').show();
+            })
         });
 
-        this.$element.find("form").submit(this.on_submit);
-
-        this.rpc("/web/database/get_list", {}, function(result) {
+        self.rpc("/web/database/get_list", {}, function(result) {
             self.set_db_list(result.db_list);
-        }, 
-        function(error, event) {
+        }, function(error, event) {
             if (error.data.fault_code === 'AccessDenied') {
                 event.preventDefault();
             }
         });
-
     },
     set_db_list: function (list) {
         this.$element.find("[name=db]").replaceWith(
@@ -612,13 +578,7 @@ openerp.web.Login =  openerp.web.OldWidget.extend(/** @lends openerp.web.Login# 
     }
 });
 
-openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
-    /**
-     * @constructs openerp.web.Menu
-     * @extends openerp.web.Widget
-     *
-     * @param parent
-     */
+openerp.web.Menu =  openerp.web.Widget.extend({
     template: 'Menu',
     init: function() {
         this._super.apply(this, arguments);
@@ -762,14 +722,8 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
     }
 });
 
-openerp.web.UserMenu =  openerp.web.Widget.extend(/** @lends openerp.web.UserMenu# */{
+openerp.web.UserMenu =  openerp.web.Widget.extend({
     template: "UserMenu",
-    /**
-     * @constructs openerp.web.UserMenu
-     * @extends openerp.web.Widget
-     *
-     * @param parent
-     */
     init: function(parent) {
         this._super(parent);
         this.update_promise = $.Deferred().resolve();
@@ -956,11 +910,7 @@ openerp.web.UserMenu =  openerp.web.Widget.extend(/** @lends openerp.web.UserMen
     }
 });
 
-openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClient */{
-    /**
-     * @constructs openerp.web.WebClient
-     * @extends openerp.web.Widget
-     */
+openerp.web.WebClient = openerp.web.Widget.extend({
     init: function(parent) {
         var self = this;
         this._super(parent);
@@ -1114,16 +1064,15 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
     }
 });
 
-openerp.web.EmbeddedClient = openerp.web.OldWidget.extend({
+openerp.web.EmbeddedClient = openerp.web.Widget.extend({
     template: 'EmptyComponent',
-    init: function(action_id, options) {
-        this._super();
+    init: function(parent, action_id, options) {
+        this._super(parent);
         // TODO take the xmlid of a action instead of its id 
         this.action_id = action_id;
         this.options = options || {};
         this.am = new openerp.web.ActionManager(this);
     },
-
     start: function() {
         var self = this;
         this.am.appendTo(this.$element.addClass('openerp openerp2'));
@@ -1140,7 +1089,6 @@ openerp.web.EmbeddedClient = openerp.web.OldWidget.extend({
             self.am.do_action(action);
         });
     }
-
 });
 
 openerp.web.embed = function (origin, dbname, login, key, action, options) {
@@ -1156,7 +1104,7 @@ openerp.web.embed = function (origin, dbname, login, key, action, options) {
     }
     openerp.connection.session_bind(origin).then(function () {
         openerp.connection.session_authenticate(dbname, login, key, true).then(function () {
-            var client = new openerp.web.EmbeddedClient(action, options);
+            var client = new openerp.web.EmbeddedClient(null, action, options);
             client.insertAfter(currentScript);
         });
     });

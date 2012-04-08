@@ -67,11 +67,7 @@ $colour4: #8a89ba
 // }}}
 
 .openerp2
-    // {{{ Loading
-    // }}}
-    // {{{ Loading
-    // }}}
-    // {{{ Loading
+    // {{{ Group
     // }}}
     // Global style {{{
     padding: 0
@@ -117,7 +113,7 @@ $colour4: #8a89ba
         width: 82px
         input
             text-align: right
-    ul, li
+    ul, li, ol
         margin: 0
         padding: 0
     li
@@ -220,7 +216,136 @@ $colour4: #8a89ba
         border-bottom-right-radius: 8px
         border-bottom-left-radius: 8px
     // }}}
-    // Topbar {{{
+    // Login {{{
+    .oe_login
+        background: url("/web/static/src/img/pattern.png") repeat
+        color: #eee
+        text-align: center
+        font-size: 14px
+        height: 100%
+        li
+            list-style-type: none
+            padding-bottom: 4px
+        a
+            color: #eee
+            text-decoration: none
+        button
+            float: right
+            display: inline-block
+            cursor: pointer
+            padding: 6px 16px
+            border: 1px solid #222
+            color: white
+            margin: 0
+            @include vertical-gradient(#b92020, #600606)
+            @include radius(4px)
+            @include box-shadow((0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(155, 155, 155, 0.4) inset))
+        input, select
+            width: 252px
+            font-family: "Lucida Grande", Helvetica, Verdana, Arial
+            border: 1px solid #999999
+            background: whitesmoke
+            @include box-shadow(inset 0 1px 4px rgba(0, 0, 0, 0.3))
+            @include radius(3px)
+        input
+            margin-bottom: 9px
+            padding: 5px 6px
+        select
+            padding: 1px
+        .oe_login_dbpane
+            position: fixed
+            top: 0
+            right: 8px
+            padding: 5px 10px
+            color: #eee
+            border: solid 1px #333
+            background: #1e1e1e
+            background: rgba(30,30,30,0.94)
+            @include radius(0 0 8px 8px)
+            input
+                padding: 2px 4px
+                margin: 4px 0
+        .oe_login_bottom
+            position: absolute
+            top: 50%
+            left: 0
+            right: 0
+            bottom: 0
+            text-shadow: 0 1px 1px #999999
+            @include vertical-gradient(#b41616, #600606)
+        .oe_login_pane
+            position: absolute
+            top: 50%
+            left: 50%
+            margin: -160px -166px
+            border: solid 1px #333333
+            background: #1e1e1e
+            background: rgba(30,30,30,0.94)
+            padding: 22px 32px
+            text-align: left
+            @include radius(8px)
+            @include box-shadow(0 0 18px rgba(0, 0, 0, 0.9))
+            h2
+                margin-top: 0
+                font-size: 18px
+        .oe_login_logo
+            position: absolute
+            top: -70px
+            left: 0
+            width: 100%
+            margin: 0 auto
+            text-align: center
+        .oe_login_footer
+            position: absolute
+            bottom: -40px
+            left: 0
+            width: 100%
+            text-align: center
+            a
+                margin: 0 8px
+                &:hover
+                    text-decoration: underline
+            span
+                font-weight: bold
+                font-size: 16px
+        .oe_login_error_message
+            display: none
+            background-color: #b41616
+            color: #eee
+            padding: 14px 18px
+            margin-top: 15px
+            text-align: center
+            @include radius(4px)
+            @include box-shadow(0 1px 4px rgba(0, 0, 0, 0.8))
+        .oe_login_invalid
+            .oe_login_error_message
+                display: inline-block
+    // }}}
+    // {{{ DatabaseManager
+    .oe_database_manager
+        color: #000
+        text-align: left
+        .oe_database_manager_menu
+    // }}}
+    // {{{ Notification
+    .oe_notification
+        z-index: 1050
+    // }}}
+    // WebClient {{{
+    .oe_webclient
+        width: 100%
+        height: 100%
+        border-spacing: 0px
+    // }}}
+    // WebClient.fullscreen {{{
+    .oe_content_full_screen
+        .oe_application
+            top: 0
+            left: 0
+        .oe_topbar, .oe_leftbar
+            display: none
+    // }}}
+    // WebClient.topbar {{{
     .oe_topbar
         width: 100%
         height: 31px
@@ -276,7 +401,39 @@ $colour4: #8a89ba
             border-top: 4px solid white
             @include opacity(0.5)
     // }}}
-    // TopBarUserMenu {{{
+    // Webclient.leftbar {{{
+    .oe_leftbar
+        width: 220px
+        background: #f0eeee
+        border-right: 1px solid #afafb6
+        text-shadow: 0 1px 1px white
+    a.oe_logo
+        width: 220px
+        display: block
+        text-align: center
+        height: 70px
+        line-height: 70px
+        img
+            height: 40px
+            width: 157px
+            margin: 14px 0
+    .oe_footer
+        position: fixed
+        bottom: 0
+        padding: 4px 0
+        background: #f0eeee
+        width: 220px
+        text-align: center
+        a
+            font-weight: 800
+            font-family: serif
+            font-size: 16px
+            color: black
+            span
+                color: #c81010
+                font-style: italic
+    // }}}
+    // UserMenu {{{
     .oe_user_menu
         float: right
         padding: 0
@@ -321,38 +478,6 @@ $colour4: #8a89ba
                     &:hover
                         @include vertical-gradient(#292929, #191919)
                         @include box-shadow(none)
-    // }}}
-    // Leftbar {{{
-    .oe_leftbar
-        width: 220px
-        background: #f0eeee
-        border-right: 1px solid #afafb6
-        text-shadow: 0 1px 1px white
-    a.oe_logo
-        width: 220px
-        display: block
-        text-align: center
-        height: 70px
-        line-height: 70px
-        img
-            height: 40px
-            width: 157px
-            margin: 14px 0
-    .oe_footer
-        position: fixed
-        bottom: 0
-        padding: 4px 0
-        background: #f0eeee
-        width: 220px
-        text-align: center
-        a
-            font-weight: 800
-            font-family: serif
-            font-size: 16px
-            color: black
-            span
-                color: #c81010
-                font-style: italic
     // }}}
     // Menu {{{
     .oe_menu
@@ -469,12 +594,6 @@ $colour4: #8a89ba
             border-right: 4px solid transparent
             border-top: 4px solid #4c4c4c
     // }}}
-    // Webclient {{{
-    .oe_webclient
-        width: 100%
-        height: 100%
-        border-spacing: 0px
-    // }}}
     // ActionManager {{{
     .oe_application
         width: 100%
@@ -483,18 +602,184 @@ $colour4: #8a89ba
             &:hover
                 text-decoration: underline
     // }}}
-    // Fullscreen mode {{{
-    .oe_content_full_screen
-        .oe_application
-            top: 0
-            left: 0
-        .oe_topbar, .oe_leftbar
-            display: none
+    // Content Header {{{
+    .oe-view-manager-header
+        border-top: 1px solid #cacaca
+        border-bottom: 1px solid #cacaca
+        @include vertical-gradient(#fcfcfc, #dedede)
+        @include box-shadow((0 1px 0 rgba(255,255,255,0.4), 0 0 9px rgba(0,0,0,0.1)))
+        h2
+            float: left
+            font-size: 18px
+            margin: 1px 0
+            a
+                color: $colour4
+        .buttons
+            padding-right: 8px
+            li
+                float: left
+                margin-right: 12px
+        .filter
+            vertical-align: top
+            li
+                height: 24px
+                line-height: 24px
+                padding: 0 8px
+        .header-row
+            height: 26px
+            line-height: 26px
+            margin: 8px
+            clear: both
+            text-shadow: 0 1px 1px white
+            .dropdown-toggle:after
+                margin-top: 7px
+                margin-left: 6px
+                border-top-color: #404040
+        .oe_vm_switch
+            li
+                padding-left: 1px
+                text-align: center
+                width: 24px
+                height: 24px
+                line-height: 24px
+        .pagination
+            li
+                height: 24px
+                line-height: 24px
+                padding: 0 8px
+  
+        .button-group
+            display: inline-block
+            border: 1px solid #ababab
+            @include radius(5px)
+            li
+                float: left
+                border-right: 1px solid #ababab
+                &:last-child
+                    border: none
+            a
+                color: #4c4c4c
+                &:hover
+                    text-decoration: none
+            .active
+                background: #999
+                @include box-shadow(0 1px 4px rgba(0,0,0,0.3) inset)
+                a
+                    color: #fff
+                    text-shadow: 0 1px 2px rgba(0,0,0,0.4)
     // }}}
-    // SearchView {{{
+    // ViewManager Header {{{
+    .oe_view_manager_header
+        border-top: 1px solid #cacaca
+        border-bottom: 1px solid #cacaca
+        @include vertical-gradient(#fcfcfc, #dedede)
+        @include box-shadow((0 1px 0 rgba(255,255,255,0.4), 0 0 9px rgba(0,0,0,0.1)))
+        .oe_view_manager_row
+            height: 26px
+            line-height: 26px
+            margin: 8px
+            clear: both
+            text-shadow: 0 1px 1px white
+            h2
+                float: left
+                font-size: 18px
+                margin: 1px 0
+                a
+                    color: $colour4
+            .dropdown-toggle:after
+                margin-top: 7px
+                margin-left: 6px
+                border-top-color: #404040
+        .oe_filter
+            vertical-align: top
+            li
+                height: 24px
+                line-height: 24px
+                padding: 0 8px
+        .oe_button_group
+            display: inline-block
+            border: 1px solid #ababab
+            @include radius(5px)
+            li
+                float: left
+                border-right: 1px solid #ababab
+                &:last-child
+                    border: none
+            a
+                color: #4c4c4c
+                &:hover
+                    text-decoration: none
+            .active
+                background: #999
+                @include box-shadow(0 1px 4px rgba(0,0,0,0.3) inset)
+                a
+                    color: #fff
+                    text-shadow: 0 1px 2px rgba(0,0,0,0.4)
+        .pagination
+            li
+                height: 24px
+                line-height: 24px
+                padding: 0 8px
+        .oe_view_manager_switch
+            float: right
+    // }}}
+    // ViewManager Dropdown {{{
+    .oe_form_dropdown_section
+        position: relative
+        display: inline-block
+        margin-right: 4px
+
+    .oe_dropdown_toggle:after
+        width: 0
+        height: 0
+        display: inline-block
+        content: "&darr"
+        text-indent: -99999px
+        vertical-align: top
+        border-left: 4px solid transparent
+        border-right: 4px solid transparent
+        border-top: 4px solid white
+        @include opacity(0.5)
+
+        margin-top: 7px
+        margin-left: 6px
+        border-top-color: #404040
+
+    .oe_dropdown_menu
+        display: none
+        position: absolute
+        top: 28px
+        left: 0px
+        padding: 8px
+        border: 1px solid #afafb6
+        width: 120px
+        overflow-x: hidden
+        z-index: 900
+        background: white
+        @include radius(3px)
+        @include box-shadow(0 1px 4px rgba(0,0,0,0.3))
+        li
+            list-style-type: none
+            float: none
+            display: block
+            background-color: none
+            a
+                display: block
+                padding: 3px 6px
+                clear: both
+                font-weight: normal
+                line-height: 14px
+                color: #4c4c4c
+                text-decoration: none
+                &:hover
+                    text-decoration: none
+                    @include vertical-gradient(#f0f0fa, #eeeef6)
+                    @include box-shadow(none)
+
+    // }}}
+    // SearchView xmo {{{
     .oe_searchview
         position: relative
-
         .VS-search
             .VS-search-box
                 min-height: 0
@@ -656,73 +941,7 @@ $colour4: #8a89ba
                     div
                         display: block
     // }}}
-    // Content Header {{{
-    .oe-view-manager-header
-        border-top: 1px solid #cacaca
-        border-bottom: 1px solid #cacaca
-        @include vertical-gradient(#fcfcfc, #dedede)
-        @include box-shadow((0 1px 0 rgba(255,255,255,0.4), 0 0 9px rgba(0,0,0,0.1)))
-        h2
-            float: left
-            font-size: 18px
-            margin: 1px 0
-            a
-                color: $colour4
-        .buttons
-            padding-right: 8px
-            li
-                float: left
-                margin-right: 12px
-        .filter
-            vertical-align: top
-            li
-                height: 24px
-                line-height: 24px
-                padding: 0 8px
-        .header-row
-            height: 26px
-            line-height: 26px
-            margin: 8px
-            clear: both
-            text-shadow: 0 1px 1px white
-            .dropdown-toggle:after
-                margin-top: 7px
-                margin-left: 6px
-                border-top-color: #404040
-        .oe_vm_switch
-            li
-                padding-left: 1px
-                text-align: center
-                width: 24px
-                height: 24px
-                line-height: 24px
-        .pagination
-            li
-                height: 24px
-                line-height: 24px
-                padding: 0 8px
-  
-        .button-group
-            display: inline-block
-            border: 1px solid #ababab
-            @include radius(5px)
-            li
-                float: left
-                border-right: 1px solid #ababab
-                &:last-child
-                    border: none
-            a
-                color: #4c4c4c
-                &:hover
-                    text-decoration: none
-            .active
-                background: #999
-                @include box-shadow(0 1px 4px rgba(0,0,0,0.3) inset)
-                a
-                    color: #fff
-                    text-shadow: 0 1px 2px rgba(0,0,0,0.4)
-    // }}}
-    // ViewManager SearchView v2 Layout {{{
+    // SearchView mit {{{
     .searcharea
         position: relative
         float: right
@@ -821,116 +1040,7 @@ $colour4: #8a89ba
         cursor: pointer
         display: none
     // }}}
-    // ViewManager Dropdown {{{
-    .oe_form_dropdown_section
-        position: relative
-        display: inline-block
-        margin-right: 4px
-
-    .oe_dropdown_toggle:after
-        width: 0
-        height: 0
-        display: inline-block
-        content: "&darr"
-        text-indent: -99999px
-        vertical-align: top
-        border-left: 4px solid transparent
-        border-right: 4px solid transparent
-        border-top: 4px solid white
-        @include opacity(0.5)
-
-        margin-top: 7px
-        margin-left: 6px
-        border-top-color: #404040
-
-    .oe_dropdown_menu
-        display: none
-        position: absolute
-        top: 28px
-        left: 0px
-        padding: 8px
-        border: 1px solid #afafb6
-        width: 120px
-        overflow-x: hidden
-        z-index: 900
-        background: white
-        @include radius(3px)
-        @include box-shadow(0 1px 4px rgba(0,0,0,0.3))
-        li
-            list-style-type: none
-            float: none
-            display: block
-            background-color: none
-            a
-                display: block
-                padding: 3px 6px
-                clear: both
-                font-weight: normal
-                line-height: 14px
-                color: #4c4c4c
-                text-decoration: none
-                &:hover
-                    text-decoration: none
-                    @include vertical-gradient(#f0f0fa, #eeeef6)
-                    @include box-shadow(none)
-
-    // }}}
-    // ViewManager Header {{{
-    .oe_view_manager_header
-        border-top: 1px solid #cacaca
-        border-bottom: 1px solid #cacaca
-        @include vertical-gradient(#fcfcfc, #dedede)
-        @include box-shadow((0 1px 0 rgba(255,255,255,0.4), 0 0 9px rgba(0,0,0,0.1)))
-        .oe_view_manager_row
-            height: 26px
-            line-height: 26px
-            margin: 8px
-            clear: both
-            text-shadow: 0 1px 1px white
-            h2
-                float: left
-                font-size: 18px
-                margin: 1px 0
-                a
-                    color: $colour4
-            .dropdown-toggle:after
-                margin-top: 7px
-                margin-left: 6px
-                border-top-color: #404040
-        .oe_filter
-            vertical-align: top
-            li
-                height: 24px
-                line-height: 24px
-                padding: 0 8px
-        .oe_button_group
-            display: inline-block
-            border: 1px solid #ababab
-            @include radius(5px)
-            li
-                float: left
-                border-right: 1px solid #ababab
-                &:last-child
-                    border: none
-            a
-                color: #4c4c4c
-                &:hover
-                    text-decoration: none
-            .active
-                background: #999
-                @include box-shadow(0 1px 4px rgba(0,0,0,0.3) inset)
-                a
-                    color: #fff
-                    text-shadow: 0 1px 2px rgba(0,0,0,0.4)
-        .pagination
-            li
-                height: 24px
-                line-height: 24px
-                padding: 0 8px
-        .oe_view_manager_switch
-            float: right
-    // }}}
-    // FormView Chrome {{{
+    // FormView.header {{{
     .oe_form_header
         padding: 8px
         .oe_form_buttons
@@ -944,7 +1054,7 @@ $colour4: #8a89ba
             display: none
 
     // }}}
-    // FormView Body {{{
+    // FormView.body {{{
     .oe_form_group_cell
         line-height: 18px
         .oe_form_button
@@ -1046,14 +1156,14 @@ $colour4: #8a89ba
         //        padding: 2px
         //        line-height: 18px
     // }}}
-    // FormView Label {{{
+    // FormView.label {{{
     .oe_form
         label
             font-weight: bold
     .oe_form_label_help[for], .oe_form_label[for]
         white-space: nowrap
     // }}}
-    // FormView Notebook {{{
+    // FormView.notebook {{{
     .oe_form_notebook
         margin: 8px 0
         padding: 0 8px

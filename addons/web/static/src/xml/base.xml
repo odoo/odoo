@@ -75,30 +75,30 @@
 </t>
 
 <t t-name="Login">
-  <div class="login">
-    <div class="bottom"> </div>
-    <div class="login_error_message">Invalid username or password</div>
-    <div class="pane">
-      <div id="logo"><img src='/web/static/src/img/logo2.png'/></div>
-      <form action="" method="post">
-        <div class="dbpane" >
-          Database:
-          <input name="db" t-att-value="widget.selected_db || ''"/>
+    <div class="oe_login">
+        <div class="oe_login_bottom"> </div>
+        <div class="oe_login_error_message">Invalid username or password</div>
+        <div class="oe_login_pane">
+            <div class="oe_login_logo"><img src='/web/static/src/img/logo2.png'/></div>
+            <form action="" method="post">
+                <div class="oe_login_dbpane" >
+                    Database:
+                    <input name="db" t-att-value="widget.selected_db || ''"/>
+                </div>
+                <ul>
+                    <li>Username</li>
+                    <li><input type="text" name="login" t-att-value="widget.selected_login || ''" autofocus="autofocus"/></li>
+                    <li>Password</li>
+                    <li><input type="password" name="password" t-att-value="widget.selected_password || ''"/></li>
+                    <li><button name="submit">Log in</button></li>
+                </ul>
+            </form>
+            <div class="oe_login_footer">
+                <a href="#" class="oe_login_manage_db">Manage Databases</a> |
+                <a href="http://www.openerp.com">Powered by <span>OpenERP</span></a>
+            </div>
         </div>
-        <ul>
-          <li>Username</li>
-          <li><input type="text" name="login" t-att-value="widget.selected_login || ''" autofocus="autofocus"/></li>
-          <li>Password</li>
-          <li><input type="password" name="password" t-att-value="widget.selected_password || ''"/></li>
-          <li><button name="submit">Log in</button></li>
-        </ul>
-      </form>
-      <div class="footer">
-        <a href="#" id="oe-db-config">Manage Databases</a> |
-        <a href="http://www.openerp.com">Powered by <span class="openerp">OpenERP</span></a>
-      </div>
     </div>
-  </div>
 </t>
 <t t-name="Login.dblist">
     <select name="db">
@@ -114,13 +114,10 @@
     </select>
 </t>
 
-<t t-name="Database">
-    <div class="oe-database-manager">
-        <div class="database">
-            <a class="company_logo_link" href="/?">
-                <div class="company_logo"></div>
-            </a>
-            <ul class="db_options">
+<t t-name="DatabaseManager">
+    <div class="oe_database_manager">
+        <div class="oe_database_manager_menu">
+            <ul class="oe_form_notebook">
                 <li id="db-create">Create</li>
                 <li id="db-drop">Drop</li>
                 <li id="db-backup">Backup</li>
