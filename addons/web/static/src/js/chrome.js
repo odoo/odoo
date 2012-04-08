@@ -258,7 +258,6 @@ openerp.web.Loading = openerp.web.Widget.extend({
 });
 
 openerp.web.DatabaseManager = openerp.web.Widget.extend({
-    template: "DatabaseManager",
     init: function(parent) {
         this._super(parent);
         this.unblockUIFunction = $.unblockUI;
@@ -267,30 +266,42 @@ openerp.web.DatabaseManager = openerp.web.Widget.extend({
         }, _t("Invalid database name"));
     },
     start: function() {
-        this.$option_id = $("#oe_db_options");
-
         var self = this;
         var fetch_db = this.rpc("/web/database/get_list", {}).pipe(
-            function(result) { self.db_list = result.db_list; },
-            function (_, ev) { ev.preventDefault(); self.db_list = null; });
-        var fetch_langs = this.rpc("/web/session/get_lang_list", {}, function(result) {
-            if (result.error) {
-                self.display_error(result);
-                return;
-            }
+            function(result) { 
+                self.db_list = result.db_list; 
+            },
+            function (_, ev) { 
+                ev.preventDefault();
+                self.db_list = null; 
+            });
+        var fetch_langs = this.rpc("/web/session/get_lang_list", {}).then(function(result) {
             self.lang_list = result.lang_list;
         });
-        $.when(fetch_db, fetch_langs).then(function () {self.do_create();});
-
-        this.$element.find('#db-create').click(this.do_create);
-        this.$element.find('#db-drop').click(this.do_drop);
-        this.$element.find('#db-backup').click(this.do_backup);
-        this.$element.find('#db-restore').click(this.do_restore);
-        this.$element.find('#db-change-password').click(this.do_change_password);
-       	this.$element.find('#back-to-login').click(this.do_exit);
+        return $.when(fetch_db, fetch_langs).then(self.do_render);
+    },
+    do_render: function() {
+        var self = this;
+        self.$element.html(QWeb.render("DatabaseManager", { widget : self }));
+        self.$element.find(".oe_database_manager_menu").tabs();
+        self.$element.find("form[name=create_db_form]").validate({ submitHandler: self.do_create });
+       	self.$element.find("form[name=drop_db_form]").validate({ submitHandler: self.do_drop });
+       	self.$element.find("form[name=backup_db_form]").validate({ submitHandler: self.do_backup });
+       	self.$element.find("form[name=restore_db_form]").validate({ submitHandler: self.do_restore });
+        self.$element.find("form[name=change_pwd_form]").validate({
+            messages: {
+                old_pwd: "Please enter your previous password",
+                new_pwd: "Please enter your new password",
+                confirm_pwd: {
+                    required: "Please confirm your new password",
+                    equalTo: "The confirmation does not match the password"
+                }
+            },
+            submitHandler: self.do_change_password
+        });
+       	self.$element.find("#back_to_login").click(self.do_exit);
     },
     destroy: function () {
-        this.$option_id.empty();
         this.$element.find('#db-create, #db-drop, #db-backup, #db-restore, #db-change-password, #back-to-login').unbind('click').end().empty();
         this._super();
     },
@@ -340,141 +351,87 @@ openerp.web.DatabaseManager = openerp.web.Widget.extend({
             ]
         }).html(error.error);
     },
-    do_create: function() {
+    do_create: function(form) {
         var self = this;
-       	self.$option_id.html(QWeb.render("Database.CreateDB", self));
-        self.$option_id.find("form[name=create_db_form]").validate({
-            submitHandler: function (form) {
-                var fields = $(form).serializeArray();
-                self.rpc("/web/database/create", {'fields': fields}, function(result) {
-                    if (self.db_list) {
-                        self.db_list.push(self.to_object(fields)['db_name']);
-                        self.db_list.sort();
-                        self.getParent().set_db_list(self.db_list);
-                    }
+        var fields = $(form).serializeArray();
+        self.rpc("/web/database/create", {'fields': fields}, function(result) {
+            var form_obj = self.to_object(fields);
+            self.getParent().do_login( form_obj['db_name'], 'admin', form_obj['create_admin_pwd']);
+            self.destroy();
+        });
 
-                    var form_obj = self.to_object(fields);
-                    self.getParent().do_login(
-                            form_obj['db_name'],
-                            'admin',
-                            form_obj['create_admin_pwd']);
-                    self.destroy();
-                });
+    },
+    do_drop: function(form) {
+        var self = this;
+        var $form = $(form),
+            fields = $form.serializeArray(),
+            $db_list = $form.find('[name=drop_db]'),
+            db = $db_list.val();
+        if (!db || !confirm("Do you really want to delete the database: " + db + " ?")) {
+            return;
+        }
+        self.rpc("/web/database/drop", {'fields': fields}, function(result) {
+            if (result.error) {
+                self.display_error(result);
+                return;
+            }
+            self.do_notify("Dropping database", "The database '" + db + "' has been dropped");
+            self.start();
+        });
+    },
+    do_backup: function(form) {
+        var self = this;
+        self.blockUI();
+        self.session.get_file({
+            form: form,
+            success: function () {
+                self.do_notify(_t("Backed"), _t("Database backed up successfully"));
+            },
+            error: openerp.webclient.crashmanager.on_rpc_error,
+            complete: function() {
+                self.unblockUI();
             }
         });
     },
-    do_drop: function() {
+    do_restore: function(form) {
         var self = this;
-       	self.$option_id.html(QWeb.render("Database.DropDB", self));
-       	self.$option_id.find("form[name=drop_db_form]").validate({
-            submitHandler: function (form) {
-                var $form = $(form),
-                    fields = $form.serializeArray(),
-                    $db_list = $form.find('[name=drop_db]'),
-                    db = $db_list.val();
+        self.blockUI();
+        $(form).ajaxSubmit({
+            url: '/web/database/restore',
+            type: 'POST',
+            resetForm: true,
+            success: function (body) {
+                // If empty body, everything went fine
+                if (!body) { return; }
 
-                if (!db || !confirm("Do you really want to delete the database: " + db + " ?")) {
-                    return;
-                }
-                self.rpc("/web/database/drop", {'fields': fields}, function(result) {
-                    if (result.error) {
-                        self.display_error(result);
-                        return;
-                    }
-                    $db_list.find(':selected').remove();
-                    if (self.db_list) {
-                        self.db_list.splice(_.indexOf(self.db_list, db, true), 1);
-                        self.getParent().set_db_list(self.db_list);
-                    }
-                    self.do_notify("Dropping database", "The database '" + db + "' has been dropped");
-                });
-            }
-        });
-    },
-    do_backup: function() {
-        var self = this;
-       	self.$option_id
-            .html(QWeb.render("Database.BackupDB", self))
-            .find("form[name=backup_db_form]").validate({
-            submitHandler: function (form) {
-                self.blockUI();
-                self.session.get_file({
-                    form: form,
-                    success: function () {
-                        self.do_notify(_t("Backed"),
-                            _t("Database backed up successfully"));
-                    },
-                    error: openerp.webclient.crashmanager.on_rpc_error,
-                    complete: function() {
-                        self.unblockUI();
-                    }
-                });
-            }
-        });
-    },
-    do_restore: function() {
-        var self = this;
-       	self.$option_id.html(QWeb.render("Database.RestoreDB", self));
-
-       	self.$option_id.find("form[name=restore_db_form]").validate({
-            submitHandler: function (form) {
-                self.blockUI();
-                $(form).ajaxSubmit({
-                    url: '/web/database/restore',
-                    type: 'POST',
-                    resetForm: true,
-                    success: function (body) {
-                        // TODO: ui manipulations
-                        // note: response objects don't work, but we have the
-                        // HTTP body of the response~~
-
-                        // If empty body, everything went fine
-                        if (!body) { return; }
-
-                        if (body.indexOf('403 Forbidden') !== -1) {
-                            self.display_error({
-                                title: 'Access Denied',
-                                error: 'Incorrect super-administrator password'
-                            })
-                        } else {
-                            self.display_error({
-                                title: 'Restore Database',
-                                error: 'Could not restore the database'
-                            })
-                        }
-                    },
-                    complete: function() {
-                        self.unblockUI();
-                        self.do_notify(_t("Restored"), _t("Database restored successfully"));
-                    }
-                });
-            }
-        });
-    },
-    do_change_password: function() {
-        var self = this;
-       	self.$option_id.html(QWeb.render("Database.Change_DB_Pwd", self));
-
-        self.$option_id.find("form[name=change_pwd_form]").validate({
-            messages: {
-                old_pwd: "Please enter your previous password",
-                new_pwd: "Please enter your new password",
-                confirm_pwd: {
-                    required: "Please confirm your new password",
-                    equalTo: "The confirmation does not match the password"
+                if (body.indexOf('403 Forbidden') !== -1) {
+                    self.display_error({
+                        title: 'Access Denied',
+                        error: 'Incorrect super-administrator password'
+                    })
+                } else {
+                    self.display_error({
+                        title: 'Restore Database',
+                        error: 'Could not restore the database'
+                    })
                 }
             },
-            submitHandler: function (form) {
-                self.rpc("/web/database/change_password", {
-                    'fields': $(form).serializeArray()
-                }, function(result) {
-                    if (result.error) {
-                        self.display_error(result);
-                        return;
-                    }
-                    self.do_notify("Changed Password", "Password has been changed successfully");
-                });
+            complete: function() {
+                self.unblockUI();
+                self.do_notify(_t("Restored"), _t("Database restored successfully"));
             }
+        });
+    },
+    do_change_password: function(form) {
+        var self = this;
+        self.rpc("/web/database/change_password", {
+            'fields': $(form).serializeArray()
+        }, function(result) {
+            if (result.error) {
+                self.display_error(result);
+                return;
+            }
+            self.do_notify("Changed Password", "Password has been changed successfully");
         });
     },
     do_exit: function () {
@@ -512,9 +469,13 @@ openerp.web.Login =  openerp.web.Widget.extend({
                 self.databasemanager.destroy();
                 self.$element.find('.oe_login_bottom').show();
                 self.$element.find('.oe_login_pane').show();
+                self.load_db_list();
             })
         });
-
+        self.load_db_list();
+    },
+    load_db_list: function () {
+        var self = this;
         self.rpc("/web/database/get_list", {}, function(result) {
             self.set_db_list(result.db_list);
         }, function(error, event) {
@@ -524,9 +485,7 @@ openerp.web.Login =  openerp.web.Widget.extend({
         });
     },
     set_db_list: function (list) {
-        this.$element.find("[name=db]").replaceWith(
-            openerp.web.qweb.render('Login.dblist', {
-                db_list: list, selected_db: this.selected_db}))
+        this.$element.find("[name=db]").replaceWith(openerp.web.qweb.render('Login.dblist', { db_list: list, selected_db: this.selected_db}))
     },
     on_submit: function(ev) {
         if(ev) {
