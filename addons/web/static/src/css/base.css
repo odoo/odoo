@@ -96,6 +96,9 @@
 .openerp2 .oe_clear {
   clear: both;
 }
+.openerp2 .oe_wait {
+  cursor: wait;
+}
 .openerp2 a.button:link, .openerp2 a.button:visited, .openerp2 button, .openerp2 input[type='submit'] {
   display: inline-block;
   border: 1px solid #ababab;
@@ -222,6 +225,23 @@
   background-image: -ms-linear-gradient(top, #dc5f59, #b33630);
   background-image: -o-linear-gradient(top, #dc5f59, #b33630);
   background-image: linear-gradient(to bottom, #dc5f59, #b33630);
+}
+.openerp2 .oe_loading {
+  display: none;
+  z-index: 100;
+  position: fixed;
+  top: 0;
+  right: 50%;
+  padding: 4px 12px;
+  background: #a61300;
+  color: white;
+  text-align: center;
+  border: 1px solid #990000;
+  border-top: none;
+  -moz-border-radius-bottomright: 8px;
+  -moz-border-radius-bottomleft: 8px;
+  border-bottom-right-radius: 8px;
+  border-bottom-left-radius: 8px;
 }
 .openerp2 .oe_topbar {
   width: 100%;
@@ -1060,15 +1080,10 @@
   margin-left: 6px;
   border-top-color: #404040;
 }
-.openerp2 .oe_view_manager_header .filter {
+.openerp2 .oe_view_manager_header .oe_filter {
   vertical-align: top;
 }
-.openerp2 .oe_view_manager_header .filter li {
-  height: 24px;
-  line-height: 24px;
-  padding: 0 8px;
-}
-.openerp2 .oe_view_manager_header .pagination li {
+.openerp2 .oe_view_manager_header .oe_filter li {
   height: 24px;
   line-height: 24px;
   padding: 0 8px;
@@ -1103,12 +1118,13 @@
   color: white;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
 }
-.openerp2 .oe_view_manager_header .oe_view_manager_switch li {
-  padding-left: 1px;
-  text-align: center;
-  width: 24px;
+.openerp2 .oe_view_manager_header .pagination li {
   height: 24px;
   line-height: 24px;
+  padding: 0 8px;
+}
+.openerp2 .oe_view_manager_header .oe_view_manager_switch {
+  float: right;
 }
 .openerp2 .oe_form_header {
   padding: 8px;
@@ -1123,9 +1139,6 @@
 }
 .openerp2 .oe_form_header .oe-sidebar-attachments {
   display: none;
-}
-.openerp2 .oe_form label {
-  font-weight: bold;
 }
 .openerp2 .oe_form_group_cell {
   line-height: 18px;
@@ -1240,6 +1253,9 @@
   -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   -box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+.openerp2 .oe_form label {
+  font-weight: bold;
 }
 .openerp2 .oe_form_label_help[for], .openerp2 .oe_form_label[for] {
   white-space: nowrap;

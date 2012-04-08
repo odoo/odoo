@@ -262,7 +262,7 @@ session.web.ViewManager =  session.web.OldWidget.extend(/** @lends session.web.V
     start: function() {
         this._super();
         var self = this;
-        this.$element.find('.oe_vm_switch button').click(function() {
+        this.$element.find('.oe_view_manager_switch button').click(function() {
             self.on_mode_switch($(this).data('view-type'));
         });
         var views_ids = {};

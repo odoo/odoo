@@ -214,15 +214,8 @@ openerp.web.CrashManager = openerp.web.CallbackEnabled.extend({
     }
 });
 
-openerp.web.Loading = openerp.web.OldWidget.extend(/** @lends openerp.web.Loading# */{
+openerp.web.Loading = openerp.web.Widget.extend({
     template: 'Loading',
-    /**
-     * @constructs openerp.web.Loading
-     * @extends openerp.web.OldWidget
-     *
-     * @param parent
-     * @param element_id
-     */
     init: function(parent) {
         this._super(parent);
         this.count = 0;
@@ -255,10 +248,9 @@ openerp.web.Loading = openerp.web.OldWidget.extend(/** @lends openerp.web.Loadin
 
         this.count += increment;
         if (this.count > 0) {
-            $(".loading",this.$element).text(_.str.sprintf(
-                _t("Loading (%d)"), this.count));
-            $(".loading",this.$element).show();
-            this.getParent().$element.addClass('loading');
+            this.$element.text(_.str.sprintf( _t("Loading (%d)"), this.count));
+            this.$element.show();
+            this.getParent().$element.addClass('oe_wait');
         } else {
             this.count = 0;
             clearTimeout(this.long_running_timer);
@@ -267,8 +259,8 @@ openerp.web.Loading = openerp.web.OldWidget.extend(/** @lends openerp.web.Loadin
                 this.blocked_ui = false;
                 $.unblockUI();
             }
-            $(".loading",this.$element).fadeOut();
-            this.getParent().$element.removeClass('loading');
+            this.$element.fadeOut();
+            this.getParent().$element.removeClass('oe_wait');
         }
     }
 });

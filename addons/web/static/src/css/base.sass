@@ -67,6 +67,12 @@ $colour4: #8a89ba
 // }}}
 
 .openerp2
+    // {{{ Loading
+    // }}}
+    // {{{ Loading
+    // }}}
+    // {{{ Loading
+    // }}}
     // Global style {{{
     padding: 0
     margin: 0
@@ -128,6 +134,8 @@ $colour4: #8a89ba
         float: right
     .oe_clear
         clear: both
+    .oe_wait
+        cursor: wait
     // }}}
     // Button style {{{
     a.button:link, a.button:visited, button, input[type='submit']
@@ -193,6 +201,24 @@ $colour4: #8a89ba
         width: 90px
         @include vertical-gradient(#dc5f59, #b33630)
 
+    // }}}
+    // {{{ Loading
+    .oe_loading
+        display: none
+        z-index: 100
+        position: fixed
+        top: 0
+        right: 50%
+        padding: 4px 12px
+        background: #A61300
+        color: white
+        text-align: center
+        border: 1px solid #900
+        border-top: none
+        -moz-border-radius-bottomright: 8px
+        -moz-border-radius-bottomleft: 8px
+        border-bottom-right-radius: 8px
+        border-bottom-left-radius: 8px
     // }}}
     // Topbar {{{
     .oe_topbar
@@ -849,8 +875,7 @@ $colour4: #8a89ba
                     @include box-shadow(none)
 
     // }}}
-
-    // Content Header {{{
+    // ViewManager Header {{{
     .oe_view_manager_header
         border-top: 1px solid #cacaca
         border-bottom: 1px solid #cacaca
@@ -872,13 +897,8 @@ $colour4: #8a89ba
                 margin-top: 7px
                 margin-left: 6px
                 border-top-color: #404040
-        .filter
+        .oe_filter
             vertical-align: top
-            li
-                height: 24px
-                line-height: 24px
-                padding: 0 8px
-        .pagination
             li
                 height: 24px
                 line-height: 24px
@@ -902,17 +922,14 @@ $colour4: #8a89ba
                 a
                     color: #fff
                     text-shadow: 0 1px 2px rgba(0,0,0,0.4)
-
-        .oe_view_manager_switch
+        .pagination
             li
-                padding-left: 1px
-                text-align: center
-                width: 24px
                 height: 24px
                 line-height: 24px
+                padding: 0 8px
+        .oe_view_manager_switch
+            float: right
     // }}}
-
-
     // FormView Chrome {{{
     .oe_form_header
         padding: 8px
@@ -928,9 +945,6 @@ $colour4: #8a89ba
 
     // }}}
     // FormView Body {{{
-    .oe_form
-        label
-            font-weight: bold
     .oe_form_group_cell
         line-height: 18px
         .oe_form_button
@@ -1033,6 +1047,9 @@ $colour4: #8a89ba
         //        line-height: 18px
     // }}}
     // FormView Label {{{
+    .oe_form
+        label
+            font-weight: bold
     .oe_form_label_help[for], .oe_form_label[for]
         white-space: nowrap
     // }}}
