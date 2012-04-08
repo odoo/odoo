@@ -5,14 +5,12 @@ openerp.web.chrome = function(openerp) {
 var QWeb = openerp.web.qweb,
     _t = openerp.web._t;
 
-openerp.web.Notification =  openerp.web.OldWidget.extend(/** @lends openerp.web.Notification# */{
+openerp.web.Notification =  openerp.web.OldWidget.extend({
     template: 'Notification',
-
     init: function() {
         this._super.apply(this, arguments);
         openerp.notification = this;
     },
-
     start: function() {
         this._super.apply(this, arguments);
         this.$element.notify({
@@ -42,7 +40,6 @@ openerp.web.Notification =  openerp.web.OldWidget.extend(/** @lends openerp.web.
             text: text
         }, opts);
     }
-
 });
 
 openerp.web.dialog = function(element) {
@@ -524,7 +521,7 @@ openerp.web.Database = openerp.web.OldWidget.extend(/** @lends openerp.web.Datab
 
 openerp.web.Login =  openerp.web.OldWidget.extend(/** @lends openerp.web.Login# */{
     remember_credentials: true,
-    
+
     template: "Login",
     /**
      * @constructs openerp.web.Login
@@ -533,7 +530,6 @@ openerp.web.Login =  openerp.web.OldWidget.extend(/** @lends openerp.web.Login# 
      * @param parent
      * @param element_id
      */
-
     init: function(parent) {
         this._super(parent);
         this.has_local_storage = typeof(localStorage) != 'undefined';

@@ -99,17 +99,13 @@ $colour4: #8a89ba
     th
         font-weight: bold
         vertical-align: middle
-
     td
         vertical-align: top
-
     .zebra tbody tr:nth-child(odd) td
         background-color: #f0f0fa
         @include vertical-gradient(#f0f0fa, #eeeef6)
-
     .zebra tbody tr:hover td
         @include vertical-gradient(#eee, #dedede)
-
     .numeric
         text-align: right
         width: 82px
@@ -118,7 +114,6 @@ $colour4: #8a89ba
     ul, li
         margin: 0
         padding: 0
-    
     li
         list-style-type: none
     // }}}
@@ -198,19 +193,6 @@ $colour4: #8a89ba
         width: 90px
         @include vertical-gradient(#dc5f59, #b33630)
 
-    // }}}
-    // Fullscreen mode {{{
-    .oe_content_full_screen
-        .oe_application
-            top: 0
-            left: 0
-        .topbar, .leftbar
-            display: none
-    // }}}
-    // Webclient {{{
-    .oe_webclient
-        width: 100%
-        height: 100%
     // }}}
     // Topbar {{{
     .oe_topbar
@@ -461,13 +443,11 @@ $colour4: #8a89ba
             border-right: 4px solid transparent
             border-top: 4px solid #4c4c4c
     // }}}
-    // Main {{{
-    .oe_main
+    // Webclient {{{
+    .oe_webclient
         width: 100%
         height: 100%
         border-spacing: 0px
-    .view-manager-main-table
-        width: 100%
     // }}}
     // ActionManager {{{
     .oe_application
@@ -476,6 +456,14 @@ $colour4: #8a89ba
             color: $colour4
             &:hover
                 text-decoration: underline
+    // }}}
+    // Fullscreen mode {{{
+    .oe_content_full_screen
+        .oe_application
+            top: 0
+            left: 0
+        .oe_topbar, .oe_leftbar
+            display: none
     // }}}
     // SearchView {{{
     .oe_searchview
@@ -861,10 +849,108 @@ $colour4: #8a89ba
                     @include box-shadow(none)
 
     // }}}
-    // FormView Layout {{{
+
+    // Content Header {{{
+    .oe_view_manager_header
+        border-top: 1px solid #cacaca
+        border-bottom: 1px solid #cacaca
+        @include vertical-gradient(#fcfcfc, #dedede)
+        @include box-shadow((0 1px 0 rgba(255,255,255,0.4), 0 0 9px rgba(0,0,0,0.1)))
+        .oe_view_manager_row
+            height: 26px
+            line-height: 26px
+            margin: 8px
+            clear: both
+            text-shadow: 0 1px 1px white
+            h2
+                float: left
+                font-size: 18px
+                margin: 1px 0
+                a
+                    color: $colour4
+            .dropdown-toggle:after
+                margin-top: 7px
+                margin-left: 6px
+                border-top-color: #404040
+        .filter
+            vertical-align: top
+            li
+                height: 24px
+                line-height: 24px
+                padding: 0 8px
+        .pagination
+            li
+                height: 24px
+                line-height: 24px
+                padding: 0 8px
+        .oe_button_group
+            display: inline-block
+            border: 1px solid #ababab
+            @include radius(5px)
+            li
+                float: left
+                border-right: 1px solid #ababab
+                &:last-child
+                    border: none
+            a
+                color: #4c4c4c
+                &:hover
+                    text-decoration: none
+            .active
+                background: #999
+                @include box-shadow(0 1px 4px rgba(0,0,0,0.3) inset)
+                a
+                    color: #fff
+                    text-shadow: 0 1px 2px rgba(0,0,0,0.4)
+
+        .oe_view_manager_switch
+            li
+                padding-left: 1px
+                text-align: center
+                width: 24px
+                height: 24px
+                line-height: 24px
+    // }}}
+
+
+    // FormView Chrome {{{
+    .oe_form_header
+        padding: 8px
+        .oe_form_buttons
+            padding-right: 8px
+            float: left
+            margin-right: 12px
+        .oe_form_pager
+            float: right
+        // FIXME
+        .oe-sidebar-attachments
+            display: none
+
+    // }}}
+    // FormView Body {{{
     .oe_form
         label
             font-weight: bold
+    .oe_form_group_cell
+        line-height: 18px
+        .oe_form_button
+            width: 100%
+            white-space: nowrap
+    .oe_layout_debugging
+        .oe_form_group
+            border: 2px dashed red
+        .oe_form_group_cell
+            border: 1px solid blue
+            padding-bottom: 1em
+        .oe_layout_debug_cell
+            color: white
+            background: #696
+            font-size: 80%
+            text-align: center
+        .oe_layout_debug_cell
+            display: block
+    .oe_layout_debug_cell
+        display: none
     .oe_form_topbar
         border-bottom: 1px solid #cacaca
         @include vertical-gradient(#fcfcfc, #dedede)
@@ -945,28 +1031,6 @@ $colour4: #8a89ba
         //    .data
         //        padding: 2px
         //        line-height: 18px
-    .oe_form_header
-        padding: 4px 16px
-    .oe_form_group_cell
-        line-height: 18px
-        .oe_form_button
-            width: 100%
-            white-space: nowrap
-    .oe_layout_debugging
-        .oe_form_group
-            border: 2px dashed red
-        .oe_form_group_cell
-            border: 1px solid blue
-            padding-bottom: 1em
-        .oe_layout_debug_cell
-            color: white
-            background: #696
-            font-size: 80%
-            text-align: center
-        .oe_layout_debug_cell
-            display: block
-    .oe_layout_debug_cell
-        display: none
     // }}}
     // FormView Label {{{
     .oe_form_label_help[for], .oe_form_label[for]

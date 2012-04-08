@@ -2,6 +2,16 @@
 <!-- vim:fdl=1:
 -->
 <templates id="template" xml:space="preserve">
+<t t-name="EmptyComponent">
+    <div></div>
+</t>
+<t t-name="Loading">
+    <div id="oe_loading">
+        <div class="loading">
+        Loading...
+        </div>
+    </div>
+</t>
 <t t-name="Notification">
     <div class="oe_notification" t-translation="off">
         <div id="oe_notification_default">
@@ -14,37 +24,6 @@
             <span style="float:left; margin:2px 5px 0 0;" class="ui-icon ui-icon-alert"></span>
             <h1>#{title}</h1>
             <p>#{text}</p>
-        </div>
-    </div>
-</t>
-<t t-name="WebClient">
-    <div class="oe_webclient">
-        <table class="oe_main">
-            <tr>
-                <td colspan="2" class="oe_topbar">
-                    <div class="oe_menu_placeholder"/>
-                    <div class="oe_user_menu_placeholder"/>
-                    <div class="oe_systray"/>
-                </td>
-            </tr>
-            <tr>
-                <td class="oe_leftbar" valign="top">
-                    <a href="#" class="oe_logo"><img t-att-src='_s + "/web/static/src/img/logo.png"'/></a>
-                    <div class="oe_secondary_menus_container"/>
-                    <div class="oe_footer">
-                        Powered by <a href="http://www.openerp.com"><span>Open</span>ERP</a>
-                    </div>
-                </td>
-                <td class="oe_application">
-                </td>
-            </tr>
-        </table>
-    </div>
-</t>
-<t t-name="Loading">
-    <div id="oe_loading">
-        <div class="loading">
-        Loading...
         </div>
     </div>
 </t>
@@ -330,6 +309,29 @@
     </form>
 </t>
 
+<t t-name="WebClient">
+    <table class="oe_webclient">
+        <tr>
+            <td colspan="2" class="oe_topbar">
+                <div class="oe_menu_placeholder"/>
+                <div class="oe_user_menu_placeholder"/>
+                <div class="oe_systray"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="oe_leftbar" valign="top">
+                <a href="#" class="oe_logo"><img t-att-src='_s + "/web/static/src/img/logo.png"'/></a>
+                <div class="oe_secondary_menus_container"/>
+                <div class="oe_footer">
+                    Powered by <a href="http://www.openerp.com"><span>Open</span>ERP</a>
+                </div>
+            </td>
+            <td class="oe_application">
+            </td>
+        </tr>
+    </table>
+</t>
+
 <t t-name="Menu">
     <ul class="oe_menu" t-if="widget.data">
         <li t-foreach="widget.data.data.children" t-as="menu">
@@ -406,55 +408,75 @@
         </a>
     </li>
 </t>
+<t t-name="About-Page">
+    <div>
+        <a class="oe_activate_debug_mode" href="?debug" style="float:right; font-size: 80%;">Activate the developper mode</a>
+        <h1 style="margin:0;">OpenERP</h1>
+        <h3 style="margin:15px 0;padding:0;">Version <t t-esc="version_info.version"/></h3>
+        <p>
+            Copyright © 2004-TODAY OpenERP SA. All Rights Reserved.<br />
+            OpenERP is a trademark of the <a target="_blank" href="http://openerp.com/" style="text-decoration: underline;">OpenERP SA Company</a>.
+        </p>
+        <p>
+            Licenced under the terms of <a target="_blank" href="http://www.gnu.org/licenses/agpl.html" style="text-decoration: underline;">GNU Affero General Public License</a>
+        </p>
+        <p>
+            For more information visit <a target="_blank" href="http://openerp.com/" style="text-decoration: underline;">OpenERP.com</a>
+        </p>
+    </div>
+</t>
+<t t-name="Change_Pwd">
+    <form name="change_password_form" class="oe_forms" method="POST">
+        <table align="center">
+            <tr>
+                <td><label for="old_pwd">Old Password:</label></td>
+                <td><input type="password" name="old_pwd"
+                           minlength="1" autofocus="autofocus"/></td>
+            </tr>
+            <tr>
+            <td><label for="new_password">New Password:</label></td>
+            <td><input type="password" name="new_password"
+                       minlength="1" autofocus="autofocus"/></td>
+            </tr>
+            <tr>
+                <td><label for="confirm_pwd">Confirm Password:</label></td>
+                <td><input type="password" name="confirm_pwd"
+                             minlength="1"/></td>
+            </tr>
+            <tr>
+                <td colspan="2" align="right"><button class="oe_button">Change Password</button></td>
+            </tr>
+        </table>
+    </form>
+</t>
 
 <t t-name="ViewManager">
-    <table class="view-manager-main-table" cellpadding="0" cellspacing="0">
-    <tbody>
-    <tr>
-        <td class="view-manager-main-content">
-            <div class="oe-view-manager-header">
+    <div class="oe_view_manager">
+        <div class="oe_view_manager_header">
+            <div class="oe_view_manager_row">
                 <h2 class="oe_view_title" t-if="self.flags.display_title !== false">
                     <span class="oe_view_title_text"><t t-esc="self.display_title()"/></span>
                 </h2>
-                <div class="oe_vm_switch">
+                <div t-attf-id="#{prefix}_search" t-opentag="true"/>
+            </div>
+            <div class="oe_view_manager_row">
+                <div class="oe_view_manager_switch oe_button_group">
                     <t t-if="views.length != 1" t-foreach="views" t-as="view">
-
                         <button type="button" t-attf-class="oe_vm_switch_#{view.view_type}" t-att-data-view-type="view.view_type" t-att-title="view.label || view.view_type">
                             <span><t t-esc="view.label || view.view_type"/></span>
                         </button>
                     </t>
                 </div>
             </div>
-            <div t-attf-id="#{prefix}_search" t-opentag="true"/>
+        </div>
+        <div class="oe_view_manager_body">
             <t t-foreach="views" t-as="view">
                 <div t-attf-id="#{prefix}_view_#{view.view_type}"/>
             </t>
-        </td>
-        <td class="view-manager-main-sidebar" height="100%">
-            <t t-foreach="views" t-as="view">
-                <div t-attf-id="#{prefix}_sidebar_#{view.view_type}" class="sidebar-main-div closed-sidebar" style="display: none"/>
-            </t>
-        </td>
-    </tr>
-    </tbody>
-    </table>
+        </div>
+    </div>
 </t>
-
-<t t-extend="ViewManager" t-name="ViewManagerAction">
-    <t t-jquery=".view-manager-main-table tbody" t-operation="prepend">
-        <tr>
-            <td class="oe_view_manager_menu_tips" colspan="2">
-                <blockquote t-if="self.action.help and !self.flags.low_profile
-                                 and !(self.action.id in self.session.hidden_menutips)">
-                    <p><t t-esc="self.action.help"/></p>
-                    <div>
-                        <button type="button" name="hide">Hide this tip</button>
-                        <button type="button" name="disable">Disable all tips</button>
-                    </div>
-                </blockquote>
-            </td>
-        </tr>
-    </t>
+<t t-name="ViewManagerAction" t-extend="ViewManager">
     <t t-jquery="h2.oe_view_title" t-operation="prepend">
         <a t-if="self.flags.display_title !== false" class="oe-shortcut-toggle" title="Add / Remove Shortcut..."
             href="javascript: void(0)"> </a>
@@ -497,14 +519,6 @@
         <span><t t-esc="format(perm.write_date, { 'type' : 'datetime' }, '/')"/></span>
     </div>
 </t>
-<t t-extend="ViewManager" t-name="One2Many.viewmanager">
-    <t t-jquery="span.oe_view_title_text" t-operation="replace"/>
-
-    <t t-jquery=".oe-view-manager-header">
-        this.attr('t-if', 'views.length != 1');
-    </t>
-</t>
-
 <t t-name="ViewPager">
     <button class="oe_button oe_button_pager" type="button" data-pager-action="first">
         <img t-att-src='_s + "/web/static/src/img/pager_first.png"'/>
@@ -542,27 +556,6 @@
     </li>
 </t>
 
-<t t-name="TranslateDialog">
-    <table t-if="widget.view.translatable_fields" class="oe_form oe_translation_form" border="0" cellpadding="0" cellspacing="0" width="100%">
-    <tr>
-        <td class="oe_form_separator" width="1%" nowrap="nowrap">
-            <div class="oe_horizontal_separator">Field</div>
-        </td>
-        <th t-foreach="widget.languages" align="left">
-            <div class="oe_horizontal_separator"><t t-esc="name"/></div>
-        </th>
-    </tr>
-    <tr t-foreach="widget.view.translatable_fields" t-as="field" t-att-data-field="field.name">
-        <td class="oe_form_group_cell" width="1%" nowrap="nowrap">
-            <label class="oe_label"><t t-esc="field.node.attrs.string"/>:</label>
-        </td>
-        <td t-foreach="widget.languages" t-as="lg" class="oe_form_group_cell">
-            <input t-if="field.type == 'char'" type="text" t-attf-name="#{lg.code}-#{field.name}" value="" data-value="" class="oe_trad_field" style="width: 100%"/>
-            <textarea t-if="field.type == 'text'" t-attf-name="#{lg.code}-#{field.name}" data-value="" class="oe_trad_field" style="width: 100%"></textarea>
-        </td>
-    </tr>
-    </table>
-</t>
 <t t-name="TreeView">
     <select t-if="toolbar" style="width: 30%">
     </select>
@@ -724,23 +717,17 @@
                 <button type="button" class="oe_button oe_form_button_save">Save</button>
                 <button type="button" class="oe_button oe_form_button_cancel">Cancel</button>
             </div>
-            <div class="oe_form_sidebar">
-                Sidebar
-            </div>
             <div class="oe_form_pager" t-if="widget.options.pager !== false">
                 <t t-call="ViewPager">
                     <span class="oe_pager_index">0</span><span class="oe_pager_separator"> / </span><span class="oe_pager_count">0</span>
                 </t>
             </div>
+            <div class="oe_form_sidebar">
+            </div>
         </div>
         <div style="clear: both;"/>
         <div class="oe_form_container"/>
     </div>
-</t>
-<t t-name="One2Many.formview" t-extend="FormView">
-    <t t-jquery=".oe_form_buttons" t-operation="inner">
-        <button type="button" class="oe_button oe_form_button_create">Add</button>
-    </t>
 </t>
 <t t-name="PageView" t-extend="FormView">
     <t t-jquery=".oe_form_buttons" t-operation="inner">
@@ -1296,8 +1283,43 @@
     </t>
 </t>
 
-<div t-name="SearchView" class="oe_searchview"/>
+<t t-name="TranslateDialog">
+    <table t-if="widget.view.translatable_fields" class="oe_form oe_translation_form" border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+        <td class="oe_form_separator" width="1%" nowrap="nowrap">
+            <div class="oe_horizontal_separator">Field</div>
+        </td>
+        <th t-foreach="widget.languages" align="left">
+            <div class="oe_horizontal_separator"><t t-esc="name"/></div>
+        </th>
+    </tr>
+    <tr t-foreach="widget.view.translatable_fields" t-as="field" t-att-data-field="field.name">
+        <td class="oe_form_group_cell" width="1%" nowrap="nowrap">
+            <label class="oe_label"><t t-esc="field.node.attrs.string"/>:</label>
+        </td>
+        <td t-foreach="widget.languages" t-as="lg" class="oe_form_group_cell">
+            <input t-if="field.type == 'char'" type="text" t-attf-name="#{lg.code}-#{field.name}" value="" data-value="" class="oe_trad_field" style="width: 100%"/>
+            <textarea t-if="field.type == 'text'" t-attf-name="#{lg.code}-#{field.name}" data-value="" class="oe_trad_field" style="width: 100%"></textarea>
+        </td>
+    </tr>
+    </table>
+</t>
 
+<t t-name="One2Many.viewmanager" t-extend="ViewManager">
+    <t t-jquery="span.oe_view_title_text" t-operation="replace"/>
+
+    <t t-jquery=".oe-view-manager-header">
+        this.attr('t-if', 'views.length != 1');
+    </t>
+</t>
+<t t-name="One2Many.formview" t-extend="FormView">
+    <t t-jquery=".oe_form_buttons" t-operation="inner">
+        <button type="button" class="oe_button oe_form_button_create">Add</button>
+    </t>
+</t>
+
+<div t-name="SearchView" class="oe_searchview">
+</div>
 <t t-name="SearchView.managed-filters">
     <option class="oe-filters-title" value="">Filters</option>
     <optgroup label="-- Filters --">
@@ -1547,6 +1569,7 @@
         <td t-if="edited and !options.deletable" class="oe-listview-padding"/>
     </t>
 </t>
+
 <t t-name="view_editor">
     <table class="oe_view_editor">
         <t t-call="view_editor.row"/>
@@ -1610,6 +1633,7 @@
 <t t-name="vieweditor_boolean">
     <input type="checkbox" t-att-id="widget.name"/>
 </t>
+
 <t t-name="ExportView">
     <a id="exportview" href="javascript: void(0)" style="text-decoration: none;color: #3D3D3D;">Export</a>
 </t>
@@ -1661,7 +1685,6 @@
         </td>
     </tr>
 </table>
-
 <table t-name="ExportTreeView-Secondary"
        id="field-tree-structure" class="oe_export_fields_selector_export"
        cellspacing="0" cellpadding="0">
@@ -1695,7 +1718,6 @@
         </table>
     </td>
 </tr>
-
 <t t-name="ExportNewList">
     <tr>
         <th><label>Save as:</label></th>
@@ -1703,7 +1725,6 @@
         <td><button class="oe_button oe_export_button_export" id="add_export_list">Ok</button></td>
     </tr>
 </t>
-
 <t t-name="Exists.ExportList">
     <label for="saved_export_list">Saved exports:</label>
 
@@ -1714,30 +1735,6 @@
         </t>
     </select>
     <button class="oe_button oe_export_button_export" id="delete_export_list" type="button">Delete</button>
-</t>
-<t t-name="Change_Pwd">
-    <form name="change_password_form" class="oe_forms" method="POST">
-        <table align="center">
-            <tr>
-                <td><label for="old_pwd">Old Password:</label></td>
-                <td><input type="password" name="old_pwd"
-                           minlength="1" autofocus="autofocus"/></td>
-            </tr>
-            <tr>
-            <td><label for="new_password">New Password:</label></td>
-            <td><input type="password" name="new_password"
-                       minlength="1" autofocus="autofocus"/></td>
-            </tr>
-            <tr>
-                <td><label for="confirm_pwd">Confirm Password:</label></td>
-                <td><input type="password" name="confirm_pwd"
-                             minlength="1"/></td>
-            </tr>
-            <tr>
-                <td colspan="2" align="right"><button class="oe_button">Change Password</button></td>
-            </tr>
-        </table>
-    </form>
 </t>
 
 <t t-name="ImportView">
@@ -1815,24 +1812,4 @@
     </t>
 </t>
 
-<t t-name="About-Page">
-    <div>
-        <a class="oe_activate_debug_mode" href="?debug" style="float:right; font-size: 80%;">Activate the developper mode</a>
-        <h1 style="margin:0;">OpenERP</h1>
-        <h3 style="margin:15px 0;padding:0;">Version <t t-esc="version_info.version"/></h3>
-        <p>
-            Copyright © 2004-TODAY OpenERP SA. All Rights Reserved.<br />
-            OpenERP is a trademark of the <a target="_blank" href="http://openerp.com/" style="text-decoration: underline;">OpenERP SA Company</a>.
-        </p>
-        <p>
-            Licenced under the terms of <a target="_blank" href="http://www.gnu.org/licenses/agpl.html" style="text-decoration: underline;">GNU Affero General Public License</a>
-        </p>
-        <p>
-            For more information visit <a target="_blank" href="http://openerp.com/" style="text-decoration: underline;">OpenERP.com</a>
-        </p>
-    </div>
-</t>
-<t t-name="EmptyComponent">
-    <div></div>
-</t>
 </templates>
