@@ -52,6 +52,7 @@ and decide on their status as they evolve.
         'security/project_issue_security.xml',
         'security/ir.model.access.csv',
         "board_project_issue_view.xml",
+        "res_config_view.xml",
      ],
     'demo_xml': ['project_issue_demo.xml'],
     'test': [

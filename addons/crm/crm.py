@@ -127,7 +127,7 @@ class crm_case_section(osv.osv):
 
     def name_get(self, cr, uid, ids, context=None):
         """Overrides orm name_get method"""
-        if not isinstance(ids, list) : 
+        if not isinstance(ids, list) :
             ids = [ids]
         res = []
         if not ids:
@@ -256,7 +256,40 @@ class crm_base(object):
             data.update(self.onchange_partner_address_id(cr, uid, ids, addr['contact'])['value'])
         return {'value': data}
 
-    def case_open(self, cr, uid, ids, *args):
+	def case_get_note_msg_prefix(self, cr, uid, id, context=None):
+		return ''
+	
+    def case_open_send_note(self, cr, uid, ids, context=None):
+        for id in ids:
+            msg = '%s has been <b>opened</b>.' % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
+            self.message_append_note(cr, uid, [id], body=msg, context=context)
+        return True
+
+    def case_close_send_note(self, cr, uid, ids, context=None):
+        for id in ids:
+            msg = '%s has been <b>closed</b>.'% (self.case_get_note_msg_prefix(cr, uid, id, context=context))
+            self.message_append_note(cr, uid, [id], body=msg, context=context)
+        return True
+
+    def case_cancel_send_note(self, cr, uid, ids, context=None):
+        for id in ids:
+            msg = '%s has been <b>canceled</b>.' % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
+            self.message_append_note(cr, uid, [id], body=msg, context=context)
+        return True
+
+    def case_pending_send_note(self, cr, uid, ids, context=None):
+        for id in ids:
+            msg = '%s is now <b>pending</b>.' % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
+            self.message_append_note(cr, uid, [id], body=msg, context=context)
+        return True
+
+    def case_reset_send_note(self, cr, uid, ids, context=None):
+        for id in ids:
+            msg = '%s has been <b>renewed</b>.' % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
+            self.message_append_note(cr, uid, [id], body=msg, context=context)
+        return True
+
+    def case_open(self, cr, uid, ids, context=None):
         """Opens Case
         :param ids: List of case Ids
         """
@@ -265,12 +298,13 @@ class crm_base(object):
             data = {'state': 'open', 'active': True}
             if not case.user_id:
                 data['user_id'] = uid
-            self.write(cr, uid, case.id, data)
-
+            self.write(cr, uid, [case.id], data)
+        self.case_open_send_note(cr, uid, ids, context=context)
         self._action(cr, uid, cases, 'open')
+
         return True
 
-    def case_close(self, cr, uid, ids, *args):
+    def case_close(self, cr, uid, ids, context=None):
         """Closes Case
         :param ids: List of case Ids
         """
@@ -278,10 +312,11 @@ class crm_base(object):
         cases[0].state # to fill the browse record cache
         self.write(cr, uid, ids, {'state': 'done', 'date_closed': time.strftime('%Y-%m-%d %H:%M:%S'), })
         # We use the cache of cases to keep the old case state
+        self.case_close_send_note(cr, uid, ids, context=context)
         self._action(cr, uid, cases, 'done')
         return True
 
-    def case_cancel(self, cr, uid, ids, *args):
+    def case_cancel(self, cr, uid, ids, context=None):
         """Cancels Case
         :param ids: List of case Ids
         """
@@ -289,26 +324,29 @@ class crm_base(object):
         cases[0].state # to fill the browse record cache
         self.write(cr, uid, ids, {'state': 'cancel', 'active': True})
         # We use the cache of cases to keep the old case state
+        self.case_cancel_send_note(cr, uid, ids, context=context)
         self._action(cr, uid, cases, 'cancel')
         return True
 
-    def case_pending(self, cr, uid, ids, *args):
+    def case_pending(self, cr, uid, ids, context=None):
         """Marks case as pending
         :param ids: List of case Ids
         """
         cases = self.browse(cr, uid, ids)
         cases[0].state # to fill the browse record cache
         self.write(cr, uid, ids, {'state': 'pending', 'active': True})
+        self.case_pending_send_note(cr, uid, ids, context=context)
         self._action(cr, uid, cases, 'pending')
         return True
 
-    def case_reset(self, cr, uid, ids, *args):
+    def case_reset(self, cr, uid, ids, context=None):
         """Resets case as draft
         :param ids: List of case Ids
         """
         cases = self.browse(cr, uid, ids)
         cases[0].state # to fill the browse record cache
         self.write(cr, uid, ids, {'state': 'draft', 'active': True})
+        self.case_reset_send_note(cr, uid, ids, context=context)
         self._action(cr, uid, cases, 'draft')
         return True
 
@@ -323,12 +361,12 @@ class crm_base(object):
         return rule_obj._action(cr, uid, rule_ids, cases, scrit=scrit, context=context)
 
 class crm_case(crm_base):
-    """ A simple python class to be used for common functions 
+    """ A simple python class to be used for common functions
     Object that inherit from this class should inherit from mailgate.thread
     And need a stage_id field
-    And object that inherit (orm inheritance) from a class the overwrite copy 
+    And object that inherit (orm inheritance) from a class the overwrite copy
     """
-
+    
     def stage_find(self, cr, uid, section_id, domain=[], order='sequence'):
         domain = list(domain)
         if section_id:
@@ -387,34 +425,45 @@ class crm_case(crm_base):
                 default.update({ 'date_open': False })
         return super(crm_case, self).copy(cr, uid, id, default, context=context)
 
+    def case_escalate_send_note(self, cr, uid, ids, new_section=None, context=None):
+        for id in ids:
+            if new_section:
+                msg = '%s has been <b>escalated</b> to <b>%s</b>.' % (self.case_get_note_msg_prefix(cr, uid, id, context=context), new_section.name)
+            else:
+                msg = '%s has been <b>escalated</b>.' % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
+            self.message_append_note(cr, uid, [id], 'System Notification', msg, context=context)
+        return True
 
-    def case_open(self, cr, uid, ids, *args):
+    def case_get_note_msg_prefix(self, cr, uid, id, context=None):
+        return ''
+    
+    def case_open(self, cr, uid, ids, context=None):
         """Opens Case"""
         cases = self.browse(cr, uid, ids)
-        self.message_append(cr, uid, cases, _('Open'))
         for case in cases:
             data = {'state': 'open', 'active': True }
             if not case.user_id:
                 data['user_id'] = uid
-            self.write(cr, uid, case.id, data)
+            self.write(cr, uid, [case.id], data)
+        self.case_open_send_note(cr, uid, ids, context=context)
         self._action(cr, uid, cases, 'open')
         return True
 
-    def case_close(self, cr, uid, ids, *args):
+    def case_close(self, cr, uid, ids, context=None):
         """Closes Case"""
         cases = self.browse(cr, uid, ids)
         cases[0].state # to fill the browse record cache
-        self.message_append(cr, uid, cases, _('Close'))
         self.write(cr, uid, ids, {'state': 'done',
                                   'date_closed': time.strftime('%Y-%m-%d %H:%M:%S'),
                                   })
         #
         # We use the cache of cases to keep the old case state
         #
+        self.case_close_send_note(cr, uid, ids, context=context)
         self._action(cr, uid, cases, 'done')
         return True
 
-    def case_escalate(self, cr, uid, ids, *args):
+    def case_escalate(self, cr, uid, ids, context=None):
         """Escalates case to parent level"""
         cases = self.browse(cr, uid, ids)
         for case in cases:
@@ -427,42 +476,37 @@ class crm_case(crm_base):
             else:
                 raise osv.except_osv(_('Error !'), _('You can not escalate, you are already at the top level regarding your sales-team category.'))
             self.write(cr, uid, [case.id], data)
+            case.case_escalate_send_note(case.section_id.parent_id)
         cases = self.browse(cr, uid, ids)
-        self.message_append(cr, uid, cases, _('Escalate'))
         self._action(cr, uid, cases, 'escalate')
         return True
 
-    def case_cancel(self, cr, uid, ids, *args):
+    def case_cancel(self, cr, uid, ids, context=None):
         """Cancels Case"""
         cases = self.browse(cr, uid, ids)
         cases[0].state # to fill the browse record cache
-        self.message_append(cr, uid, cases, _('Cancel'))
         self.write(cr, uid, ids, {'state': 'cancel',
                                   'active': True})
+        self.case_cancel_send_note(cr, uid, ids, context=context)
         self._action(cr, uid, cases, 'cancel')
-        for case in cases:
-            message = _("The case '%s' has been cancelled.") % (case.name,)
-            self.log(cr, uid, case.id, message)
         return True
 
-    def case_pending(self, cr, uid, ids, *args):
+    def case_pending(self, cr, uid, ids, context=None):
         """Marks case as pending"""
         cases = self.browse(cr, uid, ids)
         cases[0].state # to fill the browse record cache
-        self.message_append(cr, uid, cases, _('Pending'))
         self.write(cr, uid, ids, {'state': 'pending', 'active': True})
+        self.case_pending_send_note(cr, uid, ids, context=context)
         self._action(cr, uid, cases, 'pending')
         return True
 
-    def case_reset(self, cr, uid, ids, *args):
+    def case_reset(self, cr, uid, ids, context=None):
         """Resets case as draft"""
         state = 'draft'
-        if 'crm.phonecall' in args:
-            state = 'open'
         cases = self.browse(cr, uid, ids)
         cases[0].state # to fill the browse record cache
-        self.message_append(cr, uid, cases, _('Draft'))
         self.write(cr, uid, ids, {'state': state, 'active': True})
+        self.case_reset_send_note(cr, uid, ids, context=context)
         self._action(cr, uid, cases, state)
         return True
 
