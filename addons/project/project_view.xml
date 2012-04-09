@@ -174,11 +174,12 @@
                     <field name="task"/>
                     <field name="user_id"/>
                     <field name="date"/>
+                    <field name="color"/>
                     <field name="open_task"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div class="project_vignettes">
-                                <li class="oe_project_kanban_vignette">
+                                <li class="oe_project_kanban_vignette " t-attf-class="#{kanban_color(record.color.raw_value)}">
                                     <a href="#" class="oe_project_kanban_action dropdown-toggle"><span class="i">B</span></a>
                                     <ul class="dropdown-menu">
                                       <li ><a type="edit" >Edit...</a></li>
@@ -233,66 +234,6 @@
                                 </li>
                             </div>
                         </t>
-                       
-                        <!--<t t-name="tasks">
-                            <ul class="oe_kanban_tooltip">
-                                <li><b>Tasks:</b> <field name="open_task"/></li>
-                            </ul>
-                        </t>
-                        <t t-name="kanban-box">
-                            <div class="oe_module_vignette oe_kanban_box oe_kanban_color_border">
-                                <table class="project_table">
-                                    <tr>
-                                        <td class="td_image">
-                                            <div class="sequence">
-                                                <button name = "open_users" type="object" class="oe_project_buttons"><img t-att-src="kanban_image('res.users', 'avatar', record.user_id.raw_value[0])" class="avatar"/></button><br/>
-                                                <div class="manager"><field name="user_id"/></div>
-                                            </div>
-                                            <t t-if="record.date.raw_value">
-                                                <div class="sequence">
-                                                    <kbd class="user">Deadline</kbd>
-                                                    <div class="manager"><b><field name="date"/></b></div>
-                                                </div>
-                                            </t>
-                                          </td>
-                                        <td class="td_name">
-                                            <div>
-                                                <h4 class="oe_project_font1">
-                                                    <a type="edit"><div class="oe_project_font"><t t-esc="record.name.value.substr(0,35)"/><t t-if="record.name.value.length > 35">...</t></div></a>
-                                                </h4>
-                                                <table >
-                                                    <tr class ="task">
-                                                        <td class="buttons">
-                                                            <t t-if="record.task.raw_value">
-                                                                <button name="open_tasks" class="oe_project_buttons" type="object" tooltip="tasks"><img src="/project/static/src/img/tasks_icon.png" class="project_icon"/></button>
-                                                            </t>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td height="45px" class="oe_project_members">
-                                                            <t t-foreach="record.members.raw_value" t-as="member">
-                                                                <img t-att-src="kanban_image('res.users', 'avatar', member)" class="img_member"/>
-                                                            </t>
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </table>
-                                <table class="project_table">
-                                    <tr>
-                                        <td class="td_hours">
-                                            <div class="progress invoiced">
-                                                <t t-esc="Math.round(record.effective_hours.raw_value)"/> hrs
-                                                <progress t-att-value="record.effective_hours.raw_value" t-att-max="record.total_hours.raw_value"></progress>
-                                                <t t-esc="Math.round(record.total_hours.raw_value)"/> hrs
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </t>-->
                     </templates>
                 </kanban>
             </field>

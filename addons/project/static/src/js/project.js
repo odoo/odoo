@@ -1,5 +1,6 @@
 openerp.project = function(openerp) {
     openerp.web_kanban.ProjectKanban = openerp.web_kanban.KanbanRecord.include({
+        
         bind_events: function() {
             self = this;
             if(this.view.dataset.model == 'project.project') {
@@ -36,6 +37,19 @@ openerp.project = function(openerp) {
                     return aValue == bValue ? 0 : aValue < bValue ? -1 : 1;
                   });
                 $('#list').replaceWith(my_list);
+                
+                
+                $('.steelblue').click(function(){
+                    //$(this).closest('.oe_project_kanban_vignette').css('background-color', 'steelblue');
+                    $action = $(this).closest('.oe_project_kanban_vignette').addClass(self.kanban_color(2));
+                    //var data = {};
+                    //data[$action.data('name')] = $(this).data('color');
+                    //self.view.dataset.write(2, {'color':2}, {}, function() {
+                    //    //self.record[$action.data('name')] = $(this).data('color');
+                    //    self.do_reload();
+                    //});
+
+                });
             };
             self._super();
         }
