@@ -11,27 +11,27 @@
             <field name="name">Personal Quotations/Sales</field>
             <field ref="sale.model_sale_order" name="model_id"/>
             <field name="domain_force">['|',('partner_id.email','=',user.login),('user_id','=',False)]</field>
-            <field name="groups" eval="[(4, ref('base.group_sale_salesman'))]"/>
+            <field name="global" eval="True"/>
         </record>
         
         <record id="portal_stock_picking_user_rule" model="ir.rule">
             <field name="name">Personal Delivery Orders</field>
             <field ref="stock.model_stock_picking" name="model_id"/>
             <field name="domain_force">[('partner_id.email','=',user.login)]</field>
-            <field name="groups" eval="[(4, ref('base.group_sale_salesman'))]"/>
+            <field name="global" eval="True"/>
         </record>
         
         <record id="portal_account_invoice_user_rule" model="ir.rule">
             <field name="name">Personal Account Invoices</field>
             <field ref="account.model_account_invoice" name="model_id"/>
             <field name="domain_force">[('partner_id.email','=',user.login)]</field>
-            <field name="groups" eval="[(4, ref('base.group_sale_salesman'))]"/>
+            <field name="global" eval="True"/>
         </record>
         
         <record id="res_portal_demo" model="res.portal">
             <field name="name">Sales Portal</field>
             <field ref="base.module_category_sales_management" name="category_id"/>
-            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user')), (4, ref('base.group_sale_salesman'))]"/>
             <field name="rule_groups" eval="[(4, ref('portal_sale_order_user_rule')), (4, ref('portal_stock_picking_user_rule')), (4, ref('portal_account_invoice_user_rule'))]"/>
         </record>
         
