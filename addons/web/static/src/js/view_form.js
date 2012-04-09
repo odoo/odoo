@@ -119,8 +119,12 @@ openerp.web.FormView = openerp.web.View.extend({
         if (this.sidebar) {
             this.sidebar.$element.show();
         }
-        this.$buttons.find('.oe_form_buttons').show();
-        this.$pager.find('.oe_form_pager').show();
+        if (this.$buttons) {
+            this.$buttons.find('.oe_form_buttons').show();
+        }
+        if (this.$pager) {
+            this.$pager.find('.oe_form_pager').show();
+        }
         this.$element.show().css('visibility', 'hidden');
         this.$element.removeClass('oe_form_dirty');
         return this.has_been_loaded.pipe(function() {
@@ -143,7 +147,12 @@ openerp.web.FormView = openerp.web.View.extend({
         if (this.sidebar) {
             this.sidebar.$element.hide();
         }
-        this.$buttons.find('.oe_form_buttons').hide();
+        if (this.$buttons) {
+            this.$buttons.find('.oe_form_buttons').hide();
+        }
+        if (this.$pager) {
+            this.$pager.find('.oe_form_pager').hide();
+        }
         this.$pager.find('.oe_form_pager').hide();
         this._super();
     },

@@ -234,6 +234,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         this.$element.find('.oe-list-add') .click(this.proxy('do_add_record')) .attr('disabled', grouped && this.options.editable);
         this.$element.find('.oe-list-delete') .attr('disabled', true) .click(this.proxy('do_delete_selected'));
 
+        // Pager
         this.$element.find('.oe-list-pager')
             .delegate('button', 'click', function () {
                 var $this = $(this);
@@ -272,6 +273,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
                         .val(self._limit || 'NaN');
                 });
 
+        // Sidebar
         if (!this.sidebar && this.options.sidebar && this.options.$sidebar) {
             this.sidebar = new openerp.web.Sidebar(this);
             this.sidebar.appendTo(this.options.$sidebar);
