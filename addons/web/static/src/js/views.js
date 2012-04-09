@@ -6,17 +6,7 @@ openerp.web.views = function(session) {
 var QWeb = session.web.qweb,
     _t = session.web._t;
 
-/**
- * Registry for all the client actions key: tag value: widget
- */
-session.web.client_actions = new session.web.Registry();
-
-/**
- * Registry for all the main views
- */
-session.web.views = new session.web.Registry();
-
-session.web.ActionManager = session.web.OldWidget.extend({
+session.web.ActionManager = session.web.Widget.extend({
     init: function(parent) {
         this._super(parent);
         this.inner_action = null;
@@ -24,9 +14,6 @@ session.web.ActionManager = session.web.OldWidget.extend({
         this.dialog = null;
         this.dialog_viewmanager = null;
         this.client_widget = null;
-    },
-    render: function() {
-        return '<div id="' + this.element_id + '" style="height: 100%;"></div>';
     },
     dialog_stop: function () {
         if (this.dialog) {
@@ -217,7 +204,7 @@ session.web.ActionManager = session.web.OldWidget.extend({
     }
 });
 
-session.web.ViewManager =  session.web.OldWidget.extend(/** @lends session.web.ViewManager# */{
+session.web.ViewManager =  session.web.OldWidget.extend({
     template: "ViewManager",
     /**
      * @constructs session.web.ViewManager
@@ -249,12 +236,6 @@ session.web.ViewManager =  session.web.OldWidget.extend(/** @lends session.web.V
         this.flags = flags || {};
         this.registry = session.web.views;
         this.views_history = [];
-    },
-    render: function() {
-        return session.web.qweb.render(this.template, {
-            self: this,
-            prefix: this.element_id,
-            views: this.views_src});
     },
     /**
      * @returns {jQuery.Deferred} initial view loading promise
@@ -452,7 +433,7 @@ session.web.ViewManager =  session.web.OldWidget.extend(/** @lends session.web.V
     }
 });
 
-session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepnerp.web.ViewManagerAction# */{
+session.web.ViewManagerAction = session.web.ViewManager.extend({
     template:"ViewManagerAction",
     /**
      * @constructs session.web.ViewManagerAction
@@ -1294,6 +1275,16 @@ session.web.xml_to_str = function(node) {
         return (new XMLSerializer()).serializeToString(node);
     }
 }
+
+/**
+ * Registry for all the client actions key: tag value: widget
+ */
+session.web.client_actions = new session.web.Registry();
+
+/**
+ * Registry for all the main views
+ */
+session.web.views = new session.web.Registry();
 
 };
 

@@ -39,7 +39,7 @@ openerp.web.corelib = function(openerp) {
  *
  * Example:
  *
- * var Person = nova.Class.extend({
+ * var Person = openerp.web.Class.extend({
  *  init: function(isDancing){
  *     this.dancing = isDancing;
  *   },
@@ -397,8 +397,9 @@ openerp.web.GetterSetterMixin = _.extend({}, openerp.web.EventDispatcherMixin, {
     }
 });
 
-openerp.web.CallbackEnabledMixin = {
+openerp.web.CallbackEnabledMixin = _.extend({}, openerp.web.GetterSetterMixin, {
     init: function() {
+        openerp.web.GetterSetterMixin.init.call(this);
         var self = this;
         var callback_maker = function(obj, name, method) {
             var callback = function() {
@@ -494,19 +495,9 @@ openerp.web.CallbackEnabledMixin = {
             return self[method_name].apply(self, arguments);
         }
     }
-};
-
-openerp.web.CallbackEnabled = openerp.web.Class.extend(openerp.web.GetterSetterMixin, openerp.web.CallbackEnabledMixin, {
-    init: function() {
-        openerp.web.GetterSetterMixin.init.call(this);
-        openerp.web.CallbackEnabledMixin.init.call(this);
-    }
 });
 
-// Class
-
-// TODO al merge or make 2 mixins
-openerp.web.Widget = openerp.web.Class.extend(openerp.web.GetterSetterMixin, {
+openerp.web.WidgetMixin = _.extend({},openerp.web.CallbackEnabledMixin, {
     /**
      * Tag name when creating a default $element.
      * @type string
@@ -527,9 +518,8 @@ openerp.web.Widget = openerp.web.Class.extend(openerp.web.GetterSetterMixin, {
      * for new components this argument should not be provided any more.
      */
     init: function(parent) {
-        openerp.web.GetterSetterMixin.init.call(this);
+        openerp.web.CallbackEnabledMixin.init.call(this);
         this.$element = $(document.createElement(this.tagName));
-
         this.setParent(parent);
     },
     /**
@@ -621,6 +611,14 @@ openerp.web.Widget = openerp.web.Class.extend(openerp.web.GetterSetterMixin, {
     }
 });
 
+// Classes
+
+openerp.web.CallbackEnabled = openerp.web.Class.extend(openerp.web.CallbackEnabledMixin, {
+    init: function() {
+        openerp.web.CallbackEnabledMixin.init.call(this);
+    }
+});
+
 /**
  * Base class for all visual components. Provides a lot of functionalities helpful
  * for the management of a part of the DOM.
@@ -669,7 +667,7 @@ openerp.web.Widget = openerp.web.Class.extend(openerp.web.GetterSetterMixin, {
  *
  * That will kill the widget in a clean way and erase its content from the dom.
  */
-openerp.web.Widget = openerp.web.Widget.extend(openerp.web.CallbackEnabledMixin, {
+openerp.web.Widget = openerp.web.Class.extend(openerp.web.WidgetMixin, {
     /**
      * The name of the QWeb template that will be used for rendering. Must be
      * redefined in subclasses or the default render() method can not be used.
@@ -692,8 +690,7 @@ openerp.web.Widget = openerp.web.Widget.extend(openerp.web.CallbackEnabledMixin,
      * for new components this argument should not be provided any more.
      */
     init: function(parent) {
-        this._super(parent);
-        openerp.web.CallbackEnabledMixin.init.call(this);
+        openerp.web.WidgetMixin.init.call(this,parent);
         this.session = openerp.connection;
     },
     /**
@@ -1687,33 +1684,6 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
     }
 });
 
-/**
- * @deprecated use :class:`openerp.web.Widget`
- */
-openerp.web.OldWidget = openerp.web.Widget.extend({
-    init: function(parent, element_id) {
-        this._super(parent);
-        this.element_id = element_id;
-        this.element_id = this.element_id || _.uniqueId('widget-');
-        var tmp = document.getElementById(this.element_id);
-        this.$element = tmp ? $(tmp) : $(document.createElement(this.tagName));
-    },
-    renderElement: function() {
-        var rendered = this.render();
-        if (rendered) {
-            var elem = $(rendered);
-            this.$element.replaceWith(elem);
-            this.$element = elem;
-        }
-        return this;
-    },
-    render: function (additional) {
-        if (this.template)
-            return openerp.web.qweb.render(this.template, _.extend({widget: this}, additional || {}));
-        return null;
-    }
-});
-
 openerp.web.TranslationDataBase = openerp.web.Class.extend(/** @lends openerp.web.TranslationDataBase# */{
     /**
      * @constructs openerp.web.TranslationDataBase
@@ -1767,6 +1737,32 @@ openerp.web.TranslationDataBase = openerp.web.Class.extend(/** @lends openerp.we
     }
 });
 
+/**
+ * @deprecated use :class:`openerp.web.Widget`
+ */
+openerp.web.OldWidget = openerp.web.Widget.extend({
+    init: function(parent, element_id) {
+        this._super(parent);
+        this.element_id = element_id;
+        this.element_id = this.element_id || _.uniqueId('widget-');
+        var tmp = document.getElementById(this.element_id);
+        this.$element = tmp ? $(tmp) : $(document.createElement(this.tagName));
+    },
+    renderElement: function() {
+        var rendered = this.render();
+        if (rendered) {
+            var elem = $(rendered);
+            this.$element.replaceWith(elem);
+            this.$element = elem;
+        }
+        return this;
+    },
+    render: function (additional) {
+        if (this.template)
+            return openerp.web.qweb.render(this.template, _.extend({widget: this}, additional || {}));
+        return null;
+    }
+});
 
 }
 

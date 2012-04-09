@@ -409,14 +409,14 @@
     <div class="oe_view_manager">
         <div class="oe_view_manager_header">
             <div class="oe_view_manager_row">
-                <h2 class="oe_view_title" t-if="self.flags.display_title !== false">
-                    <span class="oe_view_title_text"><t t-esc="self.display_title()"/></span>
+                <h2 class="oe_view_title" t-if="widget.flags.display_title !== false">
+                    <span class="oe_view_title_text"><t t-esc="widget.display_title()"/></span>
                 </h2>
-                <div t-attf-id="#{prefix}_search" t-opentag="true"/>
+                <div t-attf-id="#{widget.element_id}_search" t-opentag="true"/>
             </div>
             <div class="oe_view_manager_row">
                 <div class="oe_view_manager_switch oe_button_group">
-                    <t t-if="views.length != 1" t-foreach="views" t-as="view">
+                    <t t-if="widget.views_src.length != 1" t-foreach="widget.views_src" t-as="view">
                         <button type="button" t-attf-class="oe_vm_switch_#{view.view_type}" t-att-data-view-type="view.view_type" t-att-title="view.label || view.view_type">
                             <span><t t-esc="view.label || view.view_type"/></span>
                         </button>
@@ -425,19 +425,19 @@
             </div>
         </div>
         <div class="oe_view_manager_body">
-            <t t-foreach="views" t-as="view">
-                <div t-attf-id="#{prefix}_view_#{view.view_type}"/>
+            <t t-foreach="widget.views_src" t-as="view">
+                <div t-attf-id="#{widget.element_id}_view_#{view.view_type}"/>
             </t>
         </div>
     </div>
 </t>
 <t t-name="ViewManagerAction" t-extend="ViewManager">
     <t t-jquery="h2.oe_view_title" t-operation="prepend">
-        <a t-if="self.flags.display_title !== false" class="oe-shortcut-toggle" title="Add / Remove Shortcut..."
+        <a t-if="widget.flags.display_title !== false" class="oe-shortcut-toggle" title="Add / Remove Shortcut..."
             href="javascript: void(0)"> </a>
     </t>
     <t t-jquery="h2.oe_view_title" t-operation="after">
-        <select t-if="self.session.debug" class="oe_debug_view"/>
+        <select t-if="widget.session.debug" class="oe_debug_view"/>
     </t>
 </t>
 <t t-name="ViewManagerDebug">
