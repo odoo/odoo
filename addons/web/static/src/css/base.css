@@ -1606,6 +1606,31 @@
 .openerp2 .oe_form .oe_form_field_progressbar.ui-progressbar .ui-widget-header {
   background: #cccccc url(/web/static/lib/jquery.ui/css/smoothness/images/ui-bg_highlight-soft_75_cccccc_1x100.png) 50% 50% repeat-x;
 }
+.openerp2 .oe_form .oe_form_field_progressbar.ui-progressbar {
+  height: 22px;
+  font-size: 10px;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+  border: 1px solid #999999;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  background: white;
+  min-width: 90px;
+}
+.openerp2 .oe_form .oe_form_field_progressbar.ui-progressbar span {
+  position: absolute;
+  margin-left: 10px;
+  font-weight: bold;
+}
+.openerp2 .oe_form .oe_form_field_progressbar.ui-progressbar .ui-widget-header {
+  background: #cccccc url(/web/static/lib/jquery.ui/css/smoothness/images/ui-bg_highlight-soft_75_cccccc_1x100.png) 50% 50% repeat-x;
+}
+.openerp2 .oe_form .oe_view_manager_row:first-child {
+  display: none;
+}
 .openerp2 .oe-listview-content {
   width: 100%;
 }
