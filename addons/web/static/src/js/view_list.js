@@ -231,10 +231,12 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         });
 
         // Add and delete
+        this.$buttons = this.options.$buttons || this.$element.find('.oe_list_buttons');
         this.$element.find('.oe-list-add') .click(this.proxy('do_add_record')) .attr('disabled', grouped && this.options.editable);
         this.$element.find('.oe-list-delete') .attr('disabled', true) .click(this.proxy('do_delete_selected'));
 
         // Pager
+        this.$pager = this.options.$pager || this.$element.find('.oe_list_pager');
         this.$element.find('.oe-list-pager')
             .delegate('button', 'click', function () {
                 var $this = $(this);

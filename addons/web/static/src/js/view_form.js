@@ -144,15 +144,15 @@ openerp.web.FormView = openerp.web.View.extend({
         });
     },
     do_hide: function () {
-        if (this.sidebar) {
-            this.sidebar.$element.hide();
-        }
-        if (this.$buttons) {
-            this.$buttons.find('.oe_form_buttons').hide();
-        }
-        if (this.$pager) {
-            this.$pager.find('.oe_form_pager').hide();
-        }
+        //if (this.sidebar) {
+        //    this.sidebar.$element.hide();
+        //}
+        //if (this.$buttons) {
+        //    this.$buttons.find('.oe_form_buttons').hide();
+        //}
+        //if (this.$pager) {
+        //    this.$pager.find('.oe_form_pager').hide();
+        //}
         this._super();
     },
     on_record_loaded: function(record) {
