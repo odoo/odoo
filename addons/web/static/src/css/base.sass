@@ -661,11 +661,11 @@ $colour4: #8a89ba
                 &:hover
                     text-decoration: none
             .active
+                width: 100%
                 background: #999
                 @include box-shadow(0 1px 4px rgba(0,0,0,0.3) inset)
-                a
-                    color: #fff
-                    text-shadow: 0 1px 2px rgba(0,0,0,0.4)
+                color: #fff
+                text-shadow: 0 1px 2px rgba(0,0,0,0.4)
     // }}}
     // ViewManager.header {{{
     .oe_view_manager_header
@@ -730,61 +730,24 @@ $colour4: #8a89ba
     // }}}
     // ViewManager.switches {{{
     .oe_view_manager_switch
-        float: right
-        margin: 2px 0 0 0
-
-        .oe_vm_switch_form,
-        .oe_vm_switch_page,
-        .oe_vm_switch_tree,
-        .oe_vm_switch_list,
-        .oe_vm_switch_graph,
-        .oe_vm_switch_gantt,
-        .oe_vm_switch_calendar,
-        .oe_vm_switch_kanban,
-        .oe_vm_switch_diagram
-            background: url("/web/static/src/img/views-icons-a.png") repeat-x scroll left top transparent
-            overflow: hidden
-            width: 22px
-            height: 21px
-            border: none
-            background-position: 0px 0px
-            span
-                display: none
-
-        .oe_vm_switch_list, .oe_vm_switch_tree
-            background-position: 0px 0px
-            &:active, &:hover, &:focus, &.oe_view_manager_switch_selected
-                background-position: 0px -21px
-
-        .oe_vm_switch_form, .oe_vm_switch_page
-            background-position: -22px 0px
-            &:active, &:hover, &:focus, &.oe_view_manager_switch_selected
-                background-position: -22px -21px
-
-        .oe_vm_switch_graph
-            background-position: -44px 0px
-            &:active, &:hover, &:focus, &.oe_view_manager_switch_selected
-                background-position: -44px -21px
-
-        .oe_vm_switch_gantt
-            background-position: -66px 0px
-            &:active, &:hover, &:focus, &.oe_view_manager_switch_selected
-                background-position: -66px -21px
-
-        .oe_vm_switch_calendar
-            background-position: -88px 0px
-            &:active, &:hover, &:focus, &.oe_view_manager_switch_selected
-                background-position: -88px -21px
-
-        .oe_vm_switch_kanban
-            background-position: -110px 0px
-            &:active, &:hover, &:focus, &.oe_view_manager_switch_selected
-                background-position: -110px -21px
-
-        .oe_vm_switch_diagram
-            background-position: 0px 0px
-            &:active, &:hover, &:focus, &.oe_view_manager_switch_selected
-                background-position: 0px -21px
+        li
+            padding-left: 1px
+            text-align: center
+            width: 24px
+            height: 24px
+            line-height: 24px
+        .oe_vm_switch_list:after, .oe_vm_switch_tree:after
+            content: "ö"
+        .oe_vm_switch_graph:after
+            content: "ó"
+        .oe_vm_switch_gantt:after
+            content: "y"
+        .oe_vm_switch_calendar:after
+            content: "b"
+        .oe_vm_switch_kanban:after
+            content: "ó"
+        .oe_vm_switch_diagram:after
+            content: "}"
     // }}}
     // ViewManager.sidebar {{{
     .oe_form_dropdown_section

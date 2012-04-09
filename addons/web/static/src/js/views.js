@@ -243,7 +243,7 @@ session.web.ViewManager =  session.web.OldWidget.extend({
     start: function() {
         this._super();
         var self = this;
-        this.$element.find('.oe_view_manager_switch button').click(function() {
+        this.$element.find('.oe_view_manager_switch a').click(function() {
             self.on_mode_switch($(this).data('view-type'));
         });
         var views_ids = {};
@@ -319,9 +319,10 @@ session.web.ViewManager =  session.web.OldWidget.extend({
         }
 
         this.$element
-            .find('.oe_view_manager_switch button').removeClass('oe_view_manager_switch_selected')
-            .filter('[data-view-type="' + view_type + '"]')
-            .addClass('oe_view_manager_switch_selected');
+            .find('.oe_view_manager_switch a').parent().removeClass('active')
+        this.$element
+            .find('.oe_view_manager_switch a').filter('[data-view-type="' + view_type + '"]')
+            .parent().addClass('active');
 
         $.when(view_promise).then(function () {
             _.each(_.keys(self.views), function(view_name) {
