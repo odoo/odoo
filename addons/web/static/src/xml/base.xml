@@ -595,17 +595,17 @@
     </tfoot>
 </table>
 <t t-name="ListView.buttons">
-    <div t-if="!no_leaf and options.action_buttons !== false" class="oe_list_buttons">
-        <button type="button" class="oe_button oe-list-add" t-if="options.addable">
-            <t t-esc="options.addable"/>
+    <div t-if="!widget.no_leaf and widget.options.action_buttons !== false" class="oe_list_buttons">
+        <button type="button" class="oe_button oe_list_add" t-if="widget.options.addable">
+            <t t-esc="widget.options.addable"/>
         </button>
-        <button type="button" class="oe_button oe-list-delete" t-if="options.selectable and options.deletable">
+        <button type="button" class="oe_button oe_list_delete" t-if="widget.options.selectable and widget.options.deletable">
             Delete
         </button>
     </div>
 </t>
 <t t-name="Listview.pager">
-    <div t-if="!no_leaf and options.pager !== false" class="oe-list-pager" t-att-colspan="columns_count">
+    <div t-if="!widget.no_leaf and widget.options.pager !== false" class="oe_list_pager" t-att-colspan="widget.columns_count">
         <t t-call="ViewPager">
             <span class="oe-pager-state">
             </span>

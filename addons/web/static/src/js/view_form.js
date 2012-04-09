@@ -78,10 +78,10 @@ openerp.web.FormView = openerp.web.View.extend({
         this.$pager = this.options.$pager || this.$element.find('.oe_form_pager');
 
         this.$buttons.html(QWeb.render("FormView.buttons", {'widget':self}));
-        this.$pager.html(QWeb.render("FormView.pager", {'widget':self}));
-
         this.$buttons.on('click','.oe_form_buttons button.oe_form_button_save',this.on_button_save);
         this.$buttons.on('click','.oe_form_buttons button.oe_form_button_cancel',this.on_button_cancel);
+
+        this.$pager.html(QWeb.render("FormView.pager", {'widget':self}));
         this.$pager.on('click','.oe_form_pager button[data-pager-action]',function(event) {
             var action = $(this).data('pager-action');
             self.on_pager_action(action);

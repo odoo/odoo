@@ -232,12 +232,14 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
 
         // Add and delete
         this.$buttons = this.options.$buttons || this.$element.find('.oe_list_buttons');
-        this.$element.find('.oe-list-add') .click(this.proxy('do_add_record')) .attr('disabled', grouped && this.options.editable);
-        this.$element.find('.oe-list-delete') .attr('disabled', true) .click(this.proxy('do_delete_selected'));
+        this.$buttons.html(QWeb.render("ListView.buttons", {'widget':self}));
+        this.$buttons.find('.oe_list_add') .click(this.proxy('do_add_record')) .attr('disabled', grouped && this.options.editable);
+        this.$buttons.find('.oe_list_delete') .attr('disabled', true) .click(this.proxy('do_delete_selected'));
 
         // Pager
         this.$pager = this.options.$pager || this.$element.find('.oe_list_pager');
-        this.$element.find('.oe-list-pager')
+        this.$pager.html(QWeb.render("FormView.pager", {'widget':self}));
+        this.$pager.find('.oe_list_pager')
             .delegate('button', 'click', function () {
                 var $this = $(this);
                 switch ($this.data('pager-action')) {
@@ -478,7 +480,6 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
     reload: function () {
         return this.reload_content();
     },
-
     do_load_state: function(state, warm) {
         var reload = false;
         if (state.page && this.page !== state.page) {
@@ -543,7 +544,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
      * @param {Array} records selected record values
      */
     do_select: function (ids, records) {
-        this.$element.find('.oe-list-delete').attr('disabled', !ids.length);
+        this.$buttons.find('.oe_list_delete').attr('disabled', !ids.length);
         if (!ids.length) {
             this.dataset.index = 0;
             if (this.sidebar) {
