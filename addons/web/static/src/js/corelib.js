@@ -503,6 +503,9 @@ openerp.web.CallbackEnabled = openerp.web.Class.extend(openerp.web.GetterSetterM
     }
 });
 
+// Class
+
+// TODO al merge or make 2 mixins
 openerp.web.Widget = openerp.web.Class.extend(openerp.web.GetterSetterMixin, {
     /**
      * Tag name when creating a default $element.
@@ -603,7 +606,8 @@ openerp.web.Widget = openerp.web.Class.extend(openerp.web.GetterSetterMixin, {
     /**
      * This is the method to implement to render the Widget.
      */
-    renderElement: function() {},
+    renderElement: function() {
+    },
     /**
      * Method called after rendering. Mostly used to bind actions, perform asynchronous
      * calls, etc...
@@ -613,7 +617,135 @@ openerp.web.Widget = openerp.web.Class.extend(openerp.web.GetterSetterMixin, {
      *
      * @returns {jQuery.Deferred}
      */
-    start: function() {}
+    start: function() {
+    }
+});
+
+/**
+ * Base class for all visual components. Provides a lot of functionalities helpful
+ * for the management of a part of the DOM.
+ *
+ * Widget handles:
+ * - Rendering with QWeb.
+ * - Life-cycle management and parenting (when a parent is destroyed, all its children are
+ *     destroyed too).
+ * - Insertion in DOM.
+ *
+ * Guide to create implementations of the Widget class:
+ * ==============================================
+ *
+ * Here is a sample child class:
+ *
+ * MyWidget = openerp.base.Widget.extend({
+ *     // the name of the QWeb template to use for rendering
+ *     template: "MyQWebTemplate",
+ *
+ *     init: function(parent) {
+ *         this._super(parent);
+ *         // stuff that you want to init before the rendering
+ *     },
+ *     start: function() {
+ *         // stuff you want to make after the rendering, `this.$element` holds a correct value
+ *         this.$element.find(".my_button").click(/* an example of event binding * /);
+ *
+ *         // if you have some asynchronous operations, it's a good idea to return
+ *         // a promise in start()
+ *         var promise = this.rpc(...);
+ *         return promise;
+ *     }
+ * });
+ *
+ * Now this class can simply be used with the following syntax:
+ *
+ * var my_widget = new MyWidget(this);
+ * my_widget.appendTo($(".some-div"));
+ *
+ * With these two lines, the MyWidget instance was inited, rendered, it was inserted into the
+ * DOM inside the ".some-div" div and its events were binded.
+ *
+ * And of course, when you don't need that widget anymore, just do:
+ *
+ * my_widget.destroy();
+ *
+ * That will kill the widget in a clean way and erase its content from the dom.
+ */
+openerp.web.Widget = openerp.web.Widget.extend(openerp.web.CallbackEnabledMixin, {
+    /**
+     * The name of the QWeb template that will be used for rendering. Must be
+     * redefined in subclasses or the default render() method can not be used.
+     *
+     * @type string
+     */
+    template: null,
+    /**
+     * Constructs the widget and sets its parent if a parent is given.
+     *
+     * @constructs openerp.web.Widget
+     * @extends openerp.web.CallbackEnabled
+     *
+     * @param {openerp.web.Widget} parent Binds the current instance to the given Widget instance.
+     * When that widget is destroyed by calling destroy(), the current instance will be
+     * destroyed too. Can be null.
+     * @param {String} element_id Deprecated. Sets the element_id. Only useful when you want
+     * to bind the current Widget to an already existing part of the DOM, which is not compatible
+     * with the DOM insertion methods provided by the current implementation of Widget. So
+     * for new components this argument should not be provided any more.
+     */
+    init: function(parent) {
+        this._super(parent);
+        openerp.web.CallbackEnabledMixin.init.call(this);
+        this.session = openerp.connection;
+    },
+    /**
+     * Renders the element. The default implementation renders the widget using QWeb,
+     * `this.template` must be defined. The context given to QWeb contains the "widget"
+     * key that references `this`.
+     */
+    renderElement: function() {
+        var rendered = null;
+        if (this.template)
+            rendered = openerp.web.qweb.render(this.template, {widget: this});
+        if (_.str.trim(rendered)) {
+            var elem = $(rendered);
+            this.$element.replaceWith(elem);
+            this.$element = elem;
+        }
+    },
+    /**
+     * Informs the action manager to do an action. This supposes that
+     * the action manager can be found amongst the ancestors of the current widget.
+     * If that's not the case this method will simply return `false`.
+     */
+    do_action: function(action, on_finished) {
+        if (this.getParent()) {
+            return this.getParent().do_action(action, on_finished);
+        }
+        return false;
+    },
+    do_notify: function() {
+        if (this.getParent()) {
+            return this.getParent().do_notify.apply(this,arguments);
+        }
+        return false;
+    },
+    do_warn: function() {
+        if (this.getParent()) {
+            return this.getParent().do_warn.apply(this,arguments);
+        }
+        return false;
+    },
+    rpc: function(url, data, success, error) {
+        var def = $.Deferred().then(success, error);
+        var self = this;
+        openerp.connection.rpc(url, data). then(function() {
+            if (!self.isDestroyed())
+                def.resolve.apply(def, arguments);
+        }, function() {
+            if (!self.isDestroyed())
+                def.reject.apply(def, arguments);
+        });
+        return def.promise();
+    }
 });
 
 openerp.web.Registry = openerp.web.Class.extend({
@@ -1554,133 +1686,6 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
     	}
     }
 });
-
-/**
- * Base class for all visual components. Provides a lot of functionalities helpful
- * for the management of a part of the DOM.
- *
- * Widget handles:
- * - Rendering with QWeb.
- * - Life-cycle management and parenting (when a parent is destroyed, all its children are
- *     destroyed too).
- * - Insertion in DOM.
- *
- * Guide to create implementations of the Widget class:
- * ==============================================
- *
- * Here is a sample child class:
- *
- * MyWidget = openerp.base.Widget.extend({
- *     // the name of the QWeb template to use for rendering
- *     template: "MyQWebTemplate",
- *
- *     init: function(parent) {
- *         this._super(parent);
- *         // stuff that you want to init before the rendering
- *     },
- *     start: function() {
- *         // stuff you want to make after the rendering, `this.$element` holds a correct value
- *         this.$element.find(".my_button").click(/* an example of event binding * /);
- *
- *         // if you have some asynchronous operations, it's a good idea to return
- *         // a promise in start()
- *         var promise = this.rpc(...);
- *         return promise;
- *     }
- * });
- *
- * Now this class can simply be used with the following syntax:
- *
- * var my_widget = new MyWidget(this);
- * my_widget.appendTo($(".some-div"));
- *
- * With these two lines, the MyWidget instance was inited, rendered, it was inserted into the
- * DOM inside the ".some-div" div and its events were binded.
- *
- * And of course, when you don't need that widget anymore, just do:
- *
- * my_widget.destroy();
- *
- * That will kill the widget in a clean way and erase its content from the dom.
- */
-openerp.web.Widget = openerp.web.Widget.extend(_.extend({}, openerp.web.CallbackEnabledMixin, {
-    /**
-     * The name of the QWeb template that will be used for rendering. Must be
-     * redefined in subclasses or the default render() method can not be used.
-     *
-     * @type string
-     */
-    template: null,
-    /**
-     * Constructs the widget and sets its parent if a parent is given.
-     *
-     * @constructs openerp.web.Widget
-     * @extends openerp.web.CallbackEnabled
-     *
-     * @param {openerp.web.Widget} parent Binds the current instance to the given Widget instance.
-     * When that widget is destroyed by calling destroy(), the current instance will be
-     * destroyed too. Can be null.
-     * @param {String} element_id Deprecated. Sets the element_id. Only useful when you want
-     * to bind the current Widget to an already existing part of the DOM, which is not compatible
-     * with the DOM insertion methods provided by the current implementation of Widget. So
-     * for new components this argument should not be provided any more.
-     */
-    init: function(parent) {
-        this._super(parent);
-        openerp.web.CallbackEnabledMixin.init.call(this);
-        this.session = openerp.connection;
-    },
-    /**
-     * Renders the element. The default implementation renders the widget using QWeb,
-     * `this.template` must be defined. The context given to QWeb contains the "widget"
-     * key that references `this`.
-     */
-    renderElement: function() {
-        var rendered = null;
-        if (this.template)
-            rendered = openerp.web.qweb.render(this.template, {widget: this});
-        if (_.str.trim(rendered)) {
-            var elem = $(rendered);
-            this.$element.replaceWith(elem);
-            this.$element = elem;
-        }
-    },
-    /**
-     * Informs the action manager to do an action. This supposes that
-     * the action manager can be found amongst the ancestors of the current widget.
-     * If that's not the case this method will simply return `false`.
-     */
-    do_action: function(action, on_finished) {
-        if (this.getParent()) {
-            return this.getParent().do_action(action, on_finished);
-        }
-        return false;
-    },
-    do_notify: function() {
-        if (this.getParent()) {
-            return this.getParent().do_notify.apply(this,arguments);
-        }
-        return false;
-    },
-    do_warn: function() {
-        if (this.getParent()) {
-            return this.getParent().do_warn.apply(this,arguments);
-        }
-        return false;
-    },
-    rpc: function(url, data, success, error) {
-        var def = $.Deferred().then(success, error);
-        var self = this;
-        openerp.connection.rpc(url, data). then(function() {
-            if (!self.isDestroyed())
-                def.resolve.apply(def, arguments);
-        }, function() {
-            if (!self.isDestroyed())
-                def.reject.apply(def, arguments);
-        });
-        return def.promise();
-    }
-}));
 
 /**
  * @deprecated use :class:`openerp.web.Widget`
