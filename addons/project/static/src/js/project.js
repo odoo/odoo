@@ -40,15 +40,19 @@ openerp.project = function(openerp) {
                 
                 
                 $('.steelblue').click(function(){
-                    //$(this).closest('.oe_project_kanban_vignette').css('background-color', 'steelblue');
-                    $action = $(this).closest('.oe_project_kanban_vignette').addClass(self.kanban_color(2));
-                    //var data = {};
-                    //data[$action.data('name')] = $(this).data('color');
-                    //self.view.dataset.write(2, {'color':2}, {}, function() {
-                    //    //self.record[$action.data('name')] = $(this).data('color');
-                    //    self.do_reload();
-                    //});
-
+                    $(this).closest('.oe_project_kanban_vignette').addClass(self.kanban_color(1));
+                });
+                $('.firebrick').click(function(){
+                    $(this).closest('.oe_project_kanban_vignette').addClass(self.kanban_color(2));
+                });
+                $('.khaki').click(function(){
+                    $(this).closest('.oe_project_kanban_vignette').addClass(self.kanban_color(3));
+                });
+                $('.thistle').click(function(){
+                    $(this).closest('.oe_project_kanban_vignette').addClass(self.kanban_color(4));
+                });
+                $('.orange').click(function(){
+                    $(this).closest('.oe_project_kanban_vignette').addClass(self.kanban_color(5));
                 });
             };
             self._super();
