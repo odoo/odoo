@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_sale_config_settings" model="ir.ui.view">
+            <field name="name">crm settings</field>
+            <field name="model">sale.config.settings</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.view_sale_config_settings"/>
+            <field name="arch" type="xml">
+                <group name="config_fetchmail" position="after">
+                    <field name="fetchmail_lead"/>
+                    <group colspan="2" attrs="{'invisible': [('fetchmail_lead','=',False)]}">
+                        <field name="lead_server" attrs="{'required': [('fetchmail_lead','=',True)]}"/>
+                        <field name="lead_type" on_change="onchange_fetchmail('lead', lead_type, lead_is_ssl)" attrs="{'required': [('fetchmail_lead','=',True)]}"/>
+                        <field name="lead_port" attrs="{'required': [('fetchmail_lead','=',True)]}"/>
+                        <field name="lead_is_ssl" on_change="onchange_fetchmail('lead', lead_type, lead_is_ssl)"/>
+                        <field name="lead_user" attrs="{'required': [('fetchmail_lead','=',True)]}"/>
+                        <field name="lead_password" password="True" attrs="{'required': [('fetchmail_lead','=',True)]}"/>
+                    </group>
+                    <newline/>
+                </group>
+
+                <group name="config_crm" position="after">
+                    <separator string="Import and Synchronize data from an other application" colspan="4"/>
+                    <field name="module_import_sugarcrm"/>
+                    <field name="module_crm_caldav"/>
+                    <field name="module_import_google"/>
+
+                    <separator string="Documents and Wiki" colspan="4"/>
+                    <field name="module_wiki_sale_faq" />
+
+                    <separator string="Customer Form" colspan="4"/>
+                    <field name="module_google_map"/>
+                </group>
+            </field>
+        </record>
+
+        <menuitem id="base.menu_sale_config" name="Sales" parent="base.menu_config" sequence="1" action="base.action_sale_config"/>
+
+    </data>
+</openerp>

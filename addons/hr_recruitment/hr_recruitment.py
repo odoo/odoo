@@ -96,7 +96,7 @@ class hr_applicant(crm.crm_case, osv.osv):
     _name = "hr.applicant"
     _description = "Applicant"
     _order = "id desc"
-    _inherit = ['mail.thread']
+    _inherit = ['ir.needaction_mixin', 'mail.thread']
 
     def _compute_day(self, cr, uid, ids, fields, args, context=None):
         """
@@ -179,6 +179,7 @@ class hr_applicant(crm.crm_case, osv.osv):
         'day_close': fields.function(_compute_day, string='Days to Close', \
                                 multi='day_close', type="float", store=True),
         'color': fields.integer('Color Index'),
+        'emp_id': fields.many2one('hr.employee', 'employee'),
         'user_email': fields.related('user_id', 'user_email', type='char', string='User Email', readonly=True),
     }
 
@@ -389,36 +390,33 @@ class hr_applicant(crm.crm_case, osv.osv):
         self.message_append_dict(cr, uid, ids, msg, context=context)
         return res
 
-    def case_open(self, cr, uid, ids, *args):
+    def create(self, cr, uid, vals, context=None):
+        obj_id = super(hr_applicant, self).create(cr, uid, vals, context=context)
+        self.create_send_note(cr, uid, [obj_id], context=context)
+        return obj_id
+
+    def case_open(self, cr, uid, ids, context=None):
         """
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of case's Ids
-        @param *args: Give Tuple Value
+            open Request of the applicant for the hr_recruitment
         """
-        res = super(hr_applicant, self).case_open(cr, uid, ids, *args)
+        res = super(hr_applicant, self).case_open(cr, uid, ids, context)
         date = self.read(cr, uid, ids, ['date_open'])[0]
         if not date['date_open']:
             self.write(cr, uid, ids, {'date_open': time.strftime('%Y-%m-%d %H:%M:%S'),})
-        for (id, name) in self.name_get(cr, uid, ids):
-            message = _("The job request '%s' has been set 'in progress'.") % name
-            self.log(cr, uid, id, message)
         return res
 
-    def case_close(self, cr, uid, ids, *args):
-        res = super(hr_applicant, self).case_close(cr, uid, ids, *args)
-        for (id, name) in self.name_get(cr, uid, ids):
-            message = _("Applicant '%s' is being hired.") % name
-            self.log(cr, uid, id, message)
+    def case_close(self, cr, uid, ids, context=None):
+        res = super(hr_applicant, self).case_close(cr, uid, ids, context)
         return res
 
-    def case_close_with_emp(self, cr, uid, ids, *args):
+    def case_close_with_emp(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         hr_employee = self.pool.get('hr.employee')
         model_data = self.pool.get('ir.model.data')
         act_window = self.pool.get('ir.actions.act_window')
         emp_id = False
-        for applicant in self.browse(cr, uid, ids):
+        for applicant in self.browse(cr, uid, ids, context=context):
             address_id = False
             if applicant.partner_id:
                 address_id = applicant.partner_id.address_get(['contact'])['contact']
@@ -429,7 +427,8 @@ class hr_applicant(crm.crm_case, osv.osv):
                                                      'address_home_id': address_id,
                                                      'department_id': applicant.department_id.id
                                                      })
-                self.case_close(cr, uid, [applicant.id], *args)
+                self.write(cr, uid, [applicant.id], {'emp_id': emp_id}, context=context)
+                self.case_close(cr, uid, [applicant.id], context)
             else:
                 raise osv.except_osv(_('Warning!'),_('You must define Applied Job for this applicant.'))
 
@@ -440,16 +439,23 @@ class hr_applicant(crm.crm_case, osv.osv):
         dict_act_window['view_mode'] = 'form,tree'
         return dict_act_window
 
-    def case_reset(self, cr, uid, ids, *args):
-        """Resets case as draft
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of case Ids
-        @param *args: Tuple Value for additional Params
+    def case_cancel(self, cr, uid, ids, context=None):
+        """Overrides cancel for crm_case for setting probability
         """
+        res = super(hr_applicant, self).case_cancel(cr, uid, ids, context)
+        self.write(cr, uid, ids, {'probability' : 0.0})
+        return res
 
-        res = super(hr_applicant, self).case_reset(cr, uid, ids, *args)
+    def case_pending(self, cr, uid, ids, context=None):
+        """Marks case as pending"""
+        res = super(hr_applicant, self).case_pending(cr, uid, ids, context)
+        self.write(cr, uid, ids, {'probability' : 0.0})
+        return res
+
+    def case_reset(self, cr, uid, ids, context=None):
+        """Resets case as draft
+        """
+        res = super(hr_applicant, self).case_reset(cr, uid, ids, context)
         self.write(cr, uid, ids, {'date_open': False, 'date_closed': False})
         return res
 
@@ -471,9 +477,57 @@ class hr_applicant(crm.crm_case, osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         if 'stage_id' in vals and vals['stage_id']:
             stage = self.pool.get('hr.recruitment.stage').browse(cr, uid, vals['stage_id'], context=context)
-            text = _("Changed Stage to: %s") % stage.name
-            self.message_append(cr, uid, ids, text, body_text=text, context=context)
+            self.message_append_note(cr, uid, ids, body=_("Stage changed to <b>%s</b>.") % stage.name, context=context)
         return super(hr_applicant,self).write(cr, uid, ids, vals, context=context)
+
+    # -------------------------------------------------------
+    # OpenChatter methods and notifications
+    # -------------------------------------------------------
+    
+    def message_get_subscribers(self, cr, uid, ids, context=None):
+        sub_ids = self.message_get_subscribers_ids(cr, uid, ids, context=context);
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.user_id:
+                sub_ids.append(obj.user_id.id)
+        return self.pool.get('res.users').read(cr, uid, sub_ids, context=context)
+
+    def get_needaction_user_ids(self, cr, uid, ids, context=None):
+        result = dict.fromkeys(ids, [])
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.state == 'draft' and obj.user_id:
+                result[obj.id] = [obj.user_id.id]
+        return result
+    
+    def case_get_note_msg_prefix(self, cr, uid, id, context=None):
+		return 'Applicant'
+
+    def case_open_send_note(self, cr, uid, ids, context=None):
+        message = _("Applicant has been set <b>in progress</b>.")
+        return self.message_append_note(cr, uid, ids, body=message, context=context)
+
+    def case_close_send_note(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        for applicant in self.browse(cr, uid, ids, context=context):
+            if applicant.emp_id:
+                message = _("Applicant has been <b>hired</b> and created as an employee.")
+                self.message_append_note(cr, uid, [applicant.id], body=message, context=context)
+            else:
+                message = _("Applicant has been <b>hired</b>.")
+                self.message_append_note(cr, uid, [applicant.id], body=message, context=context)
+        return True
+
+    def case_cancel_send_note(self, cr, uid, ids, context=None):
+        msg = 'Applicant <b>refused</b>.'
+        return self.message_append_note(cr, uid, ids, body=msg, context=context)
+
+    def case_reset_send_note(self,  cr, uid, ids, context=None):
+        message =_("Applicant has been set as <b>new</b>.")
+        return self.message_append_note(cr, uid, ids, body=message, context=context)
+
+    def create_send_note(self, cr, uid, ids, context=None):
+        message = _("Applicant has been <b>created</b>.")
+        return self.message_append_note(cr, uid, ids, body=message, context=context)
 
 hr_applicant()
 

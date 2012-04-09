@@ -220,21 +220,21 @@
        </record>
 
         <!--        Call Function to Open the leads-->
-        <function model="crm.lead" name="case_open">
-            <value eval="[ref('crm_case_electonicgoodsdealer0'), ref('crm_case_company_partnership0'), ref('crm_case_webvisitor0'), ref('crm_case_business_card0'), ref('crm.crm_case_employee0')]"/>
-        </function>
+        <function model="crm.lead" name="case_open"
+            eval="[ref('crm_case_electonicgoodsdealer0'), ref('crm_case_company_partnership0'), ref('crm_case_webvisitor0'), ref('crm_case_business_card0'), ref('crm.crm_case_employee0')], {'install_mode': True}"
+        />
         <!--        Call Function to mark the lead as Pending-->
-        <function model="crm.lead" name="case_pending">
-            <value eval="[ref('crm_case_itdeveloper0')]"/>
-        </function>
+        <function model="crm.lead" name="case_pending"
+            eval="[ref('crm_case_itdeveloper0')], {'install_mode': True}"
+        />
         <!--        Call Function to Close the leads-->
-        <function model="crm.lead" name="case_close">
-            <value eval="[ref('crm_case_vpoperations0'), ref('crm_case_developingwebapplications0'), ref('crm_case_webvisitor0')]"/>
-        </function>
+        <function model="crm.lead" name="case_close"
+            eval="[ref('crm_case_vpoperations0'), ref('crm_case_developingwebapplications0'), ref('crm_case_webvisitor0')], {'install_mode': True}"
+        />
         <!--        Call Function to Cancel the leads-->
-        <function model="crm.lead" name="case_cancel">
-            <value eval="[ref('crm_case_mgroperations0'), ref('crm_case_imported_contact0')]"/>
-        </function>
+        <function model="crm.lead" name="case_cancel"
+            eval="[ref('crm_case_mgroperations0'), ref('crm_case_imported_contact0')], {'install_mode': True}"
+        />
 
         <!-- Demo Opportunities -->
         <record id="crm_case_construstazunits0" model="crm.lead">
