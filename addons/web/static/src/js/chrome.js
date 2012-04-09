@@ -843,7 +843,7 @@ openerp.web.UserMenu =  openerp.web.Widget.extend({
             ]
         }).open();
        action_manager.appendTo(this.dialog.$element);
-       action_manager.render(this.dialog);
+       action_manager.renderElement(this.dialog);
     },
     on_menu_about: function() {
         var self = this;

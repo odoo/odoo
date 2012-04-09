@@ -1019,6 +1019,7 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
         this.options = options || {};
         _.defaults(this.options, {
             // All possible views options should be defaulted here
+            $sidebar: null,
             sidebar_id: null,
             sidebar: true,
             action: null,
