@@ -367,9 +367,11 @@ class res_partner_address(osv.osv):
             # Searching on such a domain can be dramatically inefficient, due to the expansion made
             # for field translations, and the handling of the disjunction by the DB engine itself.
             # So instead, we search field by field until the search limit is reached.
-            while len(ids) < limit and fields:
+            while (not limit or len(ids) < limit) and fields:
                 f = fields.pop(0)
-                new_ids = self.search(cr, user, [(f, operator, name)] + args, limit=limit, context=context)
+                new_ids = self.search(cr, user, [(f, operator, name)] + args,
+                                      limit=(limit-len(ids) if limit else limit),
+                                      context=context)
                 # extend ids with the ones in new_ids that are not in ids yet (and keep order)
                 old_ids = set(ids)
                 ids.extend([id for id in new_ids if id not in old_ids])
