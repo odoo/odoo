@@ -827,7 +827,7 @@ openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.Lis
             this.records.bind(event, callback);
         }, this);
 
-        this.$_element = $('<tbody class="ui-widget-content">')
+        this.$_element = $('<tbody>')
             .appendTo(document.body)
             .delegate('th.oe-record-selector', 'click', function (e) {
                 e.stopPropagation();

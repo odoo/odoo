@@ -556,7 +556,7 @@
 
 <table t-name="ListView" class="oe-listview-content">
     <t t-set="columns_count" t-value="visible_columns.length + (options.selectable ? 1 : 0) + (options.deletable ? 1 : 0) + (options.isClarkGable ? 1 : 0)"/>
-    <thead class="ui-widget-header">
+    <thead>
         <tr t-if="options.action_buttons !== false or options.pager !== false">
             <th t-att-colspan="columns_count">
                 <div class="oe_list_buttons"/>
@@ -583,7 +583,7 @@
             <th t-if="options.deletable" width="1"/>
         </tr>
     </thead>
-    <tfoot class="ui-widget-header">
+    <tfoot>
         <tr>
             <td t-if="options.selectable"/>
             <td t-if="options.isClarkGable"/>
