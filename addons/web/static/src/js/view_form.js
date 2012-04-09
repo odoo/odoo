@@ -49,7 +49,6 @@ openerp.web.FormView = openerp.web.View.extend({
         this.mutating_mutex = new $.Mutex();
         this.on_change_mutex = new $.Mutex();
         this.reload_mutex = new $.Mutex();
-        this.set({"force_readonly": false});
         this.rendering_engine = new openerp.web.FormRenderingEngine(this);
     },
     destroy: function() {
@@ -432,17 +431,32 @@ openerp.web.FormView = openerp.web.View.extend({
         }
     },
     do_switch_mode: function(mode) {
-        console.log("switch to",mode)
+        var self = this;
+        if(mode) {
+            self.$buttons.find('.oe_form_buttons_edit').show();
+            self.$buttons.find('.oe_form_buttons_view').hide();
+            _.each(this.fields,function(field){
+                field.set({"force_readonly": false});
+            });
+        } else {
+            self.$buttons.find('.oe_form_buttons_edit').hide();
+            self.$buttons.find('.oe_form_buttons_view').show();
+            _.each(this.fields,function(field){
+                field.set({"force_readonly": true});
+            });
+        }
     },
     on_button_save: function() {
         var self = this;
         return this.do_save().then(function(result) {
-            self.do_prev_view({'created': result.created, 'default': 'page'});
+            self.do_switch_mode(0);
+            self.do_prev_view({'created': result.created, 'default': 'form'});
         });
     },
     on_button_cancel: function() {
         if (this.can_be_discarded()) {
-            return this.do_prev_view({'default': 'page'});
+            this.do_switch_mode(0);
+            return this.do_prev_view({'default': 'form'});
         }
     },
     on_button_new: function() {
@@ -2491,7 +2505,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.AbstractField.extend(_.extend(
                         res_model: self.field.relation,
                         res_id: self.get("value"),
                         context: self.build_context(),
-                        views: [[false, 'page'], [false, 'form']],
+                        views: [[false, 'form']],
                         target: 'current'
                     });
                     return false;
@@ -2637,7 +2651,7 @@ openerp.web.form.FieldOne2Many = openerp.web.form.AbstractField.extend({
                 }
             } else if (view.view_type === "form") {
                 if (self.get("effective_readonly")) {
-                    view.view_type = 'page';
+                    view.view_type = 'form';
                 }
                 view.options.not_interactible_on_create = true;
             }
@@ -2664,7 +2678,7 @@ openerp.web.form.FieldOne2Many = openerp.web.form.AbstractField.extend({
             if (view_type == "list") {
                 if (self.get("effective_readonly"))
                     controller.set_editable(false);
-            } else if (view_type == "form" || view_type == 'page') {
+            } else if (view_type == "form" || view_type == 'form') {
                 if (view_type == 'page' || self.get("effective_readonly")) {
                     $(".oe_form_buttons", controller.$element).children().remove();
                 }

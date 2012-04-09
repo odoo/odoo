@@ -677,12 +677,16 @@
 </t>
 <t t-name="FormView.buttons">
     <div class="oe_form_buttons" t-if="widget.options.action_buttons !== false">
-        view:<button type="button" class="oe_button oe_form_button_edit">Edit</button>
-        <button type="button" class="oe_button oe_form_button_create">Create</button>
-        <button type="button" class="oe_button oe_form_button_duplicate">Duplicate</button>
-        <button type="button" class="oe_button oe_form_button_delete">Delete</button>
-        edit:<button type="button" class="oe_button oe_form_button_save">Save</button>
-        <button type="button" class="oe_button oe_form_button_cancel">Cancel</button>
+        <span class="oe_form_buttons_view">
+            <button type="button" class="oe_button oe_form_button_edit">Edit</button>
+            <button type="button" class="oe_button oe_form_button_create">Create</button>
+            <button type="button" class="oe_button oe_form_button_duplicate">Duplicate</button>
+            <button type="button" class="oe_button oe_form_button_delete">Delete</button>
+        </span>
+        <span class="oe_form_buttons_edit">
+            <button type="button" class="oe_button oe_form_button_save">Save</button>
+            <button type="button" class="oe_button oe_form_button_cancel">Cancel</button>
+        </span>
     </div>
 </t>
 <t t-name="FormView.pager">
@@ -692,9 +696,6 @@
         </t>
     </div>
 </t>
-<t t-name="PageView" t-extend="FormView">
-</t>
-
 <t t-name="FormView.sidebar.attachments">
     <div class="oe-sidebar-attachments-toolbar">
         <div class="oe-binary-file-set" style="float: right">
