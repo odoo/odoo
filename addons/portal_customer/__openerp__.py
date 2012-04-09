@@ -38,8 +38,8 @@
     ],
     "update_xml" : [
 #        "security/ir.model.access.csv",
+        "portal_demo.xml",
         "portal_customer_view.xml",
-        "portal_demo.xml"
     ],
     'installable': True,
 }
