@@ -1,8 +1,5 @@
 openerp.wiki = function (openerp) {
-    openerp.web.form.widgets.add(
-        'text_wiki', 'openerp.web.form.FieldText');
-    openerp.web.page.readonly.add(
-        'text_wiki', 'openerp.wiki.FieldWikiReadonly');
+    openerp.web.form.widgets.add( 'text_wiki', 'openerp.web.form.FieldText');
     openerp.wiki = {};
     openerp.wiki.FieldWikiReadonly = openerp.web.page.FieldCharReadonly.extend({
         set_value: function (value) {
