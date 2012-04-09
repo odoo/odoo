@@ -365,6 +365,9 @@ openerp.web.EventDispatcherMixin = _.extend({}, openerp.web.ParentedMixin, {
             event.source.__edispatcherEvents.off(event.name, event.func, self);
         });
         this.__edispatcherRegisteredEvents = [];
+        if(!this.__edispatcherEvents) {
+            debugger;
+        }
         this.__edispatcherEvents.off();
         openerp.web.ParentedMixin.destroy.call(this);
     }

@@ -119,7 +119,7 @@ openerp.web.Dialog = openerp.web.Widget.extend({
     open: function(options) {
         // TODO fme: bind window on resize
         if (this.template) {
-            this.$element.html(this.render());
+            this.$element.html(this.renderElement());
         }
         var o = this.get_options(options);
         openerp.web.dialog(this.$element, o).dialog('open');

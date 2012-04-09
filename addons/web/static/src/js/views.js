@@ -719,52 +719,62 @@ session.web.ViewManagerAction = session.web.ViewManager.extend({
 });
 
 session.web.Sidebar = session.web.Widget.extend({
-    template: 'Sidebar',
     init: function(parent) {
         this._super(parent);
-        this.items = {};
-        this.sections = {};
-    },
-
-    start: function() {
-        var self = this;
-        this._super(this);
-        this.$element.find('.oe_dropdown_toggle').click(function() {
-            self.$element.find('.oe_dropdown_menu').toggle();
-            return false;
-        });
-        this.$element.on('click', '.oe_dropdown_menu li a', function() {
-            var f = self['on_menu_' + $(this).data('menu')];
-            f && f($(this));
-            self.$element.find('.oe_dropdown_menu').hide();
-            return false;
-        });
-    },
-
-    add_default_sections: function() {
-        var self = this;
         var view = this.getParent();
         var view_manager = view.getParent();
         var action = view_manager.action;
-        if (this.session.uid === 1) {
-            this.add_section(_t('Customize'), 'customize');
-            this.add_items('customize', [{
-                label: _t("Translate"),
-                callback: view.on_sidebar_translate,
-                title: _t("Technical translation")
-            }]);
+        this.sections = [
+            { 'name' : 'print', 'label' : _t('Print'), },
+            { 'name' : 'files', 'label' : _t('Attachement'), },
+            { 'name' : 'other', 'label' : _t('More'), }
+        ];
+        this.items = {
+            'print' : [],
+            'files' : [],
+            'other' : [
+                    { label: _t("Import"), callback: view.on_sidebar_import },
+                    { label: _t("Export"), callback: view.on_sidebar_export }
+            ]
         }
-
-        this.add_section(_t('Other Options'), 'other');
-        this.add_items('other', [
-            {
-                label: _t("Import"),
-                callback: view.on_sidebar_import
-            }, {
-                label: _t("Export"),
-                callback: view.on_sidebar_export
+        if (this.session.uid === 1) {
+            var item = { label: _t("Translate"), callback: view.on_sidebar_translate, title: _t("Technical translation") };
+            this.items.other.push(item);
+        }
+    },
+    start: function() {
+        var self = this;
+        this._super(this);
+        this.redraw();
+        this.$element.on('click','.oe_dropdown_toggle',function(event) {
+            $(this).parent().find('ul').toggle();
+            return false;
+        });
+        this.$element.on('click','.oe_dropdown_menu li a', function(event) {
+            var section = $(this).data('section');
+            var index = $(this).data('index');
+            $(this).closest('ul').hide();
+            console.log('click item',section,index);
+            var item = self.items[section][index];
+            if (item.callback) {
+                item.callback.apply(self, [item]);
             }
-        ]);
+            if (item.action) {
+                self.on_item_action_clicked(item);
+            }
+            return false;
+        });
+    },
+    redraw: function() {
+        var self = this;
+        self.$element.html(QWeb.render('Sidebar', {widget: self}));
+        this.$element.find('ul').hide();
+    },
+    add_default_sections: function() {
+        var self = this;
+    },
+    add_section: function() {
+        var self = this;
     },
     add_toolbar: function(toolbar) {
         var self = this;
@@ -778,32 +788,15 @@ session.web.Sidebar = session.web.Widget.extend({
                         classname: 'oe_sidebar_' + type[0]
                     }
                 }
-                self.add_section(type[1], type[0]);
                 self.add_items(type[0], items);
             }
         });
-    },
-    add_section: function(name, code) {
-        if(!code) code = _.str.underscored(name);
-        var $section = this.sections[code];
-
-        if(!$section) {
-            var section_id = _.uniqueId(this.element_id + '_section_' + code + '_');
-            $section = $(session.web.qweb.render("Sidebar.section", {
-                section_id: section_id,
-                name: name,
-                classname: 'oe_sidebar_' + code
-            }));
-            $section.appendTo(this.$element.find('div.sidebar-actions'));
-            this.sections[code] = $section;
-        }
-        return $section;
     },
     /**
      * For each item added to the section:
      *
      * ``label``
-     *     will be used as the item's name in the sidebar
+     *     will be used as the item's name in the sidebar, can be html
      *
      * ``action``
      *     descriptor for the action which will be executed, ``action`` and
@@ -825,34 +818,14 @@ session.web.Sidebar = session.web.Widget.extend({
      * @param {Array<{label, action | callback[, classname][, title]}>} items
      */
     add_items: function(section_code, items) {
-        var self = this,
-            $section = this.add_section(_.str.titleize(section_code.replace('_', ' ')), section_code),
-            section_id = $section.attr('id');
-
+        var self = this;
         if (items) {
+            // generate unique id for items
             for (var i = 0; i < items.length; i++) {
-                items[i].element_id = _.uniqueId(section_id + '_item_');
+                items[i].element_id = _.uniqueId(section_code + '_item_');
                 this.items[items[i].element_id] = items[i];
             }
-
-            var $items = $(session.web.qweb.render("Sidebar.section.items", {items: items}));
-
-            $items.find('a.oe_sidebar_action_a').click(function() {
-                var item = self.items[$(this).attr('id')];
-                if (item.callback) {
-                    item.callback.apply(self, [item]);
-                }
-                if (item.action) {
-                    self.on_item_action_clicked(item);
-                }
-                return false;
-            });
-
-            var $ul = $section.find('ul');
-            if(!$ul.length) {
-                $ul = $('<ul class="oe_dropdown_menu"/>').appendTo($section);
-            }
-            $items.appendTo($ul);
+            this.redraw();
         }
     },
     on_item_action_clicked: function(item) {
@@ -860,11 +833,7 @@ session.web.Sidebar = session.web.Widget.extend({
         self.getParent().sidebar_context().then(function (context) {
             var ids = self.getParent().get_selected_ids();
             if (ids.length == 0) {
-                //TODO: make prettier warning?
-            	openerp.web.dialog($("<div />").text(_t("You must choose at least one record.")), {
-                    title: _t("Warning"),
-                    modal: true
-                });
+                openerp.web.dialog($("<div />").text(_t("You must choose at least one record.")), { title: _t("Warning"), modal: true });
                 return false;
             }
             var additional_context = _.extend({
