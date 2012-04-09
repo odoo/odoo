@@ -409,7 +409,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
      * @param {String} [view="page"] the view type to switch to
      */
     select_record:function (index, view) {
-        view = view || index == null ? 'form' : 'page';
+        view = view || index == null ? 'form' : 'form';
         this.dataset.index = index;
         _.delay(_.bind(function () {
             this.do_switch_view(view);
@@ -420,11 +420,24 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         if (this.sidebar) {
             this.sidebar.$element.show();
         }
+        if (this.$buttons) {
+            this.$buttons.find('.oe_list_buttons').show();
+        }
+        if (this.$pager) {
+            this.$pager.find('.oe_list_pager').show();
+        }
     },
     do_hide: function () {
-        this._super();
         if (this.sidebar) {
+            this.sidebar.$element.hide();
         }
+        if (this.$buttons) {
+            this.$buttons.find('.oe_list_buttons').hide();
+        }
+        if (this.$pager) {
+            this.$pager.find('.oe_list_pager').hide();
+        }
+        this._super();
     },
     /**
      * Reloads the list view based on the current settings (dataset & al)

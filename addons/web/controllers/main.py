@@ -802,9 +802,6 @@ def fix_view_modes(action):
     new view mode ``list`` which is the result of the ``tree`` view_mode
     in conjunction with the ``form`` view_type.
 
-    This method also adds a ``page`` view mode in case there is a ``form`` in
-    the input action.
-
     TODO: this should go into the doc, some kind of "peculiarities" section
 
     :param dict action: an action descriptor
@@ -818,8 +815,6 @@ def fix_view_modes(action):
         if mode == 'form':
             id_form = id
             break
-    if id_form is not None:
-        action['views'].insert(index + 1, (id_form, 'page'))
 
     if action.pop('view_type', 'form') != 'form':
         return action

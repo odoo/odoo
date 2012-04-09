@@ -80,6 +80,10 @@ openerp.web.FormView = openerp.web.View.extend({
         this.$buttons.html(QWeb.render("FormView.buttons", {'widget':self}));
         this.$buttons.on('click','.oe_form_buttons button.oe_form_button_save',this.on_button_save);
         this.$buttons.on('click','.oe_form_buttons button.oe_form_button_cancel',this.on_button_cancel);
+        this.$buttons.on('click','.oe_form_buttons button.oe_form_button_edit',this.on_button_edit);
+        this.$buttons.on('click','.oe_form_buttons button.oe_form_button_create',this.on_button_create);
+        this.$buttons.on('click','.oe_form_buttons button.oe_form_button_duplicate',this.on_button_duplicate);
+        this.$buttons.on('click','.oe_form_buttons button.oe_form_button_delete',this.on_button_delete);
 
         this.$pager.html(QWeb.render("FormView.pager", {'widget':self}));
         this.$pager.on('click','.oe_form_pager button[data-pager-action]',function(event) {
@@ -145,15 +149,15 @@ openerp.web.FormView = openerp.web.View.extend({
         });
     },
     do_hide: function () {
-        //if (this.sidebar) {
-        //    this.sidebar.$element.hide();
-        //}
-        //if (this.$buttons) {
-        //    this.$buttons.find('.oe_form_buttons').hide();
-        //}
-        //if (this.$pager) {
-        //    this.$pager.find('.oe_form_pager').hide();
-        //}
+        if (this.sidebar) {
+            this.sidebar.$element.hide();
+        }
+        if (this.$buttons) {
+            this.$buttons.find('.oe_form_buttons').hide();
+        }
+        if (this.$pager) {
+            this.$pager.find('.oe_form_pager').hide();
+        }
         this._super();
     },
     on_record_loaded: function(record) {
@@ -427,6 +431,9 @@ openerp.web.FormView = openerp.web.View.extend({
             return $.Deferred().reject();
         }
     },
+    do_switch_mode: function(mode) {
+        console.log("switch to",mode)
+    },
     on_button_save: function() {
         var self = this;
         return this.do_save().then(function(result) {
@@ -453,6 +460,44 @@ openerp.web.FormView = openerp.web.View.extend({
                         def.resolve();
                     });
                 }
+            }
+        });
+        return def.promise();
+    },
+    on_button_edit: function() {
+        return this.do_switch_mode(1);
+    },
+    on_button_create: function() {
+        this.dataset.index = null;
+        return this.do_switch_mode(1);
+    },
+    on_button_duplicate: function() {
+        var self = this;
+        var def = $.Deferred();
+        $.when(this.has_been_loaded).then(function() {
+            self.dataset.call('copy', [self.datarecord.id, {}, self.dataset.context]).then(function(new_id) {
+                return self.on_created({ result : new_id });
+            }).then(function() {
+                return self.do_switch_mode(1);
+            }).then(function() {
+                def.resolve();
+            });
+        });
+        return def.promise();
+    },
+    on_button_delete: function() {
+        var self = this;
+        var def = $.Deferred();
+        $.when(this.has_been_loaded).then(function() {
+            if (self.datarecord.id && confirm(_t("Do you really want to delete this record?"))) {
+                self.dataset.unlink([self.datarecord.id]).then(function() {
+                    self.on_pager_action('next');
+                    def.resolve();
+                });
+            } else {
+                $.async_when().then(function () {
+                    def.reject();
+                })
             }
         });
         return def.promise();
@@ -578,6 +623,10 @@ openerp.web.FormView = openerp.web.View.extend({
     reload: function() {
         var self = this;
         return this.reload_mutex.exec(function() {
+        //if (this.dataset.index == null) {
+        //    this.do_prev_view();
+        //    return $.Deferred().reject().promise();
+        //}
             if (self.dataset.index == null || self.dataset.index < 0) {
                 return $.when(self.on_button_new());
             } else {

@@ -63,7 +63,7 @@ session.web.ActionManager = session.web.Widget.extend({
                 res_model: state.model,
                 res_id: state.id,
                 type: 'ir.actions.act_window',
-                views: [[false, 'page'], [false, 'form']]
+                views: [[false, 'form']]
             };
             action_loaded = this.do_action(action);
         } else if (state.sa) {
@@ -356,10 +356,10 @@ session.web.ViewManager =  session.web.OldWidget.extend({
         if (options.created && current_view === 'form' && previous_view === 'list') {
             // APR special case: "If creation mode from list (and only from a list),
             // after saving, go to page view (don't come back in list)"
-            return this.on_mode_switch('page');
+            return this.on_mode_switch('form');
         } else if (options.created && !previous_view && this.action && this.action.flags.default_view === 'form') {
             // APR special case: "If creation from dashboard, we have no previous view
-            return this.on_mode_switch('page');
+            return this.on_mode_switch('form');
         }
         return this.on_mode_switch(previous_view, true);
     },
