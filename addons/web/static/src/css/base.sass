@@ -67,7 +67,7 @@ $colour4: #8a89ba
 // }}}
 
 .openerp2
-    // {{{ Group
+    // Group {{{
     // }}}
     // Global style {{{
     padding: 0
@@ -198,7 +198,7 @@ $colour4: #8a89ba
         @include vertical-gradient(#dc5f59, #b33630)
 
     // }}}
-    // {{{ Loading
+    // Loading {{{
     .oe_loading
         display: none
         z-index: 100
@@ -216,7 +216,7 @@ $colour4: #8a89ba
         border-bottom-right-radius: 8px
         border-bottom-left-radius: 8px
     // }}}
-    // {{{ Notification
+    // Notification {{{
     .oe_notification
         z-index: 1050
     // }}}
@@ -323,7 +323,7 @@ $colour4: #8a89ba
             .oe_login_error_message
                 display: inline-block
     // }}}
-    // {{{ DatabaseManager
+    // DatabaseManager {{{
     .oe_database_manager
         background: #fff
         color: #000
@@ -1029,11 +1029,6 @@ $colour4: #8a89ba
         -webkit-box-shadow: none
         -box-shadow: none
         font-weight: bold
-    .oe_form_group_cell
-        line-height: 18px
-        .oe_form_button
-            width: 100%
-            white-space: nowrap
     .oe_form_topbar
         border-bottom: 1px solid #cacaca
         @include vertical-gradient(#fcfcfc, #dedede)
@@ -1116,12 +1111,143 @@ $colour4: #8a89ba
             //        padding: 2px
             //        line-height: 18px
     // }}}
+    // FormView.autolayout {{{
+    .oe_form_autolayout
+        .oe_button
+            height: 22px
+        .oe_form_group_cell
+            line-height: 18px
+            padding: 2px
+            height: 25px
+            .oe_form_button
+                width: 100%
+                white-space: nowrap
+        .oe_form_group_cell > .oe_form_field_many2one,
+        .oe_form_group_cell > .oe_form_field_many2one input,
+        .oe_form_group_cell > .oe_form_field_char input,
+        .oe_form_group_cell > .oe_form_field_text textarea,
+        .oe_form_group_cell > .oe_form_field_email,
+        .oe_form_group_cell > .oe_form_field_email input,
+        .oe_form_group_cell > .oe_form_field_url,
+        .oe_form_group_cell > .oe_form_field_url input,
+        .oe_form_group_cell > .oe_form_field_date input,
+        .oe_form_group_cell > .oe_form_field_float input,
+        .oe_form_group_cell > .oe_form_field_selection select,
+        .oe_form_group_cell > .oe_datepicker_root
+            width: 100%
+        .oe_form_button.oe_button
+            color: #4c4c4c
+            white-space: nowrap
+            min-width: 100%
+            width: 100%
+            height: 22px
+            span
+                position: relative
+                vertical-align: top
+        .oe_form_group_cell.oe_form_group_nested
+            padding: 0
+    // }}}
     // FormView.label {{{
     .oe_form
         label
             font-weight: bold
     .oe_form_label_help[for], .oe_form_label[for]
         white-space: nowrap
+    // }}}
+    // FormView.fields {{{
+    .oe_form
+        textarea
+            resize: vertical
+        input[type="text"],
+        input[type="password"],
+        input[type="file"],
+        select
+            height: 22px
+            padding-top: 2px
+        input[type="text"],
+        input[type="password"],
+        input[type="file"],
+        select,
+        textarea
+            -moz-box-sizing: border-box
+            -webkit-box-sizing: border-box
+            -ms-box-sizing: border-box
+            box-sizing: border-box
+            padding: 0 2px
+            margin: 0 2px
+            border: 1px solid #999
+            -moz-border-radius: 3px
+            -webkit-border-radius: 3px
+            border-radius: 3px
+            background: white
+            min-width: 90px
+            color: #1f1f1f
+        input[readonly],
+        select[readonly],
+        textarea[readonly],
+        input[disabled],
+        select[disabled],
+        textarea[disabled]
+            background: #E5E5E5 !important
+            color: #666
+        .oe_form_field_many2one input,
+        .oe_form_field_binary input,
+        .oe_form_field_binary input,
+        .oe_form_field_email input,
+        .oe_form_field_url input
+            border-right: none
+            -webkit-border-top-right-radius: 0px
+            -webkit-border-bottom-right-radius: 0px
+            -moz-border-radius-topright: 0px
+            -moz-border-radius-bottomright: 0px
+            border-top-right-radius: 0px
+            border-bottom-right-radius: 0px
+        .oe_form_field_email button img,
+        .oe_form_field_url button img
+            vertical-align: top
+        .oe_form_field_translatable,
+        .oe_form_field_many2one,
+        .oe_form_field_date,
+        .oe_form_field_datetime
+            white-space: nowrap
+        .oe_form_field_boolean
+            padding-top: 4px
+        .oe_form_field_datetime input
+            min-width: 11em
+        .oe_datepicker_container
+            display: none
+        .oe_datepicker_root
+            display: inline-block
+        .oe_form_required
+            input, select, textarea
+                background-color: #D2D2FF !important
+        .oe_form_invalid
+            input, select, textarea
+                background-color: #F66 !important
+                border: 1px solid #D00 !important
+    // }}}
+    // FormView.buttons {{{
+    .oe_form
+        .oe_button.oe_field_button
+            -webkit-border-top-left-radius: 0px
+            -webkit-border-bottom-left-radius: 0px
+            -moz-border-radius-topleft: 0px
+            -moz-border-radius-bottomleft: 0px
+            border-top-left-radius: 0px
+            border-bottom-left-radius: 0px
+            margin-right: -1px
+            height: 22px
+        .oe_input_icon
+            cursor: pointer
+            margin: 3px 0 0 -21px
+            vertical-align: top
+        .oe_input_icon_disabled
+            position: absolute
+            cursor: default
+            opacity: 0.5
+            filter: alpha(opacity=50)
+            right: 5px
+            top: 3px
     // }}}
     // FormView.binaryfile {{{
     /* http://www.quirksmode.org/dom/inputfile.html
@@ -1314,6 +1440,10 @@ $colour4: #8a89ba
         height: 20px
         @include radius(3px)
         @include box-shadow(0 1px 2px rgba(0,0,0,0.2))
+    // }}}
+    // Translation {{{
+    .oe_trad_field.touched
+        border: 1px solid green !important
     // }}}
 
     // Debugging stuff {{{

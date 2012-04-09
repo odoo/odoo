@@ -809,6 +809,9 @@ openerp.web.FormRenderingEngine = openerp.web.Class.extend({
         //       but one day, we will have to get rid of xml2json
         var xml = openerp.web.json_node_to_xml(this.fvg.arch);
         this.$form = $('<div class="oe_form">' + xml + '</div>');
+        if (this.fvg.arch.attrs && this.fvg.arch.attrs['layout'] !== 'manual') {
+            this.$form.addClass('oe_form_autolayout');
+        }
 
         this.to_init = [];
         this.labels = {};
@@ -856,7 +859,8 @@ openerp.web.FormRenderingEngine = openerp.web.Class.extend({
         dict.legacy_mode = this.legacy_mode;
         return $(QWeb.render(template, dict));
     },
-    alter_field: function(field) {},
+    alter_field: function(field) {
+    },
     toggle_layout_debugging: function() {
         if (!this.$element.has('.oe_layout_debug_cell:first').length) {
             this.$element.find('.oe_form_group_cell').each(function() {

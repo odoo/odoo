@@ -1261,13 +1261,6 @@
   -box-shadow: none;
   font-weight: bold;
 }
-.openerp2 .oe_form_group_cell {
-  line-height: 18px;
-}
-.openerp2 .oe_form_group_cell .oe_form_button {
-  width: 100%;
-  white-space: nowrap;
-}
 .openerp2 .oe_form_topbar {
   border-bottom: 1px solid #cacaca;
   background-color: #fcfcfc;
@@ -1356,11 +1349,154 @@
   -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   -box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
+.openerp2 .oe_form_autolayout .oe_button {
+  height: 22px;
+}
+.openerp2 .oe_form_autolayout .oe_form_group_cell {
+  line-height: 18px;
+  padding: 2px;
+  height: 25px;
+}
+.openerp2 .oe_form_autolayout .oe_form_group_cell .oe_form_button {
+  width: 100%;
+  white-space: nowrap;
+}
+.openerp2 .oe_form_autolayout .oe_form_group_cell > .oe_form_field_many2one,
+.openerp2 .oe_form_autolayout .oe_form_group_cell > .oe_form_field_many2one input,
+.openerp2 .oe_form_autolayout .oe_form_group_cell > .oe_form_field_char input,
+.openerp2 .oe_form_autolayout .oe_form_group_cell > .oe_form_field_text textarea,
+.openerp2 .oe_form_autolayout .oe_form_group_cell > .oe_form_field_email,
+.openerp2 .oe_form_autolayout .oe_form_group_cell > .oe_form_field_email input,
+.openerp2 .oe_form_autolayout .oe_form_group_cell > .oe_form_field_url,
+.openerp2 .oe_form_autolayout .oe_form_group_cell > .oe_form_field_url input,
+.openerp2 .oe_form_autolayout .oe_form_group_cell > .oe_form_field_date input,
+.openerp2 .oe_form_autolayout .oe_form_group_cell > .oe_form_field_float input,
+.openerp2 .oe_form_autolayout .oe_form_group_cell > .oe_form_field_selection select,
+.openerp2 .oe_form_autolayout .oe_form_group_cell > .oe_datepicker_root {
+  width: 100%;
+}
+.openerp2 .oe_form_autolayout .oe_form_button.oe_button {
+  color: #4c4c4c;
+  white-space: nowrap;
+  min-width: 100%;
+  width: 100%;
+  height: 22px;
+}
+.openerp2 .oe_form_autolayout .oe_form_button.oe_button span {
+  position: relative;
+  vertical-align: top;
+}
+.openerp2 .oe_form_autolayout .oe_form_group_cell.oe_form_group_nested {
+  padding: 0;
+}
 .openerp2 .oe_form label {
   font-weight: bold;
 }
 .openerp2 .oe_form_label_help[for], .openerp2 .oe_form_label[for] {
   white-space: nowrap;
+}
+.openerp2 .oe_form textarea {
+  resize: vertical;
+}
+.openerp2 .oe_form input[type="text"],
+.openerp2 .oe_form input[type="password"],
+.openerp2 .oe_form input[type="file"],
+.openerp2 .oe_form select {
+  height: 22px;
+  padding-top: 2px;
+}
+.openerp2 .oe_form input[type="text"],
+.openerp2 .oe_form input[type="password"],
+.openerp2 .oe_form input[type="file"],
+.openerp2 .oe_form select,
+.openerp2 .oe_form textarea {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 0 2px;
+  margin: 0 2px;
+  border: 1px solid #999999;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  background: white;
+  min-width: 90px;
+  color: #1f1f1f;
+}
+.openerp2 .oe_form input[readonly],
+.openerp2 .oe_form select[readonly],
+.openerp2 .oe_form textarea[readonly],
+.openerp2 .oe_form input[disabled],
+.openerp2 .oe_form select[disabled],
+.openerp2 .oe_form textarea[disabled] {
+  background: #e5e5e5 !important;
+  color: #666666;
+}
+.openerp2 .oe_form .oe_form_field_many2one input,
+.openerp2 .oe_form .oe_form_field_binary input,
+.openerp2 .oe_form .oe_form_field_binary input,
+.openerp2 .oe_form .oe_form_field_email input,
+.openerp2 .oe_form .oe_form_field_url input {
+  border-right: none;
+  -webkit-border-top-right-radius: 0px;
+  -webkit-border-bottom-right-radius: 0px;
+  -moz-border-radius-topright: 0px;
+  -moz-border-radius-bottomright: 0px;
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+.openerp2 .oe_form .oe_form_field_email button img,
+.openerp2 .oe_form .oe_form_field_url button img {
+  vertical-align: top;
+}
+.openerp2 .oe_form .oe_form_field_translatable,
+.openerp2 .oe_form .oe_form_field_many2one,
+.openerp2 .oe_form .oe_form_field_date,
+.openerp2 .oe_form .oe_form_field_datetime {
+  white-space: nowrap;
+}
+.openerp2 .oe_form .oe_form_field_boolean {
+  padding-top: 4px;
+}
+.openerp2 .oe_form .oe_form_field_datetime input {
+  min-width: 11em;
+}
+.openerp2 .oe_form .oe_datepicker_container {
+  display: none;
+}
+.openerp2 .oe_form .oe_datepicker_root {
+  display: inline-block;
+}
+.openerp2 .oe_form .oe_form_required input, .openerp2 .oe_form .oe_form_required select, .openerp2 .oe_form .oe_form_required textarea {
+  background-color: #d2d2ff !important;
+}
+.openerp2 .oe_form .oe_form_invalid input, .openerp2 .oe_form .oe_form_invalid select, .openerp2 .oe_form .oe_form_invalid textarea {
+  background-color: #ff6666 !important;
+  border: 1px solid #dd0000 !important;
+}
+.openerp2 .oe_form .oe_button.oe_field_button {
+  -webkit-border-top-left-radius: 0px;
+  -webkit-border-bottom-left-radius: 0px;
+  -moz-border-radius-topleft: 0px;
+  -moz-border-radius-bottomleft: 0px;
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+  margin-right: -1px;
+  height: 22px;
+}
+.openerp2 .oe_form .oe_input_icon {
+  cursor: pointer;
+  margin: 3px 0 0 -21px;
+  vertical-align: top;
+}
+.openerp2 .oe_form .oe_input_icon_disabled {
+  position: absolute;
+  cursor: default;
+  opacity: 0.5;
+  filter: alpha(opacity=50);
+  right: 5px;
+  top: 3px;
 }
 .openerp2 .oe_form .oe-binary-file-set {
   overflow: hidden;
@@ -1590,6 +1726,9 @@
   -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   -box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+.openerp2 .oe_trad_field.touched {
+  border: 1px solid green !important;
 }
 .openerp2 .oe_layout_debugging .oe_form_group {
   border: 2px dashed red;
