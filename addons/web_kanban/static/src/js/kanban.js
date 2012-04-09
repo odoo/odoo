@@ -34,6 +34,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         this.search_domain = this.search_context = this.search_group_by = null;
         this.currently_dragging = {};
         this.limit = options.limit || 80;
+        this.add_group_mutex = new $.Mutex();
     },
     on_loaded: function(data) {
         this.$element.find('button.oe_kanban_button_new').click(this.do_add_record);
@@ -138,29 +139,43 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         });
     },
     do_process_groups: function(groups) {
-        this.do_clear_groups();
-        this.dataset.ids = [];
-        var self = this,
-            remaining = groups.length - 1,
-            groups_array = [];
-        _.each(groups, function (group, index) {
-            var dataset = new openerp.web.DataSetSearch(self, self.dataset.model, group.context, group.domain);
-            dataset.read_slice(self.fields_keys.concat(['__last_update']), { 'limit': self.limit }).then(function(records) {
-                self.dataset.ids.push.apply(self.dataset.ids, dataset.ids);
-                groups_array[index] = new openerp.web_kanban.KanbanGroup(self, records, group, dataset);
-                if (!remaining--) {
-                    self.dataset.index = self.dataset.size() ? 0 : null;
-                    self.do_add_groups(groups_array);
-                }
+        var self = this;
+        this.add_group_mutex.exec(function() {
+            var def = $.Deferred();
+            self.do_clear_groups();
+            self.dataset.ids = [];
+            var remaining = groups.length - 1,
+                groups_array = [];
+            _.each(groups, function (group, index) {
+                var dataset = new openerp.web.DataSetSearch(self, self.dataset.model, group.context, group.domain);
+                dataset.read_slice(self.fields_keys.concat(['__last_update']), { 'limit': self.limit }).then(function(records) {
+                    self.dataset.ids.push.apply(self.dataset.ids, dataset.ids);
+                    groups_array[index] = new openerp.web_kanban.KanbanGroup(self, records, group, dataset);
+                    if (!remaining--) {
+                        self.dataset.index = self.dataset.size() ? 0 : null;
+                        def.pipe(self.do_add_groups(groups_array));
+                    }
+                }).then(null, function() {
+                    def.reject();
+                });
             });
+            return def;
         });
     },
     do_process_dataset: function(dataset) {
         var self = this;
-        this.do_clear_groups();
-        this.dataset.read_slice(this.fields_keys.concat(['__last_update']), { 'limit': self.limit }).then(function(records) {
-            var kgroup = new openerp.web_kanban.KanbanGroup(self, records, null, self.dataset);
-            self.do_add_groups([kgroup]);
+        this.add_group_mutex.exec(function() {
+            var def = $.Deferred();
+            self.do_clear_groups();
+            self.dataset.read_slice(self.fields_keys.concat(['__last_update']), { 'limit': self.limit }).then(function(records) {
+                var kgroup = new openerp.web_kanban.KanbanGroup(self, records, null, self.dataset);
+                self.do_add_groups([kgroup]).then(function() {
+                    def.resolve();
+                });
+            }).then(null, function() {
+                def.reject();
+            });
+            return def;
         });
     },
     do_reload: function() {
@@ -174,14 +189,16 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         this.$element.find('.oe_kanban_groups_headers, .oe_kanban_groups_records').empty();
     },
     do_add_groups: function(groups) {
-        var self = this;
+        var self = this,
+            def = $.Deferred().resolve();
         _.each(groups, function(group) {
             self.groups[group.undefined_title ? 'unshift' : 'push'](group);
         });
         _.each(this.groups, function(group) {
-            group.appendTo(self.$element.find('.oe_kanban_groups_headers'));
+            def.pipe(group.appendTo(self.$element.find('.oe_kanban_groups_headers')));
         });
         this.on_groups_started();
+        return def;
     },
     on_groups_started: function() {
         var self = this;
