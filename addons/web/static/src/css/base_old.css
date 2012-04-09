@@ -913,28 +913,6 @@ label.error {
     border: 1px solid green !important;
 }
 
-/* http://www.quirksmode.org/dom/inputfile.html
- * http://stackoverflow.com/questions/2855589/replace-input-type-file-by-an-image
- */
-.openerp .oe-binary-file-set {
-    overflow: hidden;
-    position: relative;
-}
-.openerp input.oe-binary-file {
-    z-index: 0;
-    line-height: 0;
-    font-size: 12px;
-    position: absolute;
-    /* Should be adjusted for all browsers */
-    top: 1px;
-    right: 10px;
-    opacity: 0;
-    filter: alpha(opacity = 0);
-    -ms-filter: "alpha(opacity=0)";
-    margin: 0;
-    padding:0;
-}
-
 /* Widgets */
 .openerp .oe_form_required input, .openerp .oe_form_required select, .openerp .oe_form_required textarea {
     background-color: #D2D2FF !important;
@@ -943,30 +921,10 @@ label.error {
     background-color: #F66 !important;
     border: 1px solid #D00 !important;
 }
-.openerp div.oe-progressbar span {
-    position: absolute;
-    margin-left: 10px;
-    margin-top: 5px;
-    font-weight: bold;
-}
 
 /* jQuery UI override */
 .openerp .ui-widget {
     font-size: 1em;
-}
-.openerp .oe_form_field_progressbar .ui-progressbar {
-    height: 22px;
-    font-size: 10px;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    -ms-box-sizing: border-box;
-    box-sizing: border-box;
-    border: 1px solid #999;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    border-radius: 3px;
-    background: white;
-    min-width: 90px;
 }
 .openerp tbody.ui-widget-content {
     margin-bottom: 10px;
@@ -974,10 +932,6 @@ label.error {
 }
 .openerp .ui-widget-header {
     background: white none;
-}
-/* progress bars */
-.openerp .ui-progressbar .ui-widget-header {
-    background: #cccccc url(/web/static/lib/jquery.ui/css/smoothness/images/ui-bg_highlight-soft_75_cccccc_1x100.png) 50% 50% repeat-x;
 }
 
 /* Sidebar */
@@ -1583,24 +1537,6 @@ ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-after {
     color: black;
 }
 
-/* Debug stuff */
-.openerp .oe_debug_view_log {
-    font-size: 95%;
-}
-.openerp .oe_debug_view_log label {
-    display: block;
-    width: 49%;
-    text-align: right;
-    float: left;
-    font-weight: bold;
-    color: #009;
-}
-.openerp .oe_debug_view_log span {
-    display: block;
-    width: 49%;
-    float: right;
-    color: #333;
-}
 
 /* Internet Explorer Fix */
 a img {
