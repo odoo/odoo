@@ -262,7 +262,7 @@ session.web.ViewManager =  session.web.OldWidget.extend({
             views_ids[view.view_type] = view.view_id;
         });
         if (this.flags.views_switcher === false) {
-            this.$element.find('.oe_vm_switch').hide();
+            this.$element.find('.oe_view_manager_switch').hide();
         }
         // If no default view defined, switch to the first one in sequence
         var default_view = this.flags.default_view || this.views_src[0].view_type;
@@ -319,9 +319,9 @@ session.web.ViewManager =  session.web.OldWidget.extend({
         }
 
         this.$element
-            .find('.oe_vm_switch button').removeAttr('disabled')
+            .find('.oe_view_manager_switch button').removeClass('oe_view_manager_switch_selected')
             .filter('[data-view-type="' + view_type + '"]')
-            .attr('disabled', true);
+            .addClass('oe_view_manager_switch_selected');
 
         $.when(view_promise).then(function () {
             _.each(_.keys(self.views), function(view_name) {
