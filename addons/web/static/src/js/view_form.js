@@ -153,7 +153,6 @@ openerp.web.FormView = openerp.web.View.extend({
         if (this.$pager) {
             this.$pager.find('.oe_form_pager').hide();
         }
-        this.$pager.find('.oe_form_pager').hide();
         this._super();
     },
     on_record_loaded: function(record) {
