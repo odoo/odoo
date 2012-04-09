@@ -1,8 +1,10 @@
 openerp.web.form = function (openerp) {
-
 var _t = openerp.web._t,
    _lt = openerp.web._lt;
 var QWeb = openerp.web.qweb;
+
+/** @namespace */
+openerp.web.form = {};
 
 openerp.web.views.add('form', 'openerp.web.FormView');
 openerp.web.FormView = openerp.web.View.extend({
@@ -49,7 +51,8 @@ openerp.web.FormView = openerp.web.View.extend({
         this.mutating_mutex = new $.Mutex();
         this.on_change_mutex = new $.Mutex();
         this.reload_mutex = new $.Mutex();
-        this.rendering_engine = new openerp.web.FormRenderingEngine(this);
+        this.mode = null;
+        this.rendering_engine = new openerp.web.form.FormRenderingEngineReadonly(this);
     },
     destroy: function() {
         _.each(this.get_widgets(), function(w) {
@@ -103,6 +106,7 @@ openerp.web.FormView = openerp.web.View.extend({
                 }
             }]);
         }
+        this.do_switch_mode("view");
         this.has_been_loaded.resolve();
         return $.when();
     },
@@ -432,31 +436,30 @@ openerp.web.FormView = openerp.web.View.extend({
     },
     do_switch_mode: function(mode) {
         var self = this;
-        if(mode) {
-            self.$buttons.find('.oe_form_buttons_edit').show();
-            self.$buttons.find('.oe_form_buttons_view').hide();
-            _.each(this.fields,function(field){
-                field.set({"force_readonly": false});
-            });
-        } else {
+        if(mode=="view") {
             self.$buttons.find('.oe_form_buttons_edit').hide();
             self.$buttons.find('.oe_form_buttons_view').show();
             _.each(this.fields,function(field){
                 field.set({"force_readonly": true});
             });
+        } else {
+            self.$buttons.find('.oe_form_buttons_edit').show();
+            self.$buttons.find('.oe_form_buttons_view').hide();
+            _.each(this.fields,function(field){
+                field.set({"force_readonly": false});
+            });
         }
+        self.mode = mode;
     },
     on_button_save: function() {
         var self = this;
         return this.do_save().then(function(result) {
-            self.do_switch_mode(0);
-            self.do_prev_view({'created': result.created, 'default': 'form'});
+            self.do_switch_mode("view");
         });
     },
     on_button_cancel: function() {
         if (this.can_be_discarded()) {
-            this.do_switch_mode(0);
-            return this.do_prev_view({'default': 'form'});
+            this.do_switch_mode("view");
         }
     },
     on_button_new: function() {
@@ -479,11 +482,12 @@ openerp.web.FormView = openerp.web.View.extend({
         return def.promise();
     },
     on_button_edit: function() {
-        return this.do_switch_mode(1);
+        return this.do_switch_mode("edit");
     },
     on_button_create: function() {
         this.dataset.index = null;
-        return this.do_switch_mode(1);
+        this.do_switch_mode("edit");
+        this.do_show();
     },
     on_button_duplicate: function() {
         var self = this;
@@ -637,10 +641,10 @@ openerp.web.FormView = openerp.web.View.extend({
     reload: function() {
         var self = this;
         return this.reload_mutex.exec(function() {
-        //if (this.dataset.index == null) {
-        //    this.do_prev_view();
-        //    return $.Deferred().reject().promise();
-        //}
+            if (this.dataset.index == null) {
+                this.do_prev_view();
+                return $.Deferred().reject().promise();
+            }
             if (self.dataset.index == null || self.dataset.index < 0) {
                 return $.when(self.on_button_new());
             } else {
@@ -779,7 +783,7 @@ openerp.web.FormView = openerp.web.View.extend({
 /**
  * Interface to be implemented by rendering engines for the form view.
  */
-openerp.web.FormRenderingEngineInterface = {
+openerp.web.form.FormRenderingEngineInterface = {
     set_fields_view: function(fields_view) {},
     render_to: function($element) {},
 };
@@ -789,7 +793,7 @@ openerp.web.FormRenderingEngineInterface = {
  * 
  * It is necessary to set the view using set_view() before usage.
  */
-openerp.web.FormRenderingEngine = openerp.web.Class.extend({
+openerp.web.form.FormRenderingEngine = openerp.web.Class.extend({
     init: function(view) {
         this.view = view;
         this.legacy_mode = false;
@@ -1104,7 +1108,13 @@ openerp.web.FormRenderingEngine = openerp.web.Class.extend({
     },
 });
 
-openerp.web.FormDialog = openerp.web.Dialog.extend({
+openerp.web.form.FormRenderingEngineReadonly = openerp.web.form.FormRenderingEngine.extend({
+    alter_field: function(field) {
+        field.set({"force_readonly": true});
+    },
+});
+
+openerp.web.form.FormDialog = openerp.web.Dialog.extend({
     init: function(parent, options, view_id, dataset) {
         this._super(parent, options);
         this.dataset = dataset;
@@ -1135,15 +1145,12 @@ openerp.web.FormDialog = openerp.web.Dialog.extend({
     }
 });
 
-/** @namespace */
-openerp.web.form = {};
 
-openerp.web.form.SidebarAttachments = openerp.web.OldWidget.extend({
+openerp.web.form.SidebarAttachments = openerp.web.Widget.extend({
     init: function(parent, form_view) {
         //var $section = parent.add_section(_t('Attachments'), 'attachments');
         //this.$div = $('<div class="oe-sidebar-attachments"></div>');
         //$section.append(this.$div);
-
         this._super(parent);
         this.view = form_view;
     },

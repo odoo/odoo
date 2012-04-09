@@ -23,7 +23,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
             records : {}
         };
         this.groups = [];
-        this.form_dialog = new openerp.web.FormDialog(this, {}, this.options.action_views_ids.form, dataset).start();
+        this.form_dialog = new openerp.web.form.FormDialog(this, {}, this.options.action_views_ids.form, dataset).start();
         this.form_dialog.on_form_dialog_saved.add_last(this.do_reload);
         this.aggregates = {};
         this.group_operators = ['avg', 'max', 'min', 'sum', 'count'];

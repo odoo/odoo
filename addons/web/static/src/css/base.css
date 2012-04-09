@@ -831,12 +831,11 @@
   text-decoration: none;
 }
 .openerp2 .oe-view-manager-header .button-group .active {
+  width: 100%;
   background: #999999;
   -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) inset;
   -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) inset;
   -box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) inset;
-}
-.openerp2 .oe-view-manager-header .button-group .active a {
   color: white;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
 }
@@ -928,78 +927,30 @@
 .openerp2 .oe_view_manager_header .oe_view_manager_pager {
   float: right;
 }
-.openerp2 .oe_view_manager_switch {
-  float: right;
-  margin: 2px 0 0 0;
+.openerp2 .oe_view_manager_switch li {
+  padding-left: 1px;
+  text-align: center;
+  width: 24px;
+  height: 24px;
+  line-height: 24px;
 }
-.openerp2 .oe_view_manager_switch .oe_vm_switch_form,
-.openerp2 .oe_view_manager_switch .oe_vm_switch_page,
-.openerp2 .oe_view_manager_switch .oe_vm_switch_tree,
-.openerp2 .oe_view_manager_switch .oe_vm_switch_list,
-.openerp2 .oe_view_manager_switch .oe_vm_switch_graph,
-.openerp2 .oe_view_manager_switch .oe_vm_switch_gantt,
-.openerp2 .oe_view_manager_switch .oe_vm_switch_calendar,
-.openerp2 .oe_view_manager_switch .oe_vm_switch_kanban,
-.openerp2 .oe_view_manager_switch .oe_vm_switch_diagram {
-  background: url("/web/static/src/img/views-icons-a.png") repeat-x scroll left top transparent;
-  overflow: hidden;
-  width: 22px;
-  height: 21px;
-  border: none;
-  background-position: 0px 0px;
+.openerp2 .oe_view_manager_switch .oe_vm_switch_list:after, .openerp2 .oe_view_manager_switch .oe_vm_switch_tree:after {
+  content: "ö";
 }
-.openerp2 .oe_view_manager_switch .oe_vm_switch_form span,
-.openerp2 .oe_view_manager_switch .oe_vm_switch_page span,
-.openerp2 .oe_view_manager_switch .oe_vm_switch_tree span,
-.openerp2 .oe_view_manager_switch .oe_vm_switch_list span,
-.openerp2 .oe_view_manager_switch .oe_vm_switch_graph span,
-.openerp2 .oe_view_manager_switch .oe_vm_switch_gantt span,
-.openerp2 .oe_view_manager_switch .oe_vm_switch_calendar span,
-.openerp2 .oe_view_manager_switch .oe_vm_switch_kanban span,
-.openerp2 .oe_view_manager_switch .oe_vm_switch_diagram span {
-  display: none;
+.openerp2 .oe_view_manager_switch .oe_vm_switch_graph:after {
+  content: "ó";
 }
-.openerp2 .oe_view_manager_switch .oe_vm_switch_list, .openerp2 .oe_view_manager_switch .oe_vm_switch_tree {
-  background-position: 0px 0px;
+.openerp2 .oe_view_manager_switch .oe_vm_switch_gantt:after {
+  content: "y";
 }
-.openerp2 .oe_view_manager_switch .oe_vm_switch_list:active, .openerp2 .oe_view_manager_switch .oe_vm_switch_list:hover, .openerp2 .oe_view_manager_switch .oe_vm_switch_list:focus, .openerp2 .oe_view_manager_switch .oe_vm_switch_list.oe_view_manager_switch_selected, .openerp2 .oe_view_manager_switch .oe_vm_switch_tree:active, .openerp2 .oe_view_manager_switch .oe_vm_switch_tree:hover, .openerp2 .oe_view_manager_switch .oe_vm_switch_tree:focus, .openerp2 .oe_view_manager_switch .oe_vm_switch_tree.oe_view_manager_switch_selected {
-  background-position: 0px -21px;
+.openerp2 .oe_view_manager_switch .oe_vm_switch_calendar:after {
+  content: "b";
 }
-.openerp2 .oe_view_manager_switch .oe_vm_switch_form, .openerp2 .oe_view_manager_switch .oe_vm_switch_page {
-  background-position: -22px 0px;
+.openerp2 .oe_view_manager_switch .oe_vm_switch_kanban:after {
+  content: "ó";
 }
-.openerp2 .oe_view_manager_switch .oe_vm_switch_form:active, .openerp2 .oe_view_manager_switch .oe_vm_switch_form:hover, .openerp2 .oe_view_manager_switch .oe_vm_switch_form:focus, .openerp2 .oe_view_manager_switch .oe_vm_switch_form.oe_view_manager_switch_selected, .openerp2 .oe_view_manager_switch .oe_vm_switch_page:active, .openerp2 .oe_view_manager_switch .oe_vm_switch_page:hover, .openerp2 .oe_view_manager_switch .oe_vm_switch_page:focus, .openerp2 .oe_view_manager_switch .oe_vm_switch_page.oe_view_manager_switch_selected {
-  background-position: -22px -21px;
-}
-.openerp2 .oe_view_manager_switch .oe_vm_switch_graph {
-  background-position: -44px 0px;
-}
-.openerp2 .oe_view_manager_switch .oe_vm_switch_graph:active, .openerp2 .oe_view_manager_switch .oe_vm_switch_graph:hover, .openerp2 .oe_view_manager_switch .oe_vm_switch_graph:focus, .openerp2 .oe_view_manager_switch .oe_vm_switch_graph.oe_view_manager_switch_selected {
-  background-position: -44px -21px;
-}
-.openerp2 .oe_view_manager_switch .oe_vm_switch_gantt {
-  background-position: -66px 0px;
-}
-.openerp2 .oe_view_manager_switch .oe_vm_switch_gantt:active, .openerp2 .oe_view_manager_switch .oe_vm_switch_gantt:hover, .openerp2 .oe_view_manager_switch .oe_vm_switch_gantt:focus, .openerp2 .oe_view_manager_switch .oe_vm_switch_gantt.oe_view_manager_switch_selected {
-  background-position: -66px -21px;
-}
-.openerp2 .oe_view_manager_switch .oe_vm_switch_calendar {
-  background-position: -88px 0px;
-}
-.openerp2 .oe_view_manager_switch .oe_vm_switch_calendar:active, .openerp2 .oe_view_manager_switch .oe_vm_switch_calendar:hover, .openerp2 .oe_view_manager_switch .oe_vm_switch_calendar:focus, .openerp2 .oe_view_manager_switch .oe_vm_switch_calendar.oe_view_manager_switch_selected {
-  background-position: -88px -21px;
-}
-.openerp2 .oe_view_manager_switch .oe_vm_switch_kanban {
-  background-position: -110px 0px;
-}
-.openerp2 .oe_view_manager_switch .oe_vm_switch_kanban:active, .openerp2 .oe_view_manager_switch .oe_vm_switch_kanban:hover, .openerp2 .oe_view_manager_switch .oe_vm_switch_kanban:focus, .openerp2 .oe_view_manager_switch .oe_vm_switch_kanban.oe_view_manager_switch_selected {
-  background-position: -110px -21px;
-}
-.openerp2 .oe_view_manager_switch .oe_vm_switch_diagram {
-  background-position: 0px 0px;
-}
-.openerp2 .oe_view_manager_switch .oe_vm_switch_diagram:active, .openerp2 .oe_view_manager_switch .oe_vm_switch_diagram:hover, .openerp2 .oe_view_manager_switch .oe_vm_switch_diagram:focus, .openerp2 .oe_view_manager_switch .oe_vm_switch_diagram.oe_view_manager_switch_selected {
-  background-position: 0px -21px;
+.openerp2 .oe_view_manager_switch .oe_vm_switch_diagram:after {
+  content: "}";
 }
 .openerp2 .oe_form_dropdown_section {
   position: relative;
@@ -1583,28 +1534,6 @@
 }
 .openerp2 .ui-tabs-hide {
   display: none;
-}
-.openerp2 .oe_form .oe_form_field_progressbar.ui-progressbar {
-  height: 22px;
-  font-size: 10px;
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
-  -ms-box-sizing: border-box;
-  box-sizing: border-box;
-  border: 1px solid #999999;
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
-  border-radius: 3px;
-  background: white;
-  min-width: 90px;
-}
-.openerp2 .oe_form .oe_form_field_progressbar.ui-progressbar span {
-  position: absolute;
-  margin-left: 10px;
-  font-weight: bold;
-}
-.openerp2 .oe_form .oe_form_field_progressbar.ui-progressbar .ui-widget-header {
-  background: #cccccc url(/web/static/lib/jquery.ui/css/smoothness/images/ui-bg_highlight-soft_75_cccccc_1x100.png) 50% 50% repeat-x;
 }
 .openerp2 .oe_form .oe_form_field_progressbar.ui-progressbar {
   height: 22px;
