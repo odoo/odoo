@@ -20,7 +20,6 @@
         "static/lib/jquery.form/jquery.form.js",
         "static/lib/jquery.validate/jquery.validate.js",
         "static/lib/jquery.ba-bbq/jquery.ba-bbq.js",
-        "static/lib/jquery.bootstrap/js/bootstrap.js",
         "static/lib/jquery.blockUI/jquery.blockUI.js",
         "static/lib/jquery.superfish/js/hoverIntent.js",
         "static/lib/jquery.superfish/js/superfish.js",
@@ -71,7 +70,7 @@
     ],
     'css' : [
         "static/lib/jquery.superfish/css/superfish.css",
-#        "static/lib/jquery.ui/css/smoothness/jquery-ui-1.8.17.custom.css",
+        "static/lib/jquery.ui.bootstrap/css/custom-theme/jquery-ui-1.8.16.custom.css",
         "static/lib/jquery.ui.timepicker/css/jquery-ui-timepicker-addon.css",
         "static/lib/jquery.ui.notify/css/ui.notify.css",
         "static/lib/jquery.tipsy/tipsy.css",
