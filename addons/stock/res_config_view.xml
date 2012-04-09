@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_stock_config_settings" model="ir.ui.view">
+            <field name="name">stock settings</field>
+            <field name="model">stock.config.settings</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string ="Configure Warehouse">
+                    <separator string="Traceability" colspan="4"/>
+                    <field name="group_stock_production_lot"/>
+                    <field name="module_product_expiry"
+                        attrs="{'invisible': [('group_stock_production_lot','=',False), ('group_stock_tracking_lot','=',False)]}"/>
+                    <newline/>
+                    <field name="group_stock_tracking_lot"/>
+
+                    <separator string="Logistics" colspan="4"/>
+                    <field name="group_stock_multiple_locations"/>
+                    <field name="module_stock_no_autopicking"/>
+                    <field name="module_stock_location"/>
+                    <field name="module_stock_invoice_directly"/>
+
+                    <separator string="Products" colspan="4"/>
+                    <field name="group_stock_packaging"/>
+                    <field name="group_stock_inventory_valuation"/>
+                    <field name="group_uom"/>
+                    <field name="group_uos"/>
+
+                    <separator string="Partners" colspan="4"/>
+                    <field name="module_claim_from_delivery"/>
+
+                    <newline/>
+                    <label colspan="2"/>
+                    <button string="Cancel" icon="gtk-cancel" special="cancel"/>
+                    <button string="Apply" icon="gtk-apply" type="object" name="execute"/>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_stock_config_settings" model="ir.actions.act_window">
+            <field name="name">Configure Warehouse</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stock.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+        </record>
+
+        <menuitem id="menu_stock_config_settings" name="Warehouse" parent="base.menu_config"
+            sequence="3" action="action_stock_config_settings"/>
+
+    </data>
+</openerp>

@@ -1,53 +1,29 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        <record model="ir.ui.view" id="view_mailgate_thread_form">
-            <field name="name">mail.thread.form</field>
-            <field name="model">mail.thread</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Email Thread">
-                    <separator string="Communication History" colspan="4"/>
-                    <field name="message_ids" nolabel="1" colspan="4" mode="tree">
-                        <tree string="Communication History">
-                            <field name="display_text"/>
-                        </tree>
-                    </field>
-                </form>
-            </field>
+
+        <!-- toplevel menu -->
+        <record id="mail_feeds_main" model="ir.ui.menu">
+            <field name="name">Feeds</field>
+            <field name="sequence">0</field>
+            <field name="web_icon" eval="static/src/img/feeds.png"/>
+            <field name="web_icon_hover" eval="static/src/img/feeds-hover.png"/>
+            <field name="action" ref="action_mail_all_feeds"/>
         </record>
 
-        <record model="ir.ui.view" id="view_mailgate_thread_tree">
-            <field name="name">mail.thread.tree</field>
-            <field name="model">mail.thread</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Email Threads">
-                    <field name="message_ids" />
-                </tree>
-            </field>
+        <!-- left-side menu: Feeds !-->
+        <menuitem id="mail_feeds" name="Feeds" parent="mail_feeds_main"/>
+        <record id="mail_wallfeeds" model="ir.ui.menu">
+          <field name="name">All Feeds</field>
+          <field name="sequence" eval="10"/>
+          <field name="action" ref="action_mail_all_feeds"/>
+          <field name="parent_id" ref="mail_feeds"/>
         </record>
-
-         <!-- Emails thread action -->
-        <record model="ir.actions.act_window" id="action_view_mailgate_thread">
-            <field name="name">Email Threads</field>
-            <field name="res_model">mail.thread</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_type">form</field>
-            <field name="view_id" ref="view_mailgate_thread_tree"/>
+        <record id="mail_myfeeds" model="ir.ui.menu">
+          <field name="name">My Feeds</field>
+          <field name="sequence" eval="11"/>
+          <field name="action" ref="action_mail_my_feeds"/>
+          <field name="parent_id" ref="mail_feeds"/>
         </record>
-        <record model="ir.actions.act_window.view" id="action_view_mailgate_thread_view1">
-            <field name="sequence" eval="1"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="view_mailgate_thread_tree"/>
-            <field name="act_window_id" ref="action_view_mailgate_thread"/>
-        </record>
-        <record model="ir.actions.act_window.view" id="action_view_mailgate_thread_view2">
-            <field name="sequence" eval="2"/>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="view_mailgate_thread_form"/>
-            <field name="act_window_id" ref="action_view_mailgate_thread"/>
-        </record>
-
     </data>
 </openerp>
