@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <!-- Update Preferences form !-->
+        <record id="view_users_form_simple_modif_mail" model="ir.ui.view">
+            <field name="name">res.users.preferences.form.mail</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
+            <field name="arch" type="xml">
+            <data>
+                <xpath expr="/form/group/group[@name='preferences']/field[@name='menu_tips']" position="after">
+                    <field name="notification_email_pref" readonly="0"/>
+                </xpath>
+            </data>
+            </field>
+        </record>
+
+        <!-- Update user form !-->
+        <record id="view_users_form_mail" model="ir.ui.view">
+            <field name="name">res.users.form.mail</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+            <data>
+                <xpath expr="/form/notebook/page[@string='User']/group/group/group[@name='preferences']/field[@name='menu_tips']" position="after">
+                    <field name="notification_email_pref"/>
+                </xpath>
+                <xpath expr="/form/notebook" position="after">
+                    <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
+                </xpath>
+            </data>
+            </field>
+        </record>
+
+    </data>
+</openerp>
