@@ -195,7 +195,7 @@
                                     </ul>
                                     <h4><t t-esc="record.name.value.substr(0,32)"/><t t-if="record.name.value.length > 32">...</t></h4>
                                     <h4 id="list" height="10px">
-                                        <a>
+                                        <a id="1">
                                             <t t-if="record.task.raw_value">
                                                 <button name="open_tasks" id = "open_tasks" class="oe_project_buttons" type="object"><t t-if="record.open_task.value &lt;= 1"> Task</t><t t-if="record.open_task.value &gt; 1"> Tasks</t>(<t t-esc="record.open_task.value"/>)</button>
                                             </t>

@@ -24,6 +24,18 @@ openerp.project = function(openerp) {
                 //if task is true , then open the task when click on the anywhere in the box.
                 if(this.record.task.raw_value)$(this.$element).find('.click_button').attr('data-name','open_tasks');
                 if(!this.record.task.raw_value)$(this.$element).find('.click_button').attr('data-name','dummy');
+                
+                // set sequence like Tasks,Issues,Timesheets and Phases
+                my_list = $("#list a")
+                my_list.sort(function (a, b) {
+                    var aValue = parseInt(a.id);
+                    var bValue = parseInt(b.id);
+                    // ASC
+                    //return aValue == bValue ? 0 : aValue < bValue ? -1 : 1;
+                    // DESC
+                    return aValue == bValue ? 0 : aValue < bValue ? -1 : 1;
+                  });
+                $('#list').replaceWith(my_list);
             };
             self._super();
         }
