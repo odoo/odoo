@@ -786,69 +786,6 @@ $colour4: #8a89ba
             &:active, &:hover, &:focus, &.oe_view_manager_switch_selected
                 background-position: 0px -21px
     // }}}
-    .oe_view_manager_header
-        border-top: 1px solid #cacaca
-        border-bottom: 1px solid #cacaca
-        @include vertical-gradient(#fcfcfc, #dedede)
-        @include box-shadow((0 1px 0 rgba(255,255,255,0.4), 0 0 9px rgba(0,0,0,0.1)))
-        .oe_view_manager_row
-            height: 26px
-            line-height: 26px
-            margin: 8px
-            clear: both
-            text-shadow: 0 1px 1px white
-            h2
-                float: left
-                font-size: 18px
-                margin: 1px 0
-                a
-                    color: $colour4
-            .dropdown-toggle:after
-                margin-top: 7px
-                margin-left: 6px
-                border-top-color: #404040
-        .oe_filter
-            vertical-align: top
-            li
-                height: 24px
-                line-height: 24px
-                padding: 0 8px
-        .oe_button_group
-            display: inline-block
-            border: 1px solid #ababab
-            @include radius(5px)
-            li
-                float: left
-                border-right: 1px solid #ababab
-                &:last-child
-                    border: none
-            a
-                color: #4c4c4c
-                &:hover
-                    text-decoration: none
-            .active
-                background: #999
-                @include box-shadow(0 1px 4px rgba(0,0,0,0.3) inset)
-                a
-                    color: #fff
-                    text-shadow: 0 1px 2px rgba(0,0,0,0.4)
-        .pagination
-            li
-                height: 24px
-                line-height: 24px
-                padding: 0 8px
-        .oe_view_manager_switch
-            float: right
-        .oe_view_manager_buttons
-            padding-right: 8px
-            float: left
-            margin-right: 12px
-        .oe_view_manager_sidebar
-            display: inline-block
-        .oe_view_manager_pager
-            float: right
-
-    // }}}
     // ViewManager.sidebar {{{
     .oe_form_dropdown_section
         position: relative
