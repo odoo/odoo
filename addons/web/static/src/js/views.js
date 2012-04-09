@@ -252,7 +252,9 @@ session.web.ViewManager =  session.web.OldWidget.extend({
                 deferred : $.Deferred(),
                 controller : null,
                 options : _.extend({
-                    sidebar_id : self.element_id + '_sidebar_' + view.view_type,
+                    $buttons : self.$element.find('.oe_view_manager_buttons'),
+                    $sidebar : self.$element.find('.oe_view_manager_sidebar'),
+                    $pager : self.$element.find('.oe_view_manager_pager'),
                     action : self.action,
                     action_views_ids : views_ids
                 }, self.flags, self.flags[view.view_type] || {}, view.options || {})
@@ -274,9 +276,9 @@ session.web.ViewManager =  session.web.OldWidget.extend({
      * @returns {jQuery.Deferred} new view loading promise
      */
     on_mode_switch: function(view_type, no_store) {
-        var self = this,
-            view = this.views[view_type],
-            view_promise;
+        var self = this;
+        var view = this.views[view_type];
+        var view_promise;
         if(!view)
             return $.Deferred().reject();
 
@@ -778,17 +780,17 @@ session.web.Sidebar = session.web.Widget.extend({
     },
     add_toolbar: function(toolbar) {
         var self = this;
-        _.each([['print', _t("Reports")], ['action', _t("Actions")], ['relate', _t("Links")]], function(type) {
-            var items = toolbar[type[0]];
-            if (items.length) {
+        _.each(['print','action','relate'], function(type) {
+            var items = toolbar[type];
+            if (items) {
                 for (var i = 0; i < items.length; i++) {
                     items[i] = {
                         label: items[i]['name'],
                         action: items[i],
-                        classname: 'oe_sidebar_' + type[0]
+                        classname: 'oe_sidebar_' + type
                     }
                 }
-                self.add_items(type[0], items);
+                self.add_items(type=='print' ? 'print' : 'other', items);
             }
         });
     },
@@ -820,11 +822,7 @@ session.web.Sidebar = session.web.Widget.extend({
     add_items: function(section_code, items) {
         var self = this;
         if (items) {
-            // generate unique id for items
-            for (var i = 0; i < items.length; i++) {
-                items[i].element_id = _.uniqueId(section_code + '_item_');
-                this.items[items[i].element_id] = items[i];
-            }
+            this.items[section_code].push.apply(this.items[section_code],items);
             this.redraw();
         }
     },
@@ -974,7 +972,7 @@ session.web.TranslateDialog = session.web.Dialog.extend({
     }
 });
 
-session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
+session.web.View = session.web.Widget.extend({
     template: "EmptyComponent",
     // name displayed in view switchers
     display_name: '',
@@ -1014,7 +1012,8 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
      * Called after a successful call to fields_view_get.
      * Must return a promise.
      */
-    on_loaded: function(fields_view_get) {},
+    on_loaded: function(fields_view_get) {
+    },
     set_default_options: function(options) {
         this.options = options || {};
         _.defaults(this.options, {

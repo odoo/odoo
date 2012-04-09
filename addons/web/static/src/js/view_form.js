@@ -5,7 +5,7 @@ var _t = openerp.web._t,
 var QWeb = openerp.web.qweb;
 
 openerp.web.views.add('form', 'openerp.web.FormView');
-openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView# */{
+openerp.web.FormView = openerp.web.View.extend({
     /**
      * Indicates that this view is not searchable, and thus that no search
      * view should be displayed (if there is one active).
@@ -41,7 +41,6 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         this.default_focus_button = null;
         this.registry = openerp.web.form.widgets;
         this.has_been_loaded = $.Deferred();
-        this.$form_header = null;
         this.translatable_fields = [];
         _.defaults(this.options, {
             "not_interactible_on_create": false
@@ -54,10 +53,6 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         this.rendering_engine = new openerp.web.FormRenderingEngine(this);
     },
     destroy: function() {
-        if (this.sidebar) {
-            this.sidebar.attachments.destroy();
-            this.sidebar.destroy();
-        }
         _.each(this.get_widgets(), function(w) {
             w.destroy();
         });
@@ -78,23 +73,26 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         var $dest = this.$element.hasClass("oe_form_container") ? this.$element : this.$element.find('.oe_form_container');
         this.rendering_engine.render_to($dest);
 
-        this.$form_header = this.$element.find('.oe_form_header:first');
-        this.$form_header.find('div.oe_form_pager button[data-pager-action]').click(function() {
+        this.$buttons = this.options.$buttons || this.$element.find('.oe_form_buttons');
+        this.$sidebar = this.options.$sidebar || this.$element.find('.oe_form_sidebar');
+        this.$pager = this.options.$pager || this.$element.find('.oe_form_pager');
+
+        this.$buttons.html(QWeb.render("FormView.buttons", {'widget':self}));
+        this.$pager.html(QWeb.render("FormView.pager", {'widget':self}));
+
+        this.$buttons.on('click','.oe_form_buttons button.oe_form_button_save',this.on_button_save);
+        this.$buttons.on('click','.oe_form_buttons button.oe_form_button_cancel',this.on_button_cancel);
+        this.$pager.on('click','.oe_form_pager button[data-pager-action]',function(event) {
             var action = $(this).data('pager-action');
             self.on_pager_action(action);
         });
 
-        this.$form_header.find('button.oe_form_button_save').click(this.on_button_save);
-        this.$form_header.find('button.oe_form_button_cancel').click(this.on_button_cancel);
-
-        if (!this.sidebar && this.options.sidebar && this.options.sidebar_id) {
+        if (!this.sidebar && this.options.sidebar) {
             this.sidebar = new openerp.web.Sidebar(this);
-            this.sidebar.appendTo(this.$element.find(".oe_form_sidebar"));
-            this.sidebar.attachments = new openerp.web.form.SidebarAttachments(this.sidebar, this);
+            this.sidebar.appendTo(this.$sidebar);
+            //this.sidebar.attachments = new openerp.web.form.SidebarAttachments(this.sidebar, this);
             this.sidebar.add_toolbar(this.fields_view.toolbar);
-            this.set_common_sidebar_sections(this.sidebar);
-            this.sidebar.add_section(_t('Customize'), 'customize');
-            this.sidebar.add_items('customize', [{
+            this.sidebar.add_items('other', [{
                 label: _t('Set Default'),
                 form: this,
                 callback: function (item) {
@@ -173,7 +171,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             self.is_initialized.resolve();
             self.do_update_pager(record.id == null);
             if (self.sidebar) {
-                self.sidebar.attachments.do_update();
+               // self.sidebar.attachments.do_update();
             }
             if (self.default_focus_field) {
                 self.default_focus_field.focus();
@@ -216,7 +214,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         }
     },
     do_update_pager: function(hide_index) {
-        var $pager = this.$form_header.find('div.oe_form_pager');
+        var $pager = this.$pager.find('div.oe_form_pager');
         var index = hide_index ? '-' : this.dataset.index + 1;
         $pager.find('button').prop('disabled', this.dataset.ids.length < 2);
         $pager.find('span.oe_pager_index').html(index);

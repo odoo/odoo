@@ -667,7 +667,7 @@ $colour4: #8a89ba
                     color: #fff
                     text-shadow: 0 1px 2px rgba(0,0,0,0.4)
     // }}}
-    // ViewManager Header {{{
+    // ViewManager.header {{{
     .oe_view_manager_header
         border-top: 1px solid #cacaca
         border-bottom: 1px solid #cacaca
@@ -721,13 +721,21 @@ $colour4: #8a89ba
                 padding: 0 8px
         .oe_view_manager_switch
             float: right
+        .oe_view_manager_buttons
+            padding-right: 8px
+            float: left
+            margin-right: 12px
+        .oe_view_manager_sidebar
+            display: block
+        .oe_view_manager_pager
+            float: right
+
     // }}}
-    // ViewManager Dropdown {{{
+    // ViewManager.sidebar {{{
     .oe_form_dropdown_section
         position: relative
         display: inline-block
         margin-right: 4px
-
     .oe_dropdown_toggle:after
         width: 0
         height: 0
@@ -739,11 +747,9 @@ $colour4: #8a89ba
         border-right: 4px solid transparent
         border-top: 4px solid white
         @include opacity(0.5)
-
         margin-top: 7px
         margin-left: 6px
         border-top-color: #404040
-
     .oe_dropdown_menu
         display: none
         position: absolute
@@ -951,120 +957,9 @@ $colour4: #8a89ba
                     div
                         display: block
     // }}}
-    // SearchView mit {{{
-    .searcharea
-        position: relative
-        float: right
-        .toggle-button
-            position: absolute
-            top: 10px
-            right: 8px
-            width: 0
-            height: 0
-            display: inline-block
-            content: "&darr"
-            vertical-align: top
-            border-top: 5px solid #4c4c4c
-            border-left: 5px solid transparent
-            border-right: 5px solid transparent
-            @include opacity(0.5)
-            &:hover
-                @include opacity(0.8)
-        .searchmenu
-            display: none
-            position: absolute
-            top: 30px
-            right: 7px
-            border: 1px solid #afafb6
-            width: 432px
-            overflow-x: hidden
-            z-index: 900
-            background: white
-            @include radius(5px)
-            @include box-shadow(0 1px 4px rgba(0,0,0,0.3))
-            .dropdown-menu
-                input
-                    width: 120px
-            input
-                width: 25px
-            .toggle:before
-                margin-left: 0
-                margin-top: 9px
-            .open:before
-                margin-top: 14px
-            .menu
-                &:last-child
-                    margin-bottom: 0
-                li
-                    padding-left: 12px
-                    margin-right: 8px
-            .custom-filters
-                a:hover:after
-                    content: 'd'
-                    font-family: "mnmliconsRegular" !important
-                    font-size: 18px
-                    font-weight: 300 !important
-                    float: right
-                    margin-top: -1px
-            a
-                height: 14px
-                line-height: 14px
-                padding: 3px 6px
-                color: #4c4c4c
-                &:hover
-                    text-decoration: none
-                    @include vertical-gradient(#f0f0fa, #eeeef6)
-            p
-                margin-left: 12px
-            input, textarea
-                height: 14px
-                padding: 2px
-                font-size: 11px
-                line-height: 18px
-                border: 1px solid #ccc
-                @include radius(3px)
-            .column
-                width: 48%
-            .full-column
-                margin: 8px 0
-                padding: 4px
-
-    input.searchbox
-        width: 410px
-        border: 1px solid #ababab
-        margin-top: 0
-        margin-bottom: 0
-        padding: 4px 19px
-        font-size: 13px
-        background: url('/web/static/src/img/search.png') no-repeat 5px
-        background-color: white
-        @include radius(13px)
-        @include box-shadow(0 1px 2px rgba(0,0,0,0.2) inset)
-
-    .search-clear
-        position: absolute
-        top: 7px
-        right: 24px
-        width: 12px
-        height: 12px
-        cursor: pointer
-        display: none
-    // }}}
-    // FormView.header {{{
+    // FormView.body {{{
     .oe_form_header
         padding: 8px
-        .oe_form_buttons
-            padding-right: 8px
-            float: left
-            margin-right: 12px
-        .oe_form_pager
-            float: right
-        // FIXME
-        .oe-sidebar-attachments
-            display: none
-
-    // }}}
-    // FormView.body {{{
     .oe_form_invalid
         input, select, textarea
             background-color: #F66 !important

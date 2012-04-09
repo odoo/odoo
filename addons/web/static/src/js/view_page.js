@@ -19,10 +19,10 @@ openerp.web.page = function (openerp) {
         },
         on_loaded: function(data) {
             this._super(data);
-            this.$form_header.find('button.oe_form_button_edit').click(this.on_button_edit);
-            this.$form_header.find('button.oe_form_button_create').click(this.on_button_create);
-            this.$form_header.find('button.oe_form_button_duplicate').click(this.on_button_duplicate);
-            this.$form_header.find('button.oe_form_button_delete').click(this.on_button_delete);
+            this.$buttons.find('button.oe_form_button_edit').click(this.on_button_edit);
+            this.$buttons.find('button.oe_form_button_create').click(this.on_button_create);
+            this.$buttons.find('button.oe_form_button_duplicate').click(this.on_button_duplicate);
+            this.$buttons.find('button.oe_form_button_delete').click(this.on_button_delete);
         },
         on_button_edit: function() {
             return this.do_switch_view('form');
