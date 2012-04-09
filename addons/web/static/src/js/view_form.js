@@ -103,7 +103,6 @@ openerp.web.FormView = openerp.web.View.extend({
         this.has_been_loaded.resolve();
         return $.when();
     },
-
     do_load_state: function(state, warm) {
         if (state.id && this.datarecord.id != state.id) {
             if (!this.dataset.get_id_index(state.id)) {
@@ -115,9 +114,13 @@ openerp.web.FormView = openerp.web.View.extend({
             }
         }
     },
-
     do_show: function () {
         var self = this;
+        if (this.sidebar) {
+            this.sidebar.$element.show();
+        }
+        this.$buttons.find('.oe_form_buttons').show();
+        this.$pager.find('.oe_form_pager').show();
         this.$element.show().css('visibility', 'hidden');
         this.$element.removeClass('oe_form_dirty');
         return this.has_been_loaded.pipe(function() {
@@ -137,6 +140,11 @@ openerp.web.FormView = openerp.web.View.extend({
         });
     },
     do_hide: function () {
+        if (this.sidebar) {
+            this.sidebar.$element.hide();
+        }
+        this.$buttons.find('.oe_form_buttons').hide();
+        this.$pager.find('.oe_form_pager').hide();
         this._super();
     },
     on_record_loaded: function(record) {

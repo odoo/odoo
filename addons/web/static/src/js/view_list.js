@@ -207,6 +207,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
 
         this.$element.html(QWeb.render(this._template, this));
         // Head hook
+        // Selecting records
         this.$element.find('.all-record-selector').click(function(){
             self.$element.find('.oe-record-selector input').prop('checked',
                 self.$element.find('.all-record-selector').prop('checked')  || false);
@@ -215,27 +216,23 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
                 'selected', [selection.ids, selection.records]);
         });
 
-        this.$element.find('.oe-list-add')
-                .click(this.proxy('do_add_record'))
-                .attr('disabled', grouped && this.options.editable);
-        this.$element.find('.oe-list-delete')
-                .attr('disabled', true)
-                .click(this.proxy('do_delete_selected'));
+        // Sorting columns
         this.$element.find('thead').delegate('th.oe-sortable[data-id]', 'click', function (e) {
             e.stopPropagation();
-
             var $this = $(this);
             self.dataset.sort($this.data('id'));
             if ($this.find('span').length) {
-                $this.find('span').toggleClass(
-                    'ui-icon-triangle-1-s ui-icon-triangle-1-n');
+                $this.find('span').toggleClass( 'ui-icon-triangle-1-s ui-icon-triangle-1-n');
             } else {
-                $this.append('<span class="ui-icon ui-icon-triangle-1-n">')
-                     .siblings('.oe-sortable').find('span').remove();
+                $this.append('<span class="ui-icon ui-icon-triangle-1-n">') .siblings('.oe-sortable').find('span').remove();
             }
 
             self.reload_content();
         });
+
+        // Add and delete
+        this.$element.find('.oe-list-add') .click(this.proxy('do_add_record')) .attr('disabled', grouped && this.options.editable);
+        this.$element.find('.oe-list-delete') .attr('disabled', true) .click(this.proxy('do_delete_selected'));
 
         this.$element.find('.oe-list-pager')
             .delegate('button', 'click', function () {
@@ -274,11 +271,11 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
                         })
                         .val(self._limit || 'NaN');
                 });
-        if (!this.sidebar && this.options.sidebar && this.options.sidebar_id) {
-            //this.sidebar = new openerp.web.Sidebar(this, this.options.sidebar_id);
-            //this.sidebar.start();
-            //this.sidebar.add_toolbar(this.fields_view.toolbar);
-            //this.set_common_sidebar_sections(this.sidebar);
+
+        if (!this.sidebar && this.options.sidebar && this.options.$sidebar) {
+            this.sidebar = new openerp.web.Sidebar(this);
+            this.sidebar.appendTo(this.options.$sidebar);
+            this.sidebar.add_toolbar(this.fields_view.toolbar);
         }
     },
     /**
@@ -421,7 +418,6 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
     do_hide: function () {
         this._super();
         if (this.sidebar) {
-            this.sidebar.$element.hide();
         }
     },
     /**
@@ -546,13 +542,17 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         this.$element.find('.oe-list-delete').attr('disabled', !ids.length);
         if (!ids.length) {
             this.dataset.index = 0;
-            if (this.sidebar) { this.sidebar.do_fold(); }
+            if (this.sidebar) {
+                this.sidebar.$element.hide();
+            }
             this.compute_aggregates();
             return;
         }
 
         this.dataset.index = _(this.dataset.ids).indexOf(ids[0]);
-        if (this.sidebar) { this.sidebar.do_unfold(); }
+        if (this.sidebar) {
+            this.sidebar.$element.show();
+        }
 
         this.compute_aggregates(_(records).map(function (record) {
             return {count: 1, values: record};

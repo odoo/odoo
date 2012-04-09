@@ -559,21 +559,9 @@
     <thead class="ui-widget-header">
         <tr t-if="options.action_buttons !== false or options.pager !== false">
             <th t-att-colspan="columns_count">
-                <table>
-                    <tr>
-                        <td t-if="!no_leaf and options.action_buttons !== false" class="oe-actions">
-                            <button type="button" class="oe_button oe-list-add"
-                                    t-if="options.addable">
-                                <t t-esc="options.addable"/>
-                            </button>
-                            <button type="button" class="oe_button oe-list-delete"
-                                    t-if="options.selectable and options.deletable">
-                                Delete
-                            </button>
-                        </td>
-                        <t t-call="Listview.navigation.button"/>
-                    </tr>
-                </table>
+                <div class="oe_list_buttons"/>
+                <div class="oe_list_sidebar"/>
+                <div class="oe_list_pager"/>
             </th>
         </tr>
         <tr t-if="options.header" class="oe-listview-header-columns">
@@ -583,13 +571,13 @@
                 </th>
             </t>
             <th t-if="options.selectable" width="1"  >
-                <input type="checkbox" class="all-record-selector"/> </th>
-            <th t-if="options.isClarkGable" width="1"> </th>
+                <input type="checkbox" class="all-record-selector"/>
+            </th>
+            <th t-if="options.isClarkGable" width="1"></th>
             <t t-foreach="columns" t-as="column">
                 <th t-if="!column.meta and column.invisible !== '1'" t-att-data-id="column.id"
                     t-att-class="((options.sortable and column.tag !== 'button') ? 'oe-sortable' : null)">
-                    <t t-if="column.tag !== 'button'"
-                        ><t t-esc="column.string"/></t>
+                    <t t-if="column.tag !== 'button'"><t t-esc="column.string"/></t>
                 </th>
             </t>
             <th t-if="options.deletable" width="1"/>
@@ -604,32 +592,26 @@
             </td>
             <td t-if="options.deletable"/>
         </tr>
-        <tr>
-            <t t-call="Listview.navigation.button"/>
-        </tr>
     </tfoot>
 </table>
-<t t-extend="ListView" t-name="One2Many.listview">
-    <t t-jquery="thead.ui-widget-header > tr:first">
-        this.removeAttr('t-if');
-    </t>
-
-    <t t-jquery="tfoot &gt; tr:last-child" t-operation="replace"/>
-
-    <t t-jquery="td.oe-actions">
-        this.removeAttr('t-if');
-    </t>
-    <t t-jquery="td.oe-actions" t-operation="prepend">
-        <h3 class="oe_view_title"><t t-esc="fields_view.arch.attrs.string"/></h3>
-    </t>
+<t t-name="ListView.buttons">
+    <div t-if="!no_leaf and options.action_buttons !== false" class="oe_list_buttons">
+        <button type="button" class="oe_button oe-list-add" t-if="options.addable">
+            <t t-esc="options.addable"/>
+        </button>
+        <button type="button" class="oe_button oe-list-delete" t-if="options.selectable and options.deletable">
+            Delete
+        </button>
+    </div>
 </t>
-<th t-name="Listview.navigation.button" t-if="!no_leaf and options.pager !== false"
-        class="oe-list-pager" t-att-colspan="columns_count">
-    <t t-call="ViewPager">
-        <span class="oe-pager-state">
-        </span>
-    </t>
-</th>
+<t t-name="Listview.pager">
+    <div t-if="!no_leaf and options.pager !== false" class="oe-list-pager" t-att-colspan="columns_count">
+        <t t-call="ViewPager">
+            <span class="oe-pager-state">
+            </span>
+        </t>
+    </div>
+</t>
 <t t-name="ListView.rows" t-foreach="records.length" t-as="index">
     <t t-call="ListView.row">
         <t t-set="record" t-value="records.at(index)"/>
@@ -1291,6 +1273,20 @@
 <t t-name="One2Many.formview" t-extend="FormView">
     <t t-jquery=".oe_form_buttons" t-operation="inner">
         <button type="button" class="oe_button oe_form_button_create">Add</button>
+    </t>
+</t>
+<t t-name="One2Many.listview" t-extend="ListView">
+    <t t-jquery="thead.ui-widget-header > tr:first">
+        this.removeAttr('t-if');
+    </t>
+
+    <t t-jquery="tfoot &gt; tr:last-child" t-operation="replace"/>
+
+    <t t-jquery="td.oe-actions">
+        this.removeAttr('t-if');
+    </t>
+    <t t-jquery="td.oe-actions" t-operation="prepend">
+        <h3 class="oe_view_title"><t t-esc="fields_view.arch.attrs.string"/></h3>
     </t>
 </t>
 
