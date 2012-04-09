@@ -204,16 +204,8 @@ session.web.ActionManager = session.web.Widget.extend({
     }
 });
 
-session.web.ViewManager =  session.web.OldWidget.extend({
+session.web.ViewManager =  session.web.Widget.extend({
     template: "ViewManager",
-    /**
-     * @constructs session.web.ViewManager
-     * @extends session.web.OldWidget
-     *
-     * @param parent
-     * @param dataset
-     * @param views
-     */
     init: function(parent, dataset, views, flags) {
         this._super(parent);
         this.model = dataset ? dataset.model : undefined;
@@ -296,7 +288,7 @@ session.web.ViewManager =  session.web.OldWidget.extend({
             }
             controller.do_switch_view.add_last(this.on_mode_switch);
             controller.do_prev_view.add_last(this.on_prev_view);
-            var container = $("#" + this.element_id + '_view_' + view_type);
+            var container = this.$element.find(".oe_view_manager_view_" + view_type);
             view_promise = controller.appendTo(container);
             this.views[view_type].controller = controller;
             this.views[view_type].deferred.resolve(view_type);
@@ -375,12 +367,10 @@ session.web.ViewManager =  session.web.OldWidget.extend({
         if (this.searchview) {
             this.searchview.destroy();
         }
-        this.searchview = new session.web.SearchView(
-                this, this.dataset,
-                view_id, search_defaults, this.flags.search_view === false);
+        this.searchview = new session.web.SearchView(this, this.dataset, view_id, search_defaults, this.flags.search_view === false);
 
         this.searchview.on_search.add(this.do_searchview_search);
-        return this.searchview.appendTo($("#" + this.element_id + "_search"));
+        return this.searchview.appendTo(this.$element.find(".oe_view_manager_view_search"));
     },
     do_searchview_search: function(domains, contexts, groupbys) {
         var self = this,

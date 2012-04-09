@@ -412,7 +412,7 @@
                 <h2 class="oe_view_title" t-if="widget.flags.display_title !== false">
                     <span class="oe_view_title_text"><t t-esc="widget.display_title()"/></span>
                 </h2>
-                <div t-attf-id="#{widget.element_id}_search" t-opentag="true"/>
+                <div class="oe_view_manager_view_search" t-opentag="true"/>
             </div>
             <div class="oe_view_manager_row">
                 <div class="oe_view_manager_buttons"/>
@@ -428,7 +428,7 @@
         </div>
         <div class="oe_view_manager_body">
             <t t-foreach="widget.views_src" t-as="view">
-                <div t-attf-id="#{widget.element_id}_view_#{view.view_type}"/>
+                <div t-attf-class="oe_view_manager_view_#{view.view_type}"/>
             </t>
         </div>
     </div>
