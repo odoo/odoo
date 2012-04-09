@@ -121,6 +121,7 @@ openerp.web.FormView = openerp.web.View.extend({
         }
         if (this.$buttons) {
             this.$buttons.find('.oe_form_buttons').show();
+            this.$buttons.find('.oe_form_button_save').removeClass('oe_form_button_save_dirty');
         }
         if (this.$pager) {
             this.$pager.find('.oe_form_pager').show();
@@ -196,6 +197,7 @@ openerp.web.FormView = openerp.web.View.extend({
                 self.do_push_state({id:record.id});
             }
             self.$element.removeClass('oe_form_dirty');
+            self.$buttons.find('.oe_form_button_save').removeClass('oe_form_button_save_dirty');
         });
     },
     on_form_changed: function() {
@@ -209,6 +211,7 @@ openerp.web.FormView = openerp.web.View.extend({
     },
     do_notify_change: function() {
         this.$element.addClass('oe_form_dirty');
+        this.$buttons.find('.oe_form_button_save').addClass('oe_form_button_save_dirty');
     },
     on_pager_action: function(action) {
         if (this.can_be_discarded()) {
