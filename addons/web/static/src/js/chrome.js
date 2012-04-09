@@ -9,6 +9,7 @@ openerp.web.Notification =  openerp.web.Widget.extend({
     template: 'Notification',
     init: function() {
         this._super.apply(this, arguments);
+        // move to openerp.web.notification
         openerp.notification = this;
     },
     start: function() {

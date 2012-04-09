@@ -397,15 +397,10 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
      * @returns openerp.web.search.Field
      */
     make_field: function (item, field) {
-        try {
-            return new (openerp.web.search.fields.get_any(
-                    [item.attrs.widget, field.type]))
-                (item, field, this);
-        } catch (e) {
-            if (! e instanceof openerp.web.KeyNotFound) {
-                throw e;
-            }
-            // KeyNotFound means unknown field type
+        var obj = openerp.web.search.fields.get_any( [item.attrs.widget, field.type]);
+        if(obj) {
+            return new (obj) (item, field, this);
+        } else {
             console.group('Unknown field type ' + field.type);
             console.error('View node', item);
             console.info('View field', field);
@@ -1403,17 +1398,12 @@ openerp.web.search.ExtendedSearchProposition = openerp.web.OldWidget.extend(/** 
         }
 
         var type = field.type;
-        try {
-            openerp.web.search.custom_filters.get_object(type);
-        } catch (e) {
-            if (! e instanceof openerp.web.KeyNotFound) {
-                throw e;
-            }
-            type = "char";
+        var obj = openerp.web.search.custom_filters.get_object(type);
+        if(obj === null) {
             console.log('Unknow field type ' + e.key);
+            obj = openerp.web.search.custom_filters.get_object("char");
         }
-        this.value = new (openerp.web.search.custom_filters.get_object(type))
-                          (this);
+        this.value = new (obj) (this);
         if(this.value.set_field) {
             this.value.set_field(field);
         }

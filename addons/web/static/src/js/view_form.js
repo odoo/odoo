@@ -709,7 +709,7 @@ openerp.web.FormRenderingEngineInterface = {
  * 
  * It is necessary to set the view using set_view() before usage.
  */
-openerp.web.FormRenderingEngine = nova.Class.extend({
+openerp.web.FormRenderingEngine = openerp.web.Class.extend({
     init: function(view) {
         this.view = view;
         this.legacy_mode = false;
@@ -1206,10 +1206,10 @@ openerp.web.form.InvisibilityChangerMixin = {
     },
 };
 
-openerp.web.form.InvisibilityChanger = nova.Class.extend(_.extend({}, nova.GetterSetterMixin, openerp.web.form.InvisibilityChangerMixin, {
+openerp.web.form.InvisibilityChanger = openerp.web.Class.extend(_.extend({}, openerp.web.GetterSetterMixin, openerp.web.form.InvisibilityChangerMixin, {
     init: function(parent, field_manager, invisible_domain, $element) {
         this.setParent(parent);
-        nova.GetterSetterMixin.init.call(this);
+        openerp.web.GetterSetterMixin.init.call(this);
         openerp.web.form.InvisibilityChangerMixin.init.call(this, field_manager, invisible_domain);
         this.$element = $element;
         this.start();

@@ -51,9 +51,9 @@
 
         "static/lib/labjs/LAB.src.js",
         "static/lib/py.js/lib/py.js",
-        "static/lib/novajs/src/nova.js",
         "static/src/js/boot.js",
-        "static/src/js/core.js",
+        "static/src/js/corelib.js",
+        "static/src/js/coresetup.js",
         "static/src/js/dates.js",
         "static/src/js/formats.js",
         "static/src/js/chrome.js",
