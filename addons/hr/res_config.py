@@ -23,7 +23,7 @@ from osv import fields, osv
 from lxml import etree
 
 class human_resources_configuration(osv.osv_memory):
-    _name = 'human.resources.configuration'
+    _name = 'hr.config.settings'
     _inherit = 'res.config.settings'
 
     _columns = {

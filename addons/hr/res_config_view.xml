@@ -9,8 +9,8 @@
         </record>
 
         <record id="view_human_resources_configuration" model="ir.ui.view">
-            <field name="name">Human Resources Application</field>
-            <field name="model">human.resources.configuration</field>
+            <field name="name">hr settings</field>
+            <field name="model">hr.config.settings</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string ="HR Application">
@@ -32,18 +32,19 @@
                         <field name="module_hr_evaluation"/>
                         <field name="module_hr_contract"/>
                     </group>
-                    
+                    <label colspan="2"/>
+                    <button string="Cancel" icon="gtk-cancel" special="cancel"/>
+                    <button string="Apply" icon="gtk-apply" type="object" name="execute"/>
                 </form>
             </field>
         </record>
 
         <record id="action_human_resources_configuration" model="ir.actions.act_window">
             <field name="name">Configure Human Resources Application</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">human.resources.configuration</field>
+            <field name="res_model">hr.config.settings</field>
             <field name="view_id" ref="view_human_resources_configuration"/>
-            <field name="view_type">form</field>
             <field name="view_mode">form</field>
+            <field name="target">inline</field>
         </record>
 
         <menuitem id="menu_human_resources_configuration" name="Human Resources" parent="base.menu_config" sequence="8" action="action_human_resources_configuration"/>

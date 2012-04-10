@@ -22,7 +22,7 @@
 from osv import osv, fields
 
 class human_resources_configuration(osv.osv_memory):
-    _inherit = 'human.resources.configuration'
+    _inherit = 'hr.config.settings'
     _columns = {
             'module_hr_payroll_account': fields.boolean('Manage Account Payroll',
                            help ="""It installs the hr_payroll_account module."""),

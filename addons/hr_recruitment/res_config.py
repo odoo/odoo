@@ -22,8 +22,8 @@
 from osv import osv, fields
 
 class hr_applicant_settings(osv.osv_memory):
-    _name = 'human.resources.configuration'
-    _inherit = ['human.resources.configuration', 'fetchmail.config.settings']
+    _name = 'hr.config.settings'
+    _inherit = ['hr.config.settings', 'fetchmail.config.settings']
 
     _columns = {
         'fetchmail_applicants': fields.boolean('Create Applicants from an email account',

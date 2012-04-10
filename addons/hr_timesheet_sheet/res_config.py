@@ -22,8 +22,7 @@
 from osv import osv, fields
 import pooler
 class hr_timeshee_settings(osv.osv_memory):
-    _name = 'human.resources.configuration'
-    _inherit = 'human.resources.configuration'
+    _inherit = 'hr.config.settings'
 
     _columns = {
         'timesheet_range': fields.selection(
