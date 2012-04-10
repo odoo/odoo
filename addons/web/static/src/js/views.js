@@ -834,7 +834,7 @@ session.web.Sidebar = session.web.Widget.extend({
         self.getParent().sidebar_context().then(function (context) {
             var ids = self.getParent().get_selected_ids();
             if (ids.length == 0) {
-                openerp.web.dialog($("<div />").text(_t("You must choose at least one record.")), { title: _t("Warning"), modal: true });
+                session.web.dialog($("<div />").text(_t("You must choose at least one record.")), { title: _t("Warning"), modal: true });
                 return false;
             }
             var additional_context = _.extend({
