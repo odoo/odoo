@@ -75,17 +75,23 @@ openerp.web.FormView = openerp.web.View.extend({
         var $dest = this.$element.hasClass("oe_form_container") ? this.$element : this.$element.find('.oe_form_container');
         this.rendering_engine.render_to($dest);
 
-        this.$buttons = this.options.$buttons || this.$element.find('.oe_form_buttons');
         this.$sidebar = this.options.$sidebar || this.$element.find('.oe_form_sidebar');
         this.$pager = this.options.$pager || this.$element.find('.oe_form_pager');
 
-        this.$buttons.html(QWeb.render("FormView.buttons", {'widget':self}));
-        this.$buttons.on('click','.oe_form_buttons button.oe_form_button_save',this.on_button_save);
-        this.$buttons.on('click','.oe_form_buttons button.oe_form_button_cancel',this.on_button_cancel);
-        this.$buttons.on('click','.oe_form_buttons button.oe_form_button_edit',this.on_button_edit);
-        this.$buttons.on('click','.oe_form_buttons button.oe_form_button_create',this.on_button_create);
-        this.$buttons.on('click','.oe_form_buttons button.oe_form_button_duplicate',this.on_button_duplicate);
-        this.$buttons.on('click','.oe_form_buttons button.oe_form_button_delete',this.on_button_delete);
+        var buttons_html = QWeb.render("FormView.buttons", {'widget':self});
+        this.$buttons = $(_.str.isBlank(buttons_html) ? '<div>' : buttons_html);
+        if (this.options.$buttons) {
+            this.$buttons.appendTo(this.options.$buttons);
+        } else {
+            this.$element.find('.oe_form_buttons').replaceWith(this.$buttons);
+        }
+        this.$buttons
+            .on('click','button.oe_form_button_save',this.on_button_save)
+            .on('click','button.oe_form_button_cancel',this.on_button_cancel)
+            .on('click','button.oe_form_button_edit',this.on_button_edit)
+            .on('click','button.oe_form_button_create',this.on_button_create)
+            .on('click','button.oe_form_button_duplicate',this.on_button_duplicate)
+            .on('click','button.oe_form_button_delete',this.on_button_delete);
 
         this.$pager.html(QWeb.render("FormView.pager", {'widget':self}));
         this.$pager.on('click','.oe_form_pager button[data-pager-action]',function(event) {
@@ -127,7 +133,7 @@ openerp.web.FormView = openerp.web.View.extend({
             this.sidebar.$element.show();
         }
         if (this.$buttons) {
-            this.$buttons.find('.oe_form_buttons').show();
+            this.$buttons.show();
             this.$buttons.find('.oe_form_button_save').removeClass('oe_form_button_save_dirty');
         }
         if (this.$pager) {
@@ -156,7 +162,7 @@ openerp.web.FormView = openerp.web.View.extend({
             this.sidebar.$element.hide();
         }
         if (this.$buttons) {
-            this.$buttons.find('.oe_form_buttons').hide();
+            this.$buttons.hide();
         }
         if (this.$pager) {
             this.$pager.find('.oe_form_pager').hide();

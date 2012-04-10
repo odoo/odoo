@@ -433,7 +433,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             this.sidebar.$element.show();
         }
         if (this.$buttons) {
-            this.$buttons.find('.oe_list_buttons').show();
+            this.$buttons.show();
         }
         if (this.$pager) {
             this.$pager.find('.oe_list_pager').show();
@@ -444,7 +444,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             this.sidebar.$element.hide();
         }
         if (this.$buttons) {
-            this.$buttons.find('.oe_list_buttons').hide();
+            this.$buttons.hide();
         }
         if (this.$pager) {
             this.$pager.find('.oe_list_pager').hide();
