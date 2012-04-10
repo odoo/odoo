@@ -2,23 +2,25 @@
 <openerp>
 
     <data>
-      <menuitem name="Customer Portal" id="customer_portal" />
-        
-        <menuitem name="Address Book" id="customer_portal_address_book" parent="customer_portal"/>
-        
-        <menuitem name="Track Orders" id="customer_portal_track_orders" parent="customer_portal"/>
-            <menuitem name="Quotation" id="customer_portal_quotation" parent="customer_portal_track_orders"/>
-            <menuitem name="Sales Orders" id="customer_portal_sales_orders" parent="customer_portal_track_orders"/>
-            <menuitem name="Delivery Orders" id="customer_portal_delivery" parent="customer_portal_track_orders"/>
-            <menuitem name="Registration" id="customer_portal_registration" parent="customer_portal_track_orders"/>
+      <menuitem name="Customer Portal" id="customer_portal"/>
+      
+          <menuitem name="Address Book" id="customer_portal_address_book_main" parent="customer_portal"/>        
+              <menuitem name="Contacts" id="customer_portal_address_book" parent="customer_portal_address_book_main" action="base.action_partner_form"/>
+              
+          <menuitem name="Track Orders" id="customer_portal_track_orders" parent="customer_portal"/>
+          
+              <menuitem name="Quotation" id="customer_portal_quotation" parent="customer_portal_track_orders" action="sale.action_order_tree5"/>
+              <menuitem name="Sales Orders" id="customer_portal_sales_orders" parent="customer_portal_track_orders" action="sale.action_order_form"/>
+              <menuitem name="Delivery Orders" id="customer_portal_delivery" parent="customer_portal_track_orders" action="stock.action_picking_tree"/>
+              <menuitem name="Registration" id="customer_portal_registration" parent="customer_portal_track_orders"/>
         
         <menuitem name="Invoice and Payments" id="customer_portal_invoice_payements" parent="customer_portal"/>
-            <menuitem name="Invoice" id="customer_portal_invoice" parent="customer_portal_invoice_payements"/>
-            <menuitem name="Payments" id="customer_portal_payments" parent="customer_portal_invoice_payements"/>
+            <menuitem name="Invoice" id="customer_portal_invoice" parent="customer_portal_invoice_payements" action="account.action_invoice_tree1"/>
+            <menuitem name="Payments" id="customer_portal_payments" parent="customer_portal_invoice_payements" action="account_voucher.action_vendor_receipt"/>
             
         <menuitem name="Services" id="customer_portal_services" parent="customer_portal"/>
             <menuitem name="Events" id="customer_portal_events" parent="customer_portal_services"/>
-            <menuitem name="Products" id="customer_portal_products" parent="customer_portal_services"/>
+            <menuitem name="Products" id="customer_portal_products" parent="customer_portal_services" action="product.product_normal_action_sell"/>
             <menuitem name="Tasks" id="customer_portal_tasks" parent="customer_portal_services"/>
         
         <menuitem name="After Sales Services" id="customer_portal_after_sales" parent="customer_portal"/>
@@ -28,7 +30,35 @@
 
         <menuitem name="Contact Us" id="customer_portal_contact" parent="customer_portal"/>
         
-            
+        
+        <menuitem id="base.menu_partner_form" parent="base.menu_sales" action="base.action_partner_form" sequence="1" groups="base.group_sale_salesman_all_leads"/>
+        <menuitem id="base.menu_base_config" name="Configuration" parent="base.menu_base_partner" sequence="30" groups="base.group_sale_salesman_all_leads"/>
+        <menuitem action="product.product_uom_categ_form_action" id="product.menu_product_uom_categ_form_action" parent="base.menu_base_config" sequence="25" groups="base.group_sale_salesman_all_leads"/>
+        <menuitem action="sale.action_shop_form" id="sale.menu_action_shop_form" parent="base.menu_base_config" sequence="35" groups="base.group_sale_salesman_all_leads"/>
+        <menuitem action="product.product_pricelist_action2" id="product.menu_product_pricelist_action2" parent="base.menu_base_config" sequence="20" groups="base.group_sale_salesman_all_leads"/>
+        <menuitem action="product.product_uom_form_action" id="product.menu_product_uom_form_action" parent="base.menu_base_config" sequence="30" groups="base.group_sale_salesman_all_leads"/>
+        <menuitem action="stock.action_picking_tree4" id="stock.menu_action_picking_tree4" parent="stock.menu_stock_warehouse_mgmt" sequence="1" groups="base.group_sale_salesman_all_leads"/>
+        <menuitem action="stock.action_location_tree" id="stock.menu_action_location_tree" parent="stock.menu_stock_inventory_control" sequence="20" groups="stock.group_stock_user"/>
+        <menuitem name="Products by Category" id="stock.menu_product_by_category_stock_form" action="product.product_category_action" parent="stock.menu_stock_product" sequence="0" groups="stock.group_stock_user"/>
+        <menuitem action="product.product_normal_action" id="stock.menu_stock_products_menu" parent="stock.menu_stock_product" sequence="1" groups="stock.group_stock_user"/>
+        <menuitem id="account.menu_account_customer" name="Customers" parent="account.menu_finance_receivables" action="base.action_partner_customer_form" sequence="100" groups="account.group_account_user"/>
+        <menuitem action="account.action_invoice_tree2" id="account.menu_action_invoice_tree2" parent="account.menu_finance_payables" groups="account.group_account_user"/>
+        <menuitem action="account.action_invoice_tree4" id="account.menu_action_invoice_tree4" parent="account.menu_finance_payables" groups="account.group_account_user"/>
+        <menuitem id="account.menu_account_supplier" name="Suppliers" parent="account.menu_finance_payables" action="base.action_partner_supplier_form" sequence="100" groups="account.group_account_user"/>
+        <menuitem id="base.menu_sales" name="Sales" parent="base.menu_base_partner" sequence="1" groups="base.group_sale_salesman_all_leads"/>
+        <menuitem action="product.product_normal_action_sell" id="product.menu_products" parent="base.menu_product" sequence="1" groups="base.group_sale_salesman_all_leads"/>
+        <menuitem id="mail.mail_feeds" name="Feeds" parent="mail.mail_feeds_main" groups="base.group_sale_salesman_all_leads"/>
+        <menuitem action="account.action_account_invoice_report_all" id="account.menu_action_account_invoice_report_all" parent="account.menu_finance_statistic_report_statement" sequence="0" groups="account.group_account_user"/>
+        <menuitem id="account.menu_finance_statistic_report_statement" name="Statistic Reports" parent="account.menu_finance_reporting" sequence="300" groups="account.group_account_user"/>
+        <menuitem id="account.menu_finance_reporting" name="Accounting" parent="base.menu_reporting" sequence="35" groups="account.group_account_user"/>
+        <record id="mail.mail_feeds_main" model="ir.ui.menu">
+            <field name="name">Feeds</field>
+            <field name="sequence">0</field>
+            <field name="action" ref="mail.action_mail_all_feeds"/>
+            <field eval="[(4, ref('account.group_account_user'))]" name="groups_id"/>
+        </record>
+        <menuitem icon="terp-partner" id="base.menu_base_partner" name="Sales" sequence="0" groups="base.group_sale_salesman_all_leads"/>
+        <menuitem id="base.menu_base_partner" action="sale.open_board_sales" name="Sales" groups="base.group_sale_salesman_all_leads"/>      
     </data>
     
 </openerp>

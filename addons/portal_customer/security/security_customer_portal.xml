@@ -2,10 +2,8 @@
 <openerp>
     
     <data>
-    
-        <!-- 
-            Sale Portal Demo
-        -->
+
+        <!-- model access  -->
         
         <record id="portal_sale_order_access_right" model="ir.model.access">
             <field name="name">Sale Order</field>
@@ -46,7 +44,7 @@
             <field name="perm_unlink">True</field-->
         </record>
         
-        
+       <!--rules--> 
         <record id="portal_sale_order_user_rule" model="ir.rule">
             <field name="name">Personal Leads</field>
             <field ref="sale.model_sale_order" name="model_id"/>
@@ -67,12 +65,16 @@
             <field name="domain_force">[('partner_id.email','=',user.login)]</field>
             <field name="groups" eval="[(4, ref('base.group_sale_salesman'))]"/>
         </record>
+
+       <!-- I create a portal with rules and acces right--> 
         
         <record id="res_portal_demo" model="res.portal">
             <field name="name">Sales Portal</field>
-            <field name="menu_access" eval="[(4, ref('sale.menu_sale_quotations')), (4, ref('sale.menu_sale_order')), (4, ref('base.menu_product')), (4, ref('stock.menu_action_picking_tree')), (4, ref('account.menu_action_invoice_tree1')), (4, ref('account.menu_finance')), (4, ref('stock.menu_stock_root'))]"/>
-            <!--field name="implied_ids" eval="[(4, ref('base.group_sale_salesman')), (4, ref('account.group_account_invoice')), (4, ref('stock.group_stock_user'))]"/-->
+            <!-- give access to customer portal menu-->
+            <field name="menu_access" eval="[(4, ref('customer_portal'))]"/>
+            <!--give rules-->
             <field name="rule_groups" eval="[(4, ref('portal_sale_order_user_rule')), (4, ref('portal_stock_picking_user_rule')), (4, ref('portal_account_invoice_user_rule'))]"/>
+            <!-- give access rights-->
             <field name="model_access" eval="[(6,0,[ref('portal_sale_order_access_right'), ref('portal_sale_order_line_access_right'), ref('portal_stock_picking_access_right'), ref('portal_account_invoice_access_right'), ref('portal_account_invoice_line_access_right')])]"/>
         </record>
         
