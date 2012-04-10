@@ -4,9 +4,8 @@ openerp.project_issue = function(openerp) {
             self = this;
             self._super();
             if(this.view.dataset.model == 'project.project') {
-	            if(this.record.task.raw_value && this.record.issues.raw_value)$(this.$element).find('.click_button').attr('data-name','open_tasks');
-	            if(!this.record.task.raw_value && this.record.issues.raw_value)$(this.$element).find('.click_button').attr('data-name','open_issues');
-	            //if(!this.record.task.raw_value)$(this.$element).find('.click_button').attr('data-name','dummy');
+	        if(this.record.task.raw_value && this.record.issues.raw_value)$(this.$element).find('.click_button').attr('data-name','open_tasks');
+	        if(!this.record.task.raw_value && this.record.issues.raw_value)$(this.$element).find('.click_button').attr('data-name','open_issues');
             };
             	
         }

@@ -8,9 +8,9 @@
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
             	<xpath expr="//field[@name='task']" position='after'>
-		    		<field name="timesheets"/>
-		    		<field name="amt_to_invoice" invisible="True"/>
-		    		<field name="hrs_to_invoice" invisible="True"/>
+		    <field name="timesheets"/>
+		    <field name="amt_to_invoice" invisible="True"/>
+		    <field name="hrs_to_invoice" invisible="True"/>
                 </xpath>
             
                 <field name="warn_customer" position="after">
