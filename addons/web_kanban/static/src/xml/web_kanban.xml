@@ -1,12 +1,8 @@
 <template>
 <t t-name="KanbanView">
-    <div class="oe_view_topbar">
-    <t t-if="widget.options.action_buttons !== false">
-        <button type="button" class="oe_button oe_kanban_button_new">Create</button>
-    </t>
-    </div>
+    <div class="oe_kanban_buttons"/>
     <div class="oe_kanban_view">
-        <table style="width:100%;" class="oe_kanban_groups">
+        <table class="oe_kanban_groups">
         <tr class="oe_kanban_groups_headers">
         </tr>
         <tr class="oe_kanban_groups_records">
@@ -14,6 +10,11 @@
         </table>
     </div>
 </t>
+<div t-name="KanbanView.buttons" class="oe_kanban_buttons">
+    <t t-if="widget.options.action_buttons !== false">
+        <button type="button" class="oe_button oe_kanban_button_new">Create</button>
+    </t>
+</div>
 <t t-name="KanbanView.group_header">
     <td>
         <t t-if="widget.view.group_by">

@@ -37,7 +37,14 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         this.add_group_mutex = new $.Mutex();
     },
     on_loaded: function(data) {
-        this.$element.find('button.oe_kanban_button_new').click(this.do_add_record);
+        this.$buttons = $(QWeb.render("KanbanView.buttons", {'widget': this}));
+        if (this.options.$buttons) {
+            this.$buttons.appendTo(this.options.$buttons);
+        } else {
+            this.$element.find('.oe_kanban_buttons').replaceWith(this.$buttons);
+        }
+        this.$buttons
+            .on('click','button.oe_kanban_button_new', this.do_add_record);
         this.$groups = this.$element.find('.oe_kanban_groups tr');
         this.fields_view = data;
         this.fields_keys = _.keys(this.fields_view.fields);
@@ -265,7 +272,16 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
     },
 
     do_show: function() {
+        if (this.$buttons) {
+            this.$buttons.show();
+        }
         this.do_push_state({});
+        return this._super();
+    },
+    do_hide: function () {
+        if (this.$buttons) {
+            this.$buttons.hide();
+        }
         return this._super();
     },
     open_record: function(id) {
