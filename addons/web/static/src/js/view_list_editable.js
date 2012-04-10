@@ -383,6 +383,12 @@ openerp.web.list_editable = function (openerp) {
         set_fields_view: function(fields_view) {
             this.fvg = fields_view;
         },
+        set_tags_registry: function(tags_registry) {
+            this.tags_registry = tags_registry;
+        },
+        set_fields_registry: function(fields_registry) {
+            this.fields_registry = fields_registry;
+        },
         render_to: function($element) {
             var self = this;
     

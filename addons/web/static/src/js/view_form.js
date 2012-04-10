@@ -42,6 +42,7 @@ openerp.web.FormView = openerp.web.View.extend({
         this.default_focus_field = null;
         this.default_focus_button = null;
         this.fields_registry = openerp.web.form.widgets;
+        this.tags_registry = openerp.web.form.tags;
         this.has_been_loaded = $.Deferred();
         this.translatable_fields = [];
         _.defaults(this.options, {
@@ -73,6 +74,8 @@ openerp.web.FormView = openerp.web.View.extend({
         this.fields_view = data;
 
         this.rendering_engine.set_fields_view(data);
+        this.rendering_engine.set_fields_registry(this.fields_registry);
+        this.rendering_engine.set_tags_registry(this.tags_registry);
         var $dest = this.$element.hasClass("oe_form_container") ? this.$element : this.$element.find('.oe_form_container');
         this.rendering_engine.render_to($dest);
 
@@ -798,6 +801,7 @@ openerp.web.FormView = openerp.web.View.extend({
  */
 openerp.web.form.FormRenderingEngineInterface = {
     set_fields_view: function(fields_view) {},
+    set_fields_registry: function(fields_registry) {},
     render_to: function($element) {},
 };
 
@@ -816,9 +820,12 @@ openerp.web.form.FormRenderingEngine = openerp.web.Class.extend({
     set_tags_registry: function(tags_registry) {
         this.tags_registry = tags_registry;
     },
-    render_to: function($element) {
+    set_fields_registry: function(fields_registry) {
+        this.fields_registry = fields_registry;
+    },
+    render_to: function($target) {
         var self = this;
-        this.$element = $element;
+        this.$target = $target;
 
         // TODO: I know this will save the world and all the kitten for a moment,
         //       but one day, we will have to get rid of xml2json
@@ -832,7 +839,7 @@ openerp.web.form.FormRenderingEngine = openerp.web.Class.extend({
         this.labels = {};
         this.process(this.$form);
 
-        this.$form.appendTo(this.$element);
+        this.$form.appendTo(this.$target);
         // OpenERP views spec :
         //      - @width is obsolete ?
 
@@ -841,10 +848,10 @@ openerp.web.form.FormRenderingEngine = openerp.web.Class.extend({
             if (tag_name === "field") {
                 var name = $elem.attr("name");
                 var key = $elem.attr('widget') || self.fvg.fields[name].type;
-                if (!self.view.fields_registry.contains(key)) {
+                if (!self.fields_registry.contains(key)) {
                     throw new Error("Widget type '"+ key + "' is not implemented");
                 }
-                var obj = self.view.fields_registry.get_object(key);
+                var obj = self.fields_registry.get_object(key);
                 var w = new (obj)(self.view, openerp.web.xml_to_json($elem[0]));
                 if (tag_name === "field") {
                     var $label = self.labels[$elem.attr("name")];
@@ -856,10 +863,10 @@ openerp.web.form.FormRenderingEngine = openerp.web.Class.extend({
                 w.replace($elem);
             } else {
                 var key = tag_name;
-                if (!self.view.fields_registry.contains(key)) {
+                if (!self.fields_registry.contains(key)) {
                     return;
                 }
-                var obj = self.view.fields_registry.get_object(key);
+                var obj = self.fields_registry.get_object(key);
                 var w = new (obj)(self.view, openerp.web.xml_to_json($elem[0]));
                 w.replace($elem);
             }
@@ -877,14 +884,14 @@ openerp.web.form.FormRenderingEngine = openerp.web.Class.extend({
     alter_field: function(field) {
     },
     toggle_layout_debugging: function() {
-        if (!this.$element.has('.oe_layout_debug_cell:first').length) {
-            this.$element.find('.oe_form_group_cell').each(function() {
+        if (!this.$target.has('.oe_layout_debug_cell:first').length) {
+            this.$target.find('.oe_form_group_cell').each(function() {
                 var text = 'W:' + ($(this).attr('width') || '') + ' - C:' + $(this).attr('colspan'),
                     $span = $('<span class="oe_layout_debug_cell"/>').text(text);
                 $span.prependTo($(this));
             });
         }
-        this.$element.toggleClass('oe_layout_debugging');
+        this.$target.toggleClass('oe_layout_debugging');
     },
     process: function($tag, layout) {
         var self = this;
@@ -1119,12 +1126,12 @@ openerp.web.form.FormRenderingEngine = openerp.web.Class.extend({
         this.to_init.push($button);
         return $button;
     },
-    handle_common_properties: function($element, $node) {
+    handle_common_properties: function($new_element, $node) {
         var str_modifiers = $node.attr("modifiers") || "{}"
         var modifiers = JSON.parse(str_modifiers);
         if (modifiers.invisible !== undefined)
-            new openerp.web.form.InvisibilityChanger(this.view, this.view, modifiers.invisible, $element);
-        $element.addClass($node.attr("class") || "");
+            new openerp.web.form.InvisibilityChanger(this.view, this.view, modifiers.invisible, $new_element);
+        $new_element.addClass($node.attr("class") || "");
     },
 });
 
@@ -3818,6 +3825,8 @@ openerp.web.form.widgets = new openerp.web.Registry({
     'binary': 'openerp.web.form.FieldBinaryFile',
     'statusbar': 'openerp.web.form.FieldStatus'
 });
+
+openerp.web.form.tags = new openerp.web.Registry({});
 
 };
 
