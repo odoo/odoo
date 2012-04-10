@@ -69,6 +69,9 @@
     
     <t t-name="NoteDisplay">
         <p class="oe_mail_msg">
+            <t t-if="params.thread_level > 0">
+                <a href="#" class="intlink oe_mail_oe_intlink" t-attf-data-res-model='{params.res_model}' t-attf-data-res-id='{params.res_id}'><t t-raw="record.record_name"/></a>
+            </t>
             <span class="oe_mail_msg_body"><t t-raw="record.body"/></span>
             <t t-if="record.tr_body"><span class="oe_mail_msg_body_short"><t t-raw="record.tr_body"/></span></t>
             <br />
@@ -88,6 +91,10 @@
     
     <t t-name="EmailDisplay">
         <p class="oe_mail_msg oe_mail_msg_p_email_header">
+            <t t-if="params.thread_level > 0">
+                <a href="#" class="intlink oe_mail_oe_intlink" t-attf-data-res-model='{params.res_model}' t-attf-data-res-id='{params.res_id}'><t t-raw="record.record_name"/></a>
+            </t>
+            <br />
             <span class="oe_mail_oe_bold">From:</span> <t t-esc="record.email_from"/> on <span class="oe_mail_oe_fade"><t t-raw="record.date"/></span><br />
             <span class="oe_mail_oe_bold">To:</span> <t t-esc="record.email_to"/><br />
             <span class="oe_mail_oe_bold">Subject:</span> <t t-esc="record.subject"/><br />
@@ -95,6 +102,13 @@
         <p class="oe_mail_msg">
             <span class="oe_mail_msg_body"><t t-raw="record.body"/></span>
             <t t-if="record.tr_body"><span class="oe_mail_msg_body_short"><t t-raw="record.tr_body"/></span></t>
+            <br />
+            <t t-if="display['show_delete']">
+                <t t-if="thread._is_author(record.user_id[0])"><a href="#" t-attf-data-id='{record.id}' class="oe_mail_msg_delete oe_mail_oe_intlink"> Delete </a></t>
+            </t>
+            <t t-if="display['show_hide']">
+                <t t-if="!(thread._is_author(record.user_id[0]))"><span class="oe_mail_oe_space"><a href="#" t-attf-data-id='{record.id}' class="oe_mail_msg_hide oe_mail_oe_intlink">Hide</a></span></t>
+            </t>
         </p>
     </t>
 
