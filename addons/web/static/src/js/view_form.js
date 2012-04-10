@@ -540,7 +540,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             }
         });
         msg += "</ul>";
-        this.do_warn("The following fields are invalid :", msg);
+        this.do_warn(_t("The following fields are invalid :"), msg);
     },
     on_saved: function(r, success) {
         if (!r.result) {
