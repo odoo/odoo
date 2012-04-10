@@ -96,7 +96,7 @@
             <field name="model">sale.order</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <html layout="manual">
+                <form layout="manual">
                 <div class="oe_form_topbar">
                     <button name="invoice_recreate" states="invoice_except" string="Recreate Invoice" icon="gtk-go-forward"/>
                     <button name="invoice_corrected" states="invoice_except" string="Ignore Exception" icon="gtk-apply"/>
@@ -115,7 +115,7 @@
                         <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,progress,done" statusbar_colors='{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}'/>
                     </div>
                 </div>
-                <form string="Sales Order" class="oe_form_autolayout">
+                <sheet string="Sales Order" layout="auto">
                     <group col="2" class="oe_form_header">
                         <group col="2">
                             <field name="partner_id" options='{"quick_create": false}' on_change="onchange_partner_id(partner_id)" domain="[('customer','=',True)]" context="{'search_default_customer':1}" required="1"/>
@@ -279,11 +279,11 @@
                             <field colspan="4" name="picking_ids" nolabel="1"/>
                         </page>
                     </notebook>
-                </form>
+                </sheet>
                 <div class="oe_form_sheet_width">
                     <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
                 </div>
-                </html>
+                </form>
             </field>
         </record>
 
