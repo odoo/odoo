@@ -860,10 +860,6 @@ openerp.web.form.FormRenderingEngine = openerp.web.Class.extend({
                 w.replace($elem);
             }
         });
-        
-        if (openerp.connection.debug) {
-            $('<button>Outline Form Layout</button>').appendTo(this.$element).click($.proxy(this.toggle_layout_debugging, this));
-        }
     },
     render_element: function(template, layout/* dictionaries */) {
         var dicts = [].slice.call(arguments).slice(2);

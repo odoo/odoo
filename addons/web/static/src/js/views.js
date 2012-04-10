@@ -558,6 +558,9 @@ session.web.ViewManagerAction = session.web.ViewManager.extend({
                     });
                 }
                 break;
+            case 'toggle_layout_outline':
+                current_view.rendering_engine.toggle_layout_debugging();
+                break;
             case 'fields':
                 this.dataset.call_and_eval(
                         'fields_get', [false, {}], null, 1).then(function (fields) {
