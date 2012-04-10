@@ -28,11 +28,30 @@
             <field name="global" eval="True"/>
         </record>
         
-        <record id="res_portal_demo" model="res.portal">
-            <field name="name">Sales Portal</field>
+        <record id="portal_personal_payment" model="ir.rule">
+            <field name="name">Personal Payments</field>
+            <field ref="account_voucher.model_account_voucher" name="model_id"/>
+            <field name="domain_force">[('partner_id.email','=',user.login)]</field>
+            <field name="global" eval="True"/>
+        </record>
+        
+        <record id="portal_personal_contact" model="ir.rule">
+            <field name="name">Personal Contacts</field>
+            <field ref="base.model_res_partner" name="model_id"/>
+            <field name="domain_force">[('email','=',user.login)]</field>
+            <field name="global" eval="True"/>
+        </record>
+        
+        <record id="group_sales_portal" model="res.groups">
+            <field name="name">Sales Portal Group</field>
             <field ref="base.module_category_sales_management" name="category_id"/>
-            <field name="implied_ids" eval="[(4, ref('base.group_user')), (4, ref('base.group_sale_salesman'))]"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
             <field name="rule_groups" eval="[(4, ref('portal_sale_order_user_rule')), (4, ref('portal_stock_picking_user_rule')), (4, ref('portal_account_invoice_user_rule'))]"/>
+        </record>
+        
+        <record id="portal_customer" model="res.portal">
+            <field name="name">Sales Portal</field>
+            <field name="group_id" ref="group_sales_portal"/>
         </record>
         
     </data>

@@ -37,8 +37,8 @@
     "demo_xml" : [ 
     ],
     "update_xml" : [
-#        "security/ir.model.access.csv",
-        "portal_demo.xml",
+        "security/portal_security.xml",
+        "security/ir.model.access.csv",
         "portal_customer_view.xml",
     ],
     'installable': True,
