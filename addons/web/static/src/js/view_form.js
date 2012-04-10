@@ -835,42 +835,37 @@ openerp.web.form.FormRenderingEngine = openerp.web.Class.extend({
             this.$form.attr('layout', 'auto');
         }
 
-        this.to_init = [];
+        this.fields_to_init = [];
+        this.tags_to_init = [];
         this.labels = {};
         this.process(this.$form);
 
         this.$form.appendTo(this.$target);
-        // OpenERP views spec :
-        //      - @width is obsolete ?
 
-        _.each(this.to_init, function($elem) {
-            var tag_name = $elem[0].tagName.toLowerCase();
-            if (tag_name === "field") {
-                var name = $elem.attr("name");
-                var key = $elem.attr('widget') || self.fvg.fields[name].type;
-                if (!self.fields_registry.contains(key)) {
-                    throw new Error("Widget type '"+ key + "' is not implemented");
-                }
-                var obj = self.fields_registry.get_object(key);
-                var w = new (obj)(self.view, openerp.web.xml_to_json($elem[0]));
-                if (tag_name === "field") {
-                    var $label = self.labels[$elem.attr("name")];
-                    if ($label) {
-                        w.set_input_id($label.attr("for"));
-                    }
-                }
-                self.alter_field(w);
-                w.replace($elem);
-            } else {
-                var key = tag_name;
-                if (!self.fields_registry.contains(key)) {
-                    return;
-                }
-                var obj = self.fields_registry.get_object(key);
-                var w = new (obj)(self.view, openerp.web.xml_to_json($elem[0]));
-                w.replace($elem);
+        _.each(this.fields_to_init, function($elem) {
+            var name = $elem.attr("name");
+            if (!self.fvg.fields[name]) {
+                throw new Error("Field '" + name + "' specified in view could not be found.");
             }
+            var key = $elem.attr('widget') || self.fvg.fields[name].type;
+            if (!self.fields_registry.contains(key)) {
+                throw new Error("Widget type '"+ key + "' is not implemented");
+            }
+            var obj = self.fields_registry.get_object(key);
+            var w = new (obj)(self.view, openerp.web.xml_to_json($elem[0]));
+            var $label = self.labels[$elem.attr("name")];
+            if ($label) {
+                w.set_input_id($label.attr("for"));
+            }
+            self.alter_field(w);
+            w.replace($elem);
         });
+        _.each(this.tags_to_init, function($elem) {
+            var tag_name = $elem[0].tagName.toLowerCase();
+            var obj = self.tags_registry.get_object(tag_name);
+            var w = new (obj)(self.view, openerp.web.xml_to_json($elem[0]));
+            w.replace($elem);
+        })
     },
     render_element: function(template, layout/* dictionaries */) {
         var dicts = [].slice.call(arguments).slice(2);
@@ -901,10 +896,11 @@ openerp.web.form.FormRenderingEngine = openerp.web.Class.extend({
         layout = $tag.attr('layout') || layout || 'auto';
         $tag.removeAttr('layout');
         var tagname = $tag[0].nodeName.toLowerCase();
-        var fn = self['process_' + tagname];
-        if (this.tags_registry && this.tags_registry.contains(tagname)) {
-            fn = this.tags_registry.get_object(tagname);
+        if (this.tags_registry.contains(tagname)) {
+            this.tags_to_init.push($tag);
+            return $tag;
         }
+        var fn = self['process_' + tagname];
         if (fn) {
             var args = [].slice.call(arguments);
             args[0] = $tag;
@@ -968,12 +964,7 @@ openerp.web.form.FormRenderingEngine = openerp.web.Class.extend({
         var $label = this.preprocess_field($field);
         if ($label)
             this.process($label, layout);
-
-        if (!this.fvg.fields[$field.attr("name")]) {
-            throw new Error("Field '" + name + "' specified in view could not be found.");
-        }
-
-        this.to_init.push($field);
+        this.fields_to_init.push($field);
         return $field;
     },
     process_group: function($group, layout) {
@@ -1121,10 +1112,6 @@ openerp.web.form.FormRenderingEngine = openerp.web.Class.extend({
             this.labels[name] = $new_label;
         }
         return $new_label;
-    },
-    process_button: function($button, layout) {
-        this.to_init.push($button);
-        return $button;
     },
     handle_common_properties: function($new_element, $node) {
         var str_modifiers = $node.attr("modifiers") || "{}"
@@ -3802,7 +3789,6 @@ openerp.web.form.FieldStatus = openerp.web.form.AbstractField.extend({
  * Registry of form widgets, called by :js:`openerp.web.FormView`
  */
 openerp.web.form.widgets = new openerp.web.Registry({
-    'button' : 'openerp.web.form.WidgetButton',
     'char' : 'openerp.web.form.FieldChar',
     'id' : 'openerp.web.form.FieldID',
     'email' : 'openerp.web.form.FieldEmail',
@@ -3826,7 +3812,9 @@ openerp.web.form.widgets = new openerp.web.Registry({
     'statusbar': 'openerp.web.form.FieldStatus'
 });
 
-openerp.web.form.tags = new openerp.web.Registry({});
+openerp.web.form.tags = new openerp.web.Registry({
+    'button' : 'openerp.web.form.WidgetButton',
+});
 
 };
 
