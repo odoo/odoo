@@ -68,10 +68,9 @@ $colour4: #8a89ba
 
 .openerp.openerp-web-client-container
     height: 100%
+    position: relative
 
 .openerp
-    // Group {{{
-    // }}}
     // Global style {{{
     padding: 0
     margin: 0
@@ -79,12 +78,11 @@ $colour4: #8a89ba
     color: #4c4c4c
     font-size: 13px
     background: white
-    position: relative
-    height: 100%
-
     a
         text-decoration: none
     // }}}
+
+.openerp
     // Tag reset {{{
     table
         padding: 0
@@ -1455,6 +1453,23 @@ $colour4: #8a89ba
     // Translation {{{
     .oe_trad_field.touched
         border: 1px solid green !important
+    // }}}
+    // Tooltips {{{
+    &.oe_tooltip
+        font-size: 12px
+        .oe_tooltip_string
+            color: #FD5
+            font-weight: bold
+            font-size: 13px
+        .oe_tooltip_help
+            white-space: pre-wrap
+        .oe_tooltip_technical
+            padding: 0 0 4px 0
+            margin: 5px 0 0 15px
+            li
+                list-style: circle
+        .oe_tooltip_technical_title
+            font-weight: bold
     // }}}
 
     // Debugging stuff {{{
