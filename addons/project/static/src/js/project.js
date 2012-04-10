@@ -38,22 +38,38 @@ openerp.project = function(openerp) {
                   });
                 $('#list').replaceWith(my_list);
                 
+                console.log(this.$element.find('.steelblue'))
                 
-                $('.steelblue').click(function(){
+                this.$element.find('.bgcolor_steelblue').click(function(){
+                    console.log(this)
                     $(this).closest('.oe_project_kanban_vignette').addClass(self.kanban_color(1));
+                    self.view.dataset.write(parseInt(this.id), {color:1},self.do_reload());
                 });
-                $('.firebrick').click(function(){
+                
+                this.$element.find('.bgcolor_firebrick').click(function(){
+                    console.log(this)
                     $(this).closest('.oe_project_kanban_vignette').addClass(self.kanban_color(2));
+                    self.view.dataset.write(parseInt(this.id), {color:2},self.do_reload());
                 });
-                $('.khaki').click(function(){
+                
+                this.$element.find('.bgcolor_khaki').click(function(){
+                    console.log(this)
                     $(this).closest('.oe_project_kanban_vignette').addClass(self.kanban_color(3));
+                    self.view.dataset.write(parseInt(this.id), {color:3},self.do_reload());
                 });
-                $('.thistle').click(function(){
+                
+                this.$element.find('.bgcolor_thistle').click(function(){
+                    console.log(this)
                     $(this).closest('.oe_project_kanban_vignette').addClass(self.kanban_color(4));
+                    self.view.dataset.write(parseInt(this.id), {color:4},self.do_reload());
                 });
-                $('.orange').click(function(){
+                
+                this.$element.find('.bgcolor_orange').click(function(){
+                    console.log(this)
                     $(this).closest('.oe_project_kanban_vignette').addClass(self.kanban_color(5));
+                    self.view.dataset.write(parseInt(this.id), {color:5},self.do_reload());
                 });
+                
             };
             self._super();
         }
