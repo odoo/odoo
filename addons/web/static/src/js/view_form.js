@@ -473,6 +473,7 @@ openerp.web.FormView = openerp.web.View.extend({
     },
     on_button_new: function() {
         var self = this;
+        this.set({mode: "edit"});
         var def = $.Deferred();
         $.when(this.has_been_loaded).then(function() {
             if (self.can_be_discarded()) {
@@ -495,7 +496,6 @@ openerp.web.FormView = openerp.web.View.extend({
     },
     on_button_create: function() {
         this.dataset.index = null;
-        this.set({mode: "edit"});
         this.do_show();
     },
     on_button_duplicate: function() {
