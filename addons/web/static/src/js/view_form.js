@@ -3409,7 +3409,9 @@ openerp.web.form.FormOpenPopup = openerp.web.OldWidget.extend(/** @lends openerp
     setup_form_view: function() {
         var self = this;
         var FormClass = openerp.web.views.get_object('form');
-        this.view_form = new FormClass(this, this.dataset, false, self.options.form_view_options);
+        var options = _.clone(self.options.form_view_options);
+        options.initial_mode = this.options.readonly ? "view" : "edit";
+        this.view_form = new FormClass(this, this.dataset, false, options);
         if (this.options.alternative_form_view) {
             this.view_form.set_embedded_view(this.options.alternative_form_view);
         }
