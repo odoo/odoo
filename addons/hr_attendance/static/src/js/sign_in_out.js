@@ -52,16 +52,18 @@ openerp.hr_attendance = function(openerp) {
                 action = action[0];
                 action.context = JSON.parse(action.context);
                 var action_manager = new openerp.web.ActionManager(self);
-                action_manager.do_action(action, self.on_close);
+                action_manager.do_action(action, function() {
+                    self.on_close($(evt.currentTarget).attr('class'));
+                });
             });
         },
         
-        on_close: function() {
-            if(this.sign_in) {
+        on_close: function(target) {
+            if(target === 'sign_in') {
                 this.sign_in.destroy();
                 this.sign_out = new openerp.hr_attendance.SignOut(this);
                 this.sign_out.appendTo(this.$element);
-            } else if(this.sign_out) {
+            } else if(target === 'sign_out') {
                 this.sign_out.destroy();
                 this.sign_in = new openerp.hr_attendance.SignIn(this);
                 this.sign_in.appendTo(this.$element);
