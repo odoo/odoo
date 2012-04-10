@@ -944,7 +944,8 @@ openerp.web.form.FormRenderingEngine = openerp.web.Class.extend({
         var found = false;
         this.$form.find('label[for="' + name + '"]').each(function(i ,el) {
             $(el).parents().each(function(unused, tag) {
-                if (tag.tagName.toLowerCase() in self.tags_registry.map)
+                var name = tag.tagName.toLowerCase();
+                if (name === "field" || name in self.tags_registry.map)
                     found = true;
             });
         });
