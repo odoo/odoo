@@ -231,10 +231,22 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         });
 
         // Add and delete
-        this.$buttons = this.options.$buttons || this.$element.find('.oe_list_buttons');
-        this.$buttons.html(QWeb.render("ListView.buttons", {'widget':self}));
-        this.$buttons.find('.oe_list_add') .click(this.proxy('do_add_record')) .attr('disabled', grouped && this.options.editable);
-        this.$buttons.find('.oe_list_delete') .attr('disabled', true) .click(this.proxy('do_delete_selected'));
+        if (!this.$buttons) {
+            this.$buttons = $(QWeb.render("ListView.buttons", {'widget':self}));
+            if (this.options.$buttons) {
+                this.$buttons.appendTo(this.options.$buttons);
+            } else {
+                this.$element.find('.oe_list_buttons').replaceWith(
+                    this.options.$buttons);
+            }
+            this.$buttons.find('.oe_list_add')
+                    .click(this.proxy('do_add_record'))
+                    .prop('disabled', grouped && this.options.editable)
+                .end()
+                .find('.oe_list_delete')
+                    .click(this.proxy('do_delete_selected'))
+                    .prop('disabled', true);
+        }
 
         // Pager
         this.$pager = this.options.$pager || this.$element.find('.oe_list_pager');
