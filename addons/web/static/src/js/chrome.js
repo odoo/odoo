@@ -812,6 +812,7 @@ openerp.web.UserMenu =  openerp.web.Widget.extend({
         dataset.call ('action_get','',function (result){
             self.rpc('/web/action/load', {action_id:result}, function(result){
                 action_manager.do_action(_.extend(result['result'], {
+                    target: 'inline',
                     res_id: self.session.uid,
                     res_model: 'res.users',
                     flags: {
