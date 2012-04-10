@@ -282,7 +282,16 @@ session.web.ViewManager =  session.web.Widget.extend({
         if (!view.controller) {
             // Lazy loading of views
             var controllerclass = this.registry.get_object(view_type);
-            var controller = new controllerclass(this, this.dataset, view.view_id, view.options);
+            var options = _.clone(view.options);
+            if (view_type === "form") {
+                switch (this.action.target) {
+                    case 'new':
+                    case 'inline':
+                        options.initial_mode = 'edit';
+                        break;
+                }
+            }
+            var controller = new controllerclass(this, this.dataset, view.view_id, options);
             if (view.embedded_view) {
                 controller.set_embedded_view(view.embedded_view);
             }

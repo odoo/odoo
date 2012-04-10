@@ -113,17 +113,8 @@ openerp.web.FormView = openerp.web.View.extend({
                 }
             }]);
         }
-        var initial_mode = this.options.initial_mode;
-        if (this.getParent() && this.getParent().action) {
-            switch (this.getParent().action.target) {
-                case 'new':
-                case 'inline':
-                    initial_mode = 'edit';
-                    break;
-            }
-        }
         this.on("change:mode", this, this.switch_mode);
-        this.set({mode: initial_mode});
+        this.set({mode: this.options.initial_mode});
         this.has_been_loaded.resolve();
         return $.when();
     },
