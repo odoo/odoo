@@ -600,19 +600,19 @@
         </tr>
     </tfoot>
 </table>
-<t t-name="ListView.buttons">
-    <div t-if="!widget.no_leaf and widget.options.action_buttons !== false" class="oe_list_buttons">
+<div t-name="ListView.buttons" class="oe_list_buttons">
+    <t t-if="!widget.no_leaf and widget.options.action_buttons !== false">
         <button type="button" class="oe_button oe_list_add" t-if="widget.options.addable">
             <t t-esc="widget.options.addable"/>
         </button>
         <button type="button" class="oe_button oe_list_delete" t-if="widget.options.selectable and widget.options.deletable">
             Delete
         </button>
-    </div>
-</t>
+    </t>
+</div>
 <t t-name="ListView.pager">
-    <div t-if="!widget.no_leaf and widget.options.pager !== false" class="oe_list_pager" t-att-colspan="widget.columns_count">
-        <t t-call="ViewPager">
+    <div class="oe_list_pager" t-att-colspan="widget.columns_count">
+        <t t-if="!widget.no_leaf and widget.options.pager !== false" t-call="ViewPager">
             <span class="oe-pager-state">
             </span>
         </t>
@@ -681,8 +681,8 @@
         <div class="oe_form_container"/>
     </div>
 </t>
-<t t-name="FormView.buttons">
-    <div class="oe_form_buttons" t-if="widget.options.action_buttons !== false">
+<div t-name="FormView.buttons" class="oe_form_buttons">
+    <t t-if="widget.options.action_buttons !== false">
         <span class="oe_form_buttons_view">
             <button type="button" class="oe_button oe_form_button_edit">Edit</button>
             <button type="button" class="oe_button oe_form_button_create">Create</button>
@@ -693,11 +693,11 @@
             <button type="button" class="oe_button oe_form_button_save">Save</button>
             <button type="button" class="oe_button oe_form_button_cancel">Cancel</button>
         </span>
-    </div>
-</t>
+    </t>
+</div>
 <t t-name="FormView.pager">
-    <div class="oe_form_pager" t-if="widget.options.pager !== false">
-        <t t-call="ViewPager">
+    <div class="oe_form_pager">
+        <t t-if="widget.options.pager !== false" t-call="ViewPager">
             <span class="oe_pager_index">0</span><span class="oe_pager_separator"> / </span><span class="oe_pager_count">0</span>
         </t>
     </div>

@@ -81,8 +81,7 @@ openerp.web.FormView = openerp.web.View.extend({
 
         this.$sidebar = this.options.$sidebar || this.$element.find('.oe_form_sidebar');
 
-        var buttons_html = QWeb.render("FormView.buttons", {'widget':self});
-        this.$buttons = $(_.str.isBlank(buttons_html) ? '<div>' : buttons_html);
+        this.$buttons = $(QWeb.render("FormView.buttons", {'widget':self}));
         if (this.options.$buttons) {
             this.$buttons.appendTo(this.options.$buttons);
         } else {
@@ -96,8 +95,7 @@ openerp.web.FormView = openerp.web.View.extend({
             .on('click','button.oe_form_button_duplicate',this.on_button_duplicate)
             .on('click','button.oe_form_button_delete',this.on_button_delete);
 
-        var pager_html = QWeb.render("FormView.pager", {'widget':self});
-        this.$pager = $(_.str.isBlank(pager_html) ? '<div>' : pager_html);
+        this.$pager = $(QWeb.render("FormView.pager", {'widget':self}));
         if (this.options.$pager) {
             this.$pager.appendTo(this.options.$pager);
         } else {
