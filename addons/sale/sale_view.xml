@@ -116,19 +116,18 @@
                     </div>
                 </div>
                 <sheet string="Sales Order" layout="auto">
-                    <group col="2" class="oe_form_header">
-                        <group col="2">
-                            <field name="partner_id" options='{"quick_create": false}' on_change="onchange_partner_id(partner_id)" domain="[('customer','=',True)]" context="{'search_default_customer':1}" required="1"/>
-                            <field name="partner_shipping_id" domain="[('partner_id','=',partner_id)]" groups="base.group_extended" options='{"quick_create": false}'/>
-                        </group>
-                        <group col="2">
+                    <group col="6" colspan="4" class="oe_form_header">
+                        <group col="4" colspan="4">
                             <field name="name"/>
                             <field name="date_order"/>
-                            <field name="payment_term" widget="selection"/>
-                            <field name="pricelist_id" domain="[('type','=','sale')]" groups="base.group_extended" on_change="onchange_pricelist_id(pricelist_id,order_line)"/>
+                            <field name="shop_id" on_change="onchange_shop_id(shop_id)" widget="selection" groups="base.group_extended"/>
+                            <field name="client_order_ref"/>
+                        </group>
+                        <group col="2" colspan="2">
+                            <field name="invoiced"/>
+                            <field name="shipped"/>
                         </group>
                     </group>
-
                     <notebook colspan="5">
                         <page string="Sales Order">
                             <field name="partner_id" on_change="onchange_partner_id(partner_id)" domain="[('customer','=',True)]" context="{'search_default_customer':1}" required="1"/>
@@ -221,29 +220,6 @@
                             <field colspan="4" name="note" nolabel="1"/>
                         </page>
                         <page string="Other Information">
-                            <group col="4">
-                                <!--
-                                <field domain="[('partner_id','=',partner_id)]" name="partner_order_id" on_change="onchange_partner_order_id(partner_order_id, partner_invoice_id, partner_shipping_id)" options='{"quick_create": false}'/>
-                                -->
-                                <field domain="[('partner_id','=',partner_id)]" name="partner_invoice_id" groups="base.group_extended" options='{"quick_create": false}'/>
-                                <field name="project_id" context="{'partner_id':partner_id, 'contact_id':partner_order_id, 'pricelist_id':pricelist_id, 'default_name':name}" groups="analytic.group_analytic_accounting" domain="[('parent_id','!=',False)]"/>
-                                <newline/>
-                                <newline/>
-                                <group col="13" colspan="10">
-                                    <button name="button_dummy" states="draft" string="Compute" type="object" icon="gtk-execute"/>
-                                    <button name="%(action_view_sale_advance_payment_inv)d" string="Advance Invoice" type="action" icon="gtk-execute" states="draft,manual" groups="base.group_extended"/>
-                                </group>
-                            </group>
-                            <group col="6" colspan="4">
-                                <group col="4" colspan="4">
-                                    <field name="shop_id" on_change="onchange_shop_id(shop_id)" widget="selection" groups="base.group_extended"/>
-                                    <field name="client_order_ref"/>
-                                </group>
-                                <group col="2" colspan="2">
-                                    <field name="invoiced"/>
-                                    <field name="shipped"/>
-                                </group>
-                            </group>
                             <group colspan="2" col="2" groups="base.group_extended" name="logistics">
                                 <separator string="Logistic" colspan="2"/>
                                 <field name="incoterm" widget="selection"/>
@@ -258,19 +234,12 @@
                             </group>
                             <group name="sale_pay" colspan="2" col="2" groups="base.group_extended" >
                                 <separator string="Conditions" colspan="2"/>
+                                <field name="payment_term" widget="selection"/>
                                 <field name="fiscal_position" widget="selection"/>
                                 <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                             </group>
-
-                            <group colspan="2" col="2" groups="base.group_no_one">
-                                <separator string="Dates" colspan="2"/>
-                                <field name="create_date"/>
-                                <field name="date_confirm"/>
-                            </group>
-
                             <separator colspan="4" string="Notes" groups="base.group_sale_notes_subtotal"/>
                             <field colspan="4" name="note" nolabel="1" groups="base.group_sale_notes_subtotal"/>
-
                         </page>
                         <page string="History" groups="base.group_extended">
                             <separator colspan="4" string="Invoices"/>
