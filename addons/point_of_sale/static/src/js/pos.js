@@ -380,6 +380,7 @@ openerp.point_of_sale = function(db) {
                 existing.incrementQuantity();
             } else {
                 var line = new Orderline(product.toJSON());
+                console.log(line);
                 this.get('orderLines').add(line);
                 line.bind('killme', function() {
                     this.get('orderLines').remove(line);
@@ -903,6 +904,7 @@ openerp.point_of_sale = function(db) {
             $('.delete-payment-line', this.$element).click(this.on_delete);
         },
     });
+
     var PaymentWidget = db.web.OldWidget.extend({
         init: function(parent, options) {
             this._super(parent);
@@ -1082,22 +1084,31 @@ openerp.point_of_sale = function(db) {
         }
     });
 
-   // A Widget that displays an onscreen keyboard.
-   // There are two options when creating the widget :
-   // 
-   // * 'keyboard_model' : 'simple' | 'full' (default) 
-   //   The 'full' emulates a PC keyboard, while 'simple' emulates an 'android' one.
-   //
-   // * 'input_selector  : (default: '.searchbox input') 
-   //   defines the dom element that the keyboard will write to.
-   // 
-   // The widget is initally hidden. It can be shown with this.show(), and is 
-   // automatically shown when the input_selector gets focused.
+    var ToolbarWidget = db.web.Widget.extend({
+        tagName: 'div',
+        init: function(parent, options){
+            this._super(parent,options);
+        },
+    });
+
+    // A Widget that displays an onscreen keyboard.
+    // There are two options when creating the widget :
+    // 
+    // * 'keyboard_model' : 'simple' | 'full' (default) 
+    //   The 'full' emulates a PC keyboard, while 'simple' emulates an 'android' one.
+    //
+    // * 'input_selector  : (default: '.searchbox input') 
+    //   defines the dom element that the keyboard will write to.
+    // 
+    // The widget is initally hidden. It can be shown with this.show(), and is 
+    // automatically shown when the input_selector gets focused.
     var OnscreenKeyboardWidget = db.web.Widget.extend({
         tagName: 'div',
         
         init: function(parent, options){
             var self = this;
+
+            this._super(parent,options);
             
             function get_option(opt,default_value){ 
                 if(options){
@@ -1376,6 +1387,66 @@ openerp.point_of_sale = function(db) {
             this.onscreenKeyboard.appendTo($(".point-of-sale #content"));
         };
 
+        //returns true if the code is a valid EAN codebar number by checking the control digit.
+        App.checkEan = function(code){
+            var st1 = code.slice();
+            var st2 = st1.slice(0,st1.length-1).reverse();
+            // some EAN13 barcodes have a length of 12, as they start by 0
+            while (st2.length < 12) {
+                st2.push(0);
+            }
+            var countSt3 = 1;
+            var st3 = 0;
+            $.each(st2, function() {
+                if (countSt3%2 === 1) {
+                    st3 +=  this;
+                }
+                countSt3 ++;
+            });
+            st3 *= 3;
+            var st4 = 0;
+            var countSt4 = 1;
+            $.each(st2, function() {
+                if (countSt4%2 === 0) {
+                    st4 += this;
+                }
+                countSt4 ++;
+            });
+            var st5 = st3 + st4;
+            var cd = (10 - (st5%10)) % 10;
+            return code[code.length-1] === cd;
+        };
+
+        // returns a product that has a packaging with an EAN matching to provided ean string. 
+        // returns undefined if no such product is found.
+        App.getProductByEAN = function(ean, allPackages, allProducts) {
+            var prefix = ean.substring(0,2);
+            var scannedProductModel = undefined;
+            if (prefix in {'02':'', '22':'', '24':'', '26':'', '28':''}) {
+                // PRICE barcode
+                var itemCode = ean.substring(0,7);
+                var scannedPackaging = _.detect(allPackages, function(pack) { return pack.ean !== undefined && pack.ean.substring(0,7) === itemCode;});
+                if (scannedPackaging !== undefined) {
+                    scannedProductModel = _.detect(allProducts, function(pc) { return pc.id === scannedPackaging.product_id[0];});
+                    scannedProductModel.list_price = Number(ean.substring(7,12))/100;
+                }
+            } else if (prefix in {'21':'','23':'','27':'','29':'','25':''}) {
+                // WEIGHT barcode
+                var weight = Number(barcode.substring(7,12))/1000;
+                var itemCode = ean.substring(0,7);
+                var scannedPackaging = _.detect(allPackages, function(pack) { return pack.ean !== undefined && pack.ean.substring(0,7) === itemCode;});
+                if (scannedPackaging !== undefined) {
+                    scannedProductModel = _.detect(allProducts, function(pc) { return pc.id === scannedPackaging.product_id[0];});
+                    scannedProductModel.list_price *= weight;
+                    scannedProductModel.name += ' - ' + weight + ' Kg.';
+                }
+            } else {
+                // UNIT barcode
+                scannedProductModel = _.detect(allProducts, function(pc) { return pc.ean13 === ean;});   //TODO DOES NOT SCALE
+            }
+            return scannedProductModel;
+        };
+
         App.prototype.category = function(id) {
             var c, products, self = this;
 
@@ -1394,68 +1465,8 @@ openerp.point_of_sale = function(db) {
                 return _ref = p.pos_categ_id[0], _.indexOf(c.subtree, _ref) >= 0;
             });
             (this.shop.get('products')).reset(products);
-            
-            //returns true if the code is a valid EAN codebar number by checking the control digit.
-            var checkEan = function(code) {
-                var st1 = code.slice();
-                var st2 = st1.slice(0,st1.length-1).reverse();
-                // some EAN13 barcodes have a length of 12, as they start by 0
-                while (st2.length < 12) {
-                    st2.push(0);
-                }
-                var countSt3 = 1;
-                var st3 = 0;
-                $.each(st2, function() {
-                    if (countSt3%2 === 1) {
-                        st3 +=  this;
-                    }
-                    countSt3 ++;
-                });
-                st3 *= 3;
-                var st4 = 0;
-                var countSt4 = 1;
-                $.each(st2, function() {
-                    if (countSt4%2 === 0) {
-                        st4 += this;
-                    }
-                    countSt4 ++;
-                });
-                var st5 = st3 + st4;
-                var cd = (10 - (st5%10)) % 10;
-                return code[code.length-1] === cd;
-            }
 
             var codeNumbers = [];
-
-            // returns a product that has a packaging with an EAN matching to provided ean string. 
-            // returns undefined if no such product is found.
-            var getProductByEAN = function(ean) {
-                var prefix = ean.substring(0,2);
-                var scannedProductModel = undefined;
-                if (prefix in {'02':'', '22':'', '24':'', '26':'', '28':''}) {
-                    // PRICE barcode
-                    var itemCode = ean.substring(0,7);
-                    var scannedPackaging = _.detect(allPackages, function(pack) { return pack.ean !== undefined && pack.ean.substring(0,7) === itemCode;});
-                    if (scannedPackaging !== undefined) {
-                        scannedProductModel = _.detect(allProducts, function(pc) { return pc.id === scannedPackaging.product_id[0];});
-                        scannedProductModel.list_price = Number(ean.substring(7,12))/100;
-                    }
-                } else if (prefix in {'21':'','23':'','27':'','29':'','25':''}) {
-                    // WEIGHT barcode
-                    var weight = Number(barcode.substring(7,12))/1000;
-                    var itemCode = ean.substring(0,7);
-                    var scannedPackaging = _.detect(allPackages, function(pack) { return pack.ean !== undefined && pack.ean.substring(0,7) === itemCode;});
-                    if (scannedPackaging !== undefined) {
-                        scannedProductModel = _.detect(allProducts, function(pc) { return pc.id === scannedPackaging.product_id[0];});
-                        scannedProductModel.list_price *= weight;
-                        scannedProductModel.name += ' - ' + weight + ' Kg.';
-                    }
-                } else {
-                    // UNIT barcode
-                    scannedProductModel = _.detect(allProducts, function(pc) { return pc.ean13 === ean;});   //TODO DOES NOT SCALE
-                }
-                return scannedProductModel;
-            }
 
             // The barcode readers acts as a keyboard, we catch all keyup events and try to find a 
             // barcode sequence in the typed keys, then act accordingly.
