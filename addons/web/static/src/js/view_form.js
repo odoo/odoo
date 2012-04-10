@@ -45,7 +45,8 @@ openerp.web.FormView = openerp.web.View.extend({
         this.has_been_loaded = $.Deferred();
         this.translatable_fields = [];
         _.defaults(this.options, {
-            "not_interactible_on_create": false
+            "not_interactible_on_create": false,
+            "initial_mode": "view",
         });
         this.is_initialized = $.Deferred();
         this.mutating_mutex = new $.Mutex();
@@ -112,8 +113,8 @@ openerp.web.FormView = openerp.web.View.extend({
                 }
             }]);
         }
-        var initial_mode = 'view';
-        if (this.getParent().action) {
+        var initial_mode = this.options.initial_mode;
+        if (this.getParent() && this.getParent().action) {
             switch (this.getParent().action.target) {
                 case 'new':
                 case 'inline':
@@ -121,7 +122,8 @@ openerp.web.FormView = openerp.web.View.extend({
                     break;
             }
         }
-        this.do_switch_mode(initial_mode);
+        this.on("change:mode", this, this.switch_mode);
+        this.set({mode: initial_mode});
         this.has_been_loaded.resolve();
         return $.when();
     },
@@ -449,7 +451,8 @@ openerp.web.FormView = openerp.web.View.extend({
             return $.Deferred().reject();
         }
     },
-    do_switch_mode: function(mode) {
+    switch_mode: function() {
+        var mode = this.get("mode");
         var self = this;
         if(mode=="view") {
             self.$buttons.find('.oe_form_buttons_edit').hide();
@@ -469,12 +472,12 @@ openerp.web.FormView = openerp.web.View.extend({
     on_button_save: function() {
         var self = this;
         return this.do_save().then(function(result) {
-            self.do_switch_mode("view");
+            self.set({mode: "view"});
         });
     },
     on_button_cancel: function() {
         if (this.can_be_discarded()) {
-            this.do_switch_mode("view");
+            this.set({mode: "view"});
         }
     },
     on_button_new: function() {
@@ -497,11 +500,11 @@ openerp.web.FormView = openerp.web.View.extend({
         return def.promise();
     },
     on_button_edit: function() {
-        return this.do_switch_mode("edit");
+        return this.set({mode: "edit"});
     },
     on_button_create: function() {
         this.dataset.index = null;
-        this.do_switch_mode("edit");
+        this.set({mode: "edit"});
         this.do_show();
     },
     on_button_duplicate: function() {
@@ -511,7 +514,7 @@ openerp.web.FormView = openerp.web.View.extend({
             self.dataset.call('copy', [self.datarecord.id, {}, self.dataset.context]).then(function(new_id) {
                 return self.on_created({ result : new_id });
             }).then(function() {
-                return self.do_switch_mode(1);
+                return self.set({mode: "edit"});
             }).then(function() {
                 def.resolve();
             });
