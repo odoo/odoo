@@ -638,7 +638,7 @@ openerp.mail = function(session) {
         load_search_view: function (view_id, defaults, hidden) {
             var self = this;
             this.searchview = new session.web.SearchView(this, this.ds_msg, view_id || false, defaults || {}, hidden || false);
-            var search_view_loaded = this.searchview.appendTo(this.$element.find('div.oe_mail_wall_search'));
+            var search_view_loaded = this.searchview.appendTo(this.$element.find('.oe_view_manager_row'));
             return $.when(search_view_loaded).then(function () {
                 self.searchview.on_search.add(self.do_searchview_search);
             });

@@ -4,22 +4,32 @@
 
 div.oe_mail_wall {
     overflow: auto;
-    padding: 5px;
+    padding: 0;
+    background: white;
 }
 
-div.oe_mail_wall_search {
-    width: 55%;
+/*div.oe_mail_wall_search {*/
+    /*width: 550px;*/
+/*}*/
+
+.oe_mail_wall_button_comment {
+    float: right;
 }
 
 /* 2 columns view */
 div.oe_mail_wall_left {
     float: left;
-    width: 65%;
+    width: 560px;
+    margin: 8px;
 }
 
 div.oe_mail_wall_right {
     float: right;
     width: 34%;
+}
+
+.oe_mail_wall_threads {
+    margin-top: 8px;
 }
 
 .oe_mail_wall_thread div.oe_mail_thread_act .oe_mail_action_textarea, div.oe_mail_thread_subthread .oe_mail_action_textarea {
@@ -47,16 +57,15 @@ div.oe_mail_wall_more {
 
 .oe_mail_recthread {
     overflow: auto;
-    padding: 5px 5px 5px 5px;
 }
 
 /* Left-side CSS */
 .oe_mail_recthread_actions {
-    margin-bottom: 10px;
+    margin-bottom: 8px;
 }
 
 .oe_mail_recthread_followers {
-    margin-bottom: 10px;
+    margin-bottom: 8px;
 }
 
 .oe_mail_followers_action, .oe_mail_followers_display {
@@ -70,21 +79,16 @@ div.oe_mail_wall_more {
 
 .oe_mail_recthread_right {
     float: right;
-    width: 25%;
-    margin-right: 5%;
+    width: 240px;
 }
 
 .oe_mail_button_follow, .oe_mail_button_unfollow {
-    width: 120px;
+    /*width: 120px;*/
 }
 
 .oe_mail_button_followers {
-    display: inline;
-    width: 120px;
-}
-
-.oe_mail_followers h4 {
-    margin: 0 0 8px;
+    display: inline-block;
+    width: 240px;
 }
 
 /* ------------------------------ */
@@ -99,7 +103,7 @@ div.oe_mail_thread_act {
 
 div.oe_mail_thread_display {
     white-space: normal;
-    margin-bottom: 5px;
+    /*margin-bottom: 5px;*/
 }
 
 div.oe_mail_thread_subthread {
@@ -116,8 +120,7 @@ li.oe_mail_thread_msg {
     padding: 1px;
 }
 
-.notification, .email {
-    background: #E0E0E0;
+.notification, .comment {
     padding: 4px;
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
@@ -126,8 +129,16 @@ li.oe_mail_thread_msg {
     border-radius: 4px;
 }
 
-.comment {
-    padding: 4px;
+.oe_mail_thread_msg > .comment {
+    background: #eee;
+}
+
+.oe_mail_thread_subthread .comment {
+    background: white;
+}
+
+.notification {
+    background: #eee;
 }
 
 .notification:after, .email:after, .comment:after {
@@ -215,6 +226,14 @@ input.oe_mail, textarea.oe_mail {
     border-radius: 3px;
 }
 
+.oe_mail_wall .oe_mail_wall_act textarea {
+    width: 550px;
+}
+
+textarea.oe_mail {
+    height: 60px;
+}
+
 input.oe_mail:focus, textarea.oe_mail:focus {
     outline: 0;
     border-color: rgba(82, 168, 236, 0.8);
@@ -244,6 +263,10 @@ p.oe_mail_msg {
 
 .oe_mail_oe_bold {
     font-weight: bold;
+}
+
+.oe_mail_msg_reply, .oe_mail_msg_delete {
+    margin-right: 4px;
 }
 
 a.oe_mail_oe_intlink {
