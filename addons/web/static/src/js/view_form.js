@@ -95,7 +95,7 @@ openerp.web.FormView = openerp.web.View.extend({
             .on('click','button.oe_form_button_delete',this.on_button_delete);
 
         this.$pager.html(QWeb.render("FormView.pager", {'widget':self}));
-        this.$pager.on('click','.oe_form_pager button[data-pager-action]',function(event) {
+        this.$pager.on('click','.oe_form_pager a[data-pager-action]',function(event) {
             var action = $(this).data('pager-action');
             self.on_pager_action(action);
         });

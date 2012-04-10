@@ -477,21 +477,27 @@
     </div>
 </t>
 <t t-name="ViewPager">
-    <button class="oe_button oe_button_pager" type="button" data-pager-action="first">
-        <img t-att-src='_s + "/web/static/src/img/pager_first.png"'/>
-    </button>
-    <button class="oe_button oe_button_pager" type="button" data-pager-action="previous">
-        <img t-att-src='_s + "/web/static/src/img/pager_previous.png"'/>
-    </button>
-
-    <t t-raw="__content__"/>
-
-    <button class="oe_button oe_button_pager" type="button" data-pager-action="next">
-        <img t-att-src='_s + "/web/static/src/img/pager_next.png"'/>
-    </button>
-    <button class="oe_button oe_button_pager" type="button" data-pager-action="last">
-        <img t-att-src='_s + "/web/static/src/img/pager_last.png"'/>
-    </button>
+    <span class="oe_pager_value">
+        <t t-raw="__content__"/>
+    </span>
+    <ul class="oe_pager_group">
+        <!--
+        <button class="oe_button oe_button_pager" type="button" data-pager-action="first">
+            <img t-att-src='_s + "/web/static/src/img/pager_first.png"'/>
+        </button>
+        -->
+        <li>
+            <a class="oe_i" type="button" data-pager-action="previous">(</a>
+        </li>
+        <li>
+            <a class="oe_i" type="button" data-pager-action="next">)</a>
+        </li>
+        <!--
+        <button class="oe_button oe_button_pager" type="button" data-pager-action="last">
+            <img t-att-src='_s + "/web/static/src/img/pager_last.png"'/>
+        </button>
+        -->
+    </ul>
 </t>
 
 <t t-name="Sidebar">
