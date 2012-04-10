@@ -191,13 +191,13 @@ $colour4: #8a89ba
 
     button.following
         color: white
-        width: 90px
+        width: 120px
         @include vertical-gradient($colour4, darken($colour4, 3%))
 
     button.unfollow
         display: none
         color: white
-        width: 90px
+        width: 120px
         @include vertical-gradient(#dc5f59, #b33630)
 
     // }}}
@@ -728,6 +728,13 @@ $colour4: #8a89ba
         .oe_view_manager_pager
             float: right
     // }}}
+
+    // ViewManager.body {{{
+    .oe_view_manager_body
+        h4
+            margin: 8px 0
+    // }}}
+
     // ViewManager.pager {{{
     .oe_pager_value
         float: left
@@ -1017,6 +1024,8 @@ $colour4: #8a89ba
         line-height: 30px
     // }}}
     // FormView.body {{{
+    .oe_formview
+        background: white
     .oe_form_header
         padding: 8px
     .oe_form_invalid
