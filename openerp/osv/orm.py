@@ -1651,7 +1651,7 @@ class BaseModel(object):
                     children = False
                     views = {}
                     for f in node:
-                        if f.tag in ('form', 'tree', 'graph'):
+                        if f.tag in ('form', 'tree', 'graph', 'kanban'):
                             node.remove(f)
                             ctx = context.copy()
                             ctx['base_model_name'] = self._name
