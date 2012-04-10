@@ -26,10 +26,13 @@ class hr_applicant_settings(osv.osv_memory):
     _inherit = ['hr.config.settings', 'fetchmail.config.settings']
 
     _columns = {
-        'fetchmail_applicants': fields.boolean('Create Applicants from an email account',
-                        fetchmail_model='hr.applicant', fetchmail_name='Incoming Application',                                            
-                        help ="""It allow to create applicant from an email account."""),
-                
+        'module_document_ftp': fields.boolean('Index & Track Documents',
+            help="""Manage your CV's and motivation letter related to all applicants.
+                This installs the module document_ftp."""),
+        'fetchmail_applicants': fields.boolean('Create Applicants from an Email Account',
+            fetchmail_model='hr.applicant', fetchmail_name='Incoming HR Applications',                                            
+            help ="""Allow applicants to send their job application to an email address (jobs@mycompany.com),
+                and create automatically application documents in the system."""),
         'applicants_server': fields.char('Server', size=256),
         'applicants_port': fields.integer('Port'),
         'applicants_type': fields.selection([
@@ -41,7 +44,6 @@ class hr_applicant_settings(osv.osv_memory):
             help="Connections are encrypted with SSL/TLS through a dedicated port (default: IMAPS=993, POP=995)"),
         'applicants_user': fields.char('Username', size=256),
         'applicants_password': fields.char('Password', size=1024),                
-
     }
 
     _defaults = {

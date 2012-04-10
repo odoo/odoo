@@ -20,30 +20,29 @@
 ##############################################################################
 
 from osv import osv, fields
-import pooler
-class hr_timeshee_settings(osv.osv_memory):
+
+class hr_timesheet_settings(osv.osv_memory):
     _inherit = 'hr.config.settings'
 
     _columns = {
-        'timesheet_range': fields.selection(
-            [('day','Day'),('week','Week'),('month','Month')], 'Timesheet range',
-            help="Periodicity on which you validate your timesheets."),
-        'timesheet_max_difference': fields.float('Timesheet allowed difference(Hours)',
-            help="Allowed difference in hours between the sign in/out and the timesheet " \
-                 "computation for one sheet. Set this to 0 if you do not want any control."),
+        'timesheet_range': fields.selection([('day','Day'),('week','Week'),('month','Month')],
+            'Timesheet Range', help="Periodicity on which you validate your timesheets."),
+        'timesheet_max_difference': fields.float('Timesheet Allowed Difference (Hours)',
+            help="""Allowed difference in hours between the sign in/out and the timesheet
+                computation for one sheet. Set this to 0 if you do not want any control."""),
     }
-  
-    def default_get(self, cr, uid, fields, context=None):
-        res = super(hr_timeshee_settings, self).default_get(cr, uid, fields, context)
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        res['timesheet_range']=user.company_id.timesheet_range 
-        res['timesheet_max_difference']=user.company_id.timesheet_max_difference
-        return res
 
-    def set_timesheet_defaults(self, cr, uid, ids, context=None):
-        wizard = self.browse(cr, uid, ids)[0]
-        tm_range = wizard.timesheet_range
-        tm_diff = wizard.timesheet_max_difference
+    def get_default_timesheet(self, cr, uid, fields, context=None):
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        return {
+            'timesheet_range': user.company_id.timesheet_range,
+            'timesheet_max_difference': user.company_id.timesheet_max_difference,
+        }
+
+    def set_default_timesheet(self, cr, uid, ids, context=None):
+        config = self.browse(cr, uid, ids[0], context)
         user = self.pool.get('res.users').browse(cr, uid, uid, context)
-        user.company_id.write({'timesheet_range': tm_range,'timesheet_max_difference': tm_diff})  
-        return {}  
+        user.company_id.write({
+            'timesheet_range': config.timesheet_range,
+            'timesheet_max_difference': config.timesheet_max_difference,
+        })

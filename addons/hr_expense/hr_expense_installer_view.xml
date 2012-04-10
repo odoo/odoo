@@ -34,7 +34,6 @@
        </record>
 	   
         <!-- Hr Configuration wizard -->
-
         <record id="view_expenseconfig_wizard_inherit" model="ir.ui.view">
             <field name="name">hr settings for expenses</field>
             <field name="model">hr.config.settings</field>
@@ -42,13 +41,11 @@
             <field name="inherit_id" ref="hr.view_human_resources_configuration"/>
             <field name="arch" type="xml">
                 <field name="module_hr_expense" position="after">
-                	<group colspan="2" col="2">
-	            	    <label string="Create Expenses Products :" />
-	            	    <button name="%(product_normal_form_view_installer)d" string="Expenses Products" type="action" icon="terp-accessories-archiver"/>
-                   	</group>
+                    <button name="%(product_normal_form_view_installer)d" string="Create Expenses Products"
+                        type="action" icon="terp-accessories-archiver"/>
                 </field>
             </field>
-        </record>	   
-		
+        </record>
+
     </data>
 </openerp>

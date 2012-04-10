@@ -1,33 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-
         <record id="view_hr_apll_config_settings" model="ir.ui.view">
             <field name="name">hr settings for recruitment</field>
             <field name="model">hr.config.settings</field>
             <field name="type">form</field>
             <field name="inherit_id" ref="hr.view_human_resources_configuration"/>
             <field name="arch" type="xml">
-            <xpath expr="//field[@name='module_hr_recruitment']" position="after">
-            	<group colspan="2" col="2">
-                    <label string="Create Recruitment Stages :" />
-                    <button name="%(hr_recruitment_stage_form_installer)d" string="Recruitment Stages" type="action" icon="terp-stage"/>
-                </group>
-            </xpath>
-            <xpath expr="//field[@name='module_hr_contract']" position="after"> 
-            	<group name="Recruitment" colspan="4" col="4" >		   
-                <separator  string="Recruitment" colspan="4"/>
-                    <field name="fetchmail_applicants" />
-                    <group  attrs="{'invisible': [('fetchmail_applicants','=',False)]}">
-                    <field name="applicants_server"/>
-                    <field name="applicants_type" on_change="onchange_fetchmail('applicants', applicants_type, applicants_is_ssl)"/>
-                    <field name="applicants_port"/>						
-                    <field name="applicants_is_ssl" on_change="onchange_fetchmail('applicants', applicants_type, applicants_is_ssl)"/>
-                    <field name="applicants_user"/>
-                    <field name="applicants_password" password="True"/>						                  	
+                <field name="module_hr_recruitment" position="after">
+                    <button name="%(hr_recruitment_stage_form_installer)d" string="Create Recruitment Stages"
+                        type="action" icon="terp-stage"/>
+                </field>
+                <group name="config_recruitment" position="after">
+                    <separator  string="Recruitment" colspan="4"/>
+                    <field name="module_document_ftp"/>
+                    <newline/>
+                    <field name="fetchmail_applicants"/>
+                    <group colspan="2" attrs="{'invisible': [('fetchmail_applicants','=',False)]}">
+                        <field name="applicants_server"/>
+                        <field name="applicants_type" on_change="onchange_fetchmail('applicants', applicants_type, applicants_is_ssl)"/>
+                        <field name="applicants_port"/>						
+                        <field name="applicants_is_ssl" on_change="onchange_fetchmail('applicants', applicants_type, applicants_is_ssl)"/>
+                        <field name="applicants_user"/>
+                        <field name="applicants_password" password="True"/>						                  	
                     </group>	
                 </group>
-			</xpath>						
             </field>
         </record>
     </data>

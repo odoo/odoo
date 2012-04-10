@@ -20,27 +20,24 @@
 ##############################################################################
 
 from osv import fields, osv
-from lxml import etree
 
-class human_resources_configuration(osv.osv_memory):
+class hr_config_settings(osv.osv_memory):
     _name = 'hr.config.settings'
     _inherit = 'res.config.settings'
 
     _columns = {
-        'module_hr_timesheet_sheet': fields.boolean('Manage Timesheet and Attendances',
-                           help ="""It installs the hr_timesheet_sheet module."""),
+        'module_hr_timesheet_sheet': fields.boolean('Manage Timesheets and Attendances',
+            help ="""This installs the module hr_timesheet_sheet."""),
         'module_hr_holidays': fields.boolean('Manage Holidays',
-                           help ="""It installs the hr_holidays module."""),
+            help ="""This installs the module hr_holidays."""),
         'module_hr_expense': fields.boolean('Manage Employees Expenses',
-                           help ="""It installs the hr_expense module."""),
+            help ="""This installs the module hr_expense."""),
         'module_hr_recruitment': fields.boolean('Manage Recruitment Process',
-                           help ="""It installs the hr_payroll module."""),
+            help ="""This installs the module hr_recruitment."""),
         'module_hr_contract': fields.boolean('Manage Employees Contracts',
-                           help ="""It installs the hr_contract module."""),
+            help ="""This installs the module hr_contract."""),
         'module_hr_evaluation': fields.boolean('Manage Appraisals Process',
-                           help ="""It installs the hr_evaluation module."""),
-                }
-
-human_resources_configuration()
+            help ="""This installs the module hr_evaluation."""),
+    }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

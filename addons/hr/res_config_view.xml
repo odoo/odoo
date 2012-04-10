@@ -5,7 +5,7 @@
             <field name="name">Payroll</field>
             <field name="res_model">ir.module.module</field>
             <field name="view_mode">kanban,tree,form</field>
-            <field name="domain">[('shortdesc','ilike','Payroll'),('state','=','uninstalled'),('name','!=','hr_payroll_account')]</field>
+            <field name="domain">[('state','=','uninstalled'), ('name','ilike','payroll'), ('name','!=','hr_payroll_account')]</field>
         </record>
 
         <record id="view_human_resources_configuration" model="ir.ui.view">
@@ -15,23 +15,38 @@
             <field name="arch" type="xml">
                 <form string ="HR Application">
                     <separator string="Human Resources" colspan="4"/>
-                    <group colspan="4" col="4">
-                    	<label string="Create Your Departments :" />
-                        <button name="%(view_department_form_installer)d" string="Departments" type="action" icon="terp-personal+"/>
-                        <label string="Create Your Employees :" />
-                        <button name="%(open_view_employee_list_my)d" string="Employees" type="action" icon="terp-personal"/>
-                        <field name="module_hr_timesheet_sheet"/>
-                        <field name="module_hr_holidays"/>
-                        <label string="Configure Your Salary Rules :"/>
-                        <button string="Salary Rules" icon="gtk-go-forward" name="%(open_payroll1_modules)d" type="action" />
-                    </group>
+                    <label string="Departments :"/>
+                    <label colspan="1"/>
+                    <button name="%(view_department_form_installer)d" string="Create Your Departments"
+                        type="action" icon="terp-personal+"/>
+                    <newline/>
+                    <label string="Employees :" />
+                    <label colspan="1"/>
+                    <button name="%(open_view_employee_list_my)d" string="Create Your Employees"
+                        type="action" icon="terp-personal"/>
+                    <newline/>
+                    <field name="module_hr_timesheet_sheet"/>
+                    <newline/>
+                    <field name="module_hr_holidays"/>
+                    <newline/>
+                    <label string="Salary Rules :"/>
+                    <label colspan="1"/>
+                    <button string="Configure Your Salary Rules" icon="gtk-go-forward"
+                        name="%(open_payroll1_modules)d" type="action" />
+
                     <separator string="Additional Features" colspan="4"/>
-                    <group name="additional features" colspan="4" col="4">
-                        <field name="module_hr_expense"/>
-                        <field name="module_hr_recruitment"/>
-                        <field name="module_hr_evaluation"/>
-                        <field name="module_hr_contract"/>
-                    </group>
+                    <field name="module_hr_expense"/>
+                    <newline/>
+                    <field name="module_hr_recruitment"/>
+                    <newline/>
+                    <field name="module_hr_evaluation"/>
+                    <newline/>
+                    <field name="module_hr_contract"/>
+
+                    <group name="config_timesheets" colspan="4"/>
+                    <group name="config_payroll" colspan="4"/>
+                    <group name="config_recruitment" colspan="4"/>
+
                     <label colspan="2"/>
                     <button string="Cancel" icon="gtk-cancel" special="cancel"/>
                     <button string="Apply" icon="gtk-apply" type="object" name="execute"/>

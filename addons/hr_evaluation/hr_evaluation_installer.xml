@@ -16,7 +16,6 @@
         </record>
 		
         <!-- Hr Configuration wizard -->
-
         <record id="view_evaluation_config_wizard_inherit" model="ir.ui.view">
             <field name="name">hr settings for evaluations</field>
             <field name="model">hr.config.settings</field>
@@ -24,13 +23,11 @@
             <field name="inherit_id" ref="hr.view_human_resources_configuration"/>
             <field name="arch" type="xml">
                 <field name="module_hr_evaluation" position="after">
-                   	<group colspan="2" col="2">
-                	    <label string="Create Appraisal Plans  : " />
-                	    <button name="%(action_evaluation_plans_installer)d" string="Appraisal Plans" type="action" icon="terp-stock_align_left_24"/>
-                   	</group>
+                    <button name="%(action_evaluation_plans_installer)d" string="Create Appraisal Plans"
+                        type="action" icon="terp-stock_align_left_24"/>
                 </field>
             </field>
         </record>
-				
+
     </data>
 </openerp>

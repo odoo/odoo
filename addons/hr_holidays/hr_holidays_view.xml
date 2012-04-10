@@ -491,7 +491,6 @@
        </record>
 
         <!-- Hr Configuration wizard -->
-
         <record id="view_config_wizard_inherit" model="ir.ui.view">
             <field name="name">hr settings for holidays</field>
             <field name="model">hr.config.settings</field>
@@ -499,12 +498,10 @@
             <field name="inherit_id" ref="hr.view_human_resources_configuration"/>
             <field name="arch" type="xml">
                 <field name="module_hr_holidays" position="after">
-                	<label string="Allocate Leaves :" />
                 	<button name="%(hr_holidays.hr_holidays_leaves_assign_legal)d" string="Allocate Leaves" type="action" icon="gtk-apply"/>
                 </field>
             </field>
         </record>
-
 
         <!-- Hr employee inherit Legal Leaves -->
 
