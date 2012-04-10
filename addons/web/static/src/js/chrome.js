@@ -512,15 +512,15 @@ openerp.web.Login =  openerp.web.Widget.extend({
      */
     do_login: function (db, login, password) {
         var self = this;
-        this.$element.removeClass('login_invalid');
+        this.$element.removeClass('oe_login_invalid');
         this.session.on_session_invalid.add({
             callback: function () {
-                self.$element.addClass("login_invalid");
+                self.$element.addClass("oe_login_invalid");
             },
             unique: true
         });
         this.session.session_authenticate(db, login, password).then(function() {
-            self.$element.removeClass("login_invalid");
+            self.$element.removeClass("oe_login_invalid");
             if (self.has_local_storage) {
                 if(self.remember_credentials) {
                     localStorage.setItem('last_db_login_success', db);
