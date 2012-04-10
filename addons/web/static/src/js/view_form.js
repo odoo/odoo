@@ -634,7 +634,7 @@ openerp.web.FormView = openerp.web.View.extend({
             }
             this.do_update_pager();
             if (this.sidebar) {
-                this.sidebar.attachments.do_update();
+                // this.sidebar.attachments.do_update();
             }
             //openerp.log("The record has been created with id #" + this.datarecord.id);
             this.reload();
