@@ -38,7 +38,7 @@
             <field name="model">board.board</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Account Board">
+                <form string="Account Board" layout="manual">
                     <board style="2-1">
                         <column>
                             <action name="%(account.action_invoice_tree1)d" creatable="true" string="Draft Customer Invoices" domain="[('state','in',('draft','proforma2')), ('type','=','out_invoice')]"/>
