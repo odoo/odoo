@@ -485,9 +485,11 @@ openerp.mail = function(session) {
             // bind buttons
             this.$element.find('button.oe_mail_button_followers').click(function () { self.do_toggle_followers(); }).hide();
             this.$element.find('button.oe_mail_button_follow').click(function () { self.do_follow(); })
-                .mouseover(function () { $(this).html('Follow'); }).mouseleave(function () { $(this).html('Not following'); });
+                .mouseover(function () { $(this).html('Follow').addClass('following'); })
+                .mouseleave(function () { $(this).html('Not following').removeClass('following'); });
             this.$element.find('button.oe_mail_button_unfollow').click(function () { self.do_unfollow(); })
-                .mouseover(function () { $(this).html('Unfollow'); }).mouseleave(function () { $(this).html('Following'); });
+                .mouseover(function () { $(this).html('Unfollow').removeClass('following').addClass('unfollow'); })
+                .mouseleave(function () { $(this).html('Following').removeClass('unfollow').addClass('following'); });
             this.reinit();
         },
 
