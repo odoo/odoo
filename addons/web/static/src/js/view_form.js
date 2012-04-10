@@ -1028,7 +1028,7 @@ openerp.web.form.FormRenderingEngine = openerp.web.Class.extend({
         $group.before($new_group).remove();
 
         // Now compute width of cells
-        $table.find('tbody > tr').each(function() {
+        $table.find('> tbody > tr').each(function() {
             var to_compute = [],
                 row_cols = cols,
                 total = 100;
