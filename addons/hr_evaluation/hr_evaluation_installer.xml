@@ -18,8 +18,10 @@
             <field name="inherit_id" ref="hr.view_human_resources_configuration"/>
             <field name="arch" type="xml">
                 <field name="module_hr_evaluation" position="after">
-                    <button name="%(action_evaluation_plans_installer)d" string="Review Appraisal Plans"
-                        type="action" icon="terp-stock_align_left_24"/>
+                    <group colspan="2">
+                        <button name="%(action_evaluation_plans_installer)d" string="Review Appraisal Plans"
+                            type="action" icon="terp-stock_align_left_24"/>
+                    </group>
                 </field>
             </field>
         </record>
