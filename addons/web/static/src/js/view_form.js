@@ -77,7 +77,6 @@ openerp.web.FormView = openerp.web.View.extend({
         this.rendering_engine.render_to($dest);
 
         this.$sidebar = this.options.$sidebar || this.$element.find('.oe_form_sidebar');
-        this.$pager = this.options.$pager || this.$element.find('.oe_form_pager');
 
         var buttons_html = QWeb.render("FormView.buttons", {'widget':self});
         this.$buttons = $(_.str.isBlank(buttons_html) ? '<div>' : buttons_html);
@@ -94,8 +93,14 @@ openerp.web.FormView = openerp.web.View.extend({
             .on('click','button.oe_form_button_duplicate',this.on_button_duplicate)
             .on('click','button.oe_form_button_delete',this.on_button_delete);
 
-        this.$pager.html(QWeb.render("FormView.pager", {'widget':self}));
-        this.$pager.on('click','.oe_form_pager a[data-pager-action]',function(event) {
+        var pager_html = QWeb.render("FormView.pager", {'widget':self});
+        this.$pager = $(_.str.isBlank(pager_html) ? '<div>' : pager_html);
+        if (this.options.$pager) {
+            this.$buttons.appendTo(this.options.$pager);
+        } else {
+            this.$element.find('.oe_form_pager').replaceWith(this.$buttons);
+        }
+        this.$pager.on('click','a[data-pager-action]',function() {
             var action = $(this).data('pager-action');
             self.on_pager_action(action);
         });
@@ -139,7 +144,7 @@ openerp.web.FormView = openerp.web.View.extend({
             this.$buttons.find('.oe_form_button_save').removeClass('oe_form_button_save_dirty');
         }
         if (this.$pager) {
-            this.$pager.find('.oe_form_pager').show();
+            this.$pager.show();
         }
         this.$element.show().css('visibility', 'hidden');
         this.$element.removeClass('oe_form_dirty');
@@ -167,7 +172,7 @@ openerp.web.FormView = openerp.web.View.extend({
             this.$buttons.hide();
         }
         if (this.$pager) {
-            this.$pager.find('.oe_form_pager').hide();
+            this.$pager.hide();
         }
         this._super();
     },
@@ -248,11 +253,10 @@ openerp.web.FormView = openerp.web.View.extend({
         }
     },
     do_update_pager: function(hide_index) {
-        var $pager = this.$pager.find('div.oe_form_pager');
         var index = hide_index ? '-' : this.dataset.index + 1;
-        $pager.find('button').prop('disabled', this.dataset.ids.length < 2);
-        $pager.find('span.oe_pager_index').html(index);
-        $pager.find('span.oe_pager_count').html(this.dataset.ids.length);
+        this.$pager.find('button').prop('disabled', this.dataset.ids.length < 2).end()
+                   .find('span.oe_pager_index').html(index).end()
+                   .find('span.oe_pager_count').html(this.dataset.ids.length);
     },
     parse_on_change: function (on_change, widget) {
         var self = this;

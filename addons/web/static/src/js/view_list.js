@@ -236,8 +236,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             if (this.options.$buttons) {
                 this.$buttons.appendTo(this.options.$buttons);
             } else {
-                this.$element.find('.oe_list_buttons').replaceWith(
-                    this.options.$buttons);
+                this.$element.find('.oe_list_buttons').replaceWith(this.$buttons);
             }
             this.$buttons.find('.oe_list_add')
                     .click(this.proxy('do_add_record'))
@@ -249,45 +248,57 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         }
 
         // Pager
-        this.$pager = this.options.$pager || this.$element.find('.oe_list_pager');
-        this.$pager.html(QWeb.render("FormView.pager", {'widget':self}));
-        this.$pager.find('.oe_list_pager')
-            .delegate('button', 'click', function () {
-                var $this = $(this);
-                switch ($this.data('pager-action')) {
-                    case 'first':
-                        self.page = 0; break;
-                    case 'last':
-                        self.page = Math.floor(
-                            self.dataset.size() / self.limit());
-                        break;
-                    case 'next':
-                        self.page += 1; break;
-                    case 'previous':
-                        self.page -= 1; break;
-                }
-                self.reload_content();
-            }).find('.oe-pager-state')
-                .click(function (e) {
-                    e.stopPropagation();
-                    var $this = $(this);
+        if (!this.$pager) {
+            this.$pager = $(QWeb.render("ListView.pager", {'widget':self}));
+            if (this.options.$buttons) {
+                this.$pager.appendTo(this.options.$pager);
+            } else {
+                this.$element.find('.oe_list_pager').replaceWith(this.$pager);
+            }
 
-                    var $select = $('<select>')
-                        .appendTo($this.empty())
-                        .click(function (e) {e.stopPropagation();})
-                        .append('<option value="80">80</option>' +
-                                '<option value="100">100</option>' +
-                                '<option value="200">200</option>' +
-                                '<option value="500">500</option>' +
-                                '<option value="NaN">' + _t("Unlimited") + '</option>')
-                        .change(function () {
-                            var val = parseInt($select.val(), 10);
-                            self._limit = (isNaN(val) ? null : val);
-                            self.page = 0;
-                            self.reload_content();
-                        })
-                        .val(self._limit || 'NaN');
-                });
+            this.$pager
+                .on('click', 'a[data-pager-action]', function () {
+                    var $this = $(this);
+                    var max_page = Math.floor(self.dataset.size() / self.limit());
+                    switch ($this.data('pager-action')) {
+                        case 'first':
+                            self.page = 0; break;
+                        case 'last':
+                            self.page = max_page - 1;
+                            break;
+                        case 'next':
+                            self.page += 1; break;
+                        case 'previous':
+                            self.page -= 1; break;
+                    }
+                    if (self.page < 0) {
+                        self.page = max_page;
+                    } else if (self.page > max_page) {
+                        self.page = 0;
+                    }
+                    self.reload_content();
+                }).find('.oe-pager-state')
+                    .click(function (e) {
+                        e.stopPropagation();
+                        var $this = $(this);
+
+                        var $select = $('<select>')
+                            .appendTo($this.empty())
+                            .click(function (e) {e.stopPropagation();})
+                            .append('<option value="80">80</option>' +
+                                    '<option value="100">100</option>' +
+                                    '<option value="200">200</option>' +
+                                    '<option value="500">500</option>' +
+                                    '<option value="NaN">' + _t("Unlimited") + '</option>')
+                            .change(function () {
+                                var val = parseInt($select.val(), 10);
+                                self._limit = (isNaN(val) ? null : val);
+                                self.page = 0;
+                                self.reload_content();
+                            })
+                            .val(self._limit || 'NaN');
+                    });
+        }
 
         // Sidebar
         if (!this.sidebar && this.options.sidebar && this.options.$sidebar) {
@@ -311,12 +322,10 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         }
 
         var page = this.page + 1,
-           total = Math.floor(dataset.size() / this.limit());
-        if (total === 0) { total = 1; }
+           total = Math.floor(dataset.size() / this.limit()) + 1;
 
-        this.$pager
-            .find('.oe_pager_index').text(page).end()
-            .find('.oe_pager_count').text(total).end();
+        this.$pager.find('.oe-pager-state').text(isNaN(total)
+                ? '-' : _.str.sprintf('%d / %d', page, total));
     },
     /**
      * Sets up the listview's columns: merges view and fields data, move
@@ -421,7 +430,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             this.$buttons.show();
         }
         if (this.$pager) {
-            this.$pager.find('.oe_list_pager').show();
+            this.$pager.show();
         }
     },
     do_hide: function () {
@@ -432,7 +441,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             this.$buttons.hide();
         }
         if (this.$pager) {
-            this.$pager.find('.oe_list_pager').hide();
+            this.$pager.hide();
         }
         this._super();
     },
