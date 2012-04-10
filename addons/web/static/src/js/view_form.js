@@ -3495,21 +3495,20 @@ openerp.web.form.FieldReference = openerp.web.form.AbstractField.extend(_.extend
         }
         if (this.m2o) {
             this.m2o.destroy();
-            this.m2o.undefined;
+            this.m2o = undefined;
         }
     },
     initialize_content: function() {
-        if (!this.get("effective_readonly")) {
-            this.selection = new openerp.web.form.FieldSelection(this, { attrs: {
-                name: 'selection',
-                widget: 'selection'
-            }});
-            this.selection.on_value_changed.add_last(this.on_selection_changed);
-            
-            this.selection.$element = $(".oe_form_view_reference_selection", this.$element);
-            this.selection.renderElement();
-            this.selection.start();
-        }
+        this.selection = new openerp.web.form.FieldSelection(this, { attrs: {
+            name: 'selection',
+            widget: 'selection'
+        }});
+        this.selection.set({readonly: this.get('effective_readonly')});
+        this.selection.on_value_changed.add_last(this.on_selection_changed);
+        this.selection.$element = $(".oe_form_view_reference_selection", this.$element);
+        this.selection.renderElement();
+        this.selection.start();
+
         this.m2o = new openerp.web.form.FieldMany2One(this, { attrs: {
             name: 'm2o',
             widget: 'many2one'
