@@ -647,8 +647,8 @@ openerp.web.FormView = openerp.web.View.extend({
     reload: function() {
         var self = this;
         return this.reload_mutex.exec(function() {
-            if (this.dataset.index == null) {
-                this.do_prev_view();
+            if (self.dataset.index == null) {
+                self.do_prev_view();
                 return $.Deferred().reject().promise();
             }
             if (self.dataset.index == null || self.dataset.index < 0) {
