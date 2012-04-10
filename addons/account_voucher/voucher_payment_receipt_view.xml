@@ -356,7 +356,7 @@
                             </group>
                             <group col="2" colspan="1">
                                 <group col="4" colspan="1" attrs="{'invisible':[('currency_id','=',False),('is_multi_currency','=',False)]}">
-                                    <separator string="Currency Options" colspan="4"/>
+                                    <separator string="Currency Options" colspan="4" groups='base.group_extended'/>
                                     <field name="is_multi_currency" invisible="1"/>
                                     <field name="payment_rate" required="1" on_change="onchange_rate(payment_rate, amount, currency_id, payment_rate_currency_id, company_id, context)" groups='base.group_extended' colspan="3"/>
                                     <field name="payment_rate_currency_id" groups='base.group_extended' colspan="1" nolabel="1" on_change="onchange_payment_rate_currency(currency_id, payment_rate, payment_rate_currency_id, date, amount, company_id, context)"/>
