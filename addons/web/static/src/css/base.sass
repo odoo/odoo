@@ -671,34 +671,21 @@ $colour4: #8a89ba
                 text-shadow: 0 1px 2px rgba(0,0,0,0.4)
     // }}}
     // ViewManager.header {{{
-    .oe_view_manager_header
+    .oe_view_manager_header2
+        width: 100%
         border-top: 1px solid #cacaca
         border-bottom: 1px solid #cacaca
         @include vertical-gradient(#fcfcfc, #dedede)
         @include box-shadow((0 1px 0 rgba(255,255,255,0.4), 0 0 9px rgba(0,0,0,0.1)))
-        .oe_view_manager_row
-            height: 26px
+        h2
+            float: left
+            font-size: 18px
+            margin: 1px 0
+            a
+                color: $colour4
+        td
+            padding: 4px 8px
             line-height: 26px
-            margin: 8px
-            clear: both
-            text-shadow: 0 1px 1px white
-            text-align: center
-            h2
-                float: left
-                font-size: 18px
-                margin: 1px 0
-                a
-                    color: $colour4
-            .dropdown-toggle:after
-                margin-top: 7px
-                margin-left: 6px
-                border-top-color: #404040
-        .oe_filter
-            vertical-align: top
-            li
-                height: 24px
-                line-height: 24px
-                padding: 0 8px
         .oe_button_group
             display: inline-block
             border: 1px solid #ababab
@@ -718,23 +705,12 @@ $colour4: #8a89ba
                 a
                     color: #fff
                     text-shadow: 0 1px 2px rgba(0,0,0,0.4)
-        .oe_view_manager_buttons
-            padding-right: 8px
-            float: left
-            margin-right: 12px
-        .oe_view_manager_sidebar
-            margin: 0 auto
-            width: 33%
-        .oe_view_manager_pager
-            float: right
     // }}}
-
     // ViewManager.body {{{
     .oe_view_manager_body
         h4
             margin: 8px 0
     // }}}
-
     // ViewManager.pager {{{
     .oe_pager_value
         float: left
@@ -1372,8 +1348,19 @@ $colour4: #8a89ba
     // }}}
     // FormView.viewmanager {{{
     .oe_form
-        .oe_view_manager_row:first-child
-            display: none
+        .oe_view_manager_header2
+            td
+                padding: 0px 8px
+                line-height: 16px
+                .oe_i
+                    font-size: 13px
+                .oe_pager_group
+                    height: auto
+                    line-height: 16px
+                    li
+                        height: auto
+                        line-height: 16px
+
     // }}}
     // ListView {{{
     .oe-listview-content
