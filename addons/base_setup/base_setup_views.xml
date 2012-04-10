@@ -132,12 +132,12 @@
         <field name="model">sale.config.settings</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form layout="manual">
+            <form string="Configure Sales" layout="manual">
                 <div class="oe_form_topbar">
-                    <button string="Cancel" icon="gtk-cancel" special="cancel"/>
-                    <button string="Apply" icon="gtk-apply" type="object" name="execute"/>
+                    <button string="Apply" type="object" name="execute"/>
+                    <button string="Cancel" special="cancel"/>
                 </div>
-                <sheet string="Configure Sales" layout="auto">
+                <sheet layout="auto">
                     <group>
                         <group name="config_sale" colspan="4"/>
 
