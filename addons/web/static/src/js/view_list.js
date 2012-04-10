@@ -310,28 +310,13 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             this.dataset._length = dataset._length;
         }
 
-        var limit = this.limit(),
-            total = dataset.size(),
-            first = (this.page * limit),
-            last;
-        if (!limit || (total - first) < limit) {
-            last = total;
-        } else {
-            last = first + limit;
-        }
-        this.$element.find('span.oe-pager-state').empty().text(_.str.sprintf(
-            _t("[%(first_record)d to %(last_record)d] of %(records_count)d"), {
-                first_record: first + 1,
-                last_record: last,
-                records_count: total
-            }));
+        var page = this.page + 1,
+           total = Math.floor(dataset.size() / this.limit());
+        if (total === 0) { total = 1; }
 
-        this.$element
-            .find('button[data-pager-action=first], button[data-pager-action=previous]')
-                .attr('disabled', this.page === 0)
-            .end()
-            .find('button[data-pager-action=last], button[data-pager-action=next]')
-                .attr('disabled', last === total);
+        this.$pager
+            .find('.oe_pager_index').text(page).end()
+            .find('.oe_pager_count').text(total).end();
     },
     /**
      * Sets up the listview's columns: merges view and fields data, move
