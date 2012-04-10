@@ -112,7 +112,16 @@ openerp.web.FormView = openerp.web.View.extend({
                 }
             }]);
         }
-        this.do_switch_mode("view");
+        var initial_mode = 'view';
+        if (this.getParent().action) {
+            switch (this.getParent().action.target) {
+                case 'new':
+                case 'inline':
+                    initial_mode = 'edit';
+                    break;
+            }
+        }
+        this.do_switch_mode(initial_mode);
         this.has_been_loaded.resolve();
         return $.when();
     },
