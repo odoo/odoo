@@ -45,7 +45,7 @@ openerp.web.Notification =  openerp.web.Widget.extend({
 
 openerp.web.dialog = function(element) {
     var result = element.dialog.apply(element, _.rest(_.toArray(arguments)));
-    result.dialog("widget").addClass("openerp openerp2");
+    result.dialog("widget").addClass("openerp");
     return result;
 }
 
@@ -881,7 +881,7 @@ openerp.web.WebClient = openerp.web.Widget.extend({
     },
     start: function() {
         var self = this;
-        this.$element.addClass("openerp openerp2 openerp-web-client-container");
+        this.$element.addClass("openerp openerp-web-client-container");
         if (jQuery.param != undefined && jQuery.deparam(jQuery.param.querystring()).kitten != undefined) {
             this.$element.addClass("kitten-mode-activated");
             this.$element.delegate('img.oe-record-edit-link-img', 'hover', function(e) {
@@ -1036,7 +1036,7 @@ openerp.web.EmbeddedClient = openerp.web.Widget.extend({
     },
     start: function() {
         var self = this;
-        this.am.appendTo(this.$element.addClass('openerp openerp2'));
+        this.am.appendTo(this.$element.addClass('openerp'));
         return this.rpc("/web/action/load", { action_id: this.action_id }, function(result) {
             var action = result.result;
             action.flags = _.extend({
