@@ -41,30 +41,30 @@ openerp.project = function(openerp) {
                 // set background color
                 this.$element.find('.bgcolor_steelblue').click(function(){
                     $(this).closest('#oe_project_kanban_vignette').removeClass().addClass(self.kanban_color(1) + ' oe_project_kanban_vignette');
-                    self.view.dataset.write(parseInt(this.id), {color:1},self.do_reload());
+                    self.view.dataset.write(parseInt(this.id), {color:1});
                 });
                 
                 this.$element.find('.bgcolor_firebrick').click(function(){
                     $(this).closest('#oe_project_kanban_vignette').removeClass().addClass(self.kanban_color(2) + ' oe_project_kanban_vignette');
-                    self.view.dataset.write(parseInt(this.id), {color:2},self.do_reload());
+                    self.view.dataset.write(parseInt(this.id), {color:2});
                     
                 });
                 
                 this.$element.find('.bgcolor_khaki').click(function(){
                     $(this).closest('#oe_project_kanban_vignette').removeClass().addClass(self.kanban_color(3) + ' oe_project_kanban_vignette');
-                    self.view.dataset.write(parseInt(this.id), {color:3},self.do_reload());
+                    self.view.dataset.write(parseInt(this.id), {color:3});
                     
                 });
                 
                 this.$element.find('.bgcolor_thistle').click(function(){
                     $(this).closest('#oe_project_kanban_vignette').removeClass().addClass(self.kanban_color(4) + ' oe_project_kanban_vignette');
-                    self.view.dataset.write(parseInt(this.id), {color:4},self.do_reload());
+                    self.view.dataset.write(parseInt(this.id), {color:4});
                     
                 });
                 
                 this.$element.find('.bgcolor_orange').click(function(){
                     $(this).closest('#oe_project_kanban_vignette').removeClass().addClass(self.kanban_color(5) + ' oe_project_kanban_vignette');
-                    self.view.dataset.write(parseInt(this.id), {color:5},self.do_reload());
+                    self.view.dataset.write(parseInt(this.id), {color:5});
                     
                 });
                 
