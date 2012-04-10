@@ -20,30 +20,9 @@
                     </div>
                     <sheet layout="auto">
                         <separator string="Human Resources" colspan="4"/>
-                        <label string="Departments :"/>
-                        <label colspan="1"/>
-                        <group colspan="2">
-                            <button name="%(view_department_form_installer)d" string="Create Your Departments"
-                                type="action" icon="terp-personal+"/>
-                        </group>
-                        <newline/>
-                        <label string="Employees :" />
-                        <label colspan="1"/>
-                        <group colspan="2">
-                            <button name="%(open_view_employee_list_my)d" string="Create Your Employees"
-                                type="action" icon="terp-personal"/>
-                        </group>
-                        <newline/>
                         <field name="module_hr_timesheet_sheet"/>
                         <newline/>
                         <field name="module_hr_holidays"/>
-                        <newline/>
-                        <label string="Salary Rules :"/>
-                        <label colspan="1"/>
-                        <group colspan="2">
-                            <button string="Configure Your Salary Rules" icon="gtk-go-forward"
-                                name="%(open_payroll1_modules)d" type="action" />
-                        </group>
 
                         <separator string="Additional Features" colspan="4"/>
                         <field name="module_hr_expense"/>
