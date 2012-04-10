@@ -310,12 +310,14 @@ class res_partner(osv.osv):
             cr.execute('''SELECT partner.id FROM res_partner partner
                           LEFT JOIN res_partner company ON partner.parent_id = company.id
                           WHERE partner.name || ' (' || COALESCE(company.name,'') || ')'
-                          ''' + operator + ''' %s ''', (name2,))
+                          ''' + operator + ''' %s limit '''+str(limit), (name2,))
             ids = map(lambda x: x[0], cr.fetchall())
             if args:
                 ids = self.search(cr, uid, [('id', 'in', ids)] + args, limit=limit, context=context)
             if ids:
+                print 'ICI', ids
                 return self.name_get(cr, uid, ids, context)
+        print 'LA'
         return super(res_partner,self).name_search(cr, uid, name, args, operator=operator, context=context, limit=limit)
 
     def _email_send(self, cr, uid, ids, email_from, subject, body, on_error=None):
