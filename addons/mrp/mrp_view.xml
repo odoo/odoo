@@ -840,6 +840,9 @@
         <menuitem action="mrp_production_action" id="menu_mrp_production_action"
             parent="menu_mrp_manufacturing" sequence="1"/>
 
+        <menuitem icon="terp-mrp" id="base.menu_mrp_root" name="Manufacturing"
+            groups="group_mrp_user,group_mrp_manager" sequence="8"  action="mrp_production_action"/>			
+			
         <record id="mrp_production_action_planning" model="ir.actions.act_window">
             <field name="name">Manufacturing Orders</field>
             <field name="type">ir.actions.act_window</field>

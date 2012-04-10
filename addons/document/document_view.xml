@@ -357,6 +357,10 @@
         action="action_document_file_form"
         id="menu_document_files"
         parent="menu_document_doc"/>
+		
+    <menuitem name="Knowledge" icon="terp-stock" id="knowledge.menu_document"
+              sequence="19" groups="base.group_system,base.group_document_user" action="action_document_file_form"/>
+			  		
 
     <record model="ir.actions.act_window" id="action_document_file_directory_form">
         <field name="type">ir.actions.act_window</field>
