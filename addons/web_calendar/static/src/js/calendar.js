@@ -18,6 +18,7 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         this.model = dataset.model;
         this.fields_view = {};
         this.view_id = view_id;
+        this.view_type = 'calendar';
         this.has_been_loaded = $.Deferred();
         this.creating_event_id = null;
         this.dataset_events = [];
@@ -40,7 +41,7 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
     },
     start: function() {
         this._super();
-        return this.rpc("/web/view/load", {"model": this.model, "view_id": this.view_id, "view_type":"calendar", 'toolbar': true}, this.on_loaded);
+        return this.rpc("/web/view/load", {"model": this.model, "view_id": this.view_id, "view_type":"calendar", 'toolbar': false}, this.on_loaded);
     },
     destroy: function() {
         scheduler.clearAll();
@@ -99,21 +100,14 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         }
         this.$element.html(QWeb.render("CalendarView", {"fields_view": this.fields_view}));
 
-        if (this.options.sidebar && this.options.sidebar_id) {
-            this.sidebar = new openerp.web.Sidebar(this, this.options.sidebar_id);
-            this.sidebar.start();
-            this.sidebar.navigator = new openerp.web_calendar.SidebarNavigator(this.sidebar, this);
-            this.sidebar.responsible = new openerp.web_calendar.SidebarResponsible(this.sidebar, this);
-            this.sidebar.add_toolbar(this.fields_view.toolbar);
-            this.set_common_sidebar_sections(this.sidebar);
-            this.sidebar.do_unfold();
-            this.sidebar.do_fold.add_last(this.refresh_scheduler);
-            this.sidebar.do_unfold.add_last(this.refresh_scheduler);
-            this.sidebar.do_toggle.add_last(this.refresh_scheduler);
+        this.init_scheduler();
+
+        if (this.options.sidebar) {
+            this.sidebar = new openerp.web_calendar.Sidebar(this);
+            this.has_been_loaded.pipe(this.sidebar.appendTo(this.$element));
         }
 
-        this.init_scheduler();
-        this.has_been_loaded.resolve();
+        return this.has_been_loaded.resolve();
     },
     init_scheduler: function() {
         var self = this;
@@ -147,17 +141,6 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
 
         scheduler.attachEvent('onViewChange', this.on_view_changed);
         this.refresh_scheduler();
-
-        if (this.options.sidebar) {
-            this.mini_calendar = scheduler.renderCalendar({
-                container: this.sidebar.navigator.element_id,
-                navigation: true,
-                date: scheduler._date,
-                handler: function(date, calendar) {
-                    scheduler.setCurrentView(date, 'day');
-                }
-            });
-        }
     },
     on_view_changed: function(mode, date) {
         this.$element.removeClass('oe_cal_day oe_cal_week oe_cal_month').addClass('oe_cal_' + mode);
@@ -176,7 +159,7 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
     },
     refresh_minical: function() {
         if (this.options.sidebar) {
-            scheduler.updateCalendar(this.mini_calendar);
+            scheduler.updateCalendar(this.sidebar.mini_calendar);
         }
     },
     reload_event: function(id) {
@@ -235,7 +218,7 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         this.refresh_scheduler();
         this.refresh_minical();
         if (!no_filter_reload && this.options.sidebar) {
-            this.sidebar.responsible.on_events_loaded(sidebar_items);
+            this.sidebar.filter.on_events_loaded(sidebar_items);
         }
     },
     convert_event: function(evt) {
@@ -410,17 +393,8 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         var self = this;
         $.when(this.has_been_loaded).then(function() {
             self.$element.show();
-            if (self.sidebar) {
-                self.sidebar.$element.show();
-            }
             self.do_push_state({});
         });
-    },
-    do_hide: function () {
-        this._super();
-        if (this.sidebar) {
-            this.sidebar.$element.hide();
-        }
     },
     get_selected_ids: function() {
         // no way to select a record anyway
@@ -466,19 +440,31 @@ openerp.web_calendar.CalendarFormDialog = openerp.web.Dialog.extend({
     }
 });
 
-openerp.web_calendar.SidebarResponsible = openerp.web.OldWidget.extend({
-    // TODO: fme: in trunk, rename this class to SidebarFilter
+openerp.web_calendar.Sidebar = openerp.web.Widget.extend({
+    template: 'CalendarView.sidebar',
+    start: function() {
+        this._super();
+        this.mini_calendar = scheduler.renderCalendar({
+            container: this.$element.find('.oe_calendar_mini')[0],
+            navigation: true,
+            date: scheduler._date,
+            handler: function(date, calendar) {
+                scheduler.setCurrentView(date, 'day');
+            }
+        });
+        this.filter = new openerp.web_calendar.SidebarFilter(this, this.getParent());
+        this.filter.appendTo(this.$element.find('.oe_calendar_filter'));
+    }
+});
+openerp.web_calendar.SidebarFilter = openerp.web.Widget.extend({
     init: function(parent, view) {
-        var $section = parent.add_section(view.color_string, 'responsible');
-        this.$div = $('<div></div>');
-        $section.append(this.$div);
-        this._super(parent, $section.attr('id'));
+        this._super(parent);
         this.view = view;
         this.$element.delegate('input:checkbox', 'change', this.on_filter_click);
     },
     on_events_loaded: function(filters) {
         var selected_filters = this.view.selected_filters.slice(0);
-        this.$div.html(QWeb.render('CalendarView.sidebar.responsible', { filters: filters }));
+        this.$element.html(QWeb.render('CalendarView.sidebar.responsible', { filters: filters }));
         this.$element.find('div.oe_calendar_responsible input').each(function() {
             if (_.indexOf(selected_filters, $(this).val()) > -1) {
                 $(this).click();
@@ -505,15 +491,6 @@ openerp.web_calendar.SidebarResponsible = openerp.web.OldWidget.extend({
     }
 });
 
-openerp.web_calendar.SidebarNavigator = openerp.web.OldWidget.extend({
-    init: function(parent, view) {
-        var $section = parent.add_section(_t('Navigator'), 'navigator');
-        this._super(parent, $section.attr('id'));
-        this.view = view;
-    },
-    on_events_loaded: function(events) {
-    }
-});
 };
 
 // DEBUG_RPC:rpc.request:('execute', 'addons-dsh-l10n_us', 1, '*', ('ir.filters', 'get_filters', u'res.partner'))
