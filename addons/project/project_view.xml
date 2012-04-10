@@ -179,18 +179,18 @@
                     <templates>
                         <t t-name="kanban-box">
                             <div class="project_vignettes">
-                                <li class="oe_project_kanban_vignette " t-attf-class="#{kanban_color(record.color.raw_value)}">
+                                <li t-attf-class="#{kanban_color(record.color.raw_value)} oe_project_kanban_vignette" id="oe_project_kanban_vignette">
                                     <a href="#" class="oe_project_kanban_action dropdown-toggle"><span class="i">B</span></a>
                                     <ul class="dropdown-menu">
                                       <li ><a type="edit" >Edit...</a></li>
                                       <li ><a type="delete">Delete</a></li>
                                       <li>
                                         <ul class="color-chooser">
-                                            <li><a t-att-id="record.id.value"><span class="steelblue square"></span></a></li>
-                                            <li><a id="firebrick"><span class="firebrick square"></span></a></li>
-                                            <li><a id="khaki"><span class="khaki square"></span></a></li>
-                                            <li><a id="thistle"><span class="thistle square"></span></a></li>
-                                            <li><a id="orange"><span class="orange square"></span></a></li>
+                                            <li><a t-att-id="record.id.value" class="bgcolor_steelblue"><span class="steelblue square"></span></a></li>
+                                            <li><a t-att-id="record.id.value" class="bgcolor_firebrick"><span class="firebrick square"></span></a></li>
+                                            <li><a t-att-id="record.id.value" class="bgcolor_khaki"><span class="khaki square"></span></a></li>
+                                            <li><a t-att-id="record.id.value" class="bgcolor_thistle"><span class="thistle square"></span></a></li>
+                                            <li><a t-att-id="record.id.value" class="bgcolor_orange"><span class="orange square"></span></a></li>
                                         </ul>
                                       </li>
                                     </ul>
