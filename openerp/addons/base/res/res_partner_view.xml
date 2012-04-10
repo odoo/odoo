@@ -513,7 +513,7 @@
                                     <img t-att-src="kanban_image('res.partner', 'photo', record.id.value)" width="64" height="64" class="oe_module_icon"/>
                                 </a>
                                     <div class="oe_module_desc">
-                                        <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger oe_kanban_color_border">
+                                        <div class="oe_kanban_box_content oe_kanban_box_show_onclick_trigger oe_kanban_color_border">
                                             <table class="oe_kanban_table">
                                                 <tr>
                                                     <td class="oe_kanban_title1" align="left" valign="middle">
@@ -521,7 +521,7 @@
                                                             <div t-if="record.parent_id.raw_value"><field name="parent_id"/></div>
                                                         </h4>
                                                             <i><div t-if="record.contact_address.raw_value"><field name="contact_address"/><br/></div>
-															<div t-if="record.email.raw_value">
+                                                            <div t-if="record.email.raw_value">
                                                             <field name="email"/><br/></div>
                                                             <div t-if="record.mobile.raw_value">
                                                             <field name="mobile"/><br/>
