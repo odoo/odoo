@@ -22,7 +22,7 @@
 {
     'name' : "Portal",
     'version' : "1.0",
-    'depends' : ["portal", "crm"],
+    'depends' : ["portal_customer", "crm"],
     'author' : "OpenERP SA",
     'category': 'Portal',
     'description': """
@@ -34,8 +34,9 @@ A portal_customer_lead will show the own leads of the customer.
     'website': 'http://www.openerp.com',
   
     'update_xml': [
-        'portal_customer_lead_view.xml',
         'portal_customer_lead_data.xml',
+        'portal_customer_lead_view.xml',
+      
 #        'security/ir.model.access.csv',
             ],
     'installable': True,
