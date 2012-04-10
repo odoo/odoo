@@ -96,9 +96,9 @@ openerp.web.FormView = openerp.web.View.extend({
         var pager_html = QWeb.render("FormView.pager", {'widget':self});
         this.$pager = $(_.str.isBlank(pager_html) ? '<div>' : pager_html);
         if (this.options.$pager) {
-            this.$buttons.appendTo(this.options.$pager);
+            this.$pager.appendTo(this.options.$pager);
         } else {
-            this.$element.find('.oe_form_pager').replaceWith(this.$buttons);
+            this.$element.find('.oe_form_pager').replaceWith(this.$pager);
         }
         this.$pager.on('click','a[data-pager-action]',function() {
             var action = $(this).data('pager-action');
