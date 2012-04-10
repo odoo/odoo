@@ -95,6 +95,9 @@ class crm_claim(crm.crm_case, osv.osv):
         'active': lambda *a: 1
     }
 
+    def case_get_note_msg_prefix(self, cr, uid, id, context=None):
+        return 'Claim'
+
     def onchange_partner_id(self, cr, uid, ids, part, email=False):
         """This function returns value of partner address based on partner
            :param part: Partner's id

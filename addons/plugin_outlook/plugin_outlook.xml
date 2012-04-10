@@ -48,11 +48,20 @@
             <field name="target">new</field>
         </record>
 
-        <record id="outlook_installer_todo" model="ir.actions.todo">
-            <field name="action_id" ref="action_outlook_installer"/>
-            <field name="category_id" ref="base.category_sales_management_config"/>
-            <field name="sequence">4</field>
-            <field name="type">automatic</field>
+        <!-- Sales Configuration -->
+        <record id="view_config_outlook_installer" model="ir.ui.view">
+            <field name="name">Sales Application</field>
+            <field name="model">sale.config.settings</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.view_sale_config_settings"/>
+            <field name="arch" type="xml">
+                <field name="module_plugin_outlook" position="after">
+                    <group colspan="2" attrs="{'invisible': [('module_crm','=',False)]}">
+                        <button name="%(action_outlook_installer)d" type="action"
+                            string="Configure Outlook plugin" icon="gtk-execute"/>
+                    </group>
+                </field>
+            </field>
         </record>
 
         <record id="action_outlook_wizard" model="ir.actions.act_window">
