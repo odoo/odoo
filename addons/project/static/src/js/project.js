@@ -38,36 +38,34 @@ openerp.project = function(openerp) {
                   });
                 $('#list').replaceWith(my_list);
                 
-                console.log(this.$element.find('.steelblue'))
                 
                 this.$element.find('.bgcolor_steelblue').click(function(){
-                    console.log(this)
-                    $(this).closest('.oe_project_kanban_vignette').addClass(self.kanban_color(1));
+                    $(this).closest('#oe_project_kanban_vignette').removeClass().addClass(self.kanban_color(1) + ' oe_project_kanban_vignette');
                     self.view.dataset.write(parseInt(this.id), {color:1},self.do_reload());
                 });
                 
                 this.$element.find('.bgcolor_firebrick').click(function(){
-                    console.log(this)
-                    $(this).closest('.oe_project_kanban_vignette').addClass(self.kanban_color(2));
+                    $(this).closest('#oe_project_kanban_vignette').removeClass().addClass(self.kanban_color(2) + ' oe_project_kanban_vignette');
                     self.view.dataset.write(parseInt(this.id), {color:2},self.do_reload());
+                    
                 });
                 
                 this.$element.find('.bgcolor_khaki').click(function(){
-                    console.log(this)
-                    $(this).closest('.oe_project_kanban_vignette').addClass(self.kanban_color(3));
+                    $(this).closest('#oe_project_kanban_vignette').removeClass().addClass(self.kanban_color(3) + ' oe_project_kanban_vignette');
                     self.view.dataset.write(parseInt(this.id), {color:3},self.do_reload());
+                    
                 });
                 
                 this.$element.find('.bgcolor_thistle').click(function(){
-                    console.log(this)
-                    $(this).closest('.oe_project_kanban_vignette').addClass(self.kanban_color(4));
+                    $(this).closest('#oe_project_kanban_vignette').removeClass().addClass(self.kanban_color(4) + ' oe_project_kanban_vignette');
                     self.view.dataset.write(parseInt(this.id), {color:4},self.do_reload());
+                    
                 });
                 
                 this.$element.find('.bgcolor_orange').click(function(){
-                    console.log(this)
-                    $(this).closest('.oe_project_kanban_vignette').addClass(self.kanban_color(5));
+                    $(this).closest('#oe_project_kanban_vignette').removeClass().addClass(self.kanban_color(5) + ' oe_project_kanban_vignette');
                     self.view.dataset.write(parseInt(this.id), {color:5},self.do_reload());
+                    
                 });
                 
             };
