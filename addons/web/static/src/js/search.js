@@ -427,7 +427,10 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
         return $.when(
                 this.setup_stuff_drawer(),
                 $.when.apply(null, _(this.inputs).invoke('facet_for_defaults', this.defaults))
-                    .then(function () { self.vs.searchQuery.reset(_(arguments).compact()); }))
+                    .then(function () {
+                        self.vs.searchQuery.reset(_(arguments).compact(), {silent: true});
+                        self.vs.searchBox.renderFacets();
+                    }))
             .then(function () { self.ready.resolve(); })
     },
     /**
