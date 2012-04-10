@@ -10,11 +10,6 @@
             <field name="help">You can define appraisal plans (ex: first interview after 6 months, then every year). Then, each employee can be linked to an appraisal plan so that OpenERP can automatically generate interview requests to managers and/or subordinates.</field>
         </record>
 
-        <record id="todo_evaluation_plans_installer" model="ir.actions.todo">
-            <field name="action_id" ref="action_evaluation_plans_installer" />
-            <field name="category_id" ref="hr.category_hr_management_config" />
-        </record>
-		
         <!-- Hr Configuration wizard -->
         <record id="view_evaluation_config_wizard_inherit" model="ir.ui.view">
             <field name="name">hr settings for evaluations</field>
