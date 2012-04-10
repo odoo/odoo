@@ -1,13 +1,13 @@
-#-*- coding:utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2011 OpenERP S.A. (<http://www.openerp.com>). All Rights Reserved
+#    Copyright (C) 2009-Today OpenERP SA (<http://www.openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -19,23 +19,7 @@
 #
 ##############################################################################
 
-{
-    "name" : "eMail Gateway for Applicants",
-    "version" : "1.0",
-    "depends" : ["fetchmail", "hr_recruitment"],
-    "author" : "OpenERP SA",
-    "category": "Hidden",
-    "description": """
-    """,
-    'website': 'http://www.openerp.com',
-    'init_xml': [],
-    'update_xml': [
-        "installer.xml",
-    ],
-    'demo_xml': [
-    ],
-    'installable': True,
-    'auto_install': True,
-}
+import mail_message_report
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

@@ -55,7 +55,7 @@
         <record id="act_invoice_done" model="workflow.activity">
             <field name="wkf_id" ref="purchase_order"/>
             <field name="name">invoice_done</field>
-            <field name="action">write({'state':'approved'})</field>
+            <field name="action">invoice_done()</field>
             <field name="kind">function</field>
         </record>
         <record id="act_invoice_end" model="workflow.activity">
@@ -72,7 +72,7 @@
         <record id="act_picking_done" model="workflow.activity">
             <field name="wkf_id" ref="purchase_order"/>
             <field name="name">picking_done</field>
-            <field name="action">write({'shipped':1,'state':'approved'})</field>
+            <field name="action">picking_done()</field>
             <field name="kind">function</field>
             <field name="signal_send">subflow.delivery_done</field>
         </record>
