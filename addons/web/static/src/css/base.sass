@@ -733,12 +733,14 @@ $colour4: #8a89ba
         height: 24px
         line-height: 24px
         padding: 0 8px
+        display: inline-block
     .oe_pager_group
         height: 24px
         line-height: 24px
         padding: 0 8px
         display: inline-block
         border: 1px solid #ababab
+        cursor: pointer
         @include radius(5px)
         li
             height: 24px
@@ -752,26 +754,12 @@ $colour4: #8a89ba
             color: #4c4c4c
             &:hover
                 text-decoration: none
-        button
-            height: 24px
-            padding: 0
-            background: transparent
-            border: 0 none
-            overflow: visible
         .active
             background: #999
             @include box-shadow(0 1px 4px rgba(0,0,0,0.3) inset)
             a
                 color: #fff
                 text-shadow: 0 1px 2px rgba(0,0,0,0.4)
-        .oe_view_manager_buttons
-            padding-right: 8px
-            float: left
-            margin-right: 12px
-        .oe_view_manager_sidebar
-            display: inline-block
-        .oe_view_manager_pager
-            float: right
     // }}}
     // ViewManager.switches {{{
     .oe_view_manager_switch
