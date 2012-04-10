@@ -38,7 +38,7 @@ openerp.project = function(openerp) {
                   });
                 $('#list').replaceWith(my_list);
                 
-                
+                // set background color
                 this.$element.find('.bgcolor_steelblue').click(function(){
                     $(this).closest('#oe_project_kanban_vignette').removeClass().addClass(self.kanban_color(1) + ' oe_project_kanban_vignette');
                     self.view.dataset.write(parseInt(this.id), {color:1},self.do_reload());
