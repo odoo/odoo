@@ -69,7 +69,6 @@
     
     <t t-name="NoteDisplay">
         <p class="oe_mail_msg">
-            <a href="#" class="intlink oe_mail_oe_intlink" t-attf-data-res-model='{params.res_model}' t-attf-data-res-id='{params.res_id}'><t t-raw="record.record_name"/></a>
             <t t-if="params.thread_level > 0">
                 <a href="#" class="intlink oe_mail_oe_intlink" t-attf-data-res-model='{params.res_model}' t-attf-data-res-id='{params.res_id}'><t t-raw="record.record_name"/></a>
             </t>
