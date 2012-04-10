@@ -41,7 +41,7 @@ openerp.web.FormView = openerp.web.View.extend({
         this.datarecord = {};
         this.default_focus_field = null;
         this.default_focus_button = null;
-        this.registry = openerp.web.form.widgets;
+        this.fields_registry = openerp.web.form.widgets;
         this.has_been_loaded = $.Deferred();
         this.translatable_fields = [];
         _.defaults(this.options, {
@@ -813,8 +813,8 @@ openerp.web.form.FormRenderingEngine = openerp.web.Class.extend({
     set_fields_view: function(fvg) {
         this.fvg = fvg;
     },
-    set_registry: function(registry) {
-        this.registry = registry;
+    set_tags_registry: function(tags_registry) {
+        this.tags_registry = tags_registry;
     },
     render_to: function($element) {
         var self = this;
@@ -841,10 +841,10 @@ openerp.web.form.FormRenderingEngine = openerp.web.Class.extend({
             if (tag_name === "field") {
                 var name = $elem.attr("name");
                 var key = $elem.attr('widget') || self.fvg.fields[name].type;
-                if (!self.view.registry.contains(key)) {
+                if (!self.view.fields_registry.contains(key)) {
                     throw new Error("Widget type '"+ key + "' is not implemented");
                 }
-                var obj = self.view.registry.get_object(key);
+                var obj = self.view.fields_registry.get_object(key);
                 var w = new (obj)(self.view, openerp.web.xml_to_json($elem[0]));
                 if (tag_name === "field") {
                     var $label = self.labels[$elem.attr("name")];
@@ -856,10 +856,10 @@ openerp.web.form.FormRenderingEngine = openerp.web.Class.extend({
                 w.replace($elem);
             } else {
                 var key = tag_name;
-                if (!self.view.registry.contains(key)) {
+                if (!self.view.fields_registry.contains(key)) {
                     return;
                 }
-                var obj = self.view.registry.get_object(key);
+                var obj = self.view.fields_registry.get_object(key);
                 var w = new (obj)(self.view, openerp.web.xml_to_json($elem[0]));
                 w.replace($elem);
             }
@@ -895,8 +895,8 @@ openerp.web.form.FormRenderingEngine = openerp.web.Class.extend({
         $tag.removeAttr('layout');
         var tagname = $tag[0].nodeName.toLowerCase();
         var fn = self['process_' + tagname];
-        if (this.registry && this.registry.contains(tagname)) {
-            fn = this.registry.get_object(tagname);
+        if (this.tags_registry && this.tags_registry.contains(tagname)) {
+            fn = this.tags_registry.get_object(tagname);
         }
         if (fn) {
             var args = [].slice.call(arguments);
@@ -2692,7 +2692,7 @@ openerp.web.form.FieldOne2Many = openerp.web.form.AbstractField.extend({
 
         this.viewmanager = new openerp.web.ViewManager(this, this.dataset, views, {});
         this.viewmanager.template = 'One2Many.viewmanager';
-        this.viewmanager.registry = openerp.web.views.extend({
+        this.viewmanager.fields_registry = openerp.web.views.extend({
             list: 'openerp.web.form.One2ManyListView',
             form: 'openerp.web.form.One2ManyFormView',
             page: 'openerp.web.PageView',
