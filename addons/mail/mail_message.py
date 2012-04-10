@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2010-2011 OpenERP SA (<http://www.openerp.com>)
+#    Copyright (C) 2010-today OpenERP SA (<http://www.openerp.com>)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -26,6 +26,7 @@ import email
 import logging
 import re
 import time
+import datetime
 from email.header import decode_header
 from email.message import Message
 
@@ -68,47 +69,82 @@ class mail_message_common(osv.osv_memory):
        database model or wizard screen that needs to hold a kind of
        message"""
 
+    def get_body(self, cr, uid, ids, name, arg, context=None):
+        if context is None:
+            context = {}
+        result = dict.fromkeys(ids, '')
+        for message in self.browse(cr, uid, ids, context=context):
+            if message.subtype == 'html':
+                result[message.id] = message.body_html
+            else:
+                result[message.id] = message.body_text
+        return result
+    
+    def search_body(self, cr, uid, obj, name, args, context=None):
+        """will receive:
+           - obj: mail.message object
+           - name: 'body'
+           - args: [('body', 'ilike', 'blah')]"""
+        return ['|', '&', ('subtype', '=', 'html'), ('body_html', args[0][1], args[0][2]), ('body_text', args[0][1], args[0][2])]
+    
+    def get_record_name(self, cr, uid, ids, name, arg, context=None):
+        if context is None:
+            context = {}
+        result = dict.fromkeys(ids, '')
+        for message in self.browse(cr, uid, ids, context=context):
+            if not message.model or not message.res_id:
+                continue
+            result[message.id] = self.pool.get(message.model).name_get(cr, uid, [message.res_id], context=context)[0][1]
+        return result
+    
     _name = 'mail.message.common'
     _rec_name = 'subject'
     _columns = {
         'subject': fields.char('Subject', size=512, required=True),
-        'model': fields.char('Related Document model', size=128, select=1, readonly=1),
-        'res_id': fields.integer('Related Document ID', select=1, readonly=1),
+        'model': fields.char('Related Document model', size=128, select=1),
+        'res_id': fields.integer('Related Document ID', select=1),
+        'record_name': fields.function(get_record_name, type='string', string='Message record name',
+                        help="Name of the record, matching the result of the name_get."),
         'date': fields.datetime('Date'),
-        'email_from': fields.char('From', size=128, help='Message sender, taken from user preferences. If empty, this is not a mail but a message.'),
+        'email_from': fields.char('From', size=128, help='Message sender, taken from user preferences.'),
         'email_to': fields.char('To', size=256, help='Message recipients'),
         'email_cc': fields.char('Cc', size=256, help='Carbon copy message recipients'),
         'email_bcc': fields.char('Bcc', size=256, help='Blind carbon copy message recipients'),
         'reply_to':fields.char('Reply-To', size=256, help='Preferred response address for the message'),
         'headers': fields.text('Message headers', readonly=1,
-                               help="Full message headers, e.g. SMTP session headers "
-                                    "(usually available on inbound messages only)"),
+                        help="Full message headers, e.g. SMTP session headers (usually available on inbound messages only)"),
         'message_id': fields.char('Message-Id', size=256, help='Message unique identifier', select=1, readonly=1),
         'references': fields.text('References', help='Message references, such as identifiers of previous messages', readonly=1),
         'subtype': fields.char('Message type', size=32, help="Type of message, usually 'html' or 'plain', used to "
                                                              "select plaintext or rich text contents accordingly", readonly=1),
         'body_text': fields.text('Text contents', help="Plain-text version of the message"),
         'body_html': fields.text('Rich-text contents', help="Rich-text/HTML version of the message"),
+        'body': fields.function(get_body, fnct_search = search_body, string='Message content', type='text',
+                        help="Content of the message. This content equals the body_text field for plain-test messages, and body_html for rich-text/HTML messages. This allows having one field if we want to access the content matching the message subtype."),
+        'parent_id': fields.many2one('mail.message', 'Parent message', help="Parent message, used for displaying as threads with hierarchy",
+                        select=True, ondelete='set null',),
+        'child_ids': fields.one2many('mail.message', 'parent_id', 'Child messages'),
     }
 
     _defaults = {
-        'subtype': 'plain'
+        'subtype': 'plain',
+        'date': (lambda *a: fields.datetime.now()),
     }
 
 class mail_message(osv.osv):
-    '''Model holding RFC2822 email messages, and providing facilities
-       to parse, queue and send new messages
-
-       Messages that do not have a value for the email_from column
-       are simple log messages (e.g. document state changes), while
-       actual e-mails have the email_from value set.
+    '''Model holding messages: system notification (replacing res.log
+       notifications), comments (for OpenSocial feature) and
+       RFC2822 email messages. This model also provides facilities to
+       parse, queue and send new email messages. Type of messages
+       are differentiated using the 'type' column.
+       
        The ``display_text`` field will have a slightly different
        presentation for real emails and for log messages.
        '''
 
     _name = 'mail.message'
     _inherit = 'mail.message.common'
-    _description = 'Email Message'
+    _description = 'Mail Message (email, comment, notification)'
     _order = 'date desc'
 
     # XXX to review - how to determine action to use?
@@ -163,8 +199,13 @@ class mail_message(osv.osv):
                 msg_txt += (message.subject or '')
             result[message.id] = msg_txt
         return result
-
+    
     _columns = {
+        'type': fields.selection([
+                        ('email', 'e-mail'),
+                        ('comment', 'Comment'),
+                        ('notification', 'System notification'),
+                        ], 'Type', help="Message type: e-mail for e-mail message, notification for system message, comment for other messages such as user replies"),
         'partner_id': fields.many2one('res.partner', 'Related partner'),
         'user_id': fields.many2one('res.users', 'Related user', readonly=1),
         'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel', 'message_id', 'attachment_id', 'Attachments'),
@@ -180,11 +221,16 @@ class mail_message(osv.osv):
         'auto_delete': fields.boolean('Auto Delete', help="Permanently delete this email after sending it, to save space"),
         'original': fields.binary('Original', help="Original version of the message, as it was sent on the network", readonly=1),
     }
-
+        
     _defaults = {
+        'type': 'email',
         'state': 'received',
     }
-
+    
+    #------------------------------------------------------
+    # E-Mail api
+    #------------------------------------------------------
+    
     def init(self, cr):
         cr.execute("""SELECT indexname FROM pg_indexes WHERE indexname = 'mail_message_model_res_id_idx'""")
         if not cr.fetchone():
@@ -245,6 +291,7 @@ class mail_message(osv.osv):
                 'user_id': uid,
                 'model': model,
                 'res_id': res_id,
+                'type': 'email',
                 'body_text': body if subtype != 'html' else False,
                 'body_html': body if subtype == 'html' else False,
                 'email_from': email_from,

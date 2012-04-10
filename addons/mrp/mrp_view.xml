@@ -105,16 +105,18 @@
         <menuitem name="Master Bill of Materials"
             id="menu_mrp_property"
             parent="menu_mrp_configuration"
-            groups="base.group_extended"
+            groups="mrp.group_mrp_routings,product.group_mrp_properties"
             sequence="20" />
         <menuitem
             action="mrp_property_action"
             id="menu_mrp_property_action"
-            parent="menu_mrp_property" groups="base.group_no_one"/>
+            groups="product.group_mrp_properties"
+            parent="menu_mrp_property"/>
         <menuitem
             action="mrp_property_group_action"
             parent="menu_mrp_property"
-            id="menu_mrp_property_group_action" groups="base.group_no_one"/>
+            groups="product.group_mrp_properties"
+            id="menu_mrp_property_group_action"/>
 
         <!--
         Work Centers
@@ -304,7 +306,7 @@
             <field name="search_view_id" ref="mrp_routing_search_view"/>
             <field name="help">Routings allow you to create and manage the manufacturing operations that should be followed within your work centers in order to produce a product. They are attached to bills of materials that will define the required raw materials.</field>
         </record>
-        <menuitem action="mrp_routing_action" id="menu_mrp_routing_action" parent="mrp.menu_mrp_bom" groups="base.group_extended" sequence="15"/>
+        <menuitem action="mrp_routing_action" id="menu_mrp_routing_action" parent="mrp.menu_mrp_bom" groups="mrp.group_mrp_routings" sequence="15"/>
 
         <!--
           Bill of Materials
@@ -323,7 +325,7 @@
                         <newline/>
                         <field name="product_qty"/>
                         <field name="product_uom"/>
-                        <field name="routing_id"  groups="base.group_extended"/>
+                        <field name="routing_id"  groups="mrp.group_mrp_routings"/>
                         <newline/>
                         <field name="product_uos_qty" groups="product.group_uos" />
                         <field name="product_uos"  groups="product.group_uos"/>
@@ -350,7 +352,7 @@
                                     <newline/>
                                     <field name="product_qty"/>
                                     <field name="product_uom"/>
-                                    <field name="routing_id"  groups="base.group_extended"/>
+                                    <field name="routing_id"  groups="mrp.group_mrp_routings"/>
                                     <newline/>
                                     <field name="product_uos_qty" groups="product.group_uos" />
                                     <field name="product_uos"  groups="product.group_uos"/>
@@ -375,7 +377,7 @@
                                     <page string="Revisions" groups="base.group_extended" attrs="{'invisible': [('bom_id','!=',False)]}">
                                         <field colspan="4" name="revision_ids" nolabel="1" widget="one2many_list"/>
                                     </page>
-                                    <page string="Properties" groups="base.group_extended">
+                                    <page string="Properties" groups="product.group_mrp_properties">
                                         <field name="position"/>
                                         <field name="active"/>
                                         <field name="sequence"/>
@@ -395,7 +397,7 @@
                         <page string="Revisions" groups="base.group_extended" attrs="{'invisible': [('bom_id','!=',False)]}">
                             <field colspan="4" name="revision_ids" nolabel="1" widget="one2many_list"/>
                         </page>
-                        <page string="Properties" groups="base.group_extended">
+                        <page string="Properties" groups="product.group_mrp_properties">
                             <field name="position"/>
                             <field name="active"/>
                             <field name="sequence"/>
@@ -410,6 +412,8 @@
                             <field colspan="4" name="property_ids" nolabel="1" groups="base.group_extended"/>
                         </page>
                     </notebook>
+                    <newline/>
+                    <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
                 </form>
             </field>
         </record>
@@ -455,7 +459,7 @@
                     <field name="product_uom"/>
                     <field name="type"/>
                     <field name="method" groups="base.group_extended"/>
-                    <field name="routing_id" groups="base.group_extended"/>
+                    <field name="routing_id" groups="mrp.group_mrp_routings"/>
                     <field name="date_start" groups="base.group_extended"/>
                     <field name="date_stop" groups="base.group_extended"/>
                 </tree>
@@ -477,7 +481,7 @@
                     <field name="product_uom"/>
                     <field name="type"/>
                     <field name="method" groups="base.group_extended"/>
-                    <field name="routing_id" groups="base.group_extended"/>
+                    <field name="routing_id" groups="mrp.group_mrp_routings"/>
                     <field name="date_start" groups="base.group_extended"/>
                     <field name="date_stop" groups="base.group_extended"/>
                 </tree>
@@ -575,7 +579,7 @@
                     <field name="product_id"/>
                     <field name="product_qty" sum="Total Qty"/>
                     <field name="product_uom"/>
-                    <field name="routing_id" groups="base.group_extended"/>
+                    <field name="routing_id" groups="mrp.group_mrp_routings"/>
                     <field name="hour_total" sum="Total Hours" groups="base.group_extended"/>
                     <field name="cycle_total" sum="Total Cycles" groups="base.group_extended"/>
                     <field name="origin"/>
@@ -644,12 +648,13 @@
                         <label string="" colspan="2"/>
                         <field name="product_uos_qty" groups="product.group_uos"/>
                         <field name="product_uos" groups="product.group_uos"/>
+                        <field name="user_id"/>
                     </group>
 
                     <notebook colspan="4">
                         <page string="Consumed Products">
                             <field name="bom_id" domain="[('product_id','=',product_id),('bom_id','=',False)]" on_change="bom_id_change(bom_id)"/>
-                            <field name="routing_id" groups="base.group_extended" select="1"/>
+                            <field name="routing_id" groups="mrp.group_mrp_routings" select="1"/>
                             <field name="location_src_id" domain="[('usage','=','internal')]" on_change="location_id_change(location_src_id,location_dest_id)"/>
                             <field name="location_dest_id" domain="[('usage','=','internal')]"/>
                             <separator string="" colspan="4"/>
@@ -773,7 +778,6 @@
                             <field colspan="4" name="product_lines" nolabel="1" widget="one2many_list"/>
                         </page>
                         <page string="Extra Information">
-                            <field name="user_id"/>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             <field name="priority" groups="base.group_extended"/>
                             <newline/>
@@ -783,6 +787,7 @@
                             <field name="move_prod_id" groups="base.group_extended"/>
                         </page>
                     </notebook>
+                    <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
                 </form>
             </field>
         </record>
@@ -810,7 +815,7 @@
                        <separator orientation="vertical"/>
                        <field name="name"/>
                        <field name="product_id"/>
-                       <field name="routing_id" groups="base.group_extended"/>
+                       <field name="routing_id" groups="mrp.group_mrp_routings"/>
                        <field name="origin"/>
                     </group>
                     <newline/>
@@ -964,7 +969,7 @@
                     <field name="bom_id" domain="[('product_id','=',product_id),('bom_id','=',False)]"/>
                 </xpath>
                 <xpath expr="/form/notebook/page/field[@name='close_move']" position="after">
-                    <group colspan="4"  groups="base.group_extended">
+                    <group colspan="4"  groups="product.group_mrp_properties">
                     <separator colspan="4" string="Properties" />
                     <field colspan="4" name="property_ids" nolabel="1"/>
                      </group>
@@ -1015,7 +1020,7 @@
         </record>
 
         <menuitem id="menu_pm_resources_config" name="Resources" parent="menu_mrp_configuration"/>
-        <menuitem action="mrp_workcenter_action" id="menu_view_resource_search_mrp" parent="mrp.menu_mrp_bom" sequence="25"/>
+        <menuitem action="mrp_workcenter_action" id="menu_view_resource_search_mrp" groups="mrp.group_mrp_routings" parent="mrp.menu_mrp_bom" sequence="25"/>
         <menuitem action="resource.action_resource_calendar_form" id="menu_view_resource_calendar_search_mrp" parent="menu_pm_resources_config" sequence="1" groups="base.group_no_one"/>
         <menuitem action="resource.action_resource_calendar_leave_tree" id="menu_view_resource_calendar_leaves_search_mrp" parent="menu_pm_resources_config" sequence="1" groups="base.group_no_one"/>
 

@@ -14,7 +14,7 @@
 
         <menuitem
             id="menu_purchase_config_pricelist" name="Pricelists"
-            parent="menu_purchase_config_purchase" sequence="50"  groups="base.group_extended"/>
+            parent="menu_purchase_config_purchase" sequence="50" groups="product.group_purchase_pricelist"/>
 
         <menuitem
             action="product.product_pricelist_action" id="menu_product_pricelist_action_purhase"
@@ -39,7 +39,7 @@
 
         <menuitem
             id="menu_purchase_unit_measure_purchase" name="Units of Measure"
-            parent="purchase.menu_product_in_config_purchase"  sequence="20"/>
+            parent="purchase.menu_product_in_config_purchase"  sequence="20" groups="product.group_uom"/>
 
         <menuitem
              action="product.product_uom_categ_form_action" id="menu_purchase_uom_categ_form_action"
@@ -147,7 +147,7 @@
                     <notebook colspan="4">
                         <page string="Purchase Order">
                             <field name="partner_id" on_change="onchange_partner_id(partner_id)" context="{'search_default_supplier':1,'default_supplier':1,'default_customer':0}"  options='{"quick_create": false}'/>
-                            <field domain="[('type','=','purchase')]" name="pricelist_id" groups="base.group_extended"/>
+                            <field domain="[('type','=','purchase')]" name="pricelist_id" groups="product.group_purchase_pricelist"/>
                             <field name="origin" groups="base.group_extended"/>
                             <newline/>
                             <field colspan="4" name="order_line" nolabel="1" mode="tree,form">
@@ -155,7 +155,7 @@
                                     <field name="date_planned"/>
                                     <field name="name"/>
                                     <field name="product_qty"/>
-                                    <field name="product_uom"/>
+                                    <field name="product_uom" groups="product.group_uom"/>
                                     <field name="price_unit"/>
                                     <field name="price_subtotal"/>
                                 </tree>
@@ -206,6 +206,7 @@
                             <field colspan="4" name="notes" nolabel="1"/>
                         </page>
                     </notebook>
+                   <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
                 </form>
             </field>
         </record>
@@ -339,13 +340,13 @@
                         <page string="Order Line">
                             <field name="product_id" colspan="4" on_change="onchange_product_id(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,price_unit,notes,context)" required="1"/>
                             <field name="product_qty" on_change="onchange_product_id(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id,parent.date_order,parent.fiscal_position,date_planned,name,price_unit,notes,context)"/>
-                            <field name="product_uom" on_change="onchange_product_uom(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,price_unit,notes,context)"/>
+                            <field name="product_uom" groups="product.group_uom" on_change="onchange_product_uom(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,price_unit,notes,context)"/>
                             <field colspan="4" name="name"/>
                             <field name="date_planned" widget="date"/>
                             <field name="price_unit"/>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                            <field name="account_analytic_id" colspan="4" groups="analytic.group_analytic_accounting" domain="[('parent_id','!=',False)]" />
-                            <group colspan="4" col="4" groups="base.group_extended">
+                            <field name="account_analytic_id" colspan="4" groups="purchase.group_analytic_accounting" domain="[('parent_id','!=',False)]" />
+                            <group colspan="4" col="4">
                                 <separator colspan="4" string="Taxes"/>
                                 <field colspan="4" nolabel="1" name="taxes_id"
                                     domain="[('parent_id','=',False),('type_tax_use','!=','sale')]"/>
@@ -381,7 +382,7 @@
                     <field name="product_id"/>
                     <field name="price_unit"/>
                     <field name="product_qty"/>
-                    <field name="product_uom"/>
+                    <field name="product_uom" groups="product.group_uom"/>
                     <field name="price_subtotal"/>
                     <field name="date_planned"  widget="date" width="135"/>
                     <field name="state" invisible="1"/>
@@ -402,12 +403,12 @@
                              <field name="order_id"/>
                             <field name="product_id" readonly="1" />
                             <field name="product_qty" readonly="1" />
-                            <field name="product_uom" readonly="1"/>
+                            <field name="product_uom" readonly="1" groups="product.group_uom"/>
                             <field colspan="4" name="name"/>
                             <field name="date_planned" widget="date"  readonly="1"/>
                             <field name="price_unit"/>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                            <field name="account_analytic_id" colspan="4" groups="analytic.group_analytic_accounting" domain="[('parent_id','!=',False)]"/>
+                            <field name="account_analytic_id" colspan="4" groups="purchase.group_analytic_accounting" domain="[('parent_id','!=',False)]"/>
                             <group colspan="4" col="4" groups="base.group_extended">
                                 <separator colspan="4" string="Taxes"/>
                                 <field colspan="4" nolabel="1" name="taxes_id"

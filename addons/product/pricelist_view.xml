@@ -4,7 +4,8 @@
 
         <menuitem id="base.menu_sale_config_sales" name="Sales"
             parent="base.menu_base_config" sequence="0" groups="base.group_extended"/>
-        <menuitem groups="base.group_extended" id="menu_product_pricelist_main" name="Pricelists" parent="base.menu_base_config" sequence="70"/>
+        <menuitem id="menu_product_pricelist_main" name="Pricelists" 
+            parent="base.menu_base_config" groups="product.group_sale_pricelist" sequence="70"/>
 
         <record id="product_pricelist_version_form_view" model="ir.ui.view">
             <field name="name">product.pricelist.version.form</field>

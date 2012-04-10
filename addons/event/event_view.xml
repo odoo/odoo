@@ -389,6 +389,7 @@
                             </group>
                         </page>
                         <page string="Emails" groups="base.group_extended">
+<!--
                             <field name="message_ids" colspan="4" nolabel="1" mode="tree">
                                 <tree string="History">
                                     <field name="display_text" string="History Information"/>
@@ -400,6 +401,7 @@
                                         icon="terp-mail-replied" type="action" />
                                 </tree>
                             </field>
+-->
                             <button string="Send New Email"
                                 name="%(mail.action_email_compose_message_wizard)d"
                                 icon="terp-mail-message-new" context= '{"default_email_to":email}' type="action"/>
