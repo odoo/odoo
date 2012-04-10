@@ -376,7 +376,8 @@ class res_partner_address(osv.osv):
                 old_ids = set(ids)
                 ids.extend([id for id in new_ids if id not in old_ids])
 
-        ids = ids[:limit]
+        if limit:
+            ids = ids[:limit]
         return self.name_get(cr, user, ids, context=context)
 
     def get_city(self, cr, uid, id):
