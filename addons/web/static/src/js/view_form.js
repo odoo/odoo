@@ -847,11 +847,10 @@ openerp.web.form.FormRenderingEngine = openerp.web.Class.extend({
             if (!self.fvg.fields[name]) {
                 throw new Error("Field '" + name + "' specified in view could not be found.");
             }
-            var key = $elem.attr('widget') || self.fvg.fields[name].type;
-            if (!self.fields_registry.contains(key)) {
+            var obj = self.fields_registry.get_any([$elem.attr('widget'), self.fvg.fields[name].type]);
+            if (!obj) {
                 throw new Error("Widget type '"+ key + "' is not implemented");
             }
-            var obj = self.fields_registry.get_object(key);
             var w = new (obj)(self.view, openerp.web.xml_to_json($elem[0]));
             var $label = self.labels[$elem.attr("name")];
             if ($label) {
