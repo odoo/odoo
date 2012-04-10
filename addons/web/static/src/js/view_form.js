@@ -805,11 +805,9 @@ openerp.web.form.FormRenderingEngineInterface = {
 openerp.web.form.FormRenderingEngine = openerp.web.Class.extend({
     init: function(view) {
         this.view = view;
-        this.legacy_mode = false;
     },
     set_fields_view: function(fvg) {
         this.fvg = fvg;
-        this.legacy_mode = (this.fvg.arch.tag === 'form');
     },
     set_registry: function(registry) {
         this.registry = registry;
@@ -823,7 +821,7 @@ openerp.web.form.FormRenderingEngine = openerp.web.Class.extend({
         var xml = openerp.web.json_node_to_xml(this.fvg.arch);
         this.$form = $('<div class="oe_form">' + xml + '</div>');
         if (this.fvg.arch.attrs && this.fvg.arch.attrs['layout'] !== 'manual') {
-            this.$form.addClass('oe_form_autolayout');
+            this.$form.attr('layout', 'auto');
         }
 
         this.to_init = [];
@@ -867,9 +865,13 @@ openerp.web.form.FormRenderingEngine = openerp.web.Class.extend({
             $('<button>Outline Form Layout</button>').appendTo(this.$element).click($.proxy(this.toggle_layout_debugging, this));
         }
     },
-    render_element: function(template, dict) {
-        dict = dict || {};
-        dict.legacy_mode = this.legacy_mode;
+    render_element: function(template, layout/* dictionaries */) {
+        var dicts = [].slice.call(arguments).slice(2);
+        dicts.unshift({ 'layout' : layout });
+        var dict = _.extend.apply(_, dicts);
+        dict['classnames'] = dict['class'] || ''; // class is a reserved word and might caused problem to Safari when used from QWeb
+        var alt_template = template + '.' + layout;
+        template = QWeb.has_template(alt_template) ? alt_template : template;
         return $(QWeb.render(template, dict));
     },
     alter_field: function(field) {
@@ -884,30 +886,39 @@ openerp.web.form.FormRenderingEngine = openerp.web.Class.extend({
         }
         this.$element.toggleClass('oe_layout_debugging');
     },
-    process: function($tag) {
+    process: function($tag, layout) {
         var self = this;
+        if ($tag.attr('layout') === 'auto') {
+            $tag.addClass('oe_form_autolayout');
+        }
+        layout = $tag.attr('layout') || layout || 'auto';
+        $tag.removeAttr('layout');
         var tagname = $tag[0].nodeName.toLowerCase();
-        var fn = self['process_' + tagname]; 
+        var fn = self['process_' + tagname];
         if (this.registry && this.registry.contains(tagname)) {
             fn = this.registry.get_object(tagname);
         }
         if (fn) {
             var args = [].slice.call(arguments);
             args[0] = $tag;
+            args[1] = layout;
             return fn.apply(self, args);
         } else {
             // generic tag handling, just process children
             $tag.children().each(function() {
-                self.process($(this));
+                self.process($(this), layout);
             });
             self.handle_common_properties($tag, $tag);
             $tag.removeAttr("modifiers");
             return $tag;
         }
     },
-    process_form: function($form) {
-        var $new_form = this.render_element('FormRenderingForm', $form.getAttributes());
-        var $dst = this.legacy_mode ? $new_form.find('group:first') : $new_form.children();
+    process_sheet: function() {
+        this.process_form.apply(this, arguments);
+    },
+    process_form: function($form, layout) {
+        var $new_form = this.render_element('FormRenderingForm', layout, $form.getAttributes());
+        var $dst = (layout === 'auto') ? $new_form.find('group:first') : $new_form;
         $new_form.attr("modifiers", $form.attr("modifiers"));
         $form.children().appendTo($dst);
         if ($form[0] === this.$form[0]) {
@@ -922,7 +933,7 @@ openerp.web.form.FormRenderingEngine = openerp.web.Class.extend({
         var name = $field.attr('name'),
             field_colspan = parseInt($field.attr('colspan'), 10),
             field_modifiers = JSON.parse($field.attr('modifiers') || '{}');
-            
+
         if ($field.attr('nolabel') === '1')
             return;
         $field.attr('nolabel', '1');
@@ -933,7 +944,7 @@ openerp.web.form.FormRenderingEngine = openerp.web.Class.extend({
         });
         if (found)
             return;
-        
+
         $label = $('<label/>').attr({
             'for' : name,
             "modifiers": JSON.stringify({invisible: field_modifiers.invisible}),
@@ -946,19 +957,19 @@ openerp.web.form.FormRenderingEngine = openerp.web.Class.extend({
         }
         return $label;
     },
-    process_field: function($field) {
+    process_field: function($field, layout) {
         var $label = this.preprocess_field($field);
         if ($label)
-            this.process($label);
+            this.process($label, layout);
 
         if (!this.fvg.fields[$field.attr("name")]) {
             throw new Error("Field '" + name + "' specified in view could not be found.");
         }
-        
+
         this.to_init.push($field);
         return $field;
     },
-    process_group: function($group) {
+    process_group: function($group, layout) {
         var self = this;
         if ($group.parent().is('.oe_form_group_cell')) {
             $group.parent().addClass('oe_form_group_nested');
@@ -966,7 +977,7 @@ openerp.web.form.FormRenderingEngine = openerp.web.Class.extend({
         $group.children('field').each(function() {
             self.preprocess_field($(this));
         });
-        var $new_group = $(QWeb.render('FormRenderingGroup', $group.getAttributes())),
+        var $new_group = this.render_element('FormRenderingGroup', layout, $group.getAttributes()),
             $table;
         if ($new_group.is('table')) {
             $table = $new_group;
@@ -992,7 +1003,7 @@ openerp.web.form.FormRenderingEngine = openerp.web.Class.extend({
                 row_cols = cols;
             }
             row_cols -= colspan;
-            
+
             $td = $('<td/>').addClass('oe_form_group_cell').attr('colspan', colspan);
             // invisibility transfer
             var field_modifiers = JSON.parse($child.attr('modifiers') || '{}');
@@ -1000,7 +1011,7 @@ openerp.web.form.FormRenderingEngine = openerp.web.Class.extend({
             field_modifiers.invisible = undefined;
             $child.attr('modifiers', JSON.stringify(field_modifiers));
             self.handle_common_properties($td, $("<dummy>").attr("modifiers", JSON.stringify({invisible: invisible})));
-            
+
             $tr.append($td.append($child));
             children.push($child[0]);
         });
@@ -1049,7 +1060,7 @@ openerp.web.form.FormRenderingEngine = openerp.web.Class.extend({
         this.handle_common_properties($new_group, $group);
         return $new_group;
     },
-    process_notebook: function($notebook) {
+    process_notebook: function($notebook, layout) {
         var self = this;
         var pages = [];
         $notebook.find('> page').each(function() {
@@ -1057,13 +1068,13 @@ openerp.web.form.FormRenderingEngine = openerp.web.Class.extend({
             var page_attrs = $page.getAttributes();
             page_attrs.id = _.uniqueId('notebook_page_');
             pages.push(page_attrs);
-            var $new_page = self.render_element('FormRenderingNotebookPage', page_attrs);
-            var $dst = self.legacy_mode ? $new_page.find('group:first') : $new_page;
+            var $new_page = self.render_element('FormRenderingNotebookPage', layout, page_attrs);
+            var $dst = (layout === 'auto') ? $new_page.find('group:first') : $new_page;
             $page.children().appendTo($dst);
             $page.before($new_page).remove();
             self.handle_common_properties($new_page, $page);
         });
-        var $new_notebook = $(QWeb.render('FormRenderingNotebook', { pages : pages }));
+        var $new_notebook = this.render_element('FormRenderingNotebook', layout, { pages : pages });
         $notebook.children().appendTo($new_notebook);
         $notebook.before($new_notebook).remove();
         $new_notebook.children().each(function() {
@@ -1073,13 +1084,13 @@ openerp.web.form.FormRenderingEngine = openerp.web.Class.extend({
         this.handle_common_properties($new_notebook, $notebook);
         return $new_notebook;
     },
-    process_separator: function($separator) {
-        var $new_separator = $(QWeb.render('FormRenderingSeparator', $separator.getAttributes()));
+    process_separator: function($separator, layout) {
+        var $new_separator = this.render_element('FormRenderingSeparator', layout, $separator.getAttributes());
         $separator.before($new_separator).remove();
         this.handle_common_properties($new_separator, $separator);
         return $new_separator;
     },
-    process_label: function($label) {
+    process_label: function($label, layout) {
         var name = $label.attr("for"),
             field_orm = this.fvg.fields[name];
         var dict = {
@@ -1096,7 +1107,7 @@ openerp.web.form.FormRenderingEngine = openerp.web.Class.extend({
             align = 'center';
         }
         dict.align = align;
-        var $new_label = $(QWeb.render('FormRenderingLabel', dict));
+        var $new_label = this.render_element('FormRenderingLabel', layout, dict);
         $label.before($new_label).remove();
         this.handle_common_properties($new_label, $label);
         if (name) {
@@ -1104,7 +1115,7 @@ openerp.web.form.FormRenderingEngine = openerp.web.Class.extend({
         }
         return $new_label;
     },
-    process_button: function($button) {
+    process_button: function($button, layout) {
         this.to_init.push($button);
         return $button;
     },
