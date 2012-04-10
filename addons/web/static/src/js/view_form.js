@@ -933,6 +933,7 @@ openerp.web.form.FormRenderingEngine = openerp.web.Class.extend({
         this.process($new_form);
     },
     preprocess_field: function($field) {
+        var self = this;
         var name = $field.attr('name'),
             field_colspan = parseInt($field.attr('colspan'), 10),
             field_modifiers = JSON.parse($field.attr('modifiers') || '{}');
@@ -942,8 +943,10 @@ openerp.web.form.FormRenderingEngine = openerp.web.Class.extend({
         $field.attr('nolabel', '1');
         var found = false;
         this.$form.find('label[for="' + name + '"]').each(function(i ,el) {
-            if ($(el).parents("field").length === 0)
-                found = true;
+            $(el).parents().each(function(unused, tag) {
+                if (tag.tagName.toLowerCase() in self.tags_registry.map)
+                    found = true;
+            });
         });
         if (found)
             return;
