@@ -28,7 +28,7 @@ openerp.web_process = function (openerp) {
         initialize_process_view: function() {
             var self = this;
             this.record_id = false;
-            if(this.active_view  == 'page' || this.active_view == 'form') {
+            if(this.active_view == 'form') {
                 this.record_id = this.views[this.active_view].controller.datarecord.id;
             }
 

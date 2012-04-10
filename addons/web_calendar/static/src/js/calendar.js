@@ -344,7 +344,7 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         var index = this.dataset.get_id_index(event_id);
         if (index !== null) {
             this.dataset.index = index;
-            this.do_switch_view('page');
+            this.do_switch_view('form');
         } else if (scheduler.getState().mode === 'month') {
             var event_obj = scheduler.getEvent(event_id);
             if (event_obj._length === 1) {

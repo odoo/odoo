@@ -2687,10 +2687,9 @@ openerp.web.form.FieldOne2Many = openerp.web.form.AbstractField.extend({
 
         this.viewmanager = new openerp.web.ViewManager(this, this.dataset, views, {});
         this.viewmanager.template = 'One2Many.viewmanager';
-        this.viewmanager.fields_registry = openerp.web.views.extend({
+        this.viewmanager.registry = openerp.web.views.extend({
             list: 'openerp.web.form.One2ManyListView',
             form: 'openerp.web.form.One2ManyFormView',
-            page: 'openerp.web.PageView',
             kanban: 'openerp.web.form.One2ManyKanbanView',
         });
         var once = $.Deferred().then(function() {
@@ -2704,8 +2703,8 @@ openerp.web.form.FieldOne2Many = openerp.web.form.AbstractField.extend({
             if (view_type == "list") {
                 if (self.get("effective_readonly"))
                     controller.set_editable(false);
-            } else if (view_type == "form" || view_type == 'form') {
-                if (view_type == 'page' || self.get("effective_readonly")) {
+            } else if (view_type === "form") {
+                if (self.get("effective_readonly")) {
                     $(".oe_form_buttons", controller.$element).children().remove();
                 }
                 controller.on_record_loaded.add_last(function() {
@@ -2739,7 +2738,7 @@ openerp.web.form.FieldOne2Many = openerp.web.form.AbstractField.extend({
             var view = self.viewmanager.views[active_view].controller;
             if(active_view === "list") {
                 return view.reload_content();
-            } else if (active_view === "form" || active_view === 'page') {
+            } else if (active_view === "form") {
                 if (self.dataset.index === null && self.dataset.ids.length >= 1) {
                     self.dataset.index = 0;
                 }
@@ -3409,9 +3408,7 @@ openerp.web.form.FormOpenPopup = openerp.web.OldWidget.extend(/** @lends openerp
     on_write_completed: function() {},
     setup_form_view: function() {
         var self = this;
-        var FormClass = this.options.readonly
-                ? openerp.web.views.get_object('page')
-                : openerp.web.views.get_object('form');
+        var FormClass = openerp.web.views.get_object('form');
         this.view_form = new FormClass(this, this.dataset, false, self.options.form_view_options);
         if (this.options.alternative_form_view) {
             this.view_form.set_embedded_view(this.options.alternative_form_view);
