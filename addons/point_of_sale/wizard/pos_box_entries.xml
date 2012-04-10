@@ -10,10 +10,12 @@
             <field name="arch" type="xml">
                 <form string="Put Money">
                     <separator string="Fill in this form if you put money in the cash register:" colspan="4"/>
-                    <field name="name"/>
-                    <field name="product_id"/>
                     <field name="journal_id"/>
+                    <field name="product_id"/>
                     <field name="amount"/>
+                    <field name="session_id" />
+                    <field name="user_id" invisible="1" />
+                    <field name="name"/>
                     <separator colspan="4"/>
                     <group colspan="4" col="4">
                         <group col="2" colspan="2"/>

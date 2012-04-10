@@ -76,4 +76,56 @@
 
 
   </data>
+
+  <data>
+    <record model="workflow" id="wkf_pos_session">
+      <field name="name">POS Session Workflow</field>
+      <field name="osv">pos.session</field>
+      <field name="on_create">True</field>
+    </record>
+
+    <!-- Activities -->
+
+    <record model="workflow.activity" id="act_new">
+      <field name="wkf_id" ref="wkf_pos_session"/>
+      <field name="flow_start">True</field>
+      <field name="name">new</field>
+    </record>
+
+    <record model="workflow.activity" id="act_open">
+      <field name="wkf_id" ref="wkf_pos_session"/>
+      <field name="name">open</field>
+    </record>
+
+    <record model="workflow.activity" id="act_close">
+      <field name="wkf_id" ref="wkf_pos_session"/>
+      <field name="name">close</field>
+    </record>
+
+    <record model="workflow.activity" id="act_post">
+      <field name="wkf_id" ref="wkf_pos_session"/>
+      <field name="flow_stop">True</field>
+      <field name="name">post</field>
+    </record>
+
+    <!-- Transitions -->
+    <record model="workflow.transition" id="trans_new_open">
+      <field name="act_from" ref="act_new"/>
+      <field name="act_to" ref="act_open"/>
+      <field name="signal">open</field>
+    </record>
+
+    <record model="workflow.transition" id="trans_open_close">
+      <field name="act_from" ref="act_open"/>
+      <field name="act_to" ref="act_close"/>
+      <field name="signal">close</field>
+    </record>
+
+    <record model="workflow.transition" id="trans_close_post">
+      <field name="act_from" ref="act_close"/>
+      <field name="act_to" ref="act_post"/>
+      <field name="signal">post</field>
+    </record>
+
+  </data>
 </openerp>

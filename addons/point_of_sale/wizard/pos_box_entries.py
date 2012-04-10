@@ -73,10 +73,13 @@ class pos_box_entries(osv.osv_memory):
         'product_id': fields.selection(_get_income_product, "Operation", required=True, size=-1),
         'amount': fields.float('Amount', digits=(16, 2), required=True),
         'ref': fields.char('Ref', size=32),
+        'session_id' : fields.many2one('pos.session', 'Session'),
+        'user_id' : fields.many2one('res.users', 'User'),
     }
     _defaults = {
-         'journal_id': 1,
-         'product_id': 1,
+        'journal_id': 1,
+        'product_id': 1,
+        'user_id' : lambda obj, cr, uid, context: uid,
     }
 
     def get_in(self, cr, uid, ids, context=None):

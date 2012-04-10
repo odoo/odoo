@@ -61,6 +61,9 @@ class pos_config(osv.osv):
 
         'state' : fields.selection(POS_CONFIG_STATE, 'State', required=True, readonly=True),
 
+        #'sequence_id' : fields.many2one('ir.sequence', 'Sequence'),
+        # Add a sequence when we create a new pos.config object
+
     }
 
     _defaults = {
@@ -84,9 +87,44 @@ pos_config()
 class pos_session(osv.osv):
     _name = 'pos.session'
 
+    POS_SESSION_STATE = [('new', 'New'),('opened', 'Opened'),('closed', 'Closed'),('posted', 'Posted')]
+
     _columns = {
-        'config_id' : fields.many2one('pos.config', 'Configuration', required=True, select=1),
+        'config_id' : fields.many2one('pos.config', 'PoS', required=True, select=1),
+
+        'name' : fields.char('Session Sequence', size=32, required=True, select=1, readonly=1),
+        'user_id' : fields.many2one('res.users', 'User', required=True, select=1),
+        'start_at' : fields.datetime('Opening Date'), #, readonly=True),
+        'stop_at' : fields.datetime('Closing Date'),
+
+        'state' : fields.selection(POS_SESSION_STATE, 'State', required=True, readonly=True, select=1),
     }
+
+    _defaults = {
+        'name' : '/',
+        'user_id' : lambda obj, cr, uid, context: uid,
+        'state' : 'new',
+    }
+
+    def create(self, cr, uid, values, context=None):
+        if values.pop('name', '/') == '/':
+            values['name'] = self.pool.get('ir.sequence').get(cr, uid, 'pos.session')
+
+        return super(pos_session, self).create(cr, uid, values, context=context)
+
+    def wkf_action_open(self, cr, uid, ids, context=None):
+        # si pas de date start_at, je balance une date, sinon on utilise celle de l'utilisateur
+        values = {
+            #'start_at' : time.strftime('%Y-%m-%d %H:%M:%S'),
+            'state' : 'opened',
+        }
+        return self.write(cr, uid, ids, values, context=context)
+
+    def wkf_action_close(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state' : 'close'}, context=context)
+
+    def wkf_action_post(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state' : 'post'}, context=context)
 
 pos_session()
 
@@ -203,6 +241,8 @@ class pos_order(osv.osv):
         'statement_ids': fields.one2many('account.bank.statement.line', 'pos_statement_id', 'Payments', states={'draft': [('readonly', False)]}, readonly=True),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', required=True, states={'draft': [('readonly', False)]}, readonly=True),
         'partner_id': fields.many2one('res.partner', 'Customer', change_default=True, select=1, states={'draft': [('readonly', False)], 'paid': [('readonly', False)]}),
+
+        'session_id' : fields.many2one('pos.session', 'Session', required=True, select=1),
 
         'state': fields.selection([('draft', 'New'),
                                    ('cancel', 'Cancelled'),

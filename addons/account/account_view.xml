@@ -2617,7 +2617,7 @@ action = pool.get('res.config').next(cr, uid, [], context)
                     <group col="6" colspan="4">
                         <field name="name" select="1"/>
                         <field name='company_id' widget="selection" groups="base.group_multi_company" />
-                        <field name="journal_id" on_change="onchange_journal_id(journal_id)" select="1" widget="selection"/>
+                        <field name="journal_id" on_change="onchange_journal_id(journal_id)" select="1" widget="selection" domain="[('type', '=', 'cash')]"/>
                         <field name="user_id" select="1" readonly="1"/>
                         <field name="period_id" select="1"/>
                         <field name="currency" invisible="1"/>
