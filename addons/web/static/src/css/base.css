@@ -92,9 +92,11 @@
 }
 .openerp2 .oe_left {
   float: left;
+  margin-right: 8px;
 }
 .openerp2 .oe_right {
   float: right;
+  margin-left: 8px;
 }
 .openerp2 .oe_clear {
   clear: both;
@@ -927,6 +929,12 @@
 .openerp2 .oe_view_manager_header .oe_view_manager_pager {
   float: right;
 }
+.openerp2 .oe_view_manager_header .oe_previous:after {
+  content: "(";
+}
+.openerp2 .oe_view_manager_header .oe_next:after {
+  content: ")";
+}
 .openerp2 .oe_view_manager_switch li {
   padding-left: 1px;
   text-align: center;
@@ -1649,10 +1657,6 @@
   position: relative;
   display: block;
   min-height: 50px;
-  background: white;
-  border: 1px solid #d8d8d8;
-  border-bottom-color: #b9b9b9;
-  padding: 6px;
   margin: 6px 0;
   display: block;
   -moz-border-radius: 4px;
@@ -1661,11 +1665,6 @@
 }
 .openerp2 .oe_kanban_record:last-child {
   margin-bottom: 0;
-}
-.openerp2 .oe_kanban_record:hover {
-  -moz-box-shadow: 0 0 3px rgba(0, 0, 0, 0.6);
-  -webkit-box-shadow: 0 0 3px rgba(0, 0, 0, 0.6);
-  -box-shadow: 0 0 3px rgba(0, 0, 0, 0.6);
 }
 .openerp2 .oe_kanban_record .oe_kanban_title {
   font-weight: bold;
