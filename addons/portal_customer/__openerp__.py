@@ -37,7 +37,7 @@
     "demo_xml" : [ 
     ],
     "update_xml" : [
-        "security/security_customer_portal.xml",
+        #"security/ir_model_access.csv",
         "portal_customer_view.xml",
         "portal_demo.xml"
     ],
