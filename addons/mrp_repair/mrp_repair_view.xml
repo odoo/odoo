@@ -118,7 +118,7 @@
                     <page string="Invoicing">
                         <field name="invoice_method" colspan="4"/>
                         <field
-                            name="pricelist_id" context="{'product_id':product_id}"
+                            name="pricelist_id" groups="product.group_sale_pricelist" context="{'product_id':product_id}"
                             attrs="{'readonly':[('invoice_method','=', 'none')]}"/>
                         <field name="partner_invoice_id" attrs="{'readonly':[('invoice_method','=', 'none')]}"/>
                         <!-- <field name="invoice_id"/> -->

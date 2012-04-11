@@ -1,8 +1,10 @@
+##YAML test on the account_voucher as depicted in this bug report: https://bugs.launchpad.net/openobject-addons/+bug/954155
+
 -
   In order to check the payment with multi-currency in OpenERP, 
-  I create Invoices in EUR and make Payment in USD based on the currency rating.
+  I create a Invoice in EUR and make Payment in USD based on the currency rating.
 -
-  I create currency rate for USD 
+  I create currency USD in OpenERP for May of 1.400000 Rate
 -
   !record {model: res.currency.rate, id: usd_rate}:
     currency_id: base.USD
@@ -91,8 +93,8 @@
     data = []
     voucher = self.browse(cr, uid, ref('account_voucher_eur_usd_case'))
     for item in voucher.line_cr_ids:
-        if item.amount_unreconciled == item.amount_original:
-            data += [(item.id, item.amount_original)]
+        if item.amount_unreconciled == 1400:
+            data += [(item.id, 1400)]
     for line_id, amount in data:
         self.pool.get('account.voucher.line').write(cr, uid, [line_id], {'amount': amount})
     assert (voucher.state=='draft'), "Voucher is not in draft state"
@@ -139,5 +141,5 @@
     assert payment_line, "payment line not created for paid invoice"
     assert payment_line.state == 'valid', "payment move line state is not valid"
     assert payment_line.debit == 0.0 and payment_line.credit == invoice.amount_total, "proper amount is not debit to payment account "
-    assert payment_line.reconcile_id, "reconcile is not created for paid invoice"   
+    assert payment_line.reconcile_id, "reconcile is not created for paid invoice"
     

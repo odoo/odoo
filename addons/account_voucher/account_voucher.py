@@ -202,12 +202,19 @@ class account_voucher(osv.osv):
         line_dr_ids = resolve_o2m_operations(cr, uid, line_osv, line_dr_ids, ['amount'], context)
         line_cr_ids = resolve_o2m_operations(cr, uid, line_osv, line_cr_ids, ['amount'], context)
 
-        #loop into the lines to see if there is an amount allocated on a voucher line with a currency different than the voucher currency
+        #compute the field is_multi_currency that is used to hide/display options linked to secondary currency on the voucher
         is_multi_currency = False
-        for voucher_line in line_dr_ids+line_cr_ids:
-            if voucher_line.get('currency_id',False) != voucher_currency:
-                is_multi_currency = True
-                break
+        if voucher_currency:
+            # if the voucher currency is not False, it means it is different than the company currency and we need to display the options
+            is_multi_currency = True
+        else:
+            #loop on the voucher lines to see if one of these has a secondary currency. If yes, we need to define the options
+            for voucher_line in line_dr_ids+line_cr_ids:
+                company_currency = False
+                company_currency = voucher_line.get('move_line_id', False) and self.pool.get('account.move.line').browse(cr, uid, voucher_line.get('move_line_id'), context=context).company_id.currency_id.id
+                if voucher_line.get('currency_id', company_currency) != company_currency:
+                    is_multi_currency = True
+                    break
         return {'value': {'writeoff_amount': self._compute_writeoff_amount(cr, uid, line_dr_ids, line_cr_ids, amount), 'is_multi_currency': is_multi_currency}}
 
     def _get_writeoff_amount(self, cr, uid, ids, name, args, context=None):
