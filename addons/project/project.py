@@ -162,6 +162,13 @@ class project(osv.osv):
             task_ids = task_pool.search(cr, uid, [('project_id', '=', id)])
             open_task[id] = len(task_ids)
         return open_task
+    
+    def _cal_days(self, cr, uid, ids, field_name, arg, context=None):
+        cal_days = {}
+        for project in self.browse(cr,uid,ids):
+            cal_days[project.id] = project.company_id.project_time_mode_id.factor or 8
+        return cal_days
+                
 
     _columns = {
         'complete_name': fields.function(_complete_name, string="Project Name", type='char', size=250),
@@ -202,6 +209,7 @@ class project(osv.osv):
         'task': fields.boolean('Task',help = "If you check this field tasks appears in kanban view"),
         'open_task': fields.function(_open_task , type='integer',string="Open Tasks"),
         'color': fields.integer('Color Index'),
+        'cal_days': fields.function(_cal_days ,type="integer", string="Calculate Days"),
      }
     def dummy(self, cr, uid, ids, context=None):
             return False
