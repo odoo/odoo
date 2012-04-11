@@ -114,32 +114,50 @@
   !assert {model: account.voucher, id: account_voucher_eur_usd_case}:
     - state == 'posted'
 -
-  I check a payment is created with proper data in voucher
+  I check that the move of voucher is valid
 -
   !python {model: account.voucher}: |
-    inv_obj = self.pool.get('account.invoice')
-    invoice = inv_obj.browse(cr, uid, ref('account_invoice_eur_usd'))
     voucher = self.browse(cr, uid, ref('account_voucher_eur_usd_case'))
-    prec = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
     assert voucher.move_ids, "Move line is not created for this voucher"
     assert (voucher.number == voucher.move_ids[0].move_id.name), "referance number is not created"
     assert voucher.period_id, "period is not created"
     for move_line in voucher.move_ids:
         assert move_line.state == 'valid', "Voucher move is not valid"
     
-    rate = voucher.journal_id.currency.rate_ids[0].rate
-    assert (round(voucher.amount/rate, prec) == voucher.move_ids[2].debit),"debtor account is not correct"
-    assert (round(voucher.writeoff_amount/rate, prec) == voucher.move_ids[0].debit),"write off bank account is not correct"
-    assert (invoice.amount_total == voucher.move_ids[1].credit), " total reconcile is not correct of invoice"
 -
-  I check that the payment amount is created with proper data in customer invoice
+  I check that my debtor account is correct
+-
+  I check that my currency rate difference is correct. 1000 in credit with no amount_currency
+-
+  I  check that the total reconcilation created entries as expected
+-
+  I check that my writeoff is correct. 35.71 debit and 50 amount_currency
+-
+  I check that my bank account is correct. 964.29 debit and 1350 amount_currency
+-
+  !python {model: account.voucher}: |
+    voucher = self.browse(cr, uid, ref('account_voucher_eur_usd_case'))
+    for move_line in voucher.move_ids:
+        if move_line.amount_currency == 1350:
+            assert move_line.debit == 964.29,"debtor account is not correct"
+        if move_line.amount_currency == 50:
+            assert move_line.debit == 35.71,"write off bank account is not correct"
+        if move_line.amount_currency == 0.0:
+            assert move_line.credit == 1000,"total reconcile is not correct of invoice"
+-
+  I check that the move of payment in invoice is valid
 -
   !python {model: account.invoice}: |
     invoice = self.browse(cr, uid, ref("account_invoice_eur_usd"))
-    assert invoice.state == 'paid', "invoice is not paid"
-    payment_line =  invoice.payment_ids[0]
-    assert payment_line, "payment line not created for paid invoice"
-    assert payment_line.state == 'valid', "payment move line state is not valid"
-    assert payment_line.debit == 0.0 and payment_line.credit == invoice.amount_total, "proper amount is not debit to payment account "
-    assert payment_line.reconcile_id, "reconcile is not created for paid invoice"
+    for payment_line in invoice.payment_ids:
+        assert payment_line.state == 'valid', "payment move line state is not valid"
+-
+  I check the residual amount of Invoice, should be 0 in residual currency and 0 in amount_residual and paid
+-
+  !python {model: account.invoice}: |
+    invoice_id = self.browse(cr, uid, ref("account_invoice_eur_usd"))
+    move_line_obj = self.pool.get('account.move.line')
+    move_lines = move_line_obj.search(cr, uid, [('move_id', '=', invoice_id.move_id.id), ('invoice', '=', invoice_id.id), ('account_id', '=', invoice_id.account_id.id)])
+    move_line = move_line_obj.browse(cr, uid, move_lines[0])
+    assert (move_line.amount_residual_currency == 0.0 and move_line.amount_residual == 0.0 and invoice_id.state == 'paid') , "Residual amount is not correct for Invoice"
     
