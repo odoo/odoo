@@ -190,7 +190,7 @@
             <field name="type_id" ref="project_tt_merge"/>
         </record>
 
-        <function model="project.task" name="do_close" eval="[ref('project_task_11')]"/>
+        <function model="project.task" name="do_close" eval="[ref('project_task_11')], {'install_mode': True}"/>
         
         <record id="project_task_12" model="project.task">
             <field eval="20.0" name="planned_hours"/>
@@ -202,7 +202,7 @@
             <field name="type_id" ref="project_tt_development"/>
         </record>
 
-        <function model="project.task" name="do_close" eval="[ref('project_task_12')]"/>
+        <function model="project.task" name="do_close" eval="[ref('project_task_12')], {'install_mode': True}"/>
         
         <record id="project_task_13" model="project.task">
             <field eval="50.0" name="planned_hours"/>
@@ -214,7 +214,7 @@
             <field name="type_id" ref="project_tt_development"/>
         </record>
 
-        <function model="project.task" name="do_pending" eval="[ref('project_task_13')]"/>
+        <function model="project.task" name="do_pending" eval="[ref('project_task_13')], {'install_mode': True}"/>
 
         <record id="project_task_14" model="project.task">
             <field eval="30.0" name="planned_hours"/>
@@ -249,7 +249,7 @@
             <field name="description">Test on Runbot</field>
              <field name="type_id" ref="project_tt_specification"/>
         </record>
-        <function model="project.task" name="do_open" eval="[ref('project_task_16')]"/>
+        <function model="project.task" name="do_open" eval="[ref('project_task_16')], {'install_mode': True}"/>
 
         <record id="project_task_17" model="project.task">
             <field eval="5.0" name="planned_hours"/>
@@ -260,7 +260,7 @@
             <field name="name">Deploy and Review on Customer System</field>
             <field name="type_id" ref="project_tt_specification"/>
         </record>
-        <function model="project.task" name="do_open" eval="[ref('project_task_17')]"/>
+        <function model="project.task" name="do_open" eval="[ref('project_task_17')], {'install_mode': True}"/>
 
         <record id="project_task_18" model="project.task">
             <field eval="10.0" name="planned_hours"/>
@@ -328,7 +328,7 @@
             <field name="description">BoM, After sales returns, interventions. Traceability.</field>
             <field name="name">Specific adaptation to MRP</field>
         </record>
-        <function model="project.task" name="do_open" eval="[ref('project_task_116')]"/>
+        <function model="project.task" name="do_open" eval="[ref('project_task_116')], {'install_mode': True}"/>
        
         <record id="project_task_130" model="project.task">
             <field name="planned_hours">16.0</field>
@@ -338,7 +338,7 @@
             <field name="project_id" ref="project_project_23"/>
             <field name="name">Data importation + Doc</field>
         </record>
-        <function model="project.task" name="do_open" eval="[ref('project_task_130')]"/>
+        <function model="project.task" name="do_open" eval="[ref('project_task_130')], {'install_mode': True}"/>
 
         <record id="project_task_131" model="project.task">
             <field name="planned_hours">16.0</field>
@@ -348,7 +348,7 @@
             <field name="project_id" ref="project_project_23"/>
             <field name="name">Modifications asked by the customer.</field>
         </record>
-        <function model="project.task" name="do_open" eval="[ref('project_task_131')]"/>
+        <function model="project.task" name="do_open" eval="[ref('project_task_131')], {'install_mode': True}"/>
         
         <record id="project_task_184" model="project.task">
             <field name="planned_hours">16.0</field>
@@ -380,7 +380,7 @@
             <field name="project_id" ref="project_project_21"/>
             <field name="name">Analysis, Data Importation</field>
         </record>
-        <function model="project.task" name="do_open" eval="[ref('project_task_188')]"/>
+        <function model="project.task" name="do_open" eval="[ref('project_task_188')], {'install_mode': True}"/>
         
         <record id="project_task_189" model="project.task">
             <field name="sequence">20</field>
@@ -391,7 +391,7 @@
             <field name="name">Parameters</field>
             <field name="type_id" ref="project_tt_specification"/>
         </record>
-        <function model="project.task" name="do_open" eval="[ref('project_task_189')]"/>
+        <function model="project.task" name="do_open" eval="[ref('project_task_189')], {'install_mode': True}"/>
         
         <record id="project_task_190" model="project.task">
             <field name="sequence">20</field>
@@ -405,8 +405,9 @@
         </record>
 
         <!-- Schedule tasks to assign users and dates -->
-
-        <function model="project.project" name="schedule_tasks" eval="[[ref('project_project_21'), ref('project_project_22'), ref('project_project_23')]]"/>
+        <function model="project.project" name="schedule_tasks"
+            eval="[ref('project_project_21'), ref('project_project_22'), ref('project_project_23')], {'install_mode': True}"
+        />
 
     </data>
 </openerp>

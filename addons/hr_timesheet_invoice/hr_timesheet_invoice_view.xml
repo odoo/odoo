@@ -14,7 +14,7 @@
                     <group colspan="2" col="2" name="invoice_data">
                         <separator colspan="2" string="Invoicing Data"/>
                         <field name="to_invoice" widget="selection"/>
-                        <field name="pricelist_id" domain="[('type','=','sale')]" attrs="{'required':[('to_invoice','!=',False)]}"/>
+                        <field name="pricelist_id" groups="product.group_sale_pricelist" domain="[('type','=','sale')]" attrs="{'required':[('to_invoice','!=',False)]}"/>
                         <field name="amount_max"/>
                     </group>
                     <group colspan="2" col="2" name="invoice_stats">

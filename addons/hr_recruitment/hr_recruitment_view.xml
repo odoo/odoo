@@ -79,6 +79,9 @@
                         <field name="partner_name"/>
                         <field name="job_id" on_change="onchange_job(job_id)"/>
                         <button name="action_makeMeeting" type="object" string="Meeting" icon="gtk-index"/>
+                        <button string="Send New Email"
+                            name="%(mail.action_email_compose_message_wizard)d"
+                            icon="terp-mail-message-new" type="action"/>
                     <newline/>
                     <field name="department_id" widget="selection" on_change="onchange_department_id(department_id)"/>
                     <group colspan="2" col="4">
@@ -123,13 +126,6 @@
                             <field name="source_id"/>
                             <field name="reference"/>
                         </group>
-                        <group col="2" colspan="2" groups="base.group_no_one">
-                           <separator colspan="2" string="Dates"/>
-                           <field name="create_date"/>
-                           <field name="write_date"/>
-                           <field name="date_closed"/>
-                           <field name="date_open"/>
-                        </group>
                         <separator colspan="4" string="Status"/>
                         <group col="8" colspan="4">
                             <field name="state" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
@@ -140,33 +136,11 @@
                             <button name="case_reset" string="Reset to New" states="done,cancel" type="object" icon="gtk-convert"/>
                         </group>
                    </page>
-                   <page string="Communication &amp; History" groups="base.group_extended">
-                       <group colspan="4">
-                           <field colspan="4" name="email_cc" string="Global CC" widget="char"/>
-                       </group>
-                       <field name="message_ids" colspan="4" nolabel="1" mode="tree" readonly="1">
-                            <tree string="History">
-                                <field name="display_text" string="History Information"/>
-                                <field name="email_from" invisible="1"/>
-                                <button
-                                    string="Reply" attrs="{'invisible': [('email_from', '=', False)]}"
-                                    name="%(mail.action_email_compose_message_wizard)d"
-                                    context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
-                                    icon="terp-mail-replied" type="action" />
-                            </tree>
-                        </field>
-                        <button string="Add Internal Note"
-                                name="%(crm.action_crm_add_note)d"
-                                context="{'model': 'crm.lead' }"
-                                icon="terp-document-new" type="action" />
-                        <button string="Send New Email"
-                            name="%(mail.action_email_compose_message_wizard)d"
-                            icon="terp-mail-message-new" type="action"/>
-                 </page>
                  <page string="Notes">
                      <field name="description" nolabel="1" colspan="4"/>
                  </page>
                 </notebook>
+                <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
             </form>
         </field>
     </record>
