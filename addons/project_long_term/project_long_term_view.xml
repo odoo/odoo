@@ -120,7 +120,7 @@
                     <field name="phases"/>
                     <field name="open_phases"/>
                 </field>
-                <xpath expr="//h4[@id='list']" position="inside">
+                <xpath expr="//div[@id='list']" position="inside">
                     <a id="4">
                         <t t-if="record.phases.raw_value">
                             <button name="open_phase" class="oe_project_buttons" type="object"><t t-if="record.open_phases.value &lt;= 1"> Phase</t><t t-if="record.open_phases.value > 1"> Phases</t>(<t t-esc="record.open_phases.value"/>)</button>
