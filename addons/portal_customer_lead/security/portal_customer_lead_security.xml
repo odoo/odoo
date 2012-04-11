@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    <!-- lead access-->
+       <record id="customer_contact_rule" model="ir.rule">
+            <field name="name">Customer Contact</field>
+            <field ref="base.model_res_partner" name="model_id"/>
+            <field eval="1" name="global"/>
+            <field name="domain_force">[('email','=',user.login)]</field>
+       </record>
+
+       <record id="portal_customer_lead_rule" model="ir.rule">
+            <field name="name">Personal Lead</field>
+            <field ref="crm.model_crm_lead" name="model_id"/>
+            <field name="domain_force">[('partner_id.email','=',user.login)]</field>
+            <field name="global" eval="True"/>
+       </record>
+
+       <record id="group_portal_customer_lead" model="res.groups">
+            <field name="name">Portal Lead Group</field>
+            <field ref="base.module_category_sales_management" name="category_id"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="rule_groups" eval="[(4, ref('portal_customer_lead_rule')),(4, ref('customer_contact_rule'))]"/>
+        </record>
+
+        <record id="portal_customer_lead" model="res.portal">
+            <field name="name">Customer Lead Portal</field>
+            <field name="group_id" ref="group_portal_customer_lead"/>
+        </record>
+
+    </data>
+</openerp>

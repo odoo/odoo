@@ -34,10 +34,9 @@ A portal_customer_lead will show the own leads of the customer.
     'website': 'http://www.openerp.com',
   
     'update_xml': [
-    
-        'portal_customer_lead_view.xml',
-        'portal_customer_lead_data.xml',
-#        'security/ir.model.access.csv',
+        'security/portal_customer_lead_security.xml',
+        'security/ir.model.access.csv',
+        'portal_customer_lead_menu.xml',
             ],
     'installable': True,
 }
