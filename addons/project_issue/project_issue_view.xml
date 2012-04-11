@@ -363,7 +363,7 @@
                     <field name="issues"/>
                     <field name="total_issues" invisible="1"/>
                 </field>
-                <xpath expr="//h4[@id='list']" position="inside">
+                <xpath expr="//div[@id='list']" position="inside">
                     <a id="2">
                         <t t-if="record.issues.raw_value">
                             <button name="open_issues" class="oe_project_buttons" type="object"><div class="fontsize"><t t-if="record.total_issues.value &lt;= 1"> Issue</t><t t-if="record.total_issues.value > 1"> Issues</t>(<t t-esc="record.total_issues.value"/>)</div></button>

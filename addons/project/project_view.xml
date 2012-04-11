@@ -187,7 +187,7 @@
                                       <li ><a type="delete">Delete</a></li>
                                       <li>
                                         <ul class="color-chooser">
-                                        	<li><a t-att-id="record.id.value" class="bgcolor_white"><span class="white square"></span></a></li>
+                                            <li><a t-att-id="record.id.value" class="bgcolor_white"><span class="white square"></span></a></li>
                                             <li><a t-att-id="record.id.value" class="bgcolor_steelblue"><span class="steelblue square"></span></a></li>
                                             <li><a t-att-id="record.id.value" class="bgcolor_firebrick"><span class="firebrick square"></span></a></li>
                                             <li><a t-att-id="record.id.value" class="bgcolor_khaki"><span class="khaki square"></span></a></li>
@@ -197,13 +197,13 @@
                                       </li>
                                     </ul>
                                     <h4><t t-esc="record.name.value.substr(0,32)"/><t t-if="record.name.value.length > 32">...</t></h4>
-                                    <h4 id="list" height="10px">
+                                    <div id="list">
                                         <a id="1">
                                             <t t-if="record.task.raw_value">
                                                 <button name="open_tasks" id = "open_tasks" class="oe_project_buttons" type="object"><div class="fontsize"><t t-if="record.open_task.value &lt;= 1"> Task</t><t t-if="record.open_task.value &gt; 1"> Tasks</t>(<t t-esc="record.open_task.value"/>)</div></button>
                                             </t>
                                         </a>
-                                    </h4>
+                                    </div>
                                     <button class="click_button" type="object">
                                         <table class="project_fields">
                                             <tr id="deadline" t-if="record.date.raw_value">
@@ -222,13 +222,10 @@
                                             </tr>
                                         </table>
                                         <t t-if="record.members.raw_value.length &lt;= 7"><br/><br/><br/></t>
-                                        <t t-if="record.members.raw_value.length &gt; 7 and record.members.raw_value.length &lt;= 14"><br/><br/></t>
-                      
-                                        
+                                        <t t-if="record.members.raw_value.length &gt; 7 and record.members.raw_value.length &lt;= 14"><br/></t>
                                         <t t-foreach="record.members.raw_value" t-as="member">
                                             <img t-att-src="kanban_image('res.users', 'avatar', member)" t-att-id="member" class="project_avatar"/>
                                         </t>
-
                                     </button>
                                 </li>
                             </div>
