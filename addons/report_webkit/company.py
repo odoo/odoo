@@ -50,12 +50,6 @@ class ResCompany(osv.osv):
                                                     'html_id',
                                                     'Available html',
                                                 ),
-                'lib_path' : fields.char('Webkit Executable Path', size=264,
-                                         help="Full path to the wkhtmltopdf executable file. "
-                                              "Version 0.9.9 is required. Install a static version "
-                                              "of the library if you experience missing header/footers "
-                                              "on Linux."),
-
     }
 ResCompany()
 
