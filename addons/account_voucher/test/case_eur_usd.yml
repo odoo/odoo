@@ -2,7 +2,7 @@
 
 -
   In order to check the payment with multi-currency in OpenERP, 
-  I create a Invoice in EUR and make Payment in USD based on the currency rating.
+  I create an invoice in EUR and make payment in USD based on the currency rating.
 -
   I create currency USD in OpenERP for May of 1.400000 Rate
 -
@@ -11,7 +11,7 @@
     name: !eval "'%s-05-01' %(datetime.now().year)"
     rate: 1.400000
 -
-  I create a asset account with currency USD
+  I create a bank account with USD as currency
 -
   !record {model: account.account, id: account_eur_usd_id}:
     currency_id: base.USD
@@ -34,7 +34,7 @@
     company_id: base.main_company
     view_id: account.account_journal_bank_view
 -
-  I create a invoice 
+  I create an invoice 
 -
   !record {model: account.invoice, id: account_invoice_eur_usd}:
     account_id: account.a_recv
@@ -52,11 +52,11 @@
     journal_id: account.sales_journal
     partner_id: base.res_partner_seagate
 -
-  I perform action to validate this invoice
+  I Validate invoice by clicking on Validate button
 -
   !workflow {model: account.invoice, action: invoice_open, ref: account_invoice_eur_usd}
 -
-  I check invoice move is correct
+  I check that invoice move is correct
 -
   !python {model: account.invoice}: |
     invoice = self.browse(cr, uid, ref("account_invoice_eur_usd"))
@@ -67,7 +67,7 @@
     for move_line in invoice.move_id.line_id:
         assert move_line.state == 'valid', "Move line state is not valid"
 -
-  I set the context that will be used for the encoding of all the vouchers of this file
+  I set the type receipt for this voucher
 -
   !context
     'type': 'receipt'
