@@ -1,52 +1,13 @@
-<?xml version="1.0" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    
     <data>
     
-        <!-- 
-            Sale Portal Demo
-        -->
-        
-        <record id="portal_sale_order_user_rule" model="ir.rule">
-            <field name="name">Personal Quotations/Sales</field>
-            <field ref="sale.model_sale_order" name="model_id"/>
-            <field name="domain_force">['|',('partner_id.email','=',user.login),('user_id','=',False)]</field>
-            <field name="global" eval="True"/>
-        </record>
-        
-        <record id="portal_stock_picking_user_rule" model="ir.rule">
-            <field name="name">Personal Delivery Orders</field>
-            <field ref="stock.model_stock_picking" name="model_id"/>
-            <field name="domain_force">[('partner_id.email','=',user.login)]</field>
-            <field name="global" eval="True"/>
-        </record>
-        
-        <record id="portal_account_invoice_user_rule" model="ir.rule">
-            <field name="name">Personal Account Invoices</field>
-            <field ref="account.model_account_invoice" name="model_id"/>
-            <field name="domain_force">[('partner_id.email','=',user.login)]</field>
-            <field name="global" eval="True"/>
-        </record>
-        
-        <record id="portal_personal_payment" model="ir.rule">
-            <field name="name">Personal Payments</field>
-            <field ref="account_voucher.model_account_voucher" name="model_id"/>
-            <field name="domain_force">[('partner_id.email','=',user.login)]</field>
-            <field name="global" eval="True"/>
-        </record>
-        
-        <record id="portal_personal_contact" model="ir.rule">
-            <field name="name">Personal Contacts</field>
-            <field ref="base.model_res_partner" name="model_id"/>
-            <field name="domain_force">[('email','=',user.login)]</field>
-            <field name="global" eval="True"/>
-        </record>
+        <!-- Creating Portal Group -->
         
         <record id="group_sales_portal" model="res.groups">
             <field name="name">Sales Portal Group</field>
             <field ref="base.module_category_sales_management" name="category_id"/>
             <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
-            <field name="rule_groups" eval="[(4, ref('portal_sale_order_user_rule')), (4, ref('portal_stock_picking_user_rule')), (4, ref('portal_account_invoice_user_rule'))]"/>
         </record>
         
         <record id="portal_customer" model="res.portal">
@@ -54,6 +15,43 @@
             <field name="group_id" ref="group_sales_portal"/>
         </record>
         
-    </data>
     
+        <!-- Sale Portal Access Rules -->
+        
+        <record id="portal_sale_order_user_rule" model="ir.rule">
+            <field name="name">Personal Quotations/Sales</field>
+            <field ref="sale.model_sale_order" name="model_id"/>
+            <field name="domain_force">['|',('partner_id.email','=',user.login),('user_id','=',False)]</field>
+            <field name="groups" eval="[(4, ref('group_sales_portal'))]"/>
+        </record>
+        
+        <record id="portal_stock_picking_user_rule" model="ir.rule">
+            <field name="name">Personal Delivery Orders</field>
+            <field ref="stock.model_stock_picking" name="model_id"/>
+            <field name="domain_force">[('partner_id.email','=',user.login)]</field>
+            <field name="groups" eval="[(4, ref('group_sales_portal'))]"/>
+        </record>
+        
+        <record id="portal_account_invoice_user_rule" model="ir.rule">
+            <field name="name">Personal Account Invoices</field>
+            <field ref="account.model_account_invoice" name="model_id"/>
+            <field name="domain_force">[('partner_id.email','=',user.login)]</field>
+            <field name="groups" eval="[(4, ref('group_sales_portal'))]"/>
+        </record>
+        
+        <record id="portal_personal_payment" model="ir.rule">
+            <field name="name">Personal Payments</field>
+            <field ref="account_voucher.model_account_voucher" name="model_id"/>
+            <field name="domain_force">[('partner_id.email','=',user.login)]</field>
+            <field name="groups" eval="[(4, ref('group_sales_portal'))]"/>
+        </record>
+        
+        <record id="portal_personal_contact" model="ir.rule">
+            <field name="name">Personal Contacts</field>
+            <field ref="base.model_res_partner" name="model_id"/>
+            <field name="domain_force">[('email','=',user.login)]</field>
+            <field name="groups" eval="[(4, ref('group_sales_portal'))]"/>
+        </record>
+        
+    </data>
 </openerp>

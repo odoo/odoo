@@ -27,7 +27,7 @@
     'category': 'Portal',
     'description': """
     The Portal Customer module helps customers to track their Sales Quotations, Orders, Invoices and various
-    other possibilities
+    other possibilities.
     """,
     'website': 'http://www.openerp.com',
     'data': [
@@ -37,9 +37,9 @@
     "demo_xml" : [ 
     ],
     "update_xml" : [
-        "security/portal_security.xml",
+        "security/portal_customer_security.xml",
         "security/ir.model.access.csv",
-        "portal_customer_view.xml",
+        "portal_customer_menu.xml",
     ],
     'installable': True,
 }
