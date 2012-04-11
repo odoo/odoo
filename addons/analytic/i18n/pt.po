@@ -1,26 +1,25 @@
-# Portuguese translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* analytic
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: OpenERP Server 6.0.3\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2012-02-17 09:10+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
-"Language-Team: Portuguese <pt@li.org>\n"
+"PO-Revision-Date: 2012-04-05 14:33+0000\n"
+"Last-Translator: ThinkOpen Solutions <Unknown>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-18 06:19+0000\n"
-"X-Generator: Launchpad (build 14814)\n"
+"X-Launchpad-Export-Date: 2012-04-06 05:10+0000\n"
+"X-Generator: Launchpad (build 15060)\n"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
 msgid "Child Accounts"
-msgstr ""
+msgstr "Conta Descendente"
 
 #. module: analytic
 #: field:account.analytic.account,name:0
@@ -30,7 +29,7 @@ msgstr "Nome da conta"
 #. module: analytic
 #: help:account.analytic.line,unit_amount:0
 msgid "Specifies the amount of quantity to count."
-msgstr ""
+msgstr "Especifica a quantidade do valor a contar"
 
 #. module: analytic
 #: field:account.analytic.account,state:0
@@ -45,7 +44,7 @@ msgstr "Gestor de conta"
 #. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "Closed"
-msgstr "Encerrada"
+msgstr "Encerrado"
 
 #. module: analytic
 #: field:account.analytic.account,debit:0
@@ -70,11 +69,27 @@ msgid ""
 " If it is to be reviewed then the state is 'Pending'.\n"
 " When the project is completed the state is set to 'Done'."
 msgstr ""
+"* Quando uma conta é criada no estado \"Rascunho\".                          "
+"        \n"
+"* Se algum parceiro associado estiver lá, poderá estar em estado 'Aberto'.   "
+"                               \n"
+"* Se houver algum saldo pendente, poderá estar no estado 'Pendente'.         "
+"                          \n"
+"* E, finalmente, quando todas as transacções terminaram, poderá estar no "
+"estado \"Fechar\".                                   \n"
+"* O projecto também pode estar em qualquer caso nos estados 'Modelo' e 'Em "
+"Movimento'.\n"
+" Se for um modelo então podemos fazer projectos baseados no modelo de "
+"projectos. Se for 'Em Movimento' será um projecto normal.                    "
+"             \n"
+" Se é para ser revisto,então o estado é \"Pendente\".\n"
+" Quando o projecto estiver concluído, o estado está definido como "
+"'Terminado'."
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "New"
-msgstr ""
+msgstr "Novo"
 
 #. module: analytic
 #: field:account.analytic.account,type:0
@@ -100,7 +115,7 @@ msgstr "Descrição"
 #. module: analytic
 #: selection:account.analytic.account,type:0
 msgid "Normal"
-msgstr ""
+msgstr "Normal"
 
 #. module: analytic
 #: field:account.analytic.account,company_id:0
@@ -152,16 +167,19 @@ msgid ""
 "Calculated by multiplying the quantity and the price given in the Product's "
 "cost price. Always expressed in the company main currency."
 msgstr ""
+"Calculado multiplicando a quantidade pelo preço de custo do artigo. Sempre "
+"expresso na Divisa da principal da empresa."
 
 #. module: analytic
 #: field:account.analytic.account,child_complete_ids:0
 msgid "Account Hierarchy"
-msgstr ""
+msgstr "Hierarquia da conta"
 
 #. module: analytic
 #: help:account.analytic.account,quantity_max:0
 msgid "Sets the higher limit of time to work on the contract."
 msgstr ""
+"Defina o limite máximo de tempo de trabalho a ser usado num contracto."
 
 #. module: analytic
 #: field:account.analytic.account,credit:0
@@ -181,23 +199,23 @@ msgstr "Contacto"
 #. module: analytic
 #: field:account.analytic.account,code:0
 msgid "Code/Reference"
-msgstr ""
+msgstr "Código / Referência"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Cancelado"
 
 #. module: analytic
 #: code:addons/analytic/analytic.py:138
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Erro !"
 
 #. module: analytic
 #: field:account.analytic.account,balance:0
 msgid "Balance"
-msgstr ""
+msgstr "Balanço"
 
 #. module: analytic
 #: constraint:account.analytic.account:0
@@ -210,6 +228,8 @@ msgid ""
 "If you select the View Type, it means you won't allow to create journal "
 "entries using that account."
 msgstr ""
+"Se seleccionar o tipo vista, isso significa que não irá permitir criar "
+"movimentos no diário ao usar esta conta."
 
 #. module: analytic
 #: field:account.analytic.account,date:0
@@ -219,12 +239,12 @@ msgstr "Data final"
 #. module: analytic
 #: field:account.analytic.account,quantity_max:0
 msgid "Maximum Time"
-msgstr ""
+msgstr "Tempo máximo:"
 
 #. module: analytic
 #: model:res.groups,name:analytic.group_analytic_accounting
 msgid "Analytic Accounting"
-msgstr ""
+msgstr "Contabilidade Analítica"
 
 #. module: analytic
 #: field:account.analytic.account,complete_name:0
@@ -240,22 +260,22 @@ msgstr "Conta analítica"
 #. module: analytic
 #: field:account.analytic.account,currency_id:0
 msgid "Currency"
-msgstr ""
+msgstr "Moeda"
 
 #. module: analytic
 #: constraint:account.analytic.line:0
 msgid "You can not create analytic line on view account."
-msgstr ""
+msgstr "Não pode criar uma linha de análise numa conta de vista."
 
 #. module: analytic
 #: selection:account.analytic.account,type:0
 msgid "View"
-msgstr ""
+msgstr "Vista"
 
 #. module: analytic
 #: field:account.analytic.account,partner_id:0
 msgid "Partner"
-msgstr "Terceiro"
+msgstr "Parceiro"
 
 #. module: analytic
 #: field:account.analytic.account,date_start:0
@@ -270,4 +290,4 @@ msgstr "Abrir"
 #. module: analytic
 #: field:account.analytic.account,line_ids:0
 msgid "Analytic Entries"
-msgstr ""
+msgstr "Movimentos Analíticos"

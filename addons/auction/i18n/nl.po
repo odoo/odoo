@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2012-04-01 13:00+0000\n"
+"PO-Revision-Date: 2012-04-05 17:26+0000\n"
 "Last-Translator: Erwin <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-04-02 04:54+0000\n"
-"X-Generator: Launchpad (build 15032)\n"
+"X-Launchpad-Export-Date: 2012-04-06 05:10+0000\n"
+"X-Generator: Launchpad (build 15060)\n"
 
 #. module: auction
 #: model:ir.ui.menu,name:auction.auction_report_menu
@@ -60,12 +60,12 @@ msgstr " "
 #. module: auction
 #: view:auction.lots.auction.move:0
 msgid "Warning, Erase The Object Adjudication Price and Its Buyer!"
-msgstr ""
+msgstr "Warschuwing, Verwijder de kaveltoewijzing, prijs en koper!"
 
 #. module: auction
 #: help:auction.pay.buy,statement_id1:0
 msgid "First Bank Statement For Buyer"
-msgstr ""
+msgstr "Eerste bankverklaring  voor koper"
 
 #. module: auction
 #: field:auction.bid_line,lot_id:0
@@ -108,6 +108,7 @@ msgstr "Aantal kavels"
 msgid ""
 "When state of Seller Invoice is 'Paid', this field is selected as True."
 msgstr ""
+"Wanneer de status van kopersfactuur is 'betaald', dan is dit veld aangevinkt."
 
 #. module: auction
 #: report:auction.total.rml:0
@@ -128,7 +129,7 @@ msgstr "Gefactureerd bedrag"
 #. module: auction
 #: help:auction.lots,name:0
 msgid "Auction object name"
-msgstr "Veiling objectnaam"
+msgstr "Veiling kavelnaam"
 
 #. module: auction
 #: model:ir.model,name:auction.model_aie_category
@@ -147,7 +148,7 @@ msgstr "Bedrag"
 #: model:ir.actions.act_window,name:auction.action_deposit_border
 #: model:ir.ui.menu,name:auction.menu_auction_deposit_border
 msgid "Deposit border"
-msgstr ""
+msgstr "Borggrens"
 
 #. module: auction
 #: view:auction.deposit:0
@@ -160,6 +161,8 @@ msgid ""
 "When auction starts the state is 'Draft'.\n"
 " At the end of auction, the state becomes 'Closed'."
 msgstr ""
+"Wanneer de veiling start is de status 'Concept'.\n"
+" Aan het einde van de veiling wordt de status 'Gesloetn'."
 
 #. module: auction
 #: field:auction.dates,account_analytic_id:0
@@ -169,7 +172,7 @@ msgstr "Kostenplaats"
 #. module: auction
 #: help:auction.pay.buy,amount3:0
 msgid "Amount For Third Bank Statement"
-msgstr ""
+msgstr "Bedrag voor derde bankverklaring"
 
 #. module: auction
 #: view:auction.lots:0
@@ -241,7 +244,7 @@ msgstr "SMS - Gateway: clickatell','Bulk SMS verzonden"
 #. module: auction
 #: help:auction.lots,costs:0
 msgid "Deposit cost"
-msgstr ""
+msgstr "Borgsom kosten"
 
 #. module: auction
 #: selection:auction.lots,state:0
@@ -253,12 +256,12 @@ msgstr "Nog niet verkocht"
 #. module: auction
 #: view:auction.deposit:0
 msgid "Search Auction deposit"
-msgstr ""
+msgstr "Zoek veiling borgsom"
 
 #. module: auction
 #: help:auction.lots,lot_num:0
 msgid "List number in depositer inventory"
-msgstr ""
+msgstr "Lijst nummer in entrepositaris inventaris"
 
 #. module: auction
 #: report:auction.total.rml:0
@@ -299,7 +302,7 @@ msgstr "# kav. ret"
 #. module: auction
 #: model:ir.model,name:auction.model_auction_bid
 msgid "Bid Auctions"
-msgstr ""
+msgstr "Bied veilingen"
 
 #. module: auction
 #: help:auction.lots,image:0
@@ -310,7 +313,7 @@ msgstr "Kavel afbeelding"
 #: code:addons/auction/wizard/auction_lots_buyer_map.py:70
 #, python-format
 msgid "No buyer is set for this lot."
-msgstr ""
+msgstr "Er is geen koper ingegegen voor deze kavel"
 
 #. module: auction
 #: code:addons/auction/auction.py:578
@@ -326,17 +329,17 @@ msgstr "Veiling kavel categorieën"
 #. module: auction
 #: model:ir.model,name:auction.model_auction_deposit_cost
 msgid "Auction Deposit Cost"
-msgstr ""
+msgstr "Veiling borgsomkosten"
 
 #. module: auction
 #: view:auction.deposit:0
 msgid "Deposit Border Form"
-msgstr ""
+msgstr "Veiling borgsomk formulier"
 
 #. module: auction
 #: help:auction.lots,statement_id:0
 msgid "Bank statement line for given buyer"
-msgstr ""
+msgstr "bankverklaringsregel voor gekozen koper"
 
 #. module: auction
 #: field:auction.lot.category,aie_categ:0
@@ -351,7 +354,7 @@ msgstr "Koppel gebruikersnaam koper aan relaties"
 #. module: auction
 #: view:auction.lots:0
 msgid "Search Auction Lots"
-msgstr ""
+msgstr "Zoek veiling kavels"
 
 #. module: auction
 #: field:report.auction,net_revenue:0
@@ -391,7 +394,7 @@ msgstr "Juni"
 #: code:addons/auction/wizard/auction_catalog_flagey_report.py:63
 #, python-format
 msgid "No Lots belong to this Auction Date"
-msgstr ""
+msgstr "Geen kavels behoren aan deze veilingsdatum"
 
 #. module: auction
 #: view:auction.lots:0
@@ -426,7 +429,7 @@ msgstr "Omschrijving kavel"
 #. module: auction
 #: field:auction.lots,artist2_id:0
 msgid "Artist/Author2"
-msgstr ""
+msgstr "Artiest/Auteur 2"
 
 #. module: auction
 #: view:auction.pay.buy:0
@@ -509,12 +512,12 @@ msgstr "Veiling mutatie"
 #. module: auction
 #: help:auction.dates,buyer_costs:0
 msgid "Account tax for buyer"
-msgstr ""
+msgstr "Belastingrekening voor koper"
 
 #. module: auction
 #: view:auction.dates:0
 msgid "Next Auction"
-msgstr ""
+msgstr "Volgende veiling"
 
 #. module: auction
 #: view:auction.taken:0
@@ -541,7 +544,7 @@ msgstr "Vasthouden tot het verkocht is"
 #. module: auction
 #: view:auction.dates:0
 msgid "Last Auction Date"
-msgstr ""
+msgstr "Laatste veilingsdatum"
 
 #. module: auction
 #: field:report.object.encoded,obj_num:0
@@ -595,12 +598,12 @@ msgstr "%)"
 #. module: auction
 #: view:auction.lots:0
 msgid "Buyer Information"
-msgstr ""
+msgstr "Koper informatie"
 
 #. module: auction
 #: help:auction.lots,gross_revenue:0
 msgid "Buyer Price - Seller Price"
-msgstr ""
+msgstr "Koper prijs - Verkoper prijs"
 
 #. module: auction
 #: field:auction.lots.make.invoice,objects:0
@@ -621,7 +624,7 @@ msgstr "Kopersprijs"
 #. module: auction
 #: view:auction.lots:0
 msgid "Bids Details"
-msgstr ""
+msgstr "Bieding details"
 
 #. module: auction
 #: field:auction.lots,is_ok:0
@@ -668,7 +671,7 @@ msgstr "Indirecte kosten"
 #. module: auction
 #: help:auction.dates,seller_costs:0
 msgid "Account tax for seller"
-msgstr ""
+msgstr "Belasting rekening voor verkoper"
 
 #. module: auction
 #: code:addons/auction/wizard/auction_lots_invoice.py:67
@@ -698,7 +701,7 @@ msgstr "Concept"
 #. module: auction
 #: view:auction.dates:0
 msgid "Invoiced Auction"
-msgstr ""
+msgstr "Gefactureerde veiling"
 
 #. module: auction
 #: view:auction.catalog.flagey:0
@@ -709,7 +712,7 @@ msgstr "Afdrukken"
 #: view:auction.lots:0
 #: view:report.auction:0
 msgid "Type"
-msgstr ""
+msgstr "Type"
 
 #. module: auction
 #: help:aie.category,child_ids:0
@@ -719,7 +722,7 @@ msgstr ""
 #. module: auction
 #: help:auction.lots,ach_emp:0
 msgid "When state is Taken Away, this field is marked as True"
-msgstr ""
+msgstr "Wanner ed status is 'meegenomen', dan is dit veld aangevinkt"
 
 #. module: auction
 #: model:ir.actions.act_window,name:auction.action_auction_taken
@@ -764,7 +767,7 @@ msgstr "Min. schatting"
 #. module: auction
 #: selection:report.auction,month:0
 msgid "September"
-msgstr ""
+msgstr "September"
 
 #. module: auction
 #: field:report.auction,net_margin:0
@@ -779,7 +782,7 @@ msgstr "Netto limiet ?"
 #. module: auction
 #: field:aie.category,child_ids:0
 msgid "unknown"
-msgstr ""
+msgstr "onbekend"
 
 #. module: auction
 #: report:auction.total.rml:0
@@ -795,17 +798,17 @@ msgstr "Veilingnaam"
 #. module: auction
 #: model:account.tax,name:auction.tax_seller
 msgid "Seller Costs (12%)"
-msgstr ""
+msgstr "Verkoper kosten (12%)"
 
 #. module: auction
 #: field:aie.category,parent_id:0
 msgid "Parent aie Category"
-msgstr ""
+msgstr "Bovenliggende categorie"
 
 #. module: auction
 #: view:report.auction:0
 msgid "Auction Summary"
-msgstr ""
+msgstr "Veiling samenvatting"
 
 #. module: auction
 #: view:auction.lots.make.invoice:0
@@ -822,24 +825,24 @@ msgstr "Geen factuur adress"
 #. module: auction
 #: model:ir.actions.report.xml,name:auction.v_huissier
 msgid "Bailiffs Listing"
-msgstr ""
+msgstr "Gerechtsdeurwaarderslijst"
 
 #. module: auction
 #: code:addons/auction/wizard/auction_lots_numerotate.py:103
 #: code:addons/auction/wizard/auction_lots_numerotate.py:129
 #, python-format
 msgid "This record does not exist !"
-msgstr ""
+msgstr "Deze regel bestaat niet!"
 
 #. module: auction
 #: field:auction.pay.buy,total:0
 msgid "Total Amount"
-msgstr ""
+msgstr "Totaalbedrag"
 
 #. module: auction
 #: help:auction.pay.buy,amount:0
 msgid "Amount For First Bank Statement"
-msgstr ""
+msgstr "Bedrag voor eerste bankverklaring"
 
 #. module: auction
 #: model:ir.model,name:auction.model_report_auction_object_date
@@ -850,7 +853,7 @@ msgstr "Kavels per dag"
 #. module: auction
 #: help:auction.lots,author_right:0
 msgid "Account tax for author commission"
-msgstr ""
+msgstr "Belastingrekening voor auteurscommisie"
 
 #. module: auction
 #: model:product.template,name:auction.monproduit_product_template
@@ -881,12 +884,12 @@ msgstr "Extra kosten"
 #. module: auction
 #: view:auction.lots.buyer_map:0
 msgid "Map "
-msgstr ""
+msgstr "Kaart "
 
 #. module: auction
 #: field:auction.lots,paid_ach:0
 msgid "Buyer Invoice Reconciled"
-msgstr ""
+msgstr "Kopersfactuur afgelettrerd"
 
 #. module: auction
 #: field:auction.deposit,date_dep:0
@@ -906,17 +909,17 @@ msgstr "Specifieke kosten"
 #. module: auction
 #: report:buyer.list:0
 msgid "To pay ("
-msgstr ""
+msgstr "Te betalen ("
 
 #. module: auction
 #: model:account.tax,name:auction.tax_buyer
 msgid "Buyer Costs (20%)"
-msgstr ""
+msgstr "Koperskosten (20%)"
 
 #. module: auction
 #: model:ir.ui.menu,name:auction.menu_board_auction
 msgid "Dashboard"
-msgstr ""
+msgstr "Dashboard"
 
 #. module: auction
 #: view:auction.dates:0
@@ -929,17 +932,17 @@ msgstr "Veilingen"
 #. module: auction
 #: view:board.board:0
 msgid "Total Adjudications"
-msgstr ""
+msgstr "Totaal oordelen"
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_lots_make_invoice
 msgid "Make invoice"
-msgstr ""
+msgstr "Maak factuur"
 
 #. module: auction
 #: selection:report.auction,month:0
 msgid "November"
-msgstr ""
+msgstr "November"
 
 #. module: auction
 #: view:auction.dates:0
@@ -950,7 +953,7 @@ msgstr "Historie"
 #. module: auction
 #: field:aie.category,code:0
 msgid "Code"
-msgstr ""
+msgstr "Code"
 
 #. module: auction
 #: report:auction.code_bar_lot:0
@@ -960,7 +963,7 @@ msgstr "Nr."
 #. module: auction
 #: model:ir.actions.report.xml,name:auction.v_report_barcode_lot
 msgid "Barcode batch"
-msgstr ""
+msgstr "Barcode batch"
 
 #. module: auction
 #: report:report.auction.buyer.result:0
@@ -976,7 +979,7 @@ msgstr "Annuleren"
 #. module: auction
 #: view:auction.lots:0
 msgid "Buyer's Payment History"
-msgstr ""
+msgstr "Kopers betaalhistorie"
 
 #. module: auction
 #: view:auction.artists:0
@@ -997,7 +1000,7 @@ msgstr "Betalen"
 #. module: auction
 #: view:auction.lots.make.invoice:0
 msgid "Create Invoices For Seller"
-msgstr ""
+msgstr "Maak factuur voor verkopers"
 
 #. module: auction
 #: field:report.object.encoded,obj_margin:0
@@ -1007,7 +1010,7 @@ msgstr "Netto marge"
 #. module: auction
 #: help:auction.lots,lot_local:0
 msgid "Auction Location"
-msgstr ""
+msgstr "Veilinglocatie"
 
 #. module: auction
 #: view:auction.dates:0
@@ -1019,6 +1022,8 @@ msgstr "Kostenplaatsen"
 msgid ""
 "When state of Buyer Invoice is 'Paid', this field is selected as True."
 msgstr ""
+"Wanneer de status van een kopersfactuur 'Betaald' is, dan is dit veld "
+"aangevinkt."
 
 #. module: auction
 #: report:bids.lots:0
@@ -1045,17 +1050,17 @@ msgstr "Factureer kavels koper"
 #. module: auction
 #: view:report.auction:0
 msgid "My Auction"
-msgstr ""
+msgstr "Mijn veilingen"
 
 #. module: auction
 #: help:auction.lots,gross_margin:0
 msgid "(Gross Revenue*100.0)/ Object Price"
-msgstr ""
+msgstr "(Bruto opbrengst*100,00)/Kavelprijs"
 
 #. module: auction
 #: field:auction.bid,contact_tel:0
 msgid "Contact Number"
-msgstr ""
+msgstr "Contactnummer"
 
 #. module: auction
 #: view:auction.lots:0
@@ -1087,7 +1092,7 @@ msgstr "Factuurnummer"
 #: code:addons/auction/wizard/auction_lots_numerotate.py:173
 #, python-format
 msgid "Active IDs not Found"
-msgstr ""
+msgstr "Active IDs niet gevonden"
 
 #. module: auction
 #: code:addons/auction/wizard/auction_aie_send.py:166
@@ -1100,12 +1105,12 @@ msgstr "Verbinden met www.auction-in-europe.com mislukt!"
 #: model:ir.actions.act_window,name:auction.act_auction_lot_open_bid
 #: model:ir.actions.act_window,name:auction.action_bid_open
 msgid "Open Bids"
-msgstr ""
+msgstr "Open biedingen"
 
 #. module: auction
 #: model:ir.actions.act_window,name:auction.open_board_auction
 msgid "Auction board"
-msgstr ""
+msgstr "Veiling dashboard"
 
 #. module: auction
 #: field:aie.category,name:0
@@ -1130,7 +1135,7 @@ msgstr "De koper heeft geen fatuuradres"
 #. module: auction
 #: model:ir.actions.act_window,name:auction.action_report_auction_adjudication_tree
 msgid "Auction Adjudication Report"
-msgstr ""
+msgstr "Veiling toewijzingsrapport"
 
 #. module: auction
 #: field:auction.lots.sms.send,user:0
@@ -1140,7 +1145,7 @@ msgstr "Gebruiker"
 #. module: auction
 #: model:ir.model,name:auction.model_report_auction_adjudication
 msgid "report_auction_adjudication"
-msgstr ""
+msgstr "report_auction_adjudication"
 
 #. module: auction
 #: model:ir.actions.report.xml,name:auction.seller_lots_3
@@ -1161,7 +1166,7 @@ msgstr "Markeer percelen"
 #. module: auction
 #: model:ir.model,name:auction.model_auction_lots
 msgid "Auction Object"
-msgstr ""
+msgstr "Veiling kavel"
 
 #. module: auction
 #: field:auction.lots,obj_num:0
@@ -1210,17 +1215,17 @@ msgstr "Auteursrechten"
 #: view:auction.lots:0
 #: view:report.auction:0
 msgid "Group By..."
-msgstr ""
+msgstr "Groepeer op..."
 
 #. module: auction
 #: view:report.auction:0
 msgid "Auction during last month."
-msgstr ""
+msgstr "Veiling gedurende afgelopen maand"
 
 #. module: auction
 #: help:auction.dates,journal_id:0
 msgid "Account journal for buyer"
-msgstr ""
+msgstr "Inkoopboek"
 
 #. module: auction
 #: field:auction.bid,bid_lines:0
@@ -1249,17 +1254,17 @@ msgstr "Verkopers"
 #. module: auction
 #: view:auction.dates:0
 msgid "Draft Auction"
-msgstr ""
+msgstr "Concept veiling"
 
 #. module: auction
 #: help:auction.lots,lot_est2:0
 msgid "Maximum Estimate Price"
-msgstr ""
+msgstr "Maximale geschatte prijs"
 
 #. module: auction
 #: view:auction.lots:0
 msgid "Notes"
-msgstr ""
+msgstr "Opmerkingen"
 
 #. module: auction
 #: view:auction.lots.auction.move:0
@@ -1274,7 +1279,7 @@ msgstr "# niet verkochte items:"
 #. module: auction
 #: view:auction.dates:0
 msgid "Create Invoices"
-msgstr ""
+msgstr "Maak facturen"
 
 #. module: auction
 #: field:auction.bid,auction_id:0
@@ -1291,7 +1296,7 @@ msgstr ", ID"
 #. module: auction
 #: report:buyer.list:0
 msgid "Adj.("
-msgstr ""
+msgstr "Aanp.("
 
 #. module: auction
 #: model:ir.actions.report.xml,name:auction.lot_list_inv
@@ -1301,7 +1306,7 @@ msgstr "Kavellijst- Liggend"
 #. module: auction
 #: view:auction.artists:0
 msgid "Author/Artist"
-msgstr ""
+msgstr "Auteur/Artiest"
 
 #. module: auction
 #: field:auction.lots,ach_login:0
@@ -1318,7 +1323,7 @@ msgstr "Prioriteit"
 #: view:board.board:0
 #: model:ir.actions.act_window,name:auction.action_report_latest_objects_tree
 msgid "Latest objects"
-msgstr ""
+msgstr "Laatste kavels"
 
 #. module: auction
 #: field:auction.lots,lot_local:0
@@ -1328,12 +1333,13 @@ msgstr "Locatie"
 #. module: auction
 #: view:report.auction:0
 msgid "Month -1"
-msgstr ""
+msgstr "Maand -1"
 
 #. module: auction
 #: help:auction.lots,is_ok:0
 msgid "When buyer pay for bank statement', this field is marked"
 msgstr ""
+"Wanneer koper betaald voor een bankverklaring, dan is dit veld aangevinkt"
 
 #. module: auction
 #: field:auction.lots,ach_emp:0
@@ -1348,12 +1354,12 @@ msgstr "Totaal bruto opbrengst"
 #. module: auction
 #: help:auction.lots,lot_est1:0
 msgid "Minimum Estimate Price"
-msgstr ""
+msgstr "Minimale geschatte prijs"
 
 #. module: auction
 #: view:auction.deposit:0
 msgid "Deposit Date"
-msgstr ""
+msgstr "Borgsom datum"
 
 #. module: auction
 #: code:addons/auction/wizard/auction_lots_numerotate.py:145
@@ -1364,7 +1370,7 @@ msgstr "Deze kavel bestaat niet!"
 #. module: auction
 #: selection:report.auction,month:0
 msgid "July"
-msgstr ""
+msgstr "July"
 
 #. module: auction
 #: field:auction.bid_line,call:0
@@ -1385,7 +1391,7 @@ msgstr "Minimale schatting"
 #. module: auction
 #: model:ir.model,name:auction.model_auction_lots_sms_send
 msgid "Sms send "
-msgstr ""
+msgstr "Sms verzonden "
 
 #. module: auction
 #: view:auction.lots.auction.move:0
@@ -1396,30 +1402,30 @@ msgstr "Wijzig veilingdatum"
 #. module: auction
 #: field:auction.artists,birth_death_dates:0
 msgid "Lifespan"
-msgstr ""
+msgstr "Levensduur"
 
 #. module: auction
 #: view:auction.deposit:0
 #: field:auction.deposit,method:0
 msgid "Withdrawned method"
-msgstr ""
+msgstr "Terugtrek methode"
 
 #. module: auction
 #: view:auction.dates:0
 msgid "Buyer Commissions"
-msgstr ""
+msgstr "Kopers commissie"
 
 #. module: auction
 #: model:ir.actions.act_window,name:auction.action_report_auction
 #: model:ir.ui.menu,name:auction.menu_report_auction
 msgid "Auction Analysis"
-msgstr ""
+msgstr "Veiling analyse"
 
 #. module: auction
 #: code:addons/auction/wizard/auction_pay_buy.py:80
 #, python-format
 msgid "Payment aborted !"
-msgstr ""
+msgstr "Betaling afgebroken!"
 
 #. module: auction
 #: field:auction.lot.history,price:0
@@ -1434,7 +1440,7 @@ msgstr "Start van de veiling"
 #. module: auction
 #: help:auction.pay.buy,statement_id3:0
 msgid "Third Bank Statement For Buyer"
-msgstr ""
+msgstr "Derde bankverklaring voor koper"
 
 #. module: auction
 #: view:report.auction:0
@@ -1451,27 +1457,27 @@ msgstr "Max schatting"
 #. module: auction
 #: view:auction.lots:0
 msgid "Statistical"
-msgstr ""
+msgstr "Statistisch"
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_deposit
 msgid "Auction Deposit Border"
-msgstr ""
+msgstr "Veiling borgsomgrens"
 
 #. module: auction
 #: model:ir.actions.act_window,name:auction.action_report_object_encoded_tree
 msgid "Object statistics"
-msgstr ""
+msgstr "Kavel analyse"
 
 #. module: auction
 #: help:auction.lots,net_margin:0
 msgid "(Net Revenue * 100)/ Object Price"
-msgstr ""
+msgstr "(Netto opbrengst *100,0)/Kavelprijs"
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_lot_history
 msgid "Lot History"
-msgstr ""
+msgstr "Kavel historie"
 
 #. module: auction
 #: view:auction.lots.make.invoice:0
@@ -1482,12 +1488,12 @@ msgstr "Facturen aanmaken"
 #. module: auction
 #: model:account.tax.code,name:auction.account_tax_code_id5
 msgid "VAT 5%"
-msgstr ""
+msgstr "BTW 5%"
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_lots_buyer_map
 msgid "Map Buyer"
-msgstr ""
+msgstr "Kaart koper"
 
 #. module: auction
 #: report:buyer.list:0
@@ -1497,7 +1503,7 @@ msgstr "Kavel"
 #. module: auction
 #: model:ir.actions.act_window,name:auction.action_report_auction_object_date_tree
 msgid "Auction Object Date"
-msgstr ""
+msgstr "Veiling kaveldatum"
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_artists
@@ -1507,12 +1513,12 @@ msgstr "auction.artists"
 #. module: auction
 #: field:report.auction,avg_price:0
 msgid "Avg Price."
-msgstr ""
+msgstr "Gem. Prijs"
 
 #. module: auction
 #: help:auction.pay.buy,statement_id2:0
 msgid "Second Bank Statement For Buyer"
-msgstr ""
+msgstr "Tweede bankverklaring voor koper"
 
 #. module: auction
 #: field:auction.dates,journal_id:0
@@ -1539,7 +1545,7 @@ msgstr "Actief"
 #. module: auction
 #: view:auction.dates:0
 msgid "Exposition Dates"
-msgstr ""
+msgstr "Expositie datums"
 
 #. module: auction
 #: model:account.tax,name:auction.auction_tax1
@@ -1559,7 +1565,7 @@ msgstr "Totaal:"
 #. module: auction
 #: model:account.tax,name:auction.auction_tax2
 msgid "TVA1"
-msgstr ""
+msgstr "TVA1"
 
 #. module: auction
 #: view:report.auction.object.date:0
@@ -1576,12 +1582,12 @@ msgstr "Factuur verkoper"
 #. module: auction
 #: view:board.board:0
 msgid "Objects by day"
-msgstr ""
+msgstr "Kavels  per dag"
 
 #. module: auction
 #: help:auction.dates,expo2:0
 msgid "Last exposition date for auction"
-msgstr ""
+msgstr "Laatste expositiedatum voor kavel"
 
 #. module: auction
 #: code:addons/auction/auction.py:571
@@ -1598,7 +1604,7 @@ msgstr ""
 #. module: auction
 #: view:board.board:0
 msgid "Auction manager "
-msgstr ""
+msgstr "Veiling manager "
 
 #. module: auction
 #: code:addons/auction/wizard/auction_lots_invoice.py:67
@@ -1607,11 +1613,13 @@ msgid ""
 "Two different buyers for the same invoice !\n"
 "Please correct this problem before invoicing"
 msgstr ""
+"Twee verschillende kopers voor dezelfde factuur!\n"
+"Corrigeer het probleem voor factureren."
 
 #. module: auction
 #: view:auction.dates:0
 msgid "Invoice"
-msgstr ""
+msgstr "Factuur"
 
 #. module: auction
 #: view:auction.dates:0
@@ -1631,17 +1639,17 @@ msgstr "Overboeking"
 #. module: auction
 #: view:auction.pay.buy:0
 msgid "Line3"
-msgstr ""
+msgstr "Regel3"
 
 #. module: auction
 #: view:auction.pay.buy:0
 msgid "Line2"
-msgstr ""
+msgstr "Regel2"
 
 #. module: auction
 #: help:auction.lots,obj_ret:0
 msgid "Object Ret"
-msgstr ""
+msgstr "Kavel ret"
 
 #. module: auction
 #: view:report.auction.adjudication:0
@@ -1671,12 +1679,12 @@ msgstr "Product"
 #. module: auction
 #: report:buyer.list:0
 msgid ")"
-msgstr ""
+msgstr ")"
 
 #. module: auction
 #: view:auction.lots:0
 msgid "Seller Information"
-msgstr ""
+msgstr "Verkoper informatie"
 
 #. module: auction
 #: view:auction.deposit:0
@@ -1690,7 +1698,7 @@ msgstr "Kavels"
 #. module: auction
 #: view:auction.dates:0
 msgid "Seller Invoices"
-msgstr ""
+msgstr "Verkoper facturen"
 
 #. module: auction
 #: report:auction.total.rml:0
@@ -1705,7 +1713,7 @@ msgstr "Sta negatief bedrag toe"
 #. module: auction
 #: help:auction.pay.buy,amount2:0
 msgid "Amount For Second Bank Statement"
-msgstr ""
+msgstr "Bedrag voor tweede bankverklaring"
 
 #. module: auction
 #: field:auction.lot.history,auction_id:0
@@ -1717,7 +1725,7 @@ msgstr "Veilingdatum"
 #. module: auction
 #: view:auction.lots.sms.send:0
 msgid "SMS Text"
-msgstr ""
+msgstr "SMS Tekst"
 
 #. module: auction
 #: field:auction.dates,auction1:0
@@ -1727,7 +1735,7 @@ msgstr "Eerste veilingsdag"
 #. module: auction
 #: view:auction.lots.make.invoice.buyer:0
 msgid "Create Invoices For Buyer"
-msgstr ""
+msgstr "Maak facturen voor kper"
 
 #. module: auction
 #: model:res.groups,name:auction.group_auction_manager
@@ -1748,12 +1756,12 @@ msgstr "Artiesten"
 #. module: auction
 #: view:auction.pay.buy:0
 msgid "Pay Objects"
-msgstr ""
+msgstr "Betaal kavels"
 
 #. module: auction
 #: help:auction.dates,expo1:0
 msgid "Beginning exposition date for auction"
-msgstr ""
+msgstr "Start expositiedatum voor veiling"
 
 #. module: auction
 #: model:ir.actions.act_window,name:auction.act_auction_lot_line_open
@@ -1763,7 +1771,7 @@ msgstr "Open percelen"
 #. module: auction
 #: model:ir.actions.act_window,name:auction.act_auction_lot_open_deposit
 msgid "Deposit slip"
-msgstr ""
+msgstr "Borgsombon"
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_lots_enable
@@ -1778,7 +1786,7 @@ msgstr "Percelen"
 #. module: auction
 #: model:ir.actions.act_window,name:auction.action_auction_artist
 msgid "Auction Artists"
-msgstr ""
+msgstr "Veiling artiesten"
 
 #. module: auction
 #: field:auction.lots,seller_price:0
@@ -1811,7 +1819,7 @@ msgstr "Afschrift"
 #: help:auction.lots,seller_price:0
 #: help:auction.lots.make.invoice,amount:0
 msgid "Seller Price"
-msgstr ""
+msgstr "Verkoperprijs"
 
 #. module: auction
 #: model:account.tax,name:auction.auction_tax6
@@ -1821,7 +1829,7 @@ msgstr "Verkopen"
 #. module: auction
 #: model:account.tax.code,name:auction.account_tax_code_id1
 msgid "VAT 1%"
-msgstr ""
+msgstr "BTW 1%"
 
 #. module: auction
 #: model:account.tax,name:auction.auction_tax
@@ -1856,7 +1864,7 @@ msgstr "Netto opbrengst"
 #: code:addons/auction/wizard/auction_pay_buy.py:89
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Fout!"
 
 #. module: auction
 #: model:ir.actions.act_window,name:auction.action_report_latest_doposit_tree
@@ -1871,7 +1879,7 @@ msgstr "# Items"
 #. module: auction
 #: model:account.tax,name:auction.tax_buyer_author
 msgid "Author rights (4%)"
-msgstr ""
+msgstr "Auteursrecht (4%)"
 
 #. module: auction
 #: field:report.object.encoded,estimation:0
@@ -1881,7 +1889,7 @@ msgstr "Schatting"
 #. module: auction
 #: view:auction.taken:0
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #. module: auction
 #: model:ir.actions.report.xml,name:auction.buyer_form_id
@@ -1897,7 +1905,7 @@ msgstr "Naam koper"
 #: view:report.auction:0
 #: field:report.auction,day:0
 msgid "Day"
-msgstr ""
+msgstr "Dag"
 
 #. module: auction
 #: model:ir.actions.act_window,name:auction.action_auction_lots_make_invoice
@@ -1918,7 +1926,7 @@ msgstr "Gesloten"
 #. module: auction
 #: view:auction.dates:0
 msgid "Search Next Auction Dates"
-msgstr ""
+msgstr "Zoek volgende veilingdatums"
 
 #. module: auction
 #: view:auction.catalog.flagey:0
@@ -1938,7 +1946,7 @@ msgstr "Commissie"
 #. module: auction
 #: view:board.board:0
 msgid "Min/Adj/Max"
-msgstr ""
+msgstr "Min/Gem/Max."
 
 #. module: auction
 #: view:auction.catalog.flagey:0
@@ -1948,12 +1956,12 @@ msgstr ""
 #. module: auction
 #: help:auction.lots,obj_price:0
 msgid "Object Price"
-msgstr ""
+msgstr "Kavelprijs"
 
 #. module: auction
 #: view:auction.bid:0
 msgid "Bids Lines"
-msgstr ""
+msgstr "Biedingenregels"
 
 #. module: auction
 #: view:auction.lots:0
@@ -1963,7 +1971,7 @@ msgstr "Catalogus"
 #. module: auction
 #: help:auction.lots,auction_id:0
 msgid "Auction for object"
-msgstr ""
+msgstr "Veiling voor kavel"
 
 #. module: auction
 #: field:auction.deposit.cost,account:0
@@ -1978,7 +1986,7 @@ msgstr "Instellingen"
 #. module: auction
 #: model:ir.actions.act_window,name:auction.action_report_auction_object_date_tree_my
 msgid "My Auction Object Date"
-msgstr ""
+msgstr "Mijn veiling kaveldatum"
 
 #. module: auction
 #: code:addons/auction/wizard/auction_pay_buy.py:80
@@ -1986,16 +1994,17 @@ msgstr ""
 msgid ""
 "You should pay all the total: \"%.2f\" are missing to accomplish the payment."
 msgstr ""
+"U dient het totaal te betalen: \"%.2f\" ontbreekt om de betaling te voldoen"
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_pay_buy
 msgid "Pay buy"
-msgstr ""
+msgstr "Betaal koop"
 
 #. module: auction
 #: model:ir.ui.menu,name:auction.auction_outils_menu
 msgid "Tools Bar Codes"
-msgstr ""
+msgstr "Tools Barcodes"
 
 #. module: auction
 #: field:auction.deposit.cost,deposit_id:0
@@ -2015,7 +2024,7 @@ msgstr ""
 #. module: auction
 #: model:account.tax.code,name:auction.account_tax_code_id3
 msgid "VAT 10%"
-msgstr ""
+msgstr "BTW 10%"
 
 #. module: auction
 #: field:auction.artists,name:0
@@ -2025,7 +2034,7 @@ msgstr "Naam kunstenaar/auteur"
 #. module: auction
 #: selection:report.auction,month:0
 msgid "December"
-msgstr ""
+msgstr "December"
 
 #. module: auction
 #: view:auction.deposit:0
@@ -2037,22 +2046,22 @@ msgstr "Afbeelding"
 #: help:auction.lots,buyer_price:0
 #: help:auction.lots.make.invoice.buyer,amount:0
 msgid "Buyer Price"
-msgstr ""
+msgstr "Kopersprijs"
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_lot_category
 msgid "Auction Lots Category"
-msgstr ""
+msgstr "Veiling kavelscategorie"
 
 #. module: auction
 #: model:account.tax.code,name:auction.account_tax_code_id2
 msgid "VAT 20%"
-msgstr ""
+msgstr "BTW 20%"
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_payer_sel
 msgid "Auction payment for seller"
-msgstr ""
+msgstr "Veilingbetaling voor verkoper"
 
 #. module: auction
 #: view:auction.lots:0
@@ -2068,7 +2077,7 @@ msgstr "Lijst verkopers"
 #. module: auction
 #: view:report.object.encoded:0
 msgid "Total adj."
-msgstr ""
+msgstr "Totaal Toeg."
 
 #. module: auction
 #: view:auction.deposit:0
@@ -2088,7 +2097,7 @@ msgstr "........."
 #. module: auction
 #: view:report.auction:0
 msgid "Auction Summary tree view"
-msgstr ""
+msgstr "Veilingsamenvatting boomweergave"
 
 #. module: auction
 #: report:report.auction.buyer.result:0
@@ -2104,7 +2113,7 @@ msgstr "Veilingdata"
 #. module: auction
 #: model:ir.ui.menu,name:auction.menu_board_auction_open
 msgid "Auction DashBoard"
-msgstr ""
+msgstr "Veiling dashBoard"
 
 #. module: auction
 #: view:report.auction:0
@@ -2119,7 +2128,7 @@ msgstr "Gebruiker"
 #. module: auction
 #: view:auction.pay.buy:0
 msgid "Payment Lines"
-msgstr ""
+msgstr "Betalingsregels"
 
 #. module: auction
 #: code:addons/auction/auction.py:692
@@ -2130,7 +2139,7 @@ msgstr "Adres ontbreekt!"
 #. module: auction
 #: help:auction.lots,net_revenue:0
 msgid "Buyer Price - Seller Price - Indirect Cost"
-msgstr ""
+msgstr "Kopersprijs - verkopersprijs - indirecte kosten"
 
 #. module: auction
 #: help:auction.lots,state:0
@@ -2167,7 +2176,7 @@ msgstr "Veilingdatum:"
 #. module: auction
 #: view:auction.deposit:0
 msgid "Objects Description"
-msgstr ""
+msgstr "Kavelomschrijving"
 
 #. module: auction
 #: field:auction.dates,buyer_invoice_history:0
@@ -2194,7 +2203,7 @@ msgstr "Veiling totaallijst"
 #. module: auction
 #: view:auction.deposit:0
 msgid "General Information"
-msgstr ""
+msgstr "Algemene informatie"
 
 #. module: auction
 #: view:auction.lots.auction.move:0
@@ -2214,7 +2223,7 @@ msgstr "Kavel ingevoerd"
 #. module: auction
 #: view:auction.bid:0
 msgid "Search Auction Bid"
-msgstr ""
+msgstr "Zoek verkopersbiedingen"
 
 #. module: auction
 #: report:bids.phones.details:0
@@ -2224,7 +2233,7 @@ msgstr "Schatting"
 #. module: auction
 #: view:auction.dates:0
 msgid "Seller Commissions"
-msgstr ""
+msgstr "Verkoper commissie"
 
 #. module: auction
 #: view:report.object.encoded:0
@@ -2234,7 +2243,7 @@ msgstr "Kavel statistiek"
 #. module: auction
 #: help:auction.dates,journal_seller_id:0
 msgid "Account journal for seller"
-msgstr ""
+msgstr "Verkoopboek"
 
 #. module: auction
 #: field:auction.dates,auction2:0
@@ -2245,7 +2254,7 @@ msgstr "Laatste veilingdag"
 #: code:addons/auction/wizard/auction_pay_buy.py:89
 #, python-format
 msgid "No auction date for \"%s\": Please set one."
-msgstr ""
+msgstr "Geen veilingsdatum gevonden voor \"%s\": Selecteer er aub een."
 
 #. module: auction
 #: view:auction.deposit:0
@@ -2257,7 +2266,7 @@ msgstr "Omschrijving"
 #. module: auction
 #: selection:report.auction,month:0
 msgid "May"
-msgstr ""
+msgstr "Mei"
 
 #. module: auction
 #: field:auction.lots,obj_price:0
@@ -2277,12 +2286,12 @@ msgstr "Wachtwoord"
 #. module: auction
 #: selection:report.auction,month:0
 msgid "February"
-msgstr ""
+msgstr "Februari"
 
 #. module: auction
 #: selection:report.auction,month:0
 msgid "April"
-msgstr ""
+msgstr "April"
 
 #. module: auction
 #: view:auction.pay.buy:0
@@ -2317,17 +2326,17 @@ msgstr "Uitgaven"
 #. module: auction
 #: view:report.auction:0
 msgid "Auction during current month."
-msgstr ""
+msgstr "Veilingen in huidige maand"
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_payer
 msgid "Auction payer"
-msgstr ""
+msgstr "Veilingbetaler"
 
 #. module: auction
 #: view:report.auction:0
 msgid "Auction during current year."
-msgstr ""
+msgstr "Veilingen in huidige jaar"
 
 #. module: auction
 #: report:auction.total.rml:0
@@ -2337,7 +2346,7 @@ msgstr "Naam van de veiling:"
 #. module: auction
 #: view:board.board:0
 msgid "Latest deposits"
-msgstr ""
+msgstr "Laatste betalingen"
 
 #. module: auction
 #: model:ir.actions.report.xml,name:auction.art2
@@ -2348,7 +2357,7 @@ msgstr "Biografie kunstenaar"
 #: view:report.auction:0
 #: field:report.auction,year:0
 msgid "Year"
-msgstr ""
+msgstr "Jaar"
 
 #. module: auction
 #: field:auction.lots,history_ids:0

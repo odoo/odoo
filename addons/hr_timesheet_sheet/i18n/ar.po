@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-02-17 09:10+0000\n"
+"PO-Revision-Date: 2012-04-06 07:22+0000\n"
 "Last-Translator: kifcaliph <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-18 06:42+0000\n"
-"X-Generator: Launchpad (build 14814)\n"
+"X-Launchpad-Export-Date: 2012-04-07 05:37+0000\n"
+"X-Generator: Launchpad (build 15060)\n"
 
 #. module: hr_timesheet_sheet
 #: field:hr.analytic.timesheet,sheet_id:0 field:hr.attendance,sheet_id:0
@@ -185,6 +185,11 @@ msgid ""
 "the user and can be validated by his manager. If required, as defined on the "
 "project, you can generate the invoices based on the timesheet."
 msgstr ""
+"يفتح سجل الدوام الخاص بي  سجل دوامك بحيث يمكنك حجز نشاطاتك في النظام. من نفس "
+"الشكل، يمكنك تسجيل الحضور الخاص بك (تسجيل الدخول / خارج)، ووصف ساعات العمل "
+"يتم على مشاريع مختلفة. في نهاية المدة المحددة في الشركة، ويؤكد سجل الدوام من "
+"قبل المستخدم، ويمكن التحقق من صحتها من قبل مديره. إذا لزم الأمر، كما هو محدد "
+"في هذا المشروع، يمكنك إنشاء الفواتير بناء على سجل الدوام."
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet.day:0
@@ -236,7 +241,7 @@ msgstr "حساب تحليلي"
 #. module: hr_timesheet_sheet
 #: field:timesheet.report,nbr:0
 msgid "#Nbr"
-msgstr ""
+msgstr "# عدد"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,date_from:0
@@ -341,7 +346,7 @@ msgstr "إجمالي الوقت"
 #: view:hr_timesheet_sheet.sheet:0
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_2_hr_analytic_timesheet
 msgid "Timesheet Lines"
-msgstr "خطوط سجل الدوام"
+msgstr "خطوط الجدول الزمني"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
@@ -667,7 +672,7 @@ msgstr "يناير"
 #. module: hr_timesheet_sheet
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_attendancetimesheet0
 msgid "The employee signs in and signs out."
-msgstr "يسجل الموظف الدخول وسجيل الخروج."
+msgstr "يسجل الموظف الدخول وتسجيل الخروج."
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_res_company
@@ -820,6 +825,11 @@ msgid ""
 "* The 'Done' state is used when users timesheet is accepted by his/her "
 "senior."
 msgstr ""
+" * واستخدم الحالة \"مشروع\" عندما يقوم المستخدم بترميز سجل دوام جديد وغير "
+"مؤكد.\n"
+"* يتم استخدام الحالة \"مؤكد\" للتأكد من سجل الدوام من قبل المستخدم.\n"
+"* يتم استخدام الحالة \"تم\" عندما يتم قبول سجل الدوام للمستخدمين من قبل "
+"المدير له / لها."
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0

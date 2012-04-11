@@ -7,19 +7,19 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2012-02-17 09:10+0000\n"
-"Last-Translator: <>\n"
+"PO-Revision-Date: 2012-04-06 07:59+0000\n"
+"Last-Translator: kifcaliph <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-18 06:50+0000\n"
-"X-Generator: Launchpad (build 14814)\n"
+"X-Launchpad-Export-Date: 2012-04-07 05:37+0000\n"
+"X-Generator: Launchpad (build 15060)\n"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Fees Line"
-msgstr ""
+msgstr "خط الرسوم"
 
 #. module: mrp_repair
 #: help:mrp.repair,state:0
@@ -35,11 +35,18 @@ msgid ""
 "* The 'Done' state is set when repairing is completed.            \n"
 "* The 'Cancelled' state is used when user cancel repair order."
 msgstr ""
+" *تستخدم الحالة ‘مشروع‘ عندما يشفر المستخدم امر الاصلاح الجديد والغير مؤكد.\n"
+"*تستخدم الحالة ‘مؤكد‘ عندما يؤكد المستخدم امر الاصلاح.\n"
+"*تستخدم الحالة ‘جاهز للاصلاح‘ لبدء الاصلاح, يمك للمستخدم بدء الاصلاح فقط بعد "
+"تأكيد امر الاصلاح.\n"
+"*تستخدم الحالة‘مطلوب فاتورة‘ لإنشاء الفاتورة قبل او بعد اتمام الاصلاح.\n"
+"*تُعيين الحالة ‘تم‘ عند اكتمال الاصلاح.\n"
+"تستخدم الحالة ‘ملغي‘ عندما يلغي المستخدم امر الاصلاح."
 
 #. module: mrp_repair
 #: field:mrp.repair.line,move_id:0
 msgid "Inventory Move"
-msgstr ""
+msgstr "تحرك الجرد"
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,help:mrp_repair.action_repair_order_tree
@@ -50,6 +57,11 @@ msgid ""
 "date on the production lot in order to know if whether the repair should be "
 "invoiced to the customer or not."
 msgstr ""
+"يسمح لك امر الاصلاح بتنظيم اصلاح المنتج الخاص بك. في امر الاصلاح, يمكنك "
+"توضيح المكونات التي قمت بازالتها, او ضفتها او غيرت مكانها وتسجيل الوقت الذي "
+"قضيته في العمليات المختلفة. يستخدم امر الاصلاح تاريخ الضمان الموجود على "
+"المتوفر من المنتج بالترتيب لتعرف ما اذا كان الاصلاح يحتاج الى فاتورة من عدمه "
+"للمستخدم."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -69,12 +81,15 @@ msgid ""
 "that you can select the locations in the Info tab, if you have the extended "
 "view."
 msgstr ""
+"تحقق من هذه الخانة اذا كنت تريد ادارة التسليم حينما يتم اصلاح المنتج. اذا تم "
+"التحقق منها, ستنشأ الاختيار مع المنتج المحدد. لاحظ انه بامكانك تحديد الموقع "
+"في تبويب المعلومات, اذا كان لديك عرض ممتد."
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.action_cancel_repair
 #: view:mrp.repair.cancel:0
 msgid "Cancel Repair Order"
-msgstr ""
+msgstr "الغاء امر التصليح"
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,to_invoice:0
@@ -85,24 +100,24 @@ msgstr "في انتظار الفوترة"
 #. module: mrp_repair
 #: report:repair.order:0
 msgid "Printing Date"
-msgstr ""
+msgstr "تاريخ الطبع"
 
 #. module: mrp_repair
 #: field:mrp.repair.make_invoice,group:0
 msgid "Group by partner invoice address"
-msgstr ""
+msgstr "تم تجميعه بواسطة عنوان فاتورة الشريك"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/mrp_repair.py:435
 #, python-format
 msgid "No product defined on Fees!"
-msgstr ""
+msgstr "لا يوجد منتج محدد في الرسوم !"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 #: field:mrp.repair,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "الشركة"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -117,7 +132,7 @@ msgstr "خلل في الفاتورة"
 #. module: mrp_repair
 #: field:mrp.repair,address_id:0
 msgid "Delivery Address"
-msgstr ""
+msgstr "عنوان التسليم"
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.act_mrp_repair_invoice
@@ -141,7 +156,7 @@ msgstr "عنوان الفاتورة:"
 #: view:mrp.repair:0
 #: field:mrp.repair,guarantee_limit:0
 msgid "Guarantee limit"
-msgstr ""
+msgstr "حدود الضمان"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -186,13 +201,13 @@ msgstr "نقل"
 #: code:addons/mrp_repair/mrp_repair.py:370
 #, python-format
 msgid "You have to select a Partner Invoice Address in the repair form !"
-msgstr ""
+msgstr "ستقوم باختيار عنوان فاتورة للشريك في نموذج التصليح !"
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.action_repair_order_tree
 #: model:ir.ui.menu,name:mrp_repair.menu_repair_order
 msgid "Repair Orders"
-msgstr ""
+msgstr "اوامر التصليح"
 
 #. module: mrp_repair
 #: model:ir.actions.report.xml,name:mrp_repair.report_mrp_repair
@@ -214,7 +229,7 @@ msgstr "معلومات إضافية"
 #: field:mrp.repair.fee,repair_id:0
 #: field:mrp.repair.line,repair_id:0
 msgid "Repair Order Reference"
-msgstr ""
+msgstr "مرجع امر التصليح"
 
 #. module: mrp_repair
 #: selection:mrp.repair.line,state:0
@@ -225,7 +240,7 @@ msgstr "مسودة"
 #: code:addons/mrp_repair/mrp_repair.py:384
 #, python-format
 msgid "No account defined for partner \"%s\"."
-msgstr ""
+msgstr "لا يوجد حساب محدد للشريك \"%s\"."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -237,24 +252,24 @@ msgstr "مؤكد"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Repairs order"
-msgstr ""
+msgstr "امر التصليحات"
 
 #. module: mrp_repair
 #: report:repair.order:0
 msgid "Repair Order N° :"
-msgstr ""
+msgstr "امر التصليح :"
 
 #. module: mrp_repair
 #: field:mrp.repair,prodlot_id:0
 #: field:mrp.repair.line,prodlot_id:0
 #: report:repair.order:0
 msgid "Lot Number"
-msgstr ""
+msgstr "الكثير من العدد"
 
 #. module: mrp_repair
 #: field:mrp.repair,fees_lines:0
 msgid "Fees Lines"
-msgstr ""
+msgstr "خطوط الرسوم"
 
 #. module: mrp_repair
 #: field:mrp.repair.line,type:0
@@ -264,12 +279,12 @@ msgstr "نوع"
 #. module: mrp_repair
 #: report:repair.order:0
 msgid "Fees Line(s)"
-msgstr ""
+msgstr "خط الرسوم"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
 msgid "To be Invoiced"
-msgstr ""
+msgstr "ليتم عمل الفاتورة"
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -301,6 +316,12 @@ msgid ""
 "                  \n"
 "* The 'Cancelled' state is set automatically when user cancel repair order."
 msgstr ""
+" *تم تعيين  الحالة'مشروع' تلقائيا كمشروع عندما يكون امر الاصلاح في حالة "
+"مشروع.\n"
+"* تم تعيين الحالة\"مؤكد\" تلقائيا كتأكيد عندما يكون امر الاصلاح في حالة "
+"التأكيد.\n"
+"* تم تعيين الحالة\"تم\" تلقائيا عند اكتمال امر الاصلاح.\n"
+"* تم تعيين الحالة\"ملغاة\" تلقائيا عندما يلغي المستخدم امر الاصلاح."
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -313,6 +334,7 @@ msgid ""
 "This operation will cancel the Repair process, but will not cancel it's "
 "Invoice. Do you want to continue?"
 msgstr ""
+"ستلغي هذه العملية عملية التصليح, ولكن لن تلغي فاتورتها. هل تريد الاستمرار؟"
 
 #. module: mrp_repair
 #: field:mrp.repair,pricelist_id:0
@@ -323,7 +345,7 @@ msgstr "قائمة الأسعار"
 #: view:mrp.repair:0
 #: field:mrp.repair,quotation_notes:0
 msgid "Quotation Notes"
-msgstr ""
+msgstr "ملاحظات عن التسعير"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/wizard/cancel_repair.py:49
@@ -334,18 +356,18 @@ msgstr "تحذير!"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Search Reair Orders"
-msgstr ""
+msgstr "ابحث عن اوامر التصليح"
 
 #. module: mrp_repair
 #: report:repair.order:0
 msgid "(Add)"
-msgstr ""
+msgstr "(اضف)"
 
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair_line
 #: view:mrp.repair:0
 msgid "Repair Line"
-msgstr ""
+msgstr "خط التصليح"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -356,12 +378,12 @@ msgstr "شريك"
 #. module: mrp_repair
 #: field:mrp.repair,invoice_method:0
 msgid "Invoice Method"
-msgstr ""
+msgstr "منهجية الفاتورة"
 
 #. module: mrp_repair
 #: field:mrp.repair,repaired:0
 msgid "Repaired"
-msgstr ""
+msgstr "تم اصلاحه"
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,invoice_line_id:0
@@ -378,17 +400,17 @@ msgstr "ملغي"
 #: code:addons/mrp_repair/mrp_repair.py:337
 #, python-format
 msgid "Production lot is required for opration line with product '%s'"
-msgstr ""
+msgstr "مطلوب حصة الانتاج لخط العملية مع المنتج ‘%s‘"
 
 #. module: mrp_repair
 #: selection:mrp.repair,invoice_method:0
 msgid "Before Repair"
-msgstr ""
+msgstr "قبل التصليح"
 
 #. module: mrp_repair
 #: field:mrp.repair,location_id:0
 msgid "Current Location"
-msgstr ""
+msgstr "الموقع الحالي"
 
 #. module: mrp_repair
 #: view:mrp.repair.cancel:0
@@ -415,7 +437,7 @@ msgstr "إنشاء الفواتير"
 #. module: mrp_repair
 #: report:repair.order:0
 msgid "(Remove)"
-msgstr ""
+msgstr "(إزالة)"
 
 #. module: mrp_repair
 #: selection:mrp.repair.line,type:0
@@ -430,22 +452,22 @@ msgstr "هل تريد فعلاً  إنشاء الفاتورة/الفواتبر؟
 #. module: mrp_repair
 #: field:mrp.repair,name:0
 msgid "Repair Reference"
-msgstr ""
+msgstr "مرجع التصليح"
 
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair
 msgid "Repair Order"
-msgstr ""
+msgstr "امر التصليح"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
 msgid "Under Repair"
-msgstr ""
+msgstr "تحت التصليح"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Ready To Repair"
-msgstr ""
+msgstr "جاهز للتصليح"
 
 #. module: mrp_repair
 #: field:mrp.repair,amount_untaxed:0
@@ -455,7 +477,7 @@ msgstr "المبلغ دون ضرائب"
 #. module: mrp_repair
 #: report:repair.order:0
 msgid "Guarantee Limit"
-msgstr ""
+msgstr "حد الضمان"
 
 #. module: mrp_repair
 #: field:mrp.repair,default_address_id:0
@@ -466,17 +488,17 @@ msgstr "غير معروف"
 #: field:mrp.repair,product_id:0
 #: report:repair.order:0
 msgid "Product to Repair"
-msgstr ""
+msgstr "منتج مطلوب تصليحه"
 
 #. module: mrp_repair
 #: report:repair.order:0
 msgid "N° :"
-msgstr ""
+msgstr "N° :"
 
 #. module: mrp_repair
 #: help:mrp.repair,pricelist_id:0
 msgid "The pricelist comes from the selected partner, by default."
-msgstr ""
+msgstr "تأتي قائمة الاسعار من الشريك المحدد, بالافتراض."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -486,7 +508,7 @@ msgstr "تاريخ"
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair_fee
 msgid "Repair Fees Line"
-msgstr ""
+msgstr "خط رسوم الاصلاح"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/mrp_repair.py:334
@@ -507,24 +529,24 @@ msgstr "احسب"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Confirm Repair"
-msgstr ""
+msgstr "اكد على التصليح"
 
 #. module: mrp_repair
 #: report:repair.order:0
 msgid "Repair Quotation"
-msgstr ""
+msgstr "تحديد سعر التصليح"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "End Repair"
-msgstr ""
+msgstr "انهي التصليح"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/mrp_repair.py:413
 #: code:addons/mrp_repair/mrp_repair.py:442
 #, python-format
 msgid "No account defined for product \"%s\"."
-msgstr ""
+msgstr "لا يوجد حساب محدد للمنتج \"%s\"."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -540,7 +562,7 @@ msgstr "الكمية"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Start Repair"
-msgstr ""
+msgstr "ابدأ التصليح"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -575,6 +597,9 @@ msgid ""
 "operation and fee you will add will be set as 'not to invoiced' by default. "
 "Note that you can change manually afterwards."
 msgstr ""
+"تم حساب حد الضمان : كتاريخ اخر تحرك+التحذير المحدد على المنتج المختار. اذا "
+"كان التاريخ الحالي اقل من حد الضمان , كل  عملية ورسوم تقوم بإضافتها ستُعين "
+"كـ‘لا يعمل لها فاتورة‘ بالافتراض."
 
 #. module: mrp_repair
 #: field:mrp.repair,invoice_id:0
@@ -595,12 +620,12 @@ msgstr "إلغاء"
 #. module: mrp_repair
 #: field:mrp.repair.line,location_dest_id:0
 msgid "Dest. Location"
-msgstr ""
+msgstr "مكان الوصول"
 
 #. module: mrp_repair
 #: report:repair.order:0
 msgid "Operation Line(s)"
-msgstr ""
+msgstr "خطوط العملية"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -610,7 +635,7 @@ msgstr "محفوظات"
 #. module: mrp_repair
 #: field:mrp.repair,location_dest_id:0
 msgid "Delivery Location"
-msgstr ""
+msgstr "مكان التسليم"
 
 #. module: mrp_repair
 #: help:mrp.repair,invoice_method:0
@@ -619,6 +644,8 @@ msgid ""
 "selected is different from 'No Invoice', it also allow you to select the "
 "pricelist and invoicing address."
 msgstr ""
+"يسمح لك هذا الحقل لتغيير تتبع العمل لامر التصليح. اذا كان اختيار القيمة "
+"مختلف عن ‘ليست فاتورة‘, سيسمح لك ايضًا بتحديد قائمة الاسعار و عنوان الفواتير."
 
 #. module: mrp_repair
 #: view:mrp.repair.make_invoice:0
@@ -635,12 +662,12 @@ msgstr "وصف"
 #. module: mrp_repair
 #: field:mrp.repair,operations:0
 msgid "Operation Lines"
-msgstr ""
+msgstr "خطوط العملية"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "invoiced"
-msgstr ""
+msgstr "تم انشاء الفاتورة"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -652,7 +679,7 @@ msgstr "المنتج"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Invoice Corrected"
-msgstr ""
+msgstr "تصحيح الفاتورة"
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -662,7 +689,7 @@ msgstr "السعر"
 #. module: mrp_repair
 #: field:mrp.repair,deliver_bool:0
 msgid "Deliver"
-msgstr ""
+msgstr "التسلم"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -678,29 +705,29 @@ msgstr "ضرائب:"
 #. module: mrp_repair
 #: field:mrp.repair,picking_id:0
 msgid "Picking"
-msgstr ""
+msgstr "اختيار"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Untaxed amount"
-msgstr ""
+msgstr "المبلغ بدون ضرائب"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/wizard/cancel_repair.py:41
 #, python-format
 msgid "Active ID is not Found"
-msgstr ""
+msgstr "لم يتم العثور على الهوية الفعالة"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/wizard/cancel_repair.py:49
 #, python-format
 msgid "Repair order is not invoiced."
-msgstr ""
+msgstr "لم يتم انشاء الفاتورة لامر التصليح"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Total amount"
-msgstr ""
+msgstr "الكمية الكلية"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -721,12 +748,12 @@ msgstr "وحدة القياس للمنتج"
 #. module: mrp_repair
 #: field:mrp.repair,partner_invoice_id:0
 msgid "Invoicing Address"
-msgstr ""
+msgstr "عنوان الفواتير"
 
 #. module: mrp_repair
 #: selection:mrp.repair,invoice_method:0
 msgid "After Repair"
-msgstr ""
+msgstr "بعد التصليح"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -736,18 +763,18 @@ msgstr "الفواتير"
 #. module: mrp_repair
 #: field:mrp.repair.line,location_id:0
 msgid "Source Location"
-msgstr ""
+msgstr "مكان المورد"
 
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair_cancel
 #: view:mrp.repair:0
 msgid "Cancel Repair"
-msgstr ""
+msgstr "إلغي التصليح"
 
 #. module: mrp_repair
 #: selection:mrp.repair,invoice_method:0
 msgid "No Invoice"
-msgstr ""
+msgstr "لا يوجد فاتورة"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -758,7 +785,7 @@ msgstr "حالات"
 #: help:mrp.repair,partner_id:0
 msgid ""
 "This field allow you to choose the parner that will be invoiced and delivered"
-msgstr ""
+msgstr "يسمح لك هذا الحقل بإختيار الشريك الذي سيتم عمل له الفاتورة والتسليم"
 
 #. module: mrp_repair
 #: field:mrp.repair,amount_total:0
@@ -768,10 +795,10 @@ msgstr "الإجمالي"
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
 msgid "Ready to Repair"
-msgstr ""
+msgstr "جاهز للتصليح"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/mrp_repair.py:370
 #, python-format
 msgid "No partner !"
-msgstr ""
+msgstr "لا يوجد شريك !"
