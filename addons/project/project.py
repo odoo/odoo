@@ -163,11 +163,11 @@ class project(osv.osv):
             open_task[id] = len(task_ids)
         return open_task
     
-    def _cal_days(self, cr, uid, ids, field_name, arg, context=None):
-        cal_days = {}
+    def company_uom_id(self, cr, uid, ids, field_name, arg, context=None):
+        uom_company = {}
         for project in self.browse(cr,uid,ids):
-            cal_days[project.id] = project.company_id.project_time_mode_id.factor or 8
-        return cal_days
+            uom_company[project.id] = project.company_id.project_time_mode_id.name or "Hour"
+        return uom_company
                 
 
     _columns = {
@@ -209,7 +209,7 @@ class project(osv.osv):
         'task': fields.boolean('Task',help = "If you check this field tasks appears in kanban view"),
         'open_task': fields.function(_open_task , type='integer',string="Open Tasks"),
         'color': fields.integer('Color Index'),
-        'cal_days': fields.function(_cal_days ,type="integer", string="Calculate Days"),
+        'company_uom_id': fields.function(company_uom_id,type="char"),
      }
     def dummy(self, cr, uid, ids, context=None):
             return False
