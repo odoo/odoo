@@ -252,38 +252,6 @@ class project(osv.osv):
             }
         return value
     
-    def open_users(self, cr, uid, ids, context=None):
-        #Open the View for the Tasks for the project
-        """
-        This opens Tasks views
-        @return :Dictionary value for task view
-        """
-        if context is None:
-            context = {}
-        value = {}
-        data_obj = self.pool.get('ir.model.data')
-        for project in self.browse(cr, uid, ids, context=context):
-            # Get Task views
-            tree_view = data_obj.get_object_reference(cr, uid, 'base', 'view_users_tree')
-            form_view = data_obj.get_object_reference(cr, uid, 'base', 'view_users_form')
-            search_view = data_obj.get_object_reference(cr, uid, 'base', 'view_users_search')
-            
-            value = {
-                'name': _('User'),
-                'context': context,
-                'view_type': 'form',
-                'view_mode': 'form,tree',
-                'res_model': 'res.users',
-                'view_id': False,
-                'context': context,
-                'res_id': project.user_id.id,
-                'views': [(form_view and form_view[1] or False, 'form'),(tree_view and tree_view[1] or False, 'tree')],
-                'type': 'ir.actions.act_window',
-                'search_view_id': search_view and search_view[1] or False,
-                'nodestroy': True
-            }
-        return value
-    
     def _get_type_common(self, cr, uid, context):
         ids = self.pool.get('project.task.type').search(cr, uid, [('project_default','=',1)], context=context)
         return ids
