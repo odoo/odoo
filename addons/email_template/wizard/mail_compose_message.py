@@ -21,6 +21,7 @@
 
 import base64
 
+import netsvc
 from osv import osv
 from osv import fields
 from tools.translate import _
@@ -85,6 +86,49 @@ class mail_compose_message(osv.osv_memory):
                 # use the original template values - to be rendered when actually sent
                 # by super.send_mail()
                 values = self.pool.get('email.template').read(cr, uid, template_id, self.fields_get_keys(cr, uid), context)
+                report_xml_pool = self.pool.get('ir.actions.report.xml')
+                template = self.pool.get('email.template').get_email_template(cr, uid, template_id, res_id, context)
+                
+                values['attachments'] = False
+                attachments = {}
+                if template.report_template:
+                    report_name = self.render_template(cr, uid, template.report_name, template.model, res_id, context=context)
+                    report_service = 'report.' + report_xml_pool.browse(cr, uid, template.report_template.id, context).report_name
+                    # Ensure report is rendered using template's language
+                    ctx = context.copy()
+                    if template.lang:
+                        ctx['lang'] = self.render_template(cr, uid, template.lang, template.model, res_id, context)
+                    service = netsvc.LocalService(report_service)
+                    (result, format) = service.create(cr, uid, [res_id], {'model': template.model}, ctx)
+                    result = base64.b64encode(result)
+                    if not report_name:
+                        report_name = report_service
+                    ext = "." + format
+                    if not report_name.endswith(ext):
+                        report_name += ext
+                    attachments[report_name] = result
+
+                # Add document attachments
+                for attach in template.attachment_ids:
+                    # keep the bytes as fetched from the db, base64 encoded
+                    attachments[attach.datas_fname] = attach.datas
+
+                values['attachments'] = attachments  
+                if values['attachments']:
+                    attachment = values.pop('attachments')
+                    attachment_obj = self.pool.get('ir.attachment')
+                    att_ids = []
+                    for fname, fcontent in attachment.iteritems():
+                        data_attach = {
+                            'name': fname,
+                            'datas': fcontent,
+                            'datas_fname': fname,
+                            'description': fname,
+                            'res_model' : self._name,
+                            'res_id' : ids[0] if ids else False
+                        }
+                        att_ids.append(attachment_obj.create(cr, uid, data_attach))
+                    values['attachment_ids'] = att_ids              
             else:
                 # render the mail as one-shot
                 values = self.pool.get('email.template').generate_email(cr, uid, template_id, res_id, context=context)
