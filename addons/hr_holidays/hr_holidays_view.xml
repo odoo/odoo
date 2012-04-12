@@ -485,10 +485,21 @@
            <field name="help">You can assign remaining Legal Leaves for each employee, OpenERP will automatically create and validate allocation requests.</field>
        </record>
 
-       <record id="hr_holidays_leaves_assign_form_view_todo" model="ir.actions.todo">
-           <field name="action_id" ref="hr_holidays_leaves_assign_legal"/>
-           <field name="category_id" ref="hr.category_hr_management_config"/>
-       </record>
+        <!-- Hr Configuration wizard -->
+        <record id="view_config_wizard_inherit" model="ir.ui.view">
+            <field name="name">hr settings for holidays</field>
+            <field name="model">hr.config.settings</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="hr.view_human_resources_configuration"/>
+            <field name="arch" type="xml">
+                <field name="module_hr_holidays" position="after">
+                    <group colspan="2">
+                        <button name="%(hr_holidays.hr_holidays_leaves_assign_legal)d" string="Allocate Leaves"
+                            type="action" icon="gtk-apply"/>
+                    </group>
+                </field>
+            </field>
+        </record>
 
         <!-- Hr employee inherit Legal Leaves -->
 
