@@ -41,7 +41,7 @@ class res_users(osv.osv):
     }
     
     _defaults = {
-        'notification_email_pref': 'all',
+        'notification_email_pref': 'none',
     }
     
     def __init__(self, pool, cr):
