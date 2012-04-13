@@ -51,4 +51,17 @@ class l10n_fr_line(osv.osv):
 
 l10n_fr_line()
 
+class res_company(osv.osv):
+    _inherit = 'res.company'
+
+    _columns = {
+        'siret': fields.char('SIRET', size=64),
+        'ape': fields.char('APE', size=64),
+    }
+
+res_company()
+
+
+
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
