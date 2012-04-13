@@ -43,7 +43,7 @@
         </div>
     </div>
 
-    <ul t-name="Thread" class="oe_mail_thread oe_mail">
+    <ul t-name="Thread" class="oe_mail oe_mail_thread">
         <div class="oe_mail_thread_act">
             <img class="oe_mail_msg_image oe_mail_oe_left" alt="User img"/>
             <div class="oe_mail_msg_content">
@@ -56,8 +56,8 @@
         </div>
     </ul>
 
-    <li t-name="ThreadMsg" t-attf-class="oe_mail_thread_msg oe_mail">
-        <div t-attf-class="{record.type}">
+    <li t-name="ThreadMsg" t-attf-class="oe_mail oe_mail_thread_msg">
+        <div t-attf-class="oe_mail_msg_#{record.type}">
             <img class="oe_mail_msg_image oe_mail_oe_left" t-att-src="record.mini_url"/>
             <div class="oe_mail_msg_content">
                 <t t-if="record.type == 'email'"><t t-call="EmailDisplay" /></t>
