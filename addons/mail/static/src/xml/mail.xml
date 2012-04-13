@@ -10,7 +10,7 @@
         <div class="oe_mail_wall_left">
             <div class="oe_mail_wall_act">
                 <textarea class="oe_mail oe_mail_wall_action_textarea" placeholder="Add a personnal message here..."/>
-                <button class="oe_mail_wall_button_comment" type="button">Post comment</button>
+                <button class="oe_mail_oe_right oe_mail_wall_button_comment" type="button">Post comment</button>
             </div>
             <div class="oe_clear"></div>
             <div class="oe_mail_wall_threads">
@@ -31,8 +31,8 @@
         </div>
         <div class="oe_mail_recthread_right">
             <div class="oe_mail_recthread_actions">
-                <button type="button" class="oe_mail_button_follow">Not following</button>
-                <button type="button" class="oe_mail_button_unfollow following">Following</button>
+                <button type="button" class="oe_mail_button_follow oe_mail_button_mouseout">Not following</button>
+                <button type="button" class="oe_mail_button_unfollow oe_mail_button_mouseout">Following</button>
                 <button type="button" class="oe_mail_button_followers">Display followers</button>
             </div>
             <div class="oe_mail_recthread_followers">
@@ -47,7 +47,7 @@
         <div class="oe_mail_thread_act">
             <img class="oe_mail_msg_image oe_mail_oe_left" alt="User img"/>
             <div class="oe_mail_msg_content">
-                <textarea class="oe_mail_action_textarea oe_mail" placeholder="Add your comment here..." onfocus="this.value = '';"/><br />
+                <textarea class="oe_mail oe_mail_action_textarea" placeholder="Add your comment here..." onfocus="this.value = '';"/><br />
             </div>
         </div>
         <div class="oe_mail_thread_display"></div>
@@ -79,12 +79,12 @@
                 <a href="#" class="intlink oe_mail_oe_intlink" data-res-model='res.users' t-attf-data-res-id='{record.user_id[0]}'><t t-raw="record.user_id[1]"/></a>
                 on <t t-raw="record.date"/>
             </span>
-            <t t-if="display['show_reply']"><a href="#" class="oe_mail_msg_reply oe_mail_oe_intlink"> Reply</a> </t>
+            <t t-if="display['show_reply']"><a href="#" class="oe_mail_oe_space oe_mail_msg_reply oe_mail_oe_intlink"> Reply</a> </t>
             <t t-if="display['show_delete']">
-                <t t-if="thread._is_author(record.user_id[0])"><a href="#" t-attf-data-id='{record.id}' class="oe_mail_msg_delete oe_mail_oe_intlink"> Delete </a></t>
+                <t t-if="thread._is_author(record.user_id[0])"><a href="#" t-attf-data-id='{record.id}' class="oe_mail_oe_space oe_mail_msg_delete oe_mail_oe_intlink"> Delete </a></t>
             </t>
             <t t-if="display['show_hide']">
-                <t t-if="!(thread._is_author(record.user_id[0]))"><span class="oe_mail_oe_space"><a href="#" t-attf-data-id='{record.id}' class="oe_mail_msg_hide oe_mail_oe_intlink">Hide</a></span></t>
+                <t t-if="!(thread._is_author(record.user_id[0]))"><a href="#" t-attf-data-id='{record.id}' class="oe_mail_oe_space oe_mail_msg_hide oe_mail_oe_intlink">Hide</a></t>
             </t>
         </p>
     </t>
