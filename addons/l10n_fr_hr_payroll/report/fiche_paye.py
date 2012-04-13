@@ -39,7 +39,7 @@ class fiche_paye_parser(report_sxw.rml_parse):
         res = []
         ids = []
         for id in range(len(obj)):
-            if obj[id].appears_on_payslip == True and  ( obj[id].salary_rule_id.type != 'employer' or not obj[id].salary_rule_id.parent_rule_id ):
+            if obj[id].appears_on_payslip == True and not obj[id].salary_rule_id.parent_rule_id :
                 ids.append(obj[id].id)
         if ids:
             res = payslip_line.browse(self.cr, self.uid, ids)

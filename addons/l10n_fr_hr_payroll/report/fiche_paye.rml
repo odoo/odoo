@@ -343,20 +343,17 @@
             <para style="terp_default_7">[[ ((p.amount_select&lt;&gt; 'fix' and p.amount_select&lt;&gt; 'percentage') or removeParentNode('para')) and '' ]]</para>
           </td>
           <td>
-            <para style="terp_default_7">[[ ((p.amount_select == 'percentage' and p.salary_rule_id.type &lt;&gt; 'employer') or removeParentNode('para')) and '' ]] [[ p.rate or '' ]]</para>
-            <para style="terp_default_7">[[ ((p.amount_select &lt;&gt; 'percentage' or p.salary_rule_id.type == 'employer') or removeParentNode('para')) and '' ]]</para>
+            <para style="terp_default_7">[[ ((p.amount_select == 'percentage') or removeParentNode('para')) and '' ]] [[ p.rate or '' ]]</para>
+            <para style="terp_default_7">[[ ((p.amount_select &lt;&gt; 'percentage') or removeParentNode('para')) and '' ]]</para>
           </td>
           <td>
-            <para style="terp_default_7">[[ (( p.salary_rule_id.type &lt;&gt; 'employer') or removeParentNode('para')) and '' ]] [[ p.amount or '' ]]</para>
-            <para style="terp_default_7">[[ (( p.salary_rule_id.type == 'employer') or removeParentNode('para')) and '' ]]</para>
+            <para style="terp_default_7">[[ p.amount or '' ]]</para>
           </td>
           <td>
-            <para style="terp_default_7">[[ (( p.salary_rule_id.type == 'employer') or removeParentNode('para')) and '' ]] [[ p.rate or '' ]]</para>
-            <para style="terp_default_7">[[ (( p.salary_rule_id.type &lt;&gt; 'employer') or removeParentNode('para')) and '' ]][[ get_employer_line(o, p).rate or '']] </para>
+            <para style="terp_default_7">[[ get_employer_line(o, p).rate or '']] </para>
           </td>
           <td>
-            <para style="terp_default_7">[[ (( p.salary_rule_id.type == 'employer') or removeParentNode('para')) and '' ]] [[ p.amount or '' ]]</para>
-            <para style="terp_default_7">[[ (( p.salary_rule_id.type &lt;&gt; 'employer') or removeParentNode('para')) and '' ]][[ get_employer_line(o,p).amount or '' ]]</para>
+            <para style="terp_default_7">[[ get_employer_line(o,p).amount or '' ]]</para>
           </td>
         </tr>
       </blockTable>
