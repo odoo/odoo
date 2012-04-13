@@ -63,7 +63,8 @@ class res_users(osv.osv):
         # create a welcome message to broadcast
         company_name = user.company_id.name if user.company_id else 'the company'
         message = _('%s has joined %s! You may leave him/her a message to celebrate a new arrival in the company ! You can help him/her doing its first steps on OpenERP.') % (user.name, company_name)
-        self.message_broadcast(cr, uid, [user.id], 'Welcome notification', message, context=context)
+        # TODO: clean the broadcast feature. As this is not cleany specified, temporarily remove the message broadcasting that is not buggy but not very nice.
+        #self.message_broadcast(cr, uid, [user.id], 'Welcome notification', message, context=context)
         return user_id
 
     def message_load_ids(self, cr, uid, ids, limit=100, offset=0, domain=[], ascent=False, root_ids=[False], context=None):
