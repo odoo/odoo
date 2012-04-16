@@ -59,7 +59,7 @@ openerp.mail = function(session) {
 
     /* Add ThreadDisplay widget to registry */
     session.web.form.widgets.add( 'Thread', 'openerp.mail.Thread');
-    session.web.page.readonly.add( 'Thread', 'openerp.mail.Thread');
+//    session.web.page.readonly.add( 'Thread', 'openerp.mail.Thread');
 
     /** 
      * ThreadDisplay widget: this widget handles the display of a thread of
@@ -467,12 +467,12 @@ openerp.mail = function(session) {
 
     /* Add ThreadView widget to registry */
     session.web.form.widgets.add( 'ThreadView', 'openerp.mail.RecordThread');
-    session.web.page.readonly.add( 'ThreadView', 'openerp.mail.RecordThread');
+//    session.web.page.readonly.add( 'ThreadView', 'openerp.mail.RecordThread');
 
     /* ThreadView widget: thread of comments */
-    mail.RecordThread = session.web.form.Field.extend({
+    mail.RecordThread = session.web.form.AbstractField.extend({
         // QWeb template to use when rendering the object
-        form_template: 'RecordThread',
+        template: 'RecordThread',
 
         init: function() {
             this._super.apply(this, arguments);
