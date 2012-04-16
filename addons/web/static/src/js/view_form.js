@@ -1918,7 +1918,10 @@ openerp.web.form.FieldUrl = openerp.web.form.FieldChar.extend({
         if (!this.value) {
             this.do_warn("Resource error", "This resource is empty");
         } else {
-            window.open(this.value);
+            var url = $.trim(this.value);
+            if(/^www\./i.test(url))
+                url = 'http://'+url;
+            window.open(url);
         }
     }
 });
