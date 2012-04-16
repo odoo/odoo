@@ -327,9 +327,20 @@ class account_cash_statement(osv.osv):
                 cash_box_line_pool.write(cr, uid, [end.id], {'number': 0})
         return True
 
-    def button_load_cashbox_line(self, cr, uid, ids, context=None):
+    def button_load_cashbox_lines(self, cr, uid, ids, context=None):
         if not ids:
             return False
+
+        proxy_line = self.pool.get('account.cashbox.line')
+
+        for record in self.browse(cr, uid, ids, context=context):
+
+            proxy_line.unlink(cr, uid, [line.id for line in record.starting_details_ids], context=context)
+            proxy_line.unlink(cr, uid, [line.id for line in record.ending_details_ids], context=context)
+
+            for cash in record.journal_id.cashbox_line_ids:
+                proxy_line.create(cr, uid, {'pieces' : cash.pieces, 'starting_id' : record.id }, context=context)
+                proxy_line.create(cr, uid, {'pieces' : cash.pieces, 'ending_id' : record.id}, context=context)
 
         return True
 
@@ -348,9 +359,11 @@ class account_journal_cashbox_line(osv.osv):
     _name = 'account.journal.cashbox.line'
     _rec_name = 'value'
     _columns = {
-        'value' : fields.float('Value'),
+        'pieces': fields.float('Values', digits_compute=dp.get_precision('Account')),
         'journal_id' : fields.many2one('account.journal', 'Journal', required=True, select=1),
     }
+
+    _order = 'pieces asc'
 
 account_journal_cashbox_line()
 

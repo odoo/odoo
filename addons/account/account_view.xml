@@ -507,7 +507,7 @@
                         <page string="Cash Box">
                             <field name="cashbox_line_ids" nolabel="1">
                                 <tree string="CashBox Lines" editable="bottom">
-                                    <field name="value" />
+                                    <field name="pieces" />
                                 </tree>
                             </field>
                         </page>
@@ -2660,8 +2660,7 @@ action = pool.get('res.config').next(cr, uid, [], context)
                             </field>
                         </page>
                         <page string="CashBox">
-                            <button name="load_cashbox_lines" type="object" string="Load CashBox Lines" />
-                            <field name="cashbox_line_ids" />
+                            <button name="button_load_cashbox_lines" type="object" string="Load CashBox Lines" />
                             <newline />
                             <group col="2" colspan="2" expand="1">
                                 <field name="starting_details_ids" nolabel="1" colspan="2" attrs="{'readonly':[('state','!=','draft')]}">
