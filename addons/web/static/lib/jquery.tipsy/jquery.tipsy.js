@@ -63,7 +63,7 @@
                     }
                 }
                 
-                $tip.css(tp).addClass('tipsy-' + gravity);
+                $tip.css(tp).addClass('openerp oe_tooltip tipsy-' + gravity);
                 $tip.find('.tipsy-arrow')[0].className = 'tipsy-arrow tipsy-arrow-' + gravity.charAt(0);
                 if (this.options.className) {
                     $tip.addClass(maybeCall(this.options.className, this.$element[0]));

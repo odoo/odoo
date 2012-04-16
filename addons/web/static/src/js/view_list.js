@@ -207,6 +207,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
 
         this.$element.html(QWeb.render(this._template, this));
         // Head hook
+        // Selecting records
         this.$element.find('.all-record-selector').click(function(){
             self.$element.find('.oe-record-selector input').prop('checked',
                 self.$element.find('.all-record-selector').prop('checked')  || false);
@@ -215,70 +216,95 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
                 'selected', [selection.ids, selection.records]);
         });
 
-        this.$element.find('.oe-list-add')
-                .click(this.proxy('do_add_record'))
-                .attr('disabled', grouped && this.options.editable);
-        this.$element.find('.oe-list-delete')
-                .attr('disabled', true)
-                .click(this.proxy('do_delete_selected'));
+        // Sorting columns
         this.$element.find('thead').delegate('th.oe-sortable[data-id]', 'click', function (e) {
             e.stopPropagation();
-
             var $this = $(this);
             self.dataset.sort($this.data('id'));
             if ($this.find('span').length) {
-                $this.find('span').toggleClass(
-                    'ui-icon-triangle-1-s ui-icon-triangle-1-n');
+                $this.find('span').toggleClass( 'ui-icon-triangle-1-s ui-icon-triangle-1-n');
             } else {
-                $this.append('<span class="ui-icon ui-icon-triangle-1-n">')
-                     .siblings('.oe-sortable').find('span').remove();
+                $this.append('<span class="ui-icon ui-icon-triangle-1-n">') .siblings('.oe-sortable').find('span').remove();
             }
 
             self.reload_content();
         });
 
-        this.$element.find('.oe-list-pager')
-            .delegate('button', 'click', function () {
-                var $this = $(this);
-                switch ($this.data('pager-action')) {
-                    case 'first':
-                        self.page = 0; break;
-                    case 'last':
-                        self.page = Math.floor(
-                            self.dataset.size() / self.limit());
-                        break;
-                    case 'next':
-                        self.page += 1; break;
-                    case 'previous':
-                        self.page -= 1; break;
-                }
-                self.reload_content();
-            }).find('.oe-pager-state')
-                .click(function (e) {
-                    e.stopPropagation();
-                    var $this = $(this);
+        // Add and delete
+        if (!this.$buttons) {
+            this.$buttons = $(QWeb.render("ListView.buttons", {'widget':self}));
+            if (this.options.$buttons) {
+                this.$buttons.appendTo(this.options.$buttons);
+            } else {
+                this.$element.find('.oe_list_buttons').replaceWith(this.$buttons);
+            }
+            this.$buttons.find('.oe_list_add')
+                    .click(this.proxy('do_add_record'))
+                    .prop('disabled', grouped && this.options.editable)
+                .end()
+                .find('.oe_list_delete')
+                    .click(this.proxy('do_delete_selected'))
+                    .prop('disabled', true);
+        }
 
-                    var $select = $('<select>')
-                        .appendTo($this.empty())
-                        .click(function (e) {e.stopPropagation();})
-                        .append('<option value="80">80</option>' +
-                                '<option value="100">100</option>' +
-                                '<option value="200">200</option>' +
-                                '<option value="500">500</option>' +
-                                '<option value="NaN">' + _t("Unlimited") + '</option>')
-                        .change(function () {
-                            var val = parseInt($select.val(), 10);
-                            self._limit = (isNaN(val) ? null : val);
-                            self.page = 0;
-                            self.reload_content();
-                        })
-                        .val(self._limit || 'NaN');
-                });
-        if (!this.sidebar && this.options.sidebar && this.options.sidebar_id) {
-            this.sidebar = new openerp.web.Sidebar(this, this.options.sidebar_id);
-            this.sidebar.start();
+        // Pager
+        if (!this.$pager) {
+            this.$pager = $(QWeb.render("ListView.pager", {'widget':self}));
+            if (this.options.$buttons) {
+                this.$pager.appendTo(this.options.$pager);
+            } else {
+                this.$element.find('.oe_list_pager').replaceWith(this.$pager);
+            }
+
+            this.$pager
+                .on('click', 'a[data-pager-action]', function () {
+                    var $this = $(this);
+                    var max_page = Math.floor(self.dataset.size() / self.limit());
+                    switch ($this.data('pager-action')) {
+                        case 'first':
+                            self.page = 0; break;
+                        case 'last':
+                            self.page = max_page - 1;
+                            break;
+                        case 'next':
+                            self.page += 1; break;
+                        case 'previous':
+                            self.page -= 1; break;
+                    }
+                    if (self.page < 0) {
+                        self.page = max_page;
+                    } else if (self.page > max_page) {
+                        self.page = 0;
+                    }
+                    self.reload_content();
+                }).find('.oe-pager-state')
+                    .click(function (e) {
+                        e.stopPropagation();
+                        var $this = $(this);
+
+                        var $select = $('<select>')
+                            .appendTo($this.empty())
+                            .click(function (e) {e.stopPropagation();})
+                            .append('<option value="80">80</option>' +
+                                    '<option value="100">100</option>' +
+                                    '<option value="200">200</option>' +
+                                    '<option value="500">500</option>' +
+                                    '<option value="NaN">' + _t("Unlimited") + '</option>')
+                            .change(function () {
+                                var val = parseInt($select.val(), 10);
+                                self._limit = (isNaN(val) ? null : val);
+                                self.page = 0;
+                                self.reload_content();
+                            })
+                            .val(self._limit || 'NaN');
+                    });
+        }
+
+        // Sidebar
+        if (!this.sidebar && this.options.sidebar && this.options.$sidebar) {
+            this.sidebar = new openerp.web.Sidebar(this);
+            this.sidebar.appendTo(this.options.$sidebar);
             this.sidebar.add_toolbar(this.fields_view.toolbar);
-            this.set_common_sidebar_sections(this.sidebar);
         }
     },
     /**
@@ -295,28 +321,11 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             this.dataset._length = dataset._length;
         }
 
-        var limit = this.limit(),
-            total = dataset.size(),
-            first = (this.page * limit),
-            last;
-        if (!limit || (total - first) < limit) {
-            last = total;
-        } else {
-            last = first + limit;
-        }
-        this.$element.find('span.oe-pager-state').empty().text(_.str.sprintf(
-            _t("[%(first_record)d to %(last_record)d] of %(records_count)d"), {
-                first_record: first + 1,
-                last_record: last,
-                records_count: total
-            }));
+        var page = this.page + 1,
+           total = Math.floor(dataset.size() / this.limit()) + 1;
 
-        this.$element
-            .find('button[data-pager-action=first], button[data-pager-action=previous]')
-                .attr('disabled', this.page === 0)
-            .end()
-            .find('button[data-pager-action=last], button[data-pager-action=next]')
-                .attr('disabled', last === total);
+        this.$pager.find('.oe-pager-state').text(isNaN(total)
+                ? '-' : _.str.sprintf('%d / %d', page, total));
     },
     /**
      * Sets up the listview's columns: merges view and fields data, move
@@ -406,7 +415,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
      * @param {String} [view="page"] the view type to switch to
      */
     select_record:function (index, view) {
-        view = view || index == null ? 'form' : 'page';
+        view = view || index == null ? 'form' : 'form';
         this.dataset.index = index;
         _.delay(_.bind(function () {
             this.do_switch_view(view);
@@ -417,12 +426,24 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         if (this.sidebar) {
             this.sidebar.$element.show();
         }
+        if (this.$buttons) {
+            this.$buttons.show();
+        }
+        if (this.$pager) {
+            this.$pager.show();
+        }
     },
     do_hide: function () {
-        this._super();
         if (this.sidebar) {
             this.sidebar.$element.hide();
         }
+        if (this.$buttons) {
+            this.$buttons.hide();
+        }
+        if (this.$pager) {
+            this.$pager.hide();
+        }
+        this._super();
     },
     /**
      * Reloads the list view based on the current settings (dataset & al)
@@ -478,7 +499,6 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
     reload: function () {
         return this.reload_content();
     },
-
     do_load_state: function(state, warm) {
         var reload = false;
         if (state.page && this.page !== state.page) {
@@ -543,16 +563,20 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
      * @param {Array} records selected record values
      */
     do_select: function (ids, records) {
-        this.$element.find('.oe-list-delete').attr('disabled', !ids.length);
+        this.$buttons.find('.oe_list_delete').attr('disabled', !ids.length);
         if (!ids.length) {
             this.dataset.index = 0;
-            if (this.sidebar) { this.sidebar.do_fold(); }
+            if (this.sidebar) {
+                this.sidebar.$element.hide();
+            }
             this.compute_aggregates();
             return;
         }
 
         this.dataset.index = _(this.dataset.ids).indexOf(ids[0]);
-        if (this.sidebar) { this.sidebar.do_unfold(); }
+        if (this.sidebar) {
+            this.sidebar.$element.show();
+        }
 
         this.compute_aggregates(_(records).map(function (record) {
             return {count: 1, values: record};
@@ -823,7 +847,7 @@ openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.Lis
             this.records.bind(event, callback);
         }, this);
 
-        this.$_element = $('<tbody class="ui-widget-content">')
+        this.$_element = $('<tbody>')
             .appendTo(document.body)
             .delegate('th.oe-record-selector', 'click', function (e) {
                 e.stopPropagation();

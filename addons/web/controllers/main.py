@@ -79,7 +79,7 @@ def concat_files(file_list, reader=None, intersperse=""):
 
     if reader is None:
         def reader(f):
-            with open(f) as fp:
+            with open(f, 'rb') as fp:
                 return fp.read()
 
     files_content = []
@@ -261,8 +261,8 @@ class WebClient(openerpweb.Controller):
 
         def reader(f):
             """read the a css file and absolutify all relative uris"""
-            with open(f) as fp:
-                data = fp.read()
+            with open(f, 'rb') as fp:
+                data = fp.read().decode('utf-8')
 
             path = file_map[f]
             # convert FS path into web path
@@ -279,7 +279,7 @@ class WebClient(openerpweb.Controller):
                 r"""url(\1%s/""" % (web_dir,),
                 data,
             )
-            return data
+            return data.encode('utf-8')
 
         content, checksum = concat_files((f[0] for f in files), reader)
 
@@ -802,9 +802,6 @@ def fix_view_modes(action):
     new view mode ``list`` which is the result of the ``tree`` view_mode
     in conjunction with the ``form`` view_type.
 
-    This method also adds a ``page`` view mode in case there is a ``form`` in
-    the input action.
-
     TODO: this should go into the doc, some kind of "peculiarities" section
 
     :param dict action: an action descriptor
@@ -818,8 +815,6 @@ def fix_view_modes(action):
         if mode == 'form':
             id_form = id
             break
-    if id_form is not None:
-        action['views'].insert(index + 1, (id_form, 'page'))
 
     if action.pop('view_type', 'form') != 'form':
         return action
@@ -1154,6 +1149,7 @@ class View(openerpweb.Controller):
             arch = fvg['arch'].encode('utf-8')
         else:
             arch = fvg['arch']
+        fvg['arch_string'] = arch
 
         if transform:
             evaluation_context = session.evaluation_context(context or {})

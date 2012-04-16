@@ -47,26 +47,15 @@
 /*---------------------------------------------------------
  * OpenERP Web web module split
  *---------------------------------------------------------*/
-
-/**
- * @namespace
- */
-openerp.web = function(instance) {
-    openerp.web.core(instance);
-    if (openerp.web.dates) {
-        openerp.web.dates(instance);
-    }
-    openerp.web.formats(instance);
-    openerp.web.chrome(instance);
-    openerp.web.data(instance);
-    var files = ["views","search","list","form", "page","list_editable","web_mobile","view_tree","data_export","data_import","view_editor"];
+openerp.web = function(session) {
+    var files = ["corelib","coresetup","dates","formats","chrome","data","views","search","list","form","list_editable","web_mobile","view_tree","data_export","data_import","view_editor"];
     for(var i=0; i<files.length; i++) {
         if(openerp.web[files[i]]) {
-            openerp.web[files[i]](instance);
+            openerp.web[files[i]](session);
         }
     }
-    instance.log = function() {
-        if (instance.connection.debug && window.console) {
+    session.log = function() {
+        if (session.connection.debug && window.console) {
             console.log.apply(console, arguments);
         }
     }

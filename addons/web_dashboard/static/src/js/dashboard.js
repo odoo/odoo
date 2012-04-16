@@ -273,9 +273,9 @@ openerp.web.form.DashBoardLegacy = openerp.web.form.DashBoard.extend({
     }
 });
 
-openerp.web.form.widgets.add('hpaned', 'openerp.web.form.DashBoardLegacy');
-openerp.web.form.widgets.add('vpaned', 'openerp.web.form.DashBoardLegacy');
-openerp.web.form.widgets.add('board', 'openerp.web.form.DashBoard');
+openerp.web.form.tags.add('hpaned', 'openerp.web.form.DashBoardLegacy');
+openerp.web.form.tags.add('vpaned', 'openerp.web.form.DashBoardLegacy');
+openerp.web.form.tags.add('board', 'openerp.web.form.DashBoard');
 
 /*
  * ConfigOverview

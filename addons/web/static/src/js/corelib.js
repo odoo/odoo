@@ -1,60 +1,134 @@
-/*---------------------------------------------------------
- * OpenERP Web core
- *--------------------------------------------------------*/
-var console;
-if (!console) {
-    console = {log: function () {}};
-}
-if (!console.debug) {
-    console.debug = console.log;
-}
+/*
+ * Copyright (c) 2012, OpenERP S.A.
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met: 
+ * 
+ * 1. Redistributions of source code must retain the above copyright notice, this
+ *    list of conditions and the following disclaimer. 
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution. 
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 
-openerp.web.core = function(openerp) {
+openerp.web.corelib = function(openerp) {
 
-// a function to override the "extend()" method of JR's inheritance, allowing
-// the usage of "include()"
-var oe_override_class = function(claz){
-    var initializing = false, fnTest = /xyz/.test(function(){xyz;}) ?
-    /\b_super\b/ : /.*/;
-    
-    // Create a new Class that inherits from this class
-    claz.extend = function(prop) {
+/**
+ * Improved John Resig's inheritance, based on:
+ *
+ * Simple JavaScript Inheritance
+ * By John Resig http://ejohn.org/
+ * MIT Licensed.
+ *
+ * Adds "include()"
+ *
+ * Defines The Class object. That object can be used to define and inherit classes using
+ * the extend() method.
+ *
+ * Example:
+ *
+ * var Person = openerp.web.Class.extend({
+ *  init: function(isDancing){
+ *     this.dancing = isDancing;
+ *   },
+ *   dance: function(){
+ *     return this.dancing;
+ *   }
+ * });
+ *
+ * The init() method act as a constructor. This class can be instancied this way:
+ *
+ * var person = new Person(true);
+ * person.dance();
+ *
+ * The Person class can also be extended again:
+ *
+ * var Ninja = Person.extend({
+ *   init: function(){
+ *     this._super( false );
+ *   },
+ *   dance: function(){
+ *     // Call the inherited version of dance()
+ *     return this._super();
+ *   },
+ *   swingSword: function(){
+ *     return true;
+ *   }
+ * });
+ *
+ * When extending a class, each re-defined method can use this._super() to call the previous
+ * implementation of that method.
+ */
+(function() {
+    var initializing = false,
+        fnTest = /xyz/.test(function(){xyz;}) ? /\b_super\b/ : /.*/;
+    // The web Class implementation (does nothing)
+    openerp.web.Class = function(){};
+
+    /**
+     * Subclass an existing class
+     *
+     * @param {Object} prop class-level properties (class attributes and instance methods) to set on the new class
+     */
+    openerp.web.Class.extend = function() {
         var _super = this.prototype;
-        
-        // Instantiate a base class (but only create the instance, don't run the
-        // init constructor)
-        initializing = true; var prototype = new this(); initializing = false;
-        
+        // Support mixins arguments
+        var args = _.toArray(arguments);
+        args.unshift({});
+        var prop = _.extend.apply(_,args);
+
+        // Instantiate a web class (but only create the instance,
+        // don't run the init constructor)
+        initializing = true;
+        var prototype = new this();
+        initializing = false;
+
         // Copy the properties over onto the new prototype
         for (var name in prop) {
-          // Check if we're overwriting an existing function
-          prototype[name] = typeof prop[name] == "function" &&
-            typeof _super[name] == "function" && fnTest.test(prop[name]) ?
-            (function(name, fn){
-              return function() {
-                var tmp = this._super;
-                
-                // Add a new ._super() method that is the same method but on the
-                // super-class
-                this._super = _super[name];
-                
-                // The method only need to be bound temporarily, so we remove it
-                // when we're done executing
-                var ret = fn.apply(this, arguments); this._super = tmp;
-                
-                return ret;
-              };
-            })(name, prop[name]) : prop[name];
+            // Check if we're overwriting an existing function
+            prototype[name] = typeof prop[name] == "function" &&
+                              typeof _super[name] == "function" &&
+                              fnTest.test(prop[name]) ?
+                    (function(name, fn) {
+                        return function() {
+                            var tmp = this._super;
+
+                            // Add a new ._super() method that is the same
+                            // method but on the super-class
+                            this._super = _super[name];
+
+                            // The method only need to be bound temporarily, so
+                            // we remove it when we're done executing
+                            var ret = fn.apply(this, arguments);
+                            this._super = tmp;
+
+                            return ret;
+                        };
+                    })(name, prop[name]) :
+                    prop[name];
         }
-        
+
         // The dummy class constructor
         function Class() {
             // All construction is actually done in the init method
             if (!initializing && this.init) {
-                var ret = this.init.apply(this, arguments); if (ret) { return ret;}
-            } return this;
+                var ret = this.init.apply(this, arguments);
+                if (ret) { return ret; }
+            }
+            return this;
         }
-        
         Class.include = function (properties) {
             for (var name in properties) {
                 if (typeof properties[name] !== 'function'
@@ -64,138 +138,617 @@ var oe_override_class = function(claz){
                            && prototype.hasOwnProperty(name)) {
                     prototype[name] = (function (name, fn, previous) {
                         return function () {
-                            var tmp = this._super; this._super = previous; var
-                            ret = fn.apply(this, arguments); this._super = tmp;
+                            var tmp = this._super;
+                            this._super = previous;
+                            var ret = fn.apply(this, arguments);
+                            this._super = tmp;
                             return ret;
                         }
                     })(name, properties[name], prototype[name]);
                 } else if (typeof _super[name] === 'function') {
                     prototype[name] = (function (name, fn) {
                         return function () {
-                            var tmp = this._super; this._super = _super[name];
-                            var ret = fn.apply(this, arguments); this._super =
-                            tmp; return ret;
+                            var tmp = this._super;
+                            this._super = _super[name];
+                            var ret = fn.apply(this, arguments);
+                            this._super = tmp;
+                            return ret;
                         }
                     })(name, properties[name]);
                 }
             }
         };
-        
+
         // Populate our constructed prototype object
         Class.prototype = prototype;
-        
+
         // Enforce the constructor to be what we expect
-        Class.prototype.constructor = Class;
-    
+        Class.constructor = Class;
+
         // And make this class extendable
         Class.extend = arguments.callee;
-        
+
         return Class;
     };
-};
-oe_override_class(nova.Class);
-oe_override_class(nova.Widget);
+})();
 
-openerp.web.Class = nova.Class;
+// Mixins
 
-openerp.web.callback = function(obj, method) {
-    var callback = function() {
-        var args = Array.prototype.slice.call(arguments);
-        var r;
-        for(var i = 0; i < callback.callback_chain.length; i++)  {
-            var c = callback.callback_chain[i];
-            if(c.unique) {
-                callback.callback_chain.splice(i, 1);
-                i -= 1;
+/**
+ * Mixin to structure objects' life-cycles folowing a parent-children
+ * relationship. Each object can a have a parent and multiple children.
+ * When an object is destroyed, all its children are destroyed too releasing
+ * any resource they could have reserved before.
+ */
+openerp.web.ParentedMixin = {
+    __parentedMixin : true,
+    init: function() {
+        this.__parentedDestroyed = false;
+        this.__parentedChildren = [];
+        this.__parentedParent = null;
+    },
+    /**
+     * Set the parent of the current object. When calling this method, the
+     * parent will also be informed and will return the current object
+     * when its getChildren() method is called. If the current object did
+     * already have a parent, it is unregistered before, which means the
+     * previous parent will not return the current object anymore when its
+     * getChildren() method is called.
+     */
+    setParent : function(parent) {
+        if (this.getParent()) {
+            if (this.getParent().__parentedMixin) {
+                this.getParent().__parentedChildren = _.without(this
+                        .getParent().getChildren(), this);
             }
-            var result = c.callback.apply(c.self, c.args.concat(args));
-            if (c.callback === method) {
-                // return the result of the original method
-                r = result;
-            }
-            // TODO special value to stop the chain
-            // openerp.web.callback_stop
         }
-        return r;
-    };
-    callback.callback_chain = [];
-    callback.add = function(f) {
-        if(typeof(f) == 'function') {
-            f = { callback: f, args: Array.prototype.slice.call(arguments, 1) };
+        this.__parentedParent = parent;
+        if (parent && parent.__parentedMixin) {
+            parent.__parentedChildren.push(this);
         }
-        f.self = f.self || null;
-        f.args = f.args || [];
-        f.unique = !!f.unique;
-        if(f.position == 'last') {
-            callback.callback_chain.push(f);
-        } else {
-            callback.callback_chain.unshift(f);
-        }
-        return callback;
-    };
-    callback.add_first = function(f) {
-        return callback.add.apply(null,arguments);
-    };
-    callback.add_last = function(f) {
-        return callback.add({
-            callback: f,
-            args: Array.prototype.slice.call(arguments, 1),
-            position: "last"
+    },
+    /**
+     * Return the current parent of the object (or null).
+     */
+    getParent : function() {
+        return this.__parentedParent;
+    },
+    /**
+     * Return a list of the children of the current object.
+     */
+    getChildren : function() {
+        return _.clone(this.__parentedChildren);
+    },
+    /**
+     * Returns true if destroy() was called on the current object.
+     */
+    isDestroyed : function() {
+        return this.__parentedDestroyed;
+    },
+    /**
+     * Inform the object it should destroy itself, releasing any
+     * resource it could have reserved.
+     */
+    destroy : function() {
+        _.each(this.getChildren(), function(el) {
+            el.destroy();
         });
-    };
-    callback.remove = function(f) {
-        callback.callback_chain = _.difference(callback.callback_chain, _.filter(callback.callback_chain, function(el) {
-            return el.callback === f;
-        }));
-        return callback;
-    };
-
-    return callback.add({
-        callback: method,
-        self:obj,
-        args:Array.prototype.slice.call(arguments, 2)
-    });
+        this.setParent(undefined);
+        this.__parentedDestroyed = true;
+    }
 };
 
 /**
- * web error for lookup failure
+ * TODO al: move into the the mixin
  *
- * @class
+ * Backbone's events
+ *
+ * (c) 2010-2012 Jeremy Ashkenas, DocumentCloud Inc.
+ * Backbone may be freely distributed under the MIT license.
+ * For all details and documentation:
+ * http://backbonejs.org
+ * 
+ * This class just handle the dispatching of events, it is not meant to be extended,
+ * nor used directly. All integration with parenting and automatic unregistration of
+ * events is done in EventDispatcherMixin.
+ *
  */
-openerp.web.NotFound = openerp.web.Class.extend( /** @lends openerp.web.NotFound# */ {
-});
-openerp.web.KeyNotFound = openerp.web.NotFound.extend( /** @lends openerp.web.KeyNotFound# */ {
-    /**
-     * Thrown when a key could not be found in a mapping
-     *
-     * @constructs openerp.web.KeyNotFound
-     * @extends openerp.web.NotFound
-     * @param {String} key the key which could not be found
-     */
-    init: function (key) {
-        this.key = key;
+openerp.web.Events = openerp.web.Class.extend({
+
+    on : function(events, callback, context) {
+        var ev;
+        events = events.split(/\s+/);
+        var calls = this._callbacks || (this._callbacks = {});
+        while (ev = events.shift()) {
+            var list = calls[ev] || (calls[ev] = {});
+            var tail = list.tail || (list.tail = list.next = {});
+            tail.callback = callback;
+            tail.context = context;
+            list.tail = tail.next = {};
+        }
+        return this;
     },
-    toString: function () {
-        return "The key " + this.key + " was not found";
+
+    off : function(events, callback, context) {
+        var ev, calls, node;
+        if (!events) {
+            delete this._callbacks;
+        } else if (calls = this._callbacks) {
+            events = events.split(/\s+/);
+            while (ev = events.shift()) {
+                node = calls[ev];
+                delete calls[ev];
+                if (!callback || !node)
+                    continue;
+                while ((node = node.next) && node.next) {
+                    if (node.callback === callback
+                            && (!context || node.context === context))
+                        continue;
+                    this.on(ev, node.callback, node.context);
+                }
+            }
+        }
+        return this;
+    },
+
+    trigger : function(events) {
+        var event, node, calls, tail, args, all, rest;
+        if (!(calls = this._callbacks))
+            return this;
+        all = calls['all'];
+        (events = events.split(/\s+/)).push(null);
+        // Save references to the current heads & tails.
+        while (event = events.shift()) {
+            if (all)
+                events.push({
+                    next : all.next,
+                    tail : all.tail,
+                    event : event
+                });
+            if (!(node = calls[event]))
+                continue;
+            events.push({
+                next : node.next,
+                tail : node.tail
+            });
+        }
+        rest = Array.prototype.slice.call(arguments, 1);
+        while (node = events.pop()) {
+            tail = node.tail;
+            args = node.event ? [ node.event ].concat(rest) : rest;
+            while ((node = node.next) !== tail) {
+                node.callback.apply(node.context || this, args);
+            }
+        }
+        return this;
     }
 });
-openerp.web.ObjectNotFound = openerp.web.NotFound.extend( /** @lends openerp.web.ObjectNotFound# */ {
-    /**
-     * Thrown when an object path does not designate a valid class or object
-     * in the openerp hierarchy.
-     *
-     * @constructs openerp.web.ObjectNotFound
-     * @extends openerp.web.NotFound
-     * @param {String} path the invalid object path
-     */
-    init: function (path) {
-        this.path = path;
+
+openerp.web.EventDispatcherMixin = _.extend({}, openerp.web.ParentedMixin, {
+    __eventDispatcherMixin: true,
+    init: function() {
+        openerp.web.ParentedMixin.init.call(this);
+        this.__edispatcherEvents = new openerp.web.Events();
+        this.__edispatcherRegisteredEvents = [];
     },
-    toString: function () {
-        return "Could not find any object of path " + this.path;
+    on: function(events, dest, func) {
+        var self = this;
+        events = events.split(/\s+/);
+        _.each(events, function(eventName) {
+            self.__edispatcherEvents.on(eventName, func, dest);
+            if (dest && dest.__eventDispatcherMixin) {
+                dest.__edispatcherRegisteredEvents.push({name: eventName, func: func, source: self});
+            }
+        });
+        return this;
+    },
+    off: function(events, dest, func) {
+        var self = this;
+        events = events.split(/\s+/);
+        _.each(events, function(eventName) {
+            self.__edispatcherEvents.off(eventName, func, dest);
+            if (dest && dest.__eventDispatcherMixin) {
+                dest.__edispatcherRegisteredEvents = _.filter(dest.__edispatcherRegisteredEvents, function(el) {
+                    return !(el.name === eventName && el.func === func && el.source === self);
+                });
+            }
+        });
+        return this;
+    },
+    trigger: function(events) {
+        this.__edispatcherEvents.trigger.apply(this.__edispatcherEvents, arguments);
+        return this;
+    },
+    destroy: function() {
+        var self = this;
+        _.each(this.__edispatcherRegisteredEvents, function(event) {
+            event.source.__edispatcherEvents.off(event.name, event.func, self);
+        });
+        this.__edispatcherRegisteredEvents = [];
+        if(!this.__edispatcherEvents) {
+            debugger;
+        }
+        this.__edispatcherEvents.off();
+        openerp.web.ParentedMixin.destroy.call(this);
     }
 });
-openerp.web.Registry = openerp.web.Class.extend( /** @lends openerp.web.Registry# */ {
+
+openerp.web.GetterSetterMixin = _.extend({}, openerp.web.EventDispatcherMixin, {
+    init: function() {
+        openerp.web.EventDispatcherMixin.init.call(this);
+        this.__getterSetterInternalMap = {};
+    },
+    set: function(map) {
+        var self = this;
+        var changed = false;
+        _.each(map, function(val, key) {
+            var tmp = self.__getterSetterInternalMap[key];
+            if (tmp === val)
+                return;
+            changed = true;
+            self.__getterSetterInternalMap[key] = val;
+            self.trigger("change:" + key, self, {
+                oldValue: tmp,
+                newValue: val
+            });
+        });
+        if (changed)
+            self.trigger("change", self);
+    },
+    get: function(key) {
+        return this.__getterSetterInternalMap[key];
+    }
+});
+
+openerp.web.CallbackEnabledMixin = _.extend({}, openerp.web.GetterSetterMixin, {
+    init: function() {
+        openerp.web.GetterSetterMixin.init.call(this);
+        var self = this;
+        var callback_maker = function(obj, name, method) {
+            var callback = function() {
+                var args = Array.prototype.slice.call(arguments);
+                self.trigger.apply(self, [name].concat(args));
+                var r;
+                for(var i = 0; i < callback.callback_chain.length; i++)  {
+                    var c = callback.callback_chain[i];
+                    if(c.unique) {
+                        callback.callback_chain.splice(i, 1);
+                        i -= 1;
+                    }
+                    var result = c.callback.apply(c.self, c.args.concat(args));
+                    if (c.callback === method) {
+                        // return the result of the original method
+                        r = result;
+                    }
+                    // TODO special value to stop the chain
+                    // openerp.web.callback_stop
+                }
+                return r;
+            };
+            callback.callback_chain = [];
+            callback.add = function(f) {
+                if(typeof(f) == 'function') {
+                    f = { callback: f, args: Array.prototype.slice.call(arguments, 1) };
+                }
+                f.self = f.self || null;
+                f.args = f.args || [];
+                f.unique = !!f.unique;
+                if(f.position == 'last') {
+                    callback.callback_chain.push(f);
+                } else {
+                    callback.callback_chain.unshift(f);
+                }
+                return callback;
+            };
+            callback.add_first = function(f) {
+                return callback.add.apply(null,arguments);
+            };
+            callback.add_last = function(f) {
+                return callback.add({
+                    callback: f,
+                    args: Array.prototype.slice.call(arguments, 1),
+                    position: "last"
+                });
+            };
+            callback.remove = function(f) {
+                callback.callback_chain = _.difference(callback.callback_chain, _.filter(callback.callback_chain, function(el) {
+                    return el.callback === f;
+                }));
+                return callback;
+            };
+
+            return callback.add({
+                callback: method,
+                self:obj,
+                args:Array.prototype.slice.call(arguments, 3)
+            });
+        };
+        // Transform on_/do_* methods into callbacks
+        for (var name in this) {
+            if(typeof(this[name]) == "function") {
+                this[name].debug_name = name;
+                if((/^on_|^do_/).test(name)) {
+                    this[name] = callback_maker(this, name, this[name]);
+                }
+            }
+        }
+    },
+    /**
+     * Proxies a method of the object, in order to keep the right ``this`` on
+     * method invocations.
+     *
+     * This method is similar to ``Function.prototype.bind`` or ``_.bind``, and
+     * even more so to ``jQuery.proxy`` with a fundamental difference: its
+     * resolution of the method being called is lazy, meaning it will use the
+     * method as it is when the proxy is called, not when the proxy is created.
+     *
+     * Other methods will fix the bound method to what it is when creating the
+     * binding/proxy, which is fine in most javascript code but problematic in
+     * OpenERP Web where developers may want to replace existing callbacks with
+     * theirs.
+     *
+     * The semantics of this precisely replace closing over the method call.
+     *
+     * @param {String} method_name name of the method to invoke
+     * @returns {Function} proxied method
+     */
+    proxy: function (method_name) {
+        var self = this;
+        return function () {
+            return self[method_name].apply(self, arguments);
+        }
+    }
+});
+
+openerp.web.WidgetMixin = _.extend({},openerp.web.CallbackEnabledMixin, {
+    /**
+     * Tag name when creating a default $element.
+     * @type string
+     */
+    tagName: 'div',
+    /**
+     * Constructs the widget and sets its parent if a parent is given.
+     *
+     * @constructs openerp.web.Widget
+     * @extends openerp.web.CallbackEnabled
+     *
+     * @param {openerp.web.Widget} parent Binds the current instance to the given Widget instance.
+     * When that widget is destroyed by calling destroy(), the current instance will be
+     * destroyed too. Can be null.
+     * @param {String} element_id Deprecated. Sets the element_id. Only useful when you want
+     * to bind the current Widget to an already existing part of the DOM, which is not compatible
+     * with the DOM insertion methods provided by the current implementation of Widget. So
+     * for new components this argument should not be provided any more.
+     */
+    init: function(parent) {
+        openerp.web.CallbackEnabledMixin.init.call(this);
+        this.$element = $(document.createElement(this.tagName));
+        this.setParent(parent);
+    },
+    /**
+     * Destroys the current widget, also destroys all its children before destroying itself.
+     */
+    destroy: function() {
+        _.each(this.getChildren(), function(el) {
+            el.destroy();
+        });
+        if(this.$element != null) {
+            this.$element.remove();
+        }
+        openerp.web.GetterSetterMixin.destroy.call(this);
+    },
+    /**
+     * Renders the current widget and appends it to the given jQuery object or Widget.
+     *
+     * @param target A jQuery object or a Widget instance.
+     */
+    appendTo: function(target) {
+        var self = this;
+        return this.__widgetRenderAndInsert(function(t) {
+            self.$element.appendTo(t);
+        }, target);
+    },
+    /**
+     * Renders the current widget and prepends it to the given jQuery object or Widget.
+     *
+     * @param target A jQuery object or a Widget instance.
+     */
+    prependTo: function(target) {
+        var self = this;
+        return this.__widgetRenderAndInsert(function(t) {
+            self.$element.prependTo(t);
+        }, target);
+    },
+    /**
+     * Renders the current widget and inserts it after to the given jQuery object or Widget.
+     *
+     * @param target A jQuery object or a Widget instance.
+     */
+    insertAfter: function(target) {
+        var self = this;
+        return this.__widgetRenderAndInsert(function(t) {
+            self.$element.insertAfter(t);
+        }, target);
+    },
+    /**
+     * Renders the current widget and inserts it before to the given jQuery object or Widget.
+     *
+     * @param target A jQuery object or a Widget instance.
+     */
+    insertBefore: function(target) {
+        var self = this;
+        return this.__widgetRenderAndInsert(function(t) {
+            self.$element.insertBefore(t);
+        }, target);
+    },
+    /**
+     * Renders the current widget and replaces the given jQuery object.
+     *
+     * @param target A jQuery object or a Widget instance.
+     */
+    replace: function(target) {
+        return this.__widgetRenderAndInsert(_.bind(function(t) {
+            this.$element.replaceAll(t);
+        }, this), target);
+    },
+    __widgetRenderAndInsert: function(insertion, target) {
+        this.renderElement();
+        insertion(target);
+        return this.start();
+    },
+    /**
+     * This is the method to implement to render the Widget.
+     */
+    renderElement: function() {
+    },
+    /**
+     * Method called after rendering. Mostly used to bind actions, perform asynchronous
+     * calls, etc...
+     *
+     * By convention, the method should return a promise to inform the caller when
+     * this widget has been initialized.
+     *
+     * @returns {jQuery.Deferred}
+     */
+    start: function() {
+    }
+});
+
+// Classes
+
+openerp.web.CallbackEnabled = openerp.web.Class.extend(openerp.web.CallbackEnabledMixin, {
+    init: function() {
+        openerp.web.CallbackEnabledMixin.init.call(this);
+    }
+});
+
+/**
+ * Base class for all visual components. Provides a lot of functionalities helpful
+ * for the management of a part of the DOM.
+ *
+ * Widget handles:
+ * - Rendering with QWeb.
+ * - Life-cycle management and parenting (when a parent is destroyed, all its children are
+ *     destroyed too).
+ * - Insertion in DOM.
+ *
+ * Guide to create implementations of the Widget class:
+ * ==============================================
+ *
+ * Here is a sample child class:
+ *
+ * MyWidget = openerp.base.Widget.extend({
+ *     // the name of the QWeb template to use for rendering
+ *     template: "MyQWebTemplate",
+ *
+ *     init: function(parent) {
+ *         this._super(parent);
+ *         // stuff that you want to init before the rendering
+ *     },
+ *     start: function() {
+ *         // stuff you want to make after the rendering, `this.$element` holds a correct value
+ *         this.$element.find(".my_button").click(/* an example of event binding * /);
+ *
+ *         // if you have some asynchronous operations, it's a good idea to return
+ *         // a promise in start()
+ *         var promise = this.rpc(...);
+ *         return promise;
+ *     }
+ * });
+ *
+ * Now this class can simply be used with the following syntax:
+ *
+ * var my_widget = new MyWidget(this);
+ * my_widget.appendTo($(".some-div"));
+ *
+ * With these two lines, the MyWidget instance was inited, rendered, it was inserted into the
+ * DOM inside the ".some-div" div and its events were binded.
+ *
+ * And of course, when you don't need that widget anymore, just do:
+ *
+ * my_widget.destroy();
+ *
+ * That will kill the widget in a clean way and erase its content from the dom.
+ */
+openerp.web.Widget = openerp.web.Class.extend(openerp.web.WidgetMixin, {
+    /**
+     * The name of the QWeb template that will be used for rendering. Must be
+     * redefined in subclasses or the default render() method can not be used.
+     *
+     * @type string
+     */
+    template: null,
+    /**
+     * Constructs the widget and sets its parent if a parent is given.
+     *
+     * @constructs openerp.web.Widget
+     * @extends openerp.web.CallbackEnabled
+     *
+     * @param {openerp.web.Widget} parent Binds the current instance to the given Widget instance.
+     * When that widget is destroyed by calling destroy(), the current instance will be
+     * destroyed too. Can be null.
+     * @param {String} element_id Deprecated. Sets the element_id. Only useful when you want
+     * to bind the current Widget to an already existing part of the DOM, which is not compatible
+     * with the DOM insertion methods provided by the current implementation of Widget. So
+     * for new components this argument should not be provided any more.
+     */
+    init: function(parent) {
+        openerp.web.WidgetMixin.init.call(this,parent);
+        this.session = openerp.connection;
+    },
+    /**
+     * Renders the element. The default implementation renders the widget using QWeb,
+     * `this.template` must be defined. The context given to QWeb contains the "widget"
+     * key that references `this`.
+     */
+    renderElement: function() {
+        var rendered = null;
+        if (this.template)
+            rendered = openerp.web.qweb.render(this.template, {widget: this});
+        if (_.str.trim(rendered)) {
+            var elem = $(rendered);
+            this.$element.replaceWith(elem);
+            this.$element = elem;
+        }
+    },
+    /**
+     * Informs the action manager to do an action. This supposes that
+     * the action manager can be found amongst the ancestors of the current widget.
+     * If that's not the case this method will simply return `false`.
+     */
+    do_action: function(action, on_finished) {
+        if (this.getParent()) {
+            return this.getParent().do_action(action, on_finished);
+        }
+        return false;
+    },
+    do_notify: function() {
+        if (this.getParent()) {
+            return this.getParent().do_notify.apply(this,arguments);
+        }
+        return false;
+    },
+    do_warn: function() {
+        if (this.getParent()) {
+            return this.getParent().do_warn.apply(this,arguments);
+        }
+        return false;
+    },
+    rpc: function(url, data, success, error) {
+        var def = $.Deferred().then(success, error);
+        var self = this;
+        openerp.connection.rpc(url, data). then(function() {
+            if (!self.isDestroyed())
+                def.resolve.apply(def, arguments);
+        }, function() {
+            if (!self.isDestroyed())
+                def.reject.apply(def, arguments);
+        });
+        return def.promise();
+    }
+});
+
+openerp.web.Registry = openerp.web.Class.extend({
     /**
      * Stores a mapping of arbitrary key (strings) to object paths (as strings
      * as well).
@@ -220,10 +773,7 @@ openerp.web.Registry = openerp.web.Class.extend( /** @lends openerp.web.Registry
      *
      * @param {String} key the key to fetch the object for
      * @param {Boolean} [silent_error=false] returns undefined if the key or object is not found, rather than throwing an exception
-     * @returns {Class} the stored class, to initialize
-     *
-     * @throws {openerp.web.KeyNotFound} if the object was not in the mapping
-     * @throws {openerp.web.ObjectNotFound} if the object path was invalid
+     * @returns {Class} the stored class, to initialize or null if not found
      */
     get_object: function (key, silent_error) {
         var path_string = this.map[key];
@@ -232,7 +782,7 @@ openerp.web.Registry = openerp.web.Class.extend( /** @lends openerp.web.Registry
                 return this.parent.get_object(key, silent_error);
             }
             if (silent_error) { return void 'nooo'; }
-            throw new openerp.web.KeyNotFound(key);
+            return null;
         }
 
         var object_match = openerp;
@@ -243,7 +793,7 @@ openerp.web.Registry = openerp.web.Class.extend( /** @lends openerp.web.Registry
 
             if (object_match === undefined) {
                 if (silent_error) { return void 'noooooo'; }
-                throw new openerp.web.ObjectNotFound(path_string);
+                return null;
             }
         }
         return object_match;
@@ -269,9 +819,6 @@ openerp.web.Registry = openerp.web.Class.extend( /** @lends openerp.web.Registry
      *
      * @param {Array} keys a sequence of keys to fetch the object for
      * @returns {Class} the first class found matching an object
-     *
-     * @throws {openerp.web.KeyNotFound} if none of the keys was in the mapping
-     * @trows {openerp.web.ObjectNotFound} if a found object path was invalid
      */
     get_any: function (keys) {
         for (var i=0; i<keys.length; ++i) {
@@ -282,7 +829,7 @@ openerp.web.Registry = openerp.web.Class.extend( /** @lends openerp.web.Registry
 
             return this.get_object(key);
         }
-        throw new openerp.web.KeyNotFound(keys.join(','));
+        return null;
     },
     /**
      * Adds a new key and value to the registry.
@@ -319,53 +866,6 @@ openerp.web.Registry = openerp.web.Class.extend( /** @lends openerp.web.Registry
         return this.extend(mapping);
     }
 });
-
-openerp.web.CallbackEnabledMixin = {
-    init: function() {
-        // Transform on_* method into openerp.web.callbacks
-        for (var name in this) {
-            if(typeof(this[name]) == "function") {
-                this[name].debug_name = name;
-                // bind ALL function to this not only on_and _do ?
-                if((/^on_|^do_/).test(name)) {
-                    this[name] = openerp.web.callback(this, this[name]);
-                }
-            }
-        }
-    },
-    /**
-     * Proxies a method of the object, in order to keep the right ``this`` on
-     * method invocations.
-     *
-     * This method is similar to ``Function.prototype.bind`` or ``_.bind``, and
-     * even more so to ``jQuery.proxy`` with a fundamental difference: its
-     * resolution of the method being called is lazy, meaning it will use the
-     * method as it is when the proxy is called, not when the proxy is created.
-     *
-     * Other methods will fix the bound method to what it is when creating the
-     * binding/proxy, which is fine in most javascript code but problematic in
-     * OpenERP Web where developers may want to replace existing callbacks with
-     * theirs.
-     *
-     * The semantics of this precisely replace closing over the method call.
-     *
-     * @param {String} method_name name of the method to invoke
-     * @returns {Function} proxied method
-     */
-    proxy: function (method_name) {
-        var self = this;
-        return function () {
-            return self[method_name].apply(self, arguments);
-        }
-    }
-};
-
-openerp.web.CallbackEnabled = openerp.web.Class.extend(_.extend({}, nova.GetterSetterMixin, openerp.web.CallbackEnabledMixin, {
-    init: function() {
-        nova.GetterSetterMixin.init.call(this);
-        openerp.web.CallbackEnabledMixin.init.call(this);
-    }
-}));
 
 openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.web.Connection# */{
     /**
@@ -1187,160 +1687,6 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
     }
 });
 
-/**
- * Base class for all visual components. Provides a lot of functionalities helpful
- * for the management of a part of the DOM.
- *
- * Widget handles:
- * - Rendering with QWeb.
- * - Life-cycle management and parenting (when a parent is destroyed, all its children are
- *     destroyed too).
- * - Insertion in DOM.
- *
- * Guide to create implementations of the Widget class:
- * ==============================================
- *
- * Here is a sample child class:
- *
- * MyWidget = openerp.base.Widget.extend({
- *     // the name of the QWeb template to use for rendering
- *     template: "MyQWebTemplate",
- *
- *     init: function(parent) {
- *         this._super(parent);
- *         // stuff that you want to init before the rendering
- *     },
- *     start: function() {
- *         // stuff you want to make after the rendering, `this.$element` holds a correct value
- *         this.$element.find(".my_button").click(/* an example of event binding * /);
- *
- *         // if you have some asynchronous operations, it's a good idea to return
- *         // a promise in start()
- *         var promise = this.rpc(...);
- *         return promise;
- *     }
- * });
- *
- * Now this class can simply be used with the following syntax:
- *
- * var my_widget = new MyWidget(this);
- * my_widget.appendTo($(".some-div"));
- *
- * With these two lines, the MyWidget instance was inited, rendered, it was inserted into the
- * DOM inside the ".some-div" div and its events were binded.
- *
- * And of course, when you don't need that widget anymore, just do:
- *
- * my_widget.destroy();
- *
- * That will kill the widget in a clean way and erase its content from the dom.
- */
-openerp.web.Widget = nova.Widget.extend(_.extend({}, openerp.web.CallbackEnabledMixin, {
-    /**
-     * The name of the QWeb template that will be used for rendering. Must be
-     * redefined in subclasses or the default render() method can not be used.
-     *
-     * @type string
-     */
-    template: null,
-    /**
-     * Constructs the widget and sets its parent if a parent is given.
-     *
-     * @constructs openerp.web.Widget
-     * @extends openerp.web.CallbackEnabled
-     *
-     * @param {openerp.web.Widget} parent Binds the current instance to the given Widget instance.
-     * When that widget is destroyed by calling destroy(), the current instance will be
-     * destroyed too. Can be null.
-     * @param {String} element_id Deprecated. Sets the element_id. Only useful when you want
-     * to bind the current Widget to an already existing part of the DOM, which is not compatible
-     * with the DOM insertion methods provided by the current implementation of Widget. So
-     * for new components this argument should not be provided any more.
-     */
-    init: function(parent) {
-        this._super(parent);
-        openerp.web.CallbackEnabledMixin.init.call(this);
-        this.session = openerp.connection;
-    },
-    /**
-     * Renders the element. The default implementation renders the widget using QWeb,
-     * `this.template` must be defined. The context given to QWeb contains the "widget"
-     * key that references `this`.
-     */
-    renderElement: function() {
-        var rendered = null;
-        if (this.template)
-            rendered = openerp.web.qweb.render(this.template, {widget: this});
-        if (_.str.trim(rendered)) {
-            var elem = $(rendered);
-            this.$element.replaceWith(elem);
-            this.$element = elem;
-        }
-    },
-    /**
-     * Informs the action manager to do an action. This supposes that
-     * the action manager can be found amongst the ancestors of the current widget.
-     * If that's not the case this method will simply return `false`.
-     */
-    do_action: function(action, on_finished) {
-        if (this.getParent()) {
-            return this.getParent().do_action(action, on_finished);
-        }
-        return false;
-    },
-    do_notify: function() {
-        if (this.getParent()) {
-            return this.getParent().do_notify.apply(this,arguments);
-        }
-        return false;
-    },
-    do_warn: function() {
-        if (this.getParent()) {
-            return this.getParent().do_warn.apply(this,arguments);
-        }
-        return false;
-    },
-    rpc: function(url, data, success, error) {
-        var def = $.Deferred().then(success, error);
-        var self = this;
-        openerp.connection.rpc(url, data). then(function() {
-            if (!self.isDestroyed())
-                def.resolve.apply(def, arguments);
-        }, function() {
-            if (!self.isDestroyed())
-                def.reject.apply(def, arguments);
-        });
-        return def.promise();
-    }
-}));
-
-/**
- * @deprecated use :class:`openerp.web.Widget`
- */
-openerp.web.OldWidget = openerp.web.Widget.extend({
-    init: function(parent, element_id) {
-        this._super(parent);
-        this.element_id = element_id;
-        this.element_id = this.element_id || _.uniqueId('widget-');
-        var tmp = document.getElementById(this.element_id);
-        this.$element = tmp ? $(tmp) : $(document.createElement(this.tagName));
-    },
-    renderElement: function() {
-        var rendered = this.render();
-        if (rendered) {
-            var elem = $(rendered);
-            this.$element.replaceWith(elem);
-            this.$element = elem;
-        }
-        return this;
-    },
-    render: function (additional) {
-        if (this.template)
-            return openerp.web.qweb.render(this.template, _.extend({widget: this}, additional || {}));
-        return null;
-    }
-});
-
 openerp.web.TranslationDataBase = openerp.web.Class.extend(/** @lends openerp.web.TranslationDataBase# */{
     /**
      * @constructs openerp.web.TranslationDataBase
@@ -1394,138 +1740,33 @@ openerp.web.TranslationDataBase = openerp.web.Class.extend(/** @lends openerp.we
     }
 });
 
-/** Configure blockui */
-if ($.blockUI) {
-    $.blockUI.defaults.baseZ = 1100;
-    $.blockUI.defaults.message = '<img src="/web/static/src/img/throbber2.gif">';
-}
-
-/** Configure default qweb */
-openerp.web._t = new openerp.web.TranslationDataBase().build_translation_function();
 /**
- * Lazy translation function, only performs the translation when actually
- * printed (e.g. inserted into a template)
- *
- * Useful when defining translatable strings in code evaluated before the
- * translation database is loaded, as class attributes or at the top-level of
- * an OpenERP Web module
- *
- * @param {String} s string to translate
- * @returns {Object} lazy translation object
+ * @deprecated use :class:`openerp.web.Widget`
  */
-openerp.web._lt = function (s) {
-    return {toString: function () { return openerp.web._t(s); }}
-};
-openerp.web.qweb = new QWeb2.Engine();
-openerp.web.qweb.debug = ($.deparam($.param.querystring()).debug != undefined);
-openerp.web.qweb.default_dict = {
-    '_' : _,
-    '_t' : openerp.web._t
-};
-openerp.web.qweb.preprocess_node = function() {
-    // Note that 'this' is the Qweb Node
-    switch (this.node.nodeType) {
-        case 3:
-        case 4:
-            // Text and CDATAs
-            var translation = this.node.parentNode.attributes['t-translation'];
-            if (translation && translation.value === 'off') {
-                return;
-            }
-            var ts = _.str.trim(this.node.data);
-            if (ts.length === 0) {
-                return;
-            }
-            var tr = openerp.web._t(ts);
-            if (tr !== ts) {
-                this.node.data = tr;
-            }
-            break;
-        case 1:
-            // Element
-            var attr, attrs = ['label', 'title', 'alt'];
-            while (attr = attrs.pop()) {
-                if (this.attributes[attr]) {
-                    this.attributes[attr] = openerp.web._t(this.attributes[attr]);
-                }
-            }
-    }
-};
-
-/**
- * A small utility function to check if a class implements correctly an interface, assuming that
- * interface is simply specified using a dictionary containing methods and attributes with the
- * correct type. It only performs the check when in debug mode and the only effect of an invalid
- * check is messages in the console.
- */
-openerp.web.check_interface = function(_class, _interface) {
-    if (! openerp.web.check_interface.debug)
-        return;
-    for (var member in _interface) {
-        if ( (typeof _class.prototype[member] != typeof _interface[member]) ) {
-            console.error("class failed to implement interface member '" + member + "'");
+openerp.web.OldWidget = openerp.web.Widget.extend({
+    init: function(parent, element_id) {
+        this._super(parent);
+        this.element_id = element_id;
+        this.element_id = this.element_id || _.uniqueId('widget-');
+        var tmp = document.getElementById(this.element_id);
+        this.$element = tmp ? $(tmp) : $(document.createElement(this.tagName));
+    },
+    renderElement: function() {
+        var rendered = this.render();
+        if (rendered) {
+            var elem = $(rendered);
+            this.$element.replaceWith(elem);
+            this.$element = elem;
         }
+        return this;
+    },
+    render: function (additional) {
+        if (this.template)
+            return openerp.web.qweb.render(this.template, _.extend({widget: this}, additional || {}));
+        return null;
     }
+});
+
 }
-openerp.web.check_interface.debug = ($.deparam($.param.querystring()).debug != undefined);
-
-/** Jquery extentions */
-$.Mutex = (function() {
-    function Mutex() {
-        this.def = $.Deferred().resolve();
-    }
-    Mutex.prototype.exec = function(action) {
-        var current = this.def;
-        var next = this.def = $.Deferred();
-        return current.pipe(function() {
-            return $.when(action()).always(function() {
-                next.resolve();
-            });
-        });
-    };
-    return Mutex;
-})();
-
-/** Setup default connection */
-openerp.connection = new openerp.web.Connection();
-openerp.web.qweb.default_dict['__debug__'] = openerp.connection.debug;
-
-
-$.async_when = function() {
-    var async = false;
-    var def = $.Deferred();
-    $.when.apply($, arguments).then(function() {
-        var args = arguments;
-        var action = function() {
-            def.resolve.apply(def, args);
-        };
-        if (async)
-            action();
-        else
-            setTimeout(action, 0);
-    }, function() {
-        var args = arguments;
-        var action = function() {
-            def.reject.apply(def, args);
-        };
-        if (async)
-            action();
-        else
-            setTimeout(action, 0);
-    });
-    async = true;
-    return def;
-};
-
-// special tweak for the web client
-var old_async_when = $.async_when;
-$.async_when = function() {
-	if (openerp.connection.synch)
-		return $.when.apply(this, arguments);
-	else
-		return old_async_when.apply(this, arguments);
-};
-
-};
 
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:
