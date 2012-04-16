@@ -95,6 +95,7 @@
                                 <button string="Approved" name="second_validate" states="validate1" type="workflow" icon="gtk-apply" groups="base.group_hr_user"/>
                                 <button string="Set to Draft" name="set_to_draft" states="refuse,validate" type="object" icon="gtk-convert" groups="base.group_hr_user"/>
                             </group>
+                            <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
                         </page>
                     </notebook>
                 </form>
@@ -137,6 +138,7 @@
                             <button string="Approved" name="second_validate" states="validate1" type="workflow" icon="gtk-apply" groups="base.group_hr_user"/>
                             <button string="Set to Draft" name="set_to_draft" states="cancel,validate,refuse" type="object" icon="gtk-convert" groups="base.group_hr_user"/>
                         </group>
+                        <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
                     </page>
                 </notebook>
             </form>
@@ -483,10 +485,21 @@
            <field name="help">You can assign remaining Legal Leaves for each employee, OpenERP will automatically create and validate allocation requests.</field>
        </record>
 
-       <record id="hr_holidays_leaves_assign_form_view_todo" model="ir.actions.todo">
-           <field name="action_id" ref="hr_holidays_leaves_assign_legal"/>
-           <field name="category_id" ref="hr.category_hr_management_config"/>
-       </record>
+        <!-- Hr Configuration wizard -->
+        <record id="view_config_wizard_inherit" model="ir.ui.view">
+            <field name="name">hr settings for holidays</field>
+            <field name="model">hr.config.settings</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="hr.view_human_resources_configuration"/>
+            <field name="arch" type="xml">
+                <field name="module_hr_holidays" position="after">
+                    <group colspan="2">
+                        <button name="%(hr_holidays.hr_holidays_leaves_assign_legal)d" string="Allocate Leaves"
+                            type="action" icon="gtk-apply"/>
+                    </group>
+                </field>
+            </field>
+        </record>
 
         <!-- Hr employee inherit Legal Leaves -->
 

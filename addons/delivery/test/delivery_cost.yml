@@ -67,9 +67,9 @@
 -
   I set default delivery policy.
 -
-  !record {model: delivery.define.delivery.steps.wizard, id: default_delivery_policy}:
+  !record {model: sale.config.settings, id: default_delivery_policy}:
     {}
 -
-  !python {model: delivery.define.delivery.steps.wizard}: |
-    self.apply_cb(cr, uid, [ref('default_delivery_policy')], context=context)
+  !python {model: sale.config.settings}: |
+    self.execute(cr, uid, [ref('default_delivery_policy')], context=context)
 
