@@ -1274,7 +1274,7 @@ openerp.point_of_sale = function(db) {
                 return (self.shop.get('products')).reset(m);
             });
             return $('.search-clear').click( function() {
-                (this.shop.get('products')).reset(products);
+                (self.shop.get('products')).reset(products);
                 $('.searchbox input').val('').focus();
                 return $('.search-clear').fadeOut();
             });
