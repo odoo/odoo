@@ -59,6 +59,13 @@ openerp.point_of_sale = function(db) {
         },
     });
     
+    var DAOInterface = {
+        
+    };
+    var LocalStorageDAO = db.web.Class.extend({
+        
+    });
+    
     var fetch = function(osvModel, fields, domain) {
         var dataSetSearch;
         dataSetSearch = new db.web.DataSetSearch(null, osvModel, {}, domain);
@@ -76,21 +83,12 @@ openerp.point_of_sale = function(db) {
             this.flush_mutex = new $.Mutex();
             this.build_tree = _.bind(this.build_tree, this);
             this.session = session;
-            var attributes = {
-                'pending_operations': [],
+            this.set({'pending_operations': [],
                 'currency': {symbol: '$', position: 'after'},
                 'shop': {},
                 'company': {},
-                'user': {},
-            };
-            _.each(attributes, _.bind(function(def, attr) {
-                var to_set = {};
-                to_set[attr] = this.store.get(attr, def);
-                this.set(to_set);
-                this.bind('change:' + attr, _.bind(function(unused, val) {
-                    this.store.set(attr, val);
-                }, this));
-            }, this));
+                'user': {}});
+            
             var self = this;
             var cat_def = fetch('pos.category', ['name', 'parent_id', 'child_id']).pipe(function(result) {
                 return self.store.set('pos.category', result);
