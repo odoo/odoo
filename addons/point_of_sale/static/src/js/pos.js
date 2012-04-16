@@ -1,8 +1,9 @@
-openerp.point_of_sale = function(db) {
-    
-    db.point_of_sale = {};
 
-    var QWeb = db.web.qweb;
+openerp.point_of_sale = function(session) {
+    
+    session.point_of_sale = {};
+
+    var QWeb = session.web.qweb;
     var qweb_template = function(template) {
         return function(ctx) {
             return QWeb.render(template, _.extend({}, ctx,{
@@ -17,13 +18,13 @@ openerp.point_of_sale = function(db) {
                 }));
         };
     };
-    var _t = db.web._t;
+    var _t = session.web._t;
 
     /*
      Local store access. Read once from localStorage upon construction and persist on every change.
      There should only be one store active at any given time to ensure data consistency.
      */
-    var Store = db.web.Class.extend({
+    var Store = session.web.Class.extend({
         init: function() {
             this.data = {};
         },
@@ -33,15 +34,52 @@ openerp.point_of_sale = function(db) {
                 if (stored)
                     this.data[key] = JSON.parse(stored);
                 else
+                    console.log('Store get: ',key, 'default: ',_default);
                     return _default;
             }
+            console.log('Store get: ',key, 'value: ',this.data[key]);
             return this.data[key];
         },
         set: function(key, value) {
+            console.log('Store set: ',key,' value: ',value);
             this.data[key] = value;
             localStorage['oe_pos_' + key] = JSON.stringify(value);
         },
     });
+
+    var SqlStore = session.web.Class.extend({
+        init: function(){
+            this.data = {};
+        },
+        get: function(key, _default){
+            if (this.data[key] === undefined) {
+                var stored = localStorage['oe_pos_' + key];
+                if (stored){
+                    this.data[key] = JSON.parse(stored);
+                }else{
+                    console.log('Store get: ',key, 'default: ',_default);
+                    return _default;
+                }
+            }
+            console.log('Store get: ',key, 'value: ', this.data[key]);
+            return this.data[key];
+        },
+        set: function(key, value){
+            console.log('Store set: ',key,' value: ',value);
+            this.data[key] = value;
+            localStorage['oe_pos_' + key] = JSON.stringify(value);
+        },
+        collection_new: function(collection, elem_name_field, elem_name_func){
+        },
+        collection_get: function(collection, elem_name_field, elem_name){
+        },
+        collection_add: function(collection, elem){
+        },
+        collection_find: function(collection, elem_name_field, elem_name_pattern){
+        },
+    });
+
+    
     /*
      Gets all the necessary data from the OpenERP web client (session, shop data etc.)
      */
@@ -81,26 +119,26 @@ openerp.point_of_sale = function(db) {
         fetch: function(osvModel, fields, domain) {
             var dataSetSearch;
             var self = this;
-            dataSetSearch = new db.web.DataSetSearch(this, osvModel, {}, domain);
+            dataSetSearch = new session.web.DataSetSearch(this, osvModel, {}, domain);
             return dataSetSearch.read_slice(fields, 0).then(function(result) {
                 return self.store.set(osvModel, result);
             });
         },
         get_app_data: function() {
             var self = this;
-            return $.when(new db.web.Model("sale.shop").get_func("search_read")([]).pipe(function(result) {
+            return $.when(new session.web.Model("sale.shop").get_func("search_read")([]).pipe(function(result) {
                 self.set({'shop': result[0]});
                 var company_id = result[0]['company_id'][0];
-                return new db.web.Model("res.company").get_func("read")(company_id, ['currency_id', 'name', 'phone']).pipe(function(result) {
+                return new session.web.Model("res.company").get_func("read")(company_id, ['currency_id', 'name', 'phone']).pipe(function(result) {
                     self.set({'company': result});
                     var currency_id = result['currency_id'][0]
-                    return new db.web.Model("res.currency").get_func("read")([currency_id],
+                    return new session.web.Model("res.currency").get_func("read")([currency_id],
                             ['symbol', 'position']).pipe(function(result) {
                         self.set({'currency': result[0]});
                         
                     });
                 });
-            }), new db.web.Model("res.users").get_func("read")(this.session.uid, ['name']).pipe(function(result) {
+            }), new session.web.Model("res.users").get_func("read")(this.session.uid, ['name']).pipe(function(result) {
                 self.set({'user': result});
             }));
         },
@@ -123,7 +161,7 @@ openerp.point_of_sale = function(db) {
             /* we prevent the default error handler and assume errors
              * are a normal use case, except we stop the current iteration
              */
-            return new db.web.Model("pos.order").get_func("create_from_ui")([op]).fail(function(unused, event) {
+            return new session.web.Model("pos.order").get_func("create_from_ui")([op]).fail(function(unused, event) {
                 event.preventDefault();
             }).pipe(_.bind(function() {
                 console.debug('saved 1 record');
@@ -333,7 +371,7 @@ openerp.point_of_sale = function(db) {
         },
         exportAsJSON: function(){
             return {
-                name: db.web.datetime_to_str(new Date()),
+                name: session.web.datetime_to_str(new Date()),
                 statement_id: this.get('id'),
                 account_id: (this.get('account_id'))[0],
                 journal_id: (this.get('journal_id'))[0],
@@ -380,7 +418,7 @@ openerp.point_of_sale = function(db) {
                 existing.incrementQuantity();
             } else {
                 var line = new Orderline(product.toJSON());
-                console.log(line);
+                console.log('orderline:',line,product.toJSON());
                 this.get('orderLines').add(line);
                 line.bind('killme', function() {
                     this.get('orderLines').remove(line);
@@ -551,7 +589,7 @@ openerp.point_of_sale = function(db) {
      Views
      ---
      */
-    var NumpadWidget = db.web.OldWidget.extend({
+    var NumpadWidget = session.web.OldWidget.extend({
         init: function(parent, options) {
             this._super(parent);
             this.state = new NumpadState();
@@ -588,7 +626,7 @@ openerp.point_of_sale = function(db) {
     /*
      Gives access to the payment methods (aka. 'cash registers')
      */
-    var PaypadWidget = db.web.OldWidget.extend({
+    var PaypadWidget = session.web.OldWidget.extend({
         init: function(parent, options) {
             this._super(parent);
             this.shop = options.shop;
@@ -619,7 +657,7 @@ openerp.point_of_sale = function(db) {
             }, this));
         }
     });
-    var PaymentButtonWidget = db.web.OldWidget.extend({
+    var PaymentButtonWidget = session.web.OldWidget.extend({
         template_fct: qweb_template('pos-payment-button-template'),
         renderElement: function() {
             this.$element.html(this.template_fct({
@@ -637,7 +675,7 @@ openerp.point_of_sale = function(db) {
      It should be possible to go back to any step as long as step 3 hasn't been completed.
      Modifying an order after validation shouldn't be allowed.
      */
-    var StepSwitcher = db.web.OldWidget.extend({
+    var StepSwitcher = session.web.OldWidget.extend({
         init: function(parent, options) {
             this._super(parent);
             this.shop = options.shop;
@@ -663,7 +701,7 @@ openerp.point_of_sale = function(db) {
     /*
      Shopping carts.
      */
-    var OrderlineWidget = db.web.OldWidget.extend({
+    var OrderlineWidget = session.web.OldWidget.extend({
         tagName: 'tr',
         template_fct: qweb_template('pos-orderline-template'),
         init: function(parent, options) {
@@ -704,7 +742,7 @@ openerp.point_of_sale = function(db) {
         on_selected: function() {},
     });
 
-    var OrderWidget = db.web.OldWidget.extend({
+    var OrderWidget = session.web.OldWidget.extend({
         init: function(parent, options) {
             this._super(parent);
             this.shop = options.shop;
@@ -789,7 +827,7 @@ openerp.point_of_sale = function(db) {
     /*
      "Products" step.
      */
-    var CategoryWidget = db.web.OldWidget.extend({
+    var CategoryWidget = session.web.OldWidget.extend({
         start: function() {
             this.$element.find(".oe-pos-categories-list a").click(_.bind(this.changeCategory, this));
         },
@@ -825,7 +863,7 @@ openerp.point_of_sale = function(db) {
         on_change_category: function(id) {},
     });
 
-    var ProductWidget = db.web.OldWidget.extend({
+    var ProductWidget = session.web.OldWidget.extend({
         tagName:'li',
         template_fct: qweb_template('pos-product-template'),
         init: function(parent, options) {
@@ -848,7 +886,7 @@ openerp.point_of_sale = function(db) {
         },
     });
 
-    var ProductListWidget = db.web.OldWidget.extend({
+    var ProductListWidget = session.web.OldWidget.extend({
         init: function(parent, options) {
             this._super(parent);
             this.model = options.model;
@@ -870,7 +908,7 @@ openerp.point_of_sale = function(db) {
     /*
      "Payment" step.
      */
-    var PaymentlineWidget = db.web.OldWidget.extend({
+    var PaymentlineWidget = session.web.OldWidget.extend({
         tagName: 'tr',
         template_fct: qweb_template('pos-paymentline-template'),
         init: function(parent, options) {
@@ -905,7 +943,7 @@ openerp.point_of_sale = function(db) {
         },
     });
 
-    var PaymentWidget = db.web.OldWidget.extend({
+    var PaymentWidget = session.web.OldWidget.extend({
         init: function(parent, options) {
             this._super(parent);
             this.model = options.model;
@@ -1001,7 +1039,7 @@ openerp.point_of_sale = function(db) {
         },
     });
 
-    var ReceiptWidget = db.web.OldWidget.extend({
+    var ReceiptWidget = session.web.OldWidget.extend({
         init: function(parent, options) {
             this._super(parent);
             this.model = options.model;
@@ -1044,7 +1082,7 @@ openerp.point_of_sale = function(db) {
         },
     });
 
-    var OrderButtonWidget = db.web.OldWidget.extend({
+    var OrderButtonWidget = session.web.OldWidget.extend({
         tagName: 'li',
         template_fct: qweb_template('pos-order-selector-button-template'),
         init: function(parent, options) {
@@ -1084,7 +1122,7 @@ openerp.point_of_sale = function(db) {
         }
     });
 
-    var ToolbarWidget = db.web.Widget.extend({
+    var ToolbarWidget = session.web.Widget.extend({
         tagName: 'div',
         init: function(parent, options){
             this._super(parent,options);
@@ -1100,9 +1138,9 @@ openerp.point_of_sale = function(db) {
     // * 'input_selector  : (default: '.searchbox input') 
     //   defines the dom element that the keyboard will write to.
     // 
-    // The widget is initally hidden. It can be shown with this.show(), and is 
+    // The widget is initially hidden. It can be shown with this.show(), and is 
     // automatically shown when the input_selector gets focused.
-    var OnscreenKeyboardWidget = db.web.Widget.extend({
+    var OnscreenKeyboardWidget = session.web.Widget.extend({
         tagName: 'div',
         
         init: function(parent, options){
@@ -1285,7 +1323,7 @@ openerp.point_of_sale = function(db) {
         },
     });
 
-    var ShopWidget = db.web.OldWidget.extend({
+    var ShopWidget = session.web.OldWidget.extend({
         init: function(parent, options) {
             this._super(parent);
             this.shop = options.shop;
@@ -1422,7 +1460,9 @@ openerp.point_of_sale = function(db) {
         App.getProductByEAN = function(ean, allPackages, allProducts) {
             var prefix = ean.substring(0,2);
             var scannedProductModel = undefined;
+
             if (prefix in {'02':'', '22':'', '24':'', '26':'', '28':''}) {
+            
                 // PRICE barcode
                 var itemCode = ean.substring(0,7);
                 var scannedPackaging = _.detect(allPackages, function(pack) { return pack.ean !== undefined && pack.ean.substring(0,7) === itemCode;});
@@ -1489,24 +1529,20 @@ openerp.point_of_sale = function(db) {
                     codeNumbers.push(e.keyCode - 48);
                     lastTimeStamp = new Date().getTime();
                     if (codeNumbers.length == 13) {
+                        console.log('found code:', codeNumbers.join(''));
+
                         // a barcode reader
-                        if (!checkEan(codeNumbers)) {
+                        if (!App.checkEan(codeNumbers)) {
                             // barcode read error, raise warning
                             $(QWeb.render('pos-scan-warning')).dialog({
                                 resizable: false,
                                 height:220,
                                 modal: true,
                                 title: "Warning",
-                                buttons: {
-                                    "OK": function() {
-                                        $( this ).dialog( "close" );
-                                        return;
-                                    },
-                                }
                             });
                         }
                         var selectedOrder = self.shop.get('selectedOrder');
-                        var scannedProductModel = getProductByEAN(codeNumbers.join(''));
+                        var scannedProductModel = App.getProductByEAN(codeNumbers.join(''),allPackages,allProducts);
                         if (scannedProductModel === undefined) {
                             // product not recognized, raise warning
                             $(QWeb.render('pos-scan-warning')).dialog({
@@ -1514,12 +1550,13 @@ openerp.point_of_sale = function(db) {
                                 height:220,
                                 modal: true,
                                 title: "Warning",
+                                /*
                                 buttons: {
                                     "OK": function() {
                                         $( this ).dialog( "close" );
                                         return;
                                     },
-                                }
+                                }*/
                             });
                         } else {
                             selectedOrder.addProduct(new Product(scannedProductModel));
@@ -1556,7 +1593,7 @@ openerp.point_of_sale = function(db) {
         return App;
     })();
     
-    db.point_of_sale.SynchNotification = db.web.OldWidget.extend({
+    session.point_of_sale.SynchNotification = session.web.OldWidget.extend({
         template: "pos-synch-notification",
         init: function() {
             this._super.apply(this, arguments);
@@ -1573,8 +1610,8 @@ openerp.point_of_sale = function(db) {
         on_synch: function() {}
     });
 
-    db.web.client_actions.add('pos.ui', 'db.point_of_sale.PointOfSale');
-    db.point_of_sale.PointOfSale = db.web.OldWidget.extend({
+    session.web.client_actions.add('pos.ui', 'session.point_of_sale.PointOfSale');
+    session.point_of_sale.PointOfSale = session.web.OldWidget.extend({
         init: function() {
             this._super.apply(this, arguments);
 
@@ -1587,7 +1624,7 @@ openerp.point_of_sale = function(db) {
             var self = this;
             return pos.ready.then(_.bind(function() {
                 this.renderElement();
-                this.synch_notification = new db.point_of_sale.SynchNotification(this);
+                this.synch_notification = new session.point_of_sale.SynchNotification(this);
                 this.synch_notification.replace($('.oe_pos_synch-notification', this.$element));
                 this.synch_notification.on_synch.add(_.bind(pos.flush, pos));
                 
@@ -1599,10 +1636,10 @@ openerp.point_of_sale = function(db) {
                 });
 
                 pos.app = new App(self.$element);
-                db.webclient.set_content_full_screen(true);
+                session.webclient.set_content_full_screen(true);
                 
                 if (pos.store.get('account.bank.statement').length === 0)
-                    return new db.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_pos_open_statement']], ['res_id']).pipe(
+                    return new session.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_pos_open_statement']], ['res_id']).pipe(
                             _.bind(function(res) {
                         return this.rpc('/web/action/load', {'action_id': res[0]['res_id']}).pipe(_.bind(function(result) {
                             var action = result.result;
@@ -1650,7 +1687,7 @@ openerp.point_of_sale = function(db) {
             // remove barcode reader event listener
             $('body').undelegate('', 'keyup')
 
-            return new db.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_pos_close_statement']], ['res_id']).pipe(
+            return new session.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_pos_close_statement']], ['res_id']).pipe(
                     _.bind(function(res) {
                 return this.rpc('/web/action/load', {'action_id': res[0]['res_id']}).pipe(_.bind(function(result) {
                     var action = result.result;
@@ -1660,7 +1697,7 @@ openerp.point_of_sale = function(db) {
             }, this));
         },
         destroy: function() {
-            db.webclient.set_content_full_screen(false);
+            session.webclient.set_content_full_screen(false);
             pos = undefined;
             this._super();
         }
