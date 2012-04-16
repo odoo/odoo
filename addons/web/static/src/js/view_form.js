@@ -1577,11 +1577,11 @@ openerp.web.form.FieldUrl = openerp.web.form.FieldChar.extend({
         if (!this.value) {
             this.do_warn("Resource error", "This resource is empty");
         } else {
-            var url = $.trim(this.value);
-            if(url.toLowerCase().search("http://") != -1)
-                window.open(url);
-            else
+        	var url = $.trim(this.value);
+            if(/^[www]./i.test(url))
                 window.open('http://'+url);
+            else
+            	window.open(this.value);
         }
     }
 });
