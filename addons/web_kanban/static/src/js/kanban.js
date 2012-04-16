@@ -351,6 +351,12 @@ openerp.web_kanban.KanbanGroup = openerp.web.OldWidget.extend({
             self.view.compute_groups_width();
             return false;
         });
+        this.$element.find('.oe_kanban_add').click(function () {
+            if (self.quick) { return; }
+            self.quick = new openerp.web_kanban.QuickCreate(this)
+                .on('added', self, self.proxy('quick_add'));
+            self.quick.appendTo(self.$element.find('.oe_kanban_group_header'));
+        });
         this.$records.find('.oe_kanban_show_more').click(this.do_show_more);
         if (this.state.folded) {
             this.do_toggle_fold();
@@ -373,12 +379,17 @@ openerp.web_kanban.KanbanGroup = openerp.web.OldWidget.extend({
             'offset': self.dataset_offset += self.view.limit
         }).then(this.do_add_records);
     },
-    do_add_records: function(records) {
+    do_add_records: function(records, prepend) {
         var self = this;
         _.each(records, function(record) {
             var rec = new openerp.web_kanban.KanbanRecord(self, record);
-            rec.insertBefore(self.$records.find('.oe_kanban_show_more'));
-            self.records.push(rec);
+            if (!prepend) {
+                rec.insertBefore(self.$records.find('.oe_kanban_show_more'));
+                self.records.push(rec);
+            } else {
+                rec.prependTo(self.$records);
+                self.records.unshift(rec);
+            }
         });
         this.$records.find('.oe_kanban_show_more').toggle(this.records.length < this.dataset.size())
             .find('.oe_kanban_remaining').text(this.dataset.size() - this.records.length);
@@ -401,6 +412,35 @@ openerp.web_kanban.KanbanGroup = openerp.web.OldWidget.extend({
                 self.view.dataset.write(record.id, { sequence : index });
             });
         }
+    },
+    /**
+     * Handles user event from nested quick creation view
+     *
+     * @param {String} name name to give to the new record
+     */
+    quick_add: function (name) {
+        var context = {};
+        context['default_' + this.view.group_by] = this.value;
+        // FIXME: what if name_create fails?
+        new openerp.web.Model(this.dataset.model).call(
+            'name_create', [name], {context: new openerp.web.CompoundContext(
+                    this.dataset.get_context(), context)})
+            .then(this.proxy('quick_created'))
+    },
+    /**
+     * Handles a non-erroneous response from name_create
+     *
+     * @param {(Id, String)} record name_get format for the newly created record
+     */
+    quick_created: function (record) {
+        var id = record[0], self = this;
+        this.quick.destroy();
+        delete this.quick;
+        new openerp.web.Model(this.dataset.model).call(
+                'read', [[id], this.view.fields_keys], {})
+            .then(function (records) {
+                self.do_add_records(records, 'prepend');
+            });
     }
 });
 
@@ -600,6 +640,28 @@ openerp.web_kanban.KanbanRecord = openerp.web.OldWidget.extend({
         } else {
             return s.substr(0, size) + '...';
         }
+    }
+});
+
+/**
+ * Quick creation view.
+ *
+ * Triggers a single event "added" with a single parameter "name", which is the
+ * name entered by the user
+ *
+ * @class
+ * @type {*}
+ */
+openerp.web_kanban.QuickCreate = openerp.web.Widget.extend({
+    template: 'KanbanView.quick_create',
+
+    start: function () {
+        var self = this;
+        this.$element.on('submit', function () {
+            self.trigger('added', self.$element.find('input').val());
+            return false;
+        });
+        return this._super();
     }
 });
 };
