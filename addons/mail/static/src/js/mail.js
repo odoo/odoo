@@ -388,6 +388,11 @@ openerp.mail = function(session) {
             return this.fetch_comments(this.params.limit, this.params.offset, domain);
         },
         
+        /**
+         *
+         * var regex_login = new RegExp(/(^|\s)@((\w|@|\.)*)/g);
+         * var regex_intlink = new RegExp(/(^|\s)#(\w*[a-zA-Z_]+\w*)\.(\w+[a-zA-Z_]+\w*),(\w+)/g);
+         */
         do_replace_internal_links: function (string) {
             var self = this;
             var icon_list = ['al', 'pinky']
@@ -427,7 +432,6 @@ openerp.mail = function(session) {
         
         /**
          *
-         * var regex_login = new RegExp(/(^|\s)@(\w*[a-zA-Z_.]+\w*\s)/g);
          * var regex_login = new RegExp(/(^|\s)@((\w|@|\.)*)/g);
          * var regex_intlink = new RegExp(/(^|\s)#(\w*[a-zA-Z_]+\w*)\.(\w+[a-zA-Z_]+\w*),(\w+)/g);
          */
