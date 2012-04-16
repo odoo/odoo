@@ -58,6 +58,13 @@ openerp.point_of_sale = function(db) {
             localStorage['oe_pos_' + key] = JSON.stringify(value);
         },
     });
+    
+    var fetch = function(osvModel, fields, domain) {
+        var dataSetSearch;
+        dataSetSearch = new db.web.DataSetSearch(null, osvModel, {}, domain);
+        return dataSetSearch.read_slice(fields, 0);
+    };
+    
     /*
      Gets all the necessary data from the OpenERP web client (session, shop data etc.)
      */
@@ -84,22 +91,26 @@ openerp.point_of_sale = function(db) {
                     this.store.set(attr, val);
                 }, this));
             }, this));
-            $.when(this.fetch('pos.category', ['name', 'parent_id', 'child_id']),
-                this.fetch('product.product', ['name', 'list_price', 'pos_categ_id', 'taxes_id', 'product_image_small'], [['pos_categ_id', '!=', 'false']]),
-                this.fetch('account.bank.statement', ['account_id', 'currency', 'journal_id', 'state', 'name'],
-                    [['state', '=', 'open'], ['user_id', '=', this.session.uid]]),
-                this.fetch('account.journal', ['auto_cash', 'check_dtls', 'currency', 'name', 'type']),
-                this.fetch('account.tax', ['amount', 'price_include', 'type']),
-                this.get_app_data())
-                .pipe(_.bind(this.build_tree, this));
-        },
-        fetch: function(osvModel, fields, domain) {
-            var dataSetSearch;
             var self = this;
-            dataSetSearch = new db.web.DataSetSearch(this, osvModel, {}, domain);
-            return dataSetSearch.read_slice(fields, 0).then(function(result) {
-                return self.store.set(osvModel, result);
+            var cat_def = fetch('pos.category', ['name', 'parent_id', 'child_id']).pipe(function(result) {
+                return self.store.set('pos.category', result);
             });
+            var prod_def = fetch('product.product', ['name', 'list_price', 'pos_categ_id', 'taxes_id',
+                                                          'product_image_small'], [['pos_categ_id', '!=', 'false']]).then(function(result) {
+                return self.store.set('product.product', result);
+            });
+            var bank_def = fetch('account.bank.statement', ['account_id', 'currency', 'journal_id', 'state', 'name'],
+                    [['state', '=', 'open'], ['user_id', '=', this.session.uid]]).then(function(result) {
+                return self.store.set('account.bank.statement', result);
+            });
+            var journal_def = fetch('account.journal', ['auto_cash', 'check_dtls', 'currency', 'name', 'type']).then(function(result) {
+                return self.store.set('account.journal', result);
+            });
+            var tax_def = fetch('account.tax', ['amount', 'price_include', 'type']).then(function(result) {
+                return self.store.set('account.tax', result);
+            });
+            $.when(cat_def, prod_def, bank_def, journal_def, tax_def, this.get_app_data())
+                .pipe(_.bind(this.build_tree, this));
         },
         get_app_data: function() {
             var self = this;
