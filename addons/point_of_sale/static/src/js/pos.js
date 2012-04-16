@@ -34,30 +34,6 @@ openerp.point_of_sale = function(db) {
         };
     };
     var _t = db.web._t;
-
-    /*
-     Local store access. Read once from localStorage upon construction and persist on every change.
-     There should only be one store active at any given time to ensure data consistency.
-     */
-    var Store = db.web.Class.extend({
-        init: function() {
-            this.data = {};
-        },
-        get: function(key, _default) {
-            if (this.data[key] === undefined) {
-                var stored = localStorage['oe_pos_' + key];
-                if (stored)
-                    this.data[key] = JSON.parse(stored);
-                else
-                    return _default;
-            }
-            return this.data[key];
-        },
-        set: function(key, value) {
-            this.data[key] = value;
-            localStorage['oe_pos_' + key] = JSON.stringify(value);
-        },
-    });
     
     var DAOInterface = {
         
@@ -78,7 +54,7 @@ openerp.point_of_sale = function(db) {
     var Pos = Backbone.Model.extend({
         initialize: function(session, attributes) {
             Backbone.Model.prototype.initialize.call(this, attributes);
-            this.store = new Store();
+            this.dao = new LocalStorageDAO();
             this.ready = $.Deferred();
             this.flush_mutex = new $.Mutex();
             this.build_tree = _.bind(this.build_tree, this);
