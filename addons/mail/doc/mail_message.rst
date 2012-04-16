@@ -1,7 +1,7 @@
-.. _mail_thread:
+.. _mail_message:
 
-mail.thread and OpenChatter
-===========================
+mail.message
+============
 
 TODO
 
