@@ -413,6 +413,7 @@ openerp.web.list_editable = function (openerp) {
                 }
                 var obj = self.view.fields_registry.get_object(key);
                 var w = new (obj)(self.view, openerp.web.xml_to_json(el));
+                self.view.register_field(w, $elem.attr("name"));
                 w.appendTo($td);
                 $td.appendTo($element);
             });
