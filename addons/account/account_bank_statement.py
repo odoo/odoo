@@ -26,7 +26,6 @@ from tools.translate import _
 import decimal_precision as dp
 
 class account_bank_statement(osv.osv):
-
     def create(self, cr, uid, vals, context=None):
         seq = 0
         if 'line_ids' in vals:

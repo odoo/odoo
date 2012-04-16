@@ -327,6 +327,31 @@ class account_cash_statement(osv.osv):
                 cash_box_line_pool.write(cr, uid, [end.id], {'number': 0})
         return True
 
+    def button_load_cashbox_line(self, cr, uid, ids, context=None):
+        if not ids:
+            return False
+
+        return True
+
 account_cash_statement()
+
+class account_journal(osv.osv):
+    _inherit = 'account.journal'
+
+    _columns = {
+        'cashbox_line_ids' : fields.one2many('account.journal.cashbox.line', 'journal_id', 'CashBox'),
+    }
+
+account_journal()
+
+class account_journal_cashbox_line(osv.osv):
+    _name = 'account.journal.cashbox.line'
+    _rec_name = 'value'
+    _columns = {
+        'value' : fields.float('Value'),
+        'journal_id' : fields.many2one('account.journal', 'Journal', required=True, select=1),
+    }
+
+account_journal_cashbox_line()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

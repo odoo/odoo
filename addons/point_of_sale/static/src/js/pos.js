@@ -88,7 +88,7 @@ openerp.point_of_sale = function(db) {
                 this.fetch('product.product', ['name', 'list_price', 'pos_categ_id', 'taxes_id', 'product_image_small'], [['pos_categ_id', '!=', 'false']]),
                 this.fetch('account.bank.statement', ['account_id', 'currency', 'journal_id', 'state', 'name'],
                     [['state', '=', 'open'], ['user_id', '=', this.session.uid]]),
-                this.fetch('account.journal', ['auto_cash', 'check_dtls', 'currency', 'name', 'type']),
+                this.fetch('account.journal', ['opening_control', 'closing_control', 'currency', 'name', 'type']),
                 this.fetch('account.tax', ['amount', 'price_include', 'type']),
                 this.get_app_data())
                 .pipe(_.bind(this.build_tree, this));

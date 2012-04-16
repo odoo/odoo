@@ -242,7 +242,7 @@ class pos_order(osv.osv):
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', required=True, states={'draft': [('readonly', False)]}, readonly=True),
         'partner_id': fields.many2one('res.partner', 'Customer', change_default=True, select=1, states={'draft': [('readonly', False)], 'paid': [('readonly', False)]}),
 
-        'session_id' : fields.many2one('pos.session', 'Session', required=True, select=1),
+        #'session_id' : fields.many2one('pos.session', 'Session', required=True, select=1),
 
         'state': fields.selection([('draft', 'New'),
                                    ('cancel', 'Cancelled'),

@@ -25,13 +25,16 @@ from osv import fields, osv
 class account_journal(osv.osv):
     _inherit = 'account.journal'
     _columns = {
-        'auto_cash': fields.boolean('Automatic Opening', help="This field authorize the automatic creation of the cashbox, without control of the initial balance."),
-        'check_dtls': fields.boolean('Control Balance Before Closing', help="This field authorize Validation of Cashbox without controlling the closing balance."),
         'journal_user': fields.boolean('PoS Payment Method', help="Check this box if this journal define a payment method that can be used in point of sales."),
+
+        'opening_control': fields.boolean('Opening Control'),
+        'closing_control': fields.boolean('Closing Control'),
+
+        'internal_account_id' : fields.many2one('account.account', 'Internal Transfers Account', select=1),
     }
     _defaults = {
-        'check_dtls': False,
-        'auto_cash': True,
+        'opening_control' : True,
+        'closing_control' : True,
     }
 
 account_journal()
@@ -39,14 +42,14 @@ account_journal()
 class account_cash_statement(osv.osv):
     _inherit = 'account.bank.statement'
 
-    def _equal_balance(self, cr, uid, cash_id, context=None):
-        statement = self.browse(cr, uid, cash_id, context=context)
-        if not statement.journal_id.check_dtls:
-            return True
-        if statement.journal_id.check_dtls and (statement.balance_end != statement.balance_end_cash):
-            return False
-        else:
-            return True
+    #def _equal_balance(self, cr, uid, cash_id, context=None):
+    #    statement = self.browse(cr, uid, cash_id, context=context)
+    #    if not statement.journal_id.check_dtls:
+    #        return True
+    #    if statement.journal_id.check_dtls and (statement.balance_end != statement.balance_end_cash):
+    #        return False
+    #    else:
+    #        return True
 
     def _get_cash_open_box_lines(self, cr, uid, context=None):
         res = super(account_cash_statement,self)._get_cash_open_box_lines(cr, uid, context)
