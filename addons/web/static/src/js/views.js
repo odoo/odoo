@@ -1247,6 +1247,26 @@ session.web.xml_to_str = function(node) {
         return (new XMLSerializer()).serializeToString(node);
     }
 }
+session.web.str_to_xml = function(s) {
+    if (window.DOMParser) {
+        var dp = new DOMParser();
+        var r = dp.parseFromString(s, "text/xml");
+        if (r.body && r.body.firstChild && r.body.firstChild.nodeName == 'parsererror') {
+            throw new Error("Could not parse string to xml");
+        }
+        return r;
+    }
+    var xDoc;
+    try {
+        xDoc = new ActiveXObject("MSXML2.DOMDocument");
+    } catch (e) {
+        throw new Error("Could not find a DOM Parser: " + e.message);
+    }
+    xDoc.async = false;
+    xDoc.preserveWhiteSpace = true;
+    xDoc.loadXML(s);
+    return xDoc;
+}
 
 /**
  * Registry for all the client actions key: tag value: widget

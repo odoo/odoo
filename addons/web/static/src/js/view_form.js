@@ -55,6 +55,7 @@ openerp.web.FormView = openerp.web.View.extend({
         this.reload_mutex = new $.Mutex();
         this.mode = null;
         this.rendering_engine = new openerp.web.form.FormRenderingEngineReadonly(this);
+        this.qweb = null; // A QWeb instance will be created if the view is a QWeb template
     },
     destroy: function() {
         _.each(this.get_widgets(), function(w) {
@@ -73,11 +74,13 @@ openerp.web.FormView = openerp.web.View.extend({
         this.fields_order = [];
         this.fields_view = data;
 
-        this.rendering_engine.set_fields_view(data);
         this.rendering_engine.set_fields_registry(this.fields_registry);
         this.rendering_engine.set_tags_registry(this.tags_registry);
-        var $dest = this.$element.hasClass("oe_form_container") ? this.$element : this.$element.find('.oe_form_container');
-        this.rendering_engine.render_to($dest);
+        if (!this.extract_qweb_template(data)) {
+            this.rendering_engine.set_fields_view(data);
+            var $dest = this.$element.hasClass("oe_form_container") ? this.$element : this.$element.find('.oe_form_container');
+            this.rendering_engine.render_to($dest);
+        }
 
         this.$sidebar = this.options.$sidebar || this.$element.find('.oe_form_sidebar');
 
@@ -123,6 +126,56 @@ openerp.web.FormView = openerp.web.View.extend({
         this.set({mode: this.options.initial_mode});
         this.has_been_loaded.resolve();
         return $.when();
+    },
+    extract_qweb_template: function(fvg) {
+        for (var i=0, ii=fvg.arch.children.length; i < ii; i++) {
+            var child = fvg.arch.children[i];
+            if (child.tag === "templates") {
+                this.qweb = new QWeb2.Engine();
+                this.qweb.add_template(openerp.web.json_node_to_xml(child));
+                if (!this.qweb.has_template('form')) {
+                    throw new Error("No QWeb template found for form view");
+                }
+                return true;
+            }
+        }
+        this.qweb = null;
+        return false;
+    },
+    get_fvg_from_qweb: function(record) {
+        var view = this.qweb.render('form', this.get_qweb_context(record));
+        var fvg = _.clone(this.fields_view);
+        fvg.arch = openerp.web.xml_to_json(openerp.web.str_to_xml(view).firstChild);
+        return fvg;
+    },
+    get_qweb_context: function(record) {
+        var self = this,
+            new_record = {};
+        _.each(record, function(value, name) {
+            var r = _.clone(self.fields_view.fields[name] || {});
+            if ((r.type === 'date' || r.type === 'datetime') && value) {
+                r.raw_value = openerp.web.auto_str_to_date(value);
+            } else {
+                r.raw_value = value;
+            }
+            r.value = openerp.web.format_value(value, r);
+            new_record[name] = r;
+        });
+        return {
+            record : new_record,
+            new_record : !record.id
+        };
+    },
+    kill_current_form: function() {
+        _.each(this.getChildren(), function(el) {
+            el.destroy();
+        });
+        this.fields = {};
+        this.fields_order = [];
+        this.default_focus_field = null;
+        this.default_focus_button = null;
+        this.translatable_fields = [];
+        this.$element.find('.oe_form_container').empty();
     },
     do_load_state: function(state, warm) {
         if (state.id && this.datarecord.id != state.id) {
@@ -184,6 +237,13 @@ openerp.web.FormView = openerp.web.View.extend({
             return $.Deferred().reject();
         }
         this.datarecord = record;
+
+        if (this.qweb) {
+            this.kill_current_form();
+            this.rendering_engine.set_fields_view(this.get_fvg_from_qweb(record));
+            var $dest = this.$element.hasClass("oe_form_container") ? this.$element : this.$element.find('.oe_form_container');
+            this.rendering_engine.render_to($dest);
+        }
 
         _(this.fields).each(function (field, f) {
             field.reset();
@@ -863,6 +923,7 @@ openerp.web.form.FormRenderingEngine = openerp.web.Class.extend({
             var w = new (obj)(self.view, openerp.web.xml_to_json($elem[0]));
             w.replace($elem);
         })
+        // TODO: return a deferred
     },
     render_element: function(template, layout/* dictionaries */) {
         var dicts = [].slice.call(arguments).slice(2);
