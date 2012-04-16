@@ -163,10 +163,10 @@ class project(osv.osv):
             open_task[id] = len(task_ids)
         return open_task
     
-    def _uom_company(self, cr, uid, ids, field_name, arg, context=None):
+    def company_uom_id(self, cr, uid, ids, field_name, arg, context=None):
         uom_company = {}
         for project in self.browse(cr,uid,ids):
-            uom_company[project.id] = project.company_id.project_time_mode_id.name or "Hour"
+            uom_company[project.id] = project.company_id.project_time_mode_id.name or "Day"
         return uom_company
                 
 
@@ -209,7 +209,7 @@ class project(osv.osv):
         'task': fields.boolean('Task',help = "If you check this field tasks appears in kanban view"),
         'open_task': fields.function(_open_task , type='integer',string="Open Tasks"),
         'color': fields.integer('Color Index'),
-        'uom_company': fields.function(_uom_company , type='string'),
+        'company_uom_id': fields.function(company_uom_id,type="char"),
      }
     def dummy(self, cr, uid, ids, context=None):
             return False
@@ -246,38 +246,6 @@ class project(osv.osv):
                 'domain':[('project_id','in',ids)],
                 'context': context,
                 'views': [(kanban_view and kanban_view[1] or False, 'kanban'),(tree_view and tree_view[1] or False, 'tree'),(calander_view and calander_view[1] or False, 'calendar'),(form_view and form_view[1] or False, 'form')],
-                'type': 'ir.actions.act_window',
-                'search_view_id': search_view and search_view[1] or False,
-                'nodestroy': True
-            }
-        return value
-    
-    def open_users(self, cr, uid, ids, context=None):
-        #Open the View for the Tasks for the project
-        """
-        This opens Tasks views
-        @return :Dictionary value for task view
-        """
-        if context is None:
-            context = {}
-        value = {}
-        data_obj = self.pool.get('ir.model.data')
-        for project in self.browse(cr, uid, ids, context=context):
-            # Get Task views
-            tree_view = data_obj.get_object_reference(cr, uid, 'base', 'view_users_tree')
-            form_view = data_obj.get_object_reference(cr, uid, 'base', 'view_users_form')
-            search_view = data_obj.get_object_reference(cr, uid, 'base', 'view_users_search')
-            
-            value = {
-                'name': _('User'),
-                'context': context,
-                'view_type': 'form',
-                'view_mode': 'form,tree',
-                'res_model': 'res.users',
-                'view_id': False,
-                'context': context,
-                'res_id': project.user_id.id,
-                'views': [(form_view and form_view[1] or False, 'form'),(tree_view and tree_view[1] or False, 'tree')],
                 'type': 'ir.actions.act_window',
                 'search_view_id': search_view and search_view[1] or False,
                 'nodestroy': True
