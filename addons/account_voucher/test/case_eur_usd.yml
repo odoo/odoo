@@ -3,7 +3,7 @@
   In order to check the payment with multi-currency in OpenERP, 
   I create an invoice in EUR and make payment in USD based on the currency rating.
 -
-  I create currency USD in OpenERP for January of 1.200000 rate
+  I update the Currency USD in OpenERP for January with rate 1.200000
 -
   !python {model: res.currency.rate}: |
     from datetime import datetime
@@ -12,7 +12,7 @@
     ids = self.search(cr, uid, [('currency_id','=',curr_id), ('name', '=', date)])
     self.write(cr, uid, ids, {'rate': 1.200000})
 -
-  I create currency USD in OpenERP for February of 1.400000 rate
+  I update the Currency USD in OpenERP for February with rate 1.400000
 -
   !record {model: res.currency.rate, id: feb_usd}:
     currency_id: base.USD
