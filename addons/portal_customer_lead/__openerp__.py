@@ -22,7 +22,7 @@
 {
     'name' : "Portal",
     'version' : "1.0",
-    'depends' : ["portal_customer", "crm"],
+    'depends' : ["portal","crm"],
     'author' : "OpenERP SA",
     'category': 'Portal',
     'description': """
