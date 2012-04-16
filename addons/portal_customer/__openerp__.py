@@ -22,12 +22,12 @@
 {
     'name' : "Portal Customer",
     'version' : "1.0",
-    'depends' : ["sale","portal"],
+    'depends' : ["sale","portal","event"],
     'author' : "OpenERP SA",
     'category': 'Portal',
     'description': """
     The Portal Customer module helps customers to track their Sales Quotations, Orders, Invoices and various
-    other possibilities
+    other possibilities.
     """,
     'website': 'http://www.openerp.com',
     'data': [
@@ -37,9 +37,11 @@
     "demo_xml" : [ 
     ],
     "update_xml" : [
-#        "security/ir.model.access.csv",
+        "security/portal_customer_security.xml",
+        "security/ir.model.access.csv",
+        "board_portal_customer_view.xml",
         "portal_customer_view.xml",
-        "portal_demo.xml"
+        "portal_customer_menu.xml",
     ],
     'installable': True,
 }
