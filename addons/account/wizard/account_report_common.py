@@ -110,7 +110,8 @@ class account_common_report(osv.osv_memory):
         return res
 
     def _get_account(self, cr, uid, context=None):
-        accounts = self.pool.get('account.account').search(cr, uid, [('parent_id', '=', False)], limit=1)
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        accounts = self.pool.get('account.account').search(cr, uid, [('parent_id', '=', False), ('company_id', '=', user.company_id.id)], limit=1)
         return accounts and accounts[0] or False
 
     def _get_fiscalyear(self, cr, uid, context=None):

@@ -1,4 +1,55 @@
 
+(function(){
+    window.asyncLocalStorageDelay = 0;
+    window.asyncLocalStorage = {
+        length: function(){
+            var d = $.Deferred();
+            setTimeout(function(){
+                d.resolve(localStorage.length);
+            },asyncLocalStorageDelay);
+            return d.promise();
+        },
+        key: function(index){
+            var d = $.Deferred();
+            setTimeout(function(){
+                d.resolve(localStorage.key(index));
+            },asyncLocalStorageDelay);
+            return d.promise();
+        },
+        getItem: function(key){
+            var d = $.Deferred();
+            setTimeout(function(){
+                d.resolve(localStorage.getItem(key));
+            },asyncLocalStorageDelay);
+            return d.promise();
+        },
+        setItem: function(key,data){
+            var d = $.Deferred();
+            setTimeout(function(){
+                localStorage.setItem(key,data);
+                d.resolve();
+            },asyncLocalStorageDelay);
+            return d.promise();
+        },
+        removeItem: function(key){
+            var d = $.Deferred();
+            setTimeout(function(){
+                localStorage.removeItem(key);
+                d.resolve();
+            },asyncLocalStorageDelay);
+            return d.promise();
+        },
+        clear: function(){
+            var d = $.Deferred();
+            setTimeout(function(){
+                localStorage.clear();
+                d.resolve();
+            },asyncLocalStorageDelay);
+            return d.promise();
+        }
+    };
+})();
+
 openerp.point_of_sale = function(session) {
     
     session.point_of_sale = {};
