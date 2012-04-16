@@ -39,6 +39,7 @@
     "update_xml" : [
         "security/portal_customer_security.xml",
         "security/ir.model.access.csv",
+        "portal_customer_view.xml",
         "portal_customer_menu.xml",
     ],
     'installable': True,

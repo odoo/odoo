@@ -10,7 +10,7 @@
             <menuitem name="Track Orders" id="customer_portal_track_orders" parent="customer_portal"/>
                 <menuitem name="Quotation" id="customer_portal_quotation" parent="customer_portal_track_orders" action="sale.action_order_tree5"/>
                 <menuitem name="Sales Orders" id="customer_portal_sales_orders" parent="customer_portal_track_orders" action="sale.action_order_form"/>
-                <menuitem name="Delivery Orders" id="customer_portal_delivery" parent="customer_portal_track_orders" action="stock.action_picking_tree"/>
+                <menuitem name="Delivery Orders" id="customer_portal_delivery" parent="customer_portal_track_orders" action="action_picking_tree"/>
                 <menuitem name="Registration" id="customer_portal_registration" parent="customer_portal_track_orders"/>
         
             <menuitem name="Invoice and Payments" id="customer_portal_invoice_payements" parent="customer_portal"/>
@@ -19,7 +19,7 @@
             
             <menuitem name="Services" id="customer_portal_services" parent="customer_portal"/>
                 <menuitem name="Events" id="customer_portal_events" parent="customer_portal_services"/>
-                <menuitem name="Products" id="customer_portal_products" parent="customer_portal_services" action="product.product_normal_action_sell"/>
+                <menuitem name="Products" id="customer_portal_products" parent="customer_portal_services" action="product_normal_action"/>
                 <menuitem name="Tasks" id="customer_portal_tasks" parent="customer_portal_services"/>
         
             <menuitem name="After Sales Services" id="customer_portal_after_sales" parent="customer_portal"/>
