@@ -91,23 +91,20 @@ openerp.point_of_sale = function(db) {
             
             var self = this;
             var cat_def = fetch('pos.category', ['name', 'parent_id', 'child_id']).pipe(function(result) {
-                return self.store.set('pos.category', result);
+                return self.set({'categories': result});
             });
             var prod_def = fetch('product.product', ['name', 'list_price', 'pos_categ_id', 'taxes_id',
                                                           'product_image_small'], [['pos_categ_id', '!=', 'false']]).then(function(result) {
-                return self.store.set('product.product', result);
+                return self.set({'products': result});
             });
             var bank_def = fetch('account.bank.statement', ['account_id', 'currency', 'journal_id', 'state', 'name'],
                     [['state', '=', 'open'], ['user_id', '=', this.session.uid]]).then(function(result) {
-                return self.store.set('account.bank.statement', result);
-            });
-            var journal_def = fetch('account.journal', ['auto_cash', 'check_dtls', 'currency', 'name', 'type']).then(function(result) {
-                return self.store.set('account.journal', result);
+                return self.set({'bank_statements': result});
             });
             var tax_def = fetch('account.tax', ['amount', 'price_include', 'type']).then(function(result) {
-                return self.store.set('account.tax', result);
+                return self.set({'taxes': result});
             });
-            $.when(cat_def, prod_def, bank_def, journal_def, tax_def, this.get_app_data())
+            $.when(cat_def, prod_def, bank_def, tax_def, this.get_app_data())
                 .pipe(_.bind(this.build_tree, this));
         },
         get_app_data: function() {
@@ -159,7 +156,7 @@ openerp.point_of_sale = function(db) {
         categories: {},
         build_tree: function() {
             var c, id, _i, _len, _ref, _ref2;
-            _ref = this.store.get('pos.category');
+            _ref = this.get('categories');
             for (_i = 0, _len = _ref.length; _i < _len; _i++) {
                 c = _ref[_i];
                 this.categories[c.id] = {
@@ -182,7 +179,7 @@ openerp.point_of_sale = function(db) {
                 ancestors: [],
                 children: (function() {
                     var _j, _len2, _ref3, _results;
-                    _ref3 = this.store.get('pos.category');
+                    _ref3 = this.get('categories');
                     _results = [];
                     for (_j = 0, _len2 = _ref3.length; _j < _len2; _j++) {
                         c = _ref3[_j];
@@ -194,7 +191,7 @@ openerp.point_of_sale = function(db) {
                 }).call(this),
                 subtree: (function() {
                     var _j, _len2, _ref3, _results;
-                    _ref3 = this.store.get('pos.category');
+                    _ref3 = this.get('categories');
                     _results = [];
                     for (_j = 0, _len2 = _ref3.length; _j < _len2; _j++) {
                         c = _ref3[_j];
@@ -322,10 +319,10 @@ openerp.point_of_sale = function(db) {
             var totalTax = base;
             var totalNoTax = base;
             
-            var products = pos.store.get('product.product');
+            var products = pos.get('products');
             var product = _.detect(products, function(el) {return el.id === self.get('id');});
             var taxes_ids = product.taxes_id;
-            var taxes =  pos.store.get('account.tax');
+            var taxes =  pos.get('taxes');
             var taxtotal = 0;
             _.each(taxes_ids, function(el) {
                 var tax = _.detect(taxes, function(t) {return t.id === el;});
@@ -539,7 +536,7 @@ openerp.point_of_sale = function(db) {
                 products: new ProductCollection()
             });
             this.set({
-                cashRegisters: new CashRegisterCollection(pos.store.get('account.bank.statement')),
+                cashRegisters: new CashRegisterCollection(pos.get('bank_statements')),
             });
             return (this.get('orders')).bind('remove', _.bind( function(removedOrder) {
                 if ((this.get('orders')).isEmpty()) {
@@ -1262,7 +1259,7 @@ openerp.point_of_sale = function(db) {
             this.categoryView.children = c.children;
             this.categoryView.renderElement();
             this.categoryView.start();
-            products = pos.store.get('product.product').filter( function(p) {
+            products = pos.get('products').filter( function(p) {
                 var _ref;
                 return _ref = p.pos_categ_id[0], _.indexOf(c.subtree, _ref) >= 0;
             });
@@ -1336,7 +1333,7 @@ openerp.point_of_sale = function(db) {
                 pos.app = new App(self.$element);
                 db.webclient.set_content_full_screen(true);
                 
-                if (pos.store.get('account.bank.statement').length === 0)
+                if (pos.get('bank_statements').length === 0)
                     return new db.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_pos_open_statement']], ['res_id']).pipe(
                             _.bind(function(res) {
                         return this.rpc('/web/action/load', {'action_id': res[0]['res_id']}).pipe(_.bind(function(result) {
