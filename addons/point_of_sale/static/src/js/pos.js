@@ -71,7 +71,7 @@ openerp.point_of_sale = function(db) {
             });
             var prod_def = fetch('product.product', ['name', 'list_price', 'pos_categ_id', 'taxes_id',
                                                           'product_image_small'], [['pos_categ_id', '!=', 'false']]).then(function(result) {
-                return self.set({'products': result});
+                return self.set({'product_list': result});
             });
             var bank_def = fetch('account.bank.statement', ['account_id', 'currency', 'journal_id', 'state', 'name'],
                     [['state', '=', 'open'], ['user_id', '=', this.session.uid]]).then(function(result) {
@@ -295,8 +295,8 @@ openerp.point_of_sale = function(db) {
             var totalTax = base;
             var totalNoTax = base;
             
-            var products = pos.get('products');
-            var product = _.detect(products, function(el) {return el.id === self.get('id');});
+            var product_list = pos.get('product_list');
+            var product = _.detect(product_list, function(el) {return el.id === self.get('id');});
             var taxes_ids = product.taxes_id;
             var taxes =  pos.get('taxes');
             var taxtotal = 0;
@@ -1226,7 +1226,7 @@ openerp.point_of_sale = function(db) {
             this.category();
         };
         App.prototype.category = function(id) {
-            var c, products;
+            var c, product_list;
             if (id == null) {
                 id = 0;
             }
@@ -1235,28 +1235,28 @@ openerp.point_of_sale = function(db) {
             this.categoryView.children = c.children;
             this.categoryView.renderElement();
             this.categoryView.start();
-            products = pos.get('products').filter( function(p) {
+            product_list = pos.get('product_list').filter( function(p) {
                 var _ref;
                 return _ref = p.pos_categ_id[0], _.indexOf(c.subtree, _ref) >= 0;
             });
-            (this.shop.get('products')).reset(products);
+            (this.shop.get('products')).reset(product_list);
             var self = this;
             $('.searchbox input').keyup(function() {
                 var m, s;
                 s = $(this).val().toLowerCase();
                 if (s) {
-                    m = products.filter( function(p) {
+                    m = product_list.filter( function(p) {
                         return p.name.toLowerCase().indexOf(s) != -1;
                     });
                     $('.search-clear').fadeIn();
                 } else {
-                    m = products;
+                    m = product_list;
                     $('.search-clear').fadeOut();
                 }
                 return (self.shop.get('products')).reset(m);
             });
             return $('.search-clear').click( function() {
-                (self.shop.get('products')).reset(products);
+                (self.shop.get('products')).reset(product_list);
                 $('.searchbox input').val('').focus();
                 return $('.search-clear').fadeOut();
             });
