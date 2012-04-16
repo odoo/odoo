@@ -2,7 +2,7 @@
 <openerp>
     <data>
         
-        <menuitem name="Customer Portal" id="customer_portal" groups="group_sales_portal"/>
+        <menuitem name="Customer Portal" id="customer_portal" groups="group_sales_portal" action="open_customer_portal"/>
 
             <menuitem name="Address Book" id="customer_portal_address_book_main" parent="customer_portal"/>
                 <menuitem name="Contacts" id="customer_portal_address_book" parent="customer_portal_address_book_main" action="base.action_partner_form"/>
@@ -18,7 +18,7 @@
                 <menuitem name="Payments" id="customer_portal_payments" parent="customer_portal_invoice_payements" action="account_voucher.action_vendor_receipt"/>
             
             <menuitem name="Services" id="customer_portal_services" parent="customer_portal"/>
-                <menuitem name="Events" id="customer_portal_events" parent="customer_portal_services"/>
+                <menuitem name="Events" id="customer_portal_events" parent="customer_portal_services" action="event.action_event_view"/>
                 <menuitem name="Products" id="customer_portal_products" parent="customer_portal_services" action="product_normal_action"/>
                 <menuitem name="Tasks" id="customer_portal_tasks" parent="customer_portal_services"/>
         
@@ -57,6 +57,7 @@
             <field name="action" ref="mail.action_mail_all_feeds"/>
             <field eval="[(4, ref('base.group_sale_salesman'))]" name="groups_id"/>
         </record>
+        <menuitem name="Events" id="event.menu_event_event" action="event.action_event_view" parent="base.menu_event_main" groups="event.group_event_user"/>
         
     </data>
 </openerp>

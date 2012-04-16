@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+    
+        <record model="ir.actions.act_window" id="action_event_view_main">
+           <field name="name">Events</field>
+           <field name="type">ir.actions.act_window</field>
+           <field name="res_model">event.event</field>
+           <field name="view_type">tree</field>
+           <field name="view_mode">kanban</field>
+           <field name="view_id" ref="event.view_event_kanban"/>
+           <field name="context">{"search_default_upcoming":1}</field>
+       </record>
+       
+       <record id="action_mail_my_feeds" model="ir.actions.client">
+            <field name="name">My Feeds</field>
+            <field name="tag">mail.all_feeds</field>
+       </record>
+       
+       <record id="board_customer_portal_form" model="ir.ui.view">
+           <field name="name">board.customer.portal.form</field>
+           <field name="model">board.board</field>
+           <field name="type">form</field>
+           <field name="arch" type="xml">
+               <form string="Events">
+                   <board style="2-1">
+                       <column>
+                           <action name="%(action_event_view_main)d" string="Upcoming Events"/>
+                           <action name="%(mail.action_mail_my_feeds)d" string="My Wall"/>
+                       </column>
+                       <column>
+                           <!--action name="" string="Latest News"/-->
+                       </column>
+                   </board>
+               </form>
+           </field>
+       </record>
+        
+       <record id="open_customer_portal" model="ir.actions.act_window">
+           <field name="name">Customer Portal Dashboard</field>
+           <field name="res_model">board.board</field>
+           <field name="view_type">form</field>
+           <field name="view_mode">form</field>
+           <field name="usage">menu</field>
+           <field name="view_id" ref="board_customer_portal_form"/>
+       </record>
+        
+    </data>
+</openerp>

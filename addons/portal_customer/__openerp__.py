@@ -22,7 +22,7 @@
 {
     'name' : "Portal Customer",
     'version' : "1.0",
-    'depends' : ["sale","portal"],
+    'depends' : ["sale","portal","event"],
     'author' : "OpenERP SA",
     'category': 'Portal',
     'description': """
@@ -39,6 +39,7 @@
     "update_xml" : [
         "security/portal_customer_security.xml",
         "security/ir.model.access.csv",
+        "board_portal_customer_view.xml",
         "portal_customer_view.xml",
         "portal_customer_menu.xml",
     ],
