@@ -1,26 +1,30 @@
-
 (function(){
-    window.asyncLocalStorageDelay = 0;
-    window.asyncLocalStorage = {
+    window.asyncStorageDelay = 0;
+    window.asyncStorage = {
         length: function(){
             var d = $.Deferred();
             setTimeout(function(){
                 d.resolve(localStorage.length);
-            },asyncLocalStorageDelay);
+            },asyncStorageDelay);
             return d.promise();
         },
         key: function(index){
             var d = $.Deferred();
             setTimeout(function(){
                 d.resolve(localStorage.key(index));
-            },asyncLocalStorageDelay);
+            },asyncStorageDelay);
             return d.promise();
         },
         getItem: function(key){
             var d = $.Deferred();
             setTimeout(function(){
-                d.resolve(localStorage.getItem(key));
-            },asyncLocalStorageDelay);
+                var val = localStorage.getItem(key);
+                if(val){
+                    d.resolve(val);
+                }else{
+                    d.reject();
+                }
+            },asyncStorageDelay);
             return d.promise();
         },
         setItem: function(key,data){
@@ -28,7 +32,7 @@
             setTimeout(function(){
                 localStorage.setItem(key,data);
                 d.resolve();
-            },asyncLocalStorageDelay);
+            },asyncStorageDelay);
             return d.promise();
         },
         removeItem: function(key){
@@ -36,7 +40,7 @@
             setTimeout(function(){
                 localStorage.removeItem(key);
                 d.resolve();
-            },asyncLocalStorageDelay);
+            },asyncStorageDelay);
             return d.promise();
         },
         clear: function(){
@@ -44,9 +48,97 @@
             setTimeout(function(){
                 localStorage.clear();
                 d.resolve();
-            },asyncLocalStorageDelay);
+            },asyncStorageDelay);
             return d.promise();
-        }
+        },
+        
+        // A collection holds  a list of objects that can be stored and searched on the disc asynchronously.
+        // collection : the name of the collection.
+        // searchable_fields : a list of the name of the object's field that can be searched and matched
+        collection_new: function(collection, searchable_fields){
+            var col_obj = {
+                    'name': collection,
+                    'searchable_fields': searchable_fields || [],
+                    'data': [],
+            };
+            return asyncStorage.setItem('collection_'+collection, JSON.stringify(col_obj));
+        },
+        
+        // returns a defered that fetches one element of the collection that has a field of value equal to name
+        // the defered fails if there is no such element
+        collection_get: function(collection, field, name){
+            var d = $.Deferred();
+
+            setTimeout(function(){
+                var col_str = localStorage.getItem('collection_'+collection)
+                var col_obj = JSON.parse(col_str);
+                var data = col_obj.data;
+                for(var i = 0; i < data.length; i++){
+                    var elem = data[i];
+                    if (elem[field] && elem[field] === name){
+                        d.resolve(elem);
+                        return d.promise();
+                    }
+                }
+                d.reject();
+            },asyncStorageDelay);
+
+            return d.promise();
+        },
+        
+        // asynchronously add an element to the collection
+        collection_add: function(collection, elem){
+            var d = $.Deferred();
+
+            var col_str = localStorage.getItem('collection_'+collection);
+            var col_obj = JSON.parse(col_str);
+
+            col_obj.data.push(elem);
+            col_str = JSON.stringify(col_obj);
+
+            localStorage.setItem('collection_'+collection, col_str)
+
+            setTimeout(function(){
+                d.resolve();
+            },asyncStorageDelay);
+            
+            return d.promise();
+        },
+        
+        // returns a deffered that provides a list of element in the collection 
+        // matching the patterns *
+        // patterns is a  dictionary of {'field':'pattern'}.
+        // an object is said to match the patterns if one of his field has a related field in the
+        // dictionary with a value that contains the 'pattern'. the list may be empty
+        collection_find: function(collection, patterns){
+            var d = $.Deferred();
+
+            var col_str = localStorage.getItem('collection_'+collection)
+            var col_obj = JSON.parse(col_str);
+            var data = col_obj.data;
+            var results = [];
+            var lowerpatterns = {};
+            for (field in patterns){
+                lowerpatterns[field] = patterns[field].toLowerCase();
+            }
+
+
+            for(var i = 0; i < data.length; i++){
+                var elem = data[i];
+                for(field in lowerpatterns){
+                    if(elem[field] && (''+elem[field]).toLowerCase().indexOf(lowerpatterns[field]) >= 0){
+                        results.push(elem);
+                        break;
+                    }
+                }
+            }
+
+            setTimeout(function(){
+                d.resolve(results);
+            },asyncStorageDelay);
+
+            return d.promise();
+        },
     };
 })();
 
@@ -96,40 +188,19 @@ openerp.point_of_sale = function(session) {
             this.data[key] = value;
             localStorage['oe_pos_' + key] = JSON.stringify(value);
         },
-    });
-
-    var SqlStore = session.web.Class.extend({
-        init: function(){
-            this.data = {};
+        collection_new: function(collection, searchable_fields){
+            return asyncStorage.collection_new(collection,searchable_fields);
         },
-        get: function(key, _default){
-            if (this.data[key] === undefined) {
-                var stored = localStorage['oe_pos_' + key];
-                if (stored){
-                    this.data[key] = JSON.parse(stored);
-                }else{
-                    console.log('Store get: ',key, 'default: ',_default);
-                    return _default;
-                }
-            }
-            console.log('Store get: ',key, 'value: ', this.data[key]);
-            return this.data[key];
-        },
-        set: function(key, value){
-            console.log('Store set: ',key,' value: ',value);
-            this.data[key] = value;
-            localStorage['oe_pos_' + key] = JSON.stringify(value);
-        },
-        collection_new: function(collection, elem_name_field, elem_name_func){
-        },
-        collection_get: function(collection, elem_name_field, elem_name){
+        collection_get: function(collection, field, name){
+            return asyncStorage.collection_get(collection,field,name);
         },
         collection_add: function(collection, elem){
+            return asyncStorage.collection_add(collection,elem);
         },
-        collection_find: function(collection, elem_name_field, elem_name_pattern){
-        },
+        collection_find: function(collection, patterns){
+            return asyncStorage.collection_find(collection,patterns);
+        }
     });
-
     
     /*
      Gets all the necessary data from the OpenERP web client (session, shop data etc.)
