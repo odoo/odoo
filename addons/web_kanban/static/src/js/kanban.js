@@ -439,6 +439,7 @@ openerp.web_kanban.KanbanGroup = openerp.web.OldWidget.extend({
         new openerp.web.Model(this.dataset.model).call(
                 'read', [[id], this.view.fields_keys], {})
             .then(function (records) {
+                self.view.dataset.ids.push(id);
                 self.do_add_records(records, 'prepend');
             });
     }
