@@ -36,10 +36,46 @@ openerp.point_of_sale = function(db) {
     var _t = db.web._t;
     
     var DAOInterface = {
-        
+        add_operation: function(operation) {},
+        remove_operation: function(id) {},
+        get_operations: function() {},
     };
     var LocalStorageDAO = db.web.Class.extend({
-        
+        add_operation: function(operation) {
+            var self = this;
+            return $.async_when().pipe(function() {
+                var tmp = self._get('oe_pos_operations', []);
+                var last_id = self._get('oe_pos_operations_sequence', 1);
+                tmp.push({'id': last_id, 'data': operation});
+                self._set('oe_pos_operations', tmp);
+                self._set('oe_pos_operations_sequence', last_id + 1);
+            });
+        },
+        remove_operation: function(id) {
+            var self = this;
+            return $.async_when().pipe(function() {
+                var tmp = self._get('oe_pos_operations', []);
+                tmp = _.filter(tmp, function(el) {
+                    return el.id !== id;
+                });
+                self._set('oe_pos_operations', tmp);
+            });
+        },
+        get_operations: function() {
+            var self = this;
+            return $.async_when().pipe(function() {
+                return self._get('oe_pos_operations', []);
+            });
+        },
+        _get: function(key, default_) {
+            var txt = localStorage[key];
+            if (! txt)
+                return default_;
+            return JSON.parse(txt);
+        },
+        _set: function(key, value) {
+            localStorage[key] = JSON.stringify(value);
+        },
     });
     
     var fetch = function(osvModel, fields, domain) {
@@ -59,7 +95,7 @@ openerp.point_of_sale = function(db) {
             this.flush_mutex = new $.Mutex();
             this.build_tree = _.bind(this.build_tree, this);
             this.session = session;
-            this.set({'pending_operations': [],
+            this.set({'nbr_pending_operations': 0,
                 'currency': {symbol: '$', position: 'after'},
                 'shop': {},
                 'company': {},
@@ -80,7 +116,7 @@ openerp.point_of_sale = function(db) {
             var tax_def = fetch('account.tax', ['amount', 'price_include', 'type']).then(function(result) {
                 return self.set({'taxes': result});
             });
-            $.when(cat_def, prod_def, bank_def, tax_def, this.get_app_data())
+            $.when(cat_def, prod_def, bank_def, tax_def, this.get_app_data(), this.flush())
                 .pipe(_.bind(this.build_tree, this));
         },
         get_app_data: function() {
@@ -102,10 +138,10 @@ openerp.point_of_sale = function(db) {
             }));
         },
         pushOrder: function(record) {
-            var ops = _.clone(this.get('pending_operations'));
-            ops.push(record);
-            this.set({pending_operations: ops});
-            return this.flush();
+            var self = this;
+            return this.dao.add_operation(record).pipe(function() {
+                return self.flush();
+            });
         },
         flush: function() {
             return this.flush_mutex.exec(_.bind(function() {
@@ -113,21 +149,27 @@ openerp.point_of_sale = function(db) {
             }, this));
         },
         _int_flush : function() {
-            var ops = this.get('pending_operations');
-            if (ops.length === 0)
-                return $.when();
-            var op = ops[0];
-            /* we prevent the default error handler and assume errors
-             * are a normal use case, except we stop the current iteration
-             */
-            return new db.web.Model("pos.order").get_func("create_from_ui")([op]).fail(function(unused, event) {
-                event.preventDefault();
-            }).pipe(_.bind(function() {
-                console.debug('saved 1 record');
-                var ops2 = this.get('pending_operations');
-                this.set({'pending_operations': _.without(ops2, op)});
-                return this._int_flush();
-            }, this), function() {return $.when()});
+            var self = this;
+            this.dao.get_operations().pipe(function(ops) {
+                self.set({"nbr_pending_operations": ops.length});
+                if (ops.length === 0)
+                    return $.when();
+                var op = ops[0].data;
+                var op_id = ops[0].id;
+                /* we prevent the default error handler and assume errors
+                 * are a normal use case, except we stop the current iteration
+                 */
+                return new db.web.Model("pos.order").get_func("create_from_ui")([op]).fail(function(unused, event) {
+                    event.preventDefault();
+                }).pipe(function() {
+                    console.debug('saved 1 record');
+                    self.dao.remove_operation(op_id).pipe(function() {
+                        return self._int_flush();
+                    });
+                }, function() {
+                    return $.when();
+                });
+            });
         },
         categories: {},
         build_tree: function() {
@@ -1299,7 +1341,7 @@ openerp.point_of_sale = function(db) {
                 this.synch_notification.replace($('.oe_pos_synch-notification', this.$element));
                 this.synch_notification.on_synch.add(_.bind(pos.flush, pos));
                 
-                pos.bind('change:pending_operations', this.changed_pending_operations, this);
+                pos.bind('change:nbr_pending_operations', this.changed_pending_operations, this);
                 this.changed_pending_operations();
                 
                 this.$element.find("#loggedas button").click(function() {
@@ -1323,12 +1365,12 @@ openerp.point_of_sale = function(db) {
             return qweb_template("PointOfSale")();
         },
         changed_pending_operations: function () {
-            this.synch_notification.on_change_nbr_pending(pos.get('pending_operations').length);
+            this.synch_notification.on_change_nbr_pending(pos.get('nbr_pending_operations'));
         },
         try_close: function() {
             pos.flush().then(_.bind(function() {
                 var close = _.bind(this.close, this);
-                if (pos.get('pending_operations').length > 0) {
+                if (pos.get('nbr_pending_operations') > 0) {
                     var confirm = false;
                     $(QWeb.render('pos-close-warning')).dialog({
                         resizable: false,
