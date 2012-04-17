@@ -16,8 +16,17 @@
 					<group>
 					   <group colspan="4">
  							<separator string="Declare Periodical VAT" colspan="4"/><newline/>
-    						<field name="period_id" widget="selection"/>
 							<field name="tax_code_id" string="Company" widget="selection" groups="base.group_multi_company"/>
+                            <field name="period_ids" nolabel="1" colspan="4" height="200" width="550">
+                                <tree colors="blue:state in ('draft');gray:state in ('done') " string="Period">
+                                  <field name="name"/>
+                                  <field name="code"/>
+                                  <field name="date_start"/>
+                                  <field name="date_stop"/>
+                                  <field name="special"/>
+                                  <field name="state"/>
+                                </tree>
+                            </field>
 							<newline/>
 						</group>
 						<group>
@@ -26,6 +35,10 @@
 							<field name="client_nihil" string="Is Last Declaration" colspan="1" /><label/>
 	            		</group>
 	            		<newline/>
+                    <group colspan="4" groups="base.group_extended">
+                        <separator string="Comments" colspan="4"/>
+                        <field colspan="4" name="comments" nolabel="1"/>
+                    </group>
 					<group>
 					<separator colspan="4"/>
 					<newline/>
