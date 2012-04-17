@@ -8,6 +8,7 @@ OpenERP Server Documentation
    01_getting_started
    02_architecture
    03_module_dev
+   04_user_roles
    99_test_framework
 
 OPenERP Server API
