@@ -27,22 +27,17 @@ import decimal_precision as dp
 
 class account_bank_statement(osv.osv):
     def create(self, cr, uid, vals, context=None):
-        seq = 0
         if 'line_ids' in vals:
-            new_line_ids = []
-            for line in vals['line_ids']:
-                seq += 1
-                line[2]['sequence'] = seq
+            for idx, line in enumerate(vals['line_ids']):
+                line[2]['sequence'] = idx + 1
         return super(account_bank_statement, self).create(cr, uid, vals, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
         res = super(account_bank_statement, self).write(cr, uid, ids, vals, context=context)
         account_bank_statement_line_obj = self.pool.get('account.bank.statement.line')
         for statement in self.browse(cr, uid, ids, context):
-            seq = 0
-            for line in statement.line_ids:
-                seq += 1
-                account_bank_statement_line_obj.write(cr, uid, [line.id], {'sequence': seq}, context=context)
+            for idx, line in enumerate(statement.line_ids):
+                account_bank_statement_line_obj.write(cr, uid, [line.id], {'sequence': idx + 1}, context=context)
         return res
 
     def _default_journal_id(self, cr, uid, context=None):
@@ -50,13 +45,12 @@ class account_bank_statement(osv.osv):
             context = {}
         journal_pool = self.pool.get('account.journal')
         journal_type = context.get('journal_type', False)
-        journal_id = False
         company_id = self.pool.get('res.company')._company_default_get(cr, uid, 'account.bank.statement',context=context)
         if journal_type:
             ids = journal_pool.search(cr, uid, [('type', '=', journal_type),('company_id','=',company_id)])
             if ids:
-                journal_id = ids[0]
-        return journal_id
+                return ids[0]
+        return False
 
     def _end_balance(self, cursor, user, ids, name, attr, context=None):
         res_currency_obj = self.pool.get('res.currency')
