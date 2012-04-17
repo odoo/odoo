@@ -1,6 +1,6 @@
 
-openerp.web.formats = function(openerp) {
-var _t = openerp.web._t;
+openerp.web.formats = function(instance) {
+var _t = instance.web._t;
 
 /**
  * Intersperses ``separator`` in ``str`` at the positions indicated by
@@ -23,7 +23,7 @@ var _t = openerp.web._t;
  * @param {String} separator
  * @returns {String}
  */
-openerp.web.intersperse = function (str, indices, separator) {
+instance.web.intersperse = function (str, indices, separator) {
     separator = separator || '';
     var result = [], last = str.length;
 
@@ -55,10 +55,10 @@ openerp.web.intersperse = function (str, indices, separator) {
  * @param {String} num
  * @returns {String}
  */
-openerp.web.insert_thousand_seps = function (num) {
+instance.web.insert_thousand_seps = function (num) {
     var negative = num[0] === '-';
     num = (negative ? num.slice(1) : num);
-    return (negative ? '-' : '') + openerp.web.intersperse(
+    return (negative ? '-' : '') + instance.web.intersperse(
         num, _t.database.parameters.grouping, _t.database.parameters.thousands_sep);
 };
 
@@ -69,7 +69,7 @@ openerp.web.insert_thousand_seps = function (num) {
  *
  * @param {String} value original format
  */
-openerp.web.strip_raw_chars = function (value) {
+instance.web.strip_raw_chars = function (value) {
     var isletter = /[a-zA-Z]/, output = [];
     for(var index=0; index < value.length; ++index) {
         var character = value[index];
@@ -81,7 +81,7 @@ openerp.web.strip_raw_chars = function (value) {
     return output.join('');
 };
 var normalize_format = function (format) {
-    return Date.normalizeFormat(openerp.web.strip_raw_chars(format));
+    return Date.normalizeFormat(instance.web.strip_raw_chars(format));
 };
 /**
  * Formats a single atomic value based on a field descriptor
@@ -93,7 +93,7 @@ var normalize_format = function (format) {
  * @param {Object} [descriptor.digits] used for the formatting of floats
  * @param {String} [value_if_empty=''] returned if the ``value`` argument is considered empty
  */
-openerp.web.format_value = function (value, descriptor, value_if_empty) {
+instance.web.format_value = function (value, descriptor, value_if_empty) {
     // If NaN value, display as with a `false` (empty cell)
     if (typeof value === 'number' && isNaN(value)) {
         value = false;
@@ -115,12 +115,12 @@ openerp.web.format_value = function (value, descriptor, value_if_empty) {
         case 'id':
             return value.toString();
         case 'integer':
-            return openerp.web.insert_thousand_seps(
+            return instance.web.insert_thousand_seps(
                 _.str.sprintf('%d', value));
         case 'float':
             var precision = descriptor.digits ? descriptor.digits[1] : 2;
             var formatted = _.str.sprintf('%.' + precision + 'f', value).split('.');
-            formatted[0] = openerp.web.insert_thousand_seps(formatted[0]);
+            formatted[0] = instance.web.insert_thousand_seps(formatted[0]);
             return formatted.join(l10n.decimal_point);
         case 'float_time':
             var pattern = '%02d:%02d';
@@ -136,17 +136,17 @@ openerp.web.format_value = function (value, descriptor, value_if_empty) {
             return value[1];
         case 'datetime':
             if (typeof(value) == "string")
-                value = openerp.web.auto_str_to_date(value);
+                value = instance.web.auto_str_to_date(value);
 
             return value.toString(normalize_format(l10n.date_format)
                         + ' ' + normalize_format(l10n.time_format));
         case 'date':
             if (typeof(value) == "string")
-                value = openerp.web.auto_str_to_date(value);
+                value = instance.web.auto_str_to_date(value);
             return value.toString(normalize_format(l10n.date_format));
         case 'time':
             if (typeof(value) == "string")
-                value = openerp.web.auto_str_to_date(value);
+                value = instance.web.auto_str_to_date(value);
             return value.toString(normalize_format(l10n.time_format));
         case 'selection': case 'statusbar':
             // Each choice is [value, label]
@@ -163,7 +163,7 @@ openerp.web.format_value = function (value, descriptor, value_if_empty) {
     }
 };
 
-openerp.web.parse_value = function (value, descriptor, value_if_empty) {
+instance.web.parse_value = function (value, descriptor, value_if_empty) {
     var date_pattern = normalize_format(_t.database.parameters.date_format),
         time_pattern = normalize_format(_t.database.parameters.time_format);
     switch (value) {
@@ -176,7 +176,7 @@ openerp.web.parse_value = function (value, descriptor, value_if_empty) {
             var tmp;
             do {
                 tmp = value;
-                value = value.replace(openerp.web._t.database.parameters.thousands_sep, "");
+                value = value.replace(instance.web._t.database.parameters.thousands_sep, "");
             } while(tmp !== value);
             tmp = Number(value);
             if (isNaN(tmp))
@@ -190,9 +190,9 @@ openerp.web.parse_value = function (value, descriptor, value_if_empty) {
             var tmp2 = value;
             do {
                 tmp = tmp2;
-                tmp2 = tmp.replace(openerp.web._t.database.parameters.thousands_sep, "");
+                tmp2 = tmp.replace(instance.web._t.database.parameters.thousands_sep, "");
             } while(tmp !== tmp2);
-            var reformatted_value = tmp.replace(openerp.web._t.database.parameters.decimal_point, ".");
+            var reformatted_value = tmp.replace(instance.web._t.database.parameters.decimal_point, ".");
             var parsed = Number(reformatted_value);
             if (isNaN(parsed))
                 throw new Error(value + " is not a correct float");
@@ -205,62 +205,62 @@ openerp.web.parse_value = function (value, descriptor, value_if_empty) {
             }
             var float_time_pair = value.split(":");
             if (float_time_pair.length != 2)
-                return factor * openerp.web.parse_value(value, {type: "float"});
-            var hours = openerp.web.parse_value(float_time_pair[0], {type: "integer"});
-            var minutes = openerp.web.parse_value(float_time_pair[1], {type: "integer"});
+                return factor * instance.web.parse_value(value, {type: "float"});
+            var hours = instance.web.parse_value(float_time_pair[0], {type: "integer"});
+            var minutes = instance.web.parse_value(float_time_pair[1], {type: "integer"});
             return factor * (hours + (minutes / 60));
         case 'progressbar':
-            return openerp.web.parse_value(value, {type: "float"});
+            return instance.web.parse_value(value, {type: "float"});
         case 'datetime':
             var datetime = Date.parseExact(
                     value, (date_pattern + ' ' + time_pattern));
             if (datetime !== null)
-                return openerp.web.datetime_to_str(datetime);
+                return instance.web.datetime_to_str(datetime);
             datetime = Date.parse(value);
             if (datetime !== null)
-                return openerp.web.datetime_to_str(datetime);
+                return instance.web.datetime_to_str(datetime);
             throw new Error(value + " is not a valid datetime");
         case 'date':
             var date = Date.parseExact(value, date_pattern);
             if (date !== null)
-                return openerp.web.date_to_str(date);
+                return instance.web.date_to_str(date);
             date = Date.parse(value);
             if (date !== null)
-                return openerp.web.date_to_str(date);
+                return instance.web.date_to_str(date);
             throw new Error(value + " is not a valid date");
         case 'time':
             var time = Date.parseExact(value, time_pattern);
             if (time !== null)
-                return openerp.web.time_to_str(time);
+                return instance.web.time_to_str(time);
             time = Date.parse(value);
             if (time !== null)
-                return openerp.web.time_to_str(time);
+                return instance.web.time_to_str(time);
             throw new Error(value + " is not a valid time");
     }
     return value;
 };
 
-openerp.web.auto_str_to_date = function(value, type) {
+instance.web.auto_str_to_date = function(value, type) {
     try {
-        return openerp.web.str_to_datetime(value);
+        return instance.web.str_to_datetime(value);
     } catch(e) {}
     try {
-        return openerp.web.str_to_date(value);
+        return instance.web.str_to_date(value);
     } catch(e) {}
     try {
-        return openerp.web.str_to_time(value);
+        return instance.web.str_to_time(value);
     } catch(e) {}
     throw new Error("'" + value + "' is not a valid date, datetime nor time");
 };
 
-openerp.web.auto_date_to_str = function(value, type) {
+instance.web.auto_date_to_str = function(value, type) {
     switch(type) {
         case 'datetime':
-            return openerp.web.datetime_to_str(value);
+            return instance.web.datetime_to_str(value);
         case 'date':
-            return openerp.web.date_to_str(value);
+            return instance.web.date_to_str(value);
         case 'time':
-            return openerp.web.time_to_str(value);
+            return instance.web.time_to_str(value);
         default:
             throw new Error(type + " is not convertible to date, datetime nor time");
     }
@@ -290,7 +290,7 @@ openerp.web.auto_date_to_str = function(value, type) {
  * @param {Number} [options.id] current record's id
  *
  */
-openerp.web.format_cell = function (row_data, column, options) {
+instance.web.format_cell = function (row_data, column, options) {
     options = options || {};
     var attrs = {};
     if (options.process_modifiers !== false) {
@@ -303,9 +303,9 @@ openerp.web.format_cell = function (row_data, column, options) {
             '<img src="<%-prefix%>/web/static/src/img/icons/<%-icon%>.png" alt="<%-alt%>"/>' +
             '</button>', {
                 title: column.string || '',
-                additional_attributes: isNaN(row_data["id"].value) && openerp.web.BufferedDataSet.virtual_id_regex.test(row_data["id"].value) ?
+                additional_attributes: isNaN(row_data["id"].value) && instance.web.BufferedDataSet.virtual_id_regex.test(row_data["id"].value) ?
                     'disabled="disabled" class="oe-listview-button-disabled"' : '',
-                prefix: openerp.connection.prefix,
+                prefix: instance.connection.prefix,
                 icon: column.icon,
                 alt: column.string || ''
             });
@@ -320,11 +320,11 @@ openerp.web.format_cell = function (row_data, column, options) {
                  row_data[column.id].value ? 'checked="checked"' : '');
     case "binary":
         var text = _t("Download"),
-            download_url = _.str.sprintf('/web/binary/saveas?session_id=%s&model=%s&field=%s&id=%d', openerp.connection.session_id, options.model, column.id, options.id);
+            download_url = _.str.sprintf('/web/binary/saveas?session_id=%s&model=%s&field=%s&id=%d', instance.connection.session_id, options.model, column.id, options.id);
         if (column.filename) {
             download_url += '&filename_field=' + column.filename;
             if (row_data[column.filename]) {
-                text = _.str.sprintf(_t("Download \"%s\""), openerp.web.format_value(
+                text = _.str.sprintf(_t("Download \"%s\""), instance.web.format_value(
                         row_data[column.filename].value, {type: 'char'}));
             }
         }
@@ -340,7 +340,7 @@ openerp.web.format_cell = function (row_data, column, options) {
             });
     }
 
-    return _.escape(openerp.web.format_value(
+    return _.escape(instance.web.format_value(
             row_data[column.id].value, column, options.value_if_empty));
 }
 
