@@ -1,13 +1,13 @@
-openerp.web.form = function (openerp) {
-var _t = openerp.web._t,
-   _lt = openerp.web._lt;
-var QWeb = openerp.web.qweb;
+openerp.web.form = function (instance) {
+var _t = instance.web._t,
+   _lt = instance.web._lt;
+var QWeb = instance.web.qweb;
 
 /** @namespace */
-openerp.web.form = {};
+instance.web.form = {};
 
-openerp.web.views.add('form', 'openerp.web.FormView');
-openerp.web.FormView = openerp.web.View.extend({
+instance.web.views.add('form', 'instance.web.FormView');
+instance.web.FormView = instance.web.View.extend({
     /**
      * Indicates that this view is not searchable, and thus that no search
      * view should be displayed (if there is one active).
@@ -17,17 +17,17 @@ openerp.web.FormView = openerp.web.View.extend({
     display_name: _lt('Form'),
     view_type: "form",
     /**
-     * @constructs openerp.web.FormView
-     * @extends openerp.web.View
+     * @constructs instance.web.FormView
+     * @extends instance.web.View
      *
-     * @param {openerp.web.Session} session the current openerp session
-     * @param {openerp.web.DataSet} dataset the dataset this view will work with
+     * @param {instance.web.Session} session the current openerp session
+     * @param {instance.web.DataSet} dataset the dataset this view will work with
      * @param {String} view_id the identifier of the OpenERP view object
      * @param {Object} options
      *                  - sidebar : [true|false]
      *                  - resize_textareas : [true|false|max_height]
      *
-     * @property {openerp.web.Registry} registry=openerp.web.form.widgets widgets registry for this form view instance
+     * @property {instance.web.Registry} registry=instance.web.form.widgets widgets registry for this form view instance
      */
     init: function(parent, dataset, view_id, options) {
         this._super(parent);
@@ -41,8 +41,8 @@ openerp.web.FormView = openerp.web.View.extend({
         this.datarecord = {};
         this.default_focus_field = null;
         this.default_focus_button = null;
-        this.fields_registry = openerp.web.form.widgets;
-        this.tags_registry = openerp.web.form.tags;
+        this.fields_registry = instance.web.form.widgets;
+        this.tags_registry = instance.web.form.tags;
         this.has_been_loaded = $.Deferred();
         this.translatable_fields = [];
         _.defaults(this.options, {
@@ -54,7 +54,7 @@ openerp.web.FormView = openerp.web.View.extend({
         this.on_change_mutex = new $.Mutex();
         this.reload_mutex = new $.Mutex();
         this.mode = null;
-        this.rendering_engine = new openerp.web.form.FormRenderingEngineReadonly(this);
+        this.rendering_engine = new instance.web.form.FormRenderingEngineReadonly(this);
         this.qweb = null; // A QWeb instance will be created if the view is a QWeb template
     },
     destroy: function() {
@@ -110,7 +110,7 @@ openerp.web.FormView = openerp.web.View.extend({
         });
 
         if (!this.sidebar && this.options.sidebar) {
-            this.sidebar = new openerp.web.Sidebar(this);
+            this.sidebar = new instance.web.Sidebar(this);
             this.sidebar.appendTo(this.$sidebar);
             this.sidebar.add_toolbar(this.fields_view.toolbar);
             this.sidebar.add_items('other', [{
@@ -131,7 +131,7 @@ openerp.web.FormView = openerp.web.View.extend({
             var child = fvg.arch.children[i];
             if (child.tag === "templates") {
                 this.qweb = new QWeb2.Engine();
-                this.qweb.add_template(openerp.web.json_node_to_xml(child));
+                this.qweb.add_template(instance.web.json_node_to_xml(child));
                 if (!this.qweb.has_template('form')) {
                     throw new Error("No QWeb template found for form view");
                 }
@@ -144,7 +144,7 @@ openerp.web.FormView = openerp.web.View.extend({
     get_fvg_from_qweb: function(record) {
         var view = this.qweb.render('form', this.get_qweb_context(record));
         var fvg = _.clone(this.fields_view);
-        fvg.arch = openerp.web.xml_to_json(openerp.web.str_to_xml(view).firstChild);
+        fvg.arch = instance.web.xml_to_json(instance.web.str_to_xml(view).firstChild);
         return fvg;
     },
     get_qweb_context: function(record) {
@@ -153,11 +153,11 @@ openerp.web.FormView = openerp.web.View.extend({
         _.each(record, function(value, name) {
             var r = _.clone(self.fields_view.fields[name] || {});
             if ((r.type === 'date' || r.type === 'datetime') && value) {
-                r.raw_value = openerp.web.auto_str_to_date(value);
+                r.raw_value = instance.web.auto_str_to_date(value);
             } else {
                 r.raw_value = value;
             }
-            r.value = openerp.web.format_value(value, r);
+            r.value = instance.web.format_value(value, r);
             new_record[name] = r;
         });
         return {
@@ -337,7 +337,7 @@ openerp.web.FormView = openerp.web.View.extend({
             'None': function () {return null;},
             'context': function (i) {
                 context_index = i;
-                var ctx = new openerp.web.CompoundContext(self.dataset.get_context(), widget.build_context() ? widget.build_context() : {});
+                var ctx = new instance.web.CompoundContext(self.dataset.get_context(), widget.build_context() ? widget.build_context() : {});
                 return ctx;
             }
         };
@@ -483,7 +483,7 @@ openerp.web.FormView = openerp.web.View.extend({
             this.on_form_changed();
         }
         if (!_.isEmpty(result.warning)) {
-        	openerp.web.dialog($(QWeb.render("CrashManagerWarning", result.warning)), {
+        	instance.web.dialog($(QWeb.render("CrashManagerWarning", result.warning)), {
                 modal: true,
                 buttons: [
                     {text: _t("Ok"), click: function() { $(this).dialog("close"); }}
@@ -703,7 +703,7 @@ openerp.web.FormView = openerp.web.View.extend({
             if (this.sidebar) {
                 this.sidebar.do_attachement_update(this.dataset, this.datarecord.id);
             }
-            //openerp.log("The record has been created with id #" + this.datarecord.id);
+            //instance.log("The record has been created with id #" + this.datarecord.id);
             this.reload();
             return $.when(_.extend(r, {created: true})).then(success);
         }
@@ -729,7 +729,7 @@ openerp.web.FormView = openerp.web.View.extend({
     },
     get_widgets: function() {
         return _.filter(this.getChildren(), function(obj) {
-            return obj instanceof openerp.web.form.Widget;
+            return obj instanceof instance.web.form.Widget;
         });
     },
     get_fields_values: function(blacklist) {
@@ -767,7 +767,7 @@ openerp.web.FormView = openerp.web.View.extend({
             if (this.options.not_interactible_on_create)
                 return false;
         } else if (typeof(id) === "string") {
-            if(openerp.web.BufferedDataSet.virtual_id_regex.test(id))
+            if(instance.web.BufferedDataSet.virtual_id_regex.test(id))
                 return false;
         }
         return true;
@@ -819,7 +819,7 @@ openerp.web.FormView = openerp.web.View.extend({
             .filter(function (field) { return field.change_default; })
             .value();
 
-        var d = new openerp.web.Dialog(this, {
+        var d = new instance.web.Dialog(this, {
             title: _t("Set Default"),
             args: {
                 fields: fields,
@@ -836,7 +836,7 @@ openerp.web.FormView = openerp.web.View.extend({
                     }
                     var condition = d.$element.find('#formview_default_conditions').val(),
                         all_users = d.$element.find('#formview_default_all').is(':checked');
-                    new openerp.web.DataSet(self, 'ir.values').call(
+                    new instance.web.DataSet(self, 'ir.values').call(
                         'set_default', [
                             self.dataset.model,
                             field_to_set,
@@ -860,7 +860,7 @@ openerp.web.FormView = openerp.web.View.extend({
 /**
  * Interface to be implemented by rendering engines for the form view.
  */
-openerp.web.form.FormRenderingEngineInterface = {
+instance.web.form.FormRenderingEngineInterface = {
     set_fields_view: function(fields_view) {},
     set_fields_registry: function(fields_registry) {},
     render_to: function($element) {},
@@ -871,7 +871,7 @@ openerp.web.form.FormRenderingEngineInterface = {
  * 
  * It is necessary to set the view using set_view() before usage.
  */
-openerp.web.form.FormRenderingEngine = openerp.web.Class.extend({
+instance.web.form.FormRenderingEngine = instance.web.Class.extend({
     init: function(view) {
         this.view = view;
     },
@@ -890,7 +890,7 @@ openerp.web.form.FormRenderingEngine = openerp.web.Class.extend({
 
         // TODO: I know this will save the world and all the kitten for a moment,
         //       but one day, we will have to get rid of xml2json
-        var xml = openerp.web.json_node_to_xml(this.fvg.arch);
+        var xml = instance.web.json_node_to_xml(this.fvg.arch);
         this.$form = $('<div class="oe_form">' + xml + '</div>');
         if (this.fvg.arch.attrs && this.fvg.arch.attrs['layout'] !== 'manual') {
             this.$form.attr('layout', 'auto');
@@ -912,7 +912,7 @@ openerp.web.form.FormRenderingEngine = openerp.web.Class.extend({
             if (!obj) {
                 throw new Error("Widget type '"+ key + "' is not implemented");
             }
-            var w = new (obj)(self.view, openerp.web.xml_to_json($elem[0]));
+            var w = new (obj)(self.view, instance.web.xml_to_json($elem[0]));
             var $label = self.labels[$elem.attr("name")];
             if ($label) {
                 w.set_input_id($label.attr("for"));
@@ -924,7 +924,7 @@ openerp.web.form.FormRenderingEngine = openerp.web.Class.extend({
         _.each(this.tags_to_init, function($elem) {
             var tag_name = $elem[0].tagName.toLowerCase();
             var obj = self.tags_registry.get_object(tag_name);
-            var w = new (obj)(self.view, openerp.web.xml_to_json($elem[0]));
+            var w = new (obj)(self.view, instance.web.xml_to_json($elem[0]));
             w.replace($elem);
         })
         // TODO: return a deferred
@@ -1183,18 +1183,18 @@ openerp.web.form.FormRenderingEngine = openerp.web.Class.extend({
         var str_modifiers = $node.attr("modifiers") || "{}"
         var modifiers = JSON.parse(str_modifiers);
         if (modifiers.invisible !== undefined)
-            new openerp.web.form.InvisibilityChanger(this.view, this.view, modifiers.invisible, $new_element);
+            new instance.web.form.InvisibilityChanger(this.view, this.view, modifiers.invisible, $new_element);
         $new_element.addClass($node.attr("class") || "");
     },
 });
 
-openerp.web.form.FormRenderingEngineReadonly = openerp.web.form.FormRenderingEngine.extend({
+instance.web.form.FormRenderingEngineReadonly = instance.web.form.FormRenderingEngine.extend({
     alter_field: function(field) {
         field.set({"force_readonly": true});
     },
 });
 
-openerp.web.form.FormDialog = openerp.web.Dialog.extend({
+instance.web.form.FormDialog = instance.web.Dialog.extend({
     init: function(parent, options, view_id, dataset) {
         this._super(parent, options);
         this.dataset = dataset;
@@ -1203,7 +1203,7 @@ openerp.web.form.FormDialog = openerp.web.Dialog.extend({
     },
     start: function() {
         this._super();
-        this.form = new openerp.web.FormView(this, this.dataset, this.view_id, {
+        this.form = new instance.web.FormView(this, this.dataset, this.view_id, {
             sidebar: false,
             pager: false
         });
@@ -1225,7 +1225,7 @@ openerp.web.form.FormDialog = openerp.web.Dialog.extend({
     }
 });
 
-openerp.web.form.compute_domain = function(expr, fields) {
+instance.web.form.compute_domain = function(expr, fields) {
     var stack = [];
     for (var i = expr.length - 1; i >= 0; i--) {
         var ex = expr[i];
@@ -1301,13 +1301,13 @@ openerp.web.form.compute_domain = function(expr, fields) {
  *
  * Apply the result of the "invisible" domain to this.$element.
  */
-openerp.web.form.InvisibilityChangerMixin = {
+instance.web.form.InvisibilityChangerMixin = {
     init: function(field_manager, invisible_domain) {
         this._ic_field_manager = field_manager
         this._ic_invisible_modifier = invisible_domain;
         this._ic_field_manager.on("view_content_has_changed", this, function() {
             var result = this._ic_invisible_modifier === undefined ? false :
-                openerp.web.form.compute_domain(this._ic_invisible_modifier, this._ic_field_manager.fields);
+                instance.web.form.compute_domain(this._ic_invisible_modifier, this._ic_field_manager.fields);
             this.set({"invisible": result});
         });
         this.set({invisible: this._ic_invisible_modifier === true});
@@ -1325,20 +1325,20 @@ openerp.web.form.InvisibilityChangerMixin = {
     },
 };
 
-openerp.web.form.InvisibilityChanger = openerp.web.Class.extend(_.extend({}, openerp.web.GetterSetterMixin, openerp.web.form.InvisibilityChangerMixin, {
+instance.web.form.InvisibilityChanger = instance.web.Class.extend(_.extend({}, instance.web.GetterSetterMixin, instance.web.form.InvisibilityChangerMixin, {
     init: function(parent, field_manager, invisible_domain, $element) {
         this.setParent(parent);
-        openerp.web.GetterSetterMixin.init.call(this);
-        openerp.web.form.InvisibilityChangerMixin.init.call(this, field_manager, invisible_domain);
+        instance.web.GetterSetterMixin.init.call(this);
+        instance.web.form.InvisibilityChangerMixin.init.call(this, field_manager, invisible_domain);
         this.$element = $element;
         this.start();
     },
 }));
 
-openerp.web.form.Widget = openerp.web.Widget.extend(_.extend({}, openerp.web.form.InvisibilityChangerMixin, {
+instance.web.form.Widget = instance.web.Widget.extend(_.extend({}, instance.web.form.InvisibilityChangerMixin, {
     /**
-     * @constructs openerp.web.form.Widget
-     * @extends openerp.web.Widget
+     * @constructs instance.web.form.Widget
+     * @extends instance.web.Widget
      *
      * @param view
      * @param node
@@ -1348,7 +1348,7 @@ openerp.web.form.Widget = openerp.web.Widget.extend(_.extend({}, openerp.web.for
         this.view = view;
         this.node = node;
         this.modifiers = JSON.parse(this.node.attrs.modifiers || '{}');
-        openerp.web.form.InvisibilityChangerMixin.init.call(this, view, this.modifiers.invisible);
+        instance.web.form.InvisibilityChangerMixin.init.call(this, view, this.modifiers.invisible);
 
         this.view.on("view_content_has_changed", this, this.process_modifiers);
     },
@@ -1358,14 +1358,14 @@ openerp.web.form.Widget = openerp.web.Widget.extend(_.extend({}, openerp.web.for
     },
     start: function() {
         this._super();
-        openerp.web.form.InvisibilityChangerMixin.start.call(this);
+        instance.web.form.InvisibilityChangerMixin.start.call(this);
     },
     destroy: function() {
         $.fn.tipsy.clear();
         this._super.apply(this, arguments);
     },
     process_modifiers: function() {
-        var compute_domain = openerp.web.form.compute_domain;
+        var compute_domain = instance.web.form.compute_domain;
         var to_set = {};
         for (var a in this.modifiers) {
             if (!_.include(["invisible"], a)) {
@@ -1390,7 +1390,7 @@ openerp.web.form.Widget = openerp.web.Widget.extend(_.extend({}, openerp.web.for
                         template = 'WidgetLabel.tooltip';
                     }
                     return QWeb.render(template, {
-                        debug: openerp.connection.debug,
+                        debug: instance.connection.debug,
                         widget: widget
                 })},
                 gravity: $.fn.tipsy.autoBounds(50, 'nw'),
@@ -1417,7 +1417,7 @@ openerp.web.form.Widget = openerp.web.Widget.extend(_.extend({}, openerp.web.for
     },
     _build_eval_context: function(blacklist) {
         var a_dataset = this.view.dataset;
-        return new openerp.web.CompoundContext(a_dataset.get_context(), this._build_view_fields_values(blacklist));
+        return new instance.web.CompoundContext(a_dataset.get_context(), this._build_view_fields_values(blacklist));
     },
     /**
      * Builds a new context usable for operations related to fields by merging
@@ -1432,7 +1432,7 @@ openerp.web.form.Widget = openerp.web.Widget.extend(_.extend({}, openerp.web.for
         
         if (v_context.__ref || true) { //TODO: remove true
             var fields_values = this._build_eval_context(blacklist);
-            v_context = new openerp.web.CompoundContext(v_context).set_eval_context(fields_values);
+            v_context = new instance.web.CompoundContext(v_context).set_eval_context(fields_values);
         }
         return v_context;
     },
@@ -1443,13 +1443,13 @@ openerp.web.form.Widget = openerp.web.Widget.extend(_.extend({}, openerp.web.for
         var final_domain = n_domain !== null ? n_domain : f_domain;
         if (!(final_domain instanceof Array) || true) { //TODO: remove true
             var fields_values = this._build_eval_context();
-            final_domain = new openerp.web.CompoundDomain(final_domain).set_eval_context(fields_values);
+            final_domain = new instance.web.CompoundDomain(final_domain).set_eval_context(fields_values);
         }
         return final_domain;
     }
 }));
 
-openerp.web.form.WidgetButton = openerp.web.form.Widget.extend({
+instance.web.form.WidgetButton = instance.web.form.Widget.extend({
     template: 'WidgetButton',
     init: function(view, node) {
         this._super(view, node);
@@ -1463,7 +1463,7 @@ openerp.web.form.WidgetButton = openerp.web.form.Widget.extend({
     start: function() {
         this._super.apply(this, arguments);
         this.$element.click(this.on_click);
-        if (this.node.attrs.help || openerp.connection.debug) {
+        if (this.node.attrs.help || instance.connection.debug) {
             this.do_attach_tooltip();
         }
     },
@@ -1481,7 +1481,7 @@ openerp.web.form.WidgetButton = openerp.web.form.Widget.extend({
         var exec_action = function() {
             if (self.node.attrs.confirm) {
                 var def = $.Deferred();
-                var dialog = openerp.web.dialog($('<div/>').text(self.node.attrs.confirm), {
+                var dialog = instance.web.dialog($('<div/>').text(self.node.attrs.confirm), {
                     title: _t('Confirm'),
                     modal: true,
                     buttons: [
@@ -1515,7 +1515,7 @@ openerp.web.form.WidgetButton = openerp.web.form.Widget.extend({
 
         var context = this.node.attrs.context;
         if (context && context.__ref) {
-            context = new openerp.web.CompoundContext(context);
+            context = new instance.web.CompoundContext(context);
             context.set_eval_context(this._build_eval_context());
         }
 
@@ -1546,7 +1546,7 @@ openerp.web.form.WidgetButton = openerp.web.form.Widget.extend({
  *     - view_content_has_changed : when the values of the fields have changed. When
  *     this event is triggered all fields should reprocess their modifiers.
  */
-openerp.web.form.FieldManagerInterface = {
+instance.web.form.FieldManagerInterface = {
 
 };
 
@@ -1561,7 +1561,7 @@ openerp.web.form.FieldManagerInterface = {
  *     - ...
  * 
  */
-openerp.web.form.FieldInterface = {
+instance.web.form.FieldInterface = {
     /**
      * Constructor takes 2 arguments:
      * - field_manager: Implements FieldManagerInterface
@@ -1618,10 +1618,10 @@ openerp.web.form.FieldInterface = {
  *      the values of the "readonly" property and the "force_readonly" property on the field manager.
  * 
  */
-openerp.web.form.AbstractField = openerp.web.form.Widget.extend(/** @lends openerp.web.form.AbstractField# */{
+instance.web.form.AbstractField = instance.web.form.Widget.extend(/** @lends instance.web.form.AbstractField# */{
     /**
-     * @constructs openerp.web.form.AbstractField
-     * @extends openerp.web.form.Widget
+     * @constructs instance.web.form.AbstractField
+     * @extends instance.web.form.Widget
      *
      * @param field_manager
      * @param node
@@ -1651,7 +1651,7 @@ openerp.web.form.AbstractField = openerp.web.form.Widget.extend(/** @lends opene
             this.$element.addClass('oe_form_field_translatable');
             this.$element.find('.oe_field_translate').click(this.on_translate);
         }
-        if (this.node.attrs.nolabel && openerp.connection.debug) {
+        if (this.node.attrs.nolabel && instance.connection.debug) {
             this.do_attach_tooltip(this, this.$label || this.$element);
         }
         if (!this.disable_utility_classes) {
@@ -1737,7 +1737,7 @@ openerp.web.form.AbstractField = openerp.web.form.Widget.extend(/** @lends opene
  * A mixin to apply on any field that has to completely re-render when its readonly state
  * switch.
  */
-openerp.web.form.ReinitializeFieldMixin =  {
+instance.web.form.ReinitializeFieldMixin =  {
     /**
      * Default implementation of start(), use it or call explicitly initialize_field().
      */
@@ -1770,7 +1770,7 @@ openerp.web.form.ReinitializeFieldMixin =  {
     render_value: function() {},
 };
 
-openerp.web.form.FieldChar = openerp.web.form.AbstractField.extend(_.extend({}, openerp.web.form.ReinitializeFieldMixin, {
+instance.web.form.FieldChar = instance.web.form.AbstractField.extend(_.extend({}, instance.web.form.ReinitializeFieldMixin, {
     template: 'FieldChar',
     init: function (view, node) {
         this._super(view, node);
@@ -1784,7 +1784,7 @@ openerp.web.form.FieldChar = openerp.web.form.AbstractField.extend(_.extend({}, 
         this.render_value();
     },
     render_value: function() {
-        var show_value = openerp.web.format_value(this.value, this, '');
+        var show_value = instance.web.format_value(this.value, this, '');
         if (!this.get("effective_readonly")) {
             this.$element.find('input').val(show_value);
         } else {
@@ -1795,14 +1795,14 @@ openerp.web.form.FieldChar = openerp.web.form.AbstractField.extend(_.extend({}, 
         }
     },
     set_value_from_ui: function() {
-        this.value = openerp.web.parse_value(this.$element.find('input').val(), this);
+        this.value = instance.web.parse_value(this.$element.find('input').val(), this);
         this._super();
     },
     validate: function() {
         this.invalid = false;
         if (!this.get("effective_readonly")) {
             try {
-                var value = openerp.web.parse_value(this.$element.find('input').val(), this, '');
+                var value = instance.web.parse_value(this.$element.find('input').val(), this, '');
                 this.invalid = this.get("required") && value === '';
             } catch(e) {
                 this.invalid = true;
@@ -1814,11 +1814,11 @@ openerp.web.form.FieldChar = openerp.web.form.AbstractField.extend(_.extend({}, 
     }
 }));
 
-openerp.web.form.FieldID = openerp.web.form.FieldChar.extend({
+instance.web.form.FieldID = instance.web.form.FieldChar.extend({
     
 });
 
-openerp.web.form.FieldEmail = openerp.web.form.FieldChar.extend({
+instance.web.form.FieldEmail = instance.web.form.FieldChar.extend({
     template: 'FieldEmail',
     initialize_content: function() {
         this._super();
@@ -1842,7 +1842,7 @@ openerp.web.form.FieldEmail = openerp.web.form.FieldChar.extend({
     }
 });
 
-openerp.web.form.FieldUrl = openerp.web.form.FieldChar.extend({
+instance.web.form.FieldUrl = instance.web.form.FieldChar.extend({
     template: 'FieldUrl',
     initialize_content: function() {
         this._super();
@@ -1872,7 +1872,7 @@ openerp.web.form.FieldUrl = openerp.web.form.FieldChar.extend({
     }
 });
 
-openerp.web.form.FieldFloat = openerp.web.form.FieldChar.extend({
+instance.web.form.FieldFloat = instance.web.form.FieldChar.extend({
     is_field_number: true,
     init: function (view, node) {
         this._super(view, node);
@@ -1892,7 +1892,7 @@ openerp.web.form.FieldFloat = openerp.web.form.FieldChar.extend({
     }
 });
 
-openerp.web.DateTimeWidget = openerp.web.OldWidget.extend({
+instance.web.DateTimeWidget = instance.web.OldWidget.extend({
     template: "web.datetimepicker",
     jqueryui_object: 'datetimepicker',
     type_of_date: "datetime",
@@ -1914,7 +1914,7 @@ openerp.web.DateTimeWidget = openerp.web.OldWidget.extend({
         });
         this.$element.find('img.oe_datepicker_trigger').click(function() {
             if (!self.get("effective_readonly") && !self.picker('widget').is(':visible')) {
-                self.picker('setDate', self.value ? openerp.web.auto_str_to_date(self.value) : new Date());
+                self.picker('setDate', self.value ? instance.web.auto_str_to_date(self.value) : new Date());
                 self.$input_picker.show();
                 self.picker('show');
                 self.$input_picker.hide();
@@ -1960,10 +1960,10 @@ openerp.web.DateTimeWidget = openerp.web.OldWidget.extend({
         }
     },
     parse_client: function(v) {
-        return openerp.web.parse_value(v, {"widget": this.type_of_date});
+        return instance.web.parse_value(v, {"widget": this.type_of_date});
     },
     format_client: function(v) {
-        return openerp.web.format_value(v, {"widget": this.type_of_date});
+        return instance.web.format_value(v, {"widget": this.type_of_date});
     },
     on_change: function() {
         if (this.is_valid()) {
@@ -1972,15 +1972,15 @@ openerp.web.DateTimeWidget = openerp.web.OldWidget.extend({
     }
 });
 
-openerp.web.DateWidget = openerp.web.DateTimeWidget.extend({
+instance.web.DateWidget = instance.web.DateTimeWidget.extend({
     jqueryui_object: 'datepicker',
     type_of_date: "date"
 });
 
-openerp.web.form.FieldDatetime = openerp.web.form.AbstractField.extend(_.extend({}, openerp.web.form.ReinitializeFieldMixin, {
+instance.web.form.FieldDatetime = instance.web.form.AbstractField.extend(_.extend({}, instance.web.form.ReinitializeFieldMixin, {
     template: "EmptyComponent",
     build_widget: function() {
-        return new openerp.web.DateTimeWidget(this);
+        return new instance.web.DateTimeWidget(this);
     },
     destroy_content: function() {
         if (this.datewidget) {
@@ -2003,7 +2003,7 @@ openerp.web.form.FieldDatetime = openerp.web.form.AbstractField.extend(_.extend(
         if (!this.get("effective_readonly")) {
             this.datewidget.set_value(this.value);
         } else {
-            this.$element.text(openerp.web.format_value(this.value, this, ''));
+            this.$element.text(instance.web.format_value(this.value, this, ''));
         }
     },
     get_value: function() {
@@ -2024,13 +2024,13 @@ openerp.web.form.FieldDatetime = openerp.web.form.AbstractField.extend(_.extend(
     }
 }));
 
-openerp.web.form.FieldDate = openerp.web.form.FieldDatetime.extend({
+instance.web.form.FieldDate = instance.web.form.FieldDatetime.extend({
     build_widget: function() {
-        return new openerp.web.DateWidget(this);
+        return new instance.web.DateWidget(this);
     }
 });
 
-openerp.web.form.FieldText = openerp.web.form.AbstractField.extend(_.extend({}, openerp.web.form.ReinitializeFieldMixin, {
+instance.web.form.FieldText = instance.web.form.AbstractField.extend(_.extend({}, instance.web.form.ReinitializeFieldMixin, {
     template: 'FieldText',
     initialize_content: function() {
         this.$textarea = undefined;
@@ -2044,7 +2044,7 @@ openerp.web.form.FieldText = openerp.web.form.AbstractField.extend(_.extend({}, 
         this.render_value();
     },
     render_value: function() {
-        var show_value = openerp.web.format_value(this.value, this, '');
+        var show_value = instance.web.format_value(this.value, this, '');
         if (!this.get("effective_readonly")) {
             this.$textarea.val(show_value);
             if (!this.resized && this.view.options.resize_textareas) {
@@ -2056,14 +2056,14 @@ openerp.web.form.FieldText = openerp.web.form.AbstractField.extend(_.extend({}, 
         }
     },
     set_value_from_ui: function() {
-        this.value = openerp.web.parse_value(this.$textarea.val(), this);
+        this.value = instance.web.parse_value(this.$textarea.val(), this);
         this._super();
     },
     validate: function() {
         this.invalid = false;
         if (!this.get("effective_readonly")) {
             try {
-                var value = openerp.web.parse_value(this.$textarea.val(), this, '');
+                var value = instance.web.parse_value(this.$textarea.val(), this, '');
                 this.invalid = this.get("required") && value === '';
             } catch(e) {
                 this.invalid = true;
@@ -2098,7 +2098,7 @@ openerp.web.form.FieldText = openerp.web.form.AbstractField.extend(_.extend({}, 
     }
 }));
 
-openerp.web.form.FieldBoolean = openerp.web.form.AbstractField.extend({
+instance.web.form.FieldBoolean = instance.web.form.AbstractField.extend({
     template: 'FieldBoolean',
     start: function() {
         this._super.apply(this, arguments);
@@ -2123,7 +2123,7 @@ openerp.web.form.FieldBoolean = openerp.web.form.AbstractField.extend({
     }
 });
 
-openerp.web.form.FieldProgressBar = openerp.web.form.AbstractField.extend({
+instance.web.form.FieldProgressBar = instance.web.form.AbstractField.extend({
     template: 'FieldProgressBar',
     start: function() {
         this._super.apply(this, arguments);
@@ -2138,16 +2138,16 @@ openerp.web.form.FieldProgressBar = openerp.web.form.AbstractField.extend({
         if (isNaN(show_value)) {
             show_value = 0;
         }
-        var formatted_value = openerp.web.format_value(show_value, { type : 'float' }, '0');
+        var formatted_value = instance.web.format_value(show_value, { type : 'float' }, '0');
         this.$element.progressbar('option', 'value', show_value).find('span').html(formatted_value + '%');
     }
 });
 
-openerp.web.form.FieldTextXml = openerp.web.form.AbstractField.extend({
+instance.web.form.FieldTextXml = instance.web.form.AbstractField.extend({
 // to replace view editor
 });
 
-openerp.web.form.FieldSelection = openerp.web.form.AbstractField.extend(_.extend({}, openerp.web.form.ReinitializeFieldMixin, {
+instance.web.form.FieldSelection = instance.web.form.AbstractField.extend(_.extend({}, instance.web.form.ReinitializeFieldMixin, {
     template: 'FieldSelection',
     init: function(view, node) {
         var self = this;
@@ -2252,17 +2252,17 @@ openerp.web.form.FieldSelection = openerp.web.form.AbstractField.extend(_.extend
     });
 })();
 
-openerp.web.form.dialog = function(content, options) {
+instance.web.form.dialog = function(content, options) {
     options = _.extend({
         width: '90%',
         height: 'auto',
         min_width: '800px'
     }, options || {});
-    var dialog = new openerp.web.Dialog(null, options, content).open();
+    var dialog = new instance.web.Dialog(null, options, content).open();
     return dialog.$element;
 };
 
-openerp.web.form.FieldMany2One = openerp.web.form.AbstractField.extend(_.extend({}, openerp.web.form.ReinitializeFieldMixin, {
+instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(_.extend({}, instance.web.form.ReinitializeFieldMixin, {
     template: "FieldMany2One",
     init: function(view, node) {
         this._super(view, node);
@@ -2275,7 +2275,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.AbstractField.extend(_.extend(
     },
     start: function() {
         this._super();
-        openerp.web.form.ReinitializeFieldMixin.start.call(this);
+        instance.web.form.ReinitializeFieldMixin.start.call(this);
         this.on("change:value", this, function() {
             this.floating = false;
             this.render_value();
@@ -2308,7 +2308,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.AbstractField.extend(_.extend(
             if (!self.get('value')) {
                 return;
             }
-            var pop = new openerp.web.form.FormOpenPopup(self.view);
+            var pop = new instance.web.form.FormOpenPopup(self.view);
             pop.show_element(
                 self.field.relation,
                 self.get("value"),
@@ -2427,7 +2427,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.AbstractField.extend(_.extend(
             this.abort_last();
             delete this.abort_last;
         }
-        var dataset = new openerp.web.DataSetStatic(this, this.field.relation, self.build_context());
+        var dataset = new instance.web.DataSetStatic(this, this.field.relation, self.build_context());
 
         dataset.name_search(search_val, self.build_domain(), 'ilike',
                 this.limit + 1, function(data) {
@@ -2477,7 +2477,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.AbstractField.extend(_.extend(
             self._search_create_popup("form", undefined, {"default_name": name});
         };
         if (self.get_definition_options().quick_create === undefined || self.get_definition_options().quick_create) {
-            var dataset = new openerp.web.DataSetStatic(this, this.field.relation, self.build_context());
+            var dataset = new instance.web.DataSetStatic(this, this.field.relation, self.build_context());
             dataset.name_create(name, function(data) {
                 self.display_value = {};
                 self.display_value["" + data[0]] = data[1];
@@ -2492,7 +2492,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.AbstractField.extend(_.extend(
     // all search/create popup handling
     _search_create_popup: function(view, ids, context) {
         var self = this;
-        var pop = new openerp.web.form.SelectCreatePopup(this);
+        var pop = new instance.web.form.SelectCreatePopup(this);
         pop.select_element(
             self.field.relation,
             {
@@ -2502,7 +2502,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.AbstractField.extend(_.extend(
                 disable_multiple_selection: true
             },
             self.build_domain(),
-            new openerp.web.CompoundContext(self.build_context(), context || {})
+            new instance.web.CompoundContext(self.build_context(), context || {})
         );
         pop.on_select_elements.add(function(element_ids) {
             self.set({value: element_ids[0]});
@@ -2520,7 +2520,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.AbstractField.extend(_.extend(
             return;
         }
         if (! no_recurse) {
-            var dataset = new openerp.web.DataSetStatic(this, this.field.relation, self.view.dataset.get_context());
+            var dataset = new instance.web.DataSetStatic(this, this.field.relation, self.view.dataset.get_context());
             dataset.name_get([self.get("value")], function(data) {
                 self.display_value["" + self.get("value")] = data[0][1];
                 self.render_value(true);
@@ -2617,7 +2617,7 @@ var commands = {
         return [6, false, ids];
     }
 };
-openerp.web.form.FieldOne2Many = openerp.web.form.AbstractField.extend({
+instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
     multi_selection: false,
     disable_utility_classes: true,
     init: function(view, node) {
@@ -2634,7 +2634,7 @@ openerp.web.form.FieldOne2Many = openerp.web.form.AbstractField.extend({
 
         var self = this;
 
-        this.dataset = new openerp.web.form.One2ManyDataSet(this, this.field.relation);
+        this.dataset = new instance.web.form.One2ManyDataSet(this, this.field.relation);
         this.dataset.o2m = this;
         this.dataset.parent_view = this.view;
         this.dataset.child_name = this.name;
@@ -2695,12 +2695,12 @@ openerp.web.form.FieldOne2Many = openerp.web.form.AbstractField.extend({
         });
         this.views = views;
 
-        this.viewmanager = new openerp.web.ViewManager(this, this.dataset, views, {});
+        this.viewmanager = new instance.web.ViewManager(this, this.dataset, views, {});
         this.viewmanager.template = 'One2Many.viewmanager';
-        this.viewmanager.registry = openerp.web.views.extend({
-            list: 'openerp.web.form.One2ManyListView',
-            form: 'openerp.web.form.One2ManyFormView',
-            kanban: 'openerp.web.form.One2ManyKanbanView',
+        this.viewmanager.registry = instance.web.views.extend({
+            list: 'instance.web.form.One2ManyListView',
+            form: 'instance.web.form.One2ManyFormView',
+            kanban: 'instance.web.form.One2ManyKanbanView',
         });
         var once = $.Deferred().then(function() {
             self.init_form_last_update.resolve();
@@ -2894,21 +2894,21 @@ openerp.web.form.FieldOne2Many = openerp.web.form.AbstractField.extend({
     }
 });
 
-openerp.web.form.One2ManyDataSet = openerp.web.BufferedDataSet.extend({
+instance.web.form.One2ManyDataSet = instance.web.BufferedDataSet.extend({
     get_context: function() {
         this.context = this.o2m.build_context([this.o2m.name]);
         return this.context;
     }
 });
 
-openerp.web.form.One2ManyListView = openerp.web.ListView.extend({
+instance.web.form.One2ManyListView = instance.web.ListView.extend({
     _template: 'One2Many.listview',
     do_add_record: function () {
         if (this.options.editable) {
             this._super.apply(this, arguments);
         } else {
             var self = this;
-            var pop = new openerp.web.form.SelectCreatePopup(this);
+            var pop = new instance.web.form.SelectCreatePopup(this);
             pop.on_default_get.add(self.dataset.on_default_get);
             pop.select_element(
                 self.o2m.field.relation,
@@ -2939,7 +2939,7 @@ openerp.web.form.One2ManyListView = openerp.web.ListView.extend({
     },
     do_activate_record: function(index, id) {
         var self = this;
-        var pop = new openerp.web.form.FormOpenPopup(self.o2m.view);
+        var pop = new instance.web.form.FormOpenPopup(self.o2m.view);
         pop.show_element(self.o2m.field.relation, id, self.o2m.build_context(), {
             title: _t("Open: ") + self.name,
             auto_write: false,
@@ -2965,7 +2965,7 @@ openerp.web.form.One2ManyListView = openerp.web.ListView.extend({
     }
 });
 
-openerp.web.form.One2ManyFormView = openerp.web.FormView.extend({
+instance.web.form.One2ManyFormView = instance.web.FormView.extend({
     form_template: 'One2Many.formview',
     on_loaded: function(data) {
         this._super(data);
@@ -2984,12 +2984,12 @@ openerp.web.form.One2ManyFormView = openerp.web.FormView.extend({
 });
 
 var lazy_build_o2m_kanban_view = function() {
-if (! openerp.web_kanban || openerp.web.form.One2ManyKanbanView)
+if (! instance.web_kanban || instance.web.form.One2ManyKanbanView)
     return;
-openerp.web.form.One2ManyKanbanView = openerp.web_kanban.KanbanView.extend({
+instance.web.form.One2ManyKanbanView = instance.web_kanban.KanbanView.extend({
     open_record: function(id) {
         var self = this;
-        var pop = new openerp.web.form.FormOpenPopup(self.o2m.view);
+        var pop = new instance.web.form.FormOpenPopup(self.o2m.view);
         pop.show_element(self.o2m.field.relation, id, self.o2m.build_context(), {
             title: _t("Open: ") + self.name,
             auto_write: false,
@@ -3015,7 +3015,7 @@ openerp.web.form.One2ManyKanbanView = openerp.web_kanban.KanbanView.extend({
 /*
  * TODO niv: clean those deferred stuff, it could be better
  */
-openerp.web.form.FieldMany2Many = openerp.web.form.AbstractField.extend({
+instance.web.form.FieldMany2Many = instance.web.form.AbstractField.extend({
     multi_selection: false,
     disable_utility_classes: true,
     init: function(view, node) {
@@ -3029,7 +3029,7 @@ openerp.web.form.FieldMany2Many = openerp.web.form.AbstractField.extend({
 
         var self = this;
 
-        this.dataset = new openerp.web.form.Many2ManyDataSet(this, this.field.relation);
+        this.dataset = new instance.web.form.Many2ManyDataSet(this, this.field.relation);
         this.dataset.m2m = this;
         this.dataset.on_unlink.add_last(function(ids) {
             self.on_ui_change();
@@ -3068,7 +3068,7 @@ openerp.web.form.FieldMany2Many = openerp.web.form.AbstractField.extend({
     },
     load_view: function() {
         var self = this;
-        this.list_view = new openerp.web.form.Many2ManyListView(this, this.dataset, false, {
+        this.list_view = new instance.web.form.Many2ManyListView(this, this.dataset, false, {
                     'addable': self.get("effective_readonly") ? null : _t("Add"),
                     'deletable': self.get("effective_readonly") ? false : true,
                     'selectable': self.multi_selection,
@@ -3097,7 +3097,7 @@ openerp.web.form.FieldMany2Many = openerp.web.form.AbstractField.extend({
     },
 });
 
-openerp.web.form.Many2ManyDataSet = openerp.web.DataSetStatic.extend({
+instance.web.form.Many2ManyDataSet = instance.web.DataSetStatic.extend({
     get_context: function() {
         this.context = this.m2m.build_context();
         return this.context;
@@ -3106,17 +3106,17 @@ openerp.web.form.Many2ManyDataSet = openerp.web.DataSetStatic.extend({
 
 /**
  * @class
- * @extends openerp.web.ListView
+ * @extends instance.web.ListView
  */
-openerp.web.form.Many2ManyListView = openerp.web.ListView.extend(/** @lends openerp.web.form.Many2ManyListView# */{
+instance.web.form.Many2ManyListView = instance.web.ListView.extend(/** @lends instance.web.form.Many2ManyListView# */{
     do_add_record: function () {
-        var pop = new openerp.web.form.SelectCreatePopup(this);
+        var pop = new instance.web.form.SelectCreatePopup(this);
         pop.select_element(
             this.model,
             {
                 title: _t("Add: ") + this.name
             },
-            new openerp.web.CompoundDomain(this.m2m_field.build_domain(), ["!", ["id", "in", this.m2m_field.dataset.ids]]),
+            new instance.web.CompoundDomain(this.m2m_field.build_domain(), ["!", ["id", "in", this.m2m_field.dataset.ids]]),
             this.m2m_field.build_context()
         );
         var self = this;
@@ -3132,7 +3132,7 @@ openerp.web.form.Many2ManyListView = openerp.web.ListView.extend(/** @lends open
     },
     do_activate_record: function(index, id) {
         var self = this;
-        var pop = new openerp.web.form.FormOpenPopup(this);
+        var pop = new instance.web.form.FormOpenPopup(this);
         pop.show_element(this.dataset.model, id, this.m2m_field.build_context(), {
             title: _t("Open: ") + this.name,
             readonly: this.getParent().get("effective_readonly")
@@ -3145,9 +3145,9 @@ openerp.web.form.Many2ManyListView = openerp.web.ListView.extend(/** @lends open
 
 /**
  * @class
- * @extends openerp.web.OldWidget
+ * @extends instance.web.OldWidget
  */
-openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends openerp.web.form.SelectCreatePopup# */{
+instance.web.form.SelectCreatePopup = instance.web.OldWidget.extend(/** @lends instance.web.form.SelectCreatePopup# */{
     template: "SelectCreatePopup",
     /**
      * options:
@@ -3173,7 +3173,7 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
         this.initial_ids = this.options.initial_ids;
         this.created_elements = [];
         this.renderElement();
-        openerp.web.form.dialog(this.$element, {
+        instance.web.form.dialog(this.$element, {
             close: function() {
                 self.check_exit();
             },
@@ -3184,7 +3184,7 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
     start: function() {
         this._super();
         var self = this;
-        this.dataset = new openerp.web.ProxyDataSet(this, this.model,
+        this.dataset = new instance.web.ProxyDataSet(this, this.model,
             this.context);
         this.dataset.create_function = function() {
             return self.options.create_function.apply(null, arguments).then(function(r) {
@@ -3225,7 +3225,7 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
         if (this.searchview) {
             this.searchview.destroy();
         }
-        this.searchview = new openerp.web.SearchView(this,
+        this.searchview = new instance.web.SearchView(this,
                 this.dataset, false,  search_defaults);
         this.searchview.on_search.add(function(domains, contexts, groupbys) {
             if (self.initial_ids) {
@@ -3237,7 +3237,7 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
             }
         });
         this.searchview.on_loaded.add_last(function () {
-            self.view_list = new openerp.web.form.SelectCreateListView(self,
+            self.view_list = new instance.web.form.SelectCreateListView(self,
                     self.dataset, false,
                     _.extend({'deletable': false,
                         'selectable': !self.options.disable_multiple_selection
@@ -3279,14 +3279,14 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
     },
     create_row: function() {
         var self = this;
-        var wdataset = new openerp.web.DataSetSearch(this, this.model, this.context, this.domain);
+        var wdataset = new instance.web.DataSetSearch(this, this.model, this.context, this.domain);
         wdataset.parent_view = this.options.parent_view;
         wdataset.child_name = this.options.child_name;
         return wdataset.create.apply(wdataset, arguments);
     },
     write_row: function() {
         var self = this;
-        var wdataset = new openerp.web.DataSetSearch(this, this.model, this.context, this.domain);
+        var wdataset = new instance.web.DataSetSearch(this, this.model, this.context, this.domain);
         wdataset.parent_view = this.options.parent_view;
         wdataset.child_name = this.options.child_name;
         return wdataset.write.apply(wdataset, arguments);
@@ -3310,7 +3310,7 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
             this.view_list.$element.hide();
         }
         this.dataset.index = null;
-        this.view_form = new openerp.web.FormView(this, this.dataset, false, self.options.form_view_options);
+        this.view_form = new instance.web.FormView(this, this.dataset, false, self.options.form_view_options);
         if (this.options.alternative_form_view) {
             this.view_form.set_embedded_view(this.options.alternative_form_view);
         }
@@ -3350,7 +3350,7 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
     on_default_get: function(res) {}
 });
 
-openerp.web.form.SelectCreateListView = openerp.web.ListView.extend({
+instance.web.form.SelectCreateListView = instance.web.ListView.extend({
     do_add_record: function () {
         this.popup.new_object();
     },
@@ -3366,9 +3366,9 @@ openerp.web.form.SelectCreateListView = openerp.web.ListView.extend({
 
 /**
  * @class
- * @extends openerp.web.OldWidget
+ * @extends instance.web.OldWidget
  */
-openerp.web.form.FormOpenPopup = openerp.web.OldWidget.extend(/** @lends openerp.web.form.FormOpenPopup# */{
+instance.web.form.FormOpenPopup = instance.web.OldWidget.extend(/** @lends instance.web.form.FormOpenPopup# */{
     template: "FormOpenPopup",
     /**
      * options:
@@ -3386,7 +3386,7 @@ openerp.web.form.FormOpenPopup = openerp.web.OldWidget.extend(/** @lends openerp
         this.context = context || {};
         this.options = _.defaults(options || {}, {"auto_write": true});
         this.renderElement();
-        openerp.web.dialog(this.$element, {
+        instance.web.dialog(this.$element, {
             title: options.title || '',
             modal: true,
             width: 960,
@@ -3396,7 +3396,7 @@ openerp.web.form.FormOpenPopup = openerp.web.OldWidget.extend(/** @lends openerp
     },
     start: function() {
         this._super();
-        this.dataset = new openerp.web.form.FormOpenDataset(this, this.model, this.context);
+        this.dataset = new instance.web.form.FormOpenDataset(this, this.model, this.context);
         this.dataset.fop = this;
         this.dataset.ids = [this.row_id];
         this.dataset.index = 0;
@@ -3408,7 +3408,7 @@ openerp.web.form.FormOpenPopup = openerp.web.OldWidget.extend(/** @lends openerp
         if (!this.options.auto_write)
             return;
         var self = this;
-        var wdataset = new openerp.web.DataSetSearch(this, this.model, this.context, this.domain);
+        var wdataset = new instance.web.DataSetSearch(this, this.model, this.context, this.domain);
         wdataset.parent_view = this.options.parent_view;
         wdataset.child_name = this.options.child_name;
         wdataset.write(id, data, {}, function(r) {
@@ -3418,7 +3418,7 @@ openerp.web.form.FormOpenPopup = openerp.web.OldWidget.extend(/** @lends openerp
     on_write_completed: function() {},
     setup_form_view: function() {
         var self = this;
-        var FormClass = openerp.web.views.get_object('form');
+        var FormClass = instance.web.views.get_object('form');
         var options = _.clone(self.options.form_view_options);
         options.initial_mode = this.options.readonly ? "view" : "edit";
         this.view_form = new FormClass(this, this.dataset, false, options);
@@ -3449,7 +3449,7 @@ openerp.web.form.FormOpenPopup = openerp.web.OldWidget.extend(/** @lends openerp
     }
 });
 
-openerp.web.form.FormOpenDataset = openerp.web.ProxyDataSet.extend({
+instance.web.form.FormOpenDataset = instance.web.ProxyDataSet.extend({
     read_ids: function() {
         if (this.fop.options.read_function) {
             return this.fop.options.read_function.apply(null, arguments);
@@ -3459,7 +3459,7 @@ openerp.web.form.FormOpenDataset = openerp.web.ProxyDataSet.extend({
     }
 });
 
-openerp.web.form.FieldReference = openerp.web.form.AbstractField.extend(_.extend({}, openerp.web.form.ReinitializeFieldMixin, {
+instance.web.form.FieldReference = instance.web.form.AbstractField.extend(_.extend({}, instance.web.form.ReinitializeFieldMixin, {
     template: 'FieldReference',
     init: function(view, node) {
         this._super(view, node);
@@ -3503,7 +3503,7 @@ openerp.web.form.FieldReference = openerp.web.form.AbstractField.extend(_.extend
         }
     },
     initialize_content: function() {
-        this.selection = new openerp.web.form.FieldSelection(this, { attrs: {
+        this.selection = new instance.web.form.FieldSelection(this, { attrs: {
             name: 'selection',
             widget: 'selection'
         }});
@@ -3513,7 +3513,7 @@ openerp.web.form.FieldReference = openerp.web.form.AbstractField.extend(_.extend
         this.selection.renderElement();
         this.selection.start();
 
-        this.m2o = new openerp.web.form.FieldMany2One(this, { attrs: {
+        this.m2o = new instance.web.form.FieldMany2One(this, { attrs: {
             name: 'm2o',
             widget: 'many2one'
         }});
@@ -3560,7 +3560,7 @@ openerp.web.form.FieldReference = openerp.web.form.AbstractField.extend(_.extend
     }
 }));
 
-openerp.web.form.FieldBinary = openerp.web.form.AbstractField.extend(_.extend({}, openerp.web.form.ReinitializeFieldMixin, {
+instance.web.form.FieldBinary = instance.web.form.AbstractField.extend(_.extend({}, instance.web.form.ReinitializeFieldMixin, {
     init: function(view, node) {
         this._super(view, node);
         this.iframe = this.element_id + '_iframe';
@@ -3619,7 +3619,7 @@ openerp.web.form.FieldBinary = openerp.web.form.AbstractField.extend(_.extend({}
                 context: this.view.dataset.get_context()
             })},
             complete: $.unblockUI,
-            error: openerp.webclient.crashmanager.on_rpc_error
+            error: instance.webclient.crashmanager.on_rpc_error
         });
     },
     on_clear: function() {
@@ -3632,7 +3632,7 @@ openerp.web.form.FieldBinary = openerp.web.form.AbstractField.extend(_.extend({}
     }
 }));
 
-openerp.web.form.FieldBinaryFile = openerp.web.form.FieldBinary.extend({
+instance.web.form.FieldBinaryFile = instance.web.form.FieldBinary.extend({
     template: 'FieldBinaryFile',
     initialize_content: function() {
         this._super();
@@ -3688,7 +3688,7 @@ openerp.web.form.FieldBinaryFile = openerp.web.form.FieldBinary.extend({
     }
 });
 
-openerp.web.form.FieldBinaryImage = openerp.web.form.FieldBinary.extend({
+instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
     template: 'FieldBinaryImage',
     initialize_content: function() {
         this._super();
@@ -3730,7 +3730,7 @@ openerp.web.form.FieldBinaryImage = openerp.web.form.FieldBinary.extend({
     }
 });
 
-openerp.web.form.FieldStatus = openerp.web.form.AbstractField.extend({
+instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
     template: "EmptyComponent",
     start: function() {
         this._super();
@@ -3758,7 +3758,7 @@ openerp.web.form.FieldStatus = openerp.web.form.AbstractField.extend({
             });
         }
 
-        var content = openerp.web.qweb.render("FieldStatus.content", {widget: this, _:_});
+        var content = instance.web.qweb.render("FieldStatus.content", {widget: this, _:_});
         this.$element.html(content);
 
         var colors = JSON.parse((this.node.attrs || {}).statusbar_colors || "{}");
@@ -3796,34 +3796,34 @@ openerp.web.form.FieldStatus = openerp.web.form.AbstractField.extend({
 });
 
 /**
- * Registry of form widgets, called by :js:`openerp.web.FormView`
+ * Registry of form widgets, called by :js:`instance.web.FormView`
  */
-openerp.web.form.widgets = new openerp.web.Registry({
-    'char' : 'openerp.web.form.FieldChar',
-    'id' : 'openerp.web.form.FieldID',
-    'email' : 'openerp.web.form.FieldEmail',
-    'url' : 'openerp.web.form.FieldUrl',
-    'text' : 'openerp.web.form.FieldText',
-    'date' : 'openerp.web.form.FieldDate',
-    'datetime' : 'openerp.web.form.FieldDatetime',
-    'selection' : 'openerp.web.form.FieldSelection',
-    'many2one' : 'openerp.web.form.FieldMany2One',
-    'many2many' : 'openerp.web.form.FieldMany2Many',
-    'one2many' : 'openerp.web.form.FieldOne2Many',
-    'one2many_list' : 'openerp.web.form.FieldOne2Many',
-    'reference' : 'openerp.web.form.FieldReference',
-    'boolean' : 'openerp.web.form.FieldBoolean',
-    'float' : 'openerp.web.form.FieldFloat',
-    'integer': 'openerp.web.form.FieldFloat',
-    'float_time': 'openerp.web.form.FieldFloat',
-    'progressbar': 'openerp.web.form.FieldProgressBar',
-    'image': 'openerp.web.form.FieldBinaryImage',
-    'binary': 'openerp.web.form.FieldBinaryFile',
-    'statusbar': 'openerp.web.form.FieldStatus'
+instance.web.form.widgets = new instance.web.Registry({
+    'char' : 'instance.web.form.FieldChar',
+    'id' : 'instance.web.form.FieldID',
+    'email' : 'instance.web.form.FieldEmail',
+    'url' : 'instance.web.form.FieldUrl',
+    'text' : 'instance.web.form.FieldText',
+    'date' : 'instance.web.form.FieldDate',
+    'datetime' : 'instance.web.form.FieldDatetime',
+    'selection' : 'instance.web.form.FieldSelection',
+    'many2one' : 'instance.web.form.FieldMany2One',
+    'many2many' : 'instance.web.form.FieldMany2Many',
+    'one2many' : 'instance.web.form.FieldOne2Many',
+    'one2many_list' : 'instance.web.form.FieldOne2Many',
+    'reference' : 'instance.web.form.FieldReference',
+    'boolean' : 'instance.web.form.FieldBoolean',
+    'float' : 'instance.web.form.FieldFloat',
+    'integer': 'instance.web.form.FieldFloat',
+    'float_time': 'instance.web.form.FieldFloat',
+    'progressbar': 'instance.web.form.FieldProgressBar',
+    'image': 'instance.web.form.FieldBinaryImage',
+    'binary': 'instance.web.form.FieldBinaryFile',
+    'statusbar': 'instance.web.form.FieldStatus'
 });
 
-openerp.web.form.tags = new openerp.web.Registry({
-    'button' : 'openerp.web.form.WidgetButton',
+instance.web.form.tags = new instance.web.Registry({
+    'button' : 'instance.web.form.WidgetButton',
 });
 
 };
