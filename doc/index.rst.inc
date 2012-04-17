@@ -5,7 +5,8 @@ OpenERP Server Documentation
 .. toctree::
    :maxdepth: 1
 
-   test-framework
+   01_getting_started
+   99_test_framework
 
 Main revisions and new features
 ++++++++++++++++++++++++++++++++
