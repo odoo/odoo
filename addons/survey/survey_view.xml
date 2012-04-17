@@ -279,13 +279,52 @@
                </search>
             </field>
         </record>
+        
+        <record model="ir.ui.view" id="view_survey_kanban">
+            <field name="name">event.survey.kanban</field>
+            <field name="model">survey</field>
+            <field name="type">kanban</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="title"/>
+                    <field name="date_open"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                          <div class="oe_module_survey">
+                            <a class="oe_module_icon">
+                               <div class="oe_survey_title"><t t-esc="record.title.raw_value.toString()"/></div><br/>
+                               <div class="oe_survey_responsible">
+                                   <t t-if="record.responsible_id.raw_value">By: <field name="responsible_id"/></t>
+                               </div><br/>
+                               <div class="oe_survey_start_date">
+                                   <t t-if="record.date_open.raw_value">Open From:
+                                       <t t-esc="record.date_open.raw_value.getDate()"/>
+                                       <t t-esc="record.date_open.raw_value.toString('MMM')"/>, 
+                                       <t t-esc="record.date_open.raw_value.getFullYear()"/>
+                                   </t>
+                               </div><br/>
+                               <div class="oe_survey_rate">
+                                   Rate:
+                               </div>
+                               <div class="oe_survey_fill">
+                                   <button type="object" name="fill_survey" class="">
+                                       <span>Fill</span>
+                                   </button>
+                               </div>
+                            </a>
+                          </div>  
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
 
         <record model="ir.actions.act_window" id="action_survey_form1">
             <field name="name">Surveys</field>
             <field name="res_model">survey</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="survey_tree"></field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_id" ref="view_survey_kanban"></field>
             <field name="search_view_id" ref="survey_search"/>
             <field name="help">You can create survey for different purposes: recruitment interviews, employee's periodical evaluations, marketing campaigns, etc. A survey is made of pages containing questions of several types: text, multiple choices, etc. You can edit survey manually or click on the 'Edit Survey' for a WYSIWYG interface.</field>
         </record>
