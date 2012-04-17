@@ -202,13 +202,36 @@ class account_cash_statement(osv.osv):
         'ending_details_ids': fields.one2many('account.cashbox.line', 'ending_id', string='Closing Cashbox'),
         'user_id': fields.many2one('res.users', 'Responsible', required=False),
     }
+    
     _defaults = {
         'state': 'draft',
         'date': lambda self,cr,uid,context={}: context.get('date', time.strftime("%Y-%m-%d %H:%M:%S")),
         'user_id': lambda self, cr, uid, context=None: uid,
         'starting_details_ids': _get_cash_open_box_lines,
         'ending_details_ids': _get_default_cash_close_box_lines
-     }
+    }
+
+    def check_opening_journal(self, cr, uid, ids, context=None):
+        """
+        This constraint will check than the journal is not used twice in the system, 
+        to avoid a concurrency opening of this journal.
+        """
+        for cash in self.browse(cr, uid, ids, context=None):
+            domain = [
+                ('id', '!=', cash.id),
+                ('journal_id', '=', cash.journal_id.id),
+                ('journal_id.type', '=', 'cash'),
+                ('state', 'in', ('open',)),
+            ]
+            count = self.search_count(cr, uid, domain, context=context)
+
+            if count:
+                return False
+        return True
+
+    _constraints = [
+        (check_opening_journal, "The selected journal has been opened !", ['journal_id']),
+    ]
 
     def create(self, cr, uid, vals, context=None):
         if self.pool.get('account.journal').browse(cr, uid, vals['journal_id'], context=context).type == 'cash':
@@ -245,13 +268,16 @@ class account_cash_statement(osv.osv):
         @param journal_id: Changed journal_id
         @return:  Dictionary of changed values
         """
-        res = {}
         balance_start = 0.0
-        if not journal_id:
-            res.update({
+        if journal_id:
+            count = self.search_count(cr, uid, [('journal_id', '=', journal_id),('state', '=', 'open')], context=None)
+            if count:
+                journal = self.pool.get('account.journal').browse(cr, uid, journal_id, context=context)
+                raise osv.except_osv(_('Error !'), (_('The Account Journal %s is opened by an other Cash Register !') % (journal.name,)))
+        else:
+            return {
                 'balance_start': balance_start
-            })
-            return res
+            }
         return super(account_cash_statement, self).onchange_journal_id(cr, uid, statement_id, journal_id, context=context)
 
     def _equal_balance(self, cr, uid, cash_id, context=None):
