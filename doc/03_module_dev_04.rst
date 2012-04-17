@@ -1,77 +1,103 @@
-================
-Menu and Actions 
-================
+=================
+Menus and Actions 
+=================
 
 Menus
 =====
 
-Here's the template of a menu item :
-::
+Menus are records in the ``ir.ui.menu`` table. In order to create a new
+menu entry, you can directly create a record using the ``record`` tag.
 
-	<menuitem id="menuitem_id" 
-		  name="Position/Of/The/Menu/Item/In/The/Tree" 
-		  action="action_id" 
-		  icon="NAME_FROM_LIST" 
-		  groups="groupname" 
-		  sequence="<integer>"/>
+.. code-block:: xml
+
+        <record id="menu_xml_id" model="ir.ui.menu">
+          <field name="name">My Menu</field>
+          <field name="action" ref="action_xml_id"/>
+          <field name="sequence" eval="<integer>"/>
+          <field name="parent_id" ref="parent_menu_xml_id"/>
+        </record>
+
+There is a shortcut by using the ``menuitem`` tag that **you should use
+preferentially**. It offers a flexible way to easily define the menu entry
+along with icons and other fields.
+
+.. code-block:: xml
+
+    <menuitem id="menu_xml_id" 
+        name="My Menu" 
+        action="action_xml_id" 
+        icon="NAME_FROM_LIST" 
+        web_icon="static/src/img/icon.png"
+        web_icon_hover="static/src/img/icon-hover.png" 
+        groups="groupname" 
+        sequence="<integer>"
+	parent="parent_menu_xml_id"
+    />
 
 Where
 
-    * id specifies the identifier of the menu item in the menu items table. This identifier must be unique. Mandatory field.
-    * name defines the position of the menu item in the menu hierarchy. Elements are separated by slashes ("/"). A menu item name with no slash in its text is a top level menu. Mandatory field.
-    * action specifies the identifier of the action that must have been defined in the action table (ir.actions.act_window). Note that this field is not mandatory : you can define menu elements without associating actions to them. This is useful when defining custom icons for menu elements that will act as folders (for example this is how custom icons for "Projects", "Human Resources" in OpenERP are defined).
-    * icon specifies which icon will be displayed for the menu item using the menu item. The default icon is STOCK_OPEN.
-          - The available icons are : STOCK_ABOUT, STOCK_ADD, STOCK_APPLY, STOCK_BOLD, STOCK_CANCEL, STOCK_CDROM, STOCK_CLEAR, STOCK_CLOSE, STOCK_COLOR_PICKER, STOCK_CONNECT, STOCK_CONVERT, STOCK_COPY, STOCK_CUT, STOCK_DELETE, STOCK_DIALOG_AUTHENTICATION, STOCK_DIALOG_ERROR, STOCK_DIALOG_INFO, STOCK_DIALOG_QUESTION, STOCK_DIALOG_WARNING, STOCK_DIRECTORY, STOCK_DISCONNECT, STOCK_DND, STOCK_DND_MULTIPLE, STOCK_EDIT, STOCK_EXECUTE, STOCK_FILE, STOCK_FIND, STOCK_FIND_AND_REPLACE, STOCK_FLOPPY, STOCK_GOTO_BOTTOM, STOCK_GOTO_FIRST, STOCK_GOTO_LAST, STOCK_GOTO_TOP, STOCK_GO_BACK, STOCK_GO_DOWN, STOCK_GO_FORWARD, STOCK_GO_UP, STOCK_HARDDISK, STOCK_HELP, STOCK_HOME, STOCK_INDENT, STOCK_INDEX, STOCK_ITALIC, STOCK_JUMP_TO, STOCK_JUSTIFY_CENTER, STOCK_JUSTIFY_FILL, STOCK_JUSTIFY_LEFT, STOCK_JUSTIFY_RIGHT, STOCK_MEDIA_FORWARD, STOCK_MEDIA_NEXT, STOCK_MEDIA_PAUSE, STOCK_MEDIA_PLAY, STOCK_MEDIA_PREVIOUS, STOCK_MEDIA_RECORD, STOCK_MEDIA_REWIND, STOCK_MEDIA_STOP, STOCK_MISSING_IMAGE, STOCK_NETWORK, STOCK_NEW, STOCK_NO, STOCK_OK, STOCK_OPEN, STOCK_PASTE, STOCK_PREFERENCES, STOCK_PRINT, STOCK_PRINT_PREVIEW, STOCK_PROPERTIES, STOCK_QUIT,STOCK_REDO, STOCK_REFRESH, STOCK_REMOVE, STOCK_REVERT_TO_SAVED, STOCK_SAVE, STOCK_SAVE_AS, STOCK_SELECT_COLOR, STOCK_SELECT_FONT, STOCK_SORT_ASCENDING, STOCK_SORT_DESCENDING, STOCK_SPELL_CHECK, STOCK_STOP, STOCK_STRIKETHROUGH, STOCK_UNDELETE, STOCK_UNDERLINE, STOCK_UNDO, STOCK_UNINDENT, STOCK_YES, STOCK_ZOOM_100, STOCK_ZOOM_FIT, STOCK_ZOOM_IN, STOCK_ZOOM_OUT, terp-account, terp-crm, terp-mrp, terp-product, terp-purchase, terp-sale, terp-tools, terp-administration, terp-hr, terp-partner, terp-project, terp-report, terp-stock 
-    * **groups** specifies which group of user can see the menu item (example : groups="admin"). See section " Management of Access Rights" for more information. Multiple groups should be separated by a ',' (example: groups="admin,user")
-    * **sequence** is an integer that is used to sort the menu item in the menu. The higher the sequence number, the downer the menu item. This argument is not mandatory: if sequence is not specified, the menu item gets a default sequence number of 10. Menu items with the same sequence numbers are sorted by order of creation (*_order =* "*sequence,id*"). 
+ - ``id`` specifies the **xml identifier** of the menu item in the menu
+   items table. This identifier must be unique. Mandatory field.
+ - ``name`` defines the menu name that will be displayed in the client.
+   Mandatory field.
+ - ``action`` specifies the identifier of the attached action defined
+   in the action table (``ir.actions.act_window``). This field is not
+   mandatory : you can define menu elements without associating actions
+   to them. This is useful when defining custom icons for menu elements
+   that will act as folders. This is how custom icons for "Projects" or
+   "Human Resources" in OpenERP are defined).
+ - ``icon`` specifies which icon will be displayed for the menu item
+   using the menu item. The default icon is STOCK_OPEN.
 
-Example
--------
+    - The available icons are : STOCK_ABOUT, STOCK_ADD, STOCK_APPLY, STOCK_BOLD, STOCK_CANCEL, STOCK_CDROM, STOCK_CLEAR, STOCK_CLOSE, STOCK_COLOR_PICKER, STOCK_CONNECT,   STOCK_CONVERT, STOCK_COPY, STOCK_CUT, STOCK_DELETE, STOCK_DIALOG_AUTHENTICATION, STOCK_DIALOG_ERROR, STOCK_DIALOG_INFO, STOCK_DIALOG_QUESTION, STOCK_DIALOG_WARNING, STOCK_DIRECTORY, STOCK_DISCONNECT, STOCK_DND, STOCK_DND_MULTIPLE, STOCK_EDIT, STOCK_EXECUTE, STOCK_FILE, STOCK_FIND, STOCK_FIND_AND_REPLACE, STOCK_FLOPPY, STOCK_GOTO_BOTTOM, STOCK_GOTO_FIRST, STOCK_GOTO_LAST, STOCK_GOTO_TOP, STOCK_GO_BACK, STOCK_GO_DOWN, STOCK_GO_FORWARD, STOCK_GO_UP, STOCK_HARDDISK, STOCK_HELP, STOCK_HOME, STOCK_INDENT, STOCK_INDEX, STOCK_ITALIC, STOCK_JUMP_TO, STOCK_JUSTIFY_CENTER, STOCK_JUSTIFY_FILL, STOCK_JUSTIFY_LEFT, STOCK_JUSTIFY_RIGHT, STOCK_MEDIA_FORWARD, STOCK_MEDIA_NEXT, STOCK_MEDIA_PAUSE, STOCK_MEDIA_PLAY, STOCK_MEDIA_PREVIOUS, STOCK_MEDIA_RECORD, STOCK_MEDIA_REWIND, STOCK_MEDIA_STOP, STOCK_MISSING_IMAGE, STOCK_NETWORK, STOCK_NEW, STOCK_NO, STOCK_OK, STOCK_OPEN, STOCK_PASTE, STOCK_PREFERENCES, STOCK_PRINT, STOCK_PRINT_PREVIEW, STOCK_PROPERTIES, STOCK_QUIT,STOCK_REDO, STOCK_REFRESH, STOCK_REMOVE, STOCK_REVERT_TO_SAVED, STOCK_SAVE, STOCK_SAVE_AS, STOCK_SELECT_COLOR, STOCK_SELECT_FONT, STOCK_SORT_ASCENDING, STOCK_SORT_DESCENDING, STOCK_SPELL_CHECK, STOCK_STOP, STOCK_STRIKETHROUGH, STOCK_UNDELETE, STOCK_UNDERLINE, STOCK_UNDO, STOCK_UNINDENT, STOCK_YES, STOCK_ZOOM_100, STOCK_ZOOM_FIT, STOCK_ZOOM_IN, STOCK_ZOOM_OUT, terp-account, terp-crm, terp-mrp, terp-product, terp-purchase, terp-sale, terp-tools, terp-administration, terp-hr, terp-partner, terp-project, terp-report, terp-stock
 
-In server/bin/addons/sale/sale_view.xml, we have, for example
-::
+ - ``groups`` specifies which group of user can see the menu item.
+   (example : groups="admin"). See section " Management of Access Rights"
+   for more information. Multiple groups should be separated by a ','
+   (example: groups="admin,user")
+ - ``sequence`` is an integer that is used to sort the menu item in the
+   menu. The higher the sequence number, the downer the menu item. This
+   argument is not mandatory: if sequence is not specified, the menu item
+   gets a default sequence number of 10. Menu items with the same sequence
+   numbers are sorted by order of creation (``_order = "*sequence,id*"``).
 
-	<menuitem name="Sales Management/Sales Order/Sales Order in Progress" id="menu_action_order_tree4" action="action_order_tree4"/>
+The main current limitation of using ``menuitem`` is that the menu action must be an
+``act_window`` action. This kind of actions is the most used action in OpenERP.
+However for some menus you will use other actions. For example, the Feeds
+page that comes with the mail module is a client action. For this kind of
+menu entry, you can combine both declaration, as defined in the mail module :
 
-To change the icon of menu item :
-::
+.. code-block:: xml
 
-	* Highlight the menu with the icon you want to change.
-	* Select the "Switch to list/form" option from the "Form" menu. This will take you to the Menu editor.
-	* From here you can change the icon of the selected menu.
-
+        <!-- toplevel menu -->
+        <menuitem id="mail_feeds_main" name="Feeds" sequence="0"
+            web_icon="static/src/img/feeds.png"
+            web_icon_hover="static/src/img/feeds-hover.png" />
+        <record id="mail_feeds_main" model="ir.ui.menu">
+            <field name="action" ref="action_mail_all_feeds"/>
+        </record>
 
 Actions
 =======
 
-Introduction
-------------
-
-The actions define the behavior of the system in response to the actions of the users ; login of a new user, double-click on an invoice, click on the action button, ...
+The actions define the behavior of the system in response to the actions
+of the users ; login of a new user, double-click on an invoice, click on the action button, ...
 
 There are different types of simple actions:
 
-    * Window: Opening of a new window
-    * Report: The printing of a report
+    * **Window**: Opening of a new window
+    * **Report**: The printing of a report
           o Custom Report: The personalized reports
           o RML Report: The XSL:RML reports
-    * Wizard: The beginning of a Wizard
-    * Execute: The execution of a method on the server side
-    * Group: Gather some actions in one group
+    * **Wizard**: The beginning of a Wizard
+    * **Execute**: The execution of a method on the server side
+    * **Group**: Gather some actions in one group
 
-The actions are used for the following events;
+The actions are used for the following events:
 
     * User connection,
-    * The user double-clicks on the menu,
+    * The user clicks on a menu,
     * The user clicks on the icon 'print' or 'action'.
-
-Example of events
------------------
-
-In OpenERP, all the actions are described and not configured. Two examples:
-
-    * Opening of a window when double-clicking in the menu
-    * User connection
 
 Opening of the menu
 +++++++++++++++++++
@@ -290,76 +316,3 @@ A report is declared using a **report tag** inside a "data" block. The different
     * **rml** : the .RML report model. Important Note : Path is relative to addons/ directory.
     * **menu** : whether the report will be able to be called directly via the client or not. Setting menu to False is useful in case of reports called by wizards.
     * **auto** : determines if the .RML file must be parsed using the default parser or not. Using a custom parser allows you to define additional functions to your report.
-
-
-Security
-========
-
-Three concepts are differentiated into OpenERP;
-
-   1. The users: person identified by his login/password
-   2. The groups: define the access rights of the resources
-   3. The roles: determine the roles/duties of the users 
-
-.. figure::  images/module_base_user.png
-   :scale: 120
-   :align: center
-
-
-**The users**
-
-They represent physical persons. These are identified with a login and a password. A user may belong to several groups and may have several roles.
-
-A user must have an action set up. This action is executed when the user connects to the program with his login and password. An example of action would be to open the menu at 'Operations'.
-
-The preferences of the user are available with the preference icon. You can, for example, through these preferences, determine the working language of this user. English is set by default.
-
-A user can modify his own preferences while he is working with OpenERP. To do that, he clicks on this menu: User > Preferences. The OpenERP administrator can also modify some preferences of each and every user.
-
-**The groups**
-
-The groups determine the access rights to the different resources. There are three types of right:
-
-    * The writing access: recording & creation,
-    * The reading access: reading of a file,
-    * The execution access: the buttons of workflows or wizards. 
-
-A user can belong to several groups. If he belongs to several groups, we always use the group with the highest rights for a selected resource.
-
-**The roles**
-
-The roles define a hierarchical structure in tree. They represent the different jobs/roles inside the company. The biggest role has automatically the rights of all the inferior roles.
-
-**Example:**
-
-CEO
-
-  + Technical manager
-
-    - Chief of projects
-
-      - Developers
-      - Testers
-
-  + Commercial manager
-
-      - Salesmen
-      - ...
-
-If we want to validate the test of a program (=role Testers), it may be done by a user having one of the following roles: Testers, Chief of the project, Technical manager, CEO.
-
-The roles are used for the transition of Workflow actions into confirmation, choice or validation actions. Their implications will be detailed in the Workflow section. 
-
-
-Menu Access
------------
-
-It's easy (but risky) to grant grained access to menu based on the user's groups.
-
-First of all, you should know that if a menu is not granted to any group then it is accessible to everybody ! If you want to grant access to some groups just go to **Menu > Administration > Security > Define access to Menu-items** and select the groups that can use this menu item.
-
-.. figure::  images/grant_access.png
-   :scale: 85
-   :align: center
-
-Beware ! If the Administrator does not belong to one of the group, he will not be able to reach this menu again. 
