@@ -112,7 +112,9 @@ instance.web.FormView = instance.web.View.extend({
         if (!this.sidebar && this.options.sidebar) {
             this.sidebar = new instance.web.Sidebar(this);
             this.sidebar.appendTo(this.$sidebar);
-            this.sidebar.add_toolbar(this.fields_view.toolbar);
+            if(this.fields_view.toolbar) {
+                this.sidebar.add_toolbar(this.fields_view.toolbar);
+            }
             this.sidebar.add_items('other', [{
                 label: _t('Set Default'),
                 form: this,
