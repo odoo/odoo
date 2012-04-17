@@ -1,17 +1,17 @@
 
-OpenERP Server
-''''''''''''''
+OpenERP Server Documentation
+'''''''''''''''''''''''''''''
 
 .. toctree::
    :maxdepth: 1
 
    test-framework
 
-New feature merges
-++++++++++++++++++
+Main revisions and new features
+++++++++++++++++++++++++++++++++
 
 .. toctree::
    :maxdepth: 1
 
-   api/user_img_specs
-   api/need_action_specs
+   revisions/user_img_specs
+   revisions/need_action_specs
