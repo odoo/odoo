@@ -483,7 +483,7 @@
             <field name="arch" type="xml">
                <search string="Tasks">
                     <group>
-                        <filter name="draft" string="New" domain="[('state','=','draft')]" help="New Tasks" icon="terp-check""/>
+                        <filter name="draft" string="New" domain="[('state','=','draft')]" help="New Tasks" icon="terp-check"/>
                         <filter name="open" string="In Progress" domain="[('state','=','open')]" help="In Progress Tasks" icon="terp-camera_test"/>
                         <filter string="Pending" domain="[('state','=','pending')]" context="{'show_delegated':False}" help="Pending Tasks" icon="terp-gtk-media-pause"/>
                         <separator orientation="vertical"/>

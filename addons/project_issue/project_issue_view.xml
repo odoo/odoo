@@ -156,9 +156,9 @@
             <field name="arch" type="xml">
                 <search string="Issue Tracker Search">
                     <group>
-                        <filter string="New" icon="terp-document-new" name="draft" domain="[('state','=','draft')]" help="New Issues" groups="base.group_no_one"/>
-                        <filter string="To Do" name="todo" domain="[('state','=','open')]" help="To Do Issues" icon="terp-check" groups="base.group_no_one"/>
-                        <filter string="Pending" domain="[('state','=','pending')]"  help="Pending Issues" icon="terp-gtk-media-pause" groups="base.group_no_one"/>
+                        <filter string="New" icon="terp-document-new" name="draft" domain="[('state','=','draft')]" help="New Issues"/>
+                        <filter string="To Do" name="todo" domain="[('state','=','open')]" help="To Do Issues" icon="terp-check"/>
+                        <filter string="Pending" domain="[('state','=','pending')]"  help="Pending Issues" icon="terp-gtk-media-pause"/>
                         <separator orientation="vertical"/>
                         <field name="name" string="Issue / Partner" filter_domain="['|', '|', ('partner_id','ilike',self), ('email_from','ilike',self), ('name','ilike',self)]"/>
                         <field name="user_id">
@@ -186,7 +186,7 @@
                         <filter string="Stage" icon="terp-stage" domain="[]"
                             context="{'group_by':'type_id'}" />
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]"
-                            context="{'group_by':'state'}" groups="base.group_no_one"/>
+                            context="{'group_by':'state'}"/>
                         <separator orientation="vertical" />
                         <filter string="Month" icon="terp-go-month"
                             domain="[]" context="{'group_by':'create_date'}" help="Creation Month"/>
@@ -323,7 +323,7 @@
                     <group>
                         <field name="name" string="Feature description"/>
                         <field name="user_id"/>
-                        <field name="state" groups="base.group_no_one">
+                        <field name="state">
                         <filter icon="terp-check" domain="[('state','in',('open','draft'))]" help="Current Features" name="current_feature"/>
                         <filter icon="terp-camera_test" domain="[('state','=','open')]" help="Open Features"/>
                         </field>
