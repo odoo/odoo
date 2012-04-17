@@ -2,36 +2,36 @@
  * OpenERP Web Mobile chrome
  *---------------------------------------------------------*/
 
-openerp.web_mobile.chrome_mobile = function(openerp) {
+openerp.web_mobile.chrome_mobile = function(instance) {
 
-openerp.web_mobile.mobilewebclient = function(element_id) {
-    // TODO Helper to start mobile webclient rename it openerp.web.webclient
-    var client = new openerp.web_mobile.MobileWebClient(element_id);
+instance.web_mobile.mobilewebclient = function(element_id) {
+    // TODO Helper to start mobile webclient rename it instance.web.webclient
+    var client = new instance.web_mobile.MobileWebClient(element_id);
     client.start();
     return client;
 };
 
-openerp.web_mobile.MobileWebClient = openerp.web.OldWidget.extend({
+instance.web_mobile.MobileWebClient = instance.web.OldWidget.extend({
 
     template: "WebClient",
 
     init: function(element_id) {
         this._super(null, element_id);
-        this.crashmanager =  new openerp.web.CrashManager(this);
-        this.login = new openerp.web_mobile.Login(this, "oe_login");
+        this.crashmanager =  new instance.web.CrashManager(this);
+        this.login = new instance.web_mobile.Login(this, "oe_login");
     },
     start: function() {
         this._super.apply(this, arguments);
         var self = this;
         this.session.bind_session().then(function() {
-            openerp.web.qweb.add_template("xml/web_mobile.xml");
+            instance.web.qweb.add_template("xml/web_mobile.xml");
             self.$element.html(self.render());
             self.login.start();
         });
     }
 });
 
-openerp.web_mobile.Login =  openerp.web.OldWidget.extend({
+instance.web_mobile.Login =  instance.web.OldWidget.extend({
 
     template: "Login",
 
@@ -103,7 +103,7 @@ openerp.web_mobile.Login =  openerp.web.OldWidget.extend({
             .addClass("login_valid");
             //.hide();
         if(!$('#oe_menu').html().length){
-            this.menu = new openerp.web_mobile.Menu(this, "oe_menu", "oe_secondary_menu");
+            this.menu = new instance.web_mobile.Menu(this, "oe_menu", "oe_secondary_menu");
             this.menu.start();
         }else{
             $.mobile.changePage("#oe_menu", "slide", false, true);
@@ -119,7 +119,7 @@ openerp.web_mobile.Login =  openerp.web.OldWidget.extend({
     }
 });
 
-openerp.web_mobile.Header =  openerp.web.OldWidget.extend({
+instance.web_mobile.Header =  instance.web.OldWidget.extend({
 
     template: "Header",
 
@@ -131,7 +131,7 @@ openerp.web_mobile.Header =  openerp.web.OldWidget.extend({
     }
 });
 
-openerp.web_mobile.Footer =  openerp.web.OldWidget.extend({
+instance.web_mobile.Footer =  instance.web.OldWidget.extend({
 
     template: "Footer",
 
@@ -143,7 +143,7 @@ openerp.web_mobile.Footer =  openerp.web.OldWidget.extend({
     }
 });
 
-openerp.web_mobile.Shortcuts =  openerp.web.OldWidget.extend({
+instance.web_mobile.Shortcuts =  instance.web.OldWidget.extend({
 
     template: "Shortcuts",
 
@@ -171,7 +171,7 @@ openerp.web_mobile.Shortcuts =  openerp.web.OldWidget.extend({
         res_id = $shortcut.data('res');
         if(!$('[id^="oe_list_'+res_id+'"]').html()){
             $('<div id="oe_list_'+res_id+'" data-role="page" data-url="oe_list_'+res_id+'"> </div>').appendTo('#moe');
-            this.listview = new openerp.web_mobile.ListView(self, "oe_list_"+res_id, res_id);
+            this.listview = new instance.web_mobile.ListView(self, "oe_list_"+res_id, res_id);
             this.listview.start();
         }else{
             $.mobile.changePage('#oe_list_'+res_id, "slide", false, true);
@@ -182,7 +182,7 @@ openerp.web_mobile.Shortcuts =  openerp.web.OldWidget.extend({
     }
 });
 
-openerp.web_mobile.Menu =  openerp.web.OldWidget.extend({
+instance.web_mobile.Menu =  instance.web.OldWidget.extend({
 
     template: "Menu",
 
@@ -199,16 +199,16 @@ openerp.web_mobile.Menu =  openerp.web.OldWidget.extend({
     on_loaded: function(data) {
         var self = this;
         this.data = data;
-        this.header = new openerp.web_mobile.Header(this, "oe_header");
+        this.header = new instance.web_mobile.Header(this, "oe_header");
         this.header.start();
-        this.footer = new openerp.web_mobile.Footer(this, "oe_footer");
+        this.footer = new instance.web_mobile.Footer(this, "oe_footer");
         this.footer.start();
         this.$element.html(this.render(this.data));
         this.$element.find("[data-role=header]").find('h1').html('Applications');
         this.$element.find("[data-role=header]").find('#home').hide();
         this.$element.find("[data-role=footer]").find('#shrotcuts').click(function(){
             if(!$('#oe_shortcuts').html().length){
-                this.shortcuts = new openerp.web_mobile.Shortcuts(self, "oe_shortcuts");
+                this.shortcuts = new instance.web_mobile.Shortcuts(self, "oe_shortcuts");
                 this.shortcuts.start();
             }else{
                 $.mobile.changePage($("#oe_shortcuts"), "slide", false, true);
@@ -216,7 +216,7 @@ openerp.web_mobile.Menu =  openerp.web.OldWidget.extend({
         });
         this.$element.find("[data-role=footer]").find('#preference').click(function(){
             if(!$('#oe_options').html().length){
-                this.options = new openerp.web_mobile.Options(self, "oe_options");
+                this.options = new instance.web_mobile.Options(self, "oe_options");
                 this.options.start();
             }else{
                 $.mobile.changePage("#oe_options", "slide", false, true);
@@ -240,7 +240,7 @@ openerp.web_mobile.Menu =  openerp.web.OldWidget.extend({
             .addClass("secondary_menu");
         if(!$('[id^="oe_sec_menu_'+id+'"]').html()){
             $('<div id="oe_sec_menu_'+id+'" data-role="page" data-url="oe_sec_menu_'+id+'"> </div>').appendTo('#moe');
-            this.secondary = new openerp.web_mobile.Secondary(this, "oe_sec_menu_"+id, this.children);
+            this.secondary = new instance.web_mobile.Secondary(this, "oe_sec_menu_"+id, this.children);
             this.secondary.start();
         }else{
             $.mobile.changePage('#oe_sec_menu_'+id, "slide", false, true);
@@ -248,7 +248,7 @@ openerp.web_mobile.Menu =  openerp.web.OldWidget.extend({
     }
 });
 
-openerp.web_mobile.Secondary =  openerp.web.OldWidget.extend({
+instance.web_mobile.Secondary =  instance.web.OldWidget.extend({
 
     template: "Menu.secondary",
 
@@ -287,7 +287,7 @@ openerp.web_mobile.Secondary =  openerp.web.OldWidget.extend({
             .addClass("secondary_menu");
             if(!$('[id^="oe_sec_menu_'+id+'"]').html()){
                 $('<div id="oe_sec_menu_'+id+'" data-role="page" data-url="oe_sec_menu_'+id+'"> </div>').appendTo('#moe');
-                this.secondary = new openerp.web_mobile.Secondary(this, "oe_sec_menu_"+id, this.children);
+                this.secondary = new instance.web_mobile.Secondary(this, "oe_sec_menu_"+id, this.children);
                 this.secondary.start();
             }else{
                 $.mobile.changePage('#oe_sec_menu_'+id, "slide", false, true);
@@ -295,7 +295,7 @@ openerp.web_mobile.Secondary =  openerp.web.OldWidget.extend({
         }else {
             if(!$('[id^="oe_list_'+id+'"]').html()){
                 $('<div id="oe_list_'+id+'" data-role="page" data-url="oe_list_'+id+'"> </div>').appendTo('#moe');
-                this.listview = new openerp.web_mobile.ListView(this, "oe_list_"+id, id);
+                this.listview = new instance.web_mobile.ListView(this, "oe_list_"+id, id);
                 this.listview.start();
             }else{
                 $.mobile.changePage('#oe_list_'+id, "slide", false, true);
@@ -305,7 +305,7 @@ openerp.web_mobile.Secondary =  openerp.web.OldWidget.extend({
     }
 });
 
-openerp.web_mobile.Options =  openerp.web.OldWidget.extend({
+instance.web_mobile.Options =  instance.web.OldWidget.extend({
 
     template: "Options",
 

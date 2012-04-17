@@ -1,13 +1,13 @@
 /*---------------------------------------------------------
  * OpenERP web_gantt
  *---------------------------------------------------------*/
-openerp.web_gantt = function (openerp) {
-var _t = openerp.web._t,
-   _lt = openerp.web._lt;
-var QWeb = openerp.web.qweb;
-openerp.web.views.add('gantt', 'openerp.web_gantt.GanttView');
+openerp.web_gantt = function (instance) {
+var _t = instance.web._t,
+   _lt = instance.web._lt;
+var QWeb = instance.web.qweb;
+instance.web.views.add('gantt', 'instance.web_gantt.GanttView');
 
-openerp.web_gantt.GanttView = openerp.web.View.extend({
+instance.web_gantt.GanttView = instance.web.View.extend({
     display_name: _lt('Gantt'),
     template: "GanttView",
     view_type: "gantt",
@@ -122,7 +122,7 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
                     return memo === undefined || date > memo ? date : memo;
                 }, undefined);
                 var duration = (task_stop.getTime() - task_start.getTime()) / (1000 * 60 * 60);
-                var group_name = openerp.web.format_value(task.name, self.fields[group_bys[level]]);
+                var group_name = instance.web.format_value(task.name, self.fields[group_bys[level]]);
                 if (level == 0) {
                     var group = new GanttProjectInfo(_.uniqueId("gantt_project_"), group_name, task_start);
                     _.each(task_infos, function(el) {
@@ -138,16 +138,16 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
                 }
             } else {
                 var task_name = task.__name;
-                var task_start = openerp.web.auto_str_to_date(task[self.fields_view.arch.attrs.date_start]);
+                var task_start = instance.web.auto_str_to_date(task[self.fields_view.arch.attrs.date_start]);
                 if (!task_start)
                     return;
                 var task_stop;
                 if (self.fields_view.arch.attrs.date_stop) {
-                    task_stop = openerp.web.auto_str_to_date(task[self.fields_view.arch.attrs.date_stop]);
+                    task_stop = instance.web.auto_str_to_date(task[self.fields_view.arch.attrs.date_stop]);
                     if (!task_stop)
                         return;
                 } else { // we assume date_duration is defined
-                    var tmp = openerp.web.format_value(task[self.fields_view.arch.attrs.date_delay],
+                    var tmp = instance.web.format_value(task[self.fields_view.arch.attrs.date_delay],
                         self.fields[self.fields_view.arch.attrs.date_delay]);
                     if (!tmp)
                         return;
@@ -197,10 +197,10 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
         var end = start.clone().addMilliseconds(duration * 60 * 60 * 1000);
         var data = {};
         data[self.fields_view.arch.attrs.date_start] =
-            openerp.web.auto_date_to_str(start, self.fields[self.fields_view.arch.attrs.date_start].type);
+            instance.web.auto_date_to_str(start, self.fields[self.fields_view.arch.attrs.date_start].type);
         if (self.fields_view.arch.attrs.date_stop) {
             data[self.fields_view.arch.attrs.date_stop] = 
-                openerp.web.auto_date_to_str(end, self.fields[self.fields_view.arch.attrs.date_stop].type);
+                instance.web.auto_date_to_str(end, self.fields[self.fields_view.arch.attrs.date_stop].type);
         } else { // we assume date_duration is defined
             data[self.fields_view.arch.attrs.date_delay] = duration;
         }
@@ -210,7 +210,7 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
     },
     on_task_display: function(task) {
         var self = this;
-        var pop = new openerp.web.form.FormOpenPopup(self);
+        var pop = new instance.web.form.FormOpenPopup(self);
         pop.on_write_completed.add_last(function() {
             self.reload();
         });
@@ -223,7 +223,7 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
     },
     on_task_create: function() {
         var self = this;
-        var pop = new openerp.web.form.SelectCreatePopup(this);
+        var pop = new instance.web.form.SelectCreatePopup(this);
         pop.on_select_elements.add_last(function() {
             self.reload();
         });
