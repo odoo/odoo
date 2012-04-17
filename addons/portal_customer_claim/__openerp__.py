@@ -32,6 +32,7 @@
     'depends': ['crm_claim','portal_customer'],
     'update_xml': [
         'portal_customer_claim_view.xml',
+        "security/ir.model.access.csv",
     ],
     'installable': True,
     'auto_install':True,

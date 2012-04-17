@@ -32,6 +32,7 @@
     'depends': ['event','portal_customer'],
     'update_xml': [
         'portal_customer_event_view.xml',
+        'security/ir.model.access.csv',
     ],
     'installable': True,
     'auto_install':True,
