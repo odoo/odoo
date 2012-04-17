@@ -12,7 +12,7 @@
             <field name="priority">1000</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page/field[@name='order_line']" position="replace">
+                <xpath expr="//field[@name='order_line']" position="replace">
                     <field name="abstract_line_ids" colspan="4" nolabel="1" widget="one2many_list">
                             <form string="Order Line">
                                 <notebook>
