@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+            <record id="Customer_demo" model="res.users">
+                <field name="name">demo_customer_portal</field>
+                <field name="login">demo_customerl</field>
+                <field name="password">demo</field>
+                <field name="groups_id" eval="[(6,0,[ref('group_sales_portal')])]"/>
+            </record>
+
+    </data>
+</openerp>
+

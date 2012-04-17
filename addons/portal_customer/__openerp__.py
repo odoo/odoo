@@ -35,6 +35,7 @@
     "init_xml" : [
     ],
     "demo_xml" : [ 
+        "portal_customer_demo.xml",
     ],
     "update_xml" : [
         "security/portal_customer_security.xml",
