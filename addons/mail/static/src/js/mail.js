@@ -58,10 +58,8 @@ openerp.mail = function(session) {
     }
 
     /* Add ThreadDisplay widget to registry */
-    session.web.form.widgets.add(
-        'Thread', 'openerp.mail.Thread');
-    session.web.page.readonly.add(
-        'Thread', 'openerp.mail.Thread');
+    session.web.form.widgets.add( 'Thread', 'openerp.mail.Thread');
+//    session.web.page.readonly.add( 'Thread', 'openerp.mail.Thread');
 
     /** 
      * ThreadDisplay widget: this widget handles the display of a thread of
@@ -464,15 +462,13 @@ openerp.mail = function(session) {
 
 
     /* Add ThreadView widget to registry */
-    session.web.form.widgets.add(
-        'ThreadView', 'openerp.mail.RecordThread');
-    session.web.page.readonly.add(
-        'ThreadView', 'openerp.mail.RecordThread');
+    session.web.form.widgets.add( 'ThreadView', 'openerp.mail.RecordThread');
+//    session.web.page.readonly.add( 'ThreadView', 'openerp.mail.RecordThread');
 
     /* ThreadView widget: thread of comments */
-    mail.RecordThread = session.web.form.Field.extend({
+    mail.RecordThread = session.web.form.AbstractField.extend({
         // QWeb template to use when rendering the object
-        form_template: 'RecordThread',
+        template: 'RecordThread',
 
         init: function() {
             this._super.apply(this, arguments);
@@ -489,9 +485,11 @@ openerp.mail = function(session) {
             // bind buttons
             this.$element.find('button.oe_mail_button_followers').click(function () { self.do_toggle_followers(); }).hide();
             this.$element.find('button.oe_mail_button_follow').click(function () { self.do_follow(); })
-                .mouseover(function () { $(this).html('Follow'); }).mouseleave(function () { $(this).html('Not following'); });
+                .mouseover(function () { $(this).html('Follow').addClass('following'); })
+                .mouseleave(function () { $(this).html('Not following').removeClass('following'); });
             this.$element.find('button.oe_mail_button_unfollow').click(function () { self.do_unfollow(); })
-                .mouseover(function () { $(this).html('Unfollow'); }).mouseleave(function () { $(this).html('Following'); });
+                .mouseover(function () { $(this).html('Unfollow').removeClass('following').addClass('unfollow'); })
+                .mouseleave(function () { $(this).html('Following').removeClass('unfollow').addClass('following'); });
             this.reinit();
         },
 
@@ -642,7 +640,7 @@ openerp.mail = function(session) {
         load_search_view: function (view_id, defaults, hidden) {
             var self = this;
             this.searchview = new session.web.SearchView(this, this.ds_msg, view_id || false, defaults || {}, hidden || false);
-            var search_view_loaded = this.searchview.appendTo(this.$element.find('div.oe_mail_wall_search'));
+            var search_view_loaded = this.searchview.appendTo(this.$element.find('.oe_view_manager_row'));
             return $.when(search_view_loaded).then(function () {
                 self.searchview.on_search.add(self.do_searchview_search);
             });

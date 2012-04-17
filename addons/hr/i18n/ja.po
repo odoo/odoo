@@ -1,0 +1,695 @@
+# Japanese translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-02-08 01:37+0100\n"
+"PO-Revision-Date: 2012-04-17 01:59+0000\n"
+"Last-Translator: Masaki Yamaya <Unknown>\n"
+"Language-Team: Japanese <ja@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2012-04-17 04:51+0000\n"
+"X-Generator: Launchpad (build 15099)\n"
+
+#. module: hr
+#: model:process.node,name:hr.process_node_openerpuser0
+msgid "Openerp user"
+msgstr "OpenERPユーザ"
+
+#. module: hr
+#: view:hr.job:0 field:hr.job,requirements:0
+msgid "Requirements"
+msgstr "必要事項"
+
+#. module: hr
+#: constraint:hr.department:0
+msgid "Error! You can not create recursive departments."
+msgstr "エラー。反復する部署を作ることはできません。"
+
+#. module: hr
+#: model:process.transition,name:hr.process_transition_contactofemployee0
+msgid "Link the employee to information"
+msgstr ""
+
+#. module: hr
+#: field:hr.employee,sinid:0
+msgid "SIN No"
+msgstr ""
+
+#. module: hr
+#: model:ir.ui.menu,name:hr.menu_hr_main
+#: model:ir.ui.menu,name:hr.menu_hr_management
+#: model:ir.ui.menu,name:hr.menu_hr_root
+msgid "Human Resources"
+msgstr ""
+
+#. module: hr
+#: view:hr.employee:0 view:hr.job:0
+msgid "Group By..."
+msgstr "グループ化…"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.view_department_form_installer
+msgid "Create Your Departments"
+msgstr "部門を作る"
+
+#. module: hr
+#: model:ir.actions.act_window,help:hr.action_hr_job
+msgid ""
+"Job Positions are used to define jobs and their requirements. You can keep "
+"track of the number of employees you have per job position and how many you "
+"expect in the future. You can also attach a survey to a job position that "
+"will be used in the recruitment process to evaluate the applicants for this "
+"job position."
+msgstr ""
+"職種は、仕事内容とその要件を定義するのに使います。職種ごとの従業員数と将来の必要人数を記録することができます。職種への応募者を評価するための採用プロセスで"
+"使う質問票を、ここに添付することができます。"
+
+#. module: hr
+#: view:hr.employee:0 field:hr.employee,department_id:0 view:hr.job:0
+#: field:hr.job,department_id:0 view:res.users:0
+msgid "Department"
+msgstr "部門"
+
+#. module: hr
+#: view:hr.job:0
+msgid "Mark as Old"
+msgstr "古い印をつける。"
+
+#. module: hr
+#: view:hr.job:0
+msgid "Jobs"
+msgstr "業務"
+
+#. module: hr
+#: view:hr.job:0
+msgid "In Recruitment"
+msgstr "採用中"
+
+#. module: hr
+#: field:hr.department,company_id:0 view:hr.employee:0 view:hr.job:0
+#: field:hr.job,company_id:0
+msgid "Company"
+msgstr "会社"
+
+#. module: hr
+#: field:hr.job,no_of_recruitment:0
+msgid "Expected in Recruitment"
+msgstr "採用予定"
+
+#. module: hr
+#: model:ir.actions.todo.category,name:hr.category_hr_management_config
+msgid "HR Management"
+msgstr "人材管理"
+
+#. module: hr
+#: help:hr.employee,partner_id:0
+msgid ""
+"Partner that is related to the current employee. Accounting transaction will "
+"be written on this partner belongs to employee."
+msgstr "この従業員に関係するパートナ。会計トトランザクションは従業員に関係するこのパートナについて記録されます。"
+
+#. module: hr
+#: model:process.transition,name:hr.process_transition_employeeuser0
+msgid "Link a user to an employee"
+msgstr "ユーザを従業員に連携"
+
+#. module: hr
+#: field:hr.department,parent_id:0
+msgid "Parent Department"
+msgstr "上位の部門"
+
+#. module: hr
+#: view:hr.employee:0 field:hr.employee,notes:0
+msgid "Notes"
+msgstr "注記"
+
+#. module: hr
+#: selection:hr.employee,marital:0
+msgid "Married"
+msgstr "既婚"
+
+#. module: hr
+#: model:ir.actions.act_window,help:hr.action_create_hr_employee_installer
+msgid ""
+"Create employees form and link them to an OpenERP user if you want them to "
+"access this instance. Categories can be set on employees to perform massive "
+"operations on all the employees of the same category, i.e. allocating "
+"holidays."
+msgstr ""
+"従業員を作成して、このインスタンスをアクセスできるようにOpenERPに連携する。従業員に区分を設定すると，同じ区分の全ての従業員と同じ処理が適用されるま"
+"す。例えば、休日の割当てなど。"
+
+#. module: hr
+#: model:ir.actions.act_window,help:hr.open_module_tree_department
+msgid ""
+"Your Company's Department Structure is used to manage all documents related "
+"to employees by departments: expenses and timesheet validation, leaves "
+"management, recruitments, etc."
+msgstr ""
+
+#. module: hr
+#: field:hr.employee,color:0
+msgid "Color Index"
+msgstr "カラーインデックス"
+
+#. module: hr
+#: model:process.transition,note:hr.process_transition_employeeuser0
+msgid ""
+"The Related user field on the Employee form allows to link the OpenERP user "
+"(and her rights) to the employee."
+msgstr "従業員票のユーザ項目を使って、この従業員をOpenERPユーザとして連携することができます。"
+
+#. module: hr
+#: view:hr.job:0 selection:hr.job,state:0
+msgid "In Recruitement"
+msgstr "採用中"
+
+#. module: hr
+#: field:hr.employee,identification_id:0
+msgid "Identification No"
+msgstr "識別番号"
+
+#. module: hr
+#: selection:hr.employee,gender:0
+msgid "Female"
+msgstr "女"
+
+#. module: hr
+#: help:hr.job,expected_employees:0
+msgid "Required number of employees in total for that job."
+msgstr "この職種に必要な従業員の数"
+
+#. module: hr
+#: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_new_config
+msgid "Attendance"
+msgstr "出欠"
+
+#. module: hr
+#: view:hr.employee:0
+msgid "Social IDs"
+msgstr "社会保障番号"
+
+#. module: hr
+#: field:hr.employee,work_phone:0
+msgid "Work Phone"
+msgstr "勤務先電話"
+
+#. module: hr
+#: field:hr.employee.category,child_ids:0
+msgid "Child Categories"
+msgstr "子関係の区分"
+
+#. module: hr
+#: view:hr.job:0 field:hr.job,description:0
+#: model:ir.model,name:hr.model_hr_job
+msgid "Job Description"
+msgstr "職務内容"
+
+#. module: hr
+#: field:hr.employee,work_location:0
+msgid "Office Location"
+msgstr "勤務先住所"
+
+#. module: hr
+#: view:hr.employee:0
+msgid "My Departments Employee"
+msgstr "私の部門の従業員"
+
+#. module: hr
+#: view:hr.employee:0 model:ir.model,name:hr.model_hr_employee
+#: model:process.node,name:hr.process_node_employee0
+msgid "Employee"
+msgstr "従業員"
+
+#. module: hr
+#: model:process.node,note:hr.process_node_employeecontact0
+msgid "Other information"
+msgstr "その他の情報"
+
+#. module: hr
+#: field:hr.employee,work_email:0
+msgid "Work E-mail"
+msgstr "勤務先のEメール"
+
+#. module: hr
+#: field:hr.employee,birthday:0
+msgid "Date of Birth"
+msgstr "誕生日"
+
+#. module: hr
+#: model:ir.ui.menu,name:hr.menu_hr_reporting
+msgid "Reporting"
+msgstr "レポート"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.open_board_hr
+#: model:ir.ui.menu,name:hr.menu_hr_dashboard_user
+msgid "Human Resources Dashboard"
+msgstr "人材ダッシュボード"
+
+#. module: hr
+#: view:hr.employee:0 field:hr.employee,job_id:0 view:hr.job:0
+msgid "Job"
+msgstr "職務"
+
+#. module: hr
+#: field:hr.department,member_ids:0
+msgid "Members"
+msgstr "メンバー"
+
+#. module: hr
+#: model:ir.ui.menu,name:hr.menu_hr_configuration
+msgid "Configuration"
+msgstr "設定"
+
+#. module: hr
+#: view:hr.employee:0 field:hr.employee,category_ids:0
+msgid "Categories"
+msgstr "区分"
+
+#. module: hr
+#: field:hr.job,expected_employees:0
+msgid "Expected Employees"
+msgstr "従業員候補"
+
+#. module: hr
+#: selection:hr.employee,marital:0
+msgid "Divorced"
+msgstr "離婚"
+
+#. module: hr
+#: field:hr.employee.category,parent_id:0
+msgid "Parent Category"
+msgstr "親分類"
+
+#. module: hr
+#: constraint:hr.employee.category:0
+msgid "Error ! You cannot create recursive Categories."
+msgstr "エラー。反復区分を作ることはできません。"
+
+#. module: hr
+#: view:hr.department:0
+#: model:ir.actions.act_window,name:hr.open_module_tree_department
+#: model:ir.ui.menu,name:hr.menu_hr_department_tree
+#: field:res.users,context_department_id:0
+msgid "Departments"
+msgstr "部門"
+
+#. module: hr
+#: model:process.node,name:hr.process_node_employeecontact0
+msgid "Employee Contact"
+msgstr "従業員の連絡先"
+
+#. module: hr
+#: view:board.board:0
+msgid "My Board"
+msgstr "私のボード"
+
+#. module: hr
+#: selection:hr.employee,gender:0
+msgid "Male"
+msgstr "男"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.open_view_categ_form
+#: model:ir.ui.menu,name:hr.menu_view_employee_category_form
+msgid "Categories of Employee"
+msgstr "従業員の区分"
+
+#. module: hr
+#: view:hr.employee.category:0
+#: model:ir.model,name:hr.model_hr_employee_category
+msgid "Employee Category"
+msgstr "従業員の区分"
+
+#. module: hr
+#: model:process.process,name:hr.process_process_employeecontractprocess0
+msgid "Employee Contract"
+msgstr "従業員契約"
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_department
+msgid "hr.department"
+msgstr "hr.department"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.action_create_hr_employee_installer
+msgid "Create your Employees"
+msgstr "従業員を作成する。"
+
+#. module: hr
+#: field:hr.employee.category,name:0
+msgid "Category"
+msgstr "分類"
+
+#. module: hr
+#: model:ir.actions.act_window,help:hr.open_view_employee_list_my
+msgid ""
+"Here you can manage your work force by creating employees and assigning them "
+"specific properties in the system. Maintain all employee related information "
+"and keep track of anything that needs to be recorded for them. The personal "
+"information tab will help you maintain their identity data. The Categories "
+"tab gives you the opportunity to assign them related employee categories "
+"depending on their position and activities within the company. A category "
+"can be a seniority level within the company or a department. The Timesheets "
+"tab allows to assign them a specific timesheet and analytic journal where "
+"they will be able to enter time through the system. In the note tab, you can "
+"enter text data that should be recorded for a specific employee."
+msgstr ""
+"ここでは従業員を作成して、各人の特性を指定することができます。個人情報タブでは、従業員に関する必要な情報を記録・保持してください。カテゴリータブでは、従業"
+"員の職位と職種に応じたカテゴリーを割り当てることができます。カテゴリーは、会社あるいは部門における年功のレベルで決まるでしょう。タイムシートタブでは、従業"
+"員に分析記録のためのタイムシートを割り当てて、本人が作業時間を記録するのに使います。注記タブでは、その従業員に関する情報を追記することができます。"
+
+#. module: hr
+#: help:hr.employee,bank_account_id:0
+msgid "Employee bank salary account"
+msgstr "従業員の給与振込の銀行口座"
+
+#. module: hr
+#: field:hr.department,note:0
+msgid "Note"
+msgstr "注記"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.open_view_employee_tree
+msgid "Employees Structure"
+msgstr "従業員体系"
+
+#. module: hr
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
+msgstr "選択した会社は、このユーザに許された会社ではありません。"
+
+#. module: hr
+#: view:hr.employee:0
+msgid "Contact Information"
+msgstr "連絡先の情報"
+
+#. module: hr
+#: field:hr.employee,address_id:0
+msgid "Working Address"
+msgstr "勤務先住所"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.open_board_hr_manager
+#: model:ir.ui.menu,name:hr.menu_hr_dashboard_manager
+msgid "HR Manager Dashboard"
+msgstr "人事マネジャのダッシュボード"
+
+#. module: hr
+#: field:hr.department,child_ids:0
+msgid "Child Departments"
+msgstr "下位部門"
+
+#. module: hr
+#: view:hr.employee:0
+msgid "Status"
+msgstr "ステータス"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.open_view_categ_tree
+#: model:ir.ui.menu,name:hr.menu_view_employee_category_tree
+msgid "Categories structure"
+msgstr "カテゴリー体系"
+
+#. module: hr
+#: field:hr.employee,partner_id:0
+msgid "unknown"
+msgstr "不明"
+
+#. module: hr
+#: help:hr.job,no_of_employee:0
+msgid "Number of employees with that job."
+msgstr "この職種の従業員数"
+
+#. module: hr
+#: field:hr.employee,ssnid:0
+msgid "SSN No"
+msgstr "社会保障番号"
+
+#. module: hr
+#: view:hr.employee:0
+msgid "Active"
+msgstr "有効"
+
+#. module: hr
+#: constraint:hr.employee:0
+msgid "Error ! You cannot create recursive Hierarchy of Employees."
+msgstr "エラー。従業員の反復した階層構造を作ることはできません。"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.action2
+msgid "Subordonate Hierarchy"
+msgstr "下位の階層構造"
+
+#. module: hr
+#: model:ir.actions.act_window,help:hr.view_department_form_installer
+msgid ""
+"Your departments structure is used to manage all documents related to "
+"employees by departments: expenses and timesheet validation, leaves "
+"management, recruitments, etc."
+msgstr "部門組織構造は，従業員に関する全ての文書を管理するために使われます。：経費、タイムシートの検証、休暇の管理、採用など。"
+
+#. module: hr
+#: field:hr.employee,bank_account_id:0
+msgid "Bank Account Number"
+msgstr "銀行口座番号"
+
+#. module: hr
+#: view:hr.department:0
+msgid "Companies"
+msgstr "会社"
+
+#. module: hr
+#: model:process.transition,note:hr.process_transition_contactofemployee0
+msgid ""
+"In the Employee form, there are different kind of information like Contact "
+"information."
+msgstr "従業員票には、連絡先などのように異なる種類の情報があります。"
+
+#. module: hr
+#: model:ir.ui.menu,name:hr.menu_hr_dashboard
+msgid "Dashboard"
+msgstr "ダッシュボード"
+
+#. module: hr
+#: selection:hr.job,state:0
+msgid "Old"
+msgstr "旧"
+
+#. module: hr
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
+msgstr "同一のログインに２つのユーザを指定することはできません。"
+
+#. module: hr
+#: view:hr.job:0 field:hr.job,state:0
+msgid "State"
+msgstr "状態"
+
+#. module: hr
+#: field:hr.employee,marital:0
+msgid "Marital Status"
+msgstr "婚姻区分"
+
+#. module: hr
+#: model:ir.model,name:hr.model_ir_actions_act_window
+msgid "ir.actions.act_window"
+msgstr "ir.actions.act_window"
+
+#. module: hr
+#: model:process.node,note:hr.process_node_employee0
+msgid "Employee form and structure"
+msgstr "従業員票と構造"
+
+#. module: hr
+#: field:hr.employee,photo:0
+msgid "Photo"
+msgstr "写真"
+
+#. module: hr
+#: model:ir.model,name:hr.model_res_users
+msgid "res.users"
+msgstr "res.users"
+
+#. module: hr
+#: view:hr.employee:0
+msgid "Personal Information"
+msgstr "個人情報"
+
+#. module: hr
+#: field:hr.employee,city:0
+msgid "City"
+msgstr "市"
+
+#. module: hr
+#: field:hr.employee,passport_id:0
+msgid "Passport No"
+msgstr "旅券番号"
+
+#. module: hr
+#: field:hr.employee,mobile_phone:0
+msgid "Work Mobile"
+msgstr "会社の携帯"
+
+#. module: hr
+#: view:hr.employee.category:0
+msgid "Employees Categories"
+msgstr "従業員カテゴリー"
+
+#. module: hr
+#: field:hr.employee,address_home_id:0
+msgid "Home Address"
+msgstr "自宅住所"
+
+#. module: hr
+#: view:hr.job:0
+msgid "Description"
+msgstr "詳細"
+
+#. module: hr
+#: selection:hr.employee,marital:0
+msgid "Single"
+msgstr "独身"
+
+#. module: hr
+#: field:hr.job,name:0
+msgid "Job Name"
+msgstr "職務名"
+
+#. module: hr
+#: view:hr.job:0 selection:hr.job,state:0
+msgid "In Position"
+msgstr "職位"
+
+#. module: hr
+#: view:hr.department:0
+msgid "department"
+msgstr "部門"
+
+#. module: hr
+#: field:hr.employee,country_id:0
+msgid "Nationality"
+msgstr "国籍"
+
+#. module: hr
+#: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_config
+msgid "Leaves"
+msgstr "作業終了"
+
+#. module: hr
+#: view:board.board:0
+msgid "HR Manager Board"
+msgstr "人材マネジャボード"
+
+#. module: hr
+#: field:hr.employee,resource_id:0
+msgid "Resource"
+msgstr "リソース"
+
+#. module: hr
+#: field:hr.department,complete_name:0
+#: field:hr.employee.category,complete_name:0
+msgid "Name"
+msgstr "氏名"
+
+#. module: hr
+#: field:hr.employee,gender:0
+msgid "Gender"
+msgstr "性別"
+
+#. module: hr
+#: view:hr.employee:0 view:hr.employee.category:0
+#: field:hr.employee.category,employee_ids:0 view:hr.job:0
+#: field:hr.job,employee_ids:0
+#: model:ir.actions.act_window,name:hr.hr_employee_normal_action_tree
+#: model:ir.actions.act_window,name:hr.open_view_employee_list
+#: model:ir.actions.act_window,name:hr.open_view_employee_list_my
+#: model:ir.ui.menu,name:hr.menu_open_view_employee_list_my
+#: model:ir.ui.menu,name:hr.menu_view_employee_category_configuration_form
+msgid "Employees"
+msgstr "従業員"
+
+#. module: hr
+#: help:hr.employee,sinid:0
+msgid "Social Insurance Number"
+msgstr "社会保険番号"
+
+#. module: hr
+#: field:hr.department,name:0
+msgid "Department Name"
+msgstr "部門名"
+
+#. module: hr
+#: help:hr.employee,ssnid:0
+msgid "Social Security Number"
+msgstr "社会保障番号"
+
+#. module: hr
+#: model:process.node,note:hr.process_node_openerpuser0
+msgid "Creation of a OpenERP user"
+msgstr "OpenERPユーザ作成日"
+
+#. module: hr
+#: field:hr.employee,login:0
+msgid "Login"
+msgstr "ログイン"
+
+#. module: hr
+#: view:hr.employee:0
+msgid "Job Information"
+msgstr "職務情報"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.action_hr_job
+#: model:ir.ui.menu,name:hr.menu_hr_job
+msgid "Job Positions"
+msgstr "職位"
+
+#. module: hr
+#: field:hr.employee,otherid:0
+msgid "Other Id"
+msgstr "その他のID"
+
+#. module: hr
+#: view:hr.employee:0 field:hr.employee,coach_id:0
+msgid "Coach"
+msgstr "コーチ"
+
+#. module: hr
+#: sql_constraint:hr.job:0
+msgid "The name of the job position must be unique per company!"
+msgstr "職位名は会社ごとにユニークでなければいけません。"
+
+#. module: hr
+#: view:hr.job:0
+msgid "My Departments Jobs"
+msgstr "私の部門の職種"
+
+#. module: hr
+#: field:hr.department,manager_id:0 view:hr.employee:0
+#: field:hr.employee,parent_id:0
+msgid "Manager"
+msgstr "マネジャ"
+
+#. module: hr
+#: selection:hr.employee,marital:0
+msgid "Widower"
+msgstr "寡夫"
+
+#. module: hr
+#: field:hr.employee,child_ids:0
+msgid "Subordinates"
+msgstr "部下"
+
+#. module: hr
+#: field:hr.job,no_of_employee:0
+msgid "Number of Employees"
+msgstr "従業員数"
