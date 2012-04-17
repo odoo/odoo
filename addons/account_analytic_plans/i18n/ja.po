@@ -1,0 +1,619 @@
+# Japanese translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"PO-Revision-Date: 2012-04-13 19:12+0000\n"
+"Last-Translator: Akira Hiyama <Unknown>\n"
+"Language-Team: Japanese <ja@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2012-04-14 04:57+0000\n"
+"X-Generator: Launchpad (build 15070)\n"
+
+#. module: account_analytic_plans
+#: view:analytic.plan.create.model:0
+msgid ""
+"This distribution model has been saved.You will be able to reuse it later."
+msgstr "このディストリビューションモデルは保存されているため、後で再利用することができます。"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.instance.line,plan_id:0
+msgid "Plan Id"
+msgstr "計画ID"
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "From Date"
+msgstr "開始日"
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+#: view:account.crossovered.analytic:0
+#: model:ir.actions.act_window,name:account_analytic_plans.action_account_crossovered_analytic
+#: model:ir.actions.report.xml,name:account_analytic_plans.account_analytic_account_crossovered_analytic
+msgid "Crossovered Analytic"
+msgstr "クロスオーバー分析"
+
+#. module: account_analytic_plans
+#: view:account.analytic.plan:0
+#: field:account.analytic.plan,name:0
+#: field:account.analytic.plan.line,plan_id:0
+#: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_form_action
+#: model:ir.model,name:account_analytic_plans.model_account_analytic_plan
+#: model:ir.ui.menu,name:account_analytic_plans.menu_account_analytic_plan_action
+msgid "Analytic Plan"
+msgstr "分析計画"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.instance,journal_id:0
+#: view:account.crossovered.analytic:0
+#: field:account.crossovered.analytic,journal_ids:0
+msgid "Analytic Journal"
+msgstr "分析仕訳帳"
+
+#. module: account_analytic_plans
+#: view:account.analytic.plan.line:0
+#: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_line
+msgid "Analytic Plan Line"
+msgstr "分析計画行"
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/wizard/account_crossovered_analytic.py:61
+#, python-format
+msgid "User Error"
+msgstr "ユーザエラー"
+
+#. module: account_analytic_plans
+#: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance
+msgid "Analytic Plan Instance"
+msgstr "分析計画インスタンス"
+
+#. module: account_analytic_plans
+#: view:analytic.plan.create.model:0
+msgid "Ok"
+msgstr "OK"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.instance,plan_id:0
+msgid "Model's Plan"
+msgstr "モデルの計画"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.instance,account2_ids:0
+msgid "Account2 Id"
+msgstr "アカウント2のID"
+
+#. module: account_analytic_plans
+#: sql_constraint:account.invoice:0
+msgid "Invoice Number must be unique per Company!"
+msgstr "請求書番号は会社ごとにユニークでなければいけません。"
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Amount"
+msgstr "総額"
+
+#. module: account_analytic_plans
+#: constraint:account.journal:0
+msgid ""
+"Configuration error! The currency chosen should be shared by the default "
+"accounts too."
+msgstr "設定エラー。選択された通貨はデフォルトアカウントによっても共有されなければなりません。"
+
+#. module: account_analytic_plans
+#: sql_constraint:account.move.line:0
+msgid "Wrong credit or debit value in accounting entry !"
+msgstr "会計エントリーにおいて貸方または借方の値が誤っています。"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.instance,account6_ids:0
+msgid "Account6 Id"
+msgstr "アカウント6のID"
+
+#. module: account_analytic_plans
+#: model:ir.ui.menu,name:account_analytic_plans.menu_account_analytic_multi_plan_action
+msgid "Multi Plans"
+msgstr "複数の計画"
+
+#. module: account_analytic_plans
+#: model:ir.model,name:account_analytic_plans.model_account_bank_statement_line
+msgid "Bank Statement Line"
+msgstr "銀行明細行"
+
+#. module: account_analytic_plans
+#: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_form_action_installer
+msgid "Define your Analytic Plans"
+msgstr "分析計画を定義して下さい。"
+
+#. module: account_analytic_plans
+#: constraint:account.invoice:0
+msgid "Invalid BBA Structured Communication !"
+msgstr "無効なBBA構造のコミュニケーション"
+
+#. module: account_analytic_plans
+#: constraint:account.bank.statement:0
+msgid "The journal and period chosen have to belong to the same company."
+msgstr "選択された仕訳帳と期間は同じ会社に属していなければなりません。"
+
+#. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid ""
+"The date of your Journal Entry is not in the defined period! You should "
+"change the date or remove this constraint from the journal."
+msgstr "仕訳の日付が定義された期間ではありません。日付を変更するか仕訳帳からこの制約を削除する必要があります。"
+
+#. module: account_analytic_plans
+#: sql_constraint:account.journal:0
+msgid "The code of the journal must be unique per company !"
+msgstr "仕訳帳のコードは会社ごとに固有でなければなりません。"
+
+#. module: account_analytic_plans
+#: field:account.crossovered.analytic,ref:0
+msgid "Analytic Account Reference"
+msgstr "分析アカウント設定"
+
+#. module: account_analytic_plans
+#: model:ir.model,name:account_analytic_plans.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "受注オーダー行"
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:47
+#: view:analytic.plan.create.model:0
+#, python-format
+msgid "Distribution Model Saved"
+msgstr "ディストリビューションモデルは保存されました"
+
+#. module: account_analytic_plans
+#: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_instance_action
+msgid "Analytic Distribution's Models"
+msgstr "分析ディストリビューションモデル"
+
+#. module: account_analytic_plans
+#: view:account.crossovered.analytic:0
+msgid "Print"
+msgstr "印刷"
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+#: field:account.analytic.line,percentage:0
+msgid "Percentage"
+msgstr "パーセンテージ"
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/account_analytic_plans.py:221
+#, python-format
+msgid "A model having this name and code already exists !"
+msgstr "この名前とコードを持つモデルは既に存在しています。"
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:41
+#, python-format
+msgid "No analytic plan defined !"
+msgstr "分析計画が定義されていません。"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.instance.line,rate:0
+msgid "Rate (%)"
+msgstr "レート（%）"
+
+#. module: account_analytic_plans
+#: view:account.analytic.plan:0
+#: field:account.analytic.plan,plan_ids:0
+#: field:account.journal,plan_id:0
+msgid "Analytic Plans"
+msgstr "分析計画"
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Perc(%)"
+msgstr "パーセント（%）"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.line,max_required:0
+msgid "Maximum Allowed (%)"
+msgstr "最大許容値（%）"
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Printing date"
+msgstr "印刷日"
+
+#. module: account_analytic_plans
+#: view:account.analytic.plan.line:0
+msgid "Analytic Plan Lines"
+msgstr "分析計画行"
+
+#. module: account_analytic_plans
+#: constraint:account.bank.statement.line:0
+msgid ""
+"The amount of the voucher must be the same amount as the one on the "
+"statement line"
+msgstr "バウチャーの総額は明細行のひとつの金額と同じでなければなりません。"
+
+#. module: account_analytic_plans
+#: model:ir.model,name:account_analytic_plans.model_account_invoice_line
+msgid "Invoice Line"
+msgstr "請求行"
+
+#. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid ""
+"The selected account of your Journal Entry forces to provide a secondary "
+"currency. You should remove the secondary currency on the account or select "
+"a multi-currency view on the journal."
+msgstr ""
+"選択された仕訳のアカウントは第２の通貨を提供することを強いています。アカウントの第２通貨を削除するか、仕訳で多通貨ビューを選択して下さい。"
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Currency"
+msgstr "通貨"
+
+#. module: account_analytic_plans
+#: field:account.crossovered.analytic,date1:0
+msgid "Start Date"
+msgstr "開始日"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.instance,account_ids:0
+msgid "Account Id"
+msgstr "アカウントID"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.instance,account5_ids:0
+msgid "Account5 Id"
+msgstr "アカウント5のID"
+
+#. module: account_analytic_plans
+#: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance_line
+msgid "Analytic Instance Line"
+msgstr "分析インスタンス行"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.line,root_analytic_id:0
+msgid "Root Account"
+msgstr "ルートアカウント"
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "To Date"
+msgstr "終了日"
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/account_analytic_plans.py:341
+#: code:addons/account_analytic_plans/account_analytic_plans.py:485
+#, python-format
+msgid "You have to define an analytic journal on the '%s' journal!"
+msgstr "%s 仕訳帳に分析仕訳を定義しなければなりません。"
+
+#. module: account_analytic_plans
+#: field:account.crossovered.analytic,empty_line:0
+msgid "Dont show empty lines"
+msgstr "空行は表示されません。"
+
+#. module: account_analytic_plans
+#: model:ir.actions.act_window,name:account_analytic_plans.action_analytic_plan_create_model
+msgid "analytic.plan.create.model.action"
+msgstr ""
+
+#. module: account_analytic_plans
+#: model:ir.model,name:account_analytic_plans.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "分析行"
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Analytic Account :"
+msgstr "分析アカウント："
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Analytic Account Reference:"
+msgstr "分析アカウントリファレンス："
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.line,name:0
+msgid "Plan Name"
+msgstr "計画名"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan,default_instance_id:0
+msgid "Default Entries"
+msgstr "デフォルトエンティティ"
+
+#. module: account_analytic_plans
+#: model:ir.model,name:account_analytic_plans.model_account_move_line
+msgid "Journal Items"
+msgstr "仕訳帳項目"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.instance,account1_ids:0
+msgid "Account1 Id"
+msgstr "アカウント1のID"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.line,min_required:0
+msgid "Minimum Allowed (%)"
+msgstr "最小許容値（%）"
+
+#. module: account_analytic_plans
+#: help:account.analytic.plan.line,root_analytic_id:0
+msgid "Root account of this plan."
+msgstr "この計画のルートアカウント"
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/account_analytic_plans.py:221
+#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:38
+#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:41
+#, python-format
+msgid "Error"
+msgstr "エラー"
+
+#. module: account_analytic_plans
+#: view:analytic.plan.create.model:0
+msgid "Save This Distribution as a Model"
+msgstr "このディストリビューションをモデルとして保存"
+
+#. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid "You can not create journal items on an account of type view."
+msgstr "ビュータイプのアカウントでは仕訳項目を作ることはできません。"
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Quantity"
+msgstr "数量"
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:38
+#, python-format
+msgid "Please put a name and a code before saving the model !"
+msgstr "モデルを保存する前に名前とコードを入れて下さい。"
+
+#. module: account_analytic_plans
+#: model:ir.model,name:account_analytic_plans.model_account_crossovered_analytic
+msgid "Print Crossovered Analytic"
+msgstr "クロスオーバー分析の印刷"
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/account_analytic_plans.py:341
+#: code:addons/account_analytic_plans/account_analytic_plans.py:485
+#, python-format
+msgid "No Analytic Journal !"
+msgstr "分析仕訳帳がありません。"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.instance.line,analytic_account_id:0
+msgid "Analytic Account"
+msgstr "分析アカウント"
+
+#. module: account_analytic_plans
+#: model:ir.model,name:account_analytic_plans.model_account_bank_statement
+msgid "Bank Statement"
+msgstr "銀行明細"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.instance,account3_ids:0
+msgid "Account3 Id"
+msgstr "アカウント3のID"
+
+#. module: account_analytic_plans
+#: constraint:account.analytic.line:0
+msgid "You can not create analytic line on view account."
+msgstr "ビューアカウントでは分析行を作ることはできません。"
+
+#. module: account_analytic_plans
+#: model:ir.model,name:account_analytic_plans.model_account_invoice
+msgid "Invoice"
+msgstr "請求書"
+
+#. module: account_analytic_plans
+#: view:account.crossovered.analytic:0
+#: view:analytic.plan.create.model:0
+msgid "Cancel"
+msgstr "キャンセル"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.instance,account4_ids:0
+msgid "Account4 Id"
+msgstr "アカウント4のID"
+
+#. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid "Company must be the same for its related account and period."
+msgstr "会社は関連するアカウントと期間は同じでなければなりません。"
+
+#. module: account_analytic_plans
+#: view:account.analytic.plan.instance.line:0
+msgid "Analytic Distribution Lines"
+msgstr "分析ディストリビューション行"
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/account_analytic_plans.py:234
+#, python-format
+msgid "The Total Should be Between %s and %s"
+msgstr "合計は %s から %s の間になければなりません。"
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "at"
+msgstr ""
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Account Name"
+msgstr "アカウント名"
+
+#. module: account_analytic_plans
+#: view:account.analytic.plan.instance.line:0
+msgid "Analytic Distribution Line"
+msgstr "分析ディストリビューション行"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.instance,code:0
+msgid "Distribution Code"
+msgstr "ディストリビューションコード"
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "%"
+msgstr ""
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "100.00%"
+msgstr ""
+
+#. module: account_analytic_plans
+#: field:account.analytic.default,analytics_id:0
+#: view:account.analytic.plan.instance:0
+#: field:account.analytic.plan.instance,name:0
+#: field:account.bank.statement.line,analytics_id:0
+#: field:account.invoice.line,analytics_id:0
+#: field:account.move.line,analytics_id:0
+#: model:ir.model,name:account_analytic_plans.model_account_analytic_default
+msgid "Analytic Distribution"
+msgstr "分析ディストリビューション"
+
+#. module: account_analytic_plans
+#: model:ir.model,name:account_analytic_plans.model_account_journal
+msgid "Journal"
+msgstr "仕訳帳"
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Code"
+msgstr "コード"
+
+#. module: account_analytic_plans
+#: model:ir.model,name:account_analytic_plans.model_analytic_plan_create_model
+msgid "analytic.plan.create.model"
+msgstr ""
+
+#. module: account_analytic_plans
+#: field:account.crossovered.analytic,date2:0
+msgid "End Date"
+msgstr "終了日"
+
+#. module: account_analytic_plans
+#: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_instance_model_open
+msgid "Distribution Models"
+msgstr "ディストリビューションモデル"
+
+#. module: account_analytic_plans
+#: model:ir.actions.act_window,help:account_analytic_plans.account_analytic_plan_form_action_installer
+msgid ""
+"To setup a multiple analytic plans environment, you must define the root "
+"analytic accounts for each plan set. Then, you must attach a plan set to "
+"your account journals."
+msgstr ""
+"多数の分析計画環境をセットアップするためには、それぞれの計画セットのためにルート分析アカウントを定義しなければなりません。それから、その計画セットをあなた"
+"のアカウント仕訳帳に添付する必要があります。"
+
+#. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid "You can not create journal items on closed account."
+msgstr "閉じられたアカウントには仕訳項目を作ることはできません。"
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Company"
+msgstr "会社"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.line,sequence:0
+msgid "Sequence"
+msgstr "順序"
+
+#. module: account_analytic_plans
+#: sql_constraint:account.journal:0
+msgid "The name of the journal must be unique per company !"
+msgstr "仕訳帳の名前は会社ごとに固有でなければなりません、"
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/account_analytic_plans.py:234
+#, python-format
+msgid "Value Error"
+msgstr "値エラー"
+
+#~ msgid "Multiple-plans management in Analytic Accounting"
+#~ msgstr "分析会計における複数計画管理"
+
+#~ msgid "You can not create move line on closed account."
+#~ msgstr "閉じられたアカウントに対して移動行を作ることはできません。"
+
+#~ msgid ""
+#~ "This module allows to use several analytic plans, according to the general "
+#~ "journal,\n"
+#~ "so that multiple analytic lines are created when the invoice or the entries\n"
+#~ "are confirmed.\n"
+#~ "\n"
+#~ "For example, you can define the following analytic structure:\n"
+#~ "  Projects\n"
+#~ "      Project 1\n"
+#~ "          SubProj 1.1\n"
+#~ "          SubProj 1.2\n"
+#~ "      Project 2\n"
+#~ "  Salesman\n"
+#~ "      Eric\n"
+#~ "      Fabien\n"
+#~ "\n"
+#~ "Here, we have two plans: Projects and Salesman. An invoice line must\n"
+#~ "be able to write analytic entries in the 2 plans: SubProj 1.1 and\n"
+#~ "Fabien. The amount can also be split. The following example is for\n"
+#~ "an invoice that touches the two subproject and assigned to one salesman:\n"
+#~ "\n"
+#~ "Plan1:\n"
+#~ "    SubProject 1.1 : 50%\n"
+#~ "    SubProject 1.2 : 50%\n"
+#~ "Plan2:\n"
+#~ "    Eric: 100%\n"
+#~ "\n"
+#~ "So when this line of invoice will be confirmed, it will generate 3 analytic "
+#~ "lines,\n"
+#~ "for one account entry.\n"
+#~ "The analytic plan validates the minimum and maximum percentage at the time "
+#~ "of creation\n"
+#~ "of distribution models.\n"
+#~ "        "
+#~ msgstr ""
+#~ "このモジュールによって一般的な仕訳帳を使って、幾つかの分析計画を使うことができます。\n"
+#~ "それで、請求書や入力が確認されたときに複数の分析的な方向が作られます。\n"
+#~ "\n"
+#~ "例えば、次のような分析構造を定義することができます:\n"
+#~ "  Projects\n"
+#~ "      Project 1\n"
+#~ "          SubProj 1.1\n"
+#~ "          SubProj 1.2\n"
+#~ "\n"
+#~ "      Project 2\n"
+#~ "  Salesman\n"
+#~ "      Eric\n"
+#~ "      Fabien\n"
+#~ "\n"
+#~ "ここで、２つの計画があります： プロジェクトとセールスマン。請求書は２つの計画の中に分析的入力を書き込み可能でなければなりません： SubProj "
+#~ "1.1とFabien。量は分割することができます。次は２つのサブプロジェクトに関連し、１人のセールスマンに割り当てる請求書の例です：\n"
+#~ "\n"
+#~ "Plan1:\n"
+#~ "    SubProject 1.1 : 50%\n"
+#~ "    SubProject 1.2 : 50%\n"
+#~ "Plan2:\n"
+#~ "    Eric: 100%\n"
+#~ "\n"
+#~ "それで、この請求書の行が確認されると、１つの口座の入力により３つの分析的な行が作成されます。\n"
+#~ "分析的な計画は分配モデルの生成において最小と最大の利益を検査します。\n"
+#~ "        "
+
+#~ msgid "Company must be same for its related account and period."
+#~ msgstr "関係するアカウントと期間で会社は同じでなければなりません。"
+
+#~ msgid "You can not create move line on view account."
+#~ msgstr "ビューアカウント上に移動行を作ることはできません。"
