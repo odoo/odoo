@@ -273,9 +273,9 @@ openerp.web.form.DashBoardLegacy = openerp.web.form.DashBoard.extend({
     }
 });
 
-openerp.web.form.widgets.add('hpaned', 'openerp.web.form.DashBoardLegacy');
-openerp.web.form.widgets.add('vpaned', 'openerp.web.form.DashBoardLegacy');
-openerp.web.form.widgets.add('board', 'openerp.web.form.DashBoard');
+openerp.web.form.tags.add('hpaned', 'openerp.web.form.DashBoardLegacy');
+openerp.web.form.tags.add('vpaned', 'openerp.web.form.DashBoardLegacy');
+openerp.web.form.tags.add('board', 'openerp.web.form.DashBoard');
 
 /*
  * ConfigOverview
@@ -294,7 +294,6 @@ openerp.web_dashboard.ConfigOverview = openerp.web.View.extend({
         this.dataset = new openerp.web.DataSetSearch(this, 'ir.actions.todo');
     },
     start: function () {
-        this._super();
         var self = this;
         return this.user.read_index(['groups_id']).pipe(function(record) {
             var todos_filter = [
@@ -383,7 +382,6 @@ openerp.web_dashboard.Widget = openerp.web.View.extend(/** @lends openerp.web_da
         this.widget_id = options.widget_id;
     },
     start: function () {
-        this._super();
         var ds = new openerp.web.DataSet(this, 'res.widget');
         return ds.read_ids([this.widget_id], ['title']).then(this.on_widget_loaded);
     },
