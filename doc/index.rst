@@ -1,5 +1,6 @@
 :orphan:
 
+========================================
 OpenERP Server Developers Documentation
 ========================================
 

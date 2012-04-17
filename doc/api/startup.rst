@@ -17,4 +17,3 @@ Yet another alternative is to use a WSGI-compatible HTTP server and let it call
 into one of the WSGI entry points of the server.
 
 .. versionadded:: 6.1
-
