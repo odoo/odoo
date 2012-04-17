@@ -3,9 +3,10 @@ OpenERP Server Documentation
 '''''''''''''''''''''''''''''
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
 
    01_getting_started
+   02_architecture
    99_test_framework
 
 Main revisions and new features
