@@ -727,8 +727,6 @@ session.web.Sidebar = session.web.Widget.extend({
     init: function(parent) {
         this._super(parent);
         var view = this.getParent();
-        var view_manager = view.getParent();
-        var action = view_manager.action;
         this.sections = [
             { 'name' : 'print', 'label' : _t('Print'), },
             { 'name' : 'files', 'label' : _t('Attachement'), },
@@ -763,20 +761,21 @@ session.web.Sidebar = session.web.Widget.extend({
             var item = self.items[section][index];
             if (item.callback) {
                 item.callback.apply(self, [item]);
-            }
-            if (item.action) {
+            } else if (item.action) {
                 self.on_item_action_clicked(item);
+            } else if (item.url) {
+                return true;
             }
             return false;
         });
+        //this.$div.html(QWeb.render('FormView.sidebar.attachments', this));
+        //this.$element.find('.oe-binary-file').change(this.on_attachment_changed);
+        //this.$element.find('.oe-sidebar-attachment-delete').click(this.on_attachment_delete);
     },
     redraw: function() {
         var self = this;
         self.$element.html(QWeb.render('Sidebar', {widget: self}));
         this.$element.find('ul').hide();
-    },
-    add_default_sections: function() {
-        var self = this;
     },
     add_section: function() {
         var self = this;
@@ -857,6 +856,52 @@ session.web.Sidebar = session.web.Widget.extend({
             });
         });
     },
+    do_attachement_update: function(dataset, model_id) {
+        if (!model_id) {
+            this.on_attachments_loaded([]);
+        } else {
+            var dom = [ ['res_model', '=', dataset.model], ['res_id', '=', model_id], ['type', 'in', ['binary', 'url']] ];
+            var ds = new session.web.DataSetSearch(this, 'ir.attachment', dataset.get_context(), dom);
+            ds.read_slice(['name', 'url', 'type'], {}).then(this.on_attachments_loaded);
+        }
+    },
+    on_attachments_loaded: function(attachments) {
+        var self = this;
+        var items = [];
+        // TODO: preprend: _s +
+        var prefix = '/web/binary/saveas?session_id=' + self.session.session_id + '&model=ir.attachment&field=datas&filename_field=name&id=';
+        _.each(attachments,function(a) {
+            a.label = a.name;
+            if(a.type === "binary") {
+                a.url = prefix  + a.id + '&t=' + (new Date().getTime());
+            }
+        });
+        this.add_items('files', attachments);
+    },
+    on_attachment_changed: function(e) {
+        return;
+        window[this.element_id + '_iframe'] = this.do_update;
+        var $e = $(e.target);
+        if ($e.val() != '') {
+            this.$element.find('form.oe-binary-form').submit();
+            $e.parent().find('input[type=file]').prop('disabled', true);
+            $e.parent().find('button').prop('disabled', true).find('img, span').toggle();
+        }
+    },
+    on_attachment_delete: function(e) {
+        return;
+        var self = this, $e = $(e.currentTarget);
+        var name = _.str.trim($e.parent().find('a.oe-sidebar-attachments-link').text());
+        if (confirm(_.str.sprintf(_t("Do you really want to delete the attachment %s?"), name))) {
+            this.rpc('/web/dataset/unlink', {
+                model: 'ir.attachment',
+                ids: [parseInt($e.attr('data-id'))]
+            }, function(r) {
+                $e.parent().remove();
+                self.do_notify("Delete an attachment", "The attachment '" + name + "' has been deleted");
+            });
+        }
+    }
 });
 
 session.web.TranslateDialog = session.web.Dialog.extend({
@@ -1146,9 +1191,6 @@ session.web.View = session.web.Widget.extend({
     do_prev_view: function (options) {
     },
     do_search: function(view) {
-    },
-    set_common_sidebar_sections: function(sidebar) {
-        sidebar.add_default_sections();
     },
     on_sidebar_import: function() {
         var import_view = new session.web.DataImport(this, this.dataset);

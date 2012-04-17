@@ -112,7 +112,6 @@ openerp.web.FormView = openerp.web.View.extend({
         if (!this.sidebar && this.options.sidebar) {
             this.sidebar = new openerp.web.Sidebar(this);
             this.sidebar.appendTo(this.$sidebar);
-            //this.sidebar.attachments = new openerp.web.form.SidebarAttachments(this.sidebar, this);
             this.sidebar.add_toolbar(this.fields_view.toolbar);
             this.sidebar.add_items('other', [{
                 label: _t('Set Default'),
@@ -269,7 +268,7 @@ openerp.web.FormView = openerp.web.View.extend({
             self.is_initialized.resolve();
             self.do_update_pager(record.id == null);
             if (self.sidebar) {
-               // self.sidebar.attachments.do_update();
+               self.sidebar.do_attachement_update(self.dataset, self.datarecord.id);
             }
             if (self.default_focus_field) {
                 self.default_focus_field.focus();
@@ -697,12 +696,12 @@ openerp.web.FormView = openerp.web.View.extend({
                 this.dataset.alter_ids(this.dataset.ids.concat([this.datarecord.id]));
                 this.dataset.index = this.dataset.ids.length - 1;
             } else {
-            	this.dataset.alter_ids([this.datarecord.id].concat(this.dataset.ids));
+                this.dataset.alter_ids([this.datarecord.id].concat(this.dataset.ids));
                 this.dataset.index = 0;
             }
             this.do_update_pager();
             if (this.sidebar) {
-                // this.sidebar.attachments.do_update();
+                this.sidebar.do_attachement_update(this.dataset, this.datarecord.id);
             }
             //openerp.log("The record has been created with id #" + this.datarecord.id);
             this.reload();
@@ -1218,62 +1217,6 @@ openerp.web.form.FormDialog = openerp.web.Dialog.extend({
     },
     on_form_dialog_saved: function(r) {
         this.close();
-    }
-});
-
-
-openerp.web.form.SidebarAttachments = openerp.web.Widget.extend({
-    init: function(parent, form_view) {
-        //var $section = parent.add_section(_t('Attachments'), 'attachments');
-        //this.$div = $('<div class="oe-sidebar-attachments"></div>');
-        //$section.append(this.$div);
-        this._super(parent);
-        this.view = form_view;
-    },
-    do_update: function() {
-        return;
-        if (!this.view.datarecord.id) {
-            this.on_attachments_loaded([]);
-        } else {
-            (new openerp.web.DataSetSearch(
-                this, 'ir.attachment', this.view.dataset.get_context(),
-                [
-                    ['res_model', '=', this.view.dataset.model],
-                    ['res_id', '=', this.view.datarecord.id],
-                    ['type', 'in', ['binary', 'url']]
-                ])).read_slice(['name', 'url', 'type'], {}).then(this.on_attachments_loaded);
-        }
-    },
-    on_attachments_loaded: function(attachments) {
-        return;
-        this.attachments = attachments;
-        this.$div.html(QWeb.render('FormView.sidebar.attachments', this));
-        this.$element.find('.oe-binary-file').change(this.on_attachment_changed);
-        this.$element.find('.oe-sidebar-attachment-delete').click(this.on_attachment_delete);
-    },
-    on_attachment_changed: function(e) {
-        return;
-        window[this.element_id + '_iframe'] = this.do_update;
-        var $e = $(e.target);
-        if ($e.val() != '') {
-            this.$element.find('form.oe-binary-form').submit();
-            $e.parent().find('input[type=file]').prop('disabled', true);
-            $e.parent().find('button').prop('disabled', true).find('img, span').toggle();
-        }
-    },
-    on_attachment_delete: function(e) {
-        return;
-        var self = this, $e = $(e.currentTarget);
-        var name = _.str.trim($e.parent().find('a.oe-sidebar-attachments-link').text());
-        if (confirm(_.str.sprintf(_t("Do you really want to delete the attachment %s?"), name))) {
-            this.rpc('/web/dataset/unlink', {
-                model: 'ir.attachment',
-                ids: [parseInt($e.attr('data-id'))]
-            }, function(r) {
-                $e.parent().remove();
-                self.do_notify("Delete an attachment", "The attachment '" + name + "' has been deleted");
-            });
-        }
     }
 });
 
