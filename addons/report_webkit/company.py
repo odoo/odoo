@@ -50,6 +50,9 @@ class ResCompany(osv.osv):
                                                     'html_id',
                                                     'Available html',
                                                 ),
+                'lib_path' : fields.char('Webkit Executable Path (Deprecated)', size=264,
+                                         help="This option is now deprecated in favor of autodetection of webkit location",
+                                         invisible=1),
     }
 ResCompany()
 
