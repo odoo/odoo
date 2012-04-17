@@ -811,7 +811,7 @@
 <t t-name="FormRenderingNotebook">
     <div>
         <ul t-attf-class="oe_form_notebook #{classnames}">
-            <li t-foreach="pages" t-as="page">
+            <li t-foreach="pages" t-as="page" t-att-modifiers="page.modifiers">
                 <a t-attf-href="##{page.id}">
                     <t t-esc="page.string"/>
                 </a>
