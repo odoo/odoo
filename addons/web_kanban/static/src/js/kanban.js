@@ -658,8 +658,10 @@ openerp.web_kanban.QuickCreate = openerp.web.Widget.extend({
 
     start: function () {
         var self = this;
+        var $input = this.$element.find('input');
+        $input.focus();
         this.$element.on('submit', function () {
-            self.trigger('added', self.$element.find('input').val());
+            self.trigger('added', $input.val());
             return false;
         });
         return this._super();
