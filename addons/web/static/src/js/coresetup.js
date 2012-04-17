@@ -9,10 +9,10 @@ if (!console.debug) {
     console.debug = console.log;
 }
 
-openerp.web.coresetup = function(openerp) {
+openerp.web.coresetup = function(instance) {
 
 /** Configure default qweb */
-openerp.web._t = new openerp.web.TranslationDataBase().build_translation_function();
+instance.web._t = new instance.web.TranslationDataBase().build_translation_function();
 /**
  * Lazy translation function, only performs the translation when actually
  * printed (e.g. inserted into a template)
@@ -24,16 +24,16 @@ openerp.web._t = new openerp.web.TranslationDataBase().build_translation_functio
  * @param {String} s string to translate
  * @returns {Object} lazy translation object
  */
-openerp.web._lt = function (s) {
-    return {toString: function () { return openerp.web._t(s); }}
+instance.web._lt = function (s) {
+    return {toString: function () { return instance.web._t(s); }}
 };
-openerp.web.qweb = new QWeb2.Engine();
-openerp.web.qweb.debug = ($.deparam($.param.querystring()).debug != undefined);
-openerp.web.qweb.default_dict = {
+instance.web.qweb = new QWeb2.Engine();
+instance.web.qweb.debug = ($.deparam($.param.querystring()).debug != undefined);
+instance.web.qweb.default_dict = {
     '_' : _,
-    '_t' : openerp.web._t
+    '_t' : instance.web._t
 };
-openerp.web.qweb.preprocess_node = function() {
+instance.web.qweb.preprocess_node = function() {
     // Note that 'this' is the Qweb Node
     switch (this.node.nodeType) {
         case 3:
@@ -47,7 +47,7 @@ openerp.web.qweb.preprocess_node = function() {
             if (ts.length === 0) {
                 return;
             }
-            var tr = openerp.web._t(ts);
+            var tr = instance.web._t(ts);
             if (tr !== ts) {
                 this.node.data = tr;
             }
@@ -57,7 +57,7 @@ openerp.web.qweb.preprocess_node = function() {
             var attr, attrs = ['label', 'title', 'alt'];
             while (attr = attrs.pop()) {
                 if (this.attributes[attr]) {
-                    this.attributes[attr] = openerp.web._t(this.attributes[attr]);
+                    this.attributes[attr] = instance.web._t(this.attributes[attr]);
                 }
             }
     }
@@ -99,8 +99,8 @@ $.Mutex = (function() {
 })();
 
 /** Setup default connection */
-openerp.connection = new openerp.web.Connection();
-openerp.web.qweb.default_dict['__debug__'] = openerp.connection.debug;
+instance.connection = new instance.web.Connection();
+instance.web.qweb.default_dict['__debug__'] = instance.connection.debug;
 
 $.async_when = function() {
     var async = false;
@@ -131,7 +131,7 @@ $.async_when = function() {
 // special tweak for the web client
 var old_async_when = $.async_when;
 $.async_when = function() {
-	if (openerp.connection.synch)
+	if (instance.connection.synch)
 		return $.when.apply(this, arguments);
 	else
 		return old_async_when.apply(this, arguments);
