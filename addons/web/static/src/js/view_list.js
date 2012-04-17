@@ -1654,19 +1654,19 @@ var Collection = openerp.web.Class.extend(/** @lends Collection# */{
         var records = record instanceof Array ? record : [record];
 
         for(var i=0, length=records.length; i<length; ++i) {
-            var instance = (records[i] instanceof Record) ? records[i] : new Record(records[i]);
-            instance.bind(null, this._onRecordEvent);
-            this._byId[instance.get('id')] = instance;
+            var instance_ = (records[i] instanceof Record) ? records[i] : new Record(records[i]);
+            instance_.bind(null, this._onRecordEvent);
+            this._byId[instance_.get('id')] = instance_;
             if (options.at == undefined) {
-                this.records.push(instance);
+                this.records.push(instance_);
                 if (!options.silent) {
-                    this.trigger('add', this, instance, this.records.length-1);
+                    this.trigger('add', this, instance_, this.records.length-1);
                 }
             } else {
                 var insertion_index = options.at + i;
-                this.records.splice(insertion_index, 0, instance);
+                this.records.splice(insertion_index, 0, instance_);
                 if (!options.silent) {
-                    this.trigger('add', this, instance, insertion_index);
+                    this.trigger('add', this, instance_, insertion_index);
                 }
             }
             this.length++;

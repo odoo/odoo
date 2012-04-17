@@ -1926,7 +1926,7 @@ openerp.web.DateTimeWidget = openerp.web.OldWidget.extend({
     picker: function() {
         return $.fn[this.jqueryui_object].apply(this.$input_picker, arguments);
     },
-    on_picker_select: function(text, instance) {
+    on_picker_select: function(text, instance_) {
         var date = this.picker('getDate');
         this.$input.val(date ? this.format_client(date) : '').change();
     },
