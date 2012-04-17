@@ -876,7 +876,8 @@ session.web.Sidebar = session.web.Widget.extend({
                 a.url = prefix  + a.id + '&t=' + (new Date().getTime());
             }
         });
-        this.add_items('files', attachments);
+        this.items['files'] = attachments;
+        this.redraw();
     },
     on_attachment_changed: function(e) {
         return;
