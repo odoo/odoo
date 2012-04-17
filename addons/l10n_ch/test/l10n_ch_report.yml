@@ -57,4 +57,4 @@
   !python {model: account.invoice}: |
     from tools.test_reports import try_report
     company = self.pool.get('res.users').browse(cr, uid, uid).company_id
-    company.lib_path and try_report(cr, uid, 'report.invoice_web_bvr', [ref('l10n_ch_invoice')]) or 'Webkit lib not set'
+    try_report(cr, uid, 'report.invoice_web_bvr', [ref('l10n_ch_invoice')]) or 'Unable to find Webkit'
