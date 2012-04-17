@@ -1,32 +1,53 @@
-Module development
-==================
+Module structure
+================
 
-Module Structure
-+++++++++++++++++
+A module can contain the following elements:
 
-All the modules are located in the source/addons directory. The following
-steps are necessary to create a new module:
+ - **Business object** : declared as Python classes extending the OpenObject c
+   lass osv.Model, the persistence of these resource is completly managed 
+   by OpenObject,
+ - **Data** : XML/CSV files with meta-data (views and workflows declaration), 
+   configuration data (modules parametrization) and demo data (optional but 
+   recommended for testing),
+ - **Wizards** : stateful interactive forms used to assist users, often available 
+   as contextual actions on resources,
+ - **Reports** : RML (XML format). MAKO or OpenOffice report templates, to be 
+   merged with any kind of business data, and generate HTML, ODT or PDF reports.
 
-    * create a subdirectory in the source/addons directory
-    * create the import **__init__.py** file
-    * create a module description file: **__openerp__.py**
-    * create the **Python** file containing the **objects**
-    * create **.xml files** that create the data (views, menu entries, demo data, ...)
-    * optionally create **reports**, **wizards** or **workflows**.
+.. figure:: _static/03_module_gen_view.png
+   :width: 75%
+   :alt: Module composition
+   :align: center
+   
+   Module composition
 
-Python Module Descriptor File __init__.py
------------------------------------------
+Each module is contained in its own directory within either the server/bin/addons 
+directory or another directory of addons, configured in server installation.
+To create a new module, the following steps are required:
 
-The ``__init__.py`` file is, like any Python module, executed at the start
-of the program. It needs to import the Python files that need to be loaded.
+ - create a ``my_module`` subdirectory in the source/addons directory
+ - create the module description file ``__init__.py``
+ - create the module declaration file ``__openerp__.py``
+ - create **Python** files containing **objects**
+ - create **.xml files** holding module data such as views, menu entries 
+   or demo data
+ - optionally create **reports**, **wizards** or **workflows**
 
-So, if you create a "module.py" file, containing the description of your
-objects, you have to write one line in __init__.py::
+Description file __init__.py
+++++++++++++++++++++++++++++
+
+The ``__init__.py`` file is the Python module descriptor, because an OpenERP 
+module is also a regular Python module. Like any Python module, it is executed 
+at program start. It needs to import the Python files that need to be loaded.
+
+It contains the importation instruction applied to all Python files of the 
+module, without the .py extension. For example, if a module contains a single 
+python file named ``mymodule.py``, the file should look like:
 
     import module
 
-OpenERP Module Descriptor File __openerp__.py
----------------------------------------------
+Declaration file __openerp__.py
++++++++++++++++++++++++++++++++
 
 In the created module directory, you must add a **__openerp__.py** file.
 This file, which must be in Python format, is responsible to
@@ -37,76 +58,55 @@ This file, which must be in Python format, is responsible to
 
 This file must contain a Python dictionary with the following values:
 
-**name**
+::
 
-    The (Plain English) name of the module.
+  name             The (Plain English) name of the module.
+  version          The version of the module.
+  description      The module description (text).
+  author           The author of the module.
+  website          The website of the module.
+  license          The license of the module (default:GPL-2).
+  depends          List of modules on which this module depends. The base 
+                   module must almost always be in the dependencies because 
+                   some necessary data for the views, reports, ... are in 
+                   the base module.
+  init_xml         List of .xml files to load when the server is launched 
+                   with the "--init=module" argument. Filepaths must be 
+                   relative to the directory where the module is. OpenERP 
+                   XML file format is detailed in this section.
+  update_xml       List of .xml files to load when the server is launched with 
+                   the "--update=module" launched. Filepaths must be relative 
+                   to the directory where the module is. Files in **update_xml** 
+                   concern: views, reports and wizards.
+  installable      True or False. Determines whether the module is installable 
+                   or not.
+  auto_install     True or False (default: False). If set to ``True``, the
+                   module is a link module. It will be installed as soon
+                   as all its dependencies are installed.
 
-**version**
-
-    The version of the module.
-
-**description**
-
-    The module description (text).
-
-**author**
-
-    The author of the module.
-
-**website**
-
-    The website of the module.
-
-**license**
-
-    The license of the module (default:GPL-2).
-
-**depends**
-
-    List of modules on which this module depends. The base module must
-    almost always be in the dependencies because some necessary data for
-    the views, reports, ... are in the base module.
-
-**init_xml**
-
-    List of .xml files to load when the server is launched with the "--init=module"
-    argument. Filepaths must be relative to the directory where the module is.
-    OpenERP XML File Format is detailed in this section.
-
-**update_xml**
-
-    List of .xml files to load when the server is launched with the "--update=module"
-    launched. Filepaths must be relative to the directory where the module is.
-    OpenERP XML File Format is detailed in this section. The files in **update_xml**
-    concern: views, reports and wizards.
-
-**installable**
-
-    True or False. Determines if the module is installable or not.
-
-**active**
-
-    True or False (default: False). Determines the modules that are installed
-    on the database creation.
-
-**Example**
-
-Here is an example of __openerp__.py file for the product module
+For the ``my_module`` module, here is an example of ``__openerp__.py``
+declaration file:
 
 .. code-block:: python
 
     {
-        "name" : "Products & Pricelists",
-        "version" : "1.1",
-        "author" : "Open",
-        "category" : "Generic Modules/Inventory Control",
-        "depends" : ["base", "account"],
-        "init_xml" : [],
-        "demo_xml" : ["product_demo.xml"],
-        "update_xml" : ["product_data.xml", "product_report.xml", "product_wizard.xml",
-                        "product_view.xml", "pricelist_view.xml"],
-        "installable": True,
-        "active": True
+        'name' : "My Module",
+        'version' : "1.0",
+        'author' : "OpenERP",
+        'category' : "Tools",
+        'depends' : ['base',],
+        'init_xml' : [],
+        'demo_xml' : [
+            'module_demo.xml'
+        ],
+        'update_xml' : [
+            'module_view.xml',
+            'data/module_data.xml',
+            'report/module_report.xml',
+            'wizard/module_wizard.xml',
+        ],
+        'installable': True,
+        'auto_install': False,
     }
 
 The files that must be placed in init_xml are the ones that relate to the
@@ -546,52 +546,23 @@ which corresponds to the tools profile in OpenERP.
 
 
 
-Action creation
----------------
 
-Linking events to action
-++++++++++++++++++++++++
 
-The available type of events are:
 
-    * **client_print_multi** (print from a list or form)
-    * **client_action_multi** (action from a list or form)
-    * **tree_but_open** (double click on the item of a tree, like the menu)
-    * **tree_but_action** (action on the items of a tree) 
+Appendix
++++++++++
 
-To map an events to an action:
+Configure addons locations
+--------------------------
 
-.. code-block:: xml
+By default, the only directory of addons known by the server is server/bin/addons. 
+It is possible to add new addons by
 
-    <record model="ir.values" id="ir_open_journal_period">
-        <field name="key2">tree_but_open</field>
-        <field name="model">account.journal.period</field>
-        <field name="name">Open Journal</field>
-        <field name="value" eval="'ir.actions.wizard,%d'%action_move_journal_line_form_select"/>
-        <field name="object" eval="True"/>
-    </record>
-
-If you double click on a journal/period (object: account.journal.period), this will open the selected wizard. (id="action_move_journal_line_form_select").
-
-You can use a res_id field to allow this action only if the user click on a specific object.
-
-.. code-block:: xml
-
-    <record model="ir.values" id="ir_open_journal_period">
-        <field name="key2">tree_but_open</field>
-        <field name="model">account.journal.period</field>
-        <field name="name">Open Journal</field>
-        <field name="value" eval="'ir.actions.wizard,%d'%action_move_journal_line_form_select"/>
-        <field name="res_id" eval="3"/>
-        <field name="object" eval="True"/>
-    </record>
-
-The action will be triggered if the user clicks on the account.journal.period n°3.
-
-When you declare wizard, report or menus, the ir.values creation is automatically made with these tags:
-
-  * <wizard... />
-  * <menuitem... />
-  * <report... /> 
-
-So you usually do not need to add the mapping by yourself.
+ - copying them in server/bin/addons, or creating a symbolic link to each 
+   of them in this directory, or
+ - specifying another directory containing addons to the server. The later 
+   can be accomplished either by running the server with the ``--addons-path=`` 
+   option, or by configuring this option in the openerp_serverrc file, 
+   automatically generated under Linux in your home directory by the 
+   server when executed with the ``--save`` option. You can provide several 
+   addons to the ``addons_path`` = option, separating them using commas.
