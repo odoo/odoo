@@ -854,6 +854,12 @@ instance.web.FormView = instance.web.View.extend({
     register_field: function(field, name) {
         this.fields[name] = field;
         this.fields_order.push(name);
+        if (this.get_field(name).translate) {
+            translatable_fields.push(field);
+        }
+    },
+    get_field: function(field_name) {
+        return this.fields_view.fields[field_name];
     },
 });
 
@@ -1547,7 +1553,14 @@ instance.web.form.WidgetButton = instance.web.form.Widget.extend({
  *     this event is triggered all fields should reprocess their modifiers.
  */
 instance.web.form.FieldManagerInterface = {
-
+    /**
+     * Must return the asked field as in fields_get.
+     */
+    get_field: function(field_name) {},
+    /**
+     * Called by the field when the translate button is clicked.
+     */
+    open_translate_dialog: function(field) {},
 };
 
 /**
@@ -1628,9 +1641,10 @@ instance.web.form.AbstractField = instance.web.form.Widget.extend(/** @lends ins
      */
     init: function(field_manager, node) {
         this._super(field_manager, node);
+        this.field_manager = field_manager;
         this.name = this.node.attrs.name;
         this.value = false;
-        this.field = this.view.fields_view.fields[this.name] || {};
+        this.field = this.field_manager.get_field(this.name);
         this.set({required: this.modifiers['required'] === true});
         this.invalid = this.dirty = false;
         
@@ -1647,12 +1661,11 @@ instance.web.form.AbstractField = instance.web.form.Widget.extend(/** @lends ins
     start: function() {
         this._super.apply(this, arguments);
         if (this.field.translate) {
-            this.view.translatable_fields.push(this);
             this.$element.addClass('oe_form_field_translatable');
             this.$element.find('.oe_field_translate').click(this.on_translate);
         }
-        if (this.node.attrs.nolabel && instance.connection.debug) {
-            this.do_attach_tooltip(this, this.$label || this.$element);
+        if (instance.connection.debug) {
+            this.do_attach_tooltip(this, this.$element);
         }
         if (!this.disable_utility_classes) {
             var set_required = function() {
@@ -1674,7 +1687,7 @@ instance.web.form.AbstractField = instance.web.form.Widget.extend(/** @lends ins
     on_value_changed: function() {
     },
     on_translate: function() {
-        this.view.open_translate_dialog(this);
+        this.field_manager.open_translate_dialog(this);
     },
     get_value: function() {
         return this.value;
