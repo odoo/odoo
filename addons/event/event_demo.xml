@@ -38,16 +38,16 @@
 
     <record id="event_1" model="event.event">
         <field name="name">Opera of Verdi</field>
-        <field eval="time.strftime('%Y-%m-05 18:00:00')" name="date_begin"/>
-        <field eval="time.strftime('%Y-%m-05 21:00:00')" name="date_end"/>
+        <field eval="time.strftime('%Y-%m-%d 18:00:00')" name="date_begin"/>
+        <field eval="time.strftime('%Y-%m-%d 21:00:00')" name="date_end"/>
         <field name="type" ref="event_type_1"/>
         <field name="register_min">50</field>
         <field name="register_max">350</field>
     </record>
     <record id="event_2" model="event.event">
         <field name="name">Conference on ERP Business</field>
-        <field eval="time.strftime('%Y-%m-05 14:00:00')" name="date_begin"/>
-        <field eval="time.strftime('%Y-%m-05 16:30:00')" name="date_end"/>
+        <field eval="time.strftime('%Y-%m-%d 14:00:00')" name="date_begin"/>
+        <field eval="time.strftime('%Y-%m-%d 16:30:00')" name="date_end"/>
         <field name="type" ref="event_type_2"/>
         <field name="register_max">200</field>
     </record>
