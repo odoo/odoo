@@ -757,7 +757,6 @@ session.web.Sidebar = session.web.Widget.extend({
             var section = $(this).data('section');
             var index = $(this).data('index');
             $(this).closest('ul').hide();
-            console.log('click item',section,index);
             var item = self.items[section][index];
             if (item.callback) {
                 item.callback.apply(self, [item]);
@@ -876,8 +875,12 @@ session.web.Sidebar = session.web.Widget.extend({
                 a.url = prefix  + a.id + '&t=' + (new Date().getTime());
             }
         });
-        this.items['files'] = attachments;
-        this.redraw();
+        attachments.push( { label: _t("Add..."), callback: self.on_attachment_add } );
+        self.items['files'] = attachments;
+        self.redraw();
+    },
+    on_attachment_add: function(e) {
+        this.$element.find('.oe_sidebar_add').show();
     },
     on_attachment_changed: function(e) {
         return;
