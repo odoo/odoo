@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Customer Portal Claim',
+    'name': 'Customer Portal Issue',
     'version': '0.1',
     'category': 'Tools',
     'complexity': "easy",
@@ -29,12 +29,13 @@
     This module add the menu if claim and portal_customer is install.
     """,
     'author': 'OpenERP SA',
-    'depends': ['crm_claim','portal_customer'],
+    'depends': ['project_issue','portal_customer'],
     'update_xml': [
-        'portal_customer_claim_view.xml',
+        'portal_customer_issue_view.xml',
     ],
     'installable': True,
     'auto_install':True,
-    'category':'hidden',
+    'category':'hidden',    
+
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
