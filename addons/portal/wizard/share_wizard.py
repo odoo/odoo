@@ -140,7 +140,7 @@ class share_wizard_portal(osv.osv_memory):
             # must take care of existing users, by adding them to the new group, which is group_ids[0],
             # and adding the shortcut
             selected_user_ids = [x.id for x in wizard_data.user_ids]
-            self.pool.get('res.users').write(cr, UID_ROOT, selected_user_ids, {'groups_id': [(4,group_id)]})
+            self.pool.get('res.users').write(cr, UID_ROOT, selected_user_ids, {'groups_id': [(4,group_id[0])]})
             self._setup_action_and_shortcut(cr, uid, wizard_data, selected_user_ids, make_home=False, context=context)
             # populate the result lines for existing users too
             for user in wizard_data.user_ids:

@@ -737,7 +737,7 @@ class share_wizard(osv.osv_memory):
         # B.
         main_domain = wizard_data.domain if wizard_data.domain != '[]' else DOMAIN_ALL
         self._create_or_combine_sharing_rule(cr, current_user, wizard_data,
-                     group_id, model_id=model.id, domain=main_domain,
+                     group_id, model_id=model.id, domain=str(main_domain),
                      restrict=True, context=context)
         # C.
         self._create_indirect_sharing_rules(cr, current_user, wizard_data, group_id, obj1, context=context)
