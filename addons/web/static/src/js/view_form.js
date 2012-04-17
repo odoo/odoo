@@ -850,7 +850,11 @@ openerp.web.FormView = openerp.web.View.extend({
         });
         d.template = 'FormView.set_default';
         d.open();
-    }
+    },
+    register_field: function(field, name) {
+        this.fields[name] = field;
+        this.fields_order.push(name);
+    },
 });
 
 /**
@@ -914,6 +918,7 @@ openerp.web.form.FormRenderingEngine = openerp.web.Class.extend({
                 w.set_input_id($label.attr("for"));
             }
             self.alter_field(w);
+            self.view.register_field(w, $elem.attr("name"));
             w.replace($elem);
         });
         _.each(this.tags_to_init, function($elem) {
@@ -1625,8 +1630,6 @@ openerp.web.form.AbstractField = openerp.web.form.Widget.extend(/** @lends opene
         this._super(field_manager, node);
         this.name = this.node.attrs.name;
         this.value = false;
-        this.view.fields[this.name] = this;
-        this.view.fields_order.push(this.name);
         this.field = this.view.fields_view.fields[this.name] || {};
         this.set({required: this.modifiers['required'] === true});
         this.invalid = this.dirty = false;
