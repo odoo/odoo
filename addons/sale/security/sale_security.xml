@@ -84,7 +84,7 @@
     <record id="sale_order_personal_rule" model="ir.rule">
         <field name="name">Personal Orders</field>
         <field ref="model_sale_order" name="model_id"/>
-        <field name="domain_force">['|',('partner_id.email','=',user.login),('user_id','=',False)]</field>
+        <field name="domain_force">['|',('user_id','=',user.id),('user_id','=',False)]</field>
         <field name="groups" eval="[(4, ref('base.group_sale_salesman'))]"/>
     </record>
     <record id="sale_order_see_all" model="ir.rule">
