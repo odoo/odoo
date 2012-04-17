@@ -7,20 +7,20 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2012-03-21 20:08+0000\n"
+"PO-Revision-Date: 2012-04-16 21:32+0000\n"
 "Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-03-22 06:23+0000\n"
-"X-Generator: Launchpad (build 14981)\n"
+"X-Launchpad-Export-Date: 2012-04-17 05:36+0000\n"
+"X-Generator: Launchpad (build 15099)\n"
 
 #. module: account
 #: view:account.invoice.report:0
 #: view:analytic.entries.report:0
 msgid "last month"
-msgstr "föregående månad"
+msgstr "förra månaden"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -109,6 +109,9 @@ msgid ""
 "If you unreconciliate transactions, you must also verify all the actions "
 "that are linked to those transactions because they will not be disabled"
 msgstr ""
+"Om du upphäver avstämningar måste du också verifiera alla åtgärder som är "
+"kopplade till dessa transaktioner, därför dessa kommer inte att bli "
+"inaktiverade."
 
 #. module: account
 #: constraint:account.journal:0
@@ -166,7 +169,7 @@ msgstr "Varning!"
 #: code:addons/account/account.py:3112
 #, python-format
 msgid "Miscellaneous Journal"
-msgstr ""
+msgstr "Övrigjournal"
 
 #. module: account
 #: field:account.fiscal.position.account,account_src_id:0
@@ -2143,10 +2146,8 @@ msgid ""
 "certified Chart of Accounts exists for your specified country, a generic one "
 "can be installed and will be selected by default."
 msgstr ""
-"Föreslagen kontoplan matchar valt land. Tänk på att det är olika kontoplaner "
-"för kontant respektive fakturametod. Det finns ytterligare moduler för K1, "
-"K2 och K3-företag. Saknas det kontoplan för ditt land kan du välja en "
-"generisk."
+"Föreslagen kontoplan matchar valt land. Saknas det kontoplan för ditt land "
+"kan du välja en generisk. I nästa steg kan du välja varianter på kontoplanen."
 
 #. module: account
 #: view:account.account.type:0
@@ -2731,7 +2732,7 @@ msgstr ""
 #: model:ir.actions.server,name:account.ir_actions_server_action_wizard_multi_chart
 #: model:ir.ui.menu,name:account.menu_act_ir_actions_bleble
 msgid "New Company Financial Setting"
-msgstr ""
+msgstr "Nya bolags finansiella inställningar"
 
 #. module: account
 #: view:account.installer:0
@@ -3153,7 +3154,7 @@ msgstr ""
 #. module: account
 #: sql_constraint:account.tax:0
 msgid "The description must be unique per company!"
-msgstr ""
+msgstr "Beskrivningen måste vara unik per bolag"
 
 #. module: account
 #: help:account.account.type,close_method:0
@@ -3436,7 +3437,7 @@ msgstr ""
 #. module: account
 #: sql_constraint:res.currency:0
 msgid "The currency code must be unique per company!"
-msgstr ""
+msgstr "Valutakoden måste vara unik per bolag"
 
 #. module: account
 #: selection:account.account.type,close_method:0
@@ -3798,6 +3799,8 @@ msgid ""
 "The fiscalyear, periods or chart of account chosen have to belong to the "
 "same company."
 msgstr ""
+"Bokföringsåret, perioderna och kontoplanen i urvalet måste tillhöra samma "
+"bolag."
 
 #. module: account
 #: model:ir.actions.todo.category,name:account.category_accounting_configuration
@@ -4308,7 +4311,7 @@ msgstr "Credit Notes"
 #. module: account
 #: sql_constraint:account.period:0
 msgid "The name of the period must be unique per company!"
-msgstr ""
+msgstr "Periodnamnet måste vara unikt per bolag!"
 
 #. module: account
 #: view:wizard.multi.charts.accounts:0
@@ -4346,6 +4349,7 @@ msgstr "Allow Reconciliation"
 msgid ""
 "You can not modify company of this period as some journal items exists."
 msgstr ""
+"Du kan inte ändra bolag på denna period så länge det finns transaktioner."
 
 #. module: account
 #: view:account.analytic.account:0
@@ -4764,7 +4768,7 @@ msgstr ""
 #. module: account
 #: sql_constraint:account.invoice:0
 msgid "Invoice Number must be unique per Company!"
-msgstr ""
+msgstr "Fakturanummer måste vara unikt per bolag!"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_receivable_graph

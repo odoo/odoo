@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-02-17 09:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2012-04-14 22:03+0000\n"
+"Last-Translator: doingit.cl <Unknown>\n"
 "Language-Team: Spanish (Chile) <es_CL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-18 07:09+0000\n"
-"X-Generator: Launchpad (build 14814)\n"
+"X-Launchpad-Export-Date: 2012-04-15 05:13+0000\n"
+"X-Generator: Launchpad (build 15070)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -135,7 +135,7 @@ msgstr ""
 #. module: stock
 #: view:stock.picking:0
 msgid "Picking list"
-msgstr "Albarán"
+msgstr "Guía de despacho"
 
 #. module: stock
 #: report:lot.stock.overview:0 report:lot.stock.overview_all:0
@@ -204,7 +204,7 @@ msgstr ""
 #: code:addons/stock/stock.py:2516
 #, python-format
 msgid "Missing partial picking data for move #%s"
-msgstr "Faltan datos del albarán parcial para el movimiento #%s"
+msgstr "Faltan datos de la guía de despacho parcial para el movimiento #%s"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.action_partial_move_server
@@ -242,9 +242,9 @@ msgid ""
 "if you really want to change it '             #                        'for "
 "this product: \"%s\" (id: %d)"
 msgstr ""
-"La línea de movimiento actual ya está asignada a un albarán, elimínela "
-"primero si realmente quiere cambiarla ' # 'para este este producto: \"%s\" "
-"(id: %d)"
+"La línea de movimiento actual ya está asignada a una guía de despacho, "
+"elimínela primero si realmente quiere cambiarla ' # 'para este este "
+"producto: \"%s\" (id: %d)"
 
 #. module: stock
 #: selection:stock.picking,invoice_state:0
@@ -265,7 +265,7 @@ msgstr "Origen"
 #: view:board.board:0
 #: model:ir.actions.act_window,name:stock.action_stock_incoming_product_delay
 msgid "Incoming Products"
-msgstr "Albaranes de entrada"
+msgstr "Movimientos de entrada"
 
 #. module: stock
 #: view:report.stock.lines.date:0
@@ -310,8 +310,8 @@ msgstr ""
 #, python-format
 msgid "You cannot cancel picking because stock move is in done state !"
 msgstr ""
-"¡No puede cancelar el albarán porqué el movimiento de stock está en estado "
-"realizado!"
+"¡No puede cancelar la guiá de despacho porqué el movimiento de stock está en "
+"estado realizado!"
 
 #. module: stock
 #: code:addons/stock/stock.py:2337 code:addons/stock/stock.py:2379
@@ -446,7 +446,7 @@ msgstr "Fecha prevista"
 #: model:ir.actions.act_window,help:stock.action_warehouse_form
 msgid ""
 "Create and manage your warehouses and assign them a location from here"
-msgstr "Crea y gestiona sus almacenes y les asigna una ubicación desde aquí"
+msgstr "Crea y gestiona sus bodegas y les asigna una ubicación desde aquí"
 
 #. module: stock
 #: field:report.stock.move,product_qty_in:0
@@ -527,7 +527,7 @@ msgid ""
 "company warehouses"
 msgstr ""
 "Cantidad actual de productos con este número de lote de producción "
-"disponible en almacenes de la compañía."
+"disponible en bodegas de la compañía."
 
 #. module: stock
 #: field:stock.move,move_history_ids:0
@@ -549,7 +549,7 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree6
 #: field:stock.picking,move_lines:0
 msgid "Internal Moves"
-msgstr "Albaranes internos"
+msgstr "Guías de despacho internas"
 
 #. module: stock
 #: field:stock.move,location_dest_id:0
@@ -1128,7 +1128,7 @@ msgstr ""
 "almacén, agregando sus ubicaciones hijas. No puede contener los productos "
 "directamente.\n"
 "\n"
-"* Ubicación interna: Ubicación física dentro de su propios almacenes.\n"
+"* Ubicación interna: Ubicación física dentro de su propios bodegas.\n"
 "\n"
 "* Ubicación cliente: Ubicación virtual que representa la ubicación de "
 "destino para los productos enviados a sus clientes.\n"
@@ -1309,7 +1309,7 @@ msgstr "Identificación paquete"
 #. module: stock
 #: report:stock.picking.list:0
 msgid "Packing List:"
-msgstr "Albarán:"
+msgstr "Guía de despacho:"
 
 #. module: stock
 #: selection:stock.move,state:0
@@ -1414,7 +1414,7 @@ msgstr ""
 #, python-format
 msgid "You may only return pickings that are Confirmed, Available or Done!"
 msgstr ""
-"¡Sólo puede devolver albaranes que estén confirmados, disponibles o "
+"¡Sólo puede devolver guiás de despacho que estén confirmados, disponibles o "
 "realizados!"
 
 #. module: stock
@@ -1430,7 +1430,7 @@ msgstr "Revisiones de lote de producción"
 #. module: stock
 #: view:stock.picking:0
 msgid "Internal Picking List"
-msgstr "Albarán interno"
+msgstr "Guía de despacho interna"
 
 #. module: stock
 #: selection:report.stock.inventory,state:0
@@ -1487,7 +1487,7 @@ msgstr ""
 #. module: stock
 #: report:stock.picking.list:0
 msgid "Picking List:"
-msgstr "Albarán:"
+msgstr "Guía de despacho:"
 
 #. module: stock
 #: field:stock.inventory,date:0 field:stock.move,create_date:0
@@ -1508,7 +1508,7 @@ msgstr "Dirección del cliente o proveedor."
 #. module: stock
 #: view:report.stock.move:0 field:report.stock.move,picking_id:0
 msgid "Packing"
-msgstr "Albarán"
+msgstr "Guía de despacho"
 
 #. module: stock
 #: selection:report.stock.inventory,location_type:0
@@ -1685,8 +1685,8 @@ msgid ""
 "If this picking was split this field links to the picking that contains the "
 "other part that has been processed already."
 msgstr ""
-"Si este albarán se dividió, este campo enlaza con el albarán que contiene la "
-"otra parte que ya ha sido procesada."
+"Si esta guía de despacho se dividió, este campo enlaza con la guía de "
+"despacho que contiene la otra parte que ya ha sido procesada."
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_inventory
@@ -1872,7 +1872,7 @@ msgstr "Productos de desecho"
 #: code:addons/stock/stock.py:1157
 #, python-format
 msgid "You cannot remove the picking which is in %s state !"
-msgstr "¡No puede eliminar el albarán que está en estado %s!"
+msgstr "¡No puede eliminar la guía de despacho que está en estado %s!"
 
 #. module: stock
 #: view:stock.inventory.line.split:0 view:stock.move.consume:0
@@ -1884,7 +1884,7 @@ msgstr "Cancelar"
 #: model:ir.actions.act_window,name:stock.act_stock_return_picking
 #: model:ir.model,name:stock.model_stock_return_picking
 msgid "Return Picking"
-msgstr "Devolver albarán"
+msgstr "Devolver guía de despacho"
 
 #. module: stock
 #: view:stock.inventory:0 view:stock.move:0 view:stock.picking:0
@@ -2164,7 +2164,7 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_stock_warehouse_mgmt
 #: model:ir.ui.menu,name:stock.menu_warehouse_config
 msgid "Warehouse Management"
-msgstr "Gestión de almacenes"
+msgstr "Gestión de bodegas"
 
 #. module: stock
 #: selection:stock.picking,move_type:0
@@ -2216,7 +2216,7 @@ msgstr "Documento"
 #. module: stock
 #: view:stock.picking:0
 msgid "Input Picking List"
-msgstr "Albarán de entrada"
+msgstr "Guía de despacho de entrada"
 
 #. module: stock
 #: field:stock.move,product_uom:0 field:stock.partial.move.line,product_uom:0
@@ -2355,7 +2355,7 @@ msgstr ""
 #: view:board.board:0
 #: model:ir.actions.act_window,name:stock.action_stock_outgoing_product_delay
 msgid "Outgoing Products"
-msgstr "Albaranes de salida"
+msgstr "Movimientos de salida"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_reception_picking_move
@@ -2392,7 +2392,7 @@ msgstr "Operación prohibida"
 #. module: stock
 #: help:stock.picking,min_date:0
 msgid "Expected date for the picking to be processed"
-msgstr "Fecha prevista para procesar el albarán."
+msgstr "Fecha prevista para procesar el guía de despacho."
 
 #. module: stock
 #: code:addons/stock/product.py:435
@@ -2505,7 +2505,7 @@ msgstr "Inventario"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking
 msgid "Picking List"
-msgstr "Albarán"
+msgstr "LIsta de guías de despacho"
 
 #. module: stock
 #: sql_constraint:stock.production.lot:0
@@ -2860,7 +2860,7 @@ msgstr "Referencia inventario"
 #: code:addons/stock/stock.py:1334
 #, python-format
 msgid "Internal picking"
-msgstr "Albarán interno"
+msgstr "Movimiento interno"
 
 #. module: stock
 #: view:stock.location.product:0
@@ -2887,7 +2887,7 @@ msgstr "Nombre de revisión"
 #: model:ir.ui.menu,name:stock.menu_stock_root
 #: field:product.product,warehouse_id:0 view:stock.warehouse:0
 msgid "Warehouse"
-msgstr "Almacén"
+msgstr "Inventario"
 
 #. module: stock
 #: view:stock.inventory:0
@@ -2940,7 +2940,8 @@ msgstr "Fecha realización"
 msgid ""
 "Please put a partner on the picking list if you want to generate invoice."
 msgstr ""
-"Por favor indique una empresa en el albarán si desea generar factura."
+"Por favor indique una empresa en la guía de despacho si desea generar una "
+"factura."
 
 #. module: stock
 #: selection:stock.move,priority:0
@@ -2951,7 +2952,7 @@ msgstr "No urgente"
 #: model:ir.actions.act_window,name:stock.action_warehouse_form
 #: model:ir.ui.menu,name:stock.menu_action_warehouse_form
 msgid "Warehouses"
-msgstr "Almacenes"
+msgstr "Bodegas"
 
 #. module: stock
 #: field:stock.journal,user_id:0
@@ -3375,7 +3376,7 @@ msgstr ""
 #: view:stock.move:0 field:stock.partial.move,picking_id:0
 #: field:stock.partial.picking,picking_id:0
 msgid "Picking"
-msgstr "Albarán"
+msgstr "Guía de despacho"
 
 #. module: stock
 #: help:stock.picking,move_type:0
@@ -3506,7 +3507,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_relate_picking
 msgid "Related Picking"
-msgstr "Albarán relacionado"
+msgstr "Guía de despacho"
 
 #. module: stock
 #: view:report.stock.move:0
@@ -3607,7 +3608,7 @@ msgstr "Diario encadenamiento"
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_picking_list
 msgid "Packing list"
-msgstr "Albarán"
+msgstr "Guía de despacho"
 
 #. module: stock
 #: code:addons/stock/stock.py:738
@@ -3742,7 +3743,7 @@ msgstr "Fecha prevista máx."
 #. module: stock
 #: field:stock.picking,auto_picking:0
 msgid "Auto-Picking"
-msgstr "Auto-Albarán"
+msgstr "Auto-Guía de despacho"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_shop1
@@ -3911,7 +3912,7 @@ msgid ""
 "click on a location to get the list of the products and their stock level in "
 "this particular location and all its children."
 msgstr ""
-"Esto es la estructura de los almacenes y ubicaciones de su empresa. Puede "
+"Esto es la estructura de las bodegas y ubicaciones de su empresa. Puede "
 "pulsar sobre una ubicación para obtener la lista de los productos y su nivel "
 "de stock en esta ubicación específica y todos sus hijos."
 

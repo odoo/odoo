@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-04-09 13:40+0000\n"
+"PO-Revision-Date: 2012-04-11 09:08+0000\n"
 "Last-Translator: ThinkOpen Solutions <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-04-10 05:49+0000\n"
+"X-Launchpad-Export-Date: 2012-04-12 05:22+0000\n"
 "X-Generator: Launchpad (build 15070)\n"
 
 #. module: hr_holidays
@@ -172,6 +172,13 @@ msgid ""
 "  \n"
 "The state is 'Approved', when holiday request is approved by manager."
 msgstr ""
+"O estado é definido para 'Rascunho', quando um pedido de férias é criado.    "
+"        \n"
+"O estado é 'Aprovação em espera',quando o pedido de férias é confirmado pelo "
+"utilizador.          \n"
+"O estado é 'Recusado', quando o pedido de férias é recusado pelo gerente.    "
+"        \n"
+"O estado é 'Aprovado', quando o pedido de férias é aprovado pelo gerente."
 
 #. module: hr_holidays
 #: view:board.board:0
@@ -383,6 +390,11 @@ msgid ""
 "Requests' located in 'Human Resources \\ Leaves' to manage the leave days of "
 "the employees if the configuration does not allow to use this field."
 msgstr ""
+"O recurso por trás do campo 'Ausências Remanescentes' só pode ser usado "
+"quando há apenas um tipo de licença com a opção' Permitir para substituir "
+"Limite' desmarcada. (%s encontrado). Caso contrário, a atualização é "
+"ambígua, pois não podemos decidir sobre que ausência digitar a atualização a "
+"ser feita."
 
 #. module: hr_holidays
 #: view:hr.holidays.status:0
@@ -603,7 +615,7 @@ msgstr "Departamento de Ausências"
 #. module: hr_holidays
 #: field:hr.employee,current_leave_state:0
 msgid "Current Leave Status"
-msgstr ""
+msgstr "Estado da ausência actual"
 
 #. module: hr_holidays
 #: field:hr.holidays,type:0
