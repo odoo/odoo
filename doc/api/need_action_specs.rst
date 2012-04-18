@@ -1,6 +1,8 @@
 Need action mechanism
 =====================
 
+.. versionadded:: openobject-server.4124
+
 ir.needaction_mixin mixin class
 +++++++++++++++++++++++++++++++
 
@@ -15,15 +17,37 @@ Objects using the need_action feature should override the ``get_needaction_user_
 This class also offers several global services,:
  - ``needaction_get_record_ids``: for the current model and uid, get all record ids that ask this user to perform an action. This mechanism is used for instance to display the number of pending actions in menus, such as Leads (12)
  - ``needaction_get_action_count``: as ``needaction_get_record_ids`` but returns only the number of action, not the ids (performs a search with count=True)
- - ``needaction_get_user_record_references``: for a given uid, get all the records that ask this user to perform an action. Records are given as references, a list of tuples (model_name, record_id)
+ - ``needaction_get_user_record_references``: for a given uid, get all the records that ask this user to perform an action. Records are given as references, a list of tuples (model_name, record_id).
+
+.. versionadded:: openobject-server.XXXX
+
+This revision of the needaction_mixin mechanism slighty modifies the class behavior. The ``ir_needaction_mixin`` class now adds a function field on model inheriting from the class. This field allows to state whether a given record has a needaction for the current user. This is usefull if you want to customize views according to the needaction feature. For example, you may want to set records in bold in a list view if the current user has an action to perform on the record. This makes the class not a pure abstract class, but allows to easily use the action information. The field definition is::
+
+
+    def get_needaction_pending(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        needaction_user_ids = self.get_needaction_user_ids(cr, uid, ids, context=context)
+        for id in ids:
+            res[id] = uid in needaction_user_ids[id]
+        return res
+    
+    _columns = {
+        'needaction_pending': fields.function(get_needaction_pending, type='boolean',
+                        string='Need action pending',
+                        help='If True, this field states that users have to perform an action. \
+                                This field comes from the needaction mechanism. Please refer \
+                                to the ir.needaction_mixin class.'),
+    }
 
 Menu modification
 +++++++++++++++++
 
+.. versionchanged:: openobject-server.XXXX
+
 This revision adds three functional fields to ``ir.ui.menu`` model :
  - ``uses_needaction``: boolean field. If the menu entry action is an act_window action, and if this action is related to a model that uses the need_action mechanism, this field is set to true. Otherwise, it is false.
  - ``needaction_uid_ctr``: integer field. If the target model uses the need action mechanism, this field gives the number of actions the current user has to perform.
- - ``needaction_record_ids``: many2many field. If the target model uses the need action mechanism, this field holds the ids of the record requesting the user to perform an action.
+ - ``needaction_record_ids``: many2many field. If the target model uses the need action mechanism, this field holds the ids of the record requesting the user to perform an action. **This field has been removed on version XXXX**.
 
 Those fields are functional, because they depend on the user and must therefore be computed at every refresh, each time menus are displayed. The use of the need action mechanism is done by taking into account the action domain in order to display accurate results. When computing the value of the functional fields, the ids of records asking the user to perform an action is concatenated to the action domain. A counting search is then performed on the model, giving back the number of action the users has to perform, limited to the domain of the action.
 
