@@ -2,7 +2,7 @@
     <data>
         <menuitem icon="terp-partner"
             id="base.menu_base_partner" name="Sales"
-            sequence="0" groups="base.group_sale_salesman,base.group_sale_manager"/>
+            sequence="1" groups="base.group_sale_salesman,base.group_sale_manager"/>
 
         <menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" sequence="9"/>
 
@@ -96,8 +96,27 @@
             <field name="model">sale.order</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Sales Order">
-                    <group col="6" colspan="4">
+                <form layout="manual">
+                <div class="oe_form_topbar">
+                    <button name="invoice_recreate" states="invoice_except" string="Recreate Invoice" icon="gtk-go-forward"/>
+                    <button name="invoice_corrected" states="invoice_except" string="Ignore Exception" icon="gtk-apply"/>
+                    <button name="ship_recreate" states="shipping_except" string="Recreate Packing" icon="gtk-ok"/>
+                    <button name="ship_corrected" states="shipping_except" string="Ignore Exception" icon="gtk-apply"/>
+                    <button name="action_cancel" states="manual,progress" string="Cancel Order" type="object" icon="gtk-cancel"/>
+                    <button name="%(report_sale_order)d" string="Print Order" type="action" icon="gtk-print" states="waiting_date,manual,progress,done,shipping_except,invoice_except"/>
+                    <button name="manual_invoice" states="manual" string="Create Final Invoice" icon="gtk-go-forward" type="object"/>
+                    <button name="ship_cancel" states="shipping_except" string="Cancel Order" icon="gtk-cancel"/>
+                    <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" icon="gtk-convert"/>
+                    <button name="cancel" states="draft" string="Cancel Order" icon="gtk-cancel"/>
+                    <button name="invoice_cancel" states="invoice_except" string="Cancel Order" icon="gtk-cancel"/>
+                    <button name="%(report_sale_order)d" string="Print Quotation" type="action" icon="gtk-print" states="draft"/>
+                    <button name="order_confirm" states="draft" string="Confirm Order" icon="gtk-apply"/>
+                    <div class="oe_right">
+                        <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,progress,done" statusbar_colors='{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}'/>
+                    </div>
+                </div>
+                <sheet string="Sales Order" layout="auto">
+                    <group col="6" colspan="4" class="oe_form_header">
                         <group col="4" colspan="4">
                             <field name="name"/>
                             <field name="date_order"/>
@@ -187,30 +206,18 @@
                                     <field name="price_subtotal" groups="base.group_sale_notes_subtotal"/>
                                 </tree>
                             </field>
-                            <newline/>
-                            <group col="13" colspan="10">
-                                <field name="amount_untaxed" sum="Untaxed amount"/>
-                                <field name="amount_tax"/>
-                                <field name="amount_total"/>
-                                <button name="button_dummy" states="draft" string="Compute" type="object" icon="gtk-execute"/>
-                                <button name="%(action_view_sale_advance_payment_inv)d" string="Advance Invoice" type="action" icon="gtk-execute" states="draft,manual" groups="base.group_extended"/>
-                            </group>
-                            <group col="17" colspan="4">
-                                <field name="state" widget="statusbar" statusbar_visible="draft,progress,done" statusbar_colors='{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}'/>
-                                <button name="invoice_recreate" states="invoice_except" string="Recreate Invoice" icon="gtk-go-forward"/>
-                                <button name="invoice_corrected" states="invoice_except" string="Ignore Exception" icon="gtk-apply"/>
-                                <button name="ship_recreate" states="shipping_except" string="Recreate Packing" icon="gtk-ok"/>
-                                <button name="ship_corrected" states="shipping_except" string="Ignore Exception" icon="gtk-apply"/>
-                                <button name="action_cancel" states="manual,progress" string="Cancel Order" type="object" icon="gtk-cancel"/>
-                                <button name="%(report_sale_order)d" string="Print Order" type="action" icon="gtk-print" states="waiting_date,manual,progress,done,shipping_except,invoice_except"/>
-                                <button name="manual_invoice" states="manual" string="Create Final Invoice" icon="gtk-go-forward" type="object"/>
-                                <button name="ship_cancel" states="shipping_except" string="Cancel Order" icon="gtk-cancel"/>
-                                <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" icon="gtk-convert"/>
-                                <button name="cancel" states="draft" string="Cancel Order" icon="gtk-cancel"/>
-                                <button name="invoice_cancel" states="invoice_except" string="Cancel Order" icon="gtk-cancel"/>
-                                <button name="%(report_sale_order)d" string="Print Quotation" type="action" icon="gtk-print" states="draft"/>
-                                <button name="order_confirm" states="draft" string="Confirm Order" icon="gtk-apply"/>
-                            </group>
+
+                            <div class="oe_right">
+                                <group col="2">
+                                    <field name="amount_untaxed" sum="Untaxed amount"/>
+                                    <field name="amount_tax"/>
+                                    <field name="amount_total"/>
+                                </group>
+                            </div>
+                            <div class="oe_clear"/>
+
+                            <separator colspan="4" string="Notes"/>
+                            <field colspan="4" name="note" nolabel="1"/>
                         </page>
                         <page string="Other Information">
                             <group colspan="2" col="2" groups="base.group_extended" name="logistics">
@@ -241,7 +248,10 @@
                             <field colspan="4" name="picking_ids" nolabel="1"/>
                         </page>
                     </notebook>
-                <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
+                </sheet>
+                <div class="oe_form_sheet_width">
+                    <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
+                </div>
                 </form>
             </field>
         </record>
