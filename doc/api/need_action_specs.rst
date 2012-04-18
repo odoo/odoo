@@ -1,16 +1,18 @@
 Need action mechanism
 =====================
 
-.. versionadded:: openobject-server.4124
+.. versionadded:: 7.0
 
-ir.needaction_mixin mixin class
-+++++++++++++++++++++++++++++++
+ir.needaction_mixin class
++++++++++++++++++++++++++
+
+.. versionadded:: openobject-server.4124
 
 This revision adds a mixin class for objects using the need action feature.
 
 Need action feature can be used by objects willing to be able to signal that an action is required on a particular record. If in the business logic an action must be performed by somebody, for instance validation by a manager, this mechanism allows to set a list of users asked to perform an action.
 
-This class wraps a class (ir.needaction_users) that behaves like a many2many field. However, no field is added to the model inheriting from ir.needaction_mixin. The mixin class manages the low-level considerations of updating relationships. Every change made on the record calls a method that updates the relationships.
+This class wraps a class (ir.ir_needaction_users_rel) that behaves like a many2many field. However, no field is added to the model inheriting from ir.needaction_mixin. The mixin class manages the low-level considerations of updating relationships. Every change made on the record calls a method that updates the relationships.
 
 Objects using the need_action feature should override the ``get_needaction_user_ids`` method. This methods returns a dictionary whose keys are record ids, and values a list of user ids, like in a many2many relationship. Therefore by defining only one method, you can specify if an action is required by defining the users that have to do it, in every possible situation.
 
@@ -38,6 +40,23 @@ This revision of the needaction_mixin mechanism slighty modifies the class behav
                                 This field comes from the needaction mechanism. Please refer \
                                 to the ir.needaction_mixin class.'),
     }
+
+ir.needaction_users_rel class
++++++++++++++++++++++++++++++
+
+.. versionadded:: openobject-server.4124
+
+This class essentially wraps a database table that behaves like a many2many.
+It holds data related to the needaction mechanism inside OpenERP. A row 
+in this model is characterized by:
+
+  - ``res_model``: model of the record requiring an action
+  - ``res_id``: ID of the record requiring an action
+  - ``user_id``: foreign key to the res.users table, to the user that
+    has to perform the action
+
+This model can be seen as a many2many, linking (res_model, res_id) to  
+users (those whose attention is required on the record)
 
 Menu modification
 +++++++++++++++++
