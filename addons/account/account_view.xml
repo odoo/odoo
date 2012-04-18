@@ -2660,28 +2660,30 @@ action = pool.get('res.config').next(cr, uid, [], context)
                             </field>
                         </page>
                         <page string="CashBox">
-                            <group col="2" colspan="2" expand="1">
-                                <field name="starting_details_ids" nolabel="1" colspan="2" attrs="{'readonly':[('state','!=','draft')]}">
-                                    <tree string = "Opening Balance" editable="bottom">
-                                        <field name="pieces"/>
-                                        <field name="number" on_change="on_change_sub(pieces,number, parent.balance_end)"/>
-                                        <field name="subtotal" sum="Total"/>
+                            <group col="2" expand="1" attrs="{'invisible' : [('state', '=', 'open')]}">
+                                <separator string="Opening Cashbox" colspan="2" />
+                                <field name="starting_details_ids" nolabel="1">
+                                    <tree string="Opening Balance" editable="bottom">
+                                        <field name="pieces" readonly="1" />
+                                        <field name="number" on_change="on_change_sub(pieces,number, parent.balance_end)" />
+                                        <field name="subtotal" sum="Sub Total" />
                                     </tree>
-                                    <form string = "Opening Balance">
-                                        <field name="pieces"/>
+                                    <form string="Opening Balance">
+                                        <field name="pieces" readonly="1"/>
                                         <field name="number" on_change="on_change_sub(pieces,number, parent.balance_end)"/>
                                         <field name="subtotal"/>
                                     </form>
                                 </field>
                             </group>
-                            <group col="2" colspan="2" expand="1">
-                                <field name="ending_details_ids" nolabel="1" colspan="2" attrs="{'readonly':[('state','!=','open')]}">
-                                    <tree string = "Closing Balance" editable="bottom">
-                                        <field name="pieces"/>
+                            <group col="2" expand="1" attrs="{'invisible' : [('state', '=', 'draft')]}">
+                                <separator string="Closing Cashbox" colspan="2" />
+                                <field name="ending_details_ids" nolabel="1">
+                                    <tree string="Closing Balance" editable="bottom">
+                                        <field name="pieces" />
                                         <field name="number" on_change="on_change_sub(pieces,number, parent.balance_end)"/>
-                                        <field name="subtotal" sum="Total"/>
+                                        <field name="subtotal" sum="Sub Total"/>
                                     </tree>
-                                    <form string = "Closing Balance">
+                                    <form string="Closing Balance">
                                         <field name="pieces"/>
                                         <field name="number" on_change="on_change_sub(pieces,number, parent.balance_end)"/>
                                         <field name="subtotal"/>

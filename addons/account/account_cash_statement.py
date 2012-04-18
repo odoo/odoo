@@ -56,9 +56,9 @@ class account_cashbox_line(osv.osv):
         return {'value': {'subtotal': sub or 0.0}}
 
     _columns = {
-        'pieces': fields.float('Values', digits_compute=dp.get_precision('Account')),
-        'number': fields.integer('Number'),
-        'subtotal': fields.function(_sub_total, string='Sub Total', type='float', digits_compute=dp.get_precision('Account')),
+        'pieces': fields.float('Unit of Currency', digits_compute=dp.get_precision('Account')),
+        'number': fields.integer('Number of Units'),
+        'subtotal': fields.function(_sub_total, string='Subtotal', type='float', digits_compute=dp.get_precision('Account')),
         'starting_id': fields.many2one('account.bank.statement', ondelete='cascade'),
         'ending_id': fields.many2one('account.bank.statement', ondelete='cascade'),
      }
@@ -230,7 +230,7 @@ class account_cash_statement(osv.osv):
         return True
 
     _constraints = [
-        (check_opening_journal, "The selected journal has been opened !", ['journal_id']),
+        #(check_opening_journal, "The selected journal has been opened !", ['journal_id']),
     ]
 
     def create(self, cr, uid, vals, context=None):
@@ -284,6 +284,7 @@ class account_cash_statement(osv.osv):
                 for line in journal.cashbox_line_ids:
                     values['starting_details_ids'].append({'pieces' : line.pieces})
                     values['ending_details_ids'].append({'pieces' : line.pieces})
+
                 return { 'value' : values }
         else:
             return {
