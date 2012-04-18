@@ -1546,7 +1546,8 @@ instance.web.form.WidgetButton = instance.web.form.Widget.extend({
  * able to provide the features necessary for the fields to work.
  * 
  * Properties:
- *     - display_invalid_fields
+ *     - display_invalid_fields : if true, all fields where is_valid() return true should
+ *     be displayed as invalid.
  * Events:
  *     - view_content_has_changed : when the values of the fields have changed. When
  *     this event is triggered all fields should reprocess their modifiers.
@@ -1574,7 +1575,7 @@ instance.web.form.FieldManagerInterface = {
  *     - force_readonly: boolean, When it is true, the field should always appear
  *      in read only mode, no matter what the value of the "readonly" property can be.
  * Events:
- *     - changed_value: called to trigger a on_change in the view
+ *     - changed_value: triggered to inform the view to check on_changes
  * 
  */
 instance.web.form.FieldInterface = {
@@ -1624,10 +1625,19 @@ instance.web.form.FieldInterface = {
      * view.
      */
     set_input_id: function(id) {},
-    
+    /**
+     * Returns true if is_syntax_valid() returns true and the value is semantically
+     * valid too according to the semantic restrictions applied to the field.
+     */
     is_valid: function() {},
+    /**
+     * Returns true if the field holds a value which is syntaxically correct, ignoring
+     * the potential semantic restrictions applied to the field.
+     */
     is_syntax_valid: function() {},
-    is_false: function() {},
+    /**
+     * Must set the focus on the field.
+     */
     focus: function() {},
 };
 
@@ -1637,6 +1647,9 @@ instance.web.form.FieldInterface = {
  * Properties:
  *     - effective_readonly: when it is true, the widget is displayed as readonly. Vary depending
  *      the values of the "readonly" property and the "force_readonly" property on the field manager.
+ *     - value: useful property to hold the value of the field. By default, set_value() and get_value()
+ *     set and retrieve the value property. Changing the value property also triggers automatically
+ *     a 'changed_value' event that inform the view to trigger on_changes.
  * 
  */
 instance.web.form.AbstractField = instance.web.form.Widget.extend(/** @lends instance.web.form.AbstractField# */{
@@ -1704,6 +1717,10 @@ instance.web.form.AbstractField = instance.web.form.Widget.extend(/** @lends ins
     is_syntax_valid: function() {
         return true;
     },
+    /**
+     * Method useful to implement to ease validity testing. Must return true if the current
+     * value is similar to false in OpenERP.
+     */
     is_false: function() {
         return this.get('value') === false;
     },
