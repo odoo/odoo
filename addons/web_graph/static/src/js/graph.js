@@ -2,7 +2,7 @@
  * OpenERP web_graph
  *---------------------------------------------------------*/
 
-openerp.web_graph = function (openerp) {
+openerp.web_graph = function (instance) {
 var COLOR_PALETTE = [
     '#cc99ff', '#ccccff', '#48D1CC', '#CFD784', '#8B7B8B', '#75507b',
     '#b0008c', '#ff0000', '#ff8e00', '#9000ff', '#0078ff', '#00ff00',
@@ -12,10 +12,10 @@ var COLOR_PALETTE = [
     '#ad7fa8', '#729fcf', '#8ae234', '#e9b96e', '#fce94f', '#f57900',
     '#cc0000', '#d400a8'];
 
-var QWeb = openerp.web.qweb,
-     _lt = openerp.web._lt;
-openerp.web.views.add('graph', 'openerp.web_graph.GraphView');
-openerp.web_graph.GraphView = openerp.web.View.extend({
+var QWeb = instance.web.qweb,
+     _lt = instance.web._lt;
+instance.web.views.add('graph', 'instance.web_graph.GraphView');
+instance.web_graph.GraphView = instance.web.View.extend({
     display_name: _lt('Graph'),
     view_type: "graph",
 

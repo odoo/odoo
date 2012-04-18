@@ -1,6 +1,6 @@
-openerp.web.data_import = function(openerp) {
-var QWeb = openerp.web.qweb,
-    _t = openerp.web._t;
+openerp.web.data_import = function(instance) {
+var QWeb = instance.web.qweb,
+    _t = instance.web._t;
 /**
  * Safari does not deal well at all with raw JSON data being returned. As a
  * result, we're going to cheat by using a pseudo-jsonp: instead of getting
@@ -29,7 +29,7 @@ function jsonp(form, attributes, callback) {
     $(form).ajaxSubmit(attributes);
 }
 
-openerp.web.DataImport = openerp.web.Dialog.extend({
+instance.web.DataImport = instance.web.Dialog.extend({
     template: 'ImportDataView',
     dialog_title: {toString: function () { return _t("Import Data"); }},
     init: function(parent, dataset){
@@ -79,10 +79,10 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
         this.$element.delegate('fieldset legend', 'click', function() {
             $(this).parent().toggleClass('oe-closed');
         });
-        this.ready.push(new openerp.web.DataSet(this, this.model).call(
+        this.ready.push(new instance.web.DataSet(this, this.model).call(
             'fields_get', [], function (fields) {
                 self.graft_fields(fields);
-                self.ready.push(new openerp.web.DataSet(self, self.model)
+                self.ready.push(new instance.web.DataSet(self, self.model)
                         .default_get(_.pluck(self.fields, 'id')).then(function (fields) {
                     _.each(fields, function(val, key) {
                         if (val) {
@@ -140,7 +140,7 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
                 f.fields = [];
                 // only fetch sub-fields to a depth of 2 levels
                 if (level < 2) {
-                    self.ready.push(new openerp.web.DataSet(self, field.relation).call(
+                    self.ready.push(new instance.web.DataSet(self, field.relation).call(
                         'fields_get', [], function (fields) {
                             self.graft_fields(fields, f, level+1);
                     }));
@@ -151,7 +151,7 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
         });
     },
     toggle_import_button: function (newstate) {
-    	openerp.web.dialog(this.$element, 'widget')
+    	instance.web.dialog(this.$element, 'widget')
                 .find('.oe-dialog-import-button')
                 .button('option', 'disabled', !newstate);
     },

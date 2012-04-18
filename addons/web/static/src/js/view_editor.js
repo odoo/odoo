@@ -1,15 +1,15 @@
-openerp.web.view_editor = function(openerp) {
-var _t = openerp.web._t;
-var QWeb = openerp.web.qweb;
-openerp.web.ViewEditor =   openerp.web.OldWidget.extend({
+openerp.web.view_editor = function(instance) {
+var _t = instance.web._t;
+var QWeb = instance.web.qweb;
+instance.web.ViewEditor =   instance.web.OldWidget.extend({
     init: function(parent, element_id, dataset, view, options) {
         this._super(parent);
         this.element_id = element_id;
         this.parent = parent;
-        this.dataset = new openerp.web.DataSetSearch(this, 'ir.ui.view', null, null),
+        this.dataset = new instance.web.DataSetSearch(this, 'ir.ui.view', null, null),
         this.model = dataset.model;
         this.xml_element_id = 0;
-        this.property = openerp.web.ViewEditor.property_widget;
+        this.property = instance.web.ViewEditor.property_widget;
         this.one_object = false;
     },
     start: function() {
@@ -39,7 +39,7 @@ openerp.web.ViewEditor =   openerp.web.OldWidget.extend({
                 select_view_id: self.parent.fields_view.view_id
             }
         };
-        this.view_edit_dialog = new openerp.web.Dialog(this, {
+        this.view_edit_dialog = new instance.web.Dialog(this, {
             title: action_title,
             width: 850,
             buttons: [
@@ -51,7 +51,7 @@ openerp.web.ViewEditor =   openerp.web.OldWidget.extend({
         }).open();
         this.view_edit_dialog.on_close.add_last(function(){window.location.reload();});
         this.main_view_id = this.parent.fields_view.view_id;
-        this.action_manager = new openerp.web.ActionManager(this);
+        this.action_manager = new instance.web.ActionManager(this);
         this.action_manager.appendTo(this.view_edit_dialog);
         $.when(this.action_manager.do_action(action)).then(function() {
             var viewmanager = self.action_manager.inner_viewmanager,
@@ -67,7 +67,7 @@ openerp.web.ViewEditor =   openerp.web.OldWidget.extend({
     },
     on_create_view: function() {
         var self = this;
-        this.create_view_dialog = new openerp.web.Dialog(this, {
+        this.create_view_dialog = new instance.web.Dialog(this, {
             title: _.str.sprintf(_t("Create a view (%s)"), self.model),
             buttons: [
                 {text: _t("Save"), click: function () {
@@ -115,8 +115,8 @@ openerp.web.ViewEditor =   openerp.web.OldWidget.extend({
     },
     do_save_view: function(values) {
         def = $.Deferred();
-        var field_dataset = new openerp.web.DataSetSearch(this, this.model, null, null);
-        var model_dataset = new openerp.web.DataSetSearch(this, 'ir.model', null, null);
+        var field_dataset = new instance.web.DataSetSearch(this, this.model, null, null);
+        var model_dataset = new instance.web.DataSetSearch(this, 'ir.model', null, null);
         var view_string = "", field_name = false, self = this;
         field_dataset.call( 'fields_get', [],  function(fields) {
             _.each(['name', 'x_name'], function(value) {
@@ -360,7 +360,7 @@ openerp.web.ViewEditor =   openerp.web.OldWidget.extend({
     edit_view: function(one_object) {
         var self = this;
         this.one_object = one_object;
-        this.edit_xml_dialog = new openerp.web.Dialog(this, {
+        this.edit_xml_dialog = new instance.web.Dialog(this, {
             title: _.str.sprintf(_t("View Editor %d - %s"), self.main_view_id, self.model),
             height: '90%',
             buttons: [
@@ -392,7 +392,7 @@ openerp.web.ViewEditor =   openerp.web.OldWidget.extend({
                             action_buttons: false
                         }
                     };
-                    var action_manager = new openerp.web.ActionManager(self);
+                    var action_manager = new instance.web.ActionManager(self);
                     action_manager.do_action(action);
                 }},
                 {text: _t("Close"), click: function(){
@@ -517,7 +517,7 @@ openerp.web.ViewEditor =   openerp.web.OldWidget.extend({
         var self = this;
         var tr = self.get_object_by_id(this.one_object.clicked_tr_id, this.one_object['main_object'], [])[0].att_list[0];
         var parent_tr = ($(side).prevAll("tr[level=" + String(this.one_object.clicked_tr_level - 1) + "]"))[0];
-        var field_dataset = new openerp.web.DataSetSearch(this, this.model, null, null);
+        var field_dataset = new instance.web.DataSetSearch(this, this.model, null, null);
         parent_tr = $(parent_tr).find('a').text();
         field_dataset.call( 'fields_get', [],  function(result) {
             var fields = _.keys(result);
@@ -811,7 +811,7 @@ openerp.web.ViewEditor =   openerp.web.OldWidget.extend({
     },
     on_edit_node: function(properties){
         var self = this;
-        this.edit_node_dialog = new openerp.web.Dialog(this,{
+        this.edit_node_dialog = new instance.web.Dialog(this,{
             title: _t("Properties"),
             width: 450,
             buttons: [
@@ -881,7 +881,7 @@ openerp.web.ViewEditor =   openerp.web.OldWidget.extend({
         this.edit_widget = [];
         self.ready  = $.when(self.on_groups(properties)).then(function () {
             _PROPERTIES_ATTRIBUTES['groups']['selection'] = self.groups;
-            var values = _.keys( openerp.web.form.widgets.map);
+            var values = _.keys( instance.web.form.widgets.map);
             values.push('');
             values.sort();
             _PROPERTIES_ATTRIBUTES['widget']['selection'] = values;
@@ -909,8 +909,8 @@ openerp.web.ViewEditor =   openerp.web.OldWidget.extend({
             def.resolve();
         }
         var group_ids = [], group_names = {}, groups = [];
-        var res_groups = new openerp.web.DataSetSearch(this,'res.groups', null, null),
-            model_data = new openerp.web.DataSetSearch(self,'ir.model.data', null, null);
+        var res_groups = new instance.web.DataSetSearch(this,'res.groups', null, null),
+            model_data = new instance.web.DataSetSearch(self,'ir.model.data', null, null);
             res_groups.read_slice([], {}).done(function (res_grp) {
                 _.each(res_grp, function (res) {
                     var key = res.id;
@@ -936,7 +936,7 @@ openerp.web.ViewEditor =   openerp.web.OldWidget.extend({
                             {'name': 'field_value','selection': fields, 'value': false, 'string': '','type': 'selection'},
                             {'name': 'position','selection': ['After','Before','Inside'], 'value': false, 'string': 'Position','type': 'selection'}];
         this.add_widget = [];
-        this.add_node_dialog = new openerp.web.Dialog(this,{
+        this.add_node_dialog = new instance.web.Dialog(this,{
             title: _t("Properties"),
             width: 450,
             buttons: [
@@ -981,7 +981,7 @@ openerp.web.ViewEditor =   openerp.web.OldWidget.extend({
         });
         table_selector.find("td[id^=]").attr("width","100px");
         self.add_node_dialog.$element.find('#new_field').click(function() {
-            model_data = new openerp.web.DataSetSearch(self,'ir.model', null, null);
+            model_data = new instance.web.DataSetSearch(self,'ir.model', null, null);
             model_data.read_slice([], {domain: [['model','=', self.model]]}).then(function(result) {
                 self.render_new_field(result[0].id);
             });
@@ -999,7 +999,7 @@ openerp.web.ViewEditor =   openerp.web.OldWidget.extend({
                 action_buttons: true
             }
         };
-        var action_manager = new openerp.web.ActionManager(self);
+        var action_manager = new instance.web.ActionManager(self);
         $.when(action_manager.do_action(action)).then(function() {
             var controller = action_manager.dialog_viewmanager.views['form'].controller;
             controller.on_button_cancel.add_last(function(){
@@ -1016,7 +1016,7 @@ openerp.web.ViewEditor =   openerp.web.OldWidget.extend({
         });
     }
 });
-openerp.web.ViewEditor.Field = openerp.web.Class.extend({
+instance.web.ViewEditor.Field = instance.web.Class.extend({
     init: function(view, widget) {
         this.$element = view.$element;
         this.dirty = false;
@@ -1042,7 +1042,7 @@ openerp.web.ViewEditor.Field = openerp.web.Class.extend({
     validate: function() {
         this.is_invalid = false;
         try {
-            var value = openerp.web.parse_value(this.get_value(), this, '');
+            var value = instance.web.parse_value(this.get_value(), this, '');
             this.is_invalid = this.required && value === '';
         } catch(e) {
             this.is_invalid = true;
@@ -1052,7 +1052,7 @@ openerp.web.ViewEditor.Field = openerp.web.Class.extend({
         return _.str.sprintf("<td id = %s>%s</td>", this.name, QWeb.render(this.template, {widget: this}))
     }
 });
-openerp.web.ViewEditor.FieldBoolean = openerp.web.ViewEditor.Field.extend({
+instance.web.ViewEditor.FieldBoolean = instance.web.ViewEditor.Field.extend({
     template : "vieweditor_boolean",
     start: function() {
         var self = this;
@@ -1070,7 +1070,7 @@ openerp.web.ViewEditor.FieldBoolean = openerp.web.ViewEditor.Field.extend({
         return  this.$element.find("input[id=" + this.name + "]").is(':checked')? "1" : null;
     }
 });
-openerp.web.ViewEditor.FieldChar = openerp.web.ViewEditor.Field.extend({
+instance.web.ViewEditor.FieldChar = instance.web.ViewEditor.Field.extend({
     template : "vieweditor_char",
     start: function () {
         var self = this;
@@ -1086,7 +1086,7 @@ openerp.web.ViewEditor.FieldChar = openerp.web.ViewEditor.Field.extend({
         return this.$element.find("input[id=" + this.name + "]").val();
     }
 });
-openerp.web.ViewEditor.FieldSelect = openerp.web.ViewEditor.Field.extend({
+instance.web.ViewEditor.FieldSelect = instance.web.ViewEditor.Field.extend({
     template : "vieweditor_selection",
     start: function () {
         var self = this;
@@ -1116,7 +1116,7 @@ openerp.web.ViewEditor.FieldSelect = openerp.web.ViewEditor.Field.extend({
         return this.$element.find("select[id=" + this.name + "]").val();
     }
 });
-openerp.web.ViewEditor.FieldSelectMulti = openerp.web.ViewEditor.FieldSelect.extend({
+instance.web.ViewEditor.FieldSelectMulti = instance.web.ViewEditor.FieldSelect.extend({
     start: function () {
         this._super();
         this.$element.find("select[id=" + this.name + "]").css('height', '100px').attr("multiple", true);
@@ -1132,7 +1132,7 @@ openerp.web.ViewEditor.FieldSelectMulti = openerp.web.ViewEditor.FieldSelect.ext
         });
     }
 });
-openerp.web.ViewEditor.FieldFloat = openerp.web.ViewEditor.FieldChar.extend({
+instance.web.ViewEditor.FieldFloat = instance.web.ViewEditor.FieldChar.extend({
 });
 
 var _PROPERTIES = {
@@ -1197,11 +1197,11 @@ var _ICONS = ['','STOCK_ABOUT', 'STOCK_ADD', 'STOCK_APPLY', 'STOCK_BOLD',
             'terp-sale', 'terp-tools', 'terp-administration', 'terp-hr', 'terp-partner',
             'terp-project', 'terp-report', 'terp-stock', 'terp-calendar', 'terp-graph'
 ];
-openerp.web.ViewEditor.property_widget = new openerp.web.Registry({
-    'boolean' : 'openerp.web.ViewEditor.FieldBoolean',
-    'selection_multi' : 'openerp.web.ViewEditor.FieldSelectMulti',
-    'selection' : 'openerp.web.ViewEditor.FieldSelect',
-    'char' : 'openerp.web.ViewEditor.FieldChar',
-    'float' : 'openerp.web.ViewEditor.FieldFloat'
+instance.web.ViewEditor.property_widget = new instance.web.Registry({
+    'boolean' : 'instance.web.ViewEditor.FieldBoolean',
+    'selection_multi' : 'instance.web.ViewEditor.FieldSelectMulti',
+    'selection' : 'instance.web.ViewEditor.FieldSelect',
+    'char' : 'instance.web.ViewEditor.FieldChar',
+    'float' : 'instance.web.ViewEditor.FieldFloat'
 });
 };

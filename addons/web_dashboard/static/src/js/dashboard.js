@@ -1,13 +1,13 @@
-openerp.web_dashboard = function(openerp) {
-var QWeb = openerp.web.qweb,
-    _t = openerp.web._t;
+openerp.web_dashboard = function(instance) {
+var QWeb = instance.web.qweb,
+    _t = instance.web._t;
 
-if (!openerp.web_dashboard) {
+if (!instance.web_dashboard) {
     /** @namespace */
-    openerp.web_dashboard = {};
+    instance.web_dashboard = {};
 }
 
-openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
+instance.web.form.DashBoard = instance.web.form.Widget.extend({
     init: function(view, node) {
         this._super(view, node);
         this.form_template = 'DashBoard';
@@ -56,7 +56,7 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
         var qdict = {
             current_layout : this.$element.find('.oe-dashboard').attr('data-layout')
         };
-        var $dialog = openerp.web.dialog($('<div>'), {
+        var $dialog = instance.web.dialog($('<div>'), {
                             modal: true,
                             title: _t("Edit Layout"),
                             width: 'auto',
@@ -188,7 +188,7 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
                 selectable: false
             }
         };
-        var am = new openerp.web.ActionManager(this),
+        var am = new instance.web.ActionManager(this),
             // FIXME: ideally the dashboard view shall be refactored like kanban.
             $action = $('#' + this.view.element_id + '_action_' + index);
         $action.parent().data('action_attrs', action_attrs);
@@ -249,7 +249,7 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
         action_manager.do_action(view_manager.action);
     }
 });
-openerp.web.form.DashBoardLegacy = openerp.web.form.DashBoard.extend({
+instance.web.form.DashBoardLegacy = instance.web.form.DashBoard.extend({
     renderElement: function() {
         if (this.node.tag == 'hpaned') {
             this.node.attrs.style = '2-1';
@@ -273,25 +273,25 @@ openerp.web.form.DashBoardLegacy = openerp.web.form.DashBoard.extend({
     }
 });
 
-openerp.web.form.tags.add('hpaned', 'openerp.web.form.DashBoardLegacy');
-openerp.web.form.tags.add('vpaned', 'openerp.web.form.DashBoardLegacy');
-openerp.web.form.tags.add('board', 'openerp.web.form.DashBoard');
+instance.web.form.tags.add('hpaned', 'instance.web.form.DashBoardLegacy');
+instance.web.form.tags.add('vpaned', 'instance.web.form.DashBoardLegacy');
+instance.web.form.tags.add('board', 'instance.web.form.DashBoard');
 
 /*
  * ConfigOverview
  * This client action designed to be used as a dashboard widget display
  * ir.actions.todo in a fancy way
  */
-openerp.web.client_actions.add( 'board.config.overview', 'openerp.web_dashboard.ConfigOverview');
-openerp.web_dashboard.ConfigOverview = openerp.web.View.extend({
+instance.web.client_actions.add( 'board.config.overview', 'instance.web_dashboard.ConfigOverview');
+instance.web_dashboard.ConfigOverview = instance.web.View.extend({
     template: 'ConfigOverview',
     init: function (parent) {
         this._super(parent);
-        this.user = _.extend(new openerp.web.DataSet(this, 'res.users'), {
+        this.user = _.extend(new instance.web.DataSet(this, 'res.users'), {
             index: 0,
             ids: [this.session.uid]
         });
-        this.dataset = new openerp.web.DataSetSearch(this, 'ir.actions.todo');
+        this.dataset = new instance.web.DataSetSearch(this, 'ir.actions.todo');
     },
     start: function () {
         var self = this;
@@ -363,15 +363,15 @@ openerp.web_dashboard.ConfigOverview = openerp.web.View.extend({
  * This client action designed to be used as a dashboard widget display
  * the html content of a res_widget given as argument
  */
-openerp.web.client_actions.add( 'board.home.widgets', 'openerp.web_dashboard.Widget');
-openerp.web_dashboard.Widget = openerp.web.View.extend(/** @lends openerp.web_dashboard.Widgets# */{
+instance.web.client_actions.add( 'board.home.widgets', 'instance.web_dashboard.Widget');
+instance.web_dashboard.Widget = instance.web.View.extend(/** @lends instance.web_dashboard.Widgets# */{
     template: 'HomeWidget',
     /**
      * Initializes a "HomeWidget" client widget: handles the display of a given
      * res.widget objects in an OpenERP view (mainly a dashboard).
      *
-     * @constructs openerp.web_dashboard.Widget
-     * @extends openerp.web.View
+     * @constructs instance.web_dashboard.Widget
+     * @extends instance.web.View
      *
      * @param {Object} parent
      * @param {Object} options
@@ -382,7 +382,7 @@ openerp.web_dashboard.Widget = openerp.web.View.extend(/** @lends openerp.web_da
         this.widget_id = options.widget_id;
     },
     start: function () {
-        var ds = new openerp.web.DataSet(this, 'res.widget');
+        var ds = new instance.web.DataSet(this, 'res.widget');
         return ds.read_ids([this.widget_id], ['title']).then(this.on_widget_loaded);
     },
     on_widget_loaded: function (widgets) {
@@ -401,8 +401,8 @@ openerp.web_dashboard.Widget = openerp.web.View.extend(/** @lends openerp.web_da
  * HomeTiles this client action display either the list of application to
  * install (if none is installed yet) or a list of root menu items
  */
-openerp.web.client_actions.add('default_home', 'session.web_dashboard.ApplicationTiles');
-openerp.web_dashboard.ApplicationTiles = openerp.web.OldWidget.extend({
+instance.web.client_actions.add('default_home', 'session.web_dashboard.ApplicationTiles');
+instance.web_dashboard.ApplicationTiles = instance.web.OldWidget.extend({
     template: 'web_dashboard.ApplicationTiles',
     init: function(parent) {
         this._super(parent);
@@ -410,7 +410,7 @@ openerp.web_dashboard.ApplicationTiles = openerp.web.OldWidget.extend({
     start: function() {
         var self = this;
         var domain = [['application','=',true], ['state','=','installed'], ['name', '!=', 'base']];
-        var ds = new openerp.web.DataSetSearch(this, 'ir.module.module',{},domain);
+        var ds = new instance.web.DataSetSearch(this, 'ir.module.module',{},domain);
         ds.read_slice(['id']).then(function(result) {
             if(result.length) {
                 self.on_installed_database();
@@ -420,17 +420,17 @@ openerp.web_dashboard.ApplicationTiles = openerp.web.OldWidget.extend({
         });
     },
     on_uninstalled_database: function() {
-        installer = new openerp.web_dashboard.ApplicationInstaller(this);
+        installer = new instance.web_dashboard.ApplicationInstaller(this);
         installer.appendTo(this.$element);
     },
     on_installed_database: function() {
         var self = this;
         self.rpc('/web/menu/get_user_roots', {}).then(function (menu_ids) {
-            var menuds = new openerp.web.DataSet(this, 'ir.ui.menu',{})
+            var menuds = new instance.web.DataSet(this, 'ir.ui.menu',{})
                 .read_ids(menu_ids, ['name', 'web_icon_data', 'web_icon_hover_data', 'module']).then(function (applications) {
                     var tiles = QWeb.render('ApplicationTiles.content', {applications: applications});
                     $(tiles).appendTo(self.$element).find('.oe_install-module-link').click(function () {
-                        openerp.webclient.menu.on_menu_click(null, $(this).data('menu'))
+                        instance.webclient.menu.on_menu_click(null, $(this).data('menu'))
                     });
                 });
         });
@@ -441,13 +441,13 @@ openerp.web_dashboard.ApplicationTiles = openerp.web.OldWidget.extend({
  * ApplicationInstaller
  * This client action  display a list of applications to install.
  */
-openerp.web.client_actions.add( 'board.application.installer', 'openerp.web_dashboard.ApplicationInstaller');
-openerp.web_dashboard.ApplicationInstaller = openerp.web.OldWidget.extend({
+instance.web.client_actions.add( 'board.application.installer', 'instance.web_dashboard.ApplicationInstaller');
+instance.web_dashboard.ApplicationInstaller = instance.web.OldWidget.extend({
     template: 'web_dashboard.ApplicationInstaller',
     start: function () {
         // TODO menu hide
         var r = this._super();
-        this.action_manager = new openerp.web.ActionManager(this);
+        this.action_manager = new instance.web.ActionManager(this);
         this.action_manager.appendTo(this.$element.find('.oe_installer'));
         this.action_manager.do_action({
             type: 'ir.actions.act_window',
