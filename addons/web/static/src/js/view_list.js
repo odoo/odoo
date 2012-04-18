@@ -229,7 +229,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         }
 
         if (this.fields_view.arch.attrs.fonts) {
-            this.fonts = _(this.fields_view.arch.attrs.fonts.split(',')).chain().compact()
+            this.fonts = _(this.fields_view.arch.attrs.fonts.split(';')).chain().compact()
                 .map(function(font_pair) {
                     var pair = font_pair.split(':'),
                         font = pair[0],
