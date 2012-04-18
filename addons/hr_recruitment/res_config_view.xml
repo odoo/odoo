@@ -7,12 +7,6 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="hr.view_human_resources_configuration"/>
             <field name="arch" type="xml">
-                <field name="module_hr_recruitment" position="after">
-                    <group colspan="2">
-                        <button name="%(hr_recruitment_stage_form_installer)d" string="Review Recruitment Stages"
-                            type="action" icon="terp-stage"/>
-                    </group>
-                </field>
                 <group name="config_recruitment" position="after">
                     <separator  string="Recruitment" colspan="4"/>
                     <field name="module_document_ftp"/>
