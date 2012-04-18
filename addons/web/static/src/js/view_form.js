@@ -1698,7 +1698,13 @@ instance.web.form.AbstractField = instance.web.form.Widget.extend(/** @lends ins
         return this.get('value');
     },
     is_valid: function() {
+        return this.is_syntax_valid() && (! this.get('required') || ! this.is_false());
+    },
+    is_syntax_valid: function() {
         return true;
+    },
+    is_false: function() {
+        return this.get('value') === false;
     },
     is_dirty: function() {
         return this.dirty && !this.get("effective_readonly");
@@ -1716,7 +1722,7 @@ instance.web.form.AbstractField = instance.web.form.Widget.extend(/** @lends ins
     },
     _on_ui_change: function() {
         this.dirty = true;
-        if (this.is_valid()) {
+        if (this.is_syntax_valid()) {
             this.view.do_onchange(this);
             this.view.on_form_changed(true);
             this.view.do_notify_change();
@@ -1810,16 +1816,19 @@ instance.web.form.FieldChar = instance.web.form.AbstractField.extend(_.extend({}
             this.$element.text(show_value);
         }
     },
-    is_valid: function() {
+    is_syntax_valid: function() {
         if (!this.get("effective_readonly")) {
             try {
                 var value_ = instance.web.parse_value(this.$element.find('input').val(), this, '');
-                return (! this.get("required")) || value_ !== '';
+                return true;
             } catch(e) {
                 return false;
             }
         }
         return true;
+    },
+    is_false: function() {
+        return this.get('value') === '';
     },
     focus: function($element) {
         this._super($element || this.$element.find('input:first'));
@@ -1846,7 +1855,7 @@ instance.web.form.FieldEmail = instance.web.form.FieldChar.extend({
         }
     },
     on_button_clicked: function() {
-        if (!this.get('value') || !this.is_valid()) {
+        if (!this.get('value') || !this.is_syntax_valid()) {
             this.do_warn("E-mail error", "Can't send email to invalid e-mail address");
         } else {
             location.href = 'mailto:' + this.get('value');
@@ -1958,7 +1967,7 @@ instance.web.DateTimeWidget = instance.web.OldWidget.extend({
         this.$input.prop('readonly', this.readonly);
         this.$element.find('img.oe_datepicker_trigger').toggleClass('oe_input_icon_disabled', readonly);
     },
-    is_valid: function() {
+    is_valid_: function() {
         var value_ = this.$input.val();
         if (value_ === "") {
             return true;
@@ -1978,7 +1987,7 @@ instance.web.DateTimeWidget = instance.web.OldWidget.extend({
         return instance.web.format_value(v, {"widget": this.type_of_date});
     },
     on_change: function() {
-        if (this.is_valid()) {
+        if (this.is_valid_()) {
             this.set_value_from_ui_();
         }
     }
@@ -2020,11 +2029,14 @@ instance.web.form.FieldDatetime = instance.web.form.AbstractField.extend(_.exten
             this.$element.text(instance.web.format_value(this.get('value'), this, ''));
         }
     },
-    is_valid: function() {
+    is_syntax_valid: function() {
         if (!this.get("effective_readonly")) {
-            return this.datewidget.is_valid() && (!this.get("required") || this.datewidget.get_value());
+            return this.datewidget.is_valid_();
         }
         return true;
+    },
+    is_false: function() {
+        return this.get('value') === '';
     },
     focus: function($element) {
         this._super($element || (this.datewidget && this.datewidget.$input));
@@ -2065,16 +2077,19 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(_.extend({}
             this.$element.text(show_value);
         }
     },
-    is_valid: function() {
+    is_syntax_valid: function() {
         if (!this.get("effective_readonly")) {
             try {
                 var value_ = instance.web.parse_value(this.$textarea.val(), this, '');
-                return !this.get("required") || value_ !== '';
+                return true;
             } catch(e) {
                 return false;
             }
         }
         return true;
+    },
+    is_false: function() {
+        return this.get('value') === '';
     },
     focus: function($element) {
         this._super($element || this.$textarea);
@@ -2209,13 +2224,12 @@ instance.web.form.FieldSelection = instance.web.form.AbstractField.extend(_.exte
             this.$element.text(option ? option[1] : this.values[0][1]);
         }
     },
-    is_valid: function() {
+    is_syntax_valid: function() {
         if (this.get("effective_readonly")) {
             return true;
         }
         var value_ = this.values[this.$element.find('select')[0].selectedIndex];
-        var invalid_ = !(value_ && !(this.get("required") && value_[0] === false));
-        return ! invalid_;
+        return !! value_;
     },
     focus: function($element) {
         this._super($element || this.$element.find('select:first'));
@@ -2559,8 +2573,8 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(_.exten
         this._super(value_);
         this.inhibit_on_change = false;
     },
-    is_valid: function() {
-        return !this.get("required") || !! this.get("value");
+    is_false: function() {
+        return ! this.get("value");
     },
     focus: function ($element) {
         this._super($element || this.$input);
@@ -2864,7 +2878,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
 	        return false;
 	    }, this));
     },
-    is_valid: function() {
+    is_syntax_valid: function() {
         if (!this.viewmanager.views[this.viewmanager.active_view])
             return true;
         var view = this.viewmanager.views[this.viewmanager.active_view].controller;
@@ -3510,8 +3524,8 @@ instance.web.form.FieldReference = instance.web.form.AbstractField.extend(_.exte
         this.m2o.renderElement();
         this.m2o.start();
     },
-    is_valid: function() {
-        return this.get("required") === false || typeof(this.get_value()) === 'string';
+    is_false: function() {
+        return typeof(this.get_value()) !== 'string';
     },
     is_dirty: function() {
         return this.selection.is_dirty() || this.m2o.is_dirty();
