@@ -73,27 +73,42 @@
         <field name="model">hr.applicant</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Jobs - Recruitment Form">
-                <group colspan="4" col="8">
-                        <field name="name" string="Subject"/>
+            <form layout="manual">
+            <div class="oe_form_topbar">
+                <button name="case_cancel" string="Refuse" states="draft,open,pending" type="object" icon="gtk-cancel"/>
+                <button name="case_open" string="In Progress" states="draft,pending" type="object" icon="gtk-go-forward"/>
+                <button name="case_pending" string="Pending" states="open" type="object" icon="gtk-media-pause"/>
+                <button name="%(action_hr_recruitment_hired_employee)d" string="Hire" states="open,pending" type="action" icon="terp-partner"/>
+                <button name="case_reset" string="Reset to New" states="done,cancel" type="object" icon="gtk-convert"/>
+                <div class="oe_right">
+                    <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
+                </div>
+            </div>
+            <sheet string="Jobs - Recruitment Form" layout="auto">
+                <group colspan="4" col="4">
+                    <field name="name" string="Subject"/>
+                    <group colspan="2" col="4">
                         <field name="partner_name"/>
-                        <field name="job_id" on_change="onchange_job(job_id)"/>
                         <button name="action_makeMeeting" type="object" string="Meeting" icon="gtk-index"/>
-                    <newline/>
+                        <button string="Send New Email" name="%(mail.action_email_compose_message_wizard)d" icon="terp-mail-message-new" type="action"/>
+                    </group>
+                    <field name="user_id"/>
+                    <field name="job_id" on_change="onchange_job(job_id)"/>
                     <field name="department_id" widget="selection" on_change="onchange_department_id(department_id)"/>
                     <group colspan="2" col="4">
                         <field name="stage_id" domain="['|',('department_id','=',department_id),('department_id','=',False)]"/>
                         <button name="stage_previous" string="" type="object" icon="gtk-go-back"/>
                         <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
                     </group>
-                    <field name="user_id"/>
-                    <field name="survey" invisible="1"/>
-                    <button name="action_print_survey" string="Interview" type="object" icon="gtk-print" attrs="{'readonly':[('survey','=',False)]}"/>
-                    <button name="%(survey.action_view_survey_question_message)d" string="Answer" type="action" icon="gtk-execute" context="{'survey_id': survey, 'response_id': [response], 'response_no':0 ,'active' : response, 'object' : 'hr.applicant'}" attrs="{'readonly':[('survey','=',False)]}" groups="base.group_extended"/>
-                    <field name="response" invisible="1"/>
-                    <newline/>
                     <field name="date_action"/>
-                    <field name="title_action"/>
+                    <group colspan="2" col="8">
+                        <field name="title_action"/>
+                        <field name="survey" invisible="1"/>
+                        <button name="action_print_survey" string="Interview" type="object" icon="gtk-print" attrs="{'readonly':[('survey','=',False)]}"/>
+                        <button name="%(survey.action_view_survey_question_message)d" string="Answer" type="action" icon="gtk-execute" context="{'survey_id': survey, 'response_id': [response], 'response_no':0 ,'active' : response, 'object' : 'hr.applicant'}" attrs="{'readonly':[('survey','=',False)]}" groups="base.group_extended"/>
+                        <field name="response" invisible="1"/>
+                    </group>
+                    <newline/>
                 </group>
                 <notebook colspan="4">
                     <page string="Job Info">
@@ -123,50 +138,15 @@
                             <field name="source_id"/>
                             <field name="reference"/>
                         </group>
-                        <group col="2" colspan="2" groups="base.group_no_one">
-                           <separator colspan="2" string="Dates"/>
-                           <field name="create_date"/>
-                           <field name="write_date"/>
-                           <field name="date_closed"/>
-                           <field name="date_open"/>
-                        </group>
-                        <separator colspan="4" string="Status"/>
-                        <group col="8" colspan="4">
-                            <field name="state" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
-                            <button name="case_cancel" string="Refuse" states="draft,open,pending" type="object" icon="gtk-cancel"/>
-                            <button name="case_open" string="In Progress" states="draft,pending" type="object" icon="gtk-go-forward"/>
-                            <button name="case_pending" string="Pending" states="open" type="object" icon="gtk-media-pause"/>
-                            <button name="%(action_hr_recruitment_hired_employee)d" string="Hire" states="open,pending" type="action" icon="terp-partner"/>
-                            <button name="case_reset" string="Reset to New" states="done,cancel" type="object" icon="gtk-convert"/>
-                        </group>
                    </page>
-                   <page string="Communication &amp; History" groups="base.group_extended">
-                       <group colspan="4">
-                           <field colspan="4" name="email_cc" string="Global CC" widget="char"/>
-                       </group>
-                       <field name="message_ids" colspan="4" nolabel="1" mode="tree" readonly="1">
-                            <tree string="History">
-                                <field name="display_text" string="History Information"/>
-                                <field name="email_from" invisible="1"/>
-                                <button
-                                    string="Reply" attrs="{'invisible': [('email_from', '=', False)]}"
-                                    name="%(mail.action_email_compose_message_wizard)d"
-                                    context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
-                                    icon="terp-mail-replied" type="action" />
-                            </tree>
-                        </field>
-                        <button string="Add Internal Note"
-                                name="%(crm.action_crm_add_note)d"
-                                context="{'model': 'crm.lead' }"
-                                icon="terp-document-new" type="action" />
-                        <button string="Send New Email"
-                            name="%(mail.action_email_compose_message_wizard)d"
-                            icon="terp-mail-message-new" type="action"/>
-                 </page>
                  <page string="Notes">
                      <field name="description" nolabel="1" colspan="4"/>
                  </page>
                 </notebook>
+            </sheet>
+            <div class="oe_form_sheet_width">
+                <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
+            </div>
             </form>
         </field>
     </record>

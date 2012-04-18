@@ -105,7 +105,7 @@ class sale_advance_payment_inv(osv.osv_memory):
                 for inv in sale.invoice_ids:
                     ids_inv.append(inv.id)
                 ids_inv.append(inv_id)
-                obj_sale.write(cr, uid, sale.id, {'invoice_ids': [(6, 0, ids_inv)]})
+                obj_sale.write(cr, uid, [sale.id], {'invoice_ids': [(6, 0, ids_inv)]})
                 list_inv.append(inv_id)
         #
         # If invoice on picking: add the cost on the SO

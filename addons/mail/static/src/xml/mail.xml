@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template>
+
+    <div t-name="Wall" class="oe_mail_wall">
+        <div class="oe_view_manager_header">
+            <div class="oe_view_manager_row">
+                <h2 class="oe_view_title">All Feeds</h2>
+            </div>
+        </div>
+        <div class="oe_mail_wall_left">
+            <div class="oe_mail_wall_act">
+                <textarea class="oe_mail oe_mail_wall_action_textarea" placeholder="Add a personnal message here..."/>
+                <button class="oe_mail_wall_button_comment" type="button">Post comment</button>
+            </div>
+            <div class="oe_clear"></div>
+            <div class="oe_mail_wall_threads">
+            </div>
+            <div class="oe_mail_wall_more">
+                <button class="oe_mail_wall_button_more" type="button">See more discussions</button>
+            </div>
+        </div>
+        <div class="oe_mail_wall_right"></div>
+    </div>
+
+    <t t-name="WallThreadContainer">
+    </t>
+
+    <div t-name="RecordThread" class="oe_mail_recthread">
+        <h4>History and Comments</h4>
+        <div class="oe_mail_recthread_left">
+        </div>
+        <div class="oe_mail_recthread_right">
+            <div class="oe_mail_recthread_actions">
+                <button type="button" class="oe_mail_button_follow">Not following</button>
+                <button type="button" class="oe_mail_button_unfollow following">Following</button>
+                <button type="button" class="oe_mail_button_followers">Display followers</button>
+            </div>
+            <div class="oe_mail_recthread_followers">
+                <h4>Followers</h4>
+                <div class="oe_mail_followers_display">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <ul t-name="Thread" class="oe_mail_thread oe_mail">
+        <div class="oe_mail_thread_act">
+            <img class="oe_mail_msg_image oe_mail_oe_left" alt="User img"/>
+            <div class="oe_mail_msg_content">
+                <textarea class="oe_mail_action_textarea oe_mail" placeholder="Add your comment here..." onfocus="this.value = '';"/><br />
+            </div>
+        </div>
+        <div class="oe_mail_thread_display"></div>
+        <div class="oe_mail_thread_more">
+            <button class="oe_mail_button_more" type="button">Load more messages</button>
+        </div>
+    </ul>
+
+    <li t-name="ThreadMsg" t-attf-class="oe_mail_thread_msg oe_mail">
+        <div t-attf-class="{record.type}">
+            <img class="oe_mail_msg_image oe_mail_oe_left" t-att-src="record.mini_url"/>
+            <div class="oe_mail_msg_content">
+                <t t-if="record.type == 'email'"><t t-call="EmailDisplay" /></t>
+                <t t-if="record.type == 'notification' || record.type == 'comment'"><t t-call="NoteDisplay" /></t>
+            </div>
+            <t t-if="record.type == 'tmp'"><t t-call="ThreadDisplay" /></t>
+        </div>
+    </li>
+    
+    <t t-name="NoteDisplay">
+        <p class="oe_mail_msg">
+            <t t-if="params.thread_level > 0">
+                <a href="#" class="intlink oe_mail_oe_intlink" t-attf-data-res-model='{params.res_model}' t-attf-data-res-id='{params.res_id}'><t t-raw="record.record_name"/></a>
+            </t>
+            <span class="oe_mail_msg_body"><t t-raw="record.body"/></span>
+            <t t-if="record.tr_body"><span class="oe_mail_msg_body_short"><t t-raw="record.tr_body"/></span></t>
+            <br />
+            <span class="oe_mail_oe_fade">
+                <a href="#" class="intlink oe_mail_oe_intlink" data-res-model='res.users' t-attf-data-res-id='{record.user_id[0]}'><t t-raw="record.user_id[1]"/></a>
+                on <t t-raw="record.date"/>
+            </span>
+            <t t-if="display['show_reply']"><a href="#" class="oe_mail_msg_reply oe_mail_oe_intlink"> Reply</a> </t>
+            <t t-if="display['show_delete']">
+                <t t-if="thread._is_author(record.user_id[0])"><a href="#" t-attf-data-id='{record.id}' class="oe_mail_msg_delete oe_mail_oe_intlink"> Delete </a></t>
+            </t>
+            <t t-if="display['show_hide']">
+                <t t-if="!(thread._is_author(record.user_id[0]))"><span class="oe_mail_oe_space"><a href="#" t-attf-data-id='{record.id}' class="oe_mail_msg_hide oe_mail_oe_intlink">Hide</a></span></t>
+            </t>
+        </p>
+    </t>
+    
+    <t t-name="EmailDisplay">
+        <p class="oe_mail_msg oe_mail_msg_p_email_header">
+            <t t-if="params.thread_level > 0">
+                <a href="#" class="intlink oe_mail_oe_intlink" t-attf-data-res-model='{params.res_model}' t-attf-data-res-id='{params.res_id}'><t t-raw="record.record_name"/></a>
+            </t>
+            <br />
+            <span class="oe_mail_oe_bold">From:</span> <t t-esc="record.email_from"/> on <span class="oe_mail_oe_fade"><t t-raw="record.date"/></span><br />
+            <span class="oe_mail_oe_bold">To:</span> <t t-esc="record.email_to"/><br />
+            <span class="oe_mail_oe_bold">Subject:</span> <t t-esc="record.subject"/><br />
+        </p>
+        <p class="oe_mail_msg">
+            <span class="oe_mail_msg_body"><t t-raw="record.body"/></span>
+            <t t-if="record.tr_body"><span class="oe_mail_msg_body_short"><t t-raw="record.tr_body"/></span></t>
+            <br />
+            <t t-if="display['show_delete']">
+                <t t-if="thread._is_author(record.user_id[0])"><a href="#" t-attf-data-id='{record.id}' class="oe_mail_msg_delete oe_mail_oe_intlink"> Delete </a></t>
+            </t>
+            <t t-if="display['show_hide']">
+                <t t-if="!(thread._is_author(record.user_id[0]))"><span class="oe_mail_oe_space"><a href="#" t-attf-data-id='{record.id}' class="oe_mail_msg_hide oe_mail_oe_intlink">Hide</a></span></t>
+            </t>
+        </p>
+    </t>
+
+</template>

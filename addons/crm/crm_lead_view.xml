@@ -51,7 +51,19 @@
         <field name="model">crm.lead</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Leads Form">
+            <form string="Leads Form" layout="manual">
+                <div class="oe_form_topbar">
+                    <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" icon="gtk-cancel" />
+                    <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward" />
+                    <button name="case_mark_lost" string="Close" states="open,pending" type="object" icon="gtk-close" />
+                    <button name="case_pending" string="Pending" states="open" type="object" icon="gtk-media-pause" />
+                    <button name="case_escalate" string="Escalate" states="open,pending" type="object" groups="base.group_extended" icon="gtk-go-up" />
+                    <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert" />
+                    <div class="oe_right">
+                        <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
+                    </div>
+                </div>
+                <sheet layout="auto">
                 <group colspan="4" col="7">
                     <field name="name" required="1" string="Subject"/>
                     <field name="priority"/>
@@ -119,52 +131,6 @@
                     </group>
                     <separator colspan="4" string="Notes"/>
                     <field name="description" nolabel="1" colspan="4"/>
-                    <separator colspan="4"/>
-                    <group col="8" colspan="4">
-                        <field name="state" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
-                        <button name="case_cancel" string="Cancel"
-                            states="draft,open,pending" type="object"
-                            icon="gtk-cancel" />
-                        <button name="case_open" string="Open"
-                            states="draft,pending" type="object"
-                            icon="gtk-go-forward" />
-                        <button name="case_mark_lost" string="Close"
-                            states="open,pending" type="object"
-                            icon="gtk-close" />
-                        <button name="case_pending" string="Pending"
-                            states="open" type="object"
-                            icon="gtk-media-pause" />
-                        <button name="case_escalate" string="Escalate"
-                            states="open,pending" type="object"
-                            groups="base.group_extended"
-                            icon="gtk-go-up" />
-                        <button name="case_reset"
-                            string="Reset to Draft" states="done,cancel"
-                            type="object" icon="gtk-convert" />
-                    </group>
-                 </page>
-                 <page string="Communication &amp; History" groups="base.group_extended">
-                   <group colspan="4">
-                       <field colspan="4" name="email_cc" widget="char" size="512"/>
-                   </group>
-                    <field name="message_ids" colspan="4" nolabel="1" mode="tree" readonly="1">
-                        <tree string="History">
-                            <field name="display_text" string="History Information"/>
-                            <field name="email_from" invisible="1"/>
-                            <button
-                                string="Reply" attrs="{'invisible': [('email_from', '=', False)]}"
-                                name="%(mail.action_email_compose_message_wizard)d"
-                                context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
-                                icon="terp-mail-replied" type="action" />
-                        </tree>
-                    </field>
-                    <button string="Add Internal Note"
-                        name="%(crm.action_crm_add_note)d"
-                        context="{'model': 'crm.lead' }"
-                        icon="terp-document-new" type="action" />
-                    <button string="Send New Email"
-                        name="%(mail.action_email_compose_message_wizard)d"
-                        icon="terp-mail-message-new" type="action"/>
                  </page>
                  <page string="Extra Info" groups="base.group_extended">
                     <group colspan="2" col="2">
@@ -175,13 +141,6 @@
                         <field name="type_id" select="1" widget="selection"/>
                         <field name="channel_id" select="1" widget="selection"/>
                         <field name="referred"/>
-                    </group>
-                    <group colspan="2" col="2" groups="base.group_no_one">
-                        <separator string="Dates" colspan="2" col="2"/>
-                        <field name="create_date"/>
-                        <field name="write_date"/>
-                        <field name="date_open"/>
-                        <field name="date_closed"/>
                     </group>
                     <group colspan="2" col="2">
                         <separator string="Mailings" colspan="2" col="2"/>
@@ -195,6 +154,10 @@
                     </group>
                  </page>
                 </notebook>
+                </sheet>
+                <div class="oe_form_sheet_width">
+                    <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
+                </div>
             </form>
         </field>
     </record>
@@ -435,7 +398,20 @@
         <field name="type">form</field>
         <field name="priority">20</field>
         <field name="arch" type="xml">
-            <form string="Opportunities">
+            <form string="Opportunities" layout="manual">
+                <div class="oe_form_topbar">
+                    <button name="case_cancel" string="Cancel" states="draft" type="object" icon="gtk-cancel" />
+                    <button name="case_mark_lost" string="Mark Lost" states="open,pending" type="object" icon="gtk-cancel" />
+                    <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert" />
+                    <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward" />
+                    <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause" />
+                    <button name="case_escalate" string="Escalate" states="open,pending" type="object" groups="base.group_extended" icon="gtk-go-up" />
+                    <button name="case_mark_won" string="Mark Won" states="open,pending" type="object" icon="gtk-apply" />
+                    <div class="oe_right">
+                        <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
+                    </div>
+                </div>
+                <sheet layout="auto">
                 <group colspan="4" col="7">
                     <field name="name"  required="1" string="Opportunity"/>
                     <label string="Stage:" align="1.0"/>
@@ -502,18 +478,6 @@
 
                     <separator colspan="4" string="Details"/>
                     <field name="description" nolabel="1" colspan="4"/>
-
-                    <separator colspan="4"/>
-                    <group col="10" colspan="4">
-                        <field name="state" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
-                        <button name="case_cancel" string="Cancel" states="draft" type="object" icon="gtk-cancel" />
-                        <button name="case_mark_lost" string="Mark Lost" states="open,pending" type="object" icon="gtk-cancel" />
-                        <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert" />
-                        <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward" />
-                        <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause" />
-                        <button name="case_escalate" string="Escalate" states="open,pending" type="object" groups="base.group_extended" icon="gtk-go-up" />
-                        <button name="case_mark_won" string="Mark Won" states="open,pending" type="object" icon="gtk-apply" />
-                    </group>
                 </page>
                 <page string="Lead">
                     <group colspan="2" col="4">
@@ -545,37 +509,7 @@
                         <field name="optout" on_change="on_change_optout(optout)"/>
                     </group>
                 </page>
-                <page string="Communication &amp; History" groups="base.group_extended">
-                  <group colspan="4">
-                      <field colspan="4" name="email_cc" widget="char" size="512"/>
-                  </group>
-                   <field name="message_ids" colspan="4" nolabel="1" mode="tree" readonly="1">
-                       <tree string="History">
-                           <field name="display_text" string="History Information"/>
-                           <field name="email_from" invisible="1"/>
-                           <button
-                               string="Reply" attrs="{'invisible': [('email_from', '=', False)]}"
-                               name="%(mail.action_email_compose_message_wizard)d"
-                               context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
-                               icon="terp-mail-replied" type="action" />
-                       </tree>
-                   </field>
-                   <button string="Add Internal Note"
-                       name="%(crm.action_crm_add_note)d"
-                       context="{'model': 'crm.lead' }"
-                       icon="terp-document-new" type="action" />
-                   <button string="Send New Email"
-                       name="%(mail.action_email_compose_message_wizard)d"
-                       icon="terp-mail-message-new" type="action"/>
-                </page>
                 <page string="Extra Info" groups="base.group_extended">
-                    <group col="2" colspan="2" groups="base.group_no_one">
-                        <separator string="Dates" colspan="2"/>
-                        <field name="create_date"/>
-                        <field name="write_date"/>
-                        <field name="date_closed"/>
-                        <field name="date_open"/>
-                    </group>
                     <group col="2" colspan="2">
                         <separator string="Misc" colspan="2"/>
                         <field name="active"/>
@@ -588,6 +522,10 @@
                     <field name="ref2"/>
                 </page>
                 </notebook>
+                </sheet>
+                <div class="oe_form_sheet_width">
+                    <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
+                </div>
             </form>
         </field>
     </record>
