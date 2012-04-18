@@ -84,7 +84,7 @@
             <field name="search_view_id" ref="view_audittrail_rule_search"/>
         </record>
 
-        <menuitem id="menu_action_audittrail_rule_tree"  parent="base.menu_audit" action="action_audittrail_rule_tree"/>
+        <menuitem id="menu_action_audittrail_rule_tree" parent="menu_audit" action="action_audittrail_rule_tree"/>
 
         <!-- AuditTrail Log -->
 
@@ -183,7 +183,7 @@
             <field name="search_view_id" ref="view_audittrail_log_search"/>
         </record>
 
-        <menuitem id="menu_audit_logs" name="Audit Logs" parent="base.menu_audit" action="action_audittrail_log_tree" />
+        <menuitem id="menu_audit_logs" name="Audit Logs" parent="menu_audit" action="action_audittrail_log_tree" />
 
     </data>
 </openerp>
