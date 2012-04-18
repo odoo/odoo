@@ -66,7 +66,7 @@ Menu modification
 This revision adds three functional fields to ``ir.ui.menu`` model :
  - ``uses_needaction``: boolean field. If the menu entry action is an act_window action, and if this action is related to a model that uses the need_action mechanism, this field is set to true. Otherwise, it is false.
  - ``needaction_uid_ctr``: integer field. If the target model uses the need action mechanism, this field gives the number of actions the current user has to perform.
- - ``needaction_record_ids``: many2many field. If the target model uses the need action mechanism, this field holds the ids of the record requesting the user to perform an action. **This field has been removed on version XXXX**.
+ - **REMOVED** ``needaction_record_ids``: many2many field. If the target model uses the need action mechanism, this field holds the ids of the record requesting the user to perform an action. **This field has been removed on version XXXX**.
 
 Those fields are functional, because they depend on the user and must therefore be computed at every refresh, each time menus are displayed. The use of the need action mechanism is done by taking into account the action domain in order to display accurate results. When computing the value of the functional fields, the ids of records asking the user to perform an action is concatenated to the action domain. A counting search is then performed on the model, giving back the number of action the users has to perform, limited to the domain of the action.
 
