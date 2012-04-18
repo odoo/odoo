@@ -274,9 +274,24 @@ class account_cash_statement(osv.osv):
             if count:
                 journal = self.pool.get('account.journal').browse(cr, uid, journal_id, context=context)
                 raise osv.except_osv(_('Error !'), (_('The Account Journal %s is opened by an other Cash Register !') % (journal.name,)))
+            else:
+                proxy_line = self.pool.get('account.cashbox.line')
+
+                values = dict(starting_details_ids=[], ending_details_ids=[])
+
+                journal = self.pool.get('account.journal').browse(cr, uid, journal_id, context=context)
+
+                for line in journal.cashbox_line_ids:
+                    values['starting_details_ids'].append({'pieces' : line.pieces})
+                    values['ending_details_ids'].append({'pieces' : line.pieces})
+                return { 'value' : values }
         else:
             return {
-                'balance_start': balance_start
+                'value' : {
+                    'balance_start': balance_start,
+                    'starting_details_ids': [],
+                    'ending_details_ids' : [],
+                }
             }
         return super(account_cash_statement, self).onchange_journal_id(cr, uid, statement_id, journal_id, context=context)
 
@@ -351,23 +366,6 @@ class account_cash_statement(osv.osv):
         for st in self.browse(cr, uid, ids, context):
             for end in st.ending_details_ids:
                 cash_box_line_pool.write(cr, uid, [end.id], {'number': 0})
-        return True
-
-    def button_load_cashbox_lines(self, cr, uid, ids, context=None):
-        if not ids:
-            return False
-
-        proxy_line = self.pool.get('account.cashbox.line')
-
-        for record in self.browse(cr, uid, ids, context=context):
-
-            proxy_line.unlink(cr, uid, [line.id for line in record.starting_details_ids], context=context)
-            proxy_line.unlink(cr, uid, [line.id for line in record.ending_details_ids], context=context)
-
-            for cash in record.journal_id.cashbox_line_ids:
-                proxy_line.create(cr, uid, {'pieces' : cash.pieces, 'starting_id' : record.id }, context=context)
-                proxy_line.create(cr, uid, {'pieces' : cash.pieces, 'ending_id' : record.id}, context=context)
-
         return True
 
 account_cash_statement()
