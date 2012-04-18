@@ -250,9 +250,6 @@ instance.web.FormView = instance.web.View.extend({
             field.reset();
             var result = field.set_value(self.datarecord[f] || false);
             set_values.push(result);
-            $.when(result).then(function() {
-                field.validate();
-            });
         });
         return $.when.apply(null, set_values).pipe(function() {
             if (!record.id) {
@@ -285,9 +282,6 @@ instance.web.FormView = instance.web.View.extend({
     on_form_changed: function() {
         this.trigger("view_content_has_changed");
         _.each(this.get_widgets(), function(w) {
-            if (w.field) {
-                w.validate();
-            }
             w.update_dom();
         });
     },
@@ -1265,7 +1259,7 @@ instance.web.form.compute_domain = function(expr, fields) {
                 _t("Unknown field %s in domain %s"),
                 ex[0], JSON.stringify(expr)));
         }
-        var field_value = field.get_value();
+        var field_value = field.get_value ? field.get_value() : field.value;
         var op = ex[1];
         var val = ex[2];
 
@@ -1655,7 +1649,7 @@ instance.web.form.AbstractField = instance.web.form.Widget.extend(/** @lends ins
         this.set({'value': false});
         this.field = this.field_manager.get_field(this.name);
         this.set({required: this.modifiers['required'] === true});
-        this.invalid = this.dirty = false;
+        this.dirty = false;
         
         // some events to make the property "effective_readonly" sync automatically with "readonly" and
         // "force_readonly"
@@ -1695,7 +1689,6 @@ instance.web.form.AbstractField = instance.web.form.Widget.extend(/** @lends ins
         this._inhibit_on_change = true;
         this.set({'value': value_});
         this._inhibit_on_change = false;
-        this.invalid = false;
         this.update_dom();
     },
     on_translate: function() {
@@ -1705,7 +1698,7 @@ instance.web.form.AbstractField = instance.web.form.Widget.extend(/** @lends ins
         return this.get('value');
     },
     is_valid: function() {
-        return !this.invalid;
+        return true;
     },
     is_dirty: function() {
         return this.dirty && !this.get("effective_readonly");
@@ -1723,7 +1716,6 @@ instance.web.form.AbstractField = instance.web.form.Widget.extend(/** @lends ins
     },
     _on_ui_change: function() {
         this.dirty = true;
-        this.validate();
         if (this.is_valid()) {
             this.view.do_onchange(this);
             this.view.on_form_changed(true);
@@ -1731,9 +1723,6 @@ instance.web.form.AbstractField = instance.web.form.Widget.extend(/** @lends ins
         } else {
             this.update_dom(true);
         }
-    },
-    validate: function() {
-        this.invalid = false;
     },
     focus: function($element) {
         if ($element) {
@@ -1821,16 +1810,16 @@ instance.web.form.FieldChar = instance.web.form.AbstractField.extend(_.extend({}
             this.$element.text(show_value);
         }
     },
-    validate: function() {
-        this.invalid = false;
+    is_valid: function() {
         if (!this.get("effective_readonly")) {
             try {
                 var value_ = instance.web.parse_value(this.$element.find('input').val(), this, '');
-                this.invalid = this.get("required") && value_ === '';
+                return (! this.get("required")) || value_ !== '';
             } catch(e) {
-                this.invalid = true;
+                return false;
             }
         }
+        return true;
     },
     focus: function($element) {
         this._super($element || this.$element.find('input:first'));
@@ -2031,11 +2020,11 @@ instance.web.form.FieldDatetime = instance.web.form.AbstractField.extend(_.exten
             this.$element.text(instance.web.format_value(this.get('value'), this, ''));
         }
     },
-    validate: function() {
-        this.invalid = false;
+    is_valid: function() {
         if (!this.get("effective_readonly")) {
-            this.invalid = !this.datewidget.is_valid() || (this.get("required") && !this.datewidget.get_value());
+            return this.datewidget.is_valid() && (!this.get("required") || this.datewidget.get_value());
         }
+        return true;
     },
     focus: function($element) {
         this._super($element || (this.datewidget && this.datewidget.$input));
@@ -2076,16 +2065,16 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(_.extend({}
             this.$element.text(show_value);
         }
     },
-    validate: function() {
-        this.invalid = false;
+    is_valid: function() {
         if (!this.get("effective_readonly")) {
             try {
                 var value_ = instance.web.parse_value(this.$textarea.val(), this, '');
-                this.invalid = this.get("required") && value_ === '';
+                return !this.get("required") || value_ !== '';
             } catch(e) {
-                this.invalid = true;
+                return false;
             }
         }
+        return true;
     },
     focus: function($element) {
         this._super($element || this.$textarea);
@@ -2220,13 +2209,13 @@ instance.web.form.FieldSelection = instance.web.form.AbstractField.extend(_.exte
             this.$element.text(option ? option[1] : this.values[0][1]);
         }
     },
-    validate: function() {
+    is_valid: function() {
         if (this.get("effective_readonly")) {
-            this.invalid = false;
-            return;
+            return true;
         }
         var value_ = this.values[this.$element.find('select')[0].selectedIndex];
-        this.invalid = !(value_ && !(this.get("required") && value_[0] === false));
+        var invalid_ = !(value_ && !(this.get("required") && value_[0] === false));
+        return ! invalid_;
     },
     focus: function($element) {
         this._super($element || this.$element.find('select:first'));
@@ -2570,8 +2559,8 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(_.exten
         this._super(value_);
         this.inhibit_on_change = false;
     },
-    validate: function() {
-        this.invalid = this.get("required") && ! this.get("value");
+    is_valid: function() {
+        return !this.get("required") || !! this.get("value");
     },
     focus: function ($element) {
         this._super($element || this.$input);
@@ -2876,23 +2865,18 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
 	    }, this));
     },
     is_valid: function() {
-        this.validate();
-        return this._super();
-    },
-    validate: function() {
-        this.invalid = false;
         if (!this.viewmanager.views[this.viewmanager.active_view])
-            return;
+            return true;
         var view = this.viewmanager.views[this.viewmanager.active_view].controller;
         if (this.viewmanager.active_view === "form") {
             for (var f in view.fields) {
                 f = view.fields[f];
                 if (!f.is_valid()) {
-                    this.invalid = true;
-                    return;
+                    return false;
                 }
             }
         }
+        return true;
     },
     is_dirty: function() {
         this.save_any_view();
@@ -3065,9 +3049,6 @@ instance.web.form.FieldMany2Many = instance.web.form.AbstractField.extend({
         var self = this;
         self.reload_content();
         this.is_setted.resolve();
-    },
-    validate: function() {
-        this.invalid = false;
     },
     load_view: function() {
         var self = this;
