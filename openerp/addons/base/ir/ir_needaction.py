@@ -49,15 +49,11 @@ class ir_needaction_users(osv.osv):
     
     def _get_users(self, cr, uid, res_ids, res_model, context=None):
         """Given res_ids of res_model, get user_ids present in table"""
-        if context is None:
-            context = {}
         needact_ids = self.search(cr, uid, [('res_model', '=', res_model), ('res_id', 'in', res_ids)], context=context)
         return map(itemgetter('res_id'), self.read(cr, uid, needact_ids, context=context))
     
     def create_users(self, cr, uid, res_ids, res_model, user_ids, context=None):
         """Given res_ids of res_model, add user_ids to the relationship table"""
-        if context is None:
-            context = {}
         for res_id in res_ids:
             for user_id in user_ids:
                 self.create(cr, uid, {'res_model': res_model, 'res_id': res_id, 'user_id': user_id}, context=context)
@@ -65,8 +61,6 @@ class ir_needaction_users(osv.osv):
     
     def unlink_users(self, cr, uid, res_ids, res_model, context=None):
         """Given res_ids of res_model, delete all entries in the relationship table"""
-        if context is None:
-            context = {}
         to_del_ids = self.search(cr, uid, [('res_model', '=', res_model), ('res_id', 'in', res_ids)], context=context)
         return self.unlink(cr, uid, to_del_ids, context=context)
     
@@ -131,8 +125,6 @@ class ir_needaction_mixin(osv.osv):
         return dict.fromkeys(ids, [])
     
     def create(self, cr, uid, values, context=None):
-        if context is None:
-            context = {}
         needact_table_obj = self.pool.get('ir.needaction_users')
         # perform create
         obj_id = super(ir_needaction_mixin, self).create(cr, uid, values, context=context)
@@ -142,8 +134,6 @@ class ir_needaction_mixin(osv.osv):
         return obj_id
     
     def write(self, cr, uid, ids, values, context=None):
-        if context is None:
-            context = {}
         needact_table_obj = self.pool.get('ir.needaction_users')
         # perform write
         write_res = super(ir_needaction_mixin, self).write(cr, uid, ids, values, context=context)
@@ -154,8 +144,6 @@ class ir_needaction_mixin(osv.osv):
         return write_res
     
     def unlink(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         # unlink user_ids
         needact_table_obj = self.pool.get('ir.needaction_users')
         needact_table_obj.unlink_users(cr, uid, ids, self._name, context=context)
@@ -169,8 +157,6 @@ class ir_needaction_mixin(osv.osv):
     def needaction_get_record_ids(self, cr, uid, user_id, limit=80, context=None):
         """Given the current model and a user_id
            get the number of actions it has to perform"""
-        if context is None:
-            context = {}
         needact_table_obj = self.pool.get('ir.needaction_users')
         needact_table_ids = needact_table_obj.search(cr, uid, [('res_model', '=', self._name), ('user_id', '=', user_id)], limit=limit, context=context)
         return map(itemgetter('res_id'), needact_table_obj.read(cr, uid, needact_table_ids, context=context))
@@ -178,8 +164,6 @@ class ir_needaction_mixin(osv.osv):
     def needaction_get_action_count(self, cr, uid, user_id, limit=80, context=None):
         """Given the current model and a user_id
            get the number of actions it has to perform"""
-        if context is None:
-            context = {}
         needact_table_obj = self.pool.get('ir.needaction_users')
         return needact_table_obj.search(cr, uid, [('res_model', '=', self._name), ('user_id', '=', user_id)], limit=limit, count=True, context=context)
     
@@ -188,8 +172,6 @@ class ir_needaction_mixin(osv.osv):
            perform an action. Records are given as references, a list of
            tuples (model_name, record_id).
            This method is trans-model."""
-        if context is None:
-            context = {}
         needact_table_obj = self.pool.get('ir.needaction_users')
         needact_table_ids = needact_table_obj.search(cr, uid, [('user_id', '=', user_id)], offset=offset, limit=limit, order=order, context=context)
         needact_records = needact_table_obj.read(cr, uid, needact_table_ids, context=context)
