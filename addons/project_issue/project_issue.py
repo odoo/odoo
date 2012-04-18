@@ -165,6 +165,32 @@ class project_issue(crm.crm_case, osv.osv):
             if work.task_id:
                 issues += issue_pool.search(cr, uid, [('task_id','=',work.task_id.id)])
         return issues
+    
+    def _get_state(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        for issue in self.browse(cr, uid, ids, context=context):
+            if issue.type_id:
+                res[issue.id] = issue.type_id.state
+        return res
+
+    def _get_stage(self, cr, uid, ids, context=None):
+        issue_obj = self.pool.get('project.issue')
+        result = {}
+        for stage in self.browse(cr, uid, ids, context=context):
+            if stage.state:
+                issue_ids = issue_obj.search(cr, uid, [('state', '=', stage.state)], context=context)
+        for issue in issue_obj.browse(cr, uid, issue_ids, context=context):
+            result[issue.id] = True
+        return result.keys()
+
+    def _save_state(self, cr, uid, issue_id, field_name, field_value, arg, context=None):
+        stage_obj = self.pool.get('project.task.type')
+        stage_ids = stage_obj.search(cr, uid, [('state', '=', field_value)], context=context)
+        if stage_ids:
+            self.write(cr, uid, [issue_id], {'type_id': stage_ids[0]}, context=context)
+        else:
+            cr.execute("""update project_issue set state=%s where id=%s""", (field_value, issue_id, ))
+        return True
 
     _columns = {
         'id': fields.integer('ID', readonly=True),
@@ -181,7 +207,11 @@ class project_issue(crm.crm_case, osv.osv):
         'partner_id': fields.many2one('res.partner', 'Partner', select=1),
         'company_id': fields.many2one('res.company', 'Company'),
         'description': fields.text('Description'),
-        'state': fields.related('type_id','state', type='selection', selection=_ISSUE_STATE, string="State", readonly=True, store=True),
+        'state': fields.function(_get_state, fnct_inv=_save_state, type='selection', selection=_ISSUE_STATE, string="State", readonly=True,
+        store = {
+                'project.issue': (lambda self, cr, uid, ids, c={}: ids, ['type_id'], 10),
+                'project.task.type': (_get_stage, ['state'], 10)
+        }),
         'email_from': fields.char('Email', size=128, help="These people will receive email.", select=1),
         'email_cc': fields.char('Watchers Emails', size=256, help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
         'date_open': fields.datetime('Opened', readonly=True,select=True),
