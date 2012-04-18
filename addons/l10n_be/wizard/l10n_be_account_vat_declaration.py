@@ -194,10 +194,10 @@ class l10n_be_vat_declaration(osv.osv_memory):
         
         data_of_file += '\t\t<ns2:Data>\t'
         
-        if tax_info.get('VI') >= 0:
-            tax_info['71'] = tax_info['VI']
+        if tax_info.get('71-72',0) >= 0:
+            tax_info['71'] = tax_info['71-72']
         else:
-            tax_info['72'] = tax_info.get('VI',0)
+            tax_info['72'] = tax_info.get('71-72',0)
         cases_list = []
         for item in tax_info:
             if tax_info['91'] and ending_month != 12:
