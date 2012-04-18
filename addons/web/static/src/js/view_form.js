@@ -1781,8 +1781,8 @@ instance.web.form.ReinitializeFieldMixin =  {
 
 instance.web.form.FieldChar = instance.web.form.AbstractField.extend(_.extend({}, instance.web.form.ReinitializeFieldMixin, {
     template: 'FieldChar',
-    init: function (view, node) {
-        this._super(view, node);
+    init: function (field_manager, node) {
+        this._super(field_manager, node);
         this.password = this.node.attrs.password === 'True' || this.node.attrs.password === '1';
     },
     initialize_content: function() {
@@ -1885,8 +1885,8 @@ instance.web.form.FieldUrl = instance.web.form.FieldChar.extend({
 
 instance.web.form.FieldFloat = instance.web.form.FieldChar.extend({
     is_field_number: true,
-    init: function (view, node) {
-        this._super(view, node);
+    init: function (field_manager, node) {
+        this._super(field_manager, node);
         this.set({'value': 0});
         if (this.node.attrs.digits) {
             this.digits = py.eval(node.attrs.digits);
@@ -2156,9 +2156,9 @@ instance.web.form.FieldTextXml = instance.web.form.AbstractField.extend({
 
 instance.web.form.FieldSelection = instance.web.form.AbstractField.extend(_.extend({}, instance.web.form.ReinitializeFieldMixin, {
     template: 'FieldSelection',
-    init: function(view, node) {
+    init: function(field_manager, node) {
         var self = this;
-        this._super(view, node);
+        this._super(field_manager, node);
         this.values = _.clone(this.field.selection);
         _.each(this.values, function(v, i) {
             if (v[0] === false && v[1] === '') {
@@ -2268,8 +2268,8 @@ instance.web.form.dialog = function(content, options) {
 
 instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(_.extend({}, instance.web.form.ReinitializeFieldMixin, {
     template: "FieldMany2One",
-    init: function(view, node) {
-        this._super(view, node);
+    init: function(field_manager, node) {
+        this._super(field_manager, node);
         this.limit = 7;
         this.set({'value': false});
         this.display_value = {};
@@ -2617,8 +2617,8 @@ var commands = {
 instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
     multi_selection: false,
     disable_utility_classes: true,
-    init: function(view, node) {
-        this._super(view, node);
+    init: function(field_manager, node) {
+        this._super(field_manager, node);
         lazy_build_o2m_kanban_view();
         this.is_loaded = $.Deferred();
         this.initial_is_loaded = this.is_loaded;
@@ -3006,8 +3006,8 @@ instance.web.form.One2ManyKanbanView = instance.web_kanban.KanbanView.extend({
 instance.web.form.FieldMany2Many = instance.web.form.AbstractField.extend({
     multi_selection: false,
     disable_utility_classes: true,
-    init: function(view, node) {
-        this._super(view, node);
+    init: function(field_manager, node) {
+        this._super(field_manager, node);
         this.is_loaded = $.Deferred();
         this.initial_is_loaded = this.is_loaded;
         this.is_setted = $.Deferred();
@@ -3446,20 +3446,20 @@ instance.web.form.FormOpenDataset = instance.web.ProxyDataSet.extend({
 
 instance.web.form.FieldReference = instance.web.form.AbstractField.extend(_.extend({}, instance.web.form.ReinitializeFieldMixin, {
     template: 'FieldReference',
-    init: function(view, node) {
-        this._super(view, node);
+    init: function(field_manager, node) {
+        this._super(field_manager, node);
         this.fields_view = {
             fields: {
                 selection: {
-                    selection: view.fields_view.fields[this.name].selection
+                    selection: this.view.fields_view.fields[this.name].selection
                 },
                 m2o: {
                     relation: null
                 }
             }
         };
-        this.get_fields_values = view.get_fields_values;
-        this.get_selected_ids = view.get_selected_ids;
+        this.get_fields_values = this.view.get_fields_values;
+        this.get_selected_ids = this.view.get_selected_ids;
         this.do_onchange = this.on_form_changed = this.do_notify_change = this.on_nop;
         this.dataset = this.view.dataset;
         this.view_id = 'reference_' + _.uniqueId();
@@ -3543,8 +3543,8 @@ instance.web.form.FieldReference = instance.web.form.AbstractField.extend(_.exte
 }));
 
 instance.web.form.FieldBinary = instance.web.form.AbstractField.extend(_.extend({}, instance.web.form.ReinitializeFieldMixin, {
-    init: function(view, node) {
-        this._super(view, node);
+    init: function(field_manager, node) {
+        this._super(field_manager, node);
         this.iframe = this.element_id + '_iframe';
         this.binary_value = false;
     },
