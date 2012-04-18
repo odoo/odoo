@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2011 OpenERP S.A (<http://www.openerp.com>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,4 +19,23 @@
 #
 ##############################################################################
 
+
+{
+    'name': 'Customer Portal Claim',
+    'version': '0.1',
+    'category': 'Tools',
+    'complexity': "easy",
+    'description': """
+    This module add the menu if claim and portal_customer is install.
+    """,
+    'author': 'OpenERP SA',
+    'depends': ['crm_claim','portal_customer'],
+    'update_xml': [
+        'portal_customer_claim_view.xml',
+        "security/ir.model.access.csv",
+    ],
+    'installable': True,
+    'auto_install':True,
+    'category':'Hidden',
+}
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
