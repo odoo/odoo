@@ -61,9 +61,9 @@
                 <field name="availability" invisible="1"/>
                 <field name="department_id" invisible="context.get('invisible_department', True)"/>
                 <field name="user_id"/>
-                <field name="state"/>
-                <button name="case_open" string="In Progress" states="draft,pending" type="object" icon="gtk-go-forward"/>
-                <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause"/>
+                <field name="state" groups="base.group_no_one"/>
+                <button name="case_open" string="In Progress" states="draft,pending" type="object" icon="gtk-go-forward" groups="base.group_no_one"/>
+                <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause" groups="base.group_no_one"/>
             </tree>
         </field>
     </record>
@@ -74,7 +74,7 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form layout="manual">
-            <div class="oe_form_topbar">
+            <div class="oe_form_topbar" groups="base.group_no_one">
                 <button name="case_cancel" string="Refuse" states="draft,open,pending" type="object" icon="gtk-cancel"/>
                 <button name="case_open" string="In Progress" states="draft,pending" type="object" icon="gtk-go-forward"/>
                 <button name="case_pending" string="Pending" states="open" type="object" icon="gtk-media-pause"/>
@@ -144,15 +144,6 @@
                            <field name="write_date"/>
                            <field name="date_closed"/>
                            <field name="date_open"/>
-                        </group>
-                        <separator colspan="4" string="Status" groups="base.group_no_one"/>
-                        <group col="8" colspan="4" groups="base.group_no_one">
-                            <field name="state" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
-                            <button name="case_cancel" string="Refuse" states="draft,open,pending" type="object" icon="gtk-cancel" />
-                            <button name="case_open" string="In Progress" states="draft,pending" type="object" icon="gtk-go-forward" />
-                            <button name="case_pending" string="Pending" states="open" type="object" icon="gtk-media-pause" />
-                            <button name="%(action_hr_recruitment_hired_employee)d" string="Hire" states="open,pending" type="action" icon="terp-partner"/>
-                            <button name="case_reset" string="Reset to New" states="done,cancel" type="object" icon="gtk-convert"/>
                         </group>
                    </page>
                  <page string="Notes">
@@ -373,6 +364,7 @@
                 <field name="sequence" invisible="1"/>
                 <field name="name"/>
                 <field name="department_id" groups="base.group_extended"/>
+                <field name="state"/>
             </tree>
         </field>
     </record>
