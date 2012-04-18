@@ -353,6 +353,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
      * @returns {$.Deferred} switching end signal
      */
     on_prev_view: function (options) {
+        options = options || {};
         var current_view = this.views_history.pop();
         var previous_view = this.views_history[this.views_history.length - 1] || options['default'];
         if (options.created && current_view === 'form' && previous_view === 'list') {
