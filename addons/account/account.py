@@ -1351,7 +1351,9 @@ class account_move(osv.osv):
 
     def button_cancel(self, cr, uid, ids, context=None):
         for line in self.browse(cr, uid, ids, context=context):
-            if not line.journal_id.update_posted:
+            if line.period_id.state == 'done':
+                raise osv.except_osv(_('Error !'), _('You can not modify a posted entry of closed periods'))
+            elif not line.journal_id.update_posted:
                 raise osv.except_osv(_('Error !'), _('You can not modify a posted entry of this journal !\nYou should set the journal to allow cancelling entries if you want to do that.'))
         if ids:
             cr.execute('UPDATE account_move '\
