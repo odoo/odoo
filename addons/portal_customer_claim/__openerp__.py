@@ -31,6 +31,7 @@
     'author': 'OpenERP SA',
     'depends': ['crm_claim','portal_customer'],
     'update_xml': [
+        'security/portal_customer_security.xml',
         'portal_customer_claim_view.xml',
         "security/ir.model.access.csv",
     ],

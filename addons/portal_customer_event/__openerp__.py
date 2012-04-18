@@ -31,6 +31,7 @@
     'author': 'OpenERP SA',
     'depends': ['event','portal_customer'],
     'update_xml': [
+        'security/portal_customer_security.xml',
         'portal_customer_event_view.xml',
         'security/ir.model.access.csv',
     ],
