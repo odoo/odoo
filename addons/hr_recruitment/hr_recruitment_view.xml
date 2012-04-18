@@ -247,7 +247,7 @@
         <field name="arch" type="xml">
             <kanban default_group_by="stage_id">
                 <field name="color"/>
-                <field name="state"/>
+                <field name="state" groups="base.group_no_one"/>
                 <field name="priority"/>
                 <field name="survey"/>
                 <field name="user_id"/>
@@ -325,8 +325,8 @@
                                         <a t-if="record.survey.raw_value" name="action_print_survey" type="object" string="Print Interview" icon="gtk-print" />
                                     </div>
                                     <div class="oe_kanban_right">
-                                        <a name="case_open" string="In Progress" states="draft,pending" type="object" icon="kanban-apply"/>
-                                        <a name="case_pending" string="Pending" states="draft,open" type="object" icon="kanban-pause"/>
+                                        <a name="case_open" string="In Progress" states="draft,pending" type="object" icon="kanban-apply" groups="base.group_no_one"/>
+                                        <a name="case_pending" string="Pending" states="draft,open" type="object" icon="kanban-pause" groups="base.group_no_one"/>
                                     </div>
                                     <br class="oe_kanban_clear"/>
                                 </div>
