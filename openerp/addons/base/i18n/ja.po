@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-server\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:44+0000\n"
-"PO-Revision-Date: 2012-04-16 18:23+0000\n"
+"PO-Revision-Date: 2012-04-18 02:23+0000\n"
 "Last-Translator: Akira Hiyama <Unknown>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-04-17 04:51+0000\n"
-"X-Generator: Launchpad (build 15099)\n"
+"X-Launchpad-Export-Date: 2012-04-18 04:41+0000\n"
+"X-Generator: Launchpad (build 15108)\n"
 
 #. module: base
 #: model:res.country,name:base.sh
@@ -193,7 +193,7 @@ msgstr "販売分析の配布"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_process
 msgid "Process"
-msgstr ""
+msgstr "プロセス"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_analytic_journal_billing_rate
@@ -492,7 +492,7 @@ msgstr "PADの仕様"
 msgid ""
 "The user this filter is available to. When left empty the filter is usable "
 "by the system only."
-msgstr ""
+msgstr "このフィルタを使用可能であるユーザ。フィルタを空のままにすると、システムのみが使用します。"
 
 #. module: base
 #: help:res.partner,website:0
@@ -632,6 +632,22 @@ msgid ""
 "    Accounting/Reporting/Generic Reporting/Partners/Follow-ups Sent\n"
 "\n"
 msgstr ""
+"\n"
+"未払いの請求書のために多レベルで思い起こさせるための手紙の自動化モジュールです。\n"
+"==========================================================================\n"
+"\n"
+"メニューから思い出させるための多くのレベルが定義できます：\n"
+"　　会計 / 設定 / その他 / フォローアップ\n"
+"\n"
+"定義を終えたら、メニューから単純にクリックするだけで毎日自動的に印刷ができます：\n"
+"　　会計 / 定期処理 / 請求書 / フォローアップの送信\n"
+"\n"
+"定義された異なったレベルで思い出させる方法に従って全ての手紙をPDFで作成します。\n"
+"異なる会社のために異なるポリシーを定義でき、顧客にメールすることもできます。\n"
+"\n"
+"所定のパートナ / アカウントエントリーのためにフォローアップレベルをチェックしたい場合は、このメニューを使うことができます：\n"
+"　　会計 / レポート / 一般的なレポート / パートナ / フォローアップ送信済み\n"
+"\n"
 
 #. module: base
 #: field:res.country,name:0
@@ -661,7 +677,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.pw
 msgid "Palau"
-msgstr ""
+msgstr "パラオ"
 
 #. module: base
 #: view:res.partner:0
@@ -689,7 +705,7 @@ msgstr "ウィザード"
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_miscellaneoussuppliers0
 msgid "Miscellaneous Suppliers"
-msgstr ""
+msgstr "その他仕入先"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:287
@@ -763,7 +779,7 @@ msgstr "エリトリア"
 #. module: base
 #: sql_constraint:res.company:0
 msgid "The company name must be unique !"
-msgstr "会社名は固有でなければなりません。"
+msgstr "会社名は固有でなければいけません。"
 
 #. module: base
 #: view:res.config:0
@@ -859,7 +875,7 @@ msgstr "言語のインポート"
 #. module: base
 #: help:ir.cron,interval_number:0
 msgid "Repeat every x."
-msgstr ""
+msgstr "全ての x で繰り返す"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -928,7 +944,7 @@ msgstr ""
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_4
 msgid "Basic Partner"
-msgstr ""
+msgstr "基本的なパートナ"
 
 #. module: base
 #: report:ir.module.reference.graph:0
@@ -1297,7 +1313,7 @@ msgstr "アクションURL"
 #. module: base
 #: field:base.module.import,module_name:0
 msgid "Module Name"
-msgstr ""
+msgstr "モジュール名"
 
 #. module: base
 #: model:res.country,name:base.mh
@@ -1384,6 +1400,8 @@ msgid ""
 "use the accounting application of OpenERP, journals and accounts will be "
 "created automatically based on these data."
 msgstr ""
+"あなたの会社の銀行口座を設定し、レポートのフッターに現れるべきそれを選択して下さい。リストビューから銀行口座の並べ替えができます。OpenERPの会計アプ"
+"リケーションを使う場合は、仕訳帳とアカウントはそれらのデータを元に自動的に作成されます。"
 
 #. module: base
 #: view:ir.module.module:0
@@ -1604,7 +1622,7 @@ msgstr "ログイン"
 #: model:ir.actions.act_window,name:base.action_wizard_update_translations
 #: model:ir.ui.menu,name:base.menu_wizard_update_translations
 msgid "Synchronize Terms"
-msgstr ""
+msgstr "用語の同期"
 
 #. module: base
 #: view:ir.actions.server:0
@@ -2224,7 +2242,7 @@ msgstr "表示モード"
 msgid ""
 "Display this bank account on the footer of printed documents like invoices "
 "and sales orders."
-msgstr ""
+msgstr "請求書や受注オーダーのような印刷されるドキュメントのフッターに現れる銀行口座を示して下さい。"
 
 #. module: base
 #: view:base.language.import:0
@@ -2457,7 +2475,7 @@ msgstr "ベリーズ"
 #. module: base
 #: help:ir.actions.report.xml,header:0
 msgid "Add or not the corporate RML header"
-msgstr ""
+msgstr "会社のRMLヘッダーを追加するか否か"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_recruitment
@@ -2560,6 +2578,14 @@ msgid ""
 "and categorize your interventions with a channel and a priority level.\n"
 "    "
 msgstr ""
+"\n"
+"Helpdesk\n"
+"====================\n"
+"\n"
+"ライクレコード、クレーム処理、ヘルプデスク、サポートは仲裁の追跡のために良いツールです。\n"
+"このメニューは口頭コミュニケーションよりも適しており、必ずしもクレームとは関係がありません。\n"
+"顧客を選択し、注記を加えそしてチャンネルと優先度レベルとともに仲裁を分類して下さい。\n"
+"    "
 
 #. module: base
 #: sql_constraint:ir.ui.view_sc:0
@@ -2650,7 +2676,7 @@ msgstr "オブジェクト名は x_ で始める必要があり、特殊文字�
 #. module: base
 #: field:ir.actions.configuration.wizard,note:0
 msgid "Next Wizard"
-msgstr ""
+msgstr "次のウィザード"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_menu_admin
@@ -2830,7 +2856,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.tt
 msgid "Trinidad and Tobago"
-msgstr ""
+msgstr "トリニダード・トバゴ"
 
 #. module: base
 #: model:res.country,name:base.lv
@@ -2900,7 +2926,7 @@ msgstr "継承"
 #. module: base
 #: field:ir.model.fields,serialization_field_id:0
 msgid "Serialization Field"
-msgstr ""
+msgstr "シリアライズ項目"
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_report_designer
@@ -2918,7 +2944,7 @@ msgstr "%y - ２桁の年[00,99]."
 #: code:addons/base/res/res_company.py:155
 #, python-format
 msgid "Fax: "
-msgstr ""
+msgstr "FAX： "
 
 #. module: base
 #: model:res.country,name:base.si
@@ -3245,7 +3271,7 @@ msgstr "オーストリア"
 #. module: base
 #: view:ir.module.module:0
 msgid "Cancel Install"
-msgstr ""
+msgstr "インストールのキャンセル"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_invoice_bba
@@ -3339,7 +3365,7 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_ir_module_module_dependency
 msgid "Module dependency"
-msgstr ""
+msgstr "モジュール依存度"
 
 #. module: base
 #: selection:publisher_warranty.contract.wizard,state:0
@@ -6271,7 +6297,7 @@ msgstr ""
 #. module: base
 #: help:res.country.state,code:0
 msgid "The state code in three chars.\n"
-msgstr ""
+msgstr "３文字の状態コード\n"
 
 #. module: base
 #: model:res.country,name:base.sj
@@ -6294,7 +6320,7 @@ msgstr "基本かんばん"
 #: view:ir.actions.server:0
 #: view:res.request:0
 msgid "Group By"
-msgstr ""
+msgstr "グループ化"
 
 #. module: base
 #: view:res.config:0
@@ -6343,7 +6369,7 @@ msgstr "翻訳"
 #. module: base
 #: selection:res.request,state:0
 msgid "closed"
-msgstr ""
+msgstr "閉鎖済み"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cr
@@ -7136,7 +7162,7 @@ msgstr "モジュール"
 #: field:workflow.activity,subflow_id:0
 #: field:workflow.workitem,subflow_id:0
 msgid "Subflow"
-msgstr ""
+msgstr "サブフロー"
 
 #. module: base
 #: model:ir.model,name:base.model_res_config
@@ -7428,7 +7454,7 @@ msgstr "保守契約"
 #: model:res.groups,name:base.group_user
 #: field:res.partner,employee:0
 msgid "Employee"
-msgstr ""
+msgstr "従業員"
 
 #. module: base
 #: field:ir.model.access,perm_create:0
@@ -7727,7 +7753,7 @@ msgstr "エクアドル - 会計"
 #. module: base
 #: field:res.partner.category,name:0
 msgid "Category Name"
-msgstr ""
+msgstr "分類名"
 
 #. module: base
 #: view:res.widget:0
@@ -8865,7 +8891,7 @@ msgstr "親分類"
 #. module: base
 #: selection:ir.property,type:0
 msgid "Integer Big"
-msgstr ""
+msgstr "大きな整数"
 
 #. module: base
 #: selection:res.partner.address,type:0
@@ -10761,7 +10787,7 @@ msgstr "会社"
 #. module: base
 #: help:res.currency,symbol:0
 msgid "Currency sign, to be used when printing amounts."
-msgstr ""
+msgstr "通貨記号：印刷時に使用される"
 
 #. module: base
 #: view:res.lang:0
@@ -11080,7 +11106,7 @@ msgstr "ガイアナ"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product_expiry
 msgid "Products Expiry Date"
-msgstr ""
+msgstr "製品の有効期限"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account
@@ -11114,6 +11140,32 @@ msgid ""
 "module named account_voucher.\n"
 "    "
 msgstr ""
+"\n"
+"会計と財務管理\n"
+"====================================\n"
+"\n"
+"財務と会計モジュールは次をカバーします：\n"
+"--------------------------------------------\n"
+"一般的な会計\n"
+"コスト / 分析会計\n"
+"サードパーティ会計\n"
+"\n"
+"税金管理\n"
+"予算\n"
+"顧客と仕入先請求書\n"
+"銀行明細書\n"
+"パートナによる調整処理\n"
+"\n"
+"会計士のための次のものを含むダッシュボードを作成して下さい：\n"
+"--------------------------------------------------\n"
+"・承認すべき顧客請求書のリスト\n"
+"・ 会社分析\n"
+"・ 売掛金年齢表\n"
+"・ 金庫のグラフ\n"
+"\n"
+"総勘定元帳を維持するような処理が、特定の会計年度のため、そしてaccount_voucherというモジュールによる証書の準備のための定義された財務仕訳帳（"
+"エントリー移動行または仕訳帳を通して維持されたグループ化）を通して実行されます。\n"
+"    "
 
 #. module: base
 #: help:ir.actions.act_window,view_type:0
@@ -11350,7 +11402,7 @@ msgstr ""
 #: field:res.partner,comment:0
 #: model:res.widget,title:base.note_widget
 msgid "Notes"
-msgstr "注釈"
+msgstr "注記"
 
 #. module: base
 #: field:ir.config_parameter,value:0
@@ -11413,7 +11465,7 @@ msgstr "もし指定した場合は、このアクションは標準メニュー
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_google_map
 msgid "Google Maps on Customers"
-msgstr ""
+msgstr "顧客のGoogle Maps"
 
 #. module: base
 #: model:ir.actions.report.xml,name:base.preview_report
@@ -12752,7 +12804,7 @@ msgstr "アラビア語 / الْعَرَبيّة"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_hello
 msgid "Hello"
-msgstr ""
+msgstr "こんにちは"
 
 #. module: base
 #: view:ir.actions.configuration.wizard:0
@@ -13508,7 +13560,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_analytic_plans
 msgid "Multiple Analytic Plans"
-msgstr ""
+msgstr "多数の分析プラン"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_timesheet
@@ -13674,7 +13726,7 @@ msgstr "ユーザの参照"
 #: code:addons/base/res/res_users.py:118
 #, python-format
 msgid "Warning !"
-msgstr "警告!"
+msgstr "警告"
 
 #. module: base
 #: model:res.widget,title:base.google_maps_widget
@@ -13877,7 +13929,7 @@ msgstr "Trueにセットする場合、ウィザードはフォームビュー�
 #. module: base
 #: view:base.language.import:0
 msgid "- type,name,res_id,src,value"
-msgstr ""
+msgstr "- タイプ、名前、リソースID、ソース、値"
 
 #. module: base
 #: model:res.country,name:base.hm
@@ -17085,7 +17137,7 @@ msgstr "クック諸島"
 #. module: base
 #: field:ir.model.data,noupdate:0
 msgid "Non Updatable"
-msgstr ""
+msgstr "更新可能でない"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -17191,7 +17243,7 @@ msgstr "国"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_messages
 msgid "In-Project Messaging System"
-msgstr ""
+msgstr "プロジェクト内部のメッセージングシステム"
 
 #. module: base
 #: model:res.country,name:base.pn
