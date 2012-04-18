@@ -283,7 +283,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             // Lazy loading of views
             var controllerclass = this.registry.get_object(view_type);
             var options = _.clone(view.options);
-            if (view_type === "form") {
+            if (view_type === "form" && this.action) {
                 switch (this.action.target) {
                     case 'new':
                     case 'inline':

@@ -2976,7 +2976,7 @@ instance.web.form.One2ManyFormView = instance.web.FormView.extend({
     on_loaded: function(data) {
         this._super(data);
         var self = this;
-        this.$form_header.find('button.oe_form_button_create').click(function() {
+        this.$buttons.find('button.oe_form_button_create').click(function() {
             self.do_save().then(self.on_button_new);
         });
     },
