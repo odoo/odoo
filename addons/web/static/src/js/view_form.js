@@ -853,6 +853,11 @@ instance.web.FormView = instance.web.View.extend({
         if (this.get_field(name).translate) {
             this.translatable_fields.push(field);
         }
+        field.on('changed_value', this, function() {
+            this.do_onchange(field);
+            this.on_form_changed(true);
+            this.do_notify_change();
+        });
     },
     get_field: function(field_name) {
         return this.fields_view.fields[field_name];
@@ -1574,7 +1579,7 @@ instance.web.form.FieldManagerInterface = {
  *     - force_readonly: boolean, When it is true, the field should always appear
  *      in read only mode, no matter what the value of the "readonly" property can be.
  * Events:
- *     - ...
+ *     - changed_value: called to trigger a on_change in the view
  * 
  */
 instance.web.form.FieldInterface = {
@@ -1662,14 +1667,12 @@ instance.web.form.AbstractField = instance.web.form.Widget.extend(/** @lends ins
         _.bind(test_effective_readonly, this)();
         
         this.on("change:value", this, function() {
-            if (this._field_is_started && ! this._inhibit_on_change)
+            if (! this._inhibit_on_change)
                 this._on_ui_change();
         });
     },
     start: function() {
         this._super.apply(this, arguments);
-        // quick hack, will change later
-        this._field_is_started = true;
         if (this.field.translate) {
             this.$element.addClass('oe_form_field_translatable');
             this.$element.find('.oe_field_translate').click(this.on_translate);
@@ -1723,9 +1726,7 @@ instance.web.form.AbstractField = instance.web.form.Widget.extend(/** @lends ins
     _on_ui_change: function() {
         this.dirty = true;
         if (this.is_syntax_valid()) {
-            this.view.do_onchange(this);
-            this.view.on_form_changed(true);
-            this.view.do_notify_change();
+            this.trigger('changed_value');
         } else {
             this.update_dom(true);
         }
