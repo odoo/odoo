@@ -24,7 +24,6 @@ instance.web.FormView = instance.web.View.extend({
      * @param {instance.web.DataSet} dataset the dataset this view will work with
      * @param {String} view_id the identifier of the OpenERP view object
      * @param {Object} options
-     *                  - sidebar : [true|false]
      *                  - resize_textareas : [true|false|max_height]
      *
      * @property {instance.web.Registry} registry=instance.web.form.widgets widgets registry for this form view instance
@@ -109,7 +108,7 @@ instance.web.FormView = instance.web.View.extend({
             self.on_pager_action(action);
         });
 
-        if (!this.sidebar && this.options.sidebar) {
+        if (!this.sidebar && this.options.$sidebar) {
             this.sidebar = new instance.web.Sidebar(this);
             this.sidebar.appendTo(this.$sidebar);
             if(this.fields_view.toolbar) {
@@ -1215,7 +1214,6 @@ instance.web.form.FormDialog = instance.web.Dialog.extend({
     start: function() {
         this._super();
         this.form = new instance.web.FormView(this, this.dataset, this.view_id, {
-            sidebar: false,
             pager: false
         });
         this.form.appendTo(this.$element);
@@ -2688,7 +2686,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
             var view = {
                 view_id: false,
                 view_type: mode == "tree" ? "list" : mode,
-                options: { sidebar : false }
+                options: {}
             };
             if (self.field.views && self.field.views[mode]) {
                 view.embedded_view = self.field.views[mode];

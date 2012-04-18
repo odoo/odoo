@@ -1055,7 +1055,7 @@ instance.web.View = instance.web.Widget.extend({
                 "model": this.dataset.model,
                 "view_id": this.view_id,
                 "view_type": this.view_type,
-                toolbar: this.options.sidebar,
+                toolbar: !!this.options.$sidebar,
                 context: context
                 }).pipe(this.on_loaded);
         }
@@ -1072,7 +1072,6 @@ instance.web.View = instance.web.Widget.extend({
             // All possible views options should be defaulted here
             $sidebar: null,
             sidebar_id: null,
-            sidebar: true,
             action: null,
             action_views_ids: {}
         });
@@ -1163,7 +1162,6 @@ instance.web.View = instance.web.Widget.extend({
      */
     set_embedded_view: function(embedded_view) {
         this.embedded_view = embedded_view;
-        this.options.sidebar = false;
     },
     do_show: function () {
         this.$element.show();
