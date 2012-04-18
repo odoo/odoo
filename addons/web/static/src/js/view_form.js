@@ -953,10 +953,10 @@ instance.web.form.FormRenderingEngine = instance.web.Class.extend({
     },
     toggle_layout_debugging: function() {
         if (!this.$target.has('.oe_layout_debug_cell:first').length) {
+            this.$target.find('[title]').removeAttr('title');
             this.$target.find('.oe_form_group_cell').each(function() {
-                var text = 'W:' + ($(this).attr('width') || '') + ' - C:' + $(this).attr('colspan'),
-                    $span = $('<span class="oe_layout_debug_cell"/>').text(text);
-                $span.prependTo($(this));
+                var text = 'W:' + ($(this).attr('width') || '') + ' - C:' + $(this).attr('colspan');
+                $(this).attr('title', text);
             });
         }
         this.$target.toggleClass('oe_layout_debugging');
