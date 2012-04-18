@@ -82,19 +82,17 @@ Dashboard provided by this module:
         'process/stockable_product_process.xml',
         'process/service_product_process.xml',
         'process/procurement_process.xml',
-        'mrp_installer.xml',
         'report/mrp_report_view.xml',
         'report/mrp_production_order_view.xml',
         'board_manufacturing_view.xml',
-
-
+        'res_config_view.xml',
     ],
     'demo_xml': [
          'mrp_demo.xml',
     ],
     'test': [
          'test/order_demo.yml',
-         'test/order_process.yml', 
+         'test/order_process.yml',
          'test/cancel_order.yml',
     ],
     'installable': True,

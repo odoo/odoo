@@ -43,7 +43,7 @@
       <field name="model">board.board</field>
       <field name="type">form</field>
       <field name="arch" type="xml">
-        <form string="">
+        <form string="" layout="manual">
           <board style="1">
             <column>
               <action name="%(action_application_tiles)d"/>
@@ -61,7 +61,7 @@
     </record>
 
     <!-- set the default homepage of admin -->
-    <record id="base.user_admin" model="res.users">
+    <record id="base.user_root" model="res.users">
         <field name="action_id" ref="board_homepage_action"/>
     </record>
 
