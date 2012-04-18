@@ -51,7 +51,7 @@ class ir_needaction_users_rel(osv.osv):
     def _get_users(self, cr, uid, res_ids, res_model, context=None):
         """Given res_ids of res_model, get user_ids present in table"""
         rel_ids = self.search(cr, uid, [('res_model', '=', res_model), ('res_id', 'in', res_ids)], context=context)
-        return map(itemgetter('res_id'), self.read(cr, uid, rel_ids, context=context))
+        return list(set(map(itemgetter('user_id'), self.read(cr, uid, rel_ids, ['user_id'], context=context))))
     
     def create_users(self, cr, uid, res_ids, res_model, user_ids, context=None):
         """Given res_ids of res_model, add user_ids to the relationship table"""
@@ -69,7 +69,7 @@ class ir_needaction_users_rel(osv.osv):
         """Given res_ids of res_model, update their entries in the relationship table to user_ids"""
         # read current records
         cur_users = self._get_users(cr, uid, res_ids, res_model, context=context)
-        if len(cur_users) == len(user_ids) and all([cur_user in user_ids for cur_user in cur_users]):
+        if len(cur_users) == len(user_ids) and all(cur_user in user_ids for cur_user in cur_users):
             return True
         # unlink old records
         self.unlink_users(cr, uid, res_ids, res_model, context=context)
@@ -157,10 +157,11 @@ class ir_needaction_mixin(osv.osv):
     
     def needaction_get_record_ids(self, cr, uid, user_id, limit=80, context=None):
         """Given the current model and a user_id
-           get the number of actions it has to perform"""
+           return the record ids that require the user to perform an
+           action"""
         rel_obj = self.pool.get('ir.needaction_users')
-        needact_table_ids = rel_obj.search(cr, uid, [('res_model', '=', self._name), ('user_id', '=', user_id)], limit=limit, context=context)
-        return map(itemgetter('res_id'), rel_obj.read(cr, uid, needact_table_ids, context=context))
+        rel_ids = rel_obj.search(cr, uid, [('res_model', '=', self._name), ('user_id', '=', user_id)], limit=limit, context=context)
+        return map(itemgetter('res_id'), rel_obj.read(cr, uid, rel_ids, ['res_id'], context=context))
     
     def needaction_get_action_count(self, cr, uid, user_id, limit=80, context=None):
         """Given the current model and a user_id
@@ -174,7 +175,7 @@ class ir_needaction_mixin(osv.osv):
            tuples (model_name, record_id).
            This method is trans-model."""
         rel_obj = self.pool.get('ir.needaction_users')
-        needact_table_ids = rel_obj.search(cr, uid, [('user_id', '=', user_id)], offset=offset, limit=limit, order=order, context=context)
-        return map(itemgetter('res_model', 'id'), rel_obj.read(cr, uid, needact_table_ids, context=context))
+        rel_ids = rel_obj.search(cr, uid, [('user_id', '=', user_id)], offset=offset, limit=limit, order=order, context=context)
+        return map(itemgetter('res_model', 'res_id'), rel_obj.read(cr, uid, rel_ids, ['res_model', 'res_id'], context=context))
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
