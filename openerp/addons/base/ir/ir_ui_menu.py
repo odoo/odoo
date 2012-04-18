@@ -264,7 +264,7 @@ class ir_ui_menu(osv.osv):
             if menu.action and menu.action.type == 'ir.actions.act_window' and menu.action.res_model:
                 menu_needaction_res = self.pool.get(menu.action.res_model)._get_needaction_info(cr, uid, uid, domain=menu.action.domain, context=context)
                 # TODO: find the addon that causes a bug on runbot, not on local
-                if not isinstance(menu_needaction_res[1], (int, long)): menu_needaction_res[1] = 0
+                #if not isinstance(menu_needaction_res[1], (int, long)): menu_needaction_res[1] = 0
             else:
                 menu_needaction_res = [False, 0]
             res[menu.id]['needaction_enabled'] = menu_needaction_res[0]
