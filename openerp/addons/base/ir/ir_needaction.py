@@ -115,6 +115,21 @@ class ir_needaction_mixin(osv.osv):
     _name = 'ir.needaction_mixin'
     _description = '"Need action" mixin'
     
+    def get_needaction_pending(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        rel_obj = self.pool.get('ir.needaction_users_rel')
+        for id in ids:
+            res[id] = rel_obj.search(cr, uid, [('res_model', '=', self._name), ('res_id', '=', id), ('user_id', '=', uid)], limit=1, count=True, context=context) > 0
+        return res
+    
+    _columns = {
+        'needaction_pending': fields.function(get_needaction_pending, type='boolean',
+                        string='Need action pending',
+                        help='If True, this field states that users have to perform an action. \
+                                This field comes from the needaction mechanism. Please refer \
+                                to the ir.needaction_mixin class.'),
+    }
+    
     #------------------------------------------------------
     # Addon API
     #------------------------------------------------------
