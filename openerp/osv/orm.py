@@ -4866,7 +4866,7 @@ class BaseModel(object):
     get_xml_id = get_external_id
     _get_xml_ids = _get_external_ids
     
-    def get_needaction_info(self, cr, uid, user_id, limit=None, order=None, domain=False, context=None):
+    def _get_needaction_info(self, cr, uid, user_id, limit=None, order=None, domain=False, context=None):
         """Base method for needaction mechanism
            - see ir.needaction for actual implementation
            - if the model uses the need action mechanism
@@ -4883,16 +4883,18 @@ class BaseModel(object):
            :return: [uses_needaction=True/False, needaction_uid_ctr=%d]
         """
         if hasattr(self, 'needaction_get_record_ids'):
+            # Arbitrary limit, but still much lower thant infinity, to avoid
+            # getting too much data.
             ids = self.needaction_get_record_ids(cr, uid, user_id, limit=8192, context=context)
             if not ids:
-                return [True, 0, []]
+                return [True, 0]
             if domain:
                 new_domain = eval(domain, locals_dict={'uid': user_id}) + [('id', 'in', ids)]
             else:
                 new_domain = [('id', 'in', ids)]
-            return [True, self.search(cr, uid, new_domain, limit=limit, order=order, count=True, context=context), ids]
+            return [True, self.search(cr, uid, new_domain, limit=limit, order=order, count=True, context=context)]
         else:
-            return [False, 0, []]
+            return [False, 0]
             
     # Transience
     def is_transient(self):

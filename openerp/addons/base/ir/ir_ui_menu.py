@@ -258,19 +258,15 @@ class ir_ui_menu(osv.osv):
     def _get_needaction(self, cr, uid, ids, field_names, args, context=None):
         if context is None:
             context = {}
-        res = dict.fromkeys(ids)
+        res = {}
         for menu in self.browse(cr, uid, ids, context=context):
             res[menu.id] = {}
             if menu.action and menu.action.type == 'ir.actions.act_window' and menu.action.res_model:
-                menu_needaction_res = self.pool.get(menu.action.res_model).get_needaction_info(cr, uid, uid, domain=menu.action.domain, context=context)
-                # TODO: find the addon that causes a bug on runbot, not on local
-                if not isinstance(menu_needaction_res[1], (int, long)): menu_needaction_res[1] = 0
+                menu_needaction_res = self.pool.get(menu.action.res_model)._get_needaction_info(cr, uid, uid, domain=menu.action.domain, context=context)
             else:
-                menu_needaction_res = [False, 0, ()]
+                menu_needaction_res = [False, 0]
             res[menu.id]['needaction_enabled'] = menu_needaction_res[0]
             res[menu.id]['needaction_counter'] = menu_needaction_res[1]
-            # not used currently, therefore set to a void list
-            res[menu.id]['needaction_record_ids'] = []
         return res
         
     _columns = {
@@ -291,7 +287,6 @@ class ir_ui_menu(osv.osv):
         'web_icon_hover_data':fields.function(_get_image_icon, string='Web Icon Image (hover)', type='binary', readonly=True, store=True, multi='icon'),
         'needaction_enabled': fields.function(_get_needaction, string='Target model uses the need action mechanism', type='boolean', help='If the menu entry action is an act_window action, and if this action is related to a model that uses the need_action mechanism, this field is set to true. Otherwise, it is false.', multi='_get_needaction'),
         'needaction_counter': fields.function(_get_needaction, string='Number of actions the user has to perform', type='integer', help='If the target model uses the need action mechanism, this field gives the number of actions the current user has to perform.', multi='_get_needaction'),
-        'needaction_record_ids': fields.function(_get_needaction, string='Ids of records requesting an action from the user', type='many2many', help='If the target model uses the need action mechanism, this field holds the ids of the record requesting the user to perform an action.', multi='_get_needaction'),
         'action': fields.function(_action, fnct_inv=_action_inv,
             type='reference', string='Action',
             selection=[
