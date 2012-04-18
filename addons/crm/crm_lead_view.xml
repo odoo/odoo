@@ -300,7 +300,7 @@
                                     <td align="left" valign="middle" class="oe_kanban_title" tooltip="lead_details">
                                         <field name="partner_id"/>
                                         <t t-if="record.planned_revenue.raw_value">
-                                            - <t t-esc="Math.round(record.planned_revenue.value)"/>
+                                            - <t t-esc="record.planned_revenue.value"/>
                                             <field name="company_currency"/>
                                         </t>
                                     </td>
