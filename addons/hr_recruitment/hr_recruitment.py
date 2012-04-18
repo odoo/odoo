@@ -78,7 +78,7 @@ class hr_recruitment_stage(osv.osv):
     }
     _defaults = {
         'sequence': 1,
-        'state': lambda *a: 'draft',
+        'state': 'draft',
     }
 hr_recruitment_stage()
 
