@@ -709,18 +709,8 @@ class BaseModel(object):
     CONCURRENCY_CHECK_FIELD = '__last_update'
 
     def log(self, cr, uid, id, message, secondary=False, context=None):
-        if context and context.get('disable_log'):
-            return True
-        return self.pool.get('res.log').create(cr, uid,
-                {
-                    'name': message,
-                    'res_model': self._name,
-                    'secondary': secondary,
-                    'res_id': id,
-                },
-                context=context
-        )
-
+        return _logger.warning("log() is deprecated. Please use OpenChatter notification system instead of the res.log mechanism.")
+    
     def view_init(self, cr, uid, fields_list, context=None):
         """Override this method to do specific things when a view on the object is opened."""
         pass
@@ -1661,7 +1651,7 @@ class BaseModel(object):
                     children = False
                     views = {}
                     for f in node:
-                        if f.tag in ('form', 'tree', 'graph'):
+                        if f.tag in ('form', 'tree', 'graph', 'kanban'):
                             node.remove(f)
                             ctx = context.copy()
                             ctx['base_model_name'] = self._name
@@ -4875,7 +4865,35 @@ class BaseModel(object):
     # backwards compatibility
     get_xml_id = get_external_id
     _get_xml_ids = _get_external_ids
-
+    
+    def get_needaction_info(self, cr, uid, user_id, limit=None, order=None, domain=False, context=None):
+        """Base method for needaction mechanism
+           - see ir.needaction for actual implementation
+           - if the model uses the need action mechanism
+             (hasattr(model_obj, 'needaction_get_record_ids')):
+              - get the record ids on which the user has actions to perform
+              - evaluate the menu domain
+              - compose a new domain: menu domain, limited to ids of
+                records requesting an action
+              - count the number of records maching that domain, that
+                is the number of actions the user has to perform
+           - this method returns default values
+           :param: model_name: the name of the model (ex: hr.holidays)
+           :param: user_id: the id of user
+           :return: [uses_needaction=True/False, needaction_uid_ctr=%d]
+        """
+        if hasattr(self, 'needaction_get_record_ids'):
+            ids = self.needaction_get_record_ids(cr, uid, user_id, limit=8192, context=context)
+            if not ids:
+                return [True, 0, []]
+            if domain:
+                new_domain = eval(domain, locals_dict={'uid': user_id}) + [('id', 'in', ids)]
+            else:
+                new_domain = [('id', 'in', ids)]
+            return [True, self.search(cr, uid, new_domain, limit=limit, order=order, count=True, context=context), ids]
+        else:
+            return [False, 0, []]
+            
     # Transience
     def is_transient(self):
         """ Return whether the model is transient.

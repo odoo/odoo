@@ -76,6 +76,8 @@ class view(osv.osv):
     def _check_xml(self, cr, uid, ids, context=None):
         for view in self.browse(cr, uid, ids, context):
             eview = etree.fromstring(view.arch.encode('utf8'))
+            if eview.get('layout') or eview.get('validate'):
+                continue
             frng = tools.file_open(os.path.join('base','rng','view.rng'))
             try:
                 relaxng_doc = etree.parse(frng)

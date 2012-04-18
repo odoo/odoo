@@ -40,7 +40,6 @@ from service import security
 import tools
 from tools.translate import _
 
-
 _logger = logging.getLogger(__name__)
 
 class groups(osv.osv):
@@ -205,7 +204,7 @@ class users(osv.osv):
         img_stream = StringIO.StringIO()
         img.save(img_stream, "PNG")
         return img_stream.getvalue().encode('base64')
-    
+
     def _get_avatar(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)
         for user in self.browse(cr, uid, ids, context=context):
@@ -376,7 +375,7 @@ class users(osv.osv):
     }
 
     # User can write to a few of her own fields (but not her groups for example)
-    SELF_WRITEABLE_FIELDS = ['menu_tips','view', 'password', 'signature', 'action_id', 'company_id', 'user_email', 'name']
+    SELF_WRITEABLE_FIELDS = ['menu_tips','view', 'password', 'signature', 'action_id', 'company_id', 'user_email', 'name', 'avatar', 'avatar_big']
 
     def write(self, cr, uid, ids, values, context=None):
         if not hasattr(ids, '__iter__'):

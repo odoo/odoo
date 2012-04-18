@@ -471,7 +471,6 @@ class res_config_settings(osv.osv_memory):
 
     def default_get(self, cr, uid, fields, context=None):
         ir_values = self.pool.get('ir.values')
-        ir_model_data = self.pool.get('ir.model.data')
         classified = self._get_classified_fields(cr, uid, context)
 
         res = super(res_config_settings, self).default_get(cr, uid, fields, context)
