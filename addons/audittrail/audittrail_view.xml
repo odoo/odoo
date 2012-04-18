@@ -2,7 +2,9 @@
 <openerp>
     <data>
 
-    <!-- Audittrail Rule form -->
+        <menuitem id="menu_audit" name="Audit" parent="base.menu_reporting" sequence="50" groups="base.group_system"/>
+
+        <!-- Audittrail Rule -->
 
         <record model="ir.ui.view" id="view_audittrail_rule_form">
             <field name="name">audittrail.rule.form</field>
@@ -50,7 +52,8 @@
                 </tree>
             </field>
         </record>
-       <record id="view_audittrail_rule_search" model="ir.ui.view">
+
+        <record id="view_audittrail_rule_search" model="ir.ui.view">
             <field name="name">audittrail.rule.search</field>
             <field name="model">audittrail.rule</field>
             <field name="type">search</field>
@@ -70,7 +73,6 @@
                 </search>
             </field>
         </record>
-    <!-- Action for audittrail rule -->
 
         <record model="ir.actions.act_window" id="action_audittrail_rule_tree">
             <field name="name">Audit Rules</field>
@@ -82,9 +84,9 @@
             <field name="search_view_id" ref="view_audittrail_rule_search"/>
         </record>
 
-        <menuitem id="menu_action_audittrail_rule_tree"
-            action="action_audittrail_rule_tree" parent="base.menu_audit" />
-        <!-- AuditTrail Log form -->
+        <menuitem id="menu_action_audittrail_rule_tree"  parent="base.menu_audit" action="action_audittrail_rule_tree"/>
+
+        <!-- AuditTrail Log -->
 
         <record model="ir.ui.view" id="view_audittrail_log_form">
             <field name="name">audittrail.log.form</field>
@@ -151,7 +153,7 @@
                 </tree>
             </field>
         </record>
-        
+
        <record id="view_audittrail_log_search" model="ir.ui.view">
             <field name="name">audittrail.log.search</field>
             <field name="model">audittrail.log</field>
@@ -166,14 +168,13 @@
                 <newline/>
                   <group expand="0" string="Group By..." groups="base.group_extended">
                     <filter string="User" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
-   					<separator orientation="vertical"/>                    
+                    <separator orientation="vertical"/>
                     <filter string="Object" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'object_id'}"/>
-					<filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'timestamp'}"/>
+                    <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'timestamp'}"/>
                 </group>
                 </search>
             </field>
         </record>
-<!--  Action for Audittrail Log  -->
 
         <record model="ir.actions.act_window" id="action_audittrail_log_tree">
             <field name="name">Audit Logs</field>
@@ -181,8 +182,8 @@
             <field name="view_type">form</field>
             <field name="search_view_id" ref="view_audittrail_log_search"/>
         </record>
-        <menuitem name="Audit Logs" id="menu_action_audittrail_log_tree"
-            action="action_audittrail_log_tree" parent="base.menu_audit" />
+
+        <menuitem id="menu_audit_logs" name="Audit Logs" parent="base.menu_audit" action="action_audittrail_log_tree" />
 
     </data>
 </openerp>
