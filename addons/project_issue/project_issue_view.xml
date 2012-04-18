@@ -186,7 +186,7 @@
                         <filter string="Stage" icon="terp-stage" domain="[]"
                             context="{'group_by':'type_id'}" />
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]"
-                            context="{'group_by':'state'}" />
+                            context="{'group_by':'state'}"/>
                         <separator orientation="vertical" />
                         <filter string="Month" icon="terp-go-month"
                             domain="[]" context="{'group_by':'create_date'}" help="Creation Month"/>
@@ -262,7 +262,7 @@
                                         <a string="Convert To Task" name="convert_issue_task" icon="gtk-index" type="object"/>
                                     </div>
                                     <div class="oe_kanban_right">
-                                        <a name="case_open" string="Open" states="draft,pending" type="object" icon="kanban-apply" />
+                                        <a name="case_open" string="Open" states="draft,pending" type="object" icon="kanban-apply"/>
                                         <a name="case_pending" string="Pending" states="draft,open" type="object" icon="kanban-pause"/>
                                         <a name="case_close" string="Close" states="open,draft,pending" type="object" icon="kanban-stop"/>
                                     </div>
@@ -317,7 +317,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Feature Tracker Search">
-                    <filter icon="terp-go-today" string="Today" 
+                    <filter icon="terp-go-today" string="Today"
                         domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]" help="Today's features"/>
                     <separator orientation="vertical"/>
                     <group>

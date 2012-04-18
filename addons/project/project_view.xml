@@ -279,6 +279,7 @@
                                 <tree string="Delegated tasks">
                                     <field name="name"/>
                                     <field name="user_id"/>
+                                    <field name="type_id"/>
                                     <field name="state"/>
                                     <field name="effective_hours" widget="float_time"/>
                                     <field name="progress" widget="progressbar"/>
@@ -598,6 +599,7 @@
                     <field name="name"/>
                     <field name="project_default"/>
                     <field name="sequence"/>
+                    <field name="state"/>
                     </group>
                     <separator string="Description" colspan="4"/>
                     <field colspan="4" name="description" nolabel="1"/>
@@ -613,6 +615,7 @@
                 <tree string="Task Stage">
                     <field name="sequence"/>
                     <field name="name"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
