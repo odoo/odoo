@@ -289,7 +289,6 @@ class ir_ui_menu(osv.osv):
         'web_icon_hover_data':fields.function(_get_image_icon, string='Web Icon Image (hover)', type='binary', readonly=True, store=True, multi='icon'),
         'needaction_enabled': fields.function(_get_needaction, string='Target model uses the need action mechanism', type='boolean', help='If the menu entry action is an act_window action, and if this action is related to a model that uses the need_action mechanism, this field is set to true. Otherwise, it is false.', multi='_get_needaction'),
         'needaction_counter': fields.function(_get_needaction, string='Number of actions the user has to perform', type='integer', help='If the target model uses the need action mechanism, this field gives the number of actions the current user has to perform.', multi='_get_needaction'),
-        'needaction_record_ids': fields.function(_get_needaction, string='Ids of records requesting an action from the user', type='many2many', help='If the target model uses the need action mechanism, this field holds the ids of the record requesting the user to perform an action.', multi='_get_needaction'),
         'action': fields.function(_action, fnct_inv=_action_inv,
             type='reference', string='Action',
             selection=[
