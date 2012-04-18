@@ -2061,13 +2061,14 @@ instance.web.form.FieldDate = instance.web.form.FieldDatetime.extend({
 instance.web.form.FieldText = instance.web.form.AbstractField.extend(_.extend({}, instance.web.form.ReinitializeFieldMixin, {
     template: 'FieldText',
     initialize_content: function() {
-        this.$textarea = undefined;
+        this.$textarea = this.$element.find('textarea');
+        this.resized = false;
         if (!this.get("effective_readonly")) {
-            this.$textarea = this.$element.find('textarea');
             this.$textarea.change(_.bind(function() {
                 this.set({'value': instance.web.parse_value(this.$textarea.val(), this)});
             }, this));
-            this.resized = false;
+        } else {
+            this.$textarea.attr('disabled', 'disabled');
         }
     },
     set_value: function(value_) {
@@ -2076,14 +2077,10 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(_.extend({}
     },
     render_value: function() {
         var show_value = instance.web.format_value(this.get('value'), this, '');
-        if (!this.get("effective_readonly")) {
-            this.$textarea.val(show_value);
-            if (!this.resized && this.view.options.resize_textareas) {
-                this.do_resize(this.view.options.resize_textareas);
-                this.resized = true;
-            }
-        } else {
-            this.$element.text(show_value);
+        this.$textarea.val(show_value);
+        if (!this.resized && this.view.options.resize_textareas) {
+            this.do_resize(this.view.options.resize_textareas);
+            this.resized = true;
         }
     },
     is_syntax_valid: function() {
