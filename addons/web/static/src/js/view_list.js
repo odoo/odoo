@@ -141,13 +141,13 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         return this.reload_view(null, null, true);
     },
     /**
-     * Returns the color for the provided record in the current view (from the
-     * ``@colors`` attribute)
+     * Returns the style for the provided record in the current view (from the
+     * ``@colors`` attribute and ``@fonts`` attribute)
      *
      * @param {Record} record record for the current row
-     * @returns {String} CSS color declaration
+     * @returns {String} CSS style declaration
      */
-    color_for: function (record) {
+    style_for: function (record) {
         var style= '';
 
         var context = _.extend({}, record.attributes, {
