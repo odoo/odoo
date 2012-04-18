@@ -148,9 +148,9 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
      * @returns {String} CSS color declaration
      */
     color_for: function (record) {
-       var style= '';
+        var style= '';
 
-       var context = _.extend({}, record.attributes, {
+        var context = _.extend({}, record.attributes, {
             uid: this.session.uid,
             current_date: new Date().toString('yyyy-MM-dd')
             // TODO: time, datetime, relativedelta
@@ -162,9 +162,17 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
                     font = pair[0],
                     expression = pair[1];
                 if (py.evaluate(expression, context).toJSON()) {
-                    if (font == 'bold'){style = 'font-weight: bold;';}
-                    if (font == 'italic'){style = 'font-style: italic;';}
-                    if (font == 'underline'){style = 'text-decoration: underline;';}
+                    switch(font) {
+                    case 'bold':
+                        style += 'font-weight: bold;';
+                        break;
+                    case 'italic':
+                        style += 'font-style: italic;';
+                        break;
+                    case 'underline':
+                        style += 'text-decoration: underline;';
+                        break;
+                    }
                 }
 	        }
 	    }
@@ -175,8 +183,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
                 color = pair[0],
                 expression = pair[1];
             if (py.evaluate(expression, context).toJSON()) {
-                style += 'color: ' + color + ';'
-                return style;
+                return style += 'color: ' + color + ';';
             }
             // TODO: handle evaluation errors
         }
