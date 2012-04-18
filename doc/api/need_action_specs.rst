@@ -1,14 +1,14 @@
 Need action mechanism
 =====================
 
-ir.needaction mixin class
-++++++++++++++++++++++++++
+ir.needaction_mixin mixin class
++++++++++++++++++++++++++++++++
 
 This revision adds a mixin class for objects using the need action feature.
 
 Need action feature can be used by objects willing to be able to signal that an action is required on a particular record. If in the business logic an action must be performed by somebody, for instance validation by a manager, this mechanism allows to set a list of users asked to perform an action.
 
-This class wraps a class (ir.needaction_users) that behaves like a many2many field. However, no field is added to the model inheriting from base.needaction. The mixin class manages the low-level considerations of updating relationships. Every change made on the record calls a method that updates the relationships.
+This class wraps a class (ir.needaction_users) that behaves like a many2many field. However, no field is added to the model inheriting from ir.needaction_mixin. The mixin class manages the low-level considerations of updating relationships. Every change made on the record calls a method that updates the relationships.
 
 Objects using the need_action feature should override the ``get_needaction_user_ids`` method. This methods returns a dictionary whose keys are record ids, and values a list of user ids, like in a many2many relationship. Therefore by defining only one method, you can specify if an action is required by defining the users that have to do it, in every possible situation.
 
@@ -30,12 +30,12 @@ Those fields are functional, because they depend on the user and must therefore 
 Addon implementation example
 ++++++++++++++++++++++++++++
 
-In your ``foo`` module, you want to specify that when it is in state ``confirmed``, it has to be validated by a manager, given by the field ``manager_id``. After making ``foo`` inheriting from ``base.needaction``, you override the ``get_needaction_user_ids`` method:
+In your ``foo`` module, you want to specify that when it is in state ``confirmed``, it has to be validated by a manager, given by the field ``manager_id``. After making ``foo`` inheriting from ``ir.needaction_mixin``, you override the ``get_needaction_user_ids`` method:
 
 ::
 
   [...]
-  _inherit = [base.needaction]
+  _inherit = [`ir.needaction_mixin]
   [...]
   def get_needaction_user_ids(self, cr, uid, ids, context=None):
     result = dict.fromkeys(ids)
