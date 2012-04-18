@@ -117,9 +117,9 @@ class ir_needaction_mixin(osv.osv):
     
     def get_needaction_pending(self, cr, uid, ids, name, arg, context=None):
         res = {}
-        rel_obj = self.pool.get('ir.needaction_users_rel')
+        needaction_user_ids = self.get_needaction_user_ids(cr, uid, ids, context=context)
         for id in ids:
-            res[id] = rel_obj.search(cr, uid, [('res_model', '=', self._name), ('res_id', '=', id), ('user_id', '=', uid)], limit=1, count=True, context=context) > 0
+            res[id] = uid in needaction_user_ids[id]
         return res
     
     _columns = {
