@@ -44,9 +44,7 @@ class project_task_type(osv.osv):
         'sequence': fields.integer('Sequence'),
         'project_default': fields.boolean('Common to All Projects', help="If you check this field, this stage will be proposed by default on each new project. It will not assign this stage to existing projects."),
         'project_ids': fields.many2many('project.project', 'project_task_type_rel', 'type_id', 'project_id', 'Projects'),
-        'state': fields.selection(_TASK_STATE, 'State', required=True,
-                                help='If the task is created the state is \'Draft\'.\n If the task is started, the state becomes \'In Progress\'.\n If review is needed the task is in \'Pending\' state.\
-                                \n If the task is over, the states is set to \'Done\'.'),
+        'state': fields.selection(_TASK_STATE, 'State', required=True, help='This state is related to stage.'),
     }
     _defaults = {
         'state': 'draft',
@@ -698,7 +696,8 @@ class task(osv.osv):
         store = {
                 'project.task': (lambda self, cr, uid, ids, c={}: ids, ['type_id'], 10),
                 'project.task.type': (_get_stage, ['state'], 10)
-        }),
+        }, help='If the task is created the state is \'Draft\'.\n If the task is started, the state becomes \'In Progress\'.\n If review is needed the task is in \'Pending\' state.\
+                                \n If the task is over, the states is set to \'Done\'.'),
         'kanban_state': fields.selection([('normal', 'Normal'),('blocked', 'Blocked'),('done', 'Ready To Pull')], 'Kanban State',
                                          help="A task's kanban state indicates special situations affecting it:\n"
                                               " * Normal is the default situation\n"
