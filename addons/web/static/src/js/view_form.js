@@ -281,9 +281,6 @@ instance.web.FormView = instance.web.View.extend({
     },
     on_form_changed: function() {
         this.trigger("view_content_has_changed");
-        _.each(this.get_widgets(), function(w) {
-            w.update_dom();
-        });
     },
     do_notify_change: function() {
         this.$element.addClass('oe_form_dirty');
@@ -611,7 +608,6 @@ instance.web.FormView = instance.web.View.extend({
                 f = self.fields[f];
                 if (!f.is_valid()) {
                     form_invalid = true;
-                    f.update_dom(true);
                     if (!first_invalid_field) {
                         first_invalid_field = f;
                     }
@@ -623,10 +619,12 @@ instance.web.FormView = instance.web.View.extend({
                 }
             }
             if (form_invalid) {
+                self.set({'display_invalid_fields': true});
                 first_invalid_field.focus();
                 self.on_invalid();
                 return $.Deferred().reject();
             } else {
+                self.set({'display_invalid_fields': false});
                 var save_deferral;
                 if (!self.datarecord.id) {
                     //console.log("FormView(", self, ") : About to create", values);
@@ -1387,8 +1385,6 @@ instance.web.form.Widget = instance.web.Widget.extend(_.extend({}, instance.web.
         }
         this.set(to_set);
     },
-    update_dom: function() {
-    },
     do_attach_tooltip: function(widget, trigger, options) {
         widget = widget || this;
         trigger = trigger || this.$element;
@@ -1471,6 +1467,7 @@ instance.web.form.WidgetButton = instance.web.form.Widget.extend({
             // TODO fme: provide enter key binding to widgets
             this.view.default_focus_button = this;
         }
+        this.view.on('view_content_has_changed', this, this.check_disable);
     },
     start: function() {
         this._super.apply(this, arguments);
@@ -1537,10 +1534,6 @@ instance.web.form.WidgetButton = instance.web.form.Widget.extend({
                 self.view.reload();
             });
     },
-    update_dom: function() {
-        this._super.apply(this, arguments);
-        this.check_disable();
-    },
     check_disable: function() {
         var disabled = (this.force_disabled || !this.view.is_interactible_record());
         this.$element.prop('disabled', disabled);
@@ -1553,7 +1546,7 @@ instance.web.form.WidgetButton = instance.web.form.Widget.extend({
  * able to provide the features necessary for the fields to work.
  * 
  * Properties:
- *     - ...
+ *     - display_invalid_fields
  * Events:
  *     - view_content_has_changed : when the values of the fields have changed. When
  *     this event is triggered all fields should reprocess their modifiers.
@@ -1675,6 +1668,9 @@ instance.web.form.AbstractField = instance.web.form.Widget.extend(/** @lends ins
             if (! this._inhibit_on_change)
                 this._on_ui_change();
         });
+        this.on('changed_value', this, function() {
+            this.check_css_flags();
+        });
     },
     start: function() {
         this._super.apply(this, arguments);
@@ -1697,7 +1693,6 @@ instance.web.form.AbstractField = instance.web.form.Widget.extend(/** @lends ins
         this._inhibit_on_change = true;
         this.set({'value': value_});
         this._inhibit_on_change = false;
-        this.update_dom();
     },
     on_translate: function() {
         this.field_manager.open_translate_dialog(this);
@@ -1714,22 +1709,18 @@ instance.web.form.AbstractField = instance.web.form.Widget.extend(/** @lends ins
     is_false: function() {
         return this.get('value') === false;
     },
-    update_dom: function(show_invalid) {
-        this._super.apply(this, arguments);
+    check_css_flags: function(show_invalid) {
         if (this.field.translate) {
             this.$element.find('.oe_field_translate').toggle(!this.field_manager.is_create_mode());
         }
         if (!this.disable_utility_classes) {
-            if (show_invalid) {
+            if (this.field_manager.get('display_invalid_fields')) {
                 this.$element.toggleClass('oe_form_invalid', !this.is_valid());
             }
         }
     },
     _on_ui_change: function() {
         this.trigger('changed_value');
-        if (! this.is_syntax_valid()) {
-            this.update_dom(true);
-        }
     },
     focus: function($element) {
         if ($element) {
