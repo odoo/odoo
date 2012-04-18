@@ -2708,7 +2708,9 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
         });
         this.views = views;
 
-        this.viewmanager = new instance.web.ViewManager(this, this.dataset, views, {});
+        this.viewmanager = new instance.web.ViewManager(this, this.dataset, views, {
+            $sidebar: false,
+        });
         this.viewmanager.template = 'One2Many.viewmanager';
         this.viewmanager.registry = instance.web.views.extend({
             list: 'instance.web.form.One2ManyListView',
