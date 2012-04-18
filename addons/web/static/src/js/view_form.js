@@ -1666,10 +1666,8 @@ instance.web.form.AbstractField = instance.web.form.Widget.extend(/** @lends ins
         
         this.on("change:value", this, function() {
             if (! this._inhibit_on_change)
-                this._on_ui_change();
-        });
-        this.on('changed_value', this, function() {
-            this.check_css_flags();
+                this.trigger('changed_value');
+            this._check_css_flags();
         });
     },
     start: function() {
@@ -1709,7 +1707,7 @@ instance.web.form.AbstractField = instance.web.form.Widget.extend(/** @lends ins
     is_false: function() {
         return this.get('value') === false;
     },
-    check_css_flags: function(show_invalid) {
+    _check_css_flags: function(show_invalid) {
         if (this.field.translate) {
             this.$element.find('.oe_field_translate').toggle(!this.field_manager.is_create_mode());
         }
@@ -1718,9 +1716,6 @@ instance.web.form.AbstractField = instance.web.form.Widget.extend(/** @lends ins
                 this.$element.toggleClass('oe_form_invalid', !this.is_valid());
             }
         }
-    },
-    _on_ui_change: function() {
-        this.trigger('changed_value');
     },
     focus: function($element) {
         if ($element) {
@@ -2655,7 +2650,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
     trigger_on_change: function() {
         var tmp = this.doing_on_change;
         this.doing_on_change = true;
-        this._on_ui_change();
+        this.trigger('changed_value');
         this.doing_on_change = tmp;
     },
     load_views: function() {
