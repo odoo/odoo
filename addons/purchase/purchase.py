@@ -29,7 +29,7 @@ import pooler
 from tools.translate import _
 import decimal_precision as dp
 from osv.orm import browse_record, browse_null
-from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP
 
 #
 # Model definition
@@ -674,8 +674,8 @@ class purchase_order(osv.osv):
             for picking in (pck for pck in order.picking_ids if pck.id == picking_id):
                 # convert datetime field to a datetime, using server format, then
                 # convert it to the user TZ and re-render it with %Z to add the timezone
-                picking_datetime = fields.DT.datetime.strptime(picking.min_date, tools.DEFAULT_SERVER_DATETIME_FORMAT)
-                picking_date_str = fields.datetime.context_timestamp(cr, uid, meeting_datetime, context=context).strftime(tools.DATETIME_FORMATS_MAP['%+'] + " (%Z)")
+                picking_datetime = fields.DT.datetime.strptime(picking.min_date, DEFAULT_SERVER_DATETIME_FORMAT)
+                picking_date_str = fields.datetime.context_timestamp(cr, uid, meeting_datetime, context=context).strftime(DATETIME_FORMATS_MAP['%+'] + " (%Z)")
                 self.message_append_note(cr, uid, [order.id], body=_("Shipment <em>%s</em> <b>scheduled</b> for %s.") % (picking.name, picking_date_str), context=context)
     
     def invoice_send_note(self, cr, uid, ids, invoice_id, context=None):

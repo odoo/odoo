@@ -24,6 +24,7 @@ from osv import fields, osv
 from tools.translate import _
 import crm
 import time
+from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP
 from datetime import datetime
 
 class crm_phonecall(crm_base, osv.osv):
@@ -325,8 +326,8 @@ class crm_phonecall(crm_base, osv.osv):
                 lead = phonecall.opportunity_id
                 # convert datetime field to a datetime, using server format, then
                 # convert it to the user TZ and re-render it with %Z to add the timezone
-                phonecall_datetime = fields.DT.datetime.strptime(phonecall.date, tools.DEFAULT_SERVER_DATETIME_FORMAT)
-                phonecall_date_str = fields.datetime.context_timestamp(cr, uid, phonecall_datetime, context=context).strftime(tools.DATETIME_FORMATS_MAP['%+'] + " (%Z)")
+                phonecall_datetime = fields.DT.datetime.strptime(phonecall.date, DEFAULT_SERVER_DATETIME_FORMAT)
+                phonecall_date_str = fields.datetime.context_timestamp(cr, uid, phonecall_datetime, context=context).strftime(DATETIME_FORMATS_MAP['%+'] + " (%Z)")
                 message = _("Phonecall linked to the opportunity <em>%s</em> has been <b>created</b> and <b>scheduled</b> on <em>%s</em>.") % (lead.name, phonecall_date_str)
             else:
                 message = _("Phonecall has been <b>created and opened</b>.")

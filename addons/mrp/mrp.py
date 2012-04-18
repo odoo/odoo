@@ -22,6 +22,7 @@
 from datetime import datetime
 from osv import osv, fields
 import decimal_precision as dp
+from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP
 from tools.translate import _
 import netsvc
 import time
@@ -1075,8 +1076,8 @@ class mrp_production(osv.osv):
         for obj in self.browse(cr, uid, ids, context=context):
             # convert datetime field to a datetime, using server format, then
             # convert it to the user TZ and re-render it with %Z to add the timezone
-            obj_datetime = fields.DT.datetime.strptime(obj.date_planned, tools.DEFAULT_SERVER_DATETIME_FORMAT)
-            obj_date_str = fields.datetime.context_timestamp(cr, uid, obj_datetime, context=context).strftime(tools.DATETIME_FORMATS_MAP['%+'] + " (%Z)")
+            obj_datetime = fields.DT.datetime.strptime(obj.date_planned, DEFAULT_SERVER_DATETIME_FORMAT)
+            obj_date_str = fields.datetime.context_timestamp(cr, uid, obj_datetime, context=context).strftime(DATETIME_FORMATS_MAP['%+'] + " (%Z)")
             message = _("Manufacturing order has been <b>confirmed</b> and is <b>scheduled</b> for the <em>%s</em>.") % (obj_date_str)
             self.message_append_note(cr, uid, [obj.id], body=message, context=context)
         return True
