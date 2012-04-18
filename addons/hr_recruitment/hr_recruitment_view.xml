@@ -138,6 +138,22 @@
                             <field name="source_id"/>
                             <field name="reference"/>
                         </group>
+                        <group col="2" colspan="2">
+                           <separator colspan="2" string="Dates"/>
+                           <field name="create_date"/>
+                           <field name="write_date"/>
+                           <field name="date_closed"/>
+                           <field name="date_open"/>
+                        </group>
+                        <separator colspan="4" string="Status" groups="base.group_no_one"/>
+                        <group col="8" colspan="4" groups="base.group_no_one">
+                            <field name="state" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
+                            <button name="case_cancel" string="Refuse" states="draft,open,pending" type="object" icon="gtk-cancel" />
+                            <button name="case_open" string="In Progress" states="draft,pending" type="object" icon="gtk-go-forward" />
+                            <button name="case_pending" string="Pending" states="open" type="object" icon="gtk-media-pause" />
+                            <button name="%(action_hr_recruitment_hired_employee)d" string="Hire" states="open,pending" type="action" icon="terp-partner"/>
+                            <button name="case_reset" string="Reset to New" states="done,cancel" type="object" icon="gtk-convert"/>
+                        </group>
                    </page>
                  <page string="Notes">
                      <field name="description" nolabel="1" colspan="4"/>
@@ -374,6 +390,7 @@
                     <field name="name" select="1"/>
                     <field name="department_id" groups="base.group_extended"/>
                     <field name="sequence"/>
+                    <field name="state"/>
                 </group>
                 <separator string="Requirements" colspan="4"/>
                 <field name="requirements" nolabel="1" colspan="4"/>
