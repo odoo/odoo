@@ -478,8 +478,8 @@
 
                     <separator colspan="4" string="Details"/>
                     <field name="description" nolabel="1" colspan="4"/>
-                    <separator colspan="4" groups="base.group_no_one"/>
-                    <group col="10" colspan="4" groups="base.group_no_one">
+                    <separator colspan="4"/>
+                    <group col="10" colspan="4">
                         <field name="state" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
                         <button name="case_cancel" string="Cancel" states="draft" type="object" icon="gtk-cancel" />
                         <button name="case_mark_lost" string="Mark Lost" states="open,pending" type="object" icon="gtk-cancel" />
@@ -567,7 +567,7 @@
                 <field name="user_id"/>
                 <field name="priority" invisible="1"/>
                 <field name="categ_id" invisible="1"/>
-                <field name="state" groups="base.group_no_one"/>
+                <field name="state"/>
                 <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward" />
                 <button name="case_pending" string="Pending" states="open,draft" type="object" icon="gtk-media-pause" />
                 <button name="case_mark_lost" string="Lost" states="open,pending" type="object" icon="gtk-cancel" />
@@ -587,15 +587,15 @@
                 <filter icon="terp-check"
                     string="New"  help="New Opportunities"
                     name="new"
-                    domain="[('state','=','draft')]" groups="base.group_no_one"/>
+                    domain="[('state','=','draft')]"/>
                 <filter icon="terp-camera_test"
                     string="Open"  help="Open Opportunities"
                     name="open"
-                    domain="[('state','=','open')]" groups="base.group_no_one"/>
+                    domain="[('state','=','open')]"/>
                 <filter icon="terp-gtk-media-pause"
                     string="Pending"  help="Pending Opportunities"
                     name="pending"
-                    domain="[('state','=','pending')]" groups="base.group_no_one"/>
+                    domain="[('state','=','pending')]"/>
                 <separator orientation="vertical"/>
                 <field name="name" string="Opportunity / Customer"
                     filter_domain="['|','|','|',('partner_id','ilike',self),('partner_name','ilike',self),('email_from','ilike',self),('name', 'ilike', self)]"/>
@@ -628,7 +628,7 @@
                     <filter string="Category" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'categ_id'}" />
                     <filter string="Campaign" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'type_id'}" groups="base.group_extended"/>
                     <filter string="Channel" icon="terp-call-start" domain="[]" context="{'group_by':'channel_id'}" />
-                    <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}" groups="base.group_no_one"/>
+                    <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     <separator orientation="vertical" />
                     <filter string="Creation" icon="terp-go-month" domain="[]" context="{'group_by':'create_date'}" groups="base.group_no_one"/>
                     <filter string="Exp.Closing" icon="terp-go-month" help="Expected Closing" domain="[]" context="{'group_by':'date_deadline'}" />
