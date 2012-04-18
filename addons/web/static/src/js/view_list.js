@@ -174,8 +174,8 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
                         break;
                     }
                 }
-	        }
-	    }
+            }
+        }
 
         if (!this.colors) { return style; }
         for(var i=0, len=this.colors.length; i<len; ++i) {
