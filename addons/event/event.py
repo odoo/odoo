@@ -215,10 +215,13 @@ class event_event(osv.osv):
         register_pool = self.pool.get('event.registration')
         user_pool = self.pool.get('res.users')
         user = user_pool.browse(cr, uid, uid, context=context)
+        print "user", user
         curr_reg_ids = register_pool.search(cr, uid, [('user_id', '=', user.id), ('event_id', '=' , ids[0])])
+        print "curr_reg_ids", curr_reg_ids
         #the subscription is done with UID = 1 because in case we share the kanban view, we want anyone to be able to subscribe
         if not curr_reg_ids:
-            curr_reg_ids = [register_pool.create(cr, 1, {'event_id': ids[0] ,'email': user.user_email, 'name':user.name, 'user_id': user.id,})]
+            curr_reg_ids = [register_pool.create(cr, 1, {'event_id': ids[0] ,'email': user.user_email, 'name':user.name, 'user_id': user.id, 'nb_register': 5})]
+            print "::::::::::::::", curr_reg_ids
         return register_pool.confirm_registration(cr, 1, curr_reg_ids, context=context)
 
     def unsubscribe_to_event(self, cr, uid, ids, context=None):
@@ -288,6 +291,7 @@ class event_registration(osv.osv):
         return self.write(cr, uid, ids, {'state': 'draft'}, context=context)
 
     def confirm_registration(self, cr, uid, ids, context=None):
+        print "confirm_registrationconfirm_registration"
         self.message_append(cr, uid, ids,_('State set to open'),body_text= _('Open'))
         return self.write(cr, uid, ids, {'state': 'open'}, context=context)
 

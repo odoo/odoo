@@ -203,6 +203,7 @@
                             </p>
                             <t t-if="record.register_avail.raw_value != 0">
                               <t t-if="!record.is_subscribed.raw_value">
+                                  <textarea class="no_of_seats"/>
                                   <button type="object" name="subscribe_to_event" class="subscribe_button oe_event_button_subscribe">
                                   <span >Subscribe</span>
                                   </button>
