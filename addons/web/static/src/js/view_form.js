@@ -852,6 +852,7 @@ instance.web.FormView = instance.web.View.extend({
             this.translatable_fields.push(field);
         }
         field.on('changed_value', this, function() {
+            field._dirty_flag = true;
             if (field.is_syntax_valid()) {
                 this.do_onchange(field);
                 this.on_form_changed(true);
