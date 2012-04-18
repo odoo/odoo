@@ -1250,6 +1250,10 @@ openerp.point_of_sale = function(session) {
             this._super(parent, options);
             this.label = options.label || 'button';
             this.rightalign = options.rightalign || false;
+            if(options.icon){
+                this.icon = options.icon;
+                this.template = 'pos-action-button-with-icon';
+            }
         },
     });
 
@@ -1605,12 +1609,24 @@ openerp.point_of_sale = function(session) {
             this.actionBar = new ActionbarWidget(null);
             this.actionBar.appendTo($(".point-of-sale #content"));
 
-            this.actionBar.addNewButton('left',{'label':'foobar'});
+            this.actionBar.addNewButton('left',{
+                label : 'Aide',
+                icon  : '/point_of_sale/static/src/img/icons/png48/help-browser.png',
+            });
             this.actionBar.addNewButton('left',{'label':'test'});
             this.actionBar.addNewButton('left',{'label':'kikoo', rightalign:true});
 
             this.actionBar.addNewButton('right',{'label':'boo'});
-            this.actionBar.addNewButton('right',{'label':'bah', rightalign:true});
+            this.actionBar.addNewButton('right',{
+                label      : 'Payer', 
+                rightalign : true,
+                icon       : '/point_of_sale/static/src/img/icons/png48/go-next.png',
+            });
+            this.actionBar.addNewButton('right',{
+                label      : 'Ook Ook', 
+                rightalign : true,
+                icon       : '/point_of_sale/static/src/img/icons/png48/face-monkey.png',
+            });
         };
 
         //returns true if the code is a valid EAN codebar number by checking the control digit.
