@@ -177,14 +177,14 @@ openerp.point_of_sale = function(session) {
                 if (stored)
                     this.data[key] = JSON.parse(stored);
                 else
-                    console.log('Store get: ',key, 'default: ',_default);
+                    //console.log('Store get: ',key, 'default: ',_default);
                     return _default;
             }
-            console.log('Store get: ',key, 'value: ',this.data[key]);
+            //console.log('Store get: ',key, 'value: ',this.data[key]);
             return this.data[key];
         },
         set: function(key, value) {
-            console.log('Store set: ',key,' value: ',value);
+            //console.log('Store set: ',key,' value: ',value);
             this.data[key] = value;
             localStorage['oe_pos_' + key] = JSON.stringify(value);
         },
@@ -540,7 +540,7 @@ openerp.point_of_sale = function(session) {
                 existing.incrementQuantity();
             } else {
                 var line = new Orderline(product.toJSON());
-                console.log('orderline:',line,product.toJSON());
+                //console.log('orderline:',line,product.toJSON());
                 this.get('orderLines').add(line);
                 line.bind('killme', function() {
                     this.get('orderLines').remove(line);
@@ -1244,11 +1244,67 @@ openerp.point_of_sale = function(session) {
         }
     });
 
-    var ToolbarWidget = session.web.Widget.extend({
-        tagName: 'div',
+    var ActionButtonWidget = session.web.Widget.extend({
+        template:'pos-action-button',
+        init: function(parent, options){
+            this._super(parent, options);
+            this.label = options.label || 'button';
+            this.rightalign = options.rightalign || false;
+        },
+    });
+
+    var ActionbarWidget = session.web.Widget.extend({
+        template:'pos-actionbar',
         init: function(parent, options){
             this._super(parent,options);
+            this.left_button_list = [];
+            this.right_button_list = [];
         },
+        start: function(){
+            console.log('hello world!');
+            window.actionbarwidget = this;
+        },
+        destroyButtons:function(position){
+            var button_list;
+            if(position === 'left'){
+                button_list = this.left_button_list;
+                this.left_button_list = [];
+            }else if (position === 'right'){
+                button_list = this.right_button_list;
+                this.right_button_list = [];
+            }else{
+                return this;
+            }
+            for(var i = 0; i < button_list.length; i++){
+                button_list[i].destroy();
+            }
+            return this;
+        },
+        addNewButton: function(position,button_options){
+            if(arguments.length == 2){
+                var button_list;
+                var $button_list;
+                if(position === 'left'){ 
+                    button_list = this.left_button_list;
+                    $button_list = $('.pos-actionbar-left-region');
+                }else if(position === 'right'){
+                    button_list = this.right_button_list;
+                    $button_list = $('.pos-actionbar-right-region');
+                }
+                var button = new ActionButtonWidget(this,button_options);
+                button_list.push(button);
+                button.appendTo($button_list);
+            }else{
+                for(var i = 1; i < arguments.length; i++){
+                    this.addNewButton(position,arguments[i]);
+                }
+            }
+            return this;
+        }
+        /*
+        renderElement: function() {
+            //this.$element.html(this.template_fct());
+        },*/
     });
 
     // A Widget that displays an onscreen keyboard.
@@ -1545,6 +1601,16 @@ openerp.point_of_sale = function(session) {
 
             this.onscreenKeyboard = new OnscreenKeyboardWidget(null,{keyboard_model:'simple'});
             this.onscreenKeyboard.appendTo($(".point-of-sale #content"));
+
+            this.actionBar = new ActionbarWidget(null);
+            this.actionBar.appendTo($(".point-of-sale #content"));
+
+            this.actionBar.addNewButton('left',{'label':'foobar'});
+            this.actionBar.addNewButton('left',{'label':'test'});
+            this.actionBar.addNewButton('left',{'label':'kikoo', rightalign:true});
+
+            this.actionBar.addNewButton('right',{'label':'boo'});
+            this.actionBar.addNewButton('right',{'label':'bah', rightalign:true});
         };
 
         //returns true if the code is a valid EAN codebar number by checking the control digit.

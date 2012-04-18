@@ -294,6 +294,26 @@
             </table>
         </div>
     </t>
+    <t t-name="pos-actionbar">
+        <div class="pos-actionbar">
+            <ul class="pos-actionbar-left-region">
+                <!-- <li class="button">yoyo</li>
+                <li class="button">foo</li>
+                <li class="button rightalign">bar</li> -->
+            </ul>
+
+            <ul class="pos-actionbar-right-region">
+                <!-- <li class="button">BUTTOOON</li>
+                <li class="button">JEEENKIINS</li>
+                <li class="button rightalign">ARGH</li> -->
+            </ul>
+        </div>
+    </t>
+    <t t-name="pos-action-button">
+        <li t-att-class=" 'button '+ (widget.rightalign  ? 'rightalign ' : '')">
+            <t t-esc="widget.label" />
+        </li>
+    </t>
     <!-- Onscreen Keyboard : 
          http://net.tutsplus.com/tutorials/javascript-ajax/creating-a-keyboard-with-css-and-jquery/ -->
     <t t-name="pos-onscreen-keyboard-full-template">

@@ -1,4 +1,6 @@
-
+body{
+    overflow: hidden;
+}
 .point-of-sale {
     padding: 0;
     margin: 0;
@@ -116,9 +118,15 @@
     bottom: 0;
 }
 .point-of-sale #leftpane {
-    height: 100%;
+    -webkit-box-sizing:border-box;
+    position:absolute;
+    left:0;
+    width:440px;
+    top:0px;
+    bottom:105px;
+    /*height: 87%;
     width: 440px;
-    position: relative;
+    position: relative;*/
     border-right: solid 1px #afafb6;
     background-color: white;
 }
@@ -249,10 +257,10 @@
 .point-of-sale #rightpane {
     position: absolute;
     top: 0;
-    bottom: 0;
-    left: 441px;
+    bottom: 105px;
+    left: 440px;
+    //height:100%;
     right: 0;
-    height: 100%;
     vertical-align: top;
 }
 .point-of-sale #rightpane header {
@@ -485,6 +493,79 @@
     .pos-sale-ticket {
         margin: 0;
     }
+}
+
+.point-of-sale .pos-actionbar{
+    position:absolute;
+    left:    0;
+    bottom:  0px;
+    height: 105px;
+    width:  100%;
+    margin: 0;
+    background: #f5f5f5;    /*#ebebeb;*/
+    border-top: solid 1px #afafb6;
+}
+
+.point-of-sale .pos-actionbar ul{
+    list-style:  none;
+}
+
+.point-of-sale .pos-actionbar-left-region{
+    height: 100%;
+    width:  434px;
+    margin: 0px;
+    padding-left:3px;
+    padding-right:3px;
+    border-right: solid 1px #dfdfdf;
+    float:  left;
+}
+
+.point-of-sale .pos-actionbar-right-region{
+    height: 100%;
+    margin: 0px;
+    padding-left:3px;
+    padding-right:3px;
+    overflow:hidden;
+}
+
+.point-of-sale .pos-actionbar .button{
+    width: 90px;
+    height: 90px;
+    text-align:center;
+    margin:3px;
+    margin-top:6px;
+    line-height: 90px;
+    float:left;
+
+    font-size:   14px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    border: 1px solid #cacaca;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+
+    background: #e2e2e2;
+    background: -moz-linear-gradient(#f0f0f0, #e2e2e2);
+    background: -webkit-gradient(linear, left top, left bottom, from(#f0f0f0), to(#e2e2e2));
+    -webkit-box-shadow: 0px 2px 2px rgba(0,0,0, 0.3);
+}
+.point-of-sale .pos-actionbar .button:hover {
+    color: white;
+    background: #7f82ac;
+    border: 1px solid #7f82ac;
+    background: -moz-linear-gradient(#9d9fc5, #7f82ac);
+    background: -webkit-gradient(linear, left top, left bottom, from(#9d9fc5), to(#7f82ac));
+
+    -webkit-transition-property: background, border;
+    -webkit-transition-duration: 0.2s;
+    -webkit-transition-timing-function: ease-out;
+}
+
+.point-of-sale .pos-actionbar .button.rightalign{
+    float:right;
 }
 
 /* Onscreen Keyboard http://net.tutsplus.com/tutorials/javascript-ajax/creating-a-keyboard-with-css-and-jquery/ */
