@@ -78,12 +78,10 @@ $colour4: #8a89ba
     color: #4c4c4c
     font-size: 13px
     background: white
+    // }}}
+    // Tag reset {{{
     a
         text-decoration: none
-    // }}}
-
-.openerp
-    // Tag reset {{{
     table
         padding: 0
         font-size: 13px
@@ -1366,6 +1364,15 @@ $colour4: #8a89ba
 
     // }}}
     // ListView {{{
+    .oe_listview_nocontent
+        > img
+            float: left
+            margin-right: 1.5em
+        > div
+            // don't encroach on my arrow
+            overflow: hidden
+            padding: 6px
+            font-size: 125%
     .oe-listview-content
         width: 100%
         thead, tfoot
@@ -1480,7 +1487,6 @@ $colour4: #8a89ba
         .oe_tooltip_technical_title
             font-weight: bold
     // }}}
-
     // Debugging stuff {{{
     .oe_layout_debugging
         .oe_form_group
@@ -1519,4 +1525,3 @@ $colour4: #8a89ba
 
 // au BufWritePost,FileWritePost *.sass :!sass --style expanded --line-numbers <afile> > "%:p:r.css"
 // vim:tabstop=4:shiftwidth=4:softtabstop=4:fdm=marker:
-

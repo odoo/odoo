@@ -770,6 +770,17 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
                     .attr('colspan', this.previous_colspan);
             this.previous_colspan = null;
         }
+    },
+    no_result: function () {
+        if (this.groups.group_by
+            || !this.options.action
+            || !this.options.action.help) {
+            return;
+        }
+        this.$element.children('table').replaceWith(
+            $('<div class="oe_listview_nocontent">')
+                .append($('<img>', { src: '/web/static/src/img/list_empty_arrow.png' }))
+                .append($('<div>').html(this.options.action.help)));
     }
 });
 instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.ListView.List# */{
@@ -1367,6 +1378,9 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
             self.records.add(records, {silent: true});
             list.render();
             d.resolve(list);
+            if (_.isEmpty(records)) {
+                view.no_result();
+            }
         });});
         return d.promise();
     },
