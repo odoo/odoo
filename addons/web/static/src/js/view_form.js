@@ -1628,6 +1628,7 @@ instance.web.form.FieldInterface = {
     is_valid: function() {},
     is_syntax_valid: function() {},
     is_false: function() {},
+    focus: function() {},
 };
 
 /**
@@ -1674,7 +1675,9 @@ instance.web.form.AbstractField = instance.web.form.Widget.extend(/** @lends ins
         this._super.apply(this, arguments);
         if (this.field.translate) {
             this.$element.addClass('oe_form_field_translatable');
-            this.$element.find('.oe_field_translate').click(this.on_translate);
+            this.$element.find('.oe_field_translate').click(_.bind(function() {
+                this.field_manager.open_translate_dialog(this);
+            }, this));
         }
         if (instance.connection.debug) {
             this.do_attach_tooltip(this, this.$element);
@@ -1691,9 +1694,6 @@ instance.web.form.AbstractField = instance.web.form.Widget.extend(/** @lends ins
         this._inhibit_on_change = true;
         this.set({'value': value_});
         this._inhibit_on_change = false;
-    },
-    on_translate: function() {
-        this.field_manager.open_translate_dialog(this);
     },
     get_value: function() {
         return this.get('value');
@@ -1717,13 +1717,19 @@ instance.web.form.AbstractField = instance.web.form.Widget.extend(/** @lends ins
             }
         }
     },
-    focus: function($element) {
-        if ($element) {
-            setTimeout(function() {
-                $element.focus();
-            }, 50);
-        }
+    focus: function() {
     },
+    /**
+     * Utility method to focus an element, but only after a small amount of time.
+     */
+    delay_focus: function($elem) {
+        setTimeout(function() {
+            $elem.focus();
+        }, 50);
+    },
+    /**
+     * Utility method to get the widget options defined in the field xml description.
+     */
     get_definition_options: function() {
         if (!this.definition_options) {
             var str = this.node.attrs.options || '{}';
@@ -1814,8 +1820,8 @@ instance.web.form.FieldChar = instance.web.form.AbstractField.extend(_.extend({}
     is_false: function() {
         return this.get('value') === '';
     },
-    focus: function($element) {
-        this._super($element || this.$element.find('input:first'));
+    focus: function() {
+        this.delay_focus(this.$element.find('input:first'));
     }
 }));
 
@@ -2022,8 +2028,9 @@ instance.web.form.FieldDatetime = instance.web.form.AbstractField.extend(_.exten
     is_false: function() {
         return this.get('value') === '';
     },
-    focus: function($element) {
-        this._super($element || (this.datewidget && this.datewidget.$input));
+    focus: function() {
+        if (this.datewidget && this.datewidget.$input)
+            this.delay_focus(this.datewidget.$input);
     }
 }));
 
@@ -2076,7 +2083,7 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(_.extend({}
         return this.get('value') === '';
     },
     focus: function($element) {
-        this._super($element || this.$textarea);
+        this.delay_focus(this.$textarea);
     },
     do_resize: function(max_height) {
         max_height = parseInt(max_height, 10);
@@ -2118,8 +2125,8 @@ instance.web.form.FieldBoolean = instance.web.form.AbstractField.extend({
         this._super.apply(this, arguments);
         this.$checkbox[0].checked = value_;
     },
-    focus: function($element) {
-        this._super($element || this.$checkbox);
+    focus: function() {
+        this.delay_focus(this.$checkbox);
     }
 });
 
@@ -2212,8 +2219,8 @@ instance.web.form.FieldSelection = instance.web.form.AbstractField.extend(_.exte
         var value_ = this.values[this.$element.find('select')[0].selectedIndex];
         return !! value_;
     },
-    focus: function($element) {
-        this._super($element || this.$element.find('select:first'));
+    focus: function() {
+        this.delay_focus(this.$element.find('select:first'));
     }
 }));
 
@@ -2557,8 +2564,8 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(_.exten
     is_false: function() {
         return ! this.get("value");
     },
-    focus: function ($element) {
-        this._super($element || this.$input);
+    focus: function () {
+        this.delay_focus(this.$input);
     }
 }));
 
