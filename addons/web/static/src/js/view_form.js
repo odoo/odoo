@@ -3421,7 +3421,7 @@ instance.web.form.FormOpenPopup = instance.web.OldWidget.extend(/** @lends insta
     setup_form_view: function() {
         var self = this;
         var FormClass = instance.web.views.get_object('form');
-        var options = _.clone(self.options.form_view_options);
+        var options = _.clone(self.options.form_view_options) || {};
         options.initial_mode = this.options.readonly ? "view" : "edit";
         this.view_form = new FormClass(this, this.dataset, false, options);
         if (this.options.alternative_form_view) {
