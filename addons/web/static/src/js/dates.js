@@ -1,5 +1,5 @@
 
-openerp.web.dates = function(openerp) {
+openerp.web.dates = function(instance) {
 
 /**
  * Converts a string to a Date javascript object using OpenERP's
@@ -11,7 +11,7 @@ openerp.web.dates = function(openerp) {
  * @param {String} str A string representing a datetime.
  * @returns {Date}
  */
-openerp.web.str_to_datetime = function(str) {
+instance.web.str_to_datetime = function(str) {
     if(!str) {
         return str;
     }
@@ -38,7 +38,7 @@ openerp.web.str_to_datetime = function(str) {
  * @param {String} str A string representing a date.
  * @returns {Date}
  */
-openerp.web.str_to_date = function(str) {
+instance.web.str_to_date = function(str) {
     if(!str) {
         return str;
     }
@@ -65,7 +65,7 @@ openerp.web.str_to_date = function(str) {
  * @param {String} str A string representing a time.
  * @returns {Date}
  */
-openerp.web.str_to_time = function(str) {
+instance.web.str_to_time = function(str) {
     if(!str) {
         return str;
     }
@@ -104,7 +104,7 @@ var zpad = function(str, size) {
  * @param {Date} obj
  * @returns {String} A string representing a datetime.
  */
-openerp.web.datetime_to_str = function(obj) {
+instance.web.datetime_to_str = function(obj) {
     if (!obj) {
         return false;
     }
@@ -124,7 +124,7 @@ openerp.web.datetime_to_str = function(obj) {
  * @param {Date} obj
  * @returns {String} A string representing a date.
  */
-openerp.web.date_to_str = function(obj) {
+instance.web.date_to_str = function(obj) {
     if (!obj) {
         return false;
     }
@@ -143,7 +143,7 @@ openerp.web.date_to_str = function(obj) {
  * @param {Date} obj
  * @returns {String} A string representing a time.
  */
-openerp.web.time_to_str = function(obj) {
+instance.web.time_to_str = function(obj) {
     if (!obj) {
         return false;
     }

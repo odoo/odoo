@@ -1,16 +1,16 @@
-openerp.web_tests = function (db) {
-    db.web.client_actions.add(
+openerp.web_tests = function (instance) {
+    instance.web.client_actions.add(
         'buncha-forms', 'instance.web_tests.BunchaForms');
-    db.web_tests = {};
-    db.web_tests.BunchaForms = db.web.OldWidget.extend({
+    instance.web_tests = {};
+    instance.web_tests.BunchaForms = instance.web.OldWidget.extend({
         init: function (parent) {
             this._super(parent);
-            this.dataset = new db.web.DataSetSearch(this, 'test.listview.relations');
-            this.form = new db.web.FormView(this, this.dataset, false, {
+            this.dataset = new instance.web.DataSetSearch(this, 'test.listview.relations');
+            this.form = new instance.web.FormView(this, this.dataset, false, {
                 action_buttons: false,
                 pager: false
             });
-            this.form.registry = db.web.form.readonly;
+            this.form.registry = instance.web.form.readonly;
         },
         render: function () {
             return '<div class="oe-bunchaforms"></div>';

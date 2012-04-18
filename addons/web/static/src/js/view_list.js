@@ -1,9 +1,9 @@
-openerp.web.list = function (openerp) {
-var _t = openerp.web._t,
-   _lt = openerp.web._lt;
-var QWeb = openerp.web.qweb;
-openerp.web.views.add('list', 'openerp.web.ListView');
-openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView# */ {
+openerp.web.list = function (instance) {
+var _t = instance.web._t,
+   _lt = instance.web._lt;
+var QWeb = instance.web.qweb;
+instance.web.views.add('list', 'instance.web.ListView');
+instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListView# */ {
     _template: 'ListView',
     display_name: _lt('List'),
     defaults: {
@@ -33,11 +33,11 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
      * See constructor parameters and method documentations for information on
      * the default behaviors and possible options for the list view.
      *
-     * @constructs openerp.web.ListView
-     * @extends openerp.web.View
+     * @constructs instance.web.ListView
+     * @extends instance.web.View
      *
      * @param parent parent object
-     * @param {openerp.web.DataSet} dataset the dataset the view should work with
+     * @param {instance.web.DataSet} dataset the dataset the view should work with
      * @param {String} view_id the listview's identifier, if any
      * @param {Object} options A set of options used to configure the view
      * @param {Boolean} [options.selectable=true] determines whether view rows are selectable (e.g. via a checkbox)
@@ -61,12 +61,12 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
 
         this.records = new Collection();
 
-        this.set_groups(new openerp.web.ListView.Groups(this));
+        this.set_groups(new instance.web.ListView.Groups(this));
 
-        if (this.dataset instanceof openerp.web.DataSetStatic) {
-            this.groups.datagroup = new openerp.web.StaticDataGroup(this.dataset);
+        if (this.dataset instanceof instance.web.DataSetStatic) {
+            this.groups.datagroup = new instance.web.StaticDataGroup(this.dataset);
         } else {
-            this.groups.datagroup = new openerp.web.DataGroup(
+            this.groups.datagroup = new instance.web.DataGroup(
                 this, this.model,
                 dataset.get_domain(),
                 dataset.get_context(),
@@ -104,7 +104,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
     /**
      * Set a custom Group construct as the root of the List View.
      *
-     * @param {openerp.web.ListView.Groups} groups
+     * @param {instance.web.ListView.Groups} groups
      */
     set_groups: function (groups) {
         var self = this;
@@ -207,6 +207,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
 
         this.$element.html(QWeb.render(this._template, this));
         // Head hook
+        // Selecting records
         this.$element.find('.all-record-selector').click(function(){
             self.$element.find('.oe-record-selector input').prop('checked',
                 self.$element.find('.all-record-selector').prop('checked')  || false);
@@ -215,70 +216,95 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
                 'selected', [selection.ids, selection.records]);
         });
 
-        this.$element.find('.oe-list-add')
-                .click(this.proxy('do_add_record'))
-                .attr('disabled', grouped && this.options.editable);
-        this.$element.find('.oe-list-delete')
-                .attr('disabled', true)
-                .click(this.proxy('do_delete_selected'));
+        // Sorting columns
         this.$element.find('thead').delegate('th.oe-sortable[data-id]', 'click', function (e) {
             e.stopPropagation();
-
             var $this = $(this);
             self.dataset.sort($this.data('id'));
             if ($this.find('span').length) {
-                $this.find('span').toggleClass(
-                    'ui-icon-triangle-1-s ui-icon-triangle-1-n');
+                $this.find('span').toggleClass( 'ui-icon-triangle-1-s ui-icon-triangle-1-n');
             } else {
-                $this.append('<span class="ui-icon ui-icon-triangle-1-n">')
-                     .siblings('.oe-sortable').find('span').remove();
+                $this.append('<span class="ui-icon ui-icon-triangle-1-n">') .siblings('.oe-sortable').find('span').remove();
             }
 
             self.reload_content();
         });
 
-        this.$element.find('.oe-list-pager')
-            .delegate('button', 'click', function () {
-                var $this = $(this);
-                switch ($this.data('pager-action')) {
-                    case 'first':
-                        self.page = 0; break;
-                    case 'last':
-                        self.page = Math.floor(
-                            self.dataset.size() / self.limit());
-                        break;
-                    case 'next':
-                        self.page += 1; break;
-                    case 'previous':
-                        self.page -= 1; break;
-                }
-                self.reload_content();
-            }).find('.oe-pager-state')
-                .click(function (e) {
-                    e.stopPropagation();
-                    var $this = $(this);
+        // Add and delete
+        if (!this.$buttons) {
+            this.$buttons = $(QWeb.render("ListView.buttons", {'widget':self}));
+            if (this.options.$buttons) {
+                this.$buttons.appendTo(this.options.$buttons);
+            } else {
+                this.$element.find('.oe_list_buttons').replaceWith(this.$buttons);
+            }
+            this.$buttons.find('.oe_list_add')
+                    .click(this.proxy('do_add_record'))
+                    .prop('disabled', grouped && this.options.editable)
+                .end()
+                .find('.oe_list_delete')
+                    .click(this.proxy('do_delete_selected'))
+                    .prop('disabled', true);
+        }
 
-                    var $select = $('<select>')
-                        .appendTo($this.empty())
-                        .click(function (e) {e.stopPropagation();})
-                        .append('<option value="80">80</option>' +
-                                '<option value="100">100</option>' +
-                                '<option value="200">200</option>' +
-                                '<option value="500">500</option>' +
-                                '<option value="NaN">' + _t("Unlimited") + '</option>')
-                        .change(function () {
-                            var val = parseInt($select.val(), 10);
-                            self._limit = (isNaN(val) ? null : val);
-                            self.page = 0;
-                            self.reload_content();
-                        })
-                        .val(self._limit || 'NaN');
-                });
-        if (!this.sidebar && this.options.sidebar && this.options.sidebar_id) {
-            this.sidebar = new openerp.web.Sidebar(this, this.options.sidebar_id);
-            this.sidebar.start();
+        // Pager
+        if (!this.$pager) {
+            this.$pager = $(QWeb.render("ListView.pager", {'widget':self}));
+            if (this.options.$buttons) {
+                this.$pager.appendTo(this.options.$pager);
+            } else {
+                this.$element.find('.oe_list_pager').replaceWith(this.$pager);
+            }
+
+            this.$pager
+                .on('click', 'a[data-pager-action]', function () {
+                    var $this = $(this);
+                    var max_page = Math.floor(self.dataset.size() / self.limit());
+                    switch ($this.data('pager-action')) {
+                        case 'first':
+                            self.page = 0; break;
+                        case 'last':
+                            self.page = max_page - 1;
+                            break;
+                        case 'next':
+                            self.page += 1; break;
+                        case 'previous':
+                            self.page -= 1; break;
+                    }
+                    if (self.page < 0) {
+                        self.page = max_page;
+                    } else if (self.page > max_page) {
+                        self.page = 0;
+                    }
+                    self.reload_content();
+                }).find('.oe-pager-state')
+                    .click(function (e) {
+                        e.stopPropagation();
+                        var $this = $(this);
+
+                        var $select = $('<select>')
+                            .appendTo($this.empty())
+                            .click(function (e) {e.stopPropagation();})
+                            .append('<option value="80">80</option>' +
+                                    '<option value="100">100</option>' +
+                                    '<option value="200">200</option>' +
+                                    '<option value="500">500</option>' +
+                                    '<option value="NaN">' + _t("Unlimited") + '</option>')
+                            .change(function () {
+                                var val = parseInt($select.val(), 10);
+                                self._limit = (isNaN(val) ? null : val);
+                                self.page = 0;
+                                self.reload_content();
+                            })
+                            .val(self._limit || 'NaN');
+                    });
+        }
+
+        // Sidebar
+        if (!this.sidebar && this.options.sidebar && this.options.$sidebar) {
+            this.sidebar = new instance.web.Sidebar(this);
+            this.sidebar.appendTo(this.options.$sidebar);
             this.sidebar.add_toolbar(this.fields_view.toolbar);
-            this.set_common_sidebar_sections(this.sidebar);
         }
     },
     /**
@@ -286,7 +312,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
      *
      * Horrifying side-effect: sets the dataset's data on this.dataset?
      *
-     * @param {openerp.web.DataSet} dataset
+     * @param {instance.web.DataSet} dataset
      */
     configure_pager: function (dataset) {
         this.dataset.ids = dataset.ids;
@@ -295,28 +321,11 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             this.dataset._length = dataset._length;
         }
 
-        var limit = this.limit(),
-            total = dataset.size(),
-            first = (this.page * limit),
-            last;
-        if (!limit || (total - first) < limit) {
-            last = total;
-        } else {
-            last = first + limit;
-        }
-        this.$element.find('span.oe-pager-state').empty().text(_.str.sprintf(
-            _t("[%(first_record)d to %(last_record)d] of %(records_count)d"), {
-                first_record: first + 1,
-                last_record: last,
-                records_count: total
-            }));
+        var page = this.page + 1,
+           total = Math.floor(dataset.size() / this.limit()) + 1;
 
-        this.$element
-            .find('button[data-pager-action=first], button[data-pager-action=previous]')
-                .attr('disabled', this.page === 0)
-            .end()
-            .find('button[data-pager-action=last], button[data-pager-action=next]')
-                .attr('disabled', last === total);
+        this.$pager.find('.oe-pager-state').text(isNaN(total)
+                ? '-' : _.str.sprintf('%d / %d', page, total));
     },
     /**
      * Sets up the listview's columns: merges view and fields data, move
@@ -327,7 +336,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
      * @param {Boolean} [grouped] Should the grouping columns (group and count) be displayed
      */
     setup_columns: function (fields, grouped) {
-        var domain_computer = openerp.web.form.compute_domain;
+        var domain_computer = instance.web.form.compute_domain;
 
         var noop = function () { return {}; };
         var field_to_column = function (field) {
@@ -396,7 +405,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
      *
      * The default implementation asks the list view's view manager to switch
      * to a different view (by calling
-     * :js:func:`~openerp.web.ViewManager.on_mode_switch`), using the
+     * :js:func:`~instance.web.ViewManager.on_mode_switch`), using the
      * provided record index (within the current list view's dataset).
      *
      * If the index is null, ``switch_to_record`` asks for the creation of a
@@ -406,7 +415,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
      * @param {String} [view="page"] the view type to switch to
      */
     select_record:function (index, view) {
-        view = view || index == null ? 'form' : 'page';
+        view = view || index == null ? 'form' : 'form';
         this.dataset.index = index;
         _.delay(_.bind(function () {
             this.do_switch_view(view);
@@ -417,12 +426,24 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         if (this.sidebar) {
             this.sidebar.$element.show();
         }
+        if (this.$buttons) {
+            this.$buttons.show();
+        }
+        if (this.$pager) {
+            this.$pager.show();
+        }
     },
     do_hide: function () {
-        this._super();
         if (this.sidebar) {
             this.sidebar.$element.hide();
         }
+        if (this.$buttons) {
+            this.$buttons.hide();
+        }
+        if (this.$pager) {
+            this.$pager.hide();
+        }
+        this._super();
     },
     /**
      * Reloads the list view based on the current settings (dataset & al)
@@ -478,7 +499,6 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
     reload: function () {
         return this.reload_content();
     },
-
     do_load_state: function(state, warm) {
         var reload = false;
         if (state.page && this.page !== state.page) {
@@ -506,7 +526,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
      */
     do_search: function (domain, context, group_by) {
         this.page = 0;
-        this.groups.datagroup = new openerp.web.DataGroup(
+        this.groups.datagroup = new instance.web.DataGroup(
             this, this.model, domain, context, group_by);
         this.groups.datagroup.sort = this.dataset._sort;
 
@@ -543,16 +563,20 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
      * @param {Array} records selected record values
      */
     do_select: function (ids, records) {
-        this.$element.find('.oe-list-delete').attr('disabled', !ids.length);
+        this.$buttons.find('.oe_list_delete').attr('disabled', !ids.length);
         if (!ids.length) {
             this.dataset.index = 0;
-            if (this.sidebar) { this.sidebar.do_fold(); }
+            if (this.sidebar) {
+                this.sidebar.$element.hide();
+            }
             this.compute_aggregates();
             return;
         }
 
         this.dataset.index = _(this.dataset.ids).indexOf(ids[0]);
-        if (this.sidebar) { this.sidebar.do_unfold(); }
+        if (this.sidebar) {
+            this.sidebar.$element.show();
+        }
 
         this.compute_aggregates(_(records).map(function (record) {
             return {count: 1, values: record};
@@ -574,7 +598,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             return;
         }
 
-        var c = new openerp.web.CompoundContext();
+        var c = new instance.web.CompoundContext();
         c.set_eval_context(_.extend({
             active_id: id,
             active_ids: [id],
@@ -591,7 +615,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
      *
      * @param {Number} index index of the record in the dataset
      * @param {Object} id identifier of the activated record
-     * @param {openerp.web.DataSet} dataset dataset in which the record is available (may not be the listview's dataset in case of nested groups)
+     * @param {instance.web.DataSet} dataset dataset in which the record is available (may not be the listview's dataset in case of nested groups)
      */
     do_activate_record: function (index, id, dataset, view) {
         this.dataset.ids = dataset.ids;
@@ -615,11 +639,11 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
     /**
      * Computes the aggregates for the current list view, either on the
      * records provided or on the records of the internal
-     * :js:class:`~openerp.web.ListView.Group`, by calling
-     * :js:func:`~openerp.web.ListView.group.get_records`.
+     * :js:class:`~instance.web.ListView.Group`, by calling
+     * :js:func:`~instance.web.ListView.group.get_records`.
      *
      * Then displays the aggregates in the table through
-     * :js:method:`~openerp.web.ListView.display_aggregates`.
+     * :js:method:`~instance.web.ListView.display_aggregates`.
      *
      * @param {Array} [records]
      */
@@ -695,7 +719,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             }
 
             $footer_cells.filter(_.str.sprintf('[data-field=%s]', column.id))
-                .html(openerp.web.format_cell(aggregation, column, {
+                .html(instance.web.format_cell(aggregation, column, {
                     process_modifiers: false
             }));
         });
@@ -748,7 +772,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         }
     }
 });
-openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.ListView.List# */{
+instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.ListView.List# */{
     /**
      * List display for the ListView, handles basic DOM events and transforms
      * them in the relevant higher-level events, to which the list view (or
@@ -773,10 +797,10 @@ openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.Lis
      *   Triggered when a row of the table is clicked, provides the index (in
      *   the rows array) and id of the selected record to the handle function.
      *
-     * @constructs openerp.web.ListView.List
-     * @extends openerp.web.Class
+     * @constructs instance.web.ListView.List
+     * @extends instance.web.Class
      * 
-     * @param {Object} opts display options, identical to those of :js:class:`openerp.web.ListView`
+     * @param {Object} opts display options, identical to those of :js:class:`instance.web.ListView`
      */
     init: function (group, opts) {
         var self = this;
@@ -823,7 +847,7 @@ openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.Lis
             this.records.bind(event, callback);
         }, this);
 
-        this.$_element = $('<tbody class="ui-widget-content">')
+        this.$_element = $('<tbody>')
             .appendTo(document.body)
             .delegate('th.oe-record-selector', 'click', function (e) {
                 e.stopPropagation();
@@ -891,7 +915,7 @@ openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.Lis
                 // to get a correctly displayable value in the field
                 var model = ref_match[1],
                     id = parseInt(ref_match[2], 10);
-                new openerp.web.DataSet(this.view, model).name_get([id], function(names) {
+                new instance.web.DataSet(this.view, model).name_get([id], function(names) {
                     if (!names.length) { return; }
                     record.set(column.id, names[0][1]);
                 });
@@ -906,14 +930,14 @@ openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.Lis
                 // fetch the name, set it on the record (in the right field)
                 // and let the various registered events handle refreshing the
                 // row
-                new openerp.web.DataSet(this.view, column.relation)
+                new instance.web.DataSet(this.view, column.relation)
                         .name_get([value], function (names) {
                     if (!names.length) { return; }
                     record.set(column.id, names[0]);
                 });
             }
         }
-        return openerp.web.format_cell(record.toForm().data, column, {
+        return instance.web.format_cell(record.toForm().data, column, {
             model: this.dataset.model,
             id: record.get('id')
         });
@@ -1067,19 +1091,19 @@ openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.Lis
         });
     }
 });
-openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.ListView.Groups# */{
+instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.web.ListView.Groups# */{
     passtrough_events: 'action deleted row_link',
     /**
      * Grouped display for the ListView. Handles basic DOM events and interacts
-     * with the :js:class:`~openerp.web.DataGroup` bound to it.
+     * with the :js:class:`~instance.web.DataGroup` bound to it.
      *
      * Provides events similar to those of
-     * :js:class:`~openerp.web.ListView.List`
+     * :js:class:`~instance.web.ListView.List`
      *
-     * @constructs openerp.web.ListView.Groups
-     * @extends openerp.web.Class
+     * @constructs instance.web.ListView.Groups
+     * @extends instance.web.Class
      *
-     * @param {openerp.web.ListView} view
+     * @param {instance.web.ListView} view
      * @param {Object} [options]
      * @param {Collection} [options.records]
      * @param {Object} [options.options]
@@ -1190,7 +1214,7 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
                 self.records.proxy(group.value).reset();
                 delete self.children[group.value];
             }
-            var child = self.children[group.value] = new openerp.web.ListView.Groups(self.view, {
+            var child = self.children[group.value] = new instance.web.ListView.Groups(self.view, {
                 records: self.records.proxy(group.value),
                 options: self.options,
                 columns: self.columns
@@ -1226,7 +1250,7 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
                 var group_column = _(self.columns).detect(function (column) {
                     return column.id === group.grouped_on; });
                 try {
-                    $group_column.html(openerp.web.format_cell(
+                    $group_column.html(instance.web.format_cell(
                         row_data, group_column, {
                             value_if_empty: _t("Undefined"),
                             process_modifiers: false
@@ -1263,7 +1287,7 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
                         var r = {};
                         r[column.id] = {value: group.aggregates[column.id]};
                         $('<td class="oe-number">')
-                            .html(openerp.web.format_cell(
+                            .html(instance.web.format_cell(
                                 r, column, {process_modifiers: false}))
                             .appendTo($row);
                     } else {
@@ -1296,7 +1320,7 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
     },
     render_dataset: function (dataset) {
         var self = this,
-            list = new openerp.web.ListView.List(this, {
+            list = new instance.web.ListView.List(this, {
                 options: this.options,
                 columns: this.columns,
                 dataset: dataset,
@@ -1509,10 +1533,10 @@ var Events = /** @lends Events# */{
         return this;
     }
 };
-var Record = openerp.web.Class.extend(/** @lends Record# */{
+var Record = instance.web.Class.extend(/** @lends Record# */{
     /**
      * @constructs Record
-     * @extends openerp.web.Class
+     * @extends instance.web.Class
      * 
      * @mixes Events
      * @param {Object} [data]
@@ -1590,7 +1614,7 @@ var Record = openerp.web.Class.extend(/** @lends Record# */{
     }
 });
 Record.include(Events);
-var Collection = openerp.web.Class.extend(/** @lends Collection# */{
+var Collection = instance.web.Class.extend(/** @lends Collection# */{
     /**
      * Smarter collections, with events, very strongly inspired by Backbone's.
      *
@@ -1598,7 +1622,7 @@ var Collection = openerp.web.Class.extend(/** @lends Collection# */{
      * various serious 
      *
      * @constructs Collection
-     * @extends openerp.web.Class
+     * @extends instance.web.Class
      * 
      * @mixes Events
      * @param {Array} [records] records to initialize the collection with
@@ -1630,19 +1654,19 @@ var Collection = openerp.web.Class.extend(/** @lends Collection# */{
         var records = record instanceof Array ? record : [record];
 
         for(var i=0, length=records.length; i<length; ++i) {
-            var instance = (records[i] instanceof Record) ? records[i] : new Record(records[i]);
-            instance.bind(null, this._onRecordEvent);
-            this._byId[instance.get('id')] = instance;
+            var instance_ = (records[i] instanceof Record) ? records[i] : new Record(records[i]);
+            instance_.bind(null, this._onRecordEvent);
+            this._byId[instance_.get('id')] = instance_;
             if (options.at == undefined) {
-                this.records.push(instance);
+                this.records.push(instance_);
                 if (!options.silent) {
-                    this.trigger('add', this, instance, this.records.length-1);
+                    this.trigger('add', this, instance_, this.records.length-1);
                 }
             } else {
                 var insertion_index = options.at + i;
-                this.records.splice(insertion_index, 0, instance);
+                this.records.splice(insertion_index, 0, instance_);
                 if (!options.silent) {
-                    this.trigger('add', this, instance, insertion_index);
+                    this.trigger('add', this, instance_, insertion_index);
                 }
             }
             this.length++;
@@ -1773,7 +1797,7 @@ var Collection = openerp.web.Class.extend(/** @lends Collection# */{
     }
 });
 Collection.include(Events);
-openerp.web.list = {
+instance.web.list = {
     Events: Events,
     Record: Record,
     Collection: Collection
