@@ -18,7 +18,20 @@
             <field name="model">project.project</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Project">
+                <form string="Project" layout="manual">
+                <div class="oe_form_topbar">
+                    <button name="set_cancel" string="Cancel" type="object" states="open,pending" icon="gtk-cancel"/>
+                    <button name="set_template" string="Set as Template" type="object" states="open" icon="gtk-convert" groups="base.group_extended"/>
+                    <button name="set_open" string="Re-open project" type="object" states="pending,cancelled,close" icon="gtk-ok"/>
+                    <button name="set_pending" string="Pending" type="object" states="open" icon="gtk-media-pause"/>
+                    <button name="set_done" string="Done" type="object" states="open,pending" icon="terp-dialog-close"/>
+                    <button name="reset_project" string="Reset as Project" type="object" states="template" icon="gtk-convert"/>
+                    <button string="New Project Based on Template" name="duplicate_template"  type="object" states="template" icon="gtk-new" context="{'parent_id':parent_id}"/>
+                    <div class="oe_right">
+                        <field name="state" nolabel="1" widget="statusbar" statusbar_visible="open,close" statusbar_colors='{"pending":"blue"}' select="1" readonly="1"/>
+                    </div>
+                </div>
+                <sheet string="Project" layout="auto">
                     <group colspan="6" col="6">
                         <field name="name" string="Project Name" select="1"/>
                         <field name="analytic_account_id" invisible="1" required="0"/>
@@ -42,21 +55,6 @@
                                 <field name="warn_manager"/>
                                 <field name="priority"/>
                                 <field name="active" attrs="{'invisible':[('state','in',['open', 'pending', 'template'])]}"/>
-                            </group>
-                            <newline/>
-                            <separator colspan="4"/>
-                            <group col="9" colspan="8">
-                                <field name="state" widget="statusbar" statusbar_visible="open,close" statusbar_colors='{"pending":"blue"}' select="1" readonly="1"/>
-                                <button name="set_cancel" string="Cancel" type="object" states="open,pending" icon="gtk-cancel"/>
-                                <button name="set_template" string="Set as Template" type="object" states="open" icon="gtk-convert" groups="base.group_extended"/>
-                                <button name="set_open" string="Re-open project" type="object" states="pending,cancelled,close" icon="gtk-ok"/>
-                                <button name="set_pending" string="Pending" type="object" states="open" icon="gtk-media-pause"/>
-                                <button name="set_done" string="Done" type="object" states="open,pending" icon="terp-dialog-close"/>
-                                <button name="reset_project" string="Reset as Project" type="object" states="template" icon="gtk-convert"/>
-                                <button
-                                    string="New Project Based on Template"
-                                    name="duplicate_template"  type="object"
-                                    states="template" icon="gtk-new" context="{'parent_id':parent_id}"/>
                             </group>
                         </page>
                         <page string="Members">
@@ -96,7 +94,10 @@
                         </page>
                     </notebook>
                     <newline/>
+                </sheet>
+                <div class="oe_form_sheet_width">
                     <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
+                </div>
                 </form>
             </field>
         </record>
@@ -221,7 +222,20 @@
             <field name="type">form</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <form string="Task edition">
+                <form string="Project" layout="manual">
+                    <div class="oe_form_topbar">
+                        <button name="do_cancel" states="draft,open,pending" string="Cancel" type="object" icon="gtk-cancel"/>
+                        <button name="do_draft" states="open" string="Draft" type="object" icon="gtk-indent"/>
+                        <button name="do_open" states="pending,draft" string="Start Task" type="object" icon="gtk-media-play"/>
+                        <button name="%(action_project_task_reevaluate)d" states="done,cancelled" string="Reactivate" type="action" icon="gtk-convert" context="{'button_reactivate':True}" />
+                        <button name="do_pending" states="open" string="Pending" type="object" icon="gtk-media-pause"/>
+                        <button groups="base.group_extended" name="%(action_project_task_delegate)d" states="pending,open,draft" string="Delegate" type="action" icon="terp-personal"/>
+                        <button name="action_close" states="pending,open" string="Done" type="object" icon="terp-dialog-close"/>
+                        <div class="oe_right">
+                            <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}' select="1"/>
+                        </div>
+                    </div>
+                    <sheet string="Task edition" layout="auto">
                     <group colspan="6" col="6">
                         <field name="name" select="1"/>
                         <field name="project_id" select="1"  on_change="onchange_project(project_id)"/>
@@ -247,7 +261,7 @@
                                 <button name="%(action_project_task_reevaluate)d" string="Reevaluate" type="action" colspan="1" target="new" states="open,pending" icon="gtk-edit"/>
                             </group>
 
-                            <field colspan="4" name="description" nolabel="1"  attrs="{'readonly':[('state','=','done')]}" widget="text_wiki"/>
+                            <field colspan="4" name="description" nolabel="1"  attrs="{'readonly':[('state','=','done')]}"/>
                             <field colspan="4" name="work_ids" nolabel="1" attrs="{'readonly':[('state','in',['done','draft'])]}">
                                 <tree string="Task Work" editable="top">
                                     <field name="name" />
@@ -256,17 +270,6 @@
                                     <field name="date" />
                                 </tree>
                             </field>
-                            <newline/>
-                            <group col="11" colspan="4">
-                                <field name="state" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}' select="1"/>
-                                <button name="do_cancel" states="draft,open,pending" string="Cancel" type="object" icon="gtk-cancel"/>
-                                <button name="do_draft" states="open" string="Draft" type="object" icon="gtk-indent"/>
-                                <button name="do_open" states="pending,draft" string="Start Task" type="object" icon="gtk-media-play"/>
-                                <button name="%(action_project_task_reevaluate)d" states="done,cancelled" string="Reactivate" type="action" icon="gtk-convert" context="{'button_reactivate':True}" />
-                                <button name="do_pending" states="open" string="Pending" type="object" icon="gtk-media-pause"/>
-                                <button groups="base.group_extended" name="%(action_project_task_delegate)d" states="pending,open,draft" string="Delegate" type="action" icon="terp-personal"/>
-                                <button name="action_close" states="pending,open" string="Done" type="object" icon="terp-dialog-close"/>
-                            </group>
                         </page>
                         <page groups="base.group_extended" string="Delegations History">
                             <separator string="Parent Tasks" colspan="4"/>
@@ -305,7 +308,10 @@
                             <field colspan="4" name="notes" nolabel="1"/>
                         </page>
                     </notebook>
-                    <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
+                    </sheet>
+                    <div class="oe_form_sheet_width">
+                        <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
+                    </div>
                 </form>
             </field>
         </record>
