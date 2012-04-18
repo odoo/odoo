@@ -247,7 +247,7 @@ instance.web.FormView = instance.web.View.extend({
         }
 
         _(this.fields).each(function (field, f) {
-            field.reset();
+            field._dirty_flag = false;
             var result = field.set_value(self.datarecord[f] || false);
             set_values.push(result);
         });
@@ -258,7 +258,7 @@ instance.web.FormView = instance.web.View.extend({
                 _.each(self.fields_order, function(field_name) {
                     if (record[field_name] !== undefined) {
                         var field = self.fields[field_name];
-                        field.dirty = true;
+                        field._dirty_flag = true;
                         self.do_onchange(field);
                     }
                 });
@@ -469,7 +469,7 @@ instance.web.FormView = instance.web.View.extend({
                     var value_ = result.value[f];
                     if (field.get_value() != value_) {
                         field.set_value(value_);
-                        field.dirty = true;
+                        field._dirty_flag = true;
                         if (!_.contains(processed, field.name)) {
                             this.do_onchange(field, processed);
                         }
@@ -615,7 +615,7 @@ instance.web.FormView = instance.web.View.extend({
                     if (!first_invalid_field) {
                         first_invalid_field = f;
                     }
-                } else if (f.name !== 'id' && !f.get("readonly") && (!self.datarecord.id || f.is_dirty())) {
+                } else if (f.name !== 'id' && !f.get("readonly") && (!self.datarecord.id || f._dirty_flag)) {
                     // Special case 'id' field, do not save this field
                     // on 'create' : save all non readonly fields
                     // on 'edit' : save non readonly modified fields
@@ -754,7 +754,7 @@ instance.web.FormView = instance.web.View.extend({
     },
     is_dirty: function() {
         return _.any(this.fields, function (value_) {
-            return value_.is_dirty();
+            return value_._dirty_flag;
         });
     },
     is_interactible_record: function() {
@@ -854,9 +854,11 @@ instance.web.FormView = instance.web.View.extend({
             this.translatable_fields.push(field);
         }
         field.on('changed_value', this, function() {
-            this.do_onchange(field);
-            this.on_form_changed(true);
-            this.do_notify_change();
+            if (field.is_syntax_valid()) {
+                this.do_onchange(field);
+                this.on_form_changed(true);
+                this.do_notify_change();
+            }
         });
     },
     get_field: function(field_name) {
@@ -1628,7 +1630,11 @@ instance.web.form.FieldInterface = {
      * Inform the current object of the id it should use to match a html <label> that exists somewhere in the
      * view.
      */
-    set_input_id: function(id) {}
+    set_input_id: function(id) {},
+    
+    is_valid: function() {},
+    is_syntax_valid: function() {},
+    is_false: function() {},
 };
 
 /**
@@ -1654,7 +1660,6 @@ instance.web.form.AbstractField = instance.web.form.Widget.extend(/** @lends ins
         this.set({'value': false});
         this.field = this.field_manager.get_field(this.name);
         this.set({required: this.modifiers['required'] === true});
-        this.dirty = false;
         
         // some events to make the property "effective_readonly" sync automatically with "readonly" and
         // "force_readonly"
@@ -1709,9 +1714,6 @@ instance.web.form.AbstractField = instance.web.form.Widget.extend(/** @lends ins
     is_false: function() {
         return this.get('value') === false;
     },
-    is_dirty: function() {
-        return this.dirty && !this.get("effective_readonly");
-    },
     update_dom: function(show_invalid) {
         this._super.apply(this, arguments);
         if (this.field.translate) {
@@ -1724,10 +1726,8 @@ instance.web.form.AbstractField = instance.web.form.Widget.extend(/** @lends ins
         }
     },
     _on_ui_change: function() {
-        this.dirty = true;
-        if (this.is_syntax_valid()) {
-            this.trigger('changed_value');
-        } else {
+        this.trigger('changed_value');
+        if (! this.is_syntax_valid()) {
             this.update_dom(true);
         }
     },
@@ -1737,9 +1737,6 @@ instance.web.form.AbstractField = instance.web.form.Widget.extend(/** @lends ins
                 $element.focus();
             }, 50);
         }
-    },
-    reset: function() {
-        this.dirty = false;
     },
     get_definition_options: function() {
         if (!this.definition_options) {
@@ -2115,9 +2112,6 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(_.extend({}
         $div.remove();
         $input.height(new_height);
     },
-    reset: function() {
-        this.resized = false;
-    }
 }));
 
 instance.web.form.FieldBoolean = instance.web.form.AbstractField.extend({
@@ -2893,10 +2887,6 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
         }
         return true;
     },
-    is_dirty: function() {
-        this.save_any_view();
-        return this._super();
-    }
 });
 
 instance.web.form.One2ManyDataSet = instance.web.BufferedDataSet.extend({
@@ -3527,9 +3517,6 @@ instance.web.form.FieldReference = instance.web.form.AbstractField.extend(_.exte
     },
     is_false: function() {
         return typeof(this.get_value()) !== 'string';
-    },
-    is_dirty: function() {
-        return this.selection.is_dirty() || this.m2o.is_dirty();
     },
     set_value: function(value_) {
         this._super(value_);
