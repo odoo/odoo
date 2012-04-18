@@ -35,7 +35,7 @@ class ir_needaction_users_rel(osv.osv):
     This model can be seen as a many2many, linking (res_model, res_id) to 
     users (those whose attention is required on the record).'''
     
-    _name = 'ir.ir_needaction_users_rel'
+    _name = 'ir.needaction_users_rel'
     _description = 'Needaction relationship table'
     _rec_name = 'id'
     _order = 'id desc'
@@ -126,7 +126,7 @@ class ir_needaction_mixin(osv.osv):
         return dict.fromkeys(ids, [])
     
     def create(self, cr, uid, values, context=None):
-        rel_obj = self.pool.get('ir.ir_needaction_users_rel')
+        rel_obj = self.pool.get('ir.needaction_users_rel')
         # perform create
         obj_id = super(ir_needaction_mixin, self).create(cr, uid, values, context=context)
         # link user_ids
@@ -135,7 +135,7 @@ class ir_needaction_mixin(osv.osv):
         return obj_id
     
     def write(self, cr, uid, ids, values, context=None):
-        rel_obj = self.pool.get('ir.ir_needaction_users_rel')
+        rel_obj = self.pool.get('ir.needaction_users_rel')
         # perform write
         write_res = super(ir_needaction_mixin, self).write(cr, uid, ids, values, context=context)
         # get and update user_ids
@@ -146,7 +146,7 @@ class ir_needaction_mixin(osv.osv):
     
     def unlink(self, cr, uid, ids, context=None):
         # unlink user_ids
-        rel_obj = self.pool.get('ir.ir_needaction_users_rel')
+        rel_obj = self.pool.get('ir.needaction_users_rel')
         rel_obj.unlink_users(cr, uid, ids, self._name, context=context)
         # perform unlink
         return super(ir_needaction_mixin, self).unlink(cr, uid, ids, context=context)
@@ -159,14 +159,14 @@ class ir_needaction_mixin(osv.osv):
         """Given the current model and a user_id
            return the record ids that require the user to perform an
            action"""
-        rel_obj = self.pool.get('ir.ir_needaction_users_rel')
+        rel_obj = self.pool.get('ir.needaction_users_rel')
         rel_ids = rel_obj.search(cr, uid, [('res_model', '=', self._name), ('user_id', '=', user_id)], limit=limit, context=context)
         return map(itemgetter('res_id'), rel_obj.read(cr, uid, rel_ids, ['res_id'], context=context))
     
     def needaction_get_action_count(self, cr, uid, user_id, limit=80, context=None):
         """Given the current model and a user_id
            get the number of actions it has to perform"""
-        rel_obj = self.pool.get('ir.ir_needaction_users_rel')
+        rel_obj = self.pool.get('ir.needaction_users_rel')
         return rel_obj.search(cr, uid, [('res_model', '=', self._name), ('user_id', '=', user_id)], limit=limit, count=True, context=context)
     
     def needaction_get_record_references(self, cr, uid, user_id, offset=None, limit=None, order=None, context=None):
@@ -174,7 +174,7 @@ class ir_needaction_mixin(osv.osv):
            perform an action. Records are given as references, a list of
            tuples (model_name, record_id).
            This method is trans-model."""
-        rel_obj = self.pool.get('ir.ir_needaction_users_rel')
+        rel_obj = self.pool.get('ir.needaction_users_rel')
         rel_ids = rel_obj.search(cr, uid, [('user_id', '=', user_id)], offset=offset, limit=limit, order=order, context=context)
         return map(itemgetter('res_model', 'res_id'), rel_obj.read(cr, uid, rel_ids, ['res_model', 'res_id'], context=context))
 
