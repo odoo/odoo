@@ -96,22 +96,6 @@ class groups(osv.osv):
         self.pool.get('ir.model.access').call_cache_clearing_methods(cr)
         return res
 
-    def create(self, cr, uid, vals, context=None):
-        if 'name' in vals:
-            if vals['name'].startswith('-'):
-                raise osv.except_osv(_('Error'),
-                        _('The name of the group can not start with "-"'))
-        gid = super(groups, self).create(cr, uid, vals, context=context)
-        if context and context.get('noadmin', False):
-            pass
-        else:
-            # assign this new group to user_root
-            user_obj = self.pool.get('res.users')
-            aid = user_obj.browse(cr, 1, user_obj._get_admin_id(cr))
-            if aid:
-                aid.write({'groups_id': [(4, gid)]})
-        return gid
-
     def get_extended_interface_group(self, cr, uid, context=None):
         data_obj = self.pool.get('ir.model.data')
         extended_group_data_id = data_obj._get_id(cr, uid, 'base', 'group_extended')
@@ -391,7 +375,7 @@ class users(osv.osv):
     }
 
     # User can write to a few of her own fields (but not her groups for example)
-    SELF_WRITEABLE_FIELDS = ['menu_tips','view', 'password', 'signature', 'action_id', 'company_id', 'user_email', 'name']
+    SELF_WRITEABLE_FIELDS = ['menu_tips','view', 'password', 'signature', 'action_id', 'company_id', 'user_email', 'name', 'avatar', 'avatar_big']
 
     def write(self, cr, uid, ids, values, context=None):
         if not hasattr(ids, '__iter__'):
@@ -770,22 +754,23 @@ class groups_view(osv.osv):
         # and introduces the reified group fields
         view = self.get_user_groups_view(cr, uid, context)
         if view:
-
             xml1, xml2 = [], []
             xml1.append(E.separator(string=_('Application'), colspan="4"))
             for app, kind, gs in self.get_groups_by_application(cr, uid, context):
+                # hide groups in category 'Hidden' (except to group_no_one)
+                attrs = {'groups': 'base.group_no_one'} if app and app.xml_id == 'base.module_category_hidden' else {}
                 if kind == 'selection':
                     # application name with a selection field
                     field_name = name_selection_groups(map(int, gs))
-                    xml1.append(E.field(name=field_name))
+                    xml1.append(E.field(name=field_name, **attrs))
                     xml1.append(E.newline())
                 else:
                     # application separator with boolean fields
                     app_name = app and app.name or _('Other')
-                    xml2.append(E.separator(string=app_name, colspan="4"))
+                    xml2.append(E.separator(string=app_name, colspan="4", **attrs))
                     for g in gs:
                         field_name = name_boolean_group(g.id)
-                        xml2.append(E.field(name=field_name))
+                        xml2.append(E.field(name=field_name, **attrs))
 
             xml = E.field(*(xml1 + xml2), name="groups_id", position="replace")
             xml.addprevious(etree.Comment("GENERATED AUTOMATICALLY BY GROUPS"))

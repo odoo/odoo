@@ -1651,7 +1651,7 @@ class BaseModel(object):
                     children = False
                     views = {}
                     for f in node:
-                        if f.tag in ('form', 'tree', 'graph'):
+                        if f.tag in ('form', 'tree', 'graph', 'kanban'):
                             node.remove(f)
                             ctx = context.copy()
                             ctx['base_model_name'] = self._name
@@ -4885,14 +4885,14 @@ class BaseModel(object):
         if hasattr(self, 'needaction_get_record_ids'):
             ids = self.needaction_get_record_ids(cr, uid, user_id, limit=8192, context=context)
             if not ids:
-                return (True, 0, [])
+                return [True, 0, []]
             if domain:
-                new_domain = eval(domain) + [('id', 'in', ids)]
+                new_domain = eval(domain, locals_dict={'uid': user_id}) + [('id', 'in', ids)]
             else:
                 new_domain = [('id', 'in', ids)]
-            return (True, self.search(cr, uid, new_domain, limit=limit, order=order, count=True, context=context), ids)
+            return [True, self.search(cr, uid, new_domain, limit=limit, order=order, count=True, context=context), ids]
         else:
-            return (False, 0, [])
+            return [False, 0, []]
             
     # Transience
     def is_transient(self):

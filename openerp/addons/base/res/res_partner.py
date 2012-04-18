@@ -307,10 +307,15 @@ class res_partner(osv.osv):
         if name and operator in ('=', 'ilike', '=ilike', 'like'):
             # search on the name of the contacts and of its company
             name2 = operator == '=' and name or '%' + name + '%'
+            limit_str = ''
+            query_args = [name2]
+            if limit:
+                limit_str = ' limit %s'
+                query_args += [limit] 
             cr.execute('''SELECT partner.id FROM res_partner partner
                           LEFT JOIN res_partner company ON partner.parent_id = company.id
                           WHERE partner.name || ' (' || COALESCE(company.name,'') || ')'
-                          ''' + operator + ''' %s ''', (name2,))
+                          ''' + operator + ''' %s ''' + limit_str, query_args)
             ids = map(lambda x: x[0], cr.fetchall())
             if args:
                 ids = self.search(cr, uid, [('id', 'in', ids)] + args, limit=limit, context=context)
