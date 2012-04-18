@@ -169,7 +169,7 @@
         <field name="model">crm.lead</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Leads"  colors="blue:state=='pending';grey:state in ('cancel', 'done')">
+            <tree string="Leads" fonts="bold:state=='pending'" colors="blue:state=='pending';grey:state in ('cancel', 'done')">
                 <field name="date_deadline" invisible="1"/>
                 <field name="create_date" groups="base.group_no_one"/>
                 <field name="name" string="Subject"/>
