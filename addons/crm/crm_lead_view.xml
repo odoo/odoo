@@ -169,7 +169,8 @@
         <field name="model">crm.lead</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Leads"  colors="blue:state=='pending';grey:state in ('cancel', 'done')">
+            <tree string="Leads" fonts="bold:needaction_pending==True" colors="blue:state=='pending';grey:state in ('cancel', 'done')">
+                <field name="needaction_pending" invisible="1"/>
                 <field name="date_deadline" invisible="1"/>
                 <field name="create_date" groups="base.group_no_one"/>
                 <field name="name" string="Subject"/>
@@ -536,7 +537,8 @@
         <field name="model">crm.lead</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Opportunities" colors="blue:state=='pending' and not(date_deadline and (date_deadline &lt; current_date));gray:state in ('cancel', 'done');red:date_deadline and (date_deadline &lt; current_date)">
+            <tree string="Opportunities" fonts="bold:needaction_pending==True" colors="blue:state=='pending' and not(date_deadline and (date_deadline &lt; current_date));gray:state in ('cancel', 'done');red:date_deadline and (date_deadline &lt; current_date)">
+                <field name="needaction_pending" invisible="1"/>
                 <field name="date_deadline" invisible="1"/>
                 <field name="create_date" groups="base.group_no_one"/>
                 <field name="name" string="Opportunity"/>
