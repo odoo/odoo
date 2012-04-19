@@ -1728,6 +1728,10 @@ class BaseModel(object):
                 trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.get('sum'))
                 if trans:
                     node.set('sum', trans)
+            if node.get('avg'):
+                trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.get('avg'))
+                if trans:
+                    node.set('avg', trans)
             if node.get('help'):
                 trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.get('help'))
                 if trans:
