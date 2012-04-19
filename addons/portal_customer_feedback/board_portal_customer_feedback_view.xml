@@ -2,14 +2,13 @@
 <openerp>
     <data>
     
-     <record model="ir.actions.act_window" id="action_event_view_main">
-           <field name="name">Events</field>
+     <record model="ir.actions.act_window" id="action_survey_kanban_view">
+           <field name="name">Feedback</field>
            <field name="type">ir.actions.act_window</field>
-           <field name="res_model">event.event</field>
+           <field name="res_model">survey</field>
            <field name="view_type">tree</field>
            <field name="view_mode">kanban</field>
-           <field name="view_id" ref="event.view_event_kanban"/>
-           <field name="context">{"search_default_upcoming":1}</field>
+           <field name="view_id" ref="survey.view_survey_kanban"/>
        </record>
        
        <record id="board_customer_portal_inherit_form" model="ir.ui.view">
@@ -19,7 +18,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
             <xpath expr="/form/board/column[1]" position="inside">
-                <action name="%(action_event_view_main)d" string="Upcomming Events"/>
+                <action name="%(action_survey_kanban_view)d" string="Feedback"/>
             </xpath>
            </field>
        </record>

@@ -22,13 +22,13 @@
            <field name="model">board.board</field>
            <field name="type">form</field>
            <field name="arch" type="xml">
-               <form string="Events">
+               <form string="DashBoard">
                    <board style="2-1">
                        <column>
-                           <action name="%(mail.action_mail_my_feeds)d" string="My Wall"/>
+                        <action name="%(board.action_res_widgets_tweets)d" string="Latest News" />
                        </column>
                        <column>
-                           <!--action name="" string="Latest News"/-->
+                         <action name="%(mail.action_mail_my_feeds)d" string="My Wall"/>
                        </column>
                    </board>
                </form>

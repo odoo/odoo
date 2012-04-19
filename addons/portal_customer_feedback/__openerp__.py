@@ -32,6 +32,7 @@
     'depends': ['survey','portal_customer'],
     'update_xml': [
         'portal_customer_feedback_view.xml',
+        "board_portal_customer_feedback_view.xml",
         "security/ir.model.access.csv",
     ],
     'installable': True,
