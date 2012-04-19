@@ -1386,7 +1386,7 @@ class account_move(osv.osv):
                 if not l[0]:
                     l[2].update({
                         'reconcile_id':False,
-                        'reconcil_partial_id':False,
+                        'reconcile_partial_id':False,
                         'analytic_lines':False,
                         'invoice':False,
                         'ref':False,
