@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    OpenERP, Open Source Business Applications
+#    Copyright (C) 2004-2012 OpenERP S.A. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,42 +19,23 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+from osv import osv, fields
 
 class general_configuration(osv.osv_memory):
-    _name = 'general.configuration'
+    _name = 'base.config.settings'
     _inherit = 'res.config.settings'
-    
+
     _columns = {
-        'module_multi_company': fields.boolean('Active Multi company',
-                           help ="""It allow to installs the multi_company module."""),
-        'module_portal': fields.boolean('Customer Portal',
-                           help ="""It installs the portal module."""),
+        'module_multi_company': fields.boolean('Multi Company',
+            help="""Work in multi-company environments, with appropriate security access between companies.
+                This installs the module multi_company."""),
+        'module_portal': fields.boolean('Portal',
+            help="""Define a portal for your customers or suppliers.  The portal is a group of
+                external users that has specific access rights and rules.
+                This installs the module portal."""),
         'module_share': fields.boolean('Share',
-                           help ="""It installs the share module."""),
+            help="""Share OpenERP documents (records) with external users.
+                This installs the module share."""),
     }
-
-    def base_setup_company(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        data_obj = self.pool.get('ir.model.data')
-        user = self.pool.get('res.users').browse(cr, uid, uid)
-        context.update({'res_id': user.company_id.id})
-        company_view_id = data_obj.get_object_reference(cr, uid, 'base', 'view_company_form')
-        if company_view_id:
-            company_view_id = company_view_id and company_view_id[1] or False
-        return {
-            'view_mode': 'form',
-            'view_type': 'form',
-            'res_model': 'res.company',
-            'res_id': int(context.get('res_id')),
-            'views': [(company_view_id, 'form')],
-            'type': 'ir.actions.act_window',
-            'target': 'current',
-            'nodestroy':True,
-            'context': context,
-        }
-
-general_configuration()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
