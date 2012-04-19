@@ -22,7 +22,7 @@ High-level API: calling into OpenERP models
 
 Access to OpenERP object methods (made available through XML-RPC from
 the server) is done via the :js:class:`openerp.web.Model` class. This
-class maps ontwo the OpenERP server objects via two primary methods,
+class maps onto the OpenERP server objects via two primary methods,
 :js:func:`~openerp.web.Model.call` and
 :js:func:`~openerp.web.Model.query`.
 
@@ -52,7 +52,7 @@ similar to that of the OpenERP Model API, with three differences:
     });
 
 :js:func:`~openerp.web.Model.query` is a shortcut for a builder-style
-iterface to searches (``search`` + ``read`` in OpenERP RPC terms). It
+interface to searches (``search`` + ``read`` in OpenERP RPC terms). It
 returns a :js:class:`~openerp.web.Query` object which is immutable but
 allows building new :js:class:`~openerp.web.Query` instances from the
 first one, adding new properties or modifiying the parent object's:
@@ -69,7 +69,7 @@ first one, adding new properties or modifiying the parent object's:
 The query is only actually performed when calling one of the query
 serialization methods, :js:func:`~openerp.web.Query.all` and
 :js:func:`~openerp.web.Query.first`. These methods will perform a new
-RPC query every time they are called.
+RPC call every time they are called.
 
 For that reason, it's actually possible to keep "intermediate" queries
 around and use them differently/add new specifications on them.
@@ -314,15 +314,15 @@ Low-level API: RPC calls to Python side
 
 While the previous section is great for calling core OpenERP code
 (models code), it does not work if you want to call the Python side of
-openerp-web.
+OpenERP Web.
 
-For this. a lower-level API is available on
-:js:class:`openerp.web.Connection` objects (usually available through
+For this, a lower-level API exists on on
+:js:class:`~openerp.web.Connection` objects (usually available through
 ``openerp.connection``): the ``rpc`` method.
 
 This method simply takes an absolute path (which is the combination of
 the Python controller's ``_cp_path`` attribute and the name of the
-method yo want to call) and a mapping of attributes to values (applied
+method you want to call) and a mapping of attributes to values (applied
 as keyword arguments on the Python method [#]_). This function fetches
 the return value of the Python methods, converted to JSON.
 
