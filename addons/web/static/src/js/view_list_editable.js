@@ -420,7 +420,7 @@ openerp.web.list_editable = function (instance) {
                 w.appendTo($td);
                 $td.appendTo($element);
             });
-            $("<td><button class='oe-edit-row-save' type='button'></button></td>").appendTo($element);
+            $("<td><button class='oe-edit-row-save' type='button'>Save</button></td>").appendTo($element);
         },
     });
 };
