@@ -97,22 +97,27 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form layout="manual">
-                <div class="oe_form_topbar">
-                    <button name="invoice_recreate" states="invoice_except" string="Recreate Invoice" icon="gtk-go-forward"/>
-                    <button name="invoice_corrected" states="invoice_except" string="Ignore Exception" icon="gtk-apply"/>
-                    <button name="ship_recreate" states="shipping_except" string="Recreate Packing" icon="gtk-ok"/>
-                    <button name="ship_corrected" states="shipping_except" string="Ignore Exception" icon="gtk-apply"/>
-                    <button name="action_cancel" states="manual,progress" string="Cancel Order" type="object" icon="gtk-cancel"/>
-                    <button name="%(report_sale_order)d" string="Print Order" type="action" icon="gtk-print" states="waiting_date,manual,progress,done,shipping_except,invoice_except"/>
-                    <button name="manual_invoice" states="manual" string="Create Final Invoice" icon="gtk-go-forward" type="object"/>
-                    <button name="ship_cancel" states="shipping_except" string="Cancel Order" icon="gtk-cancel"/>
-                    <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" icon="gtk-convert"/>
-                    <button name="cancel" states="draft" string="Cancel Order" icon="gtk-cancel"/>
-                    <button name="invoice_cancel" states="invoice_except" string="Cancel Order" icon="gtk-cancel"/>
-                    <button name="%(report_sale_order)d" string="Print Quotation" type="action" icon="gtk-print" states="draft"/>
-                    <button name="order_confirm" states="draft" string="Confirm Order" icon="gtk-apply"/>
+                    <div class="oe_form_topbar">
+                        <button name="invoice_recreate" states="invoice_except" string="Recreate Invoice" icon="gtk-go-forward"/>
+                        <button name="invoice_corrected" states="invoice_except" string="Ignore Exception" icon="gtk-apply"/>
+                        <button name="ship_recreate" states="shipping_except" string="Recreate Delivery Order" icon="gtk-ok"/>
+                        <button name="ship_corrected" states="shipping_except" string="Ignore Exception" icon="gtk-apply"/>
+                        <button name="action_quotation_sent" string="Send" type="object" icon="terp-mail-message-new" states="draft"/>
+                        <button name="manual_invoice" states="manual" string="Create Final Invoice" icon="gtk-go-forward" type="object"/>
+                        <button name="action_cancel_draft" states="sent,cancel" string="Set to Draft" type="object" icon="gtk-convert"/>
+                        <button name="print_quotation" string="Print Quotation" type="object" icon="gtk-print" states="draft"/>
+                        <button name="order_confirm" states="draft,sent" string="Confirm Order" icon="gtk-apply"/>
+                        <button name="action_view_invoice" string="Open Invoice" icon="gtk-go-forward" type="object" 
+                                attrs="{'invisible': ['|','|','|',('state', '!=','progress'), ('invoiced', '=', True),('order_policy','=','picking'),
+                                '&amp;','&amp;',('order_policy','=','postpaid'),('state', '=','progress'),('shipped','=',False)]}"/>
+                        <button name="action_view_delivery" string="Open Delivery Order" icon="gtk-go-forward" type="object" 
+                                attrs="{'invisible': ['|','|','|',('picking_ids','=',False),('picking_ids','=',[]), ('state', 'not in', ('progress','manual')),('shipped','=',True)]}"/>
+                        <button name="cancel" states="draft,sent" string="Cancel Order" icon="gtk-cancel"/>
+                        <button name="action_cancel" states="manual,progress" string="Cancel Order" type="object" icon="gtk-cancel"/>
+                        <button name="ship_cancel" states="shipping_except" string="Cancel Order" icon="gtk-cancel"/>
+                        <button name="invoice_cancel" states="invoice_except" string="Cancel Order" icon="gtk-cancel"/>
                     <div class="oe_right">
-                        <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,progress,done" statusbar_colors='{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}'/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,sent,progress,invoiced,done" statusbar_colors='{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}'/>
                     </div>
                 </div>
                 <sheet string="Sales Order" layout="auto">
@@ -206,37 +211,6 @@
                                     <field name="price_subtotal" groups="base.group_sale_notes_subtotal"/>
                                 </tree>
                             </field>
-<<<<<<< TREE
-                            <newline/>
-                            <group col="13" colspan="10">
-                                <field name="amount_untaxed" sum="Untaxed amount"/>
-                                <field name="amount_tax"/>
-                                <field name="amount_total"/>
-                                <button name="button_dummy" states="draft" string="Compute" type="object" icon="gtk-execute"/>
-                                <button name="%(action_view_sale_advance_payment_inv)d" string="Advance Invoice" type="action" icon="gtk-execute" states="draft,manual" groups="base.group_extended"/>
-                            </group>
-                            <group col="17" colspan="4">
-                                <field name="state" widget="statusbar" statusbar_visible="draft,sent,progress,invoiced,done" statusbar_colors='{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}'/>
-                                <button name="invoice_recreate" states="invoice_except" string="Recreate Invoice" icon="gtk-go-forward"/>
-                                <button name="invoice_corrected" states="invoice_except" string="Ignore Exception" icon="gtk-apply"/>
-                                <button name="ship_recreate" states="shipping_except" string="Recreate Delivery Order" icon="gtk-ok"/>
-                                <button name="ship_corrected" states="shipping_except" string="Ignore Exception" icon="gtk-apply"/>
-                                <button name="action_quotation_sent" string="Send" type="object" icon="terp-mail-message-new" states="draft"/>
-                                <button name="manual_invoice" states="manual" string="Create Final Invoice" icon="gtk-go-forward" type="object"/>
-                                <button name="action_cancel_draft" states="sent,cancel" string="Set to Draft" type="object" icon="gtk-convert"/>
-                                <button name="print_quotation" string="Print Quotation" type="object" icon="gtk-print" states="draft"/>
-                                <button name="order_confirm" states="draft,sent" string="Confirm Order" icon="gtk-apply"/>
-                                <button name="action_view_invoice" string="Open Invoice" icon="gtk-go-forward" type="object" 
-                                		attrs="{'invisible': ['|','|','|',('state', '!=','progress'), ('invoiced', '=', True),('order_policy','=','picking'),
-                                		'&amp;','&amp;',('order_policy','=','postpaid'),('state', '=','progress'),('shipped','=',False)]}"/>
-								<button name="action_view_delivery" string="Open Delivery Order" icon="gtk-go-forward" type="object" 
-								attrs="{'invisible': ['|','|','|',('picking_ids','=',False),('picking_ids','=',[]), ('state', 'not in', ('progress','manual')),('shipped','=',True)]}"/>
-                                <button name="cancel" states="draft,sent" string="Cancel Order" icon="gtk-cancel"/>
-                                <button name="action_cancel" states="manual,progress" string="Cancel Order" type="object" icon="gtk-cancel"/>
-                                <button name="ship_cancel" states="shipping_except" string="Cancel Order" icon="gtk-cancel"/>
-                                <button name="invoice_cancel" states="invoice_except" string="Cancel Order" icon="gtk-cancel"/>
-                            </group>
-=======
 
                             <div class="oe_right">
                                 <group col="2">
@@ -249,7 +223,6 @@
 
                             <separator colspan="4" string="Notes"/>
                             <field colspan="4" name="note" nolabel="1"/>
->>>>>>> MERGE-SOURCE
                         </page>
                         <page string="Other Information">
                             <group colspan="2" col="2" groups="base.group_extended" name="logistics">

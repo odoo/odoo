@@ -87,17 +87,10 @@
                             <field name="manager_id2" attrs="{'invisible':[('double_validation', '!=', True)]}"/>
                             <separator string="Reasons" colspan="4"/>
                             <field name="notes" nolabel="1" colspan="4"/>
-<<<<<<< TREE
                             <newline/>
                             <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate" statusbar_colors='{"confirm":"blue","validate1":"blue","refuse":"red"}' colspan="2"/>
                             <group colspan="2" col="6">
                                 <button string="Submit to Manager" name="confirm" states="draft" type="workflow" icon="gtk-yes"/>
-=======
-                            <group colspan="4" col="8">
-                                <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate" statusbar_colors='{"confirm":"blue","validate1":"blue","refuse":"red"}'/>
-                                <button string="Refuse" name="refuse" states="confirm,validate1" type="workflow" icon="gtk-no" groups="base.group_hr_user,base.group_hr_manager"/>
-                                <button string="Confirm" name="confirm" states="draft" type="workflow" icon="gtk-yes"/>
->>>>>>> MERGE-SOURCE
                                 <button string="Approve" name="validate" states="confirm" type="workflow" icon="gtk-apply" groups="base.group_hr_user"/>
                                 <button string="Approved" name="second_validate" states="validate1" type="workflow" icon="gtk-apply" groups="base.group_hr_user"/>
                                 <button string="Refuse" name="refuse" states="confirm,validate1" type="workflow" icon="gtk-no" groups="base.group_hr_user,base.group_hr_manager"/>
@@ -138,17 +131,10 @@
                         <field name="manager_id2" attrs="{'invisible':[('double_validation', '!=', True)]}"/>
                         <separator string="Reasons" colspan="4"/>
                         <field name="notes" nolabel="1" colspan="4"/>
-<<<<<<< TREE
                         <newline/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate" statusbar_colors='{"confirm":"blue","validate1":"blue","refuse":"red"}' colspan="2"/>
                         <group colspan="2" col="6">
                             <button string="Submit to Manager" name="confirm" states="draft" type="workflow" icon="gtk-yes"/>
-=======
-                        <group colspan="4" col="8">
-                            <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate" statusbar_colors='{"confirm":"blue","validate1":"blue","refuse":"red"}'/>
-                            <button string="Refuse" name="refuse" states="confirm,validate1" type="workflow" icon="gtk-no" groups="base.group_hr_user"/>
-                            <button string="Confirm" name="confirm" states="draft" type="workflow" icon="gtk-yes"/>
->>>>>>> MERGE-SOURCE
                             <button string="Approve" name="validate" states="confirm" type="workflow" icon="gtk-apply" groups="base.group_hr_user"/>
                             <button string="Approved" name="second_validate" states="validate1" type="workflow" icon="gtk-apply" groups="base.group_hr_user"/>
                             <button string="Refuse" name="refuse" states="confirm,validate1" type="workflow" icon="gtk-no" groups="base.group_hr_user"/>

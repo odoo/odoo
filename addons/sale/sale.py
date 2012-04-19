@@ -1473,98 +1473,6 @@ class sale_order_line(osv.osv):
 
 sale_order_line()
 
-<<<<<<< TREE
-class sale_config_picking_policy(osv.osv_memory):
-    _name = 'sale.config.picking_policy'
-    _inherit = 'res.config'
-
-    _columns = {
-        'name': fields.char('Name', size=64),
-        'sale_orders': fields.boolean('Based on Sales Orders',),
-        'deli_orders': fields.boolean('Based on Delivery Orders'),
-        'task_work': fields.boolean('Based on Tasks\' Work'),
-        'timesheet': fields.boolean('Based on Timesheet'),
-        'order_policy': fields.selection([
-            ('manual', 'Invoice Based on Sales Orders'),
-            ('picking', 'Invoice Based on Deliveries'),
-        ], 'Main Method Based On', required=True, help="You can generate invoices based on sales orders or based on shippings."),
-        'charge_delivery': fields.boolean('Do you charge the delivery?'),
-        'time_unit': fields.many2one('product.uom','Main Working Time Unit')
-    }
-    _defaults = {
-        'order_policy': 'manual',
-        'time_unit': lambda self, cr, uid, c: self.pool.get('product.uom').search(cr, uid, [('name', '=', _('Hour'))], context=c) and self.pool.get('product.uom').search(cr, uid, [('name', '=', _('Hour'))], context=c)[0] or False,
-    }
-
-    def onchange_order(self, cr, uid, ids, sale, deli, context=None):
-        res = {}
-        if sale:
-            res.update({'order_policy': 'manual'})
-        elif deli:
-            res.update({'order_policy': 'picking'})
-        return {'value':res}
-
-    def execute(self, cr, uid, ids, context=None):
-        ir_values_obj = self.pool.get('ir.values')
-        data_obj = self.pool.get('ir.model.data')
-        menu_obj = self.pool.get('ir.ui.menu')
-        module_obj = self.pool.get('ir.module.module')
-        module_upgrade_obj = self.pool.get('base.module.upgrade')
-        module_name = []
-
-        group_id = data_obj.get_object(cr, uid, 'base', 'group_sale_salesman').id
-
-        wizard = self.browse(cr, uid, ids)[0]
-
-        if wizard.sale_orders:
-            menu_id = data_obj.get_object(cr, uid, 'sale', 'menu_invoicing_sales_order_lines').id
-            menu_obj.write(cr, uid, menu_id, {'groups_id':[(4,group_id)]})
-
-        if wizard.deli_orders:
-            menu_id = data_obj.get_object(cr, uid, 'sale', 'menu_action_picking_list_to_invoice').id
-            menu_obj.write(cr, uid, menu_id, {'groups_id':[(4,group_id)]})
-
-        if wizard.task_work:
-            module_name.append('project_timesheet')
-            module_name.append('project_mrp')
-            module_name.append('account_analytic_analysis')
-
-        if wizard.timesheet:
-            module_name.append('account_analytic_analysis')
-
-        if wizard.charge_delivery:
-            module_name.append('delivery')
-
-        if len(module_name):
-            module_ids = []
-            need_install = False
-            module_ids = []
-            for module in module_name:
-                data_id = module_obj.name_search(cr, uid , module, [], '=')
-                module_ids.append(data_id[0][0])
-
-            for module in module_obj.browse(cr, uid, module_ids):
-                if module.state == 'uninstalled':
-                    module_obj.state_update(cr, uid, [module.id], 'to install', ['uninstalled'], context)
-                    need_install = True
-                    cr.commit()
-            if need_install:
-                pooler.restart_pool(cr.dbname, update_module=True)[1]
-
-        if wizard.time_unit:
-            prod_id = data_obj.get_object(cr, uid, 'product', 'product_consultant').id
-            product_obj = self.pool.get('product.product')
-            product_obj.write(cr, uid, prod_id, {'uom_id':wizard.time_unit.id, 'uom_po_id': wizard.time_unit.id})
-
-        ir_values_obj.set(cr, uid, 'default', False, 'order_policy', ['sale.order'], wizard.order_policy)
-        if wizard.task_work and wizard.time_unit:
-            company_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.id
-            self.pool.get('res.company').write(cr, uid, [company_id], {
-                'project_time_mode_id': wizard.time_unit.id
-            }, context=context)
-
-sale_config_picking_policy()
-
 class mail_message(osv.osv):
     _name = 'mail.message'
     _inherit = 'mail.message'
@@ -1577,6 +1485,4 @@ class mail_message(osv.osv):
 
 mail_message()
 
-=======
->>>>>>> MERGE-SOURCE
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
