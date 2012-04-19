@@ -12,7 +12,7 @@
             <field name="priority">1000</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page/field[@name='order_line']" position="replace">
+                <xpath expr="//field[@name='order_line']" position="replace">
                     <field name="abstract_line_ids" colspan="4" nolabel="1" widget="one2many_list">
                             <form string="Order Line">
                                 <notebook>
@@ -37,6 +37,7 @@
                                             on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, False, parent.date_order, product_packaging, parent.fiscal_position, True, context)"/>
                                         <field name="product_uom"
                                             nolabel="1"
+                                            groups="product.group_uom"
                                             required="0"
                                             attrs="{'invisible':[('layout_type','!=','article')],  'required':[('layout_type','not in',['title','text','subtotal','line','break'])]}"
                                             on_change="product_uom_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, False, parent.date_order, context)"/>
@@ -99,7 +100,7 @@
                             <tree string="Sales order lines">
                                     <field colspan="4" name="name"/>
                                     <field name="product_uom_qty" string="Qty"/>
-                                    <field name="product_uom" string="UoM"/>
+                                    <field name="product_uom" string="UoM" groups="product.group_uom"/>
                                     <field name="discount"/>
                                     <field name="price_unit"/>
                                     <!-- field name="price_net"/-->

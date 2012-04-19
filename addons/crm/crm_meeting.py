@@ -42,7 +42,7 @@ class crm_meeting(crm_base, osv.osv):
     _name = 'crm.meeting'
     _description = "Meeting"
     _order = "id desc"
-    _inherit = "calendar.event"
+    _inherit = ["calendar.event", 'ir.needaction_mixin', "mail.thread"]
     _columns = {
         # From crm.case
         'name': fields.char('Summary', size=124, required=True, states={'done': [('readonly', True)]}),
@@ -78,7 +78,55 @@ class crm_meeting(crm_base, osv.osv):
         'user_id': lambda self, cr, uid, ctx: uid,
     }
 
-    def case_open(self, cr, uid, ids, *args):
+    def create(self, cr, uid, vals, context=None):
+        obj_id = super(crm_meeting, self).create(cr, uid, vals, context=context)
+        self.create_send_note(cr, uid, [obj_id], context=context)
+        return obj_id
+
+    def get_needaction_user_ids(self, cr, uid, ids, context=None):
+        result = dict.fromkeys(ids, [])
+        for obj in self.browse(cr, uid, ids, context=context):
+            if (obj.state == 'draft' and obj.user_id):
+                result[obj.id] = [obj.user_id.id]
+        return result
+
+    def case_get_note_msg_prefix(self, cr, uid, id, context=None):
+        return 'Meeting'
+
+    def create_send_note(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        # update context: if come from phonecall, default state values can make the message_append_note crash
+        context.pop('default_state', False)
+        for meeting in self.browse(cr, uid, ids, context=context):
+            message = _("A meeting has been <b>scheduled</b> on <em>%s</em>.") % (meeting.date)
+            if meeting.opportunity_id: # meeting can be create from phonecalls or opportunities, therefore checking for the parent
+                lead = meeting.opportunity_id
+                parent_message = _("Meeting linked to the opportunity <em>%s</em> has been <b>created</b> and <b>cscheduled</b> on <em>%s</em>.") % (lead.name, meeting.date)
+                lead.message_append_note(_('System Notification'), message)
+            elif meeting.phonecall_id:
+                phonecall = meeting.phonecall_id
+                parent_message = _("Meeting linked to the phonecall <em>%s</em> has been <b>created</b> and <b>cscheduled</b> on <em>%s</em>.") % (phonecall.name, meeting.date)
+                phonecall.message_append_note(body=message)
+            else:
+                parent_message = message
+            if parent_message:
+                meeting.message_append_note(body=parent_message)
+        return True
+
+    def case_close_send_note(self, cr, uid, ids, context=None):
+        message = _("Meeting has been <b>done</b>.")
+        return self.message_append_note(cr, uid, ids, body=message, context=context)
+
+    def case_open_send_note(self, cr, uid, ids, context=None):
+        for meeting in self.browse(cr, uid, ids, context=context):
+            if meeting.state != 'draft':
+                return False
+            message = _("Meeting has been <b>confirmed</b>.")
+            meeting.message_append_note(body=message)
+        return True
+
+    def case_open(self, cr, uid, ids, context=None):
         """Confirms meeting
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -86,11 +134,9 @@ class crm_meeting(crm_base, osv.osv):
         @param ids: List of Meeting Ids
         @param *args: Tuple Value for additional Params
         """
-        res = super(crm_meeting, self).case_open(cr, uid, ids, args)
+        res = super(crm_meeting, self).case_open(cr, uid, ids, context)
         for (id, name) in self.name_get(cr, uid, ids):
-            message = _("The meeting '%s' has been confirmed.") % name
             id=base_calendar.base_calendar_id2real_id(id)
-            self.log(cr, uid, id, message)
         return res
 
 crm_meeting()

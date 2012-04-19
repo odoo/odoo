@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_hr_timehseet_config_settings" model="ir.ui.view">
+            <field name="name">hr settings for timesheets</field>
+            <field name="model">hr.config.settings</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="hr.view_human_resources_configuration"/>
+            <field name="arch" type="xml">
+                <group name="config_timesheets" position="after">
+                    <separator string="Timesheets" colspan="4"/>
+                    <field name="timesheet_range"/>
+                    <field name="timesheet_max_difference"/>
+                </group>
+            </field>
+        </record>
+    </data>
+</openerp>

@@ -178,6 +178,7 @@ class account_invoice(osv.osv):
         return invoice_ids
 
     _name = "account.invoice"
+    _inherit = ['mail.thread']
     _description = 'Invoice'
     _order = "id desc"
 
@@ -356,12 +357,8 @@ class account_invoice(osv.osv):
             context = {}
         try:
             res = super(account_invoice, self).create(cr, uid, vals, context)
-            for inv_id, name in self.name_get(cr, uid, [res], context=context):
-                ctx = context.copy()
-                if vals.get('type', 'in_invoice') in ('out_invoice', 'out_refund'):
-                    ctx = self.get_log_context(cr, uid, context=ctx)
-                message = _("Invoice '%s' is waiting for validation.") % name
-                self.log(cr, uid, inv_id, message, context=ctx)
+            if res:
+                self.create_send_note(cr, uid, [res], context=context)
             return res
         except Exception, e:
             if '"journal_id" viol' in e.args[0]:
@@ -410,9 +407,7 @@ class account_invoice(osv.osv):
         if context is None:
             context = {}
         self.write(cr, uid, ids, {'state':'paid'}, context=context)
-        for inv_id, name in self.name_get(cr, uid, ids, context=context):
-            message = _("Invoice '%s' is paid.") % name
-            self.log(cr, uid, inv_id, message)
+        self.confirm_paid_send_note(cr, uid, ids, context=context)
         return True
 
     def unlink(self, cr, uid, ids, context=None):
@@ -980,6 +975,11 @@ class account_invoice(osv.osv):
             move_obj.post(cr, uid, [move_id], context=ctx)
         self._log_event(cr, uid, ids)
         return True
+    
+    def invoice_validate(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'state':'open'}, context=context)
+        self.invoice_validate_send_note(cr, uid, ids, context=context)
+        return True
 
     def line_get_convert(self, cr, uid, x, part, date, context=None):
         return {
@@ -1070,6 +1070,7 @@ class account_invoice(osv.osv):
             # will be automatically deleted too
             account_move_obj.unlink(cr, uid, move_ids, context=context)
         self._log_event(cr, uid, ids, -1.0, 'Cancel Invoice')
+        self.invoice_cancel_send_note(cr, uid, ids, context=context)
         return True
 
     ###################
@@ -1277,7 +1278,36 @@ class account_invoice(osv.osv):
         # Update the stored value (fields.function), so we write to trigger recompute
         self.pool.get('account.invoice').write(cr, uid, ids, {}, context=context)
         return True
-
+    
+    # -----------------------------------------
+    # OpenChatter notifications and need_action
+    # -----------------------------------------
+    
+    def _get_document_type(self, type):
+        type_dict = {
+                'out_invoice': 'Customer invoice',
+                'in_invoice': 'Supplier invoice',
+                'out_refund': 'Customer Refund',
+                'in_refund': 'Supplier Refund',
+        }
+        return type_dict.get(type, 'Invoice')
+    
+    def create_send_note(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            self.message_append_note(cr, uid, [obj.id],body=_("%s <b>created</b>.") % (self._get_document_type(obj.type)), context=context)
+            
+    def invoice_validate_send_note(self, cr, uid, ids, context=None):
+         for obj in self.browse(cr, uid, ids, context=context):
+            self.message_append_note(cr, uid, [obj.id], body=_("%s <b>validated</b>.") % (self._get_document_type(obj.type)), context=context)
+    
+    def confirm_paid_send_note(self, cr, uid, ids, context=None):
+         for obj in self.browse(cr, uid, ids, context=context):
+            self.message_append_note(cr, uid, [obj.id], body=_("%s <b>paid</b>.") % (self._get_document_type(obj.type)), context=context)
+    
+    def invoice_cancel_send_note(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            self.message_append_note(cr, uid, [obj.id], body=_("%s <b>cancelled</b>.") % (self._get_document_type(obj.type)), context=context)
+        
 account_invoice()
 
 class account_invoice_line(osv.osv):

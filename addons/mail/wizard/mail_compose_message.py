@@ -200,13 +200,8 @@ class mail_compose_message(osv.osv_memory):
 
             body =  mail.body_html if mail.subtype == 'html' else mail.body_text
 
-            # Reply Email
-            if context.get('mail.compose.message.mode') == 'reply' and mail.message_id:
-                references = (mail.references or '') + " " + mail.message_id
-                headers['In-Reply-To'] = mail.message_id
-
+            # Get model, and check whether it is OpenChatter enabled, aka inherit from mail.thread
             if context.get('mail.compose.message.mode') == 'mass_mail':
-                # Mass mailing: must render the template patterns
                 if context.get('active_ids') and context.get('active_model'):
                     active_ids = context['active_ids']
                     active_model = context['active_model']
@@ -214,7 +209,22 @@ class mail_compose_message(osv.osv_memory):
                     active_model = mail.model
                     active_model_pool = self.pool.get(active_model)
                     active_ids = active_model_pool.search(cr, uid, ast.literal_eval(mail.filter_id.domain), context=ast.literal_eval(mail.filter_id.context))
+            else:
+                active_model = mail.model
+                active_ids = [int(mail.res_id)]
+            active_model_pool = self.pool.get(active_model)
+            if hasattr(active_model_pool, '_inherit') and 'mail.thread' in active_model_pool._inherit:
+                mail_thread_enabled = True
+            else:
+                mail_thread_enabled = False
+            
+            # Reply Email
+            if context.get('mail.compose.message.mode') == 'reply' and mail.message_id:
+                references = (mail.references or '') + " " + mail.message_id
+                headers['In-Reply-To'] = mail.message_id
 
+            if context.get('mail.compose.message.mode') == 'mass_mail':
+                # Mass mailing: must render the template patterns
                 for active_id in active_ids:
                     subject = self.render_template(cr, uid, mail.subject, active_model, active_id)
                     rendered_body = self.render_template(cr, uid, body, active_model, active_id)
@@ -223,21 +233,38 @@ class mail_compose_message(osv.osv_memory):
                     email_cc = self.render_template(cr, uid, mail.email_cc, active_model, active_id)
                     email_bcc = self.render_template(cr, uid, mail.email_bcc, active_model, active_id)
                     reply_to = self.render_template(cr, uid, mail.reply_to, active_model, active_id)
-
+    
                     # in mass-mailing mode we only schedule the mail for sending, it will be 
                     # processed as soon as the mail scheduler runs.
-                    mail_message.schedule_with_attach(cr, uid, email_from, to_email(email_to), subject, rendered_body,
-                        model=mail.model, email_cc=to_email(email_cc), email_bcc=to_email(email_bcc), reply_to=reply_to,
-                        attachments=attachment, references=references, res_id=active_id,
-                        subtype=mail.subtype, headers=headers, context=context)
+                    if mail_thread_enabled:
+                        active_model_pool.message_append(cr, uid, [active_id],
+                            subject, body_text=mail.body_text, body_html=mail.body_html, subtype=mail.subtype, state='outgoing',
+                            email_to=email_to, email_from=email_from, email_cc=email_cc, email_bcc=email_bcc,
+                            reply_to=reply_to, references=references, attachments=attachment, headers=headers, context=context)
+                    else:
+                        mail_message.schedule_with_attach(cr, uid, email_from, to_email(email_to), subject, rendered_body,
+                            model=mail.model, email_cc=to_email(email_cc), email_bcc=to_email(email_bcc), reply_to=reply_to,
+                            attachments=attachment, references=references, res_id=active_id,
+                            subtype=mail.subtype, headers=headers, context=context)
             else:
                 # normal mode - no mass-mailing
-                msg_id = mail_message.schedule_with_attach(cr, uid, mail.email_from, to_email(mail.email_to), mail.subject, body,
-                    model=mail.model, email_cc=to_email(mail.email_cc), email_bcc=to_email(mail.email_bcc), reply_to=mail.reply_to,
-                    attachments=attachment, references=references, res_id=int(mail.res_id),
-                    subtype=mail.subtype, headers=headers, context=context)
+                if mail_thread_enabled:
+                    msg_ids = active_model_pool.message_append(cr, uid, active_ids,
+                            mail.subject, body_text=mail.body_text, body_html=mail.body_html, subtype=mail.subtype, state='outgoing',
+                            email_to=mail.email_to, email_from=mail.email_from, email_cc=mail.email_cc, email_bcc=mail.email_bcc,
+                            reply_to=mail.reply_to, references=references, attachments=attachment, headers=headers, context=context)
+                else:
+                    msg_ids = [mail_message.schedule_with_attach(cr, uid, mail.email_from, to_email(mail.email_to), mail.subject, body,
+                        model=mail.model, email_cc=to_email(mail.email_cc), email_bcc=to_email(mail.email_bcc), reply_to=mail.reply_to,
+                        attachments=attachment, references=references, res_id=int(mail.res_id),
+                        subtype=mail.subtype, headers=headers, context=context)]
                 # in normal mode, we send the email immediately, as the user expects us to (delay should be sufficiently small)
+<<<<<<< TREE
                 mail_message.send(cr, uid, [msg_id], context=context)
+=======
+                mail_message.send(cr, uid, msg_ids, context=context)
+
+>>>>>>> MERGE-SOURCE
         return {'type': 'ir.actions.act_window_close'}
 
     def render_template(self, cr, uid, template, model, res_id, context=None):

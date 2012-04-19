@@ -92,7 +92,7 @@ class sale_order(osv.osv, EDIMixin):
                     '__import_module': 'purchase',
 
                     'company_address': res_company.edi_export_address(cr, uid, order.company_id, context=context),
-                    'partner_id': res_partner_obj.edi_export(cr, uid, [order.partner_id], context=context)[0],
+                    'partner_address': res_partner_obj.edi_export(cr, uid, [order.partner_id], context=context)[0],
 
                     'currency': self.pool.get('res.currency').edi_export(cr, uid, [order.pricelist_id.currency_id],
                                                                          context=context)[0],
