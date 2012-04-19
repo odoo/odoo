@@ -44,6 +44,25 @@ class mail_subscription(osv.osv):
                         ondelete='cascade', required=True, select=1),
     }
 
+class mail_subscription_hide(osv.osv):
+    """
+    mail_subscription_hide holds the data to store the hiden notifications
+    on the Wall. Hide choices are related to a subscription, not a model
+    or a user.
+        :param: subscription_id: the related subscription
+        :param: subtype: the message subtype hiden
+    """
+    _name = 'mail.subscription.hide'
+    _rec_name = 'id'
+    _order = 'id desc'
+    _description = 'Hidden subscription'
+    _columns = {
+        'subscription_id': fields.many2one('mail.subscription', string='Subscription',
+                        ondelete='cascade', required=True, select=1),
+        'subtype': fields.char('Message subtype', size=64,
+                        required=True, help='Message subtype is a string that depends on the related model.'),
+    }
+
 class mail_notification(osv.osv):
     """
     mail_notification is a relational table modeling messages pushed to users.
