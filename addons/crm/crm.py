@@ -71,11 +71,7 @@ class crm_case_stage(osv.osv):
         'on_change': fields.boolean('Change Probability Automatically', help="Setting this stage will change the probability automatically on the opportunity."),
         'requirements': fields.text('Requirements'),
         'section_ids':fields.many2many('crm.case.section', 'section_stage_rel', 'stage_id', 'section_id', 'Sections'),
-        'state': fields.selection(AVAILABLE_STATES, 'State', size=16,
-                                  help='The state is set to \'Draft\', when a case is created.\
-                                  \nIf the case is in progress the state is set to \'Open\'.\
-                                  \nWhen the case is over, the state is set to \'Done\'.\
-                                  \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
+        'state': fields.selection(AVAILABLE_STATES, 'State', size=16,  help="This state is related to stage"),
         'case_default': fields.boolean('Common to All Teams', help="If you check this field, this stage will be proposed by default on each sales team. It will not assign this stage to existing teams."),
     }
 
