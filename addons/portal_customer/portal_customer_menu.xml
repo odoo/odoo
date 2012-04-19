@@ -22,34 +22,6 @@
         
         <menuitem name="Contact Us" id="customer_portal_contact" parent="customer_portal" groups="group_sales_portal"/>
         
-        <!-- Hiding Menus which are not required for Customer Portal user -->
-                 
-        <menuitem id="base.menu_partner_form" parent="base.menu_sales" action="base.action_partner_form" sequence="1" groups="base.group_sale_salesman"/>
-        <menuitem id="base.menu_base_config" name="Configuration" parent="base.menu_base_partner" sequence="30" groups="base.group_sale_salesman"/>
-        <menuitem action="product.product_uom_categ_form_action" id="product.menu_product_uom_categ_form_action" parent="base.menu_base_config" sequence="25" groups="base.group_sale_salesman"/>
-        <menuitem action="sale.action_shop_form" id="sale.menu_action_shop_form" parent="base.menu_base_config" sequence="35" groups="base.group_sale_salesman"/>
-        <menuitem action="product.product_pricelist_action2" id="product.menu_product_pricelist_action2" parent="base.menu_base_config" sequence="20" groups="base.group_sale_salesman"/>
-        <menuitem action="product.product_uom_form_action" id="product.menu_product_uom_form_action" parent="base.menu_base_config" sequence="30" groups="base.group_sale_salesman"/>
-        <menuitem action="stock.action_picking_tree4" id="stock.menu_action_picking_tree4" parent="stock.menu_stock_warehouse_mgmt" sequence="1" groups="base.group_sale_salesman"/>
-        <menuitem action="stock.action_location_tree" id="stock.menu_action_location_tree" parent="stock.menu_stock_inventory_control" sequence="20" groups="stock.group_stock_user"/>
-        <menuitem name="Products by Category" id="stock.menu_product_by_category_stock_form" action="product.product_category_action" parent="stock.menu_stock_product" sequence="0" groups="stock.group_stock_user"/>
-        <menuitem action="product.product_normal_action" id="stock.menu_stock_products_menu" parent="stock.menu_stock_product" sequence="1" groups="stock.group_stock_user"/>
-        <menuitem id="account.menu_account_customer" name="Customers" parent="account.menu_finance_receivables" action="base.action_partner_customer_form" sequence="100" groups="account.group_account_user"/>
-        <menuitem action="account.action_invoice_tree2" id="account.menu_action_invoice_tree2" parent="account.menu_finance_payables" groups="account.group_account_user"/>
-        <menuitem action="account.action_invoice_tree4" id="account.menu_action_invoice_tree4" parent="account.menu_finance_payables" groups="account.group_account_user"/>
-        <menuitem id="account.menu_account_supplier" name="Suppliers" parent="account.menu_finance_payables" action="base.action_partner_supplier_form" sequence="100" groups="account.group_account_user"/>
-        <menuitem id="base.menu_sales" name="Sales" parent="base.menu_base_partner" sequence="1" groups="base.group_sale_salesman"/>
-        <menuitem action="product.product_normal_action_sell" id="product.menu_products" parent="base.menu_product" sequence="1" groups="base.group_sale_salesman"/>
-        <menuitem id="mail.mail_feeds" name="Feeds" parent="mail.mail_feeds_main" groups="base.group_sale_salesman"/>
-        <menuitem action="account.action_account_invoice_report_all" id="account.menu_action_account_invoice_report_all" parent="account.menu_finance_statistic_report_statement" sequence="0" groups="account.group_account_user"/>
-        <menuitem id="account.menu_finance_statistic_report_statement" name="Statistic Reports" parent="account.menu_finance_reporting" sequence="300" groups="account.group_account_user"/>
-        <menuitem id="account.menu_finance_reporting" name="Accounting" parent="base.menu_reporting" sequence="35" groups="account.group_account_user"/>
-        <record id="mail.mail_feeds_main" model="ir.ui.menu">
-            <field name="name">Feeds</field>
-            <field name="sequence">0</field>
-            <field name="action" ref="mail.action_mail_all_feeds"/>
-            <field eval="[(4, ref('base.group_sale_salesman'))]" name="groups_id"/>
-        </record>
         
     </data>
 </openerp>
