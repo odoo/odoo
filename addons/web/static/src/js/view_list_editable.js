@@ -406,14 +406,17 @@ openerp.web.list_editable = function (instance) {
                 if (modifiers.tree_invisible === true)
                     $td.hide();
                 var tag_name = el.tagName.toLowerCase();
-                var key = tag_name;
+                var w;
                 if (tag_name === "field") {
                     var name = $(el).attr("name");
-                    key = $(el).attr('widget') || self.fvg.fields[name].type;
+                    var key = $(el).attr('widget') || self.fvg.fields[name].type;
+                    var obj = self.view.fields_registry.get_object(key);
+                    w = new (obj)(self.view, instance.web.xml_to_json(el));
+                    self.view.register_field(w, $(el).attr("name"));
+                } else {
+                    var obj = self.tags_registry.get_object(tag_name);
+                    w = new (obj)(self.view, instance.web.xml_to_json(el));
                 }
-                var obj = self.view.fields_registry.get_object(key);
-                var w = new (obj)(self.view, instance.web.xml_to_json(el));
-                self.view.register_field(w, $(el).attr("name"));
                 w.appendTo($td);
                 $td.appendTo($element);
             });
