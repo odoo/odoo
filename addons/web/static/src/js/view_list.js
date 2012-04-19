@@ -157,10 +157,10 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         });
 
         if (this.fonts) {
-	        for(var i=0, len=this.fonts.length; i<len; ++i) {
-	            var pair = this.fonts[i],
-                    font = pair[0],
-                    expression = pair[1];
+            for(var i=0, len=this.fonts.length; i<len; ++i) {
+                var pair = this.fonts[i],
+                font = pair[0],
+                expression = pair[1];
                 if (py.evaluate(expression, context).toJSON()) {
                     switch(font) {
                     case 'bold':
