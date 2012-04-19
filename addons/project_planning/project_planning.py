@@ -233,7 +233,8 @@ class project_task(osv.osv):
         if context is None:
             context = {}
         if not context.get('planning', False):
-            return super(project_task,self).search(cr, user, args, offset, limit, order, context)
+            return super(project_task,self).search(cr, user, args,
+                offset=offset, limit=limit, order=order, context=context, count=count)
         cr.execute(" SELECT t.id, t.name \
                         from project_task t \
                         join report_account_analytic_planning_line l on (l.id = t.planning_line_id )\
