@@ -662,9 +662,9 @@
         <menuitem action="ir_action_wizard" id="menu_ir_action_wizard" parent="base.next_id_6"/>
 
         <!-- Needaction mechanism -->
-        <record model="ir.ui.view" id="view_ir_needaction_users_tree">
-            <field name="name">ir.needaction_users.tree</field>
-            <field name="model">ir.needaction_users</field>
+        <record model="ir.ui.view" id="view_ir_needaction_users_rel_tree">
+            <field name="name">ir.needaction_users_rel.tree</field>
+            <field name="model">ir.needaction_users_rel</field>
             <field name="type">tree</field>
             <field name="sequence">10</field>
             <field name="arch" type="xml">
@@ -676,14 +676,14 @@
             </field>
         </record>
 
-        <record id="action_view_needaction_users" model="ir.actions.act_window">
+        <record id="action_view_needaction_users_rel" model="ir.actions.act_window">
             <field name="name">Need action relationships</field>
-            <field name="res_model">ir.needaction_users</field>
+            <field name="res_model">ir.needaction_users_rel</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="menu_needaction_users" name="Need actions" parent="base.menu_users" sequence="20" action="action_view_needaction_users" groups="base.group_no_one"/>
+        <menuitem id="menu_needaction_users_rel" name="Need actions" parent="base.menu_users" sequence="20" action="action_view_needaction_users_rel" groups="base.group_no_one"/>
         
         <!-- Companies -->
         <menuitem id="menu_res_company_global"
@@ -893,7 +893,7 @@
             <field name="res_model">ir.ui.view.custom</field>
             <field name="help">Customized views are used when users reorganize the content of their dashboard views (via web client)</field>
         </record>
-        <menuitem action="action_ui_view_custom" id="menu_action_ui_view_custom" parent="base.next_id_4"/>
+        <menuitem id="menu_action_ui_view_custom" action="action_ui_view_custom" parent="base.next_id_2"/>
 
 
         <!-- Attachment -->
@@ -1479,11 +1479,8 @@
         </record>
         <menuitem action="grant_menu_access" id="menu_grant_menu_access" parent="base.next_id_2" sequence="1"/>
 
-        <!--
-    =============================================================
-    Cron Jobs
-    =============================================================
-    -->
+        <!-- ir.cron -->
+
         <record id="ir_cron_view_tree" model="ir.ui.view">
             <field name="name">ir.cron.tree</field>
             <field name="model">ir.cron</field>
@@ -1574,9 +1571,10 @@
             <field name="view_id" ref="ir_cron_view_tree"/>
         </record>
 
-        <menuitem id="next_id_10" name="Scheduler" parent="base.menu_config"  groups="base.group_extended" sequence="23"/>
-        <menuitem action="ir_cron_act" id="menu_ir_cron_act" parent="next_id_10"/>
+        <menuitem id="menu_ir_cron" name="Scheduler" parent="menu_custom"  groups="base.group_extended" sequence="23"/>
+        <menuitem id="menu_ir_cron_act" action="ir_cron_act" parent="menu_ir_cron"/>
 
+        <!-- ir.model.access -->
 
         <record id="ir_access_view_tree" model="ir.ui.view">
             <field name="name">ir.model.access.tree</field>
@@ -1878,6 +1876,8 @@
         </record>
         <menuitem action="action_server_action" id="menu_server_action" parent="base.next_id_6"/>
 
+        <!-- ir.actions.todo -->
+
         <record id="ir_actions_todo_tree" model="ir.ui.view">
             <field name="model">ir.actions.todo</field>
             <field name="name">Config Wizard Steps</field>
@@ -1950,13 +1950,8 @@
             <field name="view_type">form</field>
             <field name="help">The configuration wizards are used to help you configure a new instance of OpenERP. They are launched during the installation of new modules, but you can choose to restart some wizards manually from this menu.</field>
         </record>
-        <menuitem id="next_id_11" name="Configuration Wizards" parent="base.menu_config" sequence="20"
-            groups="base.group_extended"/>
-
-        <menuitem action="act_ir_actions_todo_form" id="menu_ir_actions_todo_form"
-                parent="next_id_11" sequence="20"/>
-
-
+        <menuitem id="menu_ir_actions_todo" name="Configuration Wizards" parent="menu_custom" sequence="20" groups="base.group_extended"/> 
+        <menuitem id="menu_ir_actions_todo_form" action="act_ir_actions_todo_form" parent="menu_ir_actions_todo"/>
 
         <record model="ir.cron" id="cronjob_osv_memory_autovacuum">
             <field name='name'>AutoVacuum osv_memory objects</field>
@@ -1969,7 +1964,9 @@
             <field name="function">power_on</field>
             <field name="args">()</field>
         </record>
-        
+
+        <!-- ir.actions.todo category -->
+
         <record id="ir_actions_todo_category_form" model="ir.ui.view">
             <field name="name">ir.actions.todo.category.form</field>
             <field name="model">ir.actions.todo.category</field>
@@ -1982,7 +1979,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record id="ir_actions_todo_category_tree" model="ir.ui.view">
             <field name="name">ir.actions.todo.category.tree</field>
             <field name="model">ir.actions.todo.category</field>
@@ -1998,12 +1995,12 @@
         <record id="category_sales_management_config" model="ir.actions.todo.category">
             <field name="name">Sales Management</field>
             <field name="sequence">5</field>
-        </record>         
+        </record>
 
         <record id="category_tools_customization_config" model="ir.actions.todo.category">
             <field name="name">Tools / Customization</field>
             <field name="sequence">5</field>
-        </record>         
+        </record>
 
         <!-- ir.mail.server -->
         <record model="ir.ui.view" id="ir_mail_server_form">
@@ -2070,8 +2067,6 @@
             <field name="view_id" ref="ir_mail_server_list" />
             <field name="search_view_id" ref="view_ir_mail_server_search"/>
         </record>
-
-        <menuitem id="menu_email" name="Email" parent="base.menu_config" sequence="22"/>
         <menuitem id="menu_mail_servers" parent="menu_email" action="action_ir_mail_server_list" sequence="15" groups="base.group_no_one"/>
 
     </data>
