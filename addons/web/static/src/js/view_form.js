@@ -2291,7 +2291,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(_.exten
         this.last_search = [];
         this.floating = false;
         this.inhibit_on_change = false;
-        this.orderer = new openerp.web.DropMisordered();
+        this.orderer = new instance.web.DropMisordered();
     },
     start: function() {
         this._super();
