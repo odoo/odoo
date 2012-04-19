@@ -53,12 +53,12 @@
         <field name="arch" type="xml">
             <form string="Leads Form" layout="manual">
                 <div class="oe_form_topbar">
-                    <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" icon="gtk-cancel" />
-                    <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward" />
-                    <button name="case_mark_lost" string="Close" states="open,pending" type="object" icon="gtk-close" />
-                    <button name="case_pending" string="Pending" states="open" type="object" icon="gtk-media-pause" />
+                    <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" icon="gtk-cancel"/>
+                    <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward"/>
+                    <button name="case_mark_lost" string="Close" states="open,pending" type="object" icon="gtk-close"/>
+                    <button name="case_pending" string="Pending" states="open" type="object" icon="gtk-media-pause"/>
                     <button name="case_escalate" string="Escalate" states="open,pending" type="object" groups="base.group_extended" icon="gtk-go-up" />
-                    <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert" />
+                    <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert"/>
                     <div class="oe_right">
                         <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
                     </div>
@@ -192,13 +192,13 @@
                     icon="gtk-go-forward" />
                 <field name="section_id" invisible="context.get('invisible_section', True)" />
                 <field name="user_id" />
-                <field name="state" />
+                <field name="state"/>
                 <button name="case_open" string="Open"
                     states="draft,pending" type="object"
-                    icon="gtk-go-forward" />
+                    icon="gtk-go-forward"/>
                 <button name="case_close" string="Close"
                     states="open,draft,pending" type="object"
-                    icon="gtk-close" />
+                    icon="gtk-close"/>
                 <button name="%(crm.action_crm_lead2opportunity_partner)d"
                     string="Convert to Opportunity"
                     states="draft,open,pending" icon="gtk-index"
@@ -299,11 +299,11 @@
                                         <a string="Schedule Meeting" name="action_makeMeeting" type="object" icon="stock_calendar"/>
                                         <a string="Add Internal Note" name="%(crm.action_crm_add_note)d" context="{'model': 'crm.lead' }" icon="terp-document-new" type="action"/>
                                     </div>
-                                    <div class="oe_kanban_right">
-                                        <a name="case_mark_lost" string="Mark Lost" states="open,pending" type="object" icon="kanban-stop" />
-                                        <a name="case_pending" string="Pending" states="draft,open" type="object" icon="kanban-pause" />
-                                        <a name="case_open" string="Open" states="pending" type="object" icon="gtk-media-play" />
-                                        <a name="case_mark_won" string="Mark Won" states="open,pending" type="object" icon="kanban-apply" />
+                                    <div class="oe_kanban_right" groups="base.group_no_one">
+                                        <a name="case_mark_lost" string="Mark Lost" states="open,pending" type="object" icon="kanban-stop"/>
+                                        <a name="case_pending" string="Pending" states="draft,open" type="object" icon="kanban-pause"/>
+                                        <a name="case_open" string="Open" states="pending" type="object" icon="gtk-media-play"/>
+                                        <a name="case_mark_won" string="Mark Won" states="open,pending" type="object" icon="kanban-apply"/>
                                     </div>
                                     <br class="oe_kanban_clear"/>
                                 </div>
@@ -400,14 +400,14 @@
         <field name="arch" type="xml">
             <form string="Opportunities" layout="manual">
                 <div class="oe_form_topbar">
-                    <button name="case_cancel" string="Cancel" states="draft" type="object" icon="gtk-cancel" />
-                    <button name="case_mark_lost" string="Mark Lost" states="open,pending" type="object" icon="gtk-cancel" />
-                    <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert" />
-                    <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward" />
-                    <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause" />
+                    <button name="case_cancel" string="Cancel" states="draft" type="object" icon="gtk-cancel" groups="base.group_no_one"/>
+                    <button name="case_mark_lost" string="Mark Lost" states="open,pending" type="object" icon="gtk-cancel" groups="base.group_no_one"/>
+                    <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert" groups="base.group_no_one"/>
+                    <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward" groups="base.group_no_one"/>
+                    <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause" groups="base.group_no_one"/>
                     <button name="case_escalate" string="Escalate" states="open,pending" type="object" groups="base.group_extended" icon="gtk-go-up" />
-                    <button name="case_mark_won" string="Mark Won" states="open,pending" type="object" icon="gtk-apply" />
-                    <div class="oe_right">
+                    <button name="case_mark_won" string="Mark Won" states="open,pending" type="object" icon="gtk-apply" groups="base.group_no_one"/>
+                    <div class="oe_right" groups="base.group_no_one">
                         <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
                     </div>
                 </div>
@@ -557,10 +557,10 @@
                 <field name="priority" invisible="1"/>
                 <field name="categ_id" invisible="1"/>
                 <field name="state"/>
-                <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward" />
-                <button name="case_pending" string="Pending" states="open,draft" type="object" icon="gtk-media-pause" />
-                <button name="case_mark_lost" string="Lost" states="open,pending" type="object" icon="gtk-cancel" />
-                <button name="case_mark_won" string="Won" states="open,pending" type="object" icon="gtk-apply" />
+                <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward" groups="base.group_no_one"/>
+                <button name="case_pending" string="Pending" states="open,draft" type="object" icon="gtk-media-pause" groups="base.group_no_one"/>
+                <button name="case_mark_lost" string="Lost" states="open,pending" type="object" icon="gtk-cancel" groups="base.group_no_one"/>
+                <button name="case_mark_won" string="Won" states="open,pending" type="object" icon="gtk-apply" groups="base.group_no_one"/>
             </tree>
         </field>
     </record>
