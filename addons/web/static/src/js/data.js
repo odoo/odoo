@@ -1,5 +1,5 @@
 
-openerp.web.data = function(openerp) {
+openerp.web.data = function(instance) {
 
 /**
  * Serializes the sort criterion array of a dataset into a form which can be
@@ -8,7 +8,7 @@ openerp.web.data = function(openerp) {
  * @param {Array} criterion array of fields, from first to last criteria, prefixed with '-' for reverse sorting
  * @returns {String} SQL-like sorting string (``ORDER BY``) clause
  */
-openerp.web.serialize_sort = function (criterion) {
+instance.web.serialize_sort = function (criterion) {
     return _.map(criterion,
         function (criteria) {
             if (criteria[0] === '-') {
@@ -18,7 +18,7 @@ openerp.web.serialize_sort = function (criterion) {
         }).join(', ');
 };
 
-openerp.web.Query = openerp.web.Class.extend({
+instance.web.Query = instance.web.Class.extend({
     init: function (model, fields) {
         this._model = model;
         this._fields = fields;
@@ -30,7 +30,7 @@ openerp.web.Query = openerp.web.Class.extend({
     },
     clone: function (to_set) {
         to_set = to_set || {};
-        var q = new openerp.web.Query(this._model, this._fields);
+        var q = new instance.web.Query(this._model, this._fields);
         q._context = this._context;
         q._filter = this._filter;
         q._limit = this._limit;
@@ -41,11 +41,11 @@ openerp.web.Query = openerp.web.Class.extend({
             if (!to_set.hasOwnProperty(key)) { continue; }
             switch(key) {
             case 'filter':
-                q._filter = new openerp.web.CompoundDomain(
+                q._filter = new instance.web.CompoundDomain(
                         q._filter, to_set.filter);
                 break;
             case 'context':
-                q._context = new openerp.web.CompoundContext(
+                q._context = new instance.web.CompoundContext(
                         q._context, to_set.context);
                 break;
             case 'limit':
@@ -58,14 +58,14 @@ openerp.web.Query = openerp.web.Class.extend({
     },
     _execute: function () {
         var self = this;
-        return openerp.connection.rpc('/web/dataset/search_read', {
+        return instance.connection.rpc('/web/dataset/search_read', {
             model: this._model.name,
             fields: this._fields || false,
             domain: this._model.domain(this._filter),
             context: this._model.context(this._context),
             offset: this._offset,
             limit: this._limit,
-            sort: openerp.web.serialize_sort(this._order_by)
+            sort: instance.web.serialize_sort(this._order_by)
         }).pipe(function (results) {
             self._count = results.length;
             return results.records;
@@ -127,10 +127,10 @@ openerp.web.Query = openerp.web.Class.extend({
             context: this._model.context(this._context),
             offset: this._offset,
             limit: this._limit,
-            orderby: openerp.web.serialize_sort(this._order_by) || false
+            orderby: instance.web.serialize_sort(this._order_by) || false
         }).pipe(function (results) {
             return _(results).map(function (result) {
-                return new openerp.web.data.Group(
+                return new instance.web.data.Group(
                     self._model.name, grouping[0], result);
             });
         });
@@ -194,10 +194,10 @@ openerp.web.Query = openerp.web.Class.extend({
     }
 });
 
-openerp.web.Model = openerp.web.Class.extend(/** @lends openerp.web.Model# */{
+instance.web.Model = instance.web.Class.extend(/** @lends openerp.web.Model# */{
     /**
-     * @constructs openerp.web.Model
-     * @extends openerp.web.Class
+     * @constructs instance.web.Model
+     * @extends instance.web.Class
      *
      * @param {String} model_name name of the OpenERP model this object is bound to
      * @param {Object} [context]
@@ -233,7 +233,7 @@ openerp.web.Model = openerp.web.Class.extend(/** @lends openerp.web.Model# */{
             kwargs = args;
             args = [];
         }
-        return openerp.connection.rpc('/web/dataset/call_kw', {
+        return instance.connection.rpc('/web/dataset/call_kw', {
             model: this.name,
             method: method,
             args: args,
@@ -247,7 +247,7 @@ openerp.web.Model = openerp.web.Class.extend(/** @lends openerp.web.Model# */{
      * @returns {openerp.web.Query}
      */
     query: function (fields) {
-        return new openerp.web.Query(this, fields);
+        return new instance.web.Query(this, fields);
     },
     /**
      * Executes a signal on the designated workflow, on the bound OpenERP model
@@ -256,7 +256,7 @@ openerp.web.Model = openerp.web.Class.extend(/** @lends openerp.web.Model# */{
      * @param {String} signal signal to trigger on the workflow
      */
     exec_workflow: function (id, signal) {
-        return openerp.connection.rpc('/web/dataset/exec_workflow', {
+        return instance.connection.rpc('/web/dataset/exec_workflow', {
             model: this.name,
             id: id,
             signal: signal
@@ -270,7 +270,7 @@ openerp.web.Model = openerp.web.Class.extend(/** @lends openerp.web.Model# */{
      */
     domain: function (domain) {
         if (!domain) { return this._domain; }
-        return new openerp.web.CompoundDomain(
+        return new instance.web.CompoundDomain(
             this._domain, domain);
     },
     /**
@@ -281,8 +281,8 @@ openerp.web.Model = openerp.web.Class.extend(/** @lends openerp.web.Model# */{
      * @returns The union of the user's context and the model's internal context, as well as the provided context if any. In that order.
      */
     context: function (context) {
-        return new openerp.web.CompoundContext(
-            openerp.connection.user_context, this._context, context || {});
+        return new instance.web.CompoundContext(
+            instance.connection.user_context, this._context, context || {});
     },
     /**
      * Button action caller, needs to perform cleanup if an action is returned
@@ -292,7 +292,7 @@ openerp.web.Model = openerp.web.Class.extend(/** @lends openerp.web.Model# */{
      * FIXME: remove when evaluator integrated
      */
     call_button: function (method, args) {
-        return openerp.connection.rpc('/web/dataset/call_button', {
+        return instance.connection.rpc('/web/dataset/call_button', {
             model: this.name,
             method: method,
             domain_id: null,
@@ -302,12 +302,12 @@ openerp.web.Model = openerp.web.Class.extend(/** @lends openerp.web.Model# */{
     },
 });
 
-openerp.web.Traverser = openerp.web.Class.extend(/** @lends openerp.web.Traverser# */{
+instance.web.Traverser = instance.web.Class.extend(/** @lends openerp.web.Traverser# */{
     /**
-     * @constructs openerp.web.Traverser
-     * @extends openerp.web.Class
+     * @constructs instance.web.Traverser
+     * @extends instance.web.Class
      *
-     * @param {openerp.web.Model} model instance this traverser is bound to
+     * @param {instance.web.Model} model instance this traverser is bound to
      */
     init: function (model) {
         this._model = model;
@@ -387,11 +387,11 @@ openerp.web.Traverser = openerp.web.Class.extend(/** @lends openerp.web.Traverse
  *
  * @namespace
  */
-openerp.web.data = {
-    Group: openerp.web.Class.extend(/** @lends openerp.web.data.Group# */{
+instance.web.data = {
+    Group: instance.web.Class.extend(/** @lends openerp.web.data.Group# */{
         /**
-         * @constructs openerp.web.data.Group
-         * @extends openerp.web.Class
+         * @constructs instance.web.data.Group
+         * @extends instance.web.Class
          */
         init: function (model, grouping_field, read_group_group) {
             // In cases where group_by_no_leaf and no group_by, the result of
@@ -411,7 +411,7 @@ openerp.web.data = {
                 aggregates[key] = value || 0;
             });
 
-            this.model = new openerp.web.Model(
+            this.model = new instance.web.Model(
                 model, fixed_group.__context, fixed_group.__domain);
 
             var group_size = fixed_group[grouping_field + '_count'] || fixed_group.__count || 0;
@@ -439,7 +439,7 @@ openerp.web.data = {
     })
 };
 
-openerp.web.DataGroup =  openerp.web.OldWidget.extend( /** @lends openerp.web.DataGroup# */{
+instance.web.DataGroup =  instance.web.OldWidget.extend( /** @lends openerp.web.DataGroup# */{
     /**
      * Management interface between views and grouped collections of OpenERP
      * records.
@@ -447,13 +447,13 @@ openerp.web.DataGroup =  openerp.web.OldWidget.extend( /** @lends openerp.web.Da
      * The root DataGroup is instantiated with the relevant information
      * (a session, a model, a domain, a context and a group_by sequence), the
      * domain and context may be empty. It is then interacted with via
-     * :js:func:`~openerp.web.DataGroup.list`, which is used to read the
+     * :js:func:`~instance.web.DataGroup.list`, which is used to read the
      * content of the current grouping level.
      *
-     * @constructs openerp.web.DataGroup
-     * @extends openerp.web.OldWidget
+     * @constructs instance.web.DataGroup
+     * @extends instance.web.OldWidget
      *
-     * @param {openerp.web.OldWidget} parent widget
+     * @param {instance.web.OldWidget} parent widget
      * @param {String} model name of the model managed by this DataGroup
      * @param {Array} domain search domain for this DataGroup
      * @param {Object} context context of the DataGroup's searches
@@ -462,7 +462,7 @@ openerp.web.DataGroup =  openerp.web.OldWidget.extend( /** @lends openerp.web.Da
      */
     init: function(parent, model, domain, context, group_by, level) {
         this._super(parent, null);
-        this.model = new openerp.web.Model(model, context, domain);
+        this.model = new instance.web.Model(model, context, domain);
         this.group_by = group_by;
         this.context = context;
         this.domain = domain;
@@ -476,7 +476,7 @@ openerp.web.DataGroup =  openerp.web.OldWidget.extend( /** @lends openerp.web.Da
                     .group_by(this.group_by)).then(function (groups) {
             if (!groups) {
                 ifRecords(_.extend(
-                    new openerp.web.DataSetSearch(
+                    new instance.web.DataSetSearch(
                             self, self.model.name,
                             self.model.context(),
                             self.model.domain()),
@@ -487,7 +487,7 @@ openerp.web.DataGroup =  openerp.web.OldWidget.extend( /** @lends openerp.web.Da
                 var child_context = _.extend(
                     {}, self.model.context(), group.model.context());
                 return _.extend(
-                    new openerp.web.DataGroup(
+                    new instance.web.DataGroup(
                         self, self.model.name, group.model.domain(),
                         child_context, group.model._context.group_by,
                         self.level + 1),
@@ -504,16 +504,16 @@ openerp.web.DataGroup =  openerp.web.OldWidget.extend( /** @lends openerp.web.Da
         });
     }
 });
-openerp.web.ContainerDataGroup = openerp.web.DataGroup.extend({ });
-openerp.web.GrouplessDataGroup = openerp.web.DataGroup.extend({ });
+instance.web.ContainerDataGroup = instance.web.DataGroup.extend({ });
+instance.web.GrouplessDataGroup = instance.web.DataGroup.extend({ });
 
-openerp.web.StaticDataGroup = openerp.web.GrouplessDataGroup.extend( /** @lends openerp.web.StaticDataGroup# */ {
+instance.web.StaticDataGroup = instance.web.GrouplessDataGroup.extend( /** @lends openerp.web.StaticDataGroup# */ {
     /**
      * A specialization of groupless data groups, relying on a single static
      * dataset as its records provider.
      *
-     * @constructs openerp.web.StaticDataGroup
-     * @extends openerp.web.GrouplessDataGroup
+     * @constructs instance.web.StaticDataGroup
+     * @extends instance.web.GrouplessDataGroup
      * @param {openep.web.DataSetStatic} dataset a static dataset backing the groups
      */
     init: function (dataset) {
@@ -524,13 +524,13 @@ openerp.web.StaticDataGroup = openerp.web.GrouplessDataGroup.extend( /** @lends 
     }
 });
 
-openerp.web.DataSet =  openerp.web.OldWidget.extend( /** @lends openerp.web.DataSet# */{
+instance.web.DataSet =  instance.web.OldWidget.extend( /** @lends openerp.web.DataSet# */{
     /**
      * DateaManagement interface between views and the collection of selected
      * OpenERP records (represents the view's state?)
      *
-     * @constructs openerp.web.DataSet
-     * @extends openerp.web.OldWidget
+     * @constructs instance.web.DataSet
+     * @extends instance.web.OldWidget
      *
      * @param {String} model the OpenERP model this dataset will manage
      */
@@ -540,7 +540,7 @@ openerp.web.DataSet =  openerp.web.OldWidget.extend( /** @lends openerp.web.Data
         this.context = context || {};
         this.index = null;
         this._sort = [];
-        this._model = new openerp.web.Model(model, context);
+        this._model = new instance.web.Model(model, context);
     },
     previous: function () {
         this.index -= 1;
@@ -789,7 +789,7 @@ openerp.web.DataSet =  openerp.web.OldWidget.extend( /** @lends openerp.web.Data
      */
     sort: function (field, force_reverse) {
         if (!field) {
-            return openerp.web.serialize_sort(this._sort);
+            return instance.web.serialize_sort(this._sort);
         }
         var reverse = force_reverse || (this._sort[0] === field);
         this._sort.splice.apply(
@@ -806,7 +806,7 @@ openerp.web.DataSet =  openerp.web.OldWidget.extend( /** @lends openerp.web.Data
     	this.ids = n_ids;
     },
 });
-openerp.web.DataSetStatic =  openerp.web.DataSet.extend({
+instance.web.DataSetStatic =  instance.web.DataSet.extend({
     init: function(parent, model, context, ids) {
         this._super(parent, model, context);
         // all local records
@@ -836,10 +836,10 @@ openerp.web.DataSetStatic =  openerp.web.DataSet.extend({
         this.set_ids(_.without.apply(null, [this.ids].concat(ids)));
     }
 });
-openerp.web.DataSetSearch =  openerp.web.DataSet.extend(/** @lends openerp.web.DataSetSearch */{
+instance.web.DataSetSearch =  instance.web.DataSet.extend(/** @lends openerp.web.DataSetSearch */{
     /**
-     * @constructs openerp.web.DataSetSearch
-     * @extends openerp.web.DataSet
+     * @constructs instance.web.DataSetSearch
+     * @extends instance.web.DataSet
      *
      * @param {Object} parent
      * @param {String} model
@@ -851,7 +851,7 @@ openerp.web.DataSetSearch =  openerp.web.DataSet.extend(/** @lends openerp.web.D
         this.domain = domain || [];
         this._length = null;
         this.ids = [];
-        this._model = new openerp.web.Model(model, context, domain);
+        this._model = new instance.web.Model(model, context, domain);
     },
     /**
      * Read a slice of the records represented by this DataSet, based on its
@@ -906,7 +906,7 @@ openerp.web.DataSetSearch =  openerp.web.DataSet.extend(/** @lends openerp.web.D
         return this._super();
     }
 });
-openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
+instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
     virtual_id_prefix: "one2many_v_id_",
     debug_mode: true,
     init: function() {
@@ -1071,9 +1071,9 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
         this.on_change();
     },
 });
-openerp.web.BufferedDataSet.virtual_id_regex = /^one2many_v_id_.*$/;
+instance.web.BufferedDataSet.virtual_id_regex = /^one2many_v_id_.*$/;
 
-openerp.web.ProxyDataSet = openerp.web.DataSetSearch.extend({
+instance.web.ProxyDataSet = instance.web.DataSetSearch.extend({
     init: function() {
         this._super.apply(this, arguments);
         this.create_function = null;
@@ -1119,7 +1119,7 @@ openerp.web.ProxyDataSet = openerp.web.DataSetSearch.extend({
     on_unlink: function(ids) {}
 });
 
-openerp.web.CompoundContext = openerp.web.Class.extend({
+instance.web.CompoundContext = instance.web.Class.extend({
     init: function () {
         this.__ref = "compound_context";
         this.__contexts = [];
@@ -1142,7 +1142,7 @@ openerp.web.CompoundContext = openerp.web.Class.extend({
     }
 });
 
-openerp.web.CompoundDomain = openerp.web.Class.extend({
+instance.web.CompoundDomain = instance.web.Class.extend({
     init: function () {
         this.__ref = "compound_domain";
         this.__domains = [];
@@ -1165,10 +1165,10 @@ openerp.web.CompoundDomain = openerp.web.Class.extend({
     }
 });
 
-openerp.web.DropMisordered = openerp.web.Class.extend(/** @lends openerp.web.DropMisordered# */{
+instance.web.DropMisordered = instance.web.Class.extend(/** @lends openerp.web.DropMisordered# */{
     /**
-     * @constructs openerp.web.DropMisordered
-     * @extends openerp.web.Class
+     * @constructs instance.web.DropMisordered
+     * @extends instance.web.Class
      *
      * @param {Boolean} [failMisordered=false] whether mis-ordered responses should be failed or just ignored
      */

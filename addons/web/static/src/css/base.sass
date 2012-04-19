@@ -1,9 +1,21 @@
-// Variables {{{
-$colour4: #8a89ba
-//$colour4: #d14836
-// }}}
+@charset "utf-8"
 
+// Variables {{{
+$section-title-color: #8786b7
+$facets-border: #afafb6
+$facets-border-selected: #a6a6fe
+$colour4: #8a89ba
+// }}}
 // Mixins {{{
+@font-face
+    font-family: 'mnmliconsRegular'
+    src: url('/web/static/src/font/mnmliconsv21-webfont.eot') format('eot')
+    src: url('/web/static/src/font/mnmliconsv21-webfont.woff') format('woff')
+    src: url('/web/static/src/font/mnmliconsv21-webfont.ttf') format('truetype')
+    src: url('/web/static/src/font/mnmliconsv21-webfont.svg') format('svg') active
+    font-weight: normal
+    font-style: normal
+
 @mixin vertical-gradient($startColor: #555, $endColor: #333)
     background-color: $startColor
     background-image: -webkit-gradient(linear, left top, left bottom, from($startColor), to($endColor)) /* Saf4+, Chrome */
@@ -46,48 +58,295 @@ $colour4: #8a89ba
     -webkit-background-clip: $clip
     -moz-background-clip: $clip
     background-clip: $clip
+
+@mixin unscrew-box
+    -moz-box-sizing: border-box
+    -webkit-box-sizing: border-box
+    box-sizing: border-box
+
 // }}}
 
-.openerp2
-    // Common styles {{{
+.openerp.openerp-web-client-container
+    height: 100%
+    position: relative
+
+.openerp
+    // Global style {{{
     padding: 0
     margin: 0
     font-family: "Lucida Grande", Helvetica, Verdana, Arial, sans-serif
     color: #4c4c4c
     font-size: 13px
     background: white
-    position: relative
-
+    // }}}
+    // Tag reset {{{
     a
         text-decoration: none
+    table
+        padding: 0
+        font-size: 13px
+        border-collapse: collapse
+    thead
+        font-weight: bold
+        background-color: #f0f0f0
+        th
+            border-right: 1px dotted #afafb6
+            &:last-child
+                border-right: none
+    th, td
+        padding: 0
+        line-height: 18px
+        text-align: left
+    th
+        font-weight: bold
+        vertical-align: middle
+    td
+        vertical-align: top
+    .zebra tbody tr:nth-child(odd) td
+        background-color: #f0f0fa
+        @include vertical-gradient(#f0f0fa, #eeeef6)
+    .zebra tbody tr:hover td
+        @include vertical-gradient(#eee, #dedede)
+    .numeric
+        text-align: right
+        width: 82px
+        input
+            text-align: right
+    ul, li, ol
+        margin: 0
+        padding: 0
+    li
+        list-style-type: none
     // }}}
+    // Generic classes {{{
+    .oe_i
+        font-family: "mnmliconsRegular" !important
+        font-size: 21px
+        font-weight: 300 !important
+    .oe_left
+        float: left
+        margin-right: 8px
+    .oe_right
+        float: right
+        margin-left: 8px
+    .oe_clear
+        clear: both
+    .oe_wait
+        cursor: wait
+    // }}}
+    // Button style {{{
+    a.button:link, a.button:visited, button, input[type='submit']
+        display: inline-block
+        border: 1px solid #ababab
+        color: #404040
+        margin: 0
+        padding: 4px 12px
+        font-size: 13px
+        text-align: center
+        @include vertical-gradient(#efefef, #d8d8d8)
+        @include radius(3px)
+        @include box-shadow((0 1px 2px rgba(0, 0, 0, .1), 0 1px 1px rgba(255, 255, 255, .8) inset))
+        text-shadow: 0 1px 1px rgba(255, 255, 255, .5)
+        -webkit-font-smoothing: antialiased
+        outline: none
 
+    a.button:hover, button:hover, input[type='submit']:hover
+        @include vertical-gradient(#f6f6f6, #e3e3e3)
+        cursor: pointer
+
+    a.button:focus, button:focus, input[type='submit']:focus
+        border: 1px solid #80bfff
+        @include vertical-gradient(#f6f6f6, #e3e3e3)
+        @include box-shadow((0 0 3px #80bfff, 0 1px 1px rgba(255, 255, 255, .8) inset))
+
+    a.button:active, a.button.active, button:active, button.active, input[type='submit']:active, input[type='submit'].active
+        background: #e3e3e3
+        background: -moz-linear-gradient(top, #e3e3e3, #f6f6f6) #1b468f
+        background: -webkit-gradient(linear, left top, left bottom, from(#e3e3e3), to(#f6f6f6)) #1b468f
+        background: linear-gradient(top, #e3e3e3, #f6f6f6) #1b468f
+        @include box-shadow(none)
+
+    a.button.disabled, button:disabled, input[type='submit']:disabled
+        background: #efefef !important
+        border: 1px solid #d1d1d1 !important
+        @include box-shadow(none !important)
+        color: #aaa !important
+        cursor: default
+        text-shadow: 0 1px 1px #fff !important
+
+    button.primary
+        color: white
+        @include vertical-gradient(#dc5f59, #b33630)
+        @include box-shadow(none)
+
+    button.primary:hover
+        @include vertical-gradient(lighten(#dc5f59, 3%), lighten(#b33630, 3%))
+        @include box-shadow(0 0 1px rgba(0,0,0,0.2))
+
+    button.primary:active
+        @include vertical-gradient(#b33630, #dc5f59)
+        @include box-shadow(none)
+
+    button.following
+        color: white
+        width: 120px
+        @include vertical-gradient($colour4, darken($colour4, 3%))
+
+    button.unfollow
+        display: none
+        color: white
+        width: 120px
+        @include vertical-gradient(#dc5f59, #b33630)
+
+    // }}}
+    // Loading {{{
+    .oe_loading
+        display: none
+        z-index: 100
+        position: fixed
+        top: 0
+        right: 50%
+        padding: 4px 12px
+        background: #A61300
+        color: white
+        text-align: center
+        border: 1px solid #900
+        border-top: none
+        -moz-border-radius-bottomright: 8px
+        -moz-border-radius-bottomleft: 8px
+        border-bottom-right-radius: 8px
+        border-bottom-left-radius: 8px
+    // }}}
+    // Notification {{{
+    .oe_notification
+        z-index: 1050
+    // }}}
+    // Login {{{
+    .oe_login
+        background: url("/web/static/src/img/pattern.png") repeat
+        text-align: center
+        font-size: 14px
+        height: 100%
+        li
+            list-style-type: none
+            padding-bottom: 4px
+        button
+            float: right
+            display: inline-block
+            cursor: pointer
+            padding: 6px 16px
+            border: 1px solid #222
+            color: white
+            margin: 0
+            @include vertical-gradient(#b92020, #600606)
+            @include radius(4px)
+            @include box-shadow((0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(155, 155, 155, 0.4) inset))
+        input, select
+            width: 252px
+            font-family: "Lucida Grande", Helvetica, Verdana, Arial
+            border: 1px solid #999999
+            background: whitesmoke
+            @include box-shadow(inset 0 1px 4px rgba(0, 0, 0, 0.3))
+            @include radius(3px)
+        input
+            margin-bottom: 9px
+            padding: 5px 6px
+        select
+            padding: 1px
+        .oe_login_dbpane
+            position: fixed
+            top: 0
+            right: 8px
+            padding: 5px 10px
+            color: #eee
+            border: solid 1px #333
+            background: #1e1e1e
+            background: rgba(30,30,30,0.94)
+            @include radius(0 0 8px 8px)
+            input
+                padding: 2px 4px
+                margin: 4px 0
+        .oe_login_bottom
+            position: absolute
+            top: 50%
+            left: 0
+            right: 0
+            bottom: 0
+            text-shadow: 0 1px 1px #999999
+            @include vertical-gradient(#b41616, #600606)
+        .oe_login_pane
+            position: absolute
+            top: 50%
+            left: 50%
+            margin: -160px -166px
+            border: solid 1px #333333
+            background: #1e1e1e
+            background: rgba(30,30,30,0.94)
+            padding: 22px 32px
+            color: #eee
+            text-align: left
+            @include radius(8px)
+            @include box-shadow(0 0 18px rgba(0, 0, 0, 0.9))
+            h2
+                margin-top: 0
+                font-size: 18px
+        .oe_login_logo
+            position: absolute
+            top: -70px
+            left: 0
+            width: 100%
+            margin: 0 auto
+            text-align: center
+        .oe_login_footer
+            position: absolute
+            bottom: -40px
+            left: 0
+            width: 100%
+            text-align: center
+            a
+                color: #eee
+                margin: 0 8px
+                &:hover
+                    text-decoration: underline
+            span
+                font-weight: bold
+                font-size: 16px
+        .oe_login_error_message
+            display: none
+            background-color: #b41616
+            color: #eee
+            padding: 14px 18px
+            margin-top: 15px
+            text-align: center
+            @include radius(4px)
+            @include box-shadow(0 1px 4px rgba(0, 0, 0, 0.8))
+    .oe_login_invalid
+        .oe_login_error_message
+            display: inline-block
+    // }}}
+    // DatabaseManager {{{
+    .oe_database_manager
+        background: #fff
+        color: #000
+        text-align: left
+        .oe_database_manager_menu
+            color: #000
+    // }}}
     // WebClient {{{
     .oe_webclient
-        position: absolute
-        top: 0
-        bottom: 0
-        left: 0
-        right: 0
-
-        .oe_application
-            position: absolute
-            top: 32px
-            bottom: 0
-            left: 206px
-            right: 0
+        width: 100%
+        height: 100%
+        border-spacing: 0px
     // }}}
-
-    // Fullscreen mode {{{
+    // WebClient.fullscreen {{{
     .oe_content_full_screen
         .oe_application
             top: 0
             left: 0
-        .topbar, .leftbar
+        .oe_topbar, .oe_leftbar
             display: none
-    // }}
-
-    // Topbar {{{
+    // }}}
+    // WebClient.topbar {{{
     .oe_topbar
         width: 100%
         height: 31px
@@ -129,23 +388,28 @@ $colour4: #8a89ba
             @include radius(4px)
         .oe_topbar_avatar
             vertical-align: top
+        .oe_dropdown_toggle:after
+            width: 0
+            height: 0
+            display: inline-block
+            content: "&darr"
+            text-indent: -99999px
+            vertical-align: top
+            margin-top: 8px
+            margin-left: 4px
+            border-left: 4px solid transparent
+            border-right: 4px solid transparent
+            border-top: 4px solid white
+            @include opacity(0.5)
     // }}}
-
-    // Leftbar {{{
+    // Webclient.leftbar {{{
     .oe_leftbar
-        width: 205px
-        height: 100%
+        width: 220px
         background: #f0eeee
         border-right: 1px solid #afafb6
-        overflow: auto
         text-shadow: 0 1px 1px white
-
-        .oe_footer
-            position: absolute
-            width: 205px
-            text-align: center
-            bottom: 8px
     a.oe_logo
+        width: 220px
         display: block
         text-align: center
         height: 70px
@@ -155,10 +419,12 @@ $colour4: #8a89ba
             width: 157px
             margin: 14px 0
     .oe_footer
-        position: absolute
-        width: 205px
+        position: fixed
+        bottom: 0
+        padding: 4px 0
+        background: #f0eeee
+        width: 220px
         text-align: center
-        bottom: 8px
         a
             font-weight: 800
             font-family: serif
@@ -168,14 +434,58 @@ $colour4: #8a89ba
                 color: #c81010
                 font-style: italic
     // }}}
-
+    // UserMenu {{{
+    .oe_user_menu
+        float: right
+        padding: 0
+        margin: 0
+        li
+            list-style-type: none
+            float: left
+        .oe_dropdown
+            position: relative
+        .oe_dropdown_options
+            float: left
+            background: #333
+            background: rgba(37,37,37,0.9)
+            display: none
+            position: absolute
+            top: 32px
+            right: -1px
+            border: 0
+            z-index: 900
+            margin-left: 0
+            margin-right: 0
+            padding: 6px 0
+            zoom: 1
+            border-color: #999
+            border-color: rgba(0, 0, 0, 0.2)
+            border-style: solid
+            border-width: 0 1px 1px
+            @include radius(0 0 6px 6px)
+            @include box-shadow(0 1px 4px rgba(0,0,0,0.3))
+            @include background-clip()
+            li
+                float: none
+                display: block
+                background-color: none
+                a
+                    display: block
+                    padding: 4px 15px
+                    clear: both
+                    font-weight: normal
+                    line-height: 18px
+                    color: #eee
+                    &:hover
+                        @include vertical-gradient(#292929, #191919)
+                        @include box-shadow(none)
+    // }}}
     // Menu {{{
     .oe_menu
         float: left
         padding: 0
         margin: 0
         li
-            list-style-type: none
             float: left
         a
             display: block
@@ -220,7 +530,6 @@ $colour4: #8a89ba
         li
             position: relative
             padding: 1px 0 1px 16px
-            list-style-type: none
             a
                 display: block
                 color: #4c4c4c
@@ -238,6 +547,16 @@ $colour4: #8a89ba
                 text-shadow: 0 1px 1px rgba(0,0,0,0.2)
                 @include radius(4px)
                 @include box-shadow(inset 0 1px 1px rgba(0, 0, 0, 0.2))
+        .oe_menu_counter 
+            float: right
+            background: #8a89ba
+            color: #eee
+            font-size: 12px
+            border: 1px solid lightgray
+            padding: 0px 4px 0px 4px
+            text-shadow: 0 1px 1px rgba(0,0,0,0.2)
+            margin: 0px
+            @include radius(4px)
         .oe_active
             background: $colour4
             border-top: 1px solid lightGray
@@ -251,6 +570,9 @@ $colour4: #8a89ba
                 color: $colour4
                 text-shadow: 0 1px 1px white
                 @include box-shadow(0 1px 1px rgba(0, 0, 0, 0.2))
+            .oe_menu_counter 
+                background: #eee
+                color: #8a89ba
         .oe_menu_toggler:before
             width: 0
             height: 0
@@ -273,11 +595,180 @@ $colour4: #8a89ba
             border-right: 4px solid transparent
             border-top: 4px solid #4c4c4c
     // }}}
-
-    // UserMenu {{{
-    .oe_dropdown
+    // ActionManager {{{
+    .oe_application
+        width: 100%
+        a
+            color: $colour4
+            &:hover
+                text-decoration: underline
+    // }}}
+    // Content Header MIT {{{
+    .oe-view-manager-header
+        border-top: 1px solid #cacaca
+        border-bottom: 1px solid #cacaca
+        @include vertical-gradient(#fcfcfc, #dedede)
+        @include box-shadow((0 1px 0 rgba(255,255,255,0.4), 0 0 9px rgba(0,0,0,0.1)))
+        h2
+            float: left
+            font-size: 18px
+            margin: 1px 0
+            a
+                color: $colour4
+        .buttons
+            padding-right: 8px
+            li
+                float: left
+                margin-right: 12px
+        .filter
+            vertical-align: top
+            li
+                height: 24px
+                line-height: 24px
+                padding: 0 8px
+        .header-row
+            height: 26px
+            line-height: 26px
+            margin: 8px
+            clear: both
+            text-shadow: 0 1px 1px white
+            .dropdown-toggle:after
+                margin-top: 7px
+                margin-left: 6px
+                border-top-color: #404040
+        .oe_vm_switch
+            li
+                padding-left: 1px
+                text-align: center
+                width: 24px
+                height: 24px
+                line-height: 24px
+        .pagination
+            li
+                height: 24px
+                line-height: 24px
+                padding: 0 8px
+        .button-group
+            display: inline-block
+            border: 1px solid #ababab
+            @include radius(5px)
+            li
+                float: left
+                border-right: 1px solid #ababab
+                &:last-child
+                    border: none
+            a
+                color: #4c4c4c
+                &:hover
+                    text-decoration: none
+            .active
+                width: 100%
+                background: #999
+                @include box-shadow(0 1px 4px rgba(0,0,0,0.3) inset)
+                color: #fff
+                text-shadow: 0 1px 2px rgba(0,0,0,0.4)
+    // }}}
+    // ViewManager.header {{{
+    .oe_view_manager_header2
+        width: 100%
+        border-top: 1px solid #cacaca
+        border-bottom: 1px solid #cacaca
+        @include vertical-gradient(#fcfcfc, #dedede)
+        @include box-shadow((0 1px 0 rgba(255,255,255,0.4), 0 0 9px rgba(0,0,0,0.1)))
+        h2
+            float: left
+            font-size: 18px
+            margin: 1px 0
+            a
+                color: $colour4
+        td
+            padding: 4px 8px
+            line-height: 26px
+        .oe_button_group
+            display: inline-block
+            border: 1px solid #ababab
+            @include radius(5px)
+            li
+                float: left
+                border-right: 1px solid #ababab
+                &:last-child
+                    border: none
+            a
+                color: #4c4c4c
+                &:hover
+                    text-decoration: none
+            .active
+                background: #999
+                @include box-shadow(0 1px 4px rgba(0,0,0,0.3) inset)
+                a
+                    color: #fff
+                    text-shadow: 0 1px 2px rgba(0,0,0,0.4)
+        .oe_view_manager_buttons
+            white-space: nowrap
+    // }}}
+    // ViewManager.body {{{
+    .oe_view_manager_body
+        h4
+            margin: 8px 0
+    // }}}
+    // ViewManager.pager {{{
+    .oe_pager_value
+        float: left
+        margin-right: 8px
+    .oe_pager_group
+        float: left
+        height: 24px
+        line-height: 24px
+        display: inline-block
+        border: 1px solid #ababab
+        cursor: pointer
+        @include radius(5px)
+        li
+            height: 24px
+            line-height: 24px
+            padding: 0
+            float: left
+            border-right: 1px solid #ababab
+            &:last-child
+                border: none
+        a
+            color: #4c4c4c
+            padding: 0 8px
+            &:hover
+                text-decoration: none
+        .active
+            background: #999
+            @include box-shadow(0 1px 4px rgba(0,0,0,0.3) inset)
+            a
+                color: #fff
+                text-shadow: 0 1px 2px rgba(0,0,0,0.4)
+    // }}}
+    // ViewManager.switches {{{
+    .oe_view_manager_switch
+        li
+            padding-left: 1px
+            text-align: center
+            width: 24px
+            height: 24px
+            line-height: 24px
+        .oe_vm_switch_list:after, .oe_vm_switch_tree:after
+            content: "ö"
+        .oe_vm_switch_graph:after
+            content: "ó"
+        .oe_vm_switch_gantt:after
+            content: "y"
+        .oe_vm_switch_calendar:after
+            content: "b"
+        .oe_vm_switch_kanban:after
+            content: "ó"
+        .oe_vm_switch_diagram:after
+            content: "}"
+    // }}}
+    // ViewManager.sidebar {{{
+    .oe_form_dropdown_section
         position: relative
-
+        display: inline-block
+        margin-right: 4px
     .oe_dropdown_toggle:after
         width: 0
         height: 0
@@ -285,61 +776,752 @@ $colour4: #8a89ba
         content: "&darr"
         text-indent: -99999px
         vertical-align: top
-        margin-top: 8px
-        margin-left: 4px
         border-left: 4px solid transparent
         border-right: 4px solid transparent
         border-top: 4px solid white
         @include opacity(0.5)
-
-    .oe_user_menu
-        float: right
-        padding: 0
-        margin: 0
+        margin-top: 7px
+        margin-left: 6px
+        border-top-color: #404040
+    .oe_dropdown_menu
+        display: none
+        position: absolute
+        top: 28px
+        left: 0px
+        padding: 8px
+        border: 1px solid #afafb6
+        width: 120px
+        overflow-x: hidden
+        z-index: 900
+        text-align: left
+        background: white
+        @include radius(3px)
+        @include box-shadow(0 1px 4px rgba(0,0,0,0.3))
         li
             list-style-type: none
-            float: left
-
-        .oe_dropdown_options
-            float: left
-            background: #333
-            background: rgba(37,37,37,0.9)
-            display: none
-            position: absolute
-            top: 32px
-            right: -1px
-            border: 0
-            z-index: 900
-            margin-left: 0
-            margin-right: 0
-            padding: 6px 0
-            zoom: 1
-            border-color: #999
-            border-color: rgba(0, 0, 0, 0.2)
-            border-style: solid
-            border-width: 0 1px 1px
-            @include radius(0 0 6px 6px)
-            @include box-shadow(0 1px 4px rgba(0,0,0,0.3))
-            @include background-clip()
-            li
-                float: none
+            float: none
+            display: block
+            background-color: none
+            a
                 display: block
-                background-color: none
-                a
-                    display: block
-                    padding: 4px 15px
-                    clear: both
-                    font-weight: normal
-                    line-height: 18px
-                    color: #eee
+                padding: 3px 6px
+                clear: both
+                font-weight: normal
+                line-height: 14px
+                color: #4c4c4c
+                text-decoration: none
+                &:hover
+                    text-decoration: none
+                    @include vertical-gradient(#f0f0fa, #eeeef6)
+                    @include box-shadow(none)
+    .oe_sidebar
+        white-space: nowrap
+    // }}}
+    // SearchView xmo {{{
+    .oe_searchview
+        position: relative
+        float: right
+        .VS-search
+            .VS-search-box
+                min-height: 0
+                border-width: 1px
+                padding: 0
+                width: 410px
+                //border: 1px solid #ababab
+                //margin-top: 0
+                //margin-bottom: 0
+                //padding: 4px 19px
+                //font-size: 13px
+                //background: url('../img/search.png') no-repeat 5px
+                //background-color: white
+                //@include radius(13px)
+                //@include box-shadow(0 1px 2px rgba(0,0,0,0.2) inset)
+            .VS-icon
+                top: 5px
+
+            .VS-icon-search
+                left: 5px
+
+            .VS-search-inner
+                margin: 0 40px 0 17px
+                font-size: 13px
+
+                input
+                    font-size: inherit
+                    line-height: inherit
+                    height: auto
+                    padding: 0
+
+                .VS-input-width-tester
+                    font-size: inherit
+                    padding: 0
+
+                .search_input
+                    margin-left: 0
+                    height: 22px
+                    input, .VS-input-width-tester
+                        padding: 0 2px
+                        height: inherit
+                        margin: 0
+
+                .search_facet
+                    padding: 0
+                    margin: 1px 0
+                    border: 1px solid $facets-border
+                    @include radius(3px)
+                    background: #f0f0fa
+                    height: 18px
+
+                    &.is_selected
+                        border-color: $facets-border-selected
+                        @include box-shadow(0 0 3px 1px $facets-border-selected)
+
+                        .category
+                            margin-left: 0
+                        .VS-icon-cancel
+                            // don't change the icon on selection
+                            @include opacity(1.0)
+                            background-position: center 0
+
+                    .category
+                        padding: 0 4px 0 14px
+                        color: white
+                        background: #8786b7
+                        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4)
+                        font-weight: normal
+                        text-transform: none
+                        height: 18px
+                        line-height: 18px
+                        font-size: inherit
+
+                    .search_facet_input_container
+                        border-left: 1px solid $facets-border
+                        height: 18px
+                        line-height: 18px
+                        padding: 0 4px
+                        cursor: pointer
+
+                    .search_facet_remove
+                        left: 1px
+                        top: 3px
+
+            .VS-icon-cancel
+                right: 24px
+
+            .oe_vs_unfold_drawer
+                position: absolute
+                top: 0
+                right: 0
+                height: 100%
+                line-height: 23px
+                padding: 0 7px 0 4px
+                color: #ccc
+                cursor: pointer
+                &:before
+                    content: "▾"
+
+        &.oe_searchview_open_drawer
+            .oe_searchview_drawer
+                display: block
+
+        .oe_searchview_drawer
+            position: absolute
+            z-index: 1
+            top: 100%
+            right: 0
+            background-color: white
+            width: 410px
+            display: none
+            border: 1px solid #ccc
+            text-align: left
+
+            .oe_searchview_filters
+                display: table
+                width: 100%
+
+                > div
+                    @include unscrew-box
+                    display: table-cell
+                    width: 50%
+
+                h3
+                    margin: 2px 4px 2px 8px
+                    color: $section-title-color
+
+                ul
+                    margin: 0 12px 3px
+                    padding: 0
+                    list-style: none
+
+                li
+                    list-style: none
+                    padding: 3px 6px
+                    height: 14px
+                    color: inherit
+                    cursor: pointer
+
                     &:hover
-                        @include vertical-gradient(#292929, #191919)
-                        @include box-shadow(none)
+                        background-color: #f0f0fa
+
+            .oe_searchview_advanced
+                h4
+                    border-top: 1px solid #ccc
+                    margin: 5px 0 3px
+                    cursor: pointer
+
+                h4:before
+                    content: "▸ "
+
+                div
+                    display: none
+
+                button.oe_add_condition:before
+                    content: "⊞ "
+                button.oe_apply:before
+                    content: "⚡ "
+
+                ul
+                    list-style: none
+                    padding: 0
+                li
+                    list-style: none
+                    margin: 0
+
+                &.oe_opened
+                    h4:before
+                        content: "▾ "
+                    div
+                        display: block
+    // }}}
+    // View.topbar {{{
+    .oe_view_topbar
+        border-bottom: 1px solid #cacaca
+        @include vertical-gradient(#fcfcfc, #dedede)
+        padding: 0 8px
+        line-height: 30px
+    // }}}
+    // FormView.body {{{
+    .oe_formview
+        background: white
+    .oe_form_header
+        padding: 8px
+    .oe_form_invalid
+        input, select, textarea
+            background-color: #F66 !important
+            border: 1px solid #D00 !important
+    .oe_form_button_save_dirty
+        color: white
+        background: #dc5f59
+        background: -moz-linear-gradient(#dc5f59, #b33630)
+        background: -webkit-gradient(linear, left top, left bottom, from(#dc5f59), to(#b33630))
+        background: -webkit-linear-gradient(#dc5f59, #b33630)
+        -moz-box-shadow: none
+        -webkit-box-shadow: none
+        -box-shadow: none
+        font-weight: bold
+        &:hover
+            background: #ED6F6A
+    // }}}
+    // FormView.customdivs {{{
+    .oe_form_topbar
+        border-bottom: 1px solid #cacaca
+        @include vertical-gradient(#fcfcfc, #dedede)
+        padding: 0 8px
+        line-height: 30px 
+        button
+            font-size: 12px 
+            height: 24px 
+            line-height: 24px 
+            vertical-align: top
+            padding: 0 10px 
+            margin: 3px 0
+            span.i
+                line-height: 20px 
+                height: 24px 
+        ul
+            height: 30px
+            padding: 0
+            margin: 0
+            text-shadow: 0 1px 1px white
+            border-left: 1px solid #cacaca
+            border-right: 1px solid #cacaca
+            li   
+                padding: 0
+                margin: 0
+                float: left 
+                vertical-align: top
+                border-right: 1px solid #cacaca
+                height: 30px 
+                padding: 0 12px 
+                &:first-child
+                    border-left: 1px solid #cacaca
+                a    
+                    color: #4c4c4c
+                    &:hover
+                        color: black
+        .oe_form_steps
+            img  
+                margin: 0 8px
+                vertical-align: top
+            li   
+                border-right: none 
+                padding: 0
+                &:first-child
+                    margin-left: 12px 
+                    border-left: none 
+                &:last-child
+                    margin-right: 12px 
+        .oe_form_steps_active
+            font-weight: bold 
+            color: #b33630
+    .oe_application
+        .oe_form_sheetbg
+            background: url(/web/static/src/img/form_sheetbg.png)
+            padding: 8px
+            border-bottom: 1px solid #ddd 
+        .oe_form_sheet_width
+            min-width: 650px
+            max-width: 980px
+            margin: 0 auto
+        .oe_form_sheet
+            padding: 8px 8px 8px 8px
+            background: white
+            min-height: 420px
+            border: 1px solid #afafb6
+            @include box-shadow(0 0 10px rgba(0,0,0,0.3))
+            //.avatar
+            //    max-height: 52px
+            //.contacts
+            //    li
+            //        float: left
+            //        width: 33%
+            //        margin-bottom: 4px
+            //    .avatar
+            //        height: 40px
+            //        width: 40px
+            //        border: 1px solid
+            //        border-color: #e5e5e5 #dbdbdb #d2d2d2
+            //    .data
+            //        padding: 2px
+            //        line-height: 18px
+    // }}}
+    // FormView.autolayout {{{
+    .oe_form_autolayout
+        .oe_button
+            height: 22px
+        .oe_form_group_cell
+            line-height: 18px
+            padding: 2px
+            height: 25px
+            .oe_form_button
+                width: 100%
+                white-space: nowrap
+        .oe_form_group_cell > .oe_form_field_many2one,
+        .oe_form_group_cell > .oe_form_field_many2one input,
+        .oe_form_group_cell > .oe_form_field_char input,
+        .oe_form_group_cell > .oe_form_field_text textarea,
+        .oe_form_group_cell > .oe_form_field_email,
+        .oe_form_group_cell > .oe_form_field_email input,
+        .oe_form_group_cell > .oe_form_field_url,
+        .oe_form_group_cell > .oe_form_field_url input,
+        .oe_form_group_cell > .oe_form_field_date input,
+        .oe_form_group_cell > .oe_form_field_float input,
+        .oe_form_group_cell > .oe_form_field_selection select,
+        .oe_form_group_cell > .oe_datepicker_root
+            width: 100%
+        .oe_form_button.oe_button
+            color: #4c4c4c
+            white-space: nowrap
+            min-width: 100%
+            width: 100%
+            height: 22px
+            span
+                position: relative
+                vertical-align: top
+        .oe_form_group_cell.oe_form_group_nested
+            padding: 0
+    // }}}
+    // FormView.label {{{
+    .oe_form
+        label
+            font-weight: bold
+    .oe_form_label_help[for], .oe_form_label[for]
+        white-space: nowrap
+    // }}}
+    // FormView.fields {{{
+    .oe_form
+        textarea
+            resize: vertical
+        input[type="text"],
+        input[type="password"],
+        input[type="file"],
+        select
+            height: 22px
+            padding-top: 2px
+        input[type="text"],
+        input[type="password"],
+        input[type="file"],
+        select,
+        textarea
+            -moz-box-sizing: border-box
+            -webkit-box-sizing: border-box
+            -ms-box-sizing: border-box
+            box-sizing: border-box
+            padding: 0 2px
+            margin: 0 2px
+            border: 1px solid #999
+            -moz-border-radius: 3px
+            -webkit-border-radius: 3px
+            border-radius: 3px
+            background: white
+            min-width: 90px
+            color: #1f1f1f
+        input[readonly],
+        select[readonly],
+        textarea[readonly],
+        input[disabled],
+        select[disabled],
+        textarea[disabled]
+            background: #E5E5E5 !important
+            color: #666
+        .oe_form_field_many2one input,
+        .oe_form_field_binary input,
+        .oe_form_field_binary input,
+        .oe_form_field_email input,
+        .oe_form_field_url input
+            border-right: none
+            -webkit-border-top-right-radius: 0px
+            -webkit-border-bottom-right-radius: 0px
+            -moz-border-radius-topright: 0px
+            -moz-border-radius-bottomright: 0px
+            border-top-right-radius: 0px
+            border-bottom-right-radius: 0px
+        .oe_form_field_email button img,
+        .oe_form_field_url button img
+            vertical-align: top
+        .oe_form_field_translatable,
+        .oe_form_field_many2one,
+        .oe_form_field_date,
+        .oe_form_field_datetime
+            white-space: nowrap
+        .oe_form_field_boolean
+            padding-top: 4px
+        .oe_form_field_datetime input
+            min-width: 11em
+        .oe_datepicker_container
+            display: none
+        .oe_datepicker_root
+            display: inline-block
+        .oe_form_required
+            input, select, textarea
+                background-color: #D2D2FF !important
+        .oe_form_invalid
+            input, select, textarea
+                background-color: #F66 !important
+                border: 1px solid #D00 !important
+    // }}}
+    // FormView.buttons {{{
+    .oe_form
+        .oe_button.oe_field_button
+            -webkit-border-top-left-radius: 0px
+            -webkit-border-bottom-left-radius: 0px
+            -moz-border-radius-topleft: 0px
+            -moz-border-radius-bottomleft: 0px
+            border-top-left-radius: 0px
+            border-bottom-left-radius: 0px
+            margin-right: -1px
+            height: 22px
+        .oe_input_icon
+            cursor: pointer
+            margin: 3px 0 0 -21px
+            vertical-align: top
+        .oe_input_icon_disabled
+            position: absolute
+            cursor: default
+            opacity: 0.5
+            filter: alpha(opacity=50)
+            right: 5px
+            top: 3px
+    // }}}
+    // FormView.binaryfile {{{
+    /* http://www.quirksmode.org/dom/inputfile.html
+     * http://stackoverflow.com/questions/2855589/replace-input-type-file-by-an-image
+     */
+    .oe_form
+        .oe-binary-file-set
+            overflow: hidden
+            position: relative
+            width: 45px
+            height: 30px
+        input.oe-binary-file
+            z-index: 0
+            line-height: 0
+            font-size: 12px
+            position: absolute
+            // Should be adjusted for all browsers
+            top: 1px
+            right: 10px
+            opacity: 0
+            filter: alpha(opacity = 0)
+            -ms-filter: "alpha(opacity=0)"
+            margin: 0
+            padding: 0
+    // }}}
+    // FormView.separator {{{
+    .oe_horizontal_separator
+        font-weight: bold
+        border: 0 solid #666
+        border-bottom-width: 1px
+        margin: 3px 4px 3px 1px
+        height: 17px
+    .oe_horizontal_separator:empty
+        height: 5px
+    .oe_vertical_separator
+        border-left: 1px solid #666
+        padding: 0 4px 0 4px
+    // }}}
+    // FormView.notebook {{{
+    .oe_form_notebook
+        margin: 8px 0
+        padding: 0 8px
+        list-style: none
+        zoom: 1
+    .oe_form_notebook:before, .oe_form_notebook:after
+        display: table
+        content: ""
+        zoom: 1
+    .oe_form_notebook:after
+        clear: both
+    .oe_form_notebook > li
+        float: left
+    .oe_form_notebook > li > a
+        display: block
+        color: #4c4c4c
+    .oe_form_notebook
+        border-color: #ddd
+        border-style: solid
+        border-width: 0 0 1px
+    .oe_form_notebook > li
+        position: relative
+        margin-bottom: -1px
+    .oe_form_notebook > li > a
+        padding: 0 12px
+        margin-right: 2px
+        line-height: 30px
+        border: 1px solid transparent
+        @include radius(4px 4px 0 0)
+    .oe_form_notebook > li > a:hover
+        text-decoration: none
+        background-color: #eee
+        border-color: #eee #eee #ddd
+    .oe_form_notebook > li.ui-state-active > a, .oe_form_notebook > li.ui-state-active > a:hover
+        background-color: #ffffff
+        border: 1px solid #ddd
+        border-bottom-color: transparent
+        cursor: default
+    .ui-tabs-hide
+        display: none
+
+    // }}}
+    // FormView.progressbar {{{
+    .oe_form
+        .oe_form_field_progressbar.ui-progressbar
+            height: 22px
+            font-size: 10px
+            -moz-box-sizing: border-box
+            -webkit-box-sizing: border-box
+            -ms-box-sizing: border-box
+            box-sizing: border-box
+            border: 1px solid #999
+            -moz-border-radius: 3px
+            -webkit-border-radius: 3px
+            border-radius: 3px
+            background: white
+            min-width: 90px
+
+            span
+                position: absolute
+                margin-left: 10px
+                font-weight: bold
+
+            .ui-widget-header
+                background: #cccccc url(/web/static/lib/jquery.ui/css/smoothness/images/ui-bg_highlight-soft_75_cccccc_1x100.png) 50% 50% repeat-x
+    // }}}
+    // FormView.viewmanager {{{
+    .oe_form
+        .oe_view_manager_header2
+            td
+                padding: 0px 8px
+                line-height: 16px
+                .oe_i
+                    font-size: 13px
+                .oe_pager_group
+                    height: auto
+                    line-height: 16px
+                    li
+                        height: auto
+                        line-height: 16px
+
+    // }}}
+    // ListView {{{
+    .oe_listview_nocontent
+        > img
+            float: left
+            margin-right: 1.5em
+        > div
+            // don't encroach on my arrow
+            overflow: hidden
+            padding: 6px
+            font-size: 125%
+    .oe-listview-content
+        width: 100%
+        thead, tfoot
+            border-bottom: 1px solid #cacaca
+            background: #eee
+        tfoot
+            border-bottom: 1px solid #cacaca
+            font-weight: bold
+        tbody
+            cursor: pointer
+            background: white
+        thead
+            vertical-align: top
+        td.oe_list_checkbox:first-child, th.oe_list_checkbox:first-child
+            width: 17px
+            &:after
+                border-width: 0
+        tbody tr:nth-child(odd) td, tbody tr:nth-child(odd) th
+            background-color: #f0f0fa
+            @include vertical-gradient(#f0f0fa, #eeeef6)
+        tbody tr:hover td, tbody tr:hover th
+            @include vertical-gradient(#eee, #dedede)
+        td, th
+            padding: 3px 6px
+            line-height: 18px
+            button
+                border: none
+                background: transparent
+                padding: 0
+                @include box-shadow(none)
+        .numeric
+            text-align: right
+            width: 82px
+            input
+                text-align: right
+        //thead th:after
+            //content: ""
+            //float: right
+            //margin-top: 7px
+            //border-width: 0 4px 4px
+            //border-style: solid
+            //border-color: #000 transparent
+            //visibility: hidden
+        table .sortdown:after, table .sortdown:hover:after
+            visibility: visible
+            @include opacity(0.6)
+        table .sortup:after
+            border-bottom: none
+            border-left: 4px solid transparent
+            border-right: 4px solid transparent
+            border-top: 4px solid #000
+            visibility: visible
+            @include box-shadow(none)
+            @include opacity(0.6)
+    // }}}
+    // KanbanView {{{
+    .oe_kanban_group_title
+        margin: 1px 1px 4px
+        font-size: 15px
+        font-weight: bold
+        text-shadow: 0 1px 0 white
+    .oe_kanban_column, .oe_kanban_group_header
+        width: 240px
+        vertical-align: top
+        padding: 6px 7px 6px 6px
+        background: #f0eeee
+        border-left: 1px solid #f0f8f8
+        border-right: 1px solid #b9b9b9
+    .oe_kanban_record
+        position: relative
+        display: block
+        min-height: 50px
+        margin: 6px 0
+        display: block
+        @include radius(4px)
+        &:last-child
+            margin-bottom: 0
+        .oe_kanban_title
+            font-weight: bold
+            margin: 2px 4px
+    .oe_kanban_gravatar
+        width: 20px
+        height: 20px
+        @include radius(3px)
+        @include box-shadow(0 1px 2px rgba(0,0,0,0.2))
+    .oe_kanban_avatar_toto
+        height: 40px
+        width: 40px
+        border: 1px solid
+        border-color: #e5e5e5 #dbdbdb #d2d2d2
+        @include radius(3px)
+        @include box-shadow(0 1px 2px rgba(0,0,0,0.2))
+    // }}}
+    // Translation {{{
+    .oe_trad_field.touched
+        border: 1px solid green !important
+    // }}}
+    // Tooltips {{{
+    &.oe_tooltip
+        font-size: 12px
+        .oe_tooltip_string
+            color: #FD5
+            font-weight: bold
+            font-size: 13px
+        .oe_tooltip_help
+            white-space: pre-wrap
+        .oe_tooltip_technical
+            padding: 0 0 4px 0
+            margin: 5px 0 0 15px
+            li
+                list-style: circle
+        .oe_tooltip_technical_title
+            font-weight: bold
+    // }}}
+    // Debugging stuff {{{
+    .oe_layout_debugging
+        .oe_form_group
+            outline: 2px dashed red
+        .oe_form_group_cell
+            outline: 1px solid blue
+
+    .oe_debug_view
+        float: left
+    .oe_debug_view_log
+        font-size: 95%
+    .oe_debug_view_log label
+        display: block
+        width: 49%
+        text-align: right
+        float: left
+        font-weight: bold
+        color: #009
+    .oe_debug_view_log span
+        display: block
+        width: 49%
+        float: right
+        color: #333
     // }}}
 
+// Transitional overrides for old styles {{{
 .openerp
-    // Transitional overrides for old styles {{{
-    // }}}
+    .oe_form_field_many2one
+        td:first-child
+            position: relative
+        span.oe-m2o-drop-down-button
+            position: absolute
+            top: 3px
+            right: 2px
+// }}}
 
 // au BufWritePost,FileWritePost *.sass :!sass --style expanded --line-numbers <afile> > "%:p:r.css"
 // vim:tabstop=4:shiftwidth=4:softtabstop=4:fdm=marker:

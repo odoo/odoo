@@ -1,14 +1,14 @@
-openerp.web.data_export = function(openerp) {
-var QWeb = openerp.web.qweb,
-      _t = openerp.web._t;
-openerp.web.DataExport = openerp.web.Dialog.extend({
+openerp.web.data_export = function(instance) {
+var QWeb = instance.web.qweb,
+      _t = instance.web._t;
+instance.web.DataExport = instance.web.Dialog.extend({
     template: 'ExportTreeView',
     dialog_title: {toString: function () { return _t("Export Data"); }},
     init: function(parent, dataset) {
         this._super(parent);
         this.records = {};
         this.dataset = dataset;
-        this.exports = new openerp.web.DataSetSearch(
+        this.exports = new instance.web.DataSetSearch(
             this, 'ir.exports', this.dataset.get_context());
     },
     start: function() {

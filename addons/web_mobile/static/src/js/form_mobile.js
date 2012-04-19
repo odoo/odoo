@@ -2,9 +2,9 @@
  * OpenERP Web Mobile Form View
  *---------------------------------------------------------*/
 
-openerp.web_mobile.form_mobile = function (openerp) {
+openerp.web_mobile.form_mobile = function (instance) {
 
-openerp.web_mobile.FormView = openerp.web.OldWidget.extend({
+instance.web_mobile.FormView = instance.web.OldWidget.extend({
 
     template: 'FormView',
 
@@ -25,8 +25,8 @@ openerp.web_mobile.FormView = openerp.web.OldWidget.extend({
         }else{
             var view_id = this.viewid;
         }
-        this.dataset = new openerp.web.DataSetSearch(this, model, null, null);
-        var context = new openerp.web.CompoundContext(this.dataset.get_context());
+        this.dataset = new instance.web.DataSetSearch(this, model, null, null);
+        var context = new instance.web.CompoundContext(this.dataset.get_context());
         this.dataset.read_slice([]).then(function (result) {
             for (var i = 0; i < result.length; i++) {
                 if (result[i].id == id) {
@@ -71,14 +71,14 @@ openerp.web_mobile.FormView = openerp.web.OldWidget.extend({
             var head = rel_field.string;
             if (rel_ids) {
                 var list_ids = [];
-                var datasearch = new openerp.web.DataSetSearch(self, rel_field.relation, rel_field.context);
+                var datasearch = new instance.web.DataSetSearch(self, rel_field.relation, rel_field.context);
                 datasearch.domain=[['id', 'in', rel_ids]];
                 datasearch.read_slice(['name'], {context:rel_field.context, domain: datasearch.domain, limit:80}).then(function(listrec){
                     _.each(listrec, function(i) {
                         list_ids.push(i.id);
                     });
                     _.extend(rel_field.context,{"html_name_get" : true});
-                    var dataset = new openerp.web.DataSet(self, rel_field.relation,rel_field.context);
+                    var dataset = new instance.web.DataSet(self, rel_field.relation,rel_field.context);
                     dataset.name_get(list_ids,function(res){
                         var additional = "";
                         if(res['html_name_get']){
@@ -86,7 +86,7 @@ openerp.web_mobile.FormView = openerp.web.OldWidget.extend({
                         }
                         if(!$('[id^="oe_list_'+relational+'_'+self.element_id+'"]').html()){
                             $('<div id="oe_list_'+relational+'_'+self.element_id+'" data-role="page" data-url="oe_list_'+relational+'_'+self.element_id+'"> </div>').appendTo('#moe');
-                            $('[id^="oe_list_'+relational+'_'+self.element_id+'"]').html(openerp.web.qweb.render("ListView", {'records' : res,'data': additional}));
+                            $('[id^="oe_list_'+relational+'_'+self.element_id+'"]').html(instance.web.qweb.render("ListView", {'records' : res,'data': additional}));
                             $('[id^="oe_list_'+relational+'_'+self.element_id+'"]').find("[data-role=header]").find('h1').html(head);
                             $('[id^="oe_list_'+relational+'_'+self.element_id+'"]').find("[data-role=header]").find('#home').click(function(){
                                 $.mobile.changePage("#oe_menu", "slide", false, true);
@@ -98,7 +98,7 @@ openerp.web_mobile.FormView = openerp.web.OldWidget.extend({
                                 var listid = $(ev.currentTarget).data('id');
                                 if(!$('[id^="oe_form_'+listid+rel_field.relation+'"]').html()){
                                     $('<div id="oe_form_'+listid+rel_field.relation+'" data-role="page" data-url="oe_form_'+listid+rel_field.relation+'"> </div>').appendTo('#moe');
-                                        this.formview = new openerp.web_mobile.FormView(self, "oe_form_"+listid+rel_field.relation, listid, '', head, rel_field.relation, false);
+                                        this.formview = new instance.web_mobile.FormView(self, "oe_form_"+listid+rel_field.relation, listid, '', head, rel_field.relation, false);
                                         this.formview.start();
                                 }else{
                                     $.mobile.changePage('#oe_form_'+listid+rel_field.relation, "slide", false, true);
@@ -126,7 +126,7 @@ openerp.web_mobile.FormView = openerp.web.OldWidget.extend({
         if(selected_id){
             if(!$('[id^="oe_form_'+selected_id+select_model+'"]').html()){
                 $('<div id="oe_form_'+selected_id+select_model+'" data-role="page" data-url="oe_form_'+selected_id+select_model+'"> </div>').appendTo('#moe');
-                    this.formview = new openerp.web_mobile.FormView(self, "oe_form_"+selected_id+select_model, selected_id, '', head, select_model, false);
+                    this.formview = new instance.web_mobile.FormView(self, "oe_form_"+selected_id+select_model, selected_id, '', head, select_model, false);
                     this.formview.start();
             }else{
                 $.mobile.changePage('#oe_form_'+selected_id+select_model, "slide", false, true);
@@ -168,7 +168,7 @@ openerp.web_mobile.FormView = openerp.web.OldWidget.extend({
                         // Temp: Set as disabled
                         $("#"+getfields[i].attrs.name).attr('disabled', 'true');
                         if(result.fields[getfields[i].attrs.name]){
-                            var dateresult = openerp.web.format_value(data[getfields[i].attrs.name], {"widget": result.fields[getfields[i].attrs.name].type});
+                            var dateresult = instance.web.format_value(data[getfields[i].attrs.name], {"widget": result.fields[getfields[i].attrs.name].type});
                             $(this).val(dateresult);
                         }
                     }

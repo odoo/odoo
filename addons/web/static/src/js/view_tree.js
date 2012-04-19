@@ -2,12 +2,12 @@
  * OpenERP web library
  *---------------------------------------------------------*/
 
-openerp.web.view_tree = function(openerp) {
-var QWeb = openerp.web.qweb,
-      _lt = openerp.web._lt;
+openerp.web.view_tree = function(instance) {
+var QWeb = instance.web.qweb,
+      _lt = instance.web._lt;
 
-openerp.web.views.add('tree', 'openerp.web.TreeView');
-openerp.web.TreeView = openerp.web.View.extend(/** @lends openerp.web.TreeView# */{
+instance.web.views.add('tree', 'instance.web.TreeView');
+instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeView# */{
     display_name: _lt('Tree'),
     /**
      * Indicates that this view is not searchable, and thus that no search
@@ -17,8 +17,8 @@ openerp.web.TreeView = openerp.web.View.extend(/** @lends openerp.web.TreeView# 
     /**
      * Genuine tree view (the one displayed as a tree, not the list)
      *
-     * @constructs openerp.web.TreeView
-     * @extends openerp.web.View
+     * @constructs instance.web.TreeView
+     * @extends instance.web.View
      *
      * @param parent
      * @param dataset
@@ -39,7 +39,6 @@ openerp.web.TreeView = openerp.web.View.extend(/** @lends openerp.web.TreeView# 
     },
 
     start: function () {
-        this._super();
         return this.rpc("/web/treeview/load", {
             model: this.model,
             view_id: this.view_id,
@@ -204,7 +203,7 @@ openerp.web.TreeView = openerp.web.View.extend(/** @lends openerp.web.TreeView# 
                 'fields_view': self.fields_view.arch.children,
                 'fields': self.fields,
                 'level': $curr_node.data('level') || 0,
-                'render': openerp.web.format_value,
+                'render': instance.web.format_value,
                 'color_for': self.color_for
             });
 
@@ -227,12 +226,12 @@ openerp.web.TreeView = openerp.web.View.extend(/** @lends openerp.web.TreeView# 
         return this.rpc('/web/treeview/action', {
             id: id,
             model: this.dataset.model,
-            context: new openerp.web.CompoundContext(
+            context: new instance.web.CompoundContext(
                 this.dataset.get_context(), local_context)
         }).pipe(function (actions) {
             if (!actions.length) { return; }
             var action = actions[0][2];
-            var c = new openerp.web.CompoundContext(local_context);
+            var c = new instance.web.CompoundContext(local_context);
             if (action.context) {
                 c.add(action.context);
             }

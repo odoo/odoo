@@ -2,7 +2,7 @@
  * OpenERP web_graph
  *---------------------------------------------------------*/
 
-openerp.web_graph = function (openerp) {
+openerp.web_graph = function (instance) {
 var COLOR_PALETTE = [
     '#cc99ff', '#ccccff', '#48D1CC', '#CFD784', '#8B7B8B', '#75507b',
     '#b0008c', '#ff0000', '#ff8e00', '#9000ff', '#0078ff', '#00ff00',
@@ -12,11 +12,12 @@ var COLOR_PALETTE = [
     '#ad7fa8', '#729fcf', '#8ae234', '#e9b96e', '#fce94f', '#f57900',
     '#cc0000', '#d400a8'];
 
-var QWeb = openerp.web.qweb,
-     _lt = openerp.web._lt;
-openerp.web.views.add('graph', 'openerp.web_graph.GraphView');
-openerp.web_graph.GraphView = openerp.web.View.extend({
+var QWeb = instance.web.qweb,
+     _lt = instance.web._lt;
+instance.web.views.add('graph', 'instance.web_graph.GraphView');
+instance.web_graph.GraphView = instance.web.View.extend({
     display_name: _lt('Graph'),
+    view_type: "graph",
 
     init: function(parent, dataset, view_id, options) {
         this._super(parent);
@@ -39,27 +40,13 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
         }
         this._super();
     },
-    start: function() {
+    on_loaded: function(fields_view_get) {
         var self = this;
-        this._super();
-        var loaded;
-        if (this.embedded_view) {
-            loaded = $.when([self.embedded_view]);
-        } else {
-            loaded = this.rpc('/web/view/load', {
-                    model: this.dataset.model,
-                    view_id: this.view_id,
-                    view_type: 'graph'
-            });
-        }
-        return $.when(
-            this.dataset.call_and_eval('fields_get', [false, {}], null, 1),
-            loaded)
-            .then(function (fields_result, view_result) {
-                self.fields = fields_result[0];
-                self.fields_view = view_result[0];
-                self.on_loaded(self.fields_view);
-            });
+        self.fields_view = fields_view_get;
+        return this.dataset.call_and_eval('fields_get', [false, {}], null, 1).pipe(function(fields_result) {
+            self.fields = fields_result;
+            return self.on_loaded_2();
+        });
     },
     /**
      * Returns all object fields involved in the graph view
@@ -72,7 +59,7 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
         }
         return fs;
     },
-    on_loaded: function() {
+    on_loaded_2: function() {
         this.chart = this.fields_view.arch.attrs.type || 'pie';
         this.orientation = this.fields_view.arch.attrs.orientation || 'vertical';
 
@@ -91,6 +78,7 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
         }, this);
         this.ordinate = this.columns[0].name;
         this.is_loaded.resolve();
+        return $.when();
     },
     schedule_chart: function(results) {
         var self = this;

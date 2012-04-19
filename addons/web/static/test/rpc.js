@@ -3,8 +3,9 @@ $(document).ready(function () {
 
     module('Misordered resolution management', {
         setup: function () {
-            openerp = window.openerp.init();
-            window.openerp.web.core(openerp);
+            openerp = window.openerp.init([]);
+            window.openerp.web.corelib(openerp);
+            window.openerp.web.coresetup(openerp);
             window.openerp.web.data(openerp);
         }
     });

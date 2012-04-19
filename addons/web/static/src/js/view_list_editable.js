@@ -2,16 +2,16 @@
  * handles editability case for lists, because it depends on form and forms already depends on lists it had to be split out
  * @namespace
  */
-openerp.web.list_editable = function (openerp) {
+openerp.web.list_editable = function (instance) {
     var KEY_RETURN = 13,
         KEY_ESCAPE = 27;
-    var QWeb = openerp.web.qweb;
+    var QWeb = instance.web.qweb;
 
     // editability status of list rows
-    openerp.web.ListView.prototype.defaults.editable = null;
+    instance.web.ListView.prototype.defaults.editable = null;
 
     // TODO: not sure second @lends on existing item is correct, to check
-    openerp.web.ListView.include(/** @lends openerp.web.ListView# */{
+    instance.web.ListView.include(/** @lends instance.web.ListView# */{
         init: function () {
             var self = this;
             this._super.apply(this, arguments);
@@ -37,7 +37,7 @@ openerp.web.list_editable = function (openerp) {
          *
          * @param {Number} index index of the record in the dataset
          * @param {Object} id identifier of the record being edited
-         * @param {openerp.web.DataSet} dataset dataset in which the record is available
+         * @param {instance.web.DataSet} dataset dataset in which the record is available
          */
         do_edit: function (index, id, dataset) {
             _.extend(this.dataset, dataset);
@@ -93,8 +93,8 @@ openerp.web.list_editable = function (openerp) {
         }
     });
 
-    openerp.web.ListView.Groups.include(/** @lends openerp.web.ListView.Groups# */{
-        passtrough_events: openerp.web.ListView.Groups.prototype.passtrough_events + " edit saved",
+    instance.web.ListView.Groups.include(/** @lends instance.web.ListView.Groups# */{
+        passtrough_events: instance.web.ListView.Groups.prototype.passtrough_events + " edit saved",
         new_record: function () {
             // TODO: handle multiple children
             this.children[null].new_record();
@@ -113,7 +113,7 @@ openerp.web.list_editable = function (openerp) {
         }
     });
 
-    openerp.web.ListView.List.include(/** @lends openerp.web.ListView.List# */{
+    instance.web.ListView.List.include(/** @lends instance.web.ListView.List# */{
         row_clicked: function (event) {
             if (!this.options.editable) {
                 return this._super.apply(this, arguments);
@@ -235,7 +235,8 @@ openerp.web.list_editable = function (openerp) {
                 }
                 self.edition = true;
                 self.edition_id = record_id;
-                self.edition_form = new openerp.web.ListEditableFormView(self.view, self.dataset, false);
+                $new_row.addClass("oe_form_container");
+                self.edition_form = new instance.web.ListEditableFormView(self.view, self.dataset, false);
                 self.edition_form.$element = $new_row;
                 self.edition_form.editable_list = self;
                 // HO HO
@@ -273,7 +274,7 @@ openerp.web.list_editable = function (openerp) {
                         // insert after the source record
                         var index = self.records.indexOf(
                             self.records.get(source_record_id)) + 1;
-                        record = new openerp.web.list.Record({id: id});
+                        record = new instance.web.list.Record({id: id});
                         self.records.add(record, {at: index});
                         self.dataset.ids.splice(index, 0, id);
                     }
@@ -366,52 +367,57 @@ openerp.web.list_editable = function (openerp) {
             });
         }
     });
-    if (!openerp.web.list) {
-        openerp.web.list = {};
-    }
-    if (!openerp.web.list.form) {
-        openerp.web.list.form = {};
-    }
-    openerp.web.list.form.WidgetFrame = openerp.web.form.WidgetFrame.extend({
-        form_template: 'ListView.row.frame'
-    });
-    var form_widgets = openerp.web.form.widgets;
-    openerp.web.list.form.widgets = form_widgets.extend({
-        'frame': 'openerp.web.list.form.WidgetFrame'
-    });
-    // All form widgets inherit a problematic behavior from
-    // openerp.web.form.WidgetFrame: the cell itself is removed when invisible
-    // whether it's @invisible or @attrs[invisible]. In list view, only the
-    // former should completely remove the cell. We need to override update_dom
-    // on all widgets since we can't just hit on widget itself (I think)
-    var list_form_widgets = openerp.web.list.form.widgets;
-    _(form_widgets.map).each(function (widget_path, key) {
-        if (key === 'frame') { return; }
-        var new_path = 'openerp.web.list.form.' + key;
-
-        openerp.web.list.form[key] = (form_widgets.get_object(key)).extend({
-            update_dom: function () {
-                this.$element.children().css('visibility', '');
-                if (this.modifiers.tree_invisible) {
-                    var old_invisible = this.invisible;
-                    this.invisible = true;
-                    this._super();
-                    this.invisible = old_invisible;
-                } else if (this.invisible) {
-                    this.$element.children().css('visibility', 'hidden');
-                } else {
-                    this._super();
-                }
-            }
-        });
-        list_form_widgets.add(key, new_path);
+    
+    instance.web.ListEditableFormView = instance.web.FormView.extend({
+        init: function() {
+            this._super.apply(this, arguments);
+            this.rendering_engine = new instance.web.ListEditableRenderingEngine(this);
+        },
+        renderElement: function() {}
     });
     
-    openerp.web.ListEditableFormView = openerp.web.FormView.extend({
-        form_template: 'ListView.row.form',
-        init: function() {
-        	this._super.apply(this, arguments);
-        	this.registry = openerp.web.list.form.widgets;
+    instance.web.ListEditableRenderingEngine = instance.web.Class.extend({
+        init: function(view) {
+            this.view = view;
+        },
+        set_fields_view: function(fields_view) {
+            this.fvg = fields_view;
+        },
+        set_tags_registry: function(tags_registry) {
+            this.tags_registry = tags_registry;
+        },
+        set_fields_registry: function(fields_registry) {
+            this.fields_registry = fields_registry;
+        },
+        render_to: function($element) {
+            var self = this;
+    
+            var xml = instance.web.json_node_to_xml(this.fvg.arch);
+            var $xml = $(xml);
+            
+            if (this.view.editable_list.options.selectable)
+                $("<td>").appendTo($element);
+            if (this.view.editable_list.options.isClarkGable)
+                $("<td>").appendTo($element);
+                
+            $xml.children().each(function(i, el) {
+                var modifiers = JSON.parse($(el).attr("modifiers") || "{}");
+                var $td = $("<td>");
+                if (modifiers.tree_invisible === true)
+                    $td.hide();
+                var tag_name = el.tagName.toLowerCase();
+                var key = tag_name;
+                if (tag_name === "field") {
+                    var name = $(el).attr("name");
+                    key = $(el).attr('widget') || self.fvg.fields[name].type;
+                }
+                var obj = self.view.fields_registry.get_object(key);
+                var w = new (obj)(self.view, instance.web.xml_to_json(el));
+                self.view.register_field(w, $(el).attr("name"));
+                w.appendTo($td);
+                $td.appendTo($element);
+            });
+            $("<td><button class='oe-edit-row-save' type='button'></button></td>").appendTo($element);
         },
     });
 };

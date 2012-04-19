@@ -1,18 +1,17 @@
 /*---------------------------------------------------------
  * OpenERP Web chrome
  *---------------------------------------------------------*/
-openerp.web.chrome = function(openerp) {
-var QWeb = openerp.web.qweb,
-    _t = openerp.web._t;
+openerp.web.chrome = function(instance) {
+var QWeb = instance.web.qweb,
+    _t = instance.web._t;
 
-openerp.web.Notification =  openerp.web.OldWidget.extend(/** @lends openerp.web.Notification# */{
+instance.web.Notification =  instance.web.Widget.extend({
     template: 'Notification',
-
     init: function() {
         this._super.apply(this, arguments);
-        openerp.notification = this;
+        // move to instance.web.notification
+        instance.notification = this;
     },
-
     start: function() {
         this._super.apply(this, arguments);
         this.$element.notify({
@@ -42,24 +41,16 @@ openerp.web.Notification =  openerp.web.OldWidget.extend(/** @lends openerp.web.
             text: text
         }, opts);
     }
-
 });
 
-openerp.web.dialog = function(element) {
+instance.web.dialog = function(element) {
     var result = element.dialog.apply(element, _.rest(_.toArray(arguments)));
     result.dialog("widget").addClass("openerp");
     return result;
 }
 
-openerp.web.Dialog = openerp.web.OldWidget.extend(/** @lends openerp.web.Dialog# */{
+instance.web.Dialog = instance.web.Widget.extend({
     dialog_title: "",
-    /**
-     * @constructs openerp.web.Dialog
-     * @extends openerp.web.OldWidget
-     *
-     * @param parent
-     * @param options
-     */
     init: function (parent, options, content) {
         var self = this;
         this._super(parent);
@@ -92,7 +83,7 @@ openerp.web.Dialog = openerp.web.OldWidget.extend(/** @lends openerp.web.Dialog#
         if (this.dialog_options.autoOpen) {
             this.open();
         } else {
-            openerp.web.dialog(this.$element, this.get_options());
+            instance.web.dialog(this.$element, this.get_options());
         }
     },
     get_options: function(options) {
@@ -128,10 +119,10 @@ openerp.web.Dialog = openerp.web.OldWidget.extend(/** @lends openerp.web.Dialog#
     open: function(options) {
         // TODO fme: bind window on resize
         if (this.template) {
-            this.$element.html(this.render());
+            this.$element.html(this.renderElement());
         }
         var o = this.get_options(options);
-        openerp.web.dialog(this.$element, o).dialog('open');
+        instance.web.dialog(this.$element, o).dialog('open');
         if (o.height === 'auto' && o.max_height) {
             this.$element.css({ 'max-height': o.max_height, 'overflow-y': 'auto' });
         }
@@ -149,14 +140,13 @@ openerp.web.Dialog = openerp.web.OldWidget.extend(/** @lends openerp.web.Dialog#
         //openerp.log("Dialog resized to %d x %d", this.$element.width(), this.$element.height());
     },
     destroy: function () {
-        // Destroy widget
         this.close();
         this.$element.dialog('destroy');
         this._super();
     }
 });
 
-openerp.web.CrashManager = openerp.web.CallbackEnabled.extend({
+instance.web.CrashManager = instance.web.CallbackEnabled.extend({
     on_rpc_error: function(error) {
         if (error.data.fault_code) {
             var split = ("" + error.data.fault_code).split('\n')[0].split(' -- ');
@@ -172,7 +162,7 @@ openerp.web.CrashManager = openerp.web.CallbackEnabled.extend({
         }
     },
     on_managed_error: function(error) {
-    	openerp.web.dialog($('<div>' + QWeb.render('CrashManagerWarning', {error: error}) + '</div>'), {
+    	instance.web.dialog($('<div>' + QWeb.render('CrashManager.warning', {error: error}) + '</div>'), {
             title: "OpenERP " + _.str.capitalize(error.type),
             buttons: [
                 {text: _t("Ok"), click: function() { $(this).dialog("close"); }}
@@ -182,14 +172,14 @@ openerp.web.CrashManager = openerp.web.CallbackEnabled.extend({
     on_traceback: function(error) {
         var self = this;
         var buttons = {};
-        if (openerp.connection.openerp_entreprise) {
+        if (instance.connection.openerp_entreprise) {
             buttons[_t("Send OpenERP Enterprise Report")] = function() {
                 var $this = $(this);
                 var issuename = $('#issuename').val();
                 var explanation = $('#explanation').val();
                 var remark = $('#remark').val();
                 // Call the send method from server to send mail with details
-                new openerp.web.DataSet(self, 'publisher_warranty.contract').call_and_eval('send', [error.data,explanation,remark,issuename]).then(function(result){
+                new instance.web.DataSet(self, 'publisher_warranty.contract').call_and_eval('send', [error.data,explanation,remark,issuename]).then(function(result){
                     if (result === false) {
                         alert('There was a communication error.')
                     } else {
@@ -205,7 +195,7 @@ openerp.web.CrashManager = openerp.web.CallbackEnabled.extend({
                 $(this).dialog("close");
             };
         }
-        var dialog = new openerp.web.Dialog(this, {
+        var dialog = new instance.web.Dialog(this, {
             title: "OpenERP " + _.str.capitalize(error.type),
             width: '80%',
             height: '50%',
@@ -213,19 +203,12 @@ openerp.web.CrashManager = openerp.web.CallbackEnabled.extend({
             min_height: '600px',
             buttons: buttons
         }).open();
-        dialog.$element.html(QWeb.render('CrashManagerError', {session: openerp.connection, error: error}));
+        dialog.$element.html(QWeb.render('CrashManager.error', {session: instance.connection, error: error}));
     }
 });
 
-openerp.web.Loading = openerp.web.OldWidget.extend(/** @lends openerp.web.Loading# */{
+instance.web.Loading = instance.web.Widget.extend({
     template: 'Loading',
-    /**
-     * @constructs openerp.web.Loading
-     * @extends openerp.web.OldWidget
-     *
-     * @param parent
-     * @param element_id
-     */
     init: function(parent) {
         this._super(parent);
         this.count = 0;
@@ -258,10 +241,9 @@ openerp.web.Loading = openerp.web.OldWidget.extend(/** @lends openerp.web.Loadin
 
         this.count += increment;
         if (this.count > 0) {
-            $(".loading",this.$element).text(_.str.sprintf(
-                _t("Loading (%d)"), this.count));
-            $(".loading",this.$element).show();
-            this.getParent().$element.addClass('loading');
+            this.$element.text(_.str.sprintf( _t("Loading (%d)"), this.count));
+            this.$element.show();
+            this.getParent().$element.addClass('oe_wait');
         } else {
             this.count = 0;
             clearTimeout(this.long_running_timer);
@@ -270,72 +252,59 @@ openerp.web.Loading = openerp.web.OldWidget.extend(/** @lends openerp.web.Loadin
                 this.blocked_ui = false;
                 $.unblockUI();
             }
-            $(".loading",this.$element).fadeOut();
-            this.getParent().$element.removeClass('loading');
+            this.$element.fadeOut();
+            this.getParent().$element.removeClass('oe_wait');
         }
     }
 });
 
-openerp.web.Database = openerp.web.OldWidget.extend(/** @lends openerp.web.Database# */{
-    template: "DatabaseManager",
-    /**
-     * @constructs openerp.web.Database
-     * @extends openerp.web.OldWidget
-     *
-     * @param parent
-     * @param element_id
-     * @param option_id
-     */
-    init: function(parent, element_id, option_id) {
-        this._super(parent, element_id);
+instance.web.DatabaseManager = instance.web.Widget.extend({
+    init: function(parent) {
+        this._super(parent);
         this.unblockUIFunction = $.unblockUI;
         $.validator.addMethod('matches', function (s, _, re) {
             return new RegExp(re).test(s);
         }, _t("Invalid database name"));
     },
     start: function() {
-        this.$option_id = $("#oe_db_options");
-
         var self = this;
         var fetch_db = this.rpc("/web/database/get_list", {}).pipe(
-            function(result) { self.db_list = result.db_list; },
-            function (_, ev) { ev.preventDefault(); self.db_list = null; });
-        var fetch_langs = this.rpc("/web/session/get_lang_list", {}, function(result) {
-            if (result.error) {
-                self.display_error(result);
-                return;
-            }
+            function(result) { 
+                self.db_list = result.db_list; 
+            },
+            function (_, ev) { 
+                ev.preventDefault();
+                self.db_list = null; 
+            });
+        var fetch_langs = this.rpc("/web/session/get_lang_list", {}).then(function(result) {
             self.lang_list = result.lang_list;
         });
-        $.when(fetch_db, fetch_langs).then(function () {self.do_create();});
-
-        this.$element.find('#db-create').click(this.do_create);
-        this.$element.find('#db-drop').click(this.do_drop);
-        this.$element.find('#db-backup').click(this.do_backup);
-        this.$element.find('#db-restore').click(this.do_restore);
-        this.$element.find('#db-change-password').click(this.do_change_password);
-       	this.$element.find('#back-to-login').click(function() {
-            self.hide();
+        return $.when(fetch_db, fetch_langs).then(self.do_render);
+    },
+    do_render: function() {
+        var self = this;
+        self.$element.html(QWeb.render("DatabaseManager", { widget : self }));
+        self.$element.find(".oe_database_manager_menu").tabs();
+        self.$element.find("form[name=create_db_form]").validate({ submitHandler: self.do_create });
+       	self.$element.find("form[name=drop_db_form]").validate({ submitHandler: self.do_drop });
+       	self.$element.find("form[name=backup_db_form]").validate({ submitHandler: self.do_backup });
+       	self.$element.find("form[name=restore_db_form]").validate({ submitHandler: self.do_restore });
+        self.$element.find("form[name=change_pwd_form]").validate({
+            messages: {
+                old_pwd: "Please enter your previous password",
+                new_pwd: "Please enter your new password",
+                confirm_pwd: {
+                    required: "Please confirm your new password",
+                    equalTo: "The confirmation does not match the password"
+                }
+            },
+            submitHandler: self.do_change_password
         });
+       	self.$element.find("#back_to_login").click(self.do_exit);
     },
     destroy: function () {
-        this.hide();
-        this.$option_id.empty();
-
-        this.$element
-            .find('#db-create, #db-drop, #db-backup, #db-restore, #db-change-password, #back-to-login')
-                .unbind('click')
-            .end()
-            .empty();
+        this.$element.find('#db-create, #db-drop, #db-backup, #db-restore, #db-change-password, #back-to-login').unbind('click').end().empty();
         this._super();
-    },
-    show: function () {
-        this.$element.closest(".login")
-                .addClass("database_block");
-    },
-    hide: function () {
-        this.$element.closest(".login")
-                .removeClass("database_block")
     },
     /**
      * Converts a .serializeArray() result into a dict. Does not bother folding
@@ -375,7 +344,7 @@ openerp.web.Database = openerp.web.OldWidget.extend(/** @lends openerp.web.Datab
      * @param {String} error.error message of the error dialog
      */
     display_error: function (error) {
-        return openerp.web.dialog($('<div>'), {
+        return instance.web.dialog($('<div>'), {
             modal: true,
             title: error.title,
             buttons: [
@@ -383,157 +352,96 @@ openerp.web.Database = openerp.web.OldWidget.extend(/** @lends openerp.web.Datab
             ]
         }).html(error.error);
     },
-    do_create: function() {
+    do_create: function(form) {
         var self = this;
-       	self.$option_id.html(QWeb.render("Database.CreateDB", self));
-        self.$option_id.find("form[name=create_db_form]").validate({
-            submitHandler: function (form) {
-                var fields = $(form).serializeArray();
-                self.rpc("/web/database/create", {'fields': fields}, function(result) {
-                    if (self.db_list) {
-                        self.db_list.push(self.to_object(fields)['db_name']);
-                        self.db_list.sort();
-                        self.getParent().set_db_list(self.db_list);
-                    }
+        var fields = $(form).serializeArray();
+        self.rpc("/web/database/create", {'fields': fields}, function(result) {
+            var form_obj = self.to_object(fields);
+            self.getParent().do_login( form_obj['db_name'], 'admin', form_obj['create_admin_pwd']);
+            self.destroy();
+        });
 
-                    var form_obj = self.to_object(fields);
-                    self.getParent().do_login(
-                            form_obj['db_name'],
-                            'admin',
-                            form_obj['create_admin_pwd']);
-                    self.destroy();
-                });
+    },
+    do_drop: function(form) {
+        var self = this;
+        var $form = $(form),
+            fields = $form.serializeArray(),
+            $db_list = $form.find('[name=drop_db]'),
+            db = $db_list.val();
+        if (!db || !confirm("Do you really want to delete the database: " + db + " ?")) {
+            return;
+        }
+        self.rpc("/web/database/drop", {'fields': fields}, function(result) {
+            if (result.error) {
+                self.display_error(result);
+                return;
+            }
+            self.do_notify("Dropping database", "The database '" + db + "' has been dropped");
+            self.start();
+        });
+    },
+    do_backup: function(form) {
+        var self = this;
+        self.blockUI();
+        self.session.get_file({
+            form: form,
+            success: function () {
+                self.do_notify(_t("Backed"), _t("Database backed up successfully"));
+            },
+            error: instance.webclient.crashmanager.on_rpc_error,
+            complete: function() {
+                self.unblockUI();
             }
         });
     },
-    do_drop: function() {
+    do_restore: function(form) {
         var self = this;
-       	self.$option_id.html(QWeb.render("DropDB", self));
-       	self.$option_id.find("form[name=drop_db_form]").validate({
-            submitHandler: function (form) {
-                var $form = $(form),
-                    fields = $form.serializeArray(),
-                    $db_list = $form.find('[name=drop_db]'),
-                    db = $db_list.val();
+        self.blockUI();
+        $(form).ajaxSubmit({
+            url: '/web/database/restore',
+            type: 'POST',
+            resetForm: true,
+            success: function (body) {
+                // If empty body, everything went fine
+                if (!body) { return; }
 
-                if (!db || !confirm("Do you really want to delete the database: " + db + " ?")) {
-                    return;
-                }
-                self.rpc("/web/database/drop", {'fields': fields}, function(result) {
-                    if (result.error) {
-                        self.display_error(result);
-                        return;
-                    }
-                    $db_list.find(':selected').remove();
-                    if (self.db_list) {
-                        self.db_list.splice(_.indexOf(self.db_list, db, true), 1);
-                        self.getParent().set_db_list(self.db_list);
-                    }
-                    self.do_notify("Dropping database", "The database '" + db + "' has been dropped");
-                });
-            }
-        });
-    },
-    do_backup: function() {
-        var self = this;
-       	self.$option_id
-            .html(QWeb.render("BackupDB", self))
-            .find("form[name=backup_db_form]").validate({
-            submitHandler: function (form) {
-                self.blockUI();
-                self.session.get_file({
-                    form: form,
-                    success: function () {
-                        self.do_notify(_t("Backed"),
-                            _t("Database backed up successfully"));
-                    },
-                    error: openerp.webclient.crashmanager.on_rpc_error,
-                    complete: function() {
-                        self.unblockUI();
-                    }
-                });
-            }
-        });
-    },
-    do_restore: function() {
-        var self = this;
-       	self.$option_id.html(QWeb.render("RestoreDB", self));
-
-       	self.$option_id.find("form[name=restore_db_form]").validate({
-            submitHandler: function (form) {
-                self.blockUI();
-                $(form).ajaxSubmit({
-                    url: '/web/database/restore',
-                    type: 'POST',
-                    resetForm: true,
-                    success: function (body) {
-                        // TODO: ui manipulations
-                        // note: response objects don't work, but we have the
-                        // HTTP body of the response~~
-
-                        // If empty body, everything went fine
-                        if (!body) { return; }
-
-                        if (body.indexOf('403 Forbidden') !== -1) {
-                            self.display_error({
-                                title: 'Access Denied',
-                                error: 'Incorrect super-administrator password'
-                            })
-                        } else {
-                            self.display_error({
-                                title: 'Restore Database',
-                                error: 'Could not restore the database'
-                            })
-                        }
-                    },
-                    complete: function() {
-                        self.unblockUI();
-                        self.do_notify(_t("Restored"), _t("Database restored successfully"));
-                    }
-                });
-            }
-        });
-    },
-    do_change_password: function() {
-        var self = this;
-       	self.$option_id.html(QWeb.render("Change_DB_Pwd", self));
-
-        self.$option_id.find("form[name=change_pwd_form]").validate({
-            messages: {
-                old_pwd: "Please enter your previous password",
-                new_pwd: "Please enter your new password",
-                confirm_pwd: {
-                    required: "Please confirm your new password",
-                    equalTo: "The confirmation does not match the password"
+                if (body.indexOf('403 Forbidden') !== -1) {
+                    self.display_error({
+                        title: 'Access Denied',
+                        error: 'Incorrect super-administrator password'
+                    })
+                } else {
+                    self.display_error({
+                        title: 'Restore Database',
+                        error: 'Could not restore the database'
+                    })
                 }
             },
-            submitHandler: function (form) {
-                self.rpc("/web/database/change_password", {
-                    'fields': $(form).serializeArray()
-                }, function(result) {
-                    if (result.error) {
-                        self.display_error(result);
-                        return;
-                    }
-                    self.do_notify("Changed Password", "Password has been changed successfully");
-                });
+            complete: function() {
+                self.unblockUI();
+                self.do_notify(_t("Restored"), _t("Database restored successfully"));
             }
         });
+    },
+    do_change_password: function(form) {
+        var self = this;
+        self.rpc("/web/database/change_password", {
+            'fields': $(form).serializeArray()
+        }, function(result) {
+            if (result.error) {
+                self.display_error(result);
+                return;
+            }
+            self.do_notify("Changed Password", "Password has been changed successfully");
+        });
+    },
+    do_exit: function () {
     }
 });
 
-openerp.web.Login =  openerp.web.OldWidget.extend(/** @lends openerp.web.Login# */{
-    remember_credentials: true,
-    
+instance.web.Login =  instance.web.Widget.extend({
     template: "Login",
-    /**
-     * @constructs openerp.web.Login
-     * @extends openerp.web.OldWidget
-     *
-     * @param parent
-     * @param element_id
-     */
-
+    remember_credentials: true,
     init: function(parent) {
         this._super(parent);
         this.has_local_storage = typeof(localStorage) != 'undefined';
@@ -550,29 +458,35 @@ openerp.web.Login =  openerp.web.OldWidget.extend(/** @lends openerp.web.Login# 
     },
     start: function() {
         var self = this;
-        this.database = new openerp.web.Database(this);
-        this.database.appendTo(this.$element);
 
-        this.$element.find('#oe-db-config').click(function() {
-            self.database.show();
+        self.$element.find("form").submit(self.on_submit);
+
+        self.$element.find('.oe_login_manage_db').click(function() {
+            self.$element.find('.oe_login_bottom').hide();
+            self.$element.find('.oe_login_pane').hide();
+            self.databasemanager = new instance.web.DatabaseManager(self);
+            self.databasemanager.appendTo(self.$element);
+            self.databasemanager.do_exit.add_last(function() {
+                self.databasemanager.destroy();
+                self.$element.find('.oe_login_bottom').show();
+                self.$element.find('.oe_login_pane').show();
+                self.load_db_list();
+            })
         });
-
-        this.$element.find("form").submit(this.on_submit);
-
-        this.rpc("/web/database/get_list", {}, function(result) {
+        self.load_db_list();
+    },
+    load_db_list: function () {
+        var self = this;
+        self.rpc("/web/database/get_list", {}, function(result) {
             self.set_db_list(result.db_list);
-        }, 
-        function(error, event) {
+        }, function(error, event) {
             if (error.data.fault_code === 'AccessDenied') {
                 event.preventDefault();
             }
         });
-
     },
     set_db_list: function (list) {
-        this.$element.find("[name=db]").replaceWith(
-            openerp.web.qweb.render('Login_dblist', {
-                db_list: list, selected_db: this.selected_db}))
+        this.$element.find("[name=db]").replaceWith(instance.web.qweb.render('Login.dblist', { db_list: list, selected_db: this.selected_db}))
     },
     on_submit: function(ev) {
         if(ev) {
@@ -598,15 +512,15 @@ openerp.web.Login =  openerp.web.OldWidget.extend(/** @lends openerp.web.Login# 
      */
     do_login: function (db, login, password) {
         var self = this;
-        this.$element.removeClass('login_invalid');
+        this.$element.removeClass('oe_login_invalid');
         this.session.on_session_invalid.add({
             callback: function () {
-                self.$element.addClass("login_invalid");
+                self.$element.addClass("oe_login_invalid");
             },
             unique: true
         });
         this.session.session_authenticate(db, login, password).then(function() {
-            self.$element.removeClass("login_invalid");
+            self.$element.removeClass("oe_login_invalid");
             if (self.has_local_storage) {
                 if(self.remember_credentials) {
                     localStorage.setItem('last_db_login_success', db);
@@ -624,13 +538,7 @@ openerp.web.Login =  openerp.web.OldWidget.extend(/** @lends openerp.web.Login# 
     }
 });
 
-openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
-    /**
-     * @constructs openerp.web.Menu
-     * @extends openerp.web.Widget
-     *
-     * @param parent
-     */
+instance.web.Menu =  instance.web.Widget.extend({
     template: 'Menu',
     init: function() {
         this._super.apply(this, arguments);
@@ -774,14 +682,8 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
     }
 });
 
-openerp.web.UserMenu =  openerp.web.Widget.extend(/** @lends openerp.web.UserMenu# */{
+instance.web.UserMenu =  instance.web.Widget.extend({
     template: "UserMenu",
-    /**
-     * @constructs openerp.web.UserMenu
-     * @extends openerp.web.Widget
-     *
-     * @param parent
-     */
     init: function(parent) {
         this._super(parent);
         this.update_promise = $.Deferred().resolve();
@@ -805,7 +707,7 @@ openerp.web.UserMenu =  openerp.web.Widget.extend(/** @lends openerp.web.UserMen
     },
     change_password :function() {
         var self = this;
-        this.dialog = new openerp.web.Dialog(this, {
+        this.dialog = new instance.web.Dialog(this, {
             title: _t("Change Password"),
             width : 'auto'
         }).open();
@@ -819,14 +721,14 @@ openerp.web.UserMenu =  openerp.web.Widget.extend(/** @lends openerp.web.UserMen
                         self.display_error(result);
                         return;
                     } else {
-                        openerp.webclient.on_logout();
+                        instance.webclient.on_logout();
                     }
                 });
             }
         });
     },
     display_error: function (error) {
-        return openerp.web.dialog($('<div>'), {
+        return instance.web.dialog($('<div>'), {
             modal: true,
             title: error.title,
             buttons: [
@@ -841,10 +743,10 @@ openerp.web.UserMenu =  openerp.web.Widget.extend(/** @lends openerp.web.UserMen
             $avatar.attr('src', $avatar.data('default-src'));
             if (!self.session.uid)
                 return;
-            var func = new openerp.web.Model("res.users").get_func("read");
+            var func = new instance.web.Model("res.users").get_func("read");
             return func(self.session.uid, ["name", "company_id"]).pipe(function(res) {
                 // TODO: Show company if multicompany is in use
-                var topbar_name = _.str.sprintf("%s (%s)", res.name, openerp.connection.db, res.company_id[1]);
+                var topbar_name = _.str.sprintf("%s (%s)", res.name, instance.connection.db, res.company_id[1]);
                 self.$element.find('.oe_topbar_name').text(topbar_name);
                 var avatar_src = _.str.sprintf('%s/web/binary/image?session_id=%s&model=res.users&field=avatar&id=%s', self.session.prefix, self.session.session_id, self.session.uid);
                 $avatar.attr('src', avatar_src);
@@ -858,7 +760,7 @@ openerp.web.UserMenu =  openerp.web.Widget.extend(/** @lends openerp.web.UserMen
     shortcut_load :function(){
         var self = this,
             sc = self.session.shortcuts,
-            shortcuts_ds = new openerp.web.DataSet(this, 'ir.ui.view_sc');
+            shortcuts_ds = new instance.web.DataSet(this, 'ir.ui.view_sc');
         self.$element.find('.oe_dropdown_options a[data-menu=shortcut]').each(function() {
             $(this).parent().remove();
         });
@@ -905,11 +807,12 @@ openerp.web.UserMenu =  openerp.web.Widget.extend(/** @lends openerp.web.UserMen
     },
     on_menu_settings: function() {
         var self = this;
-        var action_manager = new openerp.web.ActionManager(this);
-        var dataset = new openerp.web.DataSet (this,'res.users',this.context);
+        var action_manager = new instance.web.ActionManager(this);
+        var dataset = new instance.web.DataSet (this,'res.users',this.context);
         dataset.call ('action_get','',function (result){
             self.rpc('/web/action/load', {action_id:result}, function(result){
                 action_manager.do_action(_.extend(result['result'], {
+                    target: 'inline',
                     res_id: self.session.uid,
                     res_model: 'res.users',
                     flags: {
@@ -922,7 +825,7 @@ openerp.web.UserMenu =  openerp.web.Widget.extend(/** @lends openerp.web.UserMen
                 }));
             });
         });
-        this.dialog = new openerp.web.Dialog(this,{
+        this.dialog = new instance.web.Dialog(this,{
             title: _t("Preferences"),
             width: '700px',
             buttons: [
@@ -941,7 +844,7 @@ openerp.web.UserMenu =  openerp.web.Widget.extend(/** @lends openerp.web.UserMen
             ]
         }).open();
        action_manager.appendTo(this.dialog.$element);
-       action_manager.render(this.dialog);
+       action_manager.renderElement(this.dialog);
     },
     on_menu_about: function() {
         var self = this;
@@ -952,7 +855,7 @@ openerp.web.UserMenu =  openerp.web.Widget.extend(/** @lends openerp.web.UserMen
                 window.location = $.param.querystring(
                         window.location.href, 'debug');
             });
-            openerp.web.dialog($help, {autoOpen: true,
+            instance.web.dialog($help, {autoOpen: true,
                 modal: true, width: 960, title: _t("About")});
         });
     },
@@ -968,21 +871,17 @@ openerp.web.UserMenu =  openerp.web.Widget.extend(/** @lends openerp.web.UserMen
     }
 });
 
-openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClient */{
-    /**
-     * @constructs openerp.web.WebClient
-     * @extends openerp.web.Widget
-     */
+instance.web.WebClient = instance.web.Widget.extend({
     init: function(parent) {
         var self = this;
         this._super(parent);
-        openerp.webclient = this;
+        instance.webclient = this;
         this.querystring = '?' + jQuery.param.querystring();
         this._current_state = null;
     },
     start: function() {
         var self = this;
-        this.$element.addClass("openerp openerp2");
+        this.$element.addClass("openerp openerp-web-client-container");
         if (jQuery.param != undefined && jQuery.deparam(jQuery.param.querystring()).kitten != undefined) {
             this.$element.addClass("kitten-mode-activated");
             this.$element.delegate('img.oe-record-edit-link-img', 'hover', function(e) {
@@ -1001,7 +900,7 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
             self.menu.do_reload();
             if(self.action_manager)
                 self.action_manager.destroy();
-            self.action_manager = new openerp.web.ActionManager(self);
+            self.action_manager = new instance.web.ActionManager(self);
             self.action_manager.appendTo(self.$element.find('.oe_application'));
             self.bind_hashchange();
             var version_label = _t("OpenERP - Unsupported/Community Version");
@@ -1018,7 +917,7 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         var self = this;
         this.destroy_content();
         this.show_common();
-        self.login = new openerp.web.Login(self);
+        self.login = new instance.web.Login(self);
         self.login.appendTo(self.$element);
     },
     show_application: function() {
@@ -1027,10 +926,10 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         this.show_common();
         self.$table = $(QWeb.render("WebClient", {}));
         self.$element.append(self.$table);
-        self.menu = new openerp.web.Menu(self);
+        self.menu = new instance.web.Menu(self);
         self.menu.replace(this.$element.find('.oe_menu_placeholder'));
         self.menu.on_action.add(this.proxy('on_menu_action'));
-        self.user_menu = new openerp.web.UserMenu(self);
+        self.user_menu = new instance.web.UserMenu(self);
         self.user_menu.replace(this.$element.find('.oe_user_menu_placeholder'));
         self.user_menu.on_menu_logout.add(this.proxy('on_logout'));
         self.user_menu.on_action.add(this.proxy('on_menu_action'));
@@ -1038,8 +937,8 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
     show_common: function() {
         var self = this;
         if (!this.crashmanager) {
-            this.crashmanager =  new openerp.web.CrashManager();
-            openerp.connection.on_rpc_error.add(this.crashmanager.on_rpc_error);
+            this.crashmanager =  new instance.web.CrashManager();
+            instance.connection.on_rpc_error.add(this.crashmanager.on_rpc_error);
             window.onerror = function (message, file, line) {
                 self.crashmanager.on_traceback({
                     type: _t("Client Error"),
@@ -1048,9 +947,9 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
                 });
             }
         }
-        this.notification = new openerp.web.Notification(this);
+        this.notification = new instance.web.Notification(this);
         this.notification.appendTo(this.$element);
-        this.loading = new openerp.web.Loading(this);
+        this.loading = new instance.web.Loading(this);
         this.loading.appendTo(this.$element);
     },
     destroy_content: function() {
@@ -1062,7 +961,7 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
     do_reload: function() {
         var self = this;
         return this.session.session_reload().pipe(function () {
-            openerp.connection.load_modules(true).pipe(
+            instance.connection.load_modules(true).pipe(
                 self.menu.proxy('do_reload')); });
 
     },
@@ -1126,16 +1025,15 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
     }
 });
 
-openerp.web.EmbeddedClient = openerp.web.OldWidget.extend({
+instance.web.EmbeddedClient = instance.web.Widget.extend({
     template: 'EmptyComponent',
-    init: function(action_id, options) {
-        this._super();
+    init: function(parent, action_id, options) {
+        this._super(parent);
         // TODO take the xmlid of a action instead of its id 
         this.action_id = action_id;
         this.options = options || {};
-        this.am = new openerp.web.ActionManager(this);
+        this.am = new instance.web.ActionManager(this);
     },
-
     start: function() {
         var self = this;
         this.am.appendTo(this.$element.addClass('openerp'));
@@ -1152,10 +1050,9 @@ openerp.web.EmbeddedClient = openerp.web.OldWidget.extend({
             self.am.do_action(action);
         });
     }
-
 });
 
-openerp.web.embed = function (origin, dbname, login, key, action, options) {
+instance.web.embed = function (origin, dbname, login, key, action, options) {
     $('head').append($('<link>', {
         'rel': 'stylesheet',
         'type': 'text/css',
@@ -1166,9 +1063,9 @@ openerp.web.embed = function (origin, dbname, login, key, action, options) {
         var sc = document.getElementsByTagName('script');
         currentScript = sc[sc.length-1];
     }
-    openerp.connection.session_bind(origin).then(function () {
-        openerp.connection.session_authenticate(dbname, login, key, true).then(function () {
-            var client = new openerp.web.EmbeddedClient(action, options);
+    instance.connection.session_bind(origin).then(function () {
+        instance.connection.session_authenticate(dbname, login, key, true).then(function () {
+            var client = new instance.web.EmbeddedClient(null, action, options);
             client.insertAfter(currentScript);
         });
     });

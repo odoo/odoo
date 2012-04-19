@@ -2,8 +2,9 @@ $(document).ready(function () {
     var openerp;
     module("form.widget", {
         setup: function () {
-            openerp = window.openerp.init(true);
-            window.openerp.web.core(openerp);
+            openerp = window.openerp.init([]);
+            window.openerp.web.corelib(openerp);
+            window.openerp.web.coresetup(openerp);
             window.openerp.web.chrome(openerp);
             // views loader stuff
             window.openerp.web.data(openerp);
