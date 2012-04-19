@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-04-18 04:38+0000\n"
+"PO-Revision-Date: 2012-04-18 23:32+0000\n"
 "Last-Translator: Masaki Yamaya <Unknown>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-04-18 04:41+0000\n"
+"X-Launchpad-Export-Date: 2012-04-19 04:38+0000\n"
 "X-Generator: Launchpad (build 15108)\n"
 
 #. module: hr_holidays
@@ -25,7 +25,7 @@ msgstr "青"
 #. module: hr_holidays
 #: field:hr.holidays,holiday_type:0
 msgid "Allocation Type"
-msgstr "割振りタイプ"
+msgstr "割当てタイプ"
 
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
@@ -127,6 +127,8 @@ msgid ""
 "the employee. You can define several allowance types (paid holidays, "
 "sickness, etc.) and manage allowances per type."
 msgstr ""
+"従業員が休暇申請を記録して、マネジャが承認します。休暇が承認されると、それは自動的に従業員の予定に表示されます。休暇タイプ（有給休暇、病欠など）をいくつか"
+"定義して、タイプごとに休暇を管理できます。"
 
 #. module: hr_holidays
 #: model:ir.actions.report.xml,name:hr_holidays.report_holidays_summary
@@ -166,6 +168,10 @@ msgid ""
 "  \n"
 "The state is 'Approved', when holiday request is approved by manager."
 msgstr ""
+"休暇の申請が作られると、それは「草案」状態に設定されます。　　　　　　　　\n"
+"ユーザが休暇申請を確認すると、それは「承認待ち」状態になります。　　　　\n"
+"マネジャが休暇申請を拒否すると、それは「拒否」状態になります。\n"
+"マネジャが休暇申請を承認すると、それは「承認」状態になります。"
 
 #. module: hr_holidays
 #: view:board.board:0
@@ -188,7 +194,7 @@ msgstr "休暇申請の承認"
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_account_central_journal
 msgid "Leaves by Department"
-msgstr "部門ごとの休暇"
+msgstr "部門別の休暇"
 
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
@@ -231,7 +237,7 @@ msgstr "報告書の色"
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_summary_employee
 msgid "HR Holidays Summary Report By Employee"
-msgstr "従業員ごとの休暇要約報告書"
+msgstr "従業員別の休暇要約報告書"
 
 #. module: hr_holidays
 #: help:hr.holidays,manager_id:0
@@ -303,7 +309,7 @@ msgstr "状態"
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_remaining_leaves_user
 msgid "Total holidays by type"
-msgstr "タイプごとの休暇日数"
+msgstr "タイプ別の休暇日数"
 
 #. module: hr_holidays
 #: view:hr.employee:0 view:hr.holidays:0 field:hr.holidays,employee_id:0
@@ -330,7 +336,7 @@ msgstr "赤色"
 #. module: hr_holidays
 #: view:hr.holidays.remaining.leaves.user:0
 msgid "Leaves by Type"
-msgstr "タイプごとの休暇"
+msgstr "タイプ別の休暇"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -345,7 +351,7 @@ msgstr "小麦色"
 #. module: hr_holidays
 #: constraint:resource.calendar.leaves:0
 msgid "Error! leave start-date must be lower then leave end-date."
-msgstr "エラー。休暇開始日は休暇終了日の前でなければいけません。"
+msgstr "エラー：休暇開始日は休暇終了日の前でなければいけません。"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:382
@@ -371,6 +377,9 @@ msgid ""
 "Requests' located in 'Human Resources \\ Leaves' to manage the leave days of "
 "the employees if the configuration does not allow to use this field."
 msgstr ""
+"「法定休暇の残り」の機能は、休暇タイプが１つだけであり、「限度を無効にする」が指定されていない場合(%s "
+"がある)にだけ、使うことができます。さもないと、どの休暇タイプを更新したのか不明になります。\n"
+"もし、従業員の休暇を管理するためにこの項目を使うことができないならば、人材/休暇にある以前のメニュー「休暇申請」と「割当て要求」を使ってください。"
 
 #. module: hr_holidays
 #: view:hr.holidays.status:0
@@ -470,7 +479,7 @@ msgstr "サンゴ色"
 #: view:hr.holidays.summary.dept:0
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_summary_dept
 msgid "Holidays by Department"
-msgstr "部門ごとの休暇"
+msgstr "部門別の休暇"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -532,313 +541,313 @@ msgstr "承認すべき休暇"
 #. module: hr_holidays
 #: constraint:hr.employee:0
 msgid "Error ! You cannot create recursive Hierarchy of Employees."
-msgstr ""
+msgstr "エラー：従業員の反復した階層構造を作ることはできません。"
 
 #. module: hr_holidays
 #: view:hr.employee:0 field:hr.employee,remaining_leaves:0
 msgid "Remaining Legal Leaves"
-msgstr ""
+msgstr "法定休暇の残り日数"
 
 #. module: hr_holidays
 #: field:hr.holidays,manager_id:0
 msgid "First Approval"
-msgstr ""
+msgstr "最初の承認"
 
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_unpaid
 msgid "Unpaid"
-msgstr ""
+msgstr "未払い"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 #: model:ir.actions.act_window,name:hr_holidays.open_company_allocation
 #: model:ir.ui.menu,name:hr_holidays.menu_open_company_allocation
 msgid "Leaves Summary"
-msgstr ""
+msgstr "休暇の要約"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Holidays during last month"
-msgstr ""
+msgstr "先月の休暇"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/wizard/hr_holidays_summary_department.py:44
 #, python-format
 msgid "Error"
-msgstr ""
+msgstr "エラー"
 
 #. module: hr_holidays
 #: view:hr.employee:0
 msgid "Assign Leaves"
-msgstr ""
+msgstr "休暇を割当てます。"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Light Blue"
-msgstr ""
+msgstr "薄青色"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "My Department Leaves"
-msgstr ""
+msgstr "私の部門の休暇"
 
 #. module: hr_holidays
 #: field:hr.employee,current_leave_state:0
 msgid "Current Leave Status"
-msgstr ""
+msgstr "現在の休暇の状態"
 
 #. module: hr_holidays
 #: field:hr.holidays,type:0
 msgid "Request Type"
-msgstr ""
+msgstr "申請タイプ"
 
 #. module: hr_holidays
 #: help:hr.holidays.status,active:0
 msgid ""
 "If the active field is set to false, it will allow you to hide the leave "
 "type without removing it."
-msgstr ""
+msgstr "この項目が正しくないとしても、休暇タイプをそのままにして、それを隠すことができます。"
 
 #. module: hr_holidays
 #: view:hr.holidays.status:0
 msgid "Misc"
-msgstr ""
+msgstr "その他"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "General"
-msgstr ""
+msgstr "一般"
 
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_comp
 msgid "Compensatory Days"
-msgstr ""
+msgstr "振替休日"
 
 #. module: hr_holidays
 #: view:hr.holidays:0 field:hr.holidays,notes:0
 msgid "Reasons"
-msgstr ""
+msgstr "理由"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_available_holidays_report
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_available_holidays_report_tree
 msgid "Leaves Analysis"
-msgstr ""
+msgstr "休暇分析"
 
 #. module: hr_holidays
 #: view:hr.holidays.summary.dept:0 view:hr.holidays.summary.employee:0
 msgid "Cancel"
-msgstr ""
+msgstr "キャンセル"
 
 #. module: hr_holidays
 #: help:hr.holidays.status,color_name:0
 msgid ""
 "This color will be used in the leaves summary located in Reporting\\Leaves "
 "by Departement"
-msgstr ""
+msgstr "部門別休暇報告書の休暇ようやくに、この色が使われます。"
 
 #. module: hr_holidays
 #: view:hr.holidays:0 selection:hr.holidays.summary.dept,holiday_type:0
 #: selection:hr.holidays.summary.employee,holiday_type:0
 msgid "Validated"
-msgstr ""
+msgstr "承諾済み"
 
 #. module: hr_holidays
 #: view:hr.holidays:0 selection:hr.holidays,type:0
 msgid "Allocation Request"
-msgstr ""
+msgstr "割当て申請"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_resource_calendar_leaves
 msgid "Leave Detail"
-msgstr ""
+msgstr "休暇の詳細"
 
 #. module: hr_holidays
 #: field:hr.holidays,double_validation:0
 #: field:hr.holidays.status,double_validation:0
 msgid "Apply Double Validation"
-msgstr ""
+msgstr "二重承認を適用する。"
 
 #. module: hr_holidays
 #: view:hr.holidays.summary.dept:0 view:hr.holidays.summary.employee:0
 msgid "Print"
-msgstr ""
+msgstr "印刷"
 
 #. module: hr_holidays
 #: view:hr.holidays.status:0
 msgid "Details"
-msgstr ""
+msgstr "詳細"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_leaves_by_month
 msgid "My Leaves"
-msgstr ""
+msgstr "私の休暇"
 
 #. module: hr_holidays
 #: selection:hr.holidays,holiday_type:0
 msgid "By Employee Category"
-msgstr ""
+msgstr "従業員カテゴリー別"
 
 #. module: hr_holidays
 #: view:hr.holidays:0 selection:hr.holidays,type:0
 msgid "Leave Request"
-msgstr ""
+msgstr "休暇申請"
 
 #. module: hr_holidays
 #: field:hr.holidays,name:0
 msgid "Description"
-msgstr ""
+msgstr "詳細"
 
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_cl
 msgid "Legal Leaves"
-msgstr ""
+msgstr "法定休暇"
 
 #. module: hr_holidays
 #: sql_constraint:hr.holidays:0
 msgid "The number of days must be greater than 0 !"
-msgstr ""
+msgstr "日数は0 より大きくなければいけません。"
 
 #. module: hr_holidays
 #: help:hr.holidays,holiday_type:0
 msgid ""
 "By Employee: Allocation/Request for individual Employee, By Employee "
 "Category: Allocation/Request for group of employees in category"
-msgstr ""
+msgstr "従業員別：従業員への割当て/申請，従業員カテゴリ：カテゴリ内の従業員グループへの割当て/申請"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:199
 #, python-format
 msgid "You cannot delete a leave which is not in draft state !"
-msgstr ""
+msgstr "草稿状態でない休暇を削除することはできません。"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Search Leave"
-msgstr ""
+msgstr "休暇を検索"
 
 #. module: hr_holidays
 #: field:hr.holidays.summary.employee,holiday_type:0
 msgid "Select Holiday Type"
-msgstr ""
+msgstr "祭日タイプを選んで下さい。"
 
 #. module: hr_holidays
 #: field:hr.holidays.remaining.leaves.user,no_of_leaves:0
 msgid "Remaining leaves"
-msgstr ""
+msgstr "休暇の残り"
 
 #. module: hr_holidays
 #: field:hr.holidays.summary.dept,depts:0
 msgid "Department(s)"
-msgstr ""
+msgstr "部門"
 
 #. module: hr_holidays
 #: field:hr.holidays,manager_id2:0
 msgid "Second Approval"
-msgstr ""
+msgstr "第2の承認"
 
 #. module: hr_holidays
 #: field:hr.holidays,date_to:0
 msgid "End Date"
-msgstr ""
+msgstr "終了日"
 
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_sl
 msgid "Sick Leaves"
-msgstr ""
+msgstr "病欠"
 
 #. module: hr_holidays
 #: help:hr.holidays.status,limit:0
 msgid ""
 "If you tick this checkbox, the system will allow, for this section, the "
 "employees to take more leaves than the available ones."
-msgstr ""
+msgstr "このボックスをチェックすると、従業員はこの部分について有効な休暇よりも多くの休暇を取ることができます。"
 
 #. module: hr_holidays
 #: help:hr.holidays.status,leaves_taken:0
 msgid ""
 "This value is given by the sum of all holidays requests with a negative "
 "value."
-msgstr ""
+msgstr "休暇申請の総計が負数になっています。"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Violet"
-msgstr ""
+msgstr "スミレ色"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,help:hr_holidays.hr_holidays_leaves_assign_legal
 msgid ""
 "You can assign remaining Legal Leaves for each employee, OpenERP will "
 "automatically create and validate allocation requests."
-msgstr ""
+msgstr "残りの法定休暇を各従業員に割り当てることができます。OpenERPが自動的に割当て要求を作成します。"
 
 #. module: hr_holidays
 #: field:hr.holidays.status,max_leaves:0
 msgid "Maximum Allowed"
-msgstr ""
+msgstr "最大許容数"
 
 #. module: hr_holidays
 #: help:hr.holidays,manager_id2:0
 msgid ""
 "This area is automaticly filled by the user who validate the leave with "
 "second level (If Leave type need second validation)"
-msgstr ""
+msgstr "この部分は、休暇を承認をする第２レベルのユーザによって自動的に入力されます（休暇タイプが第２レベルんの承認が必要な場合）。"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Mode"
-msgstr ""
+msgstr "モード"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_summary_dept
 msgid "HR Holidays Summary Report By Department"
-msgstr ""
+msgstr "部門別の休暇要約報告書"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Approve"
-msgstr ""
+msgstr "承認"
 
 #. module: hr_holidays
 #: view:hr.holidays:0 field:hr.holidays,date_from:0
 msgid "Start Date"
-msgstr ""
+msgstr "開始日"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 #: model:ir.actions.act_window,name:hr_holidays.open_allocation_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_open_allocation_holidays
 msgid "Allocation Requests"
-msgstr ""
+msgstr "割当て申請"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Light Yellow"
-msgstr ""
+msgstr "薄黄色"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Light Pink"
-msgstr ""
+msgstr "薄桃色"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Manager"
-msgstr ""
+msgstr "マネジャ"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "To Confirm"
-msgstr ""
+msgstr "確認"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Year"
-msgstr ""
+msgstr "年"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "To Approve"
-msgstr ""
+msgstr "承認する"

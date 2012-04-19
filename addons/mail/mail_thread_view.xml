@@ -3,11 +3,10 @@
     <data>
 
         <!-- toplevel menu -->
+        <menuitem id="mail_feeds_main" name="Feeds" sequence="0"
+            web_icon="static/src/img/feeds.png"
+            web_icon_hover="static/src/img/feeds-hover.png" />
         <record id="mail_feeds_main" model="ir.ui.menu">
-            <field name="name">Feeds</field>
-            <field name="sequence">0</field>
-            <field name="web_icon" eval="static/src/img/feeds.png"/>
-            <field name="web_icon_hover" eval="static/src/img/feeds-hover.png"/>
             <field name="action" ref="action_mail_all_feeds"/>
         </record>
 
