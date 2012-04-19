@@ -88,13 +88,12 @@ instance.web.FormView = instance.web.View.extend({
         } else {
             this.$element.find('.oe_form_buttons').replaceWith(this.$buttons);
         }
-        this.$buttons
-            .on('click','button.oe_form_button_save',this.on_button_save)
-            .on('click','button.oe_form_button_cancel',this.on_button_cancel)
-            .on('click','button.oe_form_button_edit',this.on_button_edit)
-            .on('click','button.oe_form_button_create',this.on_button_create)
-            .on('click','button.oe_form_button_duplicate',this.on_button_duplicate)
-            .on('click','button.oe_form_button_delete',this.on_button_delete);
+        this.$buttons.on('click','.oe_form_button_create',this.on_button_create);
+        this.$buttons.on('click','.oe_form_button_edit',this.on_button_edit);
+        this.$buttons.on('click','.oe_form_button_duplicate',this.on_button_duplicate);
+        this.$buttons.on('click','.oe_form_button_delete',this.on_button_delete);
+        this.$buttons.on('click','.oe_form_button_save',this.on_button_save);
+        this.$buttons.on('click','.oe_form_button_cancel',this.on_button_cancel);
 
         this.$pager = $(QWeb.render("FormView.pager", {'widget':self}));
         if (this.options.$pager) {
@@ -519,10 +518,11 @@ instance.web.FormView = instance.web.View.extend({
             self.set({mode: "view"});
         });
     },
-    on_button_cancel: function() {
+    on_button_cancel: function(event) {
         if (this.can_be_discarded()) {
             this.set({mode: "view"});
         }
+        return false;
     },
     on_button_new: function() {
         var self = this;
