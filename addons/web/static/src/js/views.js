@@ -245,7 +245,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                 controller : null,
                 options : _.extend({
                     $buttons : self.$element.find('.oe_view_manager_buttons'),
-                    $sidebar : self.$element.find('.oe_view_manager_sidebar'),
+                    $sidebar : self.flags.sidebar ? self.$element.find('.oe_view_manager_sidebar') : undefined,
                     $pager : self.$element.find('.oe_view_manager_pager'),
                     action : self.action,
                     action_views_ids : views_ids
