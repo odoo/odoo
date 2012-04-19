@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+    
+     <record model="ir.actions.act_window" id="action_event_view_main">
+           <field name="name">Events</field>
+           <field name="type">ir.actions.act_window</field>
+           <field name="res_model">event.event</field>
+           <field name="view_type">tree</field>
+           <field name="view_mode">kanban</field>
+           <field name="view_id" ref="event.view_event_kanban"/>
+           <field name="context">{"search_default_upcoming":1}</field>
+       </record>
+       
+       <record id="board_customer_portal_inherit_form" model="ir.ui.view">
+           <field name="name">board.customer.portal.inherit.form</field>
+           <field name="model">board.board</field>
+            <field name="inherit_id" ref="portal_customer.board_customer_portal_form"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+            <xpath expr="/form/board/column[0]" position="inside">
+                <action name="%(action_event_view_main)d" string="Upcomming Events"/>
+            </xpath>
+           </field>
+       </record>
+      
+    </data>
+</openerp>

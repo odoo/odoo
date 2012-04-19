@@ -142,6 +142,17 @@ class survey(osv.osv):
                 'nodestroy':True,
             }
         return report
+    
+    def fill_survey(self, cr, uid, ids, context=None):
+        return {
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'survey.question.wiz',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': {'survey_id': ids[0]}
+        }
+
 survey()
 
 class survey_history(osv.osv):

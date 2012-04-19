@@ -32,6 +32,7 @@
     'depends': ['event','portal_customer'],
     'update_xml': [
         'security/portal_customer_security.xml',
+        "board_portal_customer_event_view.xml",
         'portal_customer_event_view.xml',
         'security/ir.model.access.csv',
     ],
