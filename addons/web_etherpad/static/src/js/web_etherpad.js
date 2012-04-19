@@ -6,7 +6,7 @@ openerp.web_etherpad = function (instance) {
             this.$textarea = undefined;
             if (!this.get("effective_readonly")) {
                 this.$textarea = this.$element.find('textarea');
-                //this.$textarea.hide();
+                this.$textarea.hide();
                 this.$textarea.change(_.bind(function() {
                     this.set({'value': instance.web.parse_value(this.$textarea.val(), this)});
                 }, this));
