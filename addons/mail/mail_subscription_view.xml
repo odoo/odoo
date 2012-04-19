@@ -21,6 +21,23 @@
         </record>
 
         <!-- 
+            SUBSCRIPTION HIDE
+                !-->
+        
+        <record model="ir.ui.view" id="view_subscription_hide_tree">
+            <field name="name">mail.subscription.hide.tree</field>
+            <field name="model">mail.subscription.hide</field>
+            <field name="type">tree</field>
+            <field name="sequence">10</field>
+            <field name="arch" type="xml">
+                <tree string="Hidden subscriptions">
+                    <field name="subscription_id"/>
+                    <field name="subtype"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- 
             NOTIFICATION
                 !-->
         
@@ -45,6 +62,13 @@
             <field name="view_mode">tree,form</field>
         </record>
 
+        <record id="action_view_subscription_hide" model="ir.actions.act_window">
+            <field name="name">Hidden subscriptions</field>
+            <field name="res_model">mail.subscription.hide</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
         <record id="action_view_notifications" model="ir.actions.act_window">
             <field name="name">Pushed notif</field>
             <field name="res_model">mail.notification</field>
@@ -52,11 +76,15 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <!-- Add menu entry in Settings/Email -->
-        <menuitem name="Subscriptions" id="menu_email_subscriptions" parent="base.menu_email" action="action_view_subscriptions" sequence="30" groups="base.group_no_one"/>
+        <!-- Add subscriptions related menu entries in Settings/Email -->
+        <menuitem name="Subscriptions" id="menu_email_subscriptions" parent="base.menu_email"
+                    action="action_view_subscriptions" sequence="30" groups="base.group_no_one"/>
+        <menuitem name="Hidden subscriptions" id="menu_email_subscriptions_hide" parent="base.menu_email"
+                    action="action_view_subscription_hide" sequence="31" groups="base.group_no_one"/>
         
-        <!-- Add menu entry in Settings/Email -->
-        <menuitem name="Notifications" id="menu_email_notifications" parent="base.menu_email" action="action_view_notifications" sequence="31" groups="base.group_no_one"/>
+        <!-- Add notifications related menu entry in Settings/Email -->
+        <menuitem name="Notifications" id="menu_email_notifications" parent="base.menu_email"
+                    action="action_view_notifications" sequence="35" groups="base.group_no_one"/>
 
     </data>
 </openerp>
