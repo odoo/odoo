@@ -372,6 +372,7 @@ openerp.web.list_editable = function (instance) {
         init: function() {
             this._super.apply(this, arguments);
             this.rendering_engine = new instance.web.ListEditableRenderingEngine(this);
+            this.options.initial_mode = "edit";
         },
         renderElement: function() {}
     });

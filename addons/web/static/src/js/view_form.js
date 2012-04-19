@@ -52,7 +52,6 @@ instance.web.FormView = instance.web.View.extend({
         this.mutating_mutex = new $.Mutex();
         this.on_change_mutex = new $.Mutex();
         this.reload_mutex = new $.Mutex();
-        this.mode = null;
         this.rendering_engine = new instance.web.form.FormRenderingEngineReadonly(this);
         this.qweb = null; // A QWeb instance will be created if the view is a QWeb template
     },
@@ -499,9 +498,8 @@ instance.web.FormView = instance.web.View.extend({
         }
     },
     switch_mode: function() {
-        var mode = this.get("mode");
         var self = this;
-        if(mode=="view") {
+        if(this.get("mode") == "view") {
             self.$buttons.find('.oe_form_buttons_edit').hide();
             self.$buttons.find('.oe_form_buttons_view').show();
             _.each(this.fields,function(field){
@@ -514,7 +512,6 @@ instance.web.FormView = instance.web.View.extend({
                 field.set({"force_readonly": false});
             });
         }
-        self.mode = mode;
     },
     on_button_save: function() {
         var self = this;
