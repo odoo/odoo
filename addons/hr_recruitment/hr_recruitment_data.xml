@@ -37,29 +37,34 @@
         <field name="name">Doctoral Degree</field>
         <field name="sequence">4</field>
     </record>
-
     <record model="hr.recruitment.stage" id="stage_job1">
         <field name="name">Initial Qualification</field>
+        <field name="state">draft</field>
         <field name="sequence">1</field>
     </record>
     <record model="hr.recruitment.stage" id="stage_job2">
         <field name="name">First Interview</field>
+        <field name="state">open</field>
         <field name="sequence">2</field>
     </record>
     <record model="hr.recruitment.stage" id="stage_job3">
         <field name="name">Second Interview</field>
+        <field name="state">open</field>
         <field name="sequence">3</field>
     </record>
     <record model="hr.recruitment.stage" id="stage_job4">
         <field name="name">Contract Proposed</field>
+        <field name="state">pending</field>
         <field name="sequence">4</field>
     </record>
     <record model="hr.recruitment.stage" id="stage_job5">
         <field name="name">Contract Signed</field>
+        <field name="state">done</field>
         <field name="sequence">5</field>
     </record>
     <record model="hr.recruitment.stage" id="stage_job6">
         <field name="name">Refused</field>
+        <field name="state">cancel</field>
         <field name="sequence">6</field>
     </record>
     <record id="survey_job_0" model="survey">
