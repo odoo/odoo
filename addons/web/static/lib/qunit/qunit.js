@@ -1,9 +1,9 @@
 /**
- * QUnit v1.2.0 - A JavaScript Unit Testing Framework
+ * QUnit v1.4.0pre - A JavaScript Unit Testing Framework
  *
  * http://docs.jquery.com/QUnit
  *
- * Copyright (c) 2011 John Resig, Jörn Zaefferer
+ * Copyright (c) 2012 John Resig, Jörn Zaefferer
  * Dual licensed under the MIT (MIT-LICENSE.txt)
  * or GPL (GPL-LICENSE.txt) licenses.
  */
@@ -13,8 +13,11 @@
 var defined = {
 	setTimeout: typeof window.setTimeout !== "undefined",
 	sessionStorage: (function() {
+		var x = "qunit-test-string";
 		try {
-			return !!sessionStorage.getItem;
+			sessionStorage.setItem(x, x);
+			sessionStorage.removeItem(x);
+			return true;
 		} catch(e) {
 			return false;
 		}
@@ -25,11 +28,10 @@ var	testId = 0,
 	toString = Object.prototype.toString,
 	hasOwn = Object.prototype.hasOwnProperty;
 
-var Test = function(name, testName, expected, testEnvironmentArg, async, callback) {
+var Test = function(name, testName, expected, async, callback) {
 	this.name = name;
 	this.testName = testName;
 	this.expected = expected;
-	this.testEnvironmentArg = testEnvironmentArg;
 	this.async = async;
 	this.callback = callback;
 	this.assertions = [];
@@ -62,6 +64,10 @@ Test.prototype = {
 			runLoggingCallbacks( 'moduleStart', QUnit, {
 				name: this.module
 			} );
+		} else if (config.autorun) {
+			runLoggingCallbacks( 'moduleStart', QUnit, {
+				name: this.module
+			} );
 		}
 
 		config.current = this;
@@ -69,9 +75,6 @@ Test.prototype = {
 			setup: function() {},
 			teardown: function() {}
 		}, this.moduleTestEnvironment);
-		if (this.testEnvironmentArg) {
-			extend(this.testEnvironment, this.testEnvironmentArg);
-		}
 
 		runLoggingCallbacks( 'testStart', QUnit, {
 			name: this.testName,
@@ -274,15 +277,10 @@ var QUnit = {
 	},
 
 	test: function(testName, expected, callback, async) {
-		var name = '<span class="test-name">' + testName + '</span>', testEnvironmentArg;
+		var name = '<span class="test-name">' + escapeInnerText(testName) + '</span>';
 
 		if ( arguments.length === 2 ) {
 			callback = expected;
-			expected = null;
-		}
-		// is 2nd argument a testEnvironment?
-		if ( expected && typeof expected === 'object') {
-			testEnvironmentArg = expected;
 			expected = null;
 		}
 
@@ -294,7 +292,7 @@ var QUnit = {
 			return;
 		}
 
-		var test = new Test(name, testName, expected, testEnvironmentArg, async, callback);
+		var test = new Test(name, testName, expected, async, callback);
 		test.module = config.currentModule;
 		test.moduleTestEnvironment = config.currentModuleTestEnviroment;
 		test.queue();
@@ -312,6 +310,9 @@ var QUnit = {
 	 * @example ok( "asdfasdf".length > 5, "There must be at least 5 chars" );
 	 */
 	ok: function(a, msg) {
+		if (!config.current) {
+			throw new Error("ok() assertion outside test context, was " + sourceFromStacktrace(2));
+		}
 		a = !!a;
 		var details = {
 			result: a,
@@ -447,9 +448,14 @@ var QUnit = {
 	QUnit.constructor = F;
 })();
 
-// Backwards compatibility, deprecated
-QUnit.equals = QUnit.equal;
-QUnit.same = QUnit.deepEqual;
+// deprecated; still export them to window to provide clear error messages
+// next step: remove entirely
+QUnit.equals = function() {
+	throw new Error("QUnit.equals has been deprecated since 2009 (e88049a0), use QUnit.equal instead");
+};
+QUnit.same = function() {
+	throw new Error("QUnit.same has been deprecated since 2009 (e88049a0), use QUnit.deepEqual instead");
+};
 
 // Maintain internal state
 var config = {
@@ -513,8 +519,7 @@ if ( typeof exports === "undefined" || typeof require === "undefined" ) {
 	extend(window, QUnit);
 	window.QUnit = QUnit;
 } else {
-	extend(exports, QUnit);
-	exports.QUnit = QUnit;
+	module.exports = QUnit;
 }
 
 // define these after exposing globals to keep them in these QUnit namespace only
@@ -535,6 +540,16 @@ extend(QUnit, {
 			queue: [],
 			semaphore: 0
 		});
+
+		var qunit = id( "qunit" );
+		if ( qunit ) {
+			qunit.innerHTML =
+				'<h1 id="qunit-header">' + escapeInnerText( document.title ) + '</h1>' +
+				'<h2 id="qunit-banner"></h2>' +
+				'<div id="qunit-testrunner-toolbar"></div>' +
+				'<h2 id="qunit-userAgent"></h2>' +
+				'<ol id="qunit-tests"></ol>';
+		}
 
 		var tests = id( "qunit-tests" ),
 			banner = id( "qunit-banner" ),
@@ -564,15 +579,15 @@ extend(QUnit, {
 	/**
 	 * Resets the test setup. Useful for tests that modify the DOM.
 	 *
-	 * If jQuery is available, uses jQuery's html(), otherwise just innerHTML.
+	 * If jQuery is available, uses jQuery's replaceWith(), otherwise use replaceChild
 	 */
 	reset: function() {
-		if ( window.jQuery ) {
-			jQuery( "#qunit-fixture" ).html( config.fixture );
-		} else {
-			var main = id( 'qunit-fixture' );
-			if ( main ) {
-				main.innerHTML = config.fixture;
+		var main = id( 'qunit-fixture' );
+		if ( main ) {
+			if ( window.jQuery ) {
+				jQuery( main ).replaceWith( config.fixture.cloneNode(true) );
+			} else {
+				main.parentNode.replaceChild(config.fixture.cloneNode(true), main);
 			}
 		}
 	},
@@ -636,6 +651,9 @@ extend(QUnit, {
 	},
 
 	push: function(result, actual, expected, message) {
+		if (!config.current) {
+			throw new Error("assertion outside test context, was " + sourceFromStacktrace());
+		}
 		var details = {
 			result: result,
 			message: message,
@@ -645,21 +663,22 @@ extend(QUnit, {
 
 		message = escapeInnerText(message) || (result ? "okay" : "failed");
 		message = '<span class="test-message">' + message + "</span>";
-		expected = escapeInnerText(QUnit.jsDump.parse(expected));
-		actual = escapeInnerText(QUnit.jsDump.parse(actual));
-		var output = message + '<table><tr class="test-expected"><th>Expected: </th><td><pre>' + expected + '</pre></td></tr>';
-		if (actual != expected) {
-			output += '<tr class="test-actual"><th>Result: </th><td><pre>' + actual + '</pre></td></tr>';
-			output += '<tr class="test-diff"><th>Diff: </th><td><pre>' + QUnit.diff(expected, actual) +'</pre></td></tr>';
-		}
+		var output = message;
 		if (!result) {
+			expected = escapeInnerText(QUnit.jsDump.parse(expected));
+			actual = escapeInnerText(QUnit.jsDump.parse(actual));
+			output += '<table><tr class="test-expected"><th>Expected: </th><td><pre>' + expected + '</pre></td></tr>';
+			if (actual != expected) {
+				output += '<tr class="test-actual"><th>Result: </th><td><pre>' + actual + '</pre></td></tr>';
+				output += '<tr class="test-diff"><th>Diff: </th><td><pre>' + QUnit.diff(expected, actual) +'</pre></td></tr>';
+			}
 			var source = sourceFromStacktrace();
 			if (source) {
 				details.source = source;
 				output += '<tr class="test-source"><th>Source: </th><td><pre>' + escapeInnerText(source) + '</pre></td></tr>';
 			}
+			output += "</table>";
 		}
-		output += "</table>";
 
 		runLoggingCallbacks( 'log', QUnit, details );
 
@@ -779,7 +798,7 @@ QUnit.load = function() {
 
 	var main = id('qunit-fixture');
 	if ( main ) {
-		config.fixture = main.innerHTML;
+		config.fixture = main.cloneNode(true);
 	}
 
 	if (config.autostart) {
@@ -847,6 +866,15 @@ function done() {
 		].join(" ");
 	}
 
+	// clear own sessionStorage items if all tests passed
+	if ( config.reorder && defined.sessionStorage && config.stats.bad === 0 ) {
+		for (var key in sessionStorage) {
+			if (sessionStorage.hasOwnProperty(key) && key.indexOf("qunit-") === 0 ) {
+				sessionStorage.removeItem(key);
+			}
+		}
+	}
+
 	runLoggingCallbacks( 'done', QUnit, {
 		failed: config.stats.bad,
 		passed: passed,
@@ -881,16 +909,21 @@ function validTest( name ) {
 
 // so far supports only Firefox, Chrome and Opera (buggy)
 // could be extended in the future to use something like https://github.com/csnover/TraceKit
-function sourceFromStacktrace() {
+function sourceFromStacktrace(offset) {
+	offset = offset || 3;
 	try {
 		throw new Error();
 	} catch ( e ) {
 		if (e.stacktrace) {
 			// Opera
-			return e.stacktrace.split("\n")[6];
+			return e.stacktrace.split("\n")[offset + 3];
 		} else if (e.stack) {
 			// Firefox, Chrome
-			return e.stack.split("\n")[4];
+			var stack = e.stack.split("\n");
+			if (/^error$/i.test(stack[0])) {
+				stack.shift();
+			}
+			return stack[offset];
 		} else if (e.sourceURL) {
 			// Safari, PhantomJS
 			// TODO sourceURL points at the 'throw new Error' line above, useless
@@ -989,6 +1022,7 @@ function fail(message, exception, callback) {
 	if ( typeof console !== "undefined" && console.error && console.warn ) {
 		console.error(message);
 		console.error(exception);
+		console.error(exception.stack);
 		console.warn(callback.toString());
 
 	} else if ( window.opera && opera.postError ) {
@@ -1368,9 +1402,9 @@ QUnit.jsDump = (function() {
 				var ret = [ ];
 				QUnit.jsDump.up();
 				for ( var key in map ) {
-				    var val = map[key];
+					var val = map[key];
 					ret.push( QUnit.jsDump.parse(key,'key') + ': ' + QUnit.jsDump.parse(val, undefined, stack));
-                }
+				}
 				QUnit.jsDump.down();
 				return join( '{', ret, '}' );
 			},
@@ -1594,4 +1628,5 @@ QUnit.diff = (function() {
 	};
 })();
 
-})(this);
+// get at whatever the global object is, like window in browsers
+})( (function() {return this}).call() );

@@ -405,14 +405,14 @@ def session_context(request, storage_path, session_cookie='sessionid'):
 #----------------------------------------------------------
 addons_module = {}
 addons_manifest = {}
-controllers_class = {}
+controllers_class = []
 controllers_object = {}
 controllers_path = {}
 
 class ControllerType(type):
     def __init__(cls, name, bases, attrs):
         super(ControllerType, cls).__init__(name, bases, attrs)
-        controllers_class["%s.%s" % (cls.__module__, cls.__name__)] = cls
+        controllers_class.append(("%s.%s" % (cls.__module__, cls.__name__), cls))
 
 class Controller(object):
     __metaclass__ = ControllerType
@@ -440,12 +440,12 @@ class Root(object):
         self.root = '/web/webclient/home'
         self.config = options
 
-        if self.config.backend == 'local':
-            conn = LocalConnector()
-        else:
-            conn = openerplib.get_connector(hostname=self.config.server_host,
-                   port=self.config.server_port)
-        self.config.connector = conn
+        if not hasattr(self.config, 'connector'):
+            if self.config.backend == 'local':
+                self.config.connector = LocalConnector()
+            else:
+                self.config.connector = openerplib.get_connector(
+                    hostname=self.config.server_host, port=self.config.server_port)
 
         self.session_cookie = 'sessionid'
         self.addons = {}
@@ -526,7 +526,7 @@ class Root(object):
                         addons_module[module] = m
                         addons_manifest[module] = manifest
                         statics['/%s/static' % module] = path_static
-        for k, v in controllers_class.items():
+        for k, v in controllers_class:
             if k not in controllers_object:
                 o = v()
                 controllers_object[k] = o

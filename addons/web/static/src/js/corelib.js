@@ -1390,6 +1390,7 @@ instance.web.Connection = instance.web.CallbackEnabled.extend( /** @lends instan
             // an invalid session or no session at all), refresh session data
             // (should not change, but just in case...)
             _.extend(self, {
+                session_id: result.session_id,
                 db: result.db,
                 username: result.login,
                 uid: result.uid,

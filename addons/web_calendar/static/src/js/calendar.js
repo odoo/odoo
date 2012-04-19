@@ -102,9 +102,9 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
 
         this.init_scheduler();
 
-        if (this.options.sidebar) {
+        if (! this.sidebar && this.options.$sidebar) {
             this.sidebar = new instance.web_calendar.Sidebar(this);
-            this.has_been_loaded.pipe(this.sidebar.appendTo(this.$element));
+            this.has_been_loaded.pipe(this.sidebar.appendTo(this.options.$sidebar));
         }
 
         return this.has_been_loaded.resolve();
@@ -158,7 +158,7 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
         scheduler.setCurrentView(scheduler._date);
     },
     refresh_minical: function() {
-        if (this.options.sidebar) {
+        if (this.sidebar) {
             scheduler.updateCalendar(this.sidebar.mini_calendar);
         }
     },
@@ -217,7 +217,7 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
         scheduler.parse(res_events, 'json');
         this.refresh_scheduler();
         this.refresh_minical();
-        if (!no_filter_reload && this.options.sidebar) {
+        if (!no_filter_reload && this.sidebar) {
             this.sidebar.filter.on_events_loaded(sidebar_items);
         }
     },
@@ -412,7 +412,6 @@ instance.web_calendar.CalendarFormDialog = instance.web.Dialog.extend({
         var self = this;
         this._super();
         this.form = new instance.web.FormView(this, this.dataset, this.view_id, {
-            sidebar: false,
             pager: false
         });
         this.form.appendTo(this.$element);

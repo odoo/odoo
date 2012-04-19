@@ -283,7 +283,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             // Lazy loading of views
             var controllerclass = this.registry.get_object(view_type);
             var options = _.clone(view.options);
-            if (view_type === "form") {
+            if (view_type === "form" && this.action) {
                 switch (this.action.target) {
                     case 'new':
                     case 'inline':
@@ -353,6 +353,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
      * @returns {$.Deferred} switching end signal
      */
     on_prev_view: function (options) {
+        options = options || {};
         var current_view = this.views_history.pop();
         var previous_view = this.views_history[this.views_history.length - 1] || options['default'];
         if (options.created && current_view === 'form' && previous_view === 'list') {
@@ -1055,7 +1056,7 @@ instance.web.View = instance.web.Widget.extend({
                 "model": this.dataset.model,
                 "view_id": this.view_id,
                 "view_type": this.view_type,
-                toolbar: this.options.sidebar,
+                toolbar: !!this.options.$sidebar,
                 context: context
                 }).pipe(this.on_loaded);
         }
@@ -1072,7 +1073,6 @@ instance.web.View = instance.web.Widget.extend({
             // All possible views options should be defaulted here
             $sidebar: null,
             sidebar_id: null,
-            sidebar: true,
             action: null,
             action_views_ids: {}
         });
@@ -1163,7 +1163,6 @@ instance.web.View = instance.web.Widget.extend({
      */
     set_embedded_view: function(embedded_view) {
         this.embedded_view = embedded_view;
-        this.options.sidebar = false;
     },
     do_show: function () {
         this.$element.show();
