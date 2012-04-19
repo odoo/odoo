@@ -22,6 +22,7 @@
 from base_calendar import base_calendar
 from crm import crm_base, crm_case
 from osv import fields, osv
+import tools
 from tools.translate import _
 import logging
 
@@ -99,7 +100,11 @@ class crm_meeting(crm_base, osv.osv):
         # update context: if come from phonecall, default state values can make the message_append_note crash
         context.pop('default_state', False)
         for meeting in self.browse(cr, uid, ids, context=context):
-            message = _("A meeting has been <b>scheduled</b> on <em>%s</em>.") % (meeting.date)
+            # convert datetime field to a datetime, using server format, then
+            # convert it to the user TZ and re-render it with %Z to add the timezone
+            meeting_datetime = fields.DT.datetime.strptime(meeting.date, tools.DEFAULT_SERVER_DATETIME_FORMAT)
+            meeting_date_str = fields.datetime.context_timestamp(cr, uid, meeting_datetime, context=context).strftime(tools.DATETIME_FORMATS_MAP['%+'] + " (%Z)")
+            message = _("A meeting has been <b>scheduled</b> on <em>%s</em>.") % (meeting_date_str)
             if meeting.opportunity_id: # meeting can be create from phonecalls or opportunities, therefore checking for the parent
                 lead = meeting.opportunity_id
                 parent_message = _("Meeting linked to the opportunity <em>%s</em> has been <b>created</b> and <b>cscheduled</b> on <em>%s</em>.") % (lead.name, meeting.date)
