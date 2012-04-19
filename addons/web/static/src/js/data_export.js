@@ -64,6 +64,10 @@ openerp.web.DataExport = openerp.web.Dialog.extend({
         var $fmts = this.$element.find('#export_format');
         _(formats).each(function (format) {
             var opt = new Option(format.label, format.tag);
+            //To fix IE8 Issue which doesn't support above syntax
+            if(!opt.childNodes.length){
+            	$(opt).html(format.label);
+            }
             if (format.error) {
                 opt.disabled = true;
                 opt.replaceChild(
@@ -348,7 +352,12 @@ openerp.web.DataExport = openerp.web.Dialog.extend({
         var field_list = this.$element.find('#fields_list');
         if (this.$element.find("#fields_list option[value='" + field_id + "']")
                 && !this.$element.find("#fields_list option[value='" + field_id + "']").length) {
-            field_list.append(new Option(string, field_id));
+            var opt = new Option(string, field_id);
+            //To fix IE8 Issue which doesn't support above syntax
+            if(!opt.childNodes.length){
+            	$(opt).html(string);
+            }
+            field_list.append(opt);
         }
     },
     get_fields: function() {
