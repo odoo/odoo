@@ -275,6 +275,8 @@ openerp.mail = function(session) {
             record.tr_body = this.do_truncate_string(record.body, this.params.msg_more_limit);
             record.body = this.do_replace_internal_links(record.body);
             if (record.tr_body) record.tr_body = this.do_replace_internal_links(record.tr_body);
+            // format date according to the user timezone
+            record.date = session.web.format_value(record.date, {type:"datetime"});
             // render
             $(session.web.qweb.render('ThreadMsg', {'record': record, 'thread': this, 'params': this.params, 'display': this.display})
                     ).appendTo(this.$element.children('div.oe_mail_thread_display:first'));
