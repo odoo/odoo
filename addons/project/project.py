@@ -32,6 +32,8 @@ from openerp.addons.resource.faces import task as Task
 #    _name = 'project.project'
 #project_project()
 
+_TASK_STATE = [('draft', 'New'),('open', 'In Progress'),('pending', 'Pending'), ('done', 'Done'), ('cancelled', 'Cancelled')]
+
 class project_task_type(osv.osv):
     _name = 'project.task.type'
     _description = 'Task Stage'
@@ -42,8 +44,12 @@ class project_task_type(osv.osv):
         'sequence': fields.integer('Sequence'),
         'project_default': fields.boolean('Common to All Projects', help="If you check this field, this stage will be proposed by default on each new project. It will not assign this stage to existing projects."),
         'project_ids': fields.many2many('project.project', 'project_task_type_rel', 'type_id', 'project_id', 'Projects'),
+        'state': fields.selection(_TASK_STATE, 'State', required=True,
+                                help='If the task is created the state is \'Draft\'.\n If the task is started, the state becomes \'In Progress\'.\n If review is needed the task is in \'Pending\' state.\
+                                \n If the task is over, the states is set to \'Done\'.'),
     }
     _defaults = {
+        'state': 'draft',
         'sequence': 1
     }
     _order = 'sequence'
@@ -662,9 +668,7 @@ class task(osv.osv):
         'priority': fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Important'), ('0','Very important')], 'Priority', select=True),
         'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list of tasks."),
         'type_id': fields.many2one('project.task.type', 'Stage'),
-        'state': fields.selection([('draft', 'New'),('open', 'In Progress'),('pending', 'Pending'), ('done', 'Done'), ('cancelled', 'Cancelled')], 'State', readonly=True, required=True,
-                                  help='If the task is created the state is \'Draft\'.\n If the task is started, the state becomes \'In Progress\'.\n If review is needed the task is in \'Pending\' state.\
-                                  \n If the task is over, the states is set to \'Done\'.'),
+        'state': fields.related('type_id','state', type='selection', selection=_TASK_STATE, string="State", readonly=True, store=True),
         'kanban_state': fields.selection([('normal', 'Normal'),('blocked', 'Blocked'),('done', 'Ready To Pull')], 'Kanban State',
                                          help="A task's kanban state indicates special situations affecting it:\n"
                                               " * Normal is the default situation\n"
