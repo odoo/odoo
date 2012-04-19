@@ -119,6 +119,8 @@ class mail_group(osv.osv):
                             ondelete='set null', required=True, select=1,
                             help="Responsible of the group that has all rights on the record."),
         'public': fields.boolean('Public', help='This group is visible by non members. Invisible groups can add members through the invite button.'),
+        'models': fields.many2many('ir.model', rel='mail_group_models_rel', id1='mail_group_id', id2='model_id',
+                            string='Linked models', help='Linked models'),
         'photo_big': fields.binary('Full-size photo', help='Field holding the full-sized PIL-supported and base64 encoded version of the group image. The photo field is used as an interface for this field.'),
         'photo': fields.function(_get_photo, fnct_inv=_set_photo, string='Photo', type="binary",
             store = {
