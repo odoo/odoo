@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    
+        <!-- Creating Portal Group -->
+
+      <record id="portal_customer_lead_rule" model="ir.rule">
+            <field name="name">Personal Lead</field>
+            <field ref="crm.model_crm_lead" name="model_id"/>
+            <field name="domain_force">[('partner_id.email','=',user.login)]</field>
+             <field name="groups" eval="[(4, ref('portal_customer.group_sales_portal'))]"/>
+       </record>        
+        
+    </data>
+</openerp>

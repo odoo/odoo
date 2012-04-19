@@ -31,6 +31,7 @@
     'depends' : ["portal_customer","crm"],    
     'website': 'http://www.openerp.com',
     'update_xml': [
+         'security/portal_customer_lead_security.xml',
         'portal_customer_lead_view.xml',
         'security/ir.model.access.csv',
      ],
