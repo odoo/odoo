@@ -1,53 +1,6 @@
 <openerp>
   <data>
 
-     <!-- Define default users preferences-->
-     <record id="view_user_preferences_config_form" model="ir.ui.view">
-          <field name="name">Set default users preferences</field>
-          <field name="model">user.preferences.config</field>
-          <field name="type">form</field>
-          <field name="inherit_id" ref="base.res_config_view_base"/>
-          <field name="arch" type="xml">
-            <data>
-              <form position="attributes">
-                <attribute name="string">Define Users's Preferences</attribute>
-              </form>
-            <xpath expr="//separator[@string=&quot;title&quot;]" position="attributes">
-                  <attribute name="string">Define Users's Preferences</attribute>
-            </xpath>
-            <xpath expr="//label[@string='description']" position="attributes">
-              <attribute name="string">This will set the default preferences for new users and update all existing ones. Afterwards, users are free to change those values on their own user preference form.</attribute>
-            </xpath>
-            <xpath expr="//separator[@string=&quot;vsep&quot;]" position="attributes">
-                  <attribute name="string"/>
-                  <attribute name="rowspan">12</attribute>
-            </xpath>
-             <group string="res_config_contents" position="replace">
-                    <group colspan="4">
-                        <field colspan="4" name="view"/>
-                        <field colspan="4" name="context_lang"/>
-                        <field colspan="4" name="context_tz"/>
-                        <field colspan="4" name="menu_tips"/>
-                  </group>
-              </group>
-            </data>
-          </field>
-      </record>
-      <record id="action_user_preferences_config_form" model="ir.actions.act_window">
-          <field name="name">Define default users preferences</field>
-          <field name="type">ir.actions.act_window</field>
-          <field name="res_model">user.preferences.config</field>
-          <field name="view_type">form</field>
-          <field name="view_id" ref="view_user_preferences_config_form"/>
-          <field name="view_mode">form</field>
-          <field name="target">new</field>
-      </record>
-      <record id="config_action_user_preferences_config_form" model="ir.actions.todo">
-          <field name="action_id" ref="action_user_preferences_config_form"/>
-          <field name="category_id" ref="base.category_administration_config"/>
-          <field name="type">once</field>
-      </record>
-
       <!--   Specify Your Terminology Config Wiz-->
      <record id="base_setup_terminology_form" model="ir.ui.view">
           <field name="name">Specify Your Terminology</field>
