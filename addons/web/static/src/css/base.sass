@@ -1490,9 +1490,11 @@ $colour4: #8a89ba
     // Debugging stuff {{{
     .oe_layout_debugging
         .oe_form_group
-            outline: 2px dashed red
+            outline: 2px dashed green
         .oe_form_group_cell
             outline: 1px solid blue
+        .oe_form_group:hover, .oe_form_group_cell:hover
+            outline-color: red
 
     .oe_debug_view
         float: left

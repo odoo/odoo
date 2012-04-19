@@ -1119,7 +1119,20 @@ instance.web.form.FormRenderingEngine = instance.web.Class.extend({
                         }
                         break;
                     default:
-                        to_compute.push($td);
+                        var width = _.str.trim($child.attr('width') || ''),
+                            iwidth = parseInt(width, 10);
+                        if (iwidth) {
+                            if (width.substr(-1) === '%') {
+                                total -= iwidth;
+                                width = iwidth + '%';
+                            }
+                            $td.attr('width', width);
+                            $child.removeAttr('width');
+                            row_cols--;
+                        } else {
+                            to_compute.push($td);
+                        }
+
                 }
             });
             var unit = Math.floor(total / row_cols);

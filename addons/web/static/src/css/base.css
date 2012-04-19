@@ -1783,10 +1783,13 @@
   font-weight: bold;
 }
 .openerp .oe_layout_debugging .oe_form_group {
-  outline: 2px dashed red;
+  outline: 2px dashed green;
 }
 .openerp .oe_layout_debugging .oe_form_group_cell {
   outline: 1px solid blue;
+}
+.openerp .oe_layout_debugging .oe_form_group:hover, .openerp .oe_layout_debugging .oe_form_group_cell:hover {
+  outline-color: red;
 }
 .openerp .oe_debug_view {
   float: left;
