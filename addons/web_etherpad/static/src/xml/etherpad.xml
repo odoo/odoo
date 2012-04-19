@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- vim:fdl=1:
+-->
+<templates id="template" xml:space="preserve">
+
+
+<t t-name="FieldEtherpad">
+    <t t-if="!widget.get('effective_readonly')">
+        <div class="oe_form_field_text">
+            <textarea rows="6"
+                t-att-name="widget.name"
+                class="field_text"
+                t-att-tabindex="widget.node.attrs.tabindex"
+                t-att-autofocus="widget.node.attrs.autofocus"
+            ></textarea><img class="oe_field_translate oe_input_icon" t-if="widget.field.translate" t-att-src='_s + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"/>
+            <div t-attf-class="etherpad_field_#{widget.name}" ></div> 
+        </div>
+    </t>
+</t>
+
+</templates>
