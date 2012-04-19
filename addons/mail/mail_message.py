@@ -206,6 +206,12 @@ class mail_message(osv.osv):
                         ('comment', 'Comment'),
                         ('notification', 'System notification'),
                         ], 'Type', help="Message type: e-mail for e-mail message, notification for system message, comment for other messages such as user replies"),
+        'message_subtype': fields.selection([
+                        ('email', 'e-mail'),
+                        ('comment', 'Comment'),
+                        ('create', 'Create'),
+                        ('cancel', 'Cancel'),
+                        ], 'Type', help="Message subtype, such as create or cancel. May be overriden by addons."),
         'partner_id': fields.many2one('res.partner', 'Related partner'),
         'user_id': fields.many2one('res.users', 'Related user', readonly=1),
         'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel', 'message_id', 'attachment_id', 'Attachments'),
@@ -224,6 +230,7 @@ class mail_message(osv.osv):
         
     _defaults = {
         'type': 'email',
+        'message_subtype': 'email',
         'state': 'received',
     }
     
