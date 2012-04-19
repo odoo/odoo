@@ -1,0 +1,41 @@
+<openerp>
+    <data>
+
+        <record id="view_general_configuration" model="ir.ui.view">
+            <field name="name">General Application</field>
+            <field name="model">general.configuration</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+	        <form string ="General Application">
+                <separator string="Company Settings" colspan="4"/>
+                <group colspan="4" col="4">
+                    <group colspan="2" col="2">
+                        <label string="Set Company Header and Footer :"/>
+                        <button name="base_setup_company" string="Header and Footer" type="object" icon="gtk-go-forward"/>
+                    </group>
+                    <group colspan="2" col="2">
+                        <field name="module_multi_company"/>
+                    </group>
+                </group>
+                <separator string="Others" colspan="4"/>
+                    <group colspan="4" col="4">
+                       <field name="module_share"/>
+                       <field name="module_portal"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_general_configuration" model="ir.actions.act_window">
+            <field name="name">Configure General Application</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">general.configuration</field>
+            <field name="view_id" ref="view_general_configuration"/>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+        </record>
+
+        <menuitem id="menu_general_configuration" name="General Setting" parent="base.menu_config" sequence="9" action="action_general_configuration"/>
+
+    </data>
+</openerp>
