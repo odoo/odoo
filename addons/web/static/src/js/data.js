@@ -18,7 +18,428 @@ instance.web.serialize_sort = function (criterion) {
         }).join(', ');
 };
 
-instance.web.DataGroup =  instance.web.OldWidget.extend( /** @lends instance.web.DataGroup# */{
+instance.web.Query = instance.web.Class.extend({
+    init: function (model, fields) {
+        this._model = model;
+        this._fields = fields;
+        this._filter = [];
+        this._context = {};
+        this._limit = false;
+        this._offset = 0;
+        this._order_by = [];
+    },
+    clone: function (to_set) {
+        to_set = to_set || {};
+        var q = new instance.web.Query(this._model, this._fields);
+        q._context = this._context;
+        q._filter = this._filter;
+        q._limit = this._limit;
+        q._offset = this._offset;
+        q._order_by = this._order_by;
+
+        for(var key in to_set) {
+            if (!to_set.hasOwnProperty(key)) { continue; }
+            switch(key) {
+            case 'filter':
+                q._filter = new instance.web.CompoundDomain(
+                        q._filter, to_set.filter);
+                break;
+            case 'context':
+                q._context = new instance.web.CompoundContext(
+                        q._context, to_set.context);
+                break;
+            case 'limit':
+            case 'offset':
+            case 'order_by':
+                q['_' + key] = to_set[key];
+            }
+        }
+        return q;
+    },
+    _execute: function () {
+        var self = this;
+        return instance.connection.rpc('/web/dataset/search_read', {
+            model: this._model.name,
+            fields: this._fields || false,
+            domain: this._model.domain(this._filter),
+            context: this._model.context(this._context),
+            offset: this._offset,
+            limit: this._limit,
+            sort: instance.web.serialize_sort(this._order_by)
+        }).pipe(function (results) {
+            self._count = results.length;
+            return results.records;
+        }, null);
+    },
+    /**
+     * Fetches the first record matching the query, or null
+     *
+     * @returns {jQuery.Deferred<Object|null>}
+     */
+    first: function () {
+        var self = this;
+        return this.clone({limit: 1})._execute().pipe(function (records) {
+            delete self._count;
+            if (records.length) { return records[0]; }
+            return null;
+        });
+    },
+    /**
+     * Fetches all records matching the query
+     *
+     * @returns {jQuery.Deferred<Array<>>}
+     */
+    all: function () {
+        return this._execute();
+    },
+    /**
+     * Fetches the number of records matching the query in the database
+     *
+     * @returns {jQuery.Deferred<Number>}
+     */
+    count: function () {
+        if (this._count != undefined) { return $.when(this._count); }
+        return this._model.call(
+            'search_count', [this._filter], {
+                context: this._model.context(this._context)});
+    },
+    /**
+     * Performs a groups read according to the provided grouping criterion
+     *
+     * @param {String|Array<String>} grouping
+     * @returns {jQuery.Deferred<Array<openerp.web.data.Group>> | null}
+     */
+    group_by: function (grouping) {
+        if (grouping === undefined) {
+            return null;
+        }
+
+        if (!(grouping instanceof Array)) {
+            grouping = _.toArray(arguments);
+        }
+        if (_.isEmpty(grouping)) { return null; }
+
+        var self = this;
+        return this._model.call('read_group', {
+            groupby: grouping,
+            fields: _.uniq(grouping.concat(this._fields || [])),
+            domain: this._model.domain(this._filter),
+            context: this._model.context(this._context),
+            offset: this._offset,
+            limit: this._limit,
+            orderby: instance.web.serialize_sort(this._order_by) || false
+        }).pipe(function (results) {
+            return _(results).map(function (result) {
+                return new instance.web.data.Group(
+                    self._model.name, grouping[0], result);
+            });
+        });
+    },
+    /**
+     * Creates a new query with the union of the current query's context and
+     * the new context.
+     *
+     * @param context context data to add to the query
+     * @returns {openerp.web.Query}
+     */
+    context: function (context) {
+        if (!context) { return this; }
+        return this.clone({context: context});
+    },
+    /**
+     * Creates a new query with the union of the current query's filter and
+     * the new domain.
+     *
+     * @param domain domain data to AND with the current query filter
+     * @returns {openerp.web.Query}
+     */
+    filter: function (domain) {
+        if (!domain) { return this; }
+        return this.clone({filter: domain});
+    },
+    /**
+     * Creates a new query with the provided limit replacing the current
+     * query's own limit
+     *
+     * @param {Number} limit maximum number of records the query should retrieve
+     * @returns {openerp.web.Query}
+     */
+    limit: function (limit) {
+        return this.clone({limit: limit});
+    },
+    /**
+     * Creates a new query with the provided offset replacing the current
+     * query's own offset
+     *
+     * @param {Number} offset number of records the query should skip before starting its retrieval
+     * @returns {openerp.web.Query}
+     */
+    offset: function (offset) {
+        return this.clone({offset: offset});
+    },
+    /**
+     * Creates a new query with the provided ordering parameters replacing
+     * those of the current query
+     *
+     * @param {String...} fields ordering clauses
+     * @returns {openerp.web.Query}
+     */
+    order_by: function (fields) {
+        if (fields === undefined) { return this; }
+        if (!(fields instanceof Array)) {
+            fields = _.toArray(arguments);
+        }
+        if (_.isEmpty(fields)) { return this; }
+        return this.clone({order_by: fields});
+    }
+});
+
+instance.web.Model = instance.web.Class.extend(/** @lends openerp.web.Model# */{
+    /**
+     * @constructs instance.web.Model
+     * @extends instance.web.Class
+     *
+     * @param {String} model_name name of the OpenERP model this object is bound to
+     * @param {Object} [context]
+     * @param {Array} [domain]
+     */
+    init: function (model_name, context, domain) {
+        this.name = model_name;
+        this._context = context || {};
+        this._domain = domain || [];
+    },
+    /**
+     * @deprecated does not allow to specify kwargs, directly use call() instead
+     */
+    get_func: function (method_name) {
+        var self = this;
+        return function () {
+            return self.call(method_name, _.toArray(arguments));
+        };
+    },
+    /**
+     * Call a method (over RPC) on the bound OpenERP model.
+     *
+     * @param {String} method name of the method to call
+     * @param {Array} [args] positional arguments
+     * @param {Object} [kwargs] keyword arguments
+     * @returns {jQuery.Deferred<>} call result
+     */
+    call: function (method, args, kwargs) {
+        args = args || [];
+        kwargs = kwargs || {};
+        if (!_.isArray(args)) {
+            // call(method, kwargs)
+            kwargs = args;
+            args = [];
+        }
+        return instance.connection.rpc('/web/dataset/call_kw', {
+            model: this.name,
+            method: method,
+            args: args,
+            kwargs: kwargs
+        });
+    },
+    /**
+     * Fetches a Query instance bound to this model, for searching
+     *
+     * @param {Array<String>} [fields] fields to ultimately fetch during the search
+     * @returns {openerp.web.Query}
+     */
+    query: function (fields) {
+        return new instance.web.Query(this, fields);
+    },
+    /**
+     * Executes a signal on the designated workflow, on the bound OpenERP model
+     *
+     * @param {Number} id workflow identifier
+     * @param {String} signal signal to trigger on the workflow
+     */
+    exec_workflow: function (id, signal) {
+        return instance.connection.rpc('/web/dataset/exec_workflow', {
+            model: this.name,
+            id: id,
+            signal: signal
+        });
+    },
+    /**
+     * Fetches the model's domain, combined with the provided domain if any
+     *
+     * @param {Array} [domain] to combine with the model's internal domain
+     * @returns The model's internal domain, or the AND-ed union of the model's internal domain and the provided domain
+     */
+    domain: function (domain) {
+        if (!domain) { return this._domain; }
+        return new instance.web.CompoundDomain(
+            this._domain, domain);
+    },
+    /**
+     * Fetches the combination of the user's context and the domain context,
+     * combined with the provided context if any
+     *
+     * @param {Object} [context] to combine with the model's internal context
+     * @returns The union of the user's context and the model's internal context, as well as the provided context if any. In that order.
+     */
+    context: function (context) {
+        return new instance.web.CompoundContext(
+            instance.connection.user_context, this._context, context || {});
+    },
+    /**
+     * Button action caller, needs to perform cleanup if an action is returned
+     * from the button (parsing of context and domain, and fixup of the views
+     * collection for act_window actions)
+     *
+     * FIXME: remove when evaluator integrated
+     */
+    call_button: function (method, args) {
+        return instance.connection.rpc('/web/dataset/call_button', {
+            model: this.name,
+            method: method,
+            domain_id: null,
+            context_id: args.length - 1,
+            args: args || []
+        });
+    },
+});
+
+instance.web.Traverser = instance.web.Class.extend(/** @lends openerp.web.Traverser# */{
+    /**
+     * @constructs instance.web.Traverser
+     * @extends instance.web.Class
+     *
+     * @param {instance.web.Model} model instance this traverser is bound to
+     */
+    init: function (model) {
+        this._model = model;
+        this._index = 0;
+    },
+
+    /**
+     * Gets and sets the current index
+     *
+     * @param {Number} [idx]
+     * @returns {Number} current index
+     */
+    index: function (idx) {
+        if (idx) { this._index = idx; }
+        return this._index;
+    },
+    /**
+     * Returns the model this traverser is currently bound to
+     *
+     * @returns {openerp.web.Model}
+     */
+    model: function () {
+        return this._model;
+    },
+    /**
+     * Fetches the size of the backing model's match
+     *
+     * @returns {Deferred<Number>} deferred count
+     */
+    size: function () {
+        return this._model.query().count();
+    },
+
+    /**
+     * Record at the current index for the collection, fails if there is no
+     * record at the current index.
+     *
+     * @returns {Deferred<>}
+     */
+    current: function (fields) {
+        return this._model.query(fields).first().pipe(function (record) {
+            if (record == null) {
+                return $.Deferred()
+                    .reject('No record at index' + this._index)
+                    .promise();
+            }
+            return record;
+        });
+    },
+    next: function (fields) {
+        var self = this;
+        this._index++;
+        return this.size().pipe(function (s) {
+            if (self._index >= s) {
+                self._index = 0;
+            }
+            return self.current(fields);
+        });
+    },
+    previous: function (fields) {
+        var self = this;
+        this._index--;
+        if (this._index < 0) {
+            return this.size().pipe(function (s) {
+                self._index = s-1;
+                return self.current(fields);
+            });
+        }
+        return this.current(fields);
+    }
+
+});
+
+/**
+ * Utility objects, should never need to be instantiated from outside of this
+ * module
+ *
+ * @namespace
+ */
+instance.web.data = {
+    Group: instance.web.Class.extend(/** @lends openerp.web.data.Group# */{
+        /**
+         * @constructs instance.web.data.Group
+         * @extends instance.web.Class
+         */
+        init: function (model, grouping_field, read_group_group) {
+            // In cases where group_by_no_leaf and no group_by, the result of
+            // read_group has aggregate fields but no __context or __domain.
+            // Create default (empty) values for those so that things don't break
+            var fixed_group = _.extend(
+                {__context: {group_by: []}, __domain: []},
+                read_group_group);
+
+            var aggregates = {};
+            _(fixed_group).each(function (value, key) {
+                if (key.indexOf('__') === 0
+                        || key === grouping_field
+                        || key === grouping_field + '_count') {
+                    return;
+                }
+                aggregates[key] = value || 0;
+            });
+
+            this.model = new instance.web.Model(
+                model, fixed_group.__context, fixed_group.__domain);
+
+            var group_size = fixed_group[grouping_field + '_count'] || fixed_group.__count || 0;
+            var leaf_group = fixed_group.__context.group_by.length === 0;
+            this.attributes = {
+                grouped_on: grouping_field,
+                // if terminal group (or no group) and group_by_no_leaf => use group.__count
+                length: group_size,
+                value: fixed_group[grouping_field],
+                // A group is open-able if it's not a leaf in group_by_no_leaf mode
+                has_children: !(leaf_group && fixed_group.__context['group_by_no_leaf']),
+
+                aggregates: aggregates
+            };
+        },
+        get: function (key) {
+            return this.attributes[key];
+        },
+        subgroups: function () {
+            return this.model.query().group_by(this.model.context().group_by);
+        },
+        query: function () {
+            return this.model.query.apply(this.model, arguments);
+        }
+    })
+};
+
+instance.web.DataGroup =  instance.web.OldWidget.extend( /** @lends openerp.web.DataGroup# */{
     /**
      * Management interface between views and grouped collections of OpenERP
      * records.
@@ -41,182 +462,52 @@ instance.web.DataGroup =  instance.web.OldWidget.extend( /** @lends instance.web
      */
     init: function(parent, model, domain, context, group_by, level) {
         this._super(parent, null);
-        if (group_by) {
-            if (group_by.length || context['group_by_no_leaf']) {
-                return new instance.web.ContainerDataGroup( this, model, domain, context, group_by, level);
-            } else {
-                return new instance.web.GrouplessDataGroup( this, model, domain, context, level);
-            }
-        }
-
-        this.model = model;
+        this.model = new instance.web.Model(model, context, domain);
+        this.group_by = group_by;
         this.context = context;
         this.domain = domain;
 
         this.level = level || 0;
     },
-    cls: 'DataGroup'
-});
-instance.web.ContainerDataGroup = instance.web.DataGroup.extend( /** @lends instance.web.ContainerDataGroup# */ {
-    /**
-     *
-     * @constructs instance.web.ContainerDataGroup
-     * @extends instance.web.DataGroup
-     *
-     * @param session
-     * @param model
-     * @param domain
-     * @param context
-     * @param group_by
-     * @param level
-     */
-    init: function (parent, model, domain, context, group_by, level) {
-        this._super(parent, model, domain, context, null, level);
-
-        this.group_by = group_by;
-    },
-    /**
-     * The format returned by ``read_group`` is absolutely dreadful:
-     *
-     * * A ``__context`` key provides future grouping levels
-     * * A ``__domain`` key provides the domain for the next search
-     * * The current grouping value is provided through the name of the
-     *   current grouping name e.g. if currently grouping on ``user_id``, then
-     *   the ``user_id`` value for this group will be provided through the
-     *   ``user_id`` key.
-     * * Similarly, the number of items in the group (not necessarily direct)
-     *   is provided via ``${current_field}_count``
-     * * Other aggregate fields are just dumped there
-     *
-     * This function slightly improves the grouping records by:
-     *
-     * * Adding a ``grouped_on`` property providing the current grouping field
-     * * Adding a ``value`` and a ``length`` properties which replace the
-     *   ``$current_field`` and ``${current_field}_count`` ones
-     * * Moving aggregate values into an ``aggregates`` property object
-     *
-     * Context and domain keys remain as-is, they should not be used externally
-     * but in case they're needed...
-     *
-     * @param {Object} group ``read_group`` record
-     */
-    transform_group: function (group) {
-        var field_name = this.group_by[0];
-        // In cases where group_by_no_leaf and no group_by, the result of
-        // read_group has aggregate fields but no __context or __domain.
-        // Create default (empty) values for those so that things don't break
-        var fixed_group = _.extend(
-                {__context: {group_by: []}, __domain: []},
-                group);
-
-        var aggregates = {};
-        _(fixed_group).each(function (value, key) {
-            if (key.indexOf('__') === 0
-                    || key === field_name
-                    || key === field_name + '_count') {
-                return;
-            }
-            aggregates[key] = value || 0;
-        });
-
-        var group_size = fixed_group[field_name + '_count'] || fixed_group.__count || 0;
-        var leaf_group = fixed_group.__context.group_by.length === 0;
-        return {
-            __context: fixed_group.__context,
-            __domain: fixed_group.__domain,
-
-            grouped_on: field_name,
-            // if terminal group (or no group) and group_by_no_leaf => use group.__count
-            length: group_size,
-            value: fixed_group[field_name],
-            // A group is openable if it's not a leaf in group_by_no_leaf mode
-            openable: !(leaf_group && this.context['group_by_no_leaf']),
-
-            aggregates: aggregates
-        };
-    },
-    fetch: function (fields) {
-        // internal method
-        var d = new $.Deferred();
-        var self = this;
-
-        this.rpc('/web/group/read', {
-            model: this.model,
-            context: this.context,
-            domain: this.domain,
-            fields: _.uniq(this.group_by.concat(fields)),
-            group_by_fields: this.group_by,
-            sort: instance.web.serialize_sort(this.sort)
-        }, function () { }).then(function (response) {
-            var data_groups = _(response).map(
-                    _.bind(self.transform_group, self));
-            self.groups = data_groups;
-            d.resolveWith(self, [data_groups]);
-        }, function () {
-            d.rejectWith.apply(d, [self, arguments]);
-        });
-        return d.promise();
-    },
-    /**
-     * The items of a list have the following properties:
-     *
-     * ``length``
-     *     the number of records contained in the group (and all of its
-     *     sub-groups). This does *not* provide the size of the "next level"
-     *     of the group, unless the group is terminal (no more groups within
-     *     it).
-     * ``grouped_on``
-     *     the name of the field this level was grouped on, this is mostly
-     *     used for display purposes, in order to know the name of the current
-     *     level of grouping. The ``grouped_on`` should be the same for all
-     *     objects of the list.
-     * ``value``
-     *     the value which led to this group (this is the value all contained
-     *     records have for the current ``grouped_on`` field name).
-     * ``aggregates``
-     *     a mapping of other aggregation fields provided by ``read_group``
-     *
-     * @param {Array} fields the list of fields to aggregate in each group, can be empty
-     * @param {Function} ifGroups function executed if any group is found (DataGroup.group_by is non-null and non-empty), called with a (potentially empty) list of groups as parameters.
-     * @param {Function} ifRecords function executed if there is no grouping left to perform, called with a DataSet instance as parameter
-     */
     list: function (fields, ifGroups, ifRecords) {
         var self = this;
-        this.fetch(fields).then(function (group_records) {
-            ifGroups(_(group_records).map(function (group) {
-                var child_context = _.extend({}, self.context, group.__context);
+        $.when(this.model.query(fields)
+                    .order_by(this.sort)
+                    .group_by(this.group_by)).then(function (groups) {
+            if (!groups) {
+                ifRecords(_.extend(
+                    new instance.web.DataSetSearch(
+                            self, self.model.name,
+                            self.model.context(),
+                            self.model.domain()),
+                    {_sort: self.sort}));
+                return;
+            }
+            ifGroups(_(groups).map(function (group) {
+                var child_context = _.extend(
+                    {}, self.model.context(), group.model.context());
                 return _.extend(
                     new instance.web.DataGroup(
-                        self, self.model, group.__domain,
-                        child_context, child_context.group_by,
+                        self, self.model.name, group.model.domain(),
+                        child_context, group.model._context.group_by,
                         self.level + 1),
-                    group, {sort: self.sort});
+                    {
+                        __context: child_context,
+                        __domain: group.model.domain(),
+                        grouped_on: group.get('grouped_on'),
+                        length: group.get('length'),
+                        value: group.get('value'),
+                        openable: group.get('has_children'),
+                        aggregates: group.get('aggregates')
+                    }, {sort: self.sort});
             }));
         });
     }
 });
-instance.web.GrouplessDataGroup = instance.web.DataGroup.extend( /** @lends instance.web.GrouplessDataGroup# */ {
-    /**
-     *
-     * @constructs instance.web.GrouplessDataGroup
-     * @extends instance.web.DataGroup
-     *
-     * @param session
-     * @param model
-     * @param domain
-     * @param context
-     * @param level
-     */
-    init: function (parent, model, domain, context, level) {
-        this._super(parent, model, domain, context, null, level);
-    },
-    list: function (fields, ifGroups, ifRecords) {
-        ifRecords(_.extend(
-            new instance.web.DataSetSearch(this, this.model),
-            {domain: this.domain, context: this.context, _sort: this.sort}));
-    }
-});
-instance.web.StaticDataGroup = instance.web.GrouplessDataGroup.extend( /** @lends instance.web.StaticDataGroup# */ {
+instance.web.ContainerDataGroup = instance.web.DataGroup.extend({ });
+instance.web.GrouplessDataGroup = instance.web.DataGroup.extend({ });
+
+instance.web.StaticDataGroup = instance.web.GrouplessDataGroup.extend( /** @lends openerp.web.StaticDataGroup# */ {
     /**
      * A specialization of groupless data groups, relying on a single static
      * dataset as its records provider.
@@ -233,7 +524,7 @@ instance.web.StaticDataGroup = instance.web.GrouplessDataGroup.extend( /** @lend
     }
 });
 
-instance.web.DataSet =  instance.web.OldWidget.extend( /** @lends instance.web.DataSet# */{
+instance.web.DataSet =  instance.web.OldWidget.extend( /** @lends openerp.web.DataSet# */{
     /**
      * DateaManagement interface between views and the collection of selected
      * OpenERP records (represents the view's state?)
@@ -249,6 +540,7 @@ instance.web.DataSet =  instance.web.OldWidget.extend( /** @lends instance.web.D
         this.context = context || {};
         this.index = null;
         this._sort = [];
+        this._model = new instance.web.Model(model, context);
     },
     previous: function () {
         this.index -= 1;
@@ -296,13 +588,11 @@ instance.web.DataSet =  instance.web.OldWidget.extend( /** @lends instance.web.D
      * @returns {$.Deferred}
      */
     read_ids: function (ids, fields, options) {
-        var options = options || {};
-        return this.rpc('/web/dataset/get', {
-            model: this.model,
-            ids: ids,
-            fields: fields,
-            context: this.get_context(options.context)
-        });
+        options = options || {};
+        // TODO: reorder results to match ids list
+        return this._model.call('read',
+            [ids, fields || false],
+            {context: this._model.context(options.context)});
     },
     /**
      * Read a slice of the records represented by this DataSet, based on its
@@ -315,7 +605,14 @@ instance.web.DataSet =  instance.web.OldWidget.extend( /** @lends instance.web.D
      * @returns {$.Deferred}
      */
     read_slice: function (fields, options) {
-        return null;
+        var self = this;
+        options = options || {};
+        return this._model.query(fields)
+                .limit(options.limit || false)
+                .offset(options.offset || 0)
+                .all().then(function (records) {
+            self.ids = _(records).pluck('id');
+        });
     },
     /**
      * Reads the current dataset record (from its index)
@@ -325,18 +622,11 @@ instance.web.DataSet =  instance.web.OldWidget.extend( /** @lends instance.web.D
      * @returns {$.Deferred}
      */
     read_index: function (fields, options) {
-        var def = $.Deferred();
-        if (_.isEmpty(this.ids)) {
-            def.reject();
-        } else {
-            fields = fields || false;
-            this.read_ids([this.ids[this.index]], fields, options).then(function(records) {
-                def.resolve(records[0]);
-            }, function() {
-                def.reject.apply(def, arguments);
-            });
-        }
-        return def.promise();
+        options = options || {};
+        return this.read_ids([this.ids[this.index]], fields, options).pipe(function (records) {
+            if (_.isEmpty(records)) { return $.Deferred().reject().promise(); }
+            return records[0];
+        });
     },
     /**
      * Reads default values for the current model
@@ -346,12 +636,9 @@ instance.web.DataSet =  instance.web.OldWidget.extend( /** @lends instance.web.D
      * @returns {$.Deferred}
      */
     default_get: function(fields, options) {
-        var options = options || {};
-        return this.rpc('/web/dataset/default_get', {
-            model: this.model,
-            fields: fields,
-            context: this.get_context(options.context)
-        });
+        options = options || {};
+        return this._model.call('default_get',
+            [fields], {context: this._model.context(options.context)});
     },
     /**
      * Creates a new record in db
@@ -362,11 +649,10 @@ instance.web.DataSet =  instance.web.OldWidget.extend( /** @lends instance.web.D
      * @returns {$.Deferred}
      */
     create: function(data, callback, error_callback) {
-        return this.rpc('/web/dataset/create', {
-            model: this.model,
-            data: data,
-            context: this.get_context()
-        }, callback, error_callback);
+        return this._model.call('create',
+            [data], {context: this._model.context()})
+                .pipe(function (r) { return {result: r}; })
+                    .then(callback, error_callback);
     },
     /**
      * Saves the provided data in an existing db record
@@ -379,12 +665,10 @@ instance.web.DataSet =  instance.web.OldWidget.extend( /** @lends instance.web.D
      */
     write: function (id, data, options, callback, error_callback) {
         options = options || {};
-        return this.rpc('/web/dataset/save', {
-            model: this.model,
-            id: id,
-            data: data,
-            context: this.get_context(options.context)
-        }, callback, error_callback);
+        return this._model.call('write',
+            [[id], data], {context: this._model.context(options.context)})
+                .pipe(function (r) { return {result: r}})
+                    .then(callback, error_callback);
     },
     /**
      * Deletes an existing record from the database
@@ -394,9 +678,9 @@ instance.web.DataSet =  instance.web.OldWidget.extend( /** @lends instance.web.D
      * @param {Function} error_callback function called in case of deletion error
      */
     unlink: function(ids, callback, error_callback) {
-        var self = this;
-        return this.call_and_eval("unlink", [ids, this.get_context()], null, 1,
-            callback, error_callback);
+        return this._model.call('unlink',
+            [ids], {context: this._model.context()})
+                .then(callback, error_callback);
     },
     /**
      * Calls an arbitrary RPC method
@@ -408,11 +692,7 @@ instance.web.DataSet =  instance.web.OldWidget.extend( /** @lends instance.web.D
      * @returns {$.Deferred}
      */
     call: function (method, args, callback, error_callback) {
-        return this.rpc('/web/dataset/call', {
-            model: this.model,
-            method: method,
-            args: args || []
-        }, callback, error_callback);
+        return this._model.call(method, args).then(callback, error_callback);
     },
     /**
      * Calls an arbitrary method, with more crazy
@@ -431,9 +711,7 @@ instance.web.DataSet =  instance.web.OldWidget.extend( /** @lends instance.web.D
             method: method,
             domain_id: domain_index == undefined ? null : domain_index,
             context_id: context_index == undefined ? null : context_index,
-            args: args || [],
-            // FIXME: API which does not suck for aborting requests in-flight
-            aborter: this
+            args: args || []
         }, callback, error_callback);
     },
     /**
@@ -446,13 +724,8 @@ instance.web.DataSet =  instance.web.OldWidget.extend( /** @lends instance.web.D
      * @returns {$.Deferred}
      */
     call_button: function (method, args, callback, error_callback) {
-        return this.rpc('/web/dataset/call_button', {
-            model: this.model,
-            method: method,
-            domain_id: null,
-            context_id: args.length - 1,
-            args: args || []
-        }, callback, error_callback);
+        return this._model.call_button(method, args)
+            .then(callback, error_callback);
     },
     /**
      * Fetches the "readable name" for records, based on intrinsic rules
@@ -462,7 +735,9 @@ instance.web.DataSet =  instance.web.OldWidget.extend( /** @lends instance.web.D
      * @returns {$.Deferred}
      */
     name_get: function(ids, callback) {
-        return this.call_and_eval('name_get', [ids, this.get_context()], null, 1, callback);
+        return this._model.call('name_get',
+            [ids], {context: this._model.context()})
+                .then(callback);
     },
     /**
      * 
@@ -474,29 +749,30 @@ instance.web.DataSet =  instance.web.OldWidget.extend( /** @lends instance.web.D
      * @returns {$.Deferred}
      */
     name_search: function (name, domain, operator, limit, callback) {
-        return this.call_and_eval('name_search',
-            [name || '', domain || false, operator || 'ilike', this.get_context(), limit || 0],
-            1, 3, callback);
+        return this._model.call('name_search', {
+            name: name || '',
+            args: domain || false,
+            operator: operator || 'ilike',
+            context: this._model.context(),
+            limit: limit || 0
+        }).then(callback);
     },
     /**
      * @param name
      * @param callback
      */
     name_create: function(name, callback) {
-        return this.call_and_eval('name_create', [name, this.get_context()], null, 1, callback);
+        return this._model.call('name_create',
+            [name], {context: this._model.context()})
+                .then(callback);
     },
     exec_workflow: function (id, signal, callback) {
-        return this.rpc('/web/dataset/exec_workflow', {
-            model: this.model,
-            id: id,
-            signal: signal
-        }, callback);
+        return this._model.exec_workflow(id, signal)
+            .pipe(function (result) { return { result: result }; })
+                .then(callback);
     },
     get_context: function(request_context) {
-        if (request_context) {
-            return new instance.web.CompoundContext(this.context, request_context);
-        }
-        return this.context;
+        return this._model.context(request_context);
     },
     /**
      * Reads or changes sort criteria on the dataset.
@@ -560,7 +836,7 @@ instance.web.DataSetStatic =  instance.web.DataSet.extend({
         this.set_ids(_.without.apply(null, [this.ids].concat(ids)));
     }
 });
-instance.web.DataSetSearch =  instance.web.DataSet.extend(/** @lends instance.web.DataSetSearch */{
+instance.web.DataSetSearch =  instance.web.DataSet.extend(/** @lends openerp.web.DataSetSearch */{
     /**
      * @constructs instance.web.DataSetSearch
      * @extends instance.web.DataSet
@@ -573,11 +849,9 @@ instance.web.DataSetSearch =  instance.web.DataSet.extend(/** @lends instance.we
     init: function(parent, model, context, domain) {
         this._super(parent, model, context);
         this.domain = domain || [];
-        this.offset = 0;
-        this._length;
-        // subset records[offset:offset+limit]
-        // is it necessary ?
+        this._length = null;
         this.ids = [];
+        this._model = new instance.web.Model(model, context, domain);
     },
     /**
      * Read a slice of the records represented by this DataSet, based on its
@@ -594,32 +868,29 @@ instance.web.DataSetSearch =  instance.web.DataSet.extend(/** @lends instance.we
     read_slice: function (fields, options) {
         options = options || {};
         var self = this;
-        var offset = options.offset || 0;
-        return this.rpc('/web/dataset/search_read', {
-            model: this.model,
-            fields: fields || false,
-            domain: this.get_domain(options.domain),
-            context: this.get_context(options.context),
-            sort: this.sort(),
-            offset: offset,
-            limit: options.limit || false
-        }).pipe(function (result) {
-            self.ids = result.ids;
-            self.offset = offset;
-            self._length = result.length;
-            return result.records;
+        var q = this._model.query(fields || false)
+            .filter(options.domain)
+            .context(options.context)
+            .offset(options.offset || 0)
+            .limit(options.limit || false);
+        q = q.order_by.apply(q, this._sort);
+
+        return q.all().then(function (records) {
+            // FIXME: not sure about that one, *could* have discarded count
+            q.count().then(function (count) { self._length = count; });
+            self.ids = _(records).pluck('id');
         });
     },
     get_domain: function (other_domain) {
-        if (other_domain) {
-            return new instance.web.CompoundDomain(this.domain, other_domain);
-        }
-        return this.domain;
+        this._model.domain(other_domain);
     },
     unlink: function(ids, callback, error_callback) {
         var self = this;
         return this._super(ids, function(result) {
-            self.ids = _.without.apply(_, [self.ids].concat(ids));
+            self.ids = _(self.ids).difference(ids);
+            if (self._length) {
+                self._length -= 1;
+            }
             if (this.index !== null) {
                 self.index = self.index <= self.ids.length - 1 ?
                     self.index : (self.ids.length > 0 ? self.ids.length -1 : 0);
@@ -848,34 +1119,6 @@ instance.web.ProxyDataSet = instance.web.DataSetSearch.extend({
     on_unlink: function(ids) {}
 });
 
-instance.web.Model = instance.web.CallbackEnabled.extend({
-    init: function(model_name) {
-        this._super();
-        this.model_name = model_name;
-    },
-    rpc: function() {
-        var c = instance.connection;
-        return c.rpc.apply(c, arguments);
-    },
-    /*
-     * deprecated because it does not allow to specify kwargs, directly use call() instead
-     */
-    get_func: function(method_name) {
-        var self = this;
-        return function() {
-            return self.call(method_name, _.toArray(arguments), {});
-        };
-    },
-    call: function (method, args, kwargs) {
-        return this.rpc('/web/dataset/call_kw', {
-            model: this.model_name,
-            method: method,
-            args: args,
-            kwargs: kwargs
-        });
-    }
-});
-
 instance.web.CompoundContext = instance.web.Class.extend({
     init: function () {
         this.__ref = "compound_context";
@@ -921,6 +1164,46 @@ instance.web.CompoundDomain = instance.web.Class.extend({
         return this.__eval_context;
     }
 });
+
+instance.web.DropMisordered = instance.web.Class.extend(/** @lends openerp.web.DropMisordered# */{
+    /**
+     * @constructs instance.web.DropMisordered
+     * @extends instance.web.Class
+     *
+     * @param {Boolean} [failMisordered=false] whether mis-ordered responses should be failed or just ignored
+     */
+    init: function (failMisordered) {
+        // local sequence number, for requests sent
+        this.lsn = 0;
+        // remote sequence number, seqnum of last received request
+        this.rsn = -1;
+        this.failMisordered = failMisordered || false;
+    },
+    /**
+     * Adds a deferred (usually an async request) to the sequencer
+     *
+     * @param {$.Deferred} deferred to ensure add
+     * @returns {$.Deferred}
+     */
+    add: function (deferred) {
+        var res = $.Deferred();
+
+        var self = this, seq = this.lsn++;
+        deferred.then(function () {
+            if (seq > self.rsn) {
+                self.rsn = seq;
+                res.resolve.apply(res, arguments);
+            } else if (self.failMisordered) {
+                res.reject();
+            }
+        }, function () {
+            res.reject.apply(res, arguments);
+        });
+
+        return res.promise();
+    }
+});
+
 };
 
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:

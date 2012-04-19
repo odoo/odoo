@@ -2291,6 +2291,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(_.exten
         this.last_search = [];
         this.floating = false;
         this.inhibit_on_change = false;
+        this.orderer = new openerp.web.DropMisordered();
     },
     start: function() {
         this._super();
@@ -2439,14 +2440,10 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(_.exten
         var search_val = request.term;
         var self = this;
 
-        if (this.abort_last) {
-            this.abort_last();
-            delete this.abort_last;
-        }
-        var dataset = new instance.web.DataSetStatic(this, this.field.relation, self.build_context());
+        var dataset = new instance.web.DataSet(this, this.field.relation, self.build_context());
 
-        dataset.name_search(search_val, self.build_domain(), 'ilike',
-                this.limit + 1, function(data) {
+        this.orderer.add(dataset.name_search(
+                search_val, self.build_domain(), 'ilike', this.limit + 1)).then(function(data) {
             self.last_search = data;
             // possible selections for the m2o
             var values = _.map(data, function(x) {
@@ -2485,7 +2482,6 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(_.exten
 
             response(values);
         });
-        this.abort_last = dataset.abort_last;
     },
     _quick_create: function(name) {
         var self = this;
@@ -2493,15 +2489,15 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(_.exten
             self._search_create_popup("form", undefined, {"default_name": name});
         };
         if (self.get_definition_options().quick_create === undefined || self.get_definition_options().quick_create) {
-            var dataset = new instance.web.DataSetStatic(this, this.field.relation, self.build_context());
-            dataset.name_create(name, function(data) {
-                self.display_value = {};
-                self.display_value["" + data[0]] = data[1];
-                self.set({value: data[0]});
-            }).fail(function(error, event) {
-                event.preventDefault();
-                slow_create();
-            });
+            new instance.web.DataSet(this, this.field.relation, self.build_context())
+                .name_create(name, function(data) {
+                    self.display_value = {};
+                    self.display_value["" + data[0]] = data[1];
+                    self.set({value: data[0]});
+                }).fail(function(error, event) {
+                    event.preventDefault();
+                    slow_create();
+                });
         } else
             slow_create();
     },
