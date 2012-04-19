@@ -289,9 +289,9 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
                 var field_name = self[field];
                 if (field_name && form.fields[field_name]) {
                     var ffield = form.fields[field_name];
-                    ffield.reset();
+                    ffield._dirty_flag = false;
                     $.when(ffield.set_value(data[field_name])).then(function() {
-                        ffield.dirty = true;
+                        ffield._dirty_flag = true;
                         form.do_onchange(ffield);
                     });
                 }
