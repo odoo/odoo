@@ -203,8 +203,8 @@
                             </p>
                             <t t-if="record.register_avail.raw_value != 0">
                               <t t-if="!record.is_subscribed.raw_value">
-                                  <textarea class="no_of_seats"/>
-                                  <button type="object" name="subscribe_to_event" class="subscribe_button oe_event_button_subscribe">
+                                  <input t-att-id="record.id.raw_value" type="text" name="subscribe" class="no_of_seats" onchange="document.getElementById('btn_sub' +this.id).setAttribute('data-context',JSON.stringify({'ticket':this.value}));"/>
+                                  <button t-att-id="'btn_sub'+record.id.raw_value" type="object" name="subscribe_to_event" class="subscribe_button oe_event_button_subscribe">
                                   <span >Subscribe</span>
                                   </button>
                               </t>
