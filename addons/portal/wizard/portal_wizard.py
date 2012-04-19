@@ -147,6 +147,7 @@ class wizard(osv.osv_memory):
                     'context_lang': u.lang,
                     'share': True,
                     'partner_id': u.partner_id and u.partner_id.id,
+                    'groups_id': [(6, 0, [])],
                 } for u in wiz.user_ids if u.user_email not in existing_logins ]
             portal_obj.write(cr, ROOT_UID, [wiz.portal_id.id],
                 {'users': [(0, 0, data) for data in new_users_data]}, context0)
