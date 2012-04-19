@@ -873,7 +873,8 @@ instance.web.ViewEditor =   instance.web.OldWidget.extend({
             'widget' : {'name':'widget', 'string': 'widget', 'type': 'selection'},
             'colors' : {'name':'colors', 'string': 'Colors', 'type': 'char'},
             'editable' : {'name':'editable', 'string': 'Editable', 'type': 'selection', 'selection': [["",""],["top","Top"],["bottom", "Bottom"]]},
-            'groups' : {'name':'groups', 'string': 'Groups', 'type': 'selection_multi'}
+            'groups' : {'name':'groups', 'string': 'Groups', 'type': 'selection_multi'},
+            'fonts' : {'name':'fonts', 'string': 'fonts', 'type': 'char'},
         };
         var arch_val = self.get_object_by_id(this.one_object.clicked_tr_id,this.one_object['main_object'], []);
         this.edit_node_dialog.$element.append('<table id="rec_table"  style="width:400px" class="oe_forms"></table>');
@@ -1149,7 +1150,7 @@ var _PROPERTIES = {
     'board': ['style'],
     'column' : [],
     'action' : ['name', 'string', 'colspan', 'groups'],
-    'tree' : ['string', 'colors', 'editable', 'link', 'limit', 'min_rows'],
+    'tree' : ['string', 'colors', 'editable', 'link', 'limit', 'min_rows', 'fonts'],
     'graph' : ['string', 'type'],
     'calendar' : ['string', 'date_start', 'date_stop', 'date_delay', 'day_length', 'color', 'mode']
 };
