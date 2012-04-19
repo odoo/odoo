@@ -239,9 +239,7 @@ instance.web.ParentedMixin = {
 };
 
 /**
- * TODO al: move into the the mixin
- *
- * Backbone's events
+ * Backbone's events. Do not ever use it directly, use EventDispatcherMixin instead.
  *
  * (c) 2010-2012 Jeremy Ashkenas, DocumentCloud Inc.
  * Backbone may be freely distributed under the MIT license.
@@ -253,8 +251,7 @@ instance.web.ParentedMixin = {
  * events is done in EventDispatcherMixin.
  *
  */
-instance.web.Events = instance.web.Class.extend({
-
+var Events = instance.web.Class.extend({
     on : function(events, callback, context) {
         var ev;
         events = events.split(/\s+/);
@@ -323,12 +320,13 @@ instance.web.Events = instance.web.Class.extend({
         return this;
     }
 });
+// end of Jeremy Ashkenas' code
 
 instance.web.EventDispatcherMixin = _.extend({}, instance.web.ParentedMixin, {
     __eventDispatcherMixin: true,
     init: function() {
         instance.web.ParentedMixin.init.call(this);
-        this.__edispatcherEvents = new instance.web.Events();
+        this.__edispatcherEvents = new Events();
         this.__edispatcherRegisteredEvents = [];
     },
     on: function(events, dest, func) {
@@ -373,7 +371,7 @@ instance.web.EventDispatcherMixin = _.extend({}, instance.web.ParentedMixin, {
     }
 });
 
-instance.web.GetterSetterMixin = _.extend({}, instance.web.EventDispatcherMixin, {
+instance.web.PropertiesMixin = _.extend({}, instance.web.EventDispatcherMixin, {
     init: function() {
         instance.web.EventDispatcherMixin.init.call(this);
         this.__getterSetterInternalMap = {};
@@ -400,9 +398,9 @@ instance.web.GetterSetterMixin = _.extend({}, instance.web.EventDispatcherMixin,
     }
 });
 
-instance.web.CallbackEnabledMixin = _.extend({}, instance.web.GetterSetterMixin, {
+instance.web.CallbackEnabledMixin = _.extend({}, instance.web.PropertiesMixin, {
     init: function() {
-        instance.web.GetterSetterMixin.init.call(this);
+        instance.web.PropertiesMixin.init.call(this);
         var self = this;
         var callback_maker = function(obj, name, method) {
             var callback = function() {
@@ -535,7 +533,7 @@ instance.web.WidgetMixin = _.extend({},instance.web.CallbackEnabledMixin, {
         if(this.$element != null) {
             this.$element.remove();
         }
-        instance.web.GetterSetterMixin.destroy.call(this);
+        instance.web.PropertiesMixin.destroy.call(this);
     },
     /**
      * Renders the current widget and appends it to the given jQuery object or Widget.

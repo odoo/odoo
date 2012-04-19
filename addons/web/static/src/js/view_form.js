@@ -1307,7 +1307,7 @@ instance.web.form.compute_domain = function(expr, fields) {
 };
 
 /**
- * Must be applied over an class already possessing the GetterSetterMixin.
+ * Must be applied over an class already possessing the PropertiesMixin.
  *
  * Apply the result of the "invisible" domain to this.$element.
  */
@@ -1335,10 +1335,10 @@ instance.web.form.InvisibilityChangerMixin = {
     },
 };
 
-instance.web.form.InvisibilityChanger = instance.web.Class.extend(_.extend({}, instance.web.GetterSetterMixin, instance.web.form.InvisibilityChangerMixin, {
+instance.web.form.InvisibilityChanger = instance.web.Class.extend(_.extend({}, instance.web.PropertiesMixin, instance.web.form.InvisibilityChangerMixin, {
     init: function(parent, field_manager, invisible_domain, $element) {
         this.setParent(parent);
-        instance.web.GetterSetterMixin.init.call(this);
+        instance.web.PropertiesMixin.init.call(this);
         instance.web.form.InvisibilityChangerMixin.init.call(this, field_manager, invisible_domain);
         this.$element = $element;
         this.start();
