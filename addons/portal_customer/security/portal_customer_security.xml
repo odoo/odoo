@@ -7,7 +7,6 @@
         <record id="group_sales_portal" model="res.groups">
             <field name="name">Sales Portal Group</field>
             <field ref="base.module_category_sales_management" name="category_id"/>
-            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
         </record>
         
         <record id="portal_customer" model="res.portal">
