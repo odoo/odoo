@@ -1057,7 +1057,7 @@ class function(_column):
             # This is not needed for stored fields and non-functional integer
             # fields, as their values are constrained by the database backend
             # to the same 32bits signed int limit.
-            result = float(value)
+            result = __builtins__.float(value)
         return result
 
     def get(self, cr, obj, ids, name, uid=False, context=None, values=None):
