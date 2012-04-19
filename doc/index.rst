@@ -19,6 +19,7 @@ Contents:
    addons
    development
    project
+   font_style
    old-version
 
 Indices and tables
