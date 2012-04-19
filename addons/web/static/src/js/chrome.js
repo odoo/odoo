@@ -638,6 +638,7 @@ instance.web.Menu =  instance.web.Widget.extend({
         }
     },
     on_menu_click: function(ev, id) {
+        // TODO If first level menu doesnt have action trigger first leaf
         this.do_hide_more();
         id = id || 0;
         var $clicked_menu, manual = false;
@@ -984,13 +985,18 @@ instance.web.WebClient = instance.web.Widget.extend({
         });
     },
     bind_hashchange: function() {
+        var self = this;
         $(window).bind('hashchange', this.on_hashchange);
 
         var state = $.bbq.getState(true);
         if (! _.isEmpty(state)) {
             $(window).trigger('hashchange');
         } else {
-            this.action_manager.do_action({type: 'ir.actions.client', tag: 'default_home'});
+            self.menu.has_been_loaded.then(function() {
+                var first_menu_id = self.menu.$element.find("a:first").data("menu");
+                if(first_menu_id)
+                    self.menu.on_menu_click(null,first_menu_id);
+            });
         }
     },
     on_hashchange: function(event) {
