@@ -11,8 +11,8 @@
     </t>
 
     <t t-extend="RecordThread">
-        <t t-jquery=".oe_mail_button_follow" t-operation="before">
-            <button type="button" class="oe-share-mail">Invite</button>
+        <t t-jquery="button.oe_mail_button_unfollow" t-operation="after">
+            <button type="button" class="oe-share-mail oe_mail_button_mouseout">Invite</button>
         </t>
     </t>
 
