@@ -168,9 +168,6 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Email Search">
-                    <!--filter icon="terp-camera_test" name="received" string="Received" domain="[('state','=','received')]"/>
-                    <filter icon="terp-call-start" name="outgoing" string="Outgoing" domain="[('state','=','outgoing')]"/>
-                    <filter icon="terp-check" name="sent" string="Sent" domain="[('state','=','sent')]"/-->
                     <filter icon="terp-check" name="inbox" string="Inbox" domain="[('message_state','=','unread')]"/>
                     <separator orientation="vertical"/>
                     <filter icon="terp-gtk-stop" name="exception" string="Failed" domain="[('state','=','exception')]"/>
