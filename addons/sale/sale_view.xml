@@ -119,9 +119,9 @@
                     <group col="6" colspan="4" class="oe_form_header">
                         <group col="4" colspan="4">
                             <field name="name"/>
-                            <field name="date_order"/>
+                            <field name="date_order" />
                             <field name="shop_id" on_change="onchange_shop_id(shop_id)" widget="selection" groups="base.group_extended"/>
-                            <field name="client_order_ref"/>
+                            <field name="client_order_ref" groups="base.group_user"/>
                         </group>
                         <group col="2" colspan="2">
                             <field name="invoiced"/>
@@ -130,11 +130,11 @@
                     </group>
                     <notebook colspan="5">
                         <page string="Sales Order">
-                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" domain="[('customer','=',True)]" context="{'search_default_customer':1}" required="1"/>
+                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" domain="[('customer','=',True)]" context="{'search_default_customer':1}" required="1" groups="base.group_user"/>
                             <field domain="[('parent_id','=',partner_id)]" name="partner_invoice_id" groups="sale.group_delivery_invoice_address" options='{"quick_create": false}'/>
                             <field domain="[('parent_id','=',partner_id)]" name="partner_shipping_id" groups="sale.group_delivery_invoice_address" options='{"quick_create": false}'/>
                             <field domain="[('type','=','sale')]" name="pricelist_id" groups="product.group_sale_pricelist" on_change="onchange_pricelist_id(pricelist_id,order_line)"/>
-                            <field name="project_id" context="{'partner_id':partner_id, 'pricelist_id':pricelist_id, 'default_name':name}" groups="sale.group_analytic_accounting" domain="[('parent_id','!=',False)]"/>
+                            <field name="project_id" context="{'partner_id':partner_id, 'pricelist_id':pricelist_id, 'default_name':name}" groups="sale.group_analytic_accounting, base.group_user" domain="[('parent_id','!=',False)]" />
                             <newline/>
                             <field colspan="4" name="order_line" nolabel="1" widget="one2many_list">
                                 <form string="Sales Order Lines">
@@ -218,21 +218,45 @@
 
                             <separator colspan="4" string="Notes"/>
                             <field colspan="4" name="note" nolabel="1"/>
+                            <newline/>
+                            <group col="13" colspan="10">
+                                <field name="amount_untaxed" sum="Untaxed amount"/>
+                                <field name="amount_tax"/>
+                                <field name="amount_total"/>
+                                <button name="button_dummy" states="draft" string="Compute" type="object" icon="gtk-execute"/>
+                                <button name="%(action_view_sale_advance_payment_inv)d" string="Advance Invoice" type="action" icon="gtk-execute" states="draft,manual" groups="base.group_extended"/>
+                            </group>
+                            <group col="17" colspan="4">
+                                <field name="state" widget="statusbar" statusbar_visible="draft,progress,done" statusbar_colors='{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}'/>
+                                <button name="invoice_recreate" states="invoice_except" string="Recreate Invoice" icon="gtk-go-forward" />
+                                <button name="invoice_corrected" states="invoice_except" string="Ignore Exception" icon="gtk-apply"/>
+                                <button name="ship_recreate" states="shipping_except" string="Recreate Packing" icon="gtk-ok"/>
+                                <button name="ship_corrected" states="shipping_except" string="Ignore Exception" icon="gtk-apply"/>
+                                <button name="action_cancel" states="manual,progress" string="Cancel Order" type="object" icon="gtk-cancel"/>
+                                <button name="%(report_sale_order)d" string="Print Order" type="action" icon="gtk-print" states="waiting_date,manual,progress,done,shipping_except,invoice_except"/>
+                                <button name="manual_invoice" states="manual" string="Create Final Invoice" icon="gtk-go-forward" type="object"/>
+                                <button name="ship_cancel" states="shipping_except" string="Cancel Order" icon="gtk-cancel"/>
+                                <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" icon="gtk-convert"/>
+                                <button name="cancel" states="draft" string="Cancel Order" icon="gtk-cancel"/>
+                                <button name="invoice_cancel" states="invoice_except" string="Cancel Order" icon="gtk-cancel"/>
+                                <button name="%(report_sale_order)d" string="Print Quotation" type="action" icon="gtk-print" states="draft"/>
+                                <button name="order_confirm" states="draft" string="Confirm Order" icon="gtk-apply"/>
+                            </group>
                         </page>
-                        <page string="Other Information">
+                        <page string="Other Information" groups="base.group_user">
                             <group colspan="2" col="2" groups="base.group_extended" name="logistics">
                                 <separator string="Logistic" colspan="2"/>
-                                <field name="incoterm" widget="selection"/>
+                                <field name="incoterm" widget="selection" groups="base.group_user"/>
                                 <field name="picking_policy" required="True"/>
                                 <field name="order_policy" on_change="shipping_policy_change(order_policy)"/>
-                                <field name="invoice_quantity" attrs="{'readonly':[('order_policy','in',('prepaid','picking'))]}"/>
+                                <field name="invoice_quantity" attrs="{'readonly':[('order_policy','in',('prepaid','picking'))]}" groups="base.group_user"/>
                             </group>
-                            <group colspan="2" col="2">
+                            <group colspan="2" col="2" groups="base.group_user">
                                 <separator string="References" colspan="2"/>
                                 <field name="user_id"/>
                                 <field groups="base.group_extended" name="origin"/>
                             </group>
-                            <group name="sale_pay" colspan="2" col="2" groups="base.group_extended" >
+                            <group name="sale_pay" colspan="2" col="2" groups="base.group_extended, base.group_user" >
                                 <separator string="Conditions" colspan="2"/>
                                 <field name="payment_term" widget="selection"/>
                                 <field name="fiscal_position" widget="selection"/>
@@ -241,7 +265,7 @@
                             <separator colspan="4" string="Notes" groups="base.group_sale_notes_subtotal"/>
                             <field colspan="4" name="note" nolabel="1" groups="base.group_sale_notes_subtotal"/>
                         </page>
-                        <page string="History" groups="base.group_extended">
+                        <page string="History" groups="base.group_extended, base.group_user">
                             <separator colspan="4" string="Invoices"/>
                             <field colspan="4" name="invoice_ids" nolabel="1" context="{'form_view_ref':'account.invoice_form'}"/>
                             <separator colspan="4" string="Packings"/>
