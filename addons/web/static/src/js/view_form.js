@@ -3471,23 +3471,6 @@ instance.web.form.FieldReference = instance.web.form.AbstractField.extend(_.exte
     template: 'FieldReference',
     init: function(field_manager, node) {
         this._super(field_manager, node);
-        this.fields_view = {
-            fields: {
-                selection: {
-                    selection: this.view.fields_view.fields[this.name].selection
-                },
-                m2o: {
-                    relation: null
-                }
-            }
-        };
-        this.get_fields_values = this.view.get_fields_values;
-        this.get_selected_ids = this.view.get_selected_ids;
-        this.do_onchange = this.on_form_changed = this.do_notify_change = this.on_nop;
-        this.dataset = this.view.dataset;
-        this.view_id = 'reference_' + _.uniqueId();
-        this.fields = {};
-        this.fields_order = [];
         this.reference_ready = true;
     },
     on_nop: function() {
@@ -3512,9 +3495,9 @@ instance.web.form.FieldReference = instance.web.form.AbstractField.extend(_.exte
     },
     initialize_content: function() {
         this.selection = new instance.web.form.FieldSelection(this, { attrs: {
-            name: 'selection',
-            widget: 'selection'
+            name: 'selection'
         }});
+        this.selection.view = this.view;
         this.selection.set({readonly: this.get('effective_readonly')});
         this.selection.on("change:value", this, this.on_selection_changed);
         this.selection.$element = $(".oe_form_view_reference_selection", this.$element);
@@ -3522,9 +3505,9 @@ instance.web.form.FieldReference = instance.web.form.AbstractField.extend(_.exte
         this.selection.start();
 
         this.m2o = new instance.web.form.FieldMany2One(this, { attrs: {
-            name: 'm2o',
-            widget: 'many2one'
+            name: 'm2o'
         }});
+        this.m2o.view = this.view;
         this.m2o.set({"readonly": this.get("effective_readonly")});
         this.m2o.on("change:value", this, this.data_changed);
         this.m2o.$element = $(".oe_form_view_reference_m2o", this.$element);
@@ -3537,6 +3520,11 @@ instance.web.form.FieldReference = instance.web.form.AbstractField.extend(_.exte
     set_value: function(value_) {
         this._super(value_);
         this.render_value();
+    },
+    get_value: function() {
+        var tmp = this._super();
+        debugger;
+        return tmp;
     },
     render_value: function() {
         this.reference_ready = false;
@@ -3562,6 +3550,20 @@ instance.web.form.FieldReference = instance.web.form.AbstractField.extend(_.exte
         } else {
             this.set({'value': false});
         }
+    },
+    get_field: function(name) {
+        if (name === "selection") {
+            return {
+                selection: this.view.fields_view.fields[this.name].selection,
+                type: "selection",
+            };
+        } else if (name === "m2o") {
+            return {
+                relation: null,
+                type: "many2one",
+            };
+        }
+        throw Exception("Should not happen");
     },
 }));
 
