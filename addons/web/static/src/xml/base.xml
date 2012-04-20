@@ -413,16 +413,31 @@
             <col width="34%"/>
             <tr>
                 <td colspan="2">
-                    <h2 class="oe_view_title" t-if="widget.flags.display_title !== false">
-                        <span class="oe_view_title_text"><t t-esc="widget.display_title()"/></span>
-                    </h2>
+                    <div class="oe_view_manager_header2_row1">
+                        <h2 class="oe_view_title" t-if="widget.flags.display_title !== false">
+                            <span class="oe_view_title_text"><t t-esc="widget.display_title()"/></span>
+                        </h2>
+                    </div>
                 </td>
-                <td> <div class="oe_view_manager_view_search" t-opentag="true"/> </td>
+                <td>
+                    <div class="oe_view_manager_header2_row1">
+                        <div class="oe_view_manager_view_search" t-opentag="true"/>
+                    </div>
+                </td>
             </tr>
             <tr>
-                <td> <div class="oe_view_manager_buttons"/> </td>
-                <td> <div class="oe_view_manager_sidebar"/> </td>
                 <td>
+                    <div class="oe_view_manager_header2_row1">
+                        <div class="oe_view_manager_buttons"/>
+                    </div>
+                </td>
+                <td>
+                    <div class="oe_view_manager_header2_row1">
+                        <div class="oe_view_manager_sidebar"/>
+                    </div>
+                </td>
+                <td>
+                    <div class="oe_view_manager_header2_row1">
                     <ul class="oe_view_manager_switch oe_button_group oe_right">
                         <t t-if="widget.views_src.length != 1" t-foreach="widget.views_src" t-as="view">
                           <li><a t-attf-class="oe_vm_switch_#{view.view_type} oe_i" t-att-data-view-type="view.view_type" t-att-title="view.label || view.view_type">
@@ -430,6 +445,7 @@
                         </t>
                     </ul>
                     <div class="oe_view_manager_pager oe_right"/>
+                    </div>
                 </td>
             </tr>
         </table>
