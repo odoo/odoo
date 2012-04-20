@@ -67,6 +67,7 @@ class mail_compose_message(osv.osv_memory):
            :param dict context: several context values will modify the behavior
                                 of the wizard, cfr. the class description.
         """
+        print context
         if context is None:
             context = {}
         result = super(mail_compose_message, self).default_get(cr, uid, fields, context=context)

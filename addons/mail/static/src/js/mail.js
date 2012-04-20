@@ -225,6 +225,22 @@ openerp.mail = function(session) {
             this.$element.find('div.oe_mail_thread_display').delegate('img.oe_mail_msg_menu_icon', 'click', function (event) {
                 self.$element.find('ul.oe_mail_msg_menu').toggle();
             });
+            // event: click on "send an email"
+            this.$element.find('div.oe_mail_thread_act').delegate('a.oe_mail_compose', 'click', function (event) {
+                console.log('cacaprout');
+                self.do_action({
+                        type: 'ir.actions.act_window',
+                        res_model: 'mail.compose.message',
+                        views: [[false, 'form']],
+                        view_type: 'form',
+                        view_mode: 'form',
+                        target: 'new',
+                        context: {'active_model': self.params.res_model, 'active_id': self.params.res_id, 'mail.compose.message.mode': 'new'},
+                        key2: 'client_action_multi',
+                });
+                return false;
+            });
+            
         },
         
         destroy: function () {
