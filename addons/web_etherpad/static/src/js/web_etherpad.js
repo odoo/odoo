@@ -63,10 +63,9 @@ openerp.web_etherpad = function (instance) {
                 {
                     var self = this;
                     if(show_value.split('\n')[0] != '')             
-                        $.get(show_value.split('\n')[0]+'/export/html', function(data) {                                      
-                        console.log(data);                    
-                            self.$element.html(data);
-                        });
+                        $.get(show_value.split('\n')[0]+'/export/html')
+                        .success(function(data) { self.$element.html(data); })
+                        .error(function() { self.$element.text('Unable to load pad'); });
                     else
                         self.$element.text(show_value);
                 }                    
