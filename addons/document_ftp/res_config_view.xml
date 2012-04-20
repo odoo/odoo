@@ -1,17 +1,14 @@
 <openerp>
     <data>
-	    	
         <record id="view_document_ftp_configuration" model="ir.ui.view">
             <field name="name">Knowledge Application</field>
             <field name="model">knowledge.configuration</field>
             <field name="type">form</field>
-            <field name="inherit_id" ref="document.view_knowledge_configuration"/>
+            <field name="inherit_id" ref="base_setup.view_knowledge_configuration"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='module_document_ftp']" position="after">
-                    <group  colspan="2" col="2">
-                        <field name="url" widget="url" colspan="2"/>
-                    </group>
-                </xpath>
+                <field name="module_document_ftp" position="after">
+                    <field name="document_ftp_url" widget="url"/>
+                </field>
             </field>
         </record>
     </data>

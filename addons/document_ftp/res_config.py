@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    OpenERP, Open Source Business Applications
+#    Copyright (C) 2004-2012 OpenERP S.A. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -26,8 +26,8 @@ class documnet_ftp_setting(osv.osv_memory):
     _name = 'knowledge.configuration'
     _inherit = 'knowledge.configuration'
     _columns = {
-        'url': fields.char('Browse Documents',size=64,
-                           help ="""It allow to browse the document from the relative URL""", readonly=True),               
+        'document_ftp_url': fields.char('Browse Documents',size=64,
+            help ="""It allow to browse the document from the relative URL""", readonly=True),               
     }
 
     def get_default_ftp_config(self, cr, uid, ids, context=None):
@@ -45,5 +45,6 @@ class documnet_ftp_setting(osv.osv_memory):
                 url = url[:-1]
         else:
             url = '%s:%s' %(ftpserver.HOST, ftpserver.PORT) 
-        return {'url':'ftp://%s@%s'%(current_user.login, url)}
+        return {'document_ftp_url':'ftp://%s@%s'%(current_user.login, url)}
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
