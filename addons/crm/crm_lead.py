@@ -160,7 +160,7 @@ class crm_lead(crm_case, osv.osv):
         if stage_ids:
             return self.write(cr, uid, [lead_id], {'stage_id': stage_ids[0]}, context=context)
         else:
-            return cr.execute("""update crm_lead set state=%s where id=%s""", (field_value, crm_lead_id))
+            return cr.execute("""update crm_lead set state=%s where id=%s""", (field_value, lead_id))
  
     _columns = {
         'partner_id': fields.many2one('res.partner', 'Partner', ondelete='set null',
