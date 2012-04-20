@@ -1,274 +1,146 @@
-(function(){
-    window.asyncStorageDelay = 0;
-    window.asyncStorage = {
-        length: function(){
-            var d = $.Deferred();
-            setTimeout(function(){
-                d.resolve(localStorage.length);
-            },asyncStorageDelay);
-            return d.promise();
-        },
-        key: function(index){
-            var d = $.Deferred();
-            setTimeout(function(){
-                d.resolve(localStorage.key(index));
-            },asyncStorageDelay);
-            return d.promise();
-        },
-        getItem: function(key){
-            var d = $.Deferred();
-            setTimeout(function(){
-                var val = localStorage.getItem(key);
-                if(val){
-                    d.resolve(val);
-                }else{
-                    d.reject();
-                }
-            },asyncStorageDelay);
-            return d.promise();
-        },
-        setItem: function(key,data){
-            var d = $.Deferred();
-            setTimeout(function(){
-                localStorage.setItem(key,data);
-                d.resolve();
-            },asyncStorageDelay);
-            return d.promise();
-        },
-        removeItem: function(key){
-            var d = $.Deferred();
-            setTimeout(function(){
-                localStorage.removeItem(key);
-                d.resolve();
-            },asyncStorageDelay);
-            return d.promise();
-        },
-        clear: function(){
-            var d = $.Deferred();
-            setTimeout(function(){
-                localStorage.clear();
-                d.resolve();
-            },asyncStorageDelay);
-            return d.promise();
-        },
-        
-        // A collection holds  a list of objects that can be stored and searched on the disc asynchronously.
-        // collection : the name of the collection.
-        // searchable_fields : a list of the name of the object's field that can be searched and matched
-        collection_new: function(collection, searchable_fields){
-            var col_obj = {
-                    'name': collection,
-                    'searchable_fields': searchable_fields || [],
-                    'data': [],
-            };
-            return asyncStorage.setItem('collection_'+collection, JSON.stringify(col_obj));
-        },
-        
-        // returns a defered that fetches one element of the collection that has a field of value equal to name
-        // the defered fails if there is no such element
-        collection_get: function(collection, field, name){
-            var d = $.Deferred();
+openerp.point_of_sale = function(instance) {
 
-            setTimeout(function(){
-                var col_str = localStorage.getItem('collection_'+collection)
-                var col_obj = JSON.parse(col_str);
-                var data = col_obj.data;
-                for(var i = 0; i < data.length; i++){
-                    var elem = data[i];
-                    if (elem[field] && elem[field] === name){
-                        d.resolve(elem);
-                        return d.promise();
-                    }
-                }
-                d.reject();
-            },asyncStorageDelay);
+    instance.point_of_sale = {};
 
-            return d.promise();
-        },
-        
-        // asynchronously add an element to the collection
-        collection_add: function(collection, elem){
-            var d = $.Deferred();
+    var namespace = instance.point_of_sale;
 
-            var col_str = localStorage.getItem('collection_'+collection);
-            var col_obj = JSON.parse(col_str);
+    var posmodel;    //the global point of sale instance
 
-            col_obj.data.push(elem);
-            col_str = JSON.stringify(col_obj);
+    var QWeb = instance.web.qweb;
 
-            localStorage.setItem('collection_'+collection, col_str)
-
-            setTimeout(function(){
-                d.resolve();
-            },asyncStorageDelay);
-            
-            return d.promise();
-        },
-        
-        // returns a deffered that provides a list of element in the collection 
-        // matching the patterns *
-        // patterns is a  dictionary of {'field':'pattern'}.
-        // an object is said to match the patterns if one of his field has a related field in the
-        // dictionary with a value that contains the 'pattern'. the list may be empty
-        collection_find: function(collection, patterns){
-            var d = $.Deferred();
-
-            var col_str = localStorage.getItem('collection_'+collection)
-            var col_obj = JSON.parse(col_str);
-            var data = col_obj.data;
-            var results = [];
-            var lowerpatterns = {};
-            for (field in patterns){
-                lowerpatterns[field] = patterns[field].toLowerCase();
-            }
-
-
-            for(var i = 0; i < data.length; i++){
-                var elem = data[i];
-                for(field in lowerpatterns){
-                    if(elem[field] && (''+elem[field]).toLowerCase().indexOf(lowerpatterns[field]) >= 0){
-                        results.push(elem);
-                        break;
-                    }
-                }
-            }
-
-            setTimeout(function(){
-                d.resolve(results);
-            },asyncStorageDelay);
-
-            return d.promise();
-        },
-    };
-})();
-
-openerp.point_of_sale = function(session) {
-    
-    session.point_of_sale = {};
-
-    var QWeb = session.web.qweb;
     var qweb_template = function(template) {
         return function(ctx) {
             return QWeb.render(template, _.extend({}, ctx,{
-                'currency': pos.get('currency'),
+                'currency': posmodel.get('currency'),
                 'format_amount': function(amount) {
-                    if (pos.get('currency').position == 'after') {
-                        return amount + ' ' + pos.get('currency').symbol;
+                    if (posmodel.get('currency').position == 'after') {
+                        return amount + ' ' + posmodel.get('currency').symbol;
                     } else {
-                        return pos.get('currency').symbol + ' ' + amount;
+                        return posmodel.get('currency').symbol + ' ' + amount;
                     }
                 },
                 }));
         };
     };
-    var _t = session.web._t;
+    var _t = instance.web._t;
 
-    /*
-     Local store access. Read once from localStorage upon construction and persist on every change.
-     There should only be one store active at any given time to ensure data consistency.
-     */
-    var Store = session.web.Class.extend({
-        init: function() {
-            this.data = {};
+    var LocalStorageDAO = instance.web.Class.extend({
+        add_operation: function(operation) {
+            var self = this;
+            return $.async_when().pipe(function() {
+                var tmp = self._get('oe_pos_operations', []);
+                var last_id = self._get('oe_pos_operations_sequence', 1);
+                tmp.push({'id': last_id, 'data': operation});
+                self._set('oe_pos_operations', tmp);
+                self._set('oe_pos_operations_sequence', last_id + 1);
+            });
         },
-        get: function(key, _default) {
-            if (this.data[key] === undefined) {
-                var stored = localStorage['oe_pos_' + key];
-                if (stored)
-                    this.data[key] = JSON.parse(stored);
-                else
-                    //console.log('Store get: ',key, 'default: ',_default);
-                    return _default;
-            }
-            //console.log('Store get: ',key, 'value: ',this.data[key]);
-            return this.data[key];
+        remove_operation: function(id) {
+            var self = this;
+            return $.async_when().pipe(function() {
+                var tmp = self._get('oe_pos_operations', []);
+                tmp = _.filter(tmp, function(el) {
+                    return el.id !== id;
+                });
+                self._set('oe_pos_operations', tmp);
+            });
         },
-        set: function(key, value) {
-            //console.log('Store set: ',key,' value: ',value);
-            this.data[key] = value;
-            localStorage['oe_pos_' + key] = JSON.stringify(value);
+        get_operations: function() {
+            var self = this;
+            return $.async_when().pipe(function() {
+                return self._get('oe_pos_operations', []);
+            });
         },
-        collection_new: function(collection, searchable_fields){
-            return asyncStorage.collection_new(collection,searchable_fields);
+        _get: function(key, default_) {
+            var txt = localStorage[key];
+            if (! txt)
+                return default_;
+            return JSON.parse(txt);
         },
-        collection_get: function(collection, field, name){
-            return asyncStorage.collection_get(collection,field,name);
+        _set: function(key, value) {
+            localStorage[key] = JSON.stringify(value);
         },
-        collection_add: function(collection, elem){
-            return asyncStorage.collection_add(collection,elem);
-        },
-        collection_find: function(collection, patterns){
-            return asyncStorage.collection_find(collection,patterns);
-        }
     });
+
+    var fetch = function(osvModel, fields, domain){
+        var dataSetSearch = new instance.web.DataSetSearch(null, osvModel, {}, domain);
+        return dataSetSearch.read_slice(fields, 0);
+    };
     
     /*
-     Gets all the necessary data from the OpenERP web client (session, shop data etc.)
+     Gets all the necessary data from the OpenERP web client (instance, shop data etc.)
      */
-    var Pos = Backbone.Model.extend({
+    var PosModel = Backbone.Model.extend({
         initialize: function(session, attributes) {
             Backbone.Model.prototype.initialize.call(this, attributes);
-            this.store = new Store();
+            var  self = this;
+            this.dao = new LocalStorageDAO();
             this.ready = $.Deferred();
             this.flush_mutex = new $.Mutex();
             this.build_tree = _.bind(this.build_tree, this);
             this.session = session;
-            var attributes = {
-                'pending_operations': [],
+            this.categories = {};
+            this.set({
+                'nbr_pending_operations': 0,
                 'currency': {symbol: '$', position: 'after'},
                 'shop': {},
                 'company': {},
-                'user': {},
-            };
-            _.each(attributes, _.bind(function(def, attr) {
-                var to_set = {};
-                to_set[attr] = this.store.get(attr, def);
-                this.set(to_set);
-                this.bind('change:' + attr, _.bind(function(unused, val) {
-                    this.store.set(attr, val);
-                }, this));
-            }, this));
-            $.when(this.fetch('pos.category', ['name', 'parent_id', 'child_id']),
-                this.fetch('product.product', ['name', 'list_price', 'pos_categ_id', 'taxes_id', 'product_image_small', 'ean13', 'id'], [['pos_categ_id', '!=', 'false']]),
-                this.fetch('product.packaging', ['product_id', 'ean']),
-                this.fetch('account.bank.statement', ['account_id', 'currency', 'journal_id', 'state', 'name'],
-                    [['state', '=', 'open'], ['user_id', '=', this.session.uid]]),
-                this.fetch('account.journal', ['auto_cash', 'check_dtls', 'currency', 'name', 'type']),
-                this.fetch('account.tax', ['amount', 'price_include', 'type']),
-                this.get_app_data())
+                'user': {}
+            });
+            
+            var cat_def = fetch('pos.category', ['name', 'parent_id', 'child_id'])
+                .pipe(function(result){
+                    return self.set({'categories': result});
+                });
+            
+            var prod_def = fetch( 
+                'product.product', 
+                ['name', 'list_price', 'pos_categ_id', 'taxes_id','product_image_small'],
+                [['pos_categ_id','!=', 'false']] 
+                ).then(function(result){
+                    return self.set({'product_list': result});
+                });
+
+            var bank_def = fetch(
+                'account.bank.statement', 
+                ['account_id', 'currency', 'journal_id', 'state', 'name'],
+                [['state','=','open'], ['user_id', '=', this.session.uid]]
+                ).then(function(result){
+                    return self.set({'bank_statements': result});
+                });
+
+            var tax_def = fetch('account.tax', ['amount','price_include','type'])
+                .then(function(result){
+                    return self.set({'taxes': result});
+                });
+
+            $.when(cat_def,prod_def,bank_def,tax_def,this.get_app_data(), this.flush())
                 .pipe(_.bind(this.build_tree, this));
         },
-        fetch: function(osvModel, fields, domain) {
-            var dataSetSearch;
-            var self = this;
-            dataSetSearch = new session.web.DataSetSearch(this, osvModel, {}, domain);
-            return dataSetSearch.read_slice(fields, 0).then(function(result) {
-                return self.store.set(osvModel, result);
-            });
-        },
+
         get_app_data: function() {
             var self = this;
-            return $.when(new session.web.Model("sale.shop").get_func("search_read")([]).pipe(function(result) {
+            return $.when(new instance.web.Model("sale.shop").get_func("search_read")([]).pipe(function(result) {
                 self.set({'shop': result[0]});
                 var company_id = result[0]['company_id'][0];
-                return new session.web.Model("res.company").get_func("read")(company_id, ['currency_id', 'name', 'phone']).pipe(function(result) {
+                return new instance.web.Model("res.company").get_func("read")(company_id, ['currency_id', 'name', 'phone']).pipe(function(result) {
                     self.set({'company': result});
                     var currency_id = result['currency_id'][0]
-                    return new session.web.Model("res.currency").get_func("read")([currency_id],
+                    return new instance.web.Model("res.currency").get_func("read")([currency_id],
                             ['symbol', 'position']).pipe(function(result) {
                         self.set({'currency': result[0]});
                         
                     });
                 });
-            }), new session.web.Model("res.users").get_func("read")(this.session.uid, ['name']).pipe(function(result) {
+            }), new instance.web.Model("res.users").get_func("read")(this.session.uid, ['name']).pipe(function(result) {
                 self.set({'user': result});
             }));
         },
-        pushOrder: function(record) {
-            var ops = _.clone(this.get('pending_operations'));
-            ops.push(record);
-            this.set({pending_operations: ops});
-            return this.flush();
+        push_order: function(record) {
+            var self = this;
+            return this.dao.add_operation(record).pipe(function(){
+                    return self.flush();
+            });
         },
         flush: function() {
             return this.flush_mutex.exec(_.bind(function() {
@@ -276,26 +148,35 @@ openerp.point_of_sale = function(session) {
             }, this));
         },
         _int_flush : function() {
-            var ops = this.get('pending_operations');
-            if (ops.length === 0)
-                return $.when();
-            var op = ops[0];
-            /* we prevent the default error handler and assume errors
-             * are a normal use case, except we stop the current iteration
-             */
-            return new session.web.Model("pos.order").get_func("create_from_ui")([op]).fail(function(unused, event) {
-                event.preventDefault();
-            }).pipe(_.bind(function() {
-                console.debug('saved 1 record');
-                var ops2 = this.get('pending_operations');
-                this.set({'pending_operations': _.without(ops2, op)});
-                return this._int_flush();
-            }, this), function() {return $.when()});
+            var self = this;
+            
+            this.dao.get_operations().pipe(function(operations) {
+                self.set( {'nbr_pending_operations':operations.length} );
+                if(operations.length === 0){
+                    return $.when();
+                }
+                var op = operations[0].data;
+
+                 // we prevent the default error handler and assume errors
+                 // are a normal use case, except we stop the current iteration
+
+                 return new instance.web.Model('pos.order').get_func('create_from_ui')([op])
+                            .fail(function(unused, event){
+                                event.preventDefault();
+                            })
+                            .pipe(function(){
+                                //console.debug('saved 1 record'); TODO Debug this
+                                self.dao.remove_operation(op.id).pipe(function(){
+                                    return self._int_flush();
+                                });
+                            }, function(){
+                                return $.when();
+                            });
+            });
         },
-        categories: {},
         build_tree: function() {
             var c, id, _i, _len, _ref, _ref2;
-            _ref = this.store.get('pos.category');
+            _ref = this.get('categories');
             for (_i = 0, _len = _ref.length; _i < _len; _i++) {
                 c = _ref[_i];
                 this.categories[c.id] = {
@@ -318,7 +199,7 @@ openerp.point_of_sale = function(session) {
                 ancestors: [],
                 children: (function() {
                     var _j, _len2, _ref3, _results;
-                    _ref3 = this.store.get('pos.category');
+                    _ref3 = this.get('categories');
                     _results = [];
                     for (_j = 0, _len2 = _ref3.length; _j < _len2; _j++) {
                         c = _ref3[_j];
@@ -330,7 +211,7 @@ openerp.point_of_sale = function(session) {
                 }).call(this),
                 subtree: (function() {
                     var _j, _len2, _ref3, _results;
-                    _ref3 = this.store.get('pos.category');
+                    _ref3 = this.get('categories');
                     _results = [];
                     for (_j = 0, _len2 = _ref3.length; _j < _len2; _j++) {
                         c = _ref3[_j];
@@ -360,8 +241,6 @@ openerp.point_of_sale = function(session) {
         }
     });
 
-    /* global variable */
-    var pos;
 
     /*
      ---
@@ -403,6 +282,7 @@ openerp.point_of_sale = function(session) {
             discount: 0
         },
         initialize: function(attributes) {
+            this.posmodel = attributes.posmodel;
             Backbone.Model.prototype.initialize.apply(this, arguments);
             this.bind('change:quantity', function(unused, qty) {
                 if (qty == 0)
@@ -429,10 +309,10 @@ openerp.point_of_sale = function(session) {
             var totalTax = base;
             var totalNoTax = base;
             
-            var products = pos.store.get('product.product');
-            var product = _.detect(products, function(el) {return el.id === self.get('id');});
+            var product_list = self.posmodel.get('product_list');
+            var product = _.detect(product_list, function(el) {return el.id === self.get('id');});
             var taxes_ids = product.taxes_id;
-            var taxes =  pos.store.get('account.tax');
+            var taxes =  self.posmodel.get('taxes');
             var taxtotal = 0;
             _.each(taxes_ids, function(el) {
                 var tax = _.detect(taxes, function(t) {return t.id === el;});
@@ -493,7 +373,7 @@ openerp.point_of_sale = function(session) {
         },
         exportAsJSON: function(){
             return {
-                name: session.web.datetime_to_str(new Date()),
+                name: instance.web.datetime_to_str(new Date()),
                 statement_id: this.get('id'),
                 account_id: (this.get('account_id'))[0],
                 journal_id: (this.get('journal_id'))[0],
@@ -519,6 +399,7 @@ openerp.point_of_sale = function(session) {
                 paymentLines:   new PaymentlineCollection,
                 name:           "Order " + this.generateUniqueId(),
             });
+            this.posmodel =     attributes.posmodel; //TODO put that in set and remember to use 'get' to read it ... 
             this.bind('change:validated', this.validatedChanged);
             return this;
         },
@@ -539,8 +420,9 @@ openerp.point_of_sale = function(session) {
             if (existing != null) {
                 existing.incrementQuantity();
             } else {
-                var line = new Orderline(product.toJSON());
-                //console.log('orderline:',line,product.toJSON());
+                var attr = product.toJSON();
+                attr.posmodel = this.posmodel;
+                var line = new Orderline(attr);
                 this.get('orderLines').add(line);
                 line.bind('killme', function() {
                     this.get('orderLines').remove(line);
@@ -612,17 +494,19 @@ openerp.point_of_sale = function(session) {
     });
 
     var Shop = Backbone.Model.extend({
-        initialize: function() {
+        initialize: function(attributes) {
+            var self = this;
             this.set({
                 orders: new OrderCollection(),
-                products: new ProductCollection()
+                products: new ProductCollection(),
             });
+            this.posmodel = attributes.posmodel;
             this.set({
-                cashRegisters: new CashRegisterCollection(pos.store.get('account.bank.statement')),
+                cashRegisters: new CashRegisterCollection(this.posmodel.get('bank_statements')),
             });
             return (this.get('orders')).bind('remove', _.bind( function(removedOrder) {
                 if ((this.get('orders')).isEmpty()) {
-                    this.addAndSelectOrder(new Order);
+                    this.addAndSelectOrder(new Order({posmodel: self.posmodel}));
                 }
                 if ((this.get('selectedOrder')) === removedOrder) {
                     return this.set({
@@ -711,7 +595,7 @@ openerp.point_of_sale = function(session) {
      Views
      ---
      */
-    var NumpadWidget = session.web.OldWidget.extend({
+    var NumpadWidget = instance.web.OldWidget.extend({
         init: function(parent, options) {
             this._super(parent);
             this.state = new NumpadState();
@@ -748,7 +632,7 @@ openerp.point_of_sale = function(session) {
     /*
      Gives access to the payment methods (aka. 'cash registers')
      */
-    var PaypadWidget = session.web.OldWidget.extend({
+    var PaypadWidget = instance.web.OldWidget.extend({
         init: function(parent, options) {
             this._super(parent);
             this.shop = options.shop;
@@ -779,7 +663,7 @@ openerp.point_of_sale = function(session) {
             }, this));
         }
     });
-    var PaymentButtonWidget = session.web.OldWidget.extend({
+    var PaymentButtonWidget = instance.web.OldWidget.extend({
         template_fct: qweb_template('pos-payment-button-template'),
         renderElement: function() {
             this.$element.html(this.template_fct({
@@ -797,7 +681,7 @@ openerp.point_of_sale = function(session) {
      It should be possible to go back to any step as long as step 3 hasn't been completed.
      Modifying an order after validation shouldn't be allowed.
      */
-    var StepSwitcher = session.web.OldWidget.extend({
+    var StepSwitcher = instance.web.OldWidget.extend({
         init: function(parent, options) {
             this._super(parent);
             this.shop = options.shop;
@@ -823,7 +707,7 @@ openerp.point_of_sale = function(session) {
     /*
      Shopping carts.
      */
-    var OrderlineWidget = session.web.OldWidget.extend({
+    var OrderlineWidget = instance.web.OldWidget.extend({
         tagName: 'tr',
         template_fct: qweb_template('pos-orderline-template'),
         init: function(parent, options) {
@@ -864,7 +748,7 @@ openerp.point_of_sale = function(session) {
         on_selected: function() {},
     });
 
-    var OrderWidget = session.web.OldWidget.extend({
+    var OrderWidget = instance.web.OldWidget.extend({
         init: function(parent, options) {
             this._super(parent);
             this.shop = options.shop;
@@ -949,7 +833,11 @@ openerp.point_of_sale = function(session) {
     /*
      "Products" step.
      */
-    var CategoryWidget = session.web.OldWidget.extend({
+    var CategoryWidget = instance.web.OldWidget.extend({
+        init: function(parent, options){
+            this._super(parent,options.element_id);
+            this.posmodel = options.posmodel;
+        },
         start: function() {
             this.$element.find(".oe-pos-categories-list a").click(_.bind(this.changeCategory, this));
         },
@@ -963,7 +851,7 @@ openerp.point_of_sale = function(session) {
                     _results = [];
                     for (_i = 0, _len = self.ancestors.length; _i < _len; _i++) {
                         c = self.ancestors[_i];
-                        _results.push(pos.categories[c]);
+                        _results.push(self.posmodel.categories[c]);
                     }
                     return _results;
                 })(),
@@ -972,7 +860,7 @@ openerp.point_of_sale = function(session) {
                     _results = [];
                     for (_i = 0, _len = self.children.length; _i < _len; _i++) {
                         c = self.children[_i];
-                        _results.push(pos.categories[c]);
+                        _results.push(self.posmodel.categories[c]);
                     }
                     return _results;
                 })()
@@ -985,7 +873,7 @@ openerp.point_of_sale = function(session) {
         on_change_category: function(id) {},
     });
 
-    var ProductWidget = session.web.OldWidget.extend({
+    var ProductWidget = instance.web.OldWidget.extend({
         tagName:'li',
         template_fct: qweb_template('pos-product-template'),
         init: function(parent, options) {
@@ -1008,7 +896,7 @@ openerp.point_of_sale = function(session) {
         },
     });
 
-    var ProductListWidget = session.web.OldWidget.extend({
+    var ProductListWidget = instance.web.OldWidget.extend({
         init: function(parent, options) {
             this._super(parent);
             this.model = options.model;
@@ -1030,7 +918,7 @@ openerp.point_of_sale = function(session) {
     /*
      "Payment" step.
      */
-    var PaymentlineWidget = session.web.OldWidget.extend({
+    var PaymentlineWidget = instance.web.OldWidget.extend({
         tagName: 'tr',
         template_fct: qweb_template('pos-paymentline-template'),
         init: function(parent, options) {
@@ -1065,11 +953,12 @@ openerp.point_of_sale = function(session) {
         },
     });
 
-    var PaymentWidget = session.web.OldWidget.extend({
+    var PaymentWidget = instance.web.OldWidget.extend({
         init: function(parent, options) {
             this._super(parent);
             this.model = options.model;
             this.shop = options.shop;
+            this.posmodel = options.posmodel;
             this.shop.bind('change:selectedOrder', this.changeSelectedOrder, this);
             this.bindPaymentLineEvents();
             this.bindOrderLineEvents();
@@ -1088,7 +977,7 @@ openerp.point_of_sale = function(session) {
             var callback, currentOrder;
             currentOrder = this.shop.get('selectedOrder');
             $('button#validate-order', this.$element).attr('disabled', 'disabled');
-            pos.pushOrder(currentOrder.exportAsJSON()).then(_.bind(function() {
+            this.posmodel.push_order(currentOrder.exportAsJSON()).then(_.bind(function() {
                 $('button#validate-order', this.$element).removeAttr('disabled');
                 return currentOrder.set({
                     validated: true
@@ -1161,14 +1050,14 @@ openerp.point_of_sale = function(session) {
         },
     });
 
-    var ReceiptWidget = session.web.OldWidget.extend({
+    var ReceiptWidget = instance.web.OldWidget.extend({
         init: function(parent, options) {
             this._super(parent);
             this.model = options.model;
             this.shop = options.shop;
-            this.user = pos.get('user');
-            this.company = pos.get('company');
-            this.shop_obj = pos.get('shop');
+            this.user = posmodel.get('user');
+            this.company = posmodel.get('company');
+            this.shop_obj = posmodel.get('shop');
         },
         start: function() {
             this.shop.bind('change:selectedOrder', this.changeSelectedOrder, this);
@@ -1204,7 +1093,7 @@ openerp.point_of_sale = function(session) {
         },
     });
 
-    var OrderButtonWidget = session.web.OldWidget.extend({
+    var OrderButtonWidget = instance.web.OldWidget.extend({
         tagName: 'li',
         template_fct: qweb_template('pos-order-selector-button-template'),
         init: function(parent, options) {
@@ -1244,7 +1133,7 @@ openerp.point_of_sale = function(session) {
         }
     });
 
-    var ActionButtonWidget = session.web.Widget.extend({
+    var ActionButtonWidget = instance.web.Widget.extend({
         template:'pos-action-button',
         init: function(parent, options){
             this._super(parent, options);
@@ -1257,7 +1146,7 @@ openerp.point_of_sale = function(session) {
         },
     });
 
-    var ActionbarWidget = session.web.Widget.extend({
+    var ActionbarWidget = instance.web.Widget.extend({
         template:'pos-actionbar',
         init: function(parent, options){
             this._super(parent,options);
@@ -1322,7 +1211,7 @@ openerp.point_of_sale = function(session) {
     // 
     // The widget is initially hidden. It can be shown with this.show(), and is 
     // automatically shown when the input_selector gets focused.
-    var OnscreenKeyboardWidget = session.web.Widget.extend({
+    var OnscreenKeyboardWidget = instance.web.Widget.extend({
         tagName: 'div',
         
         init: function(parent, options){
@@ -1505,16 +1394,17 @@ openerp.point_of_sale = function(session) {
         },
     });
 
-    var ShopWidget = session.web.OldWidget.extend({
+    var ShopWidget = instance.web.OldWidget.extend({
         init: function(parent, options) {
             this._super(parent);
             this.shop = options.shop;
+            this.posmodel = options.posmodel;
         },
         start: function() {
             $('button#neworder-button', this.$element).click(_.bind(this.createNewOrder, this));
 
             (this.shop.get('orders')).bind('add', this.orderAdded, this);
-            (this.shop.get('orders')).add(new Order);
+            (this.shop.get('orders')).add(new Order({'posmodel':this.posmodel}));
             this.productListView = new ProductListWidget(null, {
                 shop: this.shop
             });
@@ -1536,7 +1426,8 @@ openerp.point_of_sale = function(session) {
             this.orderView.$element = $('#current-order-content');
             this.orderView.start();
             this.paymentView = new PaymentWidget(null, {
-                shop: this.shop
+                shop: this.shop,
+                posmodel: this.posmodel,
             });
             this.paymentView.$element = $('#payment-screen');
             this.paymentView.renderElement();
@@ -1551,7 +1442,7 @@ openerp.point_of_sale = function(session) {
         },
         createNewOrder: function() {
             var newOrder;
-            newOrder = new Order;
+            newOrder = new Order({'posmodel': this.posmodel});
             (this.shop.get('orders')).add(newOrder);
             this.shop.set({
                 selectedOrder: newOrder
@@ -1588,18 +1479,20 @@ openerp.point_of_sale = function(session) {
 
     var App = (function() {
 
-        function App($element) {
-            this.initialize($element);
+        function App($element, posmodel) {
+            this.initialize($element, posmodel);
         }
 
-        App.prototype.initialize = function($element) {
-            this.shop = new Shop;
+        App.prototype.initialize = function($element, posmodel) {
+            this.posmodel = posmodel;
+            this.shop = new Shop({'posmodel': posmodel});
             this.shopView = new ShopWidget(null, {
-                shop: this.shop
+                shop: this.shop,
+                'posmodel': posmodel,
             });
             this.shopView.$element = $element;
             this.shopView.start();
-            this.categoryView = new CategoryWidget(null, 'products-screen-categories');
+            this.categoryView = new CategoryWidget(null, {element_id: 'products-screen-categories', posmodel: posmodel} );
             this.categoryView.on_change_category.add_last(_.bind(this.category, this));
             this.category();
 
@@ -1692,23 +1585,25 @@ openerp.point_of_sale = function(session) {
         };
 
         App.prototype.category = function(id) {
-            var c, products, self = this;
+            var c, product_list, self = this;
 
             id = !id ? 0 : id; 
 
-            c = pos.categories[id];
+            c = this.posmodel.categories[id];
             this.categoryView.ancestors = c.ancestors;
             this.categoryView.children = c.children;
             this.categoryView.renderElement();
             this.categoryView.start();
 
-            allProducts = pos.store.get('product.product');
-            allPackages = pos.store.get('product.packaging');
-            products = pos.store.get('product.product').filter( function(p) {
+            allProducts = this.posmodel.get('product_list');
+
+            allPackages = this.posmodel.get('product.packaging');
+            
+            product_list = this.posmodel.get('product_list').filter( function(p) {
                 var _ref;
                 return _ref = p.pos_categ_id[0], _.indexOf(c.subtree, _ref) >= 0;
             });
-            (this.shop.get('products')).reset(products);
+            (this.shop.get('products')).reset(product_list);
 
             var codeNumbers = [];
 
@@ -1778,18 +1673,18 @@ openerp.point_of_sale = function(session) {
                 var m, s;
                 s = $(this).val().toLowerCase();
                 if (s) {
-                    m = products.filter( function(p) {
+                    m = product_list.filter( function(p) {
                         return p.name.toLowerCase().indexOf(s) != -1;
                     });
                     $('.search-clear').fadeIn();
                 } else {
-                    m = products;
+                    m = product_list;
                     $('.search-clear').fadeOut();
                 }
                 return (self.shop.get('products')).reset(m);
             });
             return $('.search-clear').click( function() {
-                (self.shop.get('products')).reset(products);
+                (self.shop.get('products')).reset(product_list);
                 $('.searchbox input').val('').focus();
                 return $('.search-clear').fadeOut();
             });
@@ -1797,7 +1692,7 @@ openerp.point_of_sale = function(session) {
         return App;
     })();
     
-    session.point_of_sale.SynchNotification = session.web.OldWidget.extend({
+    instance.point_of_sale.SynchNotification = instance.web.OldWidget.extend({
         template: "pos-synch-notification",
         init: function() {
             this._super.apply(this, arguments);
@@ -1814,36 +1709,36 @@ openerp.point_of_sale = function(session) {
         on_synch: function() {}
     });
 
-    session.web.client_actions.add('pos.ui', 'session.point_of_sale.PointOfSale');
-    session.point_of_sale.PointOfSale = session.web.OldWidget.extend({
+    instance.web.client_actions.add('pos.ui', 'instance.point_of_sale.POSWidget');
+
+    instance.point_of_sale.POSWidget = instance.web.OldWidget.extend({
         init: function() {
             this._super.apply(this, arguments);
 
-            if (pos)
-                throw "It is not possible to instantiate multiple instances "+
-                    "of the point of sale at the same time.";
-            pos = new Pos(this.session);
+            this.posmodel = new PosModel(this.session);
+
+            posmodel = this.posmodel;
         },
         start: function() {
             var self = this;
-            return pos.ready.then(_.bind(function() {
+            return self.posmodel.ready.then(_.bind(function() {
                 this.renderElement();
-                this.synch_notification = new session.point_of_sale.SynchNotification(this);
+                this.synch_notification = new instance.point_of_sale.SynchNotification(this);
                 this.synch_notification.replace($('.oe_pos_synch-notification', this.$element));
-                this.synch_notification.on_synch.add(_.bind(pos.flush, pos));
+                this.synch_notification.on_synch.add(_.bind(self.posmodel.flush, self.posmodel));
                 
-                pos.bind('change:pending_operations', this.changed_pending_operations, this);
+                self.posmodel.bind('change:nbr_pending_operations', this.changed_pending_operations, this);
                 this.changed_pending_operations();
                 
                 this.$element.find("#loggedas button").click(function() {
                     self.try_close();
                 });
 
-                pos.app = new App(self.$element);
-                session.webclient.set_content_full_screen(true);
+                self.posmodel.app = new App(self.$element, self.posmodel);
+                instance.webclient.set_content_full_screen(true);
                 
-                if (pos.store.get('account.bank.statement').length === 0)
-                    return new session.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_pos_open_statement']], ['res_id']).pipe(
+                if (self.posmodel.get('bank_statements').length === 0)
+                    return new instance.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_pos_open_statement']], ['res_id']).pipe(
                             _.bind(function(res) {
                         return this.rpc('/web/action/load', {'action_id': res[0]['res_id']}).pipe(_.bind(function(result) {
                             var action = result.result;
@@ -1853,15 +1748,17 @@ openerp.point_of_sale = function(session) {
             }, this));
         },
         render: function() {
-            return qweb_template("PointOfSale")();
+            return qweb_template("POSWidget")();
         },
         changed_pending_operations: function () {
-            this.synch_notification.on_change_nbr_pending(pos.get('pending_operations').length);
+            var self = this;
+            this.synch_notification.on_change_nbr_pending(self.posmodel.get('nbr_pending_operations').length);
         },
         try_close: function() {
-            pos.flush().then(_.bind(function() {
+            var self = this;
+            self.posmodel.flush().then(_.bind(function() {
                 var close = _.bind(this.close, this);
-                if (pos.get('pending_operations').length > 0) {
+                if (self.posmodel.get('nbr_pending_operations').length > 0) {
                     var confirm = false;
                     $(QWeb.render('pos-close-warning')).dialog({
                         resizable: false,
@@ -1891,7 +1788,7 @@ openerp.point_of_sale = function(session) {
             // remove barcode reader event listener
             $('body').undelegate('', 'keyup')
 
-            return new session.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_pos_close_statement']], ['res_id']).pipe(
+            return new instance.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_pos_close_statement']], ['res_id']).pipe(
                     _.bind(function(res) {
                 return this.rpc('/web/action/load', {'action_id': res[0]['res_id']}).pipe(_.bind(function(result) {
                     var action = result.result;
@@ -1901,8 +1798,8 @@ openerp.point_of_sale = function(session) {
             }, this));
         },
         destroy: function() {
-            session.webclient.set_content_full_screen(false);
-            pos = undefined;
+            instance.webclient.set_content_full_screen(false);
+            self.posmodel = undefined;
             this._super();
         }
     });
