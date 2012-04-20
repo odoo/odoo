@@ -607,7 +607,7 @@
 <table t-name="ListView" class="oe-listview-content">
     <t t-set="columns_count" t-value="visible_columns.length + (options.selectable ? 1 : 0) + (options.deletable ? 1 : 0) + (options.isClarkGable ? 1 : 0)"/>
     <thead>
-        <tr t-if="options.action_buttons !== false or options.pager !== false">
+        <tr t-if="(!!options.action_buttons and !options.$buttons) or (!!options.pager and !options.$pager)">
             <th t-att-colspan="columns_count">
                 <div class="oe_list_buttons"/>
                 <div class="oe_list_sidebar"/>

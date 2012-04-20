@@ -256,11 +256,12 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             e.stopPropagation();
             var $this = $(this);
             self.dataset.sort($this.data('id'));
-            if ($this.find('span').length) {
-                $this.find('span').toggleClass( 'ui-icon-triangle-1-s ui-icon-triangle-1-n');
+            if($this.hasClass("sortdown") || $this.hasClass("sortup"))  {
+                $this.toggleClass("sortdown").toggleClass("sortup");
             } else {
-                $this.append('<span class="ui-icon ui-icon-triangle-1-n">') .siblings('.oe-sortable').find('span').remove();
+                $this.toggleClass("sortdown");
             }
+            $this.siblings('.oe-sortable').removeClass("sortup sortdown");
 
             self.reload_content();
         });

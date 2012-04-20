@@ -1375,26 +1375,6 @@ $colour4: #8a89ba
             font-size: 125%
     .oe-listview-content
         width: 100%
-        thead, tfoot
-            border-bottom: 1px solid #cacaca
-            background: #eee
-        tfoot
-            border-bottom: 1px solid #cacaca
-            font-weight: bold
-        tbody
-            cursor: pointer
-            background: white
-        thead
-            vertical-align: top
-        td.oe_list_checkbox:first-child, th.oe_list_checkbox:first-child
-            width: 17px
-            &:after
-                border-width: 0
-        tbody tr:nth-child(odd) td, tbody tr:nth-child(odd) th
-            background-color: #f0f0fa
-            @include vertical-gradient(#f0f0fa, #eeeef6)
-        tbody tr:hover td, tbody tr:hover th
-            @include vertical-gradient(#eee, #dedede)
         td, th
             padding: 3px 6px
             line-height: 18px
@@ -1403,30 +1383,64 @@ $colour4: #8a89ba
                 background: transparent
                 padding: 0
                 @include box-shadow(none)
+        thead
+            border-bottom: 2px solid #cacaca
+            background: #eee
+            vertical-align: top
+            th:after
+                content: ""
+                float: right
+                margin-top: 7px
+                border-width: 0 4px 4px
+                border-style: solid
+                border-color: #000 transparent
+                visibility: hidden
+            th.sortup:after
+                visibility: visible
+                @include opacity(0.6)
+            th.sortdown:after
+                border-bottom: none
+                border-left: 4px solid transparent
+                border-right: 4px solid transparent
+                border-top: 4px solid #000
+                visibility: visible
+                @include box-shadow(none)
+                @include opacity(0.6)
+            // TODO mit
+            //th:hover:after
+            //    border-bottom: none
+            //    border-left: 4px solid transparent
+            //    border-right: 4px solid transparent
+            //    border-top: 4px solid #000
+            //    visibility: visible
+            //    @include box-shadow(none)
+            //    @include opacity(0.6)
+        tbody
+            cursor: pointer
+            background: white
+            tr
+                border-top: 1px solid #ddd
+            tr:nth-child(odd)
+                background-color: #f0f0fa
+                @include vertical-gradient(#f0f0fa, #eeeef6)
+        tfoot
+            border-top: 2px solid #cacaca
+            border-bottom: 1px solid #cacaca
+            background: #eee
+            font-weight: bold
+
+        tbody tr:hover td, tbody tr:hover th
+            @include vertical-gradient(#eee, #dedede)
+
+        td.oe_list_checkbox:first-child, th.oe_list_checkbox:first-child
+            width: 17px
+            &:after
+                border-width: 0
         .numeric
             text-align: right
             width: 82px
             input
                 text-align: right
-        //thead th:after
-            //content: ""
-            //float: right
-            //margin-top: 7px
-            //border-width: 0 4px 4px
-            //border-style: solid
-            //border-color: #000 transparent
-            //visibility: hidden
-        table .sortdown:after, table .sortdown:hover:after
-            visibility: visible
-            @include opacity(0.6)
-        table .sortup:after
-            border-bottom: none
-            border-left: 4px solid transparent
-            border-right: 4px solid transparent
-            border-top: 4px solid #000
-            visibility: visible
-            @include box-shadow(none)
-            @include opacity(0.6)
     // }}}
     // KanbanView {{{
     .oe_kanban_group_title
