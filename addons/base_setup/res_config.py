@@ -56,4 +56,22 @@ class report_config_settings(osv.osv_memory):
                 This installs the module report_webkit_sample."""),
     }
 
+
+
+class knowledge_config_settings(osv.osv_memory):
+    _name = 'knowledge.configuration'
+    _inherit = 'res.config.settings'
+    _columns = {
+        'module_wiki_quality_manual': fields.boolean('Use an internal wiki to group FAQ',
+            help="""It installs the wiki_quality_manual module."""),
+        'module_wiki_faq': fields.boolean('Track quality with wiki',
+            help="""It install the wiki_faq."""), 
+        'module_document': fields.boolean('Full Document Indexing',
+            help="""It install the document."""),
+        'module_document_ftp': fields.boolean('Share repositories (FTP)',
+            help="""It install the document_ftp."""),
+        'module_document_webdav': fields.boolean('Share Repositories (WebDAV)',
+            help="""It install the document_webdav."""),                                   
+    }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
