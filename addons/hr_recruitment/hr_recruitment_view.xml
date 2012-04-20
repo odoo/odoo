@@ -41,7 +41,8 @@
         <field name="model">hr.applicant</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Applicants" colors="grey:state in ('cancel','done');blue:state=='pending'">
+            <tree string="Applicants" fonts="bold:needaction_pending==True" colors="grey:state in ('cancel','done');blue:state=='pending'">
+                <field name="needaction_pending" invisible="1"/>
                 <field name="create_date" groups="base.group_no_one"/>
                 <field name="name" string="Subject"/>
                 <field name="partner_name"/>
