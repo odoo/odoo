@@ -68,9 +68,9 @@ class mail_message_common(osv.TransientModel):
        message object. It could be reused as parent model for any
        database model or wizard screen that needs to hold a kind of
        message.
-       All internal logic should be in a database-based model. For example,
-       a wizard for writing emails should inherit from this class and not
-       from mail.message."""
+       All internal logic should be in a database-based model while this
+       model holds the basics of a message. For example, a wizard for writing
+       emails should inherit from this class and not from mail.message."""
 
     def get_body(self, cr, uid, ids, name, arg, context=None):
         if context is None:
@@ -84,10 +84,10 @@ class mail_message_common(osv.TransientModel):
         return result
     
     def search_body(self, cr, uid, obj, name, args, context=None):
-        """will receive:
-           - obj: mail.message object
-           - name: 'body'
-           - args: [('body', 'ilike', 'blah')]"""
+        # will receive:
+        #   - obj: mail.message object
+        #   - name: 'body'
+        #   - args: [('body', 'ilike', 'blah')]
         return ['|', '&', ('content_subtype', '=', 'html'), ('body_html', args[0][1], args[0][2]), ('body_text', args[0][1], args[0][2])]
     
     def get_record_name(self, cr, uid, ids, name, arg, context=None):
@@ -136,15 +136,14 @@ class mail_message_common(osv.TransientModel):
     }
 
 class mail_message(osv.osv):
-    '''Model holding messages: system notification (replacing res.log
-       notifications), comments (for OpenSocial feature) and
+    """Model holding messages: system notification (replacing res.log
+       notifications), comments (for OpenChatter feature) and
        RFC2822 email messages. This model also provides facilities to
        parse, queue and send new email messages. Type of messages
        are differentiated using the 'type' column.
        
        The ``display_text`` field will have a slightly different
-       presentation for real emails and for log messages.
-       '''
+       presentation for real emails and for log messages."""
 
     _name = 'mail.message'
     _inherit = 'mail.message.common'
@@ -210,12 +209,15 @@ class mail_message(osv.osv):
                         ('comment', 'Comment'),
                         ('notification', 'System notification'),
                         ], 'Type', help="Message type: e-mail for e-mail message, notification for system message, comment for other messages such as user replies"),
-        'message_tmptype': fields.selection([
+        'subtype': fields.selection([
                         ('email', 'e-mail'),
                         ('comment', 'Comment'),
                         ('create', 'Create'),
                         ('cancel', 'Cancel'),
-                        ], 'Type', help="Message temptype, such as create or cancel. May be overriden by addons."),
+                        ], 'Type', help="Message subtype, such as 'create' or 'cancel'. The purpose \
+                                         is to be able to distinguish message of the same type.\
+                                         For example, it is used to add the possibility to hide \
+                                         notifications in the wall."),
         'partner_id': fields.many2one('res.partner', 'Related partner'),
         'user_id': fields.many2one('res.users', 'Related user', readonly=1),
         'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel', 'message_id', 'attachment_id', 'Attachments'),
@@ -234,7 +236,7 @@ class mail_message(osv.osv):
         
     _defaults = {
         'type': 'email',
-        'message_tmptype': 'email',
+        'subtype': 'email',
         'state': 'received',
     }
     
