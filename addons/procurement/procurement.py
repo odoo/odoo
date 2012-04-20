@@ -398,6 +398,7 @@ class procurement_order(osv.osv):
         """
         for procurement in self.browse(cr, uid, ids, context=context):
             self.write(cr, uid, [procurement.id], {'state': 'running'})
+        self.running_send_note(cr, uid, ids, context=None)
         return True
 
     def action_produce_assign_product(self, cr, uid, ids, context=None):
@@ -457,7 +458,7 @@ class procurement_order(osv.osv):
         @return: True
         """
         res = self.write(cr, uid, ids, {'state': 'ready'})
-        self.ready_send_note(cr, uid, ids, context)
+        self.ready_send_note(cr, uid, ids, context=None)
         return res
 
     def action_done(self, cr, uid, ids):
@@ -509,7 +510,7 @@ class procurement_order(osv.osv):
 
     def ready_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_append_note(cr, uid, [obj.id], body=_("Procurement has been <b>redy</b>."), context=context)
+            self.message_append_note(cr, uid, [obj.id], body=_("Procurement has been set to <b>redy</b>."), context=context)
 
     def cancel_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
