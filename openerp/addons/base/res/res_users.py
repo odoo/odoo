@@ -362,16 +362,10 @@ class users(osv.osv):
         avatar_path = openerp.modules.get_module_resource('base', 'static/src/img', 'avatar%d.png' % random.randint(0, 6))
         return self._avatar_resize(cr, uid, open(avatar_path, 'rb').read().encode('base64'), context=context)
 
-    def _get_context_lang(self, cr, uid, context=None):
-        return self.browse(cr, uid, uid).context_lang
-
-    def _get_context_tz(self, cr, uid, context=None):
-        return self.browse(cr, uid, uid).context_tz
-
     _defaults = {
         'password' : '',
-        'context_lang': _get_context_lang,
-        'context_tz': _get_context_tz,
+        'context_lang': lambda self, cr, uid, context: context.get('lang', 'en_US'),
+        'context_tz': lambda self, cr, uid, context: context.get('tz', False),
         'avatar': _get_avatar,
         'active' : True,
         'menu_id': _get_menu,
