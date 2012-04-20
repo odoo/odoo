@@ -26,25 +26,12 @@ class documnet_ftp_setting(osv.osv_memory):
     _name = 'knowledge.configuration'
     _inherit = 'knowledge.configuration'
     _columns = {
-        'document_ftp_url': fields.char('Browse Documents',size=64,
-            help ="""It allow to browse the document from the relative URL""", readonly=True),               
+        'document_ftp_url': fields.char('Browse Documents', size=128,
+            help ="""Click the url to browse the documents""", readonly=True),               
     }
 
-    def get_default_ftp_config(self, cr, uid, ids, context=None):
-        ir_values = self.pool.get('ir.actions.url')
-        user_pool = self.pool.get('res.users')
-        current_user = user_pool.browse(cr, uid, uid, context=context)
-        data_pool = self.pool.get('ir.model.data')
-        aid = data_pool._get_id(cr, uid, 'document_ftp', 'action_document_browse')
-        aid = data_pool.browse(cr, uid, aid, context=context).res_id
-        ftp_url = self.pool.get('ir.actions.url').browse(cr, uid, aid, context=context)
-        url = ftp_url.url and ftp_url.url.split('ftp://') or []
-        if url:
-            url = url[1]
-            if url[-1] == '/':
-                url = url[:-1]
-        else:
-            url = '%s:%s' %(ftpserver.HOST, ftpserver.PORT) 
-        return {'document_ftp_url':'ftp://%s@%s'%(current_user.login, url)}
+    def get_default_ftp_config(self, cr, uid, fields, context=None):
+        action = self.pool.get('ir.model.data').get_object(cr, uid, 'document_ftp', 'action_document_browse')
+        return {'document_ftp_url': action.url}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
