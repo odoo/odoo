@@ -46,7 +46,8 @@
             <field name="model">procurement.order</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Procurement">
+                <form string="Procurement" layout="manual">
+                <sheet layout="auto">
                     <group col="2" colspan="2">
                         <separator colspan="2" string="References"/>
                         <field name="name" string="Procurement Reason"/>
@@ -91,6 +92,10 @@
                         <field name="note" colspan="4" nolabel="1"/>
                     </page>
                     </notebook>
+                    </sheet>
+                    <div class="oe_form_sheet_width">
+                        <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
+                    </div>
                 </form>
             </field>
         </record>
