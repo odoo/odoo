@@ -50,7 +50,8 @@
             <field name="model">event.event</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Events">
+                <form string="Events" layout="manual">
+                    <sheet layout="auto">
                     <group col="6" colspan="4">
                         <field name="name"/>
                         <field name="date_begin"/>
@@ -127,6 +128,10 @@
                         </group>
                     </page>
                     </notebook>
+                    </sheet>
+                    <div class="oe_form_sheet_width">
+                        <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
+                    </div>
             </form>
             </field>
         </record>
@@ -353,7 +358,8 @@
             <field name="model">event.registration</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Registration">
+                <form string="Registration" layout="manual">
+                    <sheet layout="auto">
                     <group col="6" colspan="4">
                         <field name="event_id" on_change="onchange_event(event_id, context)" domain="[('state','in',('draft','confirm'))]"/>
                         <field name="partner_id" attrs="{'readonly':[('state','!=', 'draft')]}" on_change="onchange_partner_id(partner_id, context)"/>
@@ -406,6 +412,10 @@
                            </page>
 
                     </notebook>
+                    </sheet>
+                    <div class="oe_form_sheet_width">
+                        <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
+                    </div>
                 </form>
             </field>
         </record>
