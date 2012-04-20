@@ -54,7 +54,7 @@ class mail_compose_message(osv.osv_memory):
                     'email_cc' : tools.ustr(data.email_cc or ''),
                     'model': model,
                     'res_id': res_id,
-                    'subtype': 'plain',
+                    'content_subtype': 'plain',
                 })
             if hasattr(data, 'section_id'):
                 result.update({'reply_to' : data.section_id and data.section_id.reply_to or False})

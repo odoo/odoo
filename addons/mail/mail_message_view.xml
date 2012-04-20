@@ -103,7 +103,7 @@
                                 <field name="references" colspan="4" widget="char" size="512" groups="base.group_extended" attrs="{'invisible':[('references', '=', False)]}"/>
                             </group>
                             <notebook colspan="4">
-                                <page string="Body (Rich)" attrs="{'invisible':[('subtype','=','plain')]}">
+                                <page string="Body (Rich)" attrs="{'invisible':[('content_subtype','=','plain')]}">
                                     <field name="body_html" widget="text_html" nolabel="1" colspan="4"/>
                                 </page>
                                 <page string="Body (Plain)">
@@ -113,7 +113,7 @@
                             <separator string="" colspan="4"/>
                             <group col="6" colspan="6">
                                 <field name="state" colspan="2"/>
-                                <field name="subtype" attrs="{'invisible':[('subtype', '=', False)]}"/>
+                                <field name="content_subtype" attrs="{'invisible':[('content_subtype', '=', False)]}"/>
                                 <group colspan="2">
                                     <button name="%(action_email_compose_message_wizard)d" string="Reply" type="action" icon="terp-mail-replied"
                                     context="{'mail.compose.message.mode':'reply', 'message_id':active_id}" states='received,sent,exception,cancel'/>

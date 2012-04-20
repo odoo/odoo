@@ -63,18 +63,21 @@ def to_email(text):
     if not text: return []
     return re.findall(r'([^ ,<@]+@[^> ,]+)', text)
 
-class mail_message_common(osv.osv_memory):
+class mail_message_common(osv.TransientModel):
     """Common abstract class for holding the main attributes of a 
        message object. It could be reused as parent model for any
        database model or wizard screen that needs to hold a kind of
-       message"""
+       message.
+       All internal logic should be in a database-based model. For example,
+       a wizard for writing emails should inherit from this class and not
+       from mail.message."""
 
     def get_body(self, cr, uid, ids, name, arg, context=None):
         if context is None:
             context = {}
         result = dict.fromkeys(ids, '')
         for message in self.browse(cr, uid, ids, context=context):
-            if message.subtype == 'html':
+            if message.content_subtype == 'html':
                 result[message.id] = message.body_html
             else:
                 result[message.id] = message.body_text
@@ -85,7 +88,7 @@ class mail_message_common(osv.osv_memory):
            - obj: mail.message object
            - name: 'body'
            - args: [('body', 'ilike', 'blah')]"""
-        return ['|', '&', ('subtype', '=', 'html'), ('body_html', args[0][1], args[0][2]), ('body_text', args[0][1], args[0][2])]
+        return ['|', '&', ('content_subtype', '=', 'html'), ('body_html', args[0][1], args[0][2]), ('body_text', args[0][1], args[0][2])]
     
     def get_record_name(self, cr, uid, ids, name, arg, context=None):
         if context is None:
@@ -115,19 +118,20 @@ class mail_message_common(osv.osv_memory):
                         help="Full message headers, e.g. SMTP session headers (usually available on inbound messages only)"),
         'message_id': fields.char('Message-Id', size=256, help='Message unique identifier', select=1, readonly=1),
         'references': fields.text('References', help='Message references, such as identifiers of previous messages', readonly=1),
-        'subtype': fields.char('Message type', size=32, help="Type of message, usually 'html' or 'plain', used to "
-                                                             "select plaintext or rich text contents accordingly", readonly=1),
+        'content_subtype': fields.char('Message content subtype', size=32,
+                                            help="Type of message, usually 'html' or 'plain', used to "
+                                                 "select plain-text or rich-text contents accordingly", readonly=1),
         'body_text': fields.text('Text contents', help="Plain-text version of the message"),
         'body_html': fields.text('Rich-text contents', help="Rich-text/HTML version of the message"),
         'body': fields.function(get_body, fnct_search = search_body, string='Message content', type='text',
-                        help="Content of the message. This content equals the body_text field for plain-test messages, and body_html for rich-text/HTML messages. This allows having one field if we want to access the content matching the message subtype."),
+                        help="Content of the message. This content equals the body_text field for plain-test messages, and body_html for rich-text/HTML messages. This allows having one field if we want to access the content matching the message content_subtype."),
         'parent_id': fields.many2one('mail.message', 'Parent message', help="Parent message, used for displaying as threads with hierarchy",
                         select=True, ondelete='set null',),
         'child_ids': fields.one2many('mail.message', 'parent_id', 'Child messages'),
     }
 
     _defaults = {
-        'subtype': 'plain',
+        'content_subtype': 'plain',
         'date': (lambda *a: fields.datetime.now()),
     }
 
@@ -206,12 +210,12 @@ class mail_message(osv.osv):
                         ('comment', 'Comment'),
                         ('notification', 'System notification'),
                         ], 'Type', help="Message type: e-mail for e-mail message, notification for system message, comment for other messages such as user replies"),
-        'message_subtype': fields.selection([
+        'message_tmptype': fields.selection([
                         ('email', 'e-mail'),
                         ('comment', 'Comment'),
                         ('create', 'Create'),
                         ('cancel', 'Cancel'),
-                        ], 'Type', help="Message subtype, such as create or cancel. May be overriden by addons."),
+                        ], 'Type', help="Message temptype, such as create or cancel. May be overriden by addons."),
         'partner_id': fields.many2one('res.partner', 'Related partner'),
         'user_id': fields.many2one('res.users', 'Related user', readonly=1),
         'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel', 'message_id', 'attachment_id', 'Attachments'),
@@ -230,7 +234,7 @@ class mail_message(osv.osv):
         
     _defaults = {
         'type': 'email',
-        'message_subtype': 'email',
+        'message_tmptype': 'email',
         'state': 'received',
     }
     
@@ -250,18 +254,18 @@ class mail_message(osv.osv):
         default.update(message_id=False,original=False,headers=False)
         return super(mail_message,self).copy(cr, uid, id, default=default, context=context)
 
-    def schedule_with_attach(self, cr, uid, email_from, email_to, subject, body, model=False, email_cc=None,
-                             email_bcc=None, reply_to=False, attachments=None, message_id=False, references=False,
-                             res_id=False, subtype='plain', headers=None, mail_server_id=False, auto_delete=False,
-                             context=None):
+    def schedule_with_attach(self, cr, uid, email_from, email_to, subject, body, model=False,
+                             email_cc=None, email_bcc=None, reply_to=False, attachments=None,
+                             message_id=False, references=False, res_id=False, content_subtype='plain',
+                             headers=None, mail_server_id=False, auto_delete=False, context=None):
         """Schedule sending a new email message, to be sent the next time the mail scheduler runs, or
            the next time :meth:`process_email_queue` is called explicitly.
 
            :param string email_from: sender email address
            :param list email_to: list of recipient addresses (to be joined with commas) 
            :param string subject: email subject (no pre-encoding/quoting necessary)
-           :param string body: email body, according to the ``subtype`` (by default, plaintext).
-                               If html subtype is used, the message will be automatically converted
+           :param string body: email body, according to the ``content_subtype`` 
+                               (by default, plaintext). If html content_subtype is used, the message will be automatically converted
                                to plaintext and wrapped in multipart/alternative.
            :param list email_cc: optional list of string values for CC header (to be joined with commas)
            :param list email_bcc: optional list of string values for BCC header (to be joined with commas)
@@ -272,9 +276,9 @@ class mail_message(osv.osv):
                               be used to generate a tracking id, used to match any response related to the
                               same document)
            :param string reply_to: optional value of Reply-To header
-           :param string subtype: optional mime subtype for the text body (usually 'plain' or 'html'),
-                                  must match the format of the ``body`` parameter. Default is 'plain',
-                                  making the content part of the mail "text/plain".
+           :param string content_subtype: optional mime content_subtype for the text body (usually 'plain' or 'html'),
+                                       must match the format of the ``body`` parameter. Default is 'plain',
+                                       making the content part of the mail "text/plain".
            :param dict attachments: map of filename to filecontents, where filecontents is a string
                                     containing the bytes of the attachment
            :param dict headers: optional map of headers to set on the outgoing mail (may override the
@@ -299,8 +303,8 @@ class mail_message(osv.osv):
                 'model': model,
                 'res_id': res_id,
                 'type': 'email',
-                'body_text': body if subtype != 'html' else False,
-                'body_html': body if subtype == 'html' else False,
+                'body_text': body if content_subtype != 'html' else False,
+                'body_html': body if content_subtype == 'html' else False,
                 'email_from': email_from,
                 'email_to': email_to and ','.join(email_to) or '',
                 'email_cc': email_cc and ','.join(email_cc) or '',
@@ -308,7 +312,7 @@ class mail_message(osv.osv):
                 'reply_to': reply_to,
                 'message_id': message_id,
                 'references': references,
-                'subtype': subtype,
+                'content_subtype': content_subtype,
                 'headers': headers, # serialize the dict on the fly
                 'mail_server_id': mail_server_id,
                 'state': 'outgoing',
@@ -388,7 +392,7 @@ class mail_message(osv.osv):
                       'headers' : { 'X-Mailer': mailer,
                                     #.. all X- headers...
                                   },
-                      'subtype': msg_mime_subtype,
+                      'content_subtype': msg_mime_subtype,
                       'body_text': plaintext_body
                       'body_html': html_body,
                       'attachments': [('file1', 'bytes'),
@@ -464,7 +468,7 @@ class mail_message(osv.osv):
             msg['in-reply-to'] = msg_txt.get('In-Reply-To')
 
         msg['headers'] = {}
-        msg['subtype'] = 'plain'
+        msg['content_subtype'] = 'plain'
         for item in msg_txt.items():
             if item[0].startswith('X-'):
                 msg['headers'].update({item[0]: item[1]})
@@ -473,7 +477,7 @@ class mail_message(osv.osv):
             body = msg_txt.get_payload(decode=True)
             if 'text/html' in msg.get('content-type', ''):
                 msg['body_html'] =  body
-                msg['subtype'] = 'html'
+                msg['content_subtype'] = 'html'
                 if body:
                     body = tools.html2plaintext(body)
             msg['body_text'] = tools.ustr(body, encoding)
@@ -482,9 +486,9 @@ class mail_message(osv.osv):
         if msg_txt.is_multipart() or 'multipart/alternative' in msg.get('content-type', ''):
             body = ""
             if 'multipart/alternative' in msg.get('content-type', ''):
-                msg['subtype'] = 'alternative'
+                msg['content_subtype'] = 'alternative'
             else:
-                msg['subtype'] = 'mixed'
+                msg['content_subtype'] = 'mixed'
             for part in msg_txt.walk():
                 if part.get_content_maintype() == 'multipart':
                     continue
@@ -498,7 +502,7 @@ class mail_message(osv.osv):
                     content = tools.ustr(content, encoding)
                     if part.get_content_subtype() == 'html':
                         msg['body_html'] = content
-                        msg['subtype'] = 'html' # html version prevails
+                        msg['content_subtype'] = 'html' # html version prevails
                         body = tools.ustr(tools.html2plaintext(content))
                         body = body.replace('&#13;', '')
                     elif part.get_content_subtype() == 'plain':
@@ -515,7 +519,7 @@ class mail_message(osv.osv):
 
         # for backwards compatibility:
         msg['body'] = msg['body_text']
-        msg['sub_type'] = msg['subtype'] or 'plain'
+        msg['sub_type'] = msg['content_subtype'] or 'plain'
         return msg
 
     def _postprocess_sent_message(self, cr, uid, message, context=None):
@@ -561,15 +565,17 @@ class mail_message(osv.osv):
                 for attach in message.attachment_ids:
                     attachments.append((attach.datas_fname, base64.b64decode(attach.datas)))
 
-                body = message.body_html if message.subtype == 'html' else message.body_text
+                body = message.body_html if message.content_subtype == 'html' else message.body_text
                 body_alternative = None
-                subtype_alternative = None
-                if message.subtype == 'html' and message.body_text:
+                content_subtype_alternative = None
+                if message.content_subtype == 'html' and message.body_text:
                     # we have a plain text alternative prepared, pass it to 
                     # build_message instead of letting it build one
                     body_alternative = message.body_text
-                    subtype_alternative = 'plain'
+                    content_subtype_alternative = 'plain'
 
+                # build an RFC2822 email.message.Message object adn send it
+                # without queuing
                 msg = ir_mail_server.build_email(
                     email_from=message.email_from,
                     email_to=to_email(message.email_to),
@@ -582,8 +588,8 @@ class mail_message(osv.osv):
                     attachments=attachments, message_id=message.message_id,
                     references = message.references,
                     object_id=message.res_id and ('%s-%s' % (message.res_id,message.model)),
-                    subtype=message.subtype,
-                    subtype_alternative=subtype_alternative,
+                    subtype=message.content_subtype,
+                    subtype_alternative=content_subtype_alternative,
                     headers=message.headers and ast.literal_eval(message.headers))
                 res = ir_mail_server.send_email(cr, uid, msg,
                                                 mail_server_id=message.mail_server_id.id,

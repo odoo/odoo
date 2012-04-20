@@ -310,7 +310,7 @@ class email_template(osv.osv):
                   'attachment_ids': False,
                   'message_id': False,
                   'state': 'outgoing',
-                  'subtype': 'plain',
+                  'content_subtype': 'plain',
         }
         if not template_id:
             return values
@@ -326,7 +326,7 @@ class email_template(osv.osv):
                                                  or False
 
         if values['body_html']:
-            values.update(subtype='html')
+            values.update(content_subtype='html')
 
         if template.user_signature:
             signature = self.pool.get('res.users').browse(cr, uid, uid, context).signature

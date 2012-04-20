@@ -158,7 +158,7 @@ class mail_compose_message(osv.osv_memory):
                 if not (subject.startswith('Re:') or subject.startswith(re_prefix)):
                     subject = "%s %s" % (re_prefix, subject)
             result.update({
-                    'subtype' : 'plain', # default to the text version due to quoting
+                    'content_subtype' : 'plain', # default to the text version due to quoting
                     'body_text' : body,
                     'subject' : subject,
                     'attachment_ids' : [],
@@ -198,7 +198,7 @@ class mail_compose_message(osv.osv_memory):
             references = None
             headers = {}
 
-            body =  mail.body_html if mail.subtype == 'html' else mail.body_text
+            body =  mail.body_html if mail.content_subtype == 'html' else mail.body_text
 
             # Get model, and check whether it is OpenChatter enabled, aka inherit from mail.thread
             if context.get('mail.compose.message.mode') == 'mass_mail':
@@ -238,26 +238,26 @@ class mail_compose_message(osv.osv_memory):
                     # processed as soon as the mail scheduler runs.
                     if mail_thread_enabled:
                         active_model_pool.message_append(cr, uid, [active_id],
-                            subject, body_text=mail.body_text, body_html=mail.body_html, subtype=mail.subtype, state='outgoing',
+                            subject, body_text=mail.body_text, body_html=mail.body_html, content_subtype=mail.content_subtype, state='outgoing',
                             email_to=email_to, email_from=email_from, email_cc=email_cc, email_bcc=email_bcc,
                             reply_to=reply_to, references=references, attachments=attachment, headers=headers, context=context)
                     else:
                         mail_message.schedule_with_attach(cr, uid, email_from, to_email(email_to), subject, rendered_body,
                             model=mail.model, email_cc=to_email(email_cc), email_bcc=to_email(email_bcc), reply_to=reply_to,
                             attachments=attachment, references=references, res_id=active_id,
-                            subtype=mail.subtype, headers=headers, context=context)
+                            content_subtype=mail.content_subtype, headers=headers, context=context)
             else:
                 # normal mode - no mass-mailing
                 if mail_thread_enabled:
                     msg_ids = active_model_pool.message_append(cr, uid, active_ids,
-                            mail.subject, body_text=mail.body_text, body_html=mail.body_html, subtype=mail.subtype, state='outgoing',
+                            mail.subject, body_text=mail.body_text, body_html=mail.body_html, content_subtype=mail.content_subtype, state='outgoing',
                             email_to=mail.email_to, email_from=mail.email_from, email_cc=mail.email_cc, email_bcc=mail.email_bcc,
                             reply_to=mail.reply_to, references=references, attachments=attachment, headers=headers, context=context)
                 else:
                     msg_ids = [mail_message.schedule_with_attach(cr, uid, mail.email_from, to_email(mail.email_to), mail.subject, body,
                         model=mail.model, email_cc=to_email(mail.email_cc), email_bcc=to_email(mail.email_bcc), reply_to=mail.reply_to,
                         attachments=attachment, references=references, res_id=int(mail.res_id),
-                        subtype=mail.subtype, headers=headers, context=context)]
+                        content_subtype=mail.content_subtype, headers=headers, context=context)]
                 # in normal mode, we send the email immediately, as the user expects us to (delay should be sufficiently small)
                 mail_message.send(cr, uid, msg_ids, context=context)
 

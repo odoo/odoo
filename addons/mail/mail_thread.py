@@ -130,7 +130,7 @@ class mail_thread(osv.osv):
         subscription_obj = self.pool.get('mail.subscription')
         notification_obj = self.pool.get('mail.notification')
         res_users_obj = self.pool.get('res.users')
-        body = vals.get('body_html', '') if vals.get('subtype', 'plain') == 'html' else vals.get('body_text', '')
+        body = vals.get('body_html', '') if vals.get('content_subtype') == 'html' else vals.get('body_text', '')
         
         # automatically subscribe the writer of the message
         if vals['user_id']:
@@ -178,7 +178,7 @@ class mail_thread(osv.osv):
             context = {}
         
         notif_user_ids = []
-        body = new_msg_vals.get('body_html', '') if new_msg_vals.get('subtype', 'plain') == 'html' else new_msg_vals.get('body_text', '')
+        body = new_msg_vals.get('body_html', '') if new_msg_vals.get('content_subtype') == 'html' else new_msg_vals.get('body_text', '')
         for thread_id in thread_ids:
             # add subscribers
             notif_user_ids += [user['id'] for user in self.message_get_subscribers(cr, uid, [thread_id], context=context)]
@@ -218,7 +218,7 @@ class mail_thread(osv.osv):
         return ret_dict
 
     def message_append(self, cr, uid, threads, subject, body_text=None, body_html=None,
-                        parent_id=False, type='email', subtype='plain', state='received',
+                        parent_id=False, type='email', content_subtype='plain', state='received',
                         email_to=False, email_from=False, email_cc=None, email_bcc=None,
                         reply_to=None, email_date=None, message_id=False, references=None,
                         attachments=None, headers=None, original=None, context=None):
@@ -240,7 +240,7 @@ class mail_thread(osv.osv):
         :param body_html: html contents of the mail or log message
         :param parent_id: id of the parent message (threaded messaging model)
         :param type: optional type of message: 'email', 'comment', 'notification'
-        :param subtype: optional subtype of message: 'plain' or 'html', corresponding to the main
+        :param content_subtype: optional content_subtype of message: 'plain' or 'html', corresponding to the main
                         body contents (body_text or body_html).
         :param state: optional state of message; 'received' by default
         :param email_to: Email-To / Recipient address
@@ -304,7 +304,7 @@ class mail_thread(osv.osv):
                 'parent_id': parent_id,
                 'date': email_date or fields.datetime.now(),
                 'type': type,
-                'subtype': subtype,
+                'content_subtype': content_subtype,
                 'state': state,
                 'message_id': message_id,
                 'attachment_ids': [(6, 0, to_attach)],
@@ -355,7 +355,7 @@ class mail_thread(osv.osv):
                             body_html= msg_dict.get('body_html'),
                             parent_id = msg_dict.get('parent_id', False),
                             type = msg_dict.get('type', 'email'),
-                            subtype = msg_dict.get('subtype', 'plain'),
+                            content_subtype = msg_dict.get('content_subtype', 'plain'),
                             state = msg_dict.get('state', 'received'),
                             email_from = msg_dict.get('from', msg_dict.get('email_from')),
                             email_to = msg_dict.get('to', msg_dict.get('email_to')),
@@ -686,12 +686,12 @@ class mail_thread(osv.osv):
     # Note specific
     #------------------------------------------------------
     
-    def message_broadcast(self, cr, uid, ids, subject=None, body=None, parent_id=False, type='notification', subtype='html', context=None):
+    def message_broadcast(self, cr, uid, ids, subject=None, body=None, parent_id=False, type='notification', content_subtype='html', context=None):
         if context is None:
             context = {}
         notification_obj = self.pool.get('mail.notification')
         # write message
-        msg_ids = self.message_append_note(cr, uid, ids, subject=subject, body=body, parent_id=parent_id, type=type, subtype=subtype, context=context)
+        msg_ids = self.message_append_note(cr, uid, ids, subject=subject, body=body, parent_id=parent_id, type=type, content_subtype=content_subtype, context=context)
         # escape if in install mode or note writing was not successfull
         if 'install_mode' in context:
             return True
@@ -715,7 +715,7 @@ class mail_thread(osv.osv):
         _logger.warning("log() is deprecated. Please use OpenChatter notification system instead of the res.log mechanism.")
         self.message_append_note(cr, uid, [id], 'res.log', message, context=context)
     
-    def message_append_note(self, cr, uid, ids, subject=None, body=None, parent_id=False, type='notification', subtype='html', context=None):
+    def message_append_note(self, cr, uid, ids, subject=None, body=None, parent_id=False, type='notification', content_subtype='html', context=None):
         if subject is None:
             if type == 'notification':
                 subject = _('System notification')
@@ -723,13 +723,13 @@ class mail_thread(osv.osv):
                 subject = _('Comment')
             elif type == 'comment' and parent_id:
                 subject = _('Reply')
-        if subtype == 'html':
+        if content_subtype == 'html':
             body_html = body
             body_text = body
         else:
             body_html = body
             body_text = body
-        return self.message_append(cr, uid, ids, subject, body_html=body_html, body_text=body_text, parent_id=parent_id, type=type, subtype=subtype, context=context)
+        return self.message_append(cr, uid, ids, subject, body_html=body_html, body_text=body_text, parent_id=parent_id, type=type, content_subtype=content_subtype, context=context)
     
     #------------------------------------------------------
     # Subscription mechanism

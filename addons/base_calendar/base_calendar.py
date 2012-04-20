@@ -515,7 +515,7 @@ property or property parameter."),
                         sub,
                         body,
                         attachments=attach and {'invitation.ics': attach} or None,
-                        subtype='html',
+                        content_subtype='html',
                         reply_to=email_from,
                         context=context
                     )
