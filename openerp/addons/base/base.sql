@@ -59,7 +59,7 @@ ALTER TABLE ir_model_fields ADD column serialization_field_id int references ir_
 CREATE TABLE ir_actions (
     id serial NOT NULL,
     name varchar(64) DEFAULT ''::varchar NOT NULL,
-    "type" varchar(32) DEFAULT 'window'::varchar NOT NULL,
+    "type" varchar(32) NOT NULL,
     usage varchar(32) DEFAULT null,
     primary key(id)
 );
