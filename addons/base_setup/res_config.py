@@ -21,10 +21,9 @@
 
 from osv import osv, fields
 
-class general_configuration(osv.osv_memory):
+class base_config_settings(osv.osv_memory):
     _name = 'base.config.settings'
     _inherit = 'res.config.settings'
-
     _columns = {
         'module_multi_company': fields.boolean('Multi Company',
             help="""Work in multi-company environments, with appropriate security access between companies.
@@ -36,6 +35,25 @@ class general_configuration(osv.osv_memory):
         'module_share': fields.boolean('Share',
             help="""Share OpenERP documents (records) with external users.
                 This installs the module share."""),
+    }
+
+
+
+class report_config_settings(osv.osv_memory):
+    _name = 'report.config.settings'
+    _inherit = 'res.config.settings'
+    _columns = {
+        'module_base_report_designer': fields.boolean('Customize your OpenERP Reports with OpenOffice',
+            help ="""Import/export OpenERP reports that you can modify with OpenOffice.
+                New and modified reports can be uploaded to OpenERP thanks to the provided OpenOffice plugin.
+                This installs the module base_report_designer."""),
+        'module_report_webkit': fields.boolean('Design OpenERP Reports in HTML',
+            help ="""Design OpenERP reports with a report engine based on the WebKit library (http://www.webkit.org).
+                Reports are defined in HTML and the report generation is customized with CSS.
+                This installs the module report_webkit."""),
+        'module_report_webkit_sample': fields.boolean('Samples of HTML Reports',
+            help ="""Install a sample invoice report defined in HTML.
+                This installs the module report_webkit_sample."""),
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
