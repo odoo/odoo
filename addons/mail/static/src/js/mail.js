@@ -174,6 +174,34 @@ openerp.mail = function(session) {
                 }
                 return false;
             });
+            // event: click on 'hide notification' in wheel_menu
+            this.$element.find('div.oe_mail_thread_display').delegate('a.oe_mail_msg_hide_thread', 'click', function (event) {
+                console.log('hiding notification');
+                if (! confirm(_t("Do you really want to hide this thread ?"))) { return false; }
+                var msg_id = event.srcElement.dataset.id;
+                if (! msg_id) return false;
+                console.log(msg_id);
+                //var call_defer = self.ds.call('message_remove_pushed_notifications', [[self.params.res_id], [parseInt(msg_id)], true]);
+                $(event.srcElement).parents('li.oe_mail_thread_msg').eq(0).hide();
+                if (self.params.thread_level > 0) {
+                    $(event.srcElement).parents('ul.oe_mail_thread').eq(0).hide();
+                }
+                return false;
+            });
+            // event: click on 'hide this type' in wheel_menu
+            this.$element.find('div.oe_mail_thread_display').delegate('a.oe_mail_msg_hide_type', 'click', function (event) {
+                console.log('hiding type');
+                if (! confirm(_t("Do you really want to hide this thread ?"))) { return false; }
+                var msg_id = event.srcElement.dataset.id;
+                if (! msg_id) return false;
+                console.log(msg_id);
+                //var call_defer = self.ds.call('message_remove_pushed_notifications', [[self.params.res_id], [parseInt(msg_id)], true]);
+                $(event.srcElement).parents('li.oe_mail_thread_msg').eq(0).hide();
+                if (self.params.thread_level > 0) {
+                    $(event.srcElement).parents('ul.oe_mail_thread').eq(0).hide();
+                }
+                return false;
+            });
             // event: click on an internal link
             this.$element.find('div.oe_mail_thread_display').delegate('a.intlink', 'click', function (event) {
                 // lazy implementation: fetch data and try to redirect
@@ -192,6 +220,10 @@ openerp.mail = function(session) {
                     });
                 }
                 else self.do_action({ type: 'ir.actions.act_window', res_model: res_model, res_id: parseInt(res_id), views: [[false, 'form']]});
+            });
+            // event: click on the wheel menu in messages
+            this.$element.find('div.oe_mail_thread_display').delegate('img.oe_mail_msg_menu_icon', 'click', function (event) {
+                self.$element.find('ul.oe_mail_msg_menu').toggle();
             });
         },
         
