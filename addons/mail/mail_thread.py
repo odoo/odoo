@@ -174,29 +174,39 @@ class mail_thread(osv.osv):
         return msg_id
     
     def message_create_get_notification_user_ids(self, cr, uid, thread_ids, new_msg_vals, context=None):
-        if context is None:
-            context = {}
-        
-        notif_user_ids = []
+        subscription_obj = self.pool.get('mail.subscription')
+        hide_obj = self.pool.get('mail.subscription.hide')
+        # get body
         body = new_msg_vals.get('body_html', '') if new_msg_vals.get('content_subtype') == 'html' else new_msg_vals.get('body_text', '')
-        for thread_id in thread_ids:
-            # add subscribers
-            notif_user_ids += [user['id'] for user in self.message_get_subscribers(cr, uid, [thread_id], context=context)]
-            
-            # get hiden subscriptions
-            #subscription_hide_obj.search(cr, uid, [('subscription_id', 'in', ids), ('subtype', '=', new_msg_vals.get('subtype'))], context=context)
-            
-            # add users requested via parsing message (@login)
-            notif_user_ids += self.message_parse_users(cr, uid, [thread_id], body, context=context)
-            # add users requested to perform an action (need_action mechanism)
-            if hasattr(self, 'get_needaction_user_ids'):
-                notif_user_ids += self.get_needaction_user_ids(cr, uid, [thread_id], context=context)[thread_id]
-            # add users notified of the parent messages (because: if parent message contains @login, login must receive the replies)
-            if new_msg_vals.get('parent_id'):
-                notif_obj = self.pool.get('mail.notification')
-                parent_notif_ids = notif_obj.search(cr, uid, [('message_id', '=', new_msg_vals.get('parent_id'))], context=context)
-                parent_notifs = notif_obj.read(cr, uid, parent_notif_ids, context=context)
-                notif_user_ids += [parent_notif['user_id'][0] for parent_notif in parent_notifs]
+        
+        # get subscribers
+        user_sub_ids = self.message_get_subscribers_ids(cr, uid, thread_ids, context=context)
+        
+        # get hiden subscriptions
+        subscription_ids = subscription_obj.search(cr, uid, [('res_model', '=', self._name), ('res_id', 'in', thread_ids), ('user_id', 'in', user_sub_ids)], context=context)
+        hide_ids = hide_obj.search(cr, uid, [('subscription_id', 'in', subscription_ids), ('subtype', '=', new_msg_vals.get('subtype'))], context=context)
+        if hide_ids:
+            hiden_subscription_ids = map(itemgetter('subscription_id'), hide_obj.read(cr, uid, hide_ids, ['subscription_id'], context=context))
+            hiden_user_ids = map(itemgetter('user_id'), subscription_obj.read(cr, uid, hiden_subscription_ids, ['user_id'], context=context))
+            notif_user_ids = [user_id for user_id in user_sub_ids if not user_id in hiden_user_ids]
+        else:
+            notif_user_ids = user_sub_ids
+        
+        # add users requested via parsing message (@login)
+        notif_user_ids += self.message_parse_users(cr, uid, thread_ids, body, context=context)
+        
+        # add users requested to perform an action (need_action mechanism)
+        if hasattr(self, 'get_needaction_user_ids'):
+            user_ids_dict = self.get_needaction_user_ids(cr, uid, thread_ids, context=context)
+            for id, user_ids in user_ids_dict.iteritems():
+                notif_user_ids += user_ids
+        
+        # add users notified of the parent messages (because: if parent message contains @login, login must receive the replies)
+        if new_msg_vals.get('parent_id'):
+            notif_obj = self.pool.get('mail.notification')
+            parent_notif_ids = notif_obj.search(cr, uid, [('message_id', '=', new_msg_vals.get('parent_id'))], context=context)
+            parent_notifs = notif_obj.read(cr, uid, parent_notif_ids, context=context)
+            notif_user_ids += [parent_notif['user_id'][0] for parent_notif in parent_notifs]
         
         # remove duplicate entries
         notif_user_ids = list(set(notif_user_ids))
