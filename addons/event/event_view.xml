@@ -2,7 +2,9 @@
 <openerp>
     <data>
 
-        <menuitem  name="Events" id="event_main_menu"/>
+        <menuitem  name="Events" id="event_main_menu" 
+            web_icon="images/icon.png"
+            web_icon_hover="images/icon.png"/>
         <menuitem name="Events Organisation" id="base.menu_event_main" parent="event_main_menu" />
 
     <!-- EVENTS  -->
@@ -203,7 +205,8 @@
                             </p>
                             <t t-if="record.register_avail.raw_value != 0">
                               <t t-if="!record.is_subscribed.raw_value">
-                                  <button type="object" name="subscribe_to_event" class="subscribe_button oe_event_button_subscribe">
+                                  <input t-att-id="record.id.raw_value" type="text" name="subscribe" class="no_of_seats" value="1"   onchange="document.getElementById('btn_sub' +this.id).setAttribute('data-context',JSON.stringify({'ticket':this.value}))"/>
+                                  <button t-att-id="'btn_sub'+record.id.raw_value" type="object" name="subscribe_to_event" class="subscribe_button oe_event_button_subscribe">
                                   <span >Subscribe</span>
                                   </button>
                               </t>

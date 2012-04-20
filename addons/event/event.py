@@ -103,12 +103,23 @@ class event_event(osv.osv):
             if total_confirmed < self.event.register_min or total_confirmed > self.event.register_max and self.event.register_max!=0:
                 raise osv.except_osv(_('Error!'),_("The total of confirmed registration for the event '%s' does not meet the expected minimum/maximum. You should maybe reconsider those limits before going further") % (self.event.name))
             
-    def check_registration_limits_before(self, cr, uid, ids, no_of_registration, context=None):
+    def check_available_seats(self, cr, uid, ids, context=None):
+        if isinstance(ids, list):
+            ids = ids[0]
+        else:
+            ids = ids 
         total_confirmed = self.browse(cr, uid, ids, context=context).register_current
         register_max = self.browse(cr, uid, ids, context=context).register_max
         available_seats = register_max - total_confirmed
+        return available_seats
+            
+    def check_registration_limits_before(self, cr, uid, ids, no_of_registration, context=None):
+        available_seats = self.check_available_seats(cr, uid, ids, context=context)
         if no_of_registration > available_seats:
-            raise osv.except_osv(_('Warning!'),_("Only %d Seats are Available!") % (available_seats))
+            if available_seats == 0:
+                raise osv.except_osv(_('Warning!'),_("No Tickets Available!"))
+            else:
+                raise osv.except_osv(_('Warning!'),_("Only %d Seats are Available!") % (available_seats))
 
 
     def confirm_event(self, cr, uid, ids, context=None):
@@ -220,13 +231,23 @@ class event_event(osv.osv):
     }
 
     def subscribe_to_event(self, cr, uid, ids, context=None):
+        num_of_seats = int(context.get('ticket', 1))
+        available_seats = self.check_available_seats(cr, uid, ids, context=context)
+        if num_of_seats > available_seats:
+            if available_seats == 0:
+                raise osv.except_osv(_('Warning!'),_("No Tickets Available!"))
+            else:
+                raise osv.except_osv(_('Warning!'),_("Only %d Seats are Available!") % (available_seats))
+
         register_pool = self.pool.get('event.registration')
         user_pool = self.pool.get('res.users')
         user = user_pool.browse(cr, uid, uid, context=context)
         curr_reg_ids = register_pool.search(cr, uid, [('user_id', '=', user.id), ('event_id', '=' , ids[0])])
         #the subscription is done with UID = 1 because in case we share the kanban view, we want anyone to be able to subscribe
         if not curr_reg_ids:
-            curr_reg_ids = [register_pool.create(cr, 1, {'event_id': ids[0] ,'email': user.user_email, 'name':user.name, 'user_id': user.id,})]
+            curr_reg_ids = [register_pool.create(cr, 1, {'event_id': ids[0] ,'email': user.user_email, 'name':user.name, 'user_id': user.id, 'nb_register': num_of_seats})]
+        else:
+            register_pool.write(cr, uid, curr_reg_ids, {'nb_register': num_of_seats}, context=context)
         return register_pool.confirm_registration(cr, 1, curr_reg_ids, context=context)
 
     def unsubscribe_to_event(self, cr, uid, ids, context=None):
