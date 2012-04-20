@@ -456,7 +456,7 @@ def Project():
         return result
 
     def message_get_subscribers_ids(self, cr, uid, ids, context=None):
-        sub_ids = super(project_project, self).message_get_subscribers_ids(cr, uid, ids, context=context);
+        sub_ids = super(project, self).message_get_subscribers_ids(cr, uid, ids, context=context);
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.user_id:
                 sub_ids.append(obj.user_id.id)
@@ -1139,7 +1139,7 @@ class task(osv.osv):
         return result
 
     def message_get_subscribers_ids(self, cr, uid, ids, context=None):
-        sub_ids = super(project_task, self).message_get_subscribers_ids(cr, uid, ids, context=context)
+        sub_ids = super(task, self).message_get_subscribers_ids(cr, uid, ids, context=context)
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.user_id:
                 sub_ids.append(obj.user_id.id)
