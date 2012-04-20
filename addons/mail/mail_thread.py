@@ -783,6 +783,22 @@ class mail_thread(osv.osv):
         subscription_obj.unlink(cr, uid, to_delete_sub_ids, context=context)
         return True
 
+    def message_subscription_hide(self, cr, uid, ids, subtype=None, context=None):
+        """Hide notifications, allowing to tune the messages displayed on
+           the Wall.
+           :param subtype: a mail.message subtype. If None, it is means the
+                           user wants to hide all notifications coming from
+                           the document.
+        """
+        subscription_obj = self.pool.get('mail.subscription')
+        subscription_hide_obj = self.pool.get('mail.subscription.hide')
+        # find the related subscriptions
+        subscription_ids = subscription_obj.search(cr, uid, [('res_model', '=', self._name), ('res_id', 'in', ids), ('user_id', '=', uid)], context=context)
+        # hide it
+        for subscription_id in subscription_ids:
+            subscription_hide_obj.create(cr, uid, {'subscription_id': subscription_id, 'subtype': subtype}, context=context)
+        return True
+    
     #------------------------------------------------------
     # Notification API
     #------------------------------------------------------

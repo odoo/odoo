@@ -190,12 +190,12 @@ openerp.mail = function(session) {
             });
             // event: click on 'hide this type' in wheel_menu
             this.$element.find('div.oe_mail_thread_display').delegate('a.oe_mail_msg_hide_type', 'click', function (event) {
-                console.log('hiding type');
+                //console.log('hiding type');
                 if (! confirm(_t("Do you really want to hide this thread ?"))) { return false; }
-                var msg_id = event.srcElement.dataset.id;
-                if (! msg_id) return false;
-                console.log(msg_id);
-                //var call_defer = self.ds.call('message_remove_pushed_notifications', [[self.params.res_id], [parseInt(msg_id)], true]);
+                var subtype = event.srcElement.dataset.subtype;
+                if (! subtype) return false;
+                //console.log(subtype);
+                var call_defer = self.ds.call('message_subscription_hide', [[self.params.res_id], subtype]);
                 $(event.srcElement).parents('li.oe_mail_thread_msg').eq(0).hide();
                 if (self.params.thread_level > 0) {
                     $(event.srcElement).parents('ul.oe_mail_thread').eq(0).hide();
