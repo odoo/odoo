@@ -63,10 +63,6 @@
             <field name="help">You must define a Product for everything you buy or sell. Products can be raw materials, stockable products, consumables or services. The Product form contains detailed information about your products related to procurement logistics, sales price, product category, suppliers and so on.</field>
         </record>
 
-
-
-
-
         <record id="action_contact_us" model="ir.actions.act_window">
             <field name="name">Contact Us</field>
             <field name="res_model">res.company</field>
@@ -74,21 +70,8 @@
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="domain">[]</field>
+            <field name="view_id" ref="base.view_company_form" />
         </record>
-
-        <record model="ir.ui.view" id="contact_contact_us">
-            <field name="name">contact_us</field>    
-            <field name="model">res.company</field>    
-            <field name="type">form</field>    
-            <field name="arch" type="xml">
-                <field name="street"/>
-            </field>
-        </record>
-
-
-
-
-
 
     </data>
 </openerp>
