@@ -3498,7 +3498,7 @@ instance.web.form.FieldReference = instance.web.form.AbstractField.extend(_.exte
             name: 'selection'
         }});
         this.selection.view = this.view;
-        this.selection.set({readonly: this.get('effective_readonly')});
+        this.selection.set({force_readonly: this.get('effective_readonly')});
         this.selection.on("change:value", this, this.on_selection_changed);
         this.selection.$element = $(".oe_form_view_reference_selection", this.$element);
         this.selection.renderElement();
@@ -3508,7 +3508,7 @@ instance.web.form.FieldReference = instance.web.form.AbstractField.extend(_.exte
             name: 'm2o'
         }});
         this.m2o.view = this.view;
-        this.m2o.set({"readonly": this.get("effective_readonly")});
+        this.m2o.set({force_readonly: this.get("effective_readonly")});
         this.m2o.on("change:value", this, this.data_changed);
         this.m2o.$element = $(".oe_form_view_reference_m2o", this.$element);
         this.m2o.renderElement();
@@ -3521,11 +3521,6 @@ instance.web.form.FieldReference = instance.web.form.AbstractField.extend(_.exte
         this._super(value_);
         this.render_value();
     },
-    get_value: function() {
-        var tmp = this._super();
-        debugger;
-        return tmp;
-    },
     render_value: function() {
         this.reference_ready = false;
         var vals = [], sel_val, m2o_val;
@@ -3533,13 +3528,12 @@ instance.web.form.FieldReference = instance.web.form.AbstractField.extend(_.exte
             vals = this.get('value').split(',');
         }
         sel_val = vals[0] || false;
-        m2o_val = vals[1] ? parseInt(vals[1], 10) : false;
+        m2o_val = vals[1] ? parseInt(vals[1], 10) : vals[1];
         if (!this.get("effective_readonly")) {
             this.selection.set_value(sel_val);
         }
         this.m2o.field.relation = sel_val;
         this.m2o.set_value(m2o_val);
-        this.m2o.$element.toggle(sel_val !== false);
         this.reference_ready = true;
     },
     data_changed: function() {
