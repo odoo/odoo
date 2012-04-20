@@ -65,7 +65,7 @@ class mail_thread(osv.osv):
     def _get_message_ids(self, cr, uid, ids, name, arg, context=None):
         res = {}
         for id in ids:
-            res[id] = self.message_load_ids(cr, uid, [id], context=context)
+            res[id] = self._message_load_ids(cr, uid, [id], context=context)
         return res
     
     # OpenChatter: message_ids_social is a dummy field that should not be used
@@ -218,19 +218,22 @@ class mail_thread(osv.osv):
         return ret_dict
 
     def message_append(self, cr, uid, threads, subject, body_text=None, body_html=None,
-                        parent_id=False, type='email', content_subtype='plain', state='received',
-                        email_to=False, email_from=False, email_cc=None, email_bcc=None,
-                        reply_to=None, email_date=None, message_id=False, references=None,
-                        attachments=None, headers=None, original=None, context=None):
-        """Creates a new mail.message attached to the current mail.thread,
-           containing all the details passed as parameters.  All attachments
-           will be attached to the thread record as well as to the actual
-           message.
+                        type='email', subtype=None, email_date=None, parent_id=False,
+                        content_subtype='plain', state=None, email_from=False, email_to=False,
+                        email_cc=None, email_bcc=None, reply_to=None,
+                        headers=None, message_id=False, references=None,
+                        attachments=None, original=None, context=None):
+        """Creates a new mail.message through message_create. The new message
+           is attached to the current mail.thread, containing all the details 
+           passed as parameters. All attachments will be attached to the 
+           thread record as well as to the actual message.
+           
+           This method calls message_create that will handle management of
+           subscription and notifications, and effectively create the message.
+           
            If ``email_from`` is not set or ``type`` not set as 'email',
-           a note message is created, without the usual envelope
-           attributes (sender, recipients, etc.).
-           The creation of the message is done by calling ``message_create``
-           method, that will manage automatic pushing of notifications.
+           a note message is created (comment or system notification), 
+           without the usual envelope attributes (sender, recipients, etc.).
 
         :param threads: list of thread ids, or list of browse_records representing
                         threads to which a new message should be attached
@@ -238,20 +241,21 @@ class mail_thread(osv.osv):
                         is an *event log* entry.
         :param body_text: plaintext contents of the mail or log message
         :param body_html: html contents of the mail or log message
-        :param parent_id: id of the parent message (threaded messaging model)
         :param type: optional type of message: 'email', 'comment', 'notification'
+        :param subtype: optional subtype of message, such as 'create' or 'cancel'
+        :param email_date: email date string if different from now, in server timezone
+        :param parent_id: id of the parent message (threaded messaging model)
         :param content_subtype: optional content_subtype of message: 'plain' or 'html', corresponding to the main
                         body contents (body_text or body_html).
         :param state: optional state of message; 'received' by default
-        :param email_to: Email-To / Recipient address
         :param email_from: Email From / Sender address if any
+        :param email_to: Email-To / Recipient address
         :param email_cc: Comma-Separated list of Carbon Copy Emails To addresse if any
         :param email_bcc: Comma-Separated list of Blind Carbon Copy Emails To addresses if any
         :param reply_to: reply_to header
-        :param email_date: email date string if different from now, in server timezone
+        :param headers: mail headers to store
         :param message_id: optional email identifier
         :param references: optional email references
-        :param headers: mail headers to store
         :param dict attachments: map of attachment filenames to binary contents, if any.
         :param str original: optional full source of the RFC2822 email, for reference
         :param dict context: if a ``thread_model`` value is present
@@ -304,6 +308,7 @@ class mail_thread(osv.osv):
                 'parent_id': parent_id,
                 'date': email_date or fields.datetime.now(),
                 'type': type,
+                'subtype': subtype,
                 'content_subtype': content_subtype,
                 'state': state,
                 'message_id': message_id,
@@ -355,8 +360,9 @@ class mail_thread(osv.osv):
                             body_html= msg_dict.get('body_html'),
                             parent_id = msg_dict.get('parent_id', False),
                             type = msg_dict.get('type', 'email'),
-                            content_subtype = msg_dict.get('content_subtype', 'plain'),
-                            state = msg_dict.get('state', 'received'),
+                            subtype = msg_dict.get('subtype'),
+                            content_subtype = msg_dict.get('content_subtype'),
+                            state = msg_dict.get('state'),
                             email_from = msg_dict.get('from', msg_dict.get('email_from')),
                             email_to = msg_dict.get('to', msg_dict.get('email_to')),
                             email_cc = msg_dict.get('cc', msg_dict.get('email_cc')),
@@ -372,7 +378,7 @@ class mail_thread(osv.osv):
                             context = context)
 
     # Message loading
-    def _message_add_ancestor_ids(self, cr, uid, ids, child_ids, root_ids, context=None):
+    def _message_load_add_ancestor_ids(self, cr, uid, ids, child_ids, root_ids, context=None):
         """ Given message child_ids
             Find their ancestors until root ids"""
         if context is None:
@@ -391,7 +397,7 @@ class mail_thread(osv.osv):
             _logger.warning("Possible infinite loop in _message_add_ancestor_ids. Note that this algorithm is intended to check for cycle in message graph.")
         return child_ids
     
-    def message_load_ids(self, cr, uid, ids, limit=100, offset=0, domain=[], ascent=False, root_ids=[], context=None):
+    def _message_load_ids(self, cr, uid, ids, limit=100, offset=0, domain=[], ascent=False, root_ids=[], context=None):
         """ OpenChatter feature: return thread messages ids. It searches in
             mail.messages where res_id = ids, (res_)model = current model.
             :param domain: domain to add to the search; especially child_of
@@ -401,18 +407,16 @@ class mail_thread(osv.osv):
             :param root_ids: for ascent search
             :param root_ids: root_ids when performing an ascended search
         """
-        if context is None:
-            context = {}
         msg_obj = self.pool.get('mail.message')
         msg_ids = msg_obj.search(cr, uid, ['&', ('res_id', 'in', ids), ('model', '=', self._name)] + domain,
             limit=limit, offset=offset, context=context)
-        if (ascent): msg_ids = self._message_add_ancestor_ids(cr, uid, ids, msg_ids, root_ids, context=context)
+        if (ascent): msg_ids = self._message_load_add_ancestor_ids(cr, uid, ids, msg_ids, root_ids, context=context)
         return msg_ids
         
     def message_load(self, cr, uid, ids, limit=100, offset=0, domain=[], ascent=False, root_ids=[], context=None):
         """ OpenChatter feature: return thread messages
         """
-        msg_ids = self.message_load_ids(cr, uid, ids, limit, offset, domain, ascent, root_ids, context=context)
+        msg_ids = self._message_load_ids(cr, uid, ids, limit, offset, domain, ascent, root_ids, context=context)
         return self.pool.get('mail.message').read(cr, uid, msg_ids, context=context)
     
     def get_pushed_messages(self, cr, uid, ids, limit=100, offset=0, msg_search_domain=[], ascent=False, root_ids=[], context=None):
@@ -424,7 +428,6 @@ class mail_thread(osv.osv):
             :param root_ids: for ascent search
             :return list of mail.messages sorted by date
         """
-        if context is None: context = {}
         notification_obj = self.pool.get('mail.notification')
         msg_obj = self.pool.get('mail.message')
         # update message search
@@ -439,7 +442,7 @@ class mail_thread(osv.osv):
         msg_ids = [notification.message_id.id for notification in notifications]
         # get messages
         msg_ids = msg_obj.search(cr, uid, [('id', 'in', msg_ids)], context=context)
-        if (ascent): msg_ids = self._message_add_ancestor_ids(cr, uid, ids, msg_ids, root_ids, context=context)
+        if (ascent): msg_ids = self._message_load_add_ancestor_ids(cr, uid, ids, msg_ids, root_ids, context=context)
         msgs = msg_obj.read(cr, uid, msg_ids, context=context)
         return msgs
         
@@ -712,10 +715,15 @@ class mail_thread(osv.osv):
         return True
     
     def log(self, cr, uid, id, message, secondary=False, context=None):
-        _logger.warning("log() is deprecated. Please use OpenChatter notification system instead of the res.log mechanism.")
+        _logger.warning("log() is deprecated. As this module inherit from \
+                        mail.thread, the message will be managed by this \
+                        module instead of by the res.log mechanism. Please \
+                        use the mail.thread OpenChatter API instead of the \
+                        now deprecated res.log.")
         self.message_append_note(cr, uid, [id], 'res.log', message, context=context)
     
-    def message_append_note(self, cr, uid, ids, subject=None, body=None, parent_id=False, type='notification', content_subtype='html', context=None):
+    def message_append_note(self, cr, uid, ids, subject=None, body=None, parent_id=False,
+                            type='notification', content_subtype='html', subtype=None, context=None):
         if subject is None:
             if type == 'notification':
                 subject = _('System notification')
@@ -729,7 +737,9 @@ class mail_thread(osv.osv):
         else:
             body_html = body
             body_text = body
-        return self.message_append(cr, uid, ids, subject, body_html=body_html, body_text=body_text, parent_id=parent_id, type=type, content_subtype=content_subtype, context=context)
+        return self.message_append(cr, uid, ids, subject, body_html, body_text,
+                                    type, subtype, parent_id=parent_id,
+                                    content_subtype=content_subtype, context=context)
     
     #------------------------------------------------------
     # Subscription mechanism
