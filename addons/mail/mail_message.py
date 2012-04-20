@@ -218,6 +218,7 @@ class mail_message(osv.osv):
                         ('exception', 'Delivery Failed'),
                         ('cancel', 'Cancelled'),
                         ], 'State', readonly=True),
+        'message_state': fields.selection([('read', 'Read'),('unread', 'Unread')], 'Message State'),
         'auto_delete': fields.boolean('Auto Delete', help="Permanently delete this email after sending it, to save space"),
         'original': fields.binary('Original', help="Original version of the message, as it was sent on the network", readonly=1),
     }
@@ -225,6 +226,7 @@ class mail_message(osv.osv):
     _defaults = {
         'type': 'email',
         'state': 'received',
+        'message_state': 'unread'
     }
     
     #------------------------------------------------------
@@ -582,7 +584,7 @@ class mail_message(osv.osv):
                                                 mail_server_id=message.mail_server_id.id,
                                                 context=context)
                 if res:
-                    message.write({'state':'sent', 'message_id': res})
+                    message.write({'state':'sent', 'message_id': res, 'message_state': 'read'})
                 else:
                     message.write({'state':'exception'})
                 message.refresh()
