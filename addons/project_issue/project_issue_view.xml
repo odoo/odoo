@@ -123,7 +123,8 @@
             <field name="model">project.issue</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Issue Tracker Tree" colors="black:state=='open';blue:state=='pending';grey:state in ('cancel', 'done')">
+                <tree string="Issue Tracker Tree" fonts="bold:needaction_pending==True" colors="black:state=='open';blue:state=='pending';grey:state in ('cancel', 'done')">
+                    <field name="needaction_pending" invisible="1"/>
                     <field name="id"/>
                     <field name="create_date" groups="base.group_no_one"/>
                     <field name="name"/>
@@ -290,8 +291,9 @@
             <field name="model">project.issue</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Feature Tracker Tree"  colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
+                <tree string="Feature Tracker Tree" fonts="bold:needaction_pending==True" colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
                     <field name="id"/>
+                    <field name="needaction_pending" invisible="1"/>
                     <field name="name" string="Feature description"/>
                     <field name="partner_id" groups="base.group_extended"/>
                     <field name="priority" string="Priority"/>

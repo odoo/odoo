@@ -184,12 +184,11 @@ class project_issue(crm.crm_case, osv.osv):
         return result.keys()
 
     def _save_state(self, cr, uid, issue_id, field_name, field_value, arg, context=None):
-        stage_obj = self.pool.get('project.task.type')
-        stage_ids = stage_obj.search(cr, uid, [('state', '=', field_value)], context=context)
+        stage_ids = self.pool.get('project.task.type').search(cr, uid, [('state', '=', field_value)], context=context)
         if stage_ids:
             self.write(cr, uid, [issue_id], {'type_id': stage_ids[0]}, context=context)
         else:
-            cr.execute("""update project_issue set state=%s where id=%s""", (field_value, issue_id, ))
+            cr.execute("""UPDATE project_issue SET state=%s WHERE id=%s""", (field_value, issue_id, ))
         return True
 
     _columns = {
@@ -208,13 +207,13 @@ class project_issue(crm.crm_case, osv.osv):
         'company_id': fields.many2one('res.company', 'Company'),
         'description': fields.text('Description'),
         'state': fields.function(_get_state, fnct_inv=_save_state, type='selection', selection=_ISSUE_STATE, string="State", readonly=True,
-        store = {
+            store = {
                 'project.issue': (lambda self, cr, uid, ids, c={}: ids, ['type_id'], 10),
                 'project.task.type': (_get_stage, ['state'], 10)
-        }, help='The state is set to \'Draft\', when a case is created.\
-                                  \nIf the case is in progress the state is set to \'Open\'.\
-                                  \nWhen the case is over, the state is set to \'Done\'.\
-                                  \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
+            }, help='The state is set to \'Draft\', when a case is created.\
+                    \nIf the case is in progress the state is set to \'Open\'.\
+                    \nWhen the case is over, the state is set to \'Done\'.\
+                    \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
         'email_from': fields.char('Email', size=128, help="These people will receive email.", select=1),
         'email_cc': fields.char('Watchers Emails', size=256, help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
         'date_open': fields.datetime('Opened', readonly=True,select=True),
