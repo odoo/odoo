@@ -455,12 +455,12 @@ def Project():
                 result[obj.id] = [obj.user_id.id]
         return result
 
-    def message_get_subscribers(self, cr, uid, ids, context=None):
-        sub_ids = self.message_get_subscribers_ids(cr, uid, ids, context=context);
+    def message_get_subscribers_ids(self, cr, uid, ids, context=None):
+        sub_ids = super(project_project, self).message_get_subscribers_ids(cr, uid, ids, context=context);
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.user_id:
                 sub_ids.append(obj.user_id.id)
-        return self.pool.get('res.users').read(cr, uid, sub_ids, context=context)
+        return sub_ids
 
     def create(self, cr, uid, vals, context=None):
         obj_id = super(project, self).create(cr, uid, vals, context=context)
@@ -1138,14 +1138,14 @@ class task(osv.osv):
                 result[obj.id] = [obj.user_id.id]
         return result
 
-    def message_get_subscribers(self, cr, uid, ids, context=None):
-        sub_ids = self.message_get_subscribers_ids(cr, uid, ids, context=context);
+    def message_get_subscribers_ids(self, cr, uid, ids, context=None):
+        sub_ids = super(project_task, self).message_get_subscribers_ids(cr, uid, ids, context=context)
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.user_id:
                 sub_ids.append(obj.user_id.id)
             if obj.manager_id:
                 sub_ids.append(obj.manager_id.id)
-        return self.pool.get('res.users').read(cr, uid, sub_ids, context=context)
+        return sub_ids
 
     def create_send_note(self, cr, uid, ids, context=None):
         return self.message_append_note(cr, uid, ids, body=_("Task has been <b>created</b>."), context=context)

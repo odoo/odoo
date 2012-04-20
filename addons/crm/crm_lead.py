@@ -829,13 +829,13 @@ class crm_lead(crm_case, osv.osv):
     # OpenChatter methods and notifications
     # ----------------------------------------
 
-    def message_get_subscribers(self, cr, uid, ids, context=None):
-        sub_ids = self.message_get_subscribers_ids(cr, uid, ids, context=context)
+    def message_get_subscribers_ids(self, cr, uid, ids, context=None):
+        sub_ids = super(crm_lead, self).message_get_subscribers_ids(cr, uid, ids, context=context)
         # add salesman to the subscribers
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.user_id:
                 sub_ids.append(obj.user_id.id)
-        return self.pool.get('res.users').read(cr, uid, sub_ids, context=context)
+        return sub_ids
     
     def case_get_note_msg_prefix(self, cr, uid, lead, context=None):
         if isinstance(lead, (int, long)):

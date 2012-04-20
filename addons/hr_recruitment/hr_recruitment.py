@@ -484,12 +484,12 @@ class hr_applicant(crm.crm_case, osv.osv):
     # OpenChatter methods and notifications
     # -------------------------------------------------------
     
-    def message_get_subscribers(self, cr, uid, ids, context=None):
-        sub_ids = self.message_get_subscribers_ids(cr, uid, ids, context=context);
+    def message_get_subscribers_ids(self, cr, uid, ids, context=None):
+        sub_ids = super(hr_applicant, self).message_get_subscribers_ids(cr, uid, ids, context=context)
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.user_id:
                 sub_ids.append(obj.user_id.id)
-        return self.pool.get('res.users').read(cr, uid, sub_ids, context=context)
+        return sub_ids
 
     def get_needaction_user_ids(self, cr, uid, ids, context=None):
         result = dict.fromkeys(ids, [])
