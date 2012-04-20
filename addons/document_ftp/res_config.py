@@ -23,8 +23,8 @@ from osv import fields, osv
 from tools import config
 
 class documnet_ftp_setting(osv.osv_memory):
-    _name = 'knowledge.configuration'
-    _inherit = 'knowledge.configuration'
+    _name = 'knowledge.config.settings'
+    _inherit = 'knowledge.config.settings'
     _columns = {
         'document_ftp_url': fields.char('Browse Documents', size=128,
             help ="""Click the url to browse the documents""", readonly=True),               

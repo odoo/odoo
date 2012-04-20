@@ -65,7 +65,7 @@
 
         <record id="view_knowledge_configuration" model="ir.ui.view">
             <field name="name">Configure Knowledge</field>
-            <field name="model">knowledge.configuration</field>
+            <field name="model">knowledge.config.settings</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Configure Knowledge" layout="manual">
@@ -75,9 +75,9 @@
                     </div>
                     <sheet layout="auto">
                         <separator string="Wiki" colspan="4"/>
-                        <field name="module_wiki_quality_manual"/>
-                        <newline/>
                         <field name="module_wiki_faq"/>
+                        <newline/>
+                        <field name="module_wiki_quality_manual"/>
 
                         <separator string="Documents" colspan="4"/>
                         <field name="module_document"/>
@@ -92,7 +92,7 @@
 
         <record id="action_knowledge_configuration" model="ir.actions.act_window">
             <field name="name">Configure Knowledge</field>
-            <field name="res_model">knowledge.configuration</field>
+            <field name="res_model">knowledge.config.settings</field>
             <field name="view_mode">form</field>
             <field name="target">inline</field>
         </record>
