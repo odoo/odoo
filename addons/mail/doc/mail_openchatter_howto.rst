@@ -38,7 +38,7 @@ Make your module inheriting from the ``mail.thread`` class.
     # inherit from mail.thread allows the use of OpenChatter
     _inherit = ['mail.thread']
 
-Use the thread viewer widget inside your form view by using the ThreadView widget on the message_ids_social field inherited from mail.thread.
+Use the thread viewer widget inside your form view by using the ThreadView widget on the message_ids field inherited from mail.thread.
 
 ::
 
@@ -50,7 +50,7 @@ Use the thread viewer widget inside your form view by using the ThreadView widge
     <field name="arch" type="xml">
       <form>
       [...]
-      <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
+      <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"/>
       </form>
     </field>
   </record>
