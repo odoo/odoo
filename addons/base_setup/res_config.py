@@ -68,7 +68,7 @@ class knowledge_config_settings(osv.osv_memory):
             help="""This installs the module wiki_quality_manual."""),
         'module_document': fields.boolean('Document Management',
             help="""This is a complete document management system, with: user authentication,
-                full document search (pptx and docx are not supported), and a document dashboard.
+                full document search (but pptx and docx are not supported), and a document dashboard.
                 This installs the module document."""),
         'module_document_ftp': fields.boolean('Share repositories (FTP)',
             help="""Access your documents in OpenERP through an FTP interface.
