@@ -150,7 +150,8 @@
             <field name="model">hr.holidays</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="red:state == 'refuse';blue:state == 'draft';black:state in ('confirm','validate','validate1')" string="Allocation Requests">
+                <tree fonts="bold:needaction_pending==True" colors="red:state == 'refuse';blue:state == 'draft';black:state in ('confirm','validate','validate1')" string="Allocation Requests">
+                    <field name="needaction_pending" invisible="1"/>
                     <field name="holiday_type"/>
                     <field name="employee_id"/>
                     <field name="category_id"/>
@@ -205,7 +206,8 @@
             <field name="type">tree</field>
             <field name="priority">20</field>
             <field name="arch" type="xml">
-                <tree colors="red:state == 'refuse';blue:state == ' draft';black:state in ('confirm','validate','validate1')" string="Leaves Summary">
+                <tree fonts="bold:needaction_pending==True" colors="red:state == 'refuse';blue:state == ' draft';black:state in ('confirm','validate','validate1')" string="Leaves Summary">
+                    <field name="needaction_pending" invisible="1"/>
                     <field name="employee_id"/>
                     <field name="category_id" invisible="1"/>
                     <field name="department_id" invisible="1"/>
@@ -231,7 +233,8 @@
             <field name="model">hr.holidays</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="red:state == 'refuse';blue:state == ' draft';black:state in ('confirm','validate','validate1')" string="Leave Requests">
+                <tree fonts="bold:needaction_pending==True" colors="red:state == 'refuse';blue:state == ' draft';black:state in ('confirm','validate','validate1')" string="Leave Requests">
+                    <field name="needaction_pending" invisible="1"/>
                     <field name="holiday_type"/>
                     <field name="employee_id"/>
                     <field name="category_id"/>
