@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2012-04-12 18:35+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2012-04-13 19:12+0000\n"
+"Last-Translator: Akira Hiyama <Unknown>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-04-13 05:26+0000\n"
+"X-Launchpad-Export-Date: 2012-04-14 04:57+0000\n"
 "X-Generator: Launchpad (build 15070)\n"
 
 #. module: account_analytic_plans
@@ -78,7 +78,7 @@ msgstr "分析計画インスタンス"
 #. module: account_analytic_plans
 #: view:analytic.plan.create.model:0
 msgid "Ok"
-msgstr ""
+msgstr "OK"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,plan_id:0
@@ -93,7 +93,7 @@ msgstr "アカウント2のID"
 #. module: account_analytic_plans
 #: sql_constraint:account.invoice:0
 msgid "Invoice Number must be unique per Company!"
-msgstr ""
+msgstr "請求書番号は会社ごとにユニークでなければいけません。"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -105,12 +105,12 @@ msgstr "総額"
 msgid ""
 "Configuration error! The currency chosen should be shared by the default "
 "accounts too."
-msgstr ""
+msgstr "設定エラー。選択された通貨はデフォルトアカウントによっても共有されなければなりません。"
 
 #. module: account_analytic_plans
 #: sql_constraint:account.move.line:0
 msgid "Wrong credit or debit value in accounting entry !"
-msgstr "会計入力において貸方または借方の値が誤っています。"
+msgstr "会計エントリーにおいて貸方または借方の値が誤っています。"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account6_ids:0
@@ -130,24 +130,24 @@ msgstr "銀行明細行"
 #. module: account_analytic_plans
 #: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_form_action_installer
 msgid "Define your Analytic Plans"
-msgstr ""
+msgstr "分析計画を定義して下さい。"
 
 #. module: account_analytic_plans
 #: constraint:account.invoice:0
 msgid "Invalid BBA Structured Communication !"
-msgstr ""
+msgstr "無効なBBA構造のコミュニケーション"
 
 #. module: account_analytic_plans
 #: constraint:account.bank.statement:0
 msgid "The journal and period chosen have to belong to the same company."
-msgstr ""
+msgstr "選択された仕訳帳と期間は同じ会社に属していなければなりません。"
 
 #. module: account_analytic_plans
 #: constraint:account.move.line:0
 msgid ""
 "The date of your Journal Entry is not in the defined period! You should "
 "change the date or remove this constraint from the journal."
-msgstr ""
+msgstr "仕訳の日付が定義された期間ではありません。日付を変更するか仕訳帳からこの制約を削除する必要があります。"
 
 #. module: account_analytic_plans
 #: sql_constraint:account.journal:0
@@ -250,6 +250,7 @@ msgid ""
 "currency. You should remove the secondary currency on the account or select "
 "a multi-currency view on the journal."
 msgstr ""
+"選択された仕訳のアカウントは第２の通貨を提供することを強いています。アカウントの第２通貨を削除するか、仕訳で多通貨ビューを選択して下さい。"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -306,7 +307,7 @@ msgstr ""
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_line
 msgid "Analytic Line"
-msgstr ""
+msgstr "分析行"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -364,7 +365,7 @@ msgstr "このディストリビューションをモデルとして保存"
 #. module: account_analytic_plans
 #: constraint:account.move.line:0
 msgid "You can not create journal items on an account of type view."
-msgstr ""
+msgstr "ビュータイプのアカウントでは仕訳項目を作ることはできません。"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -407,7 +408,7 @@ msgstr "アカウント3のID"
 #. module: account_analytic_plans
 #: constraint:account.analytic.line:0
 msgid "You can not create analytic line on view account."
-msgstr ""
+msgstr "ビューアカウントでは分析行を作ることはできません。"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_invoice
@@ -428,7 +429,7 @@ msgstr "アカウント4のID"
 #. module: account_analytic_plans
 #: constraint:account.move.line:0
 msgid "Company must be the same for its related account and period."
-msgstr ""
+msgstr "会社は関連するアカウントと期間は同じでなければなりません。"
 
 #. module: account_analytic_plans
 #: view:account.analytic.plan.instance.line:0
@@ -514,11 +515,13 @@ msgid ""
 "analytic accounts for each plan set. Then, you must attach a plan set to "
 "your account journals."
 msgstr ""
+"多数の分析計画環境をセットアップするためには、それぞれの計画セットのためにルート分析アカウントを定義しなければなりません。それから、その計画セットをあなた"
+"のアカウント仕訳帳に添付する必要があります。"
 
 #. module: account_analytic_plans
 #: constraint:account.move.line:0
 msgid "You can not create journal items on closed account."
-msgstr ""
+msgstr "閉じられたアカウントには仕訳項目を作ることはできません。"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0

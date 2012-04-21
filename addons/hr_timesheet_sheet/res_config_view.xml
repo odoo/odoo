@@ -7,12 +7,6 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="hr.view_human_resources_configuration"/>
             <field name="arch" type="xml">
-                <field name="module_hr_timesheet_sheet" position="after">
-                    <group colspan="2">
-                        <button name="%(hr_timesheet.action_define_analytic_structure)d" string="Create Your Timesheet Accounts"
-                            type="action" icon="terp-folder-green"/>
-                    </group>
-                </field>
                 <group name="config_timesheets" position="after">
                     <separator string="Timesheets" colspan="4"/>
                     <field name="timesheet_range"/>

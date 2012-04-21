@@ -77,21 +77,14 @@
             <field name="model">board.board</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Statistics Dashboard">
+                <form string="Statistics Dashboard" layout="manual">
                     <board style="1-1">
                         <column>
-                            <action string="Opportunities by Categories"
-                                name="%(act_oppor_categ)d"/>
-
-                            <action string="Opportunities by Stage"
-                                name="%(act_opportunity_stage)d"/>
-
+                            <action string="Opportunities by Categories" name="%(act_oppor_categ)d"/>
+                            <action string="Opportunities by Stage" name="%(act_opportunity_stage)d"/>
                         </column>
                         <column>
-
-                            <action string="Planned Revenue by Stage and User"
-                                name="%(act_oppor_stage_user)d"/>
-
+                            <action string="Planned Revenue by Stage and User" name="%(act_oppor_stage_user)d"/>
                         </column>
                     </board>
                 </form>
@@ -107,14 +100,14 @@
             <field name="view_id" ref="board_crm_statistical_form"/>
         </record>
 
-	    <menuitem id="board.menu_sales_dashboard" name="Sales" sequence="1" parent="base.menu_reporting_dashboard"/>
+        <menuitem id="board.menu_sales_dashboard" name="Sales" sequence="1" parent="base.menu_reporting_dashboard"/>
 
         <menuitem
-            name="CRM Dashboard" parent="board.menu_sales_dashboard"
-            action="open_board_statistical_dash"
-            sequence="0"
             id="menu_board_statistics_dash"
-            icon="terp-graph"
+            name="CRM Dashboard"
+            sequence="0"
+            parent="board.menu_sales_dashboard"
+            action="open_board_statistical_dash"
             groups="base.group_sale_manager"/>
 
     </data>
