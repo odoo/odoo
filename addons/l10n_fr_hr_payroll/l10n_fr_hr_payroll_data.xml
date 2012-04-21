@@ -1050,6 +1050,7 @@
         <field name="sequence">2280</field>
         <field name="condition_select">none</field>
         <field name="amount_select">percentage</field>
+        <field name="amount_percentage_base">categories.BRUT</field>
         <field name="register_id" ref="hr_cci_register"/>
     </record>
 	
@@ -1074,6 +1075,7 @@
         <field name="sequence">2290</field>
         <field name="condition_select">none</field>
         <field name="amount_select">percentage</field>
+        <field name="amount_percentage_base">categories.BRUT</field>
         <field name="register_id" ref="hr_cci_register"/>
     </record>
 	
@@ -1100,6 +1102,7 @@
         <field name="condition_range">contract.employee_id.company_id.nombre_employes</field>
         <field name="condition_range_max">9</field>
         <field name="amount_select">percentage</field>
+        <field name="amount_percentage_base">categories.BRUT</field>
         <field name="register_id" ref="hr_cci_register"/>
     </record>
 	
@@ -1130,6 +1133,7 @@
         <field name="condition_range_min">10</field>
         <field name="condition_range_max">19</field>
         <field name="amount_select">percentage</field>
+        <field name="amount_percentage_base">categories.BRUT</field>
         <field name="register_id" ref="hr_cci_register"/>
     </record>
 
@@ -1159,6 +1163,7 @@
         <field name="condition_range">contract.employee_id.company_id.nombre_employes</field>
         <field name="condition_range_min">20</field>
         <field name="amount_select">percentage</field>
+        <field name="amount_percentage_base">categories.BRUT</field>
         <field name="register_id" ref="hr_cci_register"/>
     </record>
 
@@ -1224,27 +1229,30 @@
         <!-- Salary Structure -->
 
 
-    <record id="hr_payroll.structure_base" model="hr.payroll.structure">
+    <record id="hr_payroll_salary_structure_base" model="hr.payroll.structure">
+        <field name="code">Fr-Base</field>
         <field name="name">Cotisations de base Employe Francais</field>
         <field eval="[(6, 0, [ref('hr_payroll.hr_rule_basic'), ref('hr_payroll.hr_rule_taxable'),ref('hr_payroll.hr_rule_net'), ref('hr_rule_secu'), ref('hr_rule_tranche_a'), ref('hr_rule_tranche_b'), ref('hr_rule_tranche_c'), ref('hr_rule_tranche_1'), ref('hr_rule_tranche_2'), ref('hr_rule_total'), ref('hr_rule_total_charges_salariales'), ref('hr_rule_total_retenues'), ref('hr_rule_cumul_imposable'), ref('hr_rule_total_charges_patronales'), ref('hr_payroll_rules_C1_employe'), ref('hr_payroll_rules_C2_employe'), ref('hr_payroll_rules_C3_employe'), ref('hr_payroll_rules_C4_employe'), ref('hr_payroll_rules_C5_employe'), ref('hr_payroll_rules_C7_employe'), ref('hr_payroll_rules_C8_employe'), ref('hr_payroll_rules_C9_employe'), ref('hr_payroll_rules_C10_employe'), ref('hr_payroll_rules_C11_employe'), ref('hr_payroll_rules_C22_employe'), ref('hr_payroll_rules_C23_employe'), ref('hr_payroll_rules_C24_employe'), ref('hr_payroll_rules_C25_employe'), ref('hr_payroll_rules_C26_employe'), ref('hr_payroll_rules_C27_employe'), ref('hr_payroll_rules_C28_employe'), ref('hr_payroll_rules_C29_employe'), ref('hr_payroll_rules_C30_employe'), ref('hr_payroll_rules_C40_employe')])]" name="rule_ids"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="parent_id" ref="hr_payroll.structure_base"/>
     </record>
 
 
     <record id="hr_payroll_salary_structure_employe_non_cadre" model="hr.payroll.structure">
-        <field name="code">E-NC</field>
+        <field name="code">Fr-NC</field>
         <field name="name">Employe non-cadre</field>
         <field eval="[(6, 0, [ref('hr_payroll_rules_C12_employe'), ref('hr_payroll_rules_C13_employe'), ref('hr_payroll_rules_C14_employe'), ref('hr_payroll_rules_C15_employe')])]" name="rule_ids"/>
         <field name="company_id" ref="base.main_company"/>    
-        <field name="parent_id" ref="hr_payroll.structure_base"/>
+        <field name="parent_id" ref="hr_payroll_salary_structure_base"/>
     </record>
 
 
     <record id="hr_payroll_salary_structure_employe_cadre" model="hr.payroll.structure">
-        <field name="code">E-C</field>
+        <field name="code">Fr-C</field>
         <field name="name">Employe cadre</field>
         <field eval="[(6, 0, [ref('hr_payroll_rules_C16_employe'), ref('hr_payroll_rules_C17_employe'), ref('hr_payroll_rules_C18_employe'), ref('hr_payroll_rules_C19_employe'), ref('hr_payroll_rules_C20_employe'), ref('hr_payroll_rules_C21_employe'), ref('hr_payroll_rules_C38_employe'), ref('hr_payroll_rules_C39_employe')])]" name="rule_ids"/>
         <field name="company_id" ref="base.main_company"/>    
-        <field name="parent_id" ref="hr_payroll.structure_base"/>
+        <field name="parent_id" ref="hr_payroll_salary_structure_base"/>
     </record>
 
 

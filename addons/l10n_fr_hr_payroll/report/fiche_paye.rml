@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <document filename="test.pdf">
-  <template pageSize="(595.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
+  <template pageSize="(595.0,842.0)" title="Fiche de paye" author="Yannick Buron" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="28.0" y1="28.0" width="539" height="786"/>
     </pageTemplate>
@@ -338,7 +338,7 @@
             <para style="terp_default_7">[[ p.name or '' ]]</para>
           </td>
           <td>
-            <para style="terp_default_7">[[ ((p.amount_select== 'percentage') or removeParentNode('para')) and '' ]] [[ p.base or '' ]]</para>
+            <para style="terp_default_7">[[ ((p.amount_select== 'percentage') or removeParentNode('para')) and '' ]] [[ p.amount or '' ]]</para>
             <para style="terp_default_7">[[ ((p.amount_select== 'fix') or removeParentNode('para')) and '' ]] [[ p.quantity or '' ]]</para>
             <para style="terp_default_7">[[ ((p.amount_select&lt;&gt; 'fix' and p.amount_select&lt;&gt; 'percentage') or removeParentNode('para')) and '' ]]</para>
           </td>
@@ -347,13 +347,13 @@
             <para style="terp_default_7">[[ ((p.amount_select &lt;&gt; 'percentage') or removeParentNode('para')) and '' ]]</para>
           </td>
           <td>
-            <para style="terp_default_7">[[ p.amount or '' ]]</para>
+            <para style="terp_default_7">[[ p.total or '' ]]</para>
           </td>
           <td>
             <para style="terp_default_7">[[ get_employer_line(o, p).rate or '']] </para>
           </td>
           <td>
-            <para style="terp_default_7">[[ get_employer_line(o,p).amount or '' ]]</para>
+            <para style="terp_default_7">[[ get_employer_line(o,p).total or '' ]]</para>
           </td>
         </tr>
       </blockTable>
