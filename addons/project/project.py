@@ -942,9 +942,9 @@ class task(osv.osv):
                 'name': newname,
             }, context=context)
             if delegate_data['state'] == 'pending':
-                self.do_pending(cr, uid, task.id, context=context)
+                self.do_pending(cr, uid, [task.id], context=context)
             elif delegate_data['state'] == 'done':
-                self.do_close(cr, uid, task.id, context=context)
+                self.do_close(cr, uid, [task.id], context=context)
             
             message = _("The task '%s' has been delegated to %s.") % (delegate_data['name'], delegate_data['user_id'][1])
             self.log(cr, uid, task.id, message)
