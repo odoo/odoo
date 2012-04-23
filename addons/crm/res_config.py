@@ -52,7 +52,7 @@ class crm_configuration(osv.osv_memory):
         'module_wiki_sale_faq': fields.boolean("Install a Sales FAQ",
             help="""This provides demo data, thereby creating a Wiki Group and a Wiki Page for Wiki Sale FAQ.
                 This installs the module wiki_sale_faq."""),
-        'module_google_map': fields.boolean("Google maps on customer",
+        'module_google_map': fields.boolean("Google Maps on Customer",
             help="""Locate customers on Google Map.
                 This installs the module google_map."""),
     }
