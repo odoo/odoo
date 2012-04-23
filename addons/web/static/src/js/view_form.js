@@ -2072,7 +2072,6 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(_.extend({}
     template: 'FieldText',
     initialize_content: function() {
         this.$textarea = this.$element.find('textarea');
-        this.resized = false;
         if (!this.get("effective_readonly")) {
             this.$textarea.change(_.bind(function() {
                 this.set({'value': instance.web.parse_value(this.$textarea.val(), this)});
@@ -2088,9 +2087,8 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(_.extend({}
     render_value: function() {
         var show_value = instance.web.format_value(this.get('value'), this, '');
         this.$textarea.val(show_value);
-        if (!this.resized && this.view.options.resize_textareas) {
+        if (show_value && this.view.options.resize_textareas) {
             this.do_resize(this.view.options.resize_textareas);
-            this.resized = true;
         }
     },
     is_syntax_valid: function() {
