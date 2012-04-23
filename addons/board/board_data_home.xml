@@ -4,7 +4,7 @@
     <!-- neat client actions that can be used in dashboards to display res_widgets -->
     <record id="action_application_tiles" model="ir.actions.client">
       <field name="name">Applications Tiles</field>
-      <field name="tag">board.home.applications</field>
+      <field name="tag">default_home</field>
     </record>
     <record id="action_res_widgets_tweets" model="ir.actions.client">
       <field name="name">Tweets Widget</field>
@@ -52,12 +52,9 @@
         </form>
       </field>
     </record>
-    <record id="board_homepage_action" model="ir.actions.act_window">
+    <record id="board_homepage_action" model="ir.actions.client">
       <field name="name">Home Page</field>
-      <field name="res_model">board.board</field>
-      <field name="view_type">form</field>
-      <field name="view_mode">form</field>
-      <field name="view_id" ref="board_homepage_view"/>
+      <field name="tag">default_home</field>
     </record>
 
     <!-- set the default homepage of admin -->
