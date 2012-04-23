@@ -1,47 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-    
+
     <!-- = = = = = = = = = = = = = = = -->
-        <!-- Fiscal Position Templates     -->
+    <!-- Fiscal Position Templates     -->
     <!-- = = = = = = = = = = = = = = = -->
 
 <!-- Position Géographique du partenaire -->
-        <record id="fiscal_position_template_1" model="account.fiscal.position.template">
-            <field name="name">France</field>
-            <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        </record>
-        
         <record id="fiscal_position_template_2" model="account.fiscal.position.template">
-            <field name="name">Zone Euro</field>
+            <field name="name">Intra-EU B2B</field>
             <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
+            <field name="note">French VAT exemption according to articles 262 ter I (for products) and/or 283-2 (for services) of "CGI"</field>
         </record>
-        
+
         <record id="fiscal_position_template_3" model="account.fiscal.position.template">
-            <field name="name">DOM-TOM</field>
+            <field name="name">Import/Export + DOM-TOM</field>
             <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        </record>
-        
-        <record id="fiscal_position_template_4" model="account.fiscal.position.template">
-            <field name="name">Hors Euro</field>
-            <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        </record>
-
-<!-- Immobilisations (substitution de taxes) -->
-        <record id="fiscal_position_template_5" model="account.fiscal.position.template">
-            <field name="name">France</field>
-            <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        </record>
-
-<!-- TVA sur Débits ou Encaissements (substitution de comptes) -->
-        <record id="fiscal_position_template_6" model="account.fiscal.position.template">
-            <field name="name">TVA sur le débits</field>
-            <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-        </record>
-
-        <record id="fiscal_position_template_7" model="account.fiscal.position.template">
-            <field name="name">TVA sur les encaissements</field>
-            <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
+            <field name="note">French VAT exemption according to articles 262 I of "CGI"</field>
         </record>
 
 
@@ -51,133 +26,159 @@
 
 <!-- Par défaut, les produits doivent être paramétrés pour utiliser les taxes, paramétrées pour des numéro de comptes (nationaux) -->
 
-<!-- Zone Euro == Intracomm -->
+<!-- Zone Intracommunautaire B2B -->
 <!-- ventes -->
 <!-- 19,6% -->
-    <record id="fiscal_position_tax_template_1" model="account.fiscal.position.tax.template">
+        <record id="fiscal_position_tax_template_1" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_2" />
             <field name="tax_src_id" ref="tva_normale" />
-            <field name="tax_dest_id" ref="tva_intra_normale" />
+            <field name="tax_dest_id" ref="tva_intra_0" />
         </record>
-<!-- 8,5% - - >
-    <record id="fiscal_position_tax_template_2" model="account.fiscal.position.tax.template">
+<!-- 8,5% -->
+        <record id="fiscal_position_tax_template_2" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_2" />
             <field name="tax_src_id" ref="tva_specifique" />
-            <field name="tax_dest_id" ref="tva_intra_specifique" />
+            <field name="tax_dest_id" ref="tva_intra_0" />
         </record>
-<! - - 5,5% -->
-    <record id="fiscal_position_tax_template_3" model="account.fiscal.position.tax.template">
+<!-- 7% -->
+        <record id="fiscal_position_tax_template_3" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_2" />
+            <field name="tax_src_id" ref="tva_specifique_1" />
+            <field name="tax_dest_id" ref="tva_intra_0" />
+        </record>
+<!-- 5,5% -->
+        <record id="fiscal_position_tax_template_4" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_2" />
             <field name="tax_src_id" ref="tva_reduite" />
-            <field name="tax_dest_id" ref="tva_intra_reduite" />
+            <field name="tax_dest_id" ref="tva_intra_0" />
         </record>
-<!-- 2,1% - - >
-    <record id="fiscal_position_tax_template_4" model="account.fiscal.position.tax.template">
+<!-- 2,1% -->
+        <record id="fiscal_position_tax_template_5" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_2" />
             <field name="tax_src_id" ref="tva_super_reduite" />
-            <field name="tax_dest_id" ref="tva_intra_super_reduite" />
+            <field name="tax_dest_id" ref="tva_intra_0" />
         </record>
-<! - - achats -->
+<!-- achats -->
 <!-- 19,6% -->
-    <record id="fiscal_position_tax_template_5" model="account.fiscal.position.tax.template">
+        <record id="fiscal_position_tax_template_6" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_2" />
+            <field name="tax_src_id" ref="tva_acq_normale" />
+            <field name="tax_dest_id" ref="tva_intra_normale" />
+        </record>
+        <record id="fiscal_position_tax_template_7" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_2" />
             <field name="tax_src_id" ref="tva_acq_normale" />
             <field name="tax_dest_id" ref="tva_acq_intra_normale" />
         </record>
-<!-- 8,5% - - >
-    <record id="fiscal_position_tax_template_6" model="account.fiscal.position.tax.template">
+<!-- 8,5% -->
+        <record id="fiscal_position_tax_template_8" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_2" />
+            <field name="tax_src_id" ref="tva_acq_specifique" />
+            <field name="tax_dest_id" ref="tva_intra_specifique" />
+        </record>
+        <record id="fiscal_position_tax_template_9" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_2" />
             <field name="tax_src_id" ref="tva_acq_specifique" />
             <field name="tax_dest_id" ref="tva_acq_intra_specifique" />
         </record>
-<! - - 5,5% -->
-    <record id="fiscal_position_tax_template_7" model="account.fiscal.position.tax.template">
+<!-- 7% -->
+        <record id="fiscal_position_tax_template_10" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_2" />
+            <field name="tax_src_id" ref="tva_acq_specifique_1" />
+            <field name="tax_dest_id" ref="tva_intra_specifique_1" />
+        </record>
+        <record id="fiscal_position_tax_template_11" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_2" />
+            <field name="tax_src_id" ref="tva_acq_specifique_1" />
+            <field name="tax_dest_id" ref="tva_acq_intra_specifique_1" />
+        </record>
+<!-- 5,5% -->
+        <record id="fiscal_position_tax_template_12" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_2" />
+            <field name="tax_src_id" ref="tva_acq_reduite" />
+            <field name="tax_dest_id" ref="tva_intra_reduite" />
+        </record>
+        <record id="fiscal_position_tax_template_13" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_2" />
             <field name="tax_src_id" ref="tva_acq_reduite" />
             <field name="tax_dest_id" ref="tva_acq_intra_reduite" />
         </record>
-<!-- 2,1% - - >
-    <record id="fiscal_position_tax_template_8" model="account.fiscal.position.tax.template">
+<!-- 2,1% -->
+        <record id="fiscal_position_tax_template_14" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_2" />
+            <field name="tax_src_id" ref="tva_acq_super_reduite" />
+            <field name="tax_dest_id" ref="tva_intra_super_reduite" />
+        </record>
+        <record id="fiscal_position_tax_template_15" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_2" />
             <field name="tax_src_id" ref="tva_acq_super_reduite" />
             <field name="tax_dest_id" ref="tva_acq_intra_super_reduite" />
         </record>
 
-<! - - Hors Euro -->
+<!-- Import/Export + DOM/TOM -->
 <!-- ventes -->
 <!-- 19,6% -->
-    <record id="fiscal_position_tax_template_9" model="account.fiscal.position.tax.template">
-            <field name="position_id" ref="fiscal_position_template_2" />
+        <record id="fiscal_position_tax_template_16" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_3" />
             <field name="tax_src_id" ref="tva_normale" />
             <field name="tax_dest_id" ref="tva_export_0" />
         </record>
-<!-- 8,5% - - >
-    <record id="fiscal_position_tax_template_10" model="account.fiscal.position.tax.template">
-            <field name="position_id" ref="fiscal_position_template_2" />
+<!-- 8,5% -->
+        <record id="fiscal_position_tax_template_17" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_3" />
             <field name="tax_src_id" ref="tva_specifique" />
             <field name="tax_dest_id" ref="tva_export_0" />
         </record>
-<! - - 5,5% -->
-    <record id="fiscal_position_tax_template_11" model="account.fiscal.position.tax.template">
-            <field name="position_id" ref="fiscal_position_template_2" />
+<!-- 7% -->
+        <record id="fiscal_position_tax_template_18" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_3" />
+            <field name="tax_src_id" ref="tva_specifique_1" />
+            <field name="tax_dest_id" ref="tva_export_0" />
+        </record>
+<!-- 5,5% -->
+        <record id="fiscal_position_tax_template_19" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_3" />
             <field name="tax_src_id" ref="tva_reduite" />
             <field name="tax_dest_id" ref="tva_export_0" />
         </record>
-<!-- 2,1% - - >
-    <record id="fiscal_position_tax_template_12" model="account.fiscal.position.tax.template">
-            <field name="position_id" ref="fiscal_position_template_2" />
+<!-- 2,1% -->
+        <record id="fiscal_position_tax_template_20" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_3" />
             <field name="tax_src_id" ref="tva_super_reduite" />
             <field name="tax_dest_id" ref="tva_export_0" />
         </record>
--->
 
-<!-- Immobilisations -->
 <!-- achats -->
 <!-- 19,6% -->
-    <record id="fiscal_position_tax_template_5" model="account.fiscal.position.tax.template">
-            <field name="position_id" ref="fiscal_position_template_2" />
+        <record id="fiscal_position_tax_template_21" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_3" />
             <field name="tax_src_id" ref="tva_acq_normale" />
-            <field name="tax_dest_id" ref="tva_imm_normale" />
+            <field name="tax_dest_id" ref="tva_import_0" />
         </record>
-<!-- 8,5% - - >
-    <record id="fiscal_position_tax_template_6" model="account.fiscal.position.tax.template">
-            <field name="position_id" ref="fiscal_position_template_2" />
+<!-- 8,5% -->
+        <record id="fiscal_position_tax_template_22" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_3" />
             <field name="tax_src_id" ref="tva_acq_specifique" />
-            <field name="tax_dest_id" ref="tva_imm_specifique" />
+            <field name="tax_dest_id" ref="tva_import_0" />
         </record>
-<! - - 5,5% -->
-    <record id="fiscal_position_tax_template_7" model="account.fiscal.position.tax.template">
-            <field name="position_id" ref="fiscal_position_template_2" />
+<!-- 7% -->
+        <record id="fiscal_position_tax_template_23" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_3" />
+            <field name="tax_src_id" ref="tva_acq_specifique_1" />
+            <field name="tax_dest_id" ref="tva_import_0" />
+        </record>
+<!-- 5,5% -->
+        <record id="fiscal_position_tax_template_24" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_3" />
             <field name="tax_src_id" ref="tva_acq_reduite" />
-            <field name="tax_dest_id" ref="tva_imm_reduite" />
+            <field name="tax_dest_id" ref="tva_import_0" />
         </record>
-<!-- 2,1% - - >
-    <record id="fiscal_position_tax_template_8" model="account.fiscal.position.tax.template">
-            <field name="position_id" ref="fiscal_position_template_2" />
+<!-- 2,1% -->
+        <record id="fiscal_position_tax_template_25" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_3" />
             <field name="tax_src_id" ref="tva_acq_super_reduite" />
-            <field name="tax_dest_id" ref="tva_imm_super_reduite" />
+            <field name="tax_dest_id" ref="tva_import_0" />
         </record>
--->
-
-    <!-- = = = = = = = = = = = = = = = = = -->
-    <!-- Fiscal Position Account Templates -->
-    <!-- = = = = = = = = = = = = = = = = = -->
-
-<!-- Substitution des comptes de produits -->
-
-<!-- TVA sur Débits ou Encaissements Pr les 4 taux : 19,6% ; 8,5% ; 5,5% ; 2,1% - - >
-    <record id="fiscal_position_account_template_1" model="account.fiscal.position.account.template">
-            <field name="position_id" ref="fiscal_position_template_1"  />
-            <field name="account_src_id" ref="a7000" />
-            <field name="account_dest_id" ref="a_sale" />
-        </record>
-
-        <record id="fiscal_position_account_template_6" model="account.fiscal.position.account.template">
-            <field name="position_id" ref="fiscal_position_template_2"  />
-            <field name="account_src_id" ref="a7050" />
-            <field name="account_dest_id" ref="a7051" />
-        </record -->
-
 
     </data>
-</openerp>    
+</openerp>
