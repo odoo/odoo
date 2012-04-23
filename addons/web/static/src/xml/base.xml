@@ -847,7 +847,7 @@
     <div class="oe_tooltip_string" t-if="widget.string">
         <t t-esc="widget.node.attrs.string"/> <t t-if="debug and widget.nolabel">(nolabel)</t>
     </div>
-    <p t-if="widget.node.attrs.help || widget.field.help" class="oe_tooltip_help"><t t-esc="widget.node.attrs.help || widget.field.help"/></p>
+    <p t-if="widget.node.attrs.help or (widget.field and widget.field.help)" class="oe_tooltip_help"><t t-esc="widget.node.attrs.help || widget.field.help"/></p>
     <ul t-if="debug" class="oe_tooltip_technical">
         <li data-item="field" t-if="widget.name">
             <span class="oe_tooltip_technical_title">Field:</span>
