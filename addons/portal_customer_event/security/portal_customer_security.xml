@@ -5,7 +5,7 @@
         <record id="portal_event_rule" model="ir.rule">
             <field name="name">Personal Events</field>
             <field ref="event.model_event_event" name="model_id"/>
-            <field name="domain_force">[('registration_ids.email','=',user.login)]</field>
+            <field name="domain_force">[]</field>
             <field name="groups" eval="[(4, ref('portal_customer.group_sales_portal'))]"/>
         </record>
         
