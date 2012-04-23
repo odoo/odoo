@@ -30,6 +30,18 @@ class res_users(osv.osv):
             string='Related Partner'),
     }
 
+    def prepare_new_user_data(self, u, wiz, password):
+        return {
+                    'name': u.name,
+                    'login': u.user_email,
+                    'password': password,
+                    'user_email': u.user_email,
+                    'context_lang': u.lang,
+                    'share': True,
+                    'partner_id': u.partner_id and u.partner_id.id,
+                } 
+
+
 res_users()
 
 
