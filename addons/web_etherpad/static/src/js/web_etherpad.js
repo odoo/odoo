@@ -17,7 +17,6 @@ openerp.web_etherpad = function (instance) {
             var self = this ;
             var company_id = (self.view.datarecord.hasOwnProperty('id')) ?self.view.datarecord.company_id[0]: self.view.datarecord.company_id ;
               new instance.web.DataSet(this, 'res.company', {}).read_ids([company_id],['pad_url_template'],{}).then(function(res){              
-              console.log("dataset :::::" , res);
               var pad_template = res[0].pad_url_template.replace('-%(salt)s-%(name)s','').replace(/\s/g,'');                      
  
               var patt_url = (_.str.sprintf(pad_template.replace('-%(id)d',''), {
@@ -38,7 +37,7 @@ openerp.web_etherpad = function (instance) {
             self.invalid = false;
             self.render_value();
         },
-        add_pad: function(self,pad_template,value_){  
+        add_pad: function(self,pad_template,value_){
             var url = (_.str.sprintf(pad_template, {
                   db : self.session.db, 
                   model : self.view.model,          
@@ -47,6 +46,7 @@ openerp.web_etherpad = function (instance) {
             var show_value = instance.web.format_value(value_, this, '');
             self.show_pad_value(self,url + '\n'+ show_value);            
             self._dirty_flag = true ;
+            self.view.do_notify_change();
         },        
         render_value: function() {            
             var show_value = instance.web.format_value(this.get('value'), this, '');            
