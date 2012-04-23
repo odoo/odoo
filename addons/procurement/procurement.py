@@ -506,11 +506,11 @@ class procurement_order(osv.osv):
     def running_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             self.message_subscribe(cr, uid, [obj.id], [obj.user_id.id], context=context)
-            self.message_append_note(cr, uid, [obj.id], body=_("Procurement has been <b>run</b>."), context=context)
+            self.message_append_note(cr, uid, [obj.id], body=_("Procurement has been set to <b>running</b> state."), context=context)
 
     def ready_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_append_note(cr, uid, [obj.id], body=_("Procurement has been set to <b>redy</b>."), context=context)
+            self.message_append_note(cr, uid, [obj.id], body=_("Procurement has been set to <b>redy</b> state."), context=context)
 
     def cancel_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
