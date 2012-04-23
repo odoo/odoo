@@ -27,7 +27,7 @@
 ##############################################################################
 {
     "name" : "France - Accounting",
-    "version" : "1.0",
+    "version" : "1.1",
     "author" : "OpenERP SA",
     "website": "http://www.openerp.com",
     "category" : "Localization/Account Charts",
@@ -35,7 +35,9 @@
 This is the module to manage the accounting chart for France in OpenERP.
 ========================================================================
 
-Credits: Sistheo Zeekom CrysaLEAD
+This module applies to companies based in France mainland. It doesn't apply to companies based in the DOM-TOMs (Guadeloupe, Martinique, Guyane, Réunion, Mayotte, etc...)
+
+Credits: Sistheo, Zeekom, CrysaLEAD, Akretion and Camptocamp.
 """,
     "depends" : ['base_iban', 'account', 'account_chart', 'base_vat', 'l10n_fr_rib'],
     "init_xml" : [],
