@@ -224,8 +224,9 @@
         <field name="model">crm.meeting</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Meetings"
+            <tree string="Meetings" fonts="bold:needaction_pending==True"
                 colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
+                <field name="needaction_pending" invisible="1"/>
                 <field name="name" string="Subject" />
                 <field name="user_id"/>
                 <field name="date"/>

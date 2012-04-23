@@ -1,0 +1,322 @@
+# Japanese translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"PO-Revision-Date: 2012-04-19 22:02+0000\n"
+"Last-Translator: Masaki Yamaya <Unknown>\n"
+"Language-Team: Japanese <ja@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2012-04-20 04:43+0000\n"
+"X-Generator: Launchpad (build 15120)\n"
+
+#. module: fetchmail
+#: selection:fetchmail.server,state:0
+msgid "Confirmed"
+msgstr "確認済み"
+
+#. module: fetchmail
+#: field:fetchmail.server,server:0
+msgid "Server Name"
+msgstr "サーバ名"
+
+#. module: fetchmail
+#: field:fetchmail.server,script:0
+msgid "Script"
+msgstr "スクリプト"
+
+#. module: fetchmail
+#: help:fetchmail.server,priority:0
+msgid "Defines the order of processing, lower values mean higher priority"
+msgstr "処理の順序を定義します。値が小さいほど優先度が高い。"
+
+#. module: fetchmail
+#: help:fetchmail.server,is_ssl:0
+msgid ""
+"Connections are encrypted with SSL/TLS through a dedicated port (default: "
+"IMAPS=993, POP3S=995)"
+msgstr "専用ポートを使った接続によって SSL/TLS で暗号化されます (デフォルト：IMAPS=993, POP3S=995)。"
+
+#. module: fetchmail
+#: field:fetchmail.server,attach:0
+msgid "Keep Attachments"
+msgstr "添付を保持する。"
+
+#. module: fetchmail
+#: help:fetchmail.server,original:0
+msgid ""
+"Whether a full original copy of each email should be kept for referenceand "
+"attached to each processed message. This will usually double the size of "
+"your message database."
+msgstr "Eメールの原本を保存して、処理済みメッセージを添付するかどうかの指定。これを指定すると、メッセージ・データベースのサイズが倍になります。"
+
+#. module: fetchmail
+#: field:fetchmail.server,priority:0
+msgid "Server Priority"
+msgstr "サーバの優先度"
+
+#. module: fetchmail
+#: field:fetchmail.server,state:0
+msgid "State"
+msgstr "状態"
+
+#. module: fetchmail
+#: view:fetchmail.server:0
+msgid "POP"
+msgstr "POP"
+
+#. module: fetchmail
+#: view:fetchmail.server:0
+msgid "Fetch Now"
+msgstr "いま読み取る。"
+
+#. module: fetchmail
+#: model:ir.actions.act_window,name:fetchmail.action_email_server_tree
+#: model:ir.ui.menu,name:fetchmail.menu_action_fetchmail_server_tree
+msgid "Incoming Mail Servers"
+msgstr "Eメールサーバから読取り中"
+
+#. module: fetchmail
+#: field:fetchmail.server,port:0
+msgid "Port"
+msgstr "ポート"
+
+#. module: fetchmail
+#: view:fetchmail.server:0
+msgid "POP/IMAP Servers"
+msgstr "POP/MAPサーバ"
+
+#. module: fetchmail
+#: selection:fetchmail.server,type:0
+msgid "Local Server"
+msgstr "ローカルサーバ"
+
+#. module: fetchmail
+#: field:fetchmail.server,user:0
+msgid "Username"
+msgstr "ユーザ名"
+
+#. module: fetchmail
+#: model:ir.model,name:fetchmail.model_fetchmail_server
+msgid "POP/IMAP Server"
+msgstr "POP/IMAPサーバ"
+
+#. module: fetchmail
+#: view:fetchmail.server:0
+msgid "Reset Confirmation"
+msgstr "確認をリセット"
+
+#. module: fetchmail
+#: view:fetchmail.server:0
+msgid "SSL"
+msgstr "SSL"
+
+#. module: fetchmail
+#: model:ir.model,name:fetchmail.model_mail_message
+msgid "Email Message"
+msgstr "Eメールメッセージ"
+
+#. module: fetchmail
+#: field:fetchmail.server,date:0
+msgid "Last Fetch Date"
+msgstr "前回の読取り日"
+
+#. module: fetchmail
+#: help:fetchmail.server,action_id:0
+msgid ""
+"Optional custom server action to trigger for each incoming mail, on the "
+"record that was created or updated by this mail"
+msgstr "受信するEメールが作成したレコードによって、カスタムサーバの実行を起動するかどうかの選択"
+
+#. module: fetchmail
+#: view:fetchmail.server:0
+msgid "# of emails"
+msgstr "Eメールの数"
+
+#. module: fetchmail
+#: field:fetchmail.server,original:0
+msgid "Keep Original"
+msgstr "原本を保持する"
+
+#. module: fetchmail
+#: code:addons/fetchmail/fetchmail.py:155
+#, python-format
+msgid ""
+"Here is what we got instead:\n"
+" %s"
+msgstr ""
+"代わりにこれを受け取りました：\n"
+"　%s"
+
+#. module: fetchmail
+#: view:fetchmail.server:0
+#: field:fetchmail.server,configuration:0
+msgid "Configuration"
+msgstr "設定"
+
+#. module: fetchmail
+#: view:fetchmail.server:0
+msgid "Incoming Mail Server"
+msgstr "受信Eメールサーバ"
+
+#. module: fetchmail
+#: code:addons/fetchmail/fetchmail.py:155
+#, python-format
+msgid "Connection test failed!"
+msgstr "接続テストに失敗しました"
+
+#. module: fetchmail
+#: help:fetchmail.server,server:0
+msgid "Hostname or IP of the mail server"
+msgstr "ホスト名あるいはEメールサーバのIP"
+
+#. module: fetchmail
+#: view:fetchmail.server:0
+msgid "Server type IMAP."
+msgstr "サーバタイプ IMAP"
+
+#. module: fetchmail
+#: field:fetchmail.server,name:0
+msgid "Name"
+msgstr "名前"
+
+#. module: fetchmail
+#: field:fetchmail.server,is_ssl:0
+msgid "SSL/TLS"
+msgstr "SSL/TLS"
+
+#. module: fetchmail
+#: view:fetchmail.server:0
+msgid "Test & Confirm"
+msgstr "テスト・確認"
+
+#. module: fetchmail
+#: field:fetchmail.server,action_id:0
+msgid "Server Action"
+msgstr "サーバアクション"
+
+#. module: fetchmail
+#: field:mail.message,fetchmail_server_id:0
+msgid "Inbound Mail Server"
+msgstr "受信Eメールサーバ"
+
+#. module: fetchmail
+#: field:fetchmail.server,message_ids:0
+#: model:ir.actions.act_window,name:fetchmail.act_server_history
+msgid "Messages"
+msgstr "メッセージ"
+
+#. module: fetchmail
+#: view:fetchmail.server:0
+msgid "Search Incoming Mail Servers"
+msgstr "受信Eメールサーバを検索する"
+
+#. module: fetchmail
+#: field:fetchmail.server,active:0
+msgid "Active"
+msgstr "活動中"
+
+#. module: fetchmail
+#: help:fetchmail.server,attach:0
+msgid ""
+"Whether attachments should be downloaded. If not enabled, incoming emails "
+"will be stripped of any attachments before being processed"
+msgstr "添付ファイルをダウンロードするかどうか。これを指定しないと，Eメールを受信する前に添付ファイアは外されます。"
+
+#. module: fetchmail
+#: view:fetchmail.server:0
+msgid "Advanced options"
+msgstr "高度なオプション"
+
+#. module: fetchmail
+#: selection:fetchmail.server,type:0
+msgid "IMAP Server"
+msgstr "IMAP サーバー"
+
+#. module: fetchmail
+#: view:fetchmail.server:0
+msgid "IMAP"
+msgstr "IMAP"
+
+#. module: fetchmail
+#: view:fetchmail.server:0
+msgid "Server type POP."
+msgstr "サーバタイプPOP"
+
+#. module: fetchmail
+#: field:fetchmail.server,password:0
+msgid "Password"
+msgstr "パスワード"
+
+#. module: fetchmail
+#: view:fetchmail.server:0
+msgid "Actions to Perform on Incoming Mails"
+msgstr "受信Eメールに対する処理"
+
+#. module: fetchmail
+#: field:fetchmail.server,type:0
+msgid "Server Type"
+msgstr "サーバタイプ"
+
+#. module: fetchmail
+#: view:fetchmail.server:0
+msgid "Login Information"
+msgstr "ログイン情報"
+
+#. module: fetchmail
+#: view:fetchmail.server:0
+msgid "Server Information"
+msgstr "サーバ情報"
+
+#. module: fetchmail
+#: view:fetchmail.server:0
+msgid "If SSL required."
+msgstr "SSLは必要ならば"
+
+#. module: fetchmail
+#: view:fetchmail.server:0
+msgid "Advanced"
+msgstr "高度"
+
+#. module: fetchmail
+#: view:fetchmail.server:0
+msgid "Server & Login"
+msgstr "サーバとログイン"
+
+#. module: fetchmail
+#: help:fetchmail.server,object_id:0
+msgid ""
+"Process each incoming mail as part of a conversation corresponding to this "
+"document type. This will create new documents for new conversations, or "
+"attach follow-up emails to the existing conversations (documents)."
+msgstr ""
+"受信Eメールを、この文書タイプに対応する交信の一部として処理する。\r\n"
+"\r\n"
+"そうすると、新しい交信のための新しい文書を作成するか、既存の交信（文書）への追跡Eメールを添付します。"
+
+#. module: fetchmail
+#: field:fetchmail.server,object_id:0
+msgid "Create a New Record"
+msgstr "新しいレコードを作成する"
+
+#. module: fetchmail
+#: selection:fetchmail.server,state:0
+msgid "Not Confirmed"
+msgstr "未確認"
+
+#. module: fetchmail
+#: selection:fetchmail.server,type:0
+msgid "POP Server"
+msgstr "POPサーバ"
+
+#. module: fetchmail
+#: view:mail.message:0
+msgid "Mail Server"
+msgstr "Eメールサーバ"

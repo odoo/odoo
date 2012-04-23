@@ -3,18 +3,17 @@
     <data>
 
         <!-- toplevel menu -->
+        <menuitem id="mail_feeds_main" name="Feeds" sequence="0"
+            web_icon="static/src/img/feeds.png"
+            web_icon_hover="static/src/img/feeds-hover.png" />
         <record id="mail_feeds_main" model="ir.ui.menu">
-            <field name="name">Feeds</field>
-            <field name="sequence">0</field>
-            <field name="web_icon" eval="static/src/img/feeds.png"/>
-            <field name="web_icon_hover" eval="static/src/img/feeds-hover.png"/>
             <field name="action" ref="action_mail_all_feeds"/>
         </record>
 
         <!-- left-side menu: Feeds !-->
         <menuitem id="mail_feeds" name="Feeds" parent="mail_feeds_main"/>
         <record id="mail_wallfeeds" model="ir.ui.menu">
-          <field name="name">All Feeds</field>
+          <field name="name">Wall</field>
           <field name="sequence" eval="10"/>
           <field name="action" ref="action_mail_all_feeds"/>
           <field name="parent_id" ref="mail_feeds"/>

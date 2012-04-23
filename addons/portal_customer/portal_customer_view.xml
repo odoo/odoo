@@ -49,6 +49,9 @@
             </field>
         </record>
         
+
+
+
         <record id="product_normal_action" model="ir.actions.act_window">
             <field name="name">Products</field>
             <field name="type">ir.actions.act_window</field>
@@ -59,5 +62,16 @@
             <field name="search_view_id" ref="product.product_search_form_view"/>
             <field name="help">You must define a Product for everything you buy or sell. Products can be raw materials, stockable products, consumables or services. The Product form contains detailed information about your products related to procurement logistics, sales price, product category, suppliers and so on.</field>
         </record>
+
+        <record id="action_contact_us" model="ir.actions.act_window">
+            <field name="name">Contact Us</field>
+            <field name="res_model">res.company</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+            <field name="domain">[]</field>
+            <field name="view_id" ref="base.view_company_form" />
+        </record>
+
     </data>
 </openerp>
