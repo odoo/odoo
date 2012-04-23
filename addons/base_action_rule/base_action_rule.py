@@ -389,7 +389,7 @@ the rule to mark CC(mail to any other person defined in actions)."),
             context = {}
 
         if action.server_action_id:
-            context.update({'active_id':obj.id, 'active_ids':[obj.id],'active_model':obj._name})
+            context.update({'active_id': obj.id, 'active_ids': [obj.id], 'active_model': obj._name})
             self.pool.get('ir.actions.server').run(cr, uid, [action.server_action_id.id], context)
         write = {}
 

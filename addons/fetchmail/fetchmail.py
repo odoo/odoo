@@ -192,7 +192,7 @@ openerp_mailgate.py -u %(uid)d -p PASSWORD -o %(model)s -d %(dbname)s --host=HOS
                                                              strip_attachments=(not server.attach),
                                                              context=context)
                         if res_id and server.action_id:
-                            action_pool.run(cr, uid, [server.action_id.id], {'active_id': res_id, 'active_ids':[res_id], 'active_model':server.object_id.model})
+                            action_pool.run(cr, uid, [server.action_id.id], {'active_id': res_id, 'active_ids': [res_id], 'active_model': server.object_id.model})
                             imap_server.store(num, '+FLAGS', '\\Seen')
                             cr.commit()
                         count += 1
@@ -217,7 +217,7 @@ openerp_mailgate.py -u %(uid)d -p PASSWORD -o %(model)s -d %(dbname)s --host=HOS
                                                              strip_attachments=(not server.attach),
                                                              context=context)
                         if res_id and server.action_id:
-                            action_pool.run(cr, uid, [server.action_id.id], {'active_id': res_id, 'active_ids':[res_id]})
+                            action_pool.run(cr, uid, [server.action_id.id], {'active_id': res_id, 'active_ids': [res_id], 'active_model': server.object_id.model})
                         pop_server.dele(num)
                         cr.commit()
                     logger.info("fetched/processed %s email(s) on %s server %s", numMsgs, server.type, server.name)
