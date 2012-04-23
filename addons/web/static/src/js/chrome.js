@@ -1133,13 +1133,21 @@ openerp.web.WebClient = openerp.web.OldWidget.extend(/** @lends openerp.web.WebC
         });
     },
     bind_hashchange: function() {
+        var self = this;
         $(window).bind('hashchange', this.on_hashchange);
-
         var state = $.bbq.getState(true);
         if (! _.isEmpty(state)) {
             $(window).trigger('hashchange');
         } else {
-            this.action_manager.do_action({type: 'ir.actions.client', tag: 'default_home'});
+            var ds = new openerp.web.DataSetSearch(this, 'res.users');
+            ds.read_ids([this.session.uid], ['action_id']).then(function (users) {
+                var home_action = users[0].action_id;
+                if (!home_action) {
+                    self.action_manager.do_action({type: 'ir.actions.client', tag: 'default_home'});
+                } else {
+                    self.action_manager.do_action(home_action[0]);
+                }
+            });
         }
     },
     on_hashchange: function(event) {
