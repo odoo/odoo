@@ -8,39 +8,39 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2012-04-01 05:08+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2012-04-21 17:47+0000\n"
+"Last-Translator: Masaki Yamaya <Unknown>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-04-02 04:54+0000\n"
-"X-Generator: Launchpad (build 15032)\n"
+"X-Launchpad-Export-Date: 2012-04-22 05:15+0000\n"
+"X-Generator: Launchpad (build 15120)\n"
 
 #. module: account_anglo_saxon
 #: sql_constraint:purchase.order:0
 msgid "Order Reference must be unique per Company!"
-msgstr "発注参照は会社ごとにユニークなければいけません"
+msgstr "受注参照は、会社内で固有でなければなりません。"
 
 #. module: account_anglo_saxon
 #: view:product.category:0
 msgid " Accounting Property"
-msgstr " 経理属性"
+msgstr " 会計の属性"
 
 #. module: account_anglo_saxon
 #: model:ir.model,name:account_anglo_saxon.model_product_category
 msgid "Product Category"
-msgstr "製品カテゴリー"
+msgstr "製品分類"
 
 #. module: account_anglo_saxon
 #: sql_constraint:stock.picking:0
 msgid "Reference must be unique per Company!"
-msgstr "参照は会社ごとにユニークでなければいけません"
+msgstr "参照は会社内ではユニークでなければいけません。"
 
 #. module: account_anglo_saxon
 #: constraint:product.category:0
 msgid "Error ! You cannot create recursive categories."
-msgstr "エラー：再帰カテゴリーを作成することはできません"
+msgstr "エラー：カテゴリーを重複して作ることはできません。"
 
 #. module: account_anglo_saxon
 #: constraint:account.invoice:0
@@ -51,17 +51,17 @@ msgstr "無効なBBA構造のコミュニケーション"
 #: constraint:product.template:0
 msgid ""
 "Error: The default UOM and the purchase UOM must be in the same category."
-msgstr "エラー：デフォールトのUOMと購入UOMは同じカテゴリーでなければいけません"
+msgstr "エラー：デフォルトのUOMと発注UOMは同じ分類でなければいけません。"
 
 #. module: account_anglo_saxon
 #: model:ir.model,name:account_anglo_saxon.model_account_invoice_line
 msgid "Invoice Line"
-msgstr "請求明細"
+msgstr "請求行"
 
 #. module: account_anglo_saxon
 #: model:ir.model,name:account_anglo_saxon.model_purchase_order
 msgid "Purchase Order"
-msgstr "購買発注"
+msgstr "発注オーダー"
 
 #. module: account_anglo_saxon
 #: model:ir.model,name:account_anglo_saxon.model_product_template
@@ -82,12 +82,12 @@ msgstr "請求書"
 #. module: account_anglo_saxon
 #: model:ir.model,name:account_anglo_saxon.model_stock_picking
 msgid "Picking List"
-msgstr "選択リスト"
+msgstr "出庫票"
 
 #. module: account_anglo_saxon
 #: sql_constraint:account.invoice:0
 msgid "Invoice Number must be unique per Company!"
-msgstr "請求書番号は会社ごとにユニークでなければいけません"
+msgstr "請求書番号は会社ごとにユニークでなければいけません。"
 
 #. module: account_anglo_saxon
 #: help:product.category,property_account_creditor_price_difference_categ:0
@@ -95,4 +95,4 @@ msgstr "請求書番号は会社ごとにユニークでなければいけませ
 msgid ""
 "This account will be used to value price difference between purchase price "
 "and cost price."
-msgstr "このアカウントを使って購買価格とコスト価格の違いを計算します"
+msgstr "このアカウントは仕入価格とコスト価格の価格差の値のために使われます。"

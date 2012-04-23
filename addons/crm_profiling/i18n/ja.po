@@ -1,0 +1,204 @@
+# Japanese translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"PO-Revision-Date: 2012-04-21 18:38+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Japanese <ja@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2012-04-22 05:16+0000\n"
+"X-Generator: Launchpad (build 15120)\n"
+
+#. module: crm_profiling
+#: view:crm_profiling.questionnaire:0
+msgid "Questions List"
+msgstr "質問一覧"
+
+#. module: crm_profiling
+#: model:ir.actions.act_window,help:crm_profiling.open_questionnaires
+msgid ""
+"You can create specific topic-related questionnaires to guide your team(s) "
+"in the sales cycle by helping them to ask the right questions. The "
+"segmentation tool allows you to automatically assign a partner to a category "
+"according to his answers to the different questionnaires."
+msgstr ""
+"特定のトピックに関連した質問票を作成して、それを使って販売チームが適切な質問をするように指導できます。区分ツールを使って、質問に対する回答に応じて、パート"
+"ナを自動的に区分することができます。"
+
+#. module: crm_profiling
+#: field:crm_profiling.answer,question_id:0
+#: field:crm_profiling.question,name:0
+#: model:ir.model,name:crm_profiling.model_crm_profiling_question
+#: field:open.questionnaire.line,question_id:0
+msgid "Question"
+msgstr "質問"
+
+#. module: crm_profiling
+#: model:ir.actions.act_window,name:crm_profiling.action_open_questionnaire
+#: view:open.questionnaire:0
+msgid "Open Questionnaire"
+msgstr "質問票を開く"
+
+#. module: crm_profiling
+#: field:crm.segmentation,child_ids:0
+msgid "Child Profiles"
+msgstr "子のプロファイル"
+
+#. module: crm_profiling
+#: view:crm.segmentation:0
+msgid "Partner Segmentations"
+msgstr "パートナの分類"
+
+#. module: crm_profiling
+#: field:crm_profiling.answer,name:0
+#: model:ir.model,name:crm_profiling.model_crm_profiling_answer
+#: field:open.questionnaire.line,answer_id:0
+msgid "Answer"
+msgstr "回答"
+
+#. module: crm_profiling
+#: model:ir.model,name:crm_profiling.model_open_questionnaire_line
+msgid "open.questionnaire.line"
+msgstr "open.questionnaire.line"
+
+#. module: crm_profiling
+#: model:ir.model,name:crm_profiling.model_crm_segmentation
+msgid "Partner Segmentation"
+msgstr "パートナの分類"
+
+#. module: crm_profiling
+#: view:res.partner:0
+msgid "Profiling"
+msgstr "プロファイリング"
+
+#. module: crm_profiling
+#: view:crm_profiling.questionnaire:0
+#: field:crm_profiling.questionnaire,description:0
+msgid "Description"
+msgstr "詳細"
+
+#. module: crm_profiling
+#: field:crm.segmentation,answer_no:0
+msgid "Excluded Answers"
+msgstr "除外した回答"
+
+#. module: crm_profiling
+#: view:crm_profiling.answer:0
+#: view:crm_profiling.question:0
+#: field:res.partner,answers_ids:0
+msgid "Answers"
+msgstr "回答"
+
+#. module: crm_profiling
+#: model:ir.model,name:crm_profiling.model_open_questionnaire
+msgid "open.questionnaire"
+msgstr "open.questionnaire"
+
+#. module: crm_profiling
+#: field:open.questionnaire,questionnaire_id:0
+msgid "Questionnaire name"
+msgstr "質問票の名称"
+
+#. module: crm_profiling
+#: view:res.partner:0
+msgid "Use a questionnaire"
+msgstr "質問票を使う"
+
+#. module: crm_profiling
+#: view:open.questionnaire:0
+msgid "_Cancel"
+msgstr "キャンセル(_C)"
+
+#. module: crm_profiling
+#: field:open.questionnaire,question_ans_ids:0
+msgid "Question / Answers"
+msgstr "質問 / 回答"
+
+#. module: crm_profiling
+#: view:crm_profiling.questionnaire:0
+#: model:ir.actions.act_window,name:crm_profiling.open_questionnaires
+#: model:ir.ui.menu,name:crm_profiling.menu_segm_questionnaire
+#: view:open.questionnaire:0
+msgid "Questionnaires"
+msgstr "質問票"
+
+#. module: crm_profiling
+#: help:crm.segmentation,profiling_active:0
+msgid ""
+"Check                             this box if you want to use this tab as "
+"part of the                              segmentation rule. If not checked, "
+"the criteria beneath will be ignored"
+msgstr "区分の規則としてこのタブを使うのであれば、これをチェックして下さい。チェックしないと下記の基準は無視されます。"
+
+#. module: crm_profiling
+#: constraint:crm.segmentation:0
+msgid "Error ! You can not create recursive profiles."
+msgstr "エラー：重複したプロファイルを作ることはできません。"
+
+#. module: crm_profiling
+#: field:crm.segmentation,profiling_active:0
+msgid "Use The Profiling Rules"
+msgstr "プロファイル規則を使って下さい。"
+
+#. module: crm_profiling
+#: constraint:res.partner:0
+msgid "Error ! You cannot create recursive associated members."
+msgstr "エラー：再帰的なメンバーを作ることはできません。"
+
+#. module: crm_profiling
+#: view:crm_profiling.question:0
+#: field:crm_profiling.question,answers_ids:0
+msgid "Avalaible answers"
+msgstr "有効な回答"
+
+#. module: crm_profiling
+#: field:crm.segmentation,answer_yes:0
+msgid "Included Answers"
+msgstr "含まれた回答"
+
+#. module: crm_profiling
+#: view:crm_profiling.question:0
+#: field:crm_profiling.questionnaire,questions_ids:0
+#: model:ir.actions.act_window,name:crm_profiling.open_questions
+#: model:ir.ui.menu,name:crm_profiling.menu_segm_answer
+msgid "Questions"
+msgstr "質問"
+
+#. module: crm_profiling
+#: field:crm.segmentation,parent_id:0
+msgid "Parent Profile"
+msgstr "親プロファイル"
+
+#. module: crm_profiling
+#: view:open.questionnaire:0
+msgid "Cancel"
+msgstr "キャンセル"
+
+#. module: crm_profiling
+#: model:ir.model,name:crm_profiling.model_res_partner
+msgid "Partner"
+msgstr "パートナ"
+
+#. module: crm_profiling
+#: code:addons/crm_profiling/wizard/open_questionnaire.py:77
+#: field:crm_profiling.questionnaire,name:0
+#: model:ir.model,name:crm_profiling.model_crm_profiling_questionnaire
+#: view:open.questionnaire:0
+#: view:open.questionnaire.line:0
+#: field:open.questionnaire.line,wizard_id:0
+#, python-format
+msgid "Questionnaire"
+msgstr "質問票"
+
+#. module: crm_profiling
+#: view:open.questionnaire:0
+msgid "Save Data"
+msgstr "データを保存する"

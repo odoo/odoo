@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2012-04-16 21:32+0000\n"
+"PO-Revision-Date: 2012-04-22 10:35+0000\n"
 "Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-04-17 05:36+0000\n"
-"X-Generator: Launchpad (build 15099)\n"
+"X-Launchpad-Export-Date: 2012-04-23 05:29+0000\n"
+"X-Generator: Launchpad (build 15135)\n"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -38,6 +38,8 @@ msgid ""
 "Determine the display order in the report 'Accounting \\ Reporting \\ "
 "Generic Reporting \\ Taxes \\ Taxes Report'"
 msgstr ""
+"Avgör presentationsordningen för rapporten 'Redovisning / Rapporter / "
+"Generella rapporter / Skatter / Skattedeklaration'"
 
 #. module: account
 #: view:account.move.reconcile:0
@@ -86,7 +88,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_report_aged_receivable
 msgid "Aged Receivable Till Today"
-msgstr "Periodiserad reskontra till dagens datum"
+msgstr ""
 
 #. module: account
 #: model:process.transition,name:account.process_transition_invoiceimport0
@@ -314,6 +316,7 @@ msgid ""
 "Installs localized accounting charts to match as closely as possible the "
 "accounting needs of your company based on your country."
 msgstr ""
+"Installerar en anpassad kontoplan för ditt land och ditt bolags behov."
 
 #. module: account
 #: code:addons/account/wizard/account_move_journal.py:63
@@ -437,7 +440,7 @@ msgstr ""
 #: field:account.tax.template,chart_template_id:0
 #: field:wizard.multi.charts.accounts,chart_template_id:0
 msgid "Chart Template"
-msgstr "Tabellmall"
+msgstr "Mall för kontoplan"
 
 #. module: account
 #: help:account.model.line,amount_currency:0
@@ -468,11 +471,6 @@ msgid ""
 "amount of each area of the tax declaration for your country. It’s presented "
 "in a hierarchical structure, which can be modified to fit your needs."
 msgstr ""
-"Momstabell är en trädvy som återspeglar strukturen i momssatser (eller "
-"momskoder) och visar den aktuella skattesituationen. Momstabellen "
-"representerar de avsnitt som skall redovisas på skattedeklarationen för ditt "
-"land. Den presenteras i en hierarkisk struktur, som kan modifieras för att "
-"passa dina behov."
 
 #. module: account
 #: view:account.analytic.line:0
@@ -697,7 +695,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_aged_receivable
 #, python-format
 msgid "Receivable Accounts"
-msgstr "Receivable Accounts"
+msgstr "Kundfordringskonton"
 
 #. module: account
 #: constraint:account.move.line:0
@@ -911,7 +909,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_tax_code_tree
 #: model:ir.ui.menu,name:account.menu_action_tax_code_tree
 msgid "Chart of Taxes"
-msgstr "Momssatser"
+msgstr "Skattetabell"
 
 #. module: account
 #: view:account.fiscalyear:0
@@ -966,7 +964,7 @@ msgstr "Konsolidering"
 #: model:account.financial.report,name:account.account_financial_report_liability0
 #: model:account.financial.report,name:account.account_financial_report_liabilitysum0
 msgid "Liability"
-msgstr "Ansvar"
+msgstr "Skuld"
 
 #. module: account
 #: view:account.entries.report:0
@@ -1347,7 +1345,7 @@ msgstr "Nivå"
 #: model:ir.ui.menu,name:account.menu_tax_report
 #: model:ir.ui.menu,name:account.next_id_27
 msgid "Taxes"
-msgstr "Skatter"
+msgstr "Momskoder"
 
 #. module: account
 #: code:addons/account/wizard/account_financial_report.py:69
@@ -1428,7 +1426,7 @@ msgstr "Bankkontoutdrag"
 #. module: account
 #: field:res.partner,property_account_receivable:0
 msgid "Account Receivable"
-msgstr "Account Receivable"
+msgstr "Fordringar"
 
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_central_journal
@@ -1471,7 +1469,7 @@ msgstr "Maximum write-off amount"
 #. module: account
 #: view:account.invoice:0
 msgid "Compute Taxes"
-msgstr "Compute Taxes"
+msgstr "Beräkna skatt"
 
 #. module: account
 #: field:account.chart.template,code_digits:0
@@ -1713,9 +1711,9 @@ msgid ""
 "Have a complete tree view of all journal items per account code by clicking "
 "on an account."
 msgstr ""
-"Visar bolagets kontoplan per bokföringsår och selekterat på period. Du får "
-"en komplett trädvy över alla verifikationer per konto genom att klicka på "
-"ett konto."
+"Visar bolagets kontoplan per bokföringsår och vald period. Du får en "
+"komplett trädvy över alla verifikationer per konto genom att klicka på ett "
+"konto."
 
 #. module: account
 #: view:account.analytic.account:0
@@ -1725,7 +1723,7 @@ msgstr ""
 #. module: account
 #: view:account.tax.template:0
 msgid "Tax Declaration"
-msgstr "Tax Declaration"
+msgstr "Skattedeklaration"
 
 #. module: account
 #: help:account.journal.period,active:0
@@ -1789,7 +1787,7 @@ msgstr "Draft statement"
 #. module: account
 #: view:account.tax:0
 msgid "Tax Declaration: Credit Notes"
-msgstr "Momsdeklaration: Kreditfakturor"
+msgstr "Skattedeklaration: Kreditfakturor"
 
 #. module: account
 #: field:account.move.line.reconcile,credit:0
@@ -1845,7 +1843,7 @@ msgstr "Registrera verifikation"
 #. module: account
 #: view:account.tax:0
 msgid "Tax Declaration: Invoices"
-msgstr "Momsdeklaration: Faktura"
+msgstr "Skattedeklaration: Fakturor"
 
 #. module: account
 #: field:account.cashbox.line,subtotal:0
@@ -2012,7 +2010,7 @@ msgstr "Utkast"
 #. module: account
 #: report:account.journal.period.print.sale.purchase:0
 msgid "VAT Declaration"
-msgstr ""
+msgstr "Skattedeklaration"
 
 #. module: account
 #: field:account.move.reconcile,line_partial_ids:0
@@ -2068,7 +2066,7 @@ msgstr "Innevarande bokf.år"
 #. module: account
 #: view:account.tax.chart:0
 msgid "Account tax charts"
-msgstr "Momskonton"
+msgstr "Skattetabell"
 
 #. module: account
 #: constraint:account.period:0
@@ -2531,8 +2529,8 @@ msgid ""
 "The fiscal position will determine taxes and the accounts used for the "
 "partner."
 msgstr ""
-"Finansiell position används för att definiera vilken moms och vilket konto "
-"som skall användas för ett företag."
+"Skatteregion används för att avgöra vilka skatteregler, momskoder och "
+"konton, som gäller vid handel med ett företag."
 
 #. module: account
 #: view:account.print.journal:0
@@ -2778,7 +2776,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_tax_code_list
 #: model:ir.ui.menu,name:account.menu_action_tax_code_list
 msgid "Tax codes"
-msgstr "Momskoder"
+msgstr "Skattedeklarationsrubriker"
 
 #. module: account
 #: view:account.account:0
@@ -2945,8 +2943,7 @@ msgid ""
 "Set if the amount of tax must be included in the base amount before "
 "computing the next taxes."
 msgstr ""
-"Set if the amount of tax must be included in the base amount before "
-"computing the next taxes."
+"Satt om skatten måste ingå i beloppet för nästa steg i skatteberäkningen."
 
 #. module: account
 #: help:account.journal,user_id:0
@@ -3056,7 +3053,7 @@ msgstr "Modell"
 #. module: account
 #: help:account.invoice.tax,base_code_id:0
 msgid "The account basis of the tax declaration."
-msgstr "The account basis of the tax declaration."
+msgstr "Konton som ligger till grund för skattedeklarationen."
 
 #. module: account
 #: selection:account.account,type:0
@@ -4116,7 +4113,7 @@ msgstr "Förfallna konton"
 #: code:addons/account/account.py:184
 #, python-format
 msgid "Balance Sheet (Liability account)"
-msgstr ""
+msgstr "Balansrapport (skuldkonton)"
 
 #. module: account
 #: help:account.invoice,date_invoice:0
@@ -4466,7 +4463,7 @@ msgstr ""
 #. module: account
 #: help:account.vat.declaration,chart_tax_id:0
 msgid "Select Charts of Taxes"
-msgstr "Välj momstabell"
+msgstr "Välj skattetabell"
 
 #. module: account
 #: view:account.fiscal.position:0
@@ -4629,7 +4626,7 @@ msgstr "No"
 #. module: account
 #: help:account.invoice.tax,tax_code_id:0
 msgid "The tax basis of the tax declaration."
-msgstr "The tax basis of the tax declaration."
+msgstr "Skattedelen som ligger till grund för skattedeklarationen"
 
 #. module: account
 #: view:account.addtmpl.wizard:0
@@ -4817,7 +4814,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_vat_declaration
 #: model:ir.model,name:account.model_account_vat_declaration
 msgid "Account Vat Declaration"
-msgstr ""
+msgstr "Skattedeklaration"
 
 #. module: account
 #: report:account.invoice:0
@@ -5171,7 +5168,7 @@ msgstr "Transaktion"
 #: help:account.tax.template,ref_tax_code_id:0
 #: help:account.tax.template,tax_code_id:0
 msgid "Use this code for the VAT declaration."
-msgstr "Use this code for the VAT declaration."
+msgstr "Använd denna kod till skattedeklarationen"
 
 #. module: account
 #: field:account.partner.reconcile.process,progress:0
@@ -5345,7 +5342,7 @@ msgstr "Ändra valuta"
 #. module: account
 #: view:account.invoice:0
 msgid "This action will erase taxes"
-msgstr ""
+msgstr "Det här momentet raderar skatten"
 
 #. module: account
 #: model:process.node,note:account.process_node_accountingentries0
@@ -5452,7 +5449,7 @@ msgstr "Skatteregionsmall"
 #: view:account.chart:0
 #: view:account.tax.chart:0
 msgid "Open Charts"
-msgstr "Open Charts"
+msgstr "Öppna kontoplaner"
 
 #. module: account
 #: view:account.fiscalyear.close.state:0
@@ -5643,7 +5640,7 @@ msgstr "Värdering"
 #: code:addons/account/report/account_partner_balance.py:301
 #, python-format
 msgid "Receivable and Payable Accounts"
-msgstr "Receivable and Payable Accounts"
+msgstr ""
 
 #. module: account
 #: field:account.fiscal.position.account.template,position_id:0
@@ -5970,7 +5967,7 @@ msgstr "Analysrad"
 #. module: account
 #: field:product.template,taxes_id:0
 msgid "Customer Taxes"
-msgstr "Produktskatter"
+msgstr "Skatt knuten till kunder"
 
 #. module: account
 #: help:account.model,name:0
@@ -6050,7 +6047,7 @@ msgstr "Välj ett bokföringsår att stänga"
 #. module: account
 #: help:account.chart.template,tax_template_ids:0
 msgid "List of all the taxes that have to be installed by the wizard"
-msgstr "Lista med all skatt som har blivit installerad av assistenten"
+msgstr "Lista med all skatt som har blivit installerad av guiden"
 
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_intracom
@@ -6120,7 +6117,7 @@ msgstr "Avbryt"
 #: model:account.account.type,name:account.data_account_type_receivable
 #: selection:account.entries.report,type:0
 msgid "Receivable"
-msgstr "Receivable"
+msgstr "Fordringar"
 
 #. module: account
 #: constraint:account.move.line:0
@@ -6624,7 +6621,7 @@ msgstr ""
 #: model:ir.actions.report.xml,name:account.account_vat_declaration
 #: model:ir.ui.menu,name:account.menu_account_vat_declaration
 msgid "Taxes Report"
-msgstr "Momsrapport"
+msgstr "Skattedeklaration"
 
 #. module: account
 #: selection:account.journal.period,state:0
@@ -6770,7 +6767,7 @@ msgstr "Account Reconciliation"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax
 msgid "Taxes Fiscal Position"
-msgstr ""
+msgstr "Skatteregion"
 
 #. module: account
 #: report:account.general.ledger:0
@@ -6807,7 +6804,7 @@ msgstr ""
 #: field:account.chart.template,complete_tax_set:0
 #: field:wizard.multi.charts.accounts,complete_tax_set:0
 msgid "Complete Set of Taxes"
-msgstr ""
+msgstr "Fullständig uppsättning av skatter"
 
 #. module: account
 #: view:account.chart.template:0
@@ -6817,7 +6814,7 @@ msgstr "Egenskaper"
 #. module: account
 #: model:ir.model,name:account.model_account_tax_chart
 msgid "Account tax chart"
-msgstr ""
+msgstr "Skattetabell"
 
 #. module: account
 #: constraint:res.partner.bank:0
@@ -6872,7 +6869,7 @@ msgstr "Child Codes"
 #. module: account
 #: view:account.tax.template:0
 msgid "Taxes used in Sales"
-msgstr ""
+msgstr "Utgående moms"
 
 #. module: account
 #: code:addons/account/account_invoice.py:495
@@ -7055,6 +7052,8 @@ msgid ""
 "Can not find a chart of account, you should create one from the "
 "configuration of the accounting menu."
 msgstr ""
+"Kontoplan saknas för ditt bolag, du måste skapa i konfigurations-menyn i "
+"redovisningen."
 
 #. module: account
 #: field:account.chart.template,property_account_expense_opening:0
@@ -7075,7 +7074,7 @@ msgstr "Parent Account Template"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_configuration_installer
 msgid "Install your Chart of Accounts"
-msgstr ""
+msgstr "Installera din kontoplan"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -7533,7 +7532,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_chart_template
 msgid "Templates for Account Chart"
-msgstr "Templates for Account Chart"
+msgstr "Mall för kontoplan"
 
 #. module: account
 #: help:account.model.line,sequence:0
@@ -7556,7 +7555,7 @@ msgstr ""
 #. module: account
 #: view:product.product:0
 msgid "Sale Taxes"
-msgstr "Sale Taxes"
+msgstr "Utgående moms"
 
 #. module: account
 #: field:account.financial.report,name:0
@@ -8000,7 +7999,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Can not find a chart of accounts for this company, you should create one."
-msgstr ""
+msgstr "Kontoplan saknas för detta företag, du måste skapa en."
 
 #. module: account
 #: view:account.invoice:0
@@ -8164,13 +8163,13 @@ msgid ""
 "useful because it enables you to preview at any time the tax that you owe at "
 "the start and end of the month or quarter."
 msgstr ""
-"Denna meny skriver ut en momsdeklaration baseras på fakturor eller "
+"Detta menyval skriver ut en skattedeklaration baseras på fakturor eller "
 "betalningar. Välj en eller flera perioder av räkenskapsåret. Information som "
-"krävs för att en skall skattedeklaration genereras automatiskt hämtas av "
-"OpenERP från fakturor (eller betalningar, i vissa länder). Dessa data "
-"uppdateras i realtid. Det är väldigt användbart eftersom det gör att du kan "
-"förhandsgranska, när som helst, den skatt som du är skyldig i början och "
-"slutet av månaden eller kvartalet."
+"krävs för att skapa skattedeklarationen hämtas av OpenERP från fakturor "
+"(eller betalningar, i vissa länder). Dessa data uppdateras i realtid. Det är "
+"väldigt användbart eftersom det gör att du kan förhandsgranska, när som "
+"helst, den skatt som du är skyldig i början och slutet av månaden eller "
+"kvartalet."
 
 #. module: account
 #: report:account.invoice:0
@@ -8295,7 +8294,7 @@ msgstr "Avstämning"
 #: view:account.chart.template:0
 #: field:account.chart.template,property_account_receivable:0
 msgid "Receivable Account"
-msgstr "Konto för kundfordran"
+msgstr "Kundfordringskonto"
 
 #. module: account
 #: view:account.invoice:0
@@ -9234,7 +9233,7 @@ msgstr "juli"
 #. module: account
 #: view:account.account:0
 msgid "Chart of accounts"
-msgstr "Chart of accounts"
+msgstr "Kontoplan"
 
 #. module: account
 #: field:account.subscription.line,subscription_id:0
@@ -9581,7 +9580,7 @@ msgstr "Valutakurs"
 #: field:account.account,tax_ids:0
 #: field:account.account.template,tax_ids:0
 msgid "Default Taxes"
-msgstr "Default Taxes"
+msgstr "Standardmoms"
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -9960,7 +9959,7 @@ msgstr ""
 #. module: account
 #: view:wizard.multi.charts.accounts:0
 msgid "Generate Your Chart of Accounts from a Chart Template"
-msgstr ""
+msgstr "Skapa en kontoplan från en mall"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_invoice_report_all
@@ -10199,7 +10198,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_chart
 msgid "Account Analytic Chart"
-msgstr ""
+msgstr "Objektkontoplan"
 
 #. module: account
 #: help:account.invoice,residual:0
@@ -10370,7 +10369,7 @@ msgstr "Bank Accounts"
 #. module: account
 #: field:res.partner,credit:0
 msgid "Total Receivable"
-msgstr "Total Receivable"
+msgstr "Total fordran"
 
 #. module: account
 #: view:account.account:0
@@ -10529,7 +10528,7 @@ msgstr "Usually 1 or -1."
 #: model:ir.actions.act_window,name:account.action_account_analytic_chart
 #: model:ir.ui.menu,name:account.menu_action_analytic_account_tree2
 msgid "Chart of Analytic Accounts"
-msgstr "Kontoplan för objekt"
+msgstr "Objektkontoplan"
 
 #. module: account
 #: field:account.chart.template,property_account_expense:0

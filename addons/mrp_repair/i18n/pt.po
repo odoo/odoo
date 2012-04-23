@@ -4,22 +4,22 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2012-02-17 09:10+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2012-04-20 09:46+0000\n"
+"Last-Translator: ThinkOpen Solutions <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-18 06:50+0000\n"
-"X-Generator: Launchpad (build 14814)\n"
+"X-Launchpad-Export-Date: 2012-04-21 05:29+0000\n"
+"X-Generator: Launchpad (build 15120)\n"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Fees Line"
-msgstr "Liha de Comissões"
+msgstr "Linha de Comissões"
 
 #. module: mrp_repair
 #: help:mrp.repair,state:0
@@ -35,6 +35,18 @@ msgid ""
 "* The 'Done' state is set when repairing is completed.            \n"
 "* The 'Cancelled' state is used when user cancel repair order."
 msgstr ""
+" * O estado 'Rascunho' é usado quando um utilizador codifica uma nova e não "
+"confirmada ordem de reparação. \n"
+"* O estado'Confirmado' é usado quando o utilizador confirma a ordem de "
+"reparação. \n"
+"* O estado 'Pronto para reparar' é usado para iniciar a reparação, o "
+"utilizador pode começar a reparar somente após a ordem de reparação ser "
+"confirmada. \n"
+"* O estado 'Para ser facturado' é usado para gerar a factura antes ou depois "
+"da reparação ser feita. \n"
+"* O estado 'Concluído' é definido quando a reparação for concluída. \n"
+"* O estado 'Cancelado' é usado quando o utilizador cancelar a ordem de "
+"reparação."
 
 #. module: mrp_repair
 #: field:mrp.repair.line,move_id:0
@@ -50,6 +62,11 @@ msgid ""
 "date on the production lot in order to know if whether the repair should be "
 "invoiced to the customer or not."
 msgstr ""
+"Ordens de reparação permitem que organize correcções ao artigo. O pedido de "
+"reparação, pode detalhar os componentes que remover, adicionar ou substituir "
+"e registar o tempo gasto nas diferentes operações. A ordem de reparação "
+"utiliza a data de garantia sobre o lote de produção, a fim de saber se a "
+"reparação deve ser facturada ao cliente ou não."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -69,12 +86,16 @@ msgid ""
 "that you can select the locations in the Info tab, if you have the extended "
 "view."
 msgstr ""
+"Marque esta caixa se deseja gerir a entrega assim que o artigo seja "
+"reparado. Se verificado, ele irá criar uma colheita com o artigo "
+"seleccionado. Note que pode seleccionar os locais na aba Info, se tiver a "
+"visão estendida."
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.action_cancel_repair
 #: view:mrp.repair.cancel:0
 msgid "Cancel Repair Order"
-msgstr ""
+msgstr "Cancelar Ordem de reparação"
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,to_invoice:0
@@ -96,13 +117,13 @@ msgstr "Agrupado por endereço da factura do terceiro"
 #: code:addons/mrp_repair/mrp_repair.py:435
 #, python-format
 msgid "No product defined on Fees!"
-msgstr ""
+msgstr "Nenhum produto definido em taxas!"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 #: field:mrp.repair,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Empresa"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -146,7 +167,7 @@ msgstr "Limite de Garantia"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Notes"
-msgstr ""
+msgstr "Notes"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -187,6 +208,8 @@ msgstr "Movimento"
 #, python-format
 msgid "You have to select a Partner Invoice Address in the repair form !"
 msgstr ""
+"Tem que seleccionar um endereço da factura Parceiro no formulário de "
+"reparação!"
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.action_repair_order_tree
@@ -197,13 +220,13 @@ msgstr "Ordens de Reparação"
 #. module: mrp_repair
 #: model:ir.actions.report.xml,name:mrp_repair.report_mrp_repair
 msgid "Quotation / Order"
-msgstr "Cotação / Ordem"
+msgstr "Cotação / Ordem de venda"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/mrp_repair.py:337
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Aviso"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -214,7 +237,7 @@ msgstr "Informação Extra"
 #: field:mrp.repair.fee,repair_id:0
 #: field:mrp.repair.line,repair_id:0
 msgid "Repair Order Reference"
-msgstr ""
+msgstr "Referência da ordem de reparação"
 
 #. module: mrp_repair
 #: selection:mrp.repair.line,state:0
@@ -225,7 +248,7 @@ msgstr "Rascunho"
 #: code:addons/mrp_repair/mrp_repair.py:384
 #, python-format
 msgid "No account defined for partner \"%s\"."
-msgstr ""
+msgstr "Não tem conta definida para o parceiro \"%s\"."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -288,7 +311,7 @@ msgstr "Erro!"
 #. module: mrp_repair
 #: field:mrp.repair.line,product_uom_qty:0
 msgid "Quantity (UoM)"
-msgstr "Quantidade (oM)"
+msgstr "Quantidade (UdM)"
 
 #. module: mrp_repair
 #: help:mrp.repair.line,state:0
@@ -301,6 +324,14 @@ msgid ""
 "                  \n"
 "* The 'Cancelled' state is set automatically when user cancel repair order."
 msgstr ""
+" * O estado 'Rascunho' é definido automaticamente como rascunho quando a "
+"ordem de reparação está em estado de rascunho. \n"
+"* O estado 'Confirmado' é definido automaticamente como confirmado quando a "
+"ordem de reparação está em estado confirmado. \n"
+"* O estado 'Concluído' é definido automaticamente quando a ordem reparo seja "
+"concluída. \n"
+"* O estado 'Cancelado' é definido automaticamente quando o utilizador "
+"cancelar a ordem de reparação."
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -313,6 +344,8 @@ msgid ""
 "This operation will cancel the Repair process, but will not cancel it's "
 "Invoice. Do you want to continue?"
 msgstr ""
+"Esta operação irá cancelar o processo de reparação, mas não cancela a "
+"factura. Você quer continuar?"
 
 #. module: mrp_repair
 #: field:mrp.repair,pricelist_id:0
@@ -334,12 +367,12 @@ msgstr "Atenção!"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Search Reair Orders"
-msgstr ""
+msgstr "Pesquisar Ordens de Reparação"
 
 #. module: mrp_repair
 #: report:repair.order:0
 msgid "(Add)"
-msgstr ""
+msgstr "(Adicionar)"
 
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair_line
@@ -379,6 +412,7 @@ msgstr "Cancelado"
 #, python-format
 msgid "Production lot is required for opration line with product '%s'"
 msgstr ""
+"Lote de produção é necessário para a linha de operação com artigo '%s'"
 
 #. module: mrp_repair
 #: selection:mrp.repair,invoice_method:0
@@ -415,7 +449,7 @@ msgstr "Criar facturas"
 #. module: mrp_repair
 #: report:repair.order:0
 msgid "(Remove)"
-msgstr ""
+msgstr "(Remove)"
 
 #. module: mrp_repair
 #: selection:mrp.repair.line,type:0
@@ -425,17 +459,17 @@ msgstr "Adicionar"
 #. module: mrp_repair
 #: view:mrp.repair.make_invoice:0
 msgid "Do you really want to create the invoice(s) ?"
-msgstr ""
+msgstr "Deseja realmente criar a factura(s) ?"
 
 #. module: mrp_repair
 #: field:mrp.repair,name:0
 msgid "Repair Reference"
-msgstr ""
+msgstr "Referêcia de reparação"
 
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair
 msgid "Repair Order"
-msgstr ""
+msgstr "Ordem de Reparação"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
@@ -445,7 +479,7 @@ msgstr "Sobre Reparação"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Ready To Repair"
-msgstr ""
+msgstr "Pronto a reparar"
 
 #. module: mrp_repair
 #: field:mrp.repair,amount_untaxed:0
@@ -486,13 +520,13 @@ msgstr "Data"
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair_fee
 msgid "Repair Fees Line"
-msgstr ""
+msgstr "Linha Taxas de reparação"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/mrp_repair.py:334
 #, python-format
 msgid "You cannot confirm a repair order which has no line."
-msgstr ""
+msgstr "Não pode confirmar uma ordem de reparação que não tem nenhuma linha."
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
@@ -524,12 +558,12 @@ msgstr "Fim da Reparação"
 #: code:addons/mrp_repair/mrp_repair.py:442
 #, python-format
 msgid "No account defined for product \"%s\"."
-msgstr ""
+msgstr "Não tem conta definida para o artigo \"%s\"."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Quotations"
-msgstr ""
+msgstr "Citações"
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,product_uom_qty:0
@@ -575,6 +609,10 @@ msgid ""
 "operation and fee you will add will be set as 'not to invoiced' by default. "
 "Note that you can change manually afterwards."
 msgstr ""
+"O limite de garantia é calculado como: data de último movimento + garantia "
+"definidos no artigo seleccionado. Se a data actual está abaixo do limite de "
+"garantia, cada operação e taxa que irá adicionar será definida como \"não "
+"facturados\" por padrão. Note que pode mudar manualmente depois."
 
 #. module: mrp_repair
 #: field:mrp.repair,invoice_id:0
@@ -620,13 +658,13 @@ msgid ""
 "pricelist and invoicing address."
 msgstr ""
 "Este campo permite-lhe alterar o fluxo de trabalho da ordem de reparação. Se "
-"o valor selecionado é diferete de 'Sem Factura' também permite-lhe "
-"selecionar a lista de preço e o endereço de facturação."
+"o valor seleccionado é diferente de 'Sem Factura' também lhe permite "
+"seleccionar a lista de preço e o endereço de facturação."
 
 #. module: mrp_repair
 #: view:mrp.repair.make_invoice:0
 msgid "Create Invoice"
-msgstr "Criar fatura"
+msgstr "Criar factura"
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,name:0
@@ -643,7 +681,7 @@ msgstr "Linhas de Operação"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "invoiced"
-msgstr "faturado"
+msgstr "facturado"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -681,7 +719,7 @@ msgstr "Impostos:"
 #. module: mrp_repair
 #: field:mrp.repair,picking_id:0
 msgid "Picking"
-msgstr ""
+msgstr "Picking"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -692,13 +730,13 @@ msgstr "Montante sem Imposto"
 #: code:addons/mrp_repair/wizard/cancel_repair.py:41
 #, python-format
 msgid "Active ID is not Found"
-msgstr ""
+msgstr "ID activo não é encontrado"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/wizard/cancel_repair.py:49
 #, python-format
 msgid "Repair order is not invoiced."
-msgstr ""
+msgstr "Ordem de reparação não é facturada."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -708,7 +746,7 @@ msgstr "Montante Total"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "UoM"
-msgstr "UoM"
+msgstr "UdM"
 
 #. module: mrp_repair
 #: selection:mrp.repair.line,type:0
@@ -719,7 +757,7 @@ msgstr "Remover"
 #: field:mrp.repair.fee,product_uom:0
 #: field:mrp.repair.line,product_uom:0
 msgid "Product UoM"
-msgstr "Produto UoM"
+msgstr "Produto UdM"
 
 #. module: mrp_repair
 #: field:mrp.repair,partner_invoice_id:0
