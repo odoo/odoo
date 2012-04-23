@@ -88,6 +88,17 @@ class wizard(osv.osv_memory):
             help="This text is included in the welcome email sent to the users"),
     }
 
+    def prepare_new_user_data(self, u, wiz, password):
+        return {
+                    'name': u.name,
+                    'login': u.user_email,
+                    'password': password,
+                    'user_email': u.user_email,
+                    'context_lang': u.lang,
+                    'share': True,
+                    'partner_id': u.partner_id and u.partner_id.id,
+                }
+
     def _default_user_ids(self, cr, uid, context):
         """ determine default user_ids from the active records """
         def create_user_from_address(address):
@@ -145,7 +156,7 @@ class wizard(osv.osv_memory):
             existing_logins = [u.login for u in existing_users]
             
             # create new users in portal (skip existing logins)
-            new_users_data = [ user_obj.prepare_new_user_data(u, wiz, random_password())
+            new_users_data = [ self.prepare_new_user_data(u, wiz, random_password())
                 for u in wiz.user_ids if u.user_email not in existing_logins ]
             portal_obj.write(cr, ROOT_UID, [wiz.portal_id.id],
                 {'users': [(0, 0, data) for data in new_users_data]}, context0)
