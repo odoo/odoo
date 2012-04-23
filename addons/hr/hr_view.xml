@@ -242,7 +242,7 @@
         </record>
 
         <record id="action2" model="ir.actions.act_window">
-            <field name="name">Subordonate Hierarchy</field>
+            <field name="name">Subordinate Hierarchy</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hr.employee</field>
             <field name="domain">[('id','in',active_ids)]</field>
@@ -254,7 +254,7 @@
             <field eval="'action'" name="key"/>
             <field eval="'client_action_multi'" name="key2"/>
             <field eval="['hr.employee']" name="models"/>
-            <field name="name">Subordonate Hierarchy</field>
+            <field name="name">Subordinate Hierarchy</field>
             <field eval="'ir.actions.act_window,'+str(action2)" name="value"/>
             <field eval="True" name="isobject"/>
             <field eval="True" name="replace"/>
@@ -315,7 +315,7 @@
             parent="hr.menu_hr_configuration" sequence="1"/>
 
         <record id="open_view_categ_tree" model="ir.actions.act_window">
-            <field name="name">Categories structure</field>
+            <field name="name">Categories Structure</field>
             <field name="res_model">hr.employee.category</field>
             <field name="view_type">tree</field>
             <field name="view_id" ref="view_employee_category_tree"/>
