@@ -275,7 +275,10 @@
         </tr>
         <tr>
             <td class="oe_leftbar" valign="top">
-                <a href="#" class="oe_logo"><img t-att-src='_s + "/web/static/src/img/logo.png"'/></a>
+                <t t-js="d">
+                    d.url = '/' + (window.location.search || '');
+                </t>
+                <a t-att-href="url" class="oe_logo"><img t-att-src='_s + "/web/static/src/img/logo.png"'/></a>
                 <div class="oe_secondary_menus_container"/>
                 <div class="oe_footer">
                     Powered by <a href="http://www.openerp.com"><span>Open</span>ERP</a>
@@ -324,7 +327,7 @@
     </ul>
 </t>
 <t t-name="Menu.secondary.link">
-    <a href="#"
+    <a t-attf-href="#menu_id=#{menu.id}&amp;action_id=#{menu.action ? menu.action.split(',')[1] : ''}"
         t-att-class="menu.children.length ? 'oe_menu_toggler' : 'oe_menu_leaf'"
         t-att-data-menu="menu.id"
         t-att-data-action-model="menu.action ? menu.action.split(',')[0] : ''"
@@ -342,7 +345,7 @@
     <ul class="oe_user_menu oe_topbar_item">
         <li class="oe_dropdown">
             <a href="#" class="oe_dropdown_toggle">
-                <img class="oe_topbar_avatar" t-att-data-default-src="_s + '/web/static/src/img/topbar-avatar.png'"/>
+                <img class="oe_topbar_avatar" t-att-data-default-src="_s + '/web/static/src/img/user_menu_avatar.png'"/>
                 <span class="oe_topbar_name"/>
             </a>
             <ul class="oe_dropdown_options">
@@ -515,14 +518,51 @@
                 <button class="oe_dropdown_toggle"><t t-esc="section.label"/></button>
                 <ul class="oe_dropdown_menu">
                     <li t-foreach="widget.items[section.name]" t-as="item" t-att-class="item.classname">
-                        <a class="oe_sidebar_action_a" t-att-title="item.title" href="#" t-att-data-section="section.name" t-att-data-index="item_index">
+                        <a class="oe_sidebar_action_a" t-att-title="item.title" t-att-data-section="section.name" t-att-data-index="item_index" t-att-href="item.url" target="_blank">
                             <t t-raw="item.label"/>
                         </a>
+                    </li>
+                    <li t-if="section.name == 'files'" class="oe_sidebar_add" style="display:none;">
+                        Input type file stuff
                     </li>
                 </ul>
             </div>
         </t>
     </div>
+</t>
+<t t-name="Sidebar.attachments">
+    <div class="oe-sidebar-attachments-toolbar">
+        <div class="oe-binary-file-set" style="float: right">
+            <form class="oe-binary-form" t-attf-target="#{element_id}_iframe"
+                method="post" enctype="multipart/form-data" action="/web/binary/upload_attachment">
+                <input type="hidden" name="session_id" t-att-value="session.session_id"/>
+                <input type="hidden" name="callback" t-attf-value="#{element_id}_iframe"/>
+                <input type="hidden" name="model" t-att-value="view.dataset.model"/>
+                <input type="hidden" name="id" t-att-value="view.datarecord.id"/>
+                <button class="oe_button" type="button">
+                    <img t-att-src='_s + "/web/static/src/img/throbber.gif"' width="16" height="16" style="display: none"/>
+                    <span>Add</span>
+                </button>
+                <input type="file" class="oe-binary-file" name="ufile" title="Add attachment"
+                    t-att-onclick="view.datarecord.id ? null : 'alert(\'No record selected ! You can only attach to existing record.\'); return false;'"/>
+            </form>
+            <iframe t-attf-id="#{element_id}_iframe" t-attf-name="#{element_id}_iframe" style="display: none"/>
+        </div>
+    </div>
+    <br style="clear: both"/>
+    <ul class="oe-sidebar-attachments-items">
+        <li t-foreach="attachments" t-as="attachment">
+            <t t-if="attachment.type == 'binary'" t-set="attachment.url" t-value="_s + '/web/binary/saveas?session_id='
+                + session.session_id + '&amp;model=ir.attachment&amp;id=' + attachment.id
+                + '&amp;field=datas&amp;filename_field=name&amp;t=' + (new Date().getTime())"/>
+            <a class="oe-sidebar-attachments-link" t-att-href="attachment.url" target="_blank">
+                <t t-esc="attachment.name"/>
+            </a>
+            <a href="#" class="oe-sidebar-attachment-delete" t-att-data-id="attachment.id" t-attf-title="Delete the attachment #{attachment.name}">
+                <img t-att-src='_s + "/web/static/src/img/attachments-close.png"' width="15" height="15" border="0"/>
+            </a>
+        </li>
+    </ul>
 </t>
 
 <t t-name="TreeView">
@@ -633,7 +673,7 @@
 </t>
 <tr t-name="ListView.row" t-att-class="row_parity"
         t-att-data-id="record.get('id')"
-        t-att-style="view.color_for(record)">
+        t-att-style="view.style_for(record)">
     <t t-foreach="columns" t-as="column">
         <td t-if="column.meta">
 
@@ -678,8 +718,8 @@
             <button type="button" class="oe_button oe_form_button_delete">Delete</button>
         </span>
         <span class="oe_form_buttons_edit">
-            <button type="button" class="oe_button oe_form_button_save">Save</button>
-            <button type="button" class="oe_button oe_form_button_cancel">Cancel</button>
+            <button type="button" class="oe_button oe_form_button_save">Save</button> or
+            <a href="#" class="oe_form_button_cancel">Discard</a>
         </span>
     </t>
 </div>
@@ -689,40 +729,6 @@
             <span class="oe_pager_index">0</span><span class="oe_pager_separator"> / </span><span class="oe_pager_count">0</span>
         </t>
     </div>
-</t>
-<t t-name="FormView.sidebar.attachments">
-    <div class="oe-sidebar-attachments-toolbar">
-        <div class="oe-binary-file-set" style="float: right">
-            <form class="oe-binary-form" t-attf-target="#{element_id}_iframe"
-                method="post" enctype="multipart/form-data" action="/web/binary/upload_attachment">
-                <input type="hidden" name="session_id" t-att-value="session.session_id"/>
-                <input type="hidden" name="callback" t-attf-value="#{element_id}_iframe"/>
-                <input type="hidden" name="model" t-att-value="view.dataset.model"/>
-                <input type="hidden" name="id" t-att-value="view.datarecord.id"/>
-                <button class="oe_button" type="button">
-                    <img t-att-src='_s + "/web/static/src/img/throbber.gif"' width="16" height="16" style="display: none"/>
-                    <span>Add</span>
-                </button>
-                <input type="file" class="oe-binary-file" name="ufile" title="Add attachment"
-                    t-att-onclick="view.datarecord.id ? null : 'alert(\'No record selected ! You can only attach to existing record.\'); return false;'"/>
-            </form>
-            <iframe t-attf-id="#{element_id}_iframe" t-attf-name="#{element_id}_iframe" style="display: none"/>
-        </div>
-    </div>
-    <br style="clear: both"/>
-    <ul class="oe-sidebar-attachments-items">
-        <li t-foreach="attachments" t-as="attachment">
-            <t t-if="attachment.type == 'binary'" t-set="attachment.url" t-value="_s + '/web/binary/saveas?session_id='
-                + session.session_id + '&amp;model=ir.attachment&amp;id=' + attachment.id
-                + '&amp;field=datas&amp;filename_field=name&amp;t=' + (new Date().getTime())"/>
-            <a class="oe-sidebar-attachments-link" t-att-href="attachment.url" target="_blank">
-                <t t-esc="attachment.name"/>
-            </a>
-            <a href="#" class="oe-sidebar-attachment-delete" t-att-data-id="attachment.id" t-attf-title="Delete the attachment #{attachment.name}">
-                <img t-att-src='_s + "/web/static/src/img/attachments-close.png"' width="15" height="15" border="0"/>
-            </a>
-        </li>
-    </ul>
 </t>
 <form t-name="FormView.set_default" class="oe_forms oe_frame">
     <t t-set="args" t-value="widget.dialog_options.args"/>
@@ -808,7 +814,7 @@
 <t t-name="FormRenderingNotebook">
     <div>
         <ul t-attf-class="oe_form_notebook #{classnames}">
-            <li t-foreach="pages" t-as="page">
+            <li t-foreach="pages" t-as="page" t-att-modifiers="page.modifiers">
                 <a t-attf-href="##{page.id}">
                     <t t-esc="page.string"/>
                 </a>
@@ -969,16 +975,16 @@
     </t>
 </t>
 <t t-name="FieldText">
-    <t t-if="!widget.get('effective_readonly')">
-        <div class="oe_form_field_text">
-            <textarea rows="6"
-                t-att-name="widget.name"
-                class="field_text"
-                t-att-tabindex="widget.node.attrs.tabindex"
-                t-att-autofocus="widget.node.attrs.autofocus"
-            ></textarea><img class="oe_field_translate oe_input_icon" t-if="widget.field.translate" t-att-src='_s + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"/>
-        </div>
-    </t>
+    <div class="oe_form_field_text">
+        <textarea rows="6"
+            t-att-name="widget.name"
+            class="field_text"
+            t-att-tabindex="widget.node.attrs.tabindex"
+            t-att-autofocus="widget.node.attrs.autofocus"
+        ></textarea>
+        <img class="oe_field_translate oe_input_icon" t-if="widget.field.translate"
+            t-att-src='_s + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"/>
+    </div>
 </t>
 <t t-name="web.datetimepicker">
     <div class="oe_datepicker_root oe_form_field_datetime">
@@ -1037,19 +1043,14 @@
     </t>
 </t>
 <t t-name="FieldReference">
-    <t t-if="!widget.get('effective_readonly')">
-        <table class="oe_form_field_reference oe_frame oe_forms" border="0" cellpadding="0" cellspacing="0">
-        <tr>
-            <td t-attf-class="oe_form_frame_cell oe_form_selection oe_form_view_reference_selection">
-            </td>
-            <td t-attf-class="oe_form_frame_cell oe_form_many2one oe_form_view_reference_m2o" nowrap="true" style="display: none">
-            </td>
-        </tr>
-        </table>
-    </t>
-    <t t-if="widget.get('effective_readonly')">
-        <a href="#" class="oe_form_uri"/>
-    </t>
+    <table class="oe_form_field_reference oe_frame oe_forms" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td t-attf-class="oe_form_frame_cell oe_form_selection oe_form_view_reference_selection">
+        </td>
+        <td t-attf-class="oe_form_frame_cell oe_form_many2one oe_form_view_reference_m2o" nowrap="true" style="display: none">
+        </td>
+    </tr>
+    </table>
 </t>
 <t t-name="FieldBoolean">
     <span class="oe_form_field_boolean">

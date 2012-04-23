@@ -1,9 +1,9 @@
-openerp.web.list = function (openerp) {
-var _t = openerp.web._t,
-   _lt = openerp.web._lt;
-var QWeb = openerp.web.qweb;
-openerp.web.views.add('list', 'openerp.web.ListView');
-openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView# */ {
+openerp.web.list = function (instance) {
+var _t = instance.web._t,
+   _lt = instance.web._lt;
+var QWeb = instance.web.qweb;
+instance.web.views.add('list', 'instance.web.ListView');
+instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListView# */ {
     _template: 'ListView',
     display_name: _lt('List'),
     defaults: {
@@ -33,11 +33,11 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
      * See constructor parameters and method documentations for information on
      * the default behaviors and possible options for the list view.
      *
-     * @constructs openerp.web.ListView
-     * @extends openerp.web.View
+     * @constructs instance.web.ListView
+     * @extends instance.web.View
      *
      * @param parent parent object
-     * @param {openerp.web.DataSet} dataset the dataset the view should work with
+     * @param {instance.web.DataSet} dataset the dataset the view should work with
      * @param {String} view_id the listview's identifier, if any
      * @param {Object} options A set of options used to configure the view
      * @param {Boolean} [options.selectable=true] determines whether view rows are selectable (e.g. via a checkbox)
@@ -56,17 +56,18 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         this.view_id = view_id;
         this.previous_colspan = null;
         this.colors = null;
+        this.fonts = null;
 
         this.columns = [];
 
         this.records = new Collection();
 
-        this.set_groups(new openerp.web.ListView.Groups(this));
+        this.set_groups(new instance.web.ListView.Groups(this));
 
-        if (this.dataset instanceof openerp.web.DataSetStatic) {
-            this.groups.datagroup = new openerp.web.StaticDataGroup(this.dataset);
+        if (this.dataset instanceof instance.web.DataSetStatic) {
+            this.groups.datagroup = new instance.web.StaticDataGroup(this.dataset);
         } else {
-            this.groups.datagroup = new openerp.web.DataGroup(
+            this.groups.datagroup = new instance.web.DataGroup(
                 this, this.model,
                 dataset.get_domain(),
                 dataset.get_context(),
@@ -104,7 +105,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
     /**
      * Set a custom Group construct as the root of the List View.
      *
-     * @param {openerp.web.ListView.Groups} groups
+     * @param {instance.web.ListView.Groups} groups
      */
     set_groups: function (groups) {
         var self = this;
@@ -140,29 +141,53 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         return this.reload_view(null, null, true);
     },
     /**
-     * Returns the color for the provided record in the current view (from the
-     * ``@colors`` attribute)
+     * Returns the style for the provided record in the current view (from the
+     * ``@colors`` and ``@fonts`` attributes)
      *
      * @param {Record} record record for the current row
-     * @returns {String} CSS color declaration
+     * @returns {String} CSS style declaration
      */
-    color_for: function (record) {
-        if (!this.colors) { return ''; }
+    style_for: function (record) {
+        var style= '';
+
         var context = _.extend({}, record.attributes, {
             uid: this.session.uid,
             current_date: new Date().toString('yyyy-MM-dd')
             // TODO: time, datetime, relativedelta
         });
+
+        if (this.fonts) {
+            for(var i=0, len=this.fonts.length; i<len; ++i) {
+                var pair = this.fonts[i],
+                font = pair[0],
+                expression = pair[1];
+                if (py.evaluate(expression, context).toJSON()) {
+                    switch(font) {
+                    case 'bold':
+                        style += 'font-weight: bold;';
+                        break;
+                    case 'italic':
+                        style += 'font-style: italic;';
+                        break;
+                    case 'underline':
+                        style += 'text-decoration: underline;';
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (!this.colors) { return style; }
         for(var i=0, len=this.colors.length; i<len; ++i) {
             var pair = this.colors[i],
                 color = pair[0],
                 expression = pair[1];
             if (py.evaluate(expression, context).toJSON()) {
-                return 'color: ' + color + ';';
+                return style += 'color: ' + color + ';';
             }
             // TODO: handle evaluation errors
         }
-        return '';
+        return style;
     },
     /**
      * Called after loading the list view's description, sets up such things
@@ -200,6 +225,16 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
                         color = pair[0],
                         expr = pair[1];
                     return [color, py.parse(py.tokenize(expr)), expr];
+                }).value();
+        }
+
+        if (this.fields_view.arch.attrs.fonts) {
+            this.fonts = _(this.fields_view.arch.attrs.fonts.split(';')).chain().compact()
+                .map(function(font_pair) {
+                    var pair = font_pair.split(':'),
+                        font = pair[0],
+                        expr = pair[1];
+                    return [font, py.parse(py.tokenize(expr)), expr];
                 }).value();
         }
 
@@ -301,8 +336,8 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         }
 
         // Sidebar
-        if (!this.sidebar && this.options.sidebar && this.options.$sidebar) {
-            this.sidebar = new openerp.web.Sidebar(this);
+        if (!this.sidebar && this.options.$sidebar) {
+            this.sidebar = new instance.web.Sidebar(this);
             this.sidebar.appendTo(this.options.$sidebar);
             this.sidebar.add_toolbar(this.fields_view.toolbar);
         }
@@ -312,7 +347,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
      *
      * Horrifying side-effect: sets the dataset's data on this.dataset?
      *
-     * @param {openerp.web.DataSet} dataset
+     * @param {instance.web.DataSet} dataset
      */
     configure_pager: function (dataset) {
         this.dataset.ids = dataset.ids;
@@ -336,7 +371,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
      * @param {Boolean} [grouped] Should the grouping columns (group and count) be displayed
      */
     setup_columns: function (fields, grouped) {
-        var domain_computer = openerp.web.form.compute_domain;
+        var domain_computer = instance.web.form.compute_domain;
 
         var noop = function () { return {}; };
         var field_to_column = function (field) {
@@ -405,7 +440,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
      *
      * The default implementation asks the list view's view manager to switch
      * to a different view (by calling
-     * :js:func:`~openerp.web.ViewManager.on_mode_switch`), using the
+     * :js:func:`~instance.web.ViewManager.on_mode_switch`), using the
      * provided record index (within the current list view's dataset).
      *
      * If the index is null, ``switch_to_record`` asks for the creation of a
@@ -464,7 +499,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
                 view_id: this.view_id,
                 view_type: "tree",
                 context: this.dataset.get_context(context),
-                toolbar: this.options.sidebar
+                toolbar: !!this.options.$sidebar
             }, callback);
         }
     },
@@ -526,7 +561,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
      */
     do_search: function (domain, context, group_by) {
         this.page = 0;
-        this.groups.datagroup = new openerp.web.DataGroup(
+        this.groups.datagroup = new instance.web.DataGroup(
             this, this.model, domain, context, group_by);
         this.groups.datagroup.sort = this.dataset._sort;
 
@@ -598,7 +633,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             return;
         }
 
-        var c = new openerp.web.CompoundContext();
+        var c = new instance.web.CompoundContext();
         c.set_eval_context(_.extend({
             active_id: id,
             active_ids: [id],
@@ -615,7 +650,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
      *
      * @param {Number} index index of the record in the dataset
      * @param {Object} id identifier of the activated record
-     * @param {openerp.web.DataSet} dataset dataset in which the record is available (may not be the listview's dataset in case of nested groups)
+     * @param {instance.web.DataSet} dataset dataset in which the record is available (may not be the listview's dataset in case of nested groups)
      */
     do_activate_record: function (index, id, dataset, view) {
         this.dataset.ids = dataset.ids;
@@ -639,11 +674,11 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
     /**
      * Computes the aggregates for the current list view, either on the
      * records provided or on the records of the internal
-     * :js:class:`~openerp.web.ListView.Group`, by calling
-     * :js:func:`~openerp.web.ListView.group.get_records`.
+     * :js:class:`~instance.web.ListView.Group`, by calling
+     * :js:func:`~instance.web.ListView.group.get_records`.
      *
      * Then displays the aggregates in the table through
-     * :js:method:`~openerp.web.ListView.display_aggregates`.
+     * :js:method:`~instance.web.ListView.display_aggregates`.
      *
      * @param {Array} [records]
      */
@@ -719,7 +754,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             }
 
             $footer_cells.filter(_.str.sprintf('[data-field=%s]', column.id))
-                .html(openerp.web.format_cell(aggregation, column, {
+                .html(instance.web.format_cell(aggregation, column, {
                     process_modifiers: false
             }));
         });
@@ -770,9 +805,20 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
                     .attr('colspan', this.previous_colspan);
             this.previous_colspan = null;
         }
+    },
+    no_result: function () {
+        if (this.groups.group_by
+            || !this.options.action
+            || !this.options.action.help) {
+            return;
+        }
+        this.$element.children('table').replaceWith(
+            $('<div class="oe_listview_nocontent">')
+                .append($('<img>', { src: '/web/static/src/img/list_empty_arrow.png' }))
+                .append($('<div>').html(this.options.action.help)));
     }
 });
-openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.ListView.List# */{
+instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.ListView.List# */{
     /**
      * List display for the ListView, handles basic DOM events and transforms
      * them in the relevant higher-level events, to which the list view (or
@@ -797,10 +843,10 @@ openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.Lis
      *   Triggered when a row of the table is clicked, provides the index (in
      *   the rows array) and id of the selected record to the handle function.
      *
-     * @constructs openerp.web.ListView.List
-     * @extends openerp.web.Class
+     * @constructs instance.web.ListView.List
+     * @extends instance.web.Class
      * 
-     * @param {Object} opts display options, identical to those of :js:class:`openerp.web.ListView`
+     * @param {Object} opts display options, identical to those of :js:class:`instance.web.ListView`
      */
     init: function (group, opts) {
         var self = this;
@@ -915,7 +961,7 @@ openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.Lis
                 // to get a correctly displayable value in the field
                 var model = ref_match[1],
                     id = parseInt(ref_match[2], 10);
-                new openerp.web.DataSet(this.view, model).name_get([id], function(names) {
+                new instance.web.DataSet(this.view, model).name_get([id], function(names) {
                     if (!names.length) { return; }
                     record.set(column.id, names[0][1]);
                 });
@@ -930,14 +976,14 @@ openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.Lis
                 // fetch the name, set it on the record (in the right field)
                 // and let the various registered events handle refreshing the
                 // row
-                new openerp.web.DataSet(this.view, column.relation)
+                new instance.web.DataSet(this.view, column.relation)
                         .name_get([value], function (names) {
                     if (!names.length) { return; }
                     record.set(column.id, names[0]);
                 });
             }
         }
-        return openerp.web.format_cell(record.toForm().data, column, {
+        return instance.web.format_cell(record.toForm().data, column, {
             model: this.dataset.model,
             id: record.get('id')
         });
@@ -1091,19 +1137,19 @@ openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.Lis
         });
     }
 });
-openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.ListView.Groups# */{
+instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.web.ListView.Groups# */{
     passtrough_events: 'action deleted row_link',
     /**
      * Grouped display for the ListView. Handles basic DOM events and interacts
-     * with the :js:class:`~openerp.web.DataGroup` bound to it.
+     * with the :js:class:`~instance.web.DataGroup` bound to it.
      *
      * Provides events similar to those of
-     * :js:class:`~openerp.web.ListView.List`
+     * :js:class:`~instance.web.ListView.List`
      *
-     * @constructs openerp.web.ListView.Groups
-     * @extends openerp.web.Class
+     * @constructs instance.web.ListView.Groups
+     * @extends instance.web.Class
      *
-     * @param {openerp.web.ListView} view
+     * @param {instance.web.ListView} view
      * @param {Object} [options]
      * @param {Collection} [options.records]
      * @param {Object} [options.options]
@@ -1214,7 +1260,7 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
                 self.records.proxy(group.value).reset();
                 delete self.children[group.value];
             }
-            var child = self.children[group.value] = new openerp.web.ListView.Groups(self.view, {
+            var child = self.children[group.value] = new instance.web.ListView.Groups(self.view, {
                 records: self.records.proxy(group.value),
                 options: self.options,
                 columns: self.columns
@@ -1250,7 +1296,7 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
                 var group_column = _(self.columns).detect(function (column) {
                     return column.id === group.grouped_on; });
                 try {
-                    $group_column.html(openerp.web.format_cell(
+                    $group_column.html(instance.web.format_cell(
                         row_data, group_column, {
                             value_if_empty: _t("Undefined"),
                             process_modifiers: false
@@ -1287,7 +1333,7 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
                         var r = {};
                         r[column.id] = {value: group.aggregates[column.id]};
                         $('<td class="oe-number">')
-                            .html(openerp.web.format_cell(
+                            .html(instance.web.format_cell(
                                 r, column, {process_modifiers: false}))
                             .appendTo($row);
                     } else {
@@ -1320,7 +1366,7 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
     },
     render_dataset: function (dataset) {
         var self = this,
-            list = new openerp.web.ListView.List(this, {
+            list = new instance.web.ListView.List(this, {
                 options: this.options,
                 columns: this.columns,
                 dataset: dataset,
@@ -1367,6 +1413,9 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
             self.records.add(records, {silent: true});
             list.render();
             d.resolve(list);
+            if (_.isEmpty(records)) {
+                view.no_result();
+            }
         });});
         return d.promise();
     },
@@ -1533,10 +1582,10 @@ var Events = /** @lends Events# */{
         return this;
     }
 };
-var Record = openerp.web.Class.extend(/** @lends Record# */{
+var Record = instance.web.Class.extend(/** @lends Record# */{
     /**
      * @constructs Record
-     * @extends openerp.web.Class
+     * @extends instance.web.Class
      * 
      * @mixes Events
      * @param {Object} [data]
@@ -1614,7 +1663,7 @@ var Record = openerp.web.Class.extend(/** @lends Record# */{
     }
 });
 Record.include(Events);
-var Collection = openerp.web.Class.extend(/** @lends Collection# */{
+var Collection = instance.web.Class.extend(/** @lends Collection# */{
     /**
      * Smarter collections, with events, very strongly inspired by Backbone's.
      *
@@ -1622,7 +1671,7 @@ var Collection = openerp.web.Class.extend(/** @lends Collection# */{
      * various serious 
      *
      * @constructs Collection
-     * @extends openerp.web.Class
+     * @extends instance.web.Class
      * 
      * @mixes Events
      * @param {Array} [records] records to initialize the collection with
@@ -1654,19 +1703,19 @@ var Collection = openerp.web.Class.extend(/** @lends Collection# */{
         var records = record instanceof Array ? record : [record];
 
         for(var i=0, length=records.length; i<length; ++i) {
-            var instance = (records[i] instanceof Record) ? records[i] : new Record(records[i]);
-            instance.bind(null, this._onRecordEvent);
-            this._byId[instance.get('id')] = instance;
+            var instance_ = (records[i] instanceof Record) ? records[i] : new Record(records[i]);
+            instance_.bind(null, this._onRecordEvent);
+            this._byId[instance_.get('id')] = instance_;
             if (options.at == undefined) {
-                this.records.push(instance);
+                this.records.push(instance_);
                 if (!options.silent) {
-                    this.trigger('add', this, instance, this.records.length-1);
+                    this.trigger('add', this, instance_, this.records.length-1);
                 }
             } else {
                 var insertion_index = options.at + i;
-                this.records.splice(insertion_index, 0, instance);
+                this.records.splice(insertion_index, 0, instance_);
                 if (!options.silent) {
-                    this.trigger('add', this, instance, insertion_index);
+                    this.trigger('add', this, instance_, insertion_index);
                 }
             }
             this.length++;
@@ -1797,7 +1846,7 @@ var Collection = openerp.web.Class.extend(/** @lends Collection# */{
     }
 });
 Collection.include(Events);
-openerp.web.list = {
+instance.web.list = {
     Events: Events,
     Record: Record,
     Collection: Collection

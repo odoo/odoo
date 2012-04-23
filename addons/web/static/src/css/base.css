@@ -21,15 +21,12 @@
   color: #4c4c4c;
   font-size: 13px;
   background: white;
-}
-.openerp a {
-  text-decoration: none;
-}
-
-.openerp {
   /* http://www.quirksmode.org/dom/inputfile.html
    * http://stackoverflow.com/questions/2855589/replace-input-type-file-by-an-image
    */
+}
+.openerp a {
+  text-decoration: none;
 }
 .openerp table {
   padding: 0;
@@ -904,6 +901,9 @@
   color: white;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
 }
+.openerp .oe_view_manager_header2 .oe_view_manager_buttons {
+  white-space: nowrap;
+}
 .openerp .oe_view_manager_body h4 {
   margin: 8px 0;
 }
@@ -1041,6 +1041,9 @@
   -moz-box-shadow: none;
   -webkit-box-shadow: none;
   -box-shadow: none;
+}
+.openerp .oe_sidebar {
+  white-space: nowrap;
 }
 .openerp .oe_searchview {
   position: relative;
@@ -1614,6 +1617,15 @@
   height: auto;
   line-height: 16px;
 }
+.openerp .oe_listview_nocontent > img {
+  float: left;
+  margin-right: 1.5em;
+}
+.openerp .oe_listview_nocontent > div {
+  overflow: hidden;
+  padding: 6px;
+  font-size: 125%;
+}
 .openerp .oe-listview-content {
   width: 100%;
 }
@@ -1771,23 +1783,13 @@
   font-weight: bold;
 }
 .openerp .oe_layout_debugging .oe_form_group {
-  border: 2px dashed red;
+  outline: 2px dashed green;
 }
 .openerp .oe_layout_debugging .oe_form_group_cell {
-  border: 1px solid blue;
-  padding-bottom: 1em;
+  outline: 1px solid blue;
 }
-.openerp .oe_layout_debugging .oe_layout_debug_cell {
-  color: white;
-  background: #669966;
-  font-size: 80%;
-  text-align: center;
-}
-.openerp .oe_layout_debugging .oe_layout_debug_cell {
-  display: block;
-}
-.openerp .oe_layout_debug_cell {
-  display: none;
+.openerp .oe_layout_debugging .oe_form_group:hover, .openerp .oe_layout_debugging .oe_form_group_cell:hover {
+  outline-color: red;
 }
 .openerp .oe_debug_view {
   float: left;

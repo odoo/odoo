@@ -1,7 +1,7 @@
-openerp.web_process = function (openerp) {
-    var QWeb = openerp.web.qweb,
-          _t = openerp.web._t;
-    openerp.web.ViewManager.include({
+openerp.web_process = function (instance) {
+    var QWeb = instance.web.qweb,
+          _t = instance.web._t;
+    instance.web.ViewManager.include({
         start: function() {
             this._super();
             this.process_check();
@@ -15,7 +15,7 @@ openerp.web_process = function (openerp) {
             grandparent = this.getParent() && this.getParent().getParent(),
             view = this.views[this.views_src[0].view_type],
             $process_view = this.$element.find('.oe-process-view');
-            if (!(grandparent instanceof openerp.web.WebClient) ||
+            if (!(grandparent instanceof instance.web.WebClient) ||
                 !(view.view_type === this.views_src[0].view_type
                     && view.view_id === this.views_src[0].view_id)) {
                         $process_view.hide();
@@ -86,7 +86,7 @@ openerp.web_process = function (openerp) {
             if(!this.subflow_model) {
                 def.resolve(this.action ? (this.action.help!=false ? this.action.help : 'Help: Not Defined') : 'Help: Not Defined');
             } else {
-                 var dataset = new openerp.web.DataSetSearch(this, "ir.actions.act_window", this.session.context, []);
+                 var dataset = new instance.web.DataSetSearch(this, "ir.actions.act_window", this.session.context, []);
                  dataset
                     .read_slice(['help'],
                     {
@@ -107,7 +107,7 @@ openerp.web_process = function (openerp) {
             if(this.process_id)
                 return def.resolve().promise();
 
-            this.process_dataset = new openerp.web.DataSetStatic(this, "process.process", this.session.context);
+            this.process_dataset = new instance.web.DataSet(this, "process.process", this.session.context);
             this.process_dataset
             .call("search_by_model", [self.process_model,self.session.context])
             .done(function(res) {
@@ -237,7 +237,7 @@ openerp.web_process = function (openerp) {
         },
         jump_to_view: function(model, id) {
             var self = this;
-            var dataset = new openerp.web.DataSetStatic(this, 'ir.values', this.session.context);
+            var dataset = new instance.web.DataSet(this, 'ir.values', this.session.context);
             dataset.call('get',
                 ['action', 'tree_but_open',[['ir.ui.menu', id]], dataset.context],
                 function(res) {
@@ -246,7 +246,7 @@ openerp.web_process = function (openerp) {
                         action_id: action.id,
                         context: dataset.context
                         }, function(result) {
-                            var action_manager = new openerp.web.ActionManager(self);
+                            var action_manager = new instance.web.ActionManager(self);
                             action_manager.replace(self.$element);
                             action_manager.do_action(result.result);
                         });
@@ -254,8 +254,8 @@ openerp.web_process = function (openerp) {
         },
         edit_process_view: function() {
             var self = this;
-            var action_manager = new openerp.web.ActionManager(this);
-            var dialog = new openerp.web.Dialog(this, {
+            var action_manager = new instance.web.ActionManager(this);
+            var dialog = new instance.web.Dialog(this, {
                 width: 800,
                 buttons : [
                     {text: _t("Cancel"), click: function() { $(this).dialog('destroy'); }},

@@ -2,12 +2,12 @@
  * OpenERP diagram library
  *---------------------------------------------------------*/
 
-openerp.web_diagram = function (openerp) {
-var QWeb = openerp.web.qweb,
-      _t = openerp.web._t,
-     _lt = openerp.web._lt;
-openerp.web.views.add('diagram', 'openerp.web.DiagramView');
-openerp.web.DiagramView = openerp.web.View.extend({
+openerp.web_diagram = function (instance) {
+var QWeb = instance.web.qweb,
+      _t = instance.web._t,
+     _lt = instance.web._lt;
+instance.web.views.add('diagram', 'instance.web.DiagramView');
+instance.web.DiagramView = instance.web.View.extend({
     display_name: _lt('Diagram'),
     searchable: false,
     init: function(parent, dataset, view_id, options) {
@@ -194,7 +194,7 @@ openerp.web.DiagramView = openerp.web.View.extend({
             if(!confirm(_t("Deleting this node cannot be undone.\nIt will also delete all connected transitions.\n\nAre you sure ?"))){
                 return $.Deferred().reject().promise();
             }
-            return new openerp.web.DataSet(self,self.node).unlink([cutenode.id]);
+            return new instance.web.DataSet(self,self.node).unlink([cutenode.id]);
         };
         CuteEdge.double_click_callback = function(cuteedge){
             self.edit_connector(cuteedge.id);
@@ -212,7 +212,7 @@ openerp.web.DiagramView = openerp.web.View.extend({
             if(!confirm(_t("Deleting this transition cannot be undone.\n\nAre you sure ?"))){
                 return $.Deferred().reject().promise();
             }
-            return new openerp.web.DataSet(self,self.connector).unlink([cuteedge.id]);
+            return new instance.web.DataSet(self,self.connector).unlink([cuteedge.id]);
         };
 
     },
@@ -221,7 +221,7 @@ openerp.web.DiagramView = openerp.web.View.extend({
     edit_node: function(node_id){
         var self = this;
         var title = _t('Activity');
-        var pop = new openerp.web.form.FormOpenPopup(self);
+        var pop = new instance.web.form.FormOpenPopup(self);
 
         pop.show_element(
                 self.node,
@@ -254,7 +254,7 @@ openerp.web.DiagramView = openerp.web.View.extend({
     add_node: function(){
         var self = this;
         var title = _t('Activity');
-        var pop = new openerp.web.form.SelectCreatePopup(self);
+        var pop = new instance.web.form.SelectCreatePopup(self);
         pop.select_element(
             self.node,
             {
@@ -286,7 +286,7 @@ openerp.web.DiagramView = openerp.web.View.extend({
     edit_connector: function(connector_id){
         var self = this;
         var title = _t('Transition');
-        var pop = new openerp.web.form.FormOpenPopup(self);
+        var pop = new instance.web.form.FormOpenPopup(self);
         pop.show_element(
             self.connector,
             parseInt(connector_id,10),      //FIXME Isn't connector_id supposed to be an int ?
@@ -305,7 +305,7 @@ openerp.web.DiagramView = openerp.web.View.extend({
     add_connector: function(node_source_id, node_dest_id, dummy_cuteedge){
         var self = this;
         var title = _t('Transition');
-        var pop = new openerp.web.form.SelectCreatePopup(self);
+        var pop = new instance.web.form.SelectCreatePopup(self);
 
         pop.select_element(
             self.connector,

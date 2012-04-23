@@ -2,9 +2,9 @@
  * OpenERP Web Mobile List View
  *---------------------------------------------------------*/
 
-openerp.web_mobile.list_mobile = function (openerp) {
+openerp.web_mobile.list_mobile = function (instance) {
 
-openerp.web_mobile.ListView = openerp.web.OldWidget.extend({
+instance.web_mobile.ListView = instance.web.OldWidget.extend({
 
     template: 'ListView',
 
@@ -31,14 +31,14 @@ openerp.web_mobile.ListView = openerp.web.OldWidget.extend({
     on_search_data: function(ev){
         var self = this;
         var list_ids = [];
-        var datasearch = new openerp.web.DataSetSearch(self, self.action.res_model,self.action.context);
+        var datasearch = new instance.web.DataSetSearch(self, self.action.res_model,self.action.context);
         datasearch.domain = self.action.domain;
         datasearch.read_slice(['name'], {context:datasearch.context, domain: datasearch.domain, limit:80}).then(function(listresult){
             _.each(listresult, function(i) {
                 list_ids.push(i.id);
             });
             _.extend(self.action.context,{"html_name_get" : true});
-            var dataset = new openerp.web.DataSet(self, datasearch.model,datasearch.context);
+            var dataset = new instance.web.DataSet(self, datasearch.model,datasearch.context);
             dataset.name_get(list_ids,function(res){
                 var additional = "";
                 if(res['html_name_get']){
@@ -64,7 +64,7 @@ openerp.web_mobile.ListView = openerp.web.OldWidget.extend({
         head_title = $.trim($record.text());
         if(!$('[id^="oe_form_'+id+this.action.res_model+'"]').html()){
             $('<div id="oe_form_'+id+this.action.res_model+'" data-role="page" data-url="oe_form_'+id+this.action.res_model+'"> </div>').appendTo('#moe');
-            this.formview = new openerp.web_mobile.FormView(this, "oe_form_"+id+this.action.res_model, id, this.action, head_title, '' ,'');
+            this.formview = new instance.web_mobile.FormView(this, "oe_form_"+id+this.action.res_model, id, this.action, head_title, '' ,'');
             this.formview.start();
         }else{
             $.mobile.changePage('#oe_form_'+id+this.action.res_model, "slide", false, true);

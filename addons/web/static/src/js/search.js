@@ -1,7 +1,7 @@
-openerp.web.search = function(openerp) {
-var QWeb = openerp.web.qweb,
-      _t =  openerp.web._t,
-     _lt = openerp.web._lt;
+openerp.web.search = function(instance) {
+var QWeb = instance.web.qweb,
+      _t =  instance.web._t,
+     _lt = instance.web._lt;
 _.mixin({
     sum: function (obj) { return _.reduce(obj, function (a, b) { return a + b; }, 0); }
 });
@@ -70,11 +70,11 @@ _.extend(VS.model.SearchFacet.prototype, {
     }
 });
 
-openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.SearchView# */{
+instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.SearchView# */{
     template: "SearchView",
     /**
-     * @constructs openerp.web.SearchView
-     * @extends openerp.web.OldWidget
+     * @constructs instance.web.SearchView
+     * @extends instance.web.OldWidget
      *
      * @param parent
      * @param element_id
@@ -178,7 +178,7 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
 
         var running_count = 0;
         // get total filters count
-        var is_group = function (i) { return i instanceof openerp.web.search.FilterGroup; };
+        var is_group = function (i) { return i instanceof instance.web.search.FilterGroup; };
         var filters_count = _(this.controls).chain()
             .flatten()
             .filter(is_group)
@@ -212,12 +212,12 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
             name: _t("Custom Filters"),
             filters: _.map(this.custom_filters, function (filter) {
                 // FIXME: handling of ``disabled`` being set
-                var f = new openerp.web.search.Filter({attrs: {
+                var f = new instance.web.search.Filter({attrs: {
                     string: filter.name,
                     context: filter.context,
                     domain: filter.domain
                 }}, self);
-                return new openerp.web.search.FilterGroup([f], self);
+                return new instance.web.search.FilterGroup([f], self);
             }),
             length: 3
         });
@@ -225,7 +225,7 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
         return $.when(
             this.render_column(col1, $('<div>').appendTo($filters)),
             this.render_column(col2, $('<div>').appendTo($filters)),
-            (new openerp.web.search.Advanced(this).appendTo($drawer)));
+            (new instance.web.search.Advanced(this).appendTo($drawer)));
     },
     render_column: function (column, $el) {
         return $.when.apply(null, _(column).map(function (group) {
@@ -314,10 +314,10 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
      * @param {VS.model.SearchFacet} options.model facet object to render
      */
     make_visualsearch_facet: function (options) {
-        return new openerp.web.search.FilterGroupFacet(options);
+        return new instance.web.search.FilterGroupFacet(options);
 
-//        if (options.model.get('field') instanceof openerp.web.search.FilterGroup) {
-//            return new openerp.web.search.FilterGroupFacet(options);
+//        if (options.model.get('field') instanceof instance.web.search.FilterGroup) {
+//            return new instance.web.search.FilterGroupFacet(options);
 //        }
 //        return new VS.ui.SearchFacet(options);
     },
@@ -363,7 +363,7 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
         var filters = [];
         _.each(items, function (item) {
             if (filters.length && item.tag !== 'filter') {
-                group.push(new openerp.web.search.FilterGroup(filters, this));
+                group.push(new instance.web.search.FilterGroup(filters, this));
                 filters = [];
             }
 
@@ -371,7 +371,7 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
             case 'separator': case 'newline':
                 break;
             case 'filter':
-                filters.push(new openerp.web.search.Filter(item, this));
+                filters.push(new instance.web.search.Filter(item, this));
                 break;
             case 'group':
                 self.make_widgets(item.children, fields, item.attrs.string);
@@ -385,7 +385,7 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
         }, this);
 
         if (filters.length) {
-            group.push(new openerp.web.search.FilterGroup(filters, this));
+            group.push(new instance.web.search.FilterGroup(filters, this));
         }
     },
     /**
@@ -394,10 +394,10 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
      *
      * @param {Object} item fields_view_get node for the field
      * @param {Object} field fields_get result for the field
-     * @returns openerp.web.search.Field
+     * @returns instance.web.search.Field
      */
     make_field: function (item, field) {
-        var obj = openerp.web.search.fields.get_any( [item.attrs.widget, field.type]);
+        var obj = instance.web.search.fields.get_any( [item.attrs.widget, field.type]);
         if(obj) {
             return new (obj) (item, field, this);
         } else {
@@ -460,11 +460,11 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
             break;
         case 'save_filter':
             var data = this.build_search_data();
-            var context = new openerp.web.CompoundContext();
+            var context = new instance.web.CompoundContext();
             _.each(data.contexts, function(x) {
                 context.add(x);
             });
-            var domain = new openerp.web.CompoundDomain();
+            var domain = new instance.web.CompoundDomain();
             _.each(data.domains, function(x) {
                 domain.add(x);
             });
@@ -472,7 +472,7 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
             context.add({"group_by": groupbys});
             var dial_html = QWeb.render("SearchView.managed-filters.add");
             var $dial = $(dial_html);
-            openerp.web.dialog($dial, {
+            instance.web.dialog($dial, {
                 modal: true,
                 title: _t("Filter Entry"),
                 buttons: [
@@ -525,13 +525,13 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
     on_add_to_dashboard: function() {
         this.$element.find(".oe_search-view-filters-management")[0].selectedIndex = 0;
         var self = this,
-            menu = openerp.webclient.menu,
+            menu = instance.webclient.menu,
             $dialog = $(QWeb.render("SearchView.add_to_dashboard", {
                 dashboards : menu.data.data.children,
                 selected_menu_id : menu.$element.find('a.active').data('menu')
             }));
         $dialog.find('input').val(this.fields_view.name);
-        openerp.web.dialog($dialog, {
+        instance.web.dialog($dialog, {
             modal: true,
             title: _t("Add to Dashboard"),
             buttons: [
@@ -543,8 +543,8 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
                     var menu_id = $(this).find("select").val(),
                         title = $(this).find("input").val(),
                         data = self.build_search_data(),
-                        context = new openerp.web.CompoundContext(),
-                        domain = new openerp.web.CompoundDomain();
+                        context = new instance.web.CompoundContext(),
+                        domain = new instance.web.CompoundDomain();
                     _.each(data.contexts, function(x) {
                         context.add(x);
                     });
@@ -573,10 +573,10 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
      * Performs the search view collection of widget data.
      *
      * If the collection went well (all fields are valid), then triggers
-     * :js:func:`openerp.web.SearchView.on_search`.
+     * :js:func:`instance.web.SearchView.on_search`.
      *
      * If at least one field failed its validation, triggers
-     * :js:func:`openerp.web.SearchView.on_invalid` instead.
+     * :js:func:`instance.web.SearchView.on_invalid` instead.
      *
      * @param e jQuery event object coming from the "Search" button
      */
@@ -599,7 +599,7 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
                     groupbys.push.apply(groupbys, group_by);
                 }
             } catch (e) {
-                if (e instanceof openerp.web.search.Invalid) {
+                if (e instanceof instance.web.search.Invalid) {
                     errors.push(e);
                 } else {
                     throw e;
@@ -648,9 +648,9 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
 });
 
 /** @namespace */
-openerp.web.search = {};
+instance.web.search = {};
 
-openerp.web.search.FilterGroupFacet = VS.ui.SearchFacet.extend({
+instance.web.search.FilterGroupFacet = VS.ui.SearchFacet.extend({
     events: _.extend({
         'click': 'selectFacet'
     }, VS.ui.SearchFacet.prototype.events),
@@ -682,30 +682,30 @@ openerp.web.search.FilterGroupFacet = VS.ui.SearchFacet.extend({
     }
 });
 /**
- * Registry of search fields, called by :js:class:`openerp.web.SearchView` to
+ * Registry of search fields, called by :js:class:`instance.web.SearchView` to
  * find and instantiate its field widgets.
  */
-openerp.web.search.fields = new openerp.web.Registry({
-    'char': 'openerp.web.search.CharField',
-    'text': 'openerp.web.search.CharField',
-    'boolean': 'openerp.web.search.BooleanField',
-    'integer': 'openerp.web.search.IntegerField',
-    'id': 'openerp.web.search.IntegerField',
-    'float': 'openerp.web.search.FloatField',
-    'selection': 'openerp.web.search.SelectionField',
-    'datetime': 'openerp.web.search.DateTimeField',
-    'date': 'openerp.web.search.DateField',
-    'many2one': 'openerp.web.search.ManyToOneField',
-    'many2many': 'openerp.web.search.CharField',
-    'one2many': 'openerp.web.search.CharField'
+instance.web.search.fields = new instance.web.Registry({
+    'char': 'instance.web.search.CharField',
+    'text': 'instance.web.search.CharField',
+    'boolean': 'instance.web.search.BooleanField',
+    'integer': 'instance.web.search.IntegerField',
+    'id': 'instance.web.search.IntegerField',
+    'float': 'instance.web.search.FloatField',
+    'selection': 'instance.web.search.SelectionField',
+    'datetime': 'instance.web.search.DateTimeField',
+    'date': 'instance.web.search.DateField',
+    'many2one': 'instance.web.search.ManyToOneField',
+    'many2many': 'instance.web.search.CharField',
+    'one2many': 'instance.web.search.CharField'
 });
-openerp.web.search.Invalid = openerp.web.Class.extend( /** @lends openerp.web.search.Invalid# */{
+instance.web.search.Invalid = instance.web.Class.extend( /** @lends instance.web.search.Invalid# */{
     /**
      * Exception thrown by search widgets when they hold invalid values,
      * which they can not return when asked.
      *
-     * @constructs openerp.web.search.Invalid
-     * @extends openerp.web.Class
+     * @constructs instance.web.search.Invalid
+     * @extends instance.web.Class
      *
      * @param field the name of the field holding an invalid value
      * @param value the invalid value
@@ -723,13 +723,13 @@ openerp.web.search.Invalid = openerp.web.Class.extend( /** @lends openerp.web.se
         );
     }
 });
-openerp.web.search.Widget = openerp.web.OldWidget.extend( /** @lends openerp.web.search.Widget# */{
+instance.web.search.Widget = instance.web.OldWidget.extend( /** @lends instance.web.search.Widget# */{
     template: null,
     /**
      * Root class of all search widgets
      *
-     * @constructs openerp.web.search.Widget
-     * @extends openerp.web.OldWidget
+     * @constructs instance.web.search.Widget
+     * @extends instance.web.OldWidget
      *
      * @param view the ancestor view of this widget
      */
@@ -738,14 +738,14 @@ openerp.web.search.Widget = openerp.web.OldWidget.extend( /** @lends openerp.web
         this.view = view;
     }
 });
-openerp.web.search.add_expand_listener = function($root) {
+instance.web.search.add_expand_listener = function($root) {
     $root.find('a.searchview_group_string').click(function (e) {
         $root.toggleClass('folded expanded');
         e.stopPropagation();
         e.preventDefault();
     });
 };
-openerp.web.search.Group = openerp.web.search.Widget.extend({
+instance.web.search.Group = instance.web.search.Widget.extend({
     template: 'SearchView.group',
     init: function (view_section, view, fields) {
         this._super(view);
@@ -755,10 +755,10 @@ openerp.web.search.Group = openerp.web.search.Widget.extend({
     }
 });
 
-openerp.web.search.Input = openerp.web.search.Widget.extend( /** @lends openerp.web.search.Input# */{
+instance.web.search.Input = instance.web.search.Widget.extend( /** @lends instance.web.search.Input# */{
     /**
-     * @constructs openerp.web.search.Input
-     * @extends openerp.web.search.Widget
+     * @constructs instance.web.search.Input
+     * @extends instance.web.search.Widget
      *
      * @param view
      */
@@ -784,7 +784,7 @@ openerp.web.search.Input = openerp.web.search.Widget.extend( /** @lends openerp.
      * they apply to this widget, or null if they don't.
      *
      * This default implementation will try calling
-     * :js:func:`openerp.web.search.Input#facet_for` if the widget's name
+     * :js:func:`instance.web.search.Input#facet_for` if the widget's name
      * matches the input key
      *
      * @param {Object} defaults
@@ -820,17 +820,17 @@ openerp.web.search.Input = openerp.web.search.Widget.extend( /** @lends openerp.
         this.attrs = attrs;
     }
 });
-openerp.web.search.FilterGroup = openerp.web.search.Input.extend(/** @lends openerp.web.search.FilterGroup# */{
+instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends instance.web.search.FilterGroup# */{
     template: 'SearchView.filters',
     /**
      * Inclusive group of filters, creates a continuous "button" with clickable
      * sections (the normal display for filters is to be a self-contained button)
      *
-     * @constructs openerp.web.search.FilterGroup
-     * @extends openerp.web.search.Input
+     * @constructs instance.web.search.FilterGroup
+     * @extends instance.web.search.Input
      *
-     * @param {Array<openerp.web.search.Filter>} filters elements of the group
-     * @param {openerp.web.SearchView} view view in which the filters are contained
+     * @param {Array<instance.web.search.Filter>} filters elements of the group
+     * @param {instance.web.SearchView} view view in which the filters are contained
      */
     init: function (filters, view) {
         this._super(view);
@@ -868,7 +868,7 @@ openerp.web.search.FilterGroup = openerp.web.search.Input.extend(/** @lends open
 
         if (!contexts.length) { return; }
         if (contexts.length === 1) { return contexts[0]; }
-        return _.extend(new openerp.web.CompoundContext, {
+        return _.extend(new instance.web.CompoundContext, {
             __contexts: contexts
         });
     },
@@ -901,7 +901,7 @@ openerp.web.search.FilterGroup = openerp.web.search.Input.extend(/** @lends open
         for (var i=domains.length; --i;) {
             domains.unshift(['|']);
         }
-        return _.extend(new openerp.web.CompoundDomain(), {
+        return _.extend(new instance.web.CompoundDomain(), {
             __domains: domains
         });
     },
@@ -945,7 +945,7 @@ openerp.web.search.FilterGroup = openerp.web.search.Input.extend(/** @lends open
         });
     }
 });
-openerp.web.search.Filter = openerp.web.search.Input.extend(/** @lends openerp.web.search.Filter# */{
+instance.web.search.Filter = instance.web.search.Input.extend(/** @lends instance.web.search.Filter# */{
     template: 'SearchView.filter',
     /**
      * Implementation of the OpenERP filters (button with a context and/or
@@ -955,8 +955,8 @@ openerp.web.search.Filter = openerp.web.search.Input.extend(/** @lends openerp.w
      * domains and contexts, converting between facets and filters) is
      * performed by the filter group.
      *
-     * @constructs openerp.web.search.Filter
-     * @extends openerp.web.search.Input
+     * @constructs instance.web.search.Filter
+     * @extends instance.web.search.Input
      *
      * @param node
      * @param view
@@ -969,12 +969,12 @@ openerp.web.search.Filter = openerp.web.search.Input.extend(/** @lends openerp.w
     get_context: function () { },
     get_domain: function () { },
 });
-openerp.web.search.Field = openerp.web.search.Input.extend( /** @lends openerp.web.search.Field# */ {
+instance.web.search.Field = instance.web.search.Input.extend( /** @lends instance.web.search.Field# */ {
     template: 'SearchView.field',
     default_operator: '=',
     /**
-     * @constructs openerp.web.search.Field
-     * @extends openerp.web.search.Input
+     * @constructs instance.web.search.Field
+     * @extends instance.web.search.Input
      *
      * @param view_section
      * @param field
@@ -1005,7 +1005,7 @@ openerp.web.search.Field = openerp.web.search.Input.extend( /** @lends openerp.w
         if (!(has_value && context)) {
             return;
         }
-        return new openerp.web.CompoundContext(context)
+        return new instance.web.CompoundContext(context)
                 .set_eval_context({self: val});
     },
     get_groupby: function () { },
@@ -1036,7 +1036,7 @@ openerp.web.search.Field = openerp.web.search.Input.extend( /** @lends openerp.w
                 this.attrs.operator || this.default_operator,
                 facet);
         }
-        return new openerp.web.CompoundDomain(domain)
+        return new instance.web.CompoundDomain(domain)
                 .set_eval_context({self: val});
     }
 });
@@ -1048,9 +1048,9 @@ openerp.web.search.Field = openerp.web.search.Input.extend( /** @lends openerp.w
  * * The Javascript and the HTML values are identical (strings)
  *
  * @class
- * @extends openerp.web.search.Field
+ * @extends instance.web.search.Field
  */
-openerp.web.search.CharField = openerp.web.search.Field.extend( /** @lends openerp.web.search.CharField# */ {
+instance.web.search.CharField = instance.web.search.Field.extend( /** @lends instance.web.search.CharField# */ {
     default_operator: 'ilike',
     complete: function (value) {
         if (_.isEmpty(value)) { return $.when(null); }
@@ -1066,7 +1066,7 @@ openerp.web.search.CharField = openerp.web.search.Field.extend( /** @lends opene
         }]);
     }
 });
-openerp.web.search.NumberField = openerp.web.search.Field.extend(/** @lends openerp.web.search.NumberField# */{
+instance.web.search.NumberField = instance.web.search.Field.extend(/** @lends instance.web.search.NumberField# */{
     get_value: function () {
         if (!this.$element.val()) {
             return null;
@@ -1075,7 +1075,7 @@ openerp.web.search.NumberField = openerp.web.search.Field.extend(/** @lends open
           check = Number(this.$element.val());
         if (isNaN(val) || val !== check) {
             this.$element.addClass('error');
-            throw new openerp.web.search.Invalid(
+            throw new instance.web.search.Invalid(
                 this.attrs.name, this.$element.val(), this.error_message);
         }
         this.$element.removeClass('error');
@@ -1084,13 +1084,13 @@ openerp.web.search.NumberField = openerp.web.search.Field.extend(/** @lends open
 });
 /**
  * @class
- * @extends openerp.web.search.NumberField
+ * @extends instance.web.search.NumberField
  */
-openerp.web.search.IntegerField = openerp.web.search.NumberField.extend(/** @lends openerp.web.search.IntegerField# */{
+instance.web.search.IntegerField = instance.web.search.NumberField.extend(/** @lends instance.web.search.IntegerField# */{
     error_message: _t("not a valid integer"),
     parse: function (value) {
         try {
-            return openerp.web.parse_value(value, {'widget': 'integer'});
+            return instance.web.parse_value(value, {'widget': 'integer'});
         } catch (e) {
             return NaN;
         }
@@ -1098,13 +1098,13 @@ openerp.web.search.IntegerField = openerp.web.search.NumberField.extend(/** @len
 });
 /**
  * @class
- * @extends openerp.web.search.NumberField
+ * @extends instance.web.search.NumberField
  */
-openerp.web.search.FloatField = openerp.web.search.NumberField.extend(/** @lends openerp.web.search.FloatField# */{
+instance.web.search.FloatField = instance.web.search.NumberField.extend(/** @lends instance.web.search.FloatField# */{
     error_message: _t("not a valid number"),
     parse: function (value) {
         try {
-            return openerp.web.parse_value(value, {'widget': 'float'});
+            return instance.web.parse_value(value, {'widget': 'float'});
         } catch (e) {
             return NaN;
         }
@@ -1112,9 +1112,9 @@ openerp.web.search.FloatField = openerp.web.search.NumberField.extend(/** @lends
 });
 /**
  * @class
- * @extends openerp.web.search.Field
+ * @extends instance.web.search.Field
  */
-openerp.web.search.SelectionField = openerp.web.search.Field.extend(/** @lends openerp.web.search.SelectionField# */{
+instance.web.search.SelectionField = instance.web.search.Field.extend(/** @lends instance.web.search.SelectionField# */{
     // This implementation is a basic <select> field, but it may have to be
     // altered to be more in line with the GTK client, which uses a combo box
     // (~ jquery.autocomplete):
@@ -1171,10 +1171,10 @@ openerp.web.search.SelectionField = openerp.web.search.Field.extend(/** @lends o
         return facet.get('json');
     }
 });
-openerp.web.search.BooleanField = openerp.web.search.SelectionField.extend(/** @lends openerp.web.search.BooleanField# */{
+instance.web.search.BooleanField = instance.web.search.SelectionField.extend(/** @lends instance.web.search.BooleanField# */{
     /**
-     * @constructs openerp.web.search.BooleanField
-     * @extends openerp.web.search.BooleanField
+     * @constructs instance.web.search.BooleanField
+     * @extends instance.web.search.BooleanField
      */
     init: function () {
         this._super.apply(this, arguments);
@@ -1193,16 +1193,16 @@ openerp.web.search.BooleanField = openerp.web.search.SelectionField.extend(/** @
 });
 /**
  * @class
- * @extends openerp.web.search.DateField
+ * @extends instance.web.search.DateField
  */
-openerp.web.search.DateField = openerp.web.search.Field.extend(/** @lends openerp.web.search.DateField# */{
+instance.web.search.DateField = instance.web.search.Field.extend(/** @lends instance.web.search.DateField# */{
     get_value: function (facet) {
-        return openerp.web.date_to_str(facet.get('json'));
+        return instance.web.date_to_str(facet.get('json'));
     },
     complete: function (needle) {
         var d = Date.parse(needle);
         if (!d) { return $.when(null); }
-        var value = openerp.web.format_value(d, this.attrs);
+        var value = instance.web.format_value(d, this.attrs);
         var label = _.str.sprintf(_.str.escapeHTML(
             _t("Search %(field)s at: %(value)s")), {
                 field: '<em>' + this.attrs.string + '</em>',
@@ -1225,17 +1225,17 @@ openerp.web.search.DateField = openerp.web.search.Field.extend(/** @lends opener
  *   spanning the whole day selected by the date widget
  *
  * @class
- * @extends openerp.web.DateField
+ * @extends instance.web.DateField
  */
-openerp.web.search.DateTimeField = openerp.web.search.DateField.extend(/** @lends openerp.web.search.DateTimeField# */{
+instance.web.search.DateTimeField = instance.web.search.DateField.extend(/** @lends instance.web.search.DateTimeField# */{
     get_value: function (facet) {
-        return openerp.web.datetime_to_str(facet.get('json'));
+        return instance.web.datetime_to_str(facet.get('json'));
     }
 });
-openerp.web.search.ManyToOneField = openerp.web.search.CharField.extend({
+instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
     init: function (view_section, field, view) {
         this._super(view_section, field, view);
-        this.model = new openerp.web.Model(this.attrs.relation);
+        this.model = new instance.web.Model(this.attrs.relation);
     },
     complete: function (needle) {
         var self = this;
@@ -1289,7 +1289,7 @@ openerp.web.search.ManyToOneField = openerp.web.search.CharField.extend({
     }
 });
 
-openerp.web.search.Advanced = openerp.web.search.Input.extend({
+instance.web.search.Advanced = instance.web.search.Input.extend({
     template: 'SearchView.advanced',
     start: function () {
         var self = this;
@@ -1314,7 +1314,7 @@ openerp.web.search.Advanced = openerp.web.search.Input.extend({
         });
     },
     append_proposition: function () {
-        return (new openerp.web.search.ExtendedSearchProposition(this, this.fields))
+        return (new instance.web.search.ExtendedSearchProposition(this, this.fields))
             .appendTo(this.$element.find('ul'));
     },
     commit_search: function () {
@@ -1323,14 +1323,14 @@ openerp.web.search.Advanced = openerp.web.search.Input.extend({
         var children = this.getChildren(),
             domain = _.invoke(children, 'get_proposition');
         var filters = _(domain).map(function (section) {
-            return new openerp.web.search.Filter({attrs: {
+            return new instance.web.search.Filter({attrs: {
                 string: _.str.sprintf('%s(%s)%s',
                     section[0], section[1], section[2]),
                 domain: [section]
             }}, self.view);
         });
         // Create Filter (& FilterGroup around it) with that domain
-        var f = new openerp.web.search.FilterGroup(filters, this.view);
+        var f = new instance.web.search.FilterGroup(filters, this.view);
         // add group to query
         this.view.vs.searchQuery.add({
             category: _t("Advanced"),
@@ -1349,11 +1349,11 @@ openerp.web.search.Advanced = openerp.web.search.Input.extend({
     }
 });
 
-openerp.web.search.ExtendedSearchProposition = openerp.web.OldWidget.extend(/** @lends openerp.web.search.ExtendedSearchProposition# */{
+instance.web.search.ExtendedSearchProposition = instance.web.OldWidget.extend(/** @lends instance.web.search.ExtendedSearchProposition# */{
     template: 'SearchView.extended_search.proposition',
     /**
-     * @constructs openerp.web.search.ExtendedSearchProposition
-     * @extends openerp.web.OldWidget
+     * @constructs instance.web.search.ExtendedSearchProposition
+     * @extends instance.web.OldWidget
      *
      * @param parent
      * @param fields
@@ -1401,10 +1401,9 @@ openerp.web.search.ExtendedSearchProposition = openerp.web.OldWidget.extend(/** 
         }
 
         var type = field.type;
-        var obj = openerp.web.search.custom_filters.get_object(type);
+        var obj = instance.web.search.custom_filters.get_object(type);
         if(obj === null) {
-            console.log('Unknow field type ' + e.key);
-            obj = openerp.web.search.custom_filters.get_object("char");
+            obj = instance.web.search.custom_filters.get_object("char");
         }
         this.value = new (obj) (this);
         if(this.value.set_field) {
@@ -1430,12 +1429,12 @@ openerp.web.search.ExtendedSearchProposition = openerp.web.OldWidget.extend(/** 
     }
 });
 
-openerp.web.search.ExtendedSearchProposition.Field = openerp.web.OldWidget.extend({
+instance.web.search.ExtendedSearchProposition.Field = instance.web.OldWidget.extend({
     start: function () {
         this.$element = $("#" + this.element_id);
     }
 });
-openerp.web.search.ExtendedSearchProposition.Char = openerp.web.search.ExtendedSearchProposition.Field.extend({
+instance.web.search.ExtendedSearchProposition.Char = instance.web.search.ExtendedSearchProposition.Field.extend({
     template: 'SearchView.extended_search.proposition.char',
     operators: [
         {value: "ilike", text: _lt("contains")},
@@ -1447,7 +1446,7 @@ openerp.web.search.ExtendedSearchProposition.Char = openerp.web.search.ExtendedS
         return this.$element.val();
     }
 });
-openerp.web.search.ExtendedSearchProposition.DateTime = openerp.web.search.ExtendedSearchProposition.Field.extend({
+instance.web.search.ExtendedSearchProposition.DateTime = instance.web.search.ExtendedSearchProposition.Field.extend({
     template: 'SearchView.extended_search.proposition.empty',
     operators: [
         {value: "=", text: _lt("is equal to")},
@@ -1462,11 +1461,11 @@ openerp.web.search.ExtendedSearchProposition.DateTime = openerp.web.search.Exten
     },
     start: function() {
         this._super();
-        this.datewidget = new openerp.web.DateTimeWidget(this);
+        this.datewidget = new instance.web.DateTimeWidget(this);
         this.datewidget.prependTo(this.$element);
     }
 });
-openerp.web.search.ExtendedSearchProposition.Date = openerp.web.search.ExtendedSearchProposition.Field.extend({
+instance.web.search.ExtendedSearchProposition.Date = instance.web.search.ExtendedSearchProposition.Field.extend({
     template: 'SearchView.extended_search.proposition.empty',
     operators: [
         {value: "=", text: _lt("is equal to")},
@@ -1481,11 +1480,11 @@ openerp.web.search.ExtendedSearchProposition.Date = openerp.web.search.ExtendedS
     },
     start: function() {
         this._super();
-        this.datewidget = new openerp.web.DateWidget(this);
+        this.datewidget = new instance.web.DateWidget(this);
         this.datewidget.prependTo(this.$element);
     }
 });
-openerp.web.search.ExtendedSearchProposition.Integer = openerp.web.search.ExtendedSearchProposition.Field.extend({
+instance.web.search.ExtendedSearchProposition.Integer = instance.web.search.ExtendedSearchProposition.Field.extend({
     template: 'SearchView.extended_search.proposition.integer',
     operators: [
         {value: "=", text: _lt("is equal to")},
@@ -1497,16 +1496,16 @@ openerp.web.search.ExtendedSearchProposition.Integer = openerp.web.search.Extend
     ],
     get_value: function() {
         try {
-            return openerp.web.parse_value(this.$element.val(), {'widget': 'integer'});
+            return instance.web.parse_value(this.$element.val(), {'widget': 'integer'});
         } catch (e) {
             return "";
         }
     }
 });
-openerp.web.search.ExtendedSearchProposition.Id = openerp.web.search.ExtendedSearchProposition.Integer.extend({
+instance.web.search.ExtendedSearchProposition.Id = instance.web.search.ExtendedSearchProposition.Integer.extend({
     operators: [{value: "=", text: _lt("is")}]
 });
-openerp.web.search.ExtendedSearchProposition.Float = openerp.web.search.ExtendedSearchProposition.Field.extend({
+instance.web.search.ExtendedSearchProposition.Float = instance.web.search.ExtendedSearchProposition.Field.extend({
     template: 'SearchView.extended_search.proposition.float',
     operators: [
         {value: "=", text: _lt("is equal to")},
@@ -1518,13 +1517,13 @@ openerp.web.search.ExtendedSearchProposition.Float = openerp.web.search.Extended
     ],
     get_value: function() {
         try {
-            return openerp.web.parse_value(this.$element.val(), {'widget': 'float'});
+            return instance.web.parse_value(this.$element.val(), {'widget': 'float'});
         } catch (e) {
             return "";
         }
     }
 });
-openerp.web.search.ExtendedSearchProposition.Selection = openerp.web.search.ExtendedSearchProposition.Field.extend({
+instance.web.search.ExtendedSearchProposition.Selection = instance.web.search.ExtendedSearchProposition.Field.extend({
     template: 'SearchView.extended_search.proposition.selection',
     operators: [
         {value: "=", text: _lt("is")},
@@ -1537,7 +1536,7 @@ openerp.web.search.ExtendedSearchProposition.Selection = openerp.web.search.Exte
         return this.$element.val();
     }
 });
-openerp.web.search.ExtendedSearchProposition.Boolean = openerp.web.search.ExtendedSearchProposition.Field.extend({
+instance.web.search.ExtendedSearchProposition.Boolean = instance.web.search.ExtendedSearchProposition.Field.extend({
     template: 'SearchView.extended_search.proposition.boolean',
     operators: [
         {value: "=", text: _lt("is true")},
@@ -1548,21 +1547,21 @@ openerp.web.search.ExtendedSearchProposition.Boolean = openerp.web.search.Extend
     }
 });
 
-openerp.web.search.custom_filters = new openerp.web.Registry({
-    'char': 'openerp.web.search.ExtendedSearchProposition.Char',
-    'text': 'openerp.web.search.ExtendedSearchProposition.Char',
-    'one2many': 'openerp.web.search.ExtendedSearchProposition.Char',
-    'many2one': 'openerp.web.search.ExtendedSearchProposition.Char',
-    'many2many': 'openerp.web.search.ExtendedSearchProposition.Char',
+instance.web.search.custom_filters = new instance.web.Registry({
+    'char': 'instance.web.search.ExtendedSearchProposition.Char',
+    'text': 'instance.web.search.ExtendedSearchProposition.Char',
+    'one2many': 'instance.web.search.ExtendedSearchProposition.Char',
+    'many2one': 'instance.web.search.ExtendedSearchProposition.Char',
+    'many2many': 'instance.web.search.ExtendedSearchProposition.Char',
 
-    'datetime': 'openerp.web.search.ExtendedSearchProposition.DateTime',
-    'date': 'openerp.web.search.ExtendedSearchProposition.Date',
-    'integer': 'openerp.web.search.ExtendedSearchProposition.Integer',
-    'float': 'openerp.web.search.ExtendedSearchProposition.Float',
-    'boolean': 'openerp.web.search.ExtendedSearchProposition.Boolean',
-    'selection': 'openerp.web.search.ExtendedSearchProposition.Selection',
+    'datetime': 'instance.web.search.ExtendedSearchProposition.DateTime',
+    'date': 'instance.web.search.ExtendedSearchProposition.Date',
+    'integer': 'instance.web.search.ExtendedSearchProposition.Integer',
+    'float': 'instance.web.search.ExtendedSearchProposition.Float',
+    'boolean': 'instance.web.search.ExtendedSearchProposition.Boolean',
+    'selection': 'instance.web.search.ExtendedSearchProposition.Selection',
 
-    'id': 'openerp.web.search.ExtendedSearchProposition.Id'
+    'id': 'instance.web.search.ExtendedSearchProposition.Id'
 });
 
 };

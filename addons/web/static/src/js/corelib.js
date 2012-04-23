@@ -23,7 +23,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-openerp.web.corelib = function(openerp) {
+openerp.web.corelib = function(instance) {
 
 /**
  * Improved John Resig's inheritance, based on:
@@ -39,7 +39,7 @@ openerp.web.corelib = function(openerp) {
  *
  * Example:
  *
- * var Person = openerp.web.Class.extend({
+ * var Person = instance.web.Class.extend({
  *  init: function(isDancing){
  *     this.dancing = isDancing;
  *   },
@@ -75,14 +75,14 @@ openerp.web.corelib = function(openerp) {
     var initializing = false,
         fnTest = /xyz/.test(function(){xyz;}) ? /\b_super\b/ : /.*/;
     // The web Class implementation (does nothing)
-    openerp.web.Class = function(){};
+    instance.web.Class = function(){};
 
     /**
      * Subclass an existing class
      *
      * @param {Object} prop class-level properties (class attributes and instance methods) to set on the new class
      */
-    openerp.web.Class.extend = function() {
+    instance.web.Class.extend = function() {
         var _super = this.prototype;
         // Support mixins arguments
         var args = _.toArray(arguments);
@@ -180,7 +180,7 @@ openerp.web.corelib = function(openerp) {
  * When an object is destroyed, all its children are destroyed too releasing
  * any resource they could have reserved before.
  */
-openerp.web.ParentedMixin = {
+instance.web.ParentedMixin = {
     __parentedMixin : true,
     init: function() {
         this.__parentedDestroyed = false;
@@ -239,9 +239,7 @@ openerp.web.ParentedMixin = {
 };
 
 /**
- * TODO al: move into the the mixin
- *
- * Backbone's events
+ * Backbone's events. Do not ever use it directly, use EventDispatcherMixin instead.
  *
  * (c) 2010-2012 Jeremy Ashkenas, DocumentCloud Inc.
  * Backbone may be freely distributed under the MIT license.
@@ -253,8 +251,7 @@ openerp.web.ParentedMixin = {
  * events is done in EventDispatcherMixin.
  *
  */
-openerp.web.Events = openerp.web.Class.extend({
-
+var Events = instance.web.Class.extend({
     on : function(events, callback, context) {
         var ev;
         events = events.split(/\s+/);
@@ -323,12 +320,13 @@ openerp.web.Events = openerp.web.Class.extend({
         return this;
     }
 });
+// end of Jeremy Ashkenas' code
 
-openerp.web.EventDispatcherMixin = _.extend({}, openerp.web.ParentedMixin, {
+instance.web.EventDispatcherMixin = _.extend({}, instance.web.ParentedMixin, {
     __eventDispatcherMixin: true,
     init: function() {
-        openerp.web.ParentedMixin.init.call(this);
-        this.__edispatcherEvents = new openerp.web.Events();
+        instance.web.ParentedMixin.init.call(this);
+        this.__edispatcherEvents = new Events();
         this.__edispatcherRegisteredEvents = [];
     },
     on: function(events, dest, func) {
@@ -369,13 +367,13 @@ openerp.web.EventDispatcherMixin = _.extend({}, openerp.web.ParentedMixin, {
             debugger;
         }
         this.__edispatcherEvents.off();
-        openerp.web.ParentedMixin.destroy.call(this);
+        instance.web.ParentedMixin.destroy.call(this);
     }
 });
 
-openerp.web.GetterSetterMixin = _.extend({}, openerp.web.EventDispatcherMixin, {
+instance.web.PropertiesMixin = _.extend({}, instance.web.EventDispatcherMixin, {
     init: function() {
-        openerp.web.EventDispatcherMixin.init.call(this);
+        instance.web.EventDispatcherMixin.init.call(this);
         this.__getterSetterInternalMap = {};
     },
     set: function(map) {
@@ -400,9 +398,9 @@ openerp.web.GetterSetterMixin = _.extend({}, openerp.web.EventDispatcherMixin, {
     }
 });
 
-openerp.web.CallbackEnabledMixin = _.extend({}, openerp.web.GetterSetterMixin, {
+instance.web.CallbackEnabledMixin = _.extend({}, instance.web.PropertiesMixin, {
     init: function() {
-        openerp.web.GetterSetterMixin.init.call(this);
+        instance.web.PropertiesMixin.init.call(this);
         var self = this;
         var callback_maker = function(obj, name, method) {
             var callback = function() {
@@ -421,7 +419,7 @@ openerp.web.CallbackEnabledMixin = _.extend({}, openerp.web.GetterSetterMixin, {
                         r = result;
                     }
                     // TODO special value to stop the chain
-                    // openerp.web.callback_stop
+                    // instance.web.callback_stop
                 }
                 return r;
             };
@@ -500,7 +498,7 @@ openerp.web.CallbackEnabledMixin = _.extend({}, openerp.web.GetterSetterMixin, {
     }
 });
 
-openerp.web.WidgetMixin = _.extend({},openerp.web.CallbackEnabledMixin, {
+instance.web.WidgetMixin = _.extend({},instance.web.CallbackEnabledMixin, {
     /**
      * Tag name when creating a default $element.
      * @type string
@@ -509,10 +507,10 @@ openerp.web.WidgetMixin = _.extend({},openerp.web.CallbackEnabledMixin, {
     /**
      * Constructs the widget and sets its parent if a parent is given.
      *
-     * @constructs openerp.web.Widget
-     * @extends openerp.web.CallbackEnabled
+     * @constructs instance.web.Widget
+     * @extends instance.web.CallbackEnabled
      *
-     * @param {openerp.web.Widget} parent Binds the current instance to the given Widget instance.
+     * @param {instance.web.Widget} parent Binds the current instance to the given Widget instance.
      * When that widget is destroyed by calling destroy(), the current instance will be
      * destroyed too. Can be null.
      * @param {String} element_id Deprecated. Sets the element_id. Only useful when you want
@@ -521,7 +519,7 @@ openerp.web.WidgetMixin = _.extend({},openerp.web.CallbackEnabledMixin, {
      * for new components this argument should not be provided any more.
      */
     init: function(parent) {
-        openerp.web.CallbackEnabledMixin.init.call(this);
+        instance.web.CallbackEnabledMixin.init.call(this);
         this.$element = $(document.createElement(this.tagName));
         this.setParent(parent);
     },
@@ -535,7 +533,7 @@ openerp.web.WidgetMixin = _.extend({},openerp.web.CallbackEnabledMixin, {
         if(this.$element != null) {
             this.$element.remove();
         }
-        openerp.web.GetterSetterMixin.destroy.call(this);
+        instance.web.PropertiesMixin.destroy.call(this);
     },
     /**
      * Renders the current widget and appends it to the given jQuery object or Widget.
@@ -616,9 +614,9 @@ openerp.web.WidgetMixin = _.extend({},openerp.web.CallbackEnabledMixin, {
 
 // Classes
 
-openerp.web.CallbackEnabled = openerp.web.Class.extend(openerp.web.CallbackEnabledMixin, {
+instance.web.CallbackEnabled = instance.web.Class.extend(instance.web.CallbackEnabledMixin, {
     init: function() {
-        openerp.web.CallbackEnabledMixin.init.call(this);
+        instance.web.CallbackEnabledMixin.init.call(this);
     }
 });
 
@@ -637,7 +635,7 @@ openerp.web.CallbackEnabled = openerp.web.Class.extend(openerp.web.CallbackEnabl
  *
  * Here is a sample child class:
  *
- * MyWidget = openerp.base.Widget.extend({
+ * MyWidget = instance.base.Widget.extend({
  *     // the name of the QWeb template to use for rendering
  *     template: "MyQWebTemplate",
  *
@@ -670,7 +668,7 @@ openerp.web.CallbackEnabled = openerp.web.Class.extend(openerp.web.CallbackEnabl
  *
  * That will kill the widget in a clean way and erase its content from the dom.
  */
-openerp.web.Widget = openerp.web.Class.extend(openerp.web.WidgetMixin, {
+instance.web.Widget = instance.web.Class.extend(instance.web.WidgetMixin, {
     /**
      * The name of the QWeb template that will be used for rendering. Must be
      * redefined in subclasses or the default render() method can not be used.
@@ -681,10 +679,10 @@ openerp.web.Widget = openerp.web.Class.extend(openerp.web.WidgetMixin, {
     /**
      * Constructs the widget and sets its parent if a parent is given.
      *
-     * @constructs openerp.web.Widget
-     * @extends openerp.web.CallbackEnabled
+     * @constructs instance.web.Widget
+     * @extends instance.web.CallbackEnabled
      *
-     * @param {openerp.web.Widget} parent Binds the current instance to the given Widget instance.
+     * @param {instance.web.Widget} parent Binds the current instance to the given Widget instance.
      * When that widget is destroyed by calling destroy(), the current instance will be
      * destroyed too. Can be null.
      * @param {String} element_id Deprecated. Sets the element_id. Only useful when you want
@@ -693,8 +691,8 @@ openerp.web.Widget = openerp.web.Class.extend(openerp.web.WidgetMixin, {
      * for new components this argument should not be provided any more.
      */
     init: function(parent) {
-        openerp.web.WidgetMixin.init.call(this,parent);
-        this.session = openerp.connection;
+        instance.web.WidgetMixin.init.call(this,parent);
+        this.session = instance.connection;
     },
     /**
      * Renders the element. The default implementation renders the widget using QWeb,
@@ -704,7 +702,7 @@ openerp.web.Widget = openerp.web.Class.extend(openerp.web.WidgetMixin, {
     renderElement: function() {
         var rendered = null;
         if (this.template)
-            rendered = openerp.web.qweb.render(this.template, {widget: this});
+            rendered = instance.web.qweb.render(this.template, {widget: this});
         if (_.str.trim(rendered)) {
             var elem = $(rendered);
             this.$element.replaceWith(elem);
@@ -737,7 +735,7 @@ openerp.web.Widget = openerp.web.Class.extend(openerp.web.WidgetMixin, {
     rpc: function(url, data, success, error) {
         var def = $.Deferred().then(success, error);
         var self = this;
-        openerp.connection.rpc(url, data). then(function() {
+        instance.connection.rpc(url, data). then(function() {
             if (!self.isDestroyed())
                 def.resolve.apply(def, arguments);
         }, function() {
@@ -748,7 +746,7 @@ openerp.web.Widget = openerp.web.Class.extend(openerp.web.WidgetMixin, {
     }
 });
 
-openerp.web.Registry = openerp.web.Class.extend({
+instance.web.Registry = instance.web.Class.extend({
     /**
      * Stores a mapping of arbitrary key (strings) to object paths (as strings
      * as well).
@@ -757,11 +755,11 @@ openerp.web.Registry = openerp.web.Class.extend({
      * object, even if those objects have been overloaded/replaced after the
      * registry was created.
      *
-     * An object path is simply a dotted name from the openerp root to the
-     * object pointed to (e.g. ``"openerp.web.Connection"`` for an OpenERP
+     * An object path is simply a dotted name from the instance root to the
+     * object pointed to (e.g. ``"instance.web.Connection"`` for an OpenERP
      * connection object).
      *
-     * @constructs openerp.web.Registry
+     * @constructs instance.web.Registry
      * @param {Object} mapping a mapping of keys to object-paths
      */
     init: function (mapping) {
@@ -785,7 +783,7 @@ openerp.web.Registry = openerp.web.Class.extend({
             return null;
         }
 
-        var object_match = openerp;
+        var object_match = instance;
         var path = path_string.split('.');
         // ignore first section
         for(var i=1; i<path.length; ++i) {
@@ -838,7 +836,7 @@ openerp.web.Registry = openerp.web.Class.extend({
      *
      * @param {String} key
      * @param {String} object_path fully qualified dotted object path
-     * @returns {openerp.web.Registry} itself
+     * @returns {instance.web.Registry} itself
      */
     add: function (key, object_path) {
         this.map[key] = object_path;
@@ -854,7 +852,7 @@ openerp.web.Registry = openerp.web.Class.extend({
      * @param {Object} [mapping={}] a mapping of keys to object-paths
      */
     extend: function (mapping) {
-        var child = new openerp.web.Registry(mapping);
+        var child = new instance.web.Registry(mapping);
         child.parent = this;
         return child;
     },
@@ -867,10 +865,10 @@ openerp.web.Registry = openerp.web.Class.extend({
     }
 });
 
-openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.web.Connection# */{
+instance.web.Connection = instance.web.CallbackEnabled.extend( /** @lends instance.web.Connection# */{
     /**
-     * @constructs openerp.web.Connection
-     * @extends openerp.web.CallbackEnabled
+     * @constructs instance.web.Connection
+     * @extends instance.web.CallbackEnabled
      *
      * @param {String} [server] JSON-RPC endpoint hostname
      * @param {String} [port] JSON-RPC endpoint port
@@ -880,7 +878,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         this.server = null;
         this.debug = ($.deparam($.param.querystring()).debug != undefined);
         // TODO: session store in cookie should be optional
-        this.name = openerp._session_id;
+        this.name = instance._session_id;
         this.qweb_mutex = new $.Mutex();
     },
     session_bind: function(origin) {
@@ -888,7 +886,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         this.origin = origin ? _.str.rtrim(origin,'/') : window_origin;
         this.prefix = this.origin;
         this.server = this.origin; // keep chs happy
-        openerp.web.qweb.default_dict['_s'] = this.origin;
+        instance.web.qweb.default_dict['_s'] = this.origin;
         this.rpc_function = (this.origin == window_origin) ? this.rpc_json : this.rpc_jsonp;
         this.session_id = false;
         this.uid = false;
@@ -896,7 +894,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         this.user_context= {};
         this.db = false;
         this.openerp_entreprise = false;
-        this.module_list = openerp._modules.slice();
+        this.module_list = instance._modules.slice();
         this.module_loaded = {};
         _(this.module_list).each(function (mod) {
             self.module_loaded[mod] = true;
@@ -1069,7 +1067,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         try {
             var ctx = this.test_eval_contexts(source.contexts);
             if (!_.isEqual(ctx, expected.context)) {
-                openerp.webclient.notification.warn('Context mismatch, report to xmo',
+                instance.webclient.notification.warn('Context mismatch, report to xmo',
                     _.str.sprintf(match_template, {
                         source: JSON.stringify(source.contexts),
                         local: JSON.stringify(ctx),
@@ -1077,7 +1075,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
                     }), true);
             }
         } catch (e) {
-            openerp.webclient.notification.warn('Context fail, report to xmo',
+            instance.webclient.notification.warn('Context fail, report to xmo',
                 _.str.sprintf(fail_template, {
                     error: e.message,
                     source: JSON.stringify(source.contexts)
@@ -1087,7 +1085,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         try {
             var dom = this.test_eval_domains(source.domains, this.test_eval_get_context());
             if (!_.isEqual(dom, expected.domain)) {
-                openerp.webclient.notification.warn('Domains mismatch, report to xmo',
+                instance.webclient.notification.warn('Domains mismatch, report to xmo',
                     _.str.sprintf(match_template, {
                         source: JSON.stringify(source.domains),
                         local: JSON.stringify(dom),
@@ -1095,7 +1093,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
                     }), true);
             }
         } catch (e) {
-            openerp.webclient.notification.warn('Domain fail, report to xmo',
+            instance.webclient.notification.warn('Domain fail, report to xmo',
                 _.str.sprintf(fail_template, {
                     error: e.message,
                     source: JSON.stringify(source.domains)
@@ -1105,7 +1103,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         try {
             var groups = this.test_eval_groupby(source.group_by_seq);
             if (!_.isEqual(groups, expected.group_by)) {
-                openerp.webclient.notification.warn('GroupBy mismatch, report to xmo',
+                instance.webclient.notification.warn('GroupBy mismatch, report to xmo',
                     _.str.sprintf(match_template, {
                         source: JSON.stringify(source.group_by_seq),
                         local: JSON.stringify(groups),
@@ -1113,7 +1111,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
                     }), true);
             }
         } catch (e) {
-            openerp.webclient.notification.warn('GroupBy fail, report to xmo',
+            instance.webclient.notification.warn('GroupBy fail, report to xmo',
                 _.str.sprintf(fail_template, {
                     error: e.message,
                     source: JSON.stringify(source.group_by_seq)
@@ -1369,7 +1367,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         // TODO: session store in cookie should be optional
         this.session_id = this.get_cookie('session_id');
         return this.session_reload().pipe(function(result) {
-            var modules = openerp._modules.join(',');
+            var modules = instance._modules.join(',');
             var deferred = self.rpc('/web/webclient/qweblist', {mods: modules}).pipe(self.do_load_qweb);
             if(self.session_is_valid()) {
                 return deferred.pipe(function() { return self.load_modules(); });
@@ -1390,6 +1388,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
             // an invalid session or no session at all), refresh session data
             // (should not change, but just in case...)
             _.extend(self, {
+                session_id: result.session_id,
                 db: result.db,
                 username: result.login,
                 uid: result.uid,
@@ -1491,7 +1490,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
                     self.rpc('/web/webclient/csslist', {mods: to_load}, self.do_load_css),
                     self.rpc('/web/webclient/qweblist', {mods: to_load}).pipe(self.do_load_qweb),
                     self.rpc('/web/webclient/translations', params).pipe(function(trans) {
-                        openerp.web._t.database.set_bundle(trans);
+                        instance.web._t.database.set_bundle(trans);
                         var file_list = ["/web/static/lib/datejs/globalization/" + lang.replace("_", "-") + ".js"];
                         return self.rpc('/web/webclient/jslist', {mods: to_load}).pipe(function(files) {
                             return self.do_load_js(file_list.concat(files));
@@ -1553,7 +1552,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
             self.qweb_mutex.exec(function() {
                 return self.rpc('/web/proxy/load', {path: file}).pipe(function(xml) {
                     if (!xml) { return; }
-                    openerp.web.qweb.add_template(_.str.trim(xml));
+                    instance.web.qweb.add_template(_.str.trim(xml));
                 });
             });
         });
@@ -1564,10 +1563,10 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
             var mod = this.module_list[j];
             if(this.module_loaded[mod])
                 continue;
-            openerp[mod] = {};
+            instance[mod] = {};
             // init module mod
-            if(openerp._openerp[mod] != undefined) {
-                openerp._openerp[mod](openerp);
+            if(instance._openerp[mod] != undefined) {
+                instance._openerp[mod](instance);
                 this.module_loaded[mod] = true;
             }
         }
@@ -1687,10 +1686,10 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
     }
 });
 
-openerp.web.TranslationDataBase = openerp.web.Class.extend(/** @lends openerp.web.TranslationDataBase# */{
+instance.web.TranslationDataBase = instance.web.Class.extend(/** @lends instance.web.TranslationDataBase# */{
     /**
-     * @constructs openerp.web.TranslationDataBase
-     * @extends openerp.web.Class
+     * @constructs instance.web.TranslationDataBase
+     * @extends instance.web.Class
      */
     init: function() {
         this.db = {};
@@ -1741,9 +1740,9 @@ openerp.web.TranslationDataBase = openerp.web.Class.extend(/** @lends openerp.we
 });
 
 /**
- * @deprecated use :class:`openerp.web.Widget`
+ * @deprecated use :class:`instance.web.Widget`
  */
-openerp.web.OldWidget = openerp.web.Widget.extend({
+instance.web.OldWidget = instance.web.Widget.extend({
     init: function(parent, element_id) {
         this._super(parent);
         this.element_id = element_id;
@@ -1762,7 +1761,7 @@ openerp.web.OldWidget = openerp.web.Widget.extend({
     },
     render: function (additional) {
         if (this.template)
-            return openerp.web.qweb.render(this.template, _.extend({widget: this}, additional || {}));
+            return instance.web.qweb.render(this.template, _.extend({widget: this}, additional || {}));
         return null;
     }
 });
