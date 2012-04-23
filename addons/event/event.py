@@ -115,12 +115,10 @@ class event_event(osv.osv):
             
     def check_registration_limits_before(self, cr, uid, ids, no_of_registration, context=None):
         available_seats = self.check_available_seats(cr, uid, ids, context=context)
-        if no_of_registration > available_seats:
-            if available_seats == 0:
-                raise osv.except_osv(_('Warning!'),_("No Tickets Available!"))
-            else:
-                raise osv.except_osv(_('Warning!'),_("Only %d Seats are Available!") % (available_seats))
-
+        if available_seats and no_of_registration > available_seats:
+             raise osv.except_osv(_('Warning!'),_("Only %d Seats are Available!") % (available_seats))
+        elif available_seats == 0:
+            raise osv.except_osv(_('Warning!'),_("No Tickets Available!"))
 
     def confirm_event(self, cr, uid, ids, context=None):
         register_pool = self.pool.get('event.registration')
@@ -231,16 +229,10 @@ class event_event(osv.osv):
     }
 
     def subscribe_to_event(self, cr, uid, ids, context=None):
-        num_of_seats = int(context.get('ticket', 1))
-        available_seats = self.check_available_seats(cr, uid, ids, context=context)
-        if num_of_seats > available_seats:
-            if available_seats == 0:
-                raise osv.except_osv(_('Warning!'),_("No Tickets Available!"))
-            else:
-                raise osv.except_osv(_('Warning!'),_("Only %d Seats are Available!") % (available_seats))
-
         register_pool = self.pool.get('event.registration')
         user_pool = self.pool.get('res.users')
+        num_of_seats = int(context.get('ticket', 1))
+        self.check_registration_limits_before(cr, uid, ids, num_of_seats, context=context)
         user = user_pool.browse(cr, uid, uid, context=context)
         curr_reg_ids = register_pool.search(cr, uid, [('user_id', '=', user.id), ('event_id', '=' , ids[0])])
         #the subscription is done with UID = 1 because in case we share the kanban view, we want anyone to be able to subscribe
