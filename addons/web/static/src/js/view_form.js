@@ -1416,7 +1416,7 @@ instance.web.form.Widget = instance.web.Widget.extend(_.extend({}, instance.web.
                 opacity: 0.85,
                 trigger: 'hover'
             }, options || {});
-        trigger.tipsy(options);
+        $(trigger).tipsy(options);
     },
     _build_view_fields_values: function(blacklist) {
         var a_dataset = this.view.dataset;
@@ -1704,7 +1704,7 @@ instance.web.form.AbstractField = instance.web.form.Widget.extend(/** @lends ins
             }, this));
         }
         if (instance.connection.debug) {
-            this.do_attach_tooltip(this, this.$element);
+            this.do_attach_tooltip(this, this.view.$element.find('label[for=' + this.id_for_label + ']')[0] || this.$element);
         }
         if (!this.disable_utility_classes) {
             var set_required = function() {
