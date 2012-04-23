@@ -75,7 +75,8 @@
             <field name="type">tree</field>
             <field name="priority">2</field>
             <field name="arch" type="xml">
-                <tree string="Sales Orders" colors="grey:state=='cancel';blue:state in ('waiting_date','manual');red:state in ('invoice_except','shipping_except')">
+                <tree string="Sales Orders" fonts="bold:needaction_pending==True" colors="grey:state=='cancel';blue:state in ('waiting_date','manual');red:state in ('invoice_except','shipping_except')">
+                    <field name="needaction_pending" invisible="1"/>
                     <field name="name"/>
                     <field name="date_order"/>
                     <field name="partner_id"/>
@@ -109,6 +110,7 @@
                     <button name="invoice_cancel" states="invoice_except" string="Cancel Order" icon="gtk-cancel"/>
                     <button name="%(report_sale_order)d" string="Print Quotation" type="action" icon="gtk-print" states="draft"/>
                     <button name="order_confirm" states="draft" string="Confirm Order" icon="gtk-apply"/>
+                    <button name="%(action_view_sale_advance_payment_inv)d" string="Advance Invoice" type="action" icon="gtk-execute" states="draft,manual" groups="base.group_extended"/>
                     <div class="oe_right">
                         <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,progress,done" statusbar_colors='{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}'/>
                     </div>
