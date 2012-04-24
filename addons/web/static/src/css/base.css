@@ -1382,12 +1382,17 @@
 .openerp .oe_form_autolayout .oe_form_group_cell.oe_form_group_nested {
   padding: 0;
 }
-.openerp .oe_form label {
-  font-weight: bold;
-}
 .openerp .oe_form .oe_form_label_help[for], .openerp .oe_form .oe_form_label[for] {
   white-space: nowrap;
   padding-right: 8px;
+}
+.openerp .oe_form .oe_form_label_help[for] span, .openerp .oe_form .oe_form_label[for] span {
+  font-size: 80%;
+  color: darkGreen;
+  vertical-align: top;
+  position: relative;
+  top: -4px;
+  padding: 0 2px;
 }
 .openerp .oe_form textarea {
   resize: vertical;

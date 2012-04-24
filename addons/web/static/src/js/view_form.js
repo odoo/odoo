@@ -1211,6 +1211,7 @@ instance.web.form.FormRenderingEngine = instance.web.Class.extend({
         if (modifiers.invisible !== undefined)
             new instance.web.form.InvisibilityChanger(this.view, this.view, modifiers.invisible, $new_element);
         $new_element.addClass($node.attr("class") || "");
+        $new_element.attr('style', $node.attr('style'));
     },
 });
 
