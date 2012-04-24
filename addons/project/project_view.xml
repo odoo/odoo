@@ -182,7 +182,7 @@
                         <t t-name="kanban-box">
                             <div class="project_vignettes">
                                 <li t-attf-class="#{kanban_color(record.color.raw_value)} oe_project_kanban_vignette" id="oe_project_kanban_vignette">
-                                    <a href="#" class="oe_project_kanban_action dropdown-toggle"><span class="i">B</span></a>
+                                    <a href="#" class="oe_project_kanban_action dropdown-toggle"><span class="oe_i">B</span></a>
                                     <ul class="dropdown-menu">
                                       <li ><a type="edit" >Edit...</a></li>
                                       <li ><a type="delete">Delete</a></li>
@@ -205,6 +205,7 @@
                                             </t>
                                         </a>
                                     </div>
+                                    <br/>
                                     <button class="click_button" type="object">
                                         <table class="project_fields">
                                             <tr id="deadline" t-if="record.date.raw_value">
