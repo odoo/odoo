@@ -8,9 +8,11 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
             <field name="arch" type="xml">
-                <field name="priority" position="after">
-                    <button string="Convert to Quote" icon="gtk-go-forward" name="%(action_crm_make_sale)d" type="action"/>
-                </field>
+                <data>
+                    <xpath expr="//div[contains(@class,'oe_form_topbar')]/div[contains(@class,'oe_right')]" position="before">
+                        <button string="Convert to Quote" icon="gtk-go-forward" name="%(action_crm_make_sale)d" type="action"/>
+                    </xpath>
+                </data>
             </field>
         </record>
 
