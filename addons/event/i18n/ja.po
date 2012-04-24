@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2012-04-20 01:25+0000\n"
+"PO-Revision-Date: 2012-04-20 18:20+0000\n"
 "Last-Translator: Masaki Yamaya <Unknown>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-04-20 04:43+0000\n"
+"X-Launchpad-Export-Date: 2012-04-21 05:00+0000\n"
 "X-Generator: Launchpad (build 15120)\n"
 
 #. module: event
@@ -47,7 +47,7 @@ msgstr "登録者の最少数"
 #. module: event
 #: model:ir.model,name:event.model_event_confirm_registration
 msgid "Confirmation for Event Registration"
-msgstr "イベント登録者の確認"
+msgstr "イベント参加者の確定"
 
 #. module: event
 #: field:event.registration.badge,title:0
@@ -93,7 +93,7 @@ msgstr "3月"
 #. module: event
 #: field:event.event,mail_confirm:0
 msgid "Confirmation Email"
-msgstr "確認Eメール"
+msgstr "確定Eメール"
 
 #. module: event
 #: field:event.registration,nb_register:0
@@ -167,7 +167,7 @@ msgstr "内部注記を追加"
 #. module: event
 #: view:event.event:0
 msgid "Confirmed events"
-msgstr "確認済みのイベント"
+msgstr "確定済みのイベント"
 
 #. module: event
 #: view:report.event.registration:0
@@ -185,7 +185,7 @@ msgstr "イベント分析"
 #. module: event
 #: field:event.registration,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "メッセージ"
 
 #. module: event
 #: model:ir.model,name:event.model_event_registration_badge
@@ -200,14 +200,14 @@ msgstr "Eメールの自動確認"
 #. module: event
 #: model:product.template,name:event.event_product_1_product_template
 msgid "Ticket for Opera"
-msgstr "オペラの切符"
+msgstr "オペラの入場券"
 
 #. module: event
 #: code:addons/event/event.py:125
 #: view:event.event:0
 #, python-format
 msgid "Confirm Event"
-msgstr "イベントを確認"
+msgstr "イベントを確定"
 
 #. module: event
 #: selection:event.event,state:0
@@ -247,7 +247,7 @@ msgstr "登録見込み数"
 msgid ""
 "Check this box if you want to use automatic confirmation emailing or "
 "reminder."
-msgstr "確認Eメールあるいは催促Eメールを自動的に送るのであれば、ここをチェックして下さい。"
+msgstr "確定Eメールあるいは催促Eメールを自動的に送るのであれば、ここをチェックして下さい。"
 
 #. module: event
 #: field:event.registration,ref:0
@@ -280,7 +280,7 @@ msgstr "顧客請求書"
 #: selection:event.event,state:0
 #: selection:report.event.registration,state:0
 msgid "Draft"
-msgstr "草案"
+msgstr "予定"
 
 #. module: event
 #: field:event.type,name:0
@@ -317,12 +317,12 @@ msgstr "名札"
 #: selection:event.registration,state:0
 #: selection:report.event.registration,state:0
 msgid "Confirmed"
-msgstr "確認済み"
+msgstr "確定済み"
 
 #. module: event
 #: view:event.confirm.registration:0
 msgid "Registration Confirmation"
-msgstr "登録確認"
+msgstr "参加確定"
 
 #. module: event
 #: view:event.event:0
@@ -332,7 +332,7 @@ msgstr "新しいイベント"
 #. module: event
 #: view:report.event.registration:0
 msgid "Confirm"
-msgstr "確認"
+msgstr "確定"
 
 #. module: event
 #: view:event.event:0
@@ -348,7 +348,7 @@ msgstr "イベントは請求書を作成"
 #. module: event
 #: help:event.registration,nb_register:0
 msgid "Number of Registrations or Tickets"
-msgstr "登録者あるいは切符の数"
+msgstr "参加者あるいは入場券の数"
 
 #. module: event
 #: code:addons/event/wizard/event_make_invoice.py:50
@@ -385,7 +385,7 @@ msgstr "新規"
 #: field:event.event,register_current:0
 #: view:report.event.registration:0
 msgid "Confirmed Registrations"
-msgstr "確認済みの登録者"
+msgstr "確定済みの参加者"
 
 #. module: event
 #: field:event.event,mail_auto_registr:0
@@ -410,7 +410,7 @@ msgid ""
 "subscribes to a confirmed event. This is also the email sent to remind "
 "someone about the event."
 msgstr ""
-"このEメールは、イベントの開催が確認されるか、誰かが確認済みのイベントについて問い合わせるかすると、このEメールが送られます。また、イベントを気づかせるた"
+"このEメールは、イベントの開催が確定されるか、誰かが確定済みのイベントについて問い合わせるかすると、このEメールが送られます。また、イベントを気づかせるた"
 "めのEメールも送られます。"
 
 #. module: event
@@ -471,7 +471,7 @@ msgstr "イベントのタイプ。例えば、セミナー、展示会、カン
 #. module: event
 #: view:event.registration:0
 msgid "Confirmed registrations"
-msgstr "確認済み登録者"
+msgstr "確定済み参加者"
 
 #. module: event
 #: view:event.event:0
@@ -492,7 +492,7 @@ msgstr "日付"
 #: view:event.confirm:0
 #: view:event.confirm.registration:0
 msgid "Confirm Anyway"
-msgstr "とにかく確認する"
+msgstr "とにかく確定する"
 
 #. module: event
 #: code:addons/event/wizard/event_confirm_registration.py:54
@@ -529,7 +529,7 @@ msgid ""
 "If event is created, the state is 'Draft'.If event is confirmed for the "
 "particular dates the state is set to 'Confirmed'. If the event is over, the "
 "state is set to 'Done'.If event is cancelled the state is set to 'Cancelled'."
-msgstr ""
+msgstr "イベントの状態は、作成されると「予定」、日にちが確定すると[確定」、終了すると「終了」、キャンセルされると「キャンセル」に設定されます。"
 
 #. module: event
 #: view:event.event:0
@@ -576,7 +576,7 @@ msgstr "イベントの状態"
 #: view:board.board:0
 #: field:event.event,register_prospect:0
 msgid "Unconfirmed Registrations"
-msgstr "未確認の登録"
+msgstr "未確定の参加者"
 
 #. module: event
 #: field:event.registration,partner_invoice_id:0
@@ -621,7 +621,7 @@ msgstr "請求名"
 #. module: event
 #: field:report.event.registration,draft_state:0
 msgid " # No of Draft Registrations"
-msgstr " 登録の草案の数"
+msgstr " 予定している参加者の数"
 
 #. module: event
 #: view:report.event.registration:0
@@ -637,7 +637,7 @@ msgstr "終了したイベント"
 #. module: event
 #: view:event.registration:0
 msgid "Registrations in unconfirmed state"
-msgstr "未確認状態の登録"
+msgstr "未確定の参加者"
 
 #. module: event
 #: help:event.event,register_current:0
@@ -708,7 +708,7 @@ msgstr "終了"
 #. module: event
 #: view:report.event.registration:0
 msgid "Events which are in New state"
-msgstr "新規状態のイベント"
+msgstr "新規のイベント"
 
 #. module: event
 #: view:event.event:0
@@ -746,7 +746,7 @@ msgid ""
 "The invoices of this event registration will be created with this Product. "
 "Thus it allows you to set the default label and the accounting info you want "
 "by default on these invoices."
-msgstr ""
+msgstr "このイベント参加登録の請求書はこのプロダクトとして作成されます。そして、デフォルトのラベルと会計情報が設定されます。"
 
 #. module: event
 #: selection:report.event.registration,month:0
@@ -756,7 +756,7 @@ msgstr "6月"
 #. module: event
 #: model:product.template,name:event.event_product_0_product_template
 msgid "Ticket for Concert"
-msgstr "コンサートの切符"
+msgstr "コンサートの入場券"
 
 #. module: event
 #: field:event.registration,write_date:0
@@ -773,7 +773,7 @@ msgstr "私の登録"
 msgid ""
 "Warning: This Event has not reached its Minimum Registration Limit. Are you "
 "sure you want to confirm it?"
-msgstr ""
+msgstr "警告：このイベントは最少催行人数に達していません。それでも確定にしますか？"
 
 #. module: event
 #: field:event.registration,active:0
@@ -814,22 +814,22 @@ msgstr "言語"
 #: view:event.registration:0
 #: field:event.registration,email_cc:0
 msgid "CC"
-msgstr ""
+msgstr "CC"
 
 #. module: event
 #: selection:report.event.registration,month:0
 msgid "January"
-msgstr ""
+msgstr "1月"
 
 #. module: event
 #: help:event.registration,email_from:0
 msgid "These people will receive email."
-msgstr ""
+msgstr "これらの人がEメールを受け取ります。"
 
 #. module: event
 #: view:event.event:0
 msgid "Set To Draft"
-msgstr ""
+msgstr "予定に設定"
 
 #. module: event
 #: code:addons/event/event.py:499
@@ -838,77 +838,77 @@ msgstr ""
 #: view:res.partner:0
 #, python-format
 msgid "Confirm Registration"
-msgstr ""
+msgstr "登録を確定する"
 
 #. module: event
 #: view:event.event:0
 #: view:report.event.registration:0
 #: view:res.partner:0
 msgid "Date"
-msgstr ""
+msgstr "日付"
 
 #. module: event
 #: view:event.event:0
 msgid "Registration Email Body"
-msgstr ""
+msgstr "登録Eメールの本文"
 
 #. module: event
 #: view:event.event:0
 msgid "Confirmation Email Body"
-msgstr ""
+msgstr "確定Eメールの本文"
 
 #. module: event
 #: view:report.event.registration:0
 msgid "Registrations in confirmed or done state"
-msgstr ""
+msgstr "確定あるいは終了したイベントの参加者"
 
 #. module: event
 #: view:event.registration:0
 #: view:res.partner:0
 msgid "History"
-msgstr ""
+msgstr "履歴"
 
 #. module: event
 #: field:event.event,address_id:0
 msgid "Location Address"
-msgstr ""
+msgstr "会場の住所"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_type
 #: model:ir.ui.menu,name:event.menu_event_type
 msgid "Types of Events"
-msgstr ""
+msgstr "イベントのタイプ"
 
 #. module: event
 #: field:event.registration,contact_id:0
 msgid "Partner Contact"
-msgstr ""
+msgstr "取引先の連絡先"
 
 #. module: event
 #: field:event.event,pricelist_id:0
 msgid "Pricelist"
-msgstr ""
+msgstr "価格リスト"
 
 #. module: event
 #: code:addons/event/wizard/event_make_invoice.py:59
 #, python-format
 msgid "Event related doesn't have any product defined"
-msgstr ""
+msgstr "関連するイベントはプロダクトが定義されていません。"
 
 #. module: event
 #: view:event.event:0
 msgid "Auto Confirmation Email"
-msgstr ""
+msgstr "自動確定Eメール"
 
 #. module: event
 #: view:event.registration:0
 msgid "Misc"
-msgstr ""
+msgstr "その他"
 
 #. module: event
 #: constraint:event.event:0
 msgid "Error ! Closing Date cannot be set before Beginning Date."
-msgstr ""
+msgstr "エラー：終了日を開始日の前に指定することはできません。"
 
 #. module: event
 #: code:addons/event/event.py:446
@@ -918,60 +918,60 @@ msgstr ""
 #: selection:report.event.registration,state:0
 #, python-format
 msgid "Done"
-msgstr ""
+msgstr "終了"
 
 #. module: event
 #: field:event.event,date_begin:0
 msgid "Beginning date"
-msgstr ""
+msgstr "開始日"
 
 #. module: event
 #: view:event.registration:0
 #: field:event.registration,invoice_id:0
 msgid "Invoice"
-msgstr ""
+msgstr "請求書"
 
 #. module: event
 #: view:report.event.registration:0
 #: field:report.event.registration,year:0
 msgid "Year"
-msgstr ""
+msgstr "年"
 
 #. module: event
 #: code:addons/event/event.py:465
 #, python-format
 msgid "Cancel"
-msgstr ""
+msgstr "キャンセル"
 
 #. module: event
 #: view:event.confirm:0
 #: view:event.confirm.registration:0
 #: view:event.make.invoice:0
 msgid "Close"
-msgstr ""
+msgstr "締める"
 
 #. module: event
 #: view:event.event:0
 msgid "Event by Registration"
-msgstr ""
+msgstr "参加登録ごとのイベント"
 
 #. module: event
 #: code:addons/event/event.py:436
 #, python-format
 msgid "Open"
-msgstr ""
+msgstr "オープン"
 
 #. module: event
 #: field:event.event,user_id:0
 msgid "Responsible User"
-msgstr ""
+msgstr "ユーザ責任者"
 
 #. module: event
 #: code:addons/event/event.py:561
 #: code:addons/event/event.py:568
 #, python-format
 msgid "Auto Confirmation: [%s] %s"
-msgstr ""
+msgstr "自動確定：[%s] %s"
 
 #. module: event
 #: view:event.event:0
@@ -980,60 +980,60 @@ msgstr ""
 #: view:report.event.registration:0
 #: field:report.event.registration,user_id:0
 msgid "Responsible"
-msgstr ""
+msgstr "責任者"
 
 #. module: event
 #: field:event.event,unit_price:0
 #: view:event.registration:0
 #: field:partner.event.registration,unit_price:0
 msgid "Registration Cost"
-msgstr ""
+msgstr "参加料"
 
 #. module: event
 #: field:event.registration,unit_price:0
 msgid "Unit Price"
-msgstr ""
+msgstr "単価"
 
 #. module: event
 #: view:report.event.registration:0
 #: field:report.event.registration,speaker_id:0
 #: field:res.partner,speaker:0
 msgid "Speaker"
-msgstr ""
+msgstr "講演者"
 
 #. module: event
 #: model:event.event,name:event.event_2
 msgid "Conference on ERP Buisness"
-msgstr ""
+msgstr "ERPビジネスのカンファレンス"
 
 #. module: event
 #: view:event.registration:0
 msgid "Reply"
-msgstr ""
+msgstr "返信"
 
 #. module: event
 #: view:report.event.registration:0
 msgid "Events created in current month"
-msgstr ""
+msgstr "今月，企画したイベント"
 
 #. module: event
 #: help:event.event,mail_auto_registr:0
 msgid ""
 "Check this box if you want to use automatic emailing for new registration."
-msgstr ""
+msgstr "新しい登録者に自動的にEメールを送るのであれば、このボックスをチェックして下さい。"
 
 #. module: event
 #: field:event.event,date_end:0
 #: field:partner.event.registration,end_date:0
 msgid "Closing date"
-msgstr ""
+msgstr "終了日"
 
 #. module: event
 #: field:event.event,product_id:0
 #: view:report.event.registration:0
 #: field:report.event.registration,product_id:0
 msgid "Product"
-msgstr ""
+msgstr "プロダクト"
 
 #. module: event
 #: view:event.event:0
@@ -1041,101 +1041,101 @@ msgstr ""
 #: view:event.registration:0
 #: field:event.registration,description:0
 msgid "Description"
-msgstr ""
+msgstr "詳細"
 
 #. module: event
 #: field:report.event.registration,confirm_state:0
 msgid " # No of Confirmed Registrations"
-msgstr ""
+msgstr " 確定した参加者の数"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.act_register_event_partner
 msgid "Subscribe"
-msgstr ""
+msgstr "予約購読する"
 
 #. module: event
 #: selection:report.event.registration,month:0
 msgid "May"
-msgstr ""
+msgstr "5月"
 
 #. module: event
 #: view:res.partner:0
 msgid "Events Registration"
-msgstr ""
+msgstr "イベント参加者"
 
 #. module: event
 #: help:event.event,mail_registr:0
 msgid "This email will be sent when someone subscribes to the event."
-msgstr ""
+msgstr "誰かがこのイベントを予約すると、このEメールが送られます。"
 
 #. module: event
 #: model:product.template,name:event.event_product_2_product_template
 msgid "Ticket for Conference"
-msgstr ""
+msgstr "カンファレンスの入場券"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_type_association
 msgid "Events Type"
-msgstr ""
+msgstr "イベントのタイプ"
 
 #. module: event
 #: field:event.registration.badge,address_id:0
 msgid "Address"
-msgstr ""
+msgstr "住所"
 
 #. module: event
 #: view:board.board:0
 #: model:ir.actions.act_window,name:event.act_event_view
 msgid "Next Events"
-msgstr ""
+msgstr "次のイベント"
 
 #. module: event
 #: view:partner.event.registration:0
 msgid "_Subcribe"
-msgstr ""
+msgstr "_予約購読"
 
 #. module: event
 #: model:ir.model,name:event.model_partner_event_registration
 msgid "  event Registration "
-msgstr ""
+msgstr "  イベント登録 "
 
 #. module: event
 #: help:event.event,date_begin:0
 #: help:partner.event.registration,start_date:0
 msgid "Beginning Date of Event"
-msgstr ""
+msgstr "イベントの開始日"
 
 #. module: event
 #: selection:event.registration,state:0
 msgid "Unconfirmed"
-msgstr ""
+msgstr "未確定"
 
 #. module: event
 #: code:addons/event/event.py:565
 #, python-format
 msgid "Auto Registration: [%s] %s"
-msgstr ""
+msgstr "自動登録： [%s] %s"
 
 #. module: event
 #: field:event.registration,date_deadline:0
 msgid "End Date"
-msgstr ""
+msgstr "終了日"
 
 #. module: event
 #: selection:report.event.registration,month:0
 msgid "February"
-msgstr ""
+msgstr "2月"
 
 #. module: event
 #: view:board.board:0
 msgid "Association Dashboard"
-msgstr ""
+msgstr "関係ダッシュボード"
 
 #. module: event
 #: view:event.event:0
 #: field:event.registration.badge,name:0
 msgid "Name"
-msgstr ""
+msgstr "氏名"
 
 #. module: event
 #: field:event.event,section_id:0
@@ -1143,18 +1143,18 @@ msgstr ""
 #: view:report.event.registration:0
 #: field:report.event.registration,section_id:0
 msgid "Sale Team"
-msgstr ""
+msgstr "セールスチーム"
 
 #. module: event
 #: field:event.event,country_id:0
 msgid "Country"
-msgstr ""
+msgstr "国名"
 
 #. module: event
 #: code:addons/event/wizard/event_make_invoice.py:55
 #, python-format
 msgid "Registration is set as Cannot be invoiced"
-msgstr ""
+msgstr "参加者には請求しないように設定されました。"
 
 #. module: event
 #: code:addons/event/event.py:527
@@ -1163,24 +1163,24 @@ msgstr ""
 #: view:res.partner:0
 #, python-format
 msgid "Close Registration"
-msgstr ""
+msgstr "登録締切り"
 
 #. module: event
 #: selection:report.event.registration,month:0
 msgid "April"
-msgstr ""
+msgstr "4月"
 
 #. module: event
 #: help:event.event,unit_price:0
 msgid ""
 "This will be the default price used as registration cost when invoicing this "
 "event. Note that you can specify a specific amount for each registration."
-msgstr ""
+msgstr "請求書では、デフォルトの参加料が適用されます。ただし、個々の参加者に特定の金額を設定できます。"
 
 #. module: event
 #: view:report.event.registration:0
 msgid "Events which are in confirm state"
-msgstr ""
+msgstr "確定しているイベント"
 
 #. module: event
 #: view:event.event:0
@@ -1188,7 +1188,7 @@ msgstr ""
 #: view:report.event.registration:0
 #: field:report.event.registration,type:0
 msgid "Event Type"
-msgstr ""
+msgstr "イベントタイプ"
 
 #. module: event
 #: view:event.event:0
@@ -1197,63 +1197,63 @@ msgstr ""
 #: model:ir.ui.menu,name:event.menu_action_registration
 #: model:ir.ui.menu,name:event.menu_action_registration_association
 msgid "Registrations"
-msgstr ""
+msgstr "参加者"
 
 #. module: event
 #: field:event.registration,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: event
 #: field:event.event,register_max:0
 #: field:report.event.registration,register_max:0
 msgid "Maximum Registrations"
-msgstr ""
+msgstr "最大参加者数"
 
 #. module: event
 #: constraint:res.partner:0
 msgid "Error ! You cannot create recursive associated members."
-msgstr ""
+msgstr "エラー：重複した会員を作ることはできません。"
 
 #. module: event
 #: field:report.event.registration,date:0
 msgid "Event Start Date"
-msgstr ""
+msgstr "イベント開始日"
 
 #. module: event
 #: view:partner.event.registration:0
 msgid "Event For Registration"
-msgstr ""
+msgstr "参加者のイベント"
 
 #. module: event
 #: code:addons/event/wizard/event_make_invoice.py:51
 #, python-format
 msgid "Invoice cannot be created if the registration is in %s state."
-msgstr ""
+msgstr "参加者が %s 状態の場合には，請求書を作成できません。"
 
 #. module: event
 #: view:event.confirm:0
 #: model:ir.actions.act_window,name:event.action_event_confirm
 #: model:ir.model,name:event.model_event_confirm
 msgid "Event Confirmation"
-msgstr ""
+msgstr "イベント確定"
 
 #. module: event
 #: view:event.event:0
 msgid "Auto Registration Email"
-msgstr ""
+msgstr "自動参加Eメール"
 
 #. module: event
 #: view:event.registration:0
 #: view:report.event.registration:0
 #: field:report.event.registration,total:0
 msgid "Total"
-msgstr ""
+msgstr "合計"
 
 #. module: event
 #: field:event.event,speaker_confirmed:0
 msgid "Speaker Confirmed"
-msgstr ""
+msgstr "確定した講演者"
 
 #. module: event
 #: model:ir.actions.act_window,help:event.action_event_view
@@ -1263,3 +1263,5 @@ msgid ""
 "caldav. Most of the users should work in the Calendar menu, and not in the "
 "list of events."
 msgstr ""
+"イベントはミーティングなどの低レベルのオブジェクトなので、モバイルデバイスあるいはカレンダアプリケーションと同期するべきです。ユーザの多くは、イベントのリ"
+"ストではなく、カレンダ機能を使うのがよいでしょう。"
