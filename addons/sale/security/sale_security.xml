@@ -55,6 +55,10 @@
     <record model="ir.ui.menu" id="base.menu_base_config">
         <field eval="[(4, ref('base.group_sale_manager'))]" name="groups_id"/>
     </record>
+    <record id="group_multiple_shops" model="res.groups">
+        <field name="name">Manage Multiple Shops</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>	
 
     <!-- Multi - Company Rules -->
 

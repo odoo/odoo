@@ -29,7 +29,7 @@ class crm_configuration(osv.osv_memory):
         'module_crm_caldav': fields.boolean("Caldav Synchronization",
             help="""Use protocol caldav to synchronize meetings with other calendar applications (like Sunbird).
                 This installs the module crm_caldav."""),
-        'fetchmail_lead': fields.boolean("Create leads from an email account",
+        'fetchmail_lead': fields.boolean("Create Leads from Incoming Mails",
             fetchmail_model='crm.lead', fetchmail_name='Incoming leads',
             help="""Allows you to configure your incoming mail server, and create leads from incoming emails."""),
         'lead_server': fields.char('Server', size=256),

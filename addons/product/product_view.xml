@@ -140,7 +140,7 @@
                             <group colspan="2" col="2" name="delay">
                                 <separator string="Delays" colspan="2"/>
                                 <field name="sale_delay" attrs="{'readonly':[('sale_ok','=',0)]}"/>
-                                <field name="produce_delay"/>
+                                <field name="produce_delay" attrs="{'invisible':[('type','=','service')]}"/>
                                 <field name="warranty"/>
                             </group>
                             <group colspan="2" col="2" name="store">
@@ -454,14 +454,14 @@
             </field>
         </record>
         <record id="product_uom_categ_form_action" model="ir.actions.act_window">
-            <field name="name">UoM Categories</field>
+            <field name="name">Unit of Measure Categories</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.uom.categ</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="help">Create and manage the units of measure categories you want to be used in your system. If several units of measure are in the same category, they can be converted to each other. For example, in the unit of measure category "Time", you will have the following UoM: Hours, Days.</field>
         </record>
-        <menuitem action="product_uom_categ_form_action" id="menu_product_uom_categ_form_action" parent="base.menu_base_config" sequence="25"/>
+        <menuitem action="product_uom_categ_form_action" id="menu_product_uom_categ_form_action" parent="base.menu_base_config" sequence="25" groups="product.group_uom"/>
 
         <record id="product_ul_form_view" model="ir.ui.view">
             <field name="name">product.ul.form.view</field>

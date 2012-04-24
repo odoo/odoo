@@ -26,7 +26,7 @@ class project_issue_settings(osv.osv_memory):
     _inherit = ['project.config.settings', 'fetchmail.config.settings']
 
     _columns = {
-        'fetchmail_issue': fields.boolean("Create issues from an email account",
+        'fetchmail_issue': fields.boolean("Create issues from Incoming Mails",
             fetchmail_model='project.issue', fetchmail_name='Incoming issues',
             help="""Allows you to configure your incoming mail server, and create issues from incoming emails."""),
         'issue_server' : fields.char('Server', size=256),

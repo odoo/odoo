@@ -19,7 +19,6 @@
                     <field name="task_work" on_change="onchange_task_work(task_work)"/>
                     <field name="module_project_timesheet" invisible="1"/>
                     <field name="module_project_mrp" invisible="1"/>
-                    <field name="default_picking_policy" attrs="{'invisible':[('group_invoice_deli_orders','=',False)]}"/>
                     <newline/>
                     <field name="timesheet" on_change="onchange_timesheet(timesheet)"/>
                     <field name="time_unit" domain="[('category_id.name','=','Working Time')]"
@@ -34,11 +33,12 @@
                     <field name="module_sale_layout"/>
                     <field name="module_warning"/>
                     <field name="module_sale_journal"/>
-
+                    <field name="group_multiple_shops"/>
+                    <field name="default_picking_policy" attrs="{'invisible':[('group_invoice_deli_orders','=',False)]}"/>
                     <separator string="Contracts" colspan="4"/>
                     <field name="module_account_analytic_analysis" on_change="onchange_timesheet(module_account_analytic_analysis)"/>
-                    <field name="module_analytic_user_function"/>
-                    <field name="module_analytic_journal_billing_rate"/>
+                    <field name="module_analytic_user_function" attrs="{'invisible':[('module_account_analytic_analysis','=',False)]}"/>
+                    <field name="module_analytic_journal_billing_rate" attrs="{'invisible':[('module_account_analytic_analysis','=',False)]}"/>
                 </group>
             </field>
         </record>
