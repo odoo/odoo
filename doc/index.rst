@@ -16,13 +16,13 @@ Contents:
     async
     rpc
 
+    search-view
+
 Older stuff
 -----------
 
 .. toctree::
    :maxdepth: 2
-
-   search-view
 
    getting-started
    production

@@ -13,21 +13,128 @@ multiple fields). The goal for this change is twofold:
 * Improve the looks and behaviors of the view, and the fit within
   OpenERP Web's new design.
 
-The faceted search is implemented through a monkey-patched
-`VisualSearch <http://documentcloud.github.com/visualsearch/>`_
-[#]_. VisualSearch is based on `Backbone
+The internal structure of the faceted search is inspired by
+`VisualSearch <http://documentcloud.github.com/visualsearch/>`_ [#]_.
+
+As does VisualSearch, the new search view is based on `Backbone
 <http://documentcloud.github.com/backbone/>`_ and makes significant
-use of Backbone's models and views. As a result, understanding the
-implementation of the OpenERP Web 6.2 search view also requires a
-basic understanding of Backbone.
+use of Backbone's models and collections (OpenERP Web's widgets make a
+good replacement for Backbone's own views). As a result, understanding
+the implementation details of the OpenERP Web 7 search view also
+requires a basic understanding of Backbone's models, collections and
+events.
 
 .. note::
 
     This document may mention *fetching* data. This is a shortcut for
-    "returning a deferred to [whatever is being fetched]". Unless
-    further noted, the function or method may opt to return nothing by
-    fetching ``null`` (which can easily be done by returning
-    ``$.when(null)``, which simply wraps the ``null`` in a Deferred).
+    "returning a :js:class:`Deferred` to [whatever is being
+    fetched]". Unless further noted, the function or method may opt to
+    return nothing by fetching ``null`` (which can easily be done by
+    returning ``$.when(null)``, which simply wraps the ``null`` in a
+    Deferred).
+
+Working with the search view: creating new inputs
+-------------------------------------------------
+
+The primary component of search views, as with all other OpenERP
+views, are inputs. The search view has two types of inputs — filters
+and fields — but only one is easly customizable: fields.
+
+The mapping from OpenERP field types (and widgets) to search view
+objects is stored in the ``openerp.web.search.fields``
+:js:class:`~openerp.web.Registry` where new field types and widgets
+can be added.
+
+Search view inputs have three main roles:
+
+Loading defaults
+++++++++++++++++
+
+Once the search view has initialized all its inputs, it will call
+:js:func:`~openerp.web.search.Input.facet_for_defaults` on each input,
+passing it a mapping (a javascript object) of ``name:value`` extracted
+from the action's context.
+
+This method should fetch a :js:class:`~openerp.web.search.Facet` (or
+an equivalent object) for the field's default value if applicable (if
+a default value for the field is found in the ``defaults`` mapping).
+
+A default implementation is provided which checks if ``defaults``
+contains a non-falsy value for the field's ``@name`` and calls
+:js:func:`openerp.web.search.Input.facet_for` with that value.
+
+There is no default implementation of
+:js:func:`openerp.web.search.Input.facet_for` [#]_, but
+:js:class:`openerp.web.search.Field` provides one, which uses the
+value as-is to fetch a :js:class:`~openerp.web.search.Facet`.
+
+Providing completions
++++++++++++++++++++++
+
+An important component of the new search view is the auto-completion
+pane, and the task of providing completion items is delegated to
+inputs through the :js:func:`~openerp.web.search.Input.complete`
+method.
+
+This method should take a single argument (the string being typed by
+the user) and should fetch an ``Array`` of possible completions [#]_.
+
+A default implementation is provided which fetches nothing.
+
+A completion item is an object literal with two keys:
+
+``label``
+
+    The string which will be displayed in the completion pane. It may
+    be formatted using HTML (inline only), as a result if ``value`` is
+    interpolated into it it *must* be escaped. ``_.escape`` can be
+    used for this.
+
+``facet``
+
+    Either a :js:class:`~openerp.web.search.Facet` object or (more
+    commonly) the corresponding attributes object. This is the facet
+    which will be inserted into the search query if the completion
+    item is selected by the user.
+
+If the ``facet`` is not provided (not present, ``null``, ``undefined``
+or any other falsy value), the completion item will not be selectable
+and will act as a section title of sort (the ``label`` will be
+formatted differently). If an input *may* fetch multiple completion
+items, it *should* prefix those with a section title using its own
+name. This has no technical consequence but is clearer for users.
+
+Providing drawer/supplementary UI
++++++++++++++++++++++++++++++++++
+
+For some inputs (fields or not), interaction via autocompletion may be
+awkward or even impossible.
+
+These may opt to being rendered in a "drawer" as well or instead. In
+that case, they will undergo the normal widget lifecycle and be
+rendered inside the drawer.
+
+.. Found no good type-based way to handle this, since there is no MI
+   (so no type-tagging) and it's possible for both Field and non-Field
+   input to be put into the drawer, for whatever reason (e.g. some
+   sort of auto-detector completion item for date widgets, but a
+   second more usual calendar widget in the drawer for more
+   obvious/precise interactions)
+
+Any input can note its desire to be rendered in the drawer by setting
+its :js:attr:`~openerp.web.search.Input.in_drawer` attribute to
+``true``, either on its class or on its instance.
+
+It will be rendered in the full width of the drawer, and instantiated
+only once.
+
+.. todo:: drawer API (if a widget wants to close the drawer in some
+          way), part of the low-level SearchView API/interactions?
+
+
+.. todo:: handle filters and filter groups via a "driver" input which
+          dynamically collects, lays out and renders filters? =>
+          exercises drawer thingies
 
 Interaction between the Search View and VisualSearch
 ----------------------------------------------------
@@ -197,7 +304,7 @@ Converting from facet objects
 
 Ultimately, the point of the search view is to allow searching. In
 OpenERP this is done via :ref:`domains <openerpserver:domains>`. On
-the other hand, the OpenERP Web 6.2 search view's state is modelled
+the other hand, the OpenERP Web 7 search view's state is modelled
 after a collection of :js:class:`~VS.model.SearchFacet`, and each
 field of a search view may have special requirements when it comes to
 the domains it produces [#]_.
@@ -223,7 +330,7 @@ Changes
 .. todo:: merge in changelog instead
 
 The displaying of the search view was significantly altered from
-OpenERP Web 6.1 to OpenERP Web 6.2.
+OpenERP Web 6.1 to OpenERP Web 7.
 
 As a result, while the external API used to interact with the search
 view does not change many internal details — including the interaction
@@ -247,7 +354,7 @@ Widgets API
 
 * :js:func:`~openerp.web.search.Input.clear` has been removed since
   clearing the search view now simply consists of removing all search
-  facets from VisualSearch
+  facets
 
 * :js:func:`~openerp.web.search.Input.get_domain` and
   :js:func:`~openerp.web.search.Input.get_context` now take a
@@ -300,10 +407,18 @@ Many To One
   :js:func:`openerp.web.search.ManyToOneField.setup_autocomplete` has
   been removed.
 
-.. [#] the library code is untouched, all patching is performed in the
-       Search view's implementation module. Changes to the
-       VisualSearch code should only update the library to new
-       revisions or releases.
+.. [#] the original view was implemented on top of a monkey-patched
+       VisualSearch, but as our needs diverged from VisualSearch's goal this
+       made less and less sense ultimately leading to a clean-room
+       reimplementation
+
+.. [#] In case you are extending the search view with a brand new type
+       of input
+
+.. [#] Ideally this array should not hold more than about 10 items,
+       but the search view does not put any constraint on this at the
+       moment. Note that this may change.
+
 .. [#] search view fields may also bundle context data to add to the
        search context
 
