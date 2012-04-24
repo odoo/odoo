@@ -821,6 +821,8 @@ $colour4: #8a89ba
     .oe_searchview
         position: relative
         float: right
+        padding-right: 20px
+        background: white
         .VS-search
             .VS-search-box
                 min-height: 0
@@ -908,17 +910,17 @@ $colour4: #8a89ba
             .VS-icon-cancel
                 right: 24px
 
-            .oe_vs_unfold_drawer
-                position: absolute
-                top: 0
-                right: 0
-                height: 100%
-                line-height: 23px
-                padding: 0 7px 0 4px
-                color: #ccc
-                cursor: pointer
-                &:before
-                    content: "▾"
+        .oe_searchview_unfold_drawer
+            position: absolute
+            top: 0
+            right: 0
+            height: 100%
+            line-height: 23px
+            padding: 0 7px 0 4px
+            color: #ccc
+            cursor: pointer
+            &:before
+                content: "▾"
 
         &.oe_searchview_open_drawer
             .oe_searchview_drawer

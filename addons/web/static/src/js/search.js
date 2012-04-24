@@ -6,67 +6,143 @@ _.mixin({
     sum: function (obj) { return _.reduce(obj, function (a, b) { return a + b; }, 0); }
 });
 
-// Have SearchBox optionally use callback function to produce inputs and facets
-// (views) set on callbacks.make_facet and callbacks.make_input keys when
-// initializing VisualSearch
-var SearchBox_renderFacet = function (facet, position) {
-    var view = new (this.app.options.callbacks['make_facet'] || VS.ui.SearchFacet)({
-      app   : this.app,
-      model : facet,
-      order : position
-    });
+/** @namespace */
+var my = instance.web.search = {};
 
-    // Input first, facet second.
-    this.renderSearchInput();
-    this.facetViews.push(view);
-    this.$('.VS-search-inner').children().eq(position*2).after(view.render().el);
+my.FacetValue = Backbone.Model.extend({
 
-    view.calculateSize();
-    _.defer(_.bind(view.calculateSize, view));
-
-    return view;
-  }; // warning: will not match
-// Ensure we're replacing the function we think
-if (SearchBox_renderFacet.toString() !== VS.ui.SearchBox.prototype.renderFacet.toString().replace(/(VS\.ui\.SearchFacet)/, "(this.app.options.callbacks['make_facet'] || $1)")) {
-    throw new Error(
-        "Trying to replace wrong version of VS.ui.SearchBox#renderFacet. "
-        + "Please fix replacement.");
-}
-var SearchBox_renderSearchInput = function () {
-    var input = new (this.app.options.callbacks['make_input'] || VS.ui.SearchInput)({position: this.inputViews.length, app: this.app});
-    this.$('.VS-search-inner').append(input.render().el);
-    this.inputViews.push(input);
-  };
-// Ensure we're replacing the function we think
-if (SearchBox_renderSearchInput.toString() !== VS.ui.SearchBox.prototype.renderSearchInput.toString().replace(/(VS\.ui\.SearchInput)/, "(this.app.options.callbacks['make_input'] || $1)")) {
-    throw new Error(
-        "Trying to replace wrong version of VS.ui.SearchBox#renderSearchInput. "
-        + "Please fix replacement.");
-}
-var SearchBox_searchEvent = function (e) {
-    var query = null;
-    this.renderFacets();
-    this.focusSearch(e);
-    this.app.options.callbacks.search(query, this.app.searchQuery);
-  };
-if (SearchBox_searchEvent.toString() !== VS.ui.SearchBox.prototype.searchEvent.toString().replace(
-        /this\.value\(\);\n[ ]{4}this\.focusSearch\(e\);\n[ ]{4}this\.value\(query\)/,
-        'null;\n    this.renderFacets();\n    this.focusSearch(e)')) {
-    throw new Error(
-        "Trying to replace wrong version of VS.ui.SearchBox#searchEvent. "
-        + "Please fix replacement.");
-}
-_.extend(VS.ui.SearchBox.prototype, {
-    renderFacet: SearchBox_renderFacet,
-    renderSearchInput: SearchBox_renderSearchInput,
-    searchEvent: SearchBox_searchEvent
 });
-_.extend(VS.model.SearchFacet.prototype, {
-    value: function () {
-        if (this.has('json')) {
-            return this.get('json');
+my.FacetValues = Backbone.Collection.extend({
+    model: my.FacetValue
+});
+my.Facet = Backbone.Model.extend({
+    initialize: function (attrs) {
+        var values = attrs.values;
+        delete attrs.values;
+
+        Backbone.Model.prototype.initialize.apply(this, arguments);
+
+        this.values = new my.FacetValues(values || []);
+        this.values.on('add remove change reset', function () {
+            this.trigger('change', this);
+        }, this);
+    },
+    get: function (key) {
+        if (key !== 'values') {
+            return Backbone.Model.prototype.get.call(this, key);
         }
-        return this.get('value');
+        return this.values.toJSON();
+    },
+    set: function (key, value) {
+        if (key !== 'values') {
+            return Backbone.Model.prototype.set.call(this, key, value);
+        }
+        this.values.reset(value);
+    }
+});
+my.SearchQuery = Backbone.Collection.extend({
+    model: my.Facet,
+    initialize: function () {
+        Backbone.Collection.prototype.initialize.apply(
+            this, arguments);
+        this.on('change', function (facet) {
+            if(!facet.values.isEmpty()) { return; }
+
+            this.remove(facet);
+        }, this);
+    },
+    add: function (value, options) {
+        options || (options = {});
+        if (value instanceof Array) {
+            throw new Error("Can't add multiple facets to a query at once");
+        }
+        var model = this._prepareModel(value, options);
+        var previous = this.detect(function (facet) {
+            return facet.get('category') === model.get('category')
+                && facet.get('field') === model.get('field');
+        });
+        if (previous) {
+            previous.values.add(model.get('values'));
+            return this;
+        }
+        return Backbone.Collection.prototype.add.call(this, model, options);
+    },
+    toggle: function (value, options) {
+        options || (options = {});
+
+        var facet = this.detect(function (facet) {
+            return facet.get('category') === value.category
+                && facet.get('field') === value.field;
+        });
+        if (!facet) {
+            return this.add(value, options);
+        }
+
+        var changed = false;
+        _(value.values).each(function (val) {
+            var already_value = facet.values.detect(function (v) {
+                return v.get('value') === val.value
+                    && v.get('label') === val.label;
+            });
+            // toggle value
+            if (already_value) {
+                facet.values.remove(already_value, {silent: true});
+            } else {
+                facet.values.add(val, {silent: true});
+            }
+            changed = true;
+        });
+        // "Commit" changes to values array as a single call, so observers of
+        // change event don't get misled by intermediate incomplete toggling
+        // states
+        facet.trigger('change', facet);
+        return this;
+    }
+});
+
+my.InputView = instance.web.Widget.extend({
+    template: 'SearchView.InputView'
+});
+my.FacetView = instance.web.Widget.extend({
+    template: 'SearchView.FacetView',
+    init: function (parent, model) {
+        this._super(parent);
+        this.model = model;
+        this.model.on('change', this.model_changed, this);
+    },
+    destroy: function () {
+        this.model.off('change', this.model_changed, this);
+        this._super();
+    },
+    start: function () {
+        var self = this;
+        var $e = self.$element.find('span');
+        var q = $.when(this._super());
+        return q.pipe(function () {
+            var values = self.model.values.map(function (value) {
+                return new my.FacetValueView(self, value).appendTo($e);
+            });
+
+            return $.when.apply(null, values);
+        });
+    },
+    model_changed: function () {
+        this.$element.text(this.$element.text() + '*');
+    }
+});
+my.FacetValueView = instance.web.Widget.extend({
+    template: 'SearchView.FacetView.Value',
+    init: function (parent, model) {
+        this._super(parent);
+        this.model = model;
+        this.model.on('change', this.model_changed, this);
+    },
+    destroy: function () {
+        this.model.off('change', this.model_changed, this);
+        this._super();
+    },
+    model_changed: function () {
+        this.$element.text(this.$element.text() + '*');
     }
 });
 
@@ -74,13 +150,13 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
     template: "SearchView",
     /**
      * @constructs instance.web.SearchView
-     * @extends instance.web.OldWidget
+     * @extends instance.web.Widget
      *
      * @param parent
-     * @param element_id
      * @param dataset
      * @param view_id
      * @param defaults
+     * @param hidden
      */
     init: function(parent, dataset, view_id, defaults, hidden) {
         this._super(parent);
@@ -99,6 +175,8 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
 
         this.filter_data = {};
 
+        this.input_subviews = [];
+
         this.ready = $.Deferred();
     },
     start: function() {
@@ -106,33 +184,15 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         var p = this._super();
 
         this.setup_global_completion();
-        this.vs = VS.init({
-            container: this.$element,
-            query: '',
-            callbacks: {
-                make_facet: this.proxy('make_visualsearch_facet'),
-                make_input: this.proxy('make_visualsearch_input'),
-                search: function (query, searchCollection) {
-                    self.do_search();
-                },
-                facetMatches: function (callback) {
-                },
-                valueMatches : function(facet, searchTerm, callback) {
-                }
+        this.query = new my.SearchQuery()
+                .on('add change reset', this.proxy('do_search'))
+                .on('add change reset', this.proxy('renderFacets'))
+                .on('remove', function (record, collection, options) {
+            self.renderFacets();
+            if (options.trigger_search) {
+                self.do_search();
             }
         });
-
-        var search = function () { self.vs.searchBox.searchEvent({}); };
-        // searchQuery operations
-        this.vs.searchQuery
-            .off('add').on('add', search)
-            .off('change').on('change', search)
-            .off('reset').on('reset', search)
-            .off('remove').on('remove', function (record, collection, options) {
-                if (options['trigger_search']) {
-                    search();
-                }
-            });
 
         if (this.hidden) {
             this.$element.hide();
@@ -154,7 +214,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
                 .then(this.on_loaded);
         }
 
-        this.$element.on('click', '.oe_vs_unfold_drawer', function () {
+        this.$element.on('click', '.oe_searchview_unfold_drawer', function () {
             self.$element.toggleClass('oe_searchview_open_drawer');
         });
 
@@ -172,7 +232,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
      */
     setup_stuff_drawer: function () {
         var self = this;
-        $('<div class="oe_vs_unfold_drawer">').appendTo(this.$element.find('.VS-search-box'));
+        $('<div class="oe_searchview_unfold_drawer">').appendTo(this.$element);
         var $drawer = $('<div class="oe_searchview_drawer">').appendTo(this.$element);
         var $filters = $('<div class="oe_searchview_filters">').appendTo($drawer);
 
@@ -301,50 +361,28 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
      */
     select_completion: function (e, ui) {
         e.preventDefault();
-        this.vs.searchQuery.add(new VS.model.SearchFacet(_.extend(
-            {app: this.vs}, ui.item)));
-        this.vs.searchBox.searchEvent({});
-    },
 
-    /**
-     * Builds the right SearchFacet view based on the facet object to render
-     * (e.g. readonly facets for filters)
-     *
-     * @param {Object} options
-     * @param {VS.model.SearchFacet} options.model facet object to render
-     */
-    make_visualsearch_facet: function (options) {
-        return new instance.web.search.FilterGroupFacet(options);
-
-//        if (options.model.get('field') instanceof instance.web.search.FilterGroup) {
-//            return new instance.web.search.FilterGroupFacet(options);
-//        }
-//        return new VS.ui.SearchFacet(options);
+        // FIXME: could have multiple values, shitty API
+        this.query.add_value(ui.item.category, ui.item.values[0]);
     },
-    /**
-     * Proxies searches on a SearchInput to the search view's global completion
-     *
-     * Also disables SearchInput.autocomplete#_move so search view's
-     * autocomplete can get the corresponding events, or something.
-     *
-     * @param options
-     */
-    make_visualsearch_input: function (options) {
-        var self = this, input = new VS.ui.SearchInput(options);
-        input.setupAutocomplete = function () {
-            _.extend(this.box.autocomplete({
-                minLength: 1,
-                delay: 0,
-                search: function () {
-                    self.$element.autocomplete('search', input.box.val());
-                    return false;
-                }
-            }).data('autocomplete'), {
-                _move: function () {},
-                close: function () { self.$element.autocomplete('close'); }
-            });
-        };
-        return input;
+    renderFacets: function () {
+        var self = this;
+        var $e = this.$element.find('div.oe_searchview_facets');
+        _.invoke(this.input_subviews, 'destroy');
+        this.input_subviews = [];
+
+        var i = new my.InputView(this);
+        i.appendTo($e);
+        this.input_subviews.push(i);
+        this.query.each(function (facet) {
+            var f = new my.FacetView(this, facet);
+            f.appendTo($e);
+            self.input_subviews.push(f);
+
+            var i = new my.InputView(this);
+            i.appendTo($e);
+            self.input_subviews.push(i);
+        }, this);
     },
 
     /**
@@ -428,8 +466,8 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
                 this.setup_stuff_drawer(),
                 $.when.apply(null, _(this.inputs).invoke('facet_for_defaults', this.defaults))
                     .then(function () {
-                        self.vs.searchQuery.reset(_(arguments).compact(), {silent: true});
-                        self.vs.searchBox.renderFacets();
+                        self.query.reset(_(arguments).compact(), {silent: true});
+                        self.renderFacets();
                     }))
             .then(function () { self.ready.resolve(); })
     },
@@ -583,7 +621,8 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
     do_search: function () {
         var domains = [], contexts = [], groupbys = [], errors = [];
 
-        this.vs.searchQuery.each(function (facet) {
+        return this.on_search([], [], []);
+        this.query.each(function (facet) {
             var field = facet.get('field');
             try {
                 var domain = field.get_domain(facet);
@@ -647,40 +686,6 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
     }
 });
 
-/** @namespace */
-instance.web.search = {};
-
-instance.web.search.FilterGroupFacet = VS.ui.SearchFacet.extend({
-    events: _.extend({
-        'click': 'selectFacet'
-    }, VS.ui.SearchFacet.prototype.events),
-
-    render: function () {
-        this.setMode('not', 'editing');
-        this.setMode('not', 'selected');
-
-        var value = this.model.get('value');
-        this.$el.html(QWeb.render('SearchView.filters.facet', {
-            facet: this.model
-        }));
-        // virtual input so SearchFacet code has something to play with
-        this.box = $('<input>').val(value);
-
-        return this;
-    },
-    enableEdit: function () {
-        this.selectFacet()
-    },
-    keydown: function (e) {
-        var key = VS.app.hotkeys.key(e);
-        if (key !== 'right') {
-            return VS.ui.SearchFacet.prototype.keydown.call(this, e);
-        }
-        e.preventDefault();
-        this.deselectFacet();
-        this.options.app.searchBox.focusNextFacet(this, 1);
-    }
-});
 /**
  * Registry of search fields, called by :js:class:`instance.web.SearchView` to
  * find and instantiate its field widgets.
@@ -780,8 +785,8 @@ instance.web.search.Input = instance.web.search.Widget.extend( /** @lends instan
         return $.when(null)
     },
     /**
-     * Returns a VS.model.SearchFacet instance for the provided defaults if
-     * they apply to this widget, or null if they don't.
+     * Returns a Facet instance for the provided defaults if they apply to
+     * this widget, or null if they don't.
      *
      * This default implementation will try calling
      * :js:func:`instance.web.search.Input#facet_for` if the widget's name
@@ -845,14 +850,11 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
             return f.attrs && f.attrs.name && !!defaults[f.attrs.name];
         });
         if (_.isEmpty(fs)) { return $.when(null); }
-        return $.when(new VS.model.SearchFacet({
+        return $.when({
             category: _t("Filter"),
-            value: _(fs).map(function (f) {
-                return f.attrs.string || f.attrs.name }).join(' | '),
-            json: fs,
-            field: this,
-            app: this.view.vs
-        }));
+            values: fs,
+            field: this
+        });
     },
     /**
      * Fetches contexts for all enabled filters in the group
@@ -861,7 +863,7 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
      * @return {*} combined contexts of the enabled filters in this group
      */
     get_context: function (facet) {
-        var contexts = _(facet.get('json')).chain()
+        var contexts = _(facet.get('values')).chain()
             .map(function (filter) { return filter.attrs.context; })
             .reject(_.isEmpty)
             .value();
@@ -879,7 +881,7 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
      * @return {Array} enabled filters in this group
      */
     get_groupby: function (facet) {
-        return  _(facet.get('json')).chain()
+        return  _(facet.get('values')).chain()
             .map(function (filter) { return filter.attrs.context; })
             .reject(_.isEmpty)
             .value();
@@ -891,7 +893,7 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
      * @return {*} combined domains of the enabled filters in this group
      */
     get_domain: function (facet) {
-        var domains = _(facet.get('json')).chain()
+        var domains = _(facet.get('values')).chain()
             .map(function (filter) { return filter.attrs.domain; })
             .reject(_.isEmpty)
             .value();
@@ -911,10 +913,10 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
     toggle: function (filter) {
         // FIXME: oh god, my eyes, they hurt
         var self = this, fs;
-        var facet = this.view.vs.searchQuery.detect(function (f) {
+        var facet = this.view.query.detect(function (f) {
             return f.get('field') === self; });
         if (facet) {
-            fs = facet.get('json');
+            fs = facet.get('values');
 
             if (_.include(fs, filter)) {
                 fs = _.without(fs, filter);
@@ -922,12 +924,10 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
                 fs.push(filter);
             }
             if (_(fs).isEmpty()) {
-                this.view.vs.searchQuery.remove(facet, {trigger_search: true});
+                this.view.query.remove(facet, {trigger_search: true});
             } else {
                 facet.set({
-                    json: fs,
-                    value: _(fs).map(function (f) {
-                        return f.attrs.string || f.attrs.name }).join(' | ')
+                    values: fs
                 });
             }
             return;
@@ -935,13 +935,10 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
             fs = [filter];
         }
 
-        this.view.vs.searchQuery.add({
+        this.view.query.add({
             category: _t("Filter"),
-            value: _(fs).map(function (f) {
-                return f.attrs.string || f.attrs.name }).join(' | '),
-            json: fs,
-            field: this,
-            app: this.view.vs
+            values: fs,
+            field: this
         });
     }
 });
@@ -985,13 +982,10 @@ instance.web.search.Field = instance.web.search.Input.extend( /** @lends instanc
         this.load_attrs(_.extend({}, field, view_section.attrs));
     },
     facet_for: function (value) {
-        return $.when(new VS.model.SearchFacet({
+        return $.when({
             category: this.attrs.string || this.attrs.name,
-            value: String(value),
-            json: value,
-            field: this,
-            app: this.view.vs
-        }));
+            values: [{label: String(value), value: value}]
+        });
     },
     get_value: function (facet) {
         return facet.value();
@@ -1061,8 +1055,7 @@ instance.web.search.CharField = instance.web.search.Field.extend( /** @lends ins
         return $.when([{
             category: this.attrs.string,
             label: label,
-            value: value,
-            field: this
+            value: [{label: label, value: value}]
         }]);
     }
 });
@@ -1142,11 +1135,11 @@ instance.web.search.SelectionField = instance.web.search.Field.extend(/** @lends
                 return label.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
             })
             .map(function (sel) {
+                // FIXME fucking repetition man, find something better
                 return {
                     category: self.attrs.string,
-                    field: self,
                     value: sel[1],
-                    json: sel[0]
+                    values: [{value: sel[0], label: sel[1]}]
                 };
             }).value();
         if (_.isEmpty(results)) { return $.when(null); }
@@ -1159,16 +1152,14 @@ instance.web.search.SelectionField = instance.web.search.Field.extend(/** @lends
             return sel[0] === value;
         });
         if (!match) { return $.when(null); }
-        return $.when(new VS.model.SearchFacet({
+        return $.when({
             category: this.attrs.string,
             value: match[1],
-            json: match[0],
-            field: this,
-            app: this.view.app
-        }));
+            values: [{label: match[1], value: match[0]}]
+        });
     },
     get_value: function (facet) {
-        return facet.get('json');
+        return facet.get('values');
     }
 });
 instance.web.search.BooleanField = instance.web.search.SelectionField.extend(/** @lends instance.web.search.BooleanField# */{
@@ -1197,7 +1188,7 @@ instance.web.search.BooleanField = instance.web.search.SelectionField.extend(/**
  */
 instance.web.search.DateField = instance.web.search.Field.extend(/** @lends instance.web.search.DateField# */{
     get_value: function (facet) {
-        return instance.web.date_to_str(facet.get('json'));
+        return openerp.web.date_to_str(facet.get('values'));
     },
     complete: function (needle) {
         var d = Date.parse(needle);
@@ -1210,9 +1201,8 @@ instance.web.search.DateField = instance.web.search.Field.extend(/** @lends inst
         return $.when([{
             category: this.attrs.string,
             label: label,
-            value: value,
-            json: d,
-            field: this
+            // FIXME: brain broken
+            values: [{label: value, value: d}]
         }]);
     }
 });
@@ -1229,7 +1219,7 @@ instance.web.search.DateField = instance.web.search.Field.extend(/** @lends inst
  */
 instance.web.search.DateTimeField = instance.web.search.DateField.extend(/** @lends instance.web.search.DateTimeField# */{
     get_value: function (facet) {
-        return instance.web.datetime_to_str(facet.get('json'));
+        return openerp.web.datetime_to_str(facet.get('values'));
     }
 });
 instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
@@ -1252,8 +1242,7 @@ instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
                     return {
                         category: self.attrs.string,
                         value: result[1],
-                        json: result[0],
-                        field: self
+                        values: [{label: result[1], value: result[0]}]
                     };
                 }));
         });
@@ -1261,28 +1250,24 @@ instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
     facet_for: function (value) {
         var self = this;
         if (value instanceof Array) {
-            return $.when(new VS.model.SearchFacet({
+            return $.when({
                 category: this.attrs.string,
                 value: value[1],
-                json: value[0],
-                field: this,
-                app: this.view.vs
-            }));
+                values: [{label: value[1], value: value[0]}]
+            });
         }
         return this.model.call('name_get', [value], {}).pipe(function (names) {
-                return new VS.model.SearchFacet({
+            return {
                 category: self.attrs.string,
                 value: names[0][1],
-                json: names[0][0],
-                field: self,
-                app: self.view.vs
-            });
+                values: [{label: names[0][1], value: names[0][0]}]
+            };
         })
     },
     make_domain: function (name, operator, facet) {
         // ``json`` -> actual auto-completed id
-        if (facet.get('json')) {
-            return [[name, '=', facet.get('json')]];
+        if (facet.get('values')) {
+            return [[name, '=', facet.get('values')]];
         }
 
         return this._super(name, operator, facet);
@@ -1332,13 +1317,10 @@ instance.web.search.Advanced = instance.web.search.Input.extend({
         // Create Filter (& FilterGroup around it) with that domain
         var f = new instance.web.search.FilterGroup(filters, this.view);
         // add group to query
-        this.view.vs.searchQuery.add({
+        this.query.add({
             category: _t("Advanced"),
-            value: _(filters).map(function (f) {
-                return f.attrs.string || f.attrs.name }).join(' | '),
-            json: filters,
-            field: f,
-            app: this.view.vs
+            values: filters,
+            field: f
         });
         // remove all propositions
         _.invoke(children, 'destroy');
