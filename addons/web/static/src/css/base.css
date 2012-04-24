@@ -1353,10 +1353,6 @@
   padding: 2px;
   height: 25px;
 }
-.openerp .oe_form_autolayout .oe_form_group_cell .oe_form_button {
-  width: 100%;
-  white-space: nowrap;
-}
 .openerp .oe_form_autolayout .oe_form_group_cell > .oe_form_field_many2one,
 .openerp .oe_form_autolayout .oe_form_group_cell > .oe_form_field_many2one input,
 .openerp .oe_form_autolayout .oe_form_group_cell > .oe_form_field_char input,
@@ -1373,14 +1369,15 @@
 }
 .openerp .oe_form_autolayout .oe_form_button.oe_button {
   color: #4c4c4c;
-  white-space: nowrap;
-  min-width: 100%;
-  width: 100%;
-  height: 22px;
 }
 .openerp .oe_form_autolayout .oe_form_button.oe_button span {
   position: relative;
   vertical-align: top;
+}
+.openerp .oe_form_autolayout .oe_form_group_cell > .oe_form_button.oe_button {
+  white-space: nowrap;
+  min-width: 100%;
+  width: 100%;
 }
 .openerp .oe_form_autolayout .oe_form_group_cell.oe_form_group_nested {
   padding: 0;
@@ -1388,8 +1385,17 @@
 .openerp .oe_form label {
   font-weight: bold;
 }
-.openerp .oe_form_label_help[for], .openerp .oe_form_label[for] {
+.openerp .oe_form .oe_form_label_help[for], .openerp .oe_form .oe_form_label[for] {
   white-space: nowrap;
+  padding-right: 8px;
+}
+.openerp .oe_form .oe_form_group_odd_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell:nth-child(odd),
+.openerp .oe_form .oe_form_group_label_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell_label {
+  border-right: 1px solid #dddddd;
+}
+.openerp .oe_form .oe_form_group_odd_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell:nth-child(even),
+.openerp .oe_form .oe_form_group_label_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell:not(.oe_form_group_cell_label):not(:first-child) {
+  padding-left: 8px;
 }
 .openerp .oe_form textarea {
   resize: vertical;
@@ -1616,6 +1622,10 @@
 .openerp .oe_form .oe_view_manager_header2 td .oe_pager_group li {
   height: auto;
   line-height: 16px;
+}
+.openerp .oe_form .oe_form_title, .openerp .oe_form .oe_form_title input {
+  font-size: 20px;
+  font-weight: bold;
 }
 .openerp .oe_listview_nocontent > img {
   float: left;

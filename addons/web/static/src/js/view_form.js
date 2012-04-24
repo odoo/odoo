@@ -1110,7 +1110,7 @@ instance.web.form.FormRenderingEngine = instance.web.Class.extend({
                         break;
                     case 'label':
                         if ($child.attr('for')) {
-                            $td.attr('width', '1%');
+                            $td.attr('width', '1%').addClass('oe_form_group_cell_label');
                             row_cols--;
                             total--;
                         }

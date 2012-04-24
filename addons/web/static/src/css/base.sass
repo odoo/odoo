@@ -1113,9 +1113,6 @@ $colour4: #8a89ba
             line-height: 18px
             padding: 2px
             height: 25px
-            .oe_form_button
-                width: 100%
-                white-space: nowrap
         .oe_form_group_cell > .oe_form_field_many2one,
         .oe_form_group_cell > .oe_form_field_many2one input,
         .oe_form_group_cell > .oe_form_field_char input,
@@ -1131,13 +1128,13 @@ $colour4: #8a89ba
             width: 100%
         .oe_form_button.oe_button
             color: #4c4c4c
-            white-space: nowrap
-            min-width: 100%
-            width: 100%
-            height: 22px
             span
                 position: relative
                 vertical-align: top
+        .oe_form_group_cell > .oe_form_button.oe_button
+            white-space: nowrap
+            min-width: 100%
+            width: 100%
         .oe_form_group_cell.oe_form_group_nested
             padding: 0
     // }}}
@@ -1145,8 +1142,15 @@ $colour4: #8a89ba
     .oe_form
         label
             font-weight: bold
-    .oe_form_label_help[for], .oe_form_label[for]
-        white-space: nowrap
+        .oe_form_label_help[for], .oe_form_label[for]
+            white-space: nowrap
+            padding-right: 8px
+        .oe_form_group_odd_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell:nth-child(odd),
+        .oe_form_group_label_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell_label
+            border-right: 1px solid #ddd
+        .oe_form_group_odd_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell:nth-child(even),
+        .oe_form_group_label_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell:not(.oe_form_group_cell_label):not(:first-child)
+            padding-left: 8px
     // }}}
     // FormView.fields {{{
     .oe_form
@@ -1361,6 +1365,13 @@ $colour4: #8a89ba
                     li
                         height: auto
                         line-height: 16px
+
+    // }}}
+    // FormView.classes for openerp views {{{
+    .oe_form
+        .oe_form_title, .oe_form_title input
+            font-size: 20px
+            font-weight: bold
 
     // }}}
     // ListView {{{
