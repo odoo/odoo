@@ -24,15 +24,16 @@ $(document).ready(function () {
         equal(facet.get('field'), field);
         deepEqual(facet.get('values'), [{label: 'Value', value: 3}]);
     });
-    test('Adding an array of facet is not valid', function () {
+    test('Adding two facets', function () {
         var query = new instance.web.search.SearchQuery;
+        query.add([
+            { category: 'Foo', field: {}, values: [{label: 'Value', value: 3}] },
+            { category: 'Bar', field: {}, values: [{label: 'Value 2', value: 4}] }
+        ]);
 
-        raises(function () {
-            query.add([
-                { category: 'Foo', field: {}, values: [{label: 'Value', value: 3}] },
-                { category: 'Bar', field: {}, values: [{label: 'Value 2', value: 4}] }
-            ]);
-        });
+        equal(query.length, 2);
+        equal(query.at(0).values.length, 1);
+        equal(query.at(1).values.length, 1);
     });
     test('If a facet already exists, add values to it', function () {
         var query = new instance.web.search.SearchQuery;
@@ -107,7 +108,7 @@ $(document).ready(function () {
 
         equal(query.length, 0, 'Should have removed the facet');
     });
-    test('Intermediate emptyness should not remove the facet', function () {
+    test('Intermediate emptiness should not remove the facet', function () {
         var field = {};
         var query = new instance.web.search.SearchQuery;
         query.add({category: 'A', field: field, values: [{label: 'V1', value: 0}]});
@@ -124,14 +125,13 @@ $(document).ready(function () {
             {label: 'V2', value: 1}
         ]);
     });
-    // TODO: if the last FacetValue of a facet is removed, the facet should be removed from the query
 
     test('Reseting with multiple facets should still work to load defaults', function () {
         var query = new instance.web.search.SearchQuery;
         var field = {};
         query.reset([
             {category: 'A', field: field, values: [{label: 'V1', value: 0}]},
-            {category: 'B', field: field, values: [{label: 'V2', value: 1}]}]);
+            {category: 'A', field: field, values: [{label: 'V2', value: 1}]}]);
 
         equal(query.length, 1, 'Should have created a single facet');
         equal(query.at(0).values.length, 2, 'the facet should have merged two values');

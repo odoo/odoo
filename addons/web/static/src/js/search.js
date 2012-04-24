@@ -51,21 +51,25 @@ my.SearchQuery = Backbone.Collection.extend({
             this.remove(facet);
         }, this);
     },
-    add: function (value, options) {
+    add: function (values, options) {
         options || (options = {});
-        if (value instanceof Array) {
-            throw new Error("Can't add multiple facets to a query at once");
+        if (!(values instanceof Array)) {
+            values = [values];
         }
-        var model = this._prepareModel(value, options);
-        var previous = this.detect(function (facet) {
-            return facet.get('category') === model.get('category')
-                && facet.get('field') === model.get('field');
-        });
-        if (previous) {
-            previous.values.add(model.get('values'));
-            return this;
-        }
-        return Backbone.Collection.prototype.add.call(this, model, options);
+
+        _(values).each(function (value) {
+            var model = this._prepareModel(value, options);
+            var previous = this.detect(function (facet) {
+                return facet.get('category') === model.get('category')
+                    && facet.get('field') === model.get('field');
+            });
+            if (previous) {
+                previous.values.add(model.get('values'));
+                return;
+            }
+            Backbone.Collection.prototype.add.call(this, model, options);
+        }, this);
+        return this;
     },
     toggle: function (value, options) {
         options || (options = {});
