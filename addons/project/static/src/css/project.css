@@ -1,15 +1,8 @@
-@font-face {
-  font-family: "mnmliconsRegular";
-  src: url("../font/mnmliconsv21-webfont.eot") format("eot");
-  src: url("../font/mnmliconsv21-webfont.woff") format("woff");
-  src: url("../font/mnmliconsv21-webfont.ttf") format("truetype");
-  src: url("../font/mnmliconsv21-webfont.svg") format("svg") active;
-  font-weight: normal;
-  font-style: normal; }
-  
 .project_fields {
-  font-family:Helvetica;
-  font-size: 12px;
+  margin-top: 1px;
+  margin-bottom: 1px;
+  font-size: 11px;
+  padding-left: 0px;
   }
 .project_fields td {
     border: none;
@@ -19,14 +12,13 @@
     border-right: 1px solid #dddddd;
     vertical-align: top;
     margin-right: 8px; }
- 
-.project_vignettes {
-  margin: 4px; }
+    
   .project_vignettes li {
     float: left; }
   .project_vignettes .project_avatar {
-    width: 28px;
-    height: 28px; }
+    width: 30px;
+    height: 30px;
+    padding-left: 0px; }
   .project_vignettes .project_fields {
     width: 100%; }
     .project_vignettes .project_fields th {
@@ -35,22 +27,17 @@
       color: #888888; }
   .project_vignettes h4 a {
     color: #4c4c4c; }
-
-.project_vignettes > li {
-  height: 205px;
-  width: 250px;
-  padding: 8px;
-  margin: 4px; }
   .project_vignettes > li h4 {
-    margin-bottom: 2px; }
+    margin-bottom: 2px;
+    padding-left: 2px; }
     
 .oe_project_buttons {
-    display: inline-block;
-    padding: 0px 0px;
-    font-size: 13px;
-    background-color: transparent;
-    border: hidden;
-    color: #8A89BA;
+    padding: 2px 2px !important;
+    background: none !important; 
+    background-color: transparent !important;
+    border: hidden !important;
+    color: #8A89BA !important;
+    
 
 }
 
@@ -65,21 +52,22 @@
   border-radius: 4px;
   -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-  -box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); }
+  -box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); 
+  }
 
-.i {
-  font-family: "mnmliconsRegular" !important;
-  font-size: 21px;
-  font-weight: 300 !important; }
   
 .click_button {
-    display: inline-block;
-    background-color: transparent;
-    min-height: 175px;
+    background: none !important;
+    background-color: transparent !important;
+    border: hidden !important;
+    min-height: 155px;
     min-width: 265px;
     border: hidden;
-    margin-left: -7px !important;
+    /*margin-left: 6px !important;*/
+    margin-top: 3px !important;
     text-align:  left;
+    vertical-align:  super;
+    font-size: 11px;
     -webkit-box-align:  baseline;
 }
 
@@ -121,8 +109,9 @@ a.oe_project_kanban_action {
    }
   a.oe_project_kanban_action:hover {
     text-decoration: none; }
-  a.oe_project_kanban_action .i {
+  a.oe_project_kanban_action .oe_i {
     color: #4c4c4c; }
+    
 .square {
   display: inline-block;
   width: 18px;
@@ -130,6 +119,9 @@ a.oe_project_kanban_action {
   border:1px solid grey;
  }
 
+.oe_kanban_color_0 {
+    background: white;
+}
 .oe_kanban_color_1 {
     background: #B1DCFE;
 }
@@ -160,7 +152,7 @@ a.oe_project_kanban_action {
   a.oe_project_kanban_action:hover {
     text-decoration: none;
     }
-  a.oe_project_kanban_action .i {
+  a.oe_project_kanban_action .eo_i {
     color: #4c4c4c; }
 
 
@@ -175,7 +167,9 @@ a.oe_project_kanban_action {
   display: inline-block;
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
-  border-radius: 4px; }
+  border-radius: 4px; 
+
+}
   .oe_project_kanban_vignette:last-child {
     margin-bottom: 0; }
   .oe_project_kanban_vignette:hover {

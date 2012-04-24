@@ -242,34 +242,19 @@ class project(osv.osv):
         """
         if context is None:
             context = {}
-        value = {}
-        data_obj = self.pool.get('ir.model.data')
-        for project in self.browse(cr, uid, ids, context=context):
-            # Get Task views
-            tree_view = data_obj.get_object_reference(cr, uid, 'project_long_term', 'view_project_phase_list')
-            form_view = data_obj.get_object_reference(cr, uid, 'project_long_term', 'view_project_phase_form')
-            calander_view = data_obj.get_object_reference(cr, uid, 'project_long_term', 'view_project_phase_calendar')
-            search_view = data_obj.get_object_reference(cr, uid, 'project_long_term', 'view_project_phase_search')
-            context.update({
-                #'search_default_user_id': uid,
-                'search_default_project_id':project.id,
-                #'search_default_open':1,
-            })
-            value = {
+        if ids:
+            context = dict(context, search_default_project_id=ids[0])
+        return {
                 'name': _('Phase'),
-                'context': context,
                 'view_type': 'form',
-                'view_mode': 'form,tree',
+                'view_mode': 'tree,calendar,form',
                 'res_model': 'project.phase',
                 'view_id': False,
                 'domain':[('project_id','in',ids)],
                 'context': context,
-                'views': [(tree_view and tree_view[1] or False, 'tree'),(calander_view and calander_view[1] or False, 'calendar'),(form_view and form_view[1] or False, 'form')],
                 'type': 'ir.actions.act_window',
-                'search_view_id': search_view and search_view[1] or False,
                 'nodestroy': True
             }
-        return value
     
     def schedule_phases(self, cr, uid, ids, context=None):
         context = context or {}

@@ -85,30 +85,19 @@ class project_project(osv.osv):
         """
         if context is None:
             context = {}
-        value = {}
-        data_obj = self.pool.get('ir.model.data')
-
-        for project in self.browse(cr, uid, ids, context=context):
-            # Get Timesheet views
-            tree_view = data_obj.get_object_reference(cr, uid, 'project_timesheet', 'view_account_analytic_line_tree_inherit_account_id')
-            form_view = data_obj.get_object_reference(cr, uid, 'project_timesheet', 'view_account_analytic_line_form_inherit_account_id')
-            search_view = data_obj.get_object_reference(cr, uid, 'project_timesheet', 'view_account_analytic_line_search_account_inherit')
-            context.update({
-                'search_default_account_id':project.analytic_account_id.id,
-            })
-            value = {
+        if ids:
+            project = self.browse(cr, uid, ids[0], context=context)
+            context = dict(context, search_default_account_id=project.analytic_account_id.id)
+        return {
                 'name': _('Bill Tasks Works'),
                 'context': context,
                 'view_type': 'form',
-                'view_mode': 'form,tree',
+                'view_mode': 'tree,form',
                 'res_model': 'account.analytic.line',
                 'view_id': False,
-                'views': [(tree_view and tree_view[1] or False, 'tree'),(form_view and form_view[1] or False, 'form')],
                 'type': 'ir.actions.act_window',
-                'search_view_id': search_view and search_view[1] or False,
                 'nodestroy': True
             }
-        return value
 
 project_project()
 
