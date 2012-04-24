@@ -91,12 +91,25 @@ class wizard(osv.osv_memory):
     def _default_user_ids(self, cr, uid, context):
         """ determine default user_ids from the active records """
         def create_user_from_address(address):
-            return {    # a user config based on a contact (address)
-                'name': address.name,
-                'user_email': extract_email(address.email),
-                'lang': address.parent_id and address.parent_id.lang or 'en_US',
-                'partner_id': address.parent_id and address.parent_id.id,
-            }
+            res = {}
+            if isinstance(address, int):
+                res_partner_obj = self.pool.get('res.partner')
+                address = res_partner_obj.browse(cr, uid, address, context=context)
+                lang = address.id and address.lang or 'en_US'
+                partner_id = address.id
+                
+            else:
+                lang = address.parent_id and address.parent_id.lang or 'en_US'
+                partner_id = address.parent_id and address.parent_id.id
+            
+            res = {
+                   'name': address.name,
+                   'user_email': extract_email(address.email),
+                   'lang': lang,
+                   'partner_id': partner_id,
+                   }
+            
+            return res
         
         user_ids = []
         if context.get('active_model') == 'res.partner':
@@ -107,6 +120,8 @@ class wizard(osv.osv_memory):
                 # add one user per contact, or one user if no contact
                 if p.child_ids:
                     user_ids.extend(map(create_user_from_address, p.child_ids))
+                elif p.is_company == False and p.customer == True:
+                    user_ids.extend(map(create_user_from_address, [p.id]))
                 else:
                     user_ids.append({'lang': p.lang or 'en_US', 'parent_id': p.id})
         
