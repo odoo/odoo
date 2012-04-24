@@ -8,7 +8,7 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <notebook position="inside">
-                    <page string="Accounting">
+                    <page string="Accounting" groups="base.group_user">
                     <group name="properties" groups="base.group_extended">
                         <separator string="Sales Properties" colspan="2"/>
                         <separator string="Purchase Properties" colspan="2"/>
