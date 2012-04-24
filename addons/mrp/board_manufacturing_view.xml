@@ -6,7 +6,7 @@
             <field name="model">board.board</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Manufacturing board">
+                <form string="Manufacturing board" layout="manual">
                     <board style="2-1">
                         <column>
                             <action name="%(procurement.procurement_exceptions)d" string="Procurements in Exception" domain="[('state','=','exception')]"/>
