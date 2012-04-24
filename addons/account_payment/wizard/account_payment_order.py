@@ -87,7 +87,7 @@ class payment_order_create(osv.osv_memory):
                     'partner_id': line.partner_id and line.partner_id.id or False,
                     'communication': line.ref or '/',
                     'date': date_to_pay,
-                    'currency': line.invoice and line.invoice.currency_id.id or line.company_id.currency_id.id,
+                    'currency': line.invoice and line.invoice.currency_id.id or line.journal_id.currency.id or line.journal_id.company_id.currency_id.id,
                 }, context=context)
         return {'type': 'ir.actions.act_window_close'}
 
