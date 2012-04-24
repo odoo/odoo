@@ -83,7 +83,6 @@ class stock_fill_inventory(osv.osv_memory):
 
         res = {}
         flag = False
-        qty = 0.0
         
         for location in location_ids:
             datas = {}
@@ -94,10 +93,13 @@ class stock_fill_inventory(osv.osv_memory):
             for move in move_obj.browse(cr, uid, move_ids, context=context):
                 lot_id = move.prodlot_id.id
                 prod_id = move.product_id.id
-                
-                if move.location_dest_id.id == location and move.location_id.id != location:
+
+                if move.location_dest_id.id == location and move.location_id.id == location:
+                    # do not count move on same location
+                    qty = 0.0
+                elif move.location_dest_id.id == location:
                     qty = uom_obj._compute_qty(cr, uid, move.product_uom.id,move.product_qty, move.product_id.uom_id.id)
-                elif move.location_dest_id.id != location and move.location_id.id == location:
+                else:
                     qty = -uom_obj._compute_qty(cr, uid, move.product_uom.id,move.product_qty, move.product_id.uom_id.id)
 
                 if datas.get((prod_id, lot_id)):
