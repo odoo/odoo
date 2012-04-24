@@ -412,69 +412,71 @@
                         <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
                     </div>
                 </div>
-                <sheet layout="auto">
-                <group colspan="4" col="7">
-                    <field name="name"  required="1" string="Opportunity"/>
-                    <label string="Stage" for="stage_id" align="1.0"/>
-                    <group colspan="1" col="4">
-                        <field name="stage_id" nolabel="1"
-                            on_change="onchange_stage_id(stage_id)"
-                            domain="section_id and [('section_ids', '=', section_id)] or []"/>
-                        <button name="stage_previous"
-                            states="draft,open,pending" type="object"
-                            icon="gtk-go-back" string="" context="{'stage_type': 'opportunity'}"/>
-                        <button name="stage_next" states="draft,open,pending"
-                            type="object" icon="gtk-go-forward" string="" context="{'stage_type': 'opportunity'}"/>
-                    </group>
+                <sheet layout="manual">
+                <div>
+                    <field name="name" required="1" nolabel="1" class="oe_form_title" style="width: 100%%"/>
+                    <div class="oe_right">
+                        <button string="Schedule/Log Call"
+                            name="%(opportunity2phonecall_act)d" icon="terp-call-start"
+                            type="action"/>
+                        <button string="Schedule Meeting" icon="gtk-redo"
+                            name="action_makeMeeting"
+                            type="object"/>
+                    </div>
+                </div>
+                <group colspan="4" col="4" layout="auto" class="oe_form_group_label_border">
                     <field name="user_id"/>
-
-                    <button string="Schedule/Log Call"
-                        name="%(opportunity2phonecall_act)d" icon="terp-call-start"
-                        type="action"/>
-
                     <field name="planned_revenue"/>
-                    <field name="probability"/>
+
+                    <field name="date_action"/>
                     <field name="date_deadline"/>
 
-                    <button name="action_makeMeeting" type="object"
-                    string="Schedule Meeting" icon="gtk-redo" />
-                    <newline/>
-                    <field name="date_action"/>
                     <field name="title_action"/>
-                    <field name="priority" string="Priority"/>
-                    <newline/>
+                    <field name="probability"/>
+
                     <field name="type" invisible="1"/>
                 </group>
-                <notebook colspan="4">
+                <notebook colspan="4" layout="auto">
                 <page string="Opportunity">
                     <group col="4" colspan="2">
                         <separator colspan="4" string="Contacts"/>
-                        <group colspan="2">
+                        <group colspan="2" col="3" class="oe_form_group_label_border">
                             <field name="partner_id" select="1"
-                                on_change="onchange_partner_id(partner_id, email_from)" string="Customer"
-                                colspan="2" />
+                                on_change="onchange_partner_id(partner_id, email_from)" string="Customer"/>
                             <button name="%(action_crm_lead2partner)d"
                                 icon="terp-partner" type="action"
                                 string="Create"
                                 attrs="{'invisible':[('partner_id','!=',False)]}"/>
-                        </group>
-                        
-                        <group col="3" colspan="2">
-                            <field name="email_from" string="Email" />
-                            <button string="Mail"
-                            name="%(mail.action_email_compose_message_wizard)d"
-                            context="{'mail':'new', 'model': 'crm.lead'}"
-                            icon="terp-mail-message-new" type="action" />
-                        </group>
-                            <field name="phone"/>
 
+                            <field name="phone" colspan="3"/>
+
+                            <field name="email_from" string="Email"/>
+                            <button string="Mail"
+                                name="%(mail.action_email_compose_message_wizard)d"
+                                context="{'mail':'new', 'model': 'crm.lead'}"
+                                icon="terp-mail-message-new" type="action" />
+                        </group>
                     </group>
-                    <group col="2" colspan="2">
+                    <group col="2" colspan="2" class="oe_form_group_label_border">
                         <separator colspan="2" string="Categorization"/>
                         <field name="section_id" colspan="1" widget="selection"/>
                         <field name="categ_id" select="1"
-                        string="Category" widget="selection"
-                        domain="[('object_id.model', '=', 'crm.lead')]" />
+                            string="Category" widget="selection"
+                            domain="[('object_id.model', '=', 'crm.lead')]" />
+
+                        <label string="Stage" for="stage_id" align="1.0"/>
+                        <group colspan="1" col="4">
+                            <field name="stage_id" nolabel="1"
+                                on_change="onchange_stage_id(stage_id)"
+                                domain="section_id and [('section_ids', '=', section_id)] or []"/>
+                            <button name="stage_previous"
+                                states="draft,open,pending" type="object"
+                                icon="gtk-go-back" string="" context="{'stage_type': 'opportunity'}"/>
+                            <button name="stage_next" states="draft,open,pending"
+                                type="object" icon="gtk-go-forward" string="" context="{'stage_type': 'opportunity'}"/>
+                        </group>
+
+                        <field name="priority" string="Priority"/>
                     </group>
 
                     <separator colspan="4" string="Details"/>
