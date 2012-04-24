@@ -1389,14 +1389,6 @@
   white-space: nowrap;
   padding-right: 8px;
 }
-.openerp .oe_form .oe_form_group_odd_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell:nth-child(odd),
-.openerp .oe_form .oe_form_group_label_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell_label {
-  border-right: 1px solid #dddddd;
-}
-.openerp .oe_form .oe_form_group_odd_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell:nth-child(even),
-.openerp .oe_form .oe_form_group_label_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell:not(.oe_form_group_cell_label):not(:first-child) {
-  padding-left: 8px;
-}
 .openerp .oe_form textarea {
   resize: vertical;
 }
@@ -1583,6 +1575,9 @@
   border-bottom-color: transparent;
   cursor: default;
 }
+.openerp .oe_form_notebook_page {
+  padding: 0;
+}
 .openerp .ui-tabs-hide {
   display: none;
 }
@@ -1626,6 +1621,19 @@
 .openerp .oe_form .oe_form_title, .openerp .oe_form .oe_form_title input {
   font-size: 20px;
   font-weight: bold;
+}
+.openerp .oe_form .oe_form_group_odd_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell:nth-child(odd),
+.openerp .oe_form .oe_form_group_label_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell_label {
+  border-right: 1px solid #dddddd;
+}
+.openerp .oe_form .oe_form_group_odd_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell:nth-child(odd) label,
+.openerp .oe_form .oe_form_group_label_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell_label label {
+  display: block;
+  min-width: 120px;
+}
+.openerp .oe_form .oe_form_group_odd_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell:nth-child(even),
+.openerp .oe_form .oe_form_group_label_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell:not(:first-child) {
+  padding-left: 8px;
 }
 .openerp .oe_listview_nocontent > img {
   float: left;

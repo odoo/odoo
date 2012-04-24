@@ -1145,12 +1145,6 @@ $colour4: #8a89ba
         .oe_form_label_help[for], .oe_form_label[for]
             white-space: nowrap
             padding-right: 8px
-        .oe_form_group_odd_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell:nth-child(odd),
-        .oe_form_group_label_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell_label
-            border-right: 1px solid #ddd
-        .oe_form_group_odd_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell:nth-child(even),
-        .oe_form_group_label_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell:not(.oe_form_group_cell_label):not(:first-child)
-            padding-left: 8px
     // }}}
     // FormView.fields {{{
     .oe_form
@@ -1323,6 +1317,8 @@ $colour4: #8a89ba
         border: 1px solid #ddd
         border-bottom-color: transparent
         cursor: default
+    .oe_form_notebook_page
+        padding: 0
     .ui-tabs-hide
         display: none
 
@@ -1372,6 +1368,15 @@ $colour4: #8a89ba
         .oe_form_title, .oe_form_title input
             font-size: 20px
             font-weight: bold
+        .oe_form_group_odd_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell:nth-child(odd),
+        .oe_form_group_label_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell_label
+            border-right: 1px solid #ddd
+            label
+                display: block
+                min-width: 120px
+        .oe_form_group_odd_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell:nth-child(even),
+        .oe_form_group_label_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell:not(:first-child)
+            padding-left: 8px
 
     // }}}
     // ListView {{{

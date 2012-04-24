@@ -986,13 +986,18 @@ instance.web.form.FormRenderingEngine = instance.web.Class.extend({
             return $tag;
         }
     },
-    process_sheet: function() {
-        this.process_form.apply(this, arguments);
+    process_sheet: function($sheet, layout) {
+        var $new_sheet = this.render_element('FormRenderingSheet', layout, $sheet.getAttributes());
+        this.handle_common_properties($new_sheet, $sheet);
+        var $dst = (layout === 'auto') ? $new_sheet.find('group:first') : $new_sheet.find('.oe_form_sheet');
+        $sheet.children().appendTo($dst);
+        $sheet.before($new_sheet).remove();
+        this.process($new_sheet, layout);
     },
     process_form: function($form, layout) {
         var $new_form = this.render_element('FormRenderingForm', layout, $form.getAttributes());
+        this.handle_common_properties($new_form, $form);
         var $dst = (layout === 'auto') ? $new_form.find('group:first') : $new_form;
-        $new_form.attr("modifiers", $form.attr("modifiers"));
         $form.children().appendTo($dst);
         if ($form[0] === this.$form[0]) {
             // If root element, replace it
@@ -1000,7 +1005,7 @@ instance.web.form.FormRenderingEngine = instance.web.Class.extend({
         } else {
             $form.before($new_form).remove();
         }
-        this.process($new_form);
+        this.process($new_form, layout);
     },
     preprocess_field: function($field) {
         var self = this;
