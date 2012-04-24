@@ -50,7 +50,7 @@ class stock_production_lot(osv.osv):
             help='The date on which the lot starts deteriorating without becoming dangerous.'),
         'removal_date': fields.datetime('Removal Date',
             help='The date on which the lot should be removed.'),
-        'alert_date': fields.datetime('Alert Date', help="The date on which an alert should be notified about the production lot."),
+        'alert_date': fields.datetime('Alert Date', help="The date on which an alert should be notified about the Serial Number."),
     }
     # Assign dates according to products data
     def create(self, cr, uid, vals, context=None):
@@ -78,12 +78,12 @@ class product_product(osv.osv):
     _inherit = 'product.product'
     _columns = {
         'life_time': fields.integer('Product Life Time',
-            help='The number of days before a production lot may become dangerous and should not be consumed.'),
+            help='The number of days before a Serial Number may become dangerous and should not be consumed.'),
         'use_time': fields.integer('Product Use Time',
-            help='The number of days before a production lot starts deteriorating without becoming dangerous.'),
+            help='The number of days before a Serial Number starts deteriorating without becoming dangerous.'),
         'removal_time': fields.integer('Product Removal Time',
-            help='The number of days before a production lot should be removed.'),
-        'alert_time': fields.integer('Product Alert Time', help="The number of days after which an alert should be notified about the production lot."),
+            help='The number of days before a Serial Number should be removed.'),
+        'alert_time': fields.integer('Product Alert Time', help="The number of days after which an alert should be notified about the Serial Number."),
     }
 product_product()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -44,7 +44,7 @@ class stock_partial_picking_line(osv.TransientModel):
         'product_id' : fields.many2one('product.product', string="Product", required=True, ondelete='CASCADE'),
         'quantity' : fields.float("Quantity", digits_compute=dp.get_precision('Product UoM'), required=True),
         'product_uom': fields.many2one('product.uom', 'Unit of Measure', required=True, ondelete='CASCADE'),
-        'prodlot_id' : fields.many2one('stock.production.lot', 'Production Lot', ondelete='CASCADE'),
+        'prodlot_id' : fields.many2one('stock.production.lot', 'Serial Number', ondelete='CASCADE'),
         'location_id': fields.many2one('stock.location', 'Location', required=True, ondelete='CASCADE', domain = [('usage','<>','view')]),
         'location_dest_id': fields.many2one('stock.location', 'Dest. Location', required=True, ondelete='CASCADE',domain = [('usage','<>','view')]),
         'move_id' : fields.many2one('stock.move', "Move", ondelete='CASCADE'),

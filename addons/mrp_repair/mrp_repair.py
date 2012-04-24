@@ -268,9 +268,9 @@ class mrp_repair(osv.osv):
         }
 
     def onchange_lot_id(self, cr, uid, ids, lot, product_id):
-        """ On change of production lot sets the values of source location,
+        """ On change of Serial Number sets the values of source location,
         destination location, move and guarantee limit.
-        @param lot: Changed id of production lot.
+        @param lot: Changed id of Serial Number.
         @param product_id: Product id from current record.
         @return: Dictionary of values.
         """
@@ -334,7 +334,7 @@ class mrp_repair(osv.osv):
                     raise osv.except_osv(_('Error !'),_('You cannot confirm a repair order which has no line.'))
                 for line in o.operations:
                     if line.product_id.track_production and not line.prodlot_id:
-                        raise osv.except_osv(_('Warning'), _("Production lot is required for opration line with product '%s'") % (line.product_id.name))
+                        raise osv.except_osv(_('Warning'), _("Serial Number is required for opration line with product '%s'") % (line.product_id.name))
                 mrp_line_obj.write(cr, uid, [l.id for l in o.operations], {'state': 'confirmed'})
         return True
 

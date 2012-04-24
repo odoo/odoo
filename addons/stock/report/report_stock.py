@@ -26,13 +26,13 @@ from tools.sql import drop_view_if_exists
 
 class stock_report_prodlots(osv.osv):
     _name = "stock.report.prodlots"
-    _description = "Stock report by production lots"
+    _description = "Stock report by Serial Number"
     _auto = False
     _columns = {
         'qty': fields.float('Quantity', readonly=True),
         'location_id': fields.many2one('stock.location', 'Location', readonly=True, select=True),
         'product_id': fields.many2one('product.product', 'Product', readonly=True, select=True),
-        'prodlot_id': fields.many2one('stock.production.lot', 'Production lot', readonly=True, select=True),
+        'prodlot_id': fields.many2one('stock.production.lot', 'Serial Number', readonly=True, select=True),
     }
 
     def init(self, cr):

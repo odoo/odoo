@@ -31,7 +31,7 @@ class stock_change_product_qty(osv.osv_memory):
     _columns = {
         'product_id' : fields.many2one('product.product', 'Product'),
         'new_quantity': fields.float('Quantity', digits_compute=dp.get_precision('Product UoM'), required=True, help='This quantity is expressed in the Default UoM of the product.'),
-        'prodlot_id': fields.many2one('stock.production.lot', 'Production Lot', domain="[('product_id','=',product_id)]"),
+        'prodlot_id': fields.many2one('stock.production.lot', 'Serial Number', domain="[('product_id','=',product_id)]"),
         'location_id': fields.many2one('stock.location', 'Location', required=True, domain="[('usage', '=', 'internal')]"),
     }
 

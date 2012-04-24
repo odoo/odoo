@@ -1430,7 +1430,7 @@ class stock_production_lot(osv.osv):
         return self.name_get(cr, uid, ids, context)
 
     _name = 'stock.production.lot'
-    _description = 'Production lot'
+    _description = 'Serial Number'
 
     def _get_stock(self, cr, uid, ids, field_name, arg, context=None):
         """ Gets stock of products for locations
@@ -1477,7 +1477,7 @@ class stock_production_lot(osv.osv):
         return ids
 
     _columns = {
-        'name': fields.char('Production Lot', size=64, required=True, help="Unique production lot, will be displayed as: PREFIX/SERIAL [INT_REF]"),
+        'name': fields.char('Serial Number', size=64, required=True, help="Unique Serial Number, will be displayed as: PREFIX/SERIAL [INT_REF]"),
         'ref': fields.char('Internal Reference', size=256, help="Internal reference number in case it differs from the manufacturer's serial number"),
         'prefix': fields.char('Prefix', size=64, help="Optional prefix to prepend when displaying this serial number: PREFIX/SERIAL [INT_REF]"),
         'product_id': fields.many2one('product.product', 'Product', required=True, domain=[('type', '<>', 'service')]),
@@ -1487,7 +1487,7 @@ class stock_production_lot(osv.osv):
             digits_compute=dp.get_precision('Product UoM')),
         'revisions': fields.one2many('stock.production.lot.revision', 'lot_id', 'Revisions'),
         'company_id': fields.many2one('res.company', 'Company', select=True),
-        'move_ids': fields.one2many('stock.move', 'prodlot_id', 'Moves for this production lot', readonly=True),
+        'move_ids': fields.one2many('stock.move', 'prodlot_id', 'Moves for this Serial Number', readonly=True),
     }
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
@@ -1512,7 +1512,7 @@ stock_production_lot()
 
 class stock_production_lot_revision(osv.osv):
     _name = 'stock.production.lot.revision'
-    _description = 'Production lot revisions'
+    _description = 'Serial Number revisions'
 
     _columns = {
         'name': fields.char('Revision Name', size=64, required=True),
@@ -1520,7 +1520,7 @@ class stock_production_lot_revision(osv.osv):
         'date': fields.date('Revision Date'),
         'indice': fields.char('Revision Number', size=16),
         'author_id': fields.many2one('res.users', 'Author'),
-        'lot_id': fields.many2one('stock.production.lot', 'Production lot', select=True, ondelete='cascade'),
+        'lot_id': fields.many2one('stock.production.lot', 'Serial Number', select=True, ondelete='cascade'),
         'company_id': fields.related('lot_id','company_id',type='many2one',relation='res.company',string='Company', store=True, readonly=True),
     }
 
@@ -1578,7 +1578,7 @@ class stock_move(osv.osv):
         return res
 
     def _check_tracking(self, cr, uid, ids, context=None):
-        """ Checks if production lot is assigned to stock move or not.
+        """ Checks if Serial Number is assigned to stock move or not.
         @return: True or False
         """
         for move in self.browse(cr, uid, ids, context=context):
@@ -1620,7 +1620,7 @@ class stock_move(osv.osv):
         'location_dest_id': fields.many2one('stock.location', 'Destination Location', required=True,states={'done': [('readonly', True)]}, select=True, help="Location where the system will stock the finished products."),
         'partner_id': fields.many2one('res.partner', 'Destination Address ', states={'done': [('readonly', True)]}, help="Optional address where goods are to be delivered, specifically used for allotment"),
 
-        'prodlot_id': fields.many2one('stock.production.lot', 'Production Lot', states={'done': [('readonly', True)]}, help="Production lot is used to put a serial number on the production", select=True),
+        'prodlot_id': fields.many2one('stock.production.lot', 'Serial Number', states={'done': [('readonly', True)]}, help="Serial Number is used to put a serial number on the production", select=True),
         'tracking_id': fields.many2one('stock.tracking', 'Pack', select=True, states={'done': [('readonly', True)]}, help="Logistical shipping unit: pallet, box, pack ..."),
 
         'auto_validate': fields.boolean('Auto Validate'),
@@ -1650,7 +1650,7 @@ class stock_move(osv.osv):
 
     _constraints = [
         (_check_tracking,
-            'You must assign a production lot for this product',
+            'You must assign a Serial Number for this product',
             ['prodlot_id']),
         (_check_location, 'You can not move products from or to a location of the type view.',
             ['location_id','location_dest_id']),
@@ -2781,7 +2781,7 @@ class stock_inventory_line(osv.osv):
         'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
         'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product UoM')),
         'company_id': fields.related('inventory_id','company_id',type='many2one',relation='res.company',string='Company',store=True, select=True, readonly=True),
-        'prod_lot_id': fields.many2one('stock.production.lot', 'Production Lot', domain="[('product_id','=',product_id)]"),
+        'prod_lot_id': fields.many2one('stock.production.lot', 'Serial Number', domain="[('product_id','=',product_id)]"),
         'state': fields.related('inventory_id','state',type='char',string='State',readonly=True),
     }
 

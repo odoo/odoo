@@ -35,12 +35,12 @@ class stock_config_settings(osv.osv_memory):
         'module_claim_from_delivery': fields.boolean("Track Claims from Delivery",
             help="""Adds a Claim link to the delivery order.
                 This installs the module claim_from_delivery."""),
-        'module_stock_invoice_directly': fields.boolean("Invoice Picking on Delivery",
+        'module_stock_invoice_directly': fields.boolean("Invoice Directly from the Picking",
             help="""This allows to automatically launch the invoicing wizard if the delivery is
                 to be invoiced when you send or deliver goods.
                 This installs the module stock_invoice_directly."""),
         'module_product_expiry': fields.boolean("Expiry Date on Lots",
-            help="""Track different dates on products and production lots.
+            help="""Track different dates on products and Serial Number.
                 The following dates can be tracked:
                     - end of life
                     - best before date
@@ -66,12 +66,12 @@ class stock_config_settings(osv.osv_memory):
             implied_group='stock.group_production_lot',
             help="""This allows you to manage products by using serial numbers.
                 When you select a lot, you can get the upstream or downstream traceability of the products contained in lot."""),
-        'group_stock_tracking_lot': fields.boolean("Serial Numbers on Pallets (Logistic Units)",
+        'group_stock_tracking_lot': fields.boolean("Serial Numbers on Logistic Units (Pallets)",
             implied_group='stock.group_tracking_lot',
             help="""Allows you to get the upstream or downstream traceability of the products contained in lot."""),
-        'group_stock_inventory_valuation': fields.boolean("Accounting Entries per Stock Movement",
+        'group_stock_inventory_valuation': fields.boolean("Generate Accounting Entries per Stock Movement",
             implied_group='stock.group_inventory_valuation',
-            help="""This allows to split stock inventory lines according to production lots."""),
+            help="""This allows to split stock inventory lines according to Serial Number."""),
         'group_stock_multiple_locations': fields.boolean("Manage Multiple Locations and Warehouses",
             implied_group='stock.group_locations',
             help="""This allows to configure and use multiple stock locations and warehouses,

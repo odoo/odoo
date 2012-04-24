@@ -144,7 +144,7 @@ stock_move_scrap()
 
 class split_in_production_lot(osv.osv_memory):
     _name = "stock.move.split"
-    _description = "Split in Production lots"
+    _description = "Split in Serial Number"
 
     def default_get(self, cr, uid, fields, context=None):
         if context is None:
@@ -168,8 +168,8 @@ class split_in_production_lot(osv.osv_memory):
         'qty': fields.float('Quantity', digits_compute=dp.get_precision('Product UoM')),
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True),
         'product_uom': fields.many2one('product.uom', 'UoM'),
-        'line_ids': fields.one2many('stock.move.split.lines', 'wizard_id', 'Production Lots'),
-        'line_exist_ids': fields.one2many('stock.move.split.lines', 'wizard_exist_id', 'Production Lots'),
+        'line_ids': fields.one2many('stock.move.split.lines', 'wizard_id', 'Serial Number'),
+        'line_exist_ids': fields.one2many('stock.move.split.lines', 'wizard_exist_id', 'Serial Number'),
         'use_exist' : fields.boolean('Existing Lots', help="Check this option to select existing lots in the list below, otherwise you should enter new ones line by line."),
         'location_id': fields.many2one('stock.location', 'Source Location')
      }
@@ -182,7 +182,7 @@ class split_in_production_lot(osv.osv_memory):
         return {'type': 'ir.actions.act_window_close'}
 
     def split(self, cr, uid, ids, move_ids, context=None):
-        """ To split stock moves into production lot
+        """ To split stock moves into Serial Number
 
         :param move_ids: the ID or list of IDs of stock move we want to split
         """
@@ -210,7 +210,7 @@ class split_in_production_lot(osv.osv_memory):
                     quantity = line.quantity
                     total_move_qty += quantity
                     if total_move_qty > move_qty:
-                        raise osv.except_osv(_('Processing Error'), _('Production lot quantity %d of %s is larger than available quantity (%d) !') \
+                        raise osv.except_osv(_('Processing Error'), _('Serial Number quantity %d of %s is larger than available quantity (%d) !') \
                                 % (total_move_qty, move.product_id.name, move_qty))
                     if quantity <= 0 or move_qty == 0:
                         continue
@@ -260,11 +260,11 @@ class stock_move_split_lines_exist(osv.osv_memory):
     _name = "stock.move.split.lines"
     _description = "Stock move Split lines"
     _columns = {
-        'name': fields.char('Production Lot', size=64),
+        'name': fields.char('Serial Number', size=64),
         'quantity': fields.float('Quantity', digits_compute=dp.get_precision('Product UoM')),
         'wizard_id': fields.many2one('stock.move.split', 'Parent Wizard'),
         'wizard_exist_id': fields.many2one('stock.move.split', 'Parent Wizard (for existing lines)'),
-        'prodlot_id': fields.many2one('stock.production.lot', 'Production Lot'),
+        'prodlot_id': fields.many2one('stock.production.lot', 'Serial Number'),
     }
     _defaults = {
         'quantity': 1.0,

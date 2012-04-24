@@ -147,7 +147,7 @@
                                     <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
                                     <field name="product_uom" string="UoM" groups="product.group_uom"/>
                                     <field name="prodlot_id" groups="stock.group_production_lot"/>
-                                     <button name="%(track_line)d" string="Split in production lots" type="action"
+                                     <button name="%(track_line)d" string="Split in Serial Number" type="action"
                                         icon="terp-stock_effects-object-colorize"
                                         attrs="{'invisible': [('prodlot_id','&lt;&gt;',False)]}"
                                         states="draft,done,cancel"
@@ -289,7 +289,7 @@
             <field name="model">stock.production.lot.revision</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Production Lot Revisions">
+                <form string="Serial Number Revisions">
                     <field colspan="4" name="name"/>
                     <field colspan="2" name="indice"/>
                     <field colspan="2" name="date"/>
@@ -306,7 +306,7 @@
             <field name="model">stock.production.lot.revision</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Production Lot Revisions">
+                <tree string="Serial Number Revisions">
                     <field name="indice"/>
                     <field name="author_id"/>
                     <field name="date"/>
@@ -319,9 +319,9 @@
             <field name="model">stock.production.lot</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Production Lot">
+                <form string="Serial Number">
                     <group col="4" colspan="2">
-                        <separator string="Production Lot Identification" colspan="4"/>
+                        <separator string="Serial Number Identification" colspan="4"/>
                         <field name="product_id" colspan="4"/>
                         <field name="prefix" colspan="2"/>
                         <field name="name" colspan="2"/>
@@ -364,7 +364,7 @@
             <field name="model">stock.production.lot</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Production Lot">
+                <tree string="Serial Number">
                     <field name="prefix" />
                     <field name="name"/>
                     <field name="ref"/>
@@ -399,7 +399,7 @@
         </record>
 
         <record id="action_production_lot_form" model="ir.actions.act_window">
-            <field name="name">Production Lots</field>
+            <field name="name">Serial Number</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">stock.production.lot</field>
             <field name="view_type">form</field>
@@ -723,7 +723,7 @@
                                     <field name="prodlot_id" groups="stock.group_production_lot"/>
                                     <button
                                         name="%(stock.track_line)d"
-                                        string="Split in production lots"
+                                        string="Split in Serial Number"
                                         groups="stock.group_production_lot"
                                         type="action" icon="terp-stock_effects-object-colorize"
                                         states="draft,waiting,confirmed,assigned" />
@@ -911,7 +911,7 @@
                                         states="draft,waiting,confirmed,assigned" />
                                     <field name="scrapped" invisible="1"/>
                                     <field name="prodlot_id" groups="stock.group_production_lot"/>
-                                    <button name="%(track_line)d" string="Split in production lots" type="action"
+                                    <button name="%(track_line)d" string="Split in Serial Number" type="action"
                                         icon="terp-stock_effects-object-colorize" attrs="{'invisible': [('prodlot_id','&lt;&gt;',False)]}"
                                         states="draft,assigned,confirmed"
                                         groups="stock.group_production_lot"/>
@@ -1132,7 +1132,7 @@
                                     <field name="prodlot_id" groups="stock.group_production_lot"/>
                                     <button
                                            name="%(stock.track_line)d"
-                                           string="Split in production lots"
+                                           string="Split in Serial Number"
                                            groups="stock.group_production_lot"
                                            type="action" icon="terp-stock_effects-object-colorize"
                                            states="draft,waiting,confirmed,assigned" />
@@ -1372,7 +1372,7 @@
                         states="draft,waiting,confirmed,assigned"
                         groups="base.group_extended"/>
                     <field name="prodlot_id" groups="stock.group_production_lot"/>
-                    <button name="%(track_line)d" string="Split in production lots" type="action"
+                    <button name="%(track_line)d" string="Split in Serial Number" type="action"
                         icon="terp-stock_effects-object-colorize" attrs="{'invisible': [('prodlot_id','&lt;&gt;',False)]}"
                         states="draft,waiting,confirmed,assigned,done"
                         groups="stock.group_tracking_lot"/>
@@ -1543,7 +1543,7 @@
                         icon="gtk-convert" context="{'scrap': True}"
                         states="draft,waiting,confirmed,assigned" groups="base.group_extended"/>
                     <field name="prodlot_id" groups="stock.group_production_lot"/>
-                    <button name="%(track_line)d" string="Split in production lots" type="action"
+                    <button name="%(track_line)d" string="Split in Serial Number" type="action"
                         icon="terp-stock_effects-object-colorize" attrs="{'invisible': [('prodlot_id','&lt;&gt;',False)]}"
                        states="draft,waiting,confirmed,assigned,done"
                         groups="stock.group_tracking_lot"/>
