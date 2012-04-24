@@ -62,7 +62,11 @@ function pos_models(module, instance){
                 'currency': {symbol: '$', position: 'after'},
                 'shop': {},
                 'company': {},
-                'user': {}
+                'user': {},
+                'orders': new module.OrderCollection(),
+                'products': new module.ProductCollection(),
+                //'cashRegisters': [], // new module.CashRegisterCollection(this.pos.get('bank_statements')),
+                'selectedOrder': undefined,
             });
             
             var cat_def = fetch('pos.category', ['name', 'parent_id', 'child_id'])
@@ -92,7 +96,23 @@ function pos_models(module, instance){
                 });
 
             $.when(cat_def,prod_def,bank_def,tax_def,this.get_app_data(), this.flush())
-                .pipe(_.bind(this.build_tree, this));
+                .pipe(_.bind(this.build_tree, this))
+                .pipe(function(){
+                    self.set({'cashRegisters': new module.CashRegisterCollection(self.get('bank_statements')) });
+                    self.ready.resolve();
+                });
+
+            return (this.get('orders')).bind('remove', _.bind( function(removedOrder) {
+                if ((this.get('orders')).isEmpty()) {
+                    this.addAndSelectOrder(new module.Order({pos: self}));
+                }
+                if ((this.get('selectedOrder')) === removedOrder) {
+                    return this.set({
+                        selectedOrder: (this.get('orders')).last()
+                    });
+                }
+            }, this));
+
         },
 
         get_app_data: function() {
@@ -117,6 +137,12 @@ function pos_models(module, instance){
             var self = this;
             return this.dao.add_operation(record).pipe(function(){
                     return self.flush();
+            });
+        },
+        addAndSelectOrder: function(newOrder) {
+            (this.get('orders')).add(newOrder);
+            return this.set({
+                selectedOrder: newOrder
             });
         },
         flush: function() {
@@ -197,7 +223,6 @@ function pos_models(module, instance){
                     return _results;
                 }).call(this)
             };
-            return this.ready.resolve();
         },
         build_ancestors: function(parent) {
             if (parent != null) {
@@ -217,6 +242,36 @@ function pos_models(module, instance){
             return _results;
         }
     });
+    /*
+    module.Shop = Backbone.Model.extend({
+        initialize: function(attributes) {
+            var self = this;
+            this.set({
+                orders: new module.OrderCollection(),
+                products: new module.ProductCollection(),
+            });
+            this.pos = attributes.pos;
+            this.set({
+                cashRegisters: new module.CashRegisterCollection(this.pos.get('bank_statements')),
+            });
+            return (this.get('orders')).bind('remove', _.bind( function(removedOrder) {
+                if ((this.get('orders')).isEmpty()) {
+                    this.addAndSelectOrder(new module.Order({pos: self.pos}));
+                }
+                if ((this.get('selectedOrder')) === removedOrder) {
+                    return this.set({
+                        selectedOrder: (this.get('orders')).last()
+                    });
+                }
+            }, this));
+        },
+        addAndSelectOrder: function(newOrder) {
+            (this.get('orders')).add(newOrder);
+            return this.set({
+                selectedOrder: newOrder
+            });
+        },
+    });*/
 
     module.CashRegister = Backbone.Model.extend({
     });
@@ -245,7 +300,7 @@ function pos_models(module, instance){
             discount: 0
         },
         initialize: function(attributes) {
-            this.posmodel = attributes.posmodel;
+            this.pos = attributes.pos;
             Backbone.Model.prototype.initialize.apply(this, arguments);
             this.bind('change:quantity', function(unused, qty) {
                 if (qty == 0)
@@ -272,10 +327,10 @@ function pos_models(module, instance){
             var totalTax = base;
             var totalNoTax = base;
             
-            var product_list = self.posmodel.get('product_list');
+            var product_list = self.pos.get('product_list');
             var product = _.detect(product_list, function(el) {return el.id === self.get('id');});
             var taxes_ids = product.taxes_id;
-            var taxes =  self.posmodel.get('taxes');
+            var taxes =  self.pos.get('taxes');
             var taxtotal = 0;
             _.each(taxes_ids, function(el) {
                 var tax = _.detect(taxes, function(t) {return t.id === el;});
@@ -362,7 +417,7 @@ function pos_models(module, instance){
                 paymentLines:   new module.PaymentlineCollection(),
                 name:           "Order " + this.generateUniqueId(),
             });
-            this.posmodel =     attributes.posmodel; //TODO put that in set and remember to use 'get' to read it ... 
+            this.pos =     attributes.pos; //TODO put that in set and remember to use 'get' to read it ... 
             this.bind('change:validated', this.validatedChanged);
             return this;
         },
@@ -384,7 +439,7 @@ function pos_models(module, instance){
                 existing.incrementQuantity();
             } else {
                 var attr = product.toJSON();
-                attr.posmodel = this.posmodel;
+                attr.pos = this.pos;
                 var line = new module.Orderline(attr);
                 this.get('orderLines').add(line);
                 line.bind('killme', function() {
@@ -456,35 +511,6 @@ function pos_models(module, instance){
         model: module.Order,
     });
 
-    module.Shop = Backbone.Model.extend({
-        initialize: function(attributes) {
-            var self = this;
-            this.set({
-                orders: new module.OrderCollection(),
-                products: new module.ProductCollection(),
-            });
-            this.posmodel = attributes.posmodel;
-            this.set({
-                cashRegisters: new module.CashRegisterCollection(this.posmodel.get('bank_statements')),
-            });
-            return (this.get('orders')).bind('remove', _.bind( function(removedOrder) {
-                if ((this.get('orders')).isEmpty()) {
-                    this.addAndSelectOrder(new module.Order({posmodel: self.posmodel}));
-                }
-                if ((this.get('selectedOrder')) === removedOrder) {
-                    return this.set({
-                        selectedOrder: (this.get('orders')).last()
-                    });
-                }
-            }, this));
-        },
-        addAndSelectOrder: function(newOrder) {
-            (this.get('orders')).add(newOrder);
-            return this.set({
-                selectedOrder: newOrder
-            });
-        },
-    });
 
     /*
      The numpad handles both the choice of the property currently being modified
@@ -553,29 +579,27 @@ function pos_models(module, instance){
         },
     });
 
-    namespace.App = (function() {
+    module.App = (function() {
 
-        function App($element, posmodel) {
-            this.initialize($element, posmodel);
+        function App($element, pos) {
+            this.initialize($element, pos);
         }
 
-        App.prototype.initialize = function($element, posmodel) {
-            this.posmodel = posmodel;
-            this.shop = new namespace.Shop({'posmodel': posmodel});
-            this.shopView = new namespace.ShopWidget(null, {
-                shop: this.shop,
-                'posmodel': posmodel,
+        App.prototype.initialize = function($element, pos) {
+            this.pos = pos;
+            this.shopView = new module.ShopWidget(null, {
+                'pos': pos,
             });
             this.shopView.$element = $element;
             this.shopView.start();
-            this.categoryView = new namespace.CategoryWidget(null, {element_id: 'products-screen-categories', posmodel: posmodel} );
+            this.categoryView = new module.CategoryWidget(null, {element_id: 'products-screen-categories', pos: pos} );
             this.categoryView.on_change_category.add_last(_.bind(this.category, this));
             this.category();
 
-            this.onscreenKeyboard = new namespace.OnscreenKeyboardWidget(null,{keyboard_model:'simple'});
+            this.onscreenKeyboard = new module.OnscreenKeyboardWidget(null,{keyboard_model:'simple'});
             this.onscreenKeyboard.appendTo($(".point-of-sale #content"));
 
-            this.actionBar = new namespace.ActionbarWidget(null);
+            this.actionBar = new module.ActionbarWidget(null);
             this.actionBar.appendTo($(".point-of-sale #content"));
 
             this.actionBar.addNewButton('left',{
@@ -665,21 +689,21 @@ function pos_models(module, instance){
 
             id = !id ? 0 : id; 
 
-            c = this.posmodel.categories[id];
+            c = this.pos.categories[id];
             this.categoryView.ancestors = c.ancestors;
             this.categoryView.children = c.children;
             this.categoryView.renderElement();
             this.categoryView.start();
 
-            allProducts = this.posmodel.get('product_list');
+            allProducts = this.pos.get('product_list');
 
-            allPackages = this.posmodel.get('product.packaging');
+            allPackages = this.pos.get('product.packaging');
             
-            product_list = this.posmodel.get('product_list').filter( function(p) {
+            product_list = this.pos.get('product_list').filter( function(p) {
                 var _ref;
                 return _ref = p.pos_categ_id[0], _.indexOf(c.subtree, _ref) >= 0;
             });
-            (this.shop.get('products')).reset(product_list);
+            (this.pos.get('products')).reset(product_list);
 
             var codeNumbers = [];
 
@@ -716,7 +740,7 @@ function pos_models(module, instance){
                                 title: "Warning",
                             });
                         }
-                        var selectedOrder = self.shop.get('selectedOrder');
+                        var selectedOrder = self.pos.get('selectedOrder');
                         var scannedProductModel = App.getProductByEAN(codeNumbers.join(''),allPackages,allProducts);
                         if (scannedProductModel === undefined) {
                             // product not recognized, raise warning
@@ -734,7 +758,7 @@ function pos_models(module, instance){
                                 }*/
                             });
                         } else {
-                            selectedOrder.addProduct(new namespace.Product(scannedProductModel));
+                            selectedOrder.addProduct(new module.Product(scannedProductModel));
                         }
 
                         codeNumbers = [];
@@ -757,10 +781,10 @@ function pos_models(module, instance){
                     m = product_list;
                     $('.search-clear').fadeOut();
                 }
-                return (self.shop.get('products')).reset(m);
+                return (self.pos.get('products')).reset(m);
             });
             return $('.search-clear').click( function() {
-                (self.shop.get('products')).reset(product_list);
+                (self.pos.get('products')).reset(product_list);
                 $('.searchbox input').val('').focus();
                 return $('.search-clear').fadeOut();
             });

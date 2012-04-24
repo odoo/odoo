@@ -1,9 +1,9 @@
 function pos_widgets(module, instance){
     var QWeb = instance.web.qweb;
 
-    var qweb_template = function(template,posmodel){
+    var qweb_template = function(template,pos){
         return function(ctx){
-            if(!posmodel){  //this is a huge hack that needs to be removed ... TODO
+            if(!pos){  //this is a huge hack that needs to be removed ... TODO
                 var HackPosModel = Backbone.Model.extend({
                     initialize:function(){
                         this.set({
@@ -11,15 +11,15 @@ function pos_widgets(module, instance){
                         });
                     },
                 });
-                posmodel = new HackPosModel();
+                pos = new HackPosModel();
             }
             return QWeb.render(template, _.extend({}, ctx,{
-                'currency': posmodel.get('currency'),
+                'currency': pos.get('currency'),
                 'format_amount': function(amount) {
-                    if (posmodel.get('currency').position == 'after') {
-                        return amount + ' ' + posmodel.get('currency').symbol;
+                    if (pos.get('currency').position == 'after') {
+                        return amount + ' ' + pos.get('currency').symbol;
                     } else {
-                        return posmodel.get('currency').symbol + ' ' + amount;
+                        return pos.get('currency').symbol + ' ' + amount;
                     }
                 },
                 }));
@@ -66,28 +66,28 @@ function pos_widgets(module, instance){
     module.PaypadWidget = instance.web.OldWidget.extend({
         init: function(parent, options) {
             this._super(parent);
-            this.shop = options.shop;
+            this.pos = options.pos;
         },
         start: function() {
             this.$element.find('button').click(_.bind(this.performPayment, this));
         },
         performPayment: function(event) {
-            if (this.shop.get('selectedOrder').get('step') === 'receipt')
+            if (this.pos.get('selectedOrder').get('step') === 'receipt')
                 return;
             var cashRegister, cashRegisterCollection, cashRegisterId;
             /* set correct view */
-            this.shop.get('selectedOrder').set({'step': 'payment'});
+            this.pos.get('selectedOrder').set({'step': 'payment'});
 
             cashRegisterId = event.currentTarget.attributes['cash-register-id'].nodeValue;
-            cashRegisterCollection = this.shop.get('cashRegisters');
+            cashRegisterCollection = this.pos.get('cashRegisters');
             cashRegister = cashRegisterCollection.find(_.bind( function(item) {
                 return (item.get('id')) === parseInt(cashRegisterId, 10);
             }, this));
-            return (this.shop.get('selectedOrder')).addPaymentLine(cashRegister);
+            return (this.pos.get('selectedOrder')).addPaymentLine(cashRegister);
         },
         renderElement: function() {
             this.$element.empty();
-            return (this.shop.get('cashRegisters')).each(_.bind( function(cashRegister) {
+            return (this.pos.get('cashRegisters')).each(_.bind( function(cashRegister) {
                 var button = new module.PaymentButtonWidget();
                 button.model = cashRegister;
                 button.appendTo(this.$element);
@@ -116,15 +116,15 @@ function pos_widgets(module, instance){
     module.StepSwitcher = instance.web.OldWidget.extend({
         init: function(parent, options) {
             this._super(parent);
-            this.shop = options.shop;
+            this.pos = options.pos;
             this.change_order();
-            this.shop.bind('change:selectedOrder', this.change_order, this);
+            this.pos.bind('change:selectedOrder', this.change_order, this);
         },
         change_order: function() {
             if (this.selected_order) {
                 this.selected_order.unbind('change:step', this.change_step);
             }
-            this.selected_order = this.shop.get('selectedOrder');
+            this.selected_order = this.pos.get('selectedOrder');
             if (this.selected_order) {
                 this.selected_order.bind('change:step', this.change_step, this);
             }
@@ -183,9 +183,9 @@ function pos_widgets(module, instance){
     module.OrderWidget = instance.web.OldWidget.extend({
         init: function(parent, options) {
             this._super(parent);
-            this.shop = options.shop;
+            this.pos = options.pos;
             this.setNumpadState(options.numpadState);
-            this.shop.bind('change:selectedOrder', this.changeSelectedOrder, this);
+            this.pos.bind('change:selectedOrder', this.changeSelectedOrder, this);
             this.bindOrderLineEvents();
         },
         setNumpadState: function(numpadState) {
@@ -201,11 +201,11 @@ function pos_widgets(module, instance){
         setValue: function(val) {
         	var param = {};
         	param[this.numpadState.get('mode')] = val;
-        	var order = this.shop.get('selectedOrder');
+        	var order = this.pos.get('selectedOrder');
         	if (order.get('orderLines').length !== 0) {
         	   order.selected.set(param);
         	} else {
-        	    this.shop.get('selectedOrder').destroy();
+        	    this.pos.get('selectedOrder').destroy();
         	}
         },
         changeSelectedOrder: function() {
@@ -214,14 +214,14 @@ function pos_widgets(module, instance){
             this.renderElement();
         },
         bindOrderLineEvents: function() {
-            this.currentOrderLines = (this.shop.get('selectedOrder')).get('orderLines');
+            this.currentOrderLines = (this.pos.get('selectedOrder')).get('orderLines');
             this.currentOrderLines.bind('add', this.addLine, this);
             this.currentOrderLines.bind('remove', this.renderElement, this);
         },
         addLine: function(newLine) {
             var line = new module.OrderlineWidget(null, {
                     model: newLine,
-                    order: this.shop.get('selectedOrder')
+                    order: this.pos.get('selectedOrder')
             });
             line.on_selected.add(_.bind(this.selectedLine, this));
             this.selectedLine();
@@ -230,10 +230,10 @@ function pos_widgets(module, instance){
         },
         selectedLine: function() {
         	var reset = false;
-        	if (this.currentSelected !== this.shop.get('selectedOrder').selected) {
+        	if (this.currentSelected !== this.pos.get('selectedOrder').selected) {
         		reset = true;
         	}
-        	this.currentSelected = this.shop.get('selectedOrder').selected;
+        	this.currentSelected = this.pos.get('selectedOrder').selected;
         	if (reset && this.numpadState)
         		this.numpadState.reset();
             this.updateSummary();
@@ -243,7 +243,7 @@ function pos_widgets(module, instance){
             this.currentOrderLines.each(_.bind( function(orderLine) {
                 var line = new module.OrderlineWidget(null, {
                         model: orderLine,
-                        order: this.shop.get('selectedOrder')
+                        order: this.pos.get('selectedOrder')
                 });
             	line.on_selected.add(_.bind(this.selectedLine, this));
                 line.appendTo(this.$element);
@@ -252,7 +252,7 @@ function pos_widgets(module, instance){
         },
         updateSummary: function() {
             var currentOrder, tax, total, totalTaxExcluded;
-            currentOrder = this.shop.get('selectedOrder');
+            currentOrder = this.pos.get('selectedOrder');
             total = currentOrder.getTotal();
             totalTaxExcluded = currentOrder.getTotalTaxExcluded();
             tax = currentOrder.getTax();
@@ -268,7 +268,7 @@ function pos_widgets(module, instance){
     module.CategoryWidget = instance.web.OldWidget.extend({
         init: function(parent, options){
             this._super(parent,options.element_id);
-            this.posmodel = options.posmodel;
+            this.pos = options.pos;
         },
         start: function() {
             this.$element.find(".oe-pos-categories-list a").click(_.bind(this.changeCategory, this));
@@ -283,7 +283,7 @@ function pos_widgets(module, instance){
                     _results = [];
                     for (_i = 0, _len = self.ancestors.length; _i < _len; _i++) {
                         c = self.ancestors[_i];
-                        _results.push(self.posmodel.categories[c]);
+                        _results.push(self.pos.categories[c]);
                     }
                     return _results;
                 })(),
@@ -292,7 +292,7 @@ function pos_widgets(module, instance){
                     _results = [];
                     for (_i = 0, _len = self.children.length; _i < _len; _i++) {
                         c = self.children[_i];
-                        _results.push(self.posmodel.categories[c]);
+                        _results.push(self.pos.categories[c]);
                     }
                     return _results;
                 })()
@@ -311,7 +311,7 @@ function pos_widgets(module, instance){
         init: function(parent, options) {
             this._super(parent);
             this.model = options.model;
-            this.shop = options.shop;
+            this.pos = options.pos;
         },
         start: function(options) {
             $("a", this.$element).click(_.bind(this.addToOrder, this));
@@ -319,7 +319,7 @@ function pos_widgets(module, instance){
         addToOrder: function(event) {
             /* Preserve the category URL */
             event.preventDefault();
-            return (this.shop.get('selectedOrder')).addProduct(this.model);
+            return (this.pos.get('selectedOrder')).addProduct(this.model);
         },
         renderElement: function() {
             this.$element.addClass("product");
@@ -332,15 +332,15 @@ function pos_widgets(module, instance){
         init: function(parent, options) {
             this._super(parent);
             this.model = options.model;
-            this.shop = options.shop;
-            this.shop.get('products').bind('reset', this.renderElement, this);
+            this.pos = options.pos;
+            this.pos.get('products').bind('reset', this.renderElement, this);
         },
         renderElement: function() {
             this.$element.empty();
-            (this.shop.get('products')).each(_.bind( function(product) {
+            (this.pos.get('products')).each(_.bind( function(product) {
                 var p = new module.ProductWidget(null, {
                         model: product,
-                        shop: this.shop
+                        pos: this.pos
                 });
                 p.appendTo(this.$element);
             }, this));
@@ -389,9 +389,8 @@ function pos_widgets(module, instance){
         init: function(parent, options) {
             this._super(parent);
             this.model = options.model;
-            this.shop = options.shop;
-            this.posmodel = options.posmodel;
-            this.shop.bind('change:selectedOrder', this.changeSelectedOrder, this);
+            this.pos = options.pos;
+            this.pos.bind('change:selectedOrder', this.changeSelectedOrder, this);
             this.bindPaymentLineEvents();
             this.bindOrderLineEvents();
         },
@@ -403,13 +402,13 @@ function pos_widgets(module, instance){
             $('.oe-back-to-products', this.$element).click(_.bind(this.back, this));
         },
         back: function() {
-            this.shop.get('selectedOrder').set({"step": "products"});
+            this.pos.get('selectedOrder').set({"step": "products"});
         },
         validateCurrentOrder: function() {
             var callback, currentOrder;
-            currentOrder = this.shop.get('selectedOrder');
+            currentOrder = this.pos.get('selectedOrder');
             $('button#validate-order', this.$element).attr('disabled', 'disabled');
-            this.posmodel.push_order(currentOrder.exportAsJSON()).then(_.bind(function() {
+            this.pos.push_order(currentOrder.exportAsJSON()).then(_.bind(function() {
                 $('button#validate-order', this.$element).removeAttr('disabled');
                 return currentOrder.set({
                     validated: true
@@ -417,13 +416,13 @@ function pos_widgets(module, instance){
             }, this));
         },
         bindPaymentLineEvents: function() {
-            this.currentPaymentLines = (this.shop.get('selectedOrder')).get('paymentLines');
+            this.currentPaymentLines = (this.pos.get('selectedOrder')).get('paymentLines');
             this.currentPaymentLines.bind('add', this.addPaymentLine, this);
             this.currentPaymentLines.bind('remove', this.renderElement, this);
             this.currentPaymentLines.bind('all', this.updatePaymentSummary, this);
         },
         bindOrderLineEvents: function() {
-            this.currentOrderLines = (this.shop.get('selectedOrder')).get('orderLines');
+            this.currentOrderLines = (this.pos.get('selectedOrder')).get('orderLines');
             this.currentOrderLines.bind('all', this.updatePaymentSummary, this);
         },
         changeSelectedOrder: function() {
@@ -452,7 +451,7 @@ function pos_widgets(module, instance){
         },
         updatePaymentSummary: function() {
             var currentOrder, dueTotal, paidTotal, remaining, remainingAmount;
-            currentOrder = this.shop.get('selectedOrder');
+            currentOrder = this.pos.get('selectedOrder');
             paidTotal = currentOrder.getPaidTotal();
             dueTotal = currentOrder.getTotal();
             this.$element.find('#payment-due-total').html(dueTotal.toFixed(2));
@@ -486,14 +485,14 @@ function pos_widgets(module, instance){
         init: function(parent, options) {
             this._super(parent);
             this.model = options.model;
-            this.shop = options.shop;
-            this.posmodel = options.posmodel;
-            this.user = this.posmodel.get('user');
-            this.company = this.posmodel.get('company');
-            this.shop_obj = this.posmodel.get('shop');
+            this.pos = options.pos;
+            this.pos = options.pos;
+            this.user = this.pos.get('user');
+            this.company = this.pos.get('company');
+            this.shop_obj = this.pos.get('shop');
         },
         start: function() {
-            this.shop.bind('change:selectedOrder', this.changeSelectedOrder, this);
+            this.pos.bind('change:selectedOrder', this.changeSelectedOrder, this);
             this.changeSelectedOrder();
         },
         renderElement: function() {
@@ -505,23 +504,23 @@ function pos_widgets(module, instance){
             window.print();
         },
         finishOrder: function() {
-            this.shop.get('selectedOrder').destroy();
+            this.pos.get('selectedOrder').destroy();
         },
         changeSelectedOrder: function() {
             if (this.currentOrderLines)
                 this.currentOrderLines.unbind();
-            this.currentOrderLines = (this.shop.get('selectedOrder')).get('orderLines');
+            this.currentOrderLines = (this.pos.get('selectedOrder')).get('orderLines');
             this.currentOrderLines.bind('add', this.refresh, this);
             this.currentOrderLines.bind('change', this.refresh, this);
             this.currentOrderLines.bind('remove', this.refresh, this);
             if (this.currentPaymentLines)
                 this.currentPaymentLines.unbind();
-            this.currentPaymentLines = (this.shop.get('selectedOrder')).get('paymentLines');
+            this.currentPaymentLines = (this.pos.get('selectedOrder')).get('paymentLines');
             this.currentPaymentLines.bind('all', this.refresh, this);
             this.refresh();
         },
         refresh: function() {
-            this.currentOrder = this.shop.get('selectedOrder');
+            this.currentOrder = this.pos.get('selectedOrder');
             $('.pos-receipt-container', this.$element).html(qweb_template('pos-ticket')({widget:this}));
         },
     });
@@ -532,13 +531,13 @@ function pos_widgets(module, instance){
         init: function(parent, options) {
             this._super(parent);
             this.order = options.order;
-            this.shop = options.shop;
+            this.pos = options.pos;
             this.order.bind('destroy', _.bind( function() {
                 this.destroy();
             }, this));
-            this.shop.bind('change:selectedOrder', _.bind( function(shop) {
+            this.pos.bind('change:selectedOrder', _.bind( function(pos) {
                 var selectedOrder;
-                selectedOrder = shop.get('selectedOrder');
+                selectedOrder = pos.get('selectedOrder');
                 if (this.order === selectedOrder) {
                     this.setButtonSelected();
                 }
@@ -549,7 +548,7 @@ function pos_widgets(module, instance){
             $('button.close-order', this.$element).click(_.bind(this.closeOrder, this));
         },
         selectOrder: function(event) {
-            this.shop.set({
+            this.pos.set({
                 selectedOrder: this.order
             });
         },
@@ -830,22 +829,21 @@ function pos_widgets(module, instance){
     module.ShopWidget = instance.web.OldWidget.extend({
         init: function(parent, options) {
             this._super(parent);
-            this.shop = options.shop;
-            this.posmodel = options.posmodel;
+            this.pos = options.pos;
         },
         start: function() {
             $('button#neworder-button', this.$element).click(_.bind(this.createNewOrder, this));
 
-            (this.shop.get('orders')).bind('add', this.orderAdded, this);
-            (this.shop.get('orders')).add(new module.Order({'posmodel':this.posmodel}));
+            (this.pos.get('orders')).bind('add', this.orderAdded, this);
+            (this.pos.get('orders')).add(new module.Order({'pos':this.pos}));
             this.productListView = new module.ProductListWidget(null, {
-                shop: this.shop
+                pos: this.pos,
             });
             this.productListView.$element = $("#products-screen-ol");
             this.productListView.renderElement();
             this.productListView.start();
             this.paypadView = new module.PaypadWidget(null, {
-                shop: this.shop
+                pos: this.pos
             });
             this.paypadView.$element = $('#paypad');
             this.paypadView.renderElement();
@@ -854,31 +852,29 @@ function pos_widgets(module, instance){
             this.numpadView.$element = $('#numpad');
             this.numpadView.start();
             this.orderView = new module.OrderWidget(null, {
-                shop: this.shop,
+                pos: this.pos,
             });
             this.orderView.$element = $('#current-order-content');
             this.orderView.start();
             this.paymentView = new module.PaymentWidget(null, {
-                shop: this.shop,
-                posmodel: this.posmodel,
+                pos: this.pos,
             });
             this.paymentView.$element = $('#payment-screen');
             this.paymentView.renderElement();
             this.paymentView.start();
             this.receiptView = new module.ReceiptWidget(null, {
-                shop: this.shop,
-                posmodel: this.posmodel,
+                pos: this.pos,
             });
             this.receiptView.replace($('#receipt-screen'));
-            this.stepSwitcher = new module.StepSwitcher(this, {shop: this.shop});
-            this.shop.bind('change:selectedOrder', this.changedSelectedOrder, this);
+            this.stepSwitcher = new module.StepSwitcher(this, {pos: this.pos});
+            this.pos.bind('change:selectedOrder', this.changedSelectedOrder, this);
             this.changedSelectedOrder();
         },
         createNewOrder: function() {
             var newOrder;
-            newOrder = new module.Order({'posmodel': this.posmodel});
-            (this.shop.get('orders')).add(newOrder);
-            this.shop.set({
+            newOrder = new module.Order({'pos': this.pos});
+            (this.pos.get('orders')).add(newOrder);
+            this.pos.set({
                 selectedOrder: newOrder
             });
         },
@@ -886,7 +882,7 @@ function pos_widgets(module, instance){
             var newOrderButton;
             newOrderButton = new module.OrderButtonWidget(null, {
                 order: newOrder,
-                shop: this.shop
+                pos: this.pos
             });
             newOrderButton.appendTo($('#orders'));
             newOrderButton.selectOrder();
@@ -895,7 +891,7 @@ function pos_widgets(module, instance){
         	if (this.currentOrder) {
         		this.currentOrder.unbind('change:step', this.changedStep);
         	}
-        	this.currentOrder = this.shop.get('selectedOrder');
+        	this.currentOrder = this.pos.get('selectedOrder');
         	this.currentOrder.bind('change:step', this.changedStep, this);
         	this.changedStep();
         },
@@ -911,7 +907,7 @@ function pos_widgets(module, instance){
         },
     });
 
-    namespace.SynchNotification = instance.web.OldWidget.extend({
+    module.SynchNotification = instance.web.OldWidget.extend({
         template: "pos-synch-notification",
         init: function() {
             this._super.apply(this, arguments);
@@ -928,32 +924,32 @@ function pos_widgets(module, instance){
         on_synch: function() {}
     });
 
-    namespace.POSWidget = instance.web.OldWidget.extend({
+    module.POSWidget = instance.web.OldWidget.extend({
         init: function() {
             this._super.apply(this, arguments);
 
-            this.posmodel = new namespace.PosModel(this.session);
+            this.pos = new module.PosModel(this.session);
 
         },
         start: function() {
             var self = this;
-            return self.posmodel.ready.then(_.bind(function() {
+            return self.pos.ready.then(_.bind(function() {
                 this.renderElement();
-                this.synch_notification = new namespace.SynchNotification(this);
+                this.synch_notification = new module.SynchNotification(this);
                 this.synch_notification.replace($('.oe_pos_synch-notification', this.$element));
-                this.synch_notification.on_synch.add(_.bind(self.posmodel.flush, self.posmodel));
+                this.synch_notification.on_synch.add(_.bind(self.pos.flush, self.pos));
                 
-                self.posmodel.bind('change:nbr_pending_operations', this.changed_pending_operations, this);
+                self.pos.bind('change:nbr_pending_operations', this.changed_pending_operations, this);
                 this.changed_pending_operations();
                 
                 this.$element.find("#loggedas button").click(function() {
                     self.try_close();
                 });
 
-                self.posmodel.app = new namespace.App(self.$element, self.posmodel);
+                self.pos.app = new module.App(self.$element, self.pos);
                 instance.webclient.set_content_full_screen(true);
                 
-                if (self.posmodel.get('bank_statements').length === 0)
+                if (self.pos.get('bank_statements').length === 0)
                     return new instance.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_pos_open_statement']], ['res_id']).pipe(
                             _.bind(function(res) {
                         return this.rpc('/web/action/load', {'action_id': res[0]['res_id']}).pipe(_.bind(function(result) {
@@ -968,13 +964,13 @@ function pos_widgets(module, instance){
         },
         changed_pending_operations: function () {
             var self = this;
-            this.synch_notification.on_change_nbr_pending(self.posmodel.get('nbr_pending_operations').length);
+            this.synch_notification.on_change_nbr_pending(self.pos.get('nbr_pending_operations').length);
         },
         try_close: function() {
             var self = this;
-            self.posmodel.flush().then(_.bind(function() {
+            self.pos.flush().then(_.bind(function() {
                 var close = _.bind(this.close, this);
-                if (self.posmodel.get('nbr_pending_operations').length > 0) {
+                if (self.pos.get('nbr_pending_operations').length > 0) {
                     var confirm = false;
                     $(QWeb.render('pos-close-warning')).dialog({
                         resizable: false,
@@ -1015,7 +1011,7 @@ function pos_widgets(module, instance){
         },
         destroy: function() {
             instance.webclient.set_content_full_screen(false);
-            self.posmodel = undefined;
+            self.pos = undefined;
             this._super();
         }
     });
