@@ -96,6 +96,8 @@ class account_analytic_account(osv.osv):
         return self._compute_level_tree(cr, uid, ids, child_ids, res, fields, context)
 
     def name_get(self, cr, uid, ids, context=None):
+        if type(ids) != type([]):
+            ids=[ids]
         if not ids:
             return []
         res = []
