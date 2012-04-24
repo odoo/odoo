@@ -106,11 +106,23 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         if context is None:
             context = {}
         lead = self.pool.get('crm.lead')
-        partner_id = self._create_partner(cr, uid, ids, context=context)
+        res = False
+        if context.get('mass_convert'):
+            partner_ids_map = self._create_partner(cr, uid, ids, context=context)
+        else:
+            partner_id = self._create_partner(cr, uid, ids, context=context)
         lead_ids = vals.get('lead_ids', [])
-        user_ids = vals.get('user_ids', False)
         team_id = vals.get('section_id', False)
-        return lead.convert_opportunity(cr, uid, lead_ids, partner_id, user_ids, team_id, context=context) 
+        for lead_id in lead_ids:
+            if context.get('mass_convert'):
+                partner_id = partner_ids_map.get(lead_id, False)
+            # FIXME: cannot pass user_ids as the salesman allocation only works in batch
+            res = lead.convert_opportunity(cr, uid, [lead_id], partner_id, [], team_id, context=context)
+        # FIXME: must perform salesman allocation in batch separately here  
+        user_ids = vals.get('user_ids', False)
+        if user_ids:
+            lead.allocate_salesman(cr, uid, lead_ids, user_ids, team_id=team_id, context=context)
+        return res
 
     def _merge_opportunity(self, cr, uid, ids, opportunity_ids, action='merge', context=None):
         if context is None:
@@ -136,7 +148,6 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         """
         if not context:
             context = {}
-        
         lead = self.pool.get('crm.lead')
         lead_ids = context.get('active_ids', [])
         data = self.browse(cr, uid, ids, context=context)[0]

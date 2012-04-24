@@ -570,8 +570,6 @@ class crm_lead(crm_case, osv.osv):
         for lead in self.browse(cr, uid, ids, context=context):
             if lead.state in ('done', 'cancel'):
                 continue
-            if user_ids or section_id:
-                self.allocate_salesman(cr, uid, [lead.id], user_ids, section_id, context=context)
 
             vals = self._convert_opportunity_data(cr, uid, lead, customer, section_id, context=context)
             self.write(cr, uid, [lead.id], vals, context=context)
@@ -583,6 +581,10 @@ class crm_lead(crm_case, osv.osv):
                 mail_message.write(cr, uid, msg_ids, {
                         'partner_id': lead.partner_id.id
                     }, context=context)
+
+        if user_ids or section_id:
+            self.allocate_salesman(cr, uid, ids, user_ids, section_id, context=context)
+
         return True
 
     def _lead_create_partner(self, cr, uid, lead, context=None):
@@ -634,10 +636,10 @@ class crm_lead(crm_case, osv.osv):
         if context is None:
             context = {}
         partner_ids = {}
+        force_partner_id = partner_id
         for lead in self.browse(cr, uid, ids, context=context):
             if action == 'create':
-                if not partner_id:
-                    partner_id = self._lead_create_partner(cr, uid, lead, context=context)
+                partner_id = force_partner_id or self._lead_create_partner(cr, uid, lead, context=context)
                 self._lead_create_partner_address(cr, uid, lead, partner_id, context=context)
             self._lead_set_partner(cr, uid, lead, partner_id, context=context)
             partner_ids[lead.id] = partner_id

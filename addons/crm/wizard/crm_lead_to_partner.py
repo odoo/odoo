@@ -108,6 +108,8 @@ class crm_lead2partner(osv.osv_memory):
         data = self.browse(cr, uid, ids, context=context)[0]
         partner_id = data.partner_id and data.partner_id.id or False
         partner_ids = lead.convert_partner(cr, uid, lead_ids, data.action, partner_id, context=context)
+        if context.get('mass_convert'):
+            return partner_ids
         return partner_ids[lead_ids[0]]
 
     def make_partner(self, cr, uid, ids, context=None):
