@@ -5,24 +5,18 @@
       <menuitem name="Customer Portal" id="customer_portal"/>      
         <menuitem name="Address Book" id="customer_portal_address_book_main" parent="customer_portal" groups="group_sales_portal"/>
             <menuitem name="Contacts" id="customer_portal_address_book" parent="customer_portal_address_book_main" action="base.action_partner_form"/>
-
         <menuitem name="Track Orders" id="customer_portal_track_orders" parent="customer_portal" groups="group_sales_portal"/>
             <menuitem name="Quotation" id="customer_portal_quotation" parent="customer_portal_track_orders" action="sale.action_order_tree5"/>
             <menuitem name="Sales Orders" id="customer_portal_sales_orders" parent="customer_portal_track_orders" action="sale.action_order_form"/>
             <menuitem name="Delivery Orders" id="customer_portal_delivery" parent="customer_portal_track_orders" action="action_picking_tree"/>
-    
         <menuitem name="Invoice and Payments" id="customer_portal_invoice_payements" parent="customer_portal" groups="group_sales_portal"/>
             <menuitem name="Invoice" id="customer_portal_invoice" parent="customer_portal_invoice_payements" action="account.action_invoice_tree1"/>
             <menuitem name="Payments" id="customer_portal_payments" parent="customer_portal_invoice_payements" action="account_voucher.action_vendor_receipt"/>
-        
         <menuitem name="Services" id="customer_portal_services" parent="customer_portal" groups="group_sales_portal"/>
             <menuitem name="Products" id="customer_portal_products" parent="customer_portal_services" action="product_normal_action"/>
-  
         <menuitem name="After Sales Services" id="customer_portal_after_sales" parent="customer_portal" groups="group_sales_portal"/>
-        
         <menuitem name="Contact Us" id="customer_portal_contact" parent="customer_portal" groups="group_sales_portal"/>
-            <menuitem name="Contact Us" id="customer_portal_contact1" parent="customer_portal_contact" groups="group_sales_portal" action="action_contact_us" />
-        
-        
+        <menuitem name="Contact Us" id="customer_portal_contact1" parent="customer_portal_contact" groups="group_sales_portal" action="action_contact_us"/>
+            
     </data>
 </openerp>
