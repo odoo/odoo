@@ -149,7 +149,7 @@ class project_work(osv.osv):
                 default_uom = self.pool.get('res.users').browse(cr, uid, uid).company_id.project_time_mode_id.id
                 vals_line['unit_amount'] = vals['hours']
                 prod_id = vals_line.get('product_id', line_id.product_id.id) # False may be set
-                result = self.get_user_related_details(cr, uid, vals.get('user_id', uid))
+                result = self.get_user_related_details(cr, uid, vals.get('user_id', task.user_id.id))
                 for fld in ('product_id', 'general_account_id', 'journal_id', 'product_uom_id'):
                     if result.get(fld, False):
                         vals_line[fld] = result[fld]
