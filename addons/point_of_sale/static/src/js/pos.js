@@ -4,12 +4,20 @@ openerp.point_of_sale = function(instance) {
 
     var namespace = instance.point_of_sale;
 
-    var posmodel;    //the global point of sale instance
-
     var QWeb = instance.web.qweb;
 
-    var qweb_template = function(template) {
-        return function(ctx) {
+    var qweb_template = function(template,posmodel){
+        return function(ctx){
+            if(!posmodel){  //this is a huge hack that needs to be removed ... TODO
+                var HackPosModel = Backbone.Model.extend({
+                    initialize:function(){
+                        this.set({
+                            'currency': {symbol: '$', position: 'after'},
+                        });
+                    },
+                });
+                posmodel = new HackPosModel();
+            }
             return QWeb.render(template, _.extend({}, ctx,{
                 'currency': posmodel.get('currency'),
                 'format_amount': function(amount) {
@@ -22,6 +30,7 @@ openerp.point_of_sale = function(instance) {
                 }));
         };
     };
+    
     var _t = instance.web._t;
 
     var LocalStorageDAO = instance.web.Class.extend({
@@ -1055,9 +1064,10 @@ openerp.point_of_sale = function(instance) {
             this._super(parent);
             this.model = options.model;
             this.shop = options.shop;
-            this.user = posmodel.get('user');
-            this.company = posmodel.get('company');
-            this.shop_obj = posmodel.get('shop');
+            this.posmodel = options.posmodel;
+            this.user = this.posmodel.get('user');
+            this.company = this.posmodel.get('company');
+            this.shop_obj = this.posmodel.get('shop');
         },
         start: function() {
             this.shop.bind('change:selectedOrder', this.changeSelectedOrder, this);
@@ -1434,6 +1444,7 @@ openerp.point_of_sale = function(instance) {
             this.paymentView.start();
             this.receiptView = new ReceiptWidget(null, {
                 shop: this.shop,
+                posmodel: this.posmodel,
             });
             this.receiptView.replace($('#receipt-screen'));
             this.stepSwitcher = new StepSwitcher(this, {shop: this.shop});
@@ -1717,7 +1728,6 @@ openerp.point_of_sale = function(instance) {
 
             this.posmodel = new PosModel(this.session);
 
-            posmodel = this.posmodel;
         },
         start: function() {
             var self = this;
