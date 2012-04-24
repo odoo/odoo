@@ -63,7 +63,7 @@
             <field name="arch" type="xml">
                 <field name="state" position="after">
                     <newline/>
-                    <separator colspan="4" string="Account infos"/>
+                    <separator colspan="4" string="Account Infos"/>
                     <group string="Bank account info" colspan="4" attrs="{'invisible': [('state','in', ['bvpost','bvrpost'])]}" >
                         <field name="acc_number" string="Account/IBAN Number" attrs="{'required': [('state','not in',['bvpost','bvrpost'])]}"/>
                         <field name="dta_code"/>
@@ -74,7 +74,7 @@
                         <field name="post_number" attrs="{'required': [('state','in',['bvpost','bvrpost','bvrbank'])]}"/>
                         <newline/>
                     </group>
-                    <separator colspan="4" string="Financial institute infos"/>
+                    <separator colspan="4" string="Financial Institute Infos"/>
                     <field name="bank" />
                 </field>
             </field>
@@ -116,7 +116,7 @@
                 <field name="state" position="after">
                     <newline/>
                     
-                    <separator colspan="4" string="Account infos"/>
+                    <separator colspan="4" string="Account Infos"/>
                         <newline/>
                     <group string="Bank account info" colspan="4" attrs="{'invisible': [('state','in', ['bvpost','bvrpost'])]}" >
                             <field name="acc_number" string="Account/IBAN Number" attrs="{'required': [('state','not in',['bvpost','bvrpost'])]}"/>
@@ -128,7 +128,7 @@
                         <field name="post_number" attrs="{'required': [('state','in',['bvpost','bvrpost','bvrbank'])]}"/>
                         <newline/>
                     </group>
-                    <separator colspan="4" string="Financial institute infos"/>
+                    <separator colspan="4" string="Financial Institute Infos"/>
                     <newline/>
                     <group attrs="{'invisible': ['|', ('state', 'not in', ['bvrpost','bvrbank']), ('company_id', '=', False)]}" colspan="4">
                         <field name="my_bank"  attrs="{'invisible': [('company_id', '=', False)]}" />

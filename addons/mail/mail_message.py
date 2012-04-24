@@ -207,7 +207,7 @@ class mail_message(osv.osv):
                         ('notification', 'System notification'),
                         ], 'Type', help="Message type: e-mail for e-mail message, notification for system message, comment for other messages such as user replies"),
         'partner_id': fields.many2one('res.partner', 'Related partner'),
-        'user_id': fields.many2one('res.users', 'Related user', readonly=1),
+        'user_id': fields.many2one('res.users', 'Related User', readonly=1),
         'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel', 'message_id', 'attachment_id', 'Attachments'),
         'display_text': fields.function(_get_display_text, method=True, type='text', size="512", string='Display Text'),
         'mail_server_id': fields.many2one('ir.mail_server', 'Outgoing mail server', readonly=1),
