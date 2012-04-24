@@ -412,19 +412,17 @@
                         <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
                     </div>
                 </div>
-                <sheet layout="manual">
-                <div>
-                    <field name="name" required="1" nolabel="1" class="oe_form_title" style="width: 100%%"/>
-                    <div class="oe_right">
-                        <button string="Schedule/Log Call"
-                            name="%(opportunity2phonecall_act)d" icon="terp-call-start"
-                            type="action"/>
-                        <button string="Schedule Meeting" icon="gtk-redo"
-                            name="action_makeMeeting"
-                            type="object"/>
-                    </div>
-                </div>
-                <group colspan="4" col="4" layout="auto" class="oe_form_group_label_border">
+                <sheet layout="auto">
+                <group colspan="4" col="3">
+                    <field name="name" required="1" nolabel="1" class="oe_form_title" width="80%%"/>
+                    <button string="Schedule/Log Call"
+                        name="%(opportunity2phonecall_act)d" icon="terp-call-start"
+                        type="action"/>
+                    <button string="Schedule Meeting" icon="gtk-redo"
+                        name="action_makeMeeting"
+                        type="object"/>
+                </group>
+                <group colspan="4" col="4" class="oe_form_group_label_border" style="margin-top: 20px;">
                     <field name="user_id"/>
                     <field name="planned_revenue"/>
 
@@ -436,12 +434,12 @@
 
                     <field name="type" invisible="1"/>
                 </group>
-                <notebook colspan="4" layout="auto">
+                <notebook colspan="4">
                 <page string="Opportunity">
                     <group col="4" colspan="2">
                         <separator colspan="4" string="Contacts"/>
                         <group colspan="2" col="3" class="oe_form_group_label_border">
-                            <field name="partner_id" select="1"
+                            <field width="80%%" name="partner_id" select="1"
                                 on_change="onchange_partner_id(partner_id, email_from)" string="Customer"/>
                             <button name="%(action_crm_lead2partner)d"
                                 icon="terp-partner" type="action"
@@ -450,7 +448,7 @@
 
                             <field name="phone" colspan="3"/>
 
-                            <field name="email_from" string="Email"/>
+                            <field width="80%%" name="email_from" string="Email"/>
                             <button string="Mail"
                                 name="%(mail.action_email_compose_message_wizard)d"
                                 context="{'mail':'new', 'model': 'crm.lead'}"
@@ -465,10 +463,10 @@
                             domain="[('object_id.model', '=', 'crm.lead')]" />
 
                         <label string="Stage" for="stage_id" align="1.0"/>
-                        <group colspan="1" col="4">
+                        <group colspan="1" col="3">
                             <field name="stage_id" nolabel="1"
                                 on_change="onchange_stage_id(stage_id)"
-                                domain="section_id and [('section_ids', '=', section_id)] or []"/>
+                                domain="section_id and [('section_ids', '=', section_id)] or []" width="60%%"/>
                             <button name="stage_previous"
                                 states="draft,open,pending" type="object"
                                 icon="gtk-go-back" string="" context="{'stage_type': 'opportunity'}"/>
@@ -483,46 +481,49 @@
                     <field name="description" nolabel="1" colspan="4"/>
                 </page>
                 <page string="Lead">
-                    <group colspan="2" col="4">
-                        <separator string="Contact" colspan="4" col="4"/>
+                    <separator string="Contact" colspan="4"/>
+                    <group colspan="4" col="4" class="oe_form_group_label_border">
                         <field name="partner_name" string="Customer Name" colspan="4"/>
-                        <newline/>
+                    </group>
+                    <group colspan="2" col="2" class="oe_form_group_label_border">
                         <field domain="[('domain', '=', 'contact')]" name="title" widget="selection"/>
-                        <field name="function" />
-                        <field name="street" colspan="4"/>
-                        <field name="street2" colspan="4"/>
+                        <field name="fax"/>
+                        <field name="street"/>
                         <field name="zip"/>
-                        <field name="city"/>
                         <field name="country_id"/>
+                    </group>
+                    <group colspan="2" col="2" class="oe_form_group_label_border">
+                        <field name="function" />
+                        <field name="mobile"/>
+                        <field name="street2"/>
+                        <field name="city"/>
                         <field name="state_id"/>
                     </group>
-                    <group colspan="2" col="2">
-                        <separator string="Communication" colspan="2"/>
-                        <field name="fax"/>
-                        <field name="mobile"/>
-                    </group>
-                    <group colspan="2" col="2">
+
+                    <group colspan="2" col="2" class="oe_form_group_label_border">
                         <separator string="Categorization" colspan="2"/>
                         <field name="type_id" widget="selection" groups="base.group_extended"/>
                         <field name="channel_id" widget="selection"/>
                     </group>
-                    <group colspan="2" col="2">
+                    <group colspan="2" col="2" class="oe_form_group_label_border">
                         <separator string="Mailings" colspan="2"/>
                         <field name="optin" on_change="on_change_optin(optin)"/>
                         <field name="optout" on_change="on_change_optout(optout)"/>
                     </group>
                 </page>
                 <page string="Extra Info" groups="base.group_extended">
-                    <group col="2" colspan="2">
+                    <group col="2" colspan="2" class="oe_form_group_label_border">
                         <separator string="Misc" colspan="2"/>
                         <field name="active"/>
                         <field name="day_open" groups="base.group_no_one"/>
                         <field name="day_close" groups="base.group_no_one"/>
                         <field name="referred"/>
                     </group>
-                    <separator colspan="4" string="References"/>
-                    <field name="ref"/>
-                    <field name="ref2"/>
+                    <group col="2" colspan="2" class="oe_form_group_label_border">
+                        <separator colspan="4" string="References"/>
+                        <field name="ref"/>
+                        <field name="ref2"/>
+                    </group>
                 </page>
                 </notebook>
                 </sheet>
