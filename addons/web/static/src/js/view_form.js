@@ -3344,9 +3344,9 @@ openerp.web.form.FieldStatus = openerp.web.form.Field.extend({
             if (this.check_white(color))
                 elem.css("color", "white");
             elem = this.$element.find("li.oe-arrow-list-selected .oe-arrow-list-before");
-            elem.css("border-left-color", "rgba(0,0,0,0)");
+            elem.css("border-left-color", "transparent");
             elem = this.$element.find("li.oe-arrow-list-selected .oe-arrow-list-after");
-            elem.css("border-color", "rgba(0,0,0,0)");
+            elem.css("border-color", "transparent");
             elem.css("border-left-color", color);
         }
     },
