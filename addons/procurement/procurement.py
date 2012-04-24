@@ -471,7 +471,7 @@ class procurement_order(osv.osv):
                 if procurement.close_move and (procurement.move_id.state <> 'done'):
                     move_obj.action_done(cr, uid, [procurement.move_id.id])
         res = self.write(cr, uid, ids, {'state': 'done', 'date_close': time.strftime('%Y-%m-%d')})
-        self.state_change_send_note(cr, uid, ids, 'done', context)
+        self.state_change_send_note(cr, uid, ids, 'done', context=None)
         wf_service = netsvc.LocalService("workflow")
         for id in ids:
             wf_service.trg_trigger(uid, 'procurement.order', id, cr)
