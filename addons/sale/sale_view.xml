@@ -131,7 +131,7 @@
                     </group>
                     <notebook colspan="5">
                         <page string="Sales Order">
-                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" domain="[('customer','=',True)]" context="{'search_default_customer':1}" required="1" groups="base.group_user"/>
+                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" domain="[('customer','=',True)]" context="{'search_default_customer':1}" required="1" />
                             <field domain="[('parent_id','=',partner_id)]" name="partner_invoice_id" groups="sale.group_delivery_invoice_address" options='{"quick_create": false}'/>
                             <field domain="[('parent_id','=',partner_id)]" name="partner_shipping_id" groups="sale.group_delivery_invoice_address" options='{"quick_create": false}'/>
                             <field domain="[('type','=','sale')]" name="pricelist_id" groups="product.group_sale_pricelist" on_change="onchange_pricelist_id(pricelist_id,order_line)"/>
