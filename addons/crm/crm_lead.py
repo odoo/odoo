@@ -501,7 +501,7 @@ class crm_lead(crm_case, osv.osv):
         oldest = self._merge_find_oldest(cr, uid, ids, context=context)
         if ctx_opportunities :
             first_opportunity = ctx_opportunities[0]
-            tail_opportunities = opportunities_list
+            tail_opportunities = opportunities_list + ctx_opportunities[1:]
         else:
             first_opportunity = opportunities_list[0]
             tail_opportunities = opportunities_list[1:]

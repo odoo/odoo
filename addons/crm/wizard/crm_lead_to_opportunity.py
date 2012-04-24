@@ -35,8 +35,8 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         'action': fields.selection([('exist', 'Link to an existing partner'), \
                                     ('create', 'Create a new partner'), \
                                     ('nothing', 'Do not link to a partner')], \
-                                    'Action', required=True),
-        'name': fields.selection([('convert', 'Convert to Opportunity'), ('merge', 'Merge with existing Opportunity')],'Select Action', required=True),
+                                    'Related Partner', required=True),
+        'name': fields.selection([('convert', 'Convert to Opportunities'), ('merge', 'Merge with existing Opportunities')], 'Conversion Action', required=True),
         'opportunity_ids': fields.many2many('crm.lead', string='Opportunities', domain=[('type', '=', 'opportunity')]),
     }
 
@@ -70,8 +70,6 @@ class crm_lead2opportunity_partner(osv.osv_memory):
                 
                 
         if not partner_id:
-            label = False
-            opp_ids = []
             if email:
                 # Find email of existing opportunity matches the email_from of the lead
                 cr.execute("""select id from crm_lead where type='opportunity' and
@@ -115,16 +113,21 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         return lead.convert_opportunity(cr, uid, lead_ids, partner_id, user_ids, team_id, context=context) 
 
     def _merge_opportunity(self, cr, uid, ids, opportunity_ids, action='merge', context=None):
-        #TOFIX: is it usefully ?
         if context is None:
             context = {}
-        merge_opportunity = self.pool.get('crm.merge.opportunity')
         res = False
-        #If we convert in mass, don't merge if there is no other opportunity but no warning
-        if action == 'merge' and (len(opportunity_ids) > 1 or not context.get('mass_convert') ):
-            self.write(cr, uid, ids, {'opportunity_ids' : [(6,0, [opportunity_ids[0].id])]}, context=context)
-            context.update({'lead_ids' : record_id, "convert" : True})
-            res = merge_opportunity.merge(cr, uid, data.opportunity_ids, context=context)
+        # Expected: all newly-converted leads (active_ids) will be merged with the opportunity(ies)
+        # that have been selected in the 'opportunity_ids' m2m, with all these records
+        # merged into the first opportunity (and the rest deleted)
+        opportunity_ids = [o.id for o in opportunity_ids]
+        lead_ids = context.get('active_ids', [])
+        if action == 'merge' and lead_ids and opportunity_ids:
+            # Add the leads in the to-merge list, next to other opps
+            # (the fact that they're passed in context['lead_ids'] means that
+            # they cannot be selected to contain the result of the merge.
+            opportunity_ids.extend(lead_ids)
+            context.update({'lead_ids': lead_ids, "convert" : True})
+            res = self.pool.get('crm.lead').merge_opportunity(cr, uid, opportunity_ids, context=context)
         return res
 
     def action_apply(self, cr, uid, ids, context=None):
@@ -138,7 +141,7 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         lead_ids = context.get('active_ids', [])
         data = self.browse(cr, uid, ids, context=context)[0]
         self._convert_opportunity(cr, uid, ids, {'lead_ids': lead_ids}, context=context)
-        self._merge_opportunity(cr, uid, ids, data.opportunity_ids, data.action, context=context)
+        self._merge_opportunity(cr, uid, ids, data.opportunity_ids, data.name, context=context)
         return lead.redirect_opportunity_view(cr, uid, lead_ids[0], context=context)
 
 crm_lead2opportunity_partner()
@@ -150,9 +153,8 @@ class crm_lead2opportunity_mass_convert(osv.osv_memory):
 
 
     _columns = {
-            'user_ids':  fields.many2many('res.users', string='Salesmans'),
+            'user_ids':  fields.many2many('res.users', string='Salesmen'),
             'section_id': fields.many2one('crm.case.section', 'Sales Team'),
-
     }
     def _convert_opportunity(self, cr, uid, ids, vals, context=None):
         data = self.browse(cr, uid, ids, context=context)[0]
@@ -164,9 +166,7 @@ class crm_lead2opportunity_mass_convert(osv.osv_memory):
         return super(crm_lead2opportunity_mass_convert, self)._convert_opportunity(cr, uid, ids, vals, context=context)
 
     def mass_convert(self, cr, uid, ids, context=None):
-        value = self.default_get(cr, uid, ['partner_id', 'opportunity_ids'], context=context)
-        value['opportunity_ids'] = [(6, 0, value['opportunity_ids'])]
-        self.write(cr, uid, ids, value, context=context)
         return self.action_apply(cr, uid, ids, context=context)
+
 crm_lead2opportunity_mass_convert()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
