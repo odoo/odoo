@@ -13,7 +13,7 @@
             <form string="Asset category">
                 <field name="name"/>
                 <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                <separator string="Accounting information" colspan="4"/>
+                <separator string="Accounting Information" colspan="4"/>
                 <field name="journal_id"/>
                 <field name="account_asset_id" on_change="onchange_account_asset(account_asset_id)"/>
                 <field name="account_depreciation_id"/>
@@ -33,7 +33,7 @@
                     <field name="open_asset"/>
                 </group>
             <group col="2" colspan="2" groups="analytic.group_analytic_accounting">
-                <separator string="Analytic information" colspan="4"/>
+                <separator string="Analytic Information" colspan="4"/>
                 <newline/>
                 <field name="account_analytic_id"/>
             </group>
