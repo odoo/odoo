@@ -1,38 +1,37 @@
-# Portuguese translation for openobject-addons
-# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* document_webdav
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: OpenERP Server 6.0.3\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:18+0000\n"
-"PO-Revision-Date: 2011-01-19 12:00+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
-"Language-Team: Portuguese <pt@li.org>\n"
+"PO-Revision-Date: 2012-04-04 15:04+0000\n"
+"Last-Translator: ThinkOpen Solutions <Unknown>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-22 05:43+0000\n"
-"X-Generator: Launchpad (build 14838)\n"
+"X-Launchpad-Export-Date: 2012-04-05 04:52+0000\n"
+"X-Generator: Launchpad (build 15060)\n"
 
 #. module: document_webdav
 #: field:document.webdav.dir.property,create_date:0
 #: field:document.webdav.file.property,create_date:0
 msgid "Date Created"
-msgstr ""
+msgstr "Criação de data"
 
 #. module: document_webdav
 #: constraint:document.directory:0
 msgid "Error! You can not create recursive Directories."
-msgstr "Erro! Não é possível criar diretorias recursivamente."
+msgstr "Erro! Não é possível criar pastas recursivamente."
 
 #. module: document_webdav
 #: view:document.webdav.dir.property:0
 #: view:document.webdav.file.property:0
 msgid "Search Document properties"
-msgstr ""
+msgstr "Procurar propriedades de documentos"
 
 #. module: document_webdav
 #: view:document.webdav.dir.property:0
@@ -40,12 +39,12 @@ msgstr ""
 #: view:document.webdav.file.property:0
 #: field:document.webdav.file.property,namespace:0
 msgid "Namespace"
-msgstr ""
+msgstr "Namespace"
 
 #. module: document_webdav
 #: field:document.directory,dav_prop_ids:0
 msgid "DAV properties"
-msgstr ""
+msgstr "Propriedades DAV"
 
 #. module: document_webdav
 #: model:ir.module.module,description:document_webdav.module_meta_information
@@ -72,11 +71,35 @@ msgid ""
 "server,\n"
 "        which needs explicit configuration in openerp-server.conf, too.\n"
 msgstr ""
+" Com este módulo, o servidor WebDAV para os documentos é activo.\n"
+"        Assim pode usar qualquer navegador compatível para remotamente ver "
+"os anexos de OpenObject. \n"
+"\n"
+"         Após a instalação, o servidor WebDAV pode ser controlado por uma "
+"secção [webdav] na configuração do servidor. \n"
+"         Parâmetro de configuração do servidor:\n"
+"         [webdav]\n"
+"         ; enable = True ; Servidor webdav sobre servidores http(s)\n"
+"         ; vdir = webdav; a directoria que o webdav irá servir \n"
+"           ; Este valor por defeito significa que webdav será \n"
+"           ; Em \"http://localhost:8069/webdav/\n"
+"         ;verbose = True; Active o log verboso do webdav\n"
+"         ; debug = True; Active as mensagens de depuração do webdav \n"
+"           , Já que as mensagens são encaminhadas para o registo de python, "
+"com \n"
+"           ; Níveis de \"debug\" e \"debug_rpc\", respectivamente, pode "
+"deixar \n"
+"           ; Essas opções \n"
+"           \n"
+"         Também implementa IETF RFC 5785 para serviços de descoberta de um "
+"servidor http, \n"
+"         que precisa de configuração explícita no openerp-server.conf, "
+"também.\n"
 
 #. module: document_webdav
 #: model:ir.model,name:document_webdav.model_document_webdav_file_property
 msgid "document.webdav.file.property"
-msgstr ""
+msgstr "document.webdav.file.property"
 
 #. module: document_webdav
 #: view:document.webdav.dir.property:0
@@ -87,44 +110,44 @@ msgstr "Agrupar por..."
 #. module: document_webdav
 #: view:document.directory:0
 msgid "These properties will be added to WebDAV requests"
-msgstr ""
+msgstr "Estas propriedades serão adicionadas às solicitações WebDAV"
 
 #. module: document_webdav
 #: model:ir.ui.menu,name:document_webdav.menu_file_props
 msgid "DAV properties for documents"
-msgstr ""
+msgstr "DAV propriedades de documentos"
 
 #. module: document_webdav
 #: code:addons/document_webdav/webdav.py:37
 #, python-format
 msgid "PyWebDAV Import Error!"
-msgstr ""
+msgstr "PyWebDAV Erro de importação!"
 
 #. module: document_webdav
 #: view:document.webdav.file.property:0
 #: field:document.webdav.file.property,file_id:0
 msgid "Document"
-msgstr ""
+msgstr "Documento"
 
 #. module: document_webdav
 #: sql_constraint:document.directory:0
 msgid "Directory cannot be parent of itself!"
-msgstr "Uma pasta não pode ser ascendente de si mesma"
+msgstr "Uma pasta não pode ser ascendente de sí própria"
 
 #. module: document_webdav
 #: view:document.directory:0
 msgid "Dynamic context"
-msgstr ""
+msgstr "Contexto dinâmico"
 
 #. module: document_webdav
 #: view:document.directory:0
 msgid "WebDAV properties"
-msgstr ""
+msgstr "WebDAV propriedades"
 
 #. module: document_webdav
 #: sql_constraint:document.directory:0
 msgid "The directory name must be unique !"
-msgstr ""
+msgstr "O nome da pasta tem de ser único !"
 
 #. module: document_webdav
 #: code:addons/document_webdav/webdav.py:37
@@ -134,11 +157,14 @@ msgid ""
 "http://code.google.com/p/pywebdav/downloads/detail?name=PyWebDAV-"
 "0.9.4.tar.gz&can=2&q=/"
 msgstr ""
+"Por favor instale PyWebDAV de "
+"http://code.google.com/p/pywebdav/downloads/detail?name=PyWebDAV-"
+"0.9.4.tar.gz&can=2&q=/"
 
 #. module: document_webdav
 #: model:ir.ui.menu,name:document_webdav.menu_dir_props
 msgid "DAV properties for folders"
-msgstr ""
+msgstr "DAV propriedades de pastas"
 
 #. module: document_webdav
 #: view:document.directory:0
@@ -168,43 +194,43 @@ msgstr "Valor"
 #: field:document.webdav.dir.property,dir_id:0
 #: model:ir.model,name:document_webdav.model_document_directory
 msgid "Directory"
-msgstr ""
+msgstr "Directoria"
 
 #. module: document_webdav
 #: field:document.webdav.dir.property,write_uid:0
 #: field:document.webdav.file.property,write_uid:0
 msgid "Last Modification User"
-msgstr ""
+msgstr "Última modificação utilizador"
 
 #. module: document_webdav
 #: view:document.webdav.dir.property:0
 msgid "Dir"
-msgstr ""
+msgstr "Dir"
 
 #. module: document_webdav
 #: field:document.webdav.dir.property,write_date:0
 #: field:document.webdav.file.property,write_date:0
 msgid "Date Modified"
-msgstr ""
+msgstr "Data modificação"
 
 #. module: document_webdav
 #: field:document.webdav.dir.property,create_uid:0
 #: field:document.webdav.file.property,create_uid:0
 msgid "Creator"
-msgstr ""
+msgstr "Criador"
 
 #. module: document_webdav
 #: model:ir.module.module,shortdesc:document_webdav.module_meta_information
 msgid "WebDAV server for Document Management"
-msgstr ""
+msgstr "WebDAV servidor para Gestão de Documentos"
 
 #. module: document_webdav
 #: sql_constraint:document.directory:0
 msgid "Directory must have a parent or a storage"
-msgstr ""
+msgstr "A pasta tem de ter um ascendente ou um armazenamento"
 
 #. module: document_webdav
 #: field:document.webdav.dir.property,do_subst:0
 #: field:document.webdav.file.property,do_subst:0
 msgid "Substitute"
-msgstr ""
+msgstr "Substituto"

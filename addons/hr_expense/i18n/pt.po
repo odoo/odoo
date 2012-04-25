@@ -4,17 +4,17 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:18+0000\n"
-"PO-Revision-Date: 2011-08-01 16:06+0000\n"
-"Last-Translator: Daniel Reis <Unknown>\n"
+"PO-Revision-Date: 2012-04-04 15:06+0000\n"
+"Last-Translator: ThinkOpen Solutions <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-22 05:47+0000\n"
-"X-Generator: Launchpad (build 14838)\n"
+"X-Launchpad-Export-Date: 2012-04-05 04:52+0000\n"
+"X-Generator: Launchpad (build 15060)\n"
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_confirmedexpenses0
@@ -61,7 +61,7 @@ msgstr "Março"
 #. module: hr_expense
 #: field:hr.expense.report,invoiced:0
 msgid "# of Invoiced Lines"
-msgstr "Número de linhas de fatura"
+msgstr "Número de linhas de factura"
 
 #. module: hr_expense
 #: field:hr.expense.expense,company_id:0 view:hr.expense.report:0
@@ -111,7 +111,7 @@ msgstr "Notas"
 #. module: hr_expense
 #: field:hr.expense.expense,invoice_id:0
 msgid "Employee's Invoice"
-msgstr "Fatura de empregado"
+msgstr "Factura de funcionário"
 
 #. module: hr_expense
 #: model:ir.module.module,description:hr_expense.module_meta_information
@@ -132,6 +132,21 @@ msgid ""
 "    re-invoice your customer's expenses if your work by project.\n"
 "    "
 msgstr ""
+"\n"
+"    Este módulo tem como objectivo gerir as despesas do funcionário. \n"
+"\n"
+"         O fluxo do workflow é implementado: \n"
+"     * Rascunho de despesa \n"
+"     * Confirmação da folha pelo funcionário \n"
+"     * Validação pelo empresário \n"
+"     * Validação pela criação contador e factura \n"
+"     * O pagamento da factura para o funcionário \n"
+"\n"
+"     Este módulo também usa a contabilidade analítica e é compatível com \n"
+"     a factura no módulo folha de horas de forma a que seja capaz de "
+"automaticamente de\n"
+"     re-facturar as despesas do cliente se trabalhar por projecto.\n"
+"    "
 
 #. module: hr_expense
 #: selection:hr.expense.report,state:0
@@ -479,7 +494,7 @@ msgstr "Rascunho das Despesas"
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Customer Project"
-msgstr "Projeto de cliente"
+msgstr "Projecto de cliente"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0 field:hr.expense.expense,user_id:0
@@ -594,7 +609,7 @@ msgstr "Outras Informações"
 #. module: hr_expense
 #: help:hr.expense.expense,journal_id:0
 msgid "The journal used when the expense is invoiced"
-msgstr "Diário usado quando a despesa é faturada"
+msgstr "Diário usado quando a despesa é facturada"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -684,7 +699,7 @@ msgstr "Referência"
 #. module: hr_expense
 #: field:hr.expense.report,employee_id:0
 msgid "Employee's Name"
-msgstr "Nome do Empregado"
+msgstr "Nome do Funcionário"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.expense_all
@@ -696,6 +711,12 @@ msgid ""
 "and the employee can be reimbursed. You can also reinvoice the customer at "
 "the end of the flow."
 msgstr ""
+"O módulo de gestão de despesas OpenERP permite-lhe controlar o fluxo total. "
+"Todo o mês, os funcionários registam as suas despesas. No final do mês, os "
+"gerentes validam as folhas de despesas, que gera custos em projectos / "
+"contas analíticas. O contabilista valida as propostas dos movimentos e o "
+"funcionário pode ser reembolsado. Também pode re-facturar o cliente no final "
+"do fluxo."
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -726,7 +747,7 @@ msgstr "Nome"
 #. module: hr_expense
 #: field:hr.expense.expense,account_move_id:0
 msgid "Ledger Posting"
-msgstr ""
+msgstr "Ledger Posting"
 
 #. module: hr_expense
 #: model:process.transition,note:hr_expense.process_transition_approveinvoice0
@@ -758,6 +779,13 @@ msgid ""
 " If an invoice is made for the expense request, the state is 'Invoiced'.\n"
 " If the expense is paid to user, the state is 'Reimbursed'."
 msgstr ""
+"Quando o pedido de despesa é criado o estado é 'Rascunho'. \n"
+"  Confirma-se pelo utilizador e o pedido é enviado ao administrador, o "
+"estado é 'Confirmação em espera'. \n"
+"Se o administrador aceita, o estado é 'Aceite'. \n"
+"  Se uma factura é feita para a solicitação de despesa, o estado é "
+"'Facturado'. \n"
+"  Se a despesa é paga ao utilizador, o estado é 'Reembolsado'."
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -814,4 +842,4 @@ msgstr ""
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_reinvoicing0
 msgid "Reinvoicing"
-msgstr "Re-facturamento"
+msgstr "Re-facturação"

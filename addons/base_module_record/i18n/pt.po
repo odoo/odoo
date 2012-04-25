@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-02-11 05:47+0000\n"
-"Last-Translator: Jay Vora <Unknown>\n"
+"PO-Revision-Date: 2012-04-23 09:34+0000\n"
+"Last-Translator: ThinkOpen Solutions <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-22 05:32+0000\n"
-"X-Generator: Launchpad (build 14838)\n"
+"X-Launchpad-Export-Date: 2012-04-24 05:18+0000\n"
+"X-Generator: Launchpad (build 15135)\n"
 
 #. module: base_module_record
 #: wizard_field:base_module_record.module_record_objects,info,category:0
@@ -42,7 +42,7 @@ msgstr ""
 #: wizard_button:base_module_record.module_record_data,info,end:0
 #: wizard_button:base_module_record.module_record_data,save_yaml,end:0
 msgid "End"
-msgstr ""
+msgstr "Fim"
 
 #. module: base_module_record
 #: wizard_view:base_module_record.module_record_data,init:0
@@ -156,13 +156,13 @@ msgstr "Módulo criado com sucesso !"
 #. module: base_module_record
 #: wizard_view:base_module_record.module_record_objects,save_yaml:0
 msgid "YAML file successfully created !"
-msgstr ""
+msgstr "Ficheiro YALM criado com sucesso!"
 
 #. module: base_module_record
 #: wizard_view:base_module_record.module_record_data,info:0
 #: wizard_view:base_module_record.module_record_data,save_yaml:0
 msgid "Result, paste this to your module's xml"
-msgstr ""
+msgstr "Resultado, cole este sml no seu módulo"
 
 #. module: base_module_record
 #: selection:base_module_record.module_record_data,init,filter_cond:0
@@ -207,7 +207,7 @@ msgstr "Continuar"
 #: model:ir.actions.wizard,name:base_module_record.wizard_base_module_record_data
 #: model:ir.ui.menu,name:base_module_record.menu_wizard_base_module_record_data
 msgid "Export Customizations As Data File"
-msgstr ""
+msgstr "Exportar personalizações como ficheiro de dados"
 
 #. module: base_module_record
 #: code:addons/base_module_record/wizard/base_module_save.py:129
@@ -245,7 +245,7 @@ msgstr "Módulo Informação"
 #: wizard_field:base_module_record.module_record_data,init,info_yaml:0
 #: wizard_field:base_module_record.module_record_objects,init,info_yaml:0
 msgid "YAML"
-msgstr ""
+msgstr "YAML"
 
 #. module: base_module_record
 #: wizard_field:base_module_record.module_record_data,info,res_text:0
@@ -296,3 +296,26 @@ msgid ""
 "module.\n"
 "    "
 msgstr ""
+"\n"
+"Este módulo permite que crie um novo módulo sem qualquer desenvolvimento.\n"
+"Ele regista todas as operações aos objetos durante a sessão de gravação e\n"
+"produção de um módulo .ZIP. Assim pode criar o seu próprio módulo "
+"diretamente\n"
+"do cliente OpenERP.\n"
+"\n"
+"Esta versão funciona para criar e atualizar registos existentes. ele "
+"recalcula\n"
+"dependências e links para todos os tipos de widgets (many2one, many2many, "
+"...).\n"
+"Ele também suporta fluxos de trabalho e de demonstração / atualização dos "
+"dados.\n"
+"\n"
+"Isso deve ajudá-lo a criar facilmente módulos reutilizáveis ​​e publicáveis\n"
+"para configurações personalizadas e demonstração / testes de dados.\n"
+"\n"
+"Como usá-lo:\n"
+"Executar Administração / Personalização / Criação de Módulo / Exportar "
+"personalizações como um assistente do módulo.\n"
+"Selecione os critérios de data e hora de gravação e objetos para serem "
+"gravados e Gravar módulo.\n"
+"    "

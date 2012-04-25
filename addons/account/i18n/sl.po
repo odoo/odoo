@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:18+0000\n"
-"PO-Revision-Date: 2012-03-26 21:00+0000\n"
-"Last-Translator: Miha Gašperšič <mihec.gaspersic@gmail.com>\n"
+"PO-Revision-Date: 2012-04-18 22:13+0000\n"
+"Last-Translator: Dusan Laznik <laznik@mentis.si>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-03-27 05:01+0000\n"
-"X-Generator: Launchpad (build 15011)\n"
+"X-Launchpad-Export-Date: 2012-04-19 04:53+0000\n"
+"X-Generator: Launchpad (build 15108)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -39,12 +39,12 @@ msgstr ""
 #. module: account
 #: view:account.move.reconcile:0
 msgid "Journal Entry Reconcile"
-msgstr "Uskladi dnevniški zapis"
+msgstr "Usklajevanje dnevnika"
 
 #. module: account
 #: field:account.installer.modules,account_voucher:0
 msgid "Voucher Management"
-msgstr "Upravljanje Varčevanj"
+msgstr "Upravljanje plačil"
 
 #. module: account
 #: view:account.account:0
@@ -52,7 +52,7 @@ msgstr "Upravljanje Varčevanj"
 #: view:account.move:0
 #: view:account.move.line:0
 msgid "Account Statistics"
-msgstr "Statisktika Uporabniškega Računa"
+msgstr "Knjigovodske statistike"
 
 #. module: account
 #: field:report.invoice.created,residual:0
@@ -73,17 +73,17 @@ msgstr "Napaka! Trajanje obdobja/obdobij je nepravilno. "
 #. module: account
 #: field:account.analytic.line,currency_id:0
 msgid "Account currency"
-msgstr "Valuta Računa"
+msgstr "Valuta konta"
 
 #. module: account
 #: view:account.tax:0
 msgid "Children Definition"
-msgstr "Definicija otroka"
+msgstr "Definicija podrejenega elementa"
 
 #. module: account
 #: model:ir.model,name:account.model_report_aged_receivable
 msgid "Aged Receivable Till Today"
-msgstr "Zastarele Terjave Do Danes"
+msgstr "Zapadle terjatve na današnji dan"
 
 #. module: account
 #: field:account.partner.ledger,reconcil:0
@@ -105,7 +105,7 @@ msgstr "Uvozi iz računa ali plačila"
 #. module: account
 #: model:ir.model,name:account.model_wizard_multi_charts_accounts
 msgid "wizard.multi.charts.accounts"
-msgstr "Čarovnik Večkratnih Karakteristik Računa"
+msgstr "wizard.multi.charts.accounts"
 
 #. module: account
 #: view:account.move:0
@@ -117,9 +117,7 @@ msgstr "Skupaj breme"
 msgid ""
 "If you unreconciliate transactions, you must also verify all the actions "
 "that are linked to those transactions because they will not be disabled"
-msgstr ""
-"Če imate neusklajene transakcije, morate preveriti tudi vse ukrepe, ki so "
-"povezani s transakcijami, ker ne bodo onemogočeni."
+msgstr "Če odpirate postavke, morate preveriti tudi vse povezane transakcije"
 
 #. module: account
 #: report:account.tax.code.entries:0
@@ -130,7 +128,7 @@ msgstr "Računovodske knjižbe"
 #: code:addons/account/account.py:1291
 #, python-format
 msgid "You can not delete posted movement: \"%s\"!"
-msgstr "Ne morete izbrisati poslanega premika: \"%s\"!"
+msgstr "Ne morete izbrisati potrjene temeljnice: \"%s\"!"
 
 #. module: account
 #: report:account.invoice:0
@@ -155,7 +153,7 @@ msgstr "Uskladi"
 #: field:account.move.line,ref:0
 #: field:account.subscription,ref:0
 msgid "Reference"
-msgstr "Referenca"
+msgstr "Sklic"
 
 #. module: account
 #: view:account.open.closed.fiscalyear:0
@@ -181,12 +179,12 @@ msgstr "Opozorilo!"
 #: field:account.fiscal.position.account,account_src_id:0
 #: field:account.fiscal.position.account.template,account_src_id:0
 msgid "Account Source"
-msgstr "Vir Uporabniškega Računa"
+msgstr "Vir konta"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_acc_analytic_acc_5_report_hr_timesheet_invoice_journal
 msgid "All Analytic Entries"
-msgstr "Vsa Strokovna Mesta"
+msgstr "Vse analitične postavke"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_created_invoice_dashboard
@@ -202,7 +200,7 @@ msgstr "Negativno"
 #: code:addons/account/wizard/account_move_journal.py:95
 #, python-format
 msgid "Journal: %s"
-msgstr "Revija: %s"
+msgstr "Dnevnik: %s"
 
 #. module: account
 #: help:account.analytic.journal,type:0
@@ -211,8 +209,8 @@ msgid ""
 "invoice) to create analytic entries, OpenERP will look for a matching "
 "journal of the same type."
 msgstr ""
-"Daje vrste analitičnih revij. Ko jo potrebujete za dokument (npr.: račun) za "
-"ustvarjanje analitičnih vnosov, bo OpenERP iskal ujemanja revij iste vrste."
+"Vrsta analitičnega dnevnika.  Pri knjiženju analitike se bo uporabljala tu "
+"definirana vrsta dnevnika."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_tax_template_form
@@ -223,7 +221,7 @@ msgstr "Predloge davka"
 #. module: account
 #: model:ir.model,name:account.model_account_tax
 msgid "account.tax"
-msgstr "Davek Računa"
+msgstr "konto.davek"
 
 #. module: account
 #: code:addons/account/account.py:901
@@ -238,7 +236,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_move_line_reconcile_select
 msgid "Move line reconcile select"
-msgstr "Izberite usklajeno premaknjeno linijo"
+msgstr "Izbor postavke za zapiranje"
 
 #. module: account
 #: help:account.model.line,sequence:0
@@ -255,9 +253,7 @@ msgstr ""
 msgid ""
 "Check this box if you don't want any VAT related to this Tax Code to appear "
 "on invoices"
-msgstr ""
-"Označite to polje, če ne želite vseh povezanih DDV v zvezi davčnega "
-"zakonika, da se pojavijo na računih"
+msgstr "Označie to polje, če želite da se ta davek ne izisuje na računih."
 
 #. module: account
 #: code:addons/account/account_invoice.py:1241
@@ -268,12 +264,12 @@ msgstr "Račun '%s' je plačan delno: %s%s od %s%s (preostalo %s%s)"
 #. module: account
 #: model:process.transition,note:account.process_transition_supplierentriesreconcile0
 msgid "Accounting entries are an input of the reconciliation."
-msgstr "Računovodski vpisi so vnešeni neusklajeno."
+msgstr "Postavke so vhod za usklajevanje"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_management_belgian_reports
 msgid "Belgian Reports"
-msgstr "Belgijsko poročilo"
+msgstr "Belgijska poročila"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1200
@@ -291,7 +287,7 @@ msgstr "Izračunano stanje"
 #: model:ir.actions.act_window,name:account.action_view_account_use_model
 #: model:ir.ui.menu,name:account.menu_action_manual_recurring
 msgid "Manual Recurring"
-msgstr "Ročno Ponavljanje"
+msgstr "Ročno ponavljanje"
 
 #. module: account
 #: view:account.fiscalyear.close.state:0
@@ -311,13 +307,13 @@ msgstr "Izberite obdobje analize"
 #. module: account
 #: view:account.move.line:0
 msgid "St."
-msgstr "modul: račun"
+msgstr "St."
 
 #. module: account
 #: code:addons/account/account_invoice.py:551
 #, python-format
 msgid "Invoice line account company does not match with invoice company."
-msgstr "Vrstica računa podjetja se ne ujema z računom podjetja."
+msgstr "Konto na postavki računa se ne ujema z partenrjem na računu ."
 
 #. module: account
 #: field:account.journal.column,field:0
@@ -329,9 +325,7 @@ msgstr "Ime polja"
 msgid ""
 "Installs localized accounting charts to match as closely as possible the "
 "accounting needs of your company based on your country."
-msgstr ""
-"Namestitev lokalizira karte računovodstva, da se računovodske potrebe vašega "
-"podjetja čim bolj ujemajo z osnovami vaše države."
+msgstr "Namestitev lokaliziranega kontnega načrta"
 
 #. module: account
 #: code:addons/account/wizard/account_move_journal.py:63
@@ -341,21 +335,18 @@ msgid ""
 "\n"
 "You can create one in the menu: \n"
 "Configuration/Financial Accounting/Accounts/Journals."
-msgstr ""
-"Ni mogoče najti računa revije tipa % s za to podjetje.\n"
-"Lahko ga ustvarite v meniju:\n"
-"Konfiguracija / Finančno Računovodstvo / Uporabniški Računi / Dnevniki."
+msgstr "Ni mogoče najti dnevnika tipa % s za to podjetje."
 
 #. module: account
 #: model:ir.model,name:account.model_account_unreconcile
 msgid "Account Unreconcile"
-msgstr "Neusklajen račun"
+msgstr "Neusklajen konto"
 
 #. module: account
 #: view:product.product:0
 #: view:product.template:0
 msgid "Purchase Properties"
-msgstr "Lastnosti nakupa"
+msgstr "Lasnosti nabave"
 
 #. module: account
 #: view:account.installer:0
@@ -369,7 +360,7 @@ msgstr "Nastavitve"
 #: selection:report.account.sales,month:0
 #: selection:report.account_type.sales,month:0
 msgid "June"
-msgstr "junij"
+msgstr "Junij"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_moves_bank
@@ -377,20 +368,17 @@ msgid ""
 "This view is used by accountants in order to record entries massively in "
 "OpenERP. Journal items are created by OpenERP if you use Bank Statements, "
 "Cash Registers, or Customer/Supplier payments."
-msgstr ""
-"Pogled je uporabljen za računovodje, z namenom shranjevanja množičnih vnosov "
-"v OpenERP. Postavke so ustvarjeni z OpenERP, če uporabljate bančne izkaze, "
-"blagajne, plačila strank ali dobaviteljev."
+msgstr "Pogled je namenjen množičnemu vnosu postavk ."
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_template
 msgid "account.tax.template"
-msgstr "Uporabniški Račun.Davek.Predloga"
+msgstr "konto.davek.predloga"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_accounts_wizard
 msgid "account.bank.accounts.wizard"
-msgstr "Uporabniški Račun.Banka.Uporabniški Računi.Čarovnik"
+msgstr "account.bank.accounts.wizard"
 
 #. module: account
 #: field:account.move.line,date_created:0
@@ -406,31 +394,29 @@ msgstr "Vračilo Nakupa"
 #. module: account
 #: selection:account.journal,type:0
 msgid "Opening/Closing Situation"
-msgstr "Odpiranje / zapiranje stanja"
+msgstr "Začetno/Zaključno stanje"
 
 #. module: account
 #: help:account.journal,currency:0
 msgid "The currency used to enter statement"
-msgstr "Valuta Uporabljena za vnos stanja"
+msgstr "Valuta za vnos izjave"
 
 #. module: account
 #: field:account.open.closed.fiscalyear,fyear_id:0
 msgid "Fiscal Year to Open"
-msgstr "Poslovno Leto Odprtja"
+msgstr "Odprite poslovno leto"
 
 #. module: account
 #: help:account.journal,sequence_id:0
 msgid ""
 "This field contains the informatin related to the numbering of the journal "
 "entries of this journal."
-msgstr ""
-"To polje vsebuje informacije povezane z oštevilčenimi vpisi v dnevnik te "
-"revije."
+msgstr "Informacije o številčnem zaporedju dnevnika ."
 
 #. module: account
 #: field:account.journal,default_debit_account_id:0
 msgid "Default Debit Account"
-msgstr "Privzeti breme konto"
+msgstr "Privzeti debitni konto"
 
 #. module: account
 #: view:account.move:0
@@ -445,7 +431,7 @@ msgstr "Pozitivno"
 #. module: account
 #: view:account.move.line.unreconcile.select:0
 msgid "Open For Unreconciliation"
-msgstr "Odprto za neusklajeno"
+msgstr "Odpri kot neusklajeno"
 
 #. module: account
 #: field:account.account.template,chart_template_id:0
@@ -458,7 +444,7 @@ msgstr "Predloga kontnega načrta"
 #. module: account
 #: help:account.model.line,amount_currency:0
 msgid "The amount expressed in an optional other currency."
-msgstr "Znesek izražen v poljubni drugi valuti"
+msgstr "Znesek izražen v drugi valuti"
 
 #. module: account
 #: help:account.journal.period,state:0
@@ -467,9 +453,9 @@ msgid ""
 "it comes to 'Printed' state. When all transactions are done, it comes in "
 "'Done' state."
 msgstr ""
-"Ko je dnevniško trajanje ustvarjeno.Ko je stanje 'Draft'.Če je poročilo "
-"tiskano pride do 'tiskalniškega' stanja.Ko so vse transakcije končane, "
-"preide v 'Zaključno' stanje."
+"Ob kreiranju obdobja dnevnika je stanje \"Osnutek\". Če tiskate poročilo "
+"preide v stanje \"Natiskano\".Ko so vse transakcije končane, preide v stanje "
+"\"Zaključeno\"."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_tax_chart
@@ -479,10 +465,7 @@ msgid ""
 "amount of each area of the tax declaration for your country. It’s presented "
 "in a hierarchical structure, which can be modified to fit your needs."
 msgstr ""
-"Graf davkov je drevesni pogled ki se nanaša na strukturo Davčnih Primerov "
-"(ali davčnih kod) in pokaže trenutno stanje davkov.Graf davkov predstavlja "
-"število vsakega obsega davčne osnove za vašo državo. To je predstavljeno v "
-"hierarhalni strukturi katero lahko preuredite po vaših potrebah."
+"Pregled davkov je drevsni pogled na trenutno stanje po davčnih skupinah."
 
 #. module: account
 #: view:account.analytic.line:0
@@ -517,17 +500,17 @@ msgstr "Dnevnik"
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_confirm
 msgid "Confirm the selected invoices"
-msgstr "Potrdi izbrani račun"
+msgstr "Potrdi izbrane račune"
 
 #. module: account
 #: field:account.addtmpl.wizard,cparent_id:0
 msgid "Parent target"
-msgstr "Matični cilj"
+msgstr "Nadrejeni element"
 
 #. module: account
 #: field:account.bank.statement,account_id:0
 msgid "Account used in this journal"
-msgstr "Račun uporabljen v tem dnevniku"
+msgstr "Konto uporabljen v tem dnevniku"
 
 #. module: account
 #: help:account.aged.trial.balance,chart_account_id:0
@@ -545,17 +528,17 @@ msgstr "Račun uporabljen v tem dnevniku"
 #: help:account.vat.declaration,chart_account_id:0
 #: help:accounting.report,chart_account_id:0
 msgid "Select Charts of Accounts"
-msgstr "Izberi Grafe Računov"
+msgstr "Izberite kontni načrt"
 
 #. module: account
 #: view:product.product:0
 msgid "Purchase Taxes"
-msgstr "Davek Nakupov"
+msgstr "Nabavni davki"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_refund
 msgid "Invoice Refund"
-msgstr "Račun za vračilo"
+msgstr "Vračilo"
 
 #. module: account
 #: report:account.overdue:0
@@ -565,13 +548,13 @@ msgstr "Li"
 #. module: account
 #: field:account.automatic.reconcile,unreconciled:0
 msgid "Not reconciled transactions"
-msgstr "Neusklajene transakcije"
+msgstr "Odprte postavke"
 
 #. module: account
 #: code:addons/account/account_cash_statement.py:348
 #, python-format
 msgid "CashBox Balance is not matching with Calculated Balance !"
-msgstr "Bilanca blagajne se ne ujema z bilanco izračuna!"
+msgstr "Stanje blagajne se ne ujema za izračunanim stanjem"
 
 #. module: account
 #: view:account.fiscal.position:0
@@ -589,7 +572,7 @@ msgstr "Zapri poslovno leto"
 #. module: account
 #: model:process.transition,note:account.process_transition_confirmstatementfromdraft0
 msgid "The accountant confirms the statement."
-msgstr "Računovodja potrjuje izjavo."
+msgstr "Knjigovodja potrjuje izjavo."
 
 #. module: account
 #: selection:account.balance.report,display_account:0
@@ -603,7 +586,7 @@ msgstr "Vse"
 #. module: account
 #: field:account.invoice.report,address_invoice_id:0
 msgid "Invoice Address Name"
-msgstr "Ime Naslova Računa"
+msgstr "Naslov računa"
 
 #. module: account
 #: selection:account.installer,period:0
@@ -642,7 +625,7 @@ msgstr "Osrednji Dnevnik"
 #. module: account
 #: sql_constraint:account.sequence.fiscalyear:0
 msgid "Main Sequence must be different from current !"
-msgstr "Glavno Zaporedje mora biti različno od trenutnega!"
+msgstr "Glavno zaporedje mora biti različno od trenutnega!"
 
 #. module: account
 #: field:account.invoice.tax,tax_amount:0
@@ -669,7 +652,7 @@ msgstr "Zapri obdobje"
 #. module: account
 #: model:ir.model,name:account.model_account_common_partner_report
 msgid "Account Common Partner Report"
-msgstr "Skupno poročilo uporabniškega partnerja"
+msgstr "Skupni konto partnerja"
 
 #. module: account
 #: field:account.fiscalyear.close,period_id:0
@@ -703,7 +686,7 @@ msgstr "Konti terjatev"
 #. module: account
 #: model:ir.model,name:account.model_account_report_general_ledger
 msgid "General Ledger Report"
-msgstr "Osnovno ledger poročilo"
+msgstr "Glavna knjiga - Poročila"
 
 #. module: account
 #: view:account.invoice:0
@@ -713,7 +696,7 @@ msgstr "Znova odpri"
 #. module: account
 #: view:account.use.model:0
 msgid "Are you sure you want to create entries?"
-msgstr "prosim potrdite knjiženje"
+msgstr "Ali res želite ustavriti vnose ?"
 
 #. module: account
 #: selection:account.bank.accounts.wizard,account_type:0
@@ -723,13 +706,13 @@ msgstr "Preveri"
 #. module: account
 #: field:account.partner.reconcile.process,today_reconciled:0
 msgid "Partners Reconciled Today"
-msgstr "Partnerji danes usklajeni"
+msgstr "Danes usklajeni partnerji"
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:306
 #, python-format
 msgid "The statement balance is incorrect !\n"
-msgstr "Stanje izjave ni pravilno!\n"
+msgstr "Stanje ni pravilno !\n"
 
 #. module: account
 #: selection:account.payment.term.line,value:0
@@ -740,20 +723,20 @@ msgstr "Odstotek"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_charts
 msgid "Charts"
-msgstr "Načrti"
+msgstr "Preglednice"
 
 #. module: account
 #: code:addons/account/project/wizard/project_account_analytic_line.py:47
 #: model:ir.model,name:account.model_project_account_analytic_line
 #, python-format
 msgid "Analytic Entries by line"
-msgstr "Analitična vstavljanja v vrstah"
+msgstr "Analitične postavke"
 
 #. module: account
 #: code:addons/account/wizard/account_change_currency.py:38
 #, python-format
 msgid "You can only change currency for Draft Invoice !"
-msgstr "Spremenite lahko samo valuto računa za leto!"
+msgstr "Valutu lahko spremenite samo če je račun v stanju \"Osnutek\" !"
 
 #. module: account
 #: view:account.analytic.journal:0
@@ -773,7 +756,7 @@ msgstr "Vrsta"
 #. module: account
 #: model:ir.model,name:account.model_account_subscription_line
 msgid "Account Subscription Line"
-msgstr "Vrsta naročnine računa"
+msgstr "Vrstica za naročnine"
 
 #. module: account
 #: help:account.invoice,reference:0
@@ -791,7 +774,7 @@ msgstr "Preklic uskladitve"
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_journal_report
 msgid "Account Analytic Journal"
-msgstr "Analitični račun"
+msgstr "Analitični dnevnik konta"
 
 #. module: account
 #: model:ir.model,name:account.model_account_automatic_reconcile
@@ -801,7 +784,7 @@ msgstr "Samodejno usklajevanje"
 #. module: account
 #: view:account.payment.term.line:0
 msgid "Due date Computation"
-msgstr ""
+msgstr "Izračun valute"
 
 #. module: account
 #: report:account.analytic.account.quantity_cost_ledger:0
@@ -820,7 +803,7 @@ msgstr "September"
 #. module: account
 #: selection:account.subscription,period_type:0
 msgid "days"
-msgstr "dni"
+msgstr "dan;dni"
 
 #. module: account
 #: help:account.account.template,nocreate:0
@@ -835,8 +818,7 @@ msgid ""
 "Can not %s invoice which is already reconciled, invoice should be "
 "unreconciled first. You can only Refund this invoice"
 msgstr ""
-"Ne morem % s računa, ki je že potrjen, račun je potrebno razveljaviti. Račun "
-"lahko samo preknjižite."
+"Ne morem % s računa, ki je že potrjen, račun je potrebno razveljaviti."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_subscription_form_new
@@ -851,7 +833,7 @@ msgstr "Izračun"
 #. module: account
 #: view:account.move.line:0
 msgid "Next Partner to reconcile"
-msgstr ""
+msgstr "Naslednji parner"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1191
@@ -859,7 +841,7 @@ msgstr ""
 msgid ""
 "You can not do this modification on a confirmed entry ! Please note that you "
 "can just change some non important fields !"
-msgstr ""
+msgstr "Ne morete narediti te spremembe na potrjeni postavki !"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -888,7 +870,7 @@ msgstr "Zapadlo"
 #: view:account.invoice.report:0
 #: field:account.invoice.report,price_total_tax:0
 msgid "Total With Tax"
-msgstr "Skupaj z DDV"
+msgstr "Skupaj z davkom"
 
 #. module: account
 #: view:account.invoice:0
@@ -896,7 +878,7 @@ msgstr "Skupaj z DDV"
 #: view:validate.account.move:0
 #: view:validate.account.move.lines:0
 msgid "Approve"
-msgstr "Odobri"
+msgstr "Potrdi"
 
 #. module: account
 #: view:account.invoice:0
@@ -910,7 +892,7 @@ msgstr "Skupni znesek"
 #: selection:account.account.template,type:0
 #: selection:account.entries.report,type:0
 msgid "Consolidation"
-msgstr "Zgoščeno"
+msgstr "Konsolidacija"
 
 #. module: account
 #: view:account.entries.report:0
@@ -925,7 +907,7 @@ msgstr "Osrednji dnevnik"
 #. module: account
 #: selection:account.journal,type:0
 msgid "Sale Refund"
-msgstr "Prodana vrednost"
+msgstr "Vračilo"
 
 #. module: account
 #: model:process.node,note:account.process_node_accountingstatemententries0
@@ -935,7 +917,7 @@ msgstr "Bančni izpisek"
 #. module: account
 #: field:account.analytic.line,move_id:0
 msgid "Move Line"
-msgstr "Postavka prenosa"
+msgstr "Postavka"
 
 #. module: account
 #: help:account.move.line,tax_amount:0
@@ -943,10 +925,7 @@ msgid ""
 "If the Tax account is a tax code account, this field will contain the taxed "
 "amount.If the tax account is base tax code, this field will contain the "
 "basic amount(without tax)."
-msgstr ""
-"Če je davčni obračun označba davka računa, bo to polje vsebovalo obdavčeno "
-"vrednost. Če je davčni račun osnovna davčna številka, bo polje vsebovalo "
-"osnovni znesek (brez davka)."
+msgstr "Davek ali osnova za davek ; odvisno od davčne skupine."
 
 #. module: account
 #: view:account.analytic.line:0
@@ -992,18 +971,18 @@ msgstr "Ni analitičnega dnevnika!"
 #: model:ir.actions.report.xml,name:account.account_3rdparty_account_balance
 #: model:ir.ui.menu,name:account.menu_account_partner_balance_report
 msgid "Partner Balance"
-msgstr "Bilanca partnerja"
+msgstr "Stanje partnerja"
 
 #. module: account
 #: field:account.bank.accounts.wizard,acc_name:0
 msgid "Account Name."
-msgstr "Uporabniško ime"
+msgstr "Naziv konta"
 
 #. module: account
 #: field:account.chart.template,property_reserve_and_surplus_account:0
 #: field:res.company,property_reserve_and_surplus_account:0
 msgid "Reserve and Profit/Loss Account"
-msgstr "Rezerva in dobiček/izguba računa"
+msgstr "Konto rezerv ali dobička/izgube"
 
 #. module: account
 #: field:report.account.receivable,name:0
@@ -1018,12 +997,12 @@ msgstr "Ležeče"
 #. module: account
 #: view:board.board:0
 msgid "Customer Invoices to Approve"
-msgstr ""
+msgstr "Nepotrjeni izdani računi"
 
 #. module: account
 #: help:account.fiscalyear.close,fy_id:0
 msgid "Select a Fiscal year to close"
-msgstr "Izberi Fiskalno leto za zaprei"
+msgstr "Izberite poslovno leto"
 
 #. module: account
 #: help:account.account.template,user_type:0
@@ -1032,7 +1011,7 @@ msgid ""
 "information about the account and its specificities."
 msgstr ""
 "Te vrste so opredeljene glede na vašo državo. Vrsta vsebuje več informacij o "
-"računu in njegovih posebnosti."
+"kontu in njegovih posebnosti."
 
 #. module: account
 #: view:account.tax:0
@@ -1042,7 +1021,7 @@ msgstr "Možnosti uporabe"
 #. module: account
 #: report:account.partner.balance:0
 msgid "In dispute"
-msgstr "V sporu"
+msgstr "Sporno"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_bank_statement_tree
@@ -1053,7 +1032,7 @@ msgstr "Blagajna"
 #. module: account
 #: selection:account.account.type,report_type:0
 msgid "Profit & Loss (Expense Accounts)"
-msgstr ""
+msgstr "Konti dobičkov/izgube"
 
 #. module: account
 #: report:account.analytic.account.journal:0
@@ -1066,7 +1045,7 @@ msgstr "-"
 #: view:account.analytic.account:0
 #: model:res.groups,name:account.group_account_manager
 msgid "Manager"
-msgstr "Direktor"
+msgstr "Vodja"
 
 #. module: account
 #: view:account.subscription.generate:0
@@ -1100,7 +1079,7 @@ msgstr "Zamenjalni davek"
 #. module: account
 #: selection:account.move.line,centralisation:0
 msgid "Credit Centralisation"
-msgstr "Centralizacija dobička"
+msgstr "Centralizacija terjatev"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree2
@@ -1110,16 +1089,18 @@ msgid ""
 "purchase orders or receipts. This way, you can control the invoice from your "
 "supplier according to what you purchased or received."
 msgstr ""
+"Računi dobaviteljev.OpenERP lahko tudi avtomatično ustvari račune na podlagi "
+"naročila ali dobavnice."
 
 #. module: account
 #: view:account.invoice.cancel:0
 msgid "Cancel Invoices"
-msgstr "Prekliči račun"
+msgstr "Prekliči račune"
 
 #. module: account
 #: view:account.unreconcile.reconcile:0
 msgid "Unreconciliation transactions"
-msgstr ""
+msgstr "Preklic uskladitve transakcij"
 
 #. module: account
 #: field:account.invoice.tax,tax_code_id:0
@@ -1127,22 +1108,22 @@ msgstr ""
 #: field:account.tax.template,tax_code_id:0
 #: model:ir.model,name:account.model_account_tax_code
 msgid "Tax Code"
-msgstr "Davčna stopnja"
+msgstr "Davčna skupina"
 
 #. module: account
 #: field:account.account,currency_mode:0
 msgid "Outgoing Currencies Rate"
-msgstr "Odhodna ocena valute"
+msgstr "Izhodna tečajna lista"
 
 #. module: account
 #: help:account.move.line,move_id:0
 msgid "The move of this entry line."
-msgstr "Prenos te postavke vknjižbe"
+msgstr "Prenos te postavke  ."
 
 #. module: account
 #: field:account.move.line.reconcile,trans_nbr:0
 msgid "# of Transaction"
-msgstr "Številka transakcije"
+msgstr "#  transakcija"
 
 #. module: account
 #: report:account.general.ledger:0
@@ -1150,7 +1131,7 @@ msgstr "Številka transakcije"
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 msgid "Entry Label"
-msgstr "Vstopno polje"
+msgstr "Oznaka postavke"
 
 #. module: account
 #: code:addons/account/account.py:1129
@@ -1162,13 +1143,13 @@ msgstr "Ne morete spreminjati/brisati dnevnik z vpisi za to obdobje!"
 #: help:account.invoice,origin:0
 #: help:account.invoice.line,origin:0
 msgid "Reference of the document that produced this invoice."
-msgstr "Sklic na dokument, ki izdaja ta račun."
+msgstr "Sklic na dokument, ki je osnova za ta račun."
 
 #. module: account
 #: view:account.analytic.line:0
 #: view:account.journal:0
 msgid "Others"
-msgstr "Drugi"
+msgstr "Ostalo"
 
 #. module: account
 #: view:account.account:0
@@ -1202,20 +1183,20 @@ msgstr "Konto"
 #. module: account
 #: field:account.tax,include_base_amount:0
 msgid "Included in base amount"
-msgstr "Vključeno v osnovni višini"
+msgstr "Vključeno v osnovo"
 
 #. module: account
 #: view:account.entries.report:0
 #: model:ir.actions.act_window,name:account.action_account_entries_report_all
 #: model:ir.ui.menu,name:account.menu_action_account_entries_report_all
 msgid "Entries Analysis"
-msgstr "Analiza vpisov"
+msgstr "Analiza postavk"
 
 #. module: account
 #: field:account.account,level:0
 #: field:account.financial.report,level:0
 msgid "Level"
-msgstr "Nivo"
+msgstr "Raven"
 
 #. module: account
 #: report:account.invoice:0
@@ -1237,12 +1218,12 @@ msgstr "Davki"
 #: code:addons/account/wizard/account_report_common.py:144
 #, python-format
 msgid "Select a starting and an ending period"
-msgstr "Izberi zagon in končni rok"
+msgstr "Izberite začetno in končno obdobje"
 
 #. module: account
 #: model:ir.model,name:account.model_account_account_template
 msgid "Templates for Accounts"
-msgstr "Predloge za konte"
+msgstr "Osnutek kontov"
 
 #. module: account
 #: view:account.tax.code.template:0
@@ -1259,24 +1240,24 @@ msgstr "Vaš sklic"
 #: model:ir.actions.act_window,name:account.action_account_reconcile_select
 #: model:ir.actions.act_window,name:account.action_view_account_move_line_reconcile
 msgid "Reconcile Entries"
-msgstr "Uskladi vknjižbe"
+msgstr "Uskladitev postavk"
 
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_overdue
 #: view:res.company:0
 msgid "Overdue Payments"
-msgstr "Zamujena plačila"
+msgstr "Zapadla plačila"
 
 #. module: account
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 msgid "Initial Balance"
-msgstr "Začetna bilanca"
+msgstr "Začetno stanje"
 
 #. module: account
 #: view:account.invoice:0
 msgid "Reset to Draft"
-msgstr "Ponastavi glede na osnutek"
+msgstr "Vrni v Osnutek"
 
 #. module: account
 #: view:wizard.multi.charts.accounts:0
@@ -1292,7 +1273,7 @@ msgstr "Možnosti poročila"
 #. module: account
 #: model:ir.model,name:account.model_account_entries_report
 msgid "Journal Items Analysis"
-msgstr "Točke analize dnevnika"
+msgstr "Analiza postavk dnevnika"
 
 #. module: account
 #: model:ir.ui.menu,name:account.next_id_22
@@ -1327,7 +1308,7 @@ msgstr "Glavni dnevnik"
 #: code:addons/account/account_move_line.py:1271
 #, python-format
 msgid "You can not use this general account in this journal !"
-msgstr ""
+msgstr "Ne morete uporabiti izbrani konto !"
 
 #. module: account
 #: selection:account.balance.report,display_account:0
@@ -1345,12 +1326,12 @@ msgstr "Išči davke"
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_cost_ledger
 msgid "Account Analytic Cost Ledger"
-msgstr ""
+msgstr "Analitika knjige stroškov"
 
 #. module: account
 #: view:account.model:0
 msgid "Create entries"
-msgstr "Ustvari vknjižbe"
+msgstr "Ustvari postavke"
 
 #. module: account
 #: field:account.entries.report,nbr:0
@@ -1376,7 +1357,7 @@ msgstr "# mest (števila)"
 #. module: account
 #: field:account.journal,entry_posted:0
 msgid "Skip 'Draft' State for Manual Entries"
-msgstr "Preskoči 'osnutkovo' stanje za ročno vnašanje"
+msgstr "Preskoči  stanje \"Osnutek\" za ročno vnašanje"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -1392,6 +1373,9 @@ msgid ""
 "entry per accounting document: invoice, refund, supplier payment, bank "
 "statements, etc."
 msgstr ""
+"Dnevnik je sestavljen iz postavk,ki vsaka predstavlja debetno ali kreditno "
+"transakcijo. OpenERP avtomatično ustvari postavke za različne vrste "
+"računovodskih dokumentov (račun,dobropis,plačilo ..)."
 
 #. module: account
 #: view:account.entries.report:0
@@ -1401,19 +1385,19 @@ msgstr "# vnosov "
 #. module: account
 #: model:ir.model,name:account.model_temp_range
 msgid "A Temporary table used for Dashboard view"
-msgstr "Začasna tabela, ki se uporablja za pripeti pogled"
+msgstr "Začasna tabela, ki se uporablja za nadzorno ploščo"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree4
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree4
 msgid "Supplier Refunds"
-msgstr "Dobropisi dobaviteljev"
+msgstr "Vračila dobaviteljev"
 
 #. module: account
 #: view:account.payment.term.line:0
 msgid ""
 "Example: at 14 net days 2 percents, remaining amount at 30 days end of month."
-msgstr ""
+msgstr "Primer: za 14 dni 2%, ostanek za 30 dni."
 
 #. module: account
 #: code:addons/account/invoice.py:815
@@ -1423,32 +1407,34 @@ msgid ""
 "The payment term defined gives a computed amount greater than the total "
 "invoiced amount."
 msgstr ""
+"Račun ni kreiran !\n"
+"Plačilni pogoji dajo seštevek večji od seštevka računa."
 
 #. module: account
 #: field:account.installer.modules,account_anglo_saxon:0
 msgid "Anglo-Saxon Accounting"
-msgstr ""
+msgstr "Anglo-Saxon-sko računovodstvo"
 
 #. module: account
 #: view:account.automatic.reconcile:0
 #: view:account.move.line.reconcile.writeoff:0
 msgid "Write-Off Move"
-msgstr "Prenos odpisa"
+msgstr "Knjiženje odpisa"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_recurrent_entries
 msgid "Recurring Entries"
-msgstr "Podvojeni vnosi"
+msgstr "Ponavljajoči vnosi"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_template
 msgid "Template for Fiscal Position"
-msgstr "Predloga za fiskalne položaje"
+msgstr "Predloga za davčno območje"
 
 #. module: account
 #: model:account.tax.code,name:account.account_tax_code_0
 msgid "Tax Code Test"
-msgstr ""
+msgstr "Test davčne skupine"
 
 #. module: account
 #: field:account.automatic.reconcile,reconciled:0
@@ -1489,13 +1475,13 @@ msgstr "Pojdi na naslednjega partnerja"
 #. module: account
 #: view:account.bank.statement:0
 msgid "Search Bank Statements"
-msgstr "Iskanje bančnih računov"
+msgstr "Iskanje bančnih izpiskov"
 
 #. module: account
 #: sql_constraint:account.model.line:0
 msgid ""
 "Wrong credit or debit value in model (Credit + Debit Must Be greater \"0\")!"
-msgstr ""
+msgstr "Napačna kreditna ali debetna vrednost v modelu !"
 
 #. module: account
 #: view:account.chart.template:0
@@ -1507,7 +1493,7 @@ msgstr "Konto obveznosti"
 #: field:account.tax,account_paid_id:0
 #: field:account.tax.template,account_paid_id:0
 msgid "Refund Tax Account"
-msgstr "Vračilo davka na račun"
+msgstr "Konto za vračilo davka"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -1525,23 +1511,24 @@ msgid ""
 "the Payment column of a line, you can press F1 to open the reconciliation "
 "form."
 msgstr ""
+"Ko ste v poziciji plačila , lahko z tipko F1 odprete obrazec za usklajevanje."
 
 #. module: account
 #: report:account.analytic.account.cost_ledger:0
 msgid "Date/Code"
-msgstr "Datum/koda"
+msgstr "Datum/oznaka"
 
 #. module: account
 #: field:account.analytic.line,general_account_id:0
 #: view:analytic.entries.report:0
 #: field:analytic.entries.report,general_account_id:0
 msgid "General Account"
-msgstr "Splošni konto"
+msgstr "Konto glavne knjige"
 
 #. module: account
 #: field:res.partner,debit_limit:0
 msgid "Payable Limit"
-msgstr "Mejni zapadli znesek"
+msgstr "Limit plačila (dolga)"
 
 #. module: account
 #: report:account.invoice:0
@@ -1562,12 +1549,12 @@ msgstr "Analitični stroški na račun"
 #. module: account
 #: view:ir.sequence:0
 msgid "Fiscal Year Sequence"
-msgstr "Fiskalna letna frekvenca"
+msgstr "Poslovno leto - Zaporedje"
 
 #. module: account
 #: field:wizard.multi.charts.accounts,seq_journal:0
 msgid "Separated Journal Sequences"
-msgstr "Ločeni dnevniški zapisi"
+msgstr "Ločeno zaporedje dnevnikov"
 
 #. module: account
 #: view:account.invoice:0
@@ -1582,14 +1569,14 @@ msgstr "Vmesna vsota:"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_report_account_type_sales_tree_all
 msgid "Sales by Account Type"
-msgstr "Prodaja glede na vrsto računa"
+msgstr "Prodaja glede na vrsto konta"
 
 #. module: account
 #: view:account.invoice.refund:0
 msgid ""
 "Cancel Invoice: Creates the refund invoice, validate and reconcile it to "
 "cancel the current invoice."
-msgstr ""
+msgstr "Storno računa: Ustvarite dobropis."
 
 #. module: account
 #: model:ir.ui.menu,name:account.periodical_processing_invoicing
@@ -1599,7 +1586,7 @@ msgstr "Izdajanje računov"
 #. module: account
 #: field:account.chart.template,tax_code_root_id:0
 msgid "Root Tax Code"
-msgstr ""
+msgstr "Korenska davčna skupina"
 
 #. module: account
 #: field:account.partner.ledger,initial_balance:0
@@ -1624,17 +1611,18 @@ msgid ""
 "Have a complete tree view of all journal items per account code by clicking "
 "on an account."
 msgstr ""
+"Prikaz kontnega načrta. Za pregled postavk kliknite na izbrani konto."
 
 #. module: account
 #: constraint:account.fiscalyear:0
 msgid "Error! You cannot define overlapping fiscal years"
-msgstr ""
+msgstr "Napaka ! Poslovni leta se prekrivajo ."
 
 #. module: account
 #: code:addons/account/account_move_line.py:835
 #, python-format
 msgid "The account is not defined to be reconciled !"
-msgstr ""
+msgstr "Konto za usklajevanje ni določen!"
 
 #. module: account
 #: field:account.cashbox.line,pieces:0
@@ -1647,18 +1635,18 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the journal "
 "period without removing it."
 msgstr ""
-"Če je izbrano polje ni nastavljeno, vam bo omogočilo skrivanje dnevnika brez "
-"da ga onemogočite."
+"Če  izbrano polje ni nastavljeno, vam bo omogočilo skrivanje obdobja "
+"dnevnika brez da ga odstranite."
 
 #. module: account
 #: view:res.partner:0
 msgid "Supplier Debit"
-msgstr "Dobavitelj debetne strani"
+msgstr "Obveznosti do dobaviteljev"
 
 #. module: account
 #: help:account.model.line,quantity:0
 msgid "The optional quantity on entries"
-msgstr ""
+msgstr "Opcijska količina na postavki"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_partner_account_move_all
@@ -1669,12 +1657,12 @@ msgstr "Terjatve in obveznosti"
 #: code:addons/account/account_move_line.py:815
 #, python-format
 msgid "You have to provide an account for the write off entry !"
-msgstr ""
+msgstr "Izbrati morate konto !"
 
 #. module: account
 #: model:ir.model,name:account.model_account_common_journal_report
 msgid "Account Common Journal Report"
-msgstr "Skupni račun za dnevnik"
+msgstr "Poročilo dnevnika"
 
 #. module: account
 #: selection:account.partner.balance,display_partner:0
@@ -1684,7 +1672,7 @@ msgstr "Vsi partnerji"
 #. module: account
 #: view:account.analytic.chart:0
 msgid "Analytic Account Charts"
-msgstr "Analitični grafični račun"
+msgstr "Analitični kontni načrt"
 
 #. module: account
 #: view:account.analytic.line:0
@@ -1711,7 +1699,7 @@ msgstr "Ta obdobja se lahko prekrivajo."
 #. module: account
 #: model:process.node,name:account.process_node_draftstatement0
 msgid "Draft statement"
-msgstr "Osnutek izjave"
+msgstr "Osnutek"
 
 #. module: account
 #: view:account.tax:0
@@ -1722,7 +1710,7 @@ msgstr "Davčna izjava: Dobropis"
 #: code:addons/account/account.py:499
 #, python-format
 msgid "You cannot deactivate an account that contains account moves."
-msgstr ""
+msgstr "Ne morete izklopiti konta , ki ima postavke."
 
 #. module: account
 #: field:account.move.line.reconcile,credit:0
@@ -1732,7 +1720,7 @@ msgstr "Znesek v dobro"
 #. module: account
 #: constraint:account.move.line:0
 msgid "You can not create move line on closed account."
-msgstr ""
+msgstr "Konto je zaprt !"
 
 #. module: account
 #: code:addons/account/account.py:519
@@ -1741,17 +1729,18 @@ msgid ""
 "You cannot change the type of account from 'Closed' to any other type which "
 "contains account entries!"
 msgstr ""
+"Ne  morete spremeniti vrste konta iz \"Zaprto\" v drugo vrsto , ki že ima "
+"postavke!"
 
 #. module: account
 #: view:res.company:0
 msgid "Reserve And Profit/Loss Account"
-msgstr ""
+msgstr "Konto dobička/izgube in rezerv"
 
 #. module: account
 #: sql_constraint:account.move.line:0
 msgid "Wrong credit or debit value in accounting entry !"
-msgstr ""
-"Napačna kreditna ali debetna vrednost na začetku obračunskega obdobja!"
+msgstr "Napačna kreditna ali debetna vrednost na temeljnici !"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -1763,28 +1752,28 @@ msgstr "Analiza računov"
 #. module: account
 #: model:ir.model,name:account.model_account_period_close
 msgid "period close"
-msgstr "Zaprto obdobje"
+msgstr "Zapiranje obdobja"
 
 #. module: account
 #: view:account.installer:0
 msgid "Configure Fiscal Year"
-msgstr "Nastavi fiskalno leto"
+msgstr "Nastavi poslovno leto"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_project_account_analytic_line_form
 msgid "Entries By Line"
-msgstr "Vnosi glede na vrsto"
+msgstr "Postavke"
 
 #. module: account
 #: report:account.tax.code.entries:0
 msgid "A/c Code"
-msgstr ""
+msgstr "A/c oznaka"
 
 #. module: account
 #: field:account.invoice,move_id:0
 #: field:account.invoice,move_name:0
 msgid "Journal Entry"
-msgstr "Vnos v dnevnik"
+msgstr "Temeljnica"
 
 #. module: account
 #: view:account.tax:0
@@ -1803,7 +1792,7 @@ msgstr "Vmesna vsota"
 #: model:ir.model,name:account.model_account_treasury_report
 #: model:ir.ui.menu,name:account.menu_action_account_treasury_report_all
 msgid "Treasury Analysis"
-msgstr "Bogata analiza"
+msgstr "Analiza blagajne"
 
 #. module: account
 #: constraint:res.company:0
@@ -1819,7 +1808,7 @@ msgstr "Analitični konto"
 #: code:addons/account/account_bank_statement.py:339
 #, python-format
 msgid "Please verify that an account is defined in the journal."
-msgstr "Prosimo, potrdite da je račun zapisan v dnevniku."
+msgstr "Prosimo, potrdite da je konto definiran v dnevniku."
 
 #. module: account
 #: selection:account.entries.report,move_line_state:0
@@ -1831,12 +1820,12 @@ msgstr "Veljavno"
 #: model:ir.actions.act_window,name:account.action_account_print_journal
 #: model:ir.model,name:account.model_account_print_journal
 msgid "Account Print Journal"
-msgstr "Natiskaj uporabniški dnevnik"
+msgstr "Izpis dnevnika"
 
 #. module: account
 #: model:ir.model,name:account.model_product_category
 msgid "Product Category"
-msgstr "Kategorija izdelkov"
+msgstr "Skupina izdelkov"
 
 #. module: account
 #: selection:account.account.type,report_type:0
@@ -1846,24 +1835,24 @@ msgstr "/"
 #. module: account
 #: field:account.bs.report,reserve_account_id:0
 msgid "Reserve & Profit/Loss Account"
-msgstr ""
+msgstr "Konto dobička/izgube in rezerv"
 
 #. module: account
 #: help:account.bank.statement,balance_end:0
 msgid "Closing balance based on Starting Balance and Cash Transactions"
-msgstr ""
+msgstr "Zaključni saldo"
 
 #. module: account
 #: model:process.node,note:account.process_node_reconciliation0
 #: model:process.node,note:account.process_node_supplierreconciliation0
 msgid "Comparison between accounting and payment entries"
-msgstr "Primerjave računovodstva in plačilnih vnosov"
+msgstr "Primerjave postavk knjiženja in plačil"
 
 #. module: account
 #: view:account.tax:0
 #: view:account.tax.template:0
 msgid "Tax Definition"
-msgstr "Definicija davka"
+msgstr "Opredelitev davka"
 
 #. module: account
 #: help:wizard.multi.charts.accounts,seq_journal:0
@@ -1871,8 +1860,8 @@ msgid ""
 "Check this box if you want to use a different sequence for each created "
 "journal. Otherwise, all will use the same sequence."
 msgstr ""
-"Označite to polje, če želite uporabiti drugačen vrstni red za vsak ustvarjen "
-"dnevnik. V nasprotnem primeru bodo vsi uporabljali isto zaporedje."
+"Označite to polje, če želite uporabiti drugačno številčenje za vsak dnevnik. "
+"V nasprotnem primeru bodo vsi uporabljali isto številčenje."
 
 #. module: account
 #: help:account.partner.ledger,amount_currency:0
@@ -1880,19 +1869,19 @@ msgstr ""
 msgid ""
 "It adds the currency column if the currency is different then the company "
 "currency"
-msgstr ""
+msgstr "Dodajanje valute , če je različna od privzete valute."
 
 #. module: account
 #: help:account.journal,allow_date:0
 msgid ""
 "If set to True then do not accept the entry if the entry date is not into "
 "the period dates"
-msgstr ""
+msgstr "Če je nastavljeno na \"da\" , ne dovoli vnosa izven obdobja"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_pl_report
 msgid "Account Profit And Loss"
-msgstr ""
+msgstr "Konto dobička/izgube"
 
 #. module: account
 #: field:account.installer,config_logo:0
@@ -1920,19 +1909,19 @@ msgid ""
 "if you give the Name other then /, its created Accounting Entries Move will "
 "be with same name as statement name. This allows the statement entries to "
 "have the same references than the statement itself"
-msgstr ""
+msgstr "Če vpišete opis , bodo vse postavke imele isti opis."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_unreconcile
 #: model:ir.actions.act_window,name:account.action_account_unreconcile_reconcile
 #: model:ir.actions.act_window,name:account.action_account_unreconcile_select
 msgid "Unreconcile Entries"
-msgstr "Prekliči uskladitev vknjižb"
+msgstr "Odpri postavke"
 
 #. module: account
 #: field:account.move.reconcile,line_partial_ids:0
 msgid "Partial Entry lines"
-msgstr "Delne postavke vknjižbe"
+msgstr "Vrstice delnega vnosa"
 
 #. module: account
 #: view:account.fiscalyear:0
@@ -1944,12 +1933,12 @@ msgstr "Poslovno leto"
 #: view:account.journal.select:0
 #: view:project.account.analytic.line:0
 msgid "Open Entries"
-msgstr "Odprte postavke"
+msgstr "Odpri postavke"
 
 #. module: account
 #: field:account.automatic.reconcile,account_ids:0
 msgid "Accounts to Reconcile"
-msgstr ""
+msgstr "Konti za uskladitev"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_filestatement0
@@ -2004,7 +1993,7 @@ msgstr "Predračun"
 #: code:addons/account/installer.py:348
 #, python-format
 msgid " Journal"
-msgstr ""
+msgstr " Dnevnik"
 
 #. module: account
 #: code:addons/account/account.py:1461
@@ -2030,7 +2019,7 @@ msgstr ""
 #. module: account
 #: view:account.chart.template:0
 msgid "Search Chart of Account Templates"
-msgstr "Iskanje shema računa Predloge"
+msgstr "Iskanje  predlog kontnega načrta"
 
 #. module: account
 #: view:account.installer:0
@@ -2069,25 +2058,25 @@ msgstr "ECNJ"
 #: view:account.subscription:0
 #: selection:account.subscription,state:0
 msgid "Running"
-msgstr "V teku"
+msgstr "Se izvaja"
 
 #. module: account
 #: view:account.chart.template:0
 #: field:product.category,property_account_income_categ:0
 #: field:product.template,property_account_income:0
 msgid "Income Account"
-msgstr "Konto prijhodkov"
+msgstr "Konto prihodkov"
 
 #. module: account
 #: code:addons/account/account_invoice.py:370
 #, python-format
 msgid "There is no Accounting Journal of type Sale/Purchase defined!"
-msgstr "Tukaj ni definiranega računovodskega dnevnika prodaje/nakupa."
+msgstr "Ni definiranega računovodskega dnevnika prodaje/nakupa."
 
 #. module: account
 #: view:product.category:0
 msgid "Accounting Properties"
-msgstr "Lastnosti računovodstva"
+msgstr "Računovodski podatki"
 
 #. module: account
 #: report:account.general.ledger_landscape:0
@@ -2099,7 +2088,7 @@ msgstr "Vnosi urejeni po"
 #. module: account
 #: field:account.change.currency,currency_id:0
 msgid "Change to"
-msgstr "Spremeni na"
+msgstr "Spremeni v"
 
 #. module: account
 #: view:account.entries.report:0
@@ -2109,7 +2098,7 @@ msgstr "# od količine izdelkov "
 #. module: account
 #: model:ir.model,name:account.model_product_template
 msgid "Product Template"
-msgstr "Predloga proizvoda"
+msgstr "Predloga izdelka"
 
 #. module: account
 #: report:account.account.balance:0
@@ -2165,12 +2154,12 @@ msgstr "Poslovno leto"
 #: help:accounting.report,fiscalyear_id:0
 #: help:accounting.report,fiscalyear_id_cmp:0
 msgid "Keep empty for all open fiscal year"
-msgstr "Obdrži prazno za vse odprte fiskalne račune"
+msgstr "Obdrži prazno za odprto poslovno leto"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move
 msgid "Account Entry"
-msgstr "Vknjižba"
+msgstr "Temeljnica"
 
 #. module: account
 #: field:account.sequence.fiscalyear,sequence_main_id:0
@@ -2187,13 +2176,13 @@ msgstr "Glavno zaporedje"
 #: model:ir.model,name:account.model_account_payment_term
 #: field:res.partner,property_payment_term:0
 msgid "Payment Term"
-msgstr "Plačilni pogoj"
+msgstr "Plačilni pogoji"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_form
 #: model:ir.ui.menu,name:account.menu_action_account_fiscal_position_form
 msgid "Fiscal Positions"
-msgstr "Fiskalne pozicije"
+msgstr "Davčno območje"
 
 #. module: account
 #: field:account.period.close,sure:0
@@ -2224,7 +2213,7 @@ msgstr "Odpri"
 #: model:process.node,note:account.process_node_draftinvoices0
 #: model:process.node,note:account.process_node_supplierdraftinvoices0
 msgid "Draft state of an invoice"
-msgstr "Osnutek stanja na računu"
+msgstr "Stanje računa 'Osnutek'"
 
 #. module: account
 #: help:account.account,reconcile:0
@@ -2235,13 +2224,13 @@ msgstr ""
 #. module: account
 #: view:account.partner.reconcile.process:0
 msgid "Partner Reconciliation"
-msgstr "Partnerjeva neporavnava"
+msgstr "Zapiranje partnerjev"
 
 #. module: account
 #: field:account.tax,tax_code_id:0
 #: view:account.tax.code:0
 msgid "Account Tax Code"
-msgstr "Davčna stopnja"
+msgstr "Oznaka davka"
 
 #. module: account
 #: code:addons/account/account_invoice.py:572
@@ -2252,12 +2241,16 @@ msgid ""
 "You can create one in the menu: \n"
 "Configuration\\Financial Accounting\\Accounts\\Journals."
 msgstr ""
+"Dnevnika vrste %s ni mogoče najti.\n"
+"\n"
+"Lahko ga ustvarite v meniju: \n"
+"Nastavitve\\Finančno računovodstvo\\Konti\\Dnevniki"
 
 #. module: account
 #: field:account.invoice.tax,base_code_id:0
 #: field:account.tax.template,base_code_id:0
 msgid "Base Code"
-msgstr "Osnovna stopnja"
+msgstr "Oznaka osnove"
 
 #. module: account
 #: help:account.invoice.tax,sequence:0
@@ -2286,7 +2279,7 @@ msgstr ""
 #. module: account
 #: selection:account.move.line,centralisation:0
 msgid "Debit Centralisation"
-msgstr "Skupna raba 'V breme'"
+msgstr "Centralizacija obveznosti"
 
 #. module: account
 #: view:account.invoice.confirm:0
@@ -2306,7 +2299,7 @@ msgstr "Dan"
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_renew_view
 msgid "Accounts to Renew"
-msgstr "Računi za obnovo"
+msgstr "Konti za obnovo"
 
 #. module: account
 #: model:ir.model,name:account.model_account_model_line
@@ -2337,17 +2330,17 @@ msgstr ""
 #. module: account
 #: view:account.analytic.cost.ledger.journal.report:0
 msgid "Select period"
-msgstr "Izberi obdobje"
+msgstr "Izberite obdobje"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_pp_statements
 msgid "Statements"
-msgstr "Izjave"
+msgstr "Izpiski"
 
 #. module: account
 #: report:account.analytic.account.journal:0
 msgid "Move Name"
-msgstr "Ime premika"
+msgstr "Opis knjiženja"
 
 #. module: account
 #: help:res.partner,property_account_position:0
@@ -2398,13 +2391,13 @@ msgstr "Analitični konto"
 #: model:ir.ui.menu,name:account.menu_action_account_form
 #: model:ir.ui.menu,name:account.menu_analytic
 msgid "Accounts"
-msgstr "Računi"
+msgstr "Konti"
 
 #. module: account
 #: code:addons/account/account_invoice.py:369
 #, python-format
 msgid "Configuration Error!"
-msgstr "Konfiguracijska napaka"
+msgstr "Napaka v nastavitvah"
 
 #. module: account
 #: field:account.invoice.report,price_average:0
@@ -2428,13 +2421,13 @@ msgstr ""
 #: report:account.journal.period.print:0
 #: report:account.journal.period.print.sale.purchase:0
 msgid "Label"
-msgstr "Oznaka"
+msgstr "Naziv"
 
 #. module: account
 #: view:account.tax:0
 #: view:res.partner.bank:0
 msgid "Accounting Information"
-msgstr "Informacije o računu"
+msgstr "Računovodski podatki"
 
 #. module: account
 #: view:account.tax:0
@@ -2446,12 +2439,12 @@ msgstr "Poseben izračun"
 #: view:account.move.bank.reconcile:0
 #: model:ir.actions.act_window,name:account.action_account_bank_reconcile_tree
 msgid "Bank reconciliation"
-msgstr "Uskladitev izpiska"
+msgstr "Uskladitev bančnega  izpiska"
 
 #. module: account
 #: report:account.invoice:0
 msgid "Disc.(%)"
-msgstr "Popust (%)"
+msgstr "Pop. (%)"
 
 #. module: account
 #: report:account.general.ledger:0
@@ -2465,8 +2458,7 @@ msgstr "Sklic"
 #. module: account
 #: help:account.move.line,tax_code_id:0
 msgid "The Account can either be a base tax code or a tax code account."
-msgstr ""
-"Upoštevana je lahko osnovna davčna številka ali davčna številka računa."
+msgstr "Konto je lahko le konto davka ali osnove za davek ."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_automatic_reconcile
@@ -2482,7 +2474,7 @@ msgstr "Plaćano/usklajeno"
 #: field:account.tax,ref_base_code_id:0
 #: field:account.tax.template,ref_base_code_id:0
 msgid "Refund Base Code"
-msgstr "Šifra osnove za vračilo"
+msgstr "Oznaka osnove za vračilo"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_bank_statement_periodic_tree
@@ -2494,7 +2486,7 @@ msgstr ""
 #. module: account
 #: selection:account.tax.template,applicable_type:0
 msgid "True"
-msgstr "Dejanski"
+msgstr "Da"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -2557,7 +2549,7 @@ msgstr "Finančne nastavitve novega podjetja"
 #: view:report.account.sales:0
 #: view:report.account_type.sales:0
 msgid "Sales by Account"
-msgstr "Prodaja po računu"
+msgstr "Prodaja po kontih"
 
 #. module: account
 #: view:account.use.model:0
@@ -2568,7 +2560,7 @@ msgstr ""
 #: code:addons/account/account.py:1321
 #, python-format
 msgid "No sequence defined on the journal !"
-msgstr ""
+msgstr "V dnevniku ni definiranega zaporedja!"
 
 #. module: account
 #: code:addons/account/account.py:2268
@@ -2583,7 +2575,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_tax_code_list
 #: model:ir.ui.menu,name:account.menu_action_tax_code_list
 msgid "Tax codes"
-msgstr "Davčne stopnje"
+msgstr "Davčne skupine"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_customer
@@ -2709,7 +2701,7 @@ msgstr ""
 #: model:ir.model,name:account.model_account_fiscal_position
 #: field:res.partner,property_account_position:0
 msgid "Fiscal Position"
-msgstr "Davčna pozicija"
+msgstr "Davčno območje"
 
 #. module: account
 #: help:account.partner.ledger,initial_balance:0
@@ -2866,12 +2858,12 @@ msgstr "Elektronska datoteka"
 #. module: account
 #: view:res.partner:0
 msgid "Customer Credit"
-msgstr "Dobro - Stranka"
+msgstr "Terjatve do kupca"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_code_template
 msgid "Tax Code Template"
-msgstr "Vzorec davčnih šifer"
+msgstr "Davčna predloga"
 
 #. module: account
 #: view:account.subscription:0
@@ -2947,7 +2939,7 @@ msgstr ""
 #: view:account.tax:0
 #: view:account.tax.template:0
 msgid "Keep empty to use the expense account"
-msgstr "Pusti prazno v primeru stroškovnega konta"
+msgstr "Pusti prazno v primeru uporabe  stroškovnega konta"
 
 #. module: account
 #: field:account.aged.trial.balance,journal_ids:0
@@ -3154,7 +3146,7 @@ msgstr ""
 #: field:account.tax.code,name:0
 #: field:account.tax.code.template,name:0
 msgid "Tax Case Name"
-msgstr "Naziv davčne stopnje"
+msgstr "Naziv pozicije v DDV obrazcu"
 
 #. module: account
 #: report:account.invoice:0
@@ -3354,7 +3346,7 @@ msgstr ""
 #. module: account
 #: view:account.tax:0
 msgid "Account Tax"
-msgstr "Davek za konto"
+msgstr "Konto davka"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_reporting_budgets
@@ -3439,7 +3431,7 @@ msgstr ""
 #. module: account
 #: model:process.node,name:account.process_node_supplierpaymentorder0
 msgid "Payment Order"
-msgstr "Zaporedje plačil"
+msgstr "Nalog za plačilo"
 
 #. module: account
 #: help:account.account.template,reconcile:0
@@ -3589,7 +3581,7 @@ msgstr ""
 #: view:account.period:0
 #: view:account.subscription:0
 msgid "Set to Draft"
-msgstr "Preklopi v pripravo"
+msgstr "Nastavi kot osnutek"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_subscription_form
@@ -3604,7 +3596,7 @@ msgstr ""
 #. module: account
 #: view:account.invoice:0
 msgid "Validate"
-msgstr "Preveri"
+msgstr "Potrditev"
 
 #. module: account
 #: sql_constraint:account.model.line:0
@@ -3649,7 +3641,7 @@ msgstr "Naziv davka"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_configuration
 msgid "Configuration"
-msgstr "Konfiguracija"
+msgstr "Nastavitve"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term
@@ -3661,7 +3653,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_analytic_balance
 #: model:ir.actions.report.xml,name:account.account_analytic_account_balance
 msgid "Analytic Balance"
-msgstr "Analitično stanje"
+msgstr "Stanje analitike"
 
 #. module: account
 #: report:account.balancesheet:0
@@ -3775,7 +3767,7 @@ msgstr ""
 #: field:report.account.sales,month:0
 #: field:report.account_type.sales,month:0
 msgid "Month"
-msgstr "mesec"
+msgstr "Mesec"
 
 #. module: account
 #: field:account.invoice.report,uom_name:0
@@ -3962,7 +3954,7 @@ msgstr "Datum zapadlosti"
 #. module: account
 #: view:report.account.receivable:0
 msgid "Accounts by type"
-msgstr "Računi po vrsti"
+msgstr "Vrste kontov"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -3984,7 +3976,7 @@ msgstr ""
 #. module: account
 #: view:account.invoice:0
 msgid "Print Invoice"
-msgstr "Tiskanje publikacije"
+msgstr "Izpis računa"
 
 #. module: account
 #: view:account.tax.template:0
@@ -4070,7 +4062,7 @@ msgstr "4"
 #. module: account
 #: view:account.invoice:0
 msgid "Change"
-msgstr "Sprememba"
+msgstr "Spremeni"
 
 #. module: account
 #: code:addons/account/account.py:1431
@@ -4378,7 +4370,7 @@ msgstr "Konec obdobja"
 #. module: account
 #: view:res.partner:0
 msgid "Bank Details"
-msgstr "Bančne podrobnosti"
+msgstr "Podatki banke"
 
 #. module: account
 #: code:addons/account/account_invoice.py:739
@@ -4412,7 +4404,7 @@ msgstr ""
 #: view:account.invoice.cancel:0
 #: view:account.invoice.confirm:0
 msgid "Close"
-msgstr "Zaprto"
+msgstr "Zapri"
 
 #. module: account
 #: field:account.bank.statement.line,move_ids:0
@@ -4468,7 +4460,7 @@ msgstr "5"
 #. module: account
 #: report:account.analytic.account.balance:0
 msgid "Analytic Balance -"
-msgstr "Analitično stanje -"
+msgstr "Stanje analitike-"
 
 #. module: account
 #: report:account.account.balance:0
@@ -4527,7 +4519,7 @@ msgstr "Vnos"
 #: field:account.tax,python_compute_inv:0
 #: field:account.tax.template,python_compute_inv:0
 msgid "Python Code (reverse)"
-msgstr "Python kod (obratno)"
+msgstr "Python koda (obratno)"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_payment_term_form
@@ -4638,7 +4630,7 @@ msgstr ""
 #: field:account.analytic.line,product_uom_id:0
 #: field:account.move.line,product_uom_id:0
 msgid "UoM"
-msgstr "ME"
+msgstr "EM"
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_refund.py:146
@@ -4649,7 +4641,7 @@ msgstr "Na računu ni obdobja!"
 #. module: account
 #: view:account.tax.template:0
 msgid "Compute Code (if type=code)"
-msgstr "Izračunaj stopnjo"
+msgstr "Izračunaj oznako (tip=koda)"
 
 #. module: account
 #: selection:account.analytic.journal,type:0
@@ -4726,7 +4718,7 @@ msgstr ""
 #. module: account
 #: report:account.partner.balance:0
 msgid "(Account/Partner) Name"
-msgstr "Ime partnerja"
+msgstr "Naziv partnerja"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -4753,13 +4745,13 @@ msgstr ""
 #. module: account
 #: view:report.hr.timesheet.invoice.journal:0
 msgid "Analytic Entries Stats"
-msgstr "Statistika stroškovnih mest"
+msgstr "Statistika analitičnih postavk"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_tax_code_template_form
 #: model:ir.ui.menu,name:account.menu_action_account_tax_code_template_form
 msgid "Tax Code Templates"
-msgstr "Predloge davčnih šifer"
+msgstr "Predloge davčnih skupin"
 
 #. module: account
 #: model:ir.model,name:account.model_account_installer
@@ -4787,18 +4779,18 @@ msgstr ""
 #: code:addons/account/installer.py:295
 #, python-format
 msgid "Bank Journal "
-msgstr "Bančni dnevnik "
+msgstr "Dnevnik banke "
 
 #. module: account
 #: view:account.journal:0
 msgid "Entry Controls"
-msgstr "Mehanizem vknjiženja"
+msgstr "Kontrole vnosa"
 
 #. module: account
 #: view:account.analytic.chart:0
 #: view:project.account.analytic.line:0
 msgid "(Keep empty to open the current situation)"
-msgstr "(Postite prazno da se odpre terenutno stanje)"
+msgstr "(Postite prazno za terenutno stanje)"
 
 #. module: account
 #: field:account.analytic.balance,date1:0
@@ -4838,14 +4830,14 @@ msgstr "Analitično knjigovodstvo"
 #: selection:account.invoice.report,type:0
 #: selection:report.invoice.created,type:0
 msgid "Customer Refund"
-msgstr "Dobropis kupcu"
+msgstr "Vrnitev kupcu"
 
 #. module: account
 #: view:account.account:0
 #: field:account.account,tax_ids:0
 #: field:account.account.template,tax_ids:0
 msgid "Default Taxes"
-msgstr "Privzeti davek"
+msgstr "Privzeti daveki"
 
 #. module: account
 #: field:account.tax,ref_tax_sign:0
@@ -4933,7 +4925,7 @@ msgstr "6"
 #: model:ir.actions.act_window,name:account.action_account_analytic_account_form
 #: model:ir.ui.menu,name:account.account_analytic_def_account
 msgid "Analytic Accounts"
-msgstr "Stroškovna mesta"
+msgstr "Analitični konti"
 
 #. module: account
 #: help:account.account.type,report_type:0
@@ -4953,7 +4945,7 @@ msgstr ""
 msgid ""
 "There is no default default credit account defined \n"
 "on journal \"%s\""
-msgstr ""
+msgstr "Na dnevniku \"%s\" ni definiranega privzetega kreditnega konta."
 
 #. module: account
 #: field:account.analytic.line,amount_currency:0
@@ -5021,14 +5013,14 @@ msgstr ""
 #: view:account.fiscal.position.template:0
 #: field:account.fiscal.position.template,name:0
 msgid "Fiscal Position Template"
-msgstr "Vzorec za davčno pozicijo"
+msgstr "Vzorec za davčno območje"
 
 #. module: account
 #: view:account.analytic.chart:0
 #: view:account.chart:0
 #: view:account.tax.chart:0
 msgid "Open Charts"
-msgstr "Odpri načrte"
+msgstr "Odpri  kontne načrte"
 
 #. module: account
 #: view:account.fiscalyear.close.state:0
@@ -5047,7 +5039,7 @@ msgstr ""
 #: field:account.print.journal,amount_currency:0
 #: field:account.report.general.ledger,amount_currency:0
 msgid "With Currency"
-msgstr "z valuto"
+msgstr "Z valuto"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -5118,7 +5110,7 @@ msgstr ""
 #. module: account
 #: field:report.invoice.created,create_date:0
 msgid "Create Date"
-msgstr "Datum izdelave"
+msgstr "Datum nastanka"
 
 #. module: account
 #: view:account.analytic.journal:0
@@ -5213,7 +5205,7 @@ msgstr ""
 #. module: account
 #: report:account.analytic.account.quantity_cost_ledger:0
 msgid "Max Qty:"
-msgstr "Največja količina:"
+msgstr "Max. kol.:"
 
 #. module: account
 #: view:account.invoice.refund:0
@@ -5312,7 +5304,7 @@ msgstr ""
 #: field:account.tax,account_collected_id:0
 #: field:account.tax.template,account_collected_id:0
 msgid "Invoice Tax Account"
-msgstr "Konto zaračunanega davka"
+msgstr "Konto  davka"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_general_journal
@@ -5337,7 +5329,7 @@ msgstr ""
 #: report:account.vat.declaration:0
 #, python-format
 msgid "No Filter"
-msgstr "Ni filtra"
+msgstr "Bez filtra"
 
 #. module: account
 #: field:account.payment.term.line,days:0
@@ -5384,7 +5376,7 @@ msgstr "Datum izpisa"
 #: selection:account.tax,type:0
 #: selection:account.tax.template,type:0
 msgid "None"
-msgstr "Nobena"
+msgstr "Nič"
 
 #. module: account
 #: view:analytic.entries.report:0
@@ -5434,7 +5426,7 @@ msgstr ""
 #. module: account
 #: report:account.invoice:0
 msgid "Fiscal Position Remark :"
-msgstr "Opomba za davčno pozicijo"
+msgstr "Opomba za davčno območje:"
 
 #. module: account
 #: view:analytic.entries.report:0
@@ -5476,7 +5468,7 @@ msgstr ""
 #. module: account
 #: field:account.payment.term.line,value_amount:0
 msgid "Value Amount"
-msgstr "Znesek vrednosti"
+msgstr "Znesek"
 
 #. module: account
 #: help:account.journal,code:0
@@ -5522,7 +5514,7 @@ msgstr ""
 #. module: account
 #: field:product.template,taxes_id:0
 msgid "Customer Taxes"
-msgstr "Izhodni davki"
+msgstr "Prodajni davki"
 
 #. module: account
 #: view:account.addtmpl.wizard:0
@@ -5593,7 +5585,7 @@ msgstr ""
 #. module: account
 #: field:account.chart,fiscalyear:0
 msgid "Fiscal year"
-msgstr "Davčno leto"
+msgstr "Poslovno leto"
 
 #. module: account
 #: view:account.move.reconcile:0
@@ -5645,7 +5637,7 @@ msgstr "Prekliči"
 #. module: account
 #: field:account.account.type,name:0
 msgid "Acc. Type Name"
-msgstr "Naziv vrste konta"
+msgstr "Kon. Vrsta"
 
 #. module: account
 #: selection:account.account,type:0
@@ -5693,7 +5685,7 @@ msgstr ""
 #. module: account
 #: selection:account.tax,type:0
 msgid "Percentage"
-msgstr "Delež"
+msgstr "Odstotek"
 
 #. module: account
 #: selection:account.report.general.ledger,sortby:0
@@ -5831,7 +5823,7 @@ msgstr ""
 #: selection:account.invoice.report,type:0
 #: selection:report.invoice.created,type:0
 msgid "Supplier Refund"
-msgstr "Dobropis dobavitelja"
+msgstr "Vrnitev dobavitelju"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_dashboard_acc
@@ -5841,7 +5833,7 @@ msgstr ""
 #. module: account
 #: field:account.bank.statement,move_line_ids:0
 msgid "Entry lines"
-msgstr "Postavke vknjižbe"
+msgstr "Postavke"
 
 #. module: account
 #: field:account.move.line,centralisation:0
@@ -5969,7 +5961,7 @@ msgstr ""
 #: code:addons/account/account_move_line.py:933
 #, python-format
 msgid "Entries: "
-msgstr "Vpisi: "
+msgstr "Postavke: "
 
 #. module: account
 #: view:account.use.model:0
@@ -6046,7 +6038,7 @@ msgstr ""
 #: field:account.tax.template,python_compute:0
 #: selection:account.tax.template,type:0
 msgid "Python Code"
-msgstr "Python kod"
+msgstr "Python koda"
 
 #. module: account
 #: code:addons/account/wizard/account_report_balance_sheet.py:70
@@ -6204,7 +6196,7 @@ msgstr ""
 #: code:addons/account/report/common_report_header.py:67
 #, python-format
 msgid "All Entries"
-msgstr "Vse vknjižbe"
+msgstr "Vse postavke"
 
 #. module: account
 #: constraint:product.template:0
@@ -6358,7 +6350,7 @@ msgstr "Stolpec dnevnika"
 #: selection:account.subscription,state:0
 #: selection:report.invoice.created,state:0
 msgid "Done"
-msgstr "Opravljeno"
+msgstr "Končano"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_invoicemanually0
@@ -6406,7 +6398,7 @@ msgstr ""
 #. module: account
 #: report:account.invoice:0
 msgid "Taxes:"
-msgstr "Davek:"
+msgstr "Davki:"
 
 #. module: account
 #: help:account.tax,amount:0
@@ -6664,17 +6656,17 @@ msgstr ""
 #. module: account
 #: field:account.fiscalyear.close,report_name:0
 msgid "Name of new entries"
-msgstr "Naziv novih vknjižb"
+msgstr "Naziv novih postavk"
 
 #. module: account
 #: view:account.use.model:0
 msgid "Create Entries"
-msgstr "Ustvari vknjižbe"
+msgstr "Ustvari postavke"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_reporting
 msgid "Reporting"
-msgstr "Poročanje"
+msgstr "Poročila"
 
 #. module: account
 #: sql_constraint:account.journal:0
@@ -6808,12 +6800,12 @@ msgstr ""
 #. module: account
 #: selection:account.move.line,centralisation:0
 msgid "Normal"
-msgstr "Običajna"
+msgstr "Običajno"
 
 #. module: account
 #: view:account.move.line:0
 msgid "Optional Information"
-msgstr "Neobvezni podatki"
+msgstr "Dodatni podatki"
 
 #. module: account
 #: view:account.analytic.line:0
@@ -6852,7 +6844,7 @@ msgstr "Napačni konto!"
 #: code:addons/account/account.py:3108
 #, python-format
 msgid "Sales Journal"
-msgstr "Prodajni dnevnik"
+msgstr "Dnevnik prodaje"
 
 #. module: account
 #: code:addons/account/wizard/account_move_journal.py:104
@@ -6863,7 +6855,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_tax
 msgid "Invoice Tax"
-msgstr "Zaračunan davek"
+msgstr "Davek računa"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1277
@@ -6935,7 +6927,7 @@ msgstr "Predloge za kontne načrte"
 #: field:account.tax.code,code:0
 #: field:account.tax.code.template,code:0
 msgid "Case Code"
-msgstr "Davčna stopnja"
+msgstr "Oznaka davka"
 
 #. module: account
 #: view:validate.account.move:0
@@ -7201,7 +7193,7 @@ msgstr ""
 #: field:account.subscription,state:0
 #: field:report.invoice.created,state:0
 msgid "State"
-msgstr "Stanje"
+msgstr "Regija"
 
 #. module: account
 #: help:account.open.closed.fiscalyear,fyear_id:0
@@ -7224,7 +7216,7 @@ msgstr ""
 #. module: account
 #: field:account.account.type,close_method:0
 msgid "Deferral Method"
-msgstr "Metoda zaključevanja"
+msgstr "Način odloga"
 
 #. module: account
 #: code:addons/account/account_invoice.py:379
@@ -7245,7 +7237,7 @@ msgstr ""
 #. module: account
 #: view:account.invoice.line:0
 msgid "Line"
-msgstr "Postavka"
+msgstr "Vrstica"
 
 #. module: account
 #: help:account.journal,group_invoice_lines:0
@@ -7269,7 +7261,7 @@ msgstr ""
 #. module: account
 #: view:account.move.bank.reconcile:0
 msgid "Open for bank reconciliation"
-msgstr "Odpri za uskladitev z izpiski"
+msgstr "Odpri za uskladitev bančnih izpiskov"
 
 #. module: account
 #: field:account.partner.ledger,page_split:0
@@ -7280,12 +7272,12 @@ msgstr "En partner na stran"
 #: field:account.account,child_parent_ids:0
 #: field:account.account.template,child_parent_ids:0
 msgid "Children"
-msgstr "Otroci"
+msgstr "Podrejeno"
 
 #. module: account
 #: view:account.analytic.account:0
 msgid "Associated Partner"
-msgstr "Pridružen partner"
+msgstr "Povezani partner"
 
 #. module: account
 #: code:addons/account/account_invoice.py:1332
@@ -7430,18 +7422,18 @@ msgstr ""
 #. module: account
 #: view:account.tax.template:0
 msgid "Compute Code for Taxes included prices"
-msgstr "Koda izračuna za davke v cenah"
+msgstr "Oznaka za izračun cene z davkom"
 
 #. module: account
 #: field:account.chart.template,property_account_income_categ:0
 msgid "Income Category Account"
-msgstr "Konto kategorije prihodkov"
+msgstr "Oznaka konta prihodkov"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_template_form
 #: model:ir.ui.menu,name:account.menu_action_account_fiscal_position_form_template
 msgid "Fiscal Position Templates"
-msgstr "Predloge davčnih pozicij"
+msgstr "Predloge davčnih območij"
 
 #. module: account
 #: view:account.entries.report:0
@@ -7481,7 +7473,7 @@ msgstr "Tel.:"
 #. module: account
 #: field:account.account,company_currency_id:0
 msgid "Company Currency"
-msgstr "Valute družba"
+msgstr "Valute podjetja"
 
 #. module: account
 #: field:account.aged.trial.balance,chart_account_id:0
@@ -7526,7 +7518,7 @@ msgstr ""
 #: field:account.move.line,reconcile_partial_id:0
 #: view:account.move.line.reconcile:0
 msgid "Partial Reconcile"
-msgstr "Delno uskladi"
+msgstr "Delno usklajevanje"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_inverted_balance
@@ -7643,7 +7635,7 @@ msgstr ""
 #: view:account.tax.code.template:0
 #: field:account.tax.code.template,parent_id:0
 msgid "Parent Code"
-msgstr "Stopnja naddavka"
+msgstr "Oznaka nadrejenega elementa"
 
 #. module: account
 #: model:ir.model,name:account.model_account_payment_term_line
@@ -7900,7 +7892,7 @@ msgstr ""
 #: view:account.entries.report:0
 #: model:ir.actions.act_window,name:account.act_account_acount_move_line_reconcile_open
 msgid "Reconciled entries"
-msgstr "Usklajene vknjižbe"
+msgstr "Usklajene postavke"
 
 #. module: account
 #: field:account.invoice,address_contact_id:0
@@ -7991,7 +7983,7 @@ msgstr ""
 #. module: account
 #: field:account.analytic.journal,code:0
 msgid "Journal Code"
-msgstr "Šifra dnevnika"
+msgstr "Oznaka dnevnika"
 
 #. module: account
 #: help:account.tax.code,sign:0
@@ -8012,7 +8004,7 @@ msgstr ""
 #: field:account.invoice,move_lines:0
 #: field:account.move.reconcile,line_id:0
 msgid "Entry Lines"
-msgstr "Postavke vknjižbe"
+msgstr "Postavke"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_open_journal_button
@@ -8051,7 +8043,7 @@ msgstr ""
 #: view:account.move.line:0
 #: view:account.payment.term:0
 msgid "Information"
-msgstr "Informacije"
+msgstr "Podrobnosti"
 
 #. module: account
 #: model:process.node,note:account.process_node_bankstatement0
@@ -8074,7 +8066,7 @@ msgstr ""
 #: view:account.move.line:0
 #: model:ir.ui.menu,name:account.next_id_40
 msgid "Analytic"
-msgstr "Analitični"
+msgstr "Analitika"
 
 #. module: account
 #: model:process.node,name:account.process_node_invoiceinvoice0
@@ -8353,13 +8345,13 @@ msgstr ""
 #. module: account
 #: view:board.board:0
 msgid "Account Board"
-msgstr "Odbor za računovodstvo"
+msgstr "Računovodska nadzorna plošča"
 
 #. module: account
 #: view:account.model:0
 #: field:account.model,legend:0
 msgid "Legend"
-msgstr "Napotki"
+msgstr "Legenda"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_moves_sale
@@ -8386,7 +8378,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_receivable_graph
 msgid "Balance by Type of Account"
-msgstr "Bilanca po vrsti konta"
+msgstr "Saldo po vrsti konta"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_entriesreconcile0
@@ -8464,7 +8456,7 @@ msgstr ""
 #. module: account
 #: view:account.move.line.reconcile:0
 msgid "Reconciliation transactions"
-msgstr "transakcije zapiranja"
+msgstr "Transakcije usklajevanja"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_common_menu
@@ -8619,7 +8611,7 @@ msgstr ""
 #: field:accounting.report,date_from:0
 #: field:accounting.report,date_from_cmp:0
 msgid "Start Date"
-msgstr "Datum začetka"
+msgstr "Začetni datum"
 
 #. module: account
 #: view:account.invoice:0
@@ -8633,7 +8625,7 @@ msgstr "Osnutki računov"
 #: view:account.entries.report:0
 #: view:account.move.line:0
 msgid "Unreconciled"
-msgstr "Neusklajeni"
+msgstr "Neusklajeno"
 
 #. module: account
 #: code:addons/account/account_invoice.py:828
@@ -8644,7 +8636,7 @@ msgstr "Napačna skupna vsota!"
 #. module: account
 #: field:account.journal,sequence_id:0
 msgid "Entry Sequence"
-msgstr "Zaporedje vknjižbe"
+msgstr "Zaporedje"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_period_tree
@@ -8790,7 +8782,7 @@ msgstr ""
 #: field:account.invoice,number:0
 #: field:account.move,name:0
 msgid "Number"
-msgstr "Število"
+msgstr "Številka"
 
 #. module: account
 #: report:account.analytic.account.journal:0
@@ -8898,7 +8890,7 @@ msgstr "Računi dobaviteljev"
 #: field:report.account.sales,product_id:0
 #: field:report.account_type.sales,product_id:0
 msgid "Product"
-msgstr "Proizvod"
+msgstr "Izdelek"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_validate_account_move
@@ -8916,7 +8908,7 @@ msgstr ")"
 #. module: account
 #: model:ir.model,name:account.model_account_period
 msgid "Account period"
-msgstr "Obdobje konta"
+msgstr "Fiskalno obdobje"
 
 #. module: account
 #: view:account.subscription:0
@@ -8974,7 +8966,7 @@ msgstr "Izberi obdobje"
 #: selection:account.move,state:0
 #: view:account.move.line:0
 msgid "Posted"
-msgstr "Oddano"
+msgstr "Knjiženo"
 
 #. module: account
 #: report:account.account.balance:0
@@ -9128,7 +9120,7 @@ msgstr ""
 #: field:analytic.entries.report,company_id:0
 #: field:wizard.multi.charts.accounts,company_id:0
 msgid "Company"
-msgstr "Družba"
+msgstr "Podjetje"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_subscription_form
@@ -9218,7 +9210,7 @@ msgstr ""
 #: selection:account.fiscalyear,state:0
 #: selection:account.period,state:0
 msgid "Closed"
-msgstr "Zaprt"
+msgstr "Zaprto"
 
 #. module: account
 #: model:process.node,note:account.process_node_paidinvoice0
@@ -9303,7 +9295,7 @@ msgstr "Partnerjevi plačilni pogoji"
 #. module: account
 #: field:temp.range,name:0
 msgid "Range"
-msgstr "Obseg"
+msgstr "Območje"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1246
@@ -9487,7 +9479,7 @@ msgstr ""
 #: view:account.invoice.report:0
 #: model:ir.actions.act_window,name:account.action_account_invoice_refund
 msgid "Refund"
-msgstr "Dobropis"
+msgstr "Vrnitev"
 
 #. module: account
 #: model:ir.model,name:account.model_res_partner_bank
@@ -9522,7 +9514,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_analytic_cost_ledger_journal
 #: model:ir.actions.report.xml,name:account.account_analytic_account_quantity_cost_ledger
 msgid "Cost Ledger (Only quantities)"
-msgstr "Knjiga odhodkov (samo količine)"
+msgstr "Knjiga stroškov (samo količine)"
 
 #. module: account
 #: model:process.node,note:account.process_node_supplierpaidinvoice0
@@ -9714,7 +9706,7 @@ msgstr ""
 #. module: account
 #: report:account.aged_trial_balance:0
 msgid "Aged Trial Balance"
-msgstr "Izpis po zapadlosti"
+msgstr "Bruto bilanca"
 
 #. module: account
 #: report:account.aged_trial_balance:0

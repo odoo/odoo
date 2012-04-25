@@ -1,21 +1,20 @@
-# Portuguese translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* resource
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: OpenERP Server 6.0.2\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:19+0000\n"
-"PO-Revision-Date: 2011-11-11 11:06+0000\n"
-"Last-Translator: Daniel Reis <Unknown>\n"
-"Language-Team: Portuguese <pt@li.org>\n"
+"PO-Revision-Date: 2012-04-04 15:10+0000\n"
+"Last-Translator: ThinkOpen Solutions <Unknown>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-22 06:14+0000\n"
-"X-Generator: Launchpad (build 14838)\n"
+"X-Launchpad-Export-Date: 2012-04-05 04:53+0000\n"
+"X-Generator: Launchpad (build 15060)\n"
 
 #. module: resource
 #: model:ir.module.module,description:resource.module_meta_information
@@ -29,6 +28,16 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"    Módulo para gestão de recursos \n"
+"      Um recurso representa algo que pode ser programado \n"
+"      (um developer numa tarefa ou um centro de trabalho em ordens de "
+"fabricação). \n"
+"      Este módulo gere um calendário de recursos associados a cada recurso. "
+"\n"
+"      Ele também gere as folhas de todos os recursos.\n"
+"\n"
+"    "
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -41,17 +50,19 @@ msgid ""
 "If empty, this is a generic holiday for the company. If a resource is set, "
 "the holiday/leave is only for this resource"
 msgstr ""
+"Se vazio, este é um feriado genérico para a empresa. Se um recurso é "
+"definido, o feriado/licença é apenas para este recurso"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_leaves
 #: view:resource.calendar.leaves:0
 msgid "Leave Detail"
-msgstr "Detalhes sobre ausência"
+msgstr "Leave Detail"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_resources_leaves
 msgid "Resources Leaves"
-msgstr "Ausências de recursos"
+msgstr "Resources Leaves"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_form
@@ -60,7 +71,7 @@ msgstr "Ausências de recursos"
 #: view:resource.calendar.attendance:0
 #: field:resource.resource,calendar_id:0
 msgid "Working Time"
-msgstr "Tempo de trabalho"
+msgstr "Tempo de Trabalho"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -81,7 +92,7 @@ msgstr "Domingo"
 #. module: resource
 #: view:resource.resource:0
 msgid "Search Resource"
-msgstr "Procurar recurso"
+msgstr "Recursos de pesquisa"
 
 #. module: resource
 #: view:resource.resource:0
@@ -102,17 +113,17 @@ msgstr "Gestor do grupo de trabalho"
 #. module: resource
 #: help:resource.calendar.attendance,hour_from:0
 msgid "Working time will start from"
-msgstr "Tempo de trabalho começa em"
+msgstr "Tempo de trabalho terá início a partir"
 
 #. module: resource
 #: constraint:resource.calendar.leaves:0
 msgid "Error! leave start-date must be lower then leave end-date."
-msgstr ""
+msgstr "Error! leave start-date must be lower then leave end-date."
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar
 msgid "Resource Calendar"
-msgstr "Calendário do recurso"
+msgstr "Calendário de recursos"
 
 #. module: resource
 #: view:resource.calendar.leaves:0
@@ -142,7 +153,7 @@ msgstr "Dia da semana"
 #. module: resource
 #: help:resource.calendar.attendance,hour_to:0
 msgid "Working time will end at"
-msgstr "Tempo de trabalho termina em"
+msgstr "Tempo de trabalho terminará no"
 
 #. module: resource
 #: field:resource.calendar.attendance,date_from:0
@@ -152,12 +163,12 @@ msgstr "Data de inicio"
 #. module: resource
 #: view:resource.calendar:0
 msgid "Search Working Time"
-msgstr ""
+msgstr "Tempo de pesquisa de trabalho"
 
 #. module: resource
 #: view:resource.calendar.leaves:0
 msgid "Reason"
-msgstr "Motivo"
+msgstr "Razão"
 
 #. module: resource
 #: view:resource.resource:0
@@ -173,7 +184,7 @@ msgstr "Data"
 #. module: resource
 #: view:resource.calendar.leaves:0
 msgid "Search Working Period Leaves"
-msgstr ""
+msgstr "Search Working Period Leaves"
 
 #. module: resource
 #: field:resource.calendar.leaves,date_to:0
@@ -183,7 +194,7 @@ msgstr "Data de fim"
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_closing_days
 msgid "Closing Days"
-msgstr ""
+msgstr "Dias de encerramento"
 
 #. module: resource
 #: model:ir.ui.menu,name:resource.menu_resource_config
@@ -215,7 +226,7 @@ msgstr "Tipo de Recurso"
 #. module: resource
 #: model:ir.model,name:resource.model_resource_resource
 msgid "Resource Detail"
-msgstr "Detalhes do recurso"
+msgstr "Detalhes do Recurso"
 
 #. module: resource
 #: field:resource.resource,active:0
@@ -228,26 +239,29 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
 msgstr ""
+"Se o campo activo é definido como Falso, ele permitirá que oculte o registo "
+"do recurso sem o remover."
 
 #. module: resource
 #: field:resource.calendar.attendance,calendar_id:0
 msgid "Resource's Calendar"
-msgstr "Calendário do recurso"
+msgstr "Calendário recurso"
 
 #. module: resource
 #: help:resource.resource,user_id:0
 msgid "Related user name for the resource to manage its access."
-msgstr "Utilizadior correspondente para gerir acessos"
+msgstr ""
+"Nome do utilizador relacionado para o recurso para gerir o seu acesso."
 
 #. module: resource
 #: help:resource.resource,calendar_id:0
 msgid "Define the schedule of resource"
-msgstr "Definir a agenda do recurso"
+msgstr "Defina o calendário de recursos"
 
 #. module: resource
 #: field:resource.calendar.attendance,hour_from:0
 msgid "Work from"
-msgstr "Trabalhar a partir de"
+msgstr "Trabalho de"
 
 #. module: resource
 #: field:resource.resource,code:0
@@ -262,7 +276,7 @@ msgstr "Segunda-Feira"
 #. module: resource
 #: field:resource.calendar.attendance,hour_to:0
 msgid "Work to"
-msgstr "Trabalhar até"
+msgstr "Trabalho para"
 
 #. module: resource
 #: help:resource.resource,time_efficiency:0
@@ -272,6 +286,10 @@ msgid ""
 "show a load of 100% for this phase by default, but if we put a efficency of "
 "200%, then his load will only be 50%."
 msgstr ""
+"Este campo mostram a eficiência do recurso para completar tarefas. e.g de "
+"recursos por exemplo colocar sozinho numa fase de 5 dias, com cinco tarefas "
+"atribuídas a ele, irá mostrar uma carga de 100% para esta fase por padrão, "
+"mas se colocarmos uma eficiência de 200%, então a carga só será de 50%."
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -281,18 +299,18 @@ msgstr "Terça-Feira"
 #. module: resource
 #: field:resource.calendar.leaves,calendar_id:0
 msgid "Working time"
-msgstr "Tempo de trabalho"
+msgstr "Tempo de Trabalho"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_leave_tree
 #: model:ir.ui.menu,name:resource.menu_view_resource_calendar_leaves_search
 msgid "Resource Leaves"
-msgstr "Ausências do recurso"
+msgstr "Resource Leaves"
 
 #. module: resource
 #: view:resource.resource:0
 msgid "General Information"
-msgstr "Informação geral"
+msgstr "Informação Geral"
 
 #. module: resource
 #: model:ir.actions.act_window,help:resource.action_resource_resource_tree
@@ -301,22 +319,25 @@ msgid ""
 "in a specific project phase. You can also set their efficiency level and "
 "workload based on their weekly working hours."
 msgstr ""
+"Recursos permitem criar e gerir os recursos que devem ser envolvidos numa "
+"fase do projecto específico. Também pode definir o nível de eficiência e "
+"carga de trabalho com base nas horas de trabalho semanais."
 
 #. module: resource
 #: view:resource.resource:0
 msgid "Inactive"
-msgstr "Inativo"
+msgstr "Inactivo"
 
 #. module: resource
 #: code:addons/resource/faces/resource.py:340
 #, python-format
 msgid "(vacation)"
-msgstr "(férias)"
+msgstr "(vacation)"
 
 #. module: resource
 #: field:resource.resource,time_efficiency:0
 msgid "Efficiency factor"
-msgstr "Fator de eficiência"
+msgstr "Factor de Eficiência"
 
 #. module: resource
 #: selection:resource.resource,resource_type:0
@@ -326,7 +347,7 @@ msgstr "Humano"
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_attendance
 msgid "Work Detail"
-msgstr ""
+msgstr "Detalhes de Trabalho"
 
 #. module: resource
 #: field:resource.calendar.leaves,date_from:0

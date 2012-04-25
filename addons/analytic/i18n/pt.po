@@ -1,26 +1,25 @@
-# Portuguese translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* analytic
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: OpenERP Server 6.0.3\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:18+0000\n"
-"PO-Revision-Date: 2011-01-19 12:00+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
-"Language-Team: Portuguese <pt@li.org>\n"
+"PO-Revision-Date: 2012-04-04 15:03+0000\n"
+"Last-Translator: ThinkOpen Solutions <Unknown>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-22 05:25+0000\n"
-"X-Generator: Launchpad (build 14838)\n"
+"X-Launchpad-Export-Date: 2012-04-05 04:52+0000\n"
+"X-Generator: Launchpad (build 15060)\n"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
 msgid "Child Accounts"
-msgstr ""
+msgstr "?!?!?!?!Sub-Conta"
 
 #. module: analytic
 #: field:account.analytic.account,name:0
@@ -30,7 +29,7 @@ msgstr "Nome da conta"
 #. module: analytic
 #: help:account.analytic.line,unit_amount:0
 msgid "Specifies the amount of quantity to count."
-msgstr ""
+msgstr "Especifica a quantidade do valor a contar"
 
 #. module: analytic
 #: model:ir.module.module,description:analytic.module_meta_information
@@ -38,7 +37,7 @@ msgid ""
 "Module for defining analytic accounting object.\n"
 "    "
 msgstr ""
-"Módulo para definir um objeto de contabilidade analítica.\n"
+"Módulo para definir um objecto de contabilidade analítica.\n"
 "    "
 
 #. module: analytic
@@ -84,6 +83,22 @@ msgid ""
 " If it is to be reviewed then the state is 'Pending'.\n"
 " When the project is completed the state is set to 'Done'."
 msgstr ""
+"* Quando uma conta é criada no estado \"Rascunho\".                          "
+"        \n"
+"* Se algum parceiro associado estiver lá, poderá estar em estado 'Aberto'.   "
+"                               \n"
+"* Se houver algum saldo pendente, poderá estar no estado 'Pendente'.         "
+"                          \n"
+"* E, finalmente, quando todas as transacções terminaram, poderá estar no "
+"estado \"Fechar\".                                   \n"
+"* O projecto também pode estar em qualquer caso nos estados 'Modelo' e 'Em "
+"Movimento'.\n"
+" Se for um modelo então podemos fazer projectos baseados no modelo de "
+"projectos. Se for 'Em Movimento' será um projecto normal.                    "
+"             \n"
+" Se é para ser revisto,então o estado é \"Pendente\".\n"
+" Quando o projecto estiver concluído, o estado está definido como "
+"'Terminado'."
 
 #. module: analytic
 #: field:account.analytic.account,type:0
@@ -114,7 +129,7 @@ msgstr "Descrição"
 #. module: analytic
 #: selection:account.analytic.account,type:0
 msgid "Normal"
-msgstr ""
+msgstr "Normal"
 
 #. module: analytic
 #: field:account.analytic.account,company_id:0
@@ -159,11 +174,13 @@ msgid ""
 "Calculated by multiplying the quantity and the price given in the Product's "
 "cost price. Always expressed in the company main currency."
 msgstr ""
+"Calculado multiplicando a quantidade pelo preço de custo do artigo. Sempre "
+"expresso na Divisa da principal da empresa."
 
 #. module: analytic
 #: field:account.analytic.account,child_complete_ids:0
 msgid "Account Hierarchy"
-msgstr ""
+msgstr "Hierarquia da conta"
 
 #. module: analytic
 #: help:account.analytic.account,quantity_max:0
@@ -190,17 +207,17 @@ msgstr "Contacto"
 msgid ""
 "Error! The currency has to be the same as the currency of the selected "
 "company"
-msgstr ""
+msgstr "Erro! A moeda tem que ser a mesma que foi seleccionada pela empresa"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Cancelado"
 
 #. module: analytic
 #: field:account.analytic.account,balance:0
 msgid "Balance"
-msgstr ""
+msgstr "Balanço"
 
 #. module: analytic
 #: constraint:account.analytic.account:0
@@ -213,6 +230,8 @@ msgid ""
 "If you select the View Type, it means you won't allow to create journal "
 "entries using that account."
 msgstr ""
+"Se seleccionar o tipo vista, isso significa que não irá permitir criar "
+"movimentos no diário ao usar esta conta."
 
 #. module: analytic
 #: field:account.analytic.account,date:0
@@ -238,12 +257,12 @@ msgstr "Conta analítica"
 #. module: analytic
 #: selection:account.analytic.account,type:0
 msgid "View"
-msgstr ""
+msgstr "Vista"
 
 #. module: analytic
 #: field:account.analytic.account,partner_id:0
 msgid "Partner"
-msgstr "Terceiro"
+msgstr "Parceiro"
 
 #. module: analytic
 #: field:account.analytic.account,date_start:0
@@ -258,4 +277,4 @@ msgstr "Abrir"
 #. module: analytic
 #: field:account.analytic.account,line_ids:0
 msgid "Analytic Entries"
-msgstr ""
+msgstr "Movimentos Analíticos"
