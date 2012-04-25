@@ -107,17 +107,16 @@ class crm_lead2partner(osv.osv_memory):
         lead_ids = context and context.get('active_ids') or []
         data = self.browse(cr, uid, ids, context=context)[0]
         partner_id = data.partner_id and data.partner_id.id or False
-        partner_ids = lead.convert_partner(cr, uid, lead_ids, data.action, partner_id, context=context)
-        if context.get('mass_convert'):
-            return partner_ids
-        return partner_ids[lead_ids[0]]
+        return lead.convert_partner(cr, uid, lead_ids, data.action, partner_id, context=context)
 
     def make_partner(self, cr, uid, ids, context=None):
         """
         This function Makes partner based on action.
         """
-        partner_id = self._create_partner(cr, uid, ids, context=context)
-        return self.pool.get('res.partner').redirect_partner_form(cr, uid, partner_id, context=context)
+        # Only called from Form view, so only meant to convert  one Lead. 
+        lead_id = context and context.get('active_id') or False
+        partner_ids_map = self._create_partner(cr, uid, ids, context=context)
+        return self.pool.get('res.partner').redirect_partner_form(cr, uid, partner_ids_map.get(lead_id, False), context=context)
 
 crm_lead2partner()
 
