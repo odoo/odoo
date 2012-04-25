@@ -1515,6 +1515,15 @@ $colour4: #8a89ba
             outline: 1px solid blue
         .oe_form_group:hover, .oe_form_group_cell:hover
             outline-color: red
+        .oe_form_group_row_incomplete > td:last-child:after
+            content: "[Incomplete Row]"
+            background: red
+            padding: 2px
+            font-weight: bold
+            color: white
+            float: right
+        .oe_form_group_row_incomplete.oe_form_group_row_newline > td:last-child:after
+            content: "[newline]"
 
     .oe_debug_view
         float: left

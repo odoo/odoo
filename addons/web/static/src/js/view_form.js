@@ -1068,10 +1068,18 @@ instance.web.form.FormRenderingEngine = instance.web.Class.extend({
 
         var children = [];
         $group.children().each(function(a,b,c) {
-            var $child = $(this),
-                colspan = parseInt($child.attr('colspan') || 1, 10),
-                tagName = $child[0].tagName.toLowerCase();
-            if (tagName === 'newline') {
+            var $child = $(this);
+            var colspan = parseInt($child.attr('colspan') || 1, 10);
+            var tagName = $child[0].tagName.toLowerCase();
+            var $td = $('<td/>').addClass('oe_form_group_cell').attr('colspan', colspan);
+            var newline = tagName === 'newline';
+            if ($tr && row_cols > 0 && (newline || row_cols < colspan)) {
+                $tr.addClass('oe_form_group_row_incomplete');
+                if (newline) {
+                    $tr.addClass('oe_form_group_row_newline');
+                }
+            }
+            if (newline) {
                 $tr = null;
                 return;
             }
@@ -1081,7 +1089,6 @@ instance.web.form.FormRenderingEngine = instance.web.Class.extend({
             }
             row_cols -= colspan;
 
-            $td = $('<td/>').addClass('oe_form_group_cell').attr('colspan', colspan);
             // invisibility transfer
             var field_modifiers = JSON.parse($child.attr('modifiers') || '{}');
             var invisible = field_modifiers.invisible;
@@ -1138,11 +1145,13 @@ instance.web.form.FormRenderingEngine = instance.web.Class.extend({
                 }
             });
             var unit = Math.floor(total / row_cols);
-            _.each(to_compute, function($td, i) {
-                var width = parseInt($td.attr('colspan'), 10) * unit;
-                $td.attr('width', ((i == to_compute.length - 1) ? total : width) + '%');
-                total -= width;
-            });
+            if (!$(this).is('.oe_form_group_row_incomplete')) {
+                _.each(to_compute, function($td, i) {
+                    var width = parseInt($td.attr('colspan'), 10) * unit;
+                    $td.attr('width', ((i == to_compute.length - 1) ? total : width) + '%');
+                    total -= width;
+                });
+            }
         });
         _.each(children, function(el) {
             self.process($(el));

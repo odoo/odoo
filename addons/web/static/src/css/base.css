@@ -1814,6 +1814,17 @@
 .openerp .oe_layout_debugging .oe_form_group:hover, .openerp .oe_layout_debugging .oe_form_group_cell:hover {
   outline-color: red;
 }
+.openerp .oe_layout_debugging .oe_form_group_row_incomplete > td:last-child:after {
+  content: "[Incomplete Row]";
+  background: red;
+  padding: 2px;
+  font-weight: bold;
+  color: white;
+  float: right;
+}
+.openerp .oe_layout_debugging .oe_form_group_row_incomplete.oe_form_group_row_newline > td:last-child:after {
+  content: "[newline]";
+}
 .openerp .oe_debug_view {
   float: left;
 }
