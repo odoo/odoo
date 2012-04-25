@@ -33,7 +33,7 @@ from osv import fields, osv
 from tools.translate import _
 
 
-FIELD_STATES = [('clear', 'Clear'), ('anonymized', 'Anonymized'), ('not_existing', 'Not Existing')]
+FIELD_STATES = [('clear', 'Clear'), ('anonymized', 'Anonymized'), ('not_existing', 'Not Existing'), ('new', 'New')]
 ANONYMIZATION_STATES = FIELD_STATES + [('unstable', 'Unstable')]
 ANONYMIZATION_HISTORY_STATE = [('started', 'Started'), ('done', 'Done'), ('in_exception', 'Exception occured')]
 ANONYMIZATION_DIRECTION = [('clear -> anonymized', 'clear -> anonymized'), ('anonymized -> clear', 'anonymized -> clear')]
@@ -337,7 +337,9 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
                 eview.remove(placeholder)
             else:
                 # unstable ?
-                raise
+                msg = "The database anonymization is currently in an unstable state. Some fields are anonymized," + \
+                  " while some fields are not anonymized. You should try to solve this problem before trying to do anything else."
+                raise osv.except_osv('Error !', msg)
 
             res['arch'] = etree.tostring(eview)
 
