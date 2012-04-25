@@ -68,9 +68,9 @@ class mail_thread(osv.osv):
             res[id] = self.message_load_ids(cr, uid, [id], context=context)
         return res
 
-    # OpenChatter: message_ids_social is a dummy field that should not be used
+    # OpenChatter: message_ids is a dummy field that should not be used
     _columns = {
-        'message_ids_social': fields.function(_get_message_ids, method=True,
+        'message_ids': fields.function(_get_message_ids, method=True,
                         type='one2many', obj='mail.message', string='Temp messages', _fields_id = 'res_id'),
     }
 
