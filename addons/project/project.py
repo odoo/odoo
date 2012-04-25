@@ -166,7 +166,8 @@ class project(osv.osv):
     def company_uom_id(self, cr, uid, ids, field_name, arg, context=None):
         uom_company = {}
         for project in self.browse(cr,uid,ids):
-            uom_company[project.id] = project.company_id.project_time_mode_id.name or "Day"
+            user_browse = self.pool.get('res.users').browse(cr,uid,project.user_id)
+            uom_company[project.id] = project.company_id.project_time_mode_id.name or user_browse.company_id.project_time_mode_id.name
         return uom_company
                 
 
