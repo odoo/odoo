@@ -36,5 +36,6 @@ This module adds a PAD in all project kanban views
     'demo_xml': [],
     'installable': True,
     'auto_install': False,
+    'certificate': '00170752092285',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

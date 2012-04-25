@@ -37,6 +37,7 @@
     "init_xml":[],
     "update_xml" : ["l10n_syscohada_data.xml","l10n_syscohada_wizard.xml"],
     "auto_install": False,
-    "installable": True
+    "installable": True,
+    'certificate': '0074187989333',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -36,6 +36,7 @@
     'test': [], #TODO provide test
     'installable': True,
     'auto_install': False,
+    'certificate': '00141537995453',
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

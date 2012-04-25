@@ -36,6 +36,7 @@
     ],
     'installable': True,
     'auto_install': True,
+    'certificate': '00141418415405',
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

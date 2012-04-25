@@ -46,5 +46,6 @@
     ],
     'installable': 'True',
     'images': ['images/config_chart_l10n_uk.jpeg','images/l10n_uk_chart.jpeg'],
+    'certificate': '0076421203261',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -38,6 +38,7 @@ Todo list for CRM leads and opportunities.
     ],
     'installable': True,
     'auto_install': False,
+    'certificate': '0069637693725',
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

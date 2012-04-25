@@ -41,5 +41,6 @@ The common interface for pugin.
     'installable': True,
     'auto_install': False,
     'images': [],
+    'certificate': '00155084306189',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -48,5 +48,6 @@ Bu modül kurulduktan sonra, Muhasebe yapılandırma sihirbazı çalışır
     'demo_xml': [],
     'installable': True,
     'images': ['images/chart_l10n_tr_1.jpg','images/chart_l10n_tr_2.jpg','images/chart_l10n_tr_3.jpg'],
+    'certificate': '0065141563693',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

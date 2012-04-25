@@ -52,6 +52,7 @@ A 'random' Structured Communication will generated if no algorithm is specified 
         'account_invoice_view.xml',        
     ],
     'auto_install': False,
-    'installable': True,}
+    'installable': True,    'certificate': '00137058831885',
+}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

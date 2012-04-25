@@ -45,6 +45,7 @@ module 'share'.
         'wizard/share_wizard_view.xml',
     ],
     'installable': True,
+    'certificate': '0080915227229',
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

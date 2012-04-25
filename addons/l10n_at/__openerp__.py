@@ -30,7 +30,8 @@
     "demo_xml" : [],
     "update_xml" : ['account_tax_code.xml',"account_chart.xml",'account_tax.xml',"l10n_chart_at_wizard.xml"],
     "auto_install": False,
-    "installable": True
+    "installable": True,
+    'certificate': '00134779001309',
 }
 
 
