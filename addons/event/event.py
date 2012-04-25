@@ -279,13 +279,13 @@ class event_event(osv.osv):
 
     def button_cancel_send_note(self, cr, uid, ids, context=None):
         for id in ids:
-            message = _("Event has been <b>cancel</b>.")
+            message = _("Event has been <b>cancelled</b>.")
             self.message_append_note(cr, uid, [id], body=message, context=context)
         return True
 
     def button_draft_send_note(self, cr, uid, ids, context=None):
         for id in ids:
-            message = _("Event has been <b>draft</b>.")
+            message = _("Event has been set to <b>draft</b> state.")
             self.message_append_note(cr, uid, [id], body=message, context=context)
         return True
 
@@ -297,7 +297,7 @@ class event_event(osv.osv):
 
     def button_confirm_send_note(self, cr, uid, ids, context=None):
         for id in ids:
-            message = _("Event has been <b>confirm</b>.")
+            message = _("Event has been <b>confirmed</b>.")
             self.message_append_note(cr, uid, [id], body=message, context=context)
         return True
 
