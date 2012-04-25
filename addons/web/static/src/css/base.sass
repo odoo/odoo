@@ -1141,7 +1141,6 @@ $colour4: #8a89ba
     // FormView.label {{{
     .oe_form
         .oe_form_label_help[for], .oe_form_label[for]
-            white-space: nowrap
             padding-right: 8px
             span
                 font-size: 80%
@@ -1382,6 +1381,8 @@ $colour4: #8a89ba
         .oe_form_group_odd_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell,
         .oe_form_group_label_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell
             padding: 2px 2px 2px 8px !important
+        .oe_form_group_label_nowrap > tbody > tr.oe_form_group_row > td.oe_form_group_cell > label
+            white-space: nowrap
 
     // }}}
     // ListView {{{
