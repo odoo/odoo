@@ -28,7 +28,7 @@
                    <group  expand='0' string='Group by...' groups="base.group_extended">
                        <filter string='Category' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'categ_id'}" groups="base.group_extended"/>
                        <separator orientation="vertical"/>
-                       <filter string='Default UOM' icon="terp-mrp" domain="[]" context="{'group_by' : 'uom_id'}" />
+                       <filter string='Default Unit of Measure' icon="terp-mrp" domain="[]" context="{'group_by' : 'uom_id'}" />
                        <separator orientation="vertical"/>
                        <filter string='Type' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'type'}" />
                        <separator orientation="vertical" groups="base.group_multi_company"/>
@@ -50,7 +50,7 @@
                     <field name="name"/>
                     <field name="categ_id" invisible="1"/>
                     <field name="variants" groups="product.group_product_variant"/>
-                    <field name="uom_id" string="UoM" groups="product.group_uom"/>
+                    <field name="uom_id" string="Unit of Measure" groups="product.group_uom"/>
                     <field name="type"/>
                     <field name="qty_available"/>
                     <field name="virtual_available"/>
@@ -122,14 +122,14 @@
                                 <field name="product_manager"/>
                             </group>
 
-                            <group colspan="2" col="2" name="uom" groups="product.group_uom">
+                            <group colspan="2" col="2" name="Unit of Measure" groups="product.group_uom">
                                 <separator string="Unit of Measure" colspan="2"/>
                                 <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)"/>
                                 <field name="uom_po_id"/>
                             </group>
 
                             <group colspan="2" col="2" name="uos" groups="product.group_uos">
-                                <separator string="Second UoM" colspan="2"/>
+                                <separator string="Second Unit of Measure" colspan="2"/>
                                 <field name="uos_id"/>
                                 <field name="uos_coeff"/>
                                 <field name="mes_type"/>
@@ -672,14 +672,14 @@
                                 <field name="product_manager"/>
                             </group>
 
-                            <group colspan="2" col="2" name="uom">
-                                <separator string="UOM" colspan="2"/>
+                            <group colspan="2" col="2" name="Unit of Measure">
+                                <separator string="Unit of Measure" colspan="2"/>
                                 <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)" groups="product.group_uom"/>
                                 <field name="uom_po_id" groups="base.group_extended"/>
                             </group>
 
                             <group colspan="2" col="2" name="uos" groups="product.group_uom">
-                                <separator string="Second UoM" colspan="2"/>
+                                <separator string="Second Unit of Measure" colspan="2"/>
                                 <field name="uos_id"/>
                                 <field name="uos_coeff"/>
                                 <field name="mes_type"/>
