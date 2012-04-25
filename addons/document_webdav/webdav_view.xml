@@ -41,7 +41,7 @@
                     <field name="name" />
                     <field name="namespace" />
                     <newline/>
-                    <group expand="0" string="Group By..." groups="base.group_extended">
+                    <group expand="0" string="Group By..." groups="base.group_no_one">
                         <filter string="Dir" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'dir_id'}"/>
                         <filter string="Namespace" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'namespace'}"/>
                     </group>
@@ -60,14 +60,14 @@
    <menuitem
         name="DAV Properties"
         id="menu_properties"
-        groups="base.group_extended"
+        groups="base.group_no_one"
         parent="document.menu_document_management_configuration"/>
 
       <menuitem
         name="Folders"
         action="action_dir_props_form"
         id="menu_folder_props"
-        groups="base.group_extended"
+        groups="base.group_no_one"
         parent="menu_properties"/>
 
     <!-- Add the properties to the directory form -->
@@ -140,7 +140,7 @@
                     <field name="name" />
                     <field name="namespace" />
                     <newline/>
-                    <group expand="0" string="Group By..." groups="base.group_extended">
+                    <group expand="0" string="Group By..." groups="base.group_no_one">
                         <filter string="Document" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'file_id'}"/>
                         <filter string="Namespace" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'namespace'}"/>
                     </group>
@@ -160,7 +160,7 @@
         name="Documents"
         action="action_file_props_form"
         id="menu_document_props"
-        groups="base.group_extended"
+        groups="base.group_no_one"
         parent="menu_properties"/>
 </data>
 </openerp>
