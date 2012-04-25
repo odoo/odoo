@@ -283,7 +283,14 @@ class hr_department(osv.osv):
         'manager_id': fields.many2one('hr.employee', 'Manager'),
         'member_ids': fields.one2many('hr.employee', 'department_id', 'Members', readonly=True),
     }
-
+    
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        default = default.copy()
+        default.update({'member_ids': []})
+        return super(hr_department, self).copy(cr, uid, id, default, context=context)
+    
 hr_department()
 
 
