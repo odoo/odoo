@@ -52,10 +52,10 @@ class stock_config_settings(osv.osv_memory):
                 manage product manufacturing chains, manage default locations per product,
                 define routes within your warehouse according to business needs, etc.
                 This installs the module stock_location."""),
-        'group_uom': fields.boolean("Manage Different UoM for Products",
+        'group_uom': fields.boolean("Manage Different Unit of Measure for Products",
             implied_group='product.group_uom',
             help="""Allows you to select and maintain different units of measure for products."""),
-        'group_uos': fields.boolean("Manage Secondary UoM (for Sale)",
+        'group_uos': fields.boolean("Manage Secondary Unit of Measure (for Sale)",
             implied_group='product.group_uos',
             help="""Allows you to sell units of a product, but invoice based on a different unit of measure.
                 For instance, you can sell pieces of meat that you invoice based on their weight."""),

@@ -29,8 +29,8 @@ class stock_move_consume(osv.osv_memory):
 
     _columns = {
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True),
-        'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product UoM'), required=True),
-        'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
+        'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
+        'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
         'location_id': fields.many2one('stock.location', 'Location', required=True)
     }
 
@@ -165,9 +165,9 @@ class split_in_production_lot(osv.osv_memory):
         return res
 
     _columns = {
-        'qty': fields.float('Quantity', digits_compute=dp.get_precision('Product UoM')),
+        'qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure')),
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True),
-        'product_uom': fields.many2one('product.uom', 'UoM'),
+        'product_uom': fields.many2one('product.uom', 'Unit of Measure'),
         'line_ids': fields.one2many('stock.move.split.lines', 'wizard_id', 'Serial Number'),
         'line_exist_ids': fields.one2many('stock.move.split.lines', 'wizard_exist_id', 'Serial Number'),
         'use_exist' : fields.boolean('Existing Lots', help="Check this option to select existing lots in the list below, otherwise you should enter new ones line by line."),
@@ -261,7 +261,7 @@ class stock_move_split_lines_exist(osv.osv_memory):
     _description = "Stock move Split lines"
     _columns = {
         'name': fields.char('Serial Number', size=64),
-        'quantity': fields.float('Quantity', digits_compute=dp.get_precision('Product UoM')),
+        'quantity': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure')),
         'wizard_id': fields.many2one('stock.move.split', 'Parent Wizard'),
         'wizard_exist_id': fields.many2one('stock.move.split', 'Parent Wizard (for existing lines)'),
         'prodlot_id': fields.many2one('stock.production.lot', 'Serial Number'),

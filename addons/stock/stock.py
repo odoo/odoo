@@ -1484,7 +1484,7 @@ class stock_production_lot(osv.osv):
         'date': fields.datetime('Creation Date', required=True),
         'stock_available': fields.function(_get_stock, fnct_search=_stock_search, type="float", string="Available", select=True,
             help="Current quantity of products with this Production Lot Number available in company warehouses",
-            digits_compute=dp.get_precision('Product UoM')),
+            digits_compute=dp.get_precision('Product Unit of Measure')),
         'revisions': fields.one2many('stock.production.lot.revision', 'lot_id', 'Revisions'),
         'company_id': fields.many2one('res.company', 'Company', select=True),
         'move_ids': fields.one2many('stock.move', 'prodlot_id', 'Moves for this Serial Number', readonly=True),
@@ -1610,9 +1610,9 @@ class stock_move(osv.osv):
         'date_expected': fields.datetime('Scheduled Date', states={'done': [('readonly', True)]},required=True, select=True, help="Scheduled date for the processing of this move"),
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True, domain=[('type','<>','service')],states={'done': [('readonly', True)]}),
 
-        'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product UoM'), required=True,states={'done': [('readonly', True)]}),
+        'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True,states={'done': [('readonly', True)]}),
         'product_uom': fields.many2one('product.uom', 'Unit of Measure', required=True,states={'done': [('readonly', True)]}),
-        'product_uos_qty': fields.float('Quantity (UOS)', digits_compute=dp.get_precision('Product UoM'), states={'done': [('readonly', True)]}),
+        'product_uos_qty': fields.float('Quantity (UOS)', digits_compute=dp.get_precision('Product Unit of Measure'), states={'done': [('readonly', True)]}),
         'product_uos': fields.many2one('product.uom', 'Product UOS', states={'done': [('readonly', True)]}),
         'product_packaging': fields.many2one('product.packaging', 'Packaging', help="It specifies attributes of packaging like type, quantity of packaging,etc."),
 
@@ -1737,7 +1737,7 @@ class stock_move(osv.osv):
                 if move.state == 'done':
                     if frozen_fields.intersection(vals):
                         raise osv.except_osv(_('Operation forbidden'),
-                                             _('Quantities, UoMs, Products and Locations cannot be modified on stock moves that have already been processed (except by the Administrator)'))
+                                             _('Quantities, Unit of Measures, Products and Locations cannot be modified on stock moves that have already been processed (except by the Administrator)'))
         return  super(stock_move, self).write(cr, uid, ids, vals, context=context)
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -2778,8 +2778,8 @@ class stock_inventory_line(osv.osv):
         'inventory_id': fields.many2one('stock.inventory', 'Inventory', ondelete='cascade', select=True),
         'location_id': fields.many2one('stock.location', 'Location', required=True),
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True),
-        'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
-        'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product UoM')),
+        'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
+        'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure')),
         'company_id': fields.related('inventory_id','company_id',type='many2one',relation='res.company',string='Company',store=True, select=True, readonly=True),
         'prod_lot_id': fields.many2one('stock.production.lot', 'Serial Number', domain="[('product_id','=',product_id)]"),
         'state': fields.related('inventory_id','state',type='char',string='State',readonly=True),

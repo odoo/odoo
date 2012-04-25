@@ -81,17 +81,17 @@ class stock_sale_forecast(osv.osv):
                                         help = 'Shows which period this forecast concerns.'),
         'product_id': fields.many2one('product.product', 'Product', readonly=True, required=True, states={'draft':[('readonly',False)]}, \
                                         help = 'Shows which product this forecast concerns.'),
-        'product_qty': fields.float('Forecast Quantity', digits_compute=dp.get_precision('Product UoM'), required=True, readonly=True, \
+        'product_qty': fields.float('Forecast Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True, readonly=True, \
                                         states={'draft':[('readonly',False)]}, help= 'Forecast Product quantity.'),
         'product_amt': fields.float('Product Amount', readonly=True, states={'draft':[('readonly',False)]}, \
                                         help='Forecast value which will be converted to Product Quantity according to prices.'),
-        'product_uom_categ': fields.many2one('product.uom.categ', 'Product UoM Category'),  # Invisible field for product_uom domain
-        'product_uom': fields.many2one('product.uom', 'Product UoM', required=True, readonly=True, states={'draft':[('readonly',False)]}, \
+        'product_uom_categ': fields.many2one('product.uom.categ', 'Product Unit of Measure Category'),  # Invisible field for product_uom domain
+        'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True, readonly=True, states={'draft':[('readonly',False)]}, \
                         help = "Unit of Measure used to show the quantities of stock calculation." \
                         "You can use units form default category or from second category (UoS category)."),
         'product_uos_categ' : fields.many2one('product.uom.categ', 'Product UoS Category'), # Invisible field for product_uos domain
 # Field used in onchange_uom to check what uom was before change and recalculate quantities according to old uom (active_uom) and new uom.
-        'active_uom': fields.many2one('product.uom',  string = "Active UoM"),
+        'active_uom': fields.many2one('product.uom',  string = "Active Unit of Measure"),
         'state': fields.selection([('draft','Draft'),('validated','Validated')],'State',readonly=True),
         'analyzed_period1_id': fields.many2one('stock.period', 'Period1', readonly=True, states={'draft':[('readonly',False)]},),
         'analyzed_period2_id': fields.many2one('stock.period', 'Period2', readonly=True, states={'draft':[('readonly',False)]},),
@@ -452,12 +452,12 @@ class stock_planning(osv.osv):
                 help = 'Period for this planning. Requisition will be created for beginning of the period.', select=True),
         'warehouse_id': fields.many2one('stock.warehouse','Warehouse', required=True),
         'product_id': fields.many2one('product.product' , 'Product', required=True, help = 'Product which this planning is created for.'),
-        'product_uom_categ' : fields.many2one('product.uom.categ', 'Product UoM Category'), # Invisible field for product_uom domain
-        'product_uom': fields.many2one('product.uom', 'UoM', required=True, help = "Unit of Measure used to show the quantities of stock calculation." \
+        'product_uom_categ' : fields.many2one('product.uom.categ', 'Product Unit of Measure Category'), # Invisible field for product_uom domain
+        'product_uom': fields.many2one('product.uom', 'Unit of Measure', required=True, help = "Unit of Measure used to show the quantities of stock calculation." \
                         "You can use units from default category or from second category (UoS category)."),
-        'product_uos_categ': fields.many2one('product.uom.categ', 'Product UoM Category'), # Invisible field for product_uos domain
+        'product_uos_categ': fields.many2one('product.uom.categ', 'Product Unit of Measure Category'), # Invisible field for product_uos domain
 # Field used in onchange_uom to check what uom was before change to recalculate quantities according to old uom (active_uom) and new uom.
-        'active_uom': fields.many2one('product.uom',  string = "Active UoM"), #  It works only in Forecast
+        'active_uom': fields.many2one('product.uom',  string = "Active Unit of Measure"), #  It works only in Forecast
         'planned_outgoing': fields.float('Planned Out', required=True,  \
                 help = 'Enter planned outgoing quantity from selected Warehouse during the selected Period of selected Product. '\
                         'To plan this value look at Confirmed Out or Sales Forecasts. This value should be equal or greater than Confirmed Out.'),

@@ -332,7 +332,7 @@ class product_product(osv.osv):
 
     _columns = {
         'qty_available': fields.function(_product_available, multi='qty_available',
-            type='float',  digits_compute=dp.get_precision('Product UoM'),
+            type='float',  digits_compute=dp.get_precision('Product Unit of Measure'),
             string='Quantity On Hand',
             help="Current quantity of products.\n"
                  "In a context with a single Stock Location, this includes "
@@ -346,7 +346,7 @@ class product_product(osv.osv):
                  "Otherwise, this includes goods stored in any Stock Location "
                  "typed as 'internal'."),
         'virtual_available': fields.function(_product_available, multi='qty_available',
-            type='float',  digits_compute=dp.get_precision('Product UoM'),
+            type='float',  digits_compute=dp.get_precision('Product Unit of Measure'),
             string='Quantity Available',
             help="Forecast quantity (computed as Quantity On Hand "
                  "- Outgoing + Incoming)\n"
@@ -361,7 +361,7 @@ class product_product(osv.osv):
                  "Otherwise, this includes goods stored in any Stock Location "
                  "typed as 'internal'."),
         'incoming_qty': fields.function(_product_available, multi='qty_available',
-            type='float',  digits_compute=dp.get_precision('Product UoM'),
+            type='float',  digits_compute=dp.get_precision('Product Unit of Measure'),
             string='Incoming',
             help="Quantity of products that are planned to arrive.\n"
                  "In a context with a single Stock Location, this includes "
@@ -375,7 +375,7 @@ class product_product(osv.osv):
                  "Otherwise, this includes goods arriving to any Stock "
                  "Location typed as 'internal'."),
         'outgoing_qty': fields.function(_product_available, multi='qty_available',
-            type='float',  digits_compute=dp.get_precision('Product UoM'),
+            type='float',  digits_compute=dp.get_precision('Product Unit of Measure'),
             string='Outgoing',
             help="Quantity of products that are planned to leave.\n"
                  "In a context with a single Stock Location, this includes "

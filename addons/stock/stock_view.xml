@@ -145,7 +145,7 @@
                                 <tree string="Stock Moves">
                                     <field name="product_id"/>
                                     <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
-                                    <field name="product_uom" string="UoM" groups="product.group_uom"/>
+                                    <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
                                     <field name="prodlot_id" groups="stock.group_production_lot"/>
                                      <button name="%(track_line)d" string="Split in Serial Number" type="action"
                                         icon="terp-stock_effects-object-colorize"
@@ -345,7 +345,7 @@
                                     <field name="origin"/>
                                     <field name="product_id"/>
                                     <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
-                                    <field name="product_uom" string="UoM" groups="product.group_uom"/>
+                                    <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
                                     <field name="tracking_id" groups="stock.group_tracking_lot"/>
                                     <field name="date"/>
                                     <field name="prodlot_id"/>
@@ -424,7 +424,7 @@
                 <tree colors="grey:state == 'cancel'" string="Moves">
                     <field name="product_id" />
                     <field name="product_qty" />
-                    <field name="product_uom"  string="UOM" groups="product.group_uom"/>
+                    <field name="product_uom"  string="Unit of Measure" groups="product.group_uom"/>
                     <field name="prodlot_id"  groups="stock.group_production_lot"/>
                     <field name="tracking_id" groups="stock.group_tracking_lot"/>
                     <field name="product_packaging" domain="[('product_id','=',product_id)]" groups="product.group_stock_packaging"/>
@@ -448,7 +448,7 @@
                 <tree colors="grey:state == 'cancel'" string="Moves">
                     <field name="product_id" />
                     <field name="product_qty" />
-                    <field name="product_uom"  string="UOM" groups="product.group_uom"/>
+                    <field name="product_uom"  string="Unit of Measure" groups="product.group_uom"/>
                     <field name="prodlot_id"  groups="stock.group_production_lot"/>
                     <field name="tracking_id" groups="stock.group_tracking_lot"/>
                     <field name="product_packaging" domain="[('product_id','=',product_id)]" groups="product.group_stock_packaging"/>
@@ -712,7 +712,7 @@
                                 <tree colors="grey:scrapped == True" string="Stock Moves">
                                     <field name="product_id"/>
                                     <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
-                                    <field name="product_uom" string="UoM" groups="product.group_uom"/>
+                                    <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
                                     <field name="product_uos" groups="product.group_uos"/>
                                     <button name="%(stock.move_scrap)d"
                                         string="Scrap Products" type="action"
@@ -903,7 +903,7 @@
                                 <tree colors="grey:scrapped==True" string="Stock Moves">
                                     <field name="product_id"/>
                                     <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
-                                    <field name="product_uom" string="UoM" groups="product.group_uom"/>
+                                    <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
                                     <field name="product_uos" groups="product.group_uos"/>
                                     <button name="%(stock.move_scrap)d"
                                         string="Scrap Products" type="action"
@@ -1122,7 +1122,7 @@
                                 <tree colors="grey:scrapped==True" string="Stock Moves">
                                     <field name="product_id" />
                                     <field name="product_qty" />
-                                    <field name="product_uom" string="UoM" groups="product.group_uom"/>
+                                    <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
                                     <button name="%(stock.move_scrap)d"
                                         string="Scrap Products" type="action"
                                         icon="gtk-convert" context="{'scrap': True}"
@@ -1364,7 +1364,7 @@
                     <field name="create_date" invisible="1" groups="base.group_no_one"/>
                     <field name="product_id"/>
                     <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
-                    <field name="product_uom" string="UoM" groups="product.group_uom"/>
+                    <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
                     <field name="product_uos" groups="product.group_uos"/>
                     <button name="%(stock.move_scrap)d"
                         string="Scrap Products" type="action"
@@ -1537,7 +1537,7 @@
                     <field name="origin"/>
                     <field name="product_id"/>
                     <field name="product_qty" />
-                    <field name="product_uom" string="UoM" groups="product.group_uom"/>
+                    <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
                     <button name="%(stock.move_scrap)d"
                         string="Scrap Products" type="action"
                         icon="gtk-convert" context="{'scrap': True}"
@@ -1575,7 +1575,7 @@
                     <field name="picking_id" string="Reference"/>
                     <field name="product_id"/>
                     <field name="product_qty" />
-                    <field name="product_uom" string="UoM" groups="product.group_uom"/>
+                    <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
                     <field name="date" groups="base.group_no_one" />
                     <button name="action_done" states="confirmed,assigned" string="Process" type="object" icon="gtk-go-forward"/>
                 </tree>

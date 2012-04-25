@@ -204,9 +204,9 @@ class report_account_analytic_planning_line(osv.osv):
         'planning_id': fields.many2one('report_account_analytic.planning', 'Planning', required=True, ondelete='cascade'),
         'user_id': fields.many2one('res.users', 'User', select=True),
         'amount': fields.float('Quantity', required=True),
-        'amount_unit': fields.many2one('product.uom', 'Qty UoM', required=True),
+        'amount_unit': fields.many2one('product.uom', 'Qty Unit of Measure', required=True),
         'note': fields.text('Note', size=64),
-        'amount_in_base_uom': fields.function(_amount_base_uom, string='Quantity in base uom', store=True),
+        'amount_in_base_uom': fields.function(_amount_base_uom, string='Quantity in base Unit of Measure', store=True),
         'task_ids': fields.one2many('project.task', 'planning_line_id', 'Planning Tasks'),
     }
     _order = 'user_id, account_id'

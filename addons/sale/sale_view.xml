@@ -199,8 +199,8 @@
                                 </form>
                                 <tree string="Sales Order Lines">
                                     <field colspan="4" name="name"/>
-                                    <field name="product_uom_qty" string="Qty(UoM)"/>
-                                    <field name="product_uom" string="UoM" groups="product.group_uom"/>
+                                    <field name="product_uom_qty" string="Qty(Unit of Measure)"/>
+                                    <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
                                     <field groups="product.group_uos" name="product_uos_qty" string="Qty(UoS)"/>
                                     <field groups="product.group_uos" name="product_uos" string="UoS"/>
                                     <field name="discount" groups="sale.group_discount_per_so_line"/>
@@ -369,7 +369,7 @@
                     <field name="order_partner_id"/>
                     <field name="product_id"/>
                     <field name="product_uom_qty" string="Qty"/>
-                    <field name="product_uom" string="UoM" groups="product.group_uom"/>
+                    <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
                     <field name="salesman_id"/>
                     <field name="price_subtotal" sum="Total" groups="base.group_sale_notes_subtotal"/>
                     <field name="state"/>
