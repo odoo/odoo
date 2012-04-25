@@ -573,8 +573,8 @@ class crm_lead(crm_case, osv.osv):
 
             vals = self._convert_opportunity_data(cr, uid, lead, customer, section_id, context=context)
             self.write(cr, uid, [lead.id], vals, context=context)
-
             self._convert_opportunity_notification(cr, uid, lead, context=context)
+            self.case_open(cr, uid, [lead.id])
             #TOCHECK: why need to change partner details in all messages of lead ?
             if lead.partner_id:
                 msg_ids = [ x.id for x in lead.message_ids]
@@ -669,9 +669,9 @@ class crm_lead(crm_case, osv.osv):
             value = {}
             if team_id:
                 value['section_id'] = team_id
-            if index < len(user_ids):
+            if user_ids:
                 value['user_id'] = user_ids[index]
-                index += 1
+                index = (index + 1) % len(user_ids)
             if value:
                 self.write(cr, uid, [lead_id], value, context=context)
         return True
