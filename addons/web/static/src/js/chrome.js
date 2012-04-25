@@ -1141,11 +1141,21 @@ openerp.web.WebClient = openerp.web.OldWidget.extend(/** @lends openerp.web.WebC
         } else {
             var ds = new openerp.web.DataSetSearch(this, 'res.users');
             ds.read_ids([this.session.uid], ['action_id']).then(function (users) {
+                var default_home = {type: 'ir.actions.client', tag: 'default_home'};
                 var home_action = users[0].action_id;
                 if (!home_action) {
-                    self.action_manager.do_action({type: 'ir.actions.client', tag: 'default_home'});
+                    self.action_manager.do_action(default_home);
                 } else {
-                    self.action_manager.do_action(home_action[0]);
+                    // FIXME Dirty hack to avoid -u board, dont merge in 7
+                    var domain = [['model','=','ir.actions.act_window'],['res_id','=',home_action[0]]];
+                    var imd = new openerp.web.DataSetSearch(this, 'ir.model.data', {}, domain);
+                    imd.read_slice(['name']).then(function (r) {
+                        if(r.length && r[0].name === "board_homepage_action") {
+                            self.action_manager.do_action(default_home);
+                        } else {
+                            self.action_manager.do_action(home_action[0]);
+                        }
+                    })
                 }
             });
         }
