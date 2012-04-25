@@ -51,7 +51,19 @@
         <field name="model">crm.lead</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Leads Form">
+            <form string="Leads Form" layout="manual">
+                <div class="oe_form_topbar">
+                    <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" icon="gtk-cancel" />
+                    <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward" />
+                    <button name="case_mark_lost" string="Close" states="open,pending" type="object" icon="gtk-close" />
+                    <button name="case_pending" string="Pending" states="open" type="object" icon="gtk-media-pause" />
+                    <button name="case_escalate" string="Escalate" states="open,pending" type="object" groups="base.group_extended" icon="gtk-go-up" />
+                    <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert" />
+                    <div class="oe_right">
+                        <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
+                    </div>
+                </div>
+                <sheet layout="auto">
                 <group colspan="4" col="7">
                     <field name="name" required="1" string="Subject"/>
                     <field name="priority"/>
@@ -119,29 +131,6 @@
                     </group>
                     <separator colspan="4" string="Notes"/>
                     <field name="description" nolabel="1" colspan="4"/>
-                    <separator colspan="4"/>
-                    <group col="8" colspan="4">
-                        <field name="state" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
-                        <button name="case_cancel" string="Cancel"
-                            states="draft,open,pending" type="object"
-                            icon="gtk-cancel" />
-                        <button name="case_open" string="Open"
-                            states="draft,pending" type="object"
-                            icon="gtk-go-forward" />
-                        <button name="case_mark_lost" string="Close"
-                            states="open,pending" type="object"
-                            icon="gtk-close" />
-                        <button name="case_pending" string="Pending"
-                            states="open" type="object"
-                            icon="gtk-media-pause" />
-                        <button name="case_escalate" string="Escalate"
-                            states="open,pending" type="object"
-                            groups="base.group_extended"
-                            icon="gtk-go-up" />
-                        <button name="case_reset"
-                            string="Reset to Draft" states="done,cancel"
-                            type="object" icon="gtk-convert" />
-                    </group>
                  </page>
                  <page string="Extra Info" groups="base.group_extended">
                     <group colspan="2" col="2">
@@ -165,7 +154,10 @@
                     </group>
                  </page>
                 </notebook>
-                <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
+                </sheet>
+                <div class="oe_form_sheet_width">
+                    <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
+                </div>
             </form>
         </field>
     </record>
@@ -177,7 +169,8 @@
         <field name="model">crm.lead</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Leads"  colors="blue:state=='pending';grey:state in ('cancel', 'done')">
+            <tree string="Leads" fonts="bold:needaction_pending==True" colors="blue:state=='pending';grey:state in ('cancel', 'done')">
+                <field name="needaction_pending" invisible="1"/>
                 <field name="date_deadline" invisible="1"/>
                 <field name="create_date" groups="base.group_no_one"/>
                 <field name="name" string="Subject"/>
@@ -406,7 +399,20 @@
         <field name="type">form</field>
         <field name="priority">20</field>
         <field name="arch" type="xml">
-            <form string="Opportunities">
+            <form string="Opportunities" layout="manual">
+                <div class="oe_form_topbar">
+                    <button name="case_cancel" string="Cancel" states="draft" type="object" icon="gtk-cancel" />
+                    <button name="case_mark_lost" string="Mark Lost" states="open,pending" type="object" icon="gtk-cancel" />
+                    <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert" />
+                    <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward" />
+                    <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause" />
+                    <button name="case_escalate" string="Escalate" states="open,pending" type="object" groups="base.group_extended" icon="gtk-go-up" />
+                    <button name="case_mark_won" string="Mark Won" states="open,pending" type="object" icon="gtk-apply" />
+                    <div class="oe_right">
+                        <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
+                    </div>
+                </div>
+                <sheet layout="auto">
                 <group colspan="4" col="7">
                     <field name="name"  required="1" string="Opportunity"/>
                     <label string="Stage:" align="1.0"/>
@@ -473,18 +479,6 @@
 
                     <separator colspan="4" string="Details"/>
                     <field name="description" nolabel="1" colspan="4"/>
-
-                    <separator colspan="4"/>
-                    <group col="10" colspan="4">
-                        <field name="state" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
-                        <button name="case_cancel" string="Cancel" states="draft" type="object" icon="gtk-cancel" />
-                        <button name="case_mark_lost" string="Mark Lost" states="open,pending" type="object" icon="gtk-cancel" />
-                        <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert" />
-                        <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward" />
-                        <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause" />
-                        <button name="case_escalate" string="Escalate" states="open,pending" type="object" groups="base.group_extended" icon="gtk-go-up" />
-                        <button name="case_mark_won" string="Mark Won" states="open,pending" type="object" icon="gtk-apply" />
-                    </group>
                 </page>
                 <page string="Lead">
                     <group colspan="2" col="4">
@@ -529,7 +523,10 @@
                     <field name="ref2"/>
                 </page>
                 </notebook>
-                <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
+                </sheet>
+                <div class="oe_form_sheet_width">
+                    <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
+                </div>
             </form>
         </field>
     </record>
@@ -540,7 +537,8 @@
         <field name="model">crm.lead</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Opportunities" colors="blue:state=='pending' and not(date_deadline and (date_deadline &lt; current_date));gray:state in ('cancel', 'done');red:date_deadline and (date_deadline &lt; current_date)">
+            <tree string="Opportunities" fonts="bold:needaction_pending==True" colors="blue:state=='pending' and not(date_deadline and (date_deadline &lt; current_date));gray:state in ('cancel', 'done');red:date_deadline and (date_deadline &lt; current_date)">
+                <field name="needaction_pending" invisible="1"/>
                 <field name="date_deadline" invisible="1"/>
                 <field name="create_date" groups="base.group_no_one"/>
                 <field name="name" string="Opportunity"/>

@@ -34,72 +34,90 @@ openerp.point_of_sale = function(db) {
         };
     };
     var _t = db.web._t;
-
-    /*
-     Local store access. Read once from localStorage upon construction and persist on every change.
-     There should only be one store active at any given time to ensure data consistency.
-     */
-    var Store = db.web.Class.extend({
-        init: function() {
-            this.data = {};
+    
+    var DAOInterface = {
+        add_operation: function(operation) {},
+        remove_operation: function(id) {},
+        get_operations: function() {},
+    };
+    var LocalStorageDAO = db.web.Class.extend({
+        add_operation: function(operation) {
+            var self = this;
+            return $.async_when().pipe(function() {
+                var tmp = self._get('oe_pos_operations', []);
+                var last_id = self._get('oe_pos_operations_sequence', 1);
+                tmp.push({'id': last_id, 'data': operation});
+                self._set('oe_pos_operations', tmp);
+                self._set('oe_pos_operations_sequence', last_id + 1);
+            });
         },
-        get: function(key, _default) {
-            if (this.data[key] === undefined) {
-                var stored = localStorage['oe_pos_' + key];
-                if (stored)
-                    this.data[key] = JSON.parse(stored);
-                else
-                    return _default;
-            }
-            return this.data[key];
+        remove_operation: function(id) {
+            var self = this;
+            return $.async_when().pipe(function() {
+                var tmp = self._get('oe_pos_operations', []);
+                tmp = _.filter(tmp, function(el) {
+                    return el.id !== id;
+                });
+                self._set('oe_pos_operations', tmp);
+            });
         },
-        set: function(key, value) {
-            this.data[key] = value;
-            localStorage['oe_pos_' + key] = JSON.stringify(value);
+        get_operations: function() {
+            var self = this;
+            return $.async_when().pipe(function() {
+                return self._get('oe_pos_operations', []);
+            });
+        },
+        _get: function(key, default_) {
+            var txt = localStorage[key];
+            if (! txt)
+                return default_;
+            return JSON.parse(txt);
+        },
+        _set: function(key, value) {
+            localStorage[key] = JSON.stringify(value);
         },
     });
+    
+    var fetch = function(osvModel, fields, domain) {
+        var dataSetSearch;
+        dataSetSearch = new db.web.DataSetSearch(null, osvModel, {}, domain);
+        return dataSetSearch.read_slice(fields, 0);
+    };
+    
     /*
      Gets all the necessary data from the OpenERP web client (session, shop data etc.)
      */
     var Pos = Backbone.Model.extend({
         initialize: function(session, attributes) {
             Backbone.Model.prototype.initialize.call(this, attributes);
-            this.store = new Store();
+            this.dao = new LocalStorageDAO();
             this.ready = $.Deferred();
             this.flush_mutex = new $.Mutex();
             this.build_tree = _.bind(this.build_tree, this);
             this.session = session;
-            var attributes = {
-                'pending_operations': [],
+            this.set({'nbr_pending_operations': 0,
                 'currency': {symbol: '$', position: 'after'},
                 'shop': {},
                 'company': {},
-                'user': {},
-            };
-            _.each(attributes, _.bind(function(def, attr) {
-                var to_set = {};
-                to_set[attr] = this.store.get(attr, def);
-                this.set(to_set);
-                this.bind('change:' + attr, _.bind(function(unused, val) {
-                    this.store.set(attr, val);
-                }, this));
-            }, this));
-            $.when(this.fetch('pos.category', ['name', 'parent_id', 'child_id']),
-                this.fetch('product.product', ['name', 'list_price', 'pos_categ_id', 'taxes_id', 'product_image_small'], [['pos_categ_id', '!=', 'false']]),
-                this.fetch('account.bank.statement', ['account_id', 'currency', 'journal_id', 'state', 'name'],
-                    [['state', '=', 'open'], ['user_id', '=', this.session.uid]]),
-                this.fetch('account.journal', ['opening_control', 'closing_control', 'currency', 'name', 'type']),
-                this.fetch('account.tax', ['amount', 'price_include', 'type']),
-                this.get_app_data())
-                .pipe(_.bind(this.build_tree, this));
-        },
-        fetch: function(osvModel, fields, domain) {
-            var dataSetSearch;
+                'user': {}});
+            
             var self = this;
-            dataSetSearch = new db.web.DataSetSearch(this, osvModel, {}, domain);
-            return dataSetSearch.read_slice(fields, 0).then(function(result) {
-                return self.store.set(osvModel, result);
+            var cat_def = fetch('pos.category', ['name', 'parent_id', 'child_id']).pipe(function(result) {
+                return self.set({'categories': result});
             });
+            var prod_def = fetch('product.product', ['name', 'list_price', 'pos_categ_id', 'taxes_id',
+                                                          'product_image_small'], [['pos_categ_id', '!=', 'false']]).then(function(result) {
+                return self.set({'product_list': result});
+            });
+            var bank_def = fetch('account.bank.statement', ['account_id', 'currency', 'journal_id', 'state', 'name'],
+                    [['state', '=', 'open'], ['user_id', '=', this.session.uid]]).then(function(result) {
+                return self.set({'bank_statements': result});
+            });
+            var tax_def = fetch('account.tax', ['amount', 'price_include', 'type']).then(function(result) {
+                return self.set({'taxes': result});
+            });
+            $.when(cat_def, prod_def, bank_def, tax_def, this.get_app_data(), this.flush())
+                .pipe(_.bind(this.build_tree, this));
         },
         get_app_data: function() {
             var self = this;
@@ -120,10 +138,10 @@ openerp.point_of_sale = function(db) {
             }));
         },
         pushOrder: function(record) {
-            var ops = _.clone(this.get('pending_operations'));
-            ops.push(record);
-            this.set({pending_operations: ops});
-            return this.flush();
+            var self = this;
+            return this.dao.add_operation(record).pipe(function() {
+                return self.flush();
+            });
         },
         flush: function() {
             return this.flush_mutex.exec(_.bind(function() {
@@ -131,26 +149,32 @@ openerp.point_of_sale = function(db) {
             }, this));
         },
         _int_flush : function() {
-            var ops = this.get('pending_operations');
-            if (ops.length === 0)
-                return $.when();
-            var op = ops[0];
-            /* we prevent the default error handler and assume errors
-             * are a normal use case, except we stop the current iteration
-             */
-            return new db.web.Model("pos.order").get_func("create_from_ui")([op]).fail(function(unused, event) {
-                event.preventDefault();
-            }).pipe(_.bind(function() {
-                console.debug('saved 1 record');
-                var ops2 = this.get('pending_operations');
-                this.set({'pending_operations': _.without(ops2, op)});
-                return this._int_flush();
-            }, this), function() {return $.when()});
+            var self = this;
+            this.dao.get_operations().pipe(function(ops) {
+                self.set({"nbr_pending_operations": ops.length});
+                if (ops.length === 0)
+                    return $.when();
+                var op = ops[0].data;
+                var op_id = ops[0].id;
+                /* we prevent the default error handler and assume errors
+                 * are a normal use case, except we stop the current iteration
+                 */
+                return new db.web.Model("pos.order").get_func("create_from_ui")([op]).fail(function(unused, event) {
+                    event.preventDefault();
+                }).pipe(function() {
+                    console.debug('saved 1 record');
+                    self.dao.remove_operation(op_id).pipe(function() {
+                        return self._int_flush();
+                    });
+                }, function() {
+                    return $.when();
+                });
+            });
         },
         categories: {},
         build_tree: function() {
             var c, id, _i, _len, _ref, _ref2;
-            _ref = this.store.get('pos.category');
+            _ref = this.get('categories');
             for (_i = 0, _len = _ref.length; _i < _len; _i++) {
                 c = _ref[_i];
                 this.categories[c.id] = {
@@ -173,7 +197,7 @@ openerp.point_of_sale = function(db) {
                 ancestors: [],
                 children: (function() {
                     var _j, _len2, _ref3, _results;
-                    _ref3 = this.store.get('pos.category');
+                    _ref3 = this.get('categories');
                     _results = [];
                     for (_j = 0, _len2 = _ref3.length; _j < _len2; _j++) {
                         c = _ref3[_j];
@@ -185,7 +209,7 @@ openerp.point_of_sale = function(db) {
                 }).call(this),
                 subtree: (function() {
                     var _j, _len2, _ref3, _results;
-                    _ref3 = this.store.get('pos.category');
+                    _ref3 = this.get('categories');
                     _results = [];
                     for (_j = 0, _len2 = _ref3.length; _j < _len2; _j++) {
                         c = _ref3[_j];
@@ -313,10 +337,10 @@ openerp.point_of_sale = function(db) {
             var totalTax = base;
             var totalNoTax = base;
             
-            var products = pos.store.get('product.product');
-            var product = _.detect(products, function(el) {return el.id === self.get('id');});
+            var product_list = pos.get('product_list');
+            var product = _.detect(product_list, function(el) {return el.id === self.get('id');});
             var taxes_ids = product.taxes_id;
-            var taxes =  pos.store.get('account.tax');
+            var taxes =  pos.get('taxes');
             var taxtotal = 0;
             _.each(taxes_ids, function(el) {
                 var tax = _.detect(taxes, function(t) {return t.id === el;});
@@ -530,7 +554,7 @@ openerp.point_of_sale = function(db) {
                 products: new ProductCollection()
             });
             this.set({
-                cashRegisters: new CashRegisterCollection(pos.store.get('account.bank.statement')),
+                cashRegisters: new CashRegisterCollection(pos.get('bank_statements')),
             });
             return (this.get('orders')).bind('remove', _.bind( function(removedOrder) {
                 if ((this.get('orders')).isEmpty()) {
@@ -1244,7 +1268,7 @@ openerp.point_of_sale = function(db) {
             this.category();
         };
         App.prototype.category = function(id) {
-            var c, products;
+            var c, product_list;
             if (id == null) {
                 id = 0;
             }
@@ -1253,28 +1277,28 @@ openerp.point_of_sale = function(db) {
             this.categoryView.children = c.children;
             this.categoryView.renderElement();
             this.categoryView.start();
-            products = pos.store.get('product.product').filter( function(p) {
+            product_list = pos.get('product_list').filter( function(p) {
                 var _ref;
                 return _ref = p.pos_categ_id[0], _.indexOf(c.subtree, _ref) >= 0;
             });
-            (this.shop.get('products')).reset(products);
+            (this.shop.get('products')).reset(product_list);
             var self = this;
             $('.searchbox input').keyup(function() {
                 var m, s;
                 s = $(this).val().toLowerCase();
                 if (s) {
-                    m = products.filter( function(p) {
+                    m = product_list.filter( function(p) {
                         return p.name.toLowerCase().indexOf(s) != -1;
                     });
                     $('.search-clear').fadeIn();
                 } else {
-                    m = products;
+                    m = product_list;
                     $('.search-clear').fadeOut();
                 }
                 return (self.shop.get('products')).reset(m);
             });
             return $('.search-clear').click( function() {
-                (self.shop.get('products')).reset(products);
+                (self.shop.get('products')).reset(product_list);
                 $('.searchbox input').val('').focus();
                 return $('.search-clear').fadeOut();
             });
@@ -1317,7 +1341,7 @@ openerp.point_of_sale = function(db) {
                 this.synch_notification.replace($('.oe_pos_synch-notification', this.$element));
                 this.synch_notification.on_synch.add(_.bind(pos.flush, pos));
                 
-                pos.bind('change:pending_operations', this.changed_pending_operations, this);
+                pos.bind('change:nbr_pending_operations', this.changed_pending_operations, this);
                 this.changed_pending_operations();
                 
                 this.$element.find("#loggedas button").click(function() {
@@ -1327,7 +1351,7 @@ openerp.point_of_sale = function(db) {
                 pos.app = new App(self.$element);
                 db.webclient.set_content_full_screen(true);
                 
-                if (pos.store.get('account.bank.statement').length === 0)
+                if (pos.get('bank_statements').length === 0)
                     return new db.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_pos_open_statement']], ['res_id']).pipe(
                             _.bind(function(res) {
                         return this.rpc('/web/action/load', {'action_id': res[0]['res_id']}).pipe(_.bind(function(result) {
@@ -1341,12 +1365,12 @@ openerp.point_of_sale = function(db) {
             return qweb_template("PointOfSale")();
         },
         changed_pending_operations: function () {
-            this.synch_notification.on_change_nbr_pending(pos.get('pending_operations').length);
+            this.synch_notification.on_change_nbr_pending(pos.get('nbr_pending_operations'));
         },
         try_close: function() {
             pos.flush().then(_.bind(function() {
                 var close = _.bind(this.close, this);
-                if (pos.get('pending_operations').length > 0) {
+                if (pos.get('nbr_pending_operations') > 0) {
                     var confirm = false;
                     $(QWeb.render('pos-close-warning')).dialog({
                         resizable: false,
