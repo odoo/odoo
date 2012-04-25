@@ -1,4 +1,4 @@
-function pos_widgets(module, instance){
+function openerp_pos_widgets(module, instance){ //module is instance.point_of_sale
     var QWeb = instance.web.qweb;
 
     var qweb_template = function(template,pos){
@@ -997,8 +997,7 @@ function pos_widgets(module, instance){
             }, this));
         },
         close: function() {
-            // remove barcode reader event listener
-            $('body').undelegate('', 'keyup')
+            this.pos.app.barcodeReader.disconnect();
 
             return new instance.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_pos_close_statement']], ['res_id']).pipe(
                     _.bind(function(res) {
