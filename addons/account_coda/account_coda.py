@@ -32,8 +32,11 @@ class coda_bank_account(osv.osv):
 
     def _check_currency(self, cr, uid, ids, context=None):
         obj_cba = self.browse(cr, uid, ids[0], context=context)
-        if (obj_cba.state == 'normal') and obj_cba.journal and (obj_cba.currency != obj_cba.journal.currency):
-            return False
+        if (obj_cba.state == 'normal') and obj_cba.journal:
+            if obj_cba.journal.currency and (obj_cba.currency != obj_cba.journal.currency):
+                return False
+            if not obj_cba.journal.currency and (obj_cba.currency != obj_cba.company_id.currency_id):
+                return False
         return True
 
     _columns = {

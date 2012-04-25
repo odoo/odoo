@@ -630,12 +630,6 @@ class account_coda_import(osv.osv_memory):
                             err_string += _('\nConfiguration Error in journal %s!'    \
                                 '\nPlease verify the Default Debit and Credit Account settings.') % journal.name
                             break
-                    if balance_start_check <> statement['balance_start']:
-                            nb_err += 1 
-                            err_string += _('\nThe CODA Statement %s Starting Balance (%.2f) does not correspond with the previous Closing Balance (%.2f) in journal %s!')  \
-                                % (statement['name'], statement['balance_start'], balance_start_check, journal.name)   
-                            break                
-                            
                     bk_st_id = bank_st_obj.create(cr, uid, {
                         'name': statement['name'],
                         'journal_id': statement['journal_id'],
