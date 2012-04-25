@@ -115,7 +115,7 @@ class project_task(osv.osv):
                 search_extended += '''<filter domain="[('timebox_id','=', ''' + str(time.id) + ''')]" icon="''' + icon + '''" string="''' + time.name + '''" context="{'user_invisible': True}"/>\n'''
             search_extended +='''<separator orientation="vertical"/>'''
 
-            res['arch'] = res['arch'].replace('<separator name="gtdsep"/>', search_extended)
+            res['arch'] = unicode(res['arch'],'utf8').replace('<separator name="gtdsep"/>', search_extended)
 
         return res
 
