@@ -346,7 +346,16 @@
             <field name="model">hr.job</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Job">
+                <form layout="manual">
+                <div class="oe_form_topbar">
+                    <button name="job_recruitement" string="In Recruitement" states="open" type="object" icon="gtk-go-forward"/>
+                    <button name="job_open" string="In Position" states="old,recruit" type="object" icon="terp-camera_test"/>
+                    <button name="job_old" string="Mark as Old" states="open,recruit" type="object" icon="gtk-cancel"/>
+                    <div class="oe_right">
+                        <field name="state" widget="statusbar" nolabel="1" statusbar_visible="recruit,open"/>
+                    </div>
+                </div>
+                <sheet string="Job" layout="auto">
                     <group col="6" colspan="4">
                     <field name="name" />
                     <field name="department_id" />
@@ -368,12 +377,7 @@
                             <field name="employee_ids" colspan="4" nolabel="1" widget="many2many" mode="tree,form"/>
                         </page>
                     </notebook>
-                    <group col="6" colspan="4">
-                        <field name="state" widget="statusbar" statusbar_visible="recruit,open"/>
-                        <button name="job_recruitement" string="In Recruitement" states="open" type="object" icon="gtk-go-forward"/>
-                        <button name="job_open" string="In Position" states="old,recruit" type="object" icon="terp-camera_test"/>
-                        <button name="job_old" string="Mark as Old" states="open,recruit" type="object" icon="gtk-cancel"/>
-                    </group>
+                </sheet>
                 </form>
             </field>
         </record>
