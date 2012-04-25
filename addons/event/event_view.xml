@@ -98,8 +98,8 @@
                             </field>
                         <field name="state" select="1" widget="statusbar" statusbar_visible="draft,confirm,done"/>
                         <group col="4" colspan="2">
-                           <button string="Cancel Event" name="button_cancel" states="draft,confirm" type="object" icon="gtk-cancel"/>
-                           <button string="Confirm Event" name="button_confirm" states="draft" type="object" icon="gtk-apply"/>
+                           <button string="Cancel Event" name="button_cancel" states="draft,confirm" type="object" icon="gtk-cancel" groups="base.group_user"/>
+                           <button string="Confirm Event" name="button_confirm" states="draft" type="object" icon="gtk-apply" groups="base.group_user"/>
                            <button string="Event Done" name="button_done" states="confirm" type="object" icon="gtk-jump-to"/>
                            <button string="Set To Draft" name="button_draft" states="cancel,done" type="object" icon="gtk-convert"/>
                         </group>
@@ -120,8 +120,8 @@
                             <field name="register_attended"/>
                         </group>
                         <group col="2" colspan="2">
-                            <separator string="Emails" colspan="2"/>
-                            <field name="reply_to"/>
+                            <separator string="Emails" colspan="2" groups="base.group_user"/>
+                            <field name="reply_to" groups="base.group_user"/>
                             <field name="email_registration_id" domain="[('model_id.model','=','event.registration')]" groups="base.group_extended"/>
                             <field name="email_confirmation_id" domain="[('model_id.model','=','event.registration')]" groups="base.group_extended"/>
                         </group>
