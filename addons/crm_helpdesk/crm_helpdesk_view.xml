@@ -28,8 +28,20 @@
             <field name="model">crm.helpdesk</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Helpdesk Support">
-                    <group colspan="4" col="7">
+                <form layout="manual">
+                <div class="oe_form_topbar">
+                    <button name="case_open" states="draft,pending" string="Open" type="object" icon="gtk-go-forward" />
+                    <button name="case_pending" states="draft,open" string="Pending" type="object" icon="gtk-media-pause" />
+                    <button name="case_escalate" states="open,draft,pending" string="Escalate" type="object" icon="gtk-go-up" />
+                    <button name="case_close" states="open,draft,pending" string="Close" type="object" icon="gtk-jump-to" />
+                    <button name="case_reset" states="done,cancel" string="Reset to Draft" type="object" icon="gtk-convert" />
+                    <button name="case_cancel" states="draft,open,pending" string="Cancel" type="object" icon="gtk-cancel" />
+                    <div class="oe_right">
+                        <field name="state" select="1" nolabel="1" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
+                    </div>
+                </div>
+                <sheet string="Helpdesk Support" layout="auto">
+                    <group colspan="4" col="7" class="oe_form_header">
                         <field name="name" select="1" string="Query"/>
                         <field name="section_id" widget="selection"/>
                         <field name="user_id" select="1"/>
@@ -64,30 +76,6 @@
 
                             <separator colspan="4" string="Notes"/>
                             <field name="description" colspan="4" nolabel="1" />
-                            <separator colspan="4"/>
-                            <group col="8" colspan="4">
-                                <field name="state" select="1" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
-                                <button name="case_cancel"
-                                    states="draft,open,pending" string="Cancel"
-                                    type="object" icon="gtk-cancel" />
-                                <button name="case_open"
-                                    states="draft,pending" string="Open"
-                                    type="object" icon="gtk-go-forward" />
-                                <button name="case_pending"
-                                    states="draft,open" string="Pending"
-                                    type="object" icon="gtk-media-pause" />
-                                <button name="case_escalate"
-                                    states="open,draft,pending"
-                                    string="Escalate" type="object"
-                                    icon="gtk-go-up" />
-                                <button name="case_close"
-                                    states="open,draft,pending" string="Close"
-                                    type="object" icon="gtk-jump-to" />
-                                <button name="case_reset"
-                                    states="done,cancel"
-                                    string="Reset to Draft" type="object"
-                                    icon="gtk-convert" />
-                            </group>
                         </page>
                         <page string="Communication &amp; History" groups="base.group_extended">
                             <group colspan="4">
@@ -136,6 +124,7 @@
                             </group>
                         </page>
                     </notebook>
+                </sheet>
                 </form>
             </field>
         </record>
