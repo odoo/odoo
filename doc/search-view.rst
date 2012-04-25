@@ -16,13 +16,12 @@ multiple fields). The goal for this change is twofold:
 The internal structure of the faceted search is inspired by
 `VisualSearch <http://documentcloud.github.com/visualsearch/>`_ [#]_.
 
-As does VisualSearch, the new search view is based on `Backbone
-<http://documentcloud.github.com/backbone/>`_ and makes significant
-use of Backbone's models and collections (OpenERP Web's widgets make a
-good replacement for Backbone's own views). As a result, understanding
-the implementation details of the OpenERP Web 7 search view also
-requires a basic understanding of Backbone's models, collections and
-events.
+As does VisualSearch, the new search view is based on `Backbone`_ and
+makes significant use of Backbone's models and collections (OpenERP
+Web's widgets make a good replacement for Backbone's own views). As a
+result, understanding the implementation details of the OpenERP Web 7
+search view also requires a basic understanding of Backbone's models,
+collections and events.
 
 .. note::
 
@@ -45,7 +44,7 @@ objects is stored in the ``openerp.web.search.fields``
 :js:class:`~openerp.web.Registry` where new field types and widgets
 can be added.
 
-Search view inputs have three main roles:
+Search view inputs have four main roles:
 
 Loading defaults
 ++++++++++++++++
@@ -81,7 +80,9 @@ the user) and should fetch an ``Array`` of possible completions [#]_.
 
 A default implementation is provided which fetches nothing.
 
-A completion item is an object literal with two keys:
+A completion item is a javascript object with two keys (technically it
+can have any number of keys, but only these two will be used by the
+search view):
 
 ``label``
 
@@ -136,168 +137,105 @@ only once.
           dynamically collects, lays out and renders filters? =>
           exercises drawer thingies
 
-Interaction between the Search View and VisualSearch
-----------------------------------------------------
+Programmatic interactions: internal model
+-----------------------------------------
 
-The core data abstraction in VisualSearch is
-:js:class:`VS.model.SearchQuery`, a backbone Collection holding
-instances of the :js:class:`VS.model.SearchFacet` backbone Model.
+This new searchview is built around an instance of
+:js:class:`~openerp.web.search.SearchQuery` available as
+:js:attr:`openerp.web.SearchView.query`.
 
-Backbone models can hold any number of informal properties interacted
-with through the :js:func:`~Backbone.Model.get` and
-:js:func:`~Backbone.Model.set` methods. VisualSearch reserves three
-such properties for its behavior, these properties *must* be correctly
-set on all search facets created programmatically:
+The query is a `backbone collection`_ of
+:js:class:`~openerp.web.search.Facet` objects, which can be interacted
+with directly by external objects or search view controls
+(e.g. widgets displayed in the drawer).
 
-``app``
-  a reference to the VisualSearch instance using this facet. In the
-  search view, this instance is available as the
-  :js:attr:`~openerp.web.SearchView.vs` attribute to the searchview
-  instance.
+.. js:class:: openerp.web.search.SearchQuery
 
-``category``
-  the *name* of the facet, displayed in the first section of a facet
-  view.
+    The current search query of the search view, provides convenience
+    behaviors for manipulating :js:class:`~openerp.web.search.Facet`
+    on top of the usual `backbone collection`_ methods.
 
-``value``
-  the *displayed value* of the facet, it is directly printed to the
-  right of the category.
+    The query ensures all of its facets contain at least one
+    :js:class:`~openerp.web.search.FacetValue` instance. Otherwise,
+    the facet is automatically removed from the query.
 
-The search view uses additional keys to store state and data it needs
-to associate with facet objects:
+    .. js:function:: openerp.web.search.SearchQuery.add(values, options)
 
-``field``
-  the search field instance which created the facet, used when the
-  search view needs to serialize the facets.
+        Overridden from the base ``add`` method so that adding a facet
+        which is *already* in the collection will merge the value of
+        the new facet into the old one rather than add a second facet
+        with different values.
 
-``json``
-  the "logical" value of the facet, can be absent if the logical and
-  "printable" values of the facet are the same (e.g. for a basic text
-  field).
+        :param values: facet, facet attributes or array thereof
+        :returns: the collection itself
 
-  This value may be a complex javascript object such as an array (the
-  name stands for json-compatible value, it is not a JSON-encoded
-  string).
+    .. js:function:: openerp.web.search.SearchQuery.toggle(value, options)
 
-.. note::
+        Convenience method for toggling facet values in a query:
+        removes the values (through the facet itself) if they are
+        present, adds them if they are not. If the facet itself is not
+        in the collection, adds it automatically.
 
-     in order to simplify getting the logical value of a search facet
-     model, :js:class:`VS.model.SearchFacet` has been extended with a
-     :js:func:`~VS.model.SearchFacet.value` method
+        A toggling is atomic: only one change event will be triggered
+        on the facet regardless of the number of values added to or
+        removed from the facet (if the facet already exists), and the
+        facet is only removed from the query if it has no value *at
+        the end* of the toggling.
 
-Extensions and patches to VisualSearch
-++++++++++++++++++++++++++++++++++++++
+        :param value: facet or facet attributes
+        :returns: the collection
 
-.. js:function:: VS.model.SearchFacet.value()
+.. js:class:: openerp.web.search.Facet
 
-    Bundles the logic of selecting between ``json`` and ``value`` in
-    order to get the logical value of a facet.
+    A `backbone model`_ representing a single facet of the current
+    research. May map to a search field, or to a more complex or
+    fuzzier input (e.g. a custom filter or an advanced search).
 
-.. js:attribute:: VS.options.callbacks.make_facet
+    .. js:attribute:: category
 
-    Called by :js:class:`VS.ui.SearchBox` when it needs to create a
-    new search facet *view*. By default this is not supported by
-    VisualSearch, and requires monkey-patching
-    :js:func:`VS.ui.SearchBox.renderFacet`.
+        The displayed name of the facet, as a ``String``. This is a
+        backbone model attribute.
 
-    This patch should not alter any behavior if
-    :js:attr:`~VS.options.callbacks.make_facet` is not used.
+    .. js:attribute:: field
 
-.. js:attribute:: VS.options.callbacks.make_input
+        The :js:class:`~openerp.web.search.Input` instance which
+        originally created the facet, used to delegate some operations
+        (such as serializing the facet's values to domains and
+        contexts). This is a backbone model attribute.
 
-    Similar to :js:attr:`~VS.options.callbacks.make_facet`, but called
-    when the :js:class:`~VS.ui.SearchBox` needs to create a search
-    input view. It requires monkey-patching
-    :js:func:`VS.ui.SearchBox.renderSearchInput`.
+    .. js:attribute:: values
 
-Finally, :js:func:`VS.ui.SearchBox.searchEvent` is monkey-patched to
-get rid of its serialize/load round-tripping of facet data: the
-additional attributes needed by the search view don't round-trip (at
-all) so VisualSearch must not load any data from its (fairly
-simplistic) text-serialization format.
+        :js:class:`~openerp.web.search.FacetValues` as a javascript
+        attribute, stores all the values for the facet and helps
+        propagate their events to the facet. Is also available as a
+        backbone attribute (via ``#get`` and ``#set``) in which cases
+        it serializes to and deserializes from javascript arrays (via
+        ``Collection#toJSON`` and ``Collection#reset``).
 
-.. note::
+.. js:class:: openerp.web.search.FacetValues
 
-    a second issue is that — as of `commit 3fca87101d`_ — VisualSearch
-    correctly serializes facet categories containing spaces but is
-    unable to load them back in. It also does not handle facets with
-    *empty* categories correctly.
+    `Backbone collection`_ of
+    :js:class:`~openerp.web.search.FacetValue` instances.
 
-Loading Defaults
-----------------
+.. js:class:: openerp.web.search.FacetValue
 
-After loading the view data, the SearchView will call
-:js:func:`openerp.web.search.Input.facet_for_defaults` on each of its
-inputs with the ``defaults`` mapping of key:values (where each key
-corresponds to an input). This method should look into the
-``defaults`` mapping and fetch the field's default value as a
-:js:class:`~VS.models.SearchFacet` if applicable.
+    `Backbone model`_ representing a single value within a facet,
+    represents a pair of (displayed name, logical value).
 
-The default implementation is to check if there is a default value for
-the current input's name (via
-:js:attr:`openerp.web.search.Input.attrs.name`) and if there is to
-convert this value to a :js:class:`~VS.models.SearchFacet` by calling
-:js:func:`openerp.web.search.Input.facet_for`.
+    .. js:attribute:: label
 
-There is no built-in (default) implementation of
-:js:func:`openerp.web.search.Input.facet_for`. This method should
-fetch the :js:class:`~VS.models.SearchFacet` corresponding to the
-"raw" value passed as argument.
+        Backbone model attribute storing the "displayable"
+        representation of the value, visually output to the
+        user. Must be a string.
 
-Providing auto-completion
--------------------------
+    .. js:attribute:: value
 
-An important component of the unified search view is the faceted
-autocompletion pane. In order to provide good user and developer
-experiences, this pane is pluggable (value-wise): each and every
-control of the search view can check for (and provide) categorized
-auto-completions for a given value being typed by the user.
+        Backbone model attribute storing the logical/internal value
+        (of itself), will be used by
+        :js:class:`~openerp.web.search.Input` to serialize to domains
+        and contexts.
 
-This is done by implementing
-:js:func:`openerp.web.search.Input.complete`: the method is provided
-with a value to complete, and should fetch an ``Array`` of completion
-values. These completion values will then be provided to the global
-autocompletion list, implemented via `jquery-ui autocomplete
-<http://jqueryui.com/demos/autocomplete/>`_.
-
-Because the search view uses a custom renderer for its completion, it
-was possible to fix some incompatibilities between the attributes of
-completion items and VisualSearch's facet model:
-
-Actual completion items
-+++++++++++++++++++++++
-
-These are selectable items, and upon selection are turned into actual
-search facet objects. They should have all the properties of a search
-facet (as described above) and can have one more optional property:
-``label``.
-
-When rendering an item in the list, the renderer will first try to use
-the ``label`` property if it exists (``label`` can contain HTML and
-will be inserted as-is, so it can bold or emphasize some of its
-elements), if it does not the ``value`` property will be used.
-
-.. note:: the ``app`` key should not be specified on completion item,
-          it will be set automatically when the search view creates
-          the facet from the item.
-
-Section titles
-++++++++++++++
-
-A second kind of completion values is the section titles. Section
-titles are similar to completion items but only have a ``category``
-property. They will be rendered in a different style and can not be
-selected in the auto-completion (they will be skipped).
-
-.. note::
-
-    Technically, section title items can have any property they want
-    *as long as they do not have a value property*. A ``value``
-    property set to ``false``, ``null`` or ``undefined`` is **not**
-    equivalent to not having a ``value`` property.
-
-If an input *may* fetch more than one completion item, it *should*
-prepend a section title (using its own name) to the completion items.
+        Can be of any type.
 
 Converting from facet objects
 -----------------------------
@@ -327,7 +265,7 @@ Converting to facet objects
 Changes
 -------
 
-.. todo:: merge in changelog instead
+.. todo:: merge in changelog instead?
 
 The displaying of the search view was significantly altered from
 OpenERP Web 6.1 to OpenERP Web 7.
@@ -422,5 +360,15 @@ Many To One
 .. [#] search view fields may also bundle context data to add to the
        search context
 
+.. _Backbone:
+    http://documentcloud.github.com/backbone/
+
+.. _Backbone.Collection:
+.. _Backbone collection:
+    http://documentcloud.github.com/backbone/#Collection
+
+.. _Backbone model:
+    http://documentcloud.github.com/backbone/#Model
+
 .. _commit 3fca87101d:
-     https://github.com/documentcloud/visualsearch/commit/3fca87101d
+    https://github.com/documentcloud/visualsearch/commit/3fca87101d
