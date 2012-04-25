@@ -544,34 +544,19 @@ class project(osv.osv):
         """
         if context is None:
             context = {}
-        value = {}
-        data_obj = self.pool.get('ir.model.data')
-        for project in self.browse(cr, uid, ids, context=context):
-            # Get Task views
-            tree_view = data_obj.get_object_reference(cr, uid, 'project_issue', 'project_issue_tree_view')
-            form_view = data_obj.get_object_reference(cr, uid, 'project_issue', 'project_issue_form_view')
-            calander_view = data_obj.get_object_reference(cr, uid, 'project_issue', 'project_issue_calendar_view')
-            search_view = data_obj.get_object_reference(cr, uid, 'project_issue', 'view_project_issue_filter')
-            kanban_view = data_obj.get_object_reference(cr, uid, 'project_issue', 'project_issue_kanban_view')
-            context.update({
-                #'search_default_user_id': uid,
-                'search_default_project_id':project.id
-            })
-            value = {
-                'name': _('Issue'),
-                'context': context,
-                'view_type': 'form',
-                'view_mode': 'form,tree',
-                'res_model': 'project.issue',
-                'view_id': False,
-                'domain':[('project_id','in',ids)],
-                'context': context,
-                'views': [(kanban_view and kanban_view[1] or False, 'kanban'),(tree_view and tree_view[1] or False, 'tree'),(calander_view and calander_view[1] or False, 'calendar'),(form_view and form_view[1] or False, 'form')],
-                'type': 'ir.actions.act_window',
-                'search_view_id': search_view and search_view[1] or False,
-                'nodestroy': True
-            }
-        return value
+        if ids:
+            context = dict(context, search_default_project_id=ids[0])
+        return {
+            'name': _('Issue'),
+            'view_type': 'form',
+            'view_mode': 'kanban,tree,calendar,form',
+            'res_model': 'project.issue',
+            'view_id': False,
+            'domain':[('project_id','in',ids)],
+            'context': context,
+            'type': 'ir.actions.act_window',
+            'nodestroy': True
+        }
 
     def _check_escalation(self, cr, uid, ids, context=None):
         project_obj = self.browse(cr, uid, ids[0], context=context)

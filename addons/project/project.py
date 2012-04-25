@@ -222,35 +222,19 @@ class project(osv.osv):
         """
         if context is None:
             context = {}
-        value = {}
-        data_obj = self.pool.get('ir.model.data')
-        for project in self.browse(cr, uid, ids, context=context):
-            # Get Task views
-            tree_view = data_obj.get_object_reference(cr, uid, 'project', 'view_task_tree2')
-            form_view = data_obj.get_object_reference(cr, uid, 'project', 'view_task_form2')
-            calander_view = data_obj.get_object_reference(cr, uid, 'project', 'view_task_calendar')
-            search_view = data_obj.get_object_reference(cr, uid, 'project', 'view_task_search_form')
-            kanban_view = data_obj.get_object_reference(cr, uid, 'project', 'view_task_kanban')
-            context.update({
-                #'search_default_user_id': uid,
-                'search_default_project_id':project.id,
-                #'search_default_open':1,
-            })
-            value = {
-                'name': _('Task'),
-                'context': context,
-                'view_type': 'form',
-                'view_mode': 'form,tree',
-                'res_model': 'project.task',
-                'view_id': False,
-                'domain':[('project_id','in',ids)],
-                'context': context,
-                'views': [(kanban_view and kanban_view[1] or False, 'kanban'),(tree_view and tree_view[1] or False, 'tree'),(calander_view and calander_view[1] or False, 'calendar'),(form_view and form_view[1] or False, 'form')],
-                'type': 'ir.actions.act_window',
-                'search_view_id': search_view and search_view[1] or False,
-                'nodestroy': True
-            }
-        return value
+        if ids:
+            context = dict(context, search_default_project_id=ids[0])
+        return {
+            'name': _('Task'),
+            'context': context,
+            'view_type': 'form',
+            'view_mode': 'kanban,tree,calendar,form',
+            'res_model': 'project.task',
+            'view_id': False,
+            'domain':[('project_id','in',ids)],
+            'type': 'ir.actions.act_window',
+            'nodestroy': True
+        }
     
     def _get_type_common(self, cr, uid, context):
         ids = self.pool.get('project.task.type').search(cr, uid, [('project_default','=',1)], context=context)

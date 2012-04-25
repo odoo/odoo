@@ -66,6 +66,7 @@ The main features are:
         'security/mail_security.xml',
         'security/ir.model.access.csv',
         'mail_data.xml',
+        'mail_group_data.xml',
         'res_users_view.xml',
     ],
     'installable': True,
