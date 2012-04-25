@@ -50,7 +50,7 @@ class sale_configuration(osv.osv_memory):
             It installs the account_analytic_analysis module."""),
         'default_order_policy': fields.selection(
             [('manual', 'Invoice Based on Sales Orders'), ('picking', 'Invoice Based on Deliveries')],
-            'Default Method', required=True, default_model='sale.order',
+            'Default Method', default_model='sale.order',
             help="You can generate invoices based on sales orders or based on shippings."),
         'module_delivery': fields.boolean('Charge Shipping Cost',
             help ="""Allows you to add delivery methods in sale orders and delivery orders.
