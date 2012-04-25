@@ -40,28 +40,28 @@ class purchase_config_settings(osv.osv_memory):
         'group_uom':fields.boolean("Manage Different Unit of Measure for Products",
             implied_group='product.group_uom',
             help="""Allows you to select and maintain different units of measure for products."""),
-        'module_purchase_analytic_plans': fields.boolean('Purchase Analytic Plan',
+        'module_purchase_analytic_plans': fields.boolean('Use Multiple Analytic Accounts on Purchases',
             help ="""Allows the user to maintain several analysis plans. These let you split
                 lines on a purchase order between several accounts and analytic plans.
                 This installs the module purchase_analytic_plans."""),
         'module_warning': fields.boolean("Alerts by Products or Supplier",
-            help="""To trigger warnings in OpenERP objects.
-                Warning messages can be displayed for objects like sale order, purchase order, picking and invoice.
-                This installs the module warning."""),
-        'module_product_manufacturer': fields.boolean("Define a Manufacturer of Products",
+            help="""Allow to configure warnings on products and trigger them when a user wants to purchase a given product or a given supplier. 
+            Example: Product: this product is deprecated, do not purchase more than 5.
+                    Supplier: don't forget to ask for an express delivery."""),
+        'module_product_manufacturer': fields.boolean("Define Manufacturers on Products",
             help="""This allows you to define the following for a product:
                     * Manufacturer
                     * Manufacturer Product Name
                     * Manufacturer Product Code
                     * Product Attributes.
                 This installs the module product_manufacturer."""),
-        'module_purchase_double_validation': fields.boolean("Double Validation",
+        'module_purchase_double_validation': fields.boolean("Two Levels of Approval",
             help="""Provide a double validation mechanism for purchases exceeding minimum amount.
                 This installs the module purchase_double_validation."""),
-        'module_purchase_requisition': fields.boolean("Purchase Requisition",
-            help="""When a purchase order is created, you have the opportunity to save the related requisition.
-                This object regroups and allows you to keep track and order all your purchase orders.
-                This installs the module purchase_requisition."""),
+        'module_purchase_requisition': fields.boolean("Use Purchase Requisition",
+            help="""Purchase Requisitions are used when you want to request quotations from several suppliers for a given set of products. 
+            You can configure per product if you directly do a Request for Quotation 
+            to one supplier or if you want a purchase requisition to negociate with several suppliers."""),
     }
 
     _defaults = {
