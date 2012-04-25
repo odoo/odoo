@@ -669,9 +669,9 @@ class crm_lead(crm_case, osv.osv):
             value = {}
             if team_id:
                 value['section_id'] = team_id
-            if index < len(user_ids):
+            if user_ids:
                 value['user_id'] = user_ids[index]
-                index += 1
+                index = (index + 1) % len(user_ids)
             if value:
                 self.write(cr, uid, [lead_id], value, context=context)
         return True
