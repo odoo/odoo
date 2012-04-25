@@ -103,7 +103,7 @@ class stock_fill_inventory(osv.osv_memory):
                     qty = -uom_obj._compute_qty(cr, uid, move.product_uom.id,move.product_qty, move.product_id.uom_id.id)
 
                 if datas.get((prod_id, lot_id)):
-                     qty += datas[(prod_id, lot_id)]['product_qty']
+                    qty += datas[(prod_id, lot_id)]['product_qty']
                 
                 datas[(prod_id, lot_id)] = {'product_id': prod_id, 'location_id': location, 'product_qty': qty, 'product_uom': move.product_id.uom_id.id, 'prod_lot_id': lot_id}
             
