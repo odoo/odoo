@@ -9,7 +9,7 @@
             <field name="inherit_id" ref="base.view_sale_config_settings"/>
             <field name="arch" type="xml">
                 <group name="config_sale" position="after">
-                    <separator string="Picking and Invoice Policy" colspan="4"/>
+                    <separator string="Invoicing Policy" colspan="4"/>
                     <field name="group_invoice_so_lines" on_change="onchange_invoice_methods(group_invoice_so_lines, group_invoice_deli_orders)"/>
                     <field name="default_order_policy" attrs="{'invisible':['|',('group_invoice_so_lines','=',False),('group_invoice_deli_orders','=',False)]}"/>
                     <newline/>
