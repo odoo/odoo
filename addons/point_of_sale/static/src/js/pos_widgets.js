@@ -136,9 +136,9 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
             $('#' + new_step + '-screen').show();
         },
     });
-    /*
-     Shopping carts.
-     */
+
+// ---------- "Shopping Carts" ----------
+
     module.OrderlineWidget = instance.web.OldWidget.extend({
         tagName: 'tr',
         template_fct: qweb_template('pos-orderline-template'),
@@ -262,9 +262,8 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
         },
     });
 
-    /*
-     "Products" step.
-     */
+// ---------- "Products" step. ----------
+
     module.CategoryWidget = instance.web.OldWidget.extend({
         init: function(parent, options){
             this._super(parent,options.element_id);
@@ -347,9 +346,9 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
             return this;
         },
     });
-    /*
-     "Payment" step.
-     */
+
+// ---------- "Payment" step. ----------
+
     module.PaymentlineWidget = instance.web.OldWidget.extend({
         tagName: 'tr',
         template_fct: qweb_template('pos-paymentline-template'),
@@ -927,7 +926,6 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
     module.POSWidget = instance.web.OldWidget.extend({
         init: function() {
             this._super.apply(this, arguments);
-
             this.pos = new module.PosModel(this.session);
 
         },
@@ -946,12 +944,31 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
                     self.try_close();
                 });
 
-                self.pos.app = new module.App(self.$element, self.pos);
+                //self.pos.app = new module.App(self.$element, self.pos);
+                
+                this.shopView = new module.ShopWidget(null, { 'pos': this.pos } );
+                this.shopView.$element = self.$element;
+                this.shopView.start();
+                
+                this.categoryView = new module.CategoryWidget(null, {
+                    'element_id': 'products-screen-categories',
+                    'pos': this.pos,
+                });
+                this.categoryView.on_change_category.add_last(_.bind(self.search_and_categories, self));
+                this.search_and_categories();
+
+                this.onscreenKeyboard = new module.OnscreenKeyboardWidget(null, {
+                    'keyboard_model': 'simple'
+                });
+                this.onscreenKeyboard.appendTo($(".point-of-sale #content"));
+
+                this.barcodeReader = new module.BarcodeReader({'pos': self.pos });
+
                 instance.webclient.set_content_full_screen(true);
                 
                 if (self.pos.get('bank_statements').length === 0)
                     return new instance.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_pos_open_statement']], ['res_id']).pipe(
-                            _.bind(function(res) {
+                        _.bind(function(res) {
                         return this.rpc('/web/action/load', {'action_id': res[0]['res_id']}).pipe(_.bind(function(result) {
                             var action = result.result;
                             this.do_action(action);
@@ -959,6 +976,54 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
                     }, this));
             }, this));
         },
+        search_and_categories: function(id){
+            var self = this,
+                c,
+                product_list,
+                allProducts,
+                allPackages;
+
+            id = id || 0;
+
+            c = this.pos.categories[id];
+            this.categoryView.ancestors = c.ancestors;
+            this.categoryView.children = c.children;
+            this.categoryView.renderElement();
+            this.categoryView.start();
+
+            allProducts = this.pos.get('product_list');
+
+            allPackages = this.pos.get('product.packaging');
+
+            product_list = this.pos.get('product_list').filter( function(p){
+                var _ref = p.pos_categ_id[0];
+                return _.indexOf(c.subtree, _ref) >= 0;
+            });
+
+            this.pos.get('products').reset(product_list);
+
+            $('.searchbox input').keyup(function(){
+                var results, search_str;
+                search_str = $(this).val().toLowerCase();
+                if(search_str){
+                    results = product_list.filter( function(p){
+                        return p.name.toLowerCase().indexOf(search_str) != -1;
+                    });
+                    $('.search-clear').fadeIn();
+                }else{
+                    results = product_list;
+                    $('.search-clear').fadeOut();
+                }
+                self.pos.get('products').reset(results);
+            });
+
+            $('.search-clear').click(function(){
+                self.pos.get('products').reset(product_list);
+                $('.searchbox input').val('').focus();
+                $('.search-clear').fadeOut();
+            });
+        },
+
         render: function() {
             return qweb_template("POSWidget")();
         },

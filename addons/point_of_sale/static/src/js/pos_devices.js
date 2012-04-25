@@ -1,10 +1,13 @@
 
 function openerp_pos_devices(module, instance){ //module is instance.point_of_sale
     module.BarcodeReader = instance.web.Class.extend({
+
         init: function(attributes){
             this.pos = attributes.pos;
+            this.connect();
         },
-        //returns true if the code is a valid EAN codebar number by checking the control digit.
+
+        // returns true if the code is a valid EAN codebar number by checking the control digit.
         checkEan: function(code){
             var st1 = code.slice();
             var st2 = st1.slice(0,st1.length-1).reverse();
@@ -33,6 +36,7 @@ function openerp_pos_devices(module, instance){ //module is instance.point_of_sa
             var cd = (10 - (st5%10)) % 10;
             return code[code.length-1] === cd;
         },
+
         // returns a product that has a packaging with an EAN matching to provided ean string. 
         // returns undefined if no such product is found.
         getProductByEAN: function(ean) {
@@ -66,7 +70,8 @@ function openerp_pos_devices(module, instance){ //module is instance.point_of_sa
             }
             return scannedProductModel;
         },
-        //starts catching keyboard events and tries to interpret codebar 
+
+        // starts catching keyboard events and tries to interpret codebar 
         connect: function(){
             var self = this;
             var codeNumbers = [];
@@ -135,9 +140,10 @@ function openerp_pos_devices(module, instance){ //module is instance.point_of_sa
                 }
             });
         },
+
+        // stops catching keyboard events 
         disconnect: function(){
             $('body').undelegate('', 'keyup')
         },
     });
-    
 }

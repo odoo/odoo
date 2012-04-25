@@ -158,7 +158,7 @@ function openerp_pos_models(module, instance){ //module is instance.point_of_sal
                 if(operations.length === 0){
                     return $.when();
                 }
-                var op = operations[0].data;
+                var op = operations[0];
 
                  // we prevent the default error handler and assume errors
                  // are a normal use case, except we stop the current iteration
@@ -168,8 +168,8 @@ function openerp_pos_models(module, instance){ //module is instance.point_of_sal
                                 event.preventDefault();
                             })
                             .pipe(function(){
-                                //console.debug('saved 1 record'); TODO Debug this
-                                self.dao.remove_operation(op.id).pipe(function(){
+                                console.debug('saved 1 record'); //TODO Debug this
+                                self.dao.remove_operation(operations[0].id).pipe(function(){
                                     return self._int_flush();
                                 });
                             }, function(){
@@ -242,36 +242,6 @@ function openerp_pos_models(module, instance){ //module is instance.point_of_sal
             return _results;
         }
     });
-    /*
-    module.Shop = Backbone.Model.extend({
-        initialize: function(attributes) {
-            var self = this;
-            this.set({
-                orders: new module.OrderCollection(),
-                products: new module.ProductCollection(),
-            });
-            this.pos = attributes.pos;
-            this.set({
-                cashRegisters: new module.CashRegisterCollection(this.pos.get('bank_statements')),
-            });
-            return (this.get('orders')).bind('remove', _.bind( function(removedOrder) {
-                if ((this.get('orders')).isEmpty()) {
-                    this.addAndSelectOrder(new module.Order({pos: self.pos}));
-                }
-                if ((this.get('selectedOrder')) === removedOrder) {
-                    return this.set({
-                        selectedOrder: (this.get('orders')).last()
-                    });
-                }
-            }, this));
-        },
-        addAndSelectOrder: function(newOrder) {
-            (this.get('orders')).add(newOrder);
-            return this.set({
-                selectedOrder: newOrder
-            });
-        },
-    });*/
 
     module.CashRegister = Backbone.Model.extend({
     });
@@ -511,7 +481,6 @@ function openerp_pos_models(module, instance){ //module is instance.point_of_sal
         model: module.Order,
     });
 
-
     /*
      The numpad handles both the choice of the property currently being modified
      (quantity, price or discount) and the edition of the corresponding numeric value.
@@ -578,78 +547,4 @@ function openerp_pos_models(module, instance){ //module is instance.point_of_sal
             }
         },
     });
-
-    module.App = (function() {
-
-        function App($element, pos) {
-            this.initialize($element, pos);
-        }
-
-        App.prototype.initialize = function($element, pos) {
-            this.pos = pos;
-            this.shopView = new module.ShopWidget(null, {
-                'pos': pos,
-            });
-            this.shopView.$element = $element;
-            this.shopView.start();
-            this.categoryView = new module.CategoryWidget(null, {element_id: 'products-screen-categories', pos: pos} );
-            this.categoryView.on_change_category.add_last(_.bind(this.category, this));
-            this.category();
-
-            this.onscreenKeyboard = new module.OnscreenKeyboardWidget(null,{keyboard_model:'simple'});
-            this.onscreenKeyboard.appendTo($(".point-of-sale #content"));
-
-/*
-            this.actionBar = new module.ActionbarWidget(null);
-            this.actionBar.appendTo($(".point-of-sale #content"));
-            this.actionBar.addNewButton('left',{'label':'test'});
-*/
-            this.barcodeReader = new module.BarcodeReader({ 'pos': pos });
-            this.barcodeReader.connect();
-        };
-
-        App.prototype.category = function(id) {
-            var c, product_list, self = this;
-
-            id = !id ? 0 : id; 
-
-            c = this.pos.categories[id];
-            this.categoryView.ancestors = c.ancestors;
-            this.categoryView.children = c.children;
-            this.categoryView.renderElement();
-            this.categoryView.start();
-
-            allProducts = this.pos.get('product_list');
-
-            allPackages = this.pos.get('product.packaging');
-            
-            product_list = this.pos.get('product_list').filter( function(p) {
-                var _ref;
-                return _ref = p.pos_categ_id[0], _.indexOf(c.subtree, _ref) >= 0;
-            });
-            (this.pos.get('products')).reset(product_list);
-
-            $('.searchbox input').keyup(function() {
-                var m, s;
-                s = $(this).val().toLowerCase();
-                if (s) {
-                    m = product_list.filter( function(p) {
-                        return p.name.toLowerCase().indexOf(s) != -1;
-                    });
-                    $('.search-clear').fadeIn();
-                } else {
-                    m = product_list;
-                    $('.search-clear').fadeOut();
-                }
-                return (self.pos.get('products')).reset(m);
-            });
-            return $('.search-clear').click( function() {
-                (self.pos.get('products')).reset(product_list);
-                $('.searchbox input').val('').focus();
-                return $('.search-clear').fadeOut();
-            });
-        };
-        return App;
-    })();
-
 }
