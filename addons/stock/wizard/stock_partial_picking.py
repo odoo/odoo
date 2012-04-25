@@ -103,10 +103,10 @@ class stock_partial_picking(osv.osv_memory):
         # Currently, the cost on the product form is supposed to be expressed in the currency
         # of the company owning the product. If not set, we fall back to the picking's company,
         # which should work in simple cases.
+        product_currency_id = move.product_id.company_id.currency_id and  move.product_id.company_id.currency_id.id
+        picking_currency_id = move.picking_id.company_id.currency_id and  move.picking_id.company_id.currency_id.id
         return {'cost': move.product_id.standard_price,
-                'currency': move.product_id.company_id.currency_id.id \
-                                or move.picking_id.company_id.currency_id.id \
-                                or False}
+                'currency': product_currency_id or picking_currency_id or False}
 
     def _partial_move_for(self, cr, uid, move):
         partial_move = {
