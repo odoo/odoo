@@ -11,7 +11,7 @@
                         <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
                         <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
                         <separator orientation="vertical"/>
-                        <filter icon="terp-gtk-jump-to-ltr" string="To Review" domain="[('state','=','posted')]" groups="base.group_extended" help="To Review"/>
+                        <filter icon="terp-gtk-jump-to-ltr" string="To Review" domain="[('state','=','posted')]" help="To Review"/>
                         <separator orientation="vertical"/>
                         <field name="date"/>
                         <field name="number"/>
@@ -20,7 +20,7 @@
                     <newline/>
                     <group>
                         <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('purchase','purchase_refund'))]"/>
-                        <field name="period_id" groups="base.group_extended"/>
+                        <field name="period_id"/>
                     </group>
                    <newline/>
                     <group expand="0" string="Group By...">
@@ -43,7 +43,7 @@
                         <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
                         <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
                         <separator orientation="vertical"/>
-                        <filter icon="terp-gtk-jump-to-ltr" string="To Review" domain="[('state','=','posted')]" groups="base.group_extended" help="To Review"/>
+                        <filter icon="terp-gtk-jump-to-ltr" string="To Review" domain="[('state','=','posted')]" help="To Review"/>
                         <separator orientation="vertical"/>
                         <field name="date"/>
                         <field name="number"/>
@@ -52,7 +52,7 @@
                     <newline/>
                     <group>
                         <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('sale','sale_refund'))]"/>
-                        <field name="period_id" groups="base.group_extended"/>
+                        <field name="period_id"/>
                     </group>
                    <newline/>
                     <group expand="0" string="Group By...">
@@ -121,12 +121,12 @@
                                 </group>
                                 <group col="4" colspan="1">
                                     <separator string="Total" colspan="4"/>
-                                    <field name="tax_id" on_change="onchange_price(line_cr_ids, tax_id, partner_id)" widget="selection" domain="[('type_tax_use','in',('sale','all')), ('parent_id', '=', False)]"/><field name="tax_amount" nolabel="1"/><button type="object" icon="terp-stock_format-scientific" name="compute_tax" groups="base.group_extended" string="Compute Tax" attrs="{'invisible': [('state','!=','draft')]}"/>
+                                    <field name="tax_id" on_change="onchange_price(line_cr_ids, tax_id, partner_id)" widget="selection" domain="[('type_tax_use','in',('sale','all')), ('parent_id', '=', False)]"/><field name="tax_amount" nolabel="1"/><button type="object" icon="terp-stock_format-scientific" name="compute_tax" string="Compute Tax" attrs="{'invisible': [('state','!=','draft')]}"/>
                                     <label string="" colspan="1"/><field name="amount" string="Total"/>
                                 </group>
                             </group>
                         </page>
-                        <page string="Journal Items" groups="base.group_extended" attrs="{'invisible': [('state','!=','posted')]}">
+                        <page string="Journal Items" attrs="{'invisible': [('state','!=','posted')]}">
                             <group col="6" colspan="4">
                                 <field name="period_id"/>
                                 <field name="audit"/>
@@ -189,7 +189,6 @@
         <menuitem id="menu_action_sale_receipt" icon="STOCK_JUSTIFY_FILL"
             action="action_sale_receipt"
             parent="account.menu_finance_receivables"
-            groups="base.group_extended"
             sequence="10"/>
 
         <!--  Purchase Vouchers -->
@@ -242,12 +241,12 @@
                                 </group>
                                 <group col="4" colspan="1">
                                     <separator string="Total" colspan="4"/>
-                                    <field name="tax_id" on_change="onchange_price(line_dr_ids, tax_id, partner_id)" widget="selection" domain="[('type_tax_use','in',('purchase','all')), ('parent_id', '=', False)]"/><field name="tax_amount" nolabel="1"/><button type="object" icon="terp-stock_format-scientific" name="compute_tax" string="Compute Tax" groups="base.group_extended" attrs="{'invisible': [('state','!=','draft')]}"/>
+                                    <field name="tax_id" on_change="onchange_price(line_dr_ids, tax_id, partner_id)" widget="selection" domain="[('type_tax_use','in',('purchase','all')), ('parent_id', '=', False)]"/><field name="tax_amount" nolabel="1"/><button type="object" icon="terp-stock_format-scientific" name="compute_tax" string="Compute Tax" attrs="{'invisible': [('state','!=','draft')]}"/>
                                     <label string="" colspan="1"/><field name="amount" string="Total"/>
                                 </group>
                             </group>
                         </page>
-                        <page string="Journal Items" groups="base.group_extended" attrs="{'invisible': [('state','!=','posted')]}">
+                        <page string="Journal Items" attrs="{'invisible': [('state','!=','posted')]}">
                             <group col="6" colspan="4">
                                 <field name="period_id"/>
                                 <field name="audit"/>
@@ -306,8 +305,7 @@
         </record>
 
         <menuitem id="menu_action_purchase_receipt" icon="STOCK_JUSTIFY_FILL"
-            action="action_purchase_receipt" parent="account.menu_finance_payables" sequence="10"
-            groups="base.group_extended"/>
+            action="action_purchase_receipt" parent="account.menu_finance_payables" sequence="10"/>
 
     </data>
 </openerp>
