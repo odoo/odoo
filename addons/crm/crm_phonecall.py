@@ -196,11 +196,11 @@ class crm_phonecall(crm_base, osv.osv):
         if context is None:
             context = {}
         partner_ids = {}
+        force_partner_id = partner_id
         for call in self.browse(cr, uid, ids, context=context):
             if action == 'create':
-               if not partner_id:
-                   partner_id = self._call_create_partner(cr, uid, call, context=context)
-               self._call_create_partner_address(cr, uid, call, partner_id, context=context)
+                partner_id = force_partner_id or self._call_create_partner(cr, uid, call, context=context)
+                self._call_create_partner_address(cr, uid, call, partner_id, context=context)
             self._call_set_partner(cr, uid, [call.id], partner_id, context=context)
             partner_ids[call.id] = partner_id
         return partner_ids
