@@ -301,6 +301,10 @@
             <rng:optional><rng:attribute name="width"/></rng:optional>
             <rng:optional><rng:attribute name="wrap"/></rng:optional>
             <rng:optional><rng:attribute name="name"/></rng:optional>
+            <rng:optional>
+                <!-- @for: allows to explicitely link a label to a field -->
+                <rng:attribute name="for"/>
+            </rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
                     <rng:text/>
