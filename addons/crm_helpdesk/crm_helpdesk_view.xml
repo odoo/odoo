@@ -3,7 +3,7 @@
     <data>
        <!-- Helpdesk Support Categories Configuration Menu-->
        <menuitem id="menu_config_helpdesk" name="Helpdesk"
-        groups="base.group_extended"
+        groups="base.group_no_one"
         parent="base.menu_base_config" sequence="60" />
 
         <!-- Helpdesk Support Categories Form View -->
@@ -77,7 +77,7 @@
                             <separator colspan="4" string="Notes"/>
                             <field name="description" colspan="4" nolabel="1" />
                         </page>
-                        <page string="Communication &amp; History" groups="base.group_extended">
+                        <page string="Communication &amp; History">
                             <group colspan="4">
                                 <field colspan="4" name="email_cc" string="Global CC" widget="char"/>
                             </group>
@@ -100,7 +100,7 @@
                                 name="%(mail.action_email_compose_message_wizard)d"
                                 icon="terp-mail-message-new" type="action"/>
                         </page>
-                        <page string="Extra Info" groups="base.group_extended">
+                        <page string="Extra Info">
                             <group colspan="2" col="2" groups="base.group_no_one">
                                 <separator colspan="4" string="Dates"/>
                                 <field name="create_date"/>
@@ -156,7 +156,6 @@
                         states="draft,open" type="object"
                         icon="gtk-media-pause" />
                     <button name="case_escalate" string="Escalate"
-                        groups="base.group_extended"
                         states="open,draft,pending" type="object"
                         icon="gtk-go-up" />
                     <button name="case_close" string="Done"
@@ -221,7 +220,7 @@
                     <field name="partner_id" />
                     <field name="user_id" widget="selection"/>
                     <field name="section_id" widget="selection" string="Sales Team">
-                        <filter icon="terp-personal+" groups="base.group_extended"
+                        <filter icon="terp-personal+"
                             domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                             help="My Sales Team(s)" />
                     </field>
