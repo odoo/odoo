@@ -642,6 +642,7 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
     // 
     // The widget is initially hidden. It can be shown with this.show(), and is 
     // automatically shown when the input_selector gets focused.
+
     module.OnscreenKeyboardWidget = instance.web.Widget.extend({
         tagName: 'div',
         
@@ -825,12 +826,69 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
         },
     });
 
-    module.ShopWidget = instance.web.OldWidget.extend({
-        init: function(parent, options) {
-            this._super(parent);
-            this.pos = options.pos;
+    module.SynchNotification = instance.web.OldWidget.extend({
+        template: "pos-synch-notification",
+        init: function() {
+            this._super.apply(this, arguments);
+            this.nbr_pending = 0;
+        },
+        renderElement: function() {
+            this._super.apply(this, arguments);
+            $('.oe_pos_synch-notification-button', this.$element).click(this.on_synch);
+        },
+        on_change_nbr_pending: function(nbr_pending) {
+            this.nbr_pending = nbr_pending;
+            this.renderElement();
+        },
+        on_synch: function() {}
+    });
+
+    module.PosWidget = instance.web.OldWidget.extend({
+        init: function() { 
+            this._super.apply(this, arguments);
+            this.pos = new module.PosModel(this.session);
         },
         start: function() {
+            var self = this;
+            return self.pos.ready.then(_.bind(function() {
+                this.renderElement();
+                this.synch_notification = new module.SynchNotification(this);
+                this.synch_notification.replace($('.oe_pos_synch-notification', this.$element));
+                this.synch_notification.on_synch.add(_.bind(self.pos.flush, self.pos));
+                
+                self.pos.bind('change:nbr_pending_operations', this.changed_pending_operations, this);
+                this.changed_pending_operations();
+                
+                this.$element.find("#loggedas button").click(function() {
+                    self.try_close();
+                });
+
+                this.buildWidgets();
+
+                //self.pos.app = new module.App(self.$element, self.pos);
+                
+                //this.shopView = new module.ShopWidget(null, { 'pos': this.pos } );
+                //this.shopView.$element = self.$element;
+                //this.shopView.start();
+                
+
+
+                instance.webclient.set_content_full_screen(true);
+                
+                if (self.pos.get('bank_statements').length === 0)
+                    return new instance.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_pos_open_statement']], ['res_id']).pipe(
+                        _.bind(function(res) {
+                        return this.rpc('/web/action/load', {'action_id': res[0]['res_id']}).pipe(_.bind(function(result) {
+                            var action = result.result;
+                            this.do_action(action);
+                        }, this));
+                    }, this));
+            }, this));
+        },
+        render: function() {
+            return qweb_template("POSWidget")();
+        },
+        buildWidgets: function() {
             $('button#neworder-button', this.$element).click(_.bind(this.createNewOrder, this));
 
             (this.pos.get('orders')).bind('add', this.orderAdded, this);
@@ -868,6 +926,20 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
             this.stepSwitcher = new module.StepSwitcher(this, {pos: this.pos});
             this.pos.bind('change:selectedOrder', this.changedSelectedOrder, this);
             this.changedSelectedOrder();
+
+            this.categoryView = new module.CategoryWidget(null, {
+                'element_id': 'products-screen-categories',
+                'pos': this.pos,
+            });
+            this.categoryView.on_change_category.add_last(_.bind(this.search_and_categories, this));
+            this.search_and_categories();
+
+            this.onscreenKeyboard = new module.OnscreenKeyboardWidget(null, {
+                'keyboard_model': 'simple'
+            });
+            this.onscreenKeyboard.appendTo($(".point-of-sale #content"));
+
+            this.barcodeReader = new module.BarcodeReader({'pos': self.pos });
         },
         createNewOrder: function() {
             var newOrder;
@@ -903,78 +975,6 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
         	} else if (step === 'payment') {
         		this.paymentView.setNumpadState(this.numpadView.state);
         	}
-        },
-    });
-
-    module.SynchNotification = instance.web.OldWidget.extend({
-        template: "pos-synch-notification",
-        init: function() {
-            this._super.apply(this, arguments);
-            this.nbr_pending = 0;
-        },
-        renderElement: function() {
-            this._super.apply(this, arguments);
-            $('.oe_pos_synch-notification-button', this.$element).click(this.on_synch);
-        },
-        on_change_nbr_pending: function(nbr_pending) {
-            this.nbr_pending = nbr_pending;
-            this.renderElement();
-        },
-        on_synch: function() {}
-    });
-
-    module.POSWidget = instance.web.OldWidget.extend({
-        init: function() {
-            this._super.apply(this, arguments);
-            this.pos = new module.PosModel(this.session);
-
-        },
-        start: function() {
-            var self = this;
-            return self.pos.ready.then(_.bind(function() {
-                this.renderElement();
-                this.synch_notification = new module.SynchNotification(this);
-                this.synch_notification.replace($('.oe_pos_synch-notification', this.$element));
-                this.synch_notification.on_synch.add(_.bind(self.pos.flush, self.pos));
-                
-                self.pos.bind('change:nbr_pending_operations', this.changed_pending_operations, this);
-                this.changed_pending_operations();
-                
-                this.$element.find("#loggedas button").click(function() {
-                    self.try_close();
-                });
-
-                //self.pos.app = new module.App(self.$element, self.pos);
-                
-                this.shopView = new module.ShopWidget(null, { 'pos': this.pos } );
-                this.shopView.$element = self.$element;
-                this.shopView.start();
-                
-                this.categoryView = new module.CategoryWidget(null, {
-                    'element_id': 'products-screen-categories',
-                    'pos': this.pos,
-                });
-                this.categoryView.on_change_category.add_last(_.bind(self.search_and_categories, self));
-                this.search_and_categories();
-
-                this.onscreenKeyboard = new module.OnscreenKeyboardWidget(null, {
-                    'keyboard_model': 'simple'
-                });
-                this.onscreenKeyboard.appendTo($(".point-of-sale #content"));
-
-                this.barcodeReader = new module.BarcodeReader({'pos': self.pos });
-
-                instance.webclient.set_content_full_screen(true);
-                
-                if (self.pos.get('bank_statements').length === 0)
-                    return new instance.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_pos_open_statement']], ['res_id']).pipe(
-                        _.bind(function(res) {
-                        return this.rpc('/web/action/load', {'action_id': res[0]['res_id']}).pipe(_.bind(function(result) {
-                            var action = result.result;
-                            this.do_action(action);
-                        }, this));
-                    }, this));
-            }, this));
         },
         search_and_categories: function(id){
             var self = this,
@@ -1023,10 +1023,6 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
                 $('.search-clear').fadeOut();
             });
         },
-
-        render: function() {
-            return qweb_template("POSWidget")();
-        },
         changed_pending_operations: function () {
             var self = this;
             this.synch_notification.on_change_nbr_pending(self.pos.get('nbr_pending_operations').length);
@@ -1062,7 +1058,7 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
             }, this));
         },
         close: function() {
-            this.pos.app.barcodeReader.disconnect();
+            this.barcodeReader.disconnect();
 
             return new instance.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_pos_close_statement']], ['res_id']).pipe(
                     _.bind(function(res) {
@@ -1079,5 +1075,4 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
             this._super();
         }
     });
-
 }

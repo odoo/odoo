@@ -11,7 +11,7 @@ openerp.point_of_sale = function(instance) {
 
     openerp_pos_devices(module,instance);   // import pos_devices.js
 
-    instance.web.client_actions.add('pos.ui', 'instance.point_of_sale.POSWidget');
+    instance.web.client_actions.add('pos.ui', 'instance.point_of_sale.PosWidget');
 };
 
     
