@@ -30,7 +30,7 @@
                         <field name="partner_assigned_id"/>
                    </group>
                    <newline/>
-                   <group  expand="0" string="Extended Filters..." groups="base.group_extended">
+                   <group  expand="0" string="Extended Filters...">
                       <field name="partner_id"/>
                       <separator orientation="vertical"/>
                       <field name="stage_id" widget="selection" domain="[('section_ids', '=', 'section_id')]"/>
@@ -110,7 +110,7 @@
                 <field name="year" invisible="1"/>
                 <field name="month" invisible="1"/>
                 <field name="date_assign" invisible="1"/>
-                <field name="section_id" invisible="1" groups="base.group_extended"/>
+                <field name="section_id" invisible="1"/>
                 <field name="user_id" invisible="1"/>
                 <field name="grade_id" invisible="1" widget="selection"/>
                 <field name="partner_assigned_id" invisible="1"/>
@@ -161,7 +161,6 @@
        </record>
 
        <menuitem id="menu_report_crm_opportunities_assign_tree"
-           groups="base.group_extended"
            parent="base.next_id_64" action="action_report_crm_opportunity_assign" sequence="20"/>
 
     </data>

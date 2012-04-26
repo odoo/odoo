@@ -50,7 +50,7 @@
                     <field name="quantity" />
                     <field name="product_uom" />
                     <field name="tracking" invisible="1"/>
-                    <field name="prodlot_id" domain="[('product_id', '=', product_id)]" attrs="{'required':[('tracking','=',True)]}" groups="base.group_extended" />
+                    <field name="prodlot_id" domain="[('product_id', '=', product_id)]" attrs="{'required':[('tracking','=',True)]}"/>
                     <!-- Removed as this feature is not logic: price must be updated upon reception of invoice -->
                     <field name="update_cost" invisible="1"/>
                     <field name="cost" invisible="1"/>
@@ -70,7 +70,7 @@
                     <field name="location_id" />
                     <field name="location_dest_id" />
                     <field name="tracking" invisible="1"/>
-                    <field name="prodlot_id" domain="[('product_id', '=', product_id)]" attrs="{'required':[('tracking','=',True)]}" groups="base.group_extended" />
+                    <field name="prodlot_id" domain="[('product_id', '=', product_id)]" attrs="{'required':[('tracking','=',True)]}"/>
                     <field name="update_cost" invisible="1"/>
                     <field name="cost" attrs="{'invisible': [('update_cost','=', False)]}"/>
                     <field name="currency" attrs="{'invisible': [('update_cost','=', False)]}"/>
