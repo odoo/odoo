@@ -94,7 +94,7 @@
                     <separator string="Other Information" colspan="4"/>
                     <field name="partner_id"/>
                     <field name="purchase_date"/>
-                    <field name="parent_id" groups="base.group_extended"/>
+                    <field name="parent_id"/>
                     <newline/>
                     <group colspan="2" col="2">
                         <separator string="Depreciation Dates" colspan="2"/>
@@ -290,7 +290,6 @@
 
     <menuitem id="menu_finance_assets" name="Assets" parent="account.menu_finance" sequence="9"/>
     <menuitem parent="menu_finance_assets" id="menu_action_account_asset_asset_tree"
-        groups="base.group_extended"
         sequence="100"
         action="action_account_asset_asset_tree"/>
 

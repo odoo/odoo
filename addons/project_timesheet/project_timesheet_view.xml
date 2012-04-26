@@ -12,8 +12,8 @@
                         <separator colspan="4" string="Invoicing Data"/>
                         <field name="pricelist_id" groups="product.group_sale_pricelist" domain="[('type','=','sale')]" widget="selection"/>
                         <field name="to_invoice" widget="selection" string="Invoice Task Work"/>
-                        <field name="amount_max" groups="base.group_extended"/>
-                        <field name="amount_invoiced" groups="base.group_extended"/>
+                        <field name="amount_max"/>
+                        <field name="amount_invoiced"/>
                     </group>
                 </field>
             </field>
@@ -93,7 +93,6 @@ the project form.</field>
         </record>
         <menuitem action="hr_timesheet.action_hr_timesheet_sign_in"
             id="menu_hr_timesheet_sign_in"
-            groups="base.group_extended"
             parent="hr_attendance.menu_hr_attendance"
             sequence="5" />
 
