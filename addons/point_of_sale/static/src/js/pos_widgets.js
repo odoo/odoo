@@ -121,6 +121,7 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
             this.pos.bind('change:selectedOrder', this.change_order, this);
         },
         change_order: function() {
+            console.log('change_order',this.selected_order);
             if (this.selected_order) {
                 this.selected_order.unbind('change:step', this.change_step);
             }
@@ -131,7 +132,9 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
             this.change_step();
         },
         change_step: function() {
+            console.log('change_step',this.selected_order);
             var new_step = this.selected_order ? this.selected_order.get('step') : 'products';
+            console.log('new step:', new_step);
             $('.step-screen').hide();
             $('#' + new_step + '-screen').show();
         },
@@ -636,6 +639,80 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
             //this.$element.html(this.template_fct());
         },*/
     });
+
+// ---------- Screens Widgets ----------
+
+
+    module.ScreenWidget = instance.web.Widget.extend({
+        init: function(parent, options){
+            this._super(parent, options);
+        },
+        show: function(){},
+        hide: function(){},
+    });
+
+    module.ScreenContainerWidget = instance.web.Widget.extend({
+        init: function(parent, options){
+            this.pos = options.pos;
+            this.screen_set = options.screen_set || {};
+            this.current_screen = undefined;
+        },
+        addScreen: function(screen_name, screen){
+            screen.hide();
+            this.screen_set[screen_name] = screen;
+            return this;
+        },
+        setCurrentScreen: function(screen_name){
+            var screen = this.screen_set[screen_name];
+            if(screen && screen != current_screen){
+                if(current_screen){
+                    current_screen.hide();
+                }
+                current_screen = screen;
+                current_screen.show();
+            }
+        },
+    });
+
+    module.WelcomeScreenWidget = module.ScreenWidget.extend({
+    });
+
+    module.ScanProductScreenWidget = module.ScreenWidget.extend({
+    });
+
+    module.SearchProductScreenWidget = module.ScreenWidget.extend({
+    });
+
+    module.ScaleInviteScreenWidget = module.ScreenWidget.extend({
+    });
+
+    module.ScaleProductSelectionScreenWidget = module.ScreenWidget.extend({
+    });
+
+    module.AskForMoneyScreenWidget =  module.ScreenWidget.extend({
+    });
+
+    module.ReceiptScreenWidget = module.ScreenWidget.extend({
+    });
+
+
+// ---------- PopUp Widgets ----------
+
+    module.PopUp = instance.web.Widget.extend({
+        close: function(){},
+    });
+
+    module.HelpPopUp = module.PopUp.extend({
+    });
+
+    module.ErrorPopUp = module.PopUp.extend({
+    });
+
+    module.TicketOrInvoicePopUp = module.PopUp.extend({
+    });
+
+
+    
 
     // A Widget that displays an onscreen keyboard.
     // There are two options when creating the widget :
