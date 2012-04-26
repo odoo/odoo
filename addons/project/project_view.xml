@@ -229,6 +229,7 @@
                         <button name="%(action_project_task_reevaluate)d" states="done,cancelled" string="Reactivate" type="action" icon="gtk-convert" context="{'button_reactivate':True}" />
                         <button name="do_pending" states="open" string="Pending" type="object" icon="gtk-media-pause"/>
                         <button name="%(action_project_task_delegate)d" states="pending,open,draft" string="Delegate" type="action" icon="terp-personal"/>
+                        <button name="%(action_project_task_reevaluate)d" string="Reevaluate" type="action" colspan="1" target="new" states="open,pending" icon="gtk-edit"/>
                         <button name="action_close" states="pending,open" string="Done" type="object" icon="terp-dialog-close"/>
                         <button name="do_cancel" states="draft,open,pending" string="Cancel" type="object" icon="gtk-cancel"/>
                         <div class="oe_right">
@@ -258,7 +259,6 @@
                             </group>
                             <group col="3" colspan="2">
                                 <field name="remaining_hours" widget="float_time" attrs="{'readonly':[('state','!=','draft')]}" colspan="2"/>
-                                <button name="%(action_project_task_reevaluate)d" string="Reevaluate" type="action" colspan="1" target="new" states="open,pending" icon="gtk-edit"/>
                             </group>
 
                             <field colspan="4" name="description" nolabel="1"  attrs="{'readonly':[('state','=','done')]}"/>
