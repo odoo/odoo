@@ -85,7 +85,7 @@ class account_config_settings(osv.osv_memory):
                 It keeps track of the depreciation occurred on those assets, and creates account move for those depreciation lines.
                 This installs the module account_asset. If you do not check this box, you will be able to do Invoicing & Payments, 
                 but not accounting (Journal Items, Chart of Accounts, ...) """),
-        'module_account_budget': fields.boolean('Budgets Management',
+        'module_account_budget': fields.boolean('Budget Management',
             help="""This allows accountants to manage analytic and crossovered budgets.
                 Once the master budgets and the budgets are defined,
                 the project managers can set the planned amount on each analytic account.
