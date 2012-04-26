@@ -106,7 +106,7 @@
                         <field name="title_action"/>
                         <field name="survey" invisible="1"/>
                         <button name="action_print_survey" string="Interview" type="object" icon="gtk-print" attrs="{'readonly':[('survey','=',False)]}"/>
-                        <button name="%(survey.action_view_survey_question_message)d" string="Answer" type="action" icon="gtk-execute" context="{'survey_id': survey, 'response_id': [response], 'response_no':0 ,'active' : response, 'object' : 'hr.applicant'}" attrs="{'readonly':[('survey','=',False)]}" groups="base.group_extended"/>
+                        <button name="%(survey.action_view_survey_question_message)d" string="Answer" type="action" icon="gtk-execute" context="{'survey_id': survey, 'response_id': [response], 'response_no':0 ,'active' : response, 'object' : 'hr.applicant'}" attrs="{'readonly':[('survey','=',False)]}"/>
                         <field name="response" invisible="1"/>
                     </group>
                     <newline/>
@@ -357,7 +357,7 @@
             <tree string="Stages">
                 <field name="sequence" invisible="1"/>
                 <field name="name"/>
-                <field name="department_id" groups="base.group_extended"/>
+                <field name="department_id"/>
             </tree>
         </field>
     </record>
@@ -373,7 +373,7 @@
                 <group colspan="4" col="6">
                     <separator string="Stage Definition" colspan="6"/>
                     <field name="name" select="1"/>
-                    <field name="department_id" groups="base.group_extended"/>
+                    <field name="department_id"/>
                     <field name="sequence"/>
                 </group>
                 <separator string="Requirements" colspan="4"/>
