@@ -865,9 +865,9 @@ instance.web.Registry = instance.web.Class.extend({
     }
 });
 
-instance.web.Connection = instance.web.CallbackEnabled.extend( /** @lends instance.web.Connection# */{
+instance.web.BaseConnection = instance.web.CallbackEnabled.extend( /** @lends instance.web.BaseConnection# */{
     /**
-     * @constructs instance.web.Connection
+     * @constructs instance.web.BaseConnection
      * @extends instance.web.CallbackEnabled
      *
      * @param {String} [server] JSON-RPC endpoint hostname
@@ -877,32 +877,20 @@ instance.web.Connection = instance.web.CallbackEnabled.extend( /** @lends instan
         this._super();
         this.server = null;
         this.debug = ($.deparam($.param.querystring()).debug != undefined);
-        // TODO: session store in cookie should be optional
-        this.name = instance._session_id;
-        this.qweb_mutex = new $.Mutex();
     },
-    session_bind: function(origin) {
+    bind: function(origin) {
         var window_origin = location.protocol+"//"+location.host, self=this;
         this.origin = origin ? _.str.rtrim(origin,'/') : window_origin;
         this.prefix = this.origin;
         this.server = this.origin; // keep chs happy
-        instance.web.qweb.default_dict['_s'] = this.origin;
         this.rpc_function = (this.origin == window_origin) ? this.rpc_json : this.rpc_jsonp;
-        this.session_id = false;
-        this.uid = false;
-        this.username = false;
-        this.user_context= {};
-        this.db = false;
-        this.openerp_entreprise = false;
-        this.module_list = instance._modules.slice();
-        this.module_loaded = {};
-        _(this.module_list).each(function (mod) {
-            self.module_loaded[mod] = true;
-        });
-        this.context = {};
-        this.shortcuts = [];
-        this.active_id = null;
-        return this.session_init();
+        return this.on_bind();
+    },
+    on_bind: function() {
+        // FIXME
+        var deferred = $.Deferred();
+        deferred.resolve();
+        return deferred;
     },
     test_eval_get_context: function () {
         var asJS = function (arg) {
@@ -1358,6 +1346,39 @@ instance.web.Connection = instance.web.CallbackEnabled.extend( /** @lends instan
     on_rpc_response: function() {
     },
     on_rpc_error: function(error) {
+    },
+});
+
+instance.web.Connection = instance.web.BaseConnection.extend( /** @lends instance.web.Connection# */{
+    init: function() {
+        this._super.apply(this, arguments);
+        // TODO: session store in cookie should be optional
+        this.name = instance._session_id;
+        this.qweb_mutex = new $.Mutex();
+    },
+
+    on_bind: function() {
+        var self = this;
+        instance.web.qweb.default_dict['_s'] = this.origin;
+        this.session_id = false;
+        this.uid = false;
+        this.username = false;
+        this.user_context= {};
+        this.db = false;
+        this.openerp_entreprise = false;
+        this.module_list = instance._modules.slice();
+        this.module_loaded = {};
+        _(this.module_list).each(function (mod) {
+            self.module_loaded[mod] = true;
+        });
+        this.context = {};
+        this.shortcuts = [];
+        this.active_id = null;
+        return this.session_init();
+    },
+
+    session_bind: function(origin) {
+        return this.bind(origin);
     },
     /**
      * Init a session, reloads from cookie, if it exists
