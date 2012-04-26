@@ -22,7 +22,7 @@
                     <field name="log_workflow"/>
                     <separator string="Users (if User is not added then it will applicable for all users)"  colspan="4" />
                     <field name="user_id" select="1" colspan="4" nolabel="1" />
-                    <field name="action_id" colspan="4" readonly="1" groups="base.group_extended"/>
+                    <field name="action_id" colspan="4" readonly="1" groups="base.group_no_one"/>
                     <field name="state" select="1" readonly="1" />
                     <group colspan="2" col="2">
                         <button string="_Subscribe" name="subscribe" icon="gtk-ok"
@@ -67,7 +67,7 @@
                     <field name="object_id"/>
                 </group>
                 <newline/>
-                  <group expand="0" string="Group By..." groups="base.group_extended">
+                  <group expand="0" string="Group By...">
                     <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                 </group>
                 </search>
@@ -166,7 +166,7 @@
                     <field name="user_id"  widget="selection"/>
                 </group>
                 <newline/>
-                  <group expand="0" string="Group By..." groups="base.group_extended">
+                  <group expand="0" string="Group By...">
                     <filter string="User" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Object" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'object_id'}"/>

@@ -236,7 +236,7 @@
                         <field name="date_end"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By..." groups="base.group_extended">
+                    <group expand="0" string="Group By...">
                         <filter string="Project" icon="terp-folder-violet" domain="[]" context="{'group_by':'project_id'}" name="project"/>
                         <separator orientation="vertical"/>
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
@@ -301,7 +301,7 @@
             <field name="inherit_id" ref="project.view_task_search_form"/>
             <field name="arch" type="xml">
             <filter string="Project" name="group_project_id" icon="terp-folder-violet" domain="[]" context="{'group_by':'project_id'}" position="after">
-                <filter string="Project Phase" name="group_project_id_phase" icon="terp-folder-violet" domain="[]" context="{'group_by':'phase_id'}" groups="base.group_extended"/>
+                <filter string="Project Phase" name="group_project_id_phase" icon="terp-folder-violet" domain="[]" context="{'group_by':'phase_id'}"/>
             </filter>
             </field>
         </record>
@@ -313,7 +313,7 @@
             <field name="inherit_id" ref="project.view_task_tree2"/>
             <field name="arch" type="xml">
                 <field name="project_id" position="after">
-                    <field name="phase_id" invisible="1" groups="base.group_extended"/>
+                    <field name="phase_id" invisible="1"/>
                 </field>
             </field>
         </record>
@@ -353,7 +353,6 @@
             parent="base.menu_project_long_term" sequence="2"/>
 
         <menuitem id="menu_pm_users_project1"
-            groups="base.group_extended"
             name="Resources" parent="project.menu_definitions" sequence="3"/>
 
         <menuitem id="menu_phase_schedule" name="Scheduling" parent="base.menu_main_pm" sequence="4" groups="project.group_project_user,project.group_project_manager"/>

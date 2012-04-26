@@ -18,7 +18,7 @@
                     <field name="date_start"/>
                     <field name="date_stop"/>
                     <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="end_journal_period_id" groups="base.group_extended"/>
+                    <field name="end_journal_period_id"/>
                     </group>
                     <separator colspan="4" string="Periods"/>
                     <field colspan="4" name="period_ids" nolabel="1" widget="one2many_list">
@@ -169,7 +169,7 @@
                         <field name="parent_id"/>
                         <field name="type" select="1"/>
                         <field name="user_type" select="1"/>
-                        <field name="active" groups="base.group_extended" />
+                        <field name="active"/>
                         <newline/>
                         <field name="debit" invisible="context.get('config_invisible', True)" attrs="{'readonly':[('type','=','view')]}"/>
                         <field name="credit" invisible="context.get('config_invisible', True)" attrs="{'readonly':[('type','=','view')]}"/>
@@ -403,7 +403,7 @@
             <field name="help">Here you can customize an existing journal view or create a new view. Journal views determine the way you can record entries in your journal. Select the fields you want to appear in a journal and determine the sequence in which they will appear. Then you can create a new journal and link your view to it.</field>
         </record>
 
-        <menuitem action="action_account_journal_view" id="menu_action_account_journal_view" parent="account.menu_journals" sequence="20"  groups="base.group_extended"/>
+        <menuitem action="action_account_journal_view" id="menu_action_account_journal_view" parent="account.menu_journals" sequence="20"/>
 
         <!--
     # Account Journal
@@ -476,16 +476,16 @@
                             <group colspan="2" col="2">
                                 <separator string="Company" colspan="4"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
-                                <field name="user_id" groups="base.group_extended"/>
-                                <field name="currency" groups="base.group_extended"/>
+                                <field name="user_id"/>
+                                <field name="currency"/>
                             </group>
-                            <group colspan="2" col="2" groups="base.group_extended">
+                            <group colspan="2" col="2">
                                 <separator string="Validations" colspan="4"/>
                                 <field name="allow_date"/>
                             </group>
                             <group colspan="2" col="2">
                                 <separator string="Other Configuration" colspan="4"/>
-                                <field name="centralisation" groups="base.group_extended"/>
+                                <field name="centralisation"/>
                                 <field name="entry_posted"/>
                             </group>
                             <group colspan="2" col="2">
@@ -498,7 +498,7 @@
                                 <field name="sequence_id" required="0"/>
                             </group>
                         </page>
-                        <page string="Entry Controls" groups="base.group_extended">
+                        <page string="Entry Controls">
                             <separator colspan="4" string="Accounts Type Allowed (empty for no control)"/>
                             <field colspan="4" name="type_control_ids" nolabel="1"/>
                             <separator colspan="4" string="Accounts Allowed (empty for no control)"/>
@@ -609,7 +609,7 @@
                             <field colspan="4" name="line_ids" nolabel="1" context="{'date':date}">
                                 <tree editable="bottom" string="Statement lines">
                                     <field name="sequence" readonly="1" invisible="1"/>
-                                    <field name="date" groups="base.group_extended"/>
+                                    <field name="date"/>
                                     <field name="name"/>
                                     <field name="ref"/>
                                     <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
@@ -938,7 +938,7 @@
             <field name="arch" type="xml">
                 <tree string="Account Tax">
                     <field name="name"/>
-                    <field name="price_include" groups="base.group_extended"/>
+                    <field name="price_include"/>
                     <field name="description"/>
                     <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                 </tree>
@@ -992,21 +992,21 @@
                                   <field name="ref_base_sign"/>
                                   <field name="ref_tax_code_id"/>
                                   <field name="ref_tax_sign"/>
-                                  <separator groups="base.group_extended" colspan="4" string="Children Definition"/>
-                                  <field groups="base.group_extended" name="child_depend"/>
-                                  <field groups="base.group_extended" name="sequence"/>
-                                  <field groups="base.group_extended" name="include_base_amount"/>
-                                  <field groups="base.group_extended" colspan="4" name="child_ids">
+                                  <separator colspan="4" string="Children Definition"/>
+                                  <field name="child_depend"/>
+                                  <field name="sequence"/>
+                                  <field name="include_base_amount"/>
+                                  <field colspan="4" name="child_ids">
                                       <tree string="Account Tax">
                                           <field name="sequence"/>
                                           <field name="name"/>
-                                          <field name="price_include" groups="base.group_extended"/>
+                                          <field name="price_include"/>
                                           <field name="description"/>
                                      </tree>
                                  </field>
                           </group>
                         </page>
-                        <page groups="base.group_extended" string="Special Computation">
+                        <page string="Special Computation">
                             <separator colspan="4" string="Applicability Options"/>
                             <field name="applicable_type"/>
                             <field name="domain"/>
@@ -1062,11 +1062,11 @@
                     <field name="journal_id"/>
                     <field name="debit" sum="Total debit"/>
                     <field name="credit" sum="Total credit"/>
-                    <field name="account_tax_id" groups="base.group_extended"/>
+                    <field name="account_tax_id"/>
                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('parent_id','!=',False)]"/>
-                    <field name="amount_currency" groups="base.group_extended" attrs="{'readonly':[('state','=','valid')]}"/>
-                    <field name="currency_id" groups="base.group_extended" attrs="{'readonly':[('state','=','valid')]}"/>
-                    <field name="reconcile_partial_id" groups="base.group_extended"/>
+                    <field name="amount_currency" attrs="{'readonly':[('state','=','valid')]}"/>
+                    <field name="currency_id" attrs="{'readonly':[('state','=','valid')]}"/>
+                    <field name="reconcile_partial_id"/>
                     <field name="reconcile_id"/>
                     <field name="state"/>
                 </tree>
@@ -1138,9 +1138,9 @@
                                 <field name="blocked"/>
                             </group>
 
-                            <group col="2" colspan="2"  groups="base.group_extended">
+                            <group col="2" colspan="2" groups="analytic.group_analytic_accounting">
                                 <separator colspan="2" string="Analytic"/>
-                                <field name="analytic_account_id" domain="[('parent_id','!=',False)]" groups="analytic.group_analytic_accounting"/>
+                                <field name="analytic_account_id" domain="[('parent_id','!=',False)]"/>
                             </group>
                             <separator string="Internal Note" colspan="4"/>
                             <field name="narration" colspan="4" nolabel="1"/>
@@ -1331,7 +1331,7 @@
                     <field name="journal_id"/>
                     <field name="partner_id"/>
                     <field name="amount" sum="Total Amount"/>
-                    <field name="to_check" groups="base.group_extended"/>
+                    <field name="to_check"/>
                     <field name="state"/>
                     <button name="button_validate" states="draft" string="Approve" type="object" icon="terp-camera_test"/>
                 </tree>
@@ -1346,7 +1346,7 @@
                     <group colspan="4" col="6">
                         <field name="name" readonly="True"/>
                         <field name="ref"/>
-                        <field name="to_check" groups="base.group_extended"/>
+                        <field name="to_check"/>
                         <field name="journal_id"/>
                         <field name="period_id"/>
                         <field name="date"/>
@@ -1419,9 +1419,9 @@
                                                 <field name="blocked"/>
                                             </group>
 
-                                            <group col="2" colspan="2" groups="base.group_extended">
+                                            <group col="2" colspan="2" groups="analytic.group_analytic_accounting">
                                                 <separator colspan="2" string="Analytic"/>
-                                                <field name="analytic_account_id" domain="[('parent_id','!=',False)]" groups="analytic.group_analytic_accounting"/>
+                                                <field name="analytic_account_id" domain="[('parent_id','!=',False)]"/>
                                             </group>
                                             <separator string="Internal Note" colspan="4"/>
                                             <field name="narration" colspan="4" nolabel="1"/>
@@ -1441,13 +1441,13 @@
                                     <field name="debit" sum="Total Debit"/>
                                     <field name="credit" sum="Total Credit"/>
                                     <field name="analytic_account_id" domain="[('parent_id','!=',False)]" groups="analytic.group_analytic_accounting"/>
-                                    <field name="amount_currency" groups="base.group_extended"/>
-                                    <field name="currency_id" groups="base.group_extended"/>
+                                    <field name="amount_currency"/>
+                                    <field name="currency_id"/>
                                     <field name="tax_code_id"/>
                                     <field name="tax_amount"/>
                                     <field name="state"/>
                                     <field name="reconcile_id"/>
-                                    <field name="reconcile_partial_id" groups="base.group_extended"/>
+                                    <field name="reconcile_partial_id"/>
                                 </tree>
                             </field>
                             <separator colspan="4" string="Internal Note"/>
@@ -1473,7 +1473,7 @@
                         <filter icon="terp-document-new" string="Unposted" domain="[('state','=','draft')]" help="Unposted Journal Entries"/>
                         <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Journal Entries"/>
                         <separator orientation="vertical"/>
-                        <filter icon="terp-gtk-jump-to-ltr" string="To Review" domain="[('to_check','=',True)]" groups="base.group_extended" help="Journal Entries to Review"/>
+                        <filter icon="terp-gtk-jump-to-ltr" string="To Review" domain="[('to_check','=',True)]" help="Journal Entries to Review"/>
                         <separator orientation="vertical"/>
                         <field name="name"/>
                         <field name="ref"/>
@@ -1722,7 +1722,7 @@
         </record>
         <menuitem
             action="action_model_form" id="menu_action_model_form" sequence="5"
-            parent="account.menu_configuration_misc" groups="base.group_extended"/>
+            parent="account.menu_configuration_misc"/>
 
         <!--
             # Payment Terms
@@ -1939,7 +1939,6 @@
         </record>
         <menuitem
             name="Define Recurring Entries" action="action_subscription_form"
-            groups="base.group_extended"
             id="menu_action_subscription_form" sequence="1"
             parent="account.menu_finance_recurrent_entries"/>
 
@@ -2047,8 +2046,7 @@
             id="act_account_partner_account_move_all"
             name="Receivables &amp; Payables"
             res_model="account.move.line"
-            src_model="res.partner"
-            groups="base.group_extended"/>
+            src_model="res.partner"/>
 
         <act_window context="{'search_default_partner_id':[active_id], 'default_partner_id': active_id}" id="act_account_partner_account_move" name="Journal Items" res_model="account.move.line" src_model="res.partner" groups="account.group_account_user"/>
 
@@ -2282,15 +2280,15 @@
                         <page string="Tax Definition">
                             <field name="applicable_type"/>
                             <field name="amount" attrs="{'readonly':[('type','=','none'),('type','=','code')]}"/>
-                            <field groups="base.group_extended" name="include_base_amount"/>
-                            <field groups="base.group_extended" name="domain"/>
+                            <field name="include_base_amount"/>
+                            <field name="domain"/>
                             <newline/>
                             <field name="account_collected_id"/>
                             <label colspan="2" nolabel="1" string="Keep empty to use the income account"/>
                             <field name="account_paid_id"/>
                             <label colspan="2" nolabel="1" string="Keep empty to use the expense account"/>
-                            <field groups="base.group_extended" name="child_depend"/>
-                            <field groups="base.group_extended" name="sequence"/>
+                            <field name="child_depend"/>
+                            <field name="sequence"/>
                         </page>
                         <page string="Tax Declaration">
                             <separator colspan="4" string="Invoices"/>
@@ -2305,7 +2303,7 @@
                             <field name="ref_tax_code_id"/>
                             <field name="ref_tax_sign"/>
                         </page>
-                        <page groups="base.group_extended" string="Special Computation">
+                        <page string="Special Computation">
                             <separator colspan="4" string="Compute Code (if type=code)"/>
                             <field colspan="4" name="python_compute" nolabel="1" attrs="{'readonly':[('type','!=','code')]}"/>
                             <separator colspan="4" string="Compute Code for Taxes Included Prices"/>
@@ -2442,9 +2440,9 @@
                   </xpath>
                 <group string="res_config_contents" position="replace">
                     <field name="company_id" widget="selection"/> <!-- we assume that this wizard will be run only by administrators and as this field may cause problem if hidden (because of the default company of the user removed from the selection because already configured), we simply choosed to remove the group "multi company" of it -->
-                    <field name ="code_digits" groups="account.group_account_user"/>
+                    <field name="code_digits" groups="account.group_account_user"/>
                     <field name="chart_template_id" widget="selection" on_change="onchange_chart_template_id(chart_template_id)" domain="[('visible','=', True)]"/>
-                    <field name ="seq_journal" groups="base.group_extended"/>
+                    <field name="seq_journal"/>
                     <field name="sale_tax" attrs="{'invisible': [('complete_tax_set', '!=', True)]}" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('sale','all'))]"/>
                     <field name="purchase_tax" attrs="{'invisible': [('complete_tax_set', '!=', True)]}" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('purchase', 'all'))]"/>
                     <newline/>
@@ -2456,12 +2454,12 @@
                         <form string="Bank Information">
                             <field name="acc_name"/>
                             <field name="account_type"/>
-                            <field name="currency_id" widget="selection" groups="base.group_extended"/>
+                            <field name="currency_id" widget="selection"/>
                         </form>
                         <tree editable="bottom" string="Bank Information">
                             <field name="acc_name"/>
                             <field name="account_type"/>
-                            <field name="currency_id" widget="selection" groups="base.group_extended"/>
+                            <field name="currency_id" widget="selection"/>
                         </tree>
                     </field>
                 </group>
@@ -2628,7 +2626,7 @@ action = pool.get('res.config').next(cr, uid, [], context)
                             <field colspan="4" name="line_ids" nolabel="1" context="{'date':date}">
                                 <tree editable="bottom" string="Statement lines">
                                     <field name="sequence" invisible="1"/>
-                                    <field name="date" groups="base.group_extended"/>
+                                    <field name="date"/>
                                     <field name="name"/>
                                     <field name="ref"/>
                                     <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
@@ -2705,7 +2703,7 @@ action = pool.get('res.config').next(cr, uid, [], context)
                     </group>
                     <group col="8" colspan="4">
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirm" colspan="4"/>
-                        <button name="button_cancel" states="confirm,open" string="Cancel" icon="terp-gtk-stop" type="object" groups="base.group_extended"/>
+                        <button name="button_cancel" states="confirm,open" string="Cancel" icon="terp-gtk-stop" type="object"/>
                         <button name="button_confirm_cash" states="open" string="Close CashBox" icon="terp-dialog-close" type="object"/>
                         <button name="button_open" states="draft" string="Open CashBox" icon="gtk-go-forward" type="object"/>
                     </group>
