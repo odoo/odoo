@@ -13,8 +13,7 @@
                 <xpath expr="/form/notebook" position="before">
                     <field name="analytic_account_id"
                         domain="[('parent_id','!=',False),('partner_id', '=', partner_id),('type', '!=', 'view')]"
-                        on_change='on_change_account_id(analytic_account_id)'
-                        groups="base.group_extended" />
+                        on_change='on_change_account_id(analytic_account_id)'/>
                 </xpath>
                 <xpath expr="//notebook/page[@string='Extra Info']" position="before">
                 	<page string="Worklogs">
