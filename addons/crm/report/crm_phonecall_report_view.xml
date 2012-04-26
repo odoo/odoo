@@ -78,7 +78,7 @@
                         <separator orientation="vertical" />
                         <field name="section_id" string="Sales Team"
                             context="{'invisible_section': False}">
-                            <filter icon="terp-personal+" groups="base.group_extended"
+                            <filter icon="terp-personal+"
                                 context="{'invisible_section': False}"
                                 domain="[('section_id.user_id','=',uid)]"
                                 help="My Sales Team(s)" />
@@ -88,7 +88,7 @@
                         </field>
                     </group>
                     <newline/>
-                    <group expand="0" string="Extended Filters..."  groups="base.group_extended">
+                    <group expand="0" string="Extended Filters...">
                         <field name="partner_id"/>
                         <separator orientation="vertical"/>
                         <field name="company_id" groups="base.group_multi_company"/>
@@ -155,7 +155,7 @@
         </record>
 
         <menuitem name="Phone Calls Analysis"
-            groups="base.group_extended"
+            groups="base.group_sale_salesman"
             action="action_report_crm_phonecall"
             id="menu_report_crm_phonecalls_tree" parent="base.next_id_64" sequence="15"/>
 
