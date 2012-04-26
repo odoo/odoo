@@ -570,9 +570,15 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
             this._super(parent, options);
             this.label = options.label || 'button';
             this.rightalign = options.rightalign || false;
+            this.click_action = options.click;
             if(options.icon){
                 this.icon = options.icon;
                 this.template = 'pos-action-button-with-icon';
+            }
+        },
+        start: function(){
+            if(this.click_action){
+                this.$element.click(_.bind(this.click_action, this));
             }
         },
     });
@@ -940,6 +946,15 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
             this.onscreenKeyboard.appendTo($(".point-of-sale #content"));
 
             this.barcodeReader = new module.BarcodeReader({'pos': self.pos });
+
+            this.actionBar = new module.ActionbarWidget(null);
+            this.actionBar.appendTo($(".point-of-sale #content"));
+            this.actionBar.addNewButton('left',{
+                label : 'Hello World',
+                icon  : '/point_of_sale/static/src/img/icons/png48/face-monkey.png',
+                click : function(){ console.log("Hello World!"); } 
+            });
+            
         },
         createNewOrder: function() {
             var newOrder;
