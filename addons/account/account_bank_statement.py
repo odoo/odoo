@@ -372,14 +372,22 @@ class account_bank_statement(osv.osv):
             account_move_obj.unlink(cr, uid, ids, context)
             done.append(st.id)
         return self.write(cr, uid, done, {'state':'draft'}, context=context)
-
-    def onchange_journal_id(self, cr, uid, statement_id, journal_id, context=None):
+    
+    def _compute_balance_end_real(self, cr, uid, journal_id, context=None):
+        
         cr.execute('SELECT balance_end_real \
                 FROM account_bank_statement \
                 WHERE journal_id = %s AND NOT state = %s \
                 ORDER BY date DESC,id DESC LIMIT 1', (journal_id, 'draft'))
         res = cr.fetchone()
-        balance_start = res and res[0] or 0.0
+
+        print "res: %r" % (res,)
+
+        return res and res[0] or 0.0
+
+    def onchange_journal_id(self, cr, uid, statement_id, journal_id, context=None):
+        balance_start = self._compute_balance_end_real(cr, uid, journal_id, context=context)
+
         journal_data = self.pool.get('account.journal').read(cr, uid, journal_id, ['default_debit_account_id', 'company_id'], context=context)
         account_id = journal_data['default_debit_account_id']
         company_id = journal_data['company_id']

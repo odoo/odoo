@@ -670,36 +670,6 @@
         <menuitem name="Configuration" parent="menu_point_root"
             id="menu_point_config_product" sequence="25" groups="group_pos_manager"/>
 
-        <record model="ir.actions.act_window" id="action_product_input">
-            <field name="name">Products 'Take Money Out'</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">product.product</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('expense_pdt','=',True)]</field>
-            <field name="context">{'default_expense_pdt': True}</field>
-        </record>
-        <menuitem
-            parent="menu_point_config_product"
-            action="action_product_input"
-            id="products_for_input_operations"
-            groups="group_pos_manager"/>
-
-        <record model="ir.actions.act_window" id="action_product_output">
-            <field name="name">Products 'Put Money In'</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">product.product</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('income_pdt','=',True)]</field>
-            <field name="context">{'default_income_pdt': True}</field>
-        </record>
-        <menuitem
-            parent="menu_point_config_product"
-            action="action_product_output"
-            id="products_for_output_operations"
-            groups="group_pos_manager"/>
-
         <menuitem
             parent="menu_point_of_sale"
             action="action_box_entries"
@@ -776,8 +746,8 @@
                 id="menu_pos_details" parent="menu_point_of_sale_reporting" sequence="6" />
 
         <record model="ir.actions.client" id="action_pos_pos">
-          <field name="name">Start Point of Sale</field>
-          <field name="tag">pos.ui</field>
+            <field name="name">Start Point of Sale</field>
+            <field name="tag">pos.ui</field>
         </record>
 
         <record id="menu_point_root_touchscreen" model="ir.ui.menu">
@@ -822,6 +792,9 @@
                             <field name="iface_electronic_scale" />
                             <field name="iface_barscan" />
                             <field name="iface_vkeyboard" />
+                        </page>
+                        <page string="Other">
+                            <field name="sequence_id" />
                         </page>
 
 
@@ -887,6 +860,8 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Cash">
+                            <field name="cash_register_id" invisible="0" />
+                            <field name="details_ids" colspan="4" nolabel="1" />
                         </page>
                         <page string="Others">
                         </page>
@@ -894,7 +869,7 @@
                         </page>
                     </notebook>
 
-                    <group colspan="4" col="2">
+                    <group colspan="4" col="5">
                         <field name="state" widget="statusbar" statusbar_visible="new,opened,closed,posted" statusbar_colors='{"posted":"green"}'/>
                         <button name="open" type="workflow" string="Open" states="new" />
                         <button name="close" type="workflow" string="Close" states="opened" />
@@ -918,45 +893,6 @@
                 </tree>
             </field>
         </record>
-
-        <act_window 
-            id="act_pos_session_orders" 
-            name="Orders"
-            src_model="pos.session"
-            res_model="pos.order"
-            domain="[('session_id', '=', active_id)]" />         
-
-
-        <record id="view_pos_order_filter" model="ir.ui.view">
-            <field name="name">pos.order.list.select</field>
-            <field name="model">pos.order</field>
-            <field name="type">search</field>
-            <field name="arch" type="xml">
-                <search string="Search Sales Order">
-                    <filter icon="terp-document-new" string="New" domain="[('state','=','draft')]"/>
-                    <filter icon="gtk-apply" string="Done" domain="[('state','in',('paid','invoiced','done'))]"/>
-                    <separator orientation="vertical"/>
-                    <filter icon="terp-check" string="Invoiced" domain="[('state','=','invoiced')]"/>
-                    <filter icon="gtk-convert" string="Posted" domain="[('state','=','done')]"/>
-                    <separator orientation="vertical"/>
-                    <filter icon="terp-go-month" string="Today" domain="[('date_order','&gt;=',datetime.date.today().strftime('%%Y-%%m-%%d 00:00:00')),('date_order','&lt;=',datetime.date.today().strftime('%%Y-%%m-%%d 23:59:59'))]"/>
-                    <filter icon="gtk-go-forward" string="Yesterday" domain="[('date_order','&lt;',datetime.date.today().strftime('%%Y-%%m-%%d 00:00:00')),('date_order','&gt;=',(datetime.date.today() - relativedelta(days=1)).strftime('%%Y-%%m-%%d 00:00:00'))]"/>
-                    <separator orientation="vertical"/>
-                    <field name="name"/>
-                    <field name="user_id"/>
-                    <newline/>
-                    <group expand="0" string="Group By..." groups="base.group_extended">
-                        <filter string="Customer" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <filter string="Salesman" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
-                        <separator string="" orientation="vertical"/>
-                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                        <separator string="" orientation="vertical"/>
-                        <filter string="Order Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_order'}"/>
-                    </group>
-               </search>
-            </field>
-        </record>
-
 
         <record model="ir.ui.view" id="view_pos_session_search">
             <field name="name">pos.session.search.view</field>
@@ -988,9 +924,7 @@
             <field name="res_model">pos.session</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <!--
             <field name="search_view_id" ref="view_pos_session_search" />
-        -->
         </record>
 
         <menuitem
@@ -999,5 +933,41 @@
             id="menu_pos_session"
             groups="group_pos_manager"/>
 
+        <act_window 
+            id="act_pos_session_orders" 
+            name="Orders"
+            src_model="pos.session"
+            res_model="pos.order"
+            domain="[('session_id', '=', active_id)]" />         
+
+        <record id="view_pos_order_filter" model="ir.ui.view">
+            <field name="name">pos.order.list.select</field>
+            <field name="model">pos.order</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Sales Order">
+                    <filter icon="terp-document-new" string="New" domain="[('state','=','draft')]"/>
+                    <filter icon="gtk-apply" string="Done" domain="[('state','in',('paid','invoiced','done'))]"/>
+                    <separator orientation="vertical"/>
+                    <filter icon="terp-check" string="Invoiced" domain="[('state','=','invoiced')]"/>
+                    <filter icon="gtk-convert" string="Posted" domain="[('state','=','done')]"/>
+                    <separator orientation="vertical"/>
+                    <filter icon="terp-go-month" string="Today" domain="[('date_order','&gt;=',datetime.date.today().strftime('%%Y-%%m-%%d 00:00:00')),('date_order','&lt;=',datetime.date.today().strftime('%%Y-%%m-%%d 23:59:59'))]"/>
+                    <filter icon="gtk-go-forward" string="Yesterday" domain="[('date_order','&lt;',datetime.date.today().strftime('%%Y-%%m-%%d 00:00:00')),('date_order','&gt;=',(datetime.date.today() - relativedelta(days=1)).strftime('%%Y-%%m-%%d 00:00:00'))]"/>
+                    <separator orientation="vertical"/>
+                    <field name="name"/>
+                    <field name="user_id"/>
+                    <newline/>
+                    <group expand="0" string="Group By..." groups="base.group_extended">
+                        <filter string="Customer" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Salesman" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
+                        <separator string="" orientation="vertical"/>
+                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                        <separator string="" orientation="vertical"/>
+                        <filter string="Order Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_order'}"/>
+                    </group>
+               </search>
+            </field>
+        </record>
     </data>
 </openerp>

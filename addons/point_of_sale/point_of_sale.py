@@ -61,7 +61,7 @@ class pos_config(osv.osv):
 
         'state' : fields.selection(POS_CONFIG_STATE, 'State', required=True, readonly=True),
 
-        #'sequence_id' : fields.many2one('ir.sequence', 'Sequence'),
+        'sequence_id' : fields.many2one('ir.sequence', 'Sequence', readonly=True),
         # Add a sequence when we create a new pos.config object
 
     }
@@ -69,6 +69,22 @@ class pos_config(osv.osv):
     _defaults = {
         'state' : 'draft',
     }
+
+    def _check_only_one_cash_journal(self, cr, uid, ids, context=None):
+        for record in self.browse(cr, uid, ids, context=context):
+            has_cash_journal = False
+
+            for journal in record.journal_ids:
+                if journal.type == 'cash':
+                    if has_cash_journal:
+                        return False
+                    else:
+                        has_cash_journal = True
+        return True
+
+    _constraints = [
+        (_check_only_one_cash_journal, "You should have only one Cash Journal !", ['journal_id']),
+    ]
 
     def set_draft(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state' : 'draft'}, context=context)
@@ -81,6 +97,52 @@ class pos_config(osv.osv):
 
     def set_deprecate(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state' : 'deprecated'}, context=context)
+
+    def create(self, cr, uid, values, context=None):
+        proxy = self.pool.get('ir.sequence.type')
+
+        sequence_values = dict(
+            code='pos_%s_sequence' % values['name'].lower(),
+            name='POS %s Sequence' % values['name'],
+        )
+
+        proxy.create(cr, uid, sequence_values, context=context)
+
+        proxy = self.pool.get('ir.sequence')
+
+        sequence_values = dict(
+            code='pos_%s_sequence' % values['name'].lower(),
+            name='POS %s Sequence' % values['name'],
+            padding=4,
+            prefix="%s/%%(year)s/%%(month)s/%%(day)s/"  % values['name'],
+        )
+        sequence_id = proxy.create(cr, uid, sequence_values, context=context)
+
+        values['sequence_id'] = sequence_id
+        return super(pos_config, self).create(cr, uid, values, context=context)
+
+    def write(self, cr, uid, ids, values, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.sequence_id and values.get('name', False):
+                prefixes = obj.sequence_id.prefix.split('/')
+                if len(prefixes) >= 4 and prefixes[0] == obj.name:
+                    prefixes[0] = values['name']
+
+                sequence_values = dict(
+                    code='pos_%s_sequence' % values['name'].lower(),
+                    name='POS %s Sequence' % values['name'],
+                    prefix="/".join(prefixes),
+                )
+                obj.sequence_id.write(sequence_values)
+
+        return super(pos_config, self).write(cr, uid, ids, values, context=context)
+
+    def unlink(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.sequence_id:
+                obj.sequence_id.unlink()
+
+        return super(pos_config, self).unlink(cr, uid, ids, context=context)
 
 pos_config()
 
@@ -98,6 +160,12 @@ class pos_session(osv.osv):
         'stop_at' : fields.datetime('Closing Date'),
 
         'state' : fields.selection(POS_SESSION_STATE, 'State', required=True, readonly=True, select=1),
+
+        'cash_register_id' : fields.many2one('account.bank.statement', 'Bank Account Statement'),
+
+        'details_ids' : fields.related('cash_register_id', 'details_ids', 
+                                       type='one2many', relation='account.cashbox.line',
+                                       string='CashBox Lines'),
     }
 
     _defaults = {
@@ -106,9 +174,47 @@ class pos_session(osv.osv):
         'state' : 'new',
     }
 
+    _sql_constraints = [
+        ('uniq_name', 'unique(name)', "The name of this POS Session must be unique !"),
+    ]
+
+    def _create_cash_register(self, cr, uid, pos_config, name, context=None):
+        import pdb
+        pdb.set_trace()
+
+        if not pos_config:
+            return False
+
+        proxy = self.pool.get('account.bank.statement')
+
+        journal_id = False
+        for journal in pos_config.journal_ids:
+            if journal.type == 'cash':
+                journal_id = journal.id
+                break
+
+        if not journal_id:
+            return False
+
+        values = {
+            'name' : name,
+            'journal_id' : journal_id,
+        }
+        return proxy.create(cr, uid, values, context=context)
+
     def create(self, cr, uid, values, context=None):
-        if values.pop('name', '/') == '/':
-            values['name'] = self.pool.get('ir.sequence').get(cr, uid, 'pos.session')
+
+        config_id = values.get('config_id', False) or False
+
+        if config_id:
+            pos_config = self.pool.get('pos.config').browse(cr, uid, config_id, context=context)
+            name = pos_config.sequence_id._next()
+            values.update(
+                name=name,
+                cash_register_id=self._create_cash_register(cr, uid, pos_config, name, context=context),
+            )
+        else:
+            raise osv.except_osv(_('Error!'), _('There is no POS Config attached to this POS Session'))
 
         return super(pos_session, self).create(cr, uid, values, context=context)
 

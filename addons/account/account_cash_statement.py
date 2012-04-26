@@ -43,24 +43,27 @@ class account_cashbox_line(osv.osv):
         """
         res = {}
         for obj in self.browse(cr, uid, ids, context=context):
-            res[obj.id] = obj.pieces * obj.number
+            res[obj.id] = {
+                'subtotal_opening' : obj.pieces * obj.number_opening,
+                'subtotal_closing' : obj.pieces * obj.number_closing,
+            }
         return res
 
-    def on_change_sub(self, cr, uid, ids, pieces, number, *a):
+    def on_change_sub_opening(self, cr, uid, ids, pieces, number, *a):
+        """ Compute the subtotal for the opening """
+        return {'value' : {'subtotal_opening' : (pieces * number) or 0.0 }}
 
-        """ Calculates Sub total on change of number
-        @param pieces: Names of fields.
-        @param number:
-        """
-        sub = pieces * number
-        return {'value': {'subtotal': sub or 0.0}}
+    def on_change_sub_closing(self, cr, uid, ids, pieces, number, *a):
+        """ Compute the subtotal for the closing """
+        return {'value' : {'subtotal_closing' : (pieces * number) or 0.0 }}
 
     _columns = {
         'pieces': fields.float('Unit of Currency', digits_compute=dp.get_precision('Account')),
-        'number': fields.integer('Number of Units'),
-        'subtotal': fields.function(_sub_total, string='Subtotal', type='float', digits_compute=dp.get_precision('Account')),
-        'starting_id': fields.many2one('account.bank.statement', ondelete='cascade'),
-        'ending_id': fields.many2one('account.bank.statement', ondelete='cascade'),
+        'number_opening' : fields.integer('Number of Units', help='Opening Unit Numbers'),
+        'number_closing' : fields.integer('Number of Units', help='Closing Unit Numbers'),
+        'subtotal_opening': fields.function(_sub_total, string='Subtotal Opening', type='float', digits_compute=dp.get_precision('Account'), multi='subtotal'),
+        'subtotal_closing': fields.function(_sub_total, string='Subtotal Closing', type='float', digits_compute=dp.get_precision('Account'), multi='subtotal'),
+        'bank_statement_id' : fields.many2one('account.bank.statement', ondelete='cascade'),
      }
 
 account_cashbox_line()
@@ -78,16 +81,14 @@ class account_cash_statement(osv.osv):
         """
         res = {}
         for statement in self.browse(cr, uid, ids, context=context):
-            amount_total = 0.0
-
             if statement.journal_id.type not in('cash'):
                 continue
-
-            for line in statement.starting_details_ids:
-                amount_total+= line.pieces * line.number
             res[statement.id] = {
-                'balance_start': amount_total
+                'balance_start': sum((line.pieces * line.number_opening 
+                                     for line in statement.details_ids), 0.0)
             }
+
+        print "_get_starting_balance: %r" % (res,)
         return res
 
     def _balance_end_cash(self, cr, uid, ids, name, arg, context=None):
@@ -98,10 +99,9 @@ class account_cash_statement(osv.osv):
         """
         res = {}
         for statement in self.browse(cr, uid, ids, context=context):
-            amount_total = 0.0
-            for line in statement.ending_details_ids:
-                amount_total += line.pieces * line.number
-            res[statement.id] = amount_total
+            res[statement.id] = sum((line.pieces * line.number_closing
+                                    for line in statement.details_ids), 0.0)
+        print "_balance_end_cash: %r" % (res,)            
         return res
 
     def _get_sum_entry_encoding(self, cr, uid, ids, name, arg, context=None):
@@ -111,13 +111,11 @@ class account_cash_statement(osv.osv):
         @param arg: User defined arguments
         @return: Dictionary of values.
         """
-        res2 = {}
+        res = {}
         for statement in self.browse(cr, uid, ids, context=context):
-            encoding_total=0.0
-            for line in statement.line_ids:
-               encoding_total += line.amount
-            res2[statement.id] = encoding_total
-        return res2
+            res[statement.id] = sum((line.amount for line in statement.line_ids), 0.0)
+        print "_get_sum_entry_encoding: %r" % (res,)
+        return res
 
     def _get_company(self, cr, uid, context=None):
         user_pool = self.pool.get('res.users')
@@ -193,22 +191,19 @@ class account_cash_statement(osv.osv):
     _columns = {
         'total_entry_encoding': fields.function(_get_sum_entry_encoding, string="Cash Transaction", help="Total cash transactions",
             store = {
-                'account.bank.statement': (lambda self, cr, uid, ids, c={}: ids, ['line_ids','move_line_ids'], 10),
+                'account.bank.statement': (lambda self, cr, uid, ids, context=None: ids, ['line_ids','move_line_ids'], 10),
                 'account.bank.statement.line': (_get_statement, ['amount'], 10),
             }),
         'closing_date': fields.datetime("Closed On"),
-        'balance_end_cash': fields.function(_balance_end_cash, store=True, string='Closing Balance', help="Closing balance based on cashBox"),
-        'starting_details_ids': fields.one2many('account.cashbox.line', 'starting_id', string='Opening Cashbox'),
-        'ending_details_ids': fields.one2many('account.cashbox.line', 'ending_id', string='Closing Cashbox'),
+        'balance_end_cash': fields.function(_balance_end_cash, store=False, string='Closing Balance', help="Closing balance based on cashBox"),
+        'details_ids' : fields.one2many('account.cashbox.line', 'bank_statement_id', string='CashBox Lines'),
         'user_id': fields.many2one('res.users', 'Responsible', required=False),
     }
     
     _defaults = {
         'state': 'draft',
-        'date': lambda self,cr,uid,context={}: context.get('date', time.strftime("%Y-%m-%d %H:%M:%S")),
+        'date': lambda self, cr, uid, context={}: context.get('date', time.strftime("%Y-%m-%d %H:%M:%S")),
         'user_id': lambda self, cr, uid, context=None: uid,
-        'starting_details_ids': _get_cash_open_box_lines,
-        'ending_details_ids': _get_default_cash_close_box_lines
     }
 
     def check_opening_journal(self, cr, uid, ids, context=None):
@@ -236,10 +231,12 @@ class account_cash_statement(osv.osv):
     def create(self, cr, uid, vals, context=None):
         if self.pool.get('account.journal').browse(cr, uid, vals['journal_id'], context=context).type == 'cash':
             amount_total = 0.0
-            for line in vals.get('starting_details_ids',[]):
+            for line in vals.get('details_ids',[]):
+                print "line: %r" % (line,)
                 if line and len(line)==3 and line[2]:
-                    amount_total+= line[2]['pieces'] * line[2]['number']
+                    amount_total+= line[2]['pieces'] * line[2]['number_opening']
             vals.update(balance_start= amount_total)
+            vals.update(balance_end_real=self._compute_balance_end_real(cr, uid, vals['journal_id'], context=context))
         return super(account_cash_statement, self).create(cr, uid, vals, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -275,23 +272,27 @@ class account_cash_statement(osv.osv):
                 journal = self.pool.get('account.journal').browse(cr, uid, journal_id, context=context)
                 raise osv.except_osv(_('Error !'), (_('The Account Journal %s is opened by an other Cash Register !') % (journal.name,)))
             else:
+                values = super(account_cash_statement, self).onchange_journal_id(cr, uid, statement_id, journal_id, context=context)
                 proxy_line = self.pool.get('account.cashbox.line')
 
-                values = dict(starting_details_ids=[], ending_details_ids=[])
+                values.setdefault('value', {})
+                values['value']['details_ids'] = []
+                values['value']['balance_end_real'] = self._compute_balance_end_real(cr, uid, journal_id, context=context)
+                values['value']['balance_start'] = 0.0
 
                 journal = self.pool.get('account.journal').browse(cr, uid, journal_id, context=context)
 
                 for line in journal.cashbox_line_ids:
-                    values['starting_details_ids'].append({'pieces' : line.pieces})
-                    values['ending_details_ids'].append({'pieces' : line.pieces})
+                    values['value']['details_ids'].append({'pieces' : line.pieces})
 
-                return { 'value' : values }
+                print "values: %r" % (values,)
+
+                return values
         else:
             return {
                 'value' : {
                     'balance_start': balance_start,
-                    'starting_details_ids': [],
-                    'ending_details_ids' : [],
+                    'details_ids' : [],
                 }
             }
         return super(account_cash_statement, self).onchange_journal_id(cr, uid, statement_id, journal_id, context=context)
@@ -299,7 +300,10 @@ class account_cash_statement(osv.osv):
     def _equal_balance(self, cr, uid, cash_id, context=None):
         statement = self.browse(cr, uid, cash_id, context=context)
         self.write(cr, uid, [cash_id], {'balance_end_real': statement.balance_end})
-        statement.balance_end_real = statement.balance_end
+        print "balance_end_real: %r" % (statement.balance_end,)
+        print "balance_end: %r" % (statement.balance_end,)
+        print "balance_end_cash: %r" % (statement.balance_end_cash,)
+
         if statement.balance_end != statement.balance_end_cash:
             return False
         return True
@@ -365,8 +369,8 @@ class account_cash_statement(osv.osv):
         cash_box_line_pool = self.pool.get('account.cashbox.line')
         super(account_cash_statement, self).button_cancel(cr, uid, ids, context=context)
         for st in self.browse(cr, uid, ids, context):
-            for end in st.ending_details_ids:
-                cash_box_line_pool.write(cr, uid, [end.id], {'number': 0})
+            for end in st.details_ids:
+                cash_box_line_pool.write(cr, uid, [end.id], {'number_closing': 0})
         return True
 
 account_cash_statement()

@@ -82,7 +82,7 @@ Main features :
     'application': True,
     'certificate' : '001156338024966477869',
     # Web client
-    'js': ['static/lib/backbone/backbone-0.5.3.js', 'static/src/js/pos.js', 'static/src/js/pos2.js'],
+    'js': ['static/lib/backbone/backbone-0.5.3.js', 'static/src/js/pos.js'], #, 'static/src/js/pos2.js'],
     'css': ['static/src/css/pos.css'],
     'qweb': ['static/src/xml/pos.xml'],
     'auto_install': True,
