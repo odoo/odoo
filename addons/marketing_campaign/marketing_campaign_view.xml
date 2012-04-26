@@ -362,7 +362,16 @@
         <field name="model">marketing.campaign.workitem</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Marketing Campaign Activities">
+            <form layout="manual">
+            <div class="oe_form_topbar">
+                <button string="Process" states="todo" name="process" type="object" icon="terp-gtk-go-back-rtl"/>
+                <button string="Reset" states="exception,cancelled" name="button_draft" type="object" icon="gtk-undo"/>
+                <button string="Cancel" states="todo,exception" name="button_cancel" type="object" icon="terp-gtk-stop"/>
+                <div class="oe_right">
+                    <field name="state" readonly="True" nolabel="1" widget="statusbar" statusbar_visible="todo,done" statusbar_colors='{"exception":"red"}'/>
+                </div>
+            </div>
+            <sheet string="Marketing Campaign Activities" layout="auto">
                 <group colspan="4" col="6">
                     <group colspan="2" col="2">
                         <separator string="Campaign Step" colspan="2"/>
@@ -386,13 +395,7 @@
                     <separator string="Error Message" colspan="4"/>
                     <field name="error_msg" nolabel="1" colspan="4"/>
                 </group>
-                <separator string="" colspan="4"/>
-                <group colspan="4" col="11">
-                    <field name="state" readonly="True" widget="statusbar" statusbar_visible="todo,done" statusbar_colors='{"exception":"red"}'/>
-                    <button string="Cancel" states="todo,exception" name="button_cancel" type="object" icon="terp-gtk-stop"/>
-                    <button string="Reset" states="exception,cancelled" name="button_draft" type="object" icon="gtk-undo"/>
-                    <button string="Process" states="todo" name="process" type="object" icon="terp-gtk-go-back-rtl"/>
-                </group>
+            </sheet>
             </form>
         </field>
     </record>
