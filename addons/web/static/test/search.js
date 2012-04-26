@@ -169,22 +169,13 @@ $(document).ready(function () {
             };
         }
     });
-    asyncTest('defaults calling', 2, function () {
-        var defaults_called = false;
 
+    function makeSearchView(dummy_widget_attributes) {
         instance.web.search.fields.add(
             'dummy', 'instance.dummy.DummyWidget');
         instance.dummy = {};
-        instance.dummy.DummyWidget = instance.web.search.Field.extend({
-            facet_for_defaults: function (defaults) {
-                defaults_called = true;
-                return $.when({
-                    field: this,
-                    category: 'Dummy',
-                    values: [{label: 'dummy', value: defaults.dummy}]
-                });
-            }
-        });
+        instance.dummy.DummyWidget = instance.web.search.Field.extend(
+            dummy_widget_attributes);
         instance.connection.responses['/web/searchview/load'] = function () {
             return {result: {fields_view: {
                 type: 'search',
@@ -215,18 +206,63 @@ $(document).ready(function () {
         };
 
         var dataset = {model: 'dummy.model', get_context: function () { return {}; }};
-        var view = new instance.web.SearchView(null, dataset, false, {dummy: 42});
+        return new instance.web.SearchView(null, dataset, false, {dummy: 42});
+    }
+    asyncTest('defaults calling', 2, function () {
+        var defaults_called = false;
+
+        var view = makeSearchView({
+            facet_for_defaults: function (defaults) {
+                defaults_called = true;
+                return $.when({
+                    field: this,
+                    category: 'Dummy',
+                    values: [{label: 'dummy', value: defaults.dummy}]
+                });
+            }
+        });
         view.appendTo($('#qunit-fixture'))
             .always(start)
-            .then(function () {
+            .fail(function (error) { ok(false, error.message); })
+            .done(function () {
                 ok(defaults_called, "should have called defaults");
                 deepEqual(
                     view.query.toJSON(),
                     [{category: 'Dummy', values: [{label: 'dummy', value: 42}]}],
                     "should have generated a facet with the default value");
-                }, function (error) {
-                ok(false, error.message);
             });
     });
     // TODO: test defaults for various built-in widgets?
+    asyncTest('completion calling', 4, function () {
+        var view = makeSearchView({
+            complete: function () {
+                return $.when({
+                    label: "Dummy",
+                    facet: {
+                        field: this,
+                        category: 'Dummy',
+                        values: [{label: 'dummy', value: 42}]
+                    }
+                });
+            }
+        });
+        view.appendTo($('#qunit-fixture'))
+            .always(start)
+            .fail(function (error) { ok(false, error.message); })
+            .done(function () {
+                stop();
+                view.complete_global_search({term: "dum"}, function (completions) {
+                    start();
+                    equal(completions.length, 1, "should have a single completion");
+                    var completion = completions[0];
+                    equal(completion.label, "Dummy",
+                          "should have provided label");
+                    equal(completion.facet.category, "Dummy",
+                          "should have provided category");
+                    deepEqual(completion.facet.values,
+                              [{label: 'dummy', value: 42}],
+                              "should have provided values");
+                });
+            });
+    });
 });
