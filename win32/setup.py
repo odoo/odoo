@@ -19,9 +19,16 @@
 #
 ##############################################################################
 
+import os
+import glob
 from distutils.core import setup
 import py2exe
 
+def datas():
+    r = []
+    if os.name == 'nt':
+        r.append(("Microsoft.VC90.CRT", glob.glob('C:\Microsoft.VC90.CRT\*.*')))
+    return r
 
 setup(service=["OpenERPServerService"],
       options={"py2exe":{"excludes":["Tkconstants","Tkinter","tcl",
@@ -29,7 +36,8 @@ setup(service=["OpenERPServerService"],
                                      "ImageTk", "PIL.ImageTk",
                                      "FixTk"],
                          "skip_archive": 1,
-                         "optimize": 2,}}
+                         "optimize": 2,}},
+      data_files=datas(),
       )
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
