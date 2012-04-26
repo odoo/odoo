@@ -143,7 +143,7 @@
                         <field name="name" select="1"/>
                         <field name="code" select="1"/>
                         <field name="company_id" groups="base.group_multi_company"/>
-                        <field name="active" groups="base.group_extended"/>
+                        <field name="active" groups="base.group_no_one"/>
                     </group>
                     <notebook colspan="4">
                     <page string="Sequence">
@@ -219,7 +219,7 @@
             <field name="view_id" ref="sequence_view_tree"/>
             <field name="context">{'active_test': False}</field>
         </record>
-        <menuitem id="next_id_5" name="Sequences &amp; Identifiers" parent="base.menu_config" sequence="52" groups="base.group_no_one"/>
+        <menuitem id="next_id_5" name="Sequences &amp; Identifiers" parent="base.menu_config" sequence="112" groups="base.group_no_one"/>
         <menuitem action="ir_sequence_form" id="menu_ir_sequence_form" parent="next_id_5"/>
 
         <!-- Sequences Types -->
@@ -269,7 +269,7 @@
             <field eval="False" name="view_id"/>
         </record>
         <menuitem action="ir_sequence_type" id="menu_ir_sequence_type"
-            groups="base.group_extended"
+            groups="base.group_no_one"
             parent="base.next_id_5"/>
 
         <!-- Actions -->
@@ -356,8 +356,8 @@
                     <field name="name"/>
                     <field name="model_id"/>
                     <field name="user_id"/>
-                    <field name="domain" groups="base.group_extended"/>
-                    <field name="context" groups="base.group_extended"/>
+                    <field name="domain" groups="base.group_no_one"/>
+                    <field name="context" groups="base.group_no_one"/>
                 </tree>
             </field>
         </record>
@@ -662,9 +662,9 @@
         <menuitem action="ir_action_wizard" id="menu_ir_action_wizard" parent="base.next_id_6"/>
 
         <!-- Needaction mechanism -->
-        <record model="ir.ui.view" id="view_ir_needaction_users_tree">
-            <field name="name">ir.needaction_users.tree</field>
-            <field name="model">ir.needaction_users</field>
+        <record model="ir.ui.view" id="view_ir_needaction_users_rel_tree">
+            <field name="name">ir.needaction_users_rel.tree</field>
+            <field name="model">ir.needaction_users_rel</field>
             <field name="type">tree</field>
             <field name="sequence">10</field>
             <field name="arch" type="xml">
@@ -676,14 +676,14 @@
             </field>
         </record>
 
-        <record id="action_view_needaction_users" model="ir.actions.act_window">
+        <record id="action_view_needaction_users_rel" model="ir.actions.act_window">
             <field name="name">Need action relationships</field>
-            <field name="res_model">ir.needaction_users</field>
+            <field name="res_model">ir.needaction_users_rel</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="menu_needaction_users" name="Need actions" parent="base.menu_users" sequence="20" action="action_view_needaction_users" groups="base.group_no_one"/>
+        <menuitem id="menu_needaction_users_rel" name="Need actions" parent="base.menu_users" sequence="20" action="action_view_needaction_users_rel" groups="base.group_no_one"/>
         
         <!-- Companies -->
         <menuitem id="menu_res_company_global"
@@ -764,7 +764,7 @@
             <field name="help">A group is a set of functional areas that will be assigned to the user in order to give them access and rights to specific applications and tasks in the system. You can create custom groups or edit the ones existing by default in order to customize the view of the menu that users will be able to see. Whether they can have a read, write, create and delete access right can be managed from here.</field>
         </record>
         <menuitem action="action_res_groups" id="menu_action_res_groups" parent="base.menu_users"
-            groups="base.group_extended"/>
+            groups="base.group_no_one"/>
 
         <!-- View -->
         <record id="view_view_form" model="ir.ui.view">
@@ -893,7 +893,7 @@
             <field name="res_model">ir.ui.view.custom</field>
             <field name="help">Customized views are used when users reorganize the content of their dashboard views (via web client)</field>
         </record>
-        <menuitem action="action_ui_view_custom" id="menu_action_ui_view_custom" parent="base.next_id_4"/>
+        <menuitem id="menu_action_ui_view_custom" action="action_ui_view_custom" parent="base.next_id_2"/>
 
 
         <!-- Attachment -->
@@ -927,7 +927,7 @@
                             <field name="res_id"/>
                             <field name="res_name"/>
                         </group>
-                    <group col="2" groups="base.group_extended">
+                    <group col="2" groups="base.group_no_one">
                         <separator string="Created" colspan="2"/>
                         <field name="create_uid" select="2"/>
                         <field name="create_date" select="2"/>
@@ -984,7 +984,7 @@
                     <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Owner" icon="terp-personal" domain="[]" context="{'group_by':'create_uid'}"/>
-                        <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"  groups="base.group_extended"/>
+                        <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"  groups="base.group_no_one"/>
                         <filter string="Company" icon="terp-gtk-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                         <separator orientation="vertical"/>
                         <filter string="Month" help="Creation Month" icon="terp-go-month" domain="[]" context="{'group_by':'create_date'}"/>
@@ -1287,7 +1287,7 @@
             <field name="context">{'manual':True}</field>
             <field name="view_id" ref="view_model_tree"/>
         </record>
-        <menuitem id="next_id_9" name="Database Structure" parent="base.menu_custom" groups="base.group_extended"/>
+        <menuitem id="next_id_9" name="Database Structure" parent="base.menu_custom" groups="base.group_no_one"/>
         <menuitem action="action_model_model" id="ir_model_model_menu" parent="next_id_9"/>
 
         <record id="action_model_fields" model="ir.actions.act_window">
@@ -1306,7 +1306,7 @@
             <field name="view_id" ref="view_model_data_list"/>
         </record>
         <menuitem action="action_model_data" id="ir_model_data_menu" parent="base.next_id_5"
-                  groups="base.group_extended"/>
+                  groups="base.group_no_one"/>
 
         <!-- Translations -->
 
@@ -1429,11 +1429,11 @@
                         <field name="action" colspan="2" />
                         <field name="icon"  colspan="2"/>
 
-                        <group col="4" colspan="6" groups="base.group_extended">
-                            <field name="web_icon" groups="base.group_extended" />
-                            <field name="web_icon_hover" groups="base.group_extended" />
-                            <field name="web_icon_data" widget="image" groups="base.group_extended"/>
-                            <field name="web_icon_hover_data" widget="image" groups="base.group_extended"/>
+                        <group col="4" colspan="6" groups="base.group_no_one">
+                            <field name="web_icon"/>
+                            <field name="web_icon_hover"/>
+                            <field name="web_icon_data" widget="image"/>
+                            <field name="web_icon_hover_data" widget="image"/>
                         </group>
                     </group>
                     <notebook colspan="4">
@@ -1479,11 +1479,8 @@
         </record>
         <menuitem action="grant_menu_access" id="menu_grant_menu_access" parent="base.next_id_2" sequence="1"/>
 
-        <!--
-    =============================================================
-    Cron Jobs
-    =============================================================
-    -->
+        <!-- ir.cron -->
+
         <record id="ir_cron_view_tree" model="ir.ui.view">
             <field name="name">ir.cron.tree</field>
             <field name="model">ir.cron</field>
@@ -1520,9 +1517,9 @@
                         <field name="numbercall"/>
                         <field name="doall"/>
                     </page>
-                    <page string="Technical Data" groups="base.group_extended">
+                    <page string="Technical Data" groups="base.group_no_one">
                         <separator string="Action to Trigger" colspan="4"/>
-                        <field name="model" groups="base.group_extended"/>
+                        <field name="model"/>
                         <field name="function"/>
                         <separator string="Arguments" colspan="4"/>
                         <field colspan="4" name="args" nolabel="1"/>
@@ -1574,9 +1571,10 @@
             <field name="view_id" ref="ir_cron_view_tree"/>
         </record>
 
-        <menuitem id="next_id_10" name="Scheduler" parent="base.menu_config"  groups="base.group_extended" sequence="54"/>
-        <menuitem action="ir_cron_act" id="menu_ir_cron_act" parent="next_id_10"/>
+        <menuitem id="menu_ir_cron" name="Scheduler" parent="menu_custom"  groups="base.group_no_one" sequence="23"/>
+        <menuitem id="menu_ir_cron_act" action="ir_cron_act" parent="menu_ir_cron"/>
 
+        <!-- ir.model.access -->
 
         <record id="ir_access_view_tree" model="ir.ui.view">
             <field name="name">ir.model.access.tree</field>
@@ -1633,7 +1631,7 @@
                         <field name="group_id"/>
                 </group>
                 <newline/>
-                <group expand="0" string="Group By..." colspan="11" col="11" groups="base.group_extended">
+                <group expand="0" string="Group By..." colspan="11" col="11" groups="base.group_no_one">
                      <filter string="Group" icon="terp-personal" domain="[]" context="{'group_by':'group_id'}"/>
                      <filter string="Object" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'model_id'}"/>
                    </group>
@@ -1878,6 +1876,8 @@
         </record>
         <menuitem action="action_server_action" id="menu_server_action" parent="base.next_id_6"/>
 
+        <!-- ir.actions.todo -->
+
         <record id="ir_actions_todo_tree" model="ir.ui.view">
             <field name="model">ir.actions.todo</field>
             <field name="name">Config Wizard Steps</field>
@@ -1950,13 +1950,8 @@
             <field name="view_type">form</field>
             <field name="help">The configuration wizards are used to help you configure a new instance of OpenERP. They are launched during the installation of new modules, but you can choose to restart some wizards manually from this menu.</field>
         </record>
-        <menuitem id="next_id_11" name="Configuration Wizards" parent="base.menu_config" sequence="51"
-            groups="base.group_extended"/>
-
-        <menuitem action="act_ir_actions_todo_form" id="menu_ir_actions_todo_form"
-                parent="next_id_11" sequence="20"/>
-
-
+        <menuitem id="menu_ir_actions_todo" name="Configuration Wizards" parent="menu_custom" sequence="20" groups="base.group_no_one"/> 
+        <menuitem id="menu_ir_actions_todo_form" action="act_ir_actions_todo_form" parent="menu_ir_actions_todo"/>
 
         <record model="ir.cron" id="cronjob_osv_memory_autovacuum">
             <field name='name'>AutoVacuum osv_memory objects</field>
@@ -1969,7 +1964,9 @@
             <field name="function">power_on</field>
             <field name="args">()</field>
         </record>
-        
+
+        <!-- ir.actions.todo category -->
+
         <record id="ir_actions_todo_category_form" model="ir.ui.view">
             <field name="name">ir.actions.todo.category.form</field>
             <field name="model">ir.actions.todo.category</field>
@@ -1982,7 +1979,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record id="ir_actions_todo_category_tree" model="ir.ui.view">
             <field name="name">ir.actions.todo.category.tree</field>
             <field name="model">ir.actions.todo.category</field>
@@ -1998,12 +1995,12 @@
         <record id="category_sales_management_config" model="ir.actions.todo.category">
             <field name="name">Sales Management</field>
             <field name="sequence">5</field>
-        </record>         
+        </record>
 
         <record id="category_tools_customization_config" model="ir.actions.todo.category">
             <field name="name">Tools / Customization</field>
             <field name="sequence">5</field>
-        </record>         
+        </record>
 
         <!-- ir.mail.server -->
         <record model="ir.ui.view" id="ir_mail_server_form">
@@ -2020,7 +2017,7 @@
                         <separator string="Connection Information" colspan="4"/>
                         <field name="smtp_host"/>
                         <field name="smtp_port"/>
-                        <field name="smtp_debug" groups="base.group_extended"/>
+                        <field name="smtp_debug" groups="base.group_no_one"/>
                      </group>
                      <group col="2" colspan="4">
                         <separator string="Security and Authentication" colspan="2"/>
@@ -2070,8 +2067,6 @@
             <field name="view_id" ref="ir_mail_server_list" />
             <field name="search_view_id" ref="view_ir_mail_server_search"/>
         </record>
-
-        <menuitem id="menu_email" name="Email" parent="base.menu_config" sequence="53"/>
         <menuitem id="menu_mail_servers" parent="menu_email" action="action_ir_mail_server_list" sequence="15" groups="base.group_no_one"/>
 
     </data>

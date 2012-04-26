@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+        <menuitem id="menu_publisher_warranty" name="OpenERP Entreprise" parent="base.menu_administration" sequence="5"/>
 
         <record id="publisher_warranty_contract_tree_view" model="ir.ui.view">
             <field name="name">publisher_warranty.contract.tree</field>
@@ -81,12 +82,7 @@
             <field name="view_mode">tree,form,calendar</field>
             <field name="search_view_id" ref="publisher_warranty_contract_search_view"/>
         </record>
-
-        <menuitem name="Publisher Warranty" id="publisher_warranty"
-            parent="base.menu_administration"/>
-
-        <menuitem action="action_publisher_warranty_contract_form" id="menu_publisher_warranty_contract"
-            parent="publisher_warranty" sequence="2"/>
+        <menuitem id="menu_publisher_warranty_contract" parent="menu_publisher_warranty" action="action_publisher_warranty_contract_form" sequence="2"/>
 
 
         <record id="publisher_warranty_contract_add_wizard" model="ir.ui.view">
@@ -139,11 +135,7 @@
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
-
-        <menuitem
-            action="action_publisher_warranty_contract_add_wizard"
-            id="menu_publisher_warranty_contract_add"
-            parent="publisher_warranty" sequence="1"/>
+        <menuitem id="menu_publisher_warranty_contract_add" action="action_publisher_warranty_contract_add_wizard" parent="menu_publisher_warranty" sequence="1"/>
 
     </data>
 </openerp>

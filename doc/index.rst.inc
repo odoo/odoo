@@ -15,3 +15,4 @@ New feature merges
 
    api/user_img_specs
    api/need_action_specs
+   api/font_style
