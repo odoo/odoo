@@ -232,6 +232,147 @@ $(document).ready(function () {
                     "should have generated a facet with the default value");
             });
     });
+    asyncTest('FilterGroup defaults', 3, function () {
+        var view = {inputs: []};
+        var filter_a = new instance.web.search.Filter(
+            {attrs: {name: 'a'}}, view);
+        var filter_b = new instance.web.search.Filter(
+            {attrs: {name: 'b'}}, view);
+        var group = new instance.web.search.FilterGroup(
+            [filter_a, filter_b], view);
+        group.facet_for_defaults({a: true, b: true})
+            .always(start)
+            .fail(function (error) { ok(false, error && error.message); })
+            .done(function (facet) {
+                var model = facet;
+                if (!(model instanceof instance.web.search.Facet)) {
+                    model = new instance.web.search.Facet(facet);
+                }
+                var values = model.values;
+                equal(values.length, 2, 'facet should have two values');
+                strictEqual(values.at(0).get('value'), filter_a);
+                strictEqual(values.at(1).get('value'), filter_b);
+            });
+    });
+    asyncTest('Field default', 4, function () {
+        var view = {inputs: []};
+        var f = new instance.web.search.Field(
+            {attrs: {string: 'Dummy', name: 'dummy'}}, {}, view);
+        f.facet_for_defaults({dummy: 42})
+            .always(start)
+            .fail(function (error) { ok(false, error && error.message); })
+            .done(function (facet) {
+                var model = facet;
+                if (!(model instanceof instance.web.search.Facet)) {
+                    model = new instance.web.search.Facet(facet);
+                }
+                strictEqual(
+                    model.get('category'),
+                    f.attrs.string,
+                    "facet category should be field label");
+                strictEqual(
+                    model.get('field'), f,
+                    "facet field should be field which created default");
+                equal(model.values.length, 1, "facet should have a single value");
+                deepEqual(
+                    model.values.toJSON(),
+                    [{label: '42', value: 42}],
+                    "facet value should match provided default");
+                });
+    });
+    asyncTest('Selection default: valid value', 4, function () {
+        var view = {inputs: []};
+        var f = new instance.web.search.SelectionField(
+            {attrs: {name: 'dummy', string: 'Dummy'}},
+            {selection: [[1, "Foo"], [2, "Bar"], [3, "Baz"], [4, "Qux"]]},
+            view);
+        f.facet_for_defaults({dummy: 3})
+            .always(start)
+            .fail(function (error) { ok(false, error && error.message); })
+            .done(function (facet) {
+                var model = facet;
+                if (!(model instanceof instance.web.search.Facet)) {
+                    model = new instance.web.search.Facet(facet);
+                }
+                strictEqual(
+                    model.get('category'),
+                    f.attrs.string,
+                    "facet category should be field label");
+                strictEqual(
+                    model.get('field'), f,
+                    "facet field should be field which created default");
+                equal(model.values.length, 1, "facet should have a single value");
+                deepEqual(
+                    model.values.toJSON(),
+                    [{label: 'Baz', value: 3}],
+                    "facet value should match provided default's selection");
+            });
+    });
+    asyncTest('Selection default: invalid value', 1, function () {
+        var view = {inputs: []};
+        var f = new instance.web.search.SelectionField(
+            {attrs: {name: 'dummy', string: 'Dummy'}},
+            {selection: [[1, "Foo"], [2, "Bar"], [3, "Baz"], [4, "Qux"]]},
+            view);
+        f.facet_for_defaults({dummy: 42})
+            .always(start)
+            .fail(function (error) { ok(false, error && error.message); })
+            .done(function (facet) {
+                ok(!facet, "an invalid value should result in a not-facet");
+            });
+    });
+    asyncTest("M2O default: valid value", 7, function () {
+        var view = {inputs: []}, id = 4;
+        var f = new instance.web.search.ManyToOneField(
+            {attrs: {name: 'dummy', string: 'Dummy'}},
+            {relation: 'dummy.model.name'},
+            view);
+        instance.connection.responses['/web/dataset/call_kw'] = function (req) {
+            equal(req.params.method, 'name_get',
+                  "m2o should resolve default id");
+            equal(req.params.model, f.attrs.relation,
+                  "query model should match m2o relation");
+            equal(req.params.args[0], id);
+            return {result: [[id, "DumDumDum"]]};
+        };
+        f.facet_for_defaults({dummy: id})
+            .always(start)
+            .fail(function (error) { ok(false, error && error.message); })
+            .done(function (facet) {
+                var model = facet;
+                if (!(model instanceof instance.web.search.Facet)) {
+                    model = new instance.web.search.Facet(facet);
+                }
+                strictEqual(
+                    model.get('category'),
+                    f.attrs.string,
+                    "facet category should be field label");
+                strictEqual(
+                    model.get('field'), f,
+                    "facet field should be field which created default");
+                equal(model.values.length, 1, "facet should have a single value");
+                deepEqual(
+                    model.values.toJSON(),
+                    [{label: 'DumDumDum', value: id}],
+                    "facet value should match provided default's selection");
+            });
+    });
+    asyncTest("M2O default: invalid value", 1, function () {
+        var view = {inputs: []}, id = 4;
+        var f = new instance.web.search.ManyToOneField(
+            {attrs: {name: 'dummy', string: 'Dummy'}},
+            {relation: 'dummy.model.name'},
+            view);
+        instance.connection.responses['/web/dataset/call_kw'] = function (req) {
+           return {result: []};
+        };
+        f.facet_for_defaults({dummy: id})
+            .always(start)
+            .fail(function (error) { ok(false, error && error.message); })
+            .done(function (facet) {
+                ok(!facet, "an invalid m2o default should yield a non-facet");
+            });
+    });
     // TODO: test defaults for various built-in widgets?
     asyncTest('completion calling', 4, function () {
         var view = makeSearchView({

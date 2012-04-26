@@ -864,9 +864,13 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
         return $.when(null);
     },
     facet_for_defaults: function (defaults) {
-        var fs = _(this.filters).filter(function (f) {
-            return f.attrs && f.attrs.name && !!defaults[f.attrs.name];
-        });
+        var fs = _(this.filters).chain()
+            .filter(function (f) {
+                return f.attrs && f.attrs.name && !!defaults[f.attrs.name];
+            }).map(function (f) {
+                return {label: f.attrs.string || f.attrs.name,
+                        value: f};
+            }).value();
         if (_.isEmpty(fs)) { return $.when(null); }
         return $.when({
             category: _t("Filter"),
@@ -1001,6 +1005,7 @@ instance.web.search.Field = instance.web.search.Input.extend( /** @lends instanc
     },
     facet_for: function (value) {
         return $.when({
+            field: this,
             category: this.attrs.string || this.attrs.name,
             values: [{label: String(value), value: value}]
         });
@@ -1172,7 +1177,7 @@ instance.web.search.SelectionField = instance.web.search.Field.extend(/** @lends
         if (!match) { return $.when(null); }
         return $.when({
             category: this.attrs.string,
-            value: match[1],
+            field: this,
             values: [{label: match[1], value: match[0]}]
         });
     },
@@ -1275,9 +1280,10 @@ instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
             });
         }
         return this.model.call('name_get', [value], {}).pipe(function (names) {
+            if (_(names).isEmpty()) { return null; }
             return {
                 category: self.attrs.string,
-                value: names[0][1],
+                field: self,
                 values: [{label: names[0][1], value: names[0][0]}]
             };
         })
