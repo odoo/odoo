@@ -27,8 +27,8 @@
                         <group colspan="6" col="6">
                         <field colspan="6" name="name" />
                         <field name="user_id" on_change="onchange_user(user_id)"/>
-                        <field name="company_id" widget="selection" groups="base.group_multi_company,base.group_extended" on_change="onchange_company(company_id)"/>
-                        <field name="active" groups="base.group_extended"/>
+                        <field name="company_id" widget="selection" groups="base.group_multi_company" on_change="onchange_company(company_id)"/>
+                        <field name="active"/>
                         <newline/>
                         <field name="department_id" on_change="onchange_department_id(department_id)" />
                         <field name="parent_id" />
@@ -42,8 +42,8 @@
                             <group col="2" colspan="2" groups="base.group_hr_user">
                                 <separator colspan="2" string="Social IDs"/>
                                 <field name="ssnid"/>
-                                <field name="sinid" groups="base.group_extended"/>
-                                <field name="identification_id" groups="base.group_extended"/>
+                                <field name="sinid"/>
+                                <field name="identification_id"/>
                                 <field name="passport_id"/>
                                 <field name="otherid"/>
                             </group>
@@ -109,12 +109,12 @@
                     <filter icon="terp-personal+" domain="[('department_id','=',context.get('department_id',False))]" string="My Departments Employee"/>
                     </field>
                     <field name="job_id" widget="selection"/>
-                    <field name="category_ids" select="1" groups="base.group_extended"/>
+                    <field name="category_ids" select="1"/>
                     <field name="parent_id"/>
                     <newline />
                     <group expand="0" string="Group By...">
                     <filter string="Manager" icon="terp-personal" domain="[]" context="{'group_by':'parent_id'}"/>
-                    <filter string="Coach" icon="terp-personal" domain="[]" context="{'group_by':'coach_id'}" groups="base.group_extended"/>
+                    <filter string="Coach" icon="terp-personal" domain="[]" context="{'group_by':'coach_id'}"/>
                     <separator orientation="vertical" />
                     <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
                     <filter string="Job" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'job_id'}"/>
