@@ -1271,21 +1271,17 @@ instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
         });
     },
     facet_for: function (value) {
-        var self = this;
+        var self = this, fromPair = function (a) { return {
+            category: self.attrs.string,
+            field: self,
+            values: [{label: a[1], value: a[0]}]
+        } };
         if (value instanceof Array) {
-            return $.when({
-                category: this.attrs.string,
-                value: value[1],
-                values: [{label: value[1], value: value[0]}]
-            });
+            return $.when(fromPair(value));
         }
         return this.model.call('name_get', [value], {}).pipe(function (names) {
             if (_(names).isEmpty()) { return null; }
-            return {
-                category: self.attrs.string,
-                field: self,
-                values: [{label: names[0][1], value: names[0][0]}]
-            };
+            return fromPair(names[0]);
         })
     },
     make_domain: function (name, operator, facet) {
