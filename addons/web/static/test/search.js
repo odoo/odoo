@@ -1,4 +1,9 @@
 $(document).ready(function () {
+    var xhr = QWeb2.Engine.prototype.get_xhr();
+    xhr.open('GET', '/web/static/src/xml/base.xml', false);
+    xhr.send(null);
+    var doc = xhr.responseXML;
+
     var instance;
     module('query', {
         setup: function () {
@@ -140,4 +145,88 @@ $(document).ready(function () {
             {label: 'V2', value: 1}
         ])
     });
+
+    module('defaults', {
+        setup: function () {
+            instance = window.openerp.init([]);
+            window.openerp.web.corelib(instance);
+            window.openerp.web.coresetup(instance);
+            window.openerp.web.chrome(instance);
+            window.openerp.web.data(instance);
+            window.openerp.web.search(instance);
+
+            instance.web.qweb.add_template(doc);
+
+            instance.connection.responses = {};
+            instance.connection.rpc_function = function (url, payload) {
+                if (!(url.url in this.responses)) {
+                    return $.Deferred().reject(
+                        {}, 'failed',
+                        _.str.sprintf("Url %s not found in mock responses",
+                                      url.url)).promise();
+                }
+                return $.when(this.responses[url.url](payload));
+            };
+        }
+    });
+    asyncTest('defaults calling', 2, function () {
+        var defaults_called = false;
+
+        instance.web.search.fields.add(
+            'dummy', 'instance.dummy.DummyWidget');
+        instance.dummy = {};
+        instance.dummy.DummyWidget = instance.web.search.Field.extend({
+            facet_for_defaults: function (defaults) {
+                defaults_called = true;
+                return $.when({
+                    field: this,
+                    category: 'Dummy',
+                    values: [{label: 'dummy', value: defaults.dummy}]
+                });
+            }
+        });
+        instance.connection.responses['/web/searchview/load'] = function () {
+            return {result: {fields_view: {
+                type: 'search',
+                fields: {
+                    dummy: {type: 'char'}
+                },
+                arch: {
+                    tag: 'search',
+                    attrs: {},
+                    children: [{
+                        tag: 'field',
+                        attrs: {
+                            name: 'dummy',
+                            widget: 'dummy'
+                        },
+                        children: []
+                    }]
+                }
+            }}};
+        };
+        instance.connection.responses['/web/searchview/get_filters'] = function () {
+            return [];
+        };
+        instance.connection.responses['/web/searchview/fields_get'] = function () {
+            return {result: {fields: {
+                dummy: {type: 'char'}
+            }}};
+        };
+
+        var dataset = {model: 'dummy.model', get_context: function () { return {}; }};
+        var view = new instance.web.SearchView(null, dataset, false, {dummy: 42});
+        view.appendTo($('#qunit-fixture'))
+            .always(start)
+            .then(function () {
+                ok(defaults_called, "should have called defaults");
+                deepEqual(
+                    view.query.toJSON(),
+                    [{category: 'Dummy', values: [{label: 'dummy', value: 42}]}],
+                    "should have generated a facet with the default value");
+                }, function (error) {
+                ok(false, error.message);
+            });
+    });
+    // TODO: test defaults for various built-in widgets?
 });

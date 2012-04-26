@@ -38,6 +38,18 @@ my.Facet = Backbone.Model.extend({
             return Backbone.Model.prototype.set.call(this, key, value);
         }
         this.values.reset(value);
+    },
+    toJSON: function () {
+        var out = {};
+        var attrs = this.attributes;
+        for(var att in attrs) {
+            if (!attrs.hasOwnProperty(att) || att === 'field') {
+                continue;
+            }
+            out[att] = attrs[att];
+        }
+        out.values = this.values.toJSON();
+        return out;
     }
 });
 my.SearchQuery = Backbone.Collection.extend({
@@ -215,7 +227,10 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
 
             $.when(load_view, filters)
                 .pipe(function (load) { return load[0]; })
-                .then(this.on_loaded);
+                .pipe(this.on_loaded)
+                .fail(function () {
+                    self.ready.reject.apply(null, arguments);
+                });
         }
 
         this.$element.on('click', '.oe_searchview_unfold_drawer', function () {
