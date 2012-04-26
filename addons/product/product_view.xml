@@ -217,6 +217,7 @@
                                     </div>
                                     <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger">
                                         <img t-att-src="kanban_image('product.product', 'product_image', record.id.value)" width="48" style="float: left; padding: 0 4px 4px 0"/>
+                                        Code: <field name="code"/>
                                         <div t-if="record.type.raw_value == 'service'">No Stock</div>
                                         <t t-if="record.type.raw_value != 'service'">
                                             <div>Stock: <field name="qty_available"/> on hand, <field name="virtual_available"/> available</div>

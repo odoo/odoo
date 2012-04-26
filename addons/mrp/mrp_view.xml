@@ -975,7 +975,23 @@
                </data>
             </field>
         </record>
-
+		
+		<record id="product_normal_form_view" model="ir.ui.view">
+            <field name="name">product.normal.form.mrp.inherit</field>
+            <field name="model">product.product</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                  <group name="store" position="after">
+                      <group col="2" colspan="4">
+                          <separator string="Bill of Materials" colspan="4"/>
+                          <field name="bom_ids" nolabel="1" domain="[('bom_id','=',False)]">
+                          </field>
+                      </group>
+                  </group>
+            </field>
+        </record>
+		
         <act_window
             context="{'search_default_product_id': [active_id]}"
             id="act_product_manufacturing_open"
@@ -997,7 +1013,7 @@
             groups="mrp.group_mrp_user"/>
 
         <act_window
-            domain="[('bom_id','=',False)]"
+        	 domain="[('bom_id','=',False)]"
             context="{'search_default_product_id': [active_id],'default_product_id':active_id}"
             id="act_product_product_2_mrp_bom"
             name="Bill of Materials"

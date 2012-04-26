@@ -1120,4 +1120,10 @@ class mrp_production_product_line(osv.osv):
     }
 mrp_production_product_line()
 
+class product_product(osv.osv):
+    _inherit="product.product"
+    _columns = {
+        'bom_ids': fields.one2many('mrp.bom', 'product_id', 'Bill of Material')
+    }
+product_product()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
