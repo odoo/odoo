@@ -146,7 +146,7 @@ $(document).ready(function () {
         ])
     });
 
-    module('defaults', {
+    module('inputs', {
         setup: function () {
             instance = window.openerp.init([]);
             window.openerp.web.corelib(instance);
@@ -170,7 +170,7 @@ $(document).ready(function () {
         }
     });
 
-    function makeSearchView(dummy_widget_attributes) {
+    function makeSearchView(dummy_widget_attributes, defaults) {
         instance.web.search.fields.add(
             'dummy', 'instance.dummy.DummyWidget');
         instance.dummy = {};
@@ -206,7 +206,7 @@ $(document).ready(function () {
         };
 
         var dataset = {model: 'dummy.model', get_context: function () { return {}; }};
-        return new instance.web.SearchView(null, dataset, false, {dummy: 42});
+        return new instance.web.SearchView(null, dataset, false, defaults);
     }
     asyncTest('defaults calling', 2, function () {
         var defaults_called = false;
@@ -220,7 +220,7 @@ $(document).ready(function () {
                     values: [{label: 'dummy', value: defaults.dummy}]
                 });
             }
-        });
+        }, {dummy: 42});
         view.appendTo($('#qunit-fixture'))
             .always(start)
             .fail(function (error) { ok(false, error.message); })
@@ -265,4 +265,63 @@ $(document).ready(function () {
                 });
             });
     });
+    // TODO: test completions for various built-in widgets?
+    asyncTest('completion facet selection', 2, function () {
+        var completion = {
+            label: "Dummy",
+            facet: {
+                field: {},
+                category: 'Dummy',
+                values: [{label: 'dummy', value: 42}]
+            }
+        };
+
+        var view = makeSearchView({});
+        view.appendTo($('#qunit-fixture'))
+            .always(start)
+            .fail(function (error) { ok(false, error.message); })
+            .done(function () {
+                view.select_completion(
+                    {preventDefault: function () {}},
+                    {item: completion});
+                equal(view.query.length, 1, "should have one facet in the query");
+                deepEqual(
+                    view.query.at(0).toJSON(),
+                    {category: 'Dummy', values: [{label: 'dummy', value: 42}]},
+                    "should have the right facet in the query");
+            });
+    });
+    asyncTest('completion facet selection: new value existing facet', 3, function () {
+        var field = {};
+        var completion = {
+            label: "Dummy",
+            facet: {
+                field: field,
+                category: 'Dummy',
+                values: [{label: 'dummy', value: 42}]
+            }
+        };
+
+        var view = makeSearchView({});
+        view.appendTo($('#qunit-fixture'))
+            .always(start)
+            .fail(function (error) { ok(false, error.message); })
+            .done(function () {
+                view.query.add({field: field, category: 'Dummy',
+                                values: [{label: 'previous', value: 41}]});
+                equal(view.query.length, 1, 'should have newly added facet');
+                view.select_completion(
+                    {preventDefault: function () {}},
+                    {item: completion});
+                equal(view.query.length, 1, "should still have only one facet");
+                var facet = view.query.at(0);
+                deepEqual(
+                    facet.get('values'),
+                    [{label: 'previous', value: 41}, {label: 'dummy', value: 42}],
+                    "should have added selected value to old one");
+            });
+    });
+
+    // TODO: test drawer rendering
+    // TODO: UI tests?
 });

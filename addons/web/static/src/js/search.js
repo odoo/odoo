@@ -381,8 +381,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
     select_completion: function (e, ui) {
         e.preventDefault();
 
-        // FIXME: could have multiple values, shitty API
-        this.query.add_value(ui.item.category, ui.item.values[0]);
+        this.query.add(ui.item.facet);
     },
     renderFacets: function () {
         var self = this;
