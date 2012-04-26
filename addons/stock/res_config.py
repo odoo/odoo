@@ -76,6 +76,9 @@ class stock_config_settings(osv.osv_memory):
             implied_group='stock.group_locations',
             help="""This allows to configure and use multiple stock locations and warehouses,
                 instead of having a single default one."""),
+        'group_product_variant': fields.boolean("Product Variant",
+            implied_group='product.group_product_variant',
+            help="""This allows to configure and use Product Variant."""),                
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
