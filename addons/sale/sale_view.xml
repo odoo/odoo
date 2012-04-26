@@ -110,7 +110,7 @@
                     <button name="invoice_cancel" states="invoice_except" string="Cancel Order" icon="gtk-cancel"/>
                     <button name="%(report_sale_order)d" string="Print Quotation" type="action" icon="gtk-print" states="draft"/>
                     <button name="order_confirm" states="draft" string="Confirm Order" icon="gtk-apply"/>
-                    <button name="%(action_view_sale_advance_payment_inv)d" string="Advance Invoice" type="action" icon="gtk-execute" states="draft,manual" groups="base.group_extended"/>
+                    <button name="%(action_view_sale_advance_payment_inv)d" string="Advance Invoice" type="action" icon="gtk-execute" states="draft,manual"/>
                     <div class="oe_right">
                         <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,progress,done" statusbar_colors='{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}'/>
                     </div>
@@ -120,7 +120,7 @@
                         <group col="4" colspan="4">
                             <field name="name"/>
                             <field name="date_order"/>
-                            <field name="shop_id" on_change="onchange_shop_id(shop_id)" widget="selection" groups="base.group_extended"/>
+                            <field name="shop_id" on_change="onchange_shop_id(shop_id)" widget="selection" groups="stock.group_locations"/>
                             <field name="client_order_ref"/>
                         </group>
                         <group col="2" colspan="2">
@@ -162,14 +162,14 @@
                                             <newline/>
                                             <field name="product_packaging"
                                                 context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'shop':parent.shop_id, 'uom':product_uom}" on_change="product_packaging_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, parent.partner_id, product_packaging, True, context)"
-                                                domain="[('product_id','=',product_id)]" groups="base.group_extended"
+                                                domain="[('product_id','=',product_id)]" groups="product.group_stock_packaging"
                                                 colspan="3"/>
                                             <field name="discount" groups="sale.group_discount_per_so_line"/>
                                             <separator colspan="5" string="Notes" groups="base.group_sale_notes_subtotal"/>
                                             <field colspan="5" name="notes" nolabel="1" groups="base.group_sale_notes_subtotal"/>
                                             <separator colspan="5" string="Taxes"/>
                                             <field colspan="5" name="tax_id" nolabel="1" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
-                                            <group colspan="5" col="5" groups="base.group_extended">
+                                            <group colspan="5" col="5">
                                                 <separator colspan="5" string="States"/>
                                                 <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done" statusbar_colors='{"exception":"red","cancel":"red"}'/>
                                                 <field name="invoiced"/>
@@ -187,7 +187,7 @@
                                             <separator colspan="4" string="Properties"/>
                                             <field name="property_ids" colspan="4" nolabel="1"/>
                                         </page>
-                                        <page string="History" groups="base.group_extended">
+                                        <page string="History">
                                             <separator colspan="4" string="Invoice Lines"/>
                                             <field colspan="4" name="invoice_lines" nolabel="1"/>
                                             <separator colspan="4" string="Stock Moves"/>
@@ -220,7 +220,7 @@
                             <field colspan="4" name="note" nolabel="1"/>
                         </page>
                         <page string="Other Information">
-                            <group colspan="2" col="2" groups="base.group_extended" name="logistics">
+                            <group colspan="2" col="2" name="logistics">
                                 <separator string="Logistic" colspan="2"/>
                                 <field name="incoterm" widget="selection"/>
                                 <field name="picking_policy" required="True"/>
@@ -230,9 +230,9 @@
                             <group colspan="2" col="2">
                                 <separator string="References" colspan="2"/>
                                 <field name="user_id"/>
-                                <field groups="base.group_extended" name="origin"/>
+                                <field groups="base.group_no_one" name="origin"/>
                             </group>
-                            <group name="sale_pay" colspan="2" col="2" groups="base.group_extended" >
+                            <group name="sale_pay" colspan="2" col="2">
                                 <separator string="Conditions" colspan="2"/>
                                 <field name="payment_term" widget="selection"/>
                                 <field name="fiscal_position" widget="selection"/>
@@ -241,7 +241,7 @@
                             <separator colspan="4" string="Notes" groups="base.group_sale_notes_subtotal"/>
                             <field colspan="4" name="note" nolabel="1" groups="base.group_sale_notes_subtotal"/>
                         </page>
-                        <page string="History" groups="base.group_extended">
+                        <page string="History">
                             <separator colspan="4" string="Invoices"/>
                             <field colspan="4" name="invoice_ids" nolabel="1" context="{'form_view_ref':'account.invoice_form'}"/>
                             <separator colspan="4" string="Packings"/>
@@ -274,7 +274,7 @@
                         <filter domain="[('user_id','=',uid)]" help="My Sale Orders" icon="terp-personal"/>
                     </field>
                     <newline/>
-                    <group expand="0" string="Group By..." groups="base.group_extended">
+                    <group expand="0" string="Group By...">
                         <filter string="Customer" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Salesman" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <separator orientation="vertical"/>
@@ -391,7 +391,7 @@
                         <field name="product_uom" groups="product.group_uom"/>
                         <newline/>
 
-                        <field colspan="4" name="name" groups="base.group_extended"/>
+                        <field colspan="4" name="name" groups="base.group_no_one"/>
                         <field name="company_id" groups="base.group_multi_company" readonly="1"/>
                     </group>
                     <separator colspan="4" string="Price"/>

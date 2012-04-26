@@ -29,7 +29,6 @@
             id="act_purchase_order_2_stock_picking"
             name="Receptions"
             res_model="stock.picking"
-            groups="base.group_extended"
             src_model="purchase.order"
             context="{'default_purchase_id': active_id, 'contact_display': 'partner'}" />
        
@@ -72,14 +71,14 @@
                             domain="[('state','=','done')]" help="Incoming Shipments already processed"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-accessories-archiver-minus" string="Back Orders"
-                            domain="[('backorder_id', '!=', False)]" help="Is a Back Order" groups="base.group_extended"/>
+                            domain="[('backorder_id', '!=', False)]" help="Is a Back Order"/>
                         <separator orientation="vertical"/>
                         <filter string="To Invoice" name="to_invoice" icon="terp-dolar"
                             domain="[('invoice_state', '=', '2binvoiced')]"/>
                         <separator orientation="vertical"/>
                         <field name="name"/>
                         <field name="origin"/>
-                        <field name="stock_journal_id" groups="base.group_extended" widget="selection"/>
+                        <field name="stock_journal_id" widget="selection"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                     </group>                    
                     <newline/>
@@ -94,7 +93,7 @@
                             domain="[]"  context="{'group_by':'min_date'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Journal" icon="terp-folder-orange"
-                            domain="[]" context="{'group_by':'stock_journal_id'}"  groups="base.group_extended"/>
+                            domain="[]" context="{'group_by':'stock_journal_id'}"/>
                     </group>
                 </search>
             </field>

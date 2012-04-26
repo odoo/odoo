@@ -43,7 +43,7 @@
                 <search string="Search Document storage">
                     <field name="name" />
                     <newline/>
-                    <group expand="0" string="Group By..." groups="base.group_extended">
+                    <group expand="0" string="Group By...">
                         <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"/>
                     </group>
                </search>
@@ -62,7 +62,7 @@
         name="Storage Media"
         action="action_document_storage_form"
         id="menu_document_storage_media"
-        groups="base.group_extended"
+        groups="base.group_no_one"
         parent="menu_document_management_configuration"/>
 
     <record model="ir.ui.view" id="view_document_directory_form">
@@ -94,11 +94,11 @@
                         <field name="ressource_id" select="2" readonly="1"/>
                     </group>
                     <group colspan="4" col="2" attrs="{'invisible': [('type','!=','ressource'),('ressource_parent_type_id','=',False)]}">
-                        <field name="resource_find_all" groups="base.group_extended" />
+                        <field name="resource_find_all"/>
                     </group>
 
                 </page>
-                <page string="Generated Files" groups="base.group_extended">
+                <page string="Generated Files" groups="base.group_no_one">
                     <label colspan="4" string="For each entry here, virtual files will appear in this folder." />
                     <field name="content_ids" nolabel="1" colspan="4" >
                         <form string="Contents">
@@ -119,7 +119,7 @@
                         </tree>
                     </field>
                 </page>
-                <page string="Dynamic context" groups="base.group_extended">
+                <page string="Dynamic context" groups="base.group_no_one">
                     <label colspan="4" string="Define words in the context, for all child directories and files" />
                     <field name="dctx_ids" nolabel="1" colspan="4">
                         <tree string="Fields" editable="bottom">
@@ -173,7 +173,7 @@
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="storage_id" />
                     <newline/>
-                    <group expand="0" string="Group By..." groups="base.group_extended">
+                    <group expand="0" string="Group By...">
                         <filter string="Owner" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"/>
@@ -275,7 +275,7 @@
                         <field name="write_date" readonly="1"/>
                     </group>
                 </page>
-                <page string="Indexed Content - experimental" groups="base.group_extended">
+                <page string="Indexed Content - experimental" groups="base.group_no_one">
                     <field name="index_content" colspan="4" nolabel="1"/>
                 </page>
                 <page string="Notes">
@@ -312,9 +312,6 @@
             <field name="type">search</field>
             <field name="inherit_id" ref="base.view_attachment_search"/>
             <field name="arch" type="xml">
-                <xpath expr="/search/group[@string='Group By...']" position="attributes">
-                    <attribute name="groups">base.group_extended</attribute>
-                </xpath>
                 <filter string="Owner" position="replace">
                     <filter string="Owner" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                     <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
@@ -337,8 +334,8 @@
                 <field name="company_id"/>
                 <field name="create_date" groups="base.group_no_one"/>
                 <field name="write_date" groups="base.group_no_one"/>
-                <field name="partner_id" groups="base.group_extended" />
-                <field name="type"  groups="base.group_extended"/>
+                <field name="partner_id"/>
+                <field name="type"/>
             </tree>
 
         </field>
@@ -420,8 +417,7 @@
         context="{'default_partner_id': active_id}"
         id="act_res_partner_document" name="Related Documents"
         res_model="ir.attachment"
-        src_model="res.partner"
-        groups="base.group_extended"/>
+        src_model="res.partner"/>
 
     <act_window
         domain="[('parent_id', '=', active_id)]"
