@@ -136,6 +136,8 @@
                     <field name="type"/>
                     <field name="product_image"/>
                     <field name="list_price"/>
+                    <field name="total_reception"/>
+                    <field name="total_delivery"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_product_vignette">
@@ -150,6 +152,20 @@
                                         <li>Price: <field name="lst_price"></field></li>
                                         <li>Cost: <field name="standard_price"></field></li>
                                     </ul>
+                                    <t t-if="record.total_reception.raw_value">
+                                        <a name="get_receptions" type="object">
+                                            (<t t-esc="record.total_reception.value"/>)
+                                            <t t-if="record.total_reception.raw_value &lt;= 1">Reception</t>
+                                            <t t-if="record.total_reception.raw_value > 1"> Receptions</t>
+                                        </a>
+                                    </t>
+                                    <t t-if="record.total_delivery.raw_value">
+                                        <a name="get_deliveries" type="object">
+                                            (<t t-esc="record.total_delivery.value"/>)
+                                            <t t-if="record.total_delivery.raw_value &lt;= 1">Delivery</t>
+                                            <t t-if="record.total_delivery.raw_value > 1">Deliveries</t>
+                                        </a>
+                                    </t>
                                 </div>
                             </div>
                             <script>

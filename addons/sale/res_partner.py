@@ -19,17 +19,24 @@
 #
 ##############################################################################
 
-#----------------------------------------------------------
-# Init Sales
-#----------------------------------------------------------
+from osv import fields,osv
+from tools.translate import _
 
-import sale
-import stock
-import res_partner
-import wizard
-import report
-import company
-import edi
-import res_config
-
+class res_partner(osv.osv):
+    _inherit = 'res.partner'
+    
+    def _total_sale(self, cr, uid, ids, field_name, arg, context=None):
+        total_sale={}
+        sale_pool=self.pool.get('sale.order')
+        for id in ids:
+            sale_ids = sale_pool.search(cr, uid, [('partner_id', '=', id)])
+            total_sale[id] = len(sale_ids)
+        return total_sale
+    
+    _columns = {
+        'total_sale': fields.function(_total_sale , type='integer',string="Total Sale"),
+    }
+    _defaults = {
+        'total_sale': 0,
+    }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

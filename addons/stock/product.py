@@ -26,6 +26,22 @@ import decimal_precision as dp
 class product_product(osv.osv):
     _inherit = "product.product"
 
+    def _get_reception(self, cr, uid, ids, field_name, arg, context=None):
+        total_reception={}
+        reception_pool=self.pool.get('stock.picking')
+        for id in ids:
+            reception_ids = reception_pool.search(cr, uid, [('move_lines.product_id','=',id),('type','=','in')])
+            total_reception[id] = len(reception_ids)
+        return total_reception
+
+    def _total_delivery(self, cr, uid, ids, field_name, arg, context=None):
+        total_delivery={}
+        delivery_pool=self.pool.get('stock.picking')
+        for id in ids:
+            delivery_ids = delivery_pool.search(cr, uid, [('move_lines.product_id', '=', id),('type','=','out')])
+            total_delivery[id] = len(delivery_ids)
+        return total_delivery
+
     def get_product_accounts(self, cr, uid, product_id, context=None):
         """ To get the stock input account, stock output account and stock journal related to product.
         @param product_id: product id
@@ -331,6 +347,8 @@ class product_product(osv.osv):
         return res
 
     _columns = {
+        'total_reception': fields.function(_get_reception , type='integer',string="Total Reception"),
+        'total_delivery': fields.function(_total_delivery , type='integer',string="Total Delivery"),
         'qty_available': fields.function(_product_available, multi='qty_available',
             type='float',  digits_compute=dp.get_precision('Product UoM'),
             string='Quantity On Hand',
@@ -446,6 +464,61 @@ class product_product(osv.osv):
                     if fields.get('qty_available'):
                         res['fields']['qty_available']['string'] = _('Produced Qty')
         return res
+    def get_receptions(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        models_data = self.pool.get('ir.model.data')
+
+        form_view = models_data.get_object_reference(cr, uid, 'stock', 'view_picking_in_form')
+        tree_view = models_data.get_object_reference(cr, uid, 'stock', 'view_picking_in_tree')
+        search_view = models_data.get_object_reference(cr, uid, 'stock', 'view_picking_internal_search')
+        product_id = self.browse(cr, uid, ids[0], context=context)
+        domain =[('move_lines.product_id', '=', product_id.id),('type','=','in')]
+        context.update({'default_type': 'internal', 'contact_display': 'partner_address', 'search_default_available': 1})
+
+        return {
+                'name': _('Receptions'),
+                'view_type': 'form',
+                'view_mode': 'tree, form',
+                'res_model': 'stock.picking',
+                'domain': domain,
+                'view_id': False,
+                'views': [(tree_view and tree_view[1] or False, 'tree'),
+                          (form_view and form_view[1] or False, 'form'),
+                          (False, 'calendar'), (False, 'graph')],
+                'type': 'ir.actions.act_window',
+                'context': context,
+                'search_view_id': search_view and search_view[1] or False,
+                'nodestroy': True,
+        }
+
+    def get_deliveries(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        models_data = self.pool.get('ir.model.data')
+
+        form_view = models_data.get_object_reference(cr, uid, 'stock', 'view_picking_out_form')
+        tree_view = models_data.get_object_reference(cr, uid, 'stock', 'view_picking_out_tree')
+        search_view = models_data.get_object_reference(cr, uid, 'stock', 'view_picking_out_search')
+        product_id = self.browse(cr, uid, ids[0], context=context)
+        domain =[('move_lines.product_id', '=', product_id.id),('type','=','out')]
+        context.update({'default_type': 'out', 'contact_display': 'partner_address'})
+
+        return {
+                'name': _('Deliveries'),
+                'view_type': 'form',
+                'view_mode': 'tree, form',
+                'res_model': 'stock.picking',
+                'domain': domain,
+                'view_id': False,
+                'views': [(tree_view and tree_view[1] or False, 'tree'),
+                          (form_view and form_view[1] or False, 'form'),
+                          (False, 'calendar'), (False, 'graph')],
+                'type': 'ir.actions.act_window',
+                'context':context,
+                'search_view_id': search_view and search_view[1] or False,
+                'nodestroy': True,
+        }
 
 product_product()
 
