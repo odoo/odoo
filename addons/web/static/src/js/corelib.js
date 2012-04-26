@@ -756,7 +756,7 @@ instance.web.Registry = instance.web.Class.extend({
      * registry was created.
      *
      * An object path is simply a dotted name from the instance root to the
-     * object pointed to (e.g. ``"instance.web.Connection"`` for an OpenERP
+     * object pointed to (e.g. ``"instance.web.Session"`` for an OpenERP
      * connection object).
      *
      * @constructs instance.web.Registry
@@ -865,9 +865,9 @@ instance.web.Registry = instance.web.Class.extend({
     }
 });
 
-instance.web.Connection = instance.web.CallbackEnabled.extend( /** @lends instance.web.Connection# */{
+instance.web.JsonRPC = instance.web.CallbackEnabled.extend({
     /**
-     * @constructs instance.web.Connection
+     * @constructs instance.web.JsonRPC
      * @extends instance.web.CallbackEnabled
      *
      * @param {String} [server] JSON-RPC endpoint hostname
@@ -877,32 +877,13 @@ instance.web.Connection = instance.web.CallbackEnabled.extend( /** @lends instan
         this._super();
         this.server = null;
         this.debug = ($.deparam($.param.querystring()).debug != undefined);
-        // TODO: session store in cookie should be optional
-        this.name = instance._session_id;
-        this.qweb_mutex = new $.Mutex();
     },
-    session_bind: function(origin) {
+    setup: function(origin) {
         var window_origin = location.protocol+"//"+location.host, self=this;
         this.origin = origin ? _.str.rtrim(origin,'/') : window_origin;
         this.prefix = this.origin;
         this.server = this.origin; // keep chs happy
-        instance.web.qweb.default_dict['_s'] = this.origin;
         this.rpc_function = (this.origin == window_origin) ? this.rpc_json : this.rpc_jsonp;
-        this.session_id = false;
-        this.uid = false;
-        this.username = false;
-        this.user_context= {};
-        this.db = false;
-        this.openerp_entreprise = false;
-        this.module_list = instance._modules.slice();
-        this.module_loaded = {};
-        _(this.module_list).each(function (mod) {
-            self.module_loaded[mod] = true;
-        });
-        this.context = {};
-        this.shortcuts = [];
-        this.active_id = null;
-        return this.session_init();
     },
     test_eval_get_context: function () {
         var asJS = function (arg) {
@@ -1211,7 +1192,6 @@ instance.web.Connection = instance.web.CallbackEnabled.extend( /** @lends instan
             url = { url: url };
         }
         // Construct a JSON-RPC2 request, method is currently unused
-        params.session_id = this.session_id;
         if (this.debug)
             params.debug = 1;
         var payload = {
@@ -1358,6 +1338,42 @@ instance.web.Connection = instance.web.CallbackEnabled.extend( /** @lends instan
     on_rpc_response: function() {
     },
     on_rpc_error: function(error) {
+    },
+});
+
+instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Session# */{
+    init: function() {
+        this._super.apply(this, arguments);
+        // TODO: session store in cookie should be optional
+        this.name = instance._session_id;
+        this.qweb_mutex = new $.Mutex();
+    },
+    rpc: function(url, params, success_callback, error_callback) {
+        params.session_id = this.session_id;
+        return this._super(url, params, success_callback, error_callback);
+    },
+    /**
+     * Setup a sessionm
+     */
+    session_bind: function(origin) {
+        var self = this;
+        this.setup(origin);
+        instance.web.qweb.default_dict['_s'] = this.origin;
+        this.session_id = false;
+        this.uid = false;
+        this.username = false;
+        this.user_context= {};
+        this.db = false;
+        this.openerp_entreprise = false;
+        this.module_list = instance._modules.slice();
+        this.module_loaded = {};
+        _(this.module_list).each(function (mod) {
+            self.module_loaded[mod] = true;
+        });
+        this.context = {};
+        this.shortcuts = [];
+        this.active_id = null;
+        return this.session_init();
     },
     /**
      * Init a session, reloads from cookie, if it exists
@@ -1765,6 +1781,7 @@ instance.web.OldWidget = instance.web.Widget.extend({
         return null;
     }
 });
+
 
 }
 
