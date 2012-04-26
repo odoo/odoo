@@ -29,21 +29,21 @@
 -
   I create currency USD in OpenERP for February of 1.250000 Rate
 -
-  !record {model: res.currency.rate, id: febr_usd}:
+  !record {model: res.currency.rate, id: feb_usd}:
     currency_id: base.USD
     name: !eval "'%s-02-01' %(datetime.now().year)"
     rate: 1.250000
 -
   I create currency USD in OpenERP for March of 1.111111 Rate
 -
-  !record {model: res.currency.rate, id: marc_usd}:
+  !record {model: res.currency.rate, id: mar_usd}:
     currency_id: base.USD
     name: !eval "'%s-03-01' %(datetime.now().year)"
     rate: 1.111111
 -
   I create currency USD in OpenERP for April of 1.052632 Rate
 -
-  !record {model: res.currency.rate, id: apri_usd}:
+  !record {model: res.currency.rate, id: apr_usd}:
     currency_id: base.USD
     name: !eval "'%s-04-01' %(datetime.now().year)"
     rate: 1.052632
