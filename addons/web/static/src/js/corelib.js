@@ -878,7 +878,7 @@ instance.web.JsonRPC = instance.web.CallbackEnabled.extend({
         this.server = null;
         this.debug = ($.deparam($.param.querystring()).debug != undefined);
     },
-    bind: function(origin) {
+    setup: function(origin) {
         var window_origin = location.protocol+"//"+location.host, self=this;
         this.origin = origin ? _.str.rtrim(origin,'/') : window_origin;
         this.prefix = this.origin;
@@ -1357,7 +1357,7 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
      */
     session_bind: function(origin) {
         var self = this;
-        this.bind(origin);
+        this.setup(origin);
         instance.web.qweb.default_dict['_s'] = this.origin;
         this.session_id = false;
         this.uid = false;
