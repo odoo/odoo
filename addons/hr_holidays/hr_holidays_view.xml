@@ -150,7 +150,8 @@
             <field name="model">hr.holidays</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="red:state == 'refuse';blue:state == 'draft';black:state in ('confirm','validate','validate1')" string="Allocation Requests">
+                <tree fonts="bold:needaction_pending==True" colors="red:state == 'refuse';blue:state == 'draft';black:state in ('confirm','validate','validate1')" string="Allocation Requests">
+                    <field name="needaction_pending" invisible="1"/>
                     <field name="employee_id"/>
                     <field name="holiday_type"/>
                     <field name="category_id"/>
@@ -205,7 +206,8 @@
             <field name="type">tree</field>
             <field name="priority">20</field>
             <field name="arch" type="xml">
-                <tree colors="red:state == 'refuse';blue:state == ' draft';black:state in ('confirm','validate','validate1')" string="Leaves Summary">
+                <tree fonts="bold:needaction_pending==True" colors="red:state == 'refuse';blue:state == ' draft';black:state in ('confirm','validate','validate1')" string="Leaves Summary">
+                    <field name="needaction_pending" invisible="1"/>
                     <field name="employee_id"/>
                     <field name="category_id" invisible="1"/>
                     <field name="department_id" invisible="1"/>
@@ -231,7 +233,8 @@
             <field name="model">hr.holidays</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="red:state == 'refuse';blue:state == ' draft';black:state in ('confirm','validate','validate1')" string="Leave Requests">
+                <tree fonts="bold:needaction_pending==True" colors="red:state == 'refuse';blue:state == ' draft';black:state in ('confirm','validate','validate1')" string="Leave Requests">
+                    <field name="needaction_pending" invisible="1"/>
                     <field name="employee_id"/>
                     <field name="holiday_type" string="Mode" groups="base.group_hr_user"/>
                     <field name="name"/>
@@ -375,7 +378,7 @@
                     <group colspan="4" col="6">
                         <field name="name"/>
                         <field name="color_name"/>
-                        <field name="categ_id" widget="selection" groups="base.group_extended"/>
+                        <field name="categ_id" widget="selection"/>
                     </group>
                     <notebook colspan="4">
                       <page string="Details">
@@ -484,22 +487,6 @@
            <field name="view_id" ref="hr_holidays_leaves_assign_tree_view"/>
            <field name="help">You can assign remaining Legal Leaves for each employee, OpenERP will automatically create and validate allocation requests.</field>
        </record>
-
-        <!-- Hr Configuration wizard -->
-        <record id="view_config_wizard_inherit" model="ir.ui.view">
-            <field name="name">hr settings for holidays</field>
-            <field name="model">hr.config.settings</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="hr.view_human_resources_configuration"/>
-            <field name="arch" type="xml">
-                <field name="module_hr_holidays" position="after">
-                    <group colspan="2">
-                        <button name="%(hr_holidays.hr_holidays_leaves_assign_legal)d" string="Allocate Leaves"
-                            type="action" icon="gtk-apply"/>
-                    </group>
-                </field>
-            </field>
-        </record>
 
         <!-- Hr employee inherit Legal Leaves -->
 

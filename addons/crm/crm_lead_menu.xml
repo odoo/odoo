@@ -10,7 +10,20 @@
         <field name="view_id" ref="crm_case_tree_view_leads"/>
         <field name="search_view_id" ref="crm.view_crm_case_leads_filter"/>
         <field name="context">{'default_type': 'lead', 'search_default_section_id': section_id, 'stage_type': 'lead'}</field>
-        <field name="help">Leads allow you to manage and keep track of all initial contacts with a prospect or partner showing interest in your products or services. A lead is usually the first step in your sales cycle. Once qualified, a lead may be converted into a business opportunity, while creating the related partner for further detailed tracking of any linked activities. You can import a database of prospects, keep track of your business cards or integrate your website's contact form with the OpenERP Leads. Leads can be connected to the email gateway: new emails may create leads, each of them automatically gets the history of the conversation with the prospect.</field>
+        <field name="help">
+            &lt;img src="http://www.thaicrmsoftware.com/wp-content/uploads/2011/11/lead-conversion.jpg" align="right" style="padding: 6px" width="306" height="223"&gt;
+            &lt;h2&gt;Create your first OpenERP Lead &lt;/h2&gt;
+            &lt;p&gt;
+            Leads allow you to manage and keep track of all initial contacts with a prospect or partner showing interest in your products or services.
+            &lt;p&gt;
+            A lead is usually the first step in your sales cycle.
+            &lt;p&gt;
+            Once qualified, a lead may be converted into a business opportunity, while creating the related partner for further detailed tracking of any linked activities.
+            &lt;p&gt;
+            You can import a database of prospects, keep track of your business cards or integrate your website's contact form with the OpenERP Leads.
+            &lt;p&gt;
+            Leads can be connected to the email gateway: new emails may create leads, each of them automatically gets the history of the conversation with the prospect.
+        </field>
     </record>
 
     <record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_leads_all">
@@ -30,7 +43,7 @@
     <act_window
             id="act_crm_opportunity_crm_phonecall_new"
             name="Phone calls"
-            groups="base.group_extended"
+            groups="base.group_sale_salesman"
             res_model="crm.phonecall"
             src_model="crm.lead"
             view_mode="tree,calendar,form"

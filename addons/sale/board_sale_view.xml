@@ -6,7 +6,7 @@
             <field name="model">board.board</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Sales Manager Dashboard">
+                <form string="Sales Manager Dashboard" layout="manual">
                     <board style="2-1">
                         <column>
                             <action name="%(sale.action_quotation_for_sale)d" string="Quotations" creatable="true"/>
@@ -99,7 +99,7 @@
             <field name="model">board.board</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Sales Dashboard">
+                <form string="Sales Dashboard" layout="manual">
                     <board style="2-1">
                         <column>
                             <action name="%(action_quotation_for_sale)d"
