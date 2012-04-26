@@ -37,36 +37,5 @@
       <field name="params" eval="{'widget_id': ref('base.currency_converter_widget')}"/>
     </record>
 
-    <!-- default homepage definition -->
-    <record id="board_homepage_view" model="ir.ui.view">
-      <field name="name">Homepage Board</field>
-      <field name="model">board.board</field>
-      <field name="type">form</field>
-      <field name="arch" type="xml">
-        <form string="">
-          <board style="1">
-            <column>
-              <action name="%(action_application_tiles)d"/>
-            </column>
-          </board>
-        </form>
-      </field>
-    </record>
-    <record id="board_homepage_action" model="ir.actions.act_window">
-      <field name="name">Home Page</field>
-      <field name="res_model">board.board</field>
-      <field name="view_type">form</field>
-      <field name="view_mode">form</field>
-      <field name="view_id" ref="board_homepage_view"/>
-    </record>
-
-    <!-- set the default homepage of admin -->
-    <record id="base.user_admin" model="res.users">
-        <field name="action_id" ref="board_homepage_action"/>
-    </record>
-
-    <!-- and of every new users -->
-    <function eval="('default',False,'action_id', [('res.users', False)], board_homepage_action, True, False, False, False, True)" id="ir_default_home" model="ir.values" name="set"/>
-
 </data>
 </openerp>

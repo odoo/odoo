@@ -54,7 +54,12 @@
                     <group colspan="4" col="6">
                         <field name="name"/>
                         <field name="project_id" required="True" on_change="on_change_project(project_id)"/>
-                        <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'project.issue')]"/>
+                        <group colspan="2" col="3">
+                            <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'project.issue')]"/>
+                            <button string="Send New Email"
+                                name="%(mail.action_email_compose_message_wizard)d"
+                                icon="terp-mail-message-new" type="action"/>
+                        </group>
                         <field name="user_id"/>
                         <field name="version_id" colspan="2" widget="selection"/>
                         <group colspan="2" col="4">
@@ -91,41 +96,9 @@
                             <button name="case_reset" string="Reset to New" states="done,cancel" type="object" icon="gtk-convert"/>
                             </group>
                         </page>
-                        <page string="Communication &amp; History" groups="base.group_extended">
-                            <group colspan="4">
-                            <field colspan="4" name="email_cc" string="Global CC" widget="email"/>
-                            </group>
-                            <field name="message_ids" colspan="4" nolabel="1" mode="tree" readonly="1">
-                                <tree string="History">
-                                    <field name="display_text" string="History Information"/>
-                                    <field name="email_from" invisible="1"/>
-                                    <button
-                                        string="Reply" attrs="{'invisible': [('email_from', '=', False)]}"
-                                        name="%(mail.action_email_compose_message_wizard)d"
-                                        context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
-                                        icon="terp-mail-replied" type="action" />
-                                </tree>
-                            </field>
-                           <separator colspan="4"/>
-                            <button string="Add Internal Note"
-                                name="%(crm.action_crm_add_note)d"
-                                context="{'model': 'crm.lead' }"
-                                icon="terp-document-new" type="action" />
-                            <button string="Send New Email"
-                                name="%(mail.action_email_compose_message_wizard)d"
-                                icon="terp-mail-message-new" type="action"/>
-                        </page>
-                           <page string="Extra Info" groups="base.group_no_one">
-                            <group col="2" colspan="2">
-                                <separator colspan="2" string="Date"/>
-                               <field name="create_date"/>
-                                <field name="write_date" />
-                                <field name="date_closed"/>
-                                <field name="date_open"/>
-                                <field name="date_action_last"/>
-                            </group>
-                            <group colspan="2" col="2">
-                                <separator string="Statistics" colspan="2" col="2"/>
+                        <page string="Extra Info">
+                            <group col="4" colspan="4">
+                                <separator string="Statistics" colspan="4" col="4"/>
                                 <field name="day_open"/>
                                 <field name="day_close"/>
                                 <field name="working_hours_open" widget="float_time"/>
@@ -133,13 +106,14 @@
                                 <field name="inactivity_days"/>
                                 <field name="days_since_creation"/>
                             </group>
-                            <group colspan="2" col="2">
-                            <separator string="References" colspan="2"/>
-                            <field name="id"/>
-                            <field name="active"/>
+                            <group colspan="4" col="4">
+                                <separator string="References" colspan="4"/>
+                                <field name="id"/>
+                                <field name="active"/>
                             </group>
                         </page>
                     </notebook>
+                    <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
                 </form>
             </field>
         </record>
@@ -149,11 +123,12 @@
             <field name="model">project.issue</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Issue Tracker Tree" colors="black:state=='open';blue:state=='pending';grey:state in ('cancel', 'done')">
+                <tree string="Issue Tracker Tree" fonts="bold:needaction_pending==True" colors="black:state=='open';blue:state=='pending';grey:state in ('cancel', 'done')">
+                    <field name="needaction_pending" invisible="1"/>
                     <field name="id"/>
                     <field name="create_date" groups="base.group_no_one"/>
                     <field name="name"/>
-                    <field name="partner_id" groups="base.group_extended"/>
+                    <field name="partner_id"/>
                     <field name="project_id" />
                     <field name="priority" string="Priority"/>
                     <field name="type_id" widget="selection" readonly="1" string="Stages" />
@@ -194,7 +169,7 @@
                         <field name="id"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By..."  groups="base.group_extended">
+                    <group expand="0" string="Group By..." >
                         <filter string="Responsible" icon="terp-personal"
                             domain="[]" context="{'group_by':'user_id'}" />
                         <filter string="Partner" icon="terp-partner" domain="[]"
@@ -316,10 +291,11 @@
             <field name="model">project.issue</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Feature Tracker Tree"  colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
+                <tree string="Feature Tracker Tree" fonts="bold:needaction_pending==True" colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
                     <field name="id"/>
+                    <field name="needaction_pending" invisible="1"/>
                     <field name="name" string="Feature description"/>
-                    <field name="partner_id" groups="base.group_extended"/>
+                    <field name="partner_id"/>
                     <field name="priority" string="Priority"/>
                     <field name="type_id" widget="selection" readonly="1"/>
                     <button name="prev_type" string="Previous" type="object" icon="gtk-go-back" help="Change to Previous Stage"/>

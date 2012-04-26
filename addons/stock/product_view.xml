@@ -40,9 +40,9 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
-                 <page position="after" string="Information">
+                <page position="after" string="Information">
                     <page string="Properties">
-                        <separator string="Counter-Part Locations Properties" colspan="4"/>
+                        <separator string="Counter-Part Locations Properties" groups="stock.group_locations" colspan="4"/>
                         <field name="property_stock_procurement" domain="[('usage','=','procurement')]"/>
                         <field name="property_stock_production" domain="[('usage','=','production')]"/>
                         <field name="property_stock_inventory" domain="[('usage','=','inventory')]"/>
@@ -79,16 +79,16 @@
             <field name="priority">26</field>
             <field name="arch" type="xml">
                 <xpath expr="/form/notebook/page/group[@name='properties']" position="before">
-                    <group groups="base.group_extended">
+                    <group groups="stock.group_inventory_valuation">
                         <separator string="Inventory Valuation" colspan="4"/>
                         <group colspan="2" col="2">
                             <field name="valuation" attrs="{'readonly':[('type', '=', 'service')]}"/>
                         </group>
                         <group colspan="2" col="2">
                             <field name="property_stock_account_input" attrs="{'readonly':[('valuation', '!=', 'real_time')]}"
-                                domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" groups="base.group_extended"/>
+                                domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                             <field name="property_stock_account_output" attrs="{'readonly':[('valuation', '!=', 'real_time')]}"
-                                domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" groups="base.group_extended"/>
+                                domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                         </group>
                     </group>
                     <newline/>
@@ -111,16 +111,16 @@
                         <newline/>
                         <field name="virtual_available"/>
                     </group>
-                    <group colspan="2" col="2" name="stock_variations" groups="base.group_extended">
+                    <group colspan="2" col="2" name="stock_variations">
                         <separator string="Expected Stock Variations" colspan="2"/>
                         <field name="incoming_qty"/>
                         <field name="outgoing_qty"/>
                     </group>
-                    <group colspan="2" col="2" name="lot" groups="base.group_extended">
+                    <group colspan="2" col="2" name="lot" groups="stock.group_tracking_lot,stock.group_production_lot">
                         <separator string="Lots" colspan="4"/>
-                        <field name="track_production" />
-                        <field name="track_incoming" />
-                        <field name="track_outgoing" />
+                        <field name="track_production" groups="stock.group_production_lot"/>
+                        <field name="track_incoming" groups="stock.group_tracking_lot"/>
+                        <field name="track_outgoing" groups="stock.group_tracking_lot"/>
                     </group>
                 </group>
             </field>
@@ -169,7 +169,7 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <group name="store" position="after">
-                    <group col="2" colspan="2" name="store" groups="base.group_extended">
+                    <group col="2" colspan="2" name="store" groups="stock.group_locations">
                         <separator string="Counter-Part Locations Properties" colspan="2"/>
                         <field name="property_stock_procurement" attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','procurement')]"/>
                         <field name="property_stock_production" attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','production')]"/>

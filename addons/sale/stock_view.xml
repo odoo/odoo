@@ -8,7 +8,7 @@
             <field name="inherit_id" ref="stock.view_picking_form"/>
             <field name="arch" type="xml">
                 <field name="auto_picking" position="after">
-                    <field name="sale_id" invisible="1"/>
+                    <field name="sale_id"/>
                 </field>
             </field>
         </record>
@@ -57,9 +57,9 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="stock.view_picking_out_form"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page/field[@name='date']"  position="after">
+                <field name="move_type" position="after">
                     <field name="sale_id"/>
-                </xpath>
+                </field>
             </field>
         </record>
 
@@ -74,22 +74,7 @@
             <field name="context">{'default_type': 'out', 'contact_display': 'partner_address', 'search_default_to_invoice': 1, 'search_default_done': 1}</field>
             <field name="search_view_id" ref="stock.view_picking_out_search"/>
         </record>
-        
-       <record id="action_sale_picking_out_tree_view1" model="ir.actions.act_window.view">
-            <field eval="1" name="sequence"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="stock.view_picking_out_tree"/>
-            <field name="act_window_id" ref="outgoing_picking_list_to_invoice"/>
-        </record>
-
-        <record id="action_sale_picking_out_form_view1" model="ir.actions.act_window.view">
-            <field eval="2" name="sequence"/>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="stock.view_picking_out_form"/>
-            <field name="act_window_id" ref="outgoing_picking_list_to_invoice"/>
-        </record>
-
-        <menuitem action="outgoing_picking_list_to_invoice" id="menu_action_picking_list_to_invoice" parent="base.menu_invoiced" groups="base.group_no_one" sequence="20"/>
+        <menuitem action="outgoing_picking_list_to_invoice" id="menu_action_picking_list_to_invoice" parent="base.menu_invoiced" groups="sale.group_invoice_deli_orders" sequence="20"/>
 
     </data>
 </openerp>
