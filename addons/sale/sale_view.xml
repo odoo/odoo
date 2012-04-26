@@ -101,7 +101,6 @@
                 <div class="oe_form_topbar">
                     <button name="order_confirm" states="draft" string="Confirm Order" icon="gtk-apply"/>
                     <button name="manual_invoice" states="manual" string="Create Final Invoice" icon="gtk-go-forward" type="object"/>
-                    <button name="%(action_view_sale_advance_payment_inv)d" string="Advance Invoice" type="action" icon="gtk-execute" states="draft,manual"/>
                     <button name="invoice_recreate" states="invoice_except" string="Recreate Invoice" icon="gtk-go-forward"/>
                     <button name="invoice_corrected" states="invoice_except" string="Ignore Exception" icon="gtk-apply"/>
                     <button name="ship_recreate" states="shipping_except" string="Recreate Packing" icon="gtk-ok"/>
@@ -111,6 +110,7 @@
                     <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" icon="gtk-convert"/>
                     <button name="invoice_cancel" states="invoice_except" string="Cancel Order" icon="gtk-cancel"/>
                     <button name="%(report_sale_order)d" string="Print Quotation" type="action" icon="gtk-print" states="draft"/>
+                    <button name="%(action_view_sale_advance_payment_inv)d" string="Advance Invoice" type="action" icon="gtk-execute" states="draft,manual"/>
                     <button name="action_cancel" states="manual,progress" string="Cancel Order" type="object" icon="gtk-cancel"/>
                     <button name="cancel" states="draft" string="Cancel Order" icon="gtk-cancel"/>
                     <div class="oe_right">
