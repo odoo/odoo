@@ -6,24 +6,25 @@
             <field name="model">mrp.config.settings</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Configure Manufacturing">
-                    <separator string="Manufacturing Order" colspan="4"/>
-                    <field name="module_mrp_operations"/>
-                    <field name="module_stock_planning"/>
-                    <field name="module_mrp_subproduct"/>
-                    <field name="module_mrp_repair"/>
+                <form string="Configure Manufacturing" layout="manual">
+                    <div class="oe_form_topbar">
+                        <button string="Apply" type="object" name="execute"/>
+                        <button string="Cancel" special="cancel"/>
+                    </div>
+                    <sheet layout="auto">
+                        <separator string="Manufacturing Order" colspan="4"/>
+                        <field name="module_mrp_operations"/>
+                        <field name="module_stock_planning"/>
+                        <field name="module_mrp_subproduct"/>
+                        <field name="module_mrp_repair"/>
 
-		            <separator string="Logistics" colspan="4"/>
-                    <field name="module_mrp_jit"/>
+                        <separator string="Logistics" colspan="4"/>
+                        <field name="module_mrp_jit"/>
 
-		            <separator string="Bill Of Material" colspan="4"/>
-                    <field name="group_mrp_routings"/>
-                    <field name="group_mrp_properties"/>
-
-                    <newline/>
-                    <label colspan="2"/>
-                    <button string="Cancel" icon="gtk-cancel" special="cancel"/>
-                    <button string="Apply" icon="gtk-apply" type="object" name="execute"/>
+                        <separator string="Bill Of Material" colspan="4"/>
+                        <field name="group_mrp_routings"/>
+                        <field name="group_mrp_properties"/>
+                    </sheet>
                 </form>
             </field>
         </record>

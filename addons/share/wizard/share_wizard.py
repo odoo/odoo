@@ -189,7 +189,7 @@ class share_wizard(osv.osv_memory):
         'invite': False,
         'domain': lambda self, cr, uid, context, *a: context.get('domain', '[]'),
         'action_id': lambda self, cr, uid, context, *a: context.get('action_id'),
-        'access_mode': 'readonly',
+        'access_mode': 'readwrite',
         'embed_option_title': True,
         'embed_option_search': True,
     }
@@ -502,6 +502,8 @@ class share_wizard(osv.osv_memory):
         # Create required rights if allowed by current user rights and not
         # already granted
         for dummy, model in fields_relations:
+            # mail.message is transversal: it should not received directly the access rights
+            if model.model in ['mail.message']: continue
             values = {
                 'name': _('Copied access for sharing'),
                 'group_id': group_id,
@@ -632,6 +634,8 @@ class share_wizard(osv.osv_memory):
             domain = safe_eval(wizard_data.domain)
             if domain:
                 for rel_field, model in fields_relations:
+                    # mail.message is transversal: it should not received directly the access rights
+                    if model.model in ['mail.message']: continue
                     related_domain = []
                     if not rel_field: continue
                     for element in domain:
