@@ -865,9 +865,9 @@ instance.web.Registry = instance.web.Class.extend({
     }
 });
 
-instance.web.BaseConnection = instance.web.CallbackEnabled.extend( /** @lends instance.web.BaseConnection# */{
+instance.web.JsonRPC = instance.web.CallbackEnabled.extend({
     /**
-     * @constructs instance.web.BaseConnection
+     * @constructs instance.web.JsonRPC
      * @extends instance.web.CallbackEnabled
      *
      * @param {String} [server] JSON-RPC endpoint hostname
@@ -1199,7 +1199,6 @@ instance.web.BaseConnection = instance.web.CallbackEnabled.extend( /** @lends in
             url = { url: url };
         }
         // Construct a JSON-RPC2 request, method is currently unused
-        params.session_id = this.session_id;
         if (this.debug)
             params.debug = 1;
         var payload = {
@@ -1349,14 +1348,13 @@ instance.web.BaseConnection = instance.web.CallbackEnabled.extend( /** @lends in
     },
 });
 
-instance.web.Connection = instance.web.BaseConnection.extend( /** @lends instance.web.Connection# */{
+instance.web.Connection = instance.web.JsonRPC.extend( /** @lends instance.web.Connection# */{
     init: function() {
         this._super.apply(this, arguments);
         // TODO: session store in cookie should be optional
         this.name = instance._session_id;
         this.qweb_mutex = new $.Mutex();
     },
-
     on_bind: function() {
         var self = this;
         instance.web.qweb.default_dict['_s'] = this.origin;
@@ -1376,7 +1374,10 @@ instance.web.Connection = instance.web.BaseConnection.extend( /** @lends instanc
         this.active_id = null;
         return this.session_init();
     },
-
+    rpc: function(url, params, success_callback, error_callback) {
+        params.session_id = this.session_id;
+        return this._super(url, params, success_callback, error_callback);
+    },
     session_bind: function(origin) {
         return this.bind(origin);
     },
@@ -1786,6 +1787,7 @@ instance.web.OldWidget = instance.web.Widget.extend({
         return null;
     }
 });
+
 
 }
 
