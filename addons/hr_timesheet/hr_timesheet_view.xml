@@ -42,7 +42,7 @@
                             </group>
                             <group colspan="2" col="2">
                                 <separator string="Accounting" colspan="2"/>
-                                <field domain="[('type','=','normal'),('state', '&lt;&gt;', 'close'),('parent_id','!=',False)]" name="account_id" select="1" groups="base.group_extended"/>
+                                <field domain="[('type','=','normal'),('state', '&lt;&gt;', 'close'),('parent_id','!=',False)]" name="account_id" select="1"/>
                                 <field name="amount"/>
                                 <field name="general_account_id"/>
                                 <field name="journal_id"/>
