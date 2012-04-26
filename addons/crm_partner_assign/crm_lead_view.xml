@@ -9,7 +9,7 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//notebook/page[@string='Lead']" position="after">
-                        <page string="Assignation" groups="base.group_extended">
+                        <page string="Assignation">
                         <group name="partner_assign_group" col="5" colspan="4">
                             <separator string="Partner Assignation" colspan="5"/>
                             <field name="partner_assigned_id" on_change="onchange_assign_id(partner_assigned_id)" domain="[('grade_id','&lt;&gt;',False)]"/>

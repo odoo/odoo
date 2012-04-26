@@ -10,7 +10,7 @@
         <field name="inherit_id" ref="purchase.purchase_order_form"/>
         <field name="arch" type="xml">
             <field name="shipped" position="after">
-                <field name="requisition_id" groups="base.group_extended"/>
+                <field name="requisition_id"/>
             </field>
         </field>
     </record>
@@ -54,7 +54,7 @@
                     <field name="date_start"/>
                     <field name="date_end"/>
                     <field name="origin"/>
-                    <field name="warehouse_id" groups="base.group_extended" widget="selection"/>
+                    <field name="warehouse_id" widget="selection"/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                 </group>
                 <notebook colspan="4">
@@ -146,7 +146,7 @@
                     <field name="exclusive" />
                 </group>
                 <newline/>
-                  <group expand="0" string="Group By..." groups="base.group_extended">
+                  <group expand="0" string="Group By...">
                     <filter string="Responsible" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Origin" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
