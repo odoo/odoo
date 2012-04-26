@@ -884,13 +884,6 @@ instance.web.JsonRPC = instance.web.CallbackEnabled.extend({
         this.prefix = this.origin;
         this.server = this.origin; // keep chs happy
         this.rpc_function = (this.origin == window_origin) ? this.rpc_json : this.rpc_jsonp;
-        return this.on_bind();
-    },
-    on_bind: function() {
-        // FIXME
-        var deferred = $.Deferred();
-        deferred.resolve();
-        return deferred;
     },
     test_eval_get_context: function () {
         var asJS = function (arg) {
@@ -1355,8 +1348,16 @@ instance.web.Connection = instance.web.JsonRPC.extend( /** @lends instance.web.C
         this.name = instance._session_id;
         this.qweb_mutex = new $.Mutex();
     },
-    on_bind: function() {
+    rpc: function(url, params, success_callback, error_callback) {
+        params.session_id = this.session_id;
+        return this._super(url, params, success_callback, error_callback);
+    },
+    /**
+     * Setup a sessionm
+     */
+    session_bind: function(origin) {
         var self = this;
+        this.bind(origin);
         instance.web.qweb.default_dict['_s'] = this.origin;
         this.session_id = false;
         this.uid = false;
@@ -1373,13 +1374,6 @@ instance.web.Connection = instance.web.JsonRPC.extend( /** @lends instance.web.C
         this.shortcuts = [];
         this.active_id = null;
         return this.session_init();
-    },
-    rpc: function(url, params, success_callback, error_callback) {
-        params.session_id = this.session_id;
-        return this._super(url, params, success_callback, error_callback);
-    },
-    session_bind: function(origin) {
-        return this.bind(origin);
     },
     /**
      * Init a session, reloads from cookie, if it exists
