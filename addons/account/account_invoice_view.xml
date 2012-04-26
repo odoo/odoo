@@ -431,6 +431,9 @@
             <field name="help">With Customer Invoices you can create and manage sales invoices issued to your customers. OpenERP can also generate draft invoices automatically from sales orders or deliveries. You should only confirm them before sending them to your customers.</field>
         </record>
 
+        <menuitem icon="terp-account" id="account.menu_finance" name="Accounting" sequence="14" 
+		groups="group_account_user,group_account_manager,group_account_invoice"
+		action="action_invoice_tree1"/>
 
         <record id="action_invoice_tree1_view1" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>

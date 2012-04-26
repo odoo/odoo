@@ -4,8 +4,8 @@
 
         <menuitem icon="terp-stock" id="menu_stock_root" name="Warehouse"
                   groups="group_stock_manager,group_stock_user" sequence="5"
-                  web_icon="images/warehouse.png"
-                  web_icon_hover="images/warehouse-hover.png"/>
+                  web_icon="images/warehouse.png" 
+                  web_icon_hover="images/warehouse-hover.png" action="product.product_normal_action"/>
         <menuitem id="menu_stock_warehouse_mgmt" name="Receive/Deliver By Orders" parent="menu_stock_root" sequence="1"/>
         <menuitem id="menu_stock_products_moves" name="Receive/Deliver Products" parent="menu_stock_root" sequence="2"/>
         <menuitem id="menu_stock_product" name="Products" parent="menu_stock_root" sequence="6"/>
@@ -1925,6 +1925,9 @@
         <record model="ir.actions.todo.category" id="category_stock_management_config">
             <field name="name">Stock Management</field>
         </record>
+		
+        <menuitem icon="terp-stock" id="menu_stock_root" name="Warehouse" 
+		          groups="group_stock_manager,group_stock_user" sequence="5" action="product.product_normal_action"/>		
 
     </data>
 </openerp>
