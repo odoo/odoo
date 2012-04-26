@@ -11,7 +11,7 @@
                     <group colspan="4" col="6">
                         <field name="name" select="1"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                        <field name="active" groups="base.group_extended"/>
+                        <field name="active"/>
                     </group>
                     <separator string="Mapping" colspan="4"/>
                     <newline/>
@@ -90,7 +90,7 @@
                     <group col="2" colspan="2">
                         <separator string="Customer Credit" colspan="2"/>
                         <field name="credit"/>
-                        <field name="credit_limit" groups="base.group_extended"/>
+                        <field name="credit_limit"/>
                     </group>
                     <group col="2" colspan="2">
                         <separator string="Supplier Debit" colspan="2"/>
@@ -114,7 +114,7 @@
                             </group>
                             <group name="bank" colspan="2" col="2">
                                 <separator colspan="2" string="Information About the Bank"/>
-                                <field name="bank" on_change="onchange_bank_id(bank)" groups="base.group_extended"/>
+                                <field name="bank" on_change="onchange_bank_id(bank)"/>
                                 <field name="bank_name"/>
                                 <field name="bank_bic"/>
                             </group>
@@ -140,8 +140,7 @@
             context="{'search_default_partner_id':[active_id], 'default_partner_id': active_id}"
             src_model="res.partner"
             view_type="form"
-            view_mode="tree,form,graph,calendar"
-            groups="base.group_extended"/>
+            view_mode="tree,form,graph,calendar"/>
 
         <record id="view_res_partner_reconcile" model="ir.ui.view">
             <field name="name">res.partner.form.reconcile</field>
@@ -149,7 +148,7 @@
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
                 <field name="credit_limit" position="after">
-                    <field name="last_reconciliation_date" groups="base.group_extended"/>
+                    <field name="last_reconciliation_date"/>
                 </field>
             </field>
         </record>
