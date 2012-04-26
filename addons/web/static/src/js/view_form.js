@@ -720,7 +720,7 @@ instance.web.FormView = instance.web.View.extend({
     },
     get_widgets: function() {
         return _.filter(this.getChildren(), function(obj) {
-            return obj instanceof instance.web.form.Widget;
+            return obj instanceof instance.web.form.FormWidget;
         });
     },
     get_fields_values: function(blacklist) {
@@ -1370,9 +1370,9 @@ instance.web.form.InvisibilityChanger = instance.web.Class.extend(_.extend({}, i
     },
 }));
 
-instance.web.form.Widget = instance.web.Widget.extend(_.extend({}, instance.web.form.InvisibilityChangerMixin, {
+instance.web.form.FormWidget = instance.web.Widget.extend(_.extend({}, instance.web.form.InvisibilityChangerMixin, {
     /**
-     * @constructs instance.web.form.Widget
+     * @constructs instance.web.form.FormWidget
      * @extends instance.web.Widget
      *
      * @param view
@@ -1482,7 +1482,7 @@ instance.web.form.Widget = instance.web.Widget.extend(_.extend({}, instance.web.
     }
 }));
 
-instance.web.form.WidgetButton = instance.web.form.Widget.extend({
+instance.web.form.WidgetButton = instance.web.form.FormWidget.extend({
     template: 'WidgetButton',
     init: function(view, node) {
         this._super(view, node);
@@ -1678,10 +1678,10 @@ instance.web.form.FieldInterface = {
  *     a 'changed_value' event that inform the view to trigger on_changes.
  * 
  */
-instance.web.form.AbstractField = instance.web.form.Widget.extend(/** @lends instance.web.form.AbstractField# */{
+instance.web.form.AbstractField = instance.web.form.FormWidget.extend(/** @lends instance.web.form.AbstractField# */{
     /**
      * @constructs instance.web.form.AbstractField
-     * @extends instance.web.form.Widget
+     * @extends instance.web.form.FormWidget
      *
      * @param field_manager
      * @param node
