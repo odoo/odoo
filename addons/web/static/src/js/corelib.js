@@ -756,7 +756,7 @@ instance.web.Registry = instance.web.Class.extend({
      * registry was created.
      *
      * An object path is simply a dotted name from the instance root to the
-     * object pointed to (e.g. ``"instance.web.Connection"`` for an OpenERP
+     * object pointed to (e.g. ``"instance.web.Session"`` for an OpenERP
      * connection object).
      *
      * @constructs instance.web.Registry
@@ -1341,7 +1341,7 @@ instance.web.JsonRPC = instance.web.CallbackEnabled.extend({
     },
 });
 
-instance.web.Connection = instance.web.JsonRPC.extend( /** @lends instance.web.Connection# */{
+instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Session# */{
     init: function() {
         this._super.apply(this, arguments);
         // TODO: session store in cookie should be optional

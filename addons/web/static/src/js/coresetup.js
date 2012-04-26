@@ -98,8 +98,8 @@ $.Mutex = (function() {
     return Mutex;
 })();
 
-/** Setup default connection */
-instance.connection = new instance.web.Connection();
+/** Setup default session */
+instance.connection = new instance.web.Session();
 instance.web.qweb.default_dict['__debug__'] = instance.connection.debug;
 
 $.async_when = function() {
