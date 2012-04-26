@@ -116,6 +116,12 @@
                         <field name="incoming_qty"/>
                         <field name="outgoing_qty"/>
                     </group>
+                    <group colspan="4">
+                        <field name="minimum_stock_rule" nolabel="1" context="{'default_product_id': active_id}"/>
+                    </group>
+                    <group colspan="4">
+						<field name="bill_of_material" nolabel="1" context="{'default_product_id': active_id}"/>
+                    </group>                                        
                     <group colspan="2" col="2" name="lot" groups="stock.group_tracking_lot,stock.group_production_lot">
                         <separator string="Lots" colspan="4"/>
                         <field name="track_production" groups="stock.group_production_lot"/>
