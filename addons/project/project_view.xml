@@ -328,7 +328,6 @@
                     <field name="type_id"/>
                     <field name="user_id"/>
                     <field name="user_email"/>
-                    <field name="description"/>
                     <field name="sequence"/>
                     <field name="state"/>
                     <field name="kanban_state"/>
@@ -363,9 +362,7 @@
                                     </table>
                                     <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger">
                                         <div class="oe_kanban_description">
-                                            <t t-esc="kanban_text_ellipsis(record.description.value, 160)"/>
                                             <i t-if="record.date_deadline.raw_value">
-                                                <t t-if="record.description.raw_value">, </t>
                                                 <field name="date_deadline"/>
                                             </i>
                                             <span class="oe_kanban_project_times" style="white-space: nowrap; padding-left: 5px;">
