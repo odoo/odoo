@@ -33,7 +33,7 @@
                             <button string="Install More Chart Templates" icon="gtk-go-forward"
                                 name="%(open_account_charts_modules)d" type="action"/>
                             <field name ="code_digits" groups="account.group_account_user"/>
-                            <field name ="seq_journal" groups="base.group_extended"/>
+                            <field name ="seq_journal"/>
                             <newline/>
                             <field name ="complete_tax_set" invisible="1"/>
                             <field name="sale_tax" attrs="{'invisible': ['|', ('chart_template_id','=',False), ('complete_tax_set','=',False)]}"
