@@ -118,7 +118,7 @@ class procurement_order(osv.osv):
             \nAfter confirming the state is set to \'Running\'.\n If any exception arises in the order then the state is set to \'Exception\'.\n Once the exception is removed the state becomes \'Ready\'.\n It is in \'Waiting\'. state when the procurement is waiting for another one to finish.'),
         'note': fields.text('Note'),
         'company_id': fields.many2one('res.company','Company',required=True),
-        'user_id': fields.many2one('res.users', 'Salesman'),
+        'user_id': fields.many2one('res.users', 'Responsible user'),
     }
     _defaults = {
         'state': 'draft',
