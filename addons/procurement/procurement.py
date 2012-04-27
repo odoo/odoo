@@ -349,7 +349,7 @@ class procurement_order(osv.osv):
                     move_obj.action_confirm(cr, uid, [id], context=context)
                     self.write(cr, uid, [procurement.id], {'move_id': id, 'close_move': 1})
         self.write(cr, uid, ids, {'state': 'confirmed', 'message': ''})
-        self.state_change_send_note(cr, uid, ids ,'confirmed', context)
+        self.confirm_send_note(cr, uid, ids, context)
         return True
 
     def action_move_assigned(self, cr, uid, ids, context=None):
@@ -358,7 +358,7 @@ class procurement_order(osv.osv):
         """
         self.write(cr, uid, ids, {'state': 'running',
                 'message': _('from stock: products assigned.')})
-        self.change_state_send_note(cr, uid, ids, 'running', context)
+        self.running_send_note(cr, uid, ids, context)
         return True
 
     def _check_make_to_stock_service(self, cr, uid, procurement, context=None):
@@ -398,7 +398,7 @@ class procurement_order(osv.osv):
         """
         for procurement in self.browse(cr, uid, ids, context=context):
             self.write(cr, uid, [procurement.id], {'state': 'running'})
-        self.change_state_send_note(cr, uid, ids, context=None)
+        self.running_send_note(cr, uid, ids, context=None)
         return True
 
     def action_produce_assign_product(self, cr, uid, ids, context=None):
@@ -433,7 +433,7 @@ class procurement_order(osv.osv):
         if len(todo):
             move_obj.write(cr, uid, todo, {'state': 'assigned'})
         self.write(cr, uid, ids, {'state': 'cancel'})
-        self.state_change_send_note(cr, uid, ids, 'cancelled', context=None)
+        self.cancel_send_note(cr, uid, ids, context=None)
         wf_service = netsvc.LocalService("workflow")
         for id in ids:
             wf_service.trg_trigger(uid, 'procurement.order', id, cr)
@@ -458,7 +458,7 @@ class procurement_order(osv.osv):
         @return: True
         """
         res = self.write(cr, uid, ids, {'state': 'ready'})
-        self.change_state_send_note(cr, uid, ids, 'ready', context=None)
+        self.ready_send_note(cr, uid, ids, context=None)
         return res
 
     def action_done(self, cr, uid, ids):
@@ -471,7 +471,7 @@ class procurement_order(osv.osv):
                 if procurement.close_move and (procurement.move_id.state <> 'done'):
                     move_obj.action_done(cr, uid, [procurement.move_id.id])
         res = self.write(cr, uid, ids, {'state': 'done', 'date_close': time.strftime('%Y-%m-%d')})
-        self.state_change_send_note(cr, uid, ids, 'done', context=None)
+        self.done_send_note(cr, uid, ids, context=None)
         wf_service = netsvc.LocalService("workflow")
         for id in ids:
             wf_service.trg_trigger(uid, 'procurement.order', id, cr)
@@ -490,18 +490,35 @@ class procurement_order(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         obj_id = super(procurement_order, self).create(cr, uid, vals, context)
-        self.state_change_send_note(cr, uid, [obj_id], 'created', context=context)
+        self.create_send_note(cr, uid, [obj_id], context=context)
         return obj_id
 
-    def state_change_send_note(self, cr, uid, ids, state, context=None):
+    def create_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             self.message_subscribe(cr, uid, [obj.id], [obj.user_id.id], context=context)
-            self.message_append_note(cr, uid, [obj.id], body=_("Procurement has been <b>%s</b>.") % (state), context=context)
+            self.message_append_note(cr, uid, [obj.id], body=_("Procurement has been <b>created</b>."), context=context)
 
-    def change_state_send_note(self, cr, uid, ids, state, context=None):
+    def confirm_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             self.message_subscribe(cr, uid, [obj.id], [obj.user_id.id], context=context)
-            self.message_append_note(cr, uid, [obj.id], body=_("Procurement has been set to <b>%s</b> state.") % (state), context=context)
+            self.message_append_note(cr, uid, [obj.id], body=_("Procurement has been <b>confirmed</b>."), context=context)
+
+    def running_send_note(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            self.message_subscribe(cr, uid, [obj.id], [obj.user_id.id], context=context)
+            self.message_append_note(cr, uid, [obj.id], body=_("Procurement has been set to <b>running</b> state."), context=context)
+
+    def ready_send_note(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            self.message_append_note(cr, uid, [obj.id], body=_("Procurement has been set to <b>ready</b> state."), context=context)
+
+    def cancel_send_note(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            self.message_append_note(cr, uid, [obj.id], body=_("Procurement has been <b>cancelled</b>."), context=context)
+
+    def done_send_note(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            self.message_append_note(cr, uid, [obj.id], body=_("Procurement has been <b>done</b>."), context=context)
 
 procurement_order()
 
