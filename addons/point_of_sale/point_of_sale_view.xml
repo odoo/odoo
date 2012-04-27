@@ -16,8 +16,18 @@
             <field name="model">pos.order</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="PoS Orders">
-                    <group col="7" colspan="4">
+                <form layout="manual">
+                <div class="oe_form_topbar">
+                    <button name="%(action_pos_payment)d" string="Payment" icon="gtk-apply" type="action" states="draft"/>
+                    <button name="refund" string="Return Products" type="object" icon="gtk-ok"
+                        attrs="{'invisible':[('state','=','draft')]}"/>
+                    <button name="%(action_report_pos_receipt)d" string="Reprint" icon="gtk-print" type="action" states="paid,done,invoiced"/>
+                    <div class="oe_right">
+                        <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,paid,done" statusbar_colors='{"cancel":"red"}'/>
+                    </div>
+                </div>
+                <sheet string="PoS Orders" layout="auto">
+                    <group col="7" colspan="4" class="oe_form_header">
                         <field name="name"/>
                         <field name="date_order"/>
                         <field name="partner_id" on_change="onchange_partner_id(partner_id)" context="{'search_default_customer':1}" attrs="{'readonly': [('state','=','invoiced')]}"/>
@@ -49,15 +59,6 @@
                                 <field name="amount_total"/>
                                 <button name="button_dummy" string="Update" icon="gtk-execute" states="draft" />
                                 <button name="%(action_pos_discount)d" string="Discount" icon="gtk-remove" type="action" states="draft" />
-                            </group>
-
-                            <separator colspan="4"/>
-                            <group colspan="4" col="8">
-                                <field name="state" widget="statusbar" statusbar_visible="draft,paid,done" statusbar_colors='{"cancel":"red"}'/>
-                                <button name="%(action_pos_payment)d" string="Payment" icon="gtk-apply" type="action" states="draft"/>
-                                <button name="refund" string="Return Products" type="object" icon="gtk-ok"
-                                    attrs="{'invisible':[('state','=','draft')]}"/>
-                                <button name="%(action_report_pos_receipt)d" string="Reprint" icon="gtk-print" type="action" states="paid,done,invoiced"/>
                             </group>
                         </page>
                         <page string="Payment">
@@ -99,6 +100,7 @@
                             <field colspan="4" name="note" nolabel="1"/>
                         </page>
                     </notebook>
+                </sheet>
                 </form>
             </field>
         </record>
