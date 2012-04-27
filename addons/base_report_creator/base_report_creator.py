@@ -201,6 +201,7 @@ class report_result(osv.osv):
                 else:
                     fields['column_count'] = (False, 'Count')
             newargs = []
+            query_params = []
             for a in args:
                 if fields[a[0]][0]:
                     model = self.pool.get(fields[a[0]][0])
@@ -208,12 +209,13 @@ class report_result(osv.osv):
                         right = '%%%s%%' % (a[2],)
                     else:
                         right = a[2]
-                    newargs.append(str(model._table+"."+fields[a[0]][1] + " " +a[1] + " '" + right)+"'")
+                    newargs.append(str(model._table+"."+fields[a[0]][1] + " " +a[1] + " %s "))
+                    query_params.append(right)
             ctx = context or {}
             ctx['getid'] = True
             report_pool = self.pool.get('base_report_creator.report')
             reports = report_pool._sql_query_get(cr, user, [context_id], 'sql_query', None, ctx, where_plus=newargs, limit=limit, offset=offset)
-            cr.execute(reports[context_id])
+            cr.execute(reports[context_id], query_params)
             result = cr.fetchall()
             return map(lambda x: x[0], result)
 
