@@ -649,15 +649,6 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
                 self.$element.find('.oe_view_title_text').text(fvg.arch.attrs.string || fvg.name);
             }
 
-            var $title = self.$element.find('.oe_view_title_text'),
-                $search_prefix = $title.find('span.oe_searchable_view');
-            if (controller.searchable !== false && self.flags.search_view !== false) {
-                if (!$search_prefix.length) {
-                    $title.prepend('<span class="oe_searchable_view">' + _t("Search: ") + '</span>');
-                }
-            } else {
-                $search_prefix.remove();
-            }
         });
     },
     do_push_state: function(state) {
