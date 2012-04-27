@@ -435,7 +435,7 @@ class crm_case(crm_base):
         return True
 
     def case_get_note_msg_prefix(self, cr, uid, id, context=None):
-        return ''
+        return 'Case'
     
     def case_open(self, cr, uid, ids, context=None):
         """Opens Case"""
