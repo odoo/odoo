@@ -48,10 +48,7 @@ instance.web.form.FieldEtherpad = instance.web.form.AbstractField.extend(_.exten
 
                
               if(!self.view.datarecord.hasOwnProperty('id'))
-              {
-                 alert("booom",show_value);
                   self.add_pad(self,pad_template);
-              }
               else if(self.view.datarecord.hasOwnProperty('id') && show_value.search(patt_url) != 0){
                   self.add_pad(self,pad_template);
                   self.view.do_save();
