@@ -1076,9 +1076,12 @@ instance.web.search.CharField = instance.web.search.Field.extend( /** @lends ins
                 field: '<em>' + this.attrs.string + '</em>',
                 value: '<strong>' + _.str.escapeHTML(value) + '</strong>'});
         return $.when([{
-            category: this.attrs.string,
             label: label,
-            value: [{label: label, value: value}]
+            facet: {
+                category: this.attrs.string,
+                field: this,
+                values: [{label: value, value: value}]
+            }
         }]);
     }
 });
@@ -1158,16 +1161,18 @@ instance.web.search.SelectionField = instance.web.search.Field.extend(/** @lends
                 return label.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
             })
             .map(function (sel) {
-                // FIXME fucking repetition man, find something better
                 return {
-                    category: self.attrs.string,
-                    value: sel[1],
-                    values: [{value: sel[0], label: sel[1]}]
+                    label: sel[1],
+                    facet: {
+                        category: self.attrs.string,
+                        field: self,
+                        values: [{value: sel[0], label: sel[1]}]
+                    }
                 };
             }).value();
         if (_.isEmpty(results)) { return $.when(null); }
-        return $.when.apply(null, [{
-            category: this.attrs.string
+        return $.when.call(null, [{
+            label: this.attrs.string
         }].concat(results));
     },
     facet_for: function (value) {
@@ -1216,16 +1221,18 @@ instance.web.search.DateField = instance.web.search.Field.extend(/** @lends inst
     complete: function (needle) {
         var d = Date.parse(needle);
         if (!d) { return $.when(null); }
-        var value = instance.web.format_value(d, this.attrs);
+        var date_string = instance.web.format_value(d, this.attrs);
         var label = _.str.sprintf(_.str.escapeHTML(
             _t("Search %(field)s at: %(value)s")), {
                 field: '<em>' + this.attrs.string + '</em>',
-                value: '<strong>' + value + '</strong>'});
+                value: '<strong>' + date_string + '</strong>'});
         return $.when([{
-            category: this.attrs.string,
             label: label,
-            // FIXME: brain broken
-            values: [{label: value, value: d}]
+            facet: {
+                category: this.attrs.string,
+                field: this,
+                values: [{label: date_string, value: d}]
+            }
         }]);
     }
 });
@@ -1260,12 +1267,15 @@ instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
             context: {}
         }).pipe(function (results) {
             if (_.isEmpty(results)) { return null; }
-            return [{category: self.attrs.string}].concat(
+            return [{label: self.attrs.string}].concat(
                 _(results).map(function (result) {
                     return {
-                        category: self.attrs.string,
-                        value: result[1],
-                        values: [{label: result[1], value: result[0]}]
+                        label: result[1],
+                        facet: {
+                            category: self.attrs.string,
+                            field: self,
+                            values: [{label: result[1], value: result[0]}]
+                        }
                     };
                 }));
         });

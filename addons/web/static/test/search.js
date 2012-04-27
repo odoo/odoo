@@ -153,6 +153,8 @@ $(document).ready(function () {
             window.openerp.web.coresetup(instance);
             window.openerp.web.chrome(instance);
             window.openerp.web.data(instance);
+            // date complete
+            window.openerp.web.formats(instance);
             window.openerp.web.search(instance);
 
             instance.web.qweb.add_template(doc);
@@ -373,7 +375,6 @@ $(document).ready(function () {
                 ok(!facet, "an invalid m2o default should yield a non-facet");
             });
     });
-    // TODO: test defaults for various built-in widgets?
     asyncTest('completion calling', 4, function () {
         var view = makeSearchView({
             complete: function () {
@@ -406,7 +407,7 @@ $(document).ready(function () {
                 });
             });
     });
-    // TODO: test completions for various built-in widgets?
+
     asyncTest('completion facet selection', 2, function () {
         var completion = {
             label: "Dummy",
@@ -460,6 +461,143 @@ $(document).ready(function () {
                     facet.get('values'),
                     [{label: 'previous', value: 41}, {label: 'dummy', value: 42}],
                     "should have added selected value to old one");
+            });
+    });
+    asyncTest('Field completion', 1, function () {
+        var view = {inputs: []};
+        var f = new instance.web.search.Field({attrs: {}}, {}, view);
+        f.complete('foo')
+            .always(start)
+            .fail(function (error) { ok(false, error.message); })
+            .done(function (completions) {
+                ok(_(completions).isEmpty(), "field should not provide any completion");
+            });
+    });
+    asyncTest('CharField completion', 6, function () {
+        var view = {inputs: []};
+        var f = new instance.web.search.CharField(
+            {attrs: {string: "Dummy"}}, {}, view);
+        f.complete('foo<')
+            .always(start)
+            .fail(function (error) { ok(false, error.message); })
+            .done(function (completions) {
+                equal(completions.length, 1, "should provide a single completion");
+                var c = completions[0];
+                equal(c.label, "Search <em>Dummy</em> for: <strong>foo&lt;</strong>",
+                      "should propose a fuzzy matching/searching, with the" +
+                      " value escaped");
+                ok(c.facet, "completion should contain a facet proposition");
+                var facet = new instance.web.search.Facet(c.facet);
+                equal(facet.get('category'), f.attrs.string,
+                      "completion facet should bear the field's name");
+                strictEqual(facet.get('field'), f,
+                            "completion facet should yield the field");
+                deepEqual(facet.values.toJSON(), [{label: 'foo<', value: 'foo<'}],
+                          "facet should have single value using completion item");
+            });
+    });
+    asyncTest('Selection completion: match found', 14, function () {
+        var view = {inputs: []};
+        var f = new instance.web.search.SelectionField(
+            {attrs: {string: "Dummy"}},
+            {selection: [[1, "Foo"], [2, "Bar"], [3, "Baz"], [4, "Bazador"]]},
+            view);
+        f.complete("ba")
+            .always(start)
+            .fail(function (error) { ok(false, error.message); })
+            .done(function (completions) {
+                equal(completions.length, 4,
+                    "should provide two completions and a section title");
+                deepEqual(completions[0], {label: "Dummy"});
+
+                var c1 = completions[1];
+                equal(c1.label, "Bar");
+                equal(c1.facet.category, f.attrs.string);
+                strictEqual(c1.facet.field, f);
+                deepEqual(c1.facet.values, [{label: "Bar", value: 2}]);
+
+                var c2 = completions[2];
+                equal(c2.label, "Baz");
+                equal(c2.facet.category, f.attrs.string);
+                strictEqual(c2.facet.field, f);
+                deepEqual(c2.facet.values, [{label: "Baz", value: 3}]);
+
+                var c3 = completions[3];
+                equal(c3.label, "Bazador");
+                equal(c3.facet.category, f.attrs.string);
+                strictEqual(c3.facet.field, f);
+                deepEqual(c3.facet.values, [{label: "Bazador", value: 4}]);
+            });
+    });
+    asyncTest('Selection completion: no match', 1, function () {
+        var view = {inputs: []};
+        var f = new instance.web.search.SelectionField(
+            {attrs: {string: "Dummy"}},
+            {selection: [[1, "Foo"], [2, "Bar"], [3, "Baz"], [4, "Bazador"]]},
+            view);
+        f.complete("qux")
+            .always(start)
+            .fail(function (error) { ok(false, error.message); })
+            .done(function (completions) {
+                ok(!completions, "if no value matches the needle, no completion shall be provided");
+            });
+    });
+    asyncTest('Date completion', 6, function () {
+        instance.web._t.database.parameters = {
+            date_format: '%Y-%m-%d',
+            time_format: '%H:%M:%S'
+        };
+        var view = {inputs: []};
+        var f = new instance.web.search.DateField(
+            {attrs: {string: "Dummy"}}, {type: 'datetime'}, view);
+        f.complete('2012-05-21T21:21:21')
+            .always(start)
+            .fail(function (error) { ok(false, error.message); })
+            .done(function (completions) {
+                equal(completions.length, 1, "should provide a single completion");
+                var c = completions[0];
+                equal(c.label, "Search <em>Dummy</em> at: <strong>2012-05-21 21:21:21</strong>");
+                var facet = new instance.web.search.Facet(c.facet);
+                equal(facet.get('category'), f.attrs.string);
+                equal(facet.get('field'), f);
+                var value = facet.values.at(0);
+                equal(value.get('label'), "2012-05-21 21:21:21");
+                equal(value.get('value').getTime(),
+                      new Date(2012, 4, 21, 21, 21, 21).getTime());
+            });
+    });
+    asyncTest("M2O completion", 15, function () {
+        instance.connection.responses['/web/dataset/call_kw'] = function (req) {
+            equal(req.params.method, "name_search");
+            equal(req.params.model, "dummy.model");
+            deepEqual(req.params.args, []);
+            deepEqual(req.params.kwargs.name, 'bob');
+            return {result: [[42, "choice 1"], [43, "choice @"]]}
+        };
+
+        var view = {inputs: []};
+        var f = new instance.web.search.ManyToOneField(
+            {attrs: {string: 'Dummy'}}, {relation: 'dummy.model'}, view);
+        f.complete("bob")
+            .always(start)
+            .fail(function (error) { ok(false, error.message); })
+            .done(function (c) {
+                equal(c.length, 3, "should return results + title");
+                var title = c[0];
+                equal(title.label, f.attrs.string, "title should match field name");
+                ok(!title.facet, "title should not have a facet");
+
+                var f1 = new instance.web.search.Facet(c[1].facet);
+                equal(c[1].label, "choice 1");
+                equal(f1.get('category'), f.attrs.string);
+                equal(f1.get('field'), f);
+                deepEqual(f1.values.toJSON(), [{label: 'choice 1', value: 42}]);
+
+                var f2 = new instance.web.search.Facet(c[2].facet);
+                equal(c[2].label, "choice @");
+                equal(f2.get('category'), f.attrs.string);
+                equal(f2.get('field'), f);
+                deepEqual(f2.values.toJSON(), [{label: 'choice @', value: 43}]);
             });
     });
 
