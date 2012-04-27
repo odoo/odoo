@@ -30,9 +30,9 @@
             <field name="arch" type="xml">
                 <form layout="manual">
                 <div class="oe_form_topbar">
+                    <button name="case_close" states="open,pending" string="Close" type="object" icon="gtk-jump-to" />
                     <button name="case_open" states="draft,pending" string="Open" type="object" icon="gtk-go-forward" />
                     <button name="case_pending" states="draft,open" string="Pending" type="object" icon="gtk-media-pause" />
-                    <button name="case_close" states="open,draft,pending" string="Close" type="object" icon="gtk-jump-to" />
                     <button name="case_reset" states="done,cancel" string="Reset to Draft" type="object" icon="gtk-convert" />
                     <button name="case_escalate" states="open,draft,pending" string="Escalate" type="object" icon="gtk-go-up" />
                     <button name="case_cancel" states="draft,open,pending" string="Cancel" type="object" icon="gtk-cancel" />

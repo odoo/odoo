@@ -53,11 +53,11 @@
         <field name="arch" type="xml">
             <form string="Leads Form" layout="manual">
                 <div class="oe_form_topbar">
+                    <button name="case_mark_lost" string="Close" states="open,pending" type="object" icon="gtk-close" />
                     <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward" />
                     <button name="case_pending" string="Pending" states="open" type="object" icon="gtk-media-pause" />
-                    <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert" />
-                    <button name="case_mark_lost" string="Close" states="open,pending" type="object" icon="gtk-close" />
                     <button name="case_escalate" string="Escalate" states="open,pending" type="object" icon="gtk-go-up" />
+                    <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert" />
                     <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" icon="gtk-cancel" />
                     <div class="oe_right">
                         <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
@@ -401,8 +401,8 @@
         <field name="arch" type="xml">
             <form string="Opportunities" layout="manual">
                 <div class="oe_form_topbar">
-                    <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward" />
                     <button name="case_mark_won" string="Mark Won" states="open,pending" type="object" icon="gtk-apply" />
+                    <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward" />
                     <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause" />
                     <button name="case_escalate" string="Escalate" states="open,pending" type="object" icon="gtk-go-up" />
                     <button name="case_mark_lost" string="Mark Lost" states="open,pending" type="object" icon="gtk-cancel" />
