@@ -90,8 +90,6 @@ instance.web.FormView = instance.web.View.extend({
         }
         this.$buttons.on('click','.oe_form_button_create',this.on_button_create);
         this.$buttons.on('click','.oe_form_button_edit',this.on_button_edit);
-        this.$buttons.on('click','.oe_form_button_duplicate',this.on_button_duplicate);
-        this.$buttons.on('click','.oe_form_button_delete',this.on_button_delete);
         this.$buttons.on('click','.oe_form_button_save',this.on_button_save);
         this.$buttons.on('click','.oe_form_button_cancel',this.on_button_cancel);
 
@@ -112,13 +110,11 @@ instance.web.FormView = instance.web.View.extend({
             if(this.fields_view.toolbar) {
                 this.sidebar.add_toolbar(this.fields_view.toolbar);
             }
-            this.sidebar.add_items('other', [{
-                label: _t('Set Default'),
-                form: this,
-                callback: function (item) {
-                    item.form.open_defaults_dialog();
-                }
-            }]);
+            this.sidebar.add_items('other', [
+                { label: _t('Delete'), callback: self.on_button_delete },
+                { label: _t('Duplicate'), callback: self.on_button_duplicate },
+                { label: _t('Set Default'), callback: function (item) { self.open_defaults_dialog(); } },
+            ]);
         }
         this.on("change:mode", this, this.switch_mode);
         this.set({mode: this.options.initial_mode});
@@ -864,15 +860,6 @@ instance.web.FormView = instance.web.View.extend({
         return !this.datarecord.id;
     },
 });
-
-/**
- * Interface to be implemented by rendering engines for the form view.
- */
-instance.web.form.FormRenderingEngineInterface = {
-    set_fields_view: function(fields_view) {},
-    set_fields_registry: function(fields_registry) {},
-    render_to: function($element) {},
-};
 
 /**
  * Default rendering engine for the form view.

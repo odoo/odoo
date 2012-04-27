@@ -768,25 +768,6 @@ instance.web.Sidebar = instance.web.Widget.extend({
         self.$element.html(QWeb.render('Sidebar', {widget: self}));
         this.$element.find('ul').hide();
     },
-    add_section: function() {
-        var self = this;
-    },
-    add_toolbar: function(toolbar) {
-        var self = this;
-        _.each(['print','action','relate'], function(type) {
-            var items = toolbar[type];
-            if (items) {
-                for (var i = 0; i < items.length; i++) {
-                    items[i] = {
-                        label: items[i]['name'],
-                        action: items[i],
-                        classname: 'oe_sidebar_' + type
-                    }
-                }
-                self.add_items(type=='print' ? 'print' : 'other', items);
-            }
-        });
-    },
     /**
      * For each item added to the section:
      *
@@ -818,6 +799,22 @@ instance.web.Sidebar = instance.web.Widget.extend({
             this.items[section_code].push.apply(this.items[section_code],items);
             this.redraw();
         }
+    },
+    add_toolbar: function(toolbar) {
+        var self = this;
+        _.each(['print','action','relate'], function(type) {
+            var items = toolbar[type];
+            if (items) {
+                for (var i = 0; i < items.length; i++) {
+                    items[i] = {
+                        label: items[i]['name'],
+                        action: items[i],
+                        classname: 'oe_sidebar_' + type
+                    }
+                }
+                self.add_items(type=='print' ? 'print' : 'other', items);
+            }
+        });
     },
     on_item_action_clicked: function(item) {
         var self = this;
