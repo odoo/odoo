@@ -11,17 +11,20 @@ wiky.process = function(wikitext) {
 	var lines = wikitext.split(/\r?\n/);
 	var start;
 	var html = "";
-	
 	for (var i=0;i<lines.length;i++)
 	{
 		var line = lines[i];
 		if (line.match(/^===/)!=null && line.match(/===$/)!=null)
 		{
-			html += "<h2>"+line.substring(3,line.length-3)+"</h2>";
+			html += "<h3>"+line.substring(3,line.length-3)+"</h3>";
 		}
 		else if (line.match(/^==/)!=null && line.match(/==$/)!=null)
 		{
-			html += "<h3>"+line.substring(2,line.length-2)+"</h3>";
+			html += "<h2>"+line.substring(2,line.length-2)+"</h2>";
+		}
+		else if (line.match(/^=/)!=null && line.match(/=$/)!=null)
+		{
+			html += "<h1>"+line.substring(1,line.length-1)+"</h1>";
 		}
 		else if (line.match(/^:+/)!=null)
 		{
@@ -54,6 +57,14 @@ wiky.process = function(wikitext) {
 			
 			html += wiky.process_bullet_point(lines,start,i);
 		}
+		else if (line.match(/^img:/)!=null)
+		{
+			html += wiky.process_image(line.substring(4));
+		}
+		else if (line.match(/^attach:/)!=null)
+		{
+			html += "<a href='"+line.substring(7)+"'>Download the file</a>"
+		}
 		else 
 		{
 			html += wiky.process_normal(line);
@@ -61,7 +72,6 @@ wiky.process = function(wikitext) {
 		
 		html += "<br/>\n";
 	}
-	
 	return html;
 };
 
@@ -97,7 +107,6 @@ wiky.process_indent = function(lines,start,end) {
 
 wiky.process_bullet_point = function(lines,start,end) {
 	var html = (lines[start].charAt(0)=='*')?"<ul>":"<ol>";
-	
 	for(var i=start;i<=end;i++) {
 		
 		html += "<li>";
@@ -197,11 +206,9 @@ wiky.process_image = function(txt) {
 	
 	if (index > -1) 
 	{
-		url = txt.substring(0,index);
-		label = txt.substring(index+1);
+		label = txt.substring(0,index);
+		url = txt.substring(index+1);
 	}
-	
-	
 	return "<img src='"+url+"' alt=\""+label+"\" />";
 };
 
