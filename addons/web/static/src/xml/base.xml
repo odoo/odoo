@@ -805,9 +805,11 @@
 <t t-name="FormRenderingForm">
     <div class="oe_form_sheetbg">
         <div t-attf-class="oe_form_sheet oe_form_sheet_width #{classnames}">
-            <group col="4"/>
+            <group t-if="layout === 'auto'" col="4"/>
         </div>
     </div>
+</t>
+<t t-name="FormRenderingSheet" t-extend="FormRenderingForm">
 </t>
 <t t-name="FormRenderingGroup">
     <t t-set="table">
@@ -850,7 +852,6 @@
             t-attf-class="#{classnames} oe_form_label#{help ? '_help' : ''} oe_align_#{align}">
         <t t-esc="string"/>
         <span t-if="help">?</span>
-        :
     </label>
 </t>
 
@@ -862,7 +863,7 @@
     <div class="oe_tooltip_string" t-if="widget.string">
         <t t-esc="widget.node.attrs.string"/> <t t-if="debug and widget.nolabel">(nolabel)</t>
     </div>
-    <p t-if="widget.help" class="oe_tooltip_help"><t t-esc="widget.help"/></p>
+    <p t-if="widget.node.attrs.help or (widget.field and widget.field.help)" class="oe_tooltip_help"><t t-esc="widget.node.attrs.help || widget.field.help"/></p>
     <ul t-if="debug" class="oe_tooltip_technical">
         <li data-item="field" t-if="widget.name">
             <span class="oe_tooltip_technical_title">Field:</span>
@@ -932,8 +933,7 @@
         </div>
     </t>
     <t t-if="widget.get('effective_readonly')">
-        <div t-attf-class="oe_form_field_char #{widget.is_field_number ? 'oe-number' : ''}">
-        </div>
+        <span t-attf-class="oe_form_field_char #{widget.is_field_number ? 'oe-number' : ''}"/>
     </t>
 </t>
 <t t-name="FieldEmail">
@@ -956,9 +956,9 @@
         </table>
     </t>
     <t t-if="widget.get('effective_readonly')">
-        <div>
+        <span>
             <a href="#" class="oe_form_uri"/>
-        </div>
+        </span>
     </t>
 </t>
 <t t-name="FieldUrl">
@@ -981,9 +981,9 @@
         </table>
     </t>
     <t t-if="widget.get('effective_readonly')">
-        <div>
+        <span>
             <a href="#" class="oe_form_uri"/>
-        </div>
+        </span>
     </t>
 </t>
 <t t-name="FieldText">
@@ -1003,7 +1003,7 @@
         <input type="text" class="oe_datepicker_container" disabled="disabled" style="display: none;"/>
         <input type="text"
             t-att-name="widget.name"
-            t-attf-class="oe_datepicker_master field_#{widget.type_of_date}"
+            t-attf-class="oe_datepicker_master field_#{widget.type_of_date} oe_form_field_#{widget.type_of_date}"
         /><img class="oe_input_icon oe_datepicker_trigger" t-att-src='_s + "/web/static/src/img/ui/field_calendar.png"'
              title="Select date" width="16" height="16" border="0"/>
     </div>
@@ -1023,8 +1023,7 @@
         </div>
     </t>
     <t t-if="widget.get('effective_readonly')">
-        <div class="field_selection">
-        </div>
+        <span class="field_selection"/>
     </t>
 </t>
 <t t-name="FieldMany2One">
@@ -1049,9 +1048,9 @@
         </table>
     </t>
     <t t-if="widget.get('effective_readonly')">
-        <div>
+        <span>
             <a href="#" class="oe_form_uri"/>
-        </div>
+        </span>
     </t>
 </t>
 <t t-name="FieldReference">
@@ -1207,9 +1206,9 @@
         </table>
     </t>
     <t t-if="widget.get('effective_readonly')">
-        <div>
+        <span>
             <a href="javascript:void(0)" class="oe_form_uri"/>
-        </div>
+        </span>
     </t>
 </t>
 <t t-name="WidgetButton">

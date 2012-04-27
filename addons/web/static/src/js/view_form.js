@@ -720,7 +720,7 @@ instance.web.FormView = instance.web.View.extend({
     },
     get_widgets: function() {
         return _.filter(this.getChildren(), function(obj) {
-            return obj instanceof instance.web.form.Widget;
+            return obj instanceof instance.web.form.FormWidget;
         });
     },
     get_fields_values: function(blacklist) {
@@ -986,13 +986,18 @@ instance.web.form.FormRenderingEngine = instance.web.Class.extend({
             return $tag;
         }
     },
-    process_sheet: function() {
-        this.process_form.apply(this, arguments);
+    process_sheet: function($sheet, layout) {
+        var $new_sheet = this.render_element('FormRenderingSheet', layout, $sheet.getAttributes());
+        this.handle_common_properties($new_sheet, $sheet);
+        var $dst = (layout === 'auto') ? $new_sheet.find('group:first') : $new_sheet.find('.oe_form_sheet');
+        $sheet.children().appendTo($dst);
+        $sheet.before($new_sheet).remove();
+        this.process($new_sheet, layout);
     },
     process_form: function($form, layout) {
         var $new_form = this.render_element('FormRenderingForm', layout, $form.getAttributes());
+        this.handle_common_properties($new_form, $form);
         var $dst = (layout === 'auto') ? $new_form.find('group:first') : $new_form;
-        $new_form.attr("modifiers", $form.attr("modifiers"));
         $form.children().appendTo($dst);
         if ($form[0] === this.$form[0]) {
             // If root element, replace it
@@ -1000,7 +1005,7 @@ instance.web.form.FormRenderingEngine = instance.web.Class.extend({
         } else {
             $form.before($new_form).remove();
         }
-        this.process($new_form);
+        this.process($new_form, layout);
     },
     preprocess_field: function($field) {
         var self = this;
@@ -1063,10 +1068,18 @@ instance.web.form.FormRenderingEngine = instance.web.Class.extend({
 
         var children = [];
         $group.children().each(function(a,b,c) {
-            var $child = $(this),
-                colspan = parseInt($child.attr('colspan') || 1, 10),
-                tagName = $child[0].tagName.toLowerCase();
-            if (tagName === 'newline') {
+            var $child = $(this);
+            var colspan = parseInt($child.attr('colspan') || 1, 10);
+            var tagName = $child[0].tagName.toLowerCase();
+            var $td = $('<td/>').addClass('oe_form_group_cell').attr('colspan', colspan);
+            var newline = tagName === 'newline';
+            if ($tr && row_cols > 0 && (newline || row_cols < colspan)) {
+                $tr.addClass('oe_form_group_row_incomplete');
+                if (newline) {
+                    $tr.addClass('oe_form_group_row_newline');
+                }
+            }
+            if (newline) {
                 $tr = null;
                 return;
             }
@@ -1076,7 +1089,6 @@ instance.web.form.FormRenderingEngine = instance.web.Class.extend({
             }
             row_cols -= colspan;
 
-            $td = $('<td/>').addClass('oe_form_group_cell').attr('colspan', colspan);
             // invisibility transfer
             var field_modifiers = JSON.parse($child.attr('modifiers') || '{}');
             var invisible = field_modifiers.invisible;
@@ -1110,7 +1122,7 @@ instance.web.form.FormRenderingEngine = instance.web.Class.extend({
                         break;
                     case 'label':
                         if ($child.attr('for')) {
-                            $td.attr('width', '1%');
+                            $td.attr('width', '1%').addClass('oe_form_group_cell_label');
                             row_cols--;
                             total--;
                         }
@@ -1133,11 +1145,13 @@ instance.web.form.FormRenderingEngine = instance.web.Class.extend({
                 }
             });
             var unit = Math.floor(total / row_cols);
-            _.each(to_compute, function($td, i) {
-                var width = parseInt($td.attr('colspan'), 10) * unit;
-                $td.attr('width', ((i == to_compute.length - 1) ? total : width) + '%');
-                total -= width;
-            });
+            if (!$(this).is('.oe_form_group_row_incomplete')) {
+                _.each(to_compute, function($td, i) {
+                    var width = parseInt($td.attr('colspan'), 10) * unit;
+                    $td.attr('width', ((i == to_compute.length - 1) ? total : width) + '%');
+                    total -= width;
+                });
+            }
         });
         _.each(children, function(el) {
             self.process($(el));
@@ -1206,6 +1220,7 @@ instance.web.form.FormRenderingEngine = instance.web.Class.extend({
         if (modifiers.invisible !== undefined)
             new instance.web.form.InvisibilityChanger(this.view, this.view, modifiers.invisible, $new_element);
         $new_element.addClass($node.attr("class") || "");
+        $new_element.attr('style', $node.attr('style'));
     },
 });
 
@@ -1355,9 +1370,9 @@ instance.web.form.InvisibilityChanger = instance.web.Class.extend(_.extend({}, i
     },
 }));
 
-instance.web.form.Widget = instance.web.Widget.extend(_.extend({}, instance.web.form.InvisibilityChangerMixin, {
+instance.web.form.FormWidget = instance.web.Widget.extend(_.extend({}, instance.web.form.InvisibilityChangerMixin, {
     /**
-     * @constructs instance.web.form.Widget
+     * @constructs instance.web.form.FormWidget
      * @extends instance.web.Widget
      *
      * @param view
@@ -1416,7 +1431,7 @@ instance.web.form.Widget = instance.web.Widget.extend(_.extend({}, instance.web.
                 opacity: 0.85,
                 trigger: 'hover'
             }, options || {});
-        trigger.tipsy(options);
+        $(trigger).tipsy(options);
     },
     _build_view_fields_values: function(blacklist) {
         var a_dataset = this.view.dataset;
@@ -1467,7 +1482,7 @@ instance.web.form.Widget = instance.web.Widget.extend(_.extend({}, instance.web.
     }
 }));
 
-instance.web.form.WidgetButton = instance.web.form.Widget.extend({
+instance.web.form.WidgetButton = instance.web.form.FormWidget.extend({
     template: 'WidgetButton',
     init: function(view, node) {
         this._super(view, node);
@@ -1663,10 +1678,10 @@ instance.web.form.FieldInterface = {
  *     a 'changed_value' event that inform the view to trigger on_changes.
  * 
  */
-instance.web.form.AbstractField = instance.web.form.Widget.extend(/** @lends instance.web.form.AbstractField# */{
+instance.web.form.AbstractField = instance.web.form.FormWidget.extend(/** @lends instance.web.form.AbstractField# */{
     /**
      * @constructs instance.web.form.AbstractField
-     * @extends instance.web.form.Widget
+     * @extends instance.web.form.FormWidget
      *
      * @param field_manager
      * @param node
@@ -1704,7 +1719,7 @@ instance.web.form.AbstractField = instance.web.form.Widget.extend(/** @lends ins
             }, this));
         }
         if (instance.connection.debug) {
-            this.do_attach_tooltip(this, this.$element);
+            this.do_attach_tooltip(this, this.view.$element.find('label[for=' + this.id_for_label + ']')[0] || this.$element);
         }
         if (!this.disable_utility_classes) {
             var set_required = function() {
@@ -2072,7 +2087,6 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(_.extend({}
     template: 'FieldText',
     initialize_content: function() {
         this.$textarea = this.$element.find('textarea');
-        this.resized = false;
         if (!this.get("effective_readonly")) {
             this.$textarea.change(_.bind(function() {
                 this.set({'value': instance.web.parse_value(this.$textarea.val(), this)});
@@ -2088,9 +2102,8 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(_.extend({}
     render_value: function() {
         var show_value = instance.web.format_value(this.get('value'), this, '');
         this.$textarea.val(show_value);
-        if (!this.resized && this.view.options.resize_textareas) {
+        if (show_value && this.view.options.resize_textareas) {
             this.do_resize(this.view.options.resize_textareas);
-            this.resized = true;
         }
     },
     is_syntax_valid: function() {

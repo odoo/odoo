@@ -140,13 +140,13 @@ instance.web.ActionManager = instance.web.Widget.extend({
             this.dialog_viewmanager.appendTo(this.dialog.$element);
             this.dialog.open();
         } else  {
+            this.dialog_stop();
+            this.content_stop();
             if(action.menu_id) {
                 return this.getParent().do_action(action, function () {
                     instance.webclient.menu.open_menu(action.menu_id);
                 });
             }
-            this.dialog_stop();
-            this.content_stop();
             this.inner_action = action;
             this.inner_viewmanager = new instance.web.ViewManagerAction(this, action);
             this.inner_viewmanager.appendTo(this.$element);
@@ -391,8 +391,8 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             contexts: [action_context].concat(contexts || []),
             group_by_seq: groupbys || []
         }, function (results) {
-            self.dataset.context = results.context;
-            self.dataset.domain = results.domain;
+            self.dataset._model = new instance.web.Model(
+                self.dataset.model, results.context, results.domain);
             var groupby = results.group_by.length
                         ? results.group_by
                         : action_context.group_by;
