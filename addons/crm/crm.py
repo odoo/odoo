@@ -32,8 +32,8 @@ AVAILABLE_STATES = [
     ('draft', 'New'),
     ('open', 'In Progress'),
     ('pending', 'Pending'),
-    ('done', 'Closed'),
     ('cancel', 'Cancelled'),
+    ('done', 'Closed'),
     
 ]
 

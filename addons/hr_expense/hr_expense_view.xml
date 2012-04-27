@@ -73,7 +73,7 @@
                     <button name="invoice" states="accepted" string="Invoice" type="object" icon="gtk-go-forward" groups="base.group_hr_user"/>
                     <button name="refuse" states="confirm,accepted" string="Refuse" type="workflow" icon="gtk-no" groups="base.group_hr_user" />
                     <div class="oe_right">
-                        <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,confirm,accepted,invoiced" statusbar_colors='{"confirm":"blue","cancelled":"red"}'/>
+                        <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,confirm,accepted" statusbar_colors='{"confirm":"blue","cancelled":"red"}'/>
                     </div>
                 </div>
                 <sheet string="Expenses Sheet" layout="auto">

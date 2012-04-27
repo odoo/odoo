@@ -52,8 +52,8 @@ class crm_phonecall(crm_base, osv.osv):
                                     ('draft', 'Draft'),
                                     ('open', 'Todo'),
                                     ('pending', 'Not Held'),
-                                    ('done', 'Held'),
                                     ('cancel', 'Cancelled'),
+                                    ('done', 'Held'),
                                 ], 'State', size=16, readonly=True,
                                   help='The state is set to \'Todo\', when a case is created.\
                                   \nIf the case is in progress the state is set to \'Open\'.\
