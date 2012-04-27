@@ -26,7 +26,7 @@ import decimal_precision as dp
 class product_product(osv.osv):
     _inherit = "product.product"
 
-    def _get_reception(self, cr, uid, ids, field_name, arg, context=None):
+    def _total_reception(self, cr, uid, ids, field_name, arg, context=None):
         total_reception={}
         reception_pool=self.pool.get('stock.picking')
         for id in ids:
@@ -347,7 +347,7 @@ class product_product(osv.osv):
         return res
 
     _columns = {
-        'total_reception': fields.function(_get_reception , type='integer',string="Total Reception"),
+        'total_reception': fields.function(_total_reception , type='integer',string="Total Reception"),
         'total_delivery': fields.function(_total_delivery , type='integer',string="Total Delivery"),
         'qty_available': fields.function(_product_available, multi='qty_available',
             type='float',  digits_compute=dp.get_precision('Product UoM'),
@@ -420,6 +420,8 @@ class product_product(osv.osv):
 
     _defaults = {
         'valuation': 'manual_periodic',
+        'total_reception': 0,
+        'total_delivery': 0,
     }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):

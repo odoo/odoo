@@ -152,20 +152,14 @@
                                         <li>Price: <field name="lst_price"></field></li>
                                         <li>Cost: <field name="standard_price"></field></li>
                                     </ul>
-                                    <t t-if="record.total_reception.raw_value">
-                                        <a name="get_receptions" type="object">
-                                            (<t t-esc="record.total_reception.value"/>)
-                                            <t t-if="record.total_reception.raw_value &lt;= 1">Reception</t>
-                                            <t t-if="record.total_reception.raw_value > 1"> Receptions</t>
-                                        </a>
-                                    </t>
-                                    <t t-if="record.total_delivery.raw_value">
-                                        <a name="get_deliveries" type="object">
-                                            (<t t-esc="record.total_delivery.value"/>)
-                                            <t t-if="record.total_delivery.raw_value &lt;= 1">Delivery</t>
-                                            <t t-if="record.total_delivery.raw_value > 1">Deliveries</t>
-                                        </a>
-                                    </t>
+                                    <a name="get_receptions" type="object">
+                                        <t t-if="record.total_reception.raw_value &lt;= 1">Reception(<t t-esc="record.total_reception.value"/>)</t>
+                                        <t t-if="record.total_reception.raw_value > 1">Receptions(<t t-esc="record.total_reception.value"/>)</t>
+                                    </a>
+                                    <a name="get_deliveries" type="object">
+                                        <t t-if="record.total_delivery.raw_value &lt;= 1">Delivery(<t t-esc="record.total_delivery.value"/>)</t>
+                                        <t t-if="record.total_delivery.raw_value > 1">Deliveries(<t t-esc="record.total_delivery.value"/>)</t>
+                                    </a>
                                 </div>
                             </div>
                             <script>
