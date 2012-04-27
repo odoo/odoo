@@ -31,6 +31,7 @@ openerp.project = function(openerp) {
                 
                 /* set background color.
                   we can do other way to implement new widget.
+                  because we need to rpc call for that.
                 */
                 this.$element.find('.bgcolor').click(function(){
                     color = parseInt($(this).find('span').attr('class').split(' ')[0].substring(16))
