@@ -204,7 +204,11 @@ class report_result(osv.osv):
             for a in args:
                 if fields[a[0]][0]:
                     model = self.pool.get(fields[a[0]][0])
-                    newargs.append(str(model._table+"."+fields[a[0]][1] + " " +a[1] + " '" + a[2])+"'")
+                    if a[1] in ('like', 'ilike', 'not like', 'not ilike'):
+                        right = '%%%s%%' % (a[2],)
+                    else:
+                        right = a[2]
+                    newargs.append(str(model._table+"."+fields[a[0]][1] + " " +a[1] + " '" + right)+"'")
             ctx = context or {}
             ctx['getid'] = True
             report_pool = self.pool.get('base_report_creator.report')
