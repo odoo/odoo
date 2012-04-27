@@ -981,9 +981,8 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
-                  <group name="store" position="after">
+                  <group name="misc" position="after">
                       <group col="2" colspan="4">
-                          <separator string="Bill of Materials" colspan="4"/>
                           <field name="bom_ids" nolabel="1" domain="[('bom_id','=',False)]">
                           </field>
                       </group>

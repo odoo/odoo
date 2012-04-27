@@ -398,8 +398,8 @@ class product_product(osv.osv):
                                         help="If real-time valuation is enabled for a product, the system will automatically write journal entries corresponding to stock moves." \
                                              "The inventory variation account set on the product category will represent the current inventory value, and the stock input and stock output account will hold the counterpart moves for incoming and outgoing products."
                                         , required=True),
-        'minimum_stock_rule': fields.one2many('stock.warehouse.orderpoint','product_id','Minimum Stock Rules', help="This is Minimum Stock Rule"),
-        'bill_of_material': fields.one2many('mrp.bom','product_id','Bill Of Materials', help="This is Bill of Materials"),
+        'minimum_stock_rules': fields.one2many('stock.warehouse.orderpoint','product_id','Minimum Stock Rules', help="This is Minimum Stock Rule"),
+        'bill_of_materials': fields.one2many('mrp.bom','bom_id','Bill Of Materials', help="This is Bill of Materials"),
     }
 
     _defaults = {

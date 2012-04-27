@@ -275,9 +275,8 @@
             <field name="arch" type="xml">
                   <group name="misc" position="after">
                       <group col="2" colspan="4" attrs="{'invisible':[('type', '=', 'service')]}">
-                          <separator string="Minimum Stock Rules" colspan="4"/>
-                          <field name="orderpoint_ids" context="{'default_product_uom': uom_id}" nolabel="1">
-                              <tree string="Minimum Stock Rule" editable="bottom">
+                          <field name="orderpoint_ids" context="{'default_product_uom': uom_id, 'default_product_id': active_id}" nolabel="1">
+                              <tree string="Minimum Stock Rules" editable="bottom">
                                   <field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)" widget="selection"/>
                                   <field name="location_id"/>
                                   <field name="product_min_qty"/>
