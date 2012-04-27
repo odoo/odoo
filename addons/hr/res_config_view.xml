@@ -19,23 +19,18 @@
                         <button string="Cancel" special="cancel"/>
                     </div>
                     <sheet layout="auto">
-                        <separator string="Human Resources" colspan="4"/>
-                        <field name="module_hr_timesheet_sheet"/>
-                        <newline/>
-                        <field name="module_hr_holidays"/>
-
                         <separator string="Additional Features" colspan="4"/>
                         <field name="module_hr_expense"/>
-                        <newline/>
                         <field name="module_hr_recruitment"/>
-                        <newline/>
                         <field name="module_hr_evaluation"/>
-                        <newline/>
                         <field name="module_hr_contract"/>
-
-                        <group name="config_timesheets" colspan="4"/>
-                        <group name="config_payroll" colspan="4"/>
-                        <group name="config_recruitment" colspan="4"/>
+                        <field name="module_hr_holidays"/>
+                        <group name="config_timesheets" colspan="2"/>
+                        <separator string="Timesheets" colspan="4"/>
+                        <field name="module_hr_attendance"/>						
+                        <field name="module_hr_timesheet"/>							
+                        <field name="module_hr_timesheet_sheet"/>
+                        <group name="config_recruitment" colspan="2"/>
                     </sheet>
                 </form>
             </field>
