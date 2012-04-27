@@ -406,7 +406,6 @@ class mail_thread(osv.osv):
         """
         model_pool = self.pool.get(model)
         smtp_server_obj = self.pool.get('ir.mail_server')
-        mail_message = self.pool.get('mail.message')
         for res in model_pool.browse(cr, uid, thread_ids, context=context):
             if hasattr(model_pool, 'message_thread_followers'):
                 followers = model_pool.message_thread_followers(cr, uid, [res.id])[res.id]
@@ -414,25 +413,26 @@ class mail_thread(osv.osv):
                 followers = self.message_thread_followers(cr, uid, [res.id])[res.id]
             message_followers_emails = to_email(','.join(filter(None, followers)))
             message_recipients = to_email(','.join(filter(None,
-                                                                       [decode(msg['from']),
-                                                                        decode(msg['to']),
-                                                                        decode(msg['cc'])])))
+                                                                       [decode(msg['From']),
+                                                                        decode(msg['To']),
+                                                                        decode(msg['Cc'])])))
             forward_to = [i for i in message_followers_emails if (i and (i not in message_recipients))]
             if forward_to:
                 # TODO: we need an interface for this for all types of objects, not just leads
                 if hasattr(res, 'section_id'):
-                    del msg['reply-to']
-                    msg['reply-to'] = res.section_id.reply_to
+                    del msg['Reply-To']
+                    msg['Reply-To'] = res.section_id.reply_to
 
-                smtp_from, = to_email(msg['from'])
-                msg['from'] = smtp_from
-                msg['to'] =  ", ".join(forward_to)
-                msg['message-id'] = tools.generate_tracking_message_id(res.id)
+                smtp_from, = to_email(msg['From'])
+                del msg['From'], msg['To'], msg['Cc'], msg['Message-Id']
+                msg['From'] = smtp_from
+                msg['To'] =  ", ".join(forward_to)
+                msg['Message-Id'] = tools.generate_tracking_message_id(res.id)
                 if not smtp_server_obj.send_email(cr, uid, msg) and email_error:
-                    subj = msg['subject']
-                    del msg['subject'], msg['to'], msg['cc'], msg['bcc']
-                    msg['subject'] = _('[OpenERP-Forward-Failed] %s') % subj
-                    msg['to'] = email_error
+                    subj = msg['Subject']
+                    del msg['Subject'], msg['To'], msg['Cc']
+                    msg['Subject'] = _('[OpenERP-Forward-Failed] %s') % subj
+                    msg['To'] = email_error
                     smtp_server_obj.send_email(cr, uid, msg)
         return True
 
