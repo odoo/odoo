@@ -70,7 +70,7 @@ class change_production_qty(osv.osv_memory):
         bom_obj = self.pool.get('mrp.bom')
         for wiz_qty in self.browse(cr, uid, ids, context=context):
             prod = prod_obj.browse(cr, uid, record_id, context=context)
-            prod_obj.write(cr, uid,prod.id, {'product_qty': wiz_qty.product_qty})
+            prod_obj.write(cr, uid, [prod.id], {'product_qty': wiz_qty.product_qty})
             prod_obj.action_compute(cr, uid, [prod.id])
 
             move_lines_obj = self.pool.get('stock.move')

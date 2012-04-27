@@ -66,6 +66,7 @@ Account Voucher module includes all the basic requirements of Voucher Entries fo
         "test/case2_usd_eur_debtor_in_usd.yml",
         "test/case3_eur_eur.yml",
         "test/case4_cad_chf.yml",
+        "test/case_eur_usd.yml",
     ],
     'certificate': '0037580727101',
     "auto_install": False,

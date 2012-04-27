@@ -74,14 +74,14 @@
                                 </form>
                             </field>
                         </page>
-                        <page string="Extra Info" groups="base.group_extended">
+                        <page string="Extra Info">
                             <group colspan="2" col="2">
                                 <separator string="General Information" colspan="2"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
                                 <field name="shop_id" widget="selection"/>
                                 <field name="user_id"/>
-                                <field name="pricelist_id" domain="[('type','=','sale')]"/>
-                                <field name="picking_id" readonly="1" groups="base.group_extended"/>
+                                <field name="pricelist_id" groups="product.group_sale_pricelist" domain="[('type','=','sale')]"/>
+                                <field name="picking_id" readonly="1"/>
                             </group>
                             <group colspan="2" col="3">
                                 <separator string="Accounting Information" colspan="3"/>
@@ -146,7 +146,7 @@
                     <field name="name"/>
                     <field name="user_id"/>
                     <newline/>
-                    <group expand="0" string="Group By..." groups="base.group_extended">
+                    <group expand="0" string="Group By...">
                         <filter string="Customer" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Salesman" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <separator string="" orientation="vertical"/>

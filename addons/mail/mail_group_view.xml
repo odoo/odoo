@@ -1,0 +1,117 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        
+       <!-- Group Kanban View  !-->
+        <record model="ir.ui.view" id="view_group_kanban">
+            <field name="name">mail.group.kanban</field>
+            <field name="model">mail.group</field>
+            <field name="type">kanban</field>
+            <field name="priority" eval="10"/>
+            <field name="arch" type="xml">
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-description">
+                            <div class="oe_group_description" t-if="record.description.raw_value">
+                                <field name="description"/>
+                            </div>
+                        </t>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="{record.is_subscriber.raw_value} oe_group_vignette">
+                                <div class="oe_group_image">
+                                    <a type="edit"><img t-att-src="kanban_image('mail.group', 'photo', record.id.value)" class="oe_group_photo" tooltip="kanban-description"/></a>
+                                </div>
+                                <div class="oe_group_details">
+                                    <h4><a type="edit"><field name="name"/></a></h4>
+                                    <span style="display: none;"><field name="is_subscriber"/></span>
+                                    <ul>
+                                        <li><field name="member_count"/> members</li>
+                                        <li t-if="! record.is_subscriber.raw_value"><a name="action_group_join" string="Join" type="object" class="oe_group_join">Not following</a></li>
+                                        <li t-if="record.is_subscriber.raw_value"><a name="action_group_leave" string="Join" type="object" class="oe_group_leave">Following</a></li>
+                                        <li><field name="last_month_msg_nbr"/> messages last month</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <script>
+                                $('.oe_group_photo').load(function() { if($(this).width() > $(this).height()) { $(this).addClass('oe_group_photo_wide') } });
+                                $('.oe_group_join').mouseover(function () { $(this).html('Follow'); }).mouseleave(function () { $(this).html('Not following'); });
+                                $('.oe_group_leave').mouseover(function () { $(this).html('Unfollow'); }).mouseleave(function () { $(this).html('Following'); });
+                            </script>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- Group Form View !-->
+        <record  model="ir.ui.view" id="view_group_form">
+            <field name="name">mail.group.form</field>
+            <field name="model">mail.group</field>
+            <field name="type">form</field>
+            <field name="priority" eval="10"/>
+            <field name="arch" type="xml">
+                <form string="Group">
+                    <group colspan="4" col="8">
+                        <group colspan="6" col="4">
+                            <separator string="General information" colspan="4"/>
+                            <field name="name" colspan="2"/>
+                            <field name="responsible_id" colspan="2"/>
+                            <newline/>
+                            <field name="description" colspan="4"/>
+                        </group>
+                        <group colspan="1" col="2">
+                            <separator string="Group image" colspan="2"/>
+                            <field name="photo" widget='image' nolabel="1" on_change="onchange_photo(photo)"/>
+                        </group>
+                        <group colspan="1" col="2">
+                            <separator string="Privacy settings" colspan="2"/>
+                            <field name="public" nolabel="1"/>
+                            <label string="This group is visible by non members" colspan="2"/>
+                        </group>
+                    </group>
+                    <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
+                </form>
+            </field>
+        </record>
+
+        <!-- Group List View !-->
+        <record  model="ir.ui.view" id="view_group_tree">
+            <field name="name">mail.group.tree</field>
+            <field name="model">mail.group</field>
+            <field name="type">tree</field>
+            <field name="priority" eval="10"/>
+            <field name="arch" type="xml">
+                <tree string="Groups">
+                    <field name="name"/>
+                    <field name="responsible_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Group Search View !-->
+        <record  model="ir.ui.view" id="view_group_search">
+            <field name="name">mail.group.search</field>
+            <field name="model">mail.group</field>
+            <field name="type">search</field>
+            <field name="priority" eval="10"/>
+            <field name="arch" type="xml">
+                <search string="Search groups">
+                    <field name="name"/>
+                    <field name="responsible_id"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- group record !-->
+        <record id="action_view_groups" model="ir.actions.act_window">
+            <field name="name">Groups</field>
+            <field name="res_model">mail.group</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="search_view_id" ref="view_group_search"/>
+        </record>
+
+        <!-- left-side menu: Groups !-->
+        <menuitem id="mail_allgroups" name="All Groups" parent="mail_feeds" sequence="12" action="action_view_groups"/>
+    </data>
+</openerp>

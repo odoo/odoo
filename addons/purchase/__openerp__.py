@@ -50,7 +50,6 @@ Dashboard for purchase management that includes:
         'company_view.xml',
         'purchase_data.xml',
         'wizard/purchase_order_group_view.xml',
-        'wizard/purchase_installer.xml',
         'wizard/purchase_line_invoice_view.xml',
         'purchase_report.xml',
         'purchase_view.xml',
@@ -60,6 +59,7 @@ Dashboard for purchase management that includes:
         'report/purchase_report_view.xml',
         'board_purchase_view.xml',
         'edi/purchase_order_action_data.xml',
+        'res_config_view.xml',
     ],
     'test': [
         'test/process/cancel_order.yml',

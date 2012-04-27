@@ -46,7 +46,7 @@
                             <group col="2" colspan="2">
                                 <separator string="Actions to Perform on Incoming Mails" colspan="2"/>
                                 <field name="object_id" on_change="onchange_server_type(type, is_ssl, object_id)"/>
-                                <field name="action_id" groups="base.group_extended"/>
+                                <field name="action_id"/>
                             </group>
                             <group attrs="{'invisible' : [('type', '!=', 'local')]}" colspan="4" col="4">
                                 <separator string="Configuration" colspan="4"/>
@@ -54,10 +54,10 @@
                                 <field name="script" colspan="4" widget="url"/>
                             </group>
                         </page>
-                        <page string="Advanced" groups="base.group_extended">
+                        <page string="Advanced" groups="base.group_no_one">
                             <group colspan="2" col="2">
                                 <separator string="Advanced options" colspan="2"/>
-                                <field name="priority" groups="base.group_extended"/>
+                                <field name="priority"/>
                                 <field name="attach"/>
                                 <field name="original"/>
                                 <field name="active" select="1"/>
@@ -105,6 +105,7 @@
             action="action_email_server_tree"
             name="Incoming Mail Servers"
             sequence="14"
+            groups="base.group_no_one"
         />
 
       <record model="ir.ui.view" id="email_message_tree_view">

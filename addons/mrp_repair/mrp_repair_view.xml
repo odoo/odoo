@@ -70,7 +70,7 @@
                                         <separator colspan="4" string="States"/>
                                         <field name="state"/>
                                     </page>
-                                    <page string="History" groups="base.group_extended">
+                                    <page string="History">
                                         <field colspan="4" name="move_id" />
                                         <field colspan="4" name="invoice_line_id"/>
                                     </page>
@@ -118,7 +118,7 @@
                     <page string="Invoicing">
                         <field name="invoice_method" colspan="4"/>
                         <field
-                            name="pricelist_id" context="{'product_id':product_id}"
+                            name="pricelist_id" groups="product.group_sale_pricelist" context="{'product_id':product_id}"
                             attrs="{'readonly':[('invoice_method','=', 'none')]}"/>
                         <field name="partner_invoice_id" attrs="{'readonly':[('invoice_method','=', 'none')]}"/>
                         <!-- <field name="invoice_id"/> -->
@@ -141,7 +141,7 @@
                                         <separator colspan="4" string="Taxes"/>
                                         <field colspan="4" name="tax_id" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]" nolabel="1"/>
                                      </page>
-                                     <page string="History" groups="base.group_extended">
+                                     <page string="History">
                                         <field colspan="4" name="invoice_line_id" />
                                     </page>
                                   </notebook>
@@ -157,7 +157,7 @@
                             </tree>
                         </field>
                     </page>
-                    <page string="Extra Info" groups="base.group_extended">
+                    <page string="Extra Info">
                         <field name="invoice_id"/>
                         <field name="picking_id"/>
                         <field name="location_id"/>
