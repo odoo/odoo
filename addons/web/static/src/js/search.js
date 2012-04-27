@@ -888,35 +888,10 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
         this.toggle(this.filters[$(e.target).index()]);
     },
     toggle: function (filter) {
-        // FIXME: oh god, my eyes, they hurt
-        var self = this, fs;
-        var facet = this.view.query.detect(function (f) {
-            return f.get('field') === self; });
-        // just toggle the bloody thing
-        if (facet) {
-            fs = facet.get('values');
-
-            if (_.include(fs, filter)) {
-                fs = _.without(fs, filter);
-            } else {
-                fs.push(filter);
-            }
-            if (_(fs).isEmpty()) {
-                this.view.query.remove(facet, {trigger_search: true});
-            } else {
-                facet.set({
-                    values: fs
-                });
-            }
-            return;
-        } else {
-            fs = [filter];
-        }
-
-        this.view.query.add({
+        this.view.query.toggle({
             category: _t("Filter"),
-            values: fs,
-            field: this
+            field: this,
+            values: [{label: filter.attrs.string, value: filter}]
         });
     }
 });

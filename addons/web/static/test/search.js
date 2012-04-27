@@ -188,28 +188,30 @@ $(document).ready(function () {
         instance.dummy = {};
         instance.dummy.DummyWidget = instance.web.search.Field.extend(
             dummy_widget_attributes || {});
-        instance.connection.responses['/web/searchview/load'] = function () {
-            return {result: {fields_view: {
-                type: 'search',
-                fields: {
-                    dummy: {type: 'char'}
-                },
-                arch: {
-                    tag: 'search',
-                    attrs: {},
-                    children: [{
-                        tag: 'field',
-                        attrs: {
-                            name: 'dummy',
-                            widget: 'dummy'
-                        },
-                        children: []
-                    }]
-                }
-            }}};
-        };
+        if (!('/web/searchview/load' in instance.connection.responses)) {
+            instance.connection.responses['/web/searchview/load'] = function () {
+                return {result: {fields_view: {
+                    type: 'search',
+                    fields: {
+                        dummy: {type: 'char'}
+                    },
+                    arch: {
+                        tag: 'search',
+                        attrs: {},
+                        children: [{
+                            tag: 'field',
+                            attrs: {
+                                name: 'dummy',
+                                widget: 'dummy'
+                            },
+                            children: []
+                        }]
+                    }
+                }}};
+            };
+        }
         instance.connection.responses['/web/searchview/get_filters'] = function () {
-            return [];
+            return {result: []};
         };
         instance.connection.responses['/web/searchview/fields_get'] = function () {
             return {result: {fields: {
@@ -688,6 +690,127 @@ $(document).ready(function () {
                    "filters drawer control has been drawn");
                 ok($fix.find('.oe_searchview_advanced').length,
                    "filters advanced search has been drawn");
+            });
+    });
+
+    module('filters', {
+        setup: function () {
+            instance = window.openerp.init([]);
+            window.openerp.web.corelib(instance);
+            window.openerp.web.coresetup(instance);
+            window.openerp.web.chrome(instance);
+            window.openerp.web.data(instance);
+            window.openerp.web.search(instance);
+
+            instance.web.qweb.add_template(doc);
+
+            instance.connection.responses = {};
+            instance.connection.rpc_function = function (url, payload) {
+                if (!(url.url in this.responses)) {
+                    return $.Deferred().reject(
+                        {}, 'failed',
+                        _.str.sprintf("Url %s not found in mock responses",
+                                      url.url)).promise();
+                }
+                return $.when(this.responses[url.url](payload));
+            };
+            instance.connection.responses['/web/searchview/load'] = function () {
+                // view with a single group of filters
+                return {result: {fields_view: {
+                    type: 'search',
+                    fields: {},
+                    arch: {
+                        tag: 'search',
+                        attrs: {},
+                        children: [{
+                            tag: 'filter',
+                            attrs: { string: "Foo1", domain: [ ['foo', '=', '1'] ] },
+                            children: []
+                        }, {
+                            tag: 'filter',
+                            attrs: {
+                                name: 'foo2',
+                                string: "Foo2",
+                                domain: [ ['foo', '=', '2'] ] },
+                            children: []
+                        }, {
+                            tag: 'filter',
+                            attrs: { string: "Foo3", domain: [ ['foo', '=', '3'] ] },
+                            children: []
+                        }]
+                    }
+                }}};
+            };
+        }
+    });
+    asyncTest('drawn', 3, function () {
+        var view = makeSearchView();
+        var $fix = $('#qunit-fixture');
+        view.appendTo($fix)
+            .always(start)
+            .fail(function (error) { ok(false, error.message); })
+            .done(function () {
+                var $fs = $fix.find('.oe_searchview_filters ul');
+                // 3 filters, 1 filtergroup, 1 advanced and 1 Filters widget
+                equal(view.inputs.length, 6,
+                      'view should have 6 inputs total');
+                equal($fs.children().length, 3,
+                      "drawer should have a filter group with 3 filters");
+                equal(_.str.strip($fs.children().eq(0).text()), "Foo1",
+                      "Text content of first filter option should match filter string");
+            });
+    });
+    asyncTest('click adding from empty query', 4, function () {
+        var view = makeSearchView();
+        var $fix = $('#qunit-fixture');
+        view.appendTo($fix)
+            .always(start)
+            .fail(function (error) { ok(false, error.message); })
+            .done(function () {
+                var $fs = $fix.find('.oe_searchview_filters ul');
+                $fs.children(':eq(2)').trigger('click');
+                equal(view.query.length, 1, "click should have added a facet");
+                var facet = view.query.at(0);
+                equal(facet.values.length, 1, "facet should have a single value");
+                var value = facet.values.at(0);
+                ok(value.get('value') instanceof instance.web.search.Filter,
+                   "value should be a filter");
+                equal(value.get('label'), "Foo3",
+                      "value should be third filter");
+            });
+    });
+    asyncTest('click adding from existing query', 4, function () {
+        var view = makeSearchView({}, {foo2: true});
+        var $fix = $('#qunit-fixture');
+        view.appendTo($fix)
+            .always(start)
+            .fail(function (error) { ok(false, error.message); })
+            .done(function () {
+                var $fs = $fix.find('.oe_searchview_filters ul');
+                $fs.children(':eq(2)').trigger('click');
+                equal(view.query.length, 1, "click should not have changed facet count");
+                var facet = view.query.at(0);
+                equal(facet.values.length, 2, "facet should have a second value");
+                var v1 = facet.values.at(0);
+                equal(v1.get('label'), "Foo2",
+                      "first value should be default");
+                var v2 = facet.values.at(1);
+                equal(v2.get('label'), "Foo3",
+                      "second value should be clicked filter");
+            });
+    });
+    asyncTest('click removing from query', 2, function () {
+        var view = makeSearchView({}, {foo2: true});
+        var $fix = $('#qunit-fixture');
+        view.appendTo($fix)
+            .always(start)
+            .fail(function (error) { ok(false, error.message); })
+            .done(function () {
+                var $fs = $fix.find('.oe_searchview_filters ul');
+                // sanity check
+                equal(view.query.length, 1, "query should have default facet");
+                $fs.children(':eq(1)').trigger('click');
+                equal(view.query.length, 0, "click should have removed facet");
             });
     });
 
