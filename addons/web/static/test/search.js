@@ -623,6 +623,24 @@ $(document).ready(function () {
                 deepEqual(f2.values.toJSON(), [{label: 'choice @', value: 43}]);
             });
     });
+    asyncTest("M2O no match", 5, function () {
+        instance.connection.responses['/web/dataset/call_kw'] = function (req) {
+            equal(req.params.method, "name_search");
+            equal(req.params.model, "dummy.model");
+            deepEqual(req.params.args, []);
+            deepEqual(req.params.kwargs.name, 'bob');
+            return {result: []}
+        };
+        var view = {inputs: []};
+        var f = new instance.web.search.ManyToOneField(
+            {attrs: {string: 'Dummy'}}, {relation: 'dummy.model'}, view);
+        f.complete("bob")
+            .always(start)
+            .fail(function (error) { ok(false, error.message); })
+            .done(function (c) {
+                ok(!c, "no match should yield no completion");
+            });
+    });
 
     // TODO: test drawer rendering
     // TODO: UI tests?
