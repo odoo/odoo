@@ -54,6 +54,12 @@ class mrp_config_settings(osv.osv_memory):
                 All procurement orders will be processed immediately, which could in some
                 cases entail a small performance impact.
                 This installs the module mrp_jit."""),
+        'module_stock_no_autopicking': fields.boolean("Manual Picking to Fulfill Manufacturing Orders",
+            help="""This module allows an intermediate picking process to provide raw materials to production orders.
+                For example to manage production made by your suppliers (sub-contracting).
+                To achieve this, set the assembled product which is sub-contracted to "No Auto-Picking"
+                and put the location of the supplier in the routing of the assembly operation.
+                This installs the module stock_no_autopicking."""),                
         'group_mrp_routings': fields.boolean("Manage Routings and Work Orders",
             implied_group='mrp.group_mrp_routings',
             help="""Routings allow you to create and manage the manufacturing operations that should be followed
