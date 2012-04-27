@@ -13,9 +13,9 @@
                 </field>
                 <xpath expr="//div[@class='oe_partner_desc']//h4[@class='oe_partner_heading']" position="after">
                     <a name="%(sale.act_res_partner_2_sale_order)d" type="action">
+                        <t t-if="record.total_sale.value &lt;= 1">Quotation</t>
+                        <t t-if="record.total_sale.value > 1">Quotations</t>
                         (<t t-esc="record.total_sale.value" />)
-                        <t t-if="record.total_sale.value &lt;= 1">Quatation</t>
-                        <t t-if="record.total_sale.value > 1">Quatations</t>
                     </a>
                 </xpath>
             </field>

@@ -58,14 +58,14 @@
                 </field>
                  <xpath expr="//div[@class='oe_partner_desc']//h4[@class='oe_partner_heading']" position="after">
                         <a name="get_opportunity" type="object">
-                            (<t t-esc="record.total_oppo.value"/>)
                             <t t-if="record.total_oppo.value &lt;= 1">Opportunity</t>
                             <t t-if="record.total_oppo.value > 1"> Opportunities</t>
+                            (<t t-esc="record.total_oppo.value"/>)
                         </a>
                         <a name="%(crm.crm_case_categ_meet)d" type="action">
-                            (<t t-esc="record.total_meeting.value"/>)
                             <t t-if="record.total_meeting.value &lt;= 1">Meeting</t>
                             <t t-if="record.total_meeting.value > 1">Meetings</t>
+                            (<t t-esc="record.total_meeting.value"/>)
                         </a>
                 </xpath>
             </field>
