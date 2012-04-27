@@ -66,7 +66,7 @@ $(document).ready(function () {
         ok(!fail2);
     });
 
-    asyncTest('Resolve all correctly ordered, sync', 1, function () {
+    asyncTest('Resolve all correctly ordered, async', 1, function () {
         var dm = new openerp.web.DropMisordered();
 
         var d1 = $.Deferred(), d2 = $.Deferred(),
@@ -80,7 +80,7 @@ $(document).ready(function () {
             ok(true);
         });
     });
-    asyncTest("Don't resolve mis-ordered, sync", 4, function () {
+    asyncTest("Don't resolve mis-ordered, async", 4, function () {
         var dm = new openerp.web.DropMisordered(),
             done1 = false, done2 = false,
             fail1 = false, fail2 = false;
@@ -104,7 +104,7 @@ $(document).ready(function () {
             ok(!fail2);
         }, 400);
     });
-    asyncTest('Fail mis-ordered flag, sync', 4, function () {
+    asyncTest('Fail mis-ordered flag, async', 4, function () {
         var dm = new openerp.web.DropMisordered(true),
             done1 = false, done2 = false,
             fail1 = false, fail2 = false;
