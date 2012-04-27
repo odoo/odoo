@@ -693,8 +693,8 @@
             <field name="arch" type="xml">
                 <form layout="manual">
                 <div class="oe_form_topbar">
-                    <button name="draft_validate" states="draft" string="Process Now" type="object" icon="gtk-media-play"/>
                     <button name="draft_force_assign" states="draft" string="Process Later" type="object" icon="gtk-apply"/>
+                    <button name="draft_validate" states="draft" string="Process Now" type="object" icon="gtk-media-play"/>
                     <button name="action_assign" states="confirmed" string="Check Availability" type="object" icon="gtk-find"/>
                     <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
                     <button name="action_process" states="assigned" string="Process"  groups="stock.group_stock_user" type="object" icon="gtk-go-forward"/>
@@ -887,8 +887,8 @@
             <field name="arch" type="xml">
                 <form layout="manual">
                 <div class="oe_form_topbar">
-                    <button name="draft_validate" states="draft" string="Process Now" type="object" icon="gtk-yes"/>
                     <button name="draft_force_assign" states="draft" string="Process Later" type="object" icon="gtk-ok"/>
+                    <button name="draft_validate" states="draft" string="Process Now" type="object" icon="gtk-yes"/>
                     <button name="action_assign" states="confirmed" string="Check Availability" type="object" icon="gtk-find"/>
                     <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
                     <button name="action_process" states="assigned" string="Process" type="object" icon="gtk-go-forward"/>
@@ -1112,8 +1112,8 @@
             <field name="arch" type="xml">
                 <form layout="manual">
                 <div class="oe_form_topbar">
-                    <button name="draft_validate" states="draft" string="Process Now" type="object" icon="gtk-media-play"/>
                     <button name="draft_force_assign" states="draft" string="Process Later" type="object" icon="gtk-ok"/>
+                    <button name="draft_validate" states="draft" string="Process Now" type="object" icon="gtk-media-play"/>
                     <button name="action_assign" states="confirmed" string="Check Availability" type="object" icon="gtk-find"/>
                     <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
                     <button name="action_process" states="assigned" string="Process" type="object" icon="gtk-go-forward"/>
@@ -1121,7 +1121,7 @@
                     <button name="%(act_stock_return_picking)d" string="Return Products" states="done" type="action" icon="gtk-execute"/>
                     <button name="button_cancel" states="assigned,confirmed,draft" string="_Cancel" icon="gtk-cancel"/>
                     <div class="oe_right">
-                        <field name="state" nolabel="1" readonly="1" widget="statusbar" statusbar_visible="draft,assigned,done" statusbar_colors='{"auto":"blue", "confirmed":"blue"}'/>
+                        <field name="state" nolabel="1" readonly="1" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" statusbar_colors='{"auto":"blue", "confirmed":"blue"}'/>
                     </div>
                 </div>
                 <sheet string="Input Picking List" layout="auto">
@@ -1419,8 +1419,8 @@
             <field name="arch" type="xml">
                 <form layout="manual">
                 <div class="oe_form_topbar">
-                        <button name="action_done" states="draft,assigned,confirmed" string="Process Now" type="object" icon="gtk-jump-to"/>
                         <button name="action_confirm" states="draft" string="Process Later" type="object" icon="gtk-apply"/>
+                        <button name="action_done" states="draft,assigned,confirmed" string="Process Now" type="object" icon="gtk-jump-to"/>
                         <button name="force_assign" states="confirmed" string="Set Available" type="object" icon="gtk-yes"/>
                         <button name="action_cancel" states="assigned,confirmed" string="_Cancel" type="object" icon="gtk-cancel"/>
                     <div class="oe_right">
