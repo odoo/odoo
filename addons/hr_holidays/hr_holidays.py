@@ -351,7 +351,7 @@ class hr_holidays(osv.osv):
                 if record.employee_id and not record.holiday_status_id.limit:
                     leaves_rest = holi_status_obj.get_days( cr, uid, [record.holiday_status_id.id], record.employee_id.id, False)[record.holiday_status_id.id]['remaining_leaves']
                     if leaves_rest < record.number_of_days_temp:
-                        raise osv.except_osv(_('Warning!'),_('There  are no %s allocated  for employee %s, Please create allocation request for this leave type.') % (record.holiday_status_id.name,record.employee_id.name))
+                        raise osv.except_osv(_('Warning!'), _('There are not enough %s allocated for employee %s; please create an allocation request for this leave type.') % (record.holiday_status_id.name, record.employee_id.name))
         return True
     
     # -----------------------------
