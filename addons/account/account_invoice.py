@@ -1512,7 +1512,8 @@ class account_invoice_line(osv.osv):
                                                        partner_id=partner_id, fposition_id=fposition_id)
         unique_tax_ids = set(tax_ids)
         if product_change_result and 'value' in product_change_result and 'invoice_line_tax_id' in product_change_result['value']:
-            unique_tax_ids |= set(product_change_result['value']['invoice_line_tax_id'])
+            # Product tax overrides account tax
+            unique_tax_ids = product_change_result['value']['invoice_line_tax_id']
         return {'value':{'invoice_line_tax_id': list(unique_tax_ids)}}
 
 account_invoice_line()
