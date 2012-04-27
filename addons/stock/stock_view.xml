@@ -701,7 +701,7 @@
                     <button name="%(action_stock_invoice_onshipping)d" string="Create Invoice"  attrs="{'invisible': ['|','|',('state','&lt;&gt;','done'),('invoice_state','=','invoiced'),('invoice_state','=','none')]}"  type="action" icon="terp-gtk-go-back-rtl" />
                     <button name="button_cancel" states="assigned,confirmed,draft" string="_Cancel" icon="gtk-cancel"/>
                     <div class="oe_right">
-                        <field name="state" nolabel="1" readonly="1" widget="statusbar" statusbar_visible="draft,done" statusbar_colors='{"auto":"blue", "confirmed":"blue"}'/>
+                        <field name="state" nolabel="1" readonly="1" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" statusbar_colors='{"auto":"blue", "confirmed":"blue"}'/>
                     </div>
                 </div>
                 <sheet string="Internal Picking List" layout="auto">
