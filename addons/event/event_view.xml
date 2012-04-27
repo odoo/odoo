@@ -103,50 +103,33 @@
 		                    </div>
 		                    <newline/>
 		                    <group colspan="4" string="vanue">
-                            	<div class="sub1"> Venue   : </div> <separator orientation="vertical"/>
+                            	<div class="oe_sub1"> Venue   : </div> <separator orientation="vertical"/>
                             	<field name="location_id" nolabel="1"/> 
                         	</group>
 			             </group>	
 			             <group>
-			             	<div class="mapbox"> </div><newline/>
-		                    <!--table>
-		                        <tr>
-		                        <td width="70px" style="text-align:top;"  class="oe_td_border">
-		                            Where
-		                        </td>
-		                        <td width="150px">
-		                            <field name="address_id" nolabel="1"/>
-		                                
-		                        </td>
-		                        <td width="150px">
-									<span width="15px"> Start</span> <field name="date_begin" nolabel="1"/>   
-									<span width="15px"> End</span> <field name="date_end" nolabel="1"/>    
-		                        </td>
-		                        </tr>
-		                   </table-->   
-		                   <table>
-		                   	<tr>
-		                    	<td width="70px" class="oe_td_border">
-		                            Where
-		                        </td>
-		                        <td width="150px">
-		                            <field name="address_id" nolabel="1"/>
-		                        </td>
-		                        <td width="auto">
-                             		<table>
-										<tr>
-											<td class="oe_td_date_border">Start</td><td><field name="date_begin" nolabel="1"/></td>
-										</tr>
-										<tr>
-											<td class="oe_td_date_border">End</td><td><field name="date_end" nolabel="1"/></td>
-										</tr>
-									</table>
-                                 
-		                        </td>
-		                     </tr>
-		                   </table>   
-		                      <!--field name="date_end" label="To" string="end"/-->
-					       
+			             	<div class="oe_mapbox"> </div><newline/>
+		                    <table>
+			                   	<tr>
+			                    	<td width="70px" class="oe_td_border">
+			                            Where
+			                        </td>
+			                        <td width="150px">
+			                            <field name="address_id" nolabel="1"/>
+			                        </td>
+			                        <td width="auto">
+	                             		<table>
+											<tr>
+												<td class="oe_td_date_border">Start</td><td><field name="date_begin" nolabel="1"/></td>
+											</tr>
+											<tr>
+												<td class="oe_td_date_border">End</td><td><field name="date_end" nolabel="1"/></td>
+											</tr>
+										</table>
+	                                 
+			                        </td>
+			                     </tr>
+		                     </table>   
 			             </group>
                     </group>	
                     <notebook colspan="4">

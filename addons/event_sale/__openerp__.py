@@ -39,10 +39,7 @@ It defines a new kind of service products that offers you the possibility to cho
         'event_sale_view.xml',
     ],
     'demo_xml': ['event_demo.xml'],
-    'js': ['static/src/js/*.js'],
-    'html': ['static/*.html'],
     'test':['test/confirm.yml'],
-    'css': ['static/src/css/*.css'],
     'installable': True,
     'active': False,
 }
