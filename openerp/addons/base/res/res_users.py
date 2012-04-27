@@ -324,10 +324,11 @@ class users(osv.osv):
         # default avatar file name: avatar0 -> avatar6.png, choose randomly
         avatar_path = openerp.modules.get_module_resource('base', 'static/src/img', 'avatar%d.png' % random.randint(0, 6))
         return self._avatar_resize(cr, uid, open(avatar_path, 'rb').read().encode('base64'), context=context)
-    
+
     _defaults = {
         'password' : '',
-        'context_lang': 'en_US',
+        'context_lang': lambda self, cr, uid, context: context.get('lang', 'en_US'),
+        'context_tz': lambda self, cr, uid, context: context.get('tz', False),
         'avatar': _get_avatar,
         'active' : True,
         'menu_id': _get_menu,
