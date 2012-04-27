@@ -178,6 +178,8 @@ class WebKitParser(report_sxw):
         if not lang:
             lang = 'en_US'
         self.localcontext['lang'] = lang
+        for obj in self.parser_instance.objects:
+            obj._context['lang'] = lang
 
     def translate_call(self, src):
         """Translate String."""
