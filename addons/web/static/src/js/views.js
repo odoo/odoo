@@ -237,7 +237,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         var self = this;
         this.$element.find('.oe_view_manager_switch a').click(function() {
             self.on_mode_switch($(this).data('view-type'));
-        });
+        }).tipsy();
         var views_ids = {};
         _.each(this.views_src, function(view) {
             self.views[view.view_type] = $.extend({}, view, {
