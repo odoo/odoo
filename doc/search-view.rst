@@ -122,12 +122,18 @@ rendered inside the drawer.
    second more usual calendar widget in the drawer for more
    obvious/precise interactions)
 
-Any input can note its desire to be rendered in the drawer by setting
-its :js:attr:`~openerp.web.search.Input.in_drawer` attribute to
-``true``, either on its class or on its instance.
+Any input can note its desire to be rendered in the drawer by
+returning a truthy value from
+:js:func:`~openerp.web.search.Input.in_drawer`.
 
-It will be rendered in the full width of the drawer, and instantiated
-only once.
+By default, :js:func:`~openerp.web.search.Input.in_drawer` returns the
+value of :js:attr:`~openerp.web.search.Input._in_drawer`, which is
+``false``. The behavior can be toggled either by redefining the
+attribute to ``true`` (either on the class or on the input), or by
+overriding :js:func:`~openerp.web.search.Input.in_drawer` itself.
+
+The input will be rendered in the full width of the drawer, it will be
+started only once (per view).
 
 .. todo:: drawer API (if a widget wants to close the drawer in some
           way), part of the low-level SearchView API/interactions?

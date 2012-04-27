@@ -170,12 +170,24 @@ $(document).ready(function () {
         }
     });
 
+    /**
+     * Builds a basic search view with a single "dummy" field. The dummy
+     * extends `instance.web.search.Field`, it does not add any (class)
+     * attributes beyond what is provided through ``dummy_widget_attributes``.
+     *
+     * The view is returned un-started, it is the caller's role to start it
+     * (or use DOM-insertion methods to start it indirectly).
+     *
+     * @param [dummy_widget_attributes={}]
+     * @param [defaults={}]
+     * @return {instance.web.SearchView}
+     */
     function makeSearchView(dummy_widget_attributes, defaults) {
         instance.web.search.fields.add(
             'dummy', 'instance.dummy.DummyWidget');
         instance.dummy = {};
         instance.dummy.DummyWidget = instance.web.search.Field.extend(
-            dummy_widget_attributes);
+            dummy_widget_attributes || {});
         instance.connection.responses['/web/searchview/load'] = function () {
             return {result: {fields_view: {
                 type: 'search',
@@ -642,6 +654,42 @@ $(document).ready(function () {
             });
     });
 
-    // TODO: test drawer rendering
+    module('drawer', {
+        setup: function () {
+            instance = window.openerp.init([]);
+            window.openerp.web.corelib(instance);
+            window.openerp.web.coresetup(instance);
+            window.openerp.web.chrome(instance);
+            window.openerp.web.data(instance);
+            window.openerp.web.search(instance);
+
+            instance.web.qweb.add_template(doc);
+
+            instance.connection.responses = {};
+            instance.connection.rpc_function = function (url, payload) {
+                if (!(url.url in this.responses)) {
+                    return $.Deferred().reject(
+                        {}, 'failed',
+                        _.str.sprintf("Url %s not found in mock responses",
+                                      url.url)).promise();
+                }
+                return $.when(this.responses[url.url](payload));
+            };
+        }
+    });
+    asyncTest('is-drawn', 2, function () {
+        var view = makeSearchView();
+        var $fix = $('#qunit-fixture');
+        view.appendTo($fix)
+            .always(start)
+            .fail(function (error) { ok(false, error.message); })
+            .done(function () {
+                ok($fix.find('.oe_searchview_filters').length,
+                   "filters drawer control has been drawn");
+                ok($fix.find('.oe_searchview_advanced').length,
+                   "filters advanced search has been drawn");
+            });
+    });
+
     // TODO: UI tests?
 });

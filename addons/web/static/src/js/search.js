@@ -249,69 +249,10 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
     /**
      * Sets up thingie where all the mess is put?
      */
-    setup_stuff_drawer: function () {
-        var self = this;
-        $('<div class="oe_searchview_unfold_drawer">').appendTo(this.$element);
-        var $drawer = $('<div class="oe_searchview_drawer">').appendTo(this.$element);
-        var $filters = $('<div class="oe_searchview_filters">').appendTo($drawer);
-
-        var running_count = 0;
-        // get total filters count
-        var is_group = function (i) { return i instanceof instance.web.search.FilterGroup; };
-        var filters_count = _(this.controls).chain()
-            .flatten()
-            .filter(is_group)
-            .map(function (i) { return i.filters.length; })
-            .sum()
-            .value();
-
-        var col1 = [], col2 = _(this.controls).map(function (inputs, group) {
-            var filters = _(inputs).filter(is_group);
-            return {
-                name: group === 'null' ? _t("Filters") : group,
-                filters: filters,
-                length: _(filters).chain().map(function (i) {
-                    return i.filters.length; }).sum().value()
-            };
+    select_for_drawer: function () {
+        return _(this.inputs).filter(function (input) {
+            return input.in_drawer();
         });
-
-        while (col2.length) {
-            // col1 + group should be smaller than col2 + group
-            if ((running_count + col2[0].length) <= (filters_count - running_count)) {
-                running_count += col2[0].length;
-                col1.push(col2.shift());
-            } else {
-                break;
-            }
-        }
-
-        // Create a Custom Filter FilterGroup for each custom filter read from
-        // the db, add all of this as a group in the smallest column
-        [].push.call(col1.length <= col2.length ? col1 : col2, {
-            name: _t("Custom Filters"),
-            filters: _.map(this.custom_filters, function (filter) {
-                // FIXME: handling of ``disabled`` being set
-                var f = new instance.web.search.Filter({attrs: {
-                    string: filter.name,
-                    context: filter.context,
-                    domain: filter.domain
-                }}, self);
-                return new instance.web.search.FilterGroup([f], self);
-            }),
-            length: 3
-        });
-
-        return $.when(
-            this.render_column(col1, $('<div>').appendTo($filters)),
-            this.render_column(col2, $('<div>').appendTo($filters)),
-            (new instance.web.search.Advanced(this).appendTo($drawer)));
-    },
-    render_column: function (column, $el) {
-        return $.when.apply(null, _(column).map(function (group) {
-            $('<h3>').text(group.name).appendTo($el);
-            return $.when.apply(null,
-                _(group.filters).invoke('appendTo', $el));
-        }));
     },
     /**
      * Sets up search view's view-wide auto-completion widget
@@ -479,14 +420,24 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             data.fields_view['arch'].children,
             data.fields_view.fields);
 
+        // add Filters to this.inputs, need view.controls filled
+        var filters = new instance.web.search.Filters(this);
+        // add Advanced to this.inputs
+        var advanced = new instance.web.search.Advanced(this);
+
+        // build drawer
+        var drawer_started = $.when.apply(
+            null, _(this.select_for_drawer()).invoke(
+                'appendTo', this.$element.find('.oe_searchview_drawer')));
+
         // load defaults
-        return $.when(
-                this.setup_stuff_drawer(),
-                $.when.apply(null, _(this.inputs).invoke('facet_for_defaults', this.defaults))
-                    .then(function () {
-                        self.query.reset(_(arguments).compact(), {silent: true});
-                        self.renderFacets();
-                    }))
+        var defaults_fetched = $.when.apply(null, _(this.inputs).invoke(
+            'facet_for_defaults', this.defaults)).then(function () {
+                self.query.reset(_(arguments).compact(), {silent: true});
+                self.renderFacets();
+            });
+
+        return $.when(drawer_started, defaults_fetched)
             .then(function () { self.ready.resolve(); })
     },
     /**
@@ -779,6 +730,7 @@ instance.web.search.Group = instance.web.search.Widget.extend({
 });
 
 instance.web.search.Input = instance.web.search.Widget.extend( /** @lends instance.web.search.Input# */{
+    _in_drawer: false,
     /**
      * @constructs instance.web.search.Input
      * @extends instance.web.search.Widget
@@ -819,6 +771,9 @@ instance.web.search.Input = instance.web.search.Widget.extend( /** @lends instan
             return $.when(null);
         }
         return this.facet_for(defaults[this.attrs.name]);
+    },
+    in_drawer: function () {
+        return !!this._in_drawer;
     },
     get_context: function () {
         throw new Error(
@@ -937,6 +892,7 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
         var self = this, fs;
         var facet = this.view.query.detect(function (f) {
             return f.get('field') === self; });
+        // just toggle the bloody thing
         if (facet) {
             fs = facet.get('values');
 
@@ -1304,8 +1260,71 @@ instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
     }
 });
 
+instance.web.search.Filters = instance.web.search.Input.extend({
+    template: 'SearchView.Filters',
+    _in_drawer: true,
+    start: function () {
+        var self = this;
+        var running_count = 0;
+        // get total filters count
+        var is_group = function (i) { return i instanceof instance.web.search.FilterGroup; };
+        var filters_count = _(this.view.controls).chain()
+            .flatten()
+            .filter(is_group)
+            .map(function (i) { return i.filters.length; })
+            .sum()
+            .value();
+
+        var col1 = [], col2 = _(this.view.controls).map(function (inputs, group) {
+            var filters = _(inputs).filter(is_group);
+            return {
+                name: group === 'null' ? _t("Filters") : group,
+                filters: filters,
+                length: _(filters).chain().map(function (i) {
+                    return i.filters.length; }).sum().value()
+            };
+        });
+
+        while (col2.length) {
+            // col1 + group should be smaller than col2 + group
+            if ((running_count + col2[0].length) <= (filters_count - running_count)) {
+                running_count += col2[0].length;
+                col1.push(col2.shift());
+            } else {
+                break;
+            }
+        }
+
+        // Create a Custom Filter FilterGroup for each custom filter read from
+        // the db, add all of this as a group in the smallest column
+        (col1.length <= col2.length ? col1 : col2).push({
+            name: _t("Custom Filters"),
+            filters: _.map(this.view.custom_filters, function (filter) {
+                // FIXME: handling of ``disabled`` being set
+                var f = new instance.web.search.Filter({attrs: {
+                    string: filter.name,
+                    context: filter.context,
+                    domain: filter.domain
+                }}, self.view);
+                return new instance.web.search.FilterGroup([f], self.view);
+            }),
+            length: this.view.custom_filters.length
+        });
+        return $.when(
+            this.render_column(col1, $('<div>').appendTo(this.$element)),
+            this.render_column(col2, $('<div>').appendTo(this.$element)));
+    },
+    render_column: function (column, $el) {
+        return $.when.apply(null, _(column).map(function (group) {
+            $('<h3>').text(group.name).appendTo($el);
+            return $.when.apply(null,
+                _(group.filters).invoke('appendTo', $el));
+        }));
+    }
+});
 instance.web.search.Advanced = instance.web.search.Input.extend({
     template: 'SearchView.advanced',
+    _in_drawer: true,
     start: function () {
         var self = this;
         this.$element
