@@ -240,8 +240,25 @@ class mrp_bom(osv.osv):
                 return False
             level -= 1
         return True
+    
+    def _check_product(self, cr, uid, ids, context=None):
+        all_prod = []
+        boms = self.browse(cr, uid, ids, context=context)
+        def check_bom(boms):
+            res = True
+            for bom in boms:
+                if bom.product_id.id in all_prod:
+                    res = res and False
+                all_prod.append(bom.product_id.id)
+                lines = bom.bom_lines
+                if lines:
+                    res = res and check_bom([bom_id for bom_id in lines if bom_id not in boms])
+            return res
+        return check_bom(boms)
+    
     _constraints = [
-        (_check_recursion, 'Error ! You can not create recursive BoM.', ['parent_id'])
+        (_check_recursion, 'Error ! You can not create recursive BoM.', ['parent_id']),
+        (_check_product, 'BoM line product should not be same as BoM product.', ['product_id'])
     ]
 
 
