@@ -21,20 +21,24 @@
 
 from osv import osv, fields
 
-class base_config_settings(osv.osv_memory):
-    _name = 'base.config.settings'
+class knowledge_config_settings(osv.osv_memory):
+    _name = 'knowledge.config.settings'
     _inherit = 'res.config.settings'
     _columns = {
-        'module_multi_company': fields.boolean('Multi Company',
-            help="""Work in multi-company environments, with appropriate security access between companies.
-                This installs the module multi_company."""),
-        'module_portal': fields.boolean('Portal',
-            help="""Define a portal for your customers or suppliers.  The portal is a group of
-                external users that has specific access rights and rules.
-                This installs the module portal."""),
-        'module_share': fields.boolean('Share',
-            help="""Share OpenERP documents (records) with external users.
-                This installs the module share."""),
+        'module_wiki_faq': fields.boolean('Use a Wiki for Frequently Asked Questions',
+            help="""This installs the module wiki_faq."""), 
+        'module_wiki_quality_manual': fields.boolean('Track Quality with a Wiki',
+            help="""This installs the module wiki_quality_manual."""),
+        'module_document': fields.boolean('Document Management',
+            help="""This is a complete document management system, with: user authentication,
+                full document search (but pptx and docx are not supported), and a document dashboard.
+                This installs the module document."""),
+        'module_document_ftp': fields.boolean('Share repositories (FTP)',
+            help="""Access your documents in OpenERP through an FTP interface.
+                This installs the module document_ftp."""),
+        'module_document_webdav': fields.boolean('Share Repositories (WebDAV)',
+            help="""Access your documents in OpenERP through WebDAV.
+                This installs the module document_webdav."""),
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
