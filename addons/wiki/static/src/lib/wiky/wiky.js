@@ -57,11 +57,11 @@ wiky.process = function(wikitext) {
 			
 			html += wiky.process_bullet_point(lines,start,i);
 		}
-		else if (line.match(/^img/)!=null)
+		else if (line.match(/^img:/)!=null)
 		{
-			html += wiky.process_image(line);
+			html += wiky.process_image(line.substring(4));
 		}
-		else if (line.match(/^attach/)!=null)
+		else if (line.match(/^attach:/)!=null)
 		{
 			html += "<a href='"+line.substring(7)+"'>Download the file</a>"
 		}
@@ -107,7 +107,6 @@ wiky.process_indent = function(lines,start,end) {
 
 wiky.process_bullet_point = function(lines,start,end) {
 	var html = (lines[start].charAt(0)=='*')?"<ul>":"<ol>";
-	
 	for(var i=start;i<=end;i++) {
 		
 		html += "<li>";
@@ -210,7 +209,7 @@ wiky.process_image = function(txt) {
 		label = txt.substring(0,index);
 		url = txt.substring(index+1);
 	}
-	return "<image src='"+url+"' alt=\""+label+"\" />";
+	return "<img src='"+url+"' alt=\""+label+"\" />";
 };
 
 wiky.process_video = function(url) {
