@@ -632,8 +632,8 @@ class stock_picking(osv.osv):
             ('auto', 'Waiting Another Operation'),
             ('confirmed', 'Waiting Availability'),
             ('assigned', 'Ready to Process'),
-            ('done', 'Done'),
             ('cancel', 'Cancelled'),
+            ('done', 'Done'),
             ], 'State', readonly=True, select=True,
             help="* Draft: not confirmed yet and will not be scheduled until confirmed\n"\
                  "* Confirmed: still waiting for the availability of products\n"\
