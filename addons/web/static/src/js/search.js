@@ -1129,6 +1129,22 @@ instance.web.search.FloatField = instance.web.search.NumberField.extend(/** @len
         }
     }
 });
+
+/**
+ * Utility function for m2o & selection fields taking a selection/name_get pair
+ * (value, name) and converting it to a Facet descriptor
+ *
+ * @param {instance.web.search.Field} field holder field
+ * @param {Array} pair pair value to convert
+ */
+function facet_from(field, pair) {
+    return {
+        field: field,
+        category: field['attrs'].string,
+        values: [{label: pair[1], value: pair[0]}]
+    };
+}
+
 /**
  * @class
  * @extends instance.web.search.Field
@@ -1163,11 +1179,7 @@ instance.web.search.SelectionField = instance.web.search.Field.extend(/** @lends
             .map(function (sel) {
                 return {
                     label: sel[1],
-                    facet: {
-                        category: self.attrs.string,
-                        field: self,
-                        values: [{value: sel[0], label: sel[1]}]
-                    }
+                    facet: facet_from(self, sel)
                 };
             }).value();
         if (_.isEmpty(results)) { return $.when(null); }
@@ -1180,11 +1192,7 @@ instance.web.search.SelectionField = instance.web.search.Field.extend(/** @lends
             return sel[0] === value;
         });
         if (!match) { return $.when(null); }
-        return $.when({
-            category: this.attrs.string,
-            field: this,
-            values: [{label: match[1], value: match[0]}]
-        });
+        return $.when(facet_from(this, match));
     },
     get_value: function (facet) {
         return facet.get('values');
@@ -1271,27 +1279,19 @@ instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
                 _(results).map(function (result) {
                     return {
                         label: result[1],
-                        facet: {
-                            category: self.attrs.string,
-                            field: self,
-                            values: [{label: result[1], value: result[0]}]
-                        }
+                        facet: facet_from(self, result)
                     };
                 }));
         });
     },
     facet_for: function (value) {
-        var self = this, fromPair = function (a) { return {
-            category: self.attrs.string,
-            field: self,
-            values: [{label: a[1], value: a[0]}]
-        } };
+        var self = this;
         if (value instanceof Array) {
-            return $.when(fromPair(value));
+            return $.when(facet_from(this, value));
         }
         return this.model.call('name_get', [value], {}).pipe(function (names) {
             if (_(names).isEmpty()) { return null; }
-            return fromPair(names[0]);
+            return facet_from(self, names[0]);
         })
     },
     make_domain: function (name, operator, facet) {
