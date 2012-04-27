@@ -80,7 +80,6 @@ instance.web.FormView = instance.web.View.extend({
             this.rendering_engine.render_to($dest);
         }
 
-        this.$sidebar = this.options.$sidebar || this.$element.find('.oe_form_sidebar');
 
         this.$buttons = $(QWeb.render("FormView.buttons", {'widget':self}));
         if (this.options.$buttons) {
@@ -104,6 +103,7 @@ instance.web.FormView = instance.web.View.extend({
             self.on_pager_action(action);
         });
 
+        this.$sidebar = this.options.$sidebar || this.$element.find('.oe_form_sidebar');
         if (!this.sidebar && this.options.$sidebar) {
             this.sidebar = new instance.web.Sidebar(this);
             this.sidebar.appendTo(this.$sidebar);
@@ -497,12 +497,14 @@ instance.web.FormView = instance.web.View.extend({
         if(this.get("mode") == "view") {
             self.$buttons.find('.oe_form_buttons_edit').hide();
             self.$buttons.find('.oe_form_buttons_view').show();
+            self.$sidebar.show();
             _.each(this.fields,function(field){
                 field.set({"force_readonly": true});
             });
         } else {
             self.$buttons.find('.oe_form_buttons_edit').show();
             self.$buttons.find('.oe_form_buttons_view').hide();
+            self.$sidebar.hide();
             _.each(this.fields,function(field){
                 field.set({"force_readonly": false});
             });
