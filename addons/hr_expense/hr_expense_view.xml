@@ -73,7 +73,7 @@
                     <button name="invoice" states="accepted" string="Invoice" type="object" icon="gtk-go-forward" groups="base.group_hr_user"/>
                     <button name="refuse" states="confirm,accepted" string="Refuse" type="workflow" icon="gtk-no" groups="base.group_hr_user" />
                     <div class="oe_right">
-                        <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,confirm,accepted,invoiced" statusbar_colors='{"confirm":"blue","cancelled":"red"}'/>
+                        <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,confirm,accepted" statusbar_colors='{"confirm":"blue","cancelled":"red"}'/>
                     </div>
                 </div>
                 <sheet string="Expenses Sheet" layout="auto">
@@ -92,7 +92,7 @@
                             <field colspan="4" name="line_ids" nolabel="1" context="{'currency_id': currency_id}">
                                 <form string="Expense Lines">
                                     <group col="6" colspan="4">
-                                        <field name="product_id" on_change="onchange_product_id(product_id, uom_id, parent.employee_id, context)"/>
+                                        <field name="product_id" on_change="onchange_product_id(product_id, uom_id, parent.employee_id, context)" context="{'default_hr_expense_ok':1}"/>
                                         <field name="name" colspan="4"/>
                                         <newline/>
                                         <field name="unit_amount"/>

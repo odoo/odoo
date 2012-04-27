@@ -31,9 +31,10 @@ MAX_LEVEL = 15
 AVAILABLE_STATES = [
     ('draft', 'New'),
     ('open', 'In Progress'),
+    ('pending', 'Pending'),
     ('cancel', 'Cancelled'),
     ('done', 'Closed'),
-    ('pending', 'Pending'),
+    
 ]
 
 AVAILABLE_PRIORITIES = [
