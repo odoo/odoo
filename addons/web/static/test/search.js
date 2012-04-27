@@ -146,15 +146,13 @@ $(document).ready(function () {
         ])
     });
 
-    module('inputs', {
+    module('defaults', {
         setup: function () {
             instance = window.openerp.init([]);
             window.openerp.web.corelib(instance);
             window.openerp.web.coresetup(instance);
             window.openerp.web.chrome(instance);
             window.openerp.web.data(instance);
-            // date complete
-            window.openerp.web.formats(instance);
             window.openerp.web.search(instance);
 
             instance.web.qweb.add_template(doc);
@@ -210,7 +208,7 @@ $(document).ready(function () {
         var dataset = {model: 'dummy.model', get_context: function () { return {}; }};
         return new instance.web.SearchView(null, dataset, false, defaults);
     }
-    asyncTest('defaults calling', 2, function () {
+    asyncTest('calling', 2, function () {
         var defaults_called = false;
 
         var view = makeSearchView({
@@ -234,7 +232,7 @@ $(document).ready(function () {
                     "should have generated a facet with the default value");
             });
     });
-    asyncTest('FilterGroup defaults', 3, function () {
+    asyncTest('FilterGroup', 3, function () {
         var view = {inputs: []};
         var filter_a = new instance.web.search.Filter(
             {attrs: {name: 'a'}}, view);
@@ -256,7 +254,7 @@ $(document).ready(function () {
                 strictEqual(values.at(1).get('value'), filter_b);
             });
     });
-    asyncTest('Field default', 4, function () {
+    asyncTest('Field', 4, function () {
         var view = {inputs: []};
         var f = new instance.web.search.Field(
             {attrs: {string: 'Dummy', name: 'dummy'}}, {}, view);
@@ -282,7 +280,7 @@ $(document).ready(function () {
                     "facet value should match provided default");
                 });
     });
-    asyncTest('Selection default: valid value', 4, function () {
+    asyncTest('Selection: valid value', 4, function () {
         var view = {inputs: []};
         var f = new instance.web.search.SelectionField(
             {attrs: {name: 'dummy', string: 'Dummy'}},
@@ -310,7 +308,7 @@ $(document).ready(function () {
                     "facet value should match provided default's selection");
             });
     });
-    asyncTest('Selection default: invalid value', 1, function () {
+    asyncTest('Selection: invalid value', 1, function () {
         var view = {inputs: []};
         var f = new instance.web.search.SelectionField(
             {attrs: {name: 'dummy', string: 'Dummy'}},
@@ -323,7 +321,7 @@ $(document).ready(function () {
                 ok(!facet, "an invalid value should result in a not-facet");
             });
     });
-    asyncTest("M2O default: valid value", 7, function () {
+    asyncTest("M2O default: value", 7, function () {
         var view = {inputs: []}, id = 4;
         var f = new instance.web.search.ManyToOneField(
             {attrs: {name: 'dummy', string: 'Dummy'}},
@@ -359,7 +357,7 @@ $(document).ready(function () {
                     "facet value should match provided default's selection");
             });
     });
-    asyncTest("M2O default: invalid value", 1, function () {
+    asyncTest("M2O default: value", 1, function () {
         var view = {inputs: []}, id = 4;
         var f = new instance.web.search.ManyToOneField(
             {attrs: {name: 'dummy', string: 'Dummy'}},
@@ -375,7 +373,33 @@ $(document).ready(function () {
                 ok(!facet, "an invalid m2o default should yield a non-facet");
             });
     });
-    asyncTest('completion calling', 4, function () {
+
+    module('completions', {
+        setup: function () {
+            instance = window.openerp.init([]);
+            window.openerp.web.corelib(instance);
+            window.openerp.web.coresetup(instance);
+            window.openerp.web.chrome(instance);
+            window.openerp.web.data(instance);
+            // date complete
+            window.openerp.web.formats(instance);
+            window.openerp.web.search(instance);
+
+            instance.web.qweb.add_template(doc);
+
+            instance.connection.responses = {};
+            instance.connection.rpc_function = function (url, payload) {
+                if (!(url.url in this.responses)) {
+                    return $.Deferred().reject(
+                        {}, 'failed',
+                        _.str.sprintf("Url %s not found in mock responses",
+                                      url.url)).promise();
+                }
+                return $.when(this.responses[url.url](payload));
+            };
+        }
+    });
+    asyncTest('calling', 4, function () {
         var view = makeSearchView({
             complete: function () {
                 return $.when({
@@ -407,8 +431,7 @@ $(document).ready(function () {
                 });
             });
     });
-
-    asyncTest('completion facet selection', 2, function () {
+    asyncTest('facet selection', 2, function () {
         var completion = {
             label: "Dummy",
             facet: {
@@ -433,7 +456,7 @@ $(document).ready(function () {
                     "should have the right facet in the query");
             });
     });
-    asyncTest('completion facet selection: new value existing facet', 3, function () {
+    asyncTest('facet selection: new value existing facet', 3, function () {
         var field = {};
         var completion = {
             label: "Dummy",
@@ -463,7 +486,7 @@ $(document).ready(function () {
                     "should have added selected value to old one");
             });
     });
-    asyncTest('Field completion', 1, function () {
+    asyncTest('Field', 1, function () {
         var view = {inputs: []};
         var f = new instance.web.search.Field({attrs: {}}, {}, view);
         f.complete('foo')
@@ -473,7 +496,7 @@ $(document).ready(function () {
                 ok(_(completions).isEmpty(), "field should not provide any completion");
             });
     });
-    asyncTest('CharField completion', 6, function () {
+    asyncTest('CharField', 6, function () {
         var view = {inputs: []};
         var f = new instance.web.search.CharField(
             {attrs: {string: "Dummy"}}, {}, view);
@@ -496,7 +519,7 @@ $(document).ready(function () {
                           "facet should have single value using completion item");
             });
     });
-    asyncTest('Selection completion: match found', 14, function () {
+    asyncTest('Selection: match found', 14, function () {
         var view = {inputs: []};
         var f = new instance.web.search.SelectionField(
             {attrs: {string: "Dummy"}},
@@ -529,7 +552,7 @@ $(document).ready(function () {
                 deepEqual(c3.facet.values, [{label: "Bazador", value: 4}]);
             });
     });
-    asyncTest('Selection completion: no match', 1, function () {
+    asyncTest('Selection: no match', 1, function () {
         var view = {inputs: []};
         var f = new instance.web.search.SelectionField(
             {attrs: {string: "Dummy"}},
@@ -542,7 +565,7 @@ $(document).ready(function () {
                 ok(!completions, "if no value matches the needle, no completion shall be provided");
             });
     });
-    asyncTest('Date completion', 6, function () {
+    asyncTest('Date', 6, function () {
         instance.web._t.database.parameters = {
             date_format: '%Y-%m-%d',
             time_format: '%H:%M:%S'
@@ -566,7 +589,7 @@ $(document).ready(function () {
                       new Date(2012, 4, 21, 21, 21, 21).getTime());
             });
     });
-    asyncTest("M2O completion", 15, function () {
+    asyncTest("M2O", 15, function () {
         instance.connection.responses['/web/dataset/call_kw'] = function (req) {
             equal(req.params.method, "name_search");
             equal(req.params.model, "dummy.model");
