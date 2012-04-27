@@ -18,7 +18,7 @@
         <field name="type">form</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
-           <xpath expr="/form/notebook/page/field[@name='order_line']/form/notebook/page/field[@name='delay']" position="after">
+           <xpath expr="/form/sheet/notebook/page/field[@name='order_line']/form/notebook/page/field[@name='delay']" position="after">
                <field name="analytics_id" domain="[('plan_id','&lt;&gt;',False)]" groups="analytic.group_analytic_accounting"/>
            </xpath>
         </field>
