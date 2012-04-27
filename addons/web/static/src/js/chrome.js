@@ -712,7 +712,7 @@ instance.web.UserMenu =  instance.web.Widget.extend({
             title: _t("Change Password"),
             width : 'auto'
         }).open();
-        this.dialog.$element.html(QWeb.render("Change_Pwd", self));
+        this.dialog.$element.html(QWeb.render("UserMenu.password", self));
         this.dialog.$element.find("form[name=change_password_form]").validate({
             submitHandler: function (form) {
                 self.rpc("/web/session/change_password",{
@@ -746,8 +746,11 @@ instance.web.UserMenu =  instance.web.Widget.extend({
                 return;
             var func = new instance.web.Model("res.users").get_func("read");
             return func(self.session.uid, ["name", "company_id"]).pipe(function(res) {
-                // TODO: Show company if multicompany is in use
-                var topbar_name = _.str.sprintf("%s (%s)", res.name, instance.connection.db, res.company_id[1]);
+                var topbar_name = res.name;
+                if(instance.connection.debug)
+                    topbar_name = _.str.sprintf("%s (%s)", topbar_name, instance.connection.db);
+                if(res.company_id[0] > 1)
+                    topbar_name = _.str.sprintf("%s (%s)", topbar_name, res.company_id[1]);
                 self.$element.find('.oe_topbar_name').text(topbar_name);
                 var avatar_src = _.str.sprintf('%s/web/binary/image?session_id=%s&model=res.users&field=avatar&id=%s', self.session.prefix, self.session.session_id, self.session.uid);
                 $avatar.attr('src', avatar_src);
@@ -850,7 +853,7 @@ instance.web.UserMenu =  instance.web.Widget.extend({
     on_menu_about: function() {
         var self = this;
         self.rpc("/web/webclient/version_info", {}).then(function(res) {
-            var $help = $(QWeb.render("About-Page", {version_info: res}));
+            var $help = $(QWeb.render("UserMenu.about", {version_info: res}));
             $help.find('a.oe_activate_debug_mode').click(function (e) {
                 e.preventDefault();
                 window.location = $.param.querystring(

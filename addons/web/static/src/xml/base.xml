@@ -264,29 +264,6 @@
     </div>
 </t>
 
-<t t-name="WebClient">
-    <table class="oe_webclient">
-        <tr>
-            <td colspan="2" class="oe_topbar">
-                <div class="oe_menu_placeholder"/>
-                <div class="oe_user_menu_placeholder"/>
-                <div class="oe_systray"/>
-            </td>
-        </tr>
-        <tr>
-            <td class="oe_leftbar" valign="top">
-                <a href="#" class="oe_logo"><img t-att-src='_s + "/web/static/src/img/logo.png"'/></a>
-                <div class="oe_secondary_menus_container"/>
-                <div class="oe_footer">
-                    Powered by <a href="http://www.openerp.com"><span>Open</span>ERP</a>
-                </div>
-            </td>
-            <td class="oe_application">
-            </td>
-        </tr>
-    </table>
-</t>
-
 <t t-name="Menu">
     <ul class="oe_menu" t-if="widget.data">
         <li t-foreach="widget.data.data.children" t-as="menu">
@@ -363,7 +340,7 @@
         </a>
     </li>
 </t>
-<t t-name="About-Page">
+<t t-name="UserMenu.about">
     <div>
         <a class="oe_activate_debug_mode" href="?debug" style="float:right; font-size: 80%;">Activate the developper mode</a>
         <h1 style="margin:0;">OpenERP</h1>
@@ -380,7 +357,7 @@
         </p>
     </div>
 </t>
-<t t-name="Change_Pwd">
+<t t-name="UserMenu.password">
     <form name="change_password_form" class="oe_forms" method="POST">
         <table align="center">
             <tr>
@@ -403,6 +380,29 @@
             </tr>
         </table>
     </form>
+</t>
+
+<t t-name="WebClient">
+    <table class="oe_webclient">
+        <tr>
+            <td colspan="2" class="oe_topbar">
+                <div class="oe_menu_placeholder"/>
+                <div class="oe_user_menu_placeholder"/>
+                <div class="oe_systray"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="oe_leftbar" valign="top">
+                <a href="#" class="oe_logo"><img t-att-src='_s + "/web/static/src/img/logo.png"'/></a>
+                <div class="oe_secondary_menus_container"/>
+                <div class="oe_footer">
+                    Powered by <a href="http://www.openerp.com"><span>Open</span>ERP</a>
+                </div>
+            </td>
+            <td class="oe_application">
+            </td>
+        </tr>
+    </table>
 </t>
 
 <t t-name="ViewManager">
