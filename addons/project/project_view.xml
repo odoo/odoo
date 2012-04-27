@@ -198,11 +198,9 @@
                                     </ul>
                                     <h4><t t-esc="record.name.value.substr(0,33)"/><t t-if="record.name.value.length > 33">...</t></h4>
                                     <div id="list">
-                                        <a id="1">
-                                            <t t-if="record.task.raw_value">
-                                                <button name="open_tasks" id = "open_tasks" class="oe_project_buttons" type="object"><t t-if="record.open_task.value &lt;= 1"> Task</t><t t-if="record.open_task.value &gt; 1"> Tasks</t>(<t t-esc="record.open_task.value"/>)</button>
-                                            </t>
-                                        </a>
+                                        <t t-if="record.task.raw_value">
+                                            <a id="1" name="open_tasks" class="oe_project_buttons" type="object"><t t-if="record.open_task.value &lt;= 1"> Task</t><t t-if="record.open_task.value &gt; 1"> Tasks</t>(<t t-esc="record.open_task.value"/>)</a>
+                                        </t>
                                     </div>
                                     <br/>
                                     <button class="click_button" type="object">
@@ -229,6 +227,17 @@
                                     </button>
                                 </li>
                             </div>
+                            <script type="text/javascript">
+                                //open dropdwon when click on the icon.
+                                $('.dropdown-toggle').dropdown();
+                                
+                                //show and hide the dropdown icon when mouseover and mouseour.
+                                $('.oe_project_kanban_vignette').mouseover(function() {
+                                    return $(this).find('.oe_project_kanban_action').show();
+                                    }).mouseout(function() {
+                                    return $(this).find('.oe_project_kanban_action').hide();
+                                });
+                            </script>
                         </t>
                     </templates>
                 </kanban>

@@ -4,17 +4,11 @@ openerp.project = function(openerp) {
             self = this;
             self._super();
             if(this.view.dataset.model == 'project.project') {
-                //open dropdwon when click on the icon.
-                $('.dropdown-toggle').dropdown();
-                
-                //show and hide the dropdown icon when mouseover and mouseour.
-                $('.oe_project_kanban_vignette').mouseover(function() {
-                    return $(this).find('.oe_project_kanban_action').show();
-                    }).mouseout(function() {
-                    return $(this).find('.oe_project_kanban_action').hide();
-                });
-                
-                //set avatar title for members.
+                                
+                /*set avatar title for members.
+                In many2many fields, returns only list of ids.
+                we can implement return value of m2m fields like [(1,"Adminstration"),...].
+                */
                 _.each($(this.$element).find('.project_avatar'),function(avatar){
                     var dataset = new openerp.web.DataSetSearch(this, 'res.users', self.session.context, [['id','=',avatar.id]]);
                     dataset.read_slice(['name']).then(function(result){
@@ -35,7 +29,9 @@ openerp.project = function(openerp) {
                   });
                 $('#list').replaceWith(my_list);
                 
-                // set background color
+                /* set background color.
+                  we can do other way to implement new widget.
+                */
                 this.$element.find('.bgcolor').click(function(){
                     color = parseInt($(this).find('span').attr('class').split(' ')[0].substring(16))
                     color_class = $(this).find('span').attr('class').split(' ')[0]

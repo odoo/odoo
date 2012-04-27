@@ -37,11 +37,9 @@
 		    <field name="currency_id"/>
                 </field>
 		<xpath expr="//div[@id='list']" position="inside">
-		    <a id="3">
-			<t t-if="record.timesheets.raw_value">
-			    <button name="open_timesheets" class="oe_project_buttons" type="object"><t t-if="record.total_timesheet.value &lt;= 1"> Timesheet</t><t t-if="record.total_timesheet.value &gt; 1"> Timesheets</t>(<t t-esc="record.total_timesheet.value"/>)</button>
-			</t>
-		    </a>
+		    <t t-if="record.timesheets.raw_value">
+			<a id="3" name="open_timesheets" class="oe_project_buttons" type="object"><t t-if="record.total_timesheet.value &lt;= 1">Timesheet</t><t t-if="record.total_timesheet.value &gt; 1">Timesheets</t>(<t t-esc="record.total_timesheet.value"/>)</a>
+		    </t>
 		</xpath>
 
 		<xpath expr="//tr[@id='deadline']" position="before">
