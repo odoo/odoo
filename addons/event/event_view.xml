@@ -45,6 +45,39 @@
         <menuitem name="Configuration" id="base.menu_marketing_config_root" parent="event_main_menu" sequence="30"/>
         <menuitem name="Types of Events" id="menu_event_type" action="action_event_type" parent="base.menu_marketing_config_root" groups="base.group_no_one"/>
 
+
+		<!-- Event Item Tree view-->
+    	<record model="ir.ui.view" id="view_event_items_tree">
+            <field name="name">Event Items Tree</field>
+            <field name="model">event.items</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Event Items">
+                    <field name="product_id"  string="Ticket Type" />
+                    <field name="uom_id"/>
+                    <field name="sales_end_date"/>
+                    <field name="price"/>
+                    <field name="qty"/>
+                </tree>
+            </field>
+        </record>
+        <!-- Event Item Form View -->
+        <record model="ir.ui.view" id="view_event_items_form">
+            <field name="name">Event Items Form</field>
+            <field name="model">event.items</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Event Items">
+                    <field name="product_id" on_change="onchange_product_id(product_id)"/>
+                    <field name="price"/>
+                    <field name="qty"/>
+                    <field name="uom_id"/>
+                    <field name="discount"/>
+                    <field name="sales_end_date"/>
+                </form>
+            </field>
+        </record>
+
     <!-- Events Organisation/CONFIGURATION/EVENTS -->
 
         <record model="ir.ui.view" id="view_event_form">
@@ -52,20 +85,75 @@
             <field name="model">event.event</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Events">
-                    <group col="6" colspan="4">
-                        <field name="name"/>
-                        <field name="date_begin"/>
-                        <field name="date_end"/>
-                        <field name="type" on_change="onchange_event_type(type,context)"/>
-                        <field name="user_id"/>
-                        <field name="address_id" />
-                    </group>
+                <form string="Events"  layout="manual">
+                <div class="oe_form_topbar">
+                	<button string="Cancel Event" name="button_cancel" states="draft,confirm" type="object" icon="gtk-cancel"/>
+               		<button string="Confirm Event" name="button_confirm" states="draft" type="object" icon="gtk-apply"/>
+               		<button string="Event Done" name="button_done" states="confirm" type="object" icon="gtk-jump-to"/>
+               		<button string="Set To Draft" name="button_draft" states="cancel,done" type="object" icon="gtk-convert"/>
+               		<div class="oe_right">
+                    	<field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
+               		</div>
+            	</div>
+            	<sheet string="Event Form" layout="auto">
+            		<group col="2">
+            			<group col="2">
+		                	<div class="oe_event_title">
+		                    	<field name="name" nolabel="1"/>
+		                    </div>
+		                    <newline/>
+		                    <group colspan="4" string="vanue">
+                            	<div class="sub1"> Venue   : </div> <separator orientation="vertical"/>
+                            	<field name="location_id" nolabel="1"/> 
+                        	</group>
+			             </group>	
+			             <group>
+			             	<div class="mapbox"> </div><newline/>
+		                    <!--table>
+		                        <tr>
+		                        <td width="70px" style="text-align:top;"  class="oe_td_border">
+		                            Where
+		                        </td>
+		                        <td width="150px">
+		                            <field name="address_id" nolabel="1"/>
+		                                
+		                        </td>
+		                        <td width="150px">
+									<span width="15px"> Start</span> <field name="date_begin" nolabel="1"/>   
+									<span width="15px"> End</span> <field name="date_end" nolabel="1"/>    
+		                        </td>
+		                        </tr>
+		                   </table-->   
+		                   <table>
+		                   	<tr>
+		                    	<td width="70px" class="oe_td_border">
+		                            Where
+		                        </td>
+		                        <td width="150px">
+		                            <field name="address_id" nolabel="1"/>
+		                        </td>
+		                        <td width="auto">
+                             		<table>
+										<tr>
+											<td class="oe_td_date_border">Start</td><td><field name="date_begin" nolabel="1"/></td>
+										</tr>
+										<tr>
+											<td class="oe_td_date_border">End</td><td><field name="date_end" nolabel="1"/></td>
+										</tr>
+									</table>
+                                 
+		                        </td>
+		                     </tr>
+		                   </table>   
+		                      <!--field name="date_end" label="To" string="end"/-->
+					       
+			             </group>
+                    </group>	
                     <notebook colspan="4">
                     <page string="Event">
                         <separator string="Description" colspan="4"/>
                         <field name="note" colspan="4" nolabel="1"/>
-                        <field name="registration_ids" colspan="4" nolabel="1" groups="event.group_event_manager,event.group_event_user">
+                        <field name="registration_ids" colspan="4" nolabel="1" groups="event.group_event_manager">
                             <tree string="Registration" editable="top">
                                 <field name="name" />
                                 <field name="email" />
@@ -98,13 +186,7 @@
                                     </group>
                             </form>
                             </field>
-                        <field name="state" select="1" widget="statusbar" statusbar_visible="draft,confirm,done"/>
-                        <group col="4" colspan="2">
-                           <button string="Cancel Event" name="button_cancel" states="draft,confirm" type="object" icon="gtk-cancel"/>
-                           <button string="Confirm Event" name="button_confirm" states="draft" type="object" icon="gtk-apply"/>
-                           <button string="Event Done" name="button_done" states="confirm" type="object" icon="gtk-jump-to"/>
-                           <button string="Set To Draft" name="button_draft" states="cancel,done" type="object" icon="gtk-convert"/>
-                        </group>
+                        
                     </page>
                     <page string="Speakers" groups="base.group_extended">
                         <field name="main_speaker_id" domain="[('speaker','=',True)]"/>
@@ -112,7 +194,7 @@
                         <separator string="Other Speakers" colspan="4"/>
                         <field name="speaker_ids" domain="[('speaker','=',True)]" colspan="4" nolabel="1"/>
                     </page>
-                    <page string="Extra Info">
+                    <page string="Extra Info" groups="event.group_event_manager">
                         <group col="2" colspan="2">
                             <separator string="Registrations" colspan="2"/>
                             <field name="register_min"/>
@@ -129,6 +211,7 @@
                         </group>
                     </page>
                     </notebook>
+                    </sheet>
             </form>
             </field>
         </record>

@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+import time
 from osv import fields, osv
 from tools.translate import _
 
@@ -92,13 +93,53 @@ class sale_order_line(osv.osv):
                 message = _("The registration %s has been created from the Sale Order %s.") % (registration_id, order_line.order_id.name)
                 registration_obj.log(cr, uid, registration_id, message)
         return super(sale_order_line, self).button_confirm(cr, uid, ids, context=context)
-    
+  
 class event_event(osv.osv):
     _inherit = 'event.event'
     _columns = {
-        'event_item_ids': fields.one2many('event.items','event_id', 'Event Items'),
-    }
-    
+                    'event_item_ids': fields.one2many('event.items','event_id', 'Event Items'),
+                }
+
+    def make_order(self, cr, uid, ids, partner_id, context=None):
+        sale_order = self.pool.get('sale.order')
+        sale_order_line_obj = self.pool.get('sale.order.line')
+        res_partner_obj = self.pool.get('res.partner')
+        prod_pricelist_obj = self.pool.get('product.pricelist')
+        res_users_obj = self.pool.get('res.users')
+        customer = res_partner_obj.browse(cr, uid, partner_id, context=context)
+        partner_id = res_users_obj.browse(cr, uid, uid, context=context).partner_id.id
+        if not partner_id:
+            user_name = res_users_obj.browse(cr, uid, uid, context=context).name
+            partner_id =  res_partner_obj.create(cr, uid, {'name': user_name})
+        
+        price_list = prod_pricelist_obj.search(cr,uid,[],context=context)[0]
+        
+        for order_lines in self.browse(cr, uid, ids, context=context):
+            if order_lines.event_item_ids:
+                product = order_lines.id
+                sale_id = sale_order.create(cr, uid, {
+                            'partner_id': partner_id,
+                            'pricelist_id': price_list,
+                            'partner_invoice_id': partner_id,
+                            'partner_shipping_id': partner_id,
+                            'date_order': order_lines.date_begin
+                })
+            
+                for line in order_lines.event_item_ids:
+                    
+                    sale_order_line_obj.create(cr, uid, {
+                        'order_id': sale_id,
+                        'name': order_lines.name,
+                        'product_uom_qty': line.qty,
+                        'product_id': product,
+                        'product_uom': line.uom_id.id,
+                        'price_unit': line.price,
+                        'date_planned': line.sales_end_date,
+                    }, context=context)
+            self.write(cr, uid, ids, {'state': 'confirm'}, context=context)
+        return True
+
+
 class event_items(osv.osv):
     _name = "event.items"
     _columns = {
@@ -110,7 +151,7 @@ class event_items(osv.osv):
         'event_id': fields.many2one('event.event', 'Event'),
         'sales_end_date': fields.date('Sales End')
         }
-    
+   
     def onchange_product_id(self, cr, uid, ids, product, context=None):
         product_obj = self.pool.get('product.product')
         data = {}
