@@ -9,18 +9,19 @@ _.mixin({
 /** @namespace */
 var my = instance.web.search = {};
 
-my.FacetValue = Backbone.Model.extend({
+var B = Backbone;
+my.FacetValue = B.Model.extend({
 
 });
-my.FacetValues = Backbone.Collection.extend({
+my.FacetValues = B.Collection.extend({
     model: my.FacetValue
 });
-my.Facet = Backbone.Model.extend({
+my.Facet = B.Model.extend({
     initialize: function (attrs) {
         var values = attrs.values;
         delete attrs.values;
 
-        Backbone.Model.prototype.initialize.apply(this, arguments);
+        B.Model.prototype.initialize.apply(this, arguments);
 
         this.values = new my.FacetValues(values || []);
         this.values.on('add remove change reset', function () {
@@ -29,13 +30,13 @@ my.Facet = Backbone.Model.extend({
     },
     get: function (key) {
         if (key !== 'values') {
-            return Backbone.Model.prototype.get.call(this, key);
+            return B.Model.prototype.get.call(this, key);
         }
         return this.values.toJSON();
     },
     set: function (key, value) {
         if (key !== 'values') {
-            return Backbone.Model.prototype.set.call(this, key, value);
+            return B.Model.prototype.set.call(this, key, value);
         }
         this.values.reset(value);
     },
@@ -52,10 +53,10 @@ my.Facet = Backbone.Model.extend({
         return out;
     }
 });
-my.SearchQuery = Backbone.Collection.extend({
+my.SearchQuery = B.Collection.extend({
     model: my.Facet,
     initialize: function () {
-        Backbone.Collection.prototype.initialize.apply(
+        B.Collection.prototype.initialize.apply(
             this, arguments);
         this.on('change', function (facet) {
             if(!facet.values.isEmpty()) { return; }
@@ -79,7 +80,7 @@ my.SearchQuery = Backbone.Collection.extend({
                 previous.values.add(model.get('values'));
                 return;
             }
-            Backbone.Collection.prototype.add.call(this, model, options);
+            B.Collection.prototype.add.call(this, model, options);
         }, this);
         return this;
     },
