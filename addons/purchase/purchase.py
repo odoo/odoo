@@ -148,8 +148,9 @@ class purchase_order(osv.osv):
         ('approved', 'Approved'),
         ('except_picking', 'Shipping Exception'),
         ('except_invoice', 'Invoice Exception'),
-        ('done', 'Done'),
-        ('cancel', 'Cancelled')
+        ('cancel', 'Cancelled'),
+        ('done', 'Done')
+        
     ]
 
     _columns = {
