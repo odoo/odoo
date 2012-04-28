@@ -1676,6 +1676,7 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(/** @lends
      * @param node
      */
     init: function(field_manager, node) {
+        
         this._super(field_manager, node);
         this.field_manager = field_manager;
         this.name = this.node.attrs.name;
@@ -1700,6 +1701,7 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(/** @lends
         });
     },
     start: function() {
+        var self = this;
         this._super.apply(this, arguments);
         if (this.field.translate) {
             this.$element.addClass('oe_form_field_translatable');
@@ -1712,10 +1714,10 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(/** @lends
         }
         if (!this.disable_utility_classes) {
             var set_required = function() {
-                this.$element.toggleClass('oe_form_required', this.get("required"));
+                self.$element.toggleClass('oe_form_required', self.get("required"));
             };
             this.on("change:required", this, set_required);
-            _.bind(set_required, this)();
+            set_required();
         }
     },
     set_value: function(value_) {

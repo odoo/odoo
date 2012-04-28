@@ -307,7 +307,7 @@
         t-att-data-action-model="menu.action ? menu.action.split(',')[0] : ''"
         t-att-data-action-id="menu.action ? menu.action.split(',')[1] : ''">
         <t t-esc="menu.name"/>
-        <t t-if="menu.needaction_enabled">
+        <t t-if="menu.needaction_enabled &amp;&amp; menu.needaction_counter">
             <div class="oe_menu_counter">
                 <t t-esc="menu.needaction_counter"/>
             </div>
@@ -324,7 +324,7 @@
             </a>
             <ul class="oe_dropdown_options">
                 <li><a href="#" data-menu="about">About OpenERP</a></li>
-                <li><a href="#" data-menu="settings">Settings</a></li>
+                <li><a href="#" data-menu="settings">Preferences</a></li>
                 <li><a href="#" data-menu="logout">Log out</a></li>
                 <li><hr/></li>
             </ul>
@@ -425,20 +425,20 @@
             </tr>
             <tr>
                 <td>
-                    <div class="oe_view_manager_header2_row1">
+                    <div class="oe_view_manager_header2_row2">
                         <div class="oe_view_manager_buttons"/>
                     </div>
                 </td>
                 <td>
-                    <div class="oe_view_manager_header2_row1">
+                    <div class="oe_view_manager_header2_row2">
                         <div class="oe_view_manager_sidebar"/>
                     </div>
                 </td>
                 <td>
-                    <div class="oe_view_manager_header2_row1">
+                    <div class="oe_view_manager_header2_row2">
                     <ul class="oe_view_manager_switch oe_button_group oe_right">
-                        <t t-if="widget.views_src.length != 1" t-foreach="widget.views_src" t-as="view">
-                          <li><a t-attf-class="oe_vm_switch_#{view.view_type} oe_i" t-att-data-view-type="view.view_type" t-att-title="view.label || view.view_type">
+                        <t t-if="widget.views_src.length > 2" t-foreach="widget.views_src" t-as="view">
+                          <li t-if="view.view_type != 'form'"><a t-attf-class="oe_vm_switch_#{view.view_type} oe_i" t-att-data-view-type="view.view_type" t-att-title="view.label || view.view_type">
                             </a></li>
                         </t>
                     </ul>

@@ -356,7 +356,6 @@ $colour4: #8a89ba
         width: 100%
         height: 31px
         border-top: solid 1px #d3d3d3
-        border-bottom: solid 1px black
         @include vertical-gradient(#646060, #262626)
 
         .oe_systray
@@ -687,11 +686,10 @@ $colour4: #8a89ba
         .oe_view_manager_header2_row1
             margin: 8px
         .oe_view_manager_header2_row2
-            margin: 8px
+            margin: 0 8px 8px 8px
         td
             line-height: 26px
         h2
-            float: left
             font-size: 18px
             margin: 1px 0
             a
@@ -822,6 +820,7 @@ $colour4: #8a89ba
                 line-height: 14px
                 color: #4c4c4c
                 text-decoration: none
+                cursor: pointer
                 &:hover
                     text-decoration: none
                     @include vertical-gradient(#f0f0fa, #eeeef6)

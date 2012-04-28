@@ -833,8 +833,8 @@ instance.web.UserMenu =  instance.web.Widget.extend({
             title: _t("Preferences"),
             width: '700px',
             buttons: [
-                {text: _t("Cancel"), click: function(){ $(this).dialog('destroy'); }},
                 {text: _t("Change password"), click: function(){ self.change_password(); }},
+                {text: _t("Cancel"), click: function(){ $(this).dialog('destroy'); }},
                 {text: _t("Save"), click: function(){
                         var inner_viewmanager = action_manager.inner_viewmanager;
                         inner_viewmanager.views[inner_viewmanager.active_view].controller.do_save()
