@@ -659,19 +659,21 @@ instance.web.Menu =  instance.web.Widget.extend({
             var action_id = $item.data('action-id');
             // If first level menu doesnt have action trigger first leaf
             if (!action_id) {
-                if(this.$element.has($item)) {
+                if(this.$element.has($item).length) {
                     $sub_menu = this.$secondary_menus.find('.oe_secondary_menu[data-menu-parent=' + id + ']');
                     $items = $sub_menu.find('a[data-action-id]').filter('[data-action-id!=""]');
-                    if($items) {
+                    if($items.length) {
                         action_id = $items.data('action-id');
                         id = $items.data('menu');
                     }
-                }
+                } 
             }
             this.open_menu(id);
             this.current_menu = id;
             this.session.active_id = id;
-            this.trigger('menu_click', action_id, id, $item);
+            if (action_id) {
+                this.trigger('menu_click', action_id, id, $item);
+            }
         }
     },
     /**
