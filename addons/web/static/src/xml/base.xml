@@ -459,7 +459,7 @@
         <a t-if="widget.flags.display_title !== false" class="oe-shortcut-toggle" title="Add / Remove Shortcut..."
             href="javascript: void(0)"> </a>
     </t>
-    <t t-jquery="h2.oe_view_title" t-operation="after">
+    <t t-jquery="h2.oe_view_title" t-operation="before">
         <select t-if="widget.session.debug" class="oe_debug_view"/>
     </t>
 </t>
