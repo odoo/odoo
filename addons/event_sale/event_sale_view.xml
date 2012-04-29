@@ -30,49 +30,57 @@
              </field>
         </record>
         
-        <record model="ir.ui.view" id="view_event_form_inherit">
-            <field name="name">Events Inherit</field>
-            <field name="model">event.event</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="event.view_event_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="//notebook[last()]" position="inside">
-                    <page string="Event Items">
-                        <field name="event_item_ids" nolabel="1"/>
-                    </page>
-                </xpath>                
-            </field>
-        </record>
+		<record model="ir.ui.view" id="view_event_form_inherit">
+			<field name="name">Events Inherit</field>
+			<field name="model">event.event</field>
+			<field name="type">form</field>
+			<field name="inherit_id" ref="event.view_event_form"/>
+			<field name="arch" type="xml">
+				<xpath expr="//group[@string='vanue']" position="after">
+						<field name="event_item_ids" nolabel="1"/><newline/>
+						<div class="oe_right">
+							<button string="Order Now" name="open_qoutation" help="Order Event" type="object" icon="gtk-ok" attrs="{'invisible':[('state','=','confirm')]}"/>
+						</div>
+				</xpath>
+				<xpath expr="//group[@string='vanue']" position="attributes">
+                    <attribute name="string"></attribute>
+                </xpath>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="view_event_items_tree">
+			 <field name="name">Event Items Tree</field>
+			 <field name="model">event.items</field>
+			 <field name="type">tree</field>
+			 <field name="arch" type="xml">
+				 <tree string="Event Items">
+					 <field name="product_id"/>
+					 <field name="price"/>
+					 <field name="qty"/>
+					 <field name="uom_id"/>
+					 <field name="discount"/>
+					 <field name="sales_end_date"/>
+				 </tree>
+			 </field>
+		 </record>
+
+
+		<record model="ir.ui.view" id="view_event_items_form">
+			 <field name="name">Event Items Form</field>
+			 <field name="model">event.items</field>
+			 <field name="type">form</field>
+		 	 <field name="arch" type="xml">
+			 	 <form string="Event Items">
+			   	 	<field name="product_id" domain="[('event_ok','=',True)]" on_change="onchange_product_id(product_id)"/>
+			        <field name="price"/>
+			        <field name="qty"/>
+					<field name="uom_id"/>
+					<field name="discount"/>
+					<field name="sales_end_date"/>
+				</form>
+		 	</field>
+		</record>
         
-        <record model="ir.ui.view" id="view_event_items_tree">
-            <field name="name">Event Items Tree</field>
-            <field name="model">event.items</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Event Items">
-                    <field name="product_id"/>
-                    <field name="price"/>
-                    <field name="uom_id"/>
-                    <field name="discount"/>                  
-                    <field name="sales_end_date"/>
-                </tree>
-            </field>
-        </record>
-        
-        <record model="ir.ui.view" id="view_event_items_form">
-            <field name="name">Event Items Form</field>
-            <field name="model">event.items</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Event Items">
-                    <field name="product_id" domain="[('event_ok','=',True)]" on_change="onchange_product_id(product_id)"/>
-                    <field name="price"/>
-                    <field name="uom_id"/>
-                    <field name="discount"/>
-                    <field name="sales_end_date"/>
-                </form>
-            </field>
-        </record>
         
     </data>
 </openerp>

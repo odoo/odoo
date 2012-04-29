@@ -220,6 +220,8 @@ class event_event(osv.osv):
         'note': fields.text('Description', readonly=False, states={'done': [('readonly', True)]}),
         'company_id': fields.many2one('res.company', 'Company', required=False, change_default=True, readonly=False, states={'done': [('readonly', True)]}),
         'is_subscribed' : fields.function(_subscribe_fnc, type="boolean", string='Subscribed'),
+        'location_id': fields.many2one('res.partner','Organization Address', readonly=False, states={'done': [('readonly', True)]}),
+        
     }
 
     _defaults = {
@@ -408,6 +410,5 @@ class event_registration(osv.osv):
         return {'value': data}
 
 event_registration()
-
-
+    
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

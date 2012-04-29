@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+import time
 from osv import fields, osv
 from tools.translate import _
 
@@ -33,6 +34,15 @@ class product(osv.osv):
         return {'value': {'type': event_ok and 'service' or False}}
 
 product()
+
+class sale_order(osv.osv):
+    _inherit = 'sale.order'
+    _columns = {
+    'partner_id': fields.many2one('res.partner', 'Customer', readonly=False, states={'draft': [('readonly', False)]}, required=False, change_default=True, select=True),
+    'partner_invoice_id': fields.many2one('res.partner', 'Invoice Address', readonly=False, required=False, states={'draft': [('readonly', False)]}, help="Invoice address for current sales order."),
+    'partner_shipping_id': fields.many2one('res.partner', 'Shipping Address', readonly=False, required=False, states={'draft': [('readonly', False)]}, help="Shipping address for current sales order."),
+    }
+    
 
 class sale_order_line(osv.osv):
     _inherit = 'sale.order.line'
@@ -70,7 +80,6 @@ class sale_order_line(osv.osv):
     def button_confirm(self, cr, uid, ids, context=None):
         '''
         create registration with sale order
-
         '''
         registration_obj = self.pool.get('event.registration')
         sale_obj = self.pool.get('sale.order')
@@ -92,13 +101,53 @@ class sale_order_line(osv.osv):
                 message = _("The registration %s has been created from the Sale Order %s.") % (registration_id, order_line.order_id.name)
                 registration_obj.log(cr, uid, registration_id, message)
         return super(sale_order_line, self).button_confirm(cr, uid, ids, context=context)
-    
+  
 class event_event(osv.osv):
     _inherit = 'event.event'
     _columns = {
-        'event_item_ids': fields.one2many('event.items','event_id', 'Event Items'),
-    }
-    
+                    'event_item_ids': fields.one2many('event.items','event_id', 'Event Items'),
+                }
+
+    def open_qoutation(self, cr, uid, ids, partner_id, context=None):
+        res = {}
+        event_pool = self.pool.get('event.event')
+        register_pool = self.pool.get('event.registration')
+        sale_order_line_pool = self.pool.get('sale.order.line')
+        sale_order = self.pool.get('sale.order')
+        user = self.pool.get("res.users").browse(cr, uid, uid, context=context)
+        for event_id in self.browse(cr, uid, ids, context=context):
+            prod_pricelist_obj = self.pool.get('product.pricelist')
+            sale_order_lines = []
+            price_list = prod_pricelist_obj.search(cr,uid,[],context=context)[0]
+            new_sale_id = sale_order.create(cr, uid, {
+                'date_order': event_id.date_begin,
+                'pricelist_id': price_list,
+                })            
+            if event_id.event_item_ids:
+                for items in event_id.event_item_ids:
+                    product = items.product_id.id
+                    sale_order_line = sale_order_line_pool.create(cr, uid, {
+                        'order_id': new_sale_id,                                
+                        'name': items.product_id.name,
+                        'product_uom_qty': items.qty,
+                        'product_id': items.product_id.id,
+                        'product_uom': items.uom_id.id,
+                        'price_unit': items.price,
+                        'date_planned': items.sales_end_date,
+                    }, context=context)
+                res = {
+                        'name': _('Quotation'),
+                        'view_type': 'form',
+                        'view_mode': 'form',
+                        'res_model': 'sale.order',
+                        'res_id': new_sale_id,
+                        'type': 'ir.actions.act_window',
+                        'nodestroy': True,
+                        'target': 'new',
+                }
+                self.write(cr, uid, ids, {'state': 'confirm'}, context=context)
+        return res
+
 class event_items(osv.osv):
     _name = "event.items"
     _columns = {
@@ -110,7 +159,7 @@ class event_items(osv.osv):
         'event_id': fields.many2one('event.event', 'Event'),
         'sales_end_date': fields.date('Sales End')
         }
-    
+   
     def onchange_product_id(self, cr, uid, ids, product, context=None):
         product_obj = self.pool.get('product.product')
         data = {}
