@@ -900,7 +900,10 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
         this.view.query.toggle({
             category: _t("Filter"),
             field: this,
-            values: [{label: filter.attrs.string, value: filter}]
+            values: [{
+                label: filter.attrs.string || filter.attrs.name,
+                value: filter
+            }]
         });
     }
 });
