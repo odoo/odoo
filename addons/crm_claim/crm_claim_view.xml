@@ -66,7 +66,18 @@
             <field name="model">crm.claim</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Claims">
+                <form layout="manual">
+                <div class="oe_form_topbar">
+                    <button name="case_close" string="Done" states="open,pending" type="object" icon="gtk-jump-to" />
+                    <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward" />
+                    <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause" />
+                    <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert" />
+                    <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" icon="gtk-cancel" />
+                    <div class="oe_right">
+                        <field name="state" select="1" nolabel="1" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
+                    </div>
+                </div>
+                <sheet string="Claims" layout="auto">
                     <group>
                         <field name="name" />
                         <field name="date"/>
@@ -102,25 +113,6 @@
                                 </group>
                                 <separator colspan="4" string="Claim/Action Description"/>
                                 <field name="description" colspan="4" nolabel="1"/>
-                                <separator colspan="4" string=""/>
-                                <group col="8" colspan="4">
-                                    <field name="state" select="1" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
-                                    <button name="case_cancel" string="Cancel"
-                                        states="draft,open,pending" type="object"
-                                        icon="gtk-cancel" />
-                                    <button name="case_pending" string="Pending"
-                                        states="draft,open" type="object"
-                                        icon="gtk-media-pause" />
-                                    <button name="case_open" string="Open"
-                                        states="draft,pending" type="object"
-                                        icon="gtk-go-forward" />
-                                    <button name="case_close" string="Done"
-                                        states="open,pending" type="object"
-                                        icon="gtk-jump-to" />
-                                    <button name="case_reset"
-                                        string="Reset to Draft" states="done,cancel"
-                                        type="object" icon="gtk-convert" />
-                                </group>
                             </page>
                             <page string="Follow Up">
                                 <group colspan="2" col="2">
@@ -170,6 +162,7 @@
                             </page>
                         </notebook>
                     </group>
+                </sheet>
                 </form>
             </field>
         </record>

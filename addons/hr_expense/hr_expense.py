@@ -80,10 +80,11 @@ class hr_expense_expense(osv.osv):
         'state': fields.selection([
             ('draft', 'New'),
             ('confirm', 'Waiting Approval'),
+            ('cancelled', 'Refused'),
             ('accepted', 'Approved'),
             ('invoiced', 'Invoiced'),
-            ('paid', 'Reimbursed'),
-            ('cancelled', 'Refused')],
+            ('paid', 'Reimbursed')
+            ],
             'State', readonly=True, help='When the expense request is created the state is \'Draft\'.\n It is confirmed by the user and request is sent to admin, the state is \'Waiting Confirmation\'.\
             \nIf the admin accepts it, the state is \'Accepted\'.\n If an invoice is made for the expense request, the state is \'Invoiced\'.\n If the expense is paid to user, the state is \'Reimbursed\'.'),
     }

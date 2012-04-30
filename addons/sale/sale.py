@@ -209,8 +209,8 @@ class sale_order(osv.osv):
             ('progress', 'In Progress'),
             ('shipping_except', 'Shipping Exception'),
             ('invoice_except', 'Invoice Exception'),
+            ('cancel', 'Cancelled'),
             ('done', 'Done'),
-            ('cancel', 'Cancelled')
             ], 'Order State', readonly=True, help="Gives the state of the quotation or sales order. \nThe exception state is automatically set when a cancel operation occurs in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception). \nThe 'Waiting Schedule' state is set when the invoice is confirmed but waiting for the scheduler to run on the order date.", select=True),
         'date_order': fields.date('Date', required=True, readonly=True, select=True, states={'draft': [('readonly', False)]}),
         'create_date': fields.datetime('Creation Date', readonly=True, select=True, help="Date on which sales order is created."),

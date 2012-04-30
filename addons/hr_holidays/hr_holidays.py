@@ -308,7 +308,7 @@ class hr_holidays(osv.osv):
                     wf_service.trg_validate(uid, 'hr.holidays', leave_id, 'validate', cr)
                     wf_service.trg_validate(uid, 'hr.holidays', leave_id, 'second_validate', cr)
         if holiday_ids:
-            self.holidays_valid2_notificate(self, cr, uid, [holiday_ids], context=context)
+            self.holidays_valid2_notificate(cr, uid, holiday_ids, context=context)
             self.write(cr, uid, holiday_ids, {'manager_id2': manager})
         return True
 

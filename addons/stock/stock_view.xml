@@ -691,7 +691,20 @@
             <field name="type">form</field>
             <field eval="12" name="priority"/>
             <field name="arch" type="xml">
-                <form string="Internal Picking List">
+                <form layout="manual">
+                <div class="oe_form_topbar">
+                    <button name="draft_force_assign" states="draft" string="Process Later" type="object" icon="gtk-apply"/>
+                    <button name="draft_validate" states="draft" string="Process Now" type="object" icon="gtk-media-play"/>
+                    <button name="action_assign" states="confirmed" string="Check Availability" type="object" icon="gtk-find"/>
+                    <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
+                    <button name="action_process" states="assigned" string="Process"  groups="stock.group_stock_user" type="object" icon="gtk-go-forward"/>
+                    <button name="%(action_stock_invoice_onshipping)d" string="Create Invoice"  attrs="{'invisible': ['|','|',('state','&lt;&gt;','done'),('invoice_state','=','invoiced'),('invoice_state','=','none')]}"  type="action" icon="terp-gtk-go-back-rtl" />
+                    <button name="button_cancel" states="assigned,confirmed,draft" string="_Cancel" icon="gtk-cancel"/>
+                    <div class="oe_right">
+                        <field name="state" nolabel="1" readonly="1" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" statusbar_colors='{"auto":"blue", "confirmed":"blue"}'/>
+                    </div>
+                </div>
+                <sheet string="Internal Picking List" layout="auto">
                     <group colspan="4" col="6">
                         <group colspan="4" col="4">
                             <field name="name" readonly="1"/>
@@ -795,16 +808,6 @@
                                     </group>
                                 </form>
                             </field>
-                            <group col="10" colspan="4">
-                                <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" statusbar_colors='{"auto":"blue", "confirmed":"blue"}'/>
-                                <button name="button_cancel" states="assigned,confirmed,draft" string="_Cancel" icon="gtk-cancel"/>
-                                <button name="draft_force_assign" states="draft" string="Process Later" type="object" icon="gtk-apply"/>
-                                <button name="draft_validate" states="draft" string="Process Now" type="object" icon="gtk-media-play"/>
-                                <button name="action_assign" states="confirmed" string="Check Availability" type="object" icon="gtk-find"/>
-                                <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
-                                <button name="action_process" states="assigned" string="Process"  groups="stock.group_stock_user" type="object" icon="gtk-go-forward"/>
-                                <button name="%(action_stock_invoice_onshipping)d" string="Create Invoice"  attrs="{'invisible': ['|','|',('state','&lt;&gt;','done'),('invoice_state','=','invoiced'),('invoice_state','=','none')]}"  type="action" icon="terp-gtk-go-back-rtl" />
-                            </group>
                         </page>
                         <page string="Additional info">
                             <field name="auto_picking"/>
@@ -817,6 +820,7 @@
                             <field colspan="4" name="note" nolabel="1"/>
                         </page>
                     </notebook>
+                </sheet>
                 </form>
             </field>
         </record>
@@ -881,7 +885,21 @@
             <field name="model">stock.picking</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Delivery Orders">
+                <form layout="manual">
+                <div class="oe_form_topbar">
+                    <button name="draft_force_assign" states="draft" string="Process Later" type="object" icon="gtk-ok"/>
+                    <button name="draft_validate" states="draft" string="Process Now" type="object" icon="gtk-yes"/>
+                    <button name="action_assign" states="confirmed" string="Check Availability" type="object" icon="gtk-find"/>
+                    <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
+                    <button name="action_process" states="assigned" string="Process" type="object" icon="gtk-go-forward"/>
+                    <button name="%(action_stock_invoice_onshipping)d" string="Create Invoice" attrs="{'invisible': ['|','|',('state','&lt;&gt;','done'),('invoice_state','=','invoiced'),('invoice_state','=','none')]}"  type="action" icon="terp-gtk-go-back-rtl"/>
+                    <button name="%(act_stock_return_picking)d" string="Return Products" states="done" type="action" icon="gtk-execute"/>
+                    <button name="button_cancel" states="assigned,confirmed,draft" string="_Cancel" icon="gtk-cancel"/>
+                    <div class="oe_right">
+                        <field name="state" nolabel="1" readonly="1" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" statusbar_colors='{"auto":"blue", "confirmed":"blue"}'/>
+                    </div>
+                </div>
+                <sheet string="Delivery Orders" layout="auto">
                     <group col="6" colspan="4">
                         <group colspan="4" col="4">
                             <field name="name" readonly="1"/>
@@ -984,17 +1002,6 @@
                                     </group>
                                 </form>
                             </field>
-                            <group col="12" colspan="4">
-                                <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" statusbar_colors='{"auto":"blue", "confirmed":"blue"}'/>
-                                <button name="button_cancel" states="assigned,confirmed,draft" string="_Cancel" icon="gtk-cancel"/>
-                                <button name="draft_force_assign" states="draft" string="Process Later" type="object" icon="gtk-ok"/>
-                                <button name="draft_validate" states="draft" string="Process Now" type="object" icon="gtk-yes"/>
-                                <button name="action_assign" states="confirmed" string="Check Availability" type="object" icon="gtk-find"/>
-                                <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
-                                <button name="action_process" states="assigned" string="Process" type="object" icon="gtk-go-forward"/>
-                                <button name="%(act_stock_return_picking)d" string="Return Products" states="done" type="action" icon="gtk-execute"/>
-                                <button name="%(action_stock_invoice_onshipping)d" string="Create Invoice" attrs="{'invisible': ['|','|',('state','&lt;&gt;','done'),('invoice_state','=','invoiced'),('invoice_state','=','none')]}"  type="action" icon="terp-gtk-go-back-rtl"/>
-                            </group>
                         </page>
                         <page string="Additional info">
                             <field name="auto_picking"/>
@@ -1007,7 +1014,10 @@
                             <field colspan="4" name="note" nolabel="1"/>
                         </page>
                     </notebook>
+                </sheet>
+                <div class="oe_form_sheet_width">
                     <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
+                </div>
                 </form>
             </field>
         </record>
@@ -1100,7 +1110,21 @@
             <field name="model">stock.picking</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Input Picking List">
+                <form layout="manual">
+                <div class="oe_form_topbar">
+                    <button name="draft_force_assign" states="draft" string="Process Later" type="object" icon="gtk-ok"/>
+                    <button name="draft_validate" states="draft" string="Process Now" type="object" icon="gtk-media-play"/>
+                    <button name="action_assign" states="confirmed" string="Check Availability" type="object" icon="gtk-find"/>
+                    <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
+                    <button name="action_process" states="assigned" string="Process" type="object" icon="gtk-go-forward"/>
+                    <button name="%(action_stock_invoice_onshipping)d" string="Create Invoice" attrs="{'invisible': ['|','|',('state','&lt;&gt;','done'),('invoice_state','=','invoiced'),('invoice_state','=','none')]}" type="action" icon="terp-gtk-go-back-rtl" />
+                    <button name="%(act_stock_return_picking)d" string="Return Products" states="done" type="action" icon="gtk-execute"/>
+                    <button name="button_cancel" states="assigned,confirmed,draft" string="_Cancel" icon="gtk-cancel"/>
+                    <div class="oe_right">
+                        <field name="state" nolabel="1" readonly="1" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" statusbar_colors='{"auto":"blue", "confirmed":"blue"}'/>
+                    </div>
+                </div>
+                <sheet string="Input Picking List" layout="auto">
                     <group colspan="4" col="6">
                         <group colspan="4" col="4">
                             <field name="name" readonly="1"/>
@@ -1201,17 +1225,6 @@
                                     </group>
                                 </form>
                             </field>
-                            <group col="10" colspan="4">
-                                <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,assigned,done" statusbar_colors='{"auto":"blue", "confirmed":"blue"}'/>
-                                <button name="button_cancel" states="assigned,confirmed,draft" string="_Cancel" icon="gtk-cancel"/>
-                                <button name="draft_force_assign" states="draft" string="Process Later" type="object" icon="gtk-ok"/>
-                                <button name="draft_validate" states="draft" string="Process Now" type="object" icon="gtk-media-play"/>
-                                <button name="action_assign" states="confirmed" string="Check Availability" type="object" icon="gtk-find"/>
-                                <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
-                                <button name="action_process" states="assigned" string="Process" type="object" icon="gtk-go-forward"/>
-                                <button name="%(act_stock_return_picking)d" string="Return Products" states="done" type="action" icon="gtk-execute"/>
-                                <button name="%(action_stock_invoice_onshipping)d" string="Create Invoice" attrs="{'invisible': ['|','|',('state','&lt;&gt;','done'),('invoice_state','=','invoiced'),('invoice_state','=','none')]}" type="action" icon="terp-gtk-go-back-rtl" />
-                            </group>
                         </page>
                         <page string="Additional Info">
                             <field name="type"/>
@@ -1221,7 +1234,10 @@
                             <field colspan="4" name="note" nolabel="1"/>
                         </page>
                     </notebook>
+                </sheet>
+                <div class="oe_form_sheet_width">
                     <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
+                </div>
                 </form>
             </field>
         </record>
@@ -1401,7 +1417,17 @@
             <field name="type">form</field>
             <field eval="4" name="priority"/>
             <field name="arch" type="xml">
-                <form string="Stock Moves">
+                <form layout="manual">
+                <div class="oe_form_topbar">
+                        <button name="action_confirm" states="draft" string="Process Later" type="object" icon="gtk-apply"/>
+                        <button name="action_done" states="draft,assigned,confirmed" string="Process Now" type="object" icon="gtk-jump-to"/>
+                        <button name="force_assign" states="confirmed" string="Set Available" type="object" icon="gtk-yes"/>
+                        <button name="action_cancel" states="assigned,confirmed" string="_Cancel" type="object" icon="gtk-cancel"/>
+                    <div class="oe_right">
+                        <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" statusbar_colors='{"waiting":"blue","confirmed":"blue"}'/>
+                    </div>
+                </div>
+                <sheet string="Stock Moves" layout="auto">
                     <group colspan="4" col="7">
                         <field name="product_id" on_change="onchange_product_id(product_id,location_id,location_dest_id, False)"/>
                         <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
@@ -1452,15 +1478,7 @@
                               states="draft,waiting,confirmed,assigned"
                               string="Split" type="action" icon="terp-stock_effects-object-colorize" colspan="1"/>
                     </group>
-
-                    <separator colspan="4"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" statusbar_colors='{"waiting":"blue","confirmed":"blue"}'/>
-                    <group col="4" colspan="2">
-                        <button name="action_cancel" states="assigned,confirmed" string="_Cancel" type="object" icon="gtk-cancel"/>
-                        <button name="action_confirm" states="draft" string="Process Later" type="object" icon="gtk-apply"/>
-                        <button name="force_assign" states="confirmed" string="Set Available" type="object" icon="gtk-yes"/>
-                        <button name="action_done" states="draft,assigned,confirmed" string="Process Now" type="object" icon="gtk-jump-to"/>
-                    </group>
+                </sheet>
                 </form>
             </field>
         </record>
@@ -1587,7 +1605,17 @@
             <field name="type">form</field>
             <field eval="6" name="priority"/>
             <field name="arch" type="xml">
-                <form string="Receive Products">
+                <form layout="manual">
+                <div class="oe_form_topbar">
+                    <button name="action_confirm" states="draft" string="Process Later" type="object" icon="gtk-apply"/>
+                    <button name="force_assign" states="confirmed" string="Set Available" type="object" icon="gtk-yes"/>
+                    <button name="%(action_partial_move_server)d" string="Process" type="action" states="assigned" icon="gtk-go-forward"/>
+                    <button name="action_cancel" states="assigned,confirmed" string="_Cancel" type="object" icon="gtk-cancel"/>
+                    <div class="oe_right">
+                        <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" statusbar_colors='{"waiting":"blue","confirmed":"blue"}'/>
+                    </div>
+                </div>
+                <sheet string="Receive Products" layout="auto">
                     <group colspan="4" col="7">
                         <field name="product_id" on_change="onchange_product_id(product_id,location_id,location_dest_id, False)"/>
                         <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
@@ -1638,15 +1666,7 @@
                               states="draft,waiting,confirmed,assigned,done"
                               string="Split" type="action" icon="terp-stock_effects-object-colorize" colspan="1"/>
                     </group>
-
-                    <separator colspan="4"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" statusbar_colors='{"waiting":"blue","confirmed":"blue"}'/>
-                    <group col="5" colspan="2">
-                        <button name="action_cancel" states="assigned,confirmed" string="_Cancel" type="object" icon="gtk-cancel"/>
-                        <button name="action_confirm" states="draft" string="Process Later" type="object" icon="gtk-apply"/>
-                        <button name="force_assign" states="confirmed" string="Set Available" type="object" icon="gtk-yes"/>
-                        <button name="%(action_partial_move_server)d" string="Process" type="action" states="assigned" icon="gtk-go-forward"/>
-                    </group>
+                </sheet>
                 </form>
             </field>
         </record>
