@@ -79,7 +79,6 @@
                     <group col="2" colspan="3">
                         <group col="2" colspan="2" name="preferences" class="oe_form_group_label_border">
                             <separator string="Preferences" colspan="2"/>
-                            <field name="view" readonly="0"/>
                             <field name="context_lang" readonly="0"/>
                             <field name="context_tz" readonly="0"/>
                             <field name="menu_tips" readonly="0" groups="base.group_no_one"/>
@@ -127,7 +126,7 @@
                                         <field name="menu_tips"/>
                                     </group>
                                     <group col="1">
-                                        <group col="2" groups="base.group_extended" class="oe_form_group_label_border">
+                                        <group col="2" groups="base.group_no_one" class="oe_form_group_label_border">
                                             <separator string="Action" colspan="2"/>
                                             <field name="action_id"/>
                                             <field domain="[('usage','=','menu')]" name="menu_id" required="True"/>
@@ -228,7 +227,7 @@
                     <group colspan="4" col="6">
                         <group colspan="4" col="4">
                             <field name="name"/>
-                            <field name="partner_id" readonly="1" required="0" groups="base.group_extended"/>
+                            <field name="partner_id" readonly="1" required="0" groups="base.group_no_one"/>
                             <field name="parent_id"  groups="base.group_multi_company"/>
                         </group>
                         <group colspan="2" col="2">
@@ -254,7 +253,7 @@
                             <group colspan="4" col="3">
                                 <field name="rml_header1" colspan="3"/>
                                 <newline/>
-                                <field name="rml_footer1" colspan="3" groups="base.group_extended"/>
+                                <field name="rml_footer1" colspan="3" groups="base.group_no_one"/>
                                 <newline/>
                                 <field name="rml_footer2" colspan="2"/>
                                 <button name="%(bank_account_update)d" string="Set Bank Accounts" type="action" icon="gtk-go-forward"/>
@@ -263,13 +262,13 @@
                                 <button name="%(preview_report)d" string="Preview Header" type="action" icon="gtk-print"/>
                             </group>
                         </page>
-                        <page string="Header/Footer" groups="base.group_extended">
+                        <page string="Header/Footer" groups="base.group_no_one">
                             <group colspan="2" col="4">
                                <field name="paper_format" on_change="onchange_paper_format(paper_format)"/>
                             </group>
                             <field colspan="4" name="rml_header" nolabel="1"/>
                         </page>
-                        <page string="Internal Header/Footer" groups="base.group_extended">
+                        <page string="Internal Header/Footer" groups="base.group_no_one">
                             <separator string="Portrait" colspan="2"/>
                             <separator string="Landscape" colspan="2"/>
                             <field colspan="2" name="rml_header2" nolabel="1"/>
@@ -280,7 +279,7 @@
                             <field name="currency_id" colspan="2"/>
                             <newline/>
                         </page>
-                        <page string="Bank Accounts" groups="base.group_extended">
+                        <page string="Bank Accounts">
                           <field name="bank_ids" nolabel="1"/>
                         </page>
                     </notebook>
