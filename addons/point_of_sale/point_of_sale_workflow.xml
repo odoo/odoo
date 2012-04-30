@@ -95,17 +95,23 @@
     <record model="workflow.activity" id="act_open">
       <field name="wkf_id" ref="wkf_pos_session"/>
       <field name="name">open</field>
+      <field name="action">wkf_action_open()</field>
+      <field name="kind">function</field>
     </record>
 
     <record model="workflow.activity" id="act_close">
       <field name="wkf_id" ref="wkf_pos_session"/>
       <field name="name">close</field>
+      <field name="action">wkf_action_close()</field>
+      <field name="kind">function</field>
     </record>
 
     <record model="workflow.activity" id="act_post">
       <field name="wkf_id" ref="wkf_pos_session"/>
       <field name="flow_stop">True</field>
       <field name="name">post</field>
+      <field name="action">wkf_action_post()</field>
+      <field name="kind">function</field>
     </record>
 
     <!-- Transitions -->
