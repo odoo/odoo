@@ -34,7 +34,7 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="account.view_account_analytic_account_form"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page" position="after">
+                <xpath expr="/form/sheet/notebook/page" position="after">
                     <page string="Users/Products Rel.">
                         <field name="user_product_ids" colspan="4" nolabel="1"/>
                     </page>
