@@ -8,6 +8,7 @@ var _t = instance.web._t,
 var QWeb = instance.web.qweb;
 instance.web.views.add('calendar', 'instance.web_calendar.CalendarView');
 instance.web_calendar.CalendarView = instance.web.View.extend({
+    template: "CalendarView",
     display_name: _lt('Calendar'),
 // Dhtmlx scheduler ?
     init: function(parent, dataset, view_id, options) {
@@ -98,13 +99,12 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
         for (var fld = 0; fld < this.fields_view.arch.children.length; fld++) {
             this.info_fields.push(this.fields_view.arch.children[fld].attrs.name);
         }
-        this.$element.html(QWeb.render("CalendarView", {"fields_view": this.fields_view}));
 
         this.init_scheduler();
 
-        if (! this.sidebar && this.options.$sidebar) {
+        if (!this.sidebar && this.options.$sidebar) {
             this.sidebar = new instance.web_calendar.Sidebar(this);
-            this.has_been_loaded.pipe(this.sidebar.appendTo(this.options.$sidebar));
+            this.has_been_loaded.pipe(this.sidebar.appendTo(this.$element.find('.oe_calendar_sidebar_container')));
         }
 
         return this.has_been_loaded.resolve();
@@ -127,7 +127,7 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
         scheduler.config.mark_now = true;
         scheduler.config.day_date = '%l %j';
 
-        scheduler.init('openerp_scheduler', null, this.mode || 'month');
+        scheduler.init(this.$element.find('.oe_calendar')[0], null, this.mode || 'month');
 
         // Remove hard coded style attributes from dhtmlx scheduler
         this.$element.find(".dhx_cal_navline div").removeAttr('style');
@@ -143,7 +143,7 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
         this.refresh_scheduler();
     },
     on_view_changed: function(mode, date) {
-        this.$element.removeClass('oe_cal_day oe_cal_week oe_cal_month').addClass('oe_cal_' + mode);
+        this.$element.find('.oe_calendar').removeClass('oe_cal_day oe_cal_week oe_cal_month').addClass('oe_cal_' + mode);
         if (!date.between(this.range_start, this.range_stop)) {
             this.update_range_dates(date);
             this.do_ranged_search();
@@ -392,17 +392,8 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
         var self = this;
         $.when(this.has_been_loaded).then(function() {
             self.$element.show();
-            if (self.sidebar) {
-                self.sidebar.$element.show();
-            }
             self.do_push_state({});
         });
-    },
-    do_hide: function() {
-        this._super();
-        if (this.sidebar) {
-            this.sidebar.$element.hide();
-        }
     },
     get_selected_ids: function() {
         // no way to select a record anyway
