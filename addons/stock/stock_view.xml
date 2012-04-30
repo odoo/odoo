@@ -756,10 +756,10 @@
                                         <field name="product_packaging" groups="product.group_stock_packaging" domain="[('product_id','=',product_id)]" colspan="4"/>
                                     </group>
 
-                                    <group colspan="2" col="2">
+                                    <group colspan="2" col="2" groups="stock.group_locations">
                                         <separator string="Locations" colspan="2" />
-                                        <field name="location_id" domain="[('usage','&lt;&gt;','view')]" />
-                                        <field name="location_dest_id" domain="[('usage','=','internal')]" />
+                                        <field name="location_id" domain="[('usage','&lt;&gt;','view')]"/>
+                                        <field name="location_dest_id" domain="[('usage','=','internal')]"/>
                                     </group>
 
                                     <group colspan="2" col="2">
@@ -945,10 +945,10 @@
                                         <field name="product_packaging" groups="product.group_stock_packaging" domain="[('product_id','=',product_id)]" colspan="4" />
                                     </group>
 
-                                    <group colspan="2" col="2">
+                                    <group colspan="2" col="2" groups="stock.group_locations">
                                         <separator string="Locations" colspan="2" />
-                                        <field name="location_id" domain="[('usage','=','internal')]" />
-                                        <field name="location_dest_id" domain="[('usage','&lt;&gt;','view')]" />
+                                        <field name="location_id" domain="[('usage','=','internal')]"/>
+                                        <field name="location_dest_id" domain="[('usage','&lt;&gt;','view')]"/>
                                     </group>
 
                                     <group colspan="2" col="2">
@@ -1162,10 +1162,10 @@
                                         <field name="product_packaging" groups="product.group_stock_packaging" domain="[('product_id','=',product_id)]" colspan="4"/>
                                     </group>
 
-                                    <group colspan="2" col="2">
+                                    <group colspan="2" col="2" groups="stock.group_locations">
                                         <separator string="Locations" colspan="2" />
-                                        <field name="location_id" domain="[('usage','&lt;&gt;','view')]" />
-                                        <field name="location_dest_id" domain="[('usage','=','internal')]" />
+                                        <field name="location_id" domain="[('usage','&lt;&gt;','view')]"/>
+                                        <field name="location_dest_id" domain="[('usage','=','internal')]"/>
                                     </group>
 
                                     <group colspan="2" col="2">
@@ -1383,8 +1383,8 @@
                         groups="product.group_stock_packaging"
                         icon="terp-stock_effects-object-colorize"
                         states="draft,assigned,confirmed,done"/>
-                    <field name="location_id"/>
-                    <field name="location_dest_id"/>
+                    <field name="location_id" groups="stock.group_locations"/>
+                    <field name="location_dest_id" groups="stock.group_locations"/>
                     <field name="date" groups="base.group_no_one"/>
                     <field name="date_expected"/>
                     <field name="state"/>
@@ -1411,8 +1411,8 @@
                                 icon="gtk-convert" context="{'scrap': True}"
                                 states="draft,waiting,confirmed,assigned" colspan="1"/>
                         <newline/>
-                        <field name="location_id"/>
-                        <field name="location_dest_id"/>
+                        <field name="location_id" groups="stock.group_locations"/>
+                        <field name="location_dest_id" groups="stock.group_locations"/>
                         <field name="partner_id" context="{'contact_display':'partner'}"/>
 
                     </group>
@@ -1597,8 +1597,8 @@
                                 icon="gtk-convert" context="{'scrap': True}"
                                 states="draft,waiting,confirmed,assigned" colspan="1"/>
                         <newline/>
-                        <field name="location_id"/>
-                        <field name="location_dest_id"/>
+                        <field name="location_id" groups="stock.group_locations"/>
+                        <field name="location_dest_id" groups="stock.group_locations"/>
                         <field name="partner_id"/>
 
                     </group>

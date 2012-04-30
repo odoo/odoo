@@ -22,11 +22,11 @@
                     </div>
                     <sheet layout="auto">
                         <field name="has_default_company" invisible="1" />
+                        <field name="has_chart_of_accounts" invisible="1"/>
                         <field name="company_id" widget="selection" on_change="onchange_company_id(company_id)"
                             attrs="{'invisible': [('has_default_company', '=', True)]}"/>
                         <field name="expects_chart_of_accounts"/>
 
-                        <field name="has_chart_of_accounts" invisible="1"/>
                         <group string="No Chart of Accounts exists for this Company" colspan="4" attrs="{'invisible': ['|', ('expects_chart_of_accounts','=',False), ('has_chart_of_accounts','=',True)]}">
                             <label string="Please select a chart template to install a chart of accounts." colspan="4"/>
                             <field name="chart_template_id" widget="selection" on_change="onchange_chart_template_id(chart_template_id)" domain="[('visible','=', True)]"/>

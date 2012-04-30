@@ -41,7 +41,7 @@ class mrp_config_settings(osv.osv_memory):
                     * Repair quotation report
                     * Notes for the technician and for the final customer.
                 This installs the module mrp_repair."""),
-        'module_mrp_operations': fields.boolean("Track Dates in Work Order Operations",
+        'module_mrp_operations': fields.boolean("Detailed Planning of Work Orders",
             help="""This allows to add state, date_start,date_stop in production order operation lines (in the "Work Centers" tab).
                 This installs the module mrp_operations."""),
         'module_mrp_subproduct': fields.boolean("Produce Several  Product from One Production",

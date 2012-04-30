@@ -38,7 +38,8 @@ class account_config_settings(osv.osv_memory):
         'has_default_company': fields.boolean('Has default company', readonly=True),
 
         'expects_chart_of_accounts': fields.related('company_id', 'expects_chart_of_accounts', type='boolean',
-            string='Chart of Accounts for this Company'),
+            string='Chart of Accounts for this Company', 
+            help=""" Check  this box if this company is a legal entity."""),
         'currency_id': fields.related('company_id', 'currency_id', type='many2one', relation='res.currency', required=True,
             string='Default Company Currency', help="Default Company Currency of the company."),
         'paypal_account': fields.related('company_id', 'paypal_account', type='char', size=128,
@@ -78,8 +79,7 @@ class account_config_settings(osv.osv_memory):
             help="""This allows you to check writing and printing.
                 This installs the module account_check_writing."""),
         'module_account_accountant': fields.boolean('Accountant Features',
-            help="""This allows you to access all the accounting features, like the journal items and the chart of accounts.
-                This installs the module account_accountant."""),
+            help="""If you do not check this box, you will be able to  do Invoicing & Payments, but not accounting (Journal Items, Chart of  Accounts, ...)."""),
         'module_account_asset': fields.boolean('Assets Management',
             help="""This allows you to manage the assets owned by a company or a person.
                 It keeps track of the depreciation occurred on those assets, and creates account move for those depreciation lines.
