@@ -76,6 +76,15 @@ class project_project(osv.osv):
                 factor_id = data_obj.browse(cr, uid, data_id).res_id
                 res['value'].update({'to_invoice': factor_id})
         return res
+    
+    def getAnalyticJournal(self, cr, uid, context=None):
+        md = self.pool.get('ir.model.data')
+        try:
+            result = md.get_object_reference(cr, uid, 'hr_timesheet', 'analytic_journal')
+            return result[1]
+        except ValueError:
+            pass
+        return False
 
     def open_timesheets(self, cr, uid, ids, context=None):
         #Open the View for the Timesheet of the project
@@ -87,7 +96,11 @@ class project_project(osv.osv):
             context = {}
         if ids:
             project = self.browse(cr, uid, ids[0], context=context)
-            context = dict(context, search_default_account_id=project.analytic_account_id.id)
+            context = dict(context,
+                           search_default_account_id = project.analytic_account_id.id,
+                           default_account_id = project.analytic_account_id.id,
+                           default_journal_id = self.getAnalyticJournal(cr, uid, context)
+                           )
         return {
                 'name': _('Bill Tasks Works'),
                 'context': context,
