@@ -28,8 +28,7 @@
             <field name="model">crm.helpdesk</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Helpdesk Support" layout="manual">
-                <sheet layout="auto">
+                <form string="Helpdesk Support">
                     <group colspan="4" col="7">
                         <field name="name" select="1" string="Query"/>
                         <field name="section_id" widget="selection"/>
@@ -40,9 +39,6 @@
                             icon="gtk-go-forward" />
                         <field name="date" select="1"/>
                         <field name="date_deadline"/>
-                        <button string="Send New Email"
-	                        name="%(mail.action_email_compose_message_wizard)d"
-	                        icon="terp-mail-message-new" type="action"/>
                     </group>
                     <notebook colspan="4">
                         <page string="General">
@@ -93,6 +89,29 @@
                                     icon="gtk-convert" />
                             </group>
                         </page>
+                        <page string="Communication &amp; History">
+                            <group colspan="4">
+                                <field colspan="4" name="email_cc" string="Global CC" widget="char"/>
+                            </group>
+                            <field name="message_ids" colspan="4" nolabel="1" mode="tree" readonly="1">
+                                <tree string="History">
+                                    <field name="display_text" string="History Information"/>
+                                    <field name="email_from" invisible="1"/>
+                                    <button
+                                        string="Reply" attrs="{'invisible': [('email_from', '=', False)]}"
+                                        name="%(mail.action_email_compose_message_wizard)d"
+                                        context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
+                                        icon="terp-mail-replied" type="action" />
+                                </tree>
+                            </field>
+                             <button string="Add Internal Note"
+                                name="%(crm.action_crm_add_note)d"
+                                context="{'model': 'crm.lead' }"
+                                icon="terp-document-new" type="action" />
+                            <button string="Send New Email"
+                                name="%(mail.action_email_compose_message_wizard)d"
+                                icon="terp-mail-message-new" type="action"/>
+                        </page>
                         <page string="Extra Info">
                             <group colspan="2" col="2" groups="base.group_no_one">
                                 <separator colspan="4" string="Dates"/>
@@ -117,10 +136,6 @@
                             </group>
                         </page>
                     </notebook>
-                </sheet>
-                <div class="oe_form_sheet_width">
-                    <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
-                </div>
                 </form>
             </field>
         </record>
