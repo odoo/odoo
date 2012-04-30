@@ -20,8 +20,6 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         'sortable': true,
         // whether the view rows can be reordered (via vertical drag & drop)
         'reorderable': true,
-        // display an edit icon linking to form view
-        'isClarkGable': true
     },
     /**
      * Core class for list-type displays.
@@ -932,11 +930,7 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
                     if (!self.dataset.select_id(row_id)) {
                         throw "Could not find id in dataset"
                     }
-                    var view;
-                    if ($(e.target).is('.oe-record-edit-link-img')) {
-                        view = 'form';
-                    }
-                    self.row_clicked(e, view);
+                    self.row_clicked(e);
                 }
             });
     },
@@ -1010,9 +1004,6 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
         var cells = [];
         if (this.options.selectable) {
             cells.push('<th class="oe-record-selector"></td>');
-        }
-        if (this.options.isClarkGable) {
-            cells.push('<th class="oe-record-edit-link"></td>');
         }
         _(this.columns).each(function(column) {
             if (column.invisible === '1') {
@@ -1320,9 +1311,6 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
             $('<td>').text(group.length).appendTo($row);
 
             if (self.options.selectable) {
-                $row.append('<td>');
-            }
-            if (self.options.isClarkGable) {
                 $row.append('<td>');
             }
             _(self.columns).chain()

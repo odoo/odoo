@@ -2705,7 +2705,6 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
                 if (self.get("effective_readonly")) {
                     view.options.addable = null;
                     view.options.deletable = null;
-                    view.options.isClarkGable = false;
                 }
             } else if (view.view_type === "form") {
                 if (self.get("effective_readonly")) {
@@ -3081,7 +3080,6 @@ instance.web.form.FieldMany2Many = instance.web.form.AbstractField.extend({
                     'addable': self.get("effective_readonly") ? null : _t("Add"),
                     'deletable': self.get("effective_readonly") ? false : true,
                     'selectable': self.multi_selection,
-                    'isClarkGable': self.get("effective_readonly") ? false : true
             });
         var embedded = (this.field.views || {}).tree;
         if (embedded) {

@@ -398,8 +398,6 @@ openerp.web.list_editable = function (instance) {
             
             if (this.view.editable_list.options.selectable)
                 $("<td>").appendTo($element);
-            if (this.view.editable_list.options.isClarkGable)
-                $("<td>").appendTo($element);
                 
             $xml.children().each(function(i, el) {
                 var modifiers = JSON.parse($(el).attr("modifiers") || "{}");
