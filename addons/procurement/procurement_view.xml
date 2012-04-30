@@ -58,7 +58,7 @@
                         <separator colspan="2" string="Planification"/>
                         <field name="date_planned"/>
                         <field name="procure_method"/>
-                        <field name="priority" groups="base.group_extended"/>
+                        <field name="priority"/>
                     </group>
                     <notebook colspan="4">
                     <page string="Procurement Details">
@@ -68,8 +68,8 @@
                         <field name="product_qty"/>
                         <field name="product_uom"/>
 
-                        <field name="product_uos_qty" groups="product.group_uos,base.group_extended"/>
-                        <field name="product_uos"  groups="product.group_uos,base.group_extended"/>
+                        <field name="product_uos_qty" groups="product.group_uos"/>
+                        <field name="product_uos"  groups="product.group_uos"/>
 
                         <separator colspan="4" string="Status"/>
                         <field colspan="4" name="message" readonly="1"/>
@@ -83,9 +83,9 @@
                     </page>
                     <page string="Extra Information">
                         <separator colspan="4" string="Details"/>
-                        <field name="move_id" groups="base.group_extended"/>
+                        <field name="move_id"/>
                         <field name="date_close"/>
-                        <field name="close_move" groups="base.group_extended"/>
+                        <field name="close_move"/>
                     </page>
                     <page string="Notes">
                         <separator colspan="4" string="Note" />
@@ -120,7 +120,7 @@
                        <field name="state" />
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By" groups="base.group_extended">
+                    <group expand="0" string="Group By">
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
                         <filter string="Reason" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'name'}"/>
                         <filter string="Scheduled Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_planned'}"/>
@@ -225,12 +225,12 @@
                         <field name="product_max_qty"/>
                         <field name="qty_multiple"/>
                     </group>
-                    <group col="2" colspan="2" groups="base.group_extended">
+                    <group col="2" colspan="2">
                         <separator string="Misc" colspan="2" />
                         <field name="procurement_id" readonly="1"/>
                         <field name="active" />
                     </group>
-                    <group col="4" colspan="4" groups="base.group_extended">
+                    <group col="4" colspan="4">
                         <separator string="Procurement Orders to Process" colspan="4" />
                         <field name="procurement_draft_ids" colspan="4" nolabel="1"/>
                     </group>
@@ -293,10 +293,10 @@
                           <field name="orderpoint_ids" context="{'default_product_uom': uom_id}" nolabel="1">
                               <tree string="Minimum Stock Rule" editable="bottom">
                                   <field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)" widget="selection"/>
-                                  <field name="location_id" groups="base.group_extended"/>
+                                  <field name="location_id"/>
                                   <field name="product_min_qty"/>
                                   <field name="product_max_qty"/>
-                                  <field name="product_uom" groups="base.group_extended"/>
+                                  <field name="product_uom" groups="product.group_uom"/>
                               </tree>
                           </field>
                       </group>
