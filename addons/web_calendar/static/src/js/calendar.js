@@ -392,8 +392,17 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
         var self = this;
         $.when(this.has_been_loaded).then(function() {
             self.$element.show();
+            if (self.sidebar) {
+                self.sidebar.$element.show();
+            }
             self.do_push_state({});
         });
+    },
+    do_hide: function() {
+        this._super();
+        if (this.sidebar) {
+            this.sidebar.$element.hide();
+        }
     },
     get_selected_ids: function() {
         // no way to select a record anyway
