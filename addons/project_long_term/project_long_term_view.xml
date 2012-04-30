@@ -308,7 +308,7 @@
             <field name="inherit_id" ref="project.view_task_form2"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='effective_hours']" position="after">
-                    <field name="phase_id"/>
+                    <field name="phase_id" context="{'default_project_id' : project_id}"/>
                 </xpath>
             </field>
         </record>

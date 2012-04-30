@@ -32,7 +32,7 @@
             <field name="inherit_id" ref="project.view_project_kanban"/>
             <field name="arch" type="xml">
                   <field name="task" position="after">
-                    <field name="timesheets"/>
+                    <field name="timesheets" context="{'search_default_account_id': project_id, 'default_account_id': project_id}"/>
                     <field name="total_timesheet"/>
 		    <field name="currency_id"/>
                 </field>
@@ -44,13 +44,13 @@
 
 		<xpath expr="//tr[@id='deadline']" position="before">
 		    <tr >
-			<th align="left">To invoice</th>
+			<th align="left">Amount to invoice</th>
 			<td align="left">
 			    <field name="amt_to_invoice"/> <t t-esc="record.currency_id.raw_value[1].split(' ')[1][1]"/>
 			</td>
 		    </tr>
 		    <tr>
-			<th align="left">To hours</th>
+			<th align="left">Hours to Invoice</th>
 			<td align="left">
 			    <field name="hrs_to_invoice"/> h
 			</td>
