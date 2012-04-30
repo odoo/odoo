@@ -29,9 +29,7 @@ class res_partner(osv.osv):
         'event_ids': fields.one2many('event.event','main_speaker_id', readonly=True),
         'event_registration_ids': fields.one2many('event.registration','partner_id', readonly=True),
     }
-    _defaults = {
-        'speaker' : True,
-    }
+    
 
 res_partner()
 
