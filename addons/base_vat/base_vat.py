@@ -20,25 +20,41 @@
 #
 ##############################################################################
 import string
+import re
 
 from osv import osv, fields
 from tools.translate import _
 
 _ref_vat = {
-    'be': 'BE0477472701', 'at': 'ATU12345675',
-    'bg': 'BG1234567892', 'cy': 'CY12345678F',
-    'cz': 'CZ12345679', 'de': 'DE123456788',
-    'dk': 'DK12345674', 'ee': 'EE123456780',
-    'es': 'ESA12345674', 'fi': 'FI12345671',
-    'fr': 'FR32123456789', 'gb': 'GB123456782',
-    'gr': 'GR12345670', 'hu': 'HU12345676',
-    'ie': 'IE1234567T', 'it': 'IT12345670017',
-    'lt': 'LT123456715', 'lu': 'LU12345613',
-    'lv': 'LV41234567891', 'mt': 'MT12345634',
-    'nl': 'NL123456782B90', 'pl': 'PL1234567883',
-    'pt': 'PT123456789', 'ro': 'RO1234567897',
-    'se': 'SE123456789701', 'si': 'SI12345679',
-    'sk': 'SK0012345675', 'el': 'EL12345670'
+    'be': 'BE0477472701',
+    'at': 'ATU12345675',
+    'bg': 'BG1234567892',
+    'ch': 'CHE-123.456.788 TVA or CH TVA 123456', #Swiss by Yannick Vaucher @ Camptocamp
+    'cy': 'CY12345678F',
+    'cz': 'CZ12345679',
+    'de': 'DE123456788',
+    'dk': 'DK12345674',
+    'ee': 'EE123456780',
+    'el': 'EL12345670',
+    'es': 'ESA12345674',
+    'fi': 'FI12345671',
+    'fr': 'FR32123456789',
+    'gb': 'GB123456782',
+    'gr': 'GR12345670',
+    'hu': 'HU12345676',
+    'ie': 'IE1234567T',
+    'it': 'IT12345670017',
+    'lt': 'LT123456715',
+    'lu': 'LU12345613',
+    'lv': 'LV41234567891',
+    'mt': 'MT12345634',
+    'nl': 'NL123456782B90',
+    'pl': 'PL1234567883',
+    'pt': 'PT123456789',
+    'ro': 'RO1234567897',
+    'se': 'SE123456789701',
+    'si': 'SI12345679',
+    'sk': 'SK0012345675',
             }
 
 def mult_add(i, j):
@@ -150,6 +166,42 @@ class res_partner(osv.osv):
         if check == 11:
             check = 0
         return True
+
+    __check_vat_ch_re1 = re.compile(r'(MWST|TVA|IVA)[0-9]{6}$')
+    __check_vat_ch_re2 = re.compile(r'E([0-9]{9}|-[0-9]{3}\.[0-9]{3}\.[0-9]{3})(MWST|TVA|IVA)$')
+
+    def check_vat_ch(self, vat):
+        '''
+        Check Switzerland VAT number.
+        '''
+        # VAT number in Switzerland will change between 2011 and 2013 
+        # http://www.estv.admin.ch/mwst/themen/00154/00589/01107/index.html?lang=fr
+        # Old format is "TVA 123456" we will admit the user has to enter ch before the number
+        # Format will becomes such as "CHE-999.999.99C TVA"
+        # Both old and new format will be accepted till end of 2013
+        # Accepted format are: (spaces are ignored)
+        #     CH TVA ######
+        #     CH IVA ######
+        #     CH MWST #######
+        #
+        #     CHE#########MWST
+        #     CHE#########TVA
+        #     CHE#########IVA
+        #     CHE-###.###.### MWST
+        #     CHE-###.###.### TVA
+        #     CHE-###.###.### IVA
+        #     
+        if self.__check_vat_ch_re1.match(vat):
+            return True
+        match = self.__check_vat_ch_re2.match(vat) 
+        if match:
+            # For new TVA numbers, do a mod11 check
+            num = filter(lambda s: s.isdigit(), match.group(1))        # get the digits only
+            factor = (5,4,3,2,7,6,5,4)
+            csum = sum([int(num[i]) * factor[i] for i in range(8)])
+            check = 11 - (csum % 11)
+            return check == int(num[8])
+        return False
 
     def check_vat_cy(self, vat):
         '''
