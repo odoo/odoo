@@ -81,7 +81,7 @@
                             <field colspan="4" name="line_ids" nolabel="1" context="{'currency_id': currency_id}">
                                 <form string="Expense Lines">
                                     <group col="6" colspan="4">
-                                        <field name="product_id" on_change="onchange_product_id(product_id, uom_id, parent.employee_id, context)"/>
+                                        <field name="product_id" on_change="onchange_product_id(product_id, uom_id, parent.employee_id, context)" context="{'default_hr_expense_ok':1}"/>
                                         <field name="name" colspan="4"/>
                                         <newline/>
                                         <field name="unit_amount"/>
