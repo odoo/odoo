@@ -112,7 +112,6 @@
                             </notebook>
                             <separator string="" colspan="4"/>
                             <group col="6" colspan="6">
-                                <field name="message_state"/>
                                 <field name="state" colspan="2"/>
                                 <field name="subtype" attrs="{'invisible':[('subtype', '=', False)]}"/>
                                 <group colspan="2">
@@ -168,7 +167,6 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Email Search">
-                    <filter icon="terp-check" name="inbox" string="Inbox" domain="[('message_state','=','unread')]"/>
                     <separator orientation="vertical"/>
                     <filter icon="terp-gtk-stop" name="exception" string="Failed" domain="[('state','=','exception')]"/>
                     <separator orientation="vertical"/>
