@@ -864,8 +864,10 @@ $colour4: #8a89ba
 
         .oe_searchview_input
             height: 2em
-            min-width: 5px
+            padding: 0 3px
             display: inline-block
+            &:focus
+                outline: none
 
         .oe_searchview_facet
             position: relative
@@ -900,7 +902,7 @@ $colour4: #8a89ba
                 background: #8786b7
                 text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4)
 
-            &.oe_is_selected
+            &.oe_selected
                 border-color: $facets-border-selected
                 @include box-shadow(0 0 3px 1px $facets-border-selected)
 

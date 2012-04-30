@@ -1097,8 +1097,11 @@
 }
 .openerp .oe_searchview .oe_searchview_input {
   height: 2em;
-  min-width: 5px;
+  padding: 0 3px;
   display: inline-block;
+}
+.openerp .oe_searchview .oe_searchview_input:focus {
+  outline: none;
 }
 .openerp .oe_searchview .oe_searchview_facet {
   position: relative;
@@ -1136,13 +1139,13 @@
   background: #8786b7;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
 }
-.openerp .oe_searchview .oe_searchview_facet.oe_is_selected {
+.openerp .oe_searchview .oe_searchview_facet.oe_selected {
   border-color: #a6a6fe;
   -moz-box-shadow: 0 0 3px 1px #a6a6fe;
   -webkit-box-shadow: 0 0 3px 1px #a6a6fe;
   -box-shadow: 0 0 3px 1px #a6a6fe;
 }
-.openerp .oe_searchview .oe_searchview_facet.oe_is_selected .oe_facet_category {
+.openerp .oe_searchview .oe_searchview_facet.oe_selected .oe_facet_category {
   margin-left: 0;
 }
 .openerp .oe_searchview.oe_searchview_open_drawer .oe_searchview_drawer {

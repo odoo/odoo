@@ -118,7 +118,15 @@ my.SearchQuery = B.Collection.extend({
 });
 
 my.InputView = instance.web.Widget.extend({
-    template: 'SearchView.InputView'
+    template: 'SearchView.InputView',
+    start: function () {
+        var self = this;
+        var p = this._super.apply(this, arguments);
+        this.$element.on('focus', function () {
+            self.$element.siblings().trigger('deselect');
+        });
+        return p;
+    }
 });
 my.FacetView = instance.web.Widget.extend({
     template: 'SearchView.FacetView',
@@ -133,6 +141,16 @@ my.FacetView = instance.web.Widget.extend({
     },
     start: function () {
         var self = this;
+        this.$element.on('deselect', function () {
+            self.$element.removeClass('oe_selected');
+        });
+        this.$element.on('click', function (e) {
+            if ($(e.target).is('.oe_facet_remove')) {
+                return;
+            }
+            self.$element.siblings().trigger('deselect');
+            self.$element.addClass('oe_selected');
+        });
         var $e = self.$element.find('> span:last-child');
         var q = $.when(this._super());
         return q.pipe(function () {
@@ -237,7 +255,8 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         this.$element.on('click', '.oe_searchview_unfold_drawer', function () {
             self.$element.toggleClass('oe_searchview_open_drawer');
         });
-        this.$element.on('click', '.oe_facet_remove', function () {
+        this.$element.on('click', '.oe_facet_remove', function (e) {
+            e.stopImmediatePropagation();
             // get index of clicked facet: number of preceding facet siblings
             var index = $(this).closest('.oe_searchview_facet')
                    .prevAll('.oe_searchview_facet')
