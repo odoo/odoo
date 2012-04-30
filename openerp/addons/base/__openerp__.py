@@ -39,7 +39,6 @@
         'data/res.country.state.csv'
     ],
     'update_xml': [
-        'base_update.xml',
         'ir/wizard/wizard_menu_view.xml',
         'ir/ir.xml',
         'ir/ir_config_parameter_view.xml',
@@ -56,6 +55,7 @@
         'module/wizard/base_module_configuration_view.xml',
         'module/wizard/base_export_language_view.xml',
         'module/wizard/base_update_translations_view.xml',
+        'res/res_company_view.xml',
         'res/res_request_view.xml',
         'res/res_lang_view.xml',
         'res/res_partner_report.xml',
@@ -65,6 +65,7 @@
         'res/res_country_view.xml',
         'res/res_currency_view.xml',
         'res/res_partner_event_view.xml',
+        'res/res_users_view.xml',
         'res/wizard/partner_sms_send_view.xml',
         'res/wizard/partner_wizard_massmail_view.xml',
         'res/wizard/partner_clear_ids_view.xml',
