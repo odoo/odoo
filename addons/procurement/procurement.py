@@ -358,7 +358,7 @@ class procurement_order(osv.osv):
         """
         self.write(cr, uid, ids, {'state': 'running',
                 'message': _('from stock: products assigned.')})
-        self.running_send_note(cr, uid, ids, context)
+        self.running_send_note(cr, uid, ids, context=None)
         return True
 
     def _check_make_to_stock_service(self, cr, uid, procurement, context=None):
@@ -495,17 +495,14 @@ class procurement_order(osv.osv):
 
     def create_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_subscribe(cr, uid, [obj.id], [obj.user_id.id], context=context)
             self.message_append_note(cr, uid, [obj.id], body=_("Procurement has been <b>created</b>."), context=context)
 
     def confirm_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_subscribe(cr, uid, [obj.id], [obj.user_id.id], context=context)
             self.message_append_note(cr, uid, [obj.id], body=_("Procurement has been <b>confirmed</b>."), context=context)
 
     def running_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_subscribe(cr, uid, [obj.id], [obj.user_id.id], context=context)
             self.message_append_note(cr, uid, [obj.id], body=_("Procurement has been set to <b>running</b> state."), context=context)
 
     def ready_send_note(self, cr, uid, ids, context=None):
