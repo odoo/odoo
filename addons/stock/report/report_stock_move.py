@@ -166,6 +166,7 @@ class report_stock_inventory(osv.osv):
               help='When the stock move is created it is in the \'Draft\' state.\n After that it is set to \'Confirmed\' state.\n If stock is available state is set to \'Avaiable\'.\n When the picking it done the state is \'Done\'.\
               \nThe state is \'Waiting\' if the move is waiting for another one.'),
         'location_type': fields.selection([('supplier', 'Supplier Location'), ('view', 'View'), ('internal', 'Internal Location'), ('customer', 'Customer Location'), ('inventory', 'Inventory'), ('procurement', 'Procurement'), ('production', 'Production'), ('transit', 'Transit Location for Inter-Companies Transfers')], 'Location Type', required=True),
+        'scrap_location': fields.boolean('scrap'),
     }
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'report_stock_inventory')
@@ -174,7 +175,7 @@ CREATE OR REPLACE view report_stock_inventory AS (
     (SELECT
         min(m.id) as id, m.date as date,
         m.partner_id as partner_id, m.location_id as location_id,
-        m.product_id as product_id, pt.categ_id as product_categ_id, l.usage as location_type,
+        m.product_id as product_id, pt.categ_id as product_categ_id, l.usage as location_type, l.scrap_location as scrap_location,
         m.company_id,
         m.state as state, m.prodlot_id as prodlot_id,
 
@@ -191,12 +192,12 @@ CREATE OR REPLACE view report_stock_inventory AS (
             LEFT JOIN stock_location l ON (m.location_id=l.id)
     GROUP BY
         m.id, m.product_id, m.product_uom, pt.categ_id, m.partner_id, m.location_id,  m.location_dest_id,
-        m.prodlot_id, m.date, m.state, l.usage, m.company_id, pt.uom_id
+        m.prodlot_id, m.date, m.state, l.usage, l.scrap_location, m.company_id, pt.uom_id
 ) UNION ALL (
     SELECT
         -m.id as id, m.date as date,
         m.partner_id as partner_id, m.location_dest_id as location_id,
-        m.product_id as product_id, pt.categ_id as product_categ_id, l.usage as location_type,
+        m.product_id as product_id, pt.categ_id as product_categ_id, l.usage as location_type, l.scrap_location as scrap_location,
         m.company_id,
         m.state as state, m.prodlot_id as prodlot_id,
         coalesce(sum(pt.standard_price * m.product_qty * pu.factor / pu2.factor)::decimal, 0.0) as value,
@@ -212,7 +213,7 @@ CREATE OR REPLACE view report_stock_inventory AS (
             LEFT JOIN stock_location l ON (m.location_dest_id=l.id)
     GROUP BY
         m.id, m.product_id, m.product_uom, pt.categ_id, m.partner_id, m.location_id, m.location_dest_id,
-        m.prodlot_id, m.date, m.state, l.usage, m.company_id, pt.uom_id
+        m.prodlot_id, m.date, m.state, l.usage, l.scrap_location, m.company_id, pt.uom_id
     )
 );
         """)
