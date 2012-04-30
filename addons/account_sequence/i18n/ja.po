@@ -1,0 +1,215 @@
+# Japanese translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2011-05-09 10:18+0000\n"
+"PO-Revision-Date: 2012-04-28 05:31+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Japanese <ja@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2012-04-29 05:13+0000\n"
+"X-Generator: Launchpad (build 15149)\n"
+
+#. module: account_sequence
+#: view:account.sequence.installer:0
+#: model:ir.actions.act_window,name:account_sequence.action_account_seq_installer
+msgid "Account Sequence Application Configuration"
+msgstr "アカウント順序アプリケーション設定"
+
+#. module: account_sequence
+#: constraint:account.move:0
+msgid ""
+"You cannot create entries on different periods/journals in the same move"
+msgstr ""
+
+#. module: account_sequence
+#: help:account.move,internal_sequence_number:0
+#: help:account.move.line,internal_sequence_number:0
+msgid "Internal Sequence Number"
+msgstr "内部順序番号"
+
+#. module: account_sequence
+#: help:account.sequence.installer,number_next:0
+msgid "Next number of this sequence"
+msgstr "この順序の次の番号"
+
+#. module: account_sequence
+#: field:account.sequence.installer,number_next:0
+msgid "Next Number"
+msgstr "次の番号"
+
+#. module: account_sequence
+#: field:account.sequence.installer,number_increment:0
+msgid "Increment Number"
+msgstr "増分値"
+
+#. module: account_sequence
+#: model:ir.module.module,description:account_sequence.module_meta_information
+msgid ""
+"\n"
+"    This module maintains internal sequence number for accounting entries.\n"
+"    "
+msgstr ""
+
+#. module: account_sequence
+#: model:ir.module.module,shortdesc:account_sequence.module_meta_information
+msgid "Entries Sequence Numbering"
+msgstr ""
+
+#. module: account_sequence
+#: help:account.sequence.installer,number_increment:0
+msgid "The next number of the sequence will be incremented by this number"
+msgstr "順序の次の番号はこの数値だけ増加します。"
+
+#. module: account_sequence
+#: view:account.sequence.installer:0
+msgid "Configure Your Account Sequence Application"
+msgstr "アカウント順序アプリケーションの設定"
+
+#. module: account_sequence
+#: field:account.sequence.installer,progress:0
+msgid "Configuration Progress"
+msgstr ""
+
+#. module: account_sequence
+#: help:account.sequence.installer,suffix:0
+msgid "Suffix value of the record for the sequence"
+msgstr "順序のためのレコードのサフィックス値"
+
+#. module: account_sequence
+#: field:account.sequence.installer,company_id:0
+msgid "Company"
+msgstr "会社"
+
+#. module: account_sequence
+#: help:account.journal,internal_sequence_id:0
+msgid ""
+"This sequence will be used to maintain the internal number for the journal "
+"entries related to this journal."
+msgstr "この順序はこの仕訳帳に関係する仕訳帳エントリーのために内部番号を維持するために使用されます。"
+
+#. module: account_sequence
+#: field:account.sequence.installer,padding:0
+msgid "Number padding"
+msgstr "数値埋め"
+
+#. module: account_sequence
+#: model:ir.model,name:account_sequence.model_account_move_line
+msgid "Journal Items"
+msgstr "仕訳帳項目"
+
+#. module: account_sequence
+#: field:account.move,internal_sequence_number:0
+#: field:account.move.line,internal_sequence_number:0
+msgid "Internal Number"
+msgstr "内部番号"
+
+#. module: account_sequence
+#: constraint:account.move.line:0
+msgid "Company must be same for its related account and period."
+msgstr ""
+
+#. module: account_sequence
+#: help:account.sequence.installer,padding:0
+msgid ""
+"OpenERP will automatically adds some '0' on the left of the 'Next Number' to "
+"get the required padding size."
+msgstr "OpenERPは自動的に次の番号に要求されているサイズに応じて左側に0を加えます。"
+
+#. module: account_sequence
+#: field:account.sequence.installer,name:0
+msgid "Name"
+msgstr "名前"
+
+#. module: account_sequence
+#: constraint:account.move.line:0
+msgid "You can not create move line on closed account."
+msgstr ""
+
+#. module: account_sequence
+#: constraint:account.move:0
+msgid ""
+"You cannot create more than one move per period on centralized journal"
+msgstr ""
+
+#. module: account_sequence
+#: sql_constraint:account.move.line:0
+msgid "Wrong credit or debit value in accounting entry !"
+msgstr "会計エントリーにおいて貸方または借方の値が誤っています。"
+
+#. module: account_sequence
+#: field:account.journal,internal_sequence_id:0
+msgid "Internal Sequence"
+msgstr "内部順序"
+
+#. module: account_sequence
+#: view:account.sequence.installer:0
+msgid "Configure"
+msgstr "設定"
+
+#. module: account_sequence
+#: help:account.sequence.installer,prefix:0
+msgid "Prefix value of the record for the sequence"
+msgstr "順序のためのレコードのプレフィックス値"
+
+#. module: account_sequence
+#: model:ir.model,name:account_sequence.model_account_move
+msgid "Account Entry"
+msgstr "アカウントエントリー"
+
+#. module: account_sequence
+#: field:account.sequence.installer,suffix:0
+msgid "Suffix"
+msgstr "サフィックス"
+
+#. module: account_sequence
+#: field:account.sequence.installer,config_logo:0
+msgid "Image"
+msgstr "画像"
+
+#. module: account_sequence
+#: view:account.sequence.installer:0
+msgid "title"
+msgstr "タイトル"
+
+#. module: account_sequence
+#: sql_constraint:account.journal:0
+msgid "The name of the journal must be unique per company !"
+msgstr "仕訳帳の名前は会社ごとに固有でなければなりません、"
+
+#. module: account_sequence
+#: field:account.sequence.installer,prefix:0
+msgid "Prefix"
+msgstr "プレフィックス"
+
+#. module: account_sequence
+#: sql_constraint:account.journal:0
+msgid "The code of the journal must be unique per company !"
+msgstr "仕訳帳のコードは会社ごとに固有でなければなりません。"
+
+#. module: account_sequence
+#: model:ir.model,name:account_sequence.model_account_sequence_installer
+msgid "account.sequence.installer"
+msgstr ""
+
+#. module: account_sequence
+#: model:ir.model,name:account_sequence.model_account_journal
+msgid "Journal"
+msgstr "仕訳帳"
+
+#. module: account_sequence
+#: view:account.sequence.installer:0
+msgid "You can enhance the Account Sequence Application by installing ."
+msgstr "インストールによってアカウント順序アプリケーションを拡張できます。"
+
+#. module: account_sequence
+#: constraint:account.move.line:0
+msgid "You can not create move line on view account."
+msgstr ""
