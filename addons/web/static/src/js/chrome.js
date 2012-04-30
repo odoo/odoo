@@ -621,6 +621,9 @@ instance.web.Menu =  instance.web.Widget.extend({
         this.$secondary_menus.find('.oe_secondary_menu').hide();
         $sub_menu.show();
 
+        // Hide/Show the leftbar menu depending of the presence of sub-items
+        this.$secondary_menus.parent('.oe_leftbar').toggle(!!$sub_menu.children().length);
+
         // Activate current menu item and show parents
         this.$secondary_menus.find('.oe_active').removeClass('oe_active');
         if ($main_menu !== $clicked_menu) {
