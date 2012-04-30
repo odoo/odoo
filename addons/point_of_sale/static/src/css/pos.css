@@ -1,4 +1,6 @@
-
+body{
+    overflow: hidden;
+}
 .point-of-sale {
     padding: 0;
     margin: 0;
@@ -116,9 +118,15 @@
     bottom: 0;
 }
 .point-of-sale #leftpane {
-    height: 100%;
+    -webkit-box-sizing:border-box;
+    position:absolute;
+    left:0;
+    width:440px;
+    top:0px;
+    bottom:105px;
+    /*height: 87%;
     width: 440px;
-    position: relative;
+    position: relative;*/
     border-right: solid 1px #afafb6;
     background-color: white;
 }
@@ -249,10 +257,10 @@
 .point-of-sale #rightpane {
     position: absolute;
     top: 0;
-    bottom: 0;
-    left: 441px;
+    bottom: 105px;
+    left: 440px;
+    //height:100%;
     right: 0;
-    height: 100%;
     vertical-align: top;
 }
 .point-of-sale #rightpane header {
@@ -485,5 +493,231 @@
     .pos-sale-ticket {
         margin: 0;
     }
+}
+
+.point-of-sale .pos-actionbar{
+    position:absolute;
+    left:    0;
+    bottom:  0px;
+    height: 105px;
+    width:  100%;
+    margin: 0;
+    background: #f5f5f5;    /*#ebebeb;*/
+    border-top: solid 1px #afafb6;
+}
+
+.point-of-sale .pos-actionbar ul{
+    list-style:  none;
+}
+
+.point-of-sale .pos-actionbar-left-region{
+    height: 100%;
+    width:  434px;
+    margin: 0px;
+    padding-left:3px;
+    padding-right:3px;
+    border-right: solid 1px #dfdfdf;
+    float:  left;
+}
+
+.point-of-sale .pos-actionbar-right-region{
+    height: 100%;
+    margin: 0px;
+    padding-left:3px;
+    padding-right:3px;
+    overflow:hidden;
+}
+
+.point-of-sale .pos-actionbar .button{
+    width: 90px;
+    height: 90px;
+    text-align:center;
+    margin:3px;
+    margin-top:6px;
+    //line-height: 90px;
+    //vertical-align:center;
+    float:left;
+
+    font-size:   14px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    border: 1px solid #cacaca;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+
+    background: #e2e2e2;
+    background: -moz-linear-gradient(#f0f0f0, #e2e2e2);
+    background: -webkit-gradient(linear, left top, left bottom, from(#f0f0f0), to(#e2e2e2));
+    -webkit-box-shadow: 0px 2px 2px rgba(0,0,0, 0.3);
+}
+.point-of-sale .pos-actionbar .button .label{
+    margin-top: 37px;
+}
+.point-of-sale .pos-actionbar .button .icon{
+    margin-top: 10px;
+}
+.point-of-sale .pos-actionbar .button:hover {
+    color: white;
+    background: #7f82ac;
+    border: 1px solid #7f82ac;
+    background: -moz-linear-gradient(#9d9fc5, #7f82ac);
+    background: -webkit-gradient(linear, left top, left bottom, from(#9d9fc5), to(#7f82ac));
+
+    -webkit-transition-property: background, border;
+    -webkit-transition-duration: 0.2s;
+    -webkit-transition-timing-function: ease-out;
+}
+
+.point-of-sale .pos-actionbar .button.rightalign{
+    float:right;
+}
+
+/* Onscreen Keyboard http://net.tutsplus.com/tutorials/javascript-ajax/creating-a-keyboard-with-css-and-jquery/ */
+
+.point-of-sale .keyboard_frame{
+    display: none;
+    position:absolute;
+    left:    0;
+    bottom:  0px;
+    margin:  0;
+    padding: 0;
+    padding-top: 15px;
+    width: 100%;
+    height: 0px;    /* 235px, animated via jquery */
+	background-color: #BBB;
+    overflow:hidden;
+    -webkit-box-shadow: 0px 0px 10px rgba(0,0,0, 0.3);
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+}
+.point-of-sale .keyboard_frame .close_button{
+    height:40px;
+    width:60px;
+    text-align:center;
+    background-color: #DDD;
+    font-size: 12px;
+    line-height:40px;
+    border: 1px solid #CCC;
+	-webkit-border-radius: 5px;
+    -webkit-box-shadow: 0px 2px 5px rgba(0,0,0, 0.2);
+    position:absolute;
+    top:0;
+    right:15px;
+	cursor: pointer;
+}
+.point-of-sale .keyboard li {
+	float: left;
+	text-align: center;
+	background-color: #fff;
+	border: 1px solid #f0f0f0;
+    top:0;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+    -webkit-box-shadow: 0px 2px 5px rgba(0,0,0, 0.2);
+    -webkit-transition-property: top, background-color;
+    -webkit-transition-duration: 0.2s;
+    -webkit-transition-timing-function: linear;
+}
+.point-of-sale .keyboard li:hover {
+	position: relative;
+	top: 2px;
+	left: 0px;
+	border-color: #ddd;
+    background-color:#e5e5e5;
+	cursor: pointer;
+    -webkit-transition-property: top, background-color;
+    -webkit-transition-duration: 0.1s;
+    -webkit-transition-timing-function: ease-out;
+}
+.point-of-sale .uppercase {
+	text-transform: uppercase;
+}
+.point-of-sale .on {
+	display: none;
+}
+.point-of-sale .firstitem{
+	clear: left;
+}
+.point-of-sale .keyboard .lastitem {
+	margin-right: 0;
+}
+
+/* ---- full sized keyboard ---- */
+
+.point-of-sale .full_keyboard {
+    list-style: none;
+    font-size: 14px;
+    width: 680px;
+    height: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+.point-of-sale .full_keyboard li{
+	margin: 0 5px 5px 0;
+	width: 40px;
+	height: 40px;
+	line-height: 40px;
+}
+.point-of-sale .full_keyboard .tab, .point-of-sale .full_keyboard .delete {
+	width: 70px;
+}
+.point-of-sale .full_keyboard .capslock {
+	width: 80px;
+}
+.point-of-sale .full_keyboard .return {
+	width: 77px;
+}
+.point-of-sale .full_keyboard .left-shift {
+	width: 95px;
+}
+.point-of-sale .full_keyboard .right-shift {
+	width: 109px;
+}
+.point-of-sale .full_keyboard .space {
+	clear: left;
+	width: 673px;
+}
+
+/* ---- simplified keyboard ---- */
+
+.point-of-sale .simple_keyboard {
+    list-style: none;
+    font-size: 16px;
+    width: 545px;
+    height: 220px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.point-of-sale .simple_keyboard li{
+    margin: 0 5px 5px 0;
+    width: 49px;
+    height: 49px;
+    line-height: 49px;
+}
+.point-of-sale .simple_keyboard .firstitem.row_asdf{
+    margin-left:25px;
+}
+.point-of-sale .simple_keyboard .firstitem.row_zxcv{
+    margin-left:55px;
+}
+.point-of-sale .simple_keyboard .delete{
+    width: 103px;
+}
+.point-of-sale .simple_keyboard .return{
+    width: 103px;
+}
+.point-of-sale .simple_keyboard .space{
+    width:268px;
+}
+.point-of-sale .simple_keyboard .numlock{
+    width:103px;
 }
 

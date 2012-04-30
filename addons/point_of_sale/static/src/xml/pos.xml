@@ -2,7 +2,7 @@
 <!-- vim:fdl=1:
 -->
 <templates id="template" xml:space="preserve">
-    <t t-name="PointOfSale">
+    <t t-name="POSWidget">
     <div class="point-of-sale">
         <div id="topheader">
             <div id="branding">
@@ -140,6 +140,9 @@
             <t t-esc="widget.nbr_pending"/> pending orders
         </a>
         </span>
+    </t>
+    <t t-name="pos-scan-warning">
+        <div>The product could not be recognized. Please contact an employee.</div>
     </t>
     <t t-name="pos-close-warning">
         <div>There are pending operations that could not be saved into the database, are you sure you want to exit?</div>
@@ -289,6 +292,140 @@
                     <t t-esc="format_amount((widget.currentOrder.getPaidTotal() - widget.currentOrder.getTotal()).toFixed(2))"/>
                     </td></tr>
             </table>
+        </div>
+    </t>
+    <t t-name="pos-actionbar">
+        <div class="pos-actionbar">
+            <ul class="pos-actionbar-left-region">
+                <!-- <li class="button">yoyo</li>
+                <li class="button">foo</li>
+                <li class="button rightalign">bar</li> -->
+            </ul>
+
+            <ul class="pos-actionbar-right-region">
+                <!-- <li class="button">BUTTOOON</li>
+                <li class="button">JEEENKIINS</li>
+                <li class="button rightalign">ARGH</li> -->
+            </ul>
+        </div>
+    </t>
+    <t t-name="pos-action-button">
+        <li t-att-class=" 'button '+ (widget.rightalign  ? 'rightalign ' : '')">
+            <div class='label'>
+                <t t-esc="widget.label" />
+            </div>
+        </li>
+    </t>
+    <t t-name="pos-action-button-with-icon">
+        <li t-att-class=" 'button '+ (widget.rightalign  ? 'rightalign ' : '')">
+            <div class='icon'>
+                <img t-att-src="widget.icon" />
+                <div class='iconlabel'><t t-esc="widget.label" /></div>
+            </div>
+        </li>
+    </t>
+    <!-- Onscreen Keyboard : 
+         http://net.tutsplus.com/tutorials/javascript-ajax/creating-a-keyboard-with-css-and-jquery/ -->
+    <t t-name="pos-onscreen-keyboard-full-template">
+        <div class="keyboard_frame">
+            <ul class="keyboard full_keyboard">
+                <li class="symbol"><span class="off">`</span><span class="on">~</span></li>
+                <li class="symbol"><span class="off">1</span><span class="on">!</span></li>
+                <li class="symbol"><span class="off">2</span><span class="on">@</span></li>
+                <li class="symbol"><span class="off">3</span><span class="on">#</span></li>
+                <li class="symbol"><span class="off">4</span><span class="on">$</span></li>
+                <li class="symbol"><span class="off">5</span><span class="on">%</span></li>
+                <li class="symbol"><span class="off">6</span><span class="on">^</span></li>
+                <li class="symbol"><span class="off">7</span><span class="on">&amp;</span></li>
+                <li class="symbol"><span class="off">8</span><span class="on">*</span></li>
+                <li class="symbol"><span class="off">9</span><span class="on">(</span></li>
+                <li class="symbol"><span class="off">0</span><span class="on">)</span></li>
+                <li class="symbol"><span class="off">-</span><span class="on">_</span></li>
+                <li class="symbol"><span class="off">=</span><span class="on">+</span></li>
+                <li class="delete lastitem">delete</li>
+                <li class="tab firstitem">tab</li>
+                <li class="letter">q</li>
+                <li class="letter">w</li>
+                <li class="letter">e</li>
+                <li class="letter">r</li>
+                <li class="letter">t</li>
+                <li class="letter">y</li>
+                <li class="letter">u</li>
+                <li class="letter">i</li>
+                <li class="letter">o</li>
+                <li class="letter">p</li>
+                <li class="symbol"><span class="off">[</span><span class="on">{</span></li>
+                <li class="symbol"><span class="off">]</span><span class="on">}</span></li>
+                <li class="symbol lastitem"><span class="off">\</span><span class="on">|</span></li>
+                <li class="capslock firstitem">caps lock</li>
+                <li class="letter">a</li>
+                <li class="letter">s</li>
+                <li class="letter">d</li>
+                <li class="letter">f</li>
+                <li class="letter">g</li>
+                <li class="letter">h</li>
+                <li class="letter">j</li>
+                <li class="letter">k</li>
+                <li class="letter">l</li>
+                <li class="symbol"><span class="off">;</span><span class="on">:</span></li>
+                <li class="symbol"><span class="off">'</span><span class="on">&quot;</span></li>
+                <li class="return lastitem">return</li>
+                <li class="left-shift firstitem">shift</li>
+                <li class="letter">z</li>
+                <li class="letter">x</li>
+                <li class="letter">c</li>
+                <li class="letter">v</li>
+                <li class="letter">b</li>
+                <li class="letter">n</li>
+                <li class="letter">m</li>
+                <li class="symbol"><span class="off">,</span><span class="on">&lt;</span></li>
+                <li class="symbol"><span class="off">.</span><span class="on">&gt;</span></li>
+                <li class="symbol"><span class="off">/</span><span class="on">?</span></li>
+                <li class="right-shift lastitem">shift</li>
+                <li class="space firstitem lastitem">&amp;nbsp;</li>
+            </ul>
+            <p class="close_button">close</p>
+        </div>
+    </t>
+    <t t-name="pos-onscreen-keyboard-simple-template">
+        <div class="keyboard_frame">
+            <ul class="keyboard simple_keyboard">
+                <li class="symbol firstitem row_qwerty"><span class="off">q</span><span class="on">1</span></li>
+                <li class="symbol"><span class="off">w</span><span class="on">2</span></li>
+                <li class="symbol"><span class="off">e</span><span class="on">3</span></li>
+                <li class="symbol"><span class="off">r</span><span class="on">4</span></li>
+                <li class="symbol"><span class="off">t</span><span class="on">5</span></li>
+                <li class="symbol"><span class="off">y</span><span class="on">6</span></li>
+                <li class="symbol"><span class="off">u</span><span class="on">7</span></li>
+                <li class="symbol"><span class="off">i</span><span class="on">8</span></li>
+                <li class="symbol"><span class="off">o</span><span class="on">9</span></li>
+                <li class="symbol lastitem"><span class="off">p</span><span class="on">0</span></li>
+
+                <li class="symbol firstitem row_asdf"><span class="off">a</span><span class="on">@</span></li>
+                <li class="symbol"><span class="off">s</span><span class="on">#</span></li>
+                <li class="symbol"><span class="off">d</span><span class="on">%</span></li>
+                <li class="symbol"><span class="off">f</span><span class="on">*</span></li>
+                <li class="symbol"><span class="off">g</span><span class="on">/</span></li>
+                <li class="symbol"><span class="off">h</span><span class="on">-</span></li>
+                <li class="symbol"><span class="off">j</span><span class="on">+</span></li>
+                <li class="symbol"><span class="off">k</span><span class="on">(</span></li>
+                <li class="symbol lastitem"><span class="off">l</span><span class="on">)</span></li>
+
+                <li class="symbol firstitem row_zxcv"><span class="off">z</span><span class="on">?</span></li>
+                <li class="symbol"><span class="off">x</span><span class="on">!</span></li>
+                <li class="symbol"><span class="off">c</span><span class="on">"</span></li>
+                <li class="symbol"><span class="off">v</span><span class="on">'</span></li>
+                <li class="symbol"><span class="off">b</span><span class="on">:</span></li>
+                <li class="symbol"><span class="off">n</span><span class="on">;</span></li>
+                <li class="symbol"><span class="off">m</span><span class="on">,</span></li>
+                <li class="delete lastitem">delete</li>
+
+                <li class="numlock firstitem row_space"><span class="off">123</span><span class="on">ABC</span></li>
+                <li class="space">&amp;nbsp;</li>
+                <li class="symbol"><span class="off">.</span><span class="on">.</span></li>
+                <li class="return lastitem">return</li>
+            </ul>
+            <p class="close_button">close</p>
         </div>
     </t>
 </templates>

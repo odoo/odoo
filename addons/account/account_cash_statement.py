@@ -235,8 +235,27 @@ class account_cash_statement(osv.osv):
                 print "line: %r" % (line,)
                 if line and len(line)==3 and line[2]:
                     amount_total+= line[2]['pieces'] * line[2]['number_opening']
+
             vals.update(balance_start= amount_total)
             vals.update(balance_end_real=self._compute_balance_end_real(cr, uid, vals['journal_id'], context=context))
+
+            details = vals.get('details_ids')
+            if not details:
+                result = self.onchange_journal_id(cr, uid, None, vals['journal_id'], context=context)
+                vals['details_ids'] = []
+
+                for value in (result['value']['details_ids'] or []):
+                    print "value: %r" % (value,)
+                    nested_values = {
+                        'number_closing' : False,
+                        'number_opening' : False,
+                        'pieces' : value['pieces'],
+                        'subtotal_closing' : False,
+                        'subtotal_opening' : False,
+                    }
+
+                    vals['details_ids'].append([0, False, nested_values])
+
         return super(account_cash_statement, self).create(cr, uid, vals, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -284,8 +303,6 @@ class account_cash_statement(osv.osv):
 
                 for line in journal.cashbox_line_ids:
                     values['value']['details_ids'].append({'pieces' : line.pieces})
-
-                print "values: %r" % (values,)
 
                 return values
         else:

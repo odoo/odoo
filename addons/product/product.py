@@ -518,7 +518,7 @@ class product_product(osv.osv):
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the product without removing it."),
         'variants': fields.char('Variants', size=64),
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=True, ondelete="cascade"),
-        'ean13': fields.char('EAN13', size=13),
+        'ean13': fields.char('EAN13', size=13, help='Barcode'),
         'packaging' : fields.one2many('product.packaging', 'product_id', 'Logistical Units', help="Gives the different ways to package the same product. This has no impact on the picking order and is mainly used if you use the EDI module."),
         'price_extra': fields.float('Variant Price Extra', digits_compute=dp.get_precision('Sale Price')),
         'price_margin': fields.float('Variant Price Margin', digits_compute=dp.get_precision('Sale Price')),
