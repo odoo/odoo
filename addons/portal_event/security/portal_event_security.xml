@@ -5,12 +5,12 @@
         <!-- Creating Portal Group -->
         
         <record id="group_event_portal" model="res.groups">
-            <field name="name">Portal User</field>
+            <field name="name">Event Portal Groups</field>
             <field ref="event.module_category_event_management" name="category_id"/>
         </record>
         
         <record id="portal_event" model="res.portal">
-            <field name="name">Events Portal</field>
+            <field name="name">Portal User</field>
             <field name="group_id" ref="group_event_portal"/>
         </record>
             

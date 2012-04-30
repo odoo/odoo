@@ -105,48 +105,59 @@ class event_event(osv.osv):
         register_pool = self.pool.get('event.registration')
         sale_order_line_pool = self.pool.get('sale.order.line')
         sale_order = self.pool.get('sale.order')
-        user = self.pool.get("res.users").browse(cr, uid, uid, context=context)
         partner_pool = self.pool.get("res.partner")
-        new_partner_id = False
+        prod_pricelist_obj = self.pool.get('product.pricelist')
+        user = self.pool.get("res.users").browse(cr, uid, uid, context=context)
         partner_ids = partner_pool.search(cr, uid, [('name', '=', user.name), ('email', '=', user.user_email)])
         if not partner_ids:
             new_partner_id = partner_pool.create(cr, uid, {'name': user.name, 'email': user.user_email})
-            partner_invoice_id = self.pool.get('res.partner').address_get(cr, uid, [new_partner_id], ['invoice'])['invoice']
-            partner_shipping_id = self.pool.get('res.partner').address_get(cr, uid, [new_partner_id], ['delivery'])['delivery']
+            partner_invoice_id = partner_pool.address_get(cr, uid, [new_partner_id], ['invoice'])['invoice']
+            partner_shipping_id = partner_pool.address_get(cr, uid, [new_partner_id], ['delivery'])['delivery']
+        else:
+            new_partner_id = partner_ids[0]
+            partner_invoice_id = partner_pool.address_get(cr, uid, [new_partner_id], ['invoice'])['invoice']
+            partner_shipping_id = partner_pool.address_get(cr, uid, [new_partner_id], ['delivery'])['delivery']     
         for event_id in self.browse(cr, uid, ids, context=context):
-            prod_pricelist_obj = self.pool.get('product.pricelist')
             sale_order_lines = []
             price_list = prod_pricelist_obj.search(cr,uid,[],context=context)[0]
-            new_sale_id = sale_order.create(cr, uid, {
-                'date_order': event_id.date_begin,
-                'pricelist_id': price_list,
-                 'partner_id': new_partner_id, 
-                  'partner_invoice_id': partner_invoice_id,
-                 'partner_shipping_id': partner_shipping_id
-                })            
-            if event_id.event_item_ids:
-                for items in event_id.event_item_ids:
-                    product = items.product_id.id
-                    sale_order_line = sale_order_line_pool.create(cr, uid, {
-                        'order_id': new_sale_id,                                
-                        'name': items.product_id.name,
-                        'product_uom_qty': items.qty,
-                        'product_id': items.product_id.id,
-                        'product_uom': items.uom_id.id,
-                        'price_unit': items.price,
-                        'date_planned': items.sales_end_date,
-                    }, context=context)
-                res = {
-                        'name': _('Quotation'),
-                        'view_type': 'form',
-                        'view_mode': 'form',
-                        'res_model': 'sale.order',
-                        'res_id': new_sale_id,
-                        'type': 'ir.actions.act_window',
-                        'nodestroy': True,
-                        'target': 'new',
-                }
-               # self.write(cr, uid, ids, {'state': 'confirm'}, context=context)
+            sale_ids = sale_order.search(cr, uid, [('date_order', '=', event_id.date_begin), ('partner_id', '=', new_partner_id)])
+            if not sale_ids:
+#                    raise osv.except_osv(_('Error !'),
+#                        _('sale order is already Exists for this event:'))
+#            else:          
+                new_sale_id = sale_order.create(cr, uid, {
+                    'date_order': event_id.date_begin,
+                    'pricelist_id': price_list,
+                     'partner_id': new_partner_id, 
+                      'partner_invoice_id': partner_invoice_id,
+                     'partner_shipping_id': partner_shipping_id
+                    })            
+                if event_id.event_item_ids:
+                    for items in event_id.event_item_ids:
+                        product = items.product_id.id
+                        sale_order_line = sale_order_line_pool.create(cr, uid, {
+                            'order_id': new_sale_id,                                
+                            'name': items.product_id.name,
+                            'product_uom_qty': items.qty,
+                            'product_id': items.product_id.id,
+                            'product_uom': items.uom_id.id,
+                            'price_unit': items.price,
+                            'date_planned': items.sales_end_date,
+                        }, context=context)
+                    view_id = data_obj._get_id(cr, uid, 'sale', 'view_order_form')
+                    if view_id:
+                        res_id = data_obj.browse(cr, uid, view_id, context=context).res_id
+                    res = {
+                            'name': _('Quotation'),
+                            'view_type': 'form',
+                            'view_mode': 'form',
+                            'res_model': 'sale.order',
+                            'res_id': new_sale_id,
+                            'views':[(res_id,'form'), (False, 'tree')],
+                            'type': 'ir.actions.act_window',
+                            'nodestroy': True,
+                            'target': 'current',
+                    }
         return res
 
 class event_items(osv.osv):
