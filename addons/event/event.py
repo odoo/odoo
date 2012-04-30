@@ -186,8 +186,8 @@ class event_event(osv.osv):
         'state': fields.selection([
             ('draft', 'Unconfirmed'),
             ('confirm', 'Confirmed'),
-            ('done', 'Done'),
-            ('cancel', 'Cancelled')],
+            ('cancel', 'Cancelled'),
+            ('done', 'Done')],
             'State', readonly=True, required=True,
             help='If event is created, the state is \'Draft\'.If event is confirmed for the particular dates the state is set to \'Confirmed\'. If the event is over, the state is set to \'Done\'.If event is cancelled the state is set to \'Cancelled\'.'),
         'email_registration_id' : fields.many2one('email.template','Registration Confirmation Email', help='This field contains the template of the mail that will be automatically sent each time a registration for this event is confirmed.'),
