@@ -49,7 +49,7 @@
                 <tree colors="blue:state == 'draft';black:state in ('confirm','accepted','invoiced','paid');gray:state == 'cancelled'"  string="Expenses" editable="top">
                     <field name="employee_id"/>
                     <field name="date"/>
-                    <field name="department_id" groups="base.group_extended"/>
+                    <field name="department_id"/>
                     <field name="ref"/>
                     <field name="name"/>
                     <field name="amount"/>
@@ -69,10 +69,10 @@
                     <group colspan="4" col="6">
                         <field name="employee_id" on_change="onchange_employee_id(employee_id)"/>
                         <field name="name"/>
-                        <field name="ref" groups="base.group_extended"/>
+                        <field name="ref"/>
                         <field name="date"/>
                         <field name="currency_id"/>
-                        <field name="department_id" groups="base.group_extended"/>
+                        <field name="department_id"/>
                         <field name="company_id" groups="base.group_multi_company"/>
                     </group>
                     <notebook colspan="4">
@@ -81,7 +81,7 @@
                             <field colspan="4" name="line_ids" nolabel="1" context="{'currency_id': currency_id}">
                                 <form string="Expense Lines">
                                     <group col="6" colspan="4">
-                                        <field name="product_id" on_change="onchange_product_id(product_id, uom_id, parent.employee_id, context)"/>
+                                        <field name="product_id" on_change="onchange_product_id(product_id, uom_id, parent.employee_id, context)" context="{'default_hr_expense_ok':1}"/>
                                         <field name="name" colspan="4"/>
                                         <newline/>
                                         <field name="unit_amount"/>
@@ -108,7 +108,7 @@
                                 <button name="validate" states="confirm" string="Approve" type="workflow" icon="gtk-go-forward" groups="base.group_hr_user"/>
                             </group>
                         </page>
-                        <page string="Other Info" groups="base.group_extended">
+                        <page string="Other Info">
                             <group col="2" colspan="2">
                             <separator colspan="2" string="Accounting data"/>
                             <field name="journal_id"/>
