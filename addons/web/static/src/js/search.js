@@ -237,6 +237,14 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         this.$element.on('click', '.oe_searchview_unfold_drawer', function () {
             self.$element.toggleClass('oe_searchview_open_drawer');
         });
+        this.$element.on('click', '.oe_facet_remove', function () {
+            // get index of clicked facet: number of preceding facet siblings
+            var index = $(this).closest('.oe_searchview_facet')
+                   .prevAll('.oe_searchview_facet')
+                   .length;
+            self.query.remove(
+                self.query.at(index), {trigger_search: true});
+        });
 
         return $.when(p, this.ready);
     },
