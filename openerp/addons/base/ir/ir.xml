@@ -143,7 +143,7 @@
                         <field name="name" select="1"/>
                         <field name="code" select="1"/>
                         <field name="company_id" groups="base.group_multi_company"/>
-                        <field name="active" groups="base.group_extended"/>
+                        <field name="active" groups="base.group_no_one"/>
                     </group>
                     <notebook colspan="4">
                     <page string="Sequence">
@@ -269,7 +269,7 @@
             <field eval="False" name="view_id"/>
         </record>
         <menuitem action="ir_sequence_type" id="menu_ir_sequence_type"
-            groups="base.group_extended"
+            groups="base.group_no_one"
             parent="base.next_id_5"/>
 
         <!-- Actions -->
@@ -356,8 +356,8 @@
                     <field name="name"/>
                     <field name="model_id"/>
                     <field name="user_id"/>
-                    <field name="domain" groups="base.group_extended"/>
-                    <field name="context" groups="base.group_extended"/>
+                    <field name="domain" groups="base.group_no_one"/>
+                    <field name="context" groups="base.group_no_one"/>
                 </tree>
             </field>
         </record>
@@ -764,7 +764,7 @@
             <field name="help">A group is a set of functional areas that will be assigned to the user in order to give them access and rights to specific applications and tasks in the system. You can create custom groups or edit the ones existing by default in order to customize the view of the menu that users will be able to see. Whether they can have a read, write, create and delete access right can be managed from here.</field>
         </record>
         <menuitem action="action_res_groups" id="menu_action_res_groups" parent="base.menu_users"
-            groups="base.group_extended"/>
+            groups="base.group_no_one"/>
 
         <!-- View -->
         <record id="view_view_form" model="ir.ui.view">
@@ -927,7 +927,7 @@
                             <field name="res_id"/>
                             <field name="res_name"/>
                         </group>
-                    <group col="2" groups="base.group_extended">
+                    <group col="2" groups="base.group_no_one">
                         <separator string="Created" colspan="2"/>
                         <field name="create_uid" select="2"/>
                         <field name="create_date" select="2"/>
@@ -984,7 +984,7 @@
                     <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Owner" icon="terp-personal" domain="[]" context="{'group_by':'create_uid'}"/>
-                        <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"  groups="base.group_extended"/>
+                        <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"  groups="base.group_no_one"/>
                         <filter string="Company" icon="terp-gtk-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                         <separator orientation="vertical"/>
                         <filter string="Month" help="Creation Month" icon="terp-go-month" domain="[]" context="{'group_by':'create_date'}"/>
@@ -1287,7 +1287,7 @@
             <field name="context">{'manual':True}</field>
             <field name="view_id" ref="view_model_tree"/>
         </record>
-        <menuitem id="next_id_9" name="Database Structure" parent="base.menu_custom" groups="base.group_extended"/>
+        <menuitem id="next_id_9" name="Database Structure" parent="base.menu_custom" groups="base.group_no_one"/>
         <menuitem action="action_model_model" id="ir_model_model_menu" parent="next_id_9"/>
 
         <record id="action_model_fields" model="ir.actions.act_window">
@@ -1306,7 +1306,7 @@
             <field name="view_id" ref="view_model_data_list"/>
         </record>
         <menuitem action="action_model_data" id="ir_model_data_menu" parent="base.next_id_5"
-                  groups="base.group_extended"/>
+                  groups="base.group_no_one"/>
 
         <!-- Translations -->
 
@@ -1429,11 +1429,11 @@
                         <field name="action" colspan="2" />
                         <field name="icon"  colspan="2"/>
 
-                        <group col="4" colspan="6" groups="base.group_extended">
-                            <field name="web_icon" groups="base.group_extended" />
-                            <field name="web_icon_hover" groups="base.group_extended" />
-                            <field name="web_icon_data" widget="image" groups="base.group_extended"/>
-                            <field name="web_icon_hover_data" widget="image" groups="base.group_extended"/>
+                        <group col="4" colspan="6" groups="base.group_no_one">
+                            <field name="web_icon"/>
+                            <field name="web_icon_hover"/>
+                            <field name="web_icon_data" widget="image"/>
+                            <field name="web_icon_hover_data" widget="image"/>
                         </group>
                     </group>
                     <notebook colspan="4">
@@ -1517,9 +1517,9 @@
                         <field name="numbercall"/>
                         <field name="doall"/>
                     </page>
-                    <page string="Technical Data" groups="base.group_extended">
+                    <page string="Technical Data" groups="base.group_no_one">
                         <separator string="Action to Trigger" colspan="4"/>
-                        <field name="model" groups="base.group_extended"/>
+                        <field name="model"/>
                         <field name="function"/>
                         <separator string="Arguments" colspan="4"/>
                         <field colspan="4" name="args" nolabel="1"/>
@@ -1571,7 +1571,7 @@
             <field name="view_id" ref="ir_cron_view_tree"/>
         </record>
 
-        <menuitem id="menu_ir_cron" name="Scheduler" parent="menu_custom"  groups="base.group_extended" sequence="23"/>
+        <menuitem id="menu_ir_cron" name="Scheduler" parent="menu_custom"  groups="base.group_no_one" sequence="23"/>
         <menuitem id="menu_ir_cron_act" action="ir_cron_act" parent="menu_ir_cron"/>
 
         <!-- ir.model.access -->
@@ -1631,7 +1631,7 @@
                         <field name="group_id"/>
                 </group>
                 <newline/>
-                <group expand="0" string="Group By..." colspan="11" col="11" groups="base.group_extended">
+                <group expand="0" string="Group By..." colspan="11" col="11" groups="base.group_no_one">
                      <filter string="Group" icon="terp-personal" domain="[]" context="{'group_by':'group_id'}"/>
                      <filter string="Object" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'model_id'}"/>
                    </group>
@@ -1950,7 +1950,7 @@
             <field name="view_type">form</field>
             <field name="help">The configuration wizards are used to help you configure a new instance of OpenERP. They are launched during the installation of new modules, but you can choose to restart some wizards manually from this menu.</field>
         </record>
-        <menuitem id="menu_ir_actions_todo" name="Configuration Wizards" parent="menu_custom" sequence="20" groups="base.group_extended"/> 
+        <menuitem id="menu_ir_actions_todo" name="Configuration Wizards" parent="menu_custom" sequence="20" groups="base.group_no_one"/> 
         <menuitem id="menu_ir_actions_todo_form" action="act_ir_actions_todo_form" parent="menu_ir_actions_todo"/>
 
         <record model="ir.cron" id="cronjob_osv_memory_autovacuum">
@@ -2017,7 +2017,7 @@
                         <separator string="Connection Information" colspan="4"/>
                         <field name="smtp_host"/>
                         <field name="smtp_port"/>
-                        <field name="smtp_debug" groups="base.group_extended"/>
+                        <field name="smtp_debug" groups="base.group_no_one"/>
                      </group>
                      <group col="2" colspan="4">
                         <separator string="Security and Authentication" colspan="2"/>

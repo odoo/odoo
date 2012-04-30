@@ -202,9 +202,6 @@
             <field name="view_id" ref="view_partner_address_form1"/>
             <field name="act_window_id" ref="action_partner_address_form"/>
         </record>
-        <!--menuitem action="action_partner_address_form" id="menu_partner_address_form"
-            groups="base.group_extended" name="Contacts"
-            parent="base.menu_address_book" sequence="30"/-->
 
         <!--
           =========================================
@@ -339,7 +336,7 @@
                         <group colspan="4">
                             <h2><field name="name" required="1" nolabel="1" colspan="4"/></h2><newline/>
                                 <field name="function" attrs="{'invisible': [('is_company', '=', True)]}"/>
-                                <field name="title" size="0" groups="base.group_extended" domain="[('domain', '=', 'contact')]"/>
+                                <field name="title" size="0" domain="[('domain', '=', 'contact')]"/>
                                 <field name="parent_id" string="Company" attrs="{'invisible': [('is_company','=', True)]}"
                                     domain="[('is_company', '=', True)]" context="{'default_is_company': True}"
                                     on_change="onchange_address(use_parent_address, parent_id)"/>
@@ -374,7 +371,7 @@
                                 <field name="fax" colspan="4"/>
                                 <field name="email" widget="email" colspan="4"/>
                                 <field name="website" widget="url" colspan="4"/>
-                                <field name="ref" groups="base.group_extended" colspan="4"/>
+                                <field name="ref" colspan="4"/>
                             </group>
                             <group colspan="4" attrs="{'invisible': [('is_company','=', False)]}">
                             <field name="child_ids" context="{'default_parent_id': active_id}" nolabel="1" mode="kanban,list">
@@ -433,14 +430,14 @@
                             <separator string="General Information" colspan="4"/>
                             <field name="lang" colspan="4"/>
                             <field name="user_id"/>
-                            <field name="active" groups="base.group_extended"/>
+                            <field name="active"/>
                             <field name="date"/>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             <newline/>
                         </page>
-                        <page string="History" groups="base.group_extended" invisible="True">
+                        <page string="History" invisible="True">
                         </page>
-                        <page string="Categories" groups="base.group_extended">
+                        <page string="Categories">
                             <field name="category_id" colspan="4" nolabel="1"/>
                         </page>
                         <page string="Notes">
@@ -467,7 +464,7 @@
                         <field name="name" select="1"/>
                         <!--field name="address" select="1"/-->
                         <!--field name="country" select="1"/-->
-                        <field name="category_id" select="1" groups="base.group_extended"/>
+                        <field name="category_id" select="1"/>
                         <field name="user_id" select="1">
                             <filter help="My Partners" icon="terp-personal+" domain="[('user_id','=',uid)]"/>
                         </field>
@@ -654,7 +651,7 @@
             <field name="arch" type="xml">
                 <form string="Partner Category">
                     <field name="name" select="1"/>
-                    <field name="active" groups="base.group_extended"/>
+                    <field name="active"/>
                     <field name="parent_id"/>
                     <separator colspan="4" string="Partners"/>
                     <field colspan="4" name="partner_ids" nolabel="1"/>
@@ -693,7 +690,7 @@
             <field name="domain">[('parent_id','=',False)]</field>
         </record>
         <menuitem action="action_partner_category" id="menu_partner_category_main" parent="base.menu_address_book" sequence="1"
-            groups="base.group_extended"/>
+            groups="base.group_no_one"/>
         -->
 
         <record id="action_partner_by_category" model="ir.actions.act_window">
@@ -727,7 +724,6 @@
             id="act_res_partner_event" name="Events"
             res_model="res.partner.event"
             src_model="res.partner"
-            groups="base.group_extended"
             />
 
     </data>
