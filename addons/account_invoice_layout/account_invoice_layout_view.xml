@@ -47,7 +47,7 @@
             <field name="inherit_id" ref="account.invoice_form"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page/field[@name='invoice_line']" position="replace">
+                <xpath expr="/form/sheet/notebook/page/field[@name='invoice_line']" position="replace">
                     <!-- keep the original fields, because other views position on that, too -->
                     <field name="invoice_line" invisible="True"/>
                     <field name="abstract_line_ids" colspan="4" nolabel="1"/>

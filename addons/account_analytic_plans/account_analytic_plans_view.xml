@@ -303,10 +303,10 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="account.view_bank_statement_form"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page/field[@name='line_ids']/tree/field[@name='analytic_account_id']" position="replace">
+                <xpath expr="/form/sheet/notebook/page/field[@name='line_ids']/tree/field[@name='analytic_account_id']" position="replace">
                     <field name="analytics_id" groups="analytic.group_analytic_accounting"/>
                 </xpath>
-                <xpath expr="/form/notebook/page/field[@name='line_ids']/form/field[@name='analytic_account_id']" position="replace">
+                <xpath expr="/form/sheet/notebook/page/field[@name='line_ids']/form/field[@name='analytic_account_id']" position="replace">
                     <field name="analytics_id" groups="analytic.group_analytic_accounting"/>
                 </xpath>
             </field>
