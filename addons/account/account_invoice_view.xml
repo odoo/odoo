@@ -39,7 +39,7 @@
                     <field name="quantity"/>
                     <field name="uos_id"/>
                     <field name="price_unit"/>
-                    <field name="discount" groups="base.group_extended"/>
+                    <field name="discount"/>
                     <field name="price_subtotal"/>
                 </tree>
             </field>
@@ -60,7 +60,7 @@
                     </group>
                     <field name="price_unit"/>
                     <field domain="[('company_id', '=', parent.company_id), ('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id" on_change="onchange_account_id(product_id, parent.partner_id, parent.type, parent.fiscal_position,account_id)"/>
-                    <field name="discount" groups="base.group_extended"/>
+                    <field name="discount"/>
                     <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id), ('parent_id', '!=', False)]" name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
                     <field name="company_id" groups="base.group_multi_company" readonly="1"/>
                     <separator string="Notes" colspan="4"/>
@@ -153,7 +153,7 @@
                         <button name="%(action_account_change_currency)d" type="action" icon="terp-stock_effects-object-colorize" string="Change" attrs="{'invisible':[('state','!=','draft')]}" groups="account.group_account_user"/>
                         <newline/>
                         <field string="Supplier" name="partner_id" on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank_id,company_id)" context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}" options='{"quick_create": false}' domain="[('supplier', '=', True)]"/>
-                        <field name="fiscal_position" groups="base.group_extended" widget="selection"/>
+                        <field name="fiscal_position" widget="selection"/>
                         <newline/>
                         <field name="date_invoice"/>
                         <field name="period_id" domain="[('state', '=', 'draft')]" groups="account.group_account_user" widget="selection"/>
@@ -221,24 +221,24 @@
                             <field name="payment_term" widget="selection"/>
                             <field name="name"/>
                             <newline/>
-                            <field name="origin" groups="base.group_extended"/>
+                            <field name="origin"/>
                             <field name="user_id"/>
                             <field name="move_id" groups="account.group_account_user"/>
                             <separator colspan="4" string="Additional Information"/>
                             <field colspan="4" name="comment" nolabel="1"/>
                         </page>
-                        <page string="Payments" groups="base.group_extended">
+                        <page string="Payments">
                             <field name="payment_ids" colspan="4" nolabel="1" >
                                 <tree string="Payments">
                                     <field name="date" string="Payment Date"/>
                                     <field name="move_id"/>
                                     <field name="ref"/>
-                                    <field name="name" groups="base.group_extended"/>
+                                    <field name="name"/>
                                     <field name="journal_id"/>
                                     <field name="debit"/>
                                     <field name="credit"/>
-                                    <field name="amount_currency" groups="base.group_extended"/>
-                                    <field name="currency_id" groups="base.group_extended"/>
+                                    <field name="amount_currency"/>
+                                    <field name="currency_id"/>
                                 </tree>
                             </field>
                         </page>
@@ -262,14 +262,14 @@
                     <button name="%(action_account_change_currency)d" type="action" icon="terp-stock_effects-object-colorize" string="Change" attrs="{'invisible':[('state','!=','draft')]}" groups="account.group_account_user"/>
                     <newline/>
                     <field string="Customer" name="partner_id" on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank_id,company_id)" groups="base.group_user" context="{'search_default_customer': 1}" options='{"quick_create": false}' domain="[('customer', '=', True)]"/>
-                    <field name="fiscal_position" groups="base.group_extended" widget="selection" options='{"quick_create": false}'/>
+                    <field name="fiscal_position" widget="selection" options='{"quick_create": false}'/>
                     <newline/>
                     <field name="date_invoice"/>
                     <field name="period_id" domain="[('state', '=', 'draft')]" groups="account.group_account_user" widget="selection"/>
                     <field name="payment_term" widget="selection"/>
                     <newline/>
                     <field domain="[('company_id', '=', company_id),('type','=', 'receivable')]" name="account_id" groups="account.group_account_user"/>
-                    <field name="name" groups="base.group_extended"/>
+                    <field name="name"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Invoice">
@@ -317,8 +317,7 @@
                             <field name="date_due"/>
                             <field name="user_id"/>
                             <newline/>
-                            <field domain="[('partner_id.ref_companies', 'in', [company_id])]" name="partner_bank_id"
-                                groups="base.group_extended"/>
+                            <field domain="[('partner_id.ref_companies', 'in', [company_id])]" name="partner_bank_id"/>
                             <field name="origin"/>
                             <field name="move_id" groups="account.group_account_user"/>
                             <separator colspan="4" string="Additional Information"/>
