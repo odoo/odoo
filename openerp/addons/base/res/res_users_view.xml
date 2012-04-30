@@ -66,60 +66,65 @@
         </record>
         <menuitem action="action_res_groups" id="menu_action_res_groups" parent="base.menu_users" groups="base.group_no_one"/>
 
+
         <!-- res.users -->
         <record id="view_users_form" model="ir.ui.view">
             <field name="name">res.users.form</field>
             <field name="model">res.users</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Users">
-                    <group colspan="4" col="6">
-                        <field name="name" select="1"/>
-                        <field name="login" select="1"/>
+                <form string="Users" layout="manual">
+                    <sheet layout="auto">
                         <field name="id" invisible="1"/>
-                        <field name="new_password" password="True" attrs="{'required': [('id','=',False)]}"/>
-                        <field name="active"/>
-                    </group>
-                    <notebook colspan="4">
-                        <page string="User">
-                            <group colspan="4" col="7">
-                                <!-- Second nested group to avoid misalignment with email prefs groups
-                                    in simplified view -->
-                                <group colspan="7" col="7">
-                                    <group col="2" colspan="1" name="avatar">
-                                        <separator string="Avatar" colspan="2"/>
-                                        <field name="avatar" widget='image' nolabel="1" colspan="2" on_change="onchange_avatar(avatar)"/>
-                                    </group>
-                                    <group col="2" colspan="2" name="preferences">
+                        <group colspan="4" col="4" class="oe_form_group_label_border">
+                            <field name="id" invisible="1"/>
+                            <field name="name" select="1"/>
+                            <field name="login" select="1"/>
+                            <field name="new_password" password="True" attrs="{'required': [('id','=',False)]}"/>
+                            <field name="active"/>
+                        </group>
+                        <notebook colspan="4">
+                            <page string="User">
+                                <group col="2" colspan="3" width="80%%">
+                                    <group col="2" name="preferences" class="oe_form_group_label_border">
                                         <separator string="Preferences" colspan="2"/>
                                         <field name="context_lang"/>
                                         <field name="context_tz"/>
                                         <field name="menu_tips"/>
                                     </group>
-                                    <group name="default_filters" colspan="2" col="2">
-                                        <separator string="Default Filters" colspan="2"/>
-                                        <field name="company_id" required="1" context="{'user_preference': 0}" groups="base.group_multi_company"/>
-                                    </group>
-                                    <group colspan="2" col="2" groups="base.group_no_one">
-                                        <separator string="Action" colspan="2"/>
-                                        <field name="action_id"/>
-                                        <field domain="[('usage','=','menu')]" name="menu_id" required="True"/>
+                                    <group col="1">
+                                        <group col="2" groups="base.group_no_one" class="oe_form_group_label_border">
+                                            <separator string="Action" colspan="2"/>
+                                            <field name="action_id"/>
+                                            <field domain="[('usage','=','menu')]" name="menu_id" required="True"/>
+                                        </group>
+                                        <group name="default_filters" col="2" class="oe_form_group_label_border">
+                                            <separator string="Default Filters" colspan="2"/>
+                                            <field name="company_id" required="1" context="{'user_preference': 0}" groups="base.group_multi_company"/>
+                                        </group>
                                     </group>
                                 </group>
-                                <group colspan="7" col="2">
+                                <group col="1" name="avatar" class="oe_form_group_label_border">
+                                    <separator string="Avatar"/>
+                                    <field name="avatar" widget='image' nolabel="1" on_change="onchange_avatar(avatar)"/>
+                                </group>
+
+                                <group colspan="4" col="2" class="oe_form_group_label_border">
                                     <separator string="Email Preferences" colspan="2"/>
                                     <field name="user_email" widget="email"/>
                                     <field name="signature"/>
                                 </group>
-                            </group>
-                        </page>
-                        <page string="Access Rights">
-                            <field nolabel="1" name="groups_id"/>
-                        </page>
-                        <page string="Allowed Companies" groups="base.group_multi_company">
-                            <field colspan="4" nolabel="1" name="company_ids" select="1"/>
-                        </page>
-                    </notebook>
+                            </page>
+                            <page string="Access Rights">
+                                <group colspan="4" col="4" class="oe_form_group_label_border">
+                                    <field nolabel="1" name="groups_id"/>
+                                </group>
+                            </page>
+                            <page string="Allowed Companies" groups="base.group_multi_company">
+                                <field colspan="4" nolabel="1" name="company_ids" select="1"/>
+                            </page>
+                        </notebook>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -186,21 +191,34 @@
             <field name="type">form</field>
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
-                <form string="Users">
-                    <field name="avatar" widget='image' nolabel="1" colspan="2" on_change="onchange_avatar(avatar)" readonly="0"/>
-                    <group colspan="2" col="2">
-                        <field name="name" readonly="1"/>
-                        <field name="context_lang" readonly="0"/>
-                        <field name="context_tz" readonly="0"/>
-                        <field name="menu_tips" readonly="0" groups="base.group_no_one"/>
+                <form string="Users" layout="auto">
+                    <div class="oe_form_title" colspan="4">
+                        <field name="name" readonly="1" nolabel="1"/>
+                        (<field name="login" readonly="1" nolabel="1"/>)
+                    </div>
+                    <newline/>
+                    <group col="2" colspan="3">
+                        <group col="2" colspan="2" name="preferences" class="oe_form_group_label_border">
+                            <separator string="Preferences" colspan="2"/>
+                            <field name="context_lang" readonly="0"/>
+                            <field name="context_tz" readonly="0"/>
+                            <field name="menu_tips" readonly="0" groups="base.group_no_one"/>
+                        </group>
+                        <group name="default_filters" colspan="2" col="2" class="oe_form_group_label_border">
+                            <separator string="Default Filters" colspan="2"/>
+                            <field name="company_id" widget="selection" readonly="0"
+                                groups="base.group_multi_company" on_change="on_change_company_id(company_id)"/>
+                        </group>
                     </group>
-                    <group name="default_filters" colspan="4" col="2">
-                        <separator string="Default Filters" colspan="2"/>
-                        <field name="company_id" widget="selection" readonly="0" groups="base.group_multi_company" on_change="on_change_company_id(company_id)"/>
+                    <group col="1">
+                        <separator string="Avatar"/>
+                        <field name="avatar" widget='image' nolabel="1" on_change="onchange_avatar(avatar)" readonly="0"/>
                     </group>
-                    <separator string="Email Preferences" colspan="4"/>
-                    <field colspan="4" name="user_email" widget="email" readonly="0"/>
-                    <field colspan="4" name="signature" readonly="0"/>
+                    <group col="2" colspan="4" class="oe_form_group_label_border">
+                        <separator string="Email Preferences" colspan="2"/>
+                        <field name="user_email" widget="email" readonly="0"/>
+                        <field name="signature" readonly="0"/>
+                    </group>
                 </form>
             </field>
         </record>
