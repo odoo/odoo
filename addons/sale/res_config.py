@@ -174,6 +174,8 @@ class sale_configuration(osv.osv_memory):
 class account_config_settings(osv.osv_memory):
     _inherit = 'account.config.settings'
     _columns = {
+        'module_sale_analytic_plans': fields.boolean('Several Analytic Accounts on Sales',
+            help="""This allows install module sale_analytic_plans."""),                 
         'group_analytic_account_for_sales': fields.boolean('Analytic Accounting for Sales',
             implied_group='sale.group_analytic_accounting',
             help="Allows you to specify an analytic account on sale orders."),

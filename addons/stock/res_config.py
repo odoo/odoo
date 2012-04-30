@@ -26,7 +26,7 @@ class stock_config_settings(osv.osv_memory):
     _inherit = 'res.config.settings'
 
     _columns = {
-        'module_claim_from_delivery': fields.boolean("Track Claims from Delivery",
+        'module_claim_from_delivery': fields.boolean("Allows Claims on Delivery Orders",
             help="""Adds a Claim link to the delivery order.
                 This installs the module claim_from_delivery."""),
         'module_stock_invoice_directly': fields.boolean("Invoice Directly from the Picking",

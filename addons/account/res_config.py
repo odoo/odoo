@@ -101,9 +101,6 @@ class account_config_settings(osv.osv_memory):
         'module_account_followup': fields.boolean('Manage Customer Payment Follow-Ups',
             help="""This allows to automate letters for unpaid invoices, with multi-level recalls.
                 This installs the module account_followup."""),
-        'module_account_analytic_plans': fields.boolean('Support Multiple Analytic Plans',
-            help="""This allows to use several analytic plans, according to the general journal.
-                This installs the module account_analytic_plans."""),
         'module_account_invoice_layout': fields.boolean('Allow notes and subtotals',
             help="""This provides some features to improve the layout of invoices.
                 It gives you the possibility to:
@@ -115,7 +112,6 @@ class account_config_settings(osv.osv_memory):
         'group_proforma_invoices': fields.boolean('Allow Pro-forma Invoices',
             implied_group='account.group_proforma_invoices',
             help="Allows you to put invoices in pro-forma state."),
-
         'default_sale_tax': fields.many2one('account.tax', 'Default Sale Tax'),
         'default_purchase_tax': fields.many2one('account.tax', 'Default Purchase Tax'),
     }
