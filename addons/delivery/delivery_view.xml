@@ -44,7 +44,7 @@
                         <form string="Delivery grids">
                              <field name="name" select="1"/>
                              <field name="active" select="1"/>
-                             <field name="sequence" groups="base.group_extended" select="1"/>
+                             <field name="sequence" select="1"/>
                              <notebook colspan="4">
                                <page string="Grid definition">
                                   <field colspan="4" name="line_ids" nolabel="1" select="1"/>
@@ -97,7 +97,7 @@
                     <field name="name" select="1"/>
                     <field name="active" select="1"/>
                     <field name="carrier_id" select="1"/>
-                    <field name="sequence" groups="base.group_extended" select="1"/>
+                    <field name="sequence" select="1"/>
                     <notebook colspan="4">
                         <page string="Grid definition">
                             <field colspan="4" name="line_ids" nolabel="1" select="1"/>
@@ -139,7 +139,7 @@
                     </group>
                     <newline/>
                     <field name="list_price"/>
-                    <field name="standard_price" groups="base.group_extended"/>
+                    <field name="standard_price"/>
                     <field name="price_type"/>
                     <field name="variable_factor" attrs="{'invisible':[('price_type','=','fixed')]}"/>
                 </form>
@@ -156,7 +156,7 @@
                     <field name="operator"/>
                     <field name="max_value" nolabel="1"/>
                     <field name="list_price"/>
-                    <field name="standard_price" groups="base.group_extended"/>
+                    <field name="standard_price"/>
                 </tree>
             </field>
         </record>
@@ -182,8 +182,8 @@
             <field name="arch" type="xml">
                 <field name="partner_id" position="after">
                     <field name="carrier_id"/>
-                    <field name="carrier_tracking_ref" groups="base.group_extended"/>
-                    <field name="number_of_packages" groups="base.group_extended"/>
+                    <field name="carrier_tracking_ref"/>
+                    <field name="number_of_packages"/>
                     <field name="weight"/>
                     <field name="weight_net"/>
                 </field>
@@ -247,7 +247,7 @@
             <field name="model">stock.picking</field>
             <field name="inherit_id" ref="stock.view_picking_in_form"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page/field[@name='move_lines']/tree/field[@name='product_uom']" position="after">
+                <xpath expr="/form/sheet/notebook/page/field[@name='move_lines']/tree/field[@name='product_uom']" position="after">
                     <field name="weight"/>
                     <field name="weight_net"/>
                 </xpath>
@@ -260,7 +260,7 @@
             <field name="model">stock.picking</field>
             <field name="inherit_id" ref="stock.view_picking_form"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page/field[@name='move_lines']/tree/field[@name='product_uom']" position="after">
+                <xpath expr="/form/sheet/notebook/page/field[@name='move_lines']/tree/field[@name='product_uom']" position="after">
                     <field name="weight"/>
                     <field name="weight_net"/>
                 </xpath>
@@ -274,7 +274,7 @@
             <field name="inherit_id" ref="stock.view_move_form"/>
             <field name="arch" type="xml">
                 <group colspan="2" col="2" position="after">
-                    <group colspan="2" col="2" groups="base.group_extended">
+                    <group colspan="2" col="2">
                         <separator string="Weights" colspan="2"/>
                         <field name="weight"/>
                         <field name="weight_net"/>
@@ -290,7 +290,7 @@
             <field name="inherit_id" ref="stock.view_move_form_reception_picking"/>
             <field name="arch" type="xml">
                 <group colspan="2" col="2" position="after">
-                    <group colspan="2" col="2" groups="base.group_extended">
+                    <group colspan="2" col="2">
                         <separator string="Weights" colspan="2"/>
                         <field name="weight"/>
                         <field name="weight_net"/>

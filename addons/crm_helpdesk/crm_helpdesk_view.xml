@@ -3,7 +3,7 @@
     <data>
        <!-- Helpdesk Support Categories Configuration Menu-->
        <menuitem id="menu_config_helpdesk" name="Helpdesk"
-        groups="base.group_extended"
+        groups="base.group_no_one"
         parent="base.menu_base_config" sequence="60" />
 
         <!-- Helpdesk Support Categories Form View -->
@@ -28,8 +28,20 @@
             <field name="model">crm.helpdesk</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Helpdesk Support">
-                    <group colspan="4" col="7">
+                <form layout="manual">
+                <div class="oe_form_topbar">
+                    <button name="case_close" states="open,pending" string="Close" type="object" icon="gtk-jump-to" />
+                    <button name="case_open" states="draft,pending" string="Open" type="object" icon="gtk-go-forward" />
+                    <button name="case_pending" states="draft,open" string="Pending" type="object" icon="gtk-media-pause" />
+                    <button name="case_reset" states="done,cancel" string="Reset to Draft" type="object" icon="gtk-convert" />
+                    <button name="case_escalate" states="open,draft,pending" string="Escalate" type="object" icon="gtk-go-up" />
+                    <button name="case_cancel" states="draft,open,pending" string="Cancel" type="object" icon="gtk-cancel" />
+                    <div class="oe_right">
+                        <field name="state" select="1" nolabel="1" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
+                    </div>
+                </div>
+                <sheet string="Helpdesk Support" layout="auto">
+                    <group colspan="4" col="7" class="oe_form_header">
                         <field name="name" select="1" string="Query"/>
                         <field name="section_id" widget="selection"/>
                         <field name="user_id" select="1"/>
@@ -64,32 +76,8 @@
 
                             <separator colspan="4" string="Notes"/>
                             <field name="description" colspan="4" nolabel="1" />
-                            <separator colspan="4"/>
-                            <group col="8" colspan="4">
-                                <field name="state" select="1" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
-                                <button name="case_cancel"
-                                    states="draft,open,pending" string="Cancel"
-                                    type="object" icon="gtk-cancel" />
-                                <button name="case_open"
-                                    states="draft,pending" string="Open"
-                                    type="object" icon="gtk-go-forward" />
-                                <button name="case_pending"
-                                    states="draft,open" string="Pending"
-                                    type="object" icon="gtk-media-pause" />
-                                <button name="case_escalate"
-                                    states="open,draft,pending"
-                                    string="Escalate" type="object"
-                                    icon="gtk-go-up" />
-                                <button name="case_close"
-                                    states="open,draft,pending" string="Close"
-                                    type="object" icon="gtk-jump-to" />
-                                <button name="case_reset"
-                                    states="done,cancel"
-                                    string="Reset to Draft" type="object"
-                                    icon="gtk-convert" />
-                            </group>
                         </page>
-                        <page string="Communication &amp; History" groups="base.group_extended">
+                        <page string="Communication &amp; History">
                             <group colspan="4">
                                 <field colspan="4" name="email_cc" string="Global CC" widget="char"/>
                             </group>
@@ -112,7 +100,7 @@
                                 name="%(mail.action_email_compose_message_wizard)d"
                                 icon="terp-mail-message-new" type="action"/>
                         </page>
-                        <page string="Extra Info" groups="base.group_extended">
+                        <page string="Extra Info">
                             <group colspan="2" col="2" groups="base.group_no_one">
                                 <separator colspan="4" string="Dates"/>
                                 <field name="create_date"/>
@@ -136,6 +124,7 @@
                             </group>
                         </page>
                     </notebook>
+                </sheet>
                 </form>
             </field>
         </record>
@@ -167,7 +156,6 @@
                         states="draft,open" type="object"
                         icon="gtk-media-pause" />
                     <button name="case_escalate" string="Escalate"
-                        groups="base.group_extended"
                         states="open,draft,pending" type="object"
                         icon="gtk-go-up" />
                     <button name="case_close" string="Done"
@@ -232,7 +220,7 @@
                     <field name="partner_id" />
                     <field name="user_id" widget="selection"/>
                     <field name="section_id" widget="selection" string="Sales Team">
-                        <filter icon="terp-personal+" groups="base.group_extended"
+                        <filter icon="terp-personal+"
                             domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                             help="My Sales Team(s)" />
                     </field>

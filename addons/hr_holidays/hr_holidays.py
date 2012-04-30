@@ -308,7 +308,7 @@ class hr_holidays(osv.osv):
                     wf_service.trg_validate(uid, 'hr.holidays', leave_id, 'validate', cr)
                     wf_service.trg_validate(uid, 'hr.holidays', leave_id, 'second_validate', cr)
         if holiday_ids:
-            self.holidays_valid2_notificate(self, cr, uid, [holiday_ids], context=context)
+            self.holidays_valid2_notificate(cr, uid, holiday_ids, context=context)
             self.write(cr, uid, holiday_ids, {'manager_id2': manager})
         return True
 
@@ -351,7 +351,7 @@ class hr_holidays(osv.osv):
                 if record.employee_id and not record.holiday_status_id.limit:
                     leaves_rest = holi_status_obj.get_days( cr, uid, [record.holiday_status_id.id], record.employee_id.id, False)[record.holiday_status_id.id]['remaining_leaves']
                     if leaves_rest < record.number_of_days_temp:
-                        raise osv.except_osv(_('Warning!'),_('You cannot validate leaves for employee %s: too few remaining days (%s).') % (record.employee_id.name, leaves_rest))
+                        raise osv.except_osv(_('Warning!'), _('There are not enough %s allocated for employee %s; please create an allocation request for this leave type.') % (record.holiday_status_id.name, record.employee_id.name))
         return True
     
     # -----------------------------

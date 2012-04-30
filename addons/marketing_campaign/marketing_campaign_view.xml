@@ -15,7 +15,17 @@
         <field name="model">marketing.campaign</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Campaign">
+            <form layout="manual">
+            <div class="oe_form_topbar">
+                <button name="state_running_set" string="Run" states="draft" icon="gtk-apply"/>
+                <button name="state_done_set" string="Done" states="running" icon="terp-dialog-close"/>
+                <button name="state_draft_set" string="Set to Draft" states="done,cancelled" icon="gtk-convert"/>
+                <button name="state_cancel_set" string="Cancel" states="running" icon="terp-gtk-stop"/>
+                <div class="oe_right">
+                    <field name="state" readonly="1" widget="statusbar" nolabel="1" statusbar_visible="draft,running,done"/>
+                </div>
+            </div>
+            <sheet string="Campaign" layout="auto">
                 <group colspan="4" col="6">
                     <group colspan="2" col="2">
                         <separator string="Campaign" colspan="2" />
@@ -34,14 +44,7 @@
                     </group>
                 </group>
                 <field name="activity_ids" nolabel = "1" colspan="4" context="{'default_object_id': object_id, 'default_campaign_id': active_id}" />
-                <separator string="" colspan="4" />
-                <group col="10" colspan="4">
-                    <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,running,done"/>
-                    <button name="state_cancel_set" string="Cancel" states="running" icon="terp-gtk-stop"/>
-                    <button name="state_running_set" string="Run" states="draft" icon="gtk-apply"/>
-                    <button name="state_draft_set" string="Set to Draft" states="done,cancelled" icon="gtk-convert"/>
-                    <button name="state_done_set" string="Done" states="running" icon="terp-dialog-close"/>
-                </group>
+              </sheet>
               </form>
         </field>
     </record>
@@ -135,7 +138,17 @@
         <field name="model">marketing.campaign.segment</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Segments">
+            <form layout="manual">
+            <div class="oe_form_topbar">
+                <button name="state_running_set" string="Run" states="draft" icon="gtk-apply"/>
+                <button name="state_done_set" string="Close" states="running" icon="terp-dialog-close"/>
+                <button name="state_draft_set" string="Set to Draft" states="done,cancelled" icon="gtk-convert"/>
+                <button name="state_cancel_set" string="Cancel" states="running" icon="terp-gtk-stop"/>
+                <div class="oe_right">
+                    <field name="state" readonly="1" nolabel="1" widget="statusbar" statusbar_visible="draft,running,done"/>
+                </div>
+            </div>
+            <sheet string="Segments" layout="auto">
                 <group colspan="2" col="2">
                     <separator string="Segment" colspan="4"/>
                     <field name="name"/>
@@ -159,14 +172,7 @@
                     <field name="date_run" readonly="1"/>
                     <field name="date_done" readonly="1"/>
                 </group>
-                <separator string="" colspan="4"/>
-                <group col="6" colspan="4">
-                    <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,running,done"/>
-                    <button name="state_cancel_set" string="Cancel" states="running" icon="terp-gtk-stop"/>
-                    <button name="state_running_set" string="Run" states="draft" icon="gtk-apply"/>
-                    <button name="state_done_set" string="Close" states="running" icon="terp-dialog-close"/>
-                    <button name="state_draft_set" string="Set to Draft" states="done,cancelled" icon="gtk-convert"/>
-                </group>
+            </sheet>
             </form>
         </field>
     </record>
@@ -246,7 +252,7 @@
                 <group colspan="2" col="2">
                     <separator string="Activity" colspan="2"/>
                     <field name="name" select="1"/>
-                    <field name="signal" groups="base.group_extended"/>
+                    <field name="signal" groups="base.group_no_one"/>
                     <field name="start"/>
                     <field name="object_id" invisible="1"/>
                     <field name="campaign_id" invisible="1"/>
@@ -356,7 +362,16 @@
         <field name="model">marketing.campaign.workitem</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Marketing Campaign Activities">
+            <form layout="manual">
+            <div class="oe_form_topbar">
+                <button string="Process" states="todo" name="process" type="object" icon="terp-gtk-go-back-rtl"/>
+                <button string="Reset" states="exception,cancelled" name="button_draft" type="object" icon="gtk-undo"/>
+                <button string="Cancel" states="todo,exception" name="button_cancel" type="object" icon="terp-gtk-stop"/>
+                <div class="oe_right">
+                    <field name="state" readonly="True" nolabel="1" widget="statusbar" statusbar_visible="todo,done" statusbar_colors='{"exception":"red"}'/>
+                </div>
+            </div>
+            <sheet string="Marketing Campaign Activities" layout="auto">
                 <group colspan="4" col="6">
                     <group colspan="2" col="2">
                         <separator string="Campaign Step" colspan="2"/>
@@ -380,13 +395,7 @@
                     <separator string="Error Message" colspan="4"/>
                     <field name="error_msg" nolabel="1" colspan="4"/>
                 </group>
-                <separator string="" colspan="4"/>
-                <group colspan="4" col="11">
-                    <field name="state" readonly="True" widget="statusbar" statusbar_visible="todo,done" statusbar_colors='{"exception":"red"}'/>
-                    <button string="Cancel" states="todo,exception" name="button_cancel" type="object" icon="terp-gtk-stop"/>
-                    <button string="Reset" states="exception,cancelled" name="button_draft" type="object" icon="gtk-undo"/>
-                    <button string="Process" states="todo" name="process" type="object" icon="terp-gtk-go-back-rtl"/>
-                </group>
+            </sheet>
             </form>
         </field>
     </record>
