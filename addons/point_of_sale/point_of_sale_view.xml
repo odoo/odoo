@@ -18,6 +18,7 @@
             <field name="arch" type="xml">
                 <form string="PoS Orders">
                     <group col="7" colspan="4">
+                        <field name="session_id" />
                         <field name="name"/>
                         <field name="date_order"/>
                         <field name="partner_id" on_change="onchange_partner_id(partner_id)" context="{'search_default_customer':1}" attrs="{'readonly': [('state','=','invoiced')]}"/>
@@ -871,12 +872,6 @@
                                 </tree>
                             </field>
                         </page>
-<!--                        
-                        <page string="Others">
-                        </page>
-                        <page string="Nothing">
-                        </page>
--->                        
                     </notebook>
 
                     <group colspan="4" col="5">

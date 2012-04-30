@@ -152,7 +152,7 @@ class pos_session(osv.osv):
     POS_SESSION_STATE = [('new', 'New'),('opened', 'Opened'),('closed', 'Closed'),('posted', 'Posted')]
 
     _columns = {
-        'config_id' : fields.many2one('pos.config', 'PoS', required=True, select=1),
+        'config_id' : fields.many2one('pos.config', 'PoS', required=True, select=1, domain="[('state', '=', 'active')]"),
 
         'name' : fields.char('Session Sequence', size=32, required=True, select=1, readonly=1),
         'user_id' : fields.many2one('res.users', 'User', required=True, select=1),
@@ -179,9 +179,6 @@ class pos_session(osv.osv):
     ]
 
     def _create_cash_register(self, cr, uid, pos_config, name, context=None):
-        import pdb
-        #pdb.set_trace()
-
         if not pos_config:
             return False
 
@@ -205,7 +202,6 @@ class pos_session(osv.osv):
         return cash_register_id
 
     def create(self, cr, uid, values, context=None):
-
         config_id = values.get('config_id', False) or False
 
         if config_id:
@@ -222,14 +218,18 @@ class pos_session(osv.osv):
 
     def wkf_action_open(self, cr, uid, ids, context=None):
         # si pas de date start_at, je balance une date, sinon on utilise celle de l'utilisateur
-        values = {
-            #'start_at' : time.strftime('%Y-%m-%d %H:%M:%S'),
-            'state' : 'opened',
-        }
-        return self.write(cr, uid, ids, values, context=context)
+        for record in self.browse(cr, uid, ids, context=context):
+            values = {}
+            if not record.start_at:
+                values['start_at'] = time.strftime('%Y-%m-%d %H:%M:%S')
+            values['state'] = 'opened'
+
+            record.write(values, context=context)
+
+        return True
 
     def wkf_action_close(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state' : 'close'}, context=context)
+        return self.write(cr, uid, ids, {'state' : 'close', 'stop_at' : time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
 
     def wkf_action_post(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state' : 'post'}, context=context)
@@ -334,8 +334,7 @@ class pos_order(osv.osv):
         return super(pos_order, self).copy(cr, uid, id, d, context=context)
 
     _columns = {
-        'name': fields.char('Order Ref', size=64, required=True,
-            states={'draft': [('readonly', False)]}, readonly=True),
+        'name': fields.char('Order Ref', size=64, required=True, readonly=True),
         'company_id':fields.many2one('res.company', 'Company', required=True, readonly=True),
         'shop_id': fields.many2one('sale.shop', 'Shop', required=True,
             states={'draft': [('readonly', False)]}, readonly=True),
@@ -350,7 +349,11 @@ class pos_order(osv.osv):
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', required=True, states={'draft': [('readonly', False)]}, readonly=True),
         'partner_id': fields.many2one('res.partner', 'Customer', change_default=True, select=1, states={'draft': [('readonly', False)], 'paid': [('readonly', False)]}),
 
-        'session_id' : fields.many2one('pos.session', 'Session', required=True, select=1),
+        'session_id' : fields.many2one('pos.session', 'Session', 
+                                        select=1,
+                                        domain="[('state', '=', 'opened')]",
+                                        states={'draft' : [('readonly', False)]},
+                                        readonly=True),
 
         'state': fields.selection([('draft', 'New'),
                                    ('cancel', 'Cancelled'),
@@ -377,7 +380,7 @@ class pos_order(osv.osv):
     _defaults = {
         'user_id': lambda self, cr, uid, context: uid,
         'state': 'draft',
-        'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'pos.order'),
+        'name': '/', 
         'date_order': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'nb_print': 0,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
@@ -385,6 +388,10 @@ class pos_order(osv.osv):
         'shop_id': _default_shop,
         'pricelist_id': _default_pricelist,
     }
+
+    def create(self, cr, uid, values, context=None):
+        values['name'] = self.pool.get('ir.sequence').get(cr, uid, 'pos.order')
+        return super(pos_order, self).create(cr, uid, values, context=context)
 
     def test_paid(self, cr, uid, ids, context=None):
         """A Point of Sale is paid when the sum
@@ -453,7 +460,7 @@ class pos_order(osv.osv):
         if not len(ids):
             return False
         for order in self.browse(cr, uid, ids, context=context):
-            if order.state<>'cancel':
+            if order.state != 'cancel':
                 raise osv.except_osv(_('Error!'), _('In order to set to draft a sale, it must be cancelled.'))
         self.write(cr, uid, ids, {'state': 'draft'})
         wf_service = netsvc.LocalService("workflow")
