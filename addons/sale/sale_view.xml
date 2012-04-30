@@ -1,10 +1,6 @@
 <openerp>
     <data>
-        <menuitem icon="terp-partner"
-            id="base.menu_base_partner" name="Sales"
-            sequence="1" groups="base.group_sale_salesman,base.group_sale_manager"/>
-
-        <menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" sequence="9"/>
+        <menuitem icon="terp-partner" id="base.menu_base_partner" name="Sales" sequence="1" groups="base.group_sale_salesman"/>
 
         <record id="view_shop_form" model="ir.ui.view">
             <field name="name">sale.shop</field>

@@ -108,7 +108,6 @@ Creates a dashboard for CRM that includes:
         'process/crm_configuration_process.xml',
 
         'res_partner_view.xml',
-        'board_crm_statistical_view.xml',
         'board_crm_view.xml',
         
         'res_config_view.xml',
