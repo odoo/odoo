@@ -28,7 +28,7 @@ class mrp_config_settings(osv.osv_memory):
     _inherit = 'res.config.settings'
 
     _columns = {
-        'module_stock_planning': fields.boolean('Master Production Schedule',
+        'module_stock_planning': fields.boolean('Master Manufacturing Order Schedule',
             help ="""This allows to create a manual procurement plan apart of the normal MRP scheduling,
                 which works automatically based on minimum stock rules.
                 This installs the module stock_planning."""),
@@ -44,7 +44,7 @@ class mrp_config_settings(osv.osv_memory):
         'module_mrp_operations': fields.boolean("Detailed Planning of Work Orders",
             help="""This allows to add state, date_start,date_stop in production order operation lines (in the "Work Centers" tab).
                 This installs the module mrp_operations."""),
-        'module_mrp_subproduct': fields.boolean("Produce Several  Product from One Production",
+        'module_mrp_subproduct': fields.boolean("Produce Several  Product from One Manufacturing Order",
             help="""You can configure sub-products in the bill of material.
                 Without this module: A + B + C -> D.
                 With this module: A + B + C -> D + E.

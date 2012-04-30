@@ -66,6 +66,7 @@ class stock_picking(osv.osv):
                  }),
         'carrier_tracking_ref': fields.char('Carrier Tracking Ref', size=32),
         'number_of_packages': fields.integer('Number of Packages'),
+        'decimal_precision': fields.many2one('decimal.precision', 'Decimal Precision on Stock Weight'),
         }
 
     def _prepare_shipping_invoice_line(self, cr, uid, picking, invoice, context=None):
