@@ -8,68 +8,68 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2012-04-13 02:13+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2012-04-27 18:21+0000\n"
+"Last-Translator: Akira Hiyama <Unknown>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-04-13 14:56+0000\n"
-"X-Generator: Launchpad (build 15070)\n"
+"X-Launchpad-Export-Date: 2012-04-28 05:20+0000\n"
+"X-Generator: Launchpad (build 15149)\n"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,revenue_per_hour:0
 msgid "Revenue per Time (real)"
-msgstr ""
+msgstr "時間当たりの収入（実質）"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_ca:0
 msgid "Computed using the formula: Max Invoice Price - Invoiced Amount."
-msgstr "式を使って計算：最大請求価格 - 請求された金額"
+msgstr "式を使った計算：最大請求価格 - 請求金額"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_date:0
 msgid "Date of the latest work done on this account."
-msgstr ""
+msgstr "このアカウントの最後の作業完了日"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid ""
 "The contracts to be renewed because the deadline is passed or the working "
 "hours are higher than the allocated hours"
-msgstr ""
+msgstr "契約は最終期限を過ぎたか、または労働時間が割り当て時間を超えたため更新されます。"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Pending contracts to renew with your customer"
-msgstr ""
+msgstr "保留中の契約は顧客により更新されます。"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_qtt_non_invoiced:0
 msgid ""
 "Number of time (hours/days) (from journal of type 'general') that can be "
 "invoiced if you invoice based on analytic account."
-msgstr ""
+msgstr "請求書が分析アカウントに基づく場合、時間数（時間 / 日）（タイプが\"一般\"の仕訳帳から）が請求されます。"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Analytic Accounts with a past deadline in one month."
-msgstr ""
+msgstr "１ヶ月以内に期限を迎える分析アカウント"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Group By..."
-msgstr ""
+msgstr "グループ化…"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "End Date"
-msgstr ""
+msgstr "終了日"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Create Invoice"
-msgstr ""
+msgstr "請求書作成"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_invoice_date:0
@@ -79,24 +79,24 @@ msgstr "前回請求日"
 #. module: account_analytic_analysis
 #: help:account.analytic.account,theorical_margin:0
 msgid "Computed using the formula: Theorial Revenue - Total Costs"
-msgstr "式を使って計算：理論的な収入 - 総コスト"
+msgstr "式を使った計算：理論的な収入 - 総コスト"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_quantity:0
 msgid ""
 "Number of time you spent on the analytic account (from timesheet). It "
 "computes quantities on all journal of type 'general'."
-msgstr ""
+msgstr "分析アカウントに費やされた時間数（勤務表から）です。タイプが\"一般\"の全ての仕訳帳の数量を計算します。"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Contracts in progress"
-msgstr ""
+msgstr "進行中の契約"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,is_overdue_quantity:0
 msgid "Overdue Quantity"
-msgstr ""
+msgstr "遅延数量"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_account_analytic_overdue
@@ -108,6 +108,9 @@ msgid ""
 "pending accounts and reopen or close the according to the negotiation with "
 "the customer."
 msgstr ""
+"最終期限を過ぎたか、作業時間が割り当てた時間を超えたため、更新される契約があります。OpenERPはタイムシートを記録するときに警告を起こすために、自動的"
+"に分析アカウントを保留状態に設定します。セールスマンは全ての保留中のアカウントをレビューして、再開するか、顧客と交渉することによって閉じるかしなければなり"
+"ません。"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_theorical:0
@@ -117,7 +120,7 @@ msgstr "理論的な収入"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_non_invoiced:0
 msgid "Uninvoiced Time"
-msgstr ""
+msgstr "未請求時間"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_invoiced_date:0
@@ -129,7 +132,7 @@ msgstr "コストからの請求書である場合、これは請求された最
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "To Renew"
-msgstr ""
+msgstr "更新"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_date:0
@@ -139,24 +142,24 @@ msgstr "最後の作業 / コストの日付"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_invoiced:0
 msgid "Invoiced Time"
-msgstr ""
+msgstr "請求時間"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid ""
 "A contract in OpenERP is an analytic account having a partner set on it."
-msgstr ""
+msgstr "OpenERpの契約はその上にパートナのセットを持つ分析アカウントです。"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,remaining_hours:0
 msgid "Remaining Time"
-msgstr ""
+msgstr "残り時間"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_overdue
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_overdue
 msgid "Contracts to Renew"
-msgstr ""
+msgstr "更新する契約"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,theorical_margin:0
@@ -166,7 +169,7 @@ msgstr "理論上のマージン"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid " +1 Month"
-msgstr ""
+msgstr " +1 月"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_theorical:0
@@ -179,7 +182,7 @@ msgstr "全てのそれらのコストが価格表によって提供される通
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Pending"
-msgstr ""
+msgstr "保留"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_to_invoice:0
@@ -189,12 +192,12 @@ msgstr "未請求金額"
 #. module: account_analytic_analysis
 #: help:account.analytic.account,real_margin:0
 msgid "Computed using the formula: Invoiced Amount - Total Costs."
-msgstr ""
+msgstr "式を使った計算：請求アカウント - 合計コスト"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Parent"
-msgstr ""
+msgstr "親"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,user_ids:0
@@ -205,27 +208,27 @@ msgstr "ユーザ"
 #. module: account_analytic_analysis
 #: help:account.analytic.account,real_margin_rate:0
 msgid "Computes using the formula: (Real Margin / Total Costs) * 100."
-msgstr ""
+msgstr "公式による計算：（実マージン / 合計コスト） * 100"
 
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_user
 msgid "Hours Summary by User"
-msgstr ""
+msgstr "ユーザごとの時間合計"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_invoiced:0
 msgid "Invoiced Amount"
-msgstr ""
+msgstr "請求金額"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_invoiced_date:0
 msgid "Date of Last Invoiced Cost"
-msgstr ""
+msgstr "最後の請求コストの日"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Contract"
-msgstr ""
+msgstr "契約"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin_rate:0
@@ -235,51 +238,51 @@ msgstr "実マージンレート（%）"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin:0
 msgid "Real Margin"
-msgstr ""
+msgstr "実マージン"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_invoiced:0
 msgid "Total customer invoiced amount for this account."
-msgstr ""
+msgstr "このアカウントに対する顧客請求金額の合計"
 
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_month
 msgid "Hours summary by month"
-msgstr ""
+msgstr "月別時間数合計"
 
 #. module: account_analytic_analysis
 #: constraint:account.analytic.account:0
 msgid "Error! You can not create recursive analytic accounts."
-msgstr ""
+msgstr "エラー。反復した分析アカウントを作ることはできません"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,remaining_ca:0
 msgid "Remaining Revenue"
-msgstr ""
+msgstr "残りの収入"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_hours:0
 msgid "Computed using the formula: Maximum Time - Total Time"
-msgstr ""
+msgstr "式を使った計算：最大時間 - 合計時間"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_qtt_invoiced:0
 msgid ""
 "Number of time (hours/days) that can be invoiced plus those that already "
 "have been invoiced."
-msgstr ""
+msgstr "請求可能に加えて既に請求された時間数（時間 / 日）"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_to_invoice:0
 msgid ""
 "If invoice from analytic account, the remaining amount you can invoice to "
 "the customer based on the total costs."
-msgstr ""
+msgstr "分析アカウントからの請求書の場合、合計コストに基づいて顧客に請求することができる残った金額です。"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,revenue_per_hour:0
 msgid "Computed using the formula: Invoiced Amount / Total Time"
-msgstr ""
+msgstr "式を使った計算：請求金額 / 合計時間"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,total_cost:0
@@ -290,7 +293,7 @@ msgstr "コスト合計"
 #: field:account.analytic.account,month_ids:0
 #: field:account_analytic_analysis.summary.month,month:0
 msgid "Month"
-msgstr ""
+msgstr "月"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -298,55 +301,55 @@ msgstr ""
 #: field:account_analytic_analysis.summary.user,account_id:0
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_account
 msgid "Analytic Account"
-msgstr ""
+msgstr "分析アカウント"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_overdue_all
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_overdue_all
 msgid "Contracts"
-msgstr ""
+msgstr "契約"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Manager"
-msgstr ""
+msgstr "マネジャ"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_hr_tree_invoiced_all
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_action_hr_tree_invoiced_all
 msgid "All Uninvoiced Entries"
-msgstr ""
+msgstr "全ての未請求エントリー"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_invoice_date:0
 msgid "If invoice from the costs, this is the date of the latest invoiced."
-msgstr ""
+msgstr "コストからの請求書の場合、最後に請求された日付です。"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Associated Partner"
-msgstr ""
+msgstr "関連パートナ"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Open"
-msgstr ""
+msgstr "開く"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Contracts that are not assigned to an account manager."
-msgstr ""
+msgstr "アカウントマネジャに割り当てられていない契約"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_quantity:0
 #: field:account_analytic_analysis.summary.month,unit_amount:0
 #: field:account_analytic_analysis.summary.user,unit_amount:0
 msgid "Total Time"
-msgstr ""
+msgstr "合計時間"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,total_cost:0
 msgid ""
 "Total of costs for this account. It includes real costs (from invoices) and "
 "indirect costs, like time spent on timesheets."
-msgstr ""
+msgstr "アカウントのコストの合計。これには実際のコスト（請求書から）と勤務表上で費やされた時間といった間接コストも含まれます。"
