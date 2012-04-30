@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:44+0000\n"
-"PO-Revision-Date: 2012-04-19 14:20+0000\n"
+"PO-Revision-Date: 2012-04-25 11:04+0000\n"
 "Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
 "Language-Team: <>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-04-20 05:30+0000\n"
-"X-Generator: Launchpad (build 15120)\n"
+"X-Launchpad-Export-Date: 2012-04-26 05:18+0000\n"
+"X-Generator: Launchpad (build 15149)\n"
 
 #. module: base
 #: model:res.country,name:base.sh
@@ -1740,6 +1740,43 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Moms-kontroll av företags momsregistreringsnummer\n"
+"==========================================\n"
+"\n"
+"När du har installerat denna modul, kommer inmatade momeregistreringsnummer "
+"för företag\n"
+"att verifieras i de länder inom EU med stöd för detta. Landet härleds från\n"
+"prefixet i momsregistreringsnummret, t.ex. `` BE0477472701 ``\n"
+"kommer att valideras med hjälp av belgiska reglerna.\n"
+"\n"
+"Det finns två olika nivåer av Momsregisteringsnummerkontroller:\n"
+"\n"
+"  * Som standard är en enkel off-line kontroll utförs med hjälp av kända "
+"valideringsregler för landet, oftast en enkel kontrollsiffra. Det är snabbt "
+"och   alltid tillgänglig, men tillåter tal som kanske inte är riktigt "
+"tilldelade,\n"
+"    eller inte längre gäller.\n"
+"  * När \"Moms-kontrollrutan, VIES\" är aktiverat (i konfigurationen av "
+"användarens\n"
+"    företag) kommer momsregistreringsnummer att i stället lämnas till online "
+"EU VIES\n"
+"    databas, som verkligen kommer att kontrollera att numret är giltigt och "
+"för närvarande\n"
+"    anslås till en EU-företag. Detta är lite långsammare än den enkla\n"
+"    off-line checken, kräver en Internet-anslutning, och kanske inte är "
+"tillgängligt\n"
+"    hela tiden. Om tjänsten inte är tillgänglig eller inte stöder\n"
+"    aktuellt land (t.ex. för icke-EU-länder), kommer en enkel kontroll "
+"utföras\n"
+"    stället.\n"
+"\n"
+"Länder som stöds inkluderar för närvarande EU-länder och några länder "
+"utanför EU\n"
+"som Chile, Colombia, Mexiko, Norge eller Ryssland. För stöds länder\n"
+"bara landskoden kommer att valideras.\n"
+"\n"
+"    "
 
 #. module: base
 #: view:ir.sequence:0
@@ -3575,6 +3612,11 @@ msgid ""
 "or data in your OpenERP instance. To install some modules, click on the "
 "button \"Install\" from the form view and then click on \"Start Upgrade\"."
 msgstr ""
+"Du kan installera nya moduler för att aktivera nya funktioner, menyer, "
+"rapporter eller data i din OpenERP instans. För att installera vissa "
+"moduler, klicka på knappen \"Installera\" från vyn. Vissa moduler har en "
+"egen installationsguide som du hittar i informationspanelen som tillhör "
+"\"Inställningar\"."
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_cron_act
@@ -5704,7 +5746,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_and_finance
 msgid "Accounting & Finance"
-msgstr ""
+msgstr "Redovisning"
 
 #. module: base
 #: field:ir.actions.server,write_id:0
@@ -6881,7 +6923,7 @@ msgstr "Säljare"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_accountant
 msgid "Accounting and Finance"
-msgstr "Redovisning och finanshantering"
+msgstr "Bokföring"
 
 #. module: base
 #: code:addons/base/module/module.py:429
