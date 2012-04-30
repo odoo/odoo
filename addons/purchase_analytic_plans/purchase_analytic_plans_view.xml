@@ -9,7 +9,7 @@
         <field name="inherit_id" ref="purchase.purchase_order_line_form"/>
         <field name="arch" type="xml">
             <field name="account_analytic_id" position="replace">
-                <field name="analytics_id" domain="[('plan_id','&lt;&gt;',False)]" groups="base.group_extended"/>
+                <field name="analytics_id" domain="[('plan_id','&lt;&gt;',False)]"/>
             </field>
         </field>
     </record>

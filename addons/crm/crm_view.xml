@@ -15,7 +15,7 @@
             parent="base.menu_base_config" sequence="0" groups="base.group_sale_manager"/>
 
         <menuitem id="menu_crm_config_phonecall" name="Phone Calls"
-            parent="base.menu_base_config" sequence="45" groups="base.group_extended"/>
+            parent="base.menu_base_config" sequence="45" groups="base.group_sale_salesman"/>
 
         <menuitem id="base.next_id_64" name="Sales"
             parent="base.menu_reporting" sequence="1" />
@@ -84,7 +84,7 @@
                                 <field name="allow_unlink" select="2"/>
                                 <field name="change_responsible"/>
                             </group>
-                            <group col="1" colspan="4" groups="base.group_extended">
+                            <group col="1" colspan="4">
                                 <separator string="Team Members" colspan="4"/>
                                 <field name="member_ids" nolabel="1" colspan="4"   height="250"/>
                             </group>
@@ -143,6 +143,7 @@
                     <field name="sequence"/>
                     <field name="name"/>
                     <field name="probability"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
@@ -162,6 +163,7 @@
                         <field name="on_change"/>
                         <field name="case_default"/>
                         <field name="sequence"/>
+                        <field name="state"/>
                     </group>
                     <separator string="Requirements" colspan="4"/>
                     <field name="requirements" nolabel="1" colspan="4"/>
@@ -373,7 +375,7 @@
 
        <menuitem action="crm_segmentation_tree-act"
             id="menu_crm_segmentation-act"
-            groups="base.group_extended" sequence="15"
+            groups="base.group_no_one" sequence="15"
             parent="base.menu_base_config" />
 
         <record model="ir.ui.view" id="view_users_form_simple_modif_inherited1">

@@ -69,7 +69,7 @@ class hr_recruitment_stage(osv.osv):
         'name': fields.char('Name', size=64, required=True, translate=True),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of stages."),
         'department_id':fields.many2one('hr.department', 'Specific to a Department', help="Stages of the recruitment process may be different per department. If this stage is common to all departments, keep tempy this field."),
-        'state': fields.selection(AVAILABLE_STATES, 'State', size=16, help="This state is related to this stage"),
+        'state': fields.selection(AVAILABLE_STATES, 'State', required=True, help="This state is related to this stage"),
         'requirements': fields.text('Requirements')
     }
     _defaults = {
@@ -151,12 +151,12 @@ class hr_applicant(crm.crm_case, osv.osv):
             result[applicant.id] = True
         return result.keys()
 
-    def _save_state(self, cr, uid, hr_applicant_id, field_name, field_value, arg, context=None):
+    def _save_state(self, cr, uid, applicant_id, field_name, field_value, arg, context=None):
         stage_ids = self.pool.get('hr.recruitment.stage').search(cr, uid, [('state', '=', field_value)], order='sequence', context=context)
         if stage_ids:
-            return cr.execute("""update hr_applicant set state=%s, stage_id=%s where id=%s""", (field_value, stage_ids[0], hr_applicant_id))
+            return self.write(cr, uid, [applicant_id], {'stage_id': stage_ids[0]}, context=context)
         else:
-            return cr.execute("""update hr_applicant set state=%s where id=%s""", (field_value, hr_applicant_id))
+            return cr.execute("""UPDATE hr_applicant SET state=%s WHERE id=%s""", (field_value, hr_applicant_id))
     
 
     _columns = {
@@ -172,13 +172,13 @@ class hr_applicant(crm.crm_case, osv.osv):
         'write_date': fields.datetime('Update Date', readonly=True),
         'stage_id': fields.many2one ('hr.recruitment.stage', 'Stage'),
         'state': fields.function(_get_state, fnct_inv=_save_state, type='selection', selection=AVAILABLE_STATES, string="State", readonly=True,
-                store = {
-                         'hr.applicant': (lambda self, cr, uid, ids, c={}: ids, ['stage_id'], 10),
-                         'hr.recruitment.stage': (_get_stage, ['state'], 10)
-                         }, help='The state is set to \'Draft\', when a case is created.\
-                                  \nIf the case is in progress the state is set to \'Open\'.\
-                                  \nWhen the case is over, the state is set to \'Done\'.\
-                                  \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
+            store = {
+                     'hr.applicant': (lambda self, cr, uid, ids, c={}: ids, ['stage_id'], 10),
+                     'hr.recruitment.stage': (_get_stage, ['state'], 10)
+            }, help='The state is set to \'Draft\', when a case is created.\
+                  \nIf the case is in progress the state is set to \'Open\'.\
+                  \nWhen the case is over, the state is set to \'Done\'.\
+                  \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
         'company_id': fields.many2one('res.company', 'Company'),
         'user_id': fields.many2one('res.users', 'Responsible'),
         # Applicant Columns
