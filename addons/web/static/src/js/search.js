@@ -133,7 +133,7 @@ my.FacetView = instance.web.Widget.extend({
     },
     start: function () {
         var self = this;
-        var $e = self.$element.find('span');
+        var $e = self.$element.find('> span:last-child');
         var q = $.when(this._super());
         return q.pipe(function () {
             var values = self.model.values.map(function (value) {

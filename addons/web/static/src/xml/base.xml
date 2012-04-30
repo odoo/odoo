@@ -1291,18 +1291,21 @@
 
 <div t-name="SearchView" class="oe_searchview">
     <div class="oe_searchview_facets"/>
+    <div class="oe_searchview_clear"/>
     <div class="oe_searchview_unfold_drawer"/>
     <div class="oe_searchview_drawer"/>
 </div>
 
 <div t-name="SearchView.InputView"
      class="oe_searchview_input"
-     style="height: 2em; min-width: 1em; display: inline-block;"
      contenteditable="true"/>
 <div t-name="SearchView.FacetView"
-     class="oe_searchview_facet"
-     style="outline: 1px solid black; min-width: 40px; height: 2em; display: inline-block">
-    <t t-esc="widget.model.get('category')"/>: <span/>
+     class="oe_searchview_facet">
+    <span class="oe_facet_remove">✖</span>
+    <span class="oe_facet_category">
+        <t t-esc="widget.model.get('category')"/>
+        <!--  -->
+    </span ><span/>
 </div>
 <span t-name="SearchView.FacetView.Value">
     <t t-esc="widget.model.get('label')"/>
