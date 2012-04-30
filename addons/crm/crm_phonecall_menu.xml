@@ -9,7 +9,7 @@
         src_model="res.partner"
         view_mode="calendar,tree,form"
         context="{'search_default_partner_id': [active_id], 'default_duration': 1.0, 'default_partner_id': active_id}"
-        groups="base.group_extended"
+        groups="base.group_sale_salesman"
         />
 
     <!-- TO CONFIRM: This is fine -->
@@ -57,7 +57,7 @@
     </record>
 
     <menuitem name="Phone Calls" id="menu_crm_case_phone"
-        groups="base.group_extended,base.group_sale_salesman"
+        groups="base.group_sale_salesman"
         parent="base.menu_base_partner" sequence="4" />
 
     <record model="ir.actions.act_window" id="crm_case_categ_phone_incoming0">

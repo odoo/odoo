@@ -9,11 +9,11 @@
             <field name="arch" type="xml">
                 <notebook position="inside">
                     <page string="Accounting">
-                    <group name="properties" groups="base.group_extended">
+                    <group name="properties">
                         <separator string="Sales Properties" colspan="2"/>
                         <separator string="Purchase Properties" colspan="2"/>
-                        <field name="property_account_income" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" attrs="{'readonly':[('sale_ok','=',0)]}"  groups="base.group_extended"/>
-                        <field name="property_account_expense" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" attrs="{'readonly':[('purchase_ok','=',0)]}"  groups="base.group_extended"/>
+                        <field name="property_account_income" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" attrs="{'readonly':[('sale_ok','=',0)]}"/>
+                        <field name="property_account_expense" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" attrs="{'readonly':[('purchase_ok','=',0)]}"/>
 					</group>
 					<newline/>
 					<group colspan="2">
