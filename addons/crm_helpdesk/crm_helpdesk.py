@@ -92,6 +92,9 @@ class crm_helpdesk(crm.crm_case, osv.osv):
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
     }
 
+    def case_get_note_msg_prefix(self, cr, uid, id, context=None):
+        return 'Case'
+
     def message_new(self, cr, uid, msg_dict, custom_values=None, context=None):
         """Automatically called when new email message arrives"""
         res_id = super(crm_helpdesk,self).message_new(cr, uid, msg_dict, custom_values=custom_values, context=context)
