@@ -35,15 +35,6 @@ class product(osv.osv):
 
 product()
 
-class sale_order(osv.osv):
-    _inherit = 'sale.order'
-    _columns = {
-    'partner_id': fields.many2one('res.partner', 'Customer', readonly=False, states={'draft': [('readonly', False)]}, required=False, change_default=True, select=True),
-    'partner_invoice_id': fields.many2one('res.partner', 'Invoice Address', readonly=False, required=False, states={'draft': [('readonly', False)]}, help="Invoice address for current sales order."),
-    'partner_shipping_id': fields.many2one('res.partner', 'Shipping Address', readonly=False, required=False, states={'draft': [('readonly', False)]}, help="Shipping address for current sales order."),
-    }
-    
-
 class sale_order_line(osv.osv):
     _inherit = 'sale.order.line'
     _columns = {
@@ -108,13 +99,20 @@ class event_event(osv.osv):
                     'event_item_ids': fields.one2many('event.items','event_id', 'Event Items'),
                 }
 
-    def open_qoutation(self, cr, uid, ids, partner_id, context=None):
+    def make_quotation(self, cr, uid, ids, context=None):
         res = {}
         event_pool = self.pool.get('event.event')
         register_pool = self.pool.get('event.registration')
         sale_order_line_pool = self.pool.get('sale.order.line')
         sale_order = self.pool.get('sale.order')
         user = self.pool.get("res.users").browse(cr, uid, uid, context=context)
+        partner_pool = self.pool.get("res.partner")
+        new_partner_id = False
+        partner_ids = partner_pool.search(cr, uid, [('name', '=', user.name), ('email', '=', user.user_email)])
+        if not partner_ids:
+            new_partner_id = partner_pool.create(cr, uid, {'name': user.name, 'email': user.user_email})
+            partner_invoice_id = self.pool.get('res.partner').address_get(cr, uid, [new_partner_id], ['invoice'])['invoice']
+            partner_shipping_id = self.pool.get('res.partner').address_get(cr, uid, [new_partner_id], ['delivery'])['delivery']
         for event_id in self.browse(cr, uid, ids, context=context):
             prod_pricelist_obj = self.pool.get('product.pricelist')
             sale_order_lines = []
@@ -122,6 +120,9 @@ class event_event(osv.osv):
             new_sale_id = sale_order.create(cr, uid, {
                 'date_order': event_id.date_begin,
                 'pricelist_id': price_list,
+                 'partner_id': new_partner_id, 
+                  'partner_invoice_id': partner_invoice_id,
+                 'partner_shipping_id': partner_shipping_id
                 })            
             if event_id.event_item_ids:
                 for items in event_id.event_item_ids:
@@ -145,7 +146,7 @@ class event_event(osv.osv):
                         'nodestroy': True,
                         'target': 'new',
                 }
-                self.write(cr, uid, ids, {'state': 'confirm'}, context=context)
+               # self.write(cr, uid, ids, {'state': 'confirm'}, context=context)
         return res
 
 class event_items(osv.osv):

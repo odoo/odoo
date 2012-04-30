@@ -36,15 +36,12 @@
 			<field name="type">form</field>
 			<field name="inherit_id" ref="event.view_event_form"/>
 			<field name="arch" type="xml">
-				<xpath expr="//group[@string='vanue']" position="after">
+				<xpath expr="//group[@name='venue']" position="after">
 						<field name="event_item_ids" nolabel="1"/><newline/>
 						<div class="oe_right">
-							<button string="Order Now" name="open_qoutation" help="Order Event" type="object" icon="gtk-ok" attrs="{'invisible':[('state','=','confirm')]}"/>
+							<button string="Order Now" name="make_quotation" help="Order Event" type="object" icon="gtk-ok" attrs="{'invisible':[('state','=','confirm')]}"/>
 						</div>
 				</xpath>
-				<xpath expr="//group[@string='vanue']" position="attributes">
-                    <attribute name="string"></attribute>
-                </xpath>
 			</field>
 		</record>
 
@@ -53,7 +50,7 @@
 			 <field name="model">event.items</field>
 			 <field name="type">tree</field>
 			 <field name="arch" type="xml">
-				 <tree string="Event Items">
+				 <tree editable="top" string="Event Items">
 					 <field name="product_id"/>
 					 <field name="price"/>
 					 <field name="qty"/>
