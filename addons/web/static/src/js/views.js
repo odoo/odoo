@@ -366,6 +366,7 @@ session.web.ViewManager =  session.web.OldWidget.extend(/** @lends session.web.V
     on_prev_view: function (options) {
         var current_view = this.views_history.pop();
         var previous_view = this.views_history[this.views_history.length - 1] || options['default'];
+        if (options != undefined) {
         if (options.created && current_view === 'form' && previous_view === 'list') {
             // APR special case: "If creation mode from list (and only from a list),
             // after saving, go to page view (don't come back in list)"
@@ -373,7 +374,7 @@ session.web.ViewManager =  session.web.OldWidget.extend(/** @lends session.web.V
         } else if (options.created && !previous_view && this.action && this.action.flags.default_view === 'form') {
             // APR special case: "If creation from dashboard, we have no previous view
             return this.on_mode_switch('page');
-        }
+        }}
         return this.on_mode_switch(previous_view, true);
     },
     /**
