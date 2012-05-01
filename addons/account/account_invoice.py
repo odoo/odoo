@@ -201,11 +201,11 @@ class account_invoice(osv.osv):
 
         'state': fields.selection([
             ('draft','Draft'),
+            ('cancel','Cancelled'),
             ('proforma','Pro-forma'),
             ('proforma2','Pro-forma'),
             ('open','Open'),
-            ('paid','Paid'),
-            ('cancel','Cancelled')
+            ('paid','Paid')
             ],'State', select=True, readonly=True,
             help=' * The \'Draft\' state is used when a user is encoding a new and unconfirmed Invoice. \
             \n* The \'Pro-forma\' when invoice is in Pro-forma state,invoice does not have an invoice number. \
