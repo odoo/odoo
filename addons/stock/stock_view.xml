@@ -116,7 +116,7 @@
                     <page string="General Informations">
                         <field colspan="4" name="inventory_line_id" nolabel="1" widget="one2many_list">
                             <tree string="Products" editable="bottom">
-                                <field domain="[('usage','=','internal')]" name="location_id"/>
+                                <field domain="[('usage','=','internal')]" name="location_id" />
                                 <field context="{'location':location_id, 'uom':product_uom, 'to_date':parent.date}" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom,parent.date)"  domain="[('type','&lt;&gt;','service')]"/>
                                 <field name="product_qty"/>
                                 <field name="product_uom" groups="product.group_uom"/>
@@ -505,7 +505,7 @@
                         <separator string="Location" colspan="2"/>
                         <field name="name"/>
                         <field name="usage"/>
-                        <field name="location_id"/>
+                        <field name="location_id" groups="stock.group_locations"/>
                     </group>
                     <group col="4" colspan="2">
                         <separator string="Additional Information" colspan="4"/>
@@ -755,7 +755,13 @@
                                         <field groups="product.group_uos" name="product_uos" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)" colspan="4"/>
                                         <field name="product_packaging" groups="product.group_stock_packaging" domain="[('product_id','=',product_id)]" colspan="4"/>
                                     </group>
-
+									
+                                    <group colspan="2" col="2">
+                                        <separator string="Locations" colspan="2" />
+                                        <field name="location_id" domain="[('usage','&lt;&gt;','view')]"/>
+                                        <field name="location_dest_id" domain="[('usage','=','internal')]"/>
+                                    </group>
+									
                                     <group colspan="2" col="2">
                                         <separator string="Dates" colspan="2" />
                                         <field name="create_date" invisible="1"/>
@@ -763,12 +769,6 @@
                                         <field name="date_expected" on_change="onchange_date(date,date_expected)"/>
                                     </group>
 									
-                                    <group colspan="2" col="2" groups="stock.group_locations">
-                                        <separator string="Locations" colspan="2" />
-                                        <field name="location_id" domain="[('usage','&lt;&gt;','view')]"/>
-                                        <field name="location_dest_id" domain="[('usage','=','internal')]"/>
-                                    </group>
-
                                     <group colspan="2" col="4" groups="stock.group_tracking_lot">
                                         <separator string="Traceability" colspan="4" groups="stock.group_tracking_lot"/>
                                         <field name="tracking_id" groups="stock.group_tracking_lot"  colspan="3"/>
@@ -946,16 +946,16 @@
                                     </group>
 
                                     <group colspan="2" col="2">
+                                        <separator string="Locations" colspan="2" />
+                                        <field name="location_id" domain="[('usage','=','internal')]"/>
+                                        <field name="location_dest_id" domain="[('usage','&lt;&gt;','view')]"/>
+                                    </group>
+									
+                                    <group colspan="2" col="2">
                                         <separator string="Dates" colspan="2" />
                                         <field name="create_date" invisible="1"/>
                                         <field name="date"/>
                                         <field name="date_expected" on_change="onchange_date(date,date_expected)"/>
-                                    </group>
-									
-                                    <group colspan="2" col="2" groups="stock.group_locations">
-                                        <separator string="Locations" colspan="2" />
-                                        <field name="location_id" domain="[('usage','=','internal')]"/>
-                                        <field name="location_dest_id" domain="[('usage','&lt;&gt;','view')]"/>
                                     </group>
 									
                                     <group colspan="2" col="4">
@@ -1163,18 +1163,18 @@
                                     </group>
 
                                     <group colspan="2" col="2">
+                                        <separator string="Locations" colspan="2" />
+                                        <field name="location_id" domain="[('usage','&lt;&gt;','view')]"/>
+                                        <field name="location_dest_id" domain="[('usage','=','internal')]"/>
+                                    </group>
+									
+                                    <group colspan="2" col="2">
                                         <separator string="Dates" colspan="2" />
                                         <field name="create_date" invisible="1"/>
                                         <field name="date"/>
                                         <field name="date_expected" on_change="onchange_date(date,date_expected)"/>
                                     </group>
 									
-                                    <group colspan="2" col="2" groups="stock.group_locations">
-                                        <separator string="Locations" colspan="2" />
-                                        <field name="location_id" domain="[('usage','&lt;&gt;','view')]"/>
-                                        <field name="location_dest_id" domain="[('usage','=','internal')]"/>
-                                    </group>
-
                                     <group colspan="2" col="4">
                                         <separator string="Traceability" colspan="4" groups="stock.group_tracking_lot"/>
                                         <field name="tracking_id" groups="stock.group_tracking_lot" colspan="3" />
