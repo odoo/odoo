@@ -275,9 +275,9 @@ class account_voucher(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'state':fields.selection(
             [('draft','Draft'),
+             ('cancel','Cancelled'),
              ('proforma','Pro-forma'),
-             ('posted','Posted'),
-             ('cancel','Cancelled')
+             ('posted','Posted')
             ], 'State', readonly=True, size=32,
             help=' * The \'Draft\' state is used when a user is encoding a new and unconfirmed Voucher. \
                         \n* The \'Pro-forma\' when voucher is in Pro-forma state,voucher does not have an voucher number. \
