@@ -25,18 +25,18 @@ from tools.translate import _
 class res_partner(osv.osv):
     _inherit = 'res.partner'
     
-    def _total_sale(self, cr, uid, ids, field_name, arg, context=None):
-        total_sale={}
-        sale_pool=self.pool.get('sale.order')
-        for id in ids:
-            sale_ids = sale_pool.search(cr, uid, [('partner_id', '=', id)])
-            total_sale[id] = len(sale_ids)
-        return total_sale
+    def _sale_order_count(self, cr, uid, ids, field_name, arg, context=None):
+        count = dict.fromkeys(ids, 0)
+        sale_order_pool=self.pool.get('sale.order')
+        sale_order_ids = sale_order_pool.search(cr, uid, [('partner_id', 'in', ids)])
+        for sale_order in sale_order_pool.browse(cr, uid, sale_order_ids):
+            count[sale_order.partner_id.id] += 1
+        return count
     
     _columns = {
-        'total_sale': fields.function(_total_sale , type='integer',string="Total Sale"),
+        'sale_order_count': fields.function(_sale_order_count , type='integer',string="Sale Order"),
     }
     _defaults = {
-        'total_sale': 0,
+        'sale_order_count': 0,
     }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

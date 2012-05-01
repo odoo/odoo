@@ -9,12 +9,11 @@
             <field name="inherit_id" ref="base.res_partner_kanban_view"/>
             <field name="arch" type="xml">
             	<field name="mobile" position="after">
-                    <field name="total_sale"/>
+                    <field name="sale_order_count"/>
                 </field>
                 <xpath expr="//div[@class='oe_partner_desc']//h4[@class='oe_partner_heading']" position="after">
                     <a name="%(sale.act_res_partner_2_sale_order)d" type="action">
-                        <t t-if="record.total_sale.value &lt;= 1">Quotation(<t t-esc="record.total_sale.value" />)</t>
-                        <t t-if="record.total_sale.value > 1">Quotations(<t t-esc="record.total_sale.value" />)</t>
+                        <t t-if="record.sale_order_count.value">Quotations(<t t-esc="record.sale_order_count.value" />)</t>
                     </a>
                 </xpath>
             </field>

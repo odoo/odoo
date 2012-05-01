@@ -52,9 +52,6 @@
             <field name="view_id" ref="board_administration_form"/>
         </record>
 
-        <!-- bind adminitration dashboard to the root administration -->
-       <!-- <menuitem id="base.menu_administration" icon="terp-administration"  name="Settings" sequence="50" action="open_board_administration_form"/> -->
-
         <!-- add a menu item in adminitration/reporting/dashboards -->
         <menuitem id="base.menu_reporting_admin" name="Administration" parent="base.menu_reporting_dashboard" groups="base.group_system"/>
         <menuitem id="base.menu_reporting_admin_dashboard" parent="base.menu_reporting_admin" action="open_board_administration_form"/>

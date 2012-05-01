@@ -42,8 +42,24 @@
                 </field>
         </record>
 
-       <!-- Partner kanban view inherte -->
+		<act_window
+        id="crm_meeting_partner"
+        name="Meetings"
+        res_model="crm.meeting"
+        src_model="res.partner"
+        view_mode="calendar,tree,form,gantt"
+        context="{'search_default_partner_id': [active_id],'default_partner_id': active_id}"
+    />
+        <act_window
+            context="{'search_default_partner_id': [active_id],'default_partner_id': active_id}"
+            id="act_res_partner_2_opportunity"
+            name="Opportunity"
+            view_mode="tree,form,graph,calendar"
+            domain="[('type','=','opportunity')]"
+            res_model="crm.lead"
+            src_model="res.partner"/>
 
+		<!-- Partner kanban view inherte -->
         <record model="ir.ui.view" id="crm_lead_partner_kanban_view">
             <field name="name">res.partner.kanban.inherit</field>
             <field name="model">res.partner</field>
@@ -53,18 +69,15 @@
                 <field name="mobile" position="after">
                     <field name="opportunity_ids"/>
                     <field name="meeting_ids"/>
-                    <field name="total_oppo"/>
-                    <field name="total_meeting"/>
+                    <field name="opportunity_count"/>
+                    <field name="meeting_count"/>
                 </field>
                  <xpath expr="//div[@class='oe_partner_desc']//h4[@class='oe_partner_heading']" position="after">
-                        <a name="get_opportunity" type="object">
-                            <t t-if="record.total_oppo.value &lt;= 1">Opportunity(<t t-esc="record.total_oppo.value"/>)</t>
-                            <t t-if="record.total_oppo.value > 1">Opportunities(<t t-esc="record.total_oppo.value"/>)</t>
+                        <a name="%(act_res_partner_2_opportunity)d" type="action">
+                            <t t-if="record.opportunity_count.value">Opportunities(<t t-esc="record.opportunity_count.value"/>)</t>
                         </a>
-                        <a name="%(crm.crm_case_categ_meet)d" type="action">
-                            <t t-if="record.total_meeting.value &lt;= 1">Meeting(<t t-esc="record.total_meeting.value"/>)</t>
-                            <t t-if="record.total_meeting.value > 1">Meetings(<t t-esc="record.total_meeting.value"/>)</t>
-                            
+                        <a name="%(crm_meeting_partner)d" type="action">
+                            <t t-if="record.meeting_count.value">Meetings(<t t-esc="record.meeting_count.value"/>)</t>
                         </a>
                 </xpath>
             </field>

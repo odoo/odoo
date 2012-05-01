@@ -282,6 +282,7 @@
                                    domain="[('user_id','=',uid)]"
                                    help="My Meetings" />
                            </field>
+                           <field name="partner_id"/>
                            <field name="section_id" widget="selection">
                                <filter icon="terp-personal+"
                                    domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
