@@ -161,9 +161,9 @@ class hr_evaluation(osv.osv):
         'plan_id': fields.many2one('hr_evaluation.plan', 'Plan', required=True),
         'state': fields.selection([
             ('draft','New'),
+            ('cancel','Cancelled'),
             ('wait','Plan In Progress'),
             ('progress','Waiting Appreciation'),
-            ('cancel','Cancelled'),
             ('done','Done'),
         ], 'State', required=True, readonly=True),
         'date_close': fields.date('Ending Date', select=True),

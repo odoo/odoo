@@ -79,8 +79,8 @@ class hr_expense_expense(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'state': fields.selection([
             ('draft', 'New'),
-            ('confirm', 'Waiting Approval'),
             ('cancelled', 'Refused'),
+            ('confirm', 'Waiting Approval'),
             ('accepted', 'Approved'),
             ('invoiced', 'Invoiced'),
             ('paid', 'Reimbursed')

@@ -648,8 +648,10 @@ class marketing_campaign_workitem(osv.osv):
         'res_name': fields.function(_res_name_get, string='Resource Name', fnct_search=_resource_search, type="char", size=64),
         'date': fields.datetime('Execution Date', help='If date is not set, this workitem has to be run manually', readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner', select=1, readonly=True),
-        'state': fields.selection([('todo', 'To Do'),
-                                   ('exception', 'Exception'), ('cancelled', 'Cancelled'),('done', 'Done'),
+        'state': fields.selection([ ('todo', 'To Do'),
+                                    ('cancelled', 'Cancelled'),
+                                    ('exception', 'Exception'),
+                                    ('done', 'Done'),
                                    ], 'State', readonly=True),
 
         'error_msg' : fields.text('Error Message', readonly=True)

@@ -109,7 +109,7 @@ class project_scrum_sprint(osv.osv):
         'progress': fields.function(_compute, group_operator="avg", type='float', multi="progress", string='Progress (0-100)', help="Computed as: Time Spent / Total Time."),
         'effective_hours': fields.function(_compute, multi="effective_hours", string='Effective hours', help="Computed using the sum of the task work done."),
         'expected_hours': fields.function(_compute, multi="expected_hours", string='Planned Hours', help='Estimated time to do the task.'),
-        'state': fields.selection([('draft','Draft'),('open','Open'),('pending','Pending'),('cancel','Cancelled'),('done','Done')], 'State', required=True),
+        'state': fields.selection([('draft','Draft'),('cancel','Cancelled'),('open','Open'),('pending','Pending'),('done','Done')], 'State', required=True),
     }
     _defaults = {
         'state': 'draft',

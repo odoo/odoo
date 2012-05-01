@@ -128,7 +128,7 @@ class report_account_analytic_planning(osv.osv):
         'date_to':fields.date('End Date', required=True, states={'done':[('readonly', True)]}),
         'line_ids': fields.one2many('report_account_analytic.planning.line', 'planning_id', 'Planning lines', states={'done':[('readonly', True)]}),
         'stat_ids': fields.one2many('report_account_analytic.planning.stat', 'planning_id', 'Planning analysis', readonly=True),
-        'state': fields.selection([('draft', 'Draft'), ('open', 'Open'), ('done', 'Done'), ('cancel', 'Cancelled')], 'Status', required=True),
+        'state': fields.selection([('draft', 'Draft'), ('cancel', 'Cancelled'), ('open', 'Open'), ('done', 'Done')], 'Status', required=True),
         'business_days': fields.integer('Business Days', required=True, states={'done':[('readonly', True)]}, help='Set here the number of working days within this planning for one person full time'),
         'planning_user_ids': one2many_mod3('report_account_analytic.planning.user', 'planning_id', 'Planning By User'),
         'planning_account': fields.one2many('report_account_analytic.planning.account', 'planning_id', 'Planning By Account'),
