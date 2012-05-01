@@ -185,8 +185,8 @@ class event_event(osv.osv):
         'date_end': fields.datetime('End Date', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'state': fields.selection([
             ('draft', 'Unconfirmed'),
-            ('confirm', 'Confirmed'),
             ('cancel', 'Cancelled'),
+            ('confirm', 'Confirmed'),
             ('done', 'Done')],
             'State', readonly=True, required=True,
             help='If event is created, the state is \'Draft\'.If event is confirmed for the particular dates the state is set to \'Confirmed\'. If the event is over, the state is set to \'Done\'.If event is cancelled the state is set to \'Cancelled\'.'),
@@ -271,8 +271,8 @@ class event_registration(osv.osv):
         'user_id': fields.many2one('res.users', 'Attendee', states={'done': [('readonly', True)]}),
         'company_id': fields.related('event_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True, states={'draft':[('readonly',False)]}),
         'state': fields.selection([('draft', 'Unconfirmed'),
-                                    ('open', 'Confirmed'),
                                     ('cancel', 'Cancelled'),
+                                    ('open', 'Confirmed'),
                                     ('done', 'Attended')], 'State',
                                     size=16, readonly=True),
     }
