@@ -35,9 +35,9 @@ wizard.mail_compose_message.SUPPORTED_MODELS.append('hr.applicant')
 
 AVAILABLE_STATES = [
     ('draft', 'New'),
+    ('cancel', 'Refused'),
     ('open', 'In Progress'),
     ('pending', 'Pending'),
-    ('cancel', 'Refused'),
     ('done', 'Hired')
 ]
 
