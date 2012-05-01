@@ -30,11 +30,10 @@ from tools.translate import _
 MAX_LEVEL = 15
 AVAILABLE_STATES = [
     ('draft', 'New'),
+    ('cancel', 'Cancelled'),
     ('open', 'In Progress'),
     ('pending', 'Pending'),
-    ('cancel', 'Cancelled'),
-    ('done', 'Closed'),
-    
+    ('done', 'Closed')
 ]
 
 AVAILABLE_PRIORITIES = [
