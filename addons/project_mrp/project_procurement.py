@@ -81,6 +81,7 @@ class procurement_order(osv.osv):
                 'company_id': procurement.company_id.id,
             },context=context)
             self.write(cr, uid, [procurement.id], {'task_id': task_id, 'state': 'running'}, context=context)
+            self.running_send_note(cr, uid, ids, context=None)
         return task_id
 
 procurement_order()

@@ -97,6 +97,7 @@ class procurement_order(osv.osv):
             })
             res[procurement.id] = produce_id
             self.write(cr, uid, [procurement.id], {'state': 'running'})
+            self.running_send_note(cr, uid, ids, context=None)
             bom_result = production_obj.action_compute(cr, uid,
                     [produce_id], properties=[x.id for x in procurement.property_ids])
             wf_service.trg_validate(uid, 'mrp.production', produce_id, 'button_confirm', cr)
