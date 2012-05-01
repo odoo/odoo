@@ -500,7 +500,7 @@ class task(osv.osv):
     _description = "Task"
     _log_create = True
     _date_name = "date_start"
-    _inherit = ['ir.needaction_mixin', 'mail.thread']
+    _inherit = ['ir.needaction_mixin', 'mail.thread', 'pad.common']
 
 
     def _resolve_project_id_from_context(self, cr, uid, context=None):

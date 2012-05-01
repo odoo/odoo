@@ -261,7 +261,7 @@
                                 <button name="%(action_project_task_reevaluate)d" string="Reevaluate" type="action" colspan="1" target="new" states="open,pending" icon="gtk-edit"/>
                             </group>
 
-                            <field colspan="4" name="description" widget="etherpad" nolabel="1"  attrs="{'readonly':[('state','=','done')]}"/>
+                            <field colspan="4" name="pad_url" widget="etherpad" nolabel="1"  attrs="{'readonly':[('state','=','done')]}"/>
                             <field colspan="4" name="work_ids" nolabel="1" attrs="{'readonly':[('state','in',['done','draft'])]}">
                                 <tree string="Task Work" editable="top">
                                     <field name="name" />
@@ -294,7 +294,7 @@
                                 <field name="priority"/>
                                 <field name="sequence"/>
                             </group>
-
+                            <field name="partner_id" />
                             <separator string="Miscelleanous" colspan="4"/>
                             <field name="partner_id" />
                             <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
@@ -340,7 +340,7 @@
                             </ul>
                         </t>
                         <t t-name="kanban-box">
-                            <t t-set="pad_url">http://pad.openerp.com/<t t-raw="_.str.underscored(_.str.trim(record.name.raw_value))"/></t>
+                            
                             <t t-if="record.kanban_state.raw_value === 'blocked'" t-set="border">oe_kanban_color_red</t>
                             <t t-if="record.kanban_state.raw_value === 'done'" t-set="border">oe_kanban_color_green</t>
                             <div t-attf-class="#{kanban_color(record.color.raw_value)} #{border || ''}">
@@ -365,6 +365,7 @@
                                             <i t-if="record.date_deadline.raw_value">
                                                 <field name="date_deadline"/>
                                             </i>
+                                            <a name="action_open_pad" string="Pad" type="object" class="oe_kanban_button" style="margin-left: 5px;"><b>PAD</b></a>
                                             <span class="oe_kanban_project_times" style="white-space: nowrap; padding-left: 5px;">
                                                 <t t-set="hours" t-value="record.remaining_hours.raw_value"/>
                                                 <t t-set="times" t-value="[
