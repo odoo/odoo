@@ -92,6 +92,7 @@
   <pto>
   <pto_header>
     <blockTable colWidths="57.0,136.0,51.0,72.0,54.0,56.0,66.0,18.0" style="Table1">
+    <para>[[ reduce(lambda x, y: x +(y['debit'] - y['credit']), getLines(o), 0) == 0 and removeParentNode('blockTable') ]]</para>
       <tr>
         <td>
           <para style="terp_tblheader_Details">Date</para>
@@ -153,22 +154,24 @@
     <para style="terp_default_9">
       <font color="white"> </font>
     </para>
-    <para style="terp_default_9">Dear Sir/Madam,</para>
+    <para style="terp_default_9">Dear Sir/Madam,[[ reduce(lambda x, y: x +(y['debit'] - y['credit']), getLines(o), 0) == 0 and removeParentNode('blockTable') ]]</para>
     <para style="terp_default_9">
       <font color="white"> </font>
     </para>
     <para style="terp_default_9">
       <font color="white"> </font>
     </para>
-    <para style="terp_default_9">[[ message(o, company) ]]</para>
+    <para style="terp_default_9">[[ reduce(lambda x, y: x +(y['debit'] - y['credit']), getLines(o), 0) == 0 and removeParentNode('blockTable') or message(o, company) ]]</para>
+    <para style="terp_default_9">There is nothing due with this customer or a company. [[ reduce(lambda x, y: x +(y['debit'] - y['credit']), getLines(o), 0) != 0 and removeParentNode('blockTable') ]]</para>
     <para style="terp_default_9">
       <font color="white"> </font>
     </para>
-    <para style="terp_default_9">Best regards.</para>
+    <para style="terp_default_9">Best regards.[[ reduce(lambda x, y: x +(y['debit'] - y['credit']), getLines(o), 0) == 0 and removeParentNode('blockTable') ]]</para>
     <para style="terp_default_9">
       <font color="white"> </font>
     </para>
     <blockTable colWidths="57.0,136.0,51.0,72.0,54.0,56.0,66.0,18.0" style="Table1">
+    <para>[[ reduce(lambda x, y: x +(y['debit'] - y['credit']), getLines(o), 0) == 0 and removeParentNode('blockTable') ]]</para>
       <tr>
         <td>
           <para style="terp_tblheader_Details">Date</para>
@@ -228,6 +231,7 @@
       </blockTable>
     </section>
     <blockTable colWidths="245.0,71.0,56.0,56.0,66.0,17.0" style="Table2">
+    <para>[[ reduce(lambda x, y: x +(y['debit'] - y['credit']), getLines(o), 0) == 0 and removeParentNode('blockTable') ]]</para>
       <tr>
         <td>
           <para style="terp_default_8">
@@ -254,6 +258,7 @@
       </tr>
     </blockTable>
     <blockTable colWidths="250.0,66.0,62.0,131.0" style="Table4">
+    <para>[[ reduce(lambda x, y: x +(y['debit'] - y['credit']), getLines(o), 0) == 0 and removeParentNode('blockTable') ]]</para>
       <tr>
         <td>
           <para style="terp_default_8">
@@ -279,7 +284,7 @@
     <para style="terp_default_9">
       <font color="white"> </font>
     </para>
-    <para style="terp_default_9">Total amount due: [[ formatLang((reduce(lambda x, y: x + (y['debit'] - y['credit']), getLines(o), 0)), currency_obj=company.currency_id) ]].</para>
+    <para style="terp_default_9">Total amount due: [[ reduce(lambda x, y: x +(y['debit'] - y['credit']), getLines(o), 0) == 0 and removeParentNode('blockTable') or formatLang((reduce(lambda x, y: x + (y['debit'] - y['credit']), getLines(o), 0)), currency_obj=company.currency_id) ]]</para>
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
