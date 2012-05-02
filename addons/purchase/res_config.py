@@ -28,6 +28,7 @@ class purchase_config_settings(osv.osv_memory):
     _inherit = 'res.config.settings'
 
     _columns = {
+        'decimal_precision_purchase': fields.integer('Decimal Precision on Purchase Price'),                
         'default_invoice_method': fields.selection(
             [('manual', 'Based on Purchase Order Lines'),
              ('picking', 'Based on Receptions'),
@@ -69,6 +70,20 @@ class purchase_config_settings(osv.osv_memory):
     }
 
 
+    def get_default_dp(self, cr, uid, fields, context=None):
+        purchase_id = self.pool.get('ir.model.data').get_object_reference(cr,uid, 'product','decimal_purchase')[1]
+        dec_id =self.pool.get('decimal.precision').browse(cr,uid, purchase_id,context=context)
+        return {
+            'decimal_precision_purchase': dec_id.digits,
+        }
+        
+    def set_default_dp(self, cr, uid, ids, context=None):
+        config = self.browse(cr, uid, ids[0], context)
+        purchase_id = self.pool.get('ir.model.data').get_object_reference(cr,uid, 'product','decimal_purchase')[1]
+        dec_id =self.pool.get('decimal.precision').browse(cr,uid, purchase_id,context=context) 
+        dec_id.write({
+            'digits': config.decimal_precision_purchase,
+        })
 
 class account_config_settings(osv.osv_memory):
     _inherit = 'account.config.settings'
