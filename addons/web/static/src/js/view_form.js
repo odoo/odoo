@@ -3807,7 +3807,10 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
 });
 
 /**
- * Registry of form widgets, called by :js:`instance.web.FormView`
+ * Registry of form fields, called by :js:`instance.web.FormView`.
+ *
+ * All referenced classes must implement FieldMixin. Those represent the classes whose instances
+ * will substitute to the <field> tags as defined in OpenERP's views.
  */
 instance.web.form.widgets = new instance.web.Registry({
     'char' : 'instance.web.form.FieldChar',
@@ -3833,6 +3836,12 @@ instance.web.form.widgets = new instance.web.Registry({
     'statusbar': 'instance.web.form.FieldStatus'
 });
 
+/**
+ * Registry of widgets usable in the form view that can substitute to any possible
+ * tags defined in OpenERP's form views.
+ *
+ * Every referenced class should extend FormWidget.
+ */
 instance.web.form.tags = new instance.web.Registry({
     'button' : 'instance.web.form.WidgetButton',
 });
