@@ -18,7 +18,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import pytz
 
 import simplejson
 import cgi
@@ -74,61 +73,6 @@ class product_installer(osv.osv_memory):
                 }
         if val.customers == 'import':
             return {'type': 'ir.actions.act_window'}
-
-# Define users preferences for new users (ir.values)
-
-def _lang_get(self, cr, uid, context=None):
-    obj = self.pool.get('res.lang')
-    ids = obj.search(cr, uid, [('translatable','=',True)])
-    res = obj.read(cr, uid, ids, ['code', 'name'], context=context)
-    res = [(r['code'], r['name']) for r in res]
-    return res
-
-def _tz_get(self,cr,uid, context=None):
-    return [(x, x) for x in pytz.all_timezones]
-
-class user_preferences_config(osv.osv_memory):
-    _name = 'user.preferences.config'
-    _inherit = 'res.config'
-    _columns = {
-        'context_tz': fields.selection(_tz_get,  'Timezone', size=64,
-            help="Set default for new user's timezone, used to perform timezone conversions "
-                 "between the server and the client."),
-        'context_lang': fields.selection(_lang_get, 'Language', required=True,
-            help="Sets default language for the all user interface, when UI "
-                "translations are available. If you want to Add new Language, you can add it from 'Load an Official Translation' wizard  from 'Administration' menu."),
-        'view': fields.selection([('simple','Simplified'),
-                                  ('extended','Extended')],
-                                 'Interface', required=True, help= "If you use OpenERP for the first time we strongly advise you to select the simplified interface, which has less features but is easier. You can always switch later from the user preferences." ),
-        'menu_tips': fields.boolean('Display Tips', help="Check out this box if you want to always display tips on each menu action"),
-
-    }
-    _defaults={
-               'view' : lambda self,cr,uid,*args: self.pool.get('res.users').browse(cr, uid, uid).view or 'simple',
-               'context_lang' : 'en_US',
-               'menu_tips' : True
-    }
-
-    def default_get(self, cr, uid, fields, context=None):
-        if context is None:
-            context = {}
-        res = super(user_preferences_config, self).default_get(cr, uid, fields, context=context)
-        res_default = self.pool.get('ir.values').get(cr, uid, 'default', False, ['res.users'])
-        for id, field, value in res_default:
-            res.update({field: value})
-        return res
-
-    def execute(self, cr, uid, ids, context=None):
-        user_obj = self.pool.get('res.users')
-        user_ids = user_obj.search(cr, uid, [], context=context)
-        for o in self.browse(cr, uid, ids, context=context):
-            user_obj.write(cr , uid, user_ids ,{'context_tz' : o.context_tz, 'context_lang' : o.context_lang, 'view' : o.view, 'menu_tips' : o.menu_tips}, context=context)
-            ir_values_obj = self.pool.get('ir.values')
-            ir_values_obj.set(cr, uid, 'default', False, 'context_tz', ['res.users'], o.context_tz)
-            ir_values_obj.set(cr, uid, 'default', False, 'context_lang', ['res.users'], o.context_lang)
-            ir_values_obj.set(cr, uid, 'default', False, 'view', ['res.users'], o.view)
-            ir_values_obj.set(cr, uid, 'default', False, 'menu_tips', ['res.users'], o.menu_tips)
-        return {}
 
 # Specify Your Terminology
 

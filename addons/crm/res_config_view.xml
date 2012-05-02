@@ -10,15 +10,9 @@
             <field name="arch" type="xml">
                 <group name="config_fetchmail" position="after">
                     <field name="fetchmail_lead"/>
-                    <group colspan="2" attrs="{'invisible': [('fetchmail_lead','=',False)]}">
-                        <field name="lead_server" attrs="{'required': [('fetchmail_lead','=',True)]}"/>
-                        <field name="lead_type" on_change="onchange_fetchmail('lead', lead_type, lead_is_ssl)" attrs="{'required': [('fetchmail_lead','=',True)]}"/>
-                        <field name="lead_port" attrs="{'required': [('fetchmail_lead','=',True)]}"/>
-                        <field name="lead_is_ssl" on_change="onchange_fetchmail('lead', lead_type, lead_is_ssl)"/>
-                        <field name="lead_user" attrs="{'required': [('fetchmail_lead','=',True)]}"/>
-                        <field name="lead_password" password="True" attrs="{'required': [('fetchmail_lead','=',True)]}"/>
+                    <group colspan="2">
+                        <button type="object" name="configure_fetchmail_lead" string="Configure" icon="gtk-execute"/>
                     </group>
-                    <newline/>
                 </group>
 
                 <group name="config_crm" position="after">
@@ -36,7 +30,8 @@
             </field>
         </record>
 
-        <menuitem id="base.menu_sale_config" name="Sales" parent="base.menu_config" sequence="1" action="base.action_sale_config"/>
+        <menuitem id="base.menu_sale_config" name="Sales" parent="base.menu_config"
+            sequence="1" action="base.action_sale_config"/>
 
     </data>
 </openerp>

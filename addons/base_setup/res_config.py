@@ -21,12 +21,20 @@
 
 from osv import osv, fields
 
-class crm_claim_settings(osv.osv_memory):
-    _name = 'sale.config.settings'
-    _inherit = ['sale.config.settings', 'fetchmail.config.settings']
-
+class base_config_settings(osv.osv_memory):
+    _name = 'base.config.settings'
+    _inherit = 'res.config.settings'
     _columns = {
-        'fetchmail_claim': fields.boolean("Create Claims from Incoming Mails", readonly=True,
-            fetchmail_model='crm.claim', fetchmail_name='Incoming Claims',
-            help="""Allows you to configure your incoming mail server, and create claims from incoming emails."""),
+        'module_multi_company': fields.boolean('Multi Company',
+            help="""Work in multi-company environments, with appropriate security access between companies.
+                This installs the module multi_company."""),
+        'module_portal': fields.boolean('Portal',
+            help="""Define a portal for your customers or suppliers.  The portal is a group of
+                external users that has specific access rights and rules.
+                This installs the module portal."""),
+        'module_share': fields.boolean('Share',
+            help="""Share OpenERP documents (records) with external users.
+                This installs the module share."""),
     }
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

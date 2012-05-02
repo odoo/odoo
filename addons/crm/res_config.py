@@ -26,12 +26,12 @@ class crm_configuration(osv.osv_memory):
     _inherit = ['sale.config.settings', 'fetchmail.config.settings']
 
     _columns = {
-        'module_crm_caldav': fields.boolean("Caldav Synchronization",
-            help="""Use protocol caldav to synchronize meetings with other calendar applications (like Sunbird).
-                This installs the module crm_caldav."""),
         'fetchmail_lead': fields.boolean("Create Leads from Incoming Mails",
             fetchmail_model='crm.lead', fetchmail_name='Incoming leads',
             help="""Allows you to configure your incoming mail server, and create leads from incoming emails."""),
+        'module_crm_caldav': fields.boolean("Caldav Synchronization",
+            help="""Use protocol caldav to synchronize meetings with other calendar applications (like Sunbird).
+                This installs the module crm_caldav."""),
         'lead_server': fields.char('Server', size=256),
         'lead_port': fields.integer('Port'),
         'lead_type': fields.selection([
@@ -55,10 +55,6 @@ class crm_configuration(osv.osv_memory):
         'module_google_map': fields.boolean("Google maps on customer",
             help="""Locate customers on Google Map.
                 This installs the module google_map."""),
-    }
-
-    _defaults = {
-        'lead_type': 'pop',
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
