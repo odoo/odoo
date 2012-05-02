@@ -828,14 +828,6 @@ $colour4: #8a89ba
         @include radius(1em)
         @include box-shadow(0 1px 2px rgba(0,0,0,0.2) inset)
 
-        &:before
-            color: #ccc
-            font-family: "mnmliconsRegular"
-            content: "r"
-            font-size: 150%
-            padding: 0 1px 0 3px
-            display: inline
-
         .oe_searchview_clear
             cursor: pointer
             position: absolute
@@ -861,6 +853,13 @@ $colour4: #8a89ba
 
         .oe_searchview_facets
             display: inline-block
+            &:before
+                color: #ccc
+                font-family: "mnmliconsRegular"
+                content: "r"
+                font-size: 150%
+                padding: 0 1px 0 3px
+                display: inline
 
         .oe_searchview_input
             height: 2em
