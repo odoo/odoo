@@ -273,13 +273,13 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             self.query.remove(
                 self.query.at(index), {trigger_search: true});
         });
+        // Focus last input if the view itself is clicked
         this.$element.on('click', function (e) {
-            // Focus last input if the view itself is clicked (but not one of
-            // its children, that would be weird)
             if (e.target === self.$element[0]) {
                 self.$element.find('.oe_searchview_input:last').focus();
             }
         });
+        // focusing class on whole searchview, :focus is not transitive
         this.$element.on('focus', function () {
             self.$element.addClass('oe_focused');
         });
