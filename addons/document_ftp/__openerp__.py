@@ -40,7 +40,8 @@ FTP client.
     'update_xml': [
         'wizard/ftp_configuration_view.xml',
         'wizard/ftp_browse_view.xml',
-        'security/ir.model.access.csv'
+        'security/ir.model.access.csv',
+        'res_config_view.xml',
     ],
     'demo_xml': [],
     'test': [

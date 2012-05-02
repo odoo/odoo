@@ -19,14 +19,19 @@
 #
 ##############################################################################
 
-from osv import osv, fields
+from osv import fields, osv
+from tools import config
 
-class crm_claim_settings(osv.osv_memory):
-    _name = 'sale.config.settings'
-    _inherit = ['sale.config.settings', 'fetchmail.config.settings']
-
+class documnet_ftp_setting(osv.osv_memory):
+    _name = 'knowledge.config.settings'
+    _inherit = 'knowledge.config.settings'
     _columns = {
-        'fetchmail_claim': fields.boolean("Create Claims from Incoming Mails", readonly=True,
-            fetchmail_model='crm.claim', fetchmail_name='Incoming Claims',
-            help="""Allows you to configure your incoming mail server, and create claims from incoming emails."""),
+        'document_ftp_url': fields.char('Browse Documents', size=128,
+            help ="""Click the url to browse the documents""", readonly=True),               
     }
+
+    def get_default_ftp_config(self, cr, uid, fields, context=None):
+        action = self.pool.get('ir.model.data').get_object(cr, uid, 'document_ftp', 'action_document_browse')
+        return {'document_ftp_url': action.url}
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
