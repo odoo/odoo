@@ -1046,6 +1046,7 @@
   white-space: nowrap;
 }
 .openerp .oe_searchview {
+  cursor: text;
   position: relative;
   float: right;
   padding-right: 20px;
@@ -1058,6 +1059,12 @@
   -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) inset;
   -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) inset;
   -box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) inset;
+}
+.openerp .oe_searchview.oe_focused {
+  border-color: #a6a6fe;
+  -moz-box-shadow: 0 1px 2px #a6a6fe inset;
+  -webkit-box-shadow: 0 1px 2px #a6a6fe inset;
+  -box-shadow: 0 1px 2px #a6a6fe inset;
 }
 .openerp .oe_searchview .oe_searchview_clear {
   cursor: pointer;

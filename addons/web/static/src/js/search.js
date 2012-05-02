@@ -155,6 +155,7 @@ my.FacetView = instance.web.Widget.extend({
             if ($(e.target).is('.oe_facet_remove')) {
                 return;
             }
+            e.stopPropagation();
             self.$element.siblings().trigger('deselect');
             self.$element.addClass('oe_selected');
         });
@@ -259,7 +260,8 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
                 });
         }
 
-        this.$element.on('click', '.oe_searchview_unfold_drawer', function () {
+        this.$element.on('click', '.oe_searchview_unfold_drawer', function (e) {
+            e.stopImmediatePropagation();
             self.$element.toggleClass('oe_searchview_open_drawer');
         });
         this.$element.on('click', '.oe_facet_remove', function (e) {
@@ -270,6 +272,19 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
                    .length;
             self.query.remove(
                 self.query.at(index), {trigger_search: true});
+        });
+        this.$element.on('click', function (e) {
+            // Focus last input if the view itself is clicked (but not one of
+            // its children, that would be weird)
+            if (e.target === self.$element[0]) {
+                self.$element.find('.oe_searchview_input:last').focus();
+            }
+        });
+        this.$element.on('focus', function () {
+            self.$element.addClass('oe_focused');
+        });
+        this.$element.on('blur', function () {
+            self.$element.removeClass('oe_focused');
         });
 
         return $.when(p, this.ready);

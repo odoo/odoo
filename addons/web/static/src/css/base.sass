@@ -819,6 +819,7 @@ $colour4: #8a89ba
     // }}}
     // SearchView xmo {{{
     .oe_searchview
+        cursor: text
         position: relative
         float: right
         padding-right: 20px
@@ -827,6 +828,10 @@ $colour4: #8a89ba
         background: white
         @include radius(1em)
         @include box-shadow(0 1px 2px rgba(0,0,0,0.2) inset)
+
+        &.oe_focused
+            border-color: $facets-border-selected
+            @include box-shadow(0 1px 2px $facets-border-selected inset)
 
         .oe_searchview_clear
             cursor: pointer
