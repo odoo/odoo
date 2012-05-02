@@ -1417,10 +1417,6 @@ instance.web.form.FormWidget = instance.web.Widget.extend(_.extend({}, instance.
         this._super();
         this.$element.addClass(this.node.attrs["class"] || "");
     },
-    start: function() {
-        this._super();
-        instance.web.form.InvisibilityChangerMixin.start.call(this);
-    },
     destroy: function() {
         $.fn.tipsy.clear();
         this._super.apply(this, arguments);
@@ -1710,8 +1706,8 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(_.extend({
             this._check_css_flags();
         });
     },
-    start: function() {
-        this._super.apply(this, arguments);
+    renderElement: function() {
+        this._super();
         if (this.field.translate) {
             this.$element.addClass('oe_form_field_translatable');
             this.$element.find('.oe_field_translate').click(_.bind(function() {
@@ -1722,12 +1718,16 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(_.extend({
             this.do_attach_tooltip(this, this.view.$element.find('label[for=' + this.id_for_label + ']')[0] || this.$element);
         }
         if (!this.disable_utility_classes) {
-            var set_required = function() {
-                this.$element.toggleClass('oe_form_required', this.get("required"));
-            };
-            this.on("change:required", this, set_required);
-            _.bind(set_required, this)();
+            this.off("change:required", this, this._set_required);
+            this.on("change:required", this, this._set_required);
+            this._set_required();
         }
+    },
+    /**
+     * Private. Do not use.
+     */
+    _set_required: function() {
+        this.$element.toggleClass('oe_form_required', this.get("required"));
     },
     set_value: function(value_) {
         this._inhibit_on_change = true;
