@@ -6,8 +6,34 @@ var QWeb = instance.web.qweb;
 /** @namespace */
 instance.web.form = {};
 
+/**
+ * Interface implemented by the form view or any other object
+ * able to provide the features necessary for the fields to work.
+ * 
+ * Properties:
+ *     - display_invalid_fields : if true, all fields where is_valid() return true should
+ *     be displayed as invalid.
+ * Events:
+ *     - view_content_has_changed : when the values of the fields have changed. When
+ *     this event is triggered all fields should reprocess their modifiers.
+ */
+instance.web.form.FieldManagerInterfaceMixin = {
+    /**
+     * Must return the asked field as in fields_get.
+     */
+    get_field: function(field_name) {},
+    /**
+     * Called by the field when the translate button is clicked.
+     */
+    open_translate_dialog: function(field) {},
+    /**
+     * Returns true when the view is in create mode.
+     */
+    is_create_mode: function() {},
+};
+
 instance.web.views.add('form', 'instance.web.FormView');
-instance.web.FormView = instance.web.View.extend({
+instance.web.FormView = instance.web.View.extend(_.extend({}, instance.web.form.FieldManagerInterfaceMixin, {
     /**
      * Indicates that this view is not searchable, and thus that no search
      * view should be displayed (if there is one active).
@@ -863,7 +889,7 @@ instance.web.FormView = instance.web.View.extend({
     is_create_mode: function() {
         return !this.datarecord.id;
     },
-});
+}));
 
 /**
  * Interface to be implemented by rendering engines for the form view.
@@ -1566,32 +1592,6 @@ instance.web.form.WidgetButton = instance.web.form.FormWidget.extend({
         this.$element.css('color', disabled ? 'grey' : '');
     }
 });
-
-/**
- * Interface implemented by the form view or any other object
- * able to provide the features necessary for the fields to work.
- * 
- * Properties:
- *     - display_invalid_fields : if true, all fields where is_valid() return true should
- *     be displayed as invalid.
- * Events:
- *     - view_content_has_changed : when the values of the fields have changed. When
- *     this event is triggered all fields should reprocess their modifiers.
- */
-instance.web.form.FieldManagerInterface = {
-    /**
-     * Must return the asked field as in fields_get.
-     */
-    get_field: function(field_name) {},
-    /**
-     * Called by the field when the translate button is clicked.
-     */
-    open_translate_dialog: function(field) {},
-    /**
-     * Returns true when the view is in create mode.
-     */
-    is_create_mode: function() {},
-};
 
 /**
  * Interface to be implemented by fields.
