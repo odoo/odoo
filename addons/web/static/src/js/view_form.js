@@ -1604,7 +1604,7 @@ instance.web.form.FieldManagerInterface = {
  *     - changed_value: triggered to inform the view to check on_changes
  * 
  */
-instance.web.form.FieldInterface = {
+instance.web.form.FieldInterfaceMixin = {
     /**
      * Constructor takes 2 arguments:
      * - field_manager: Implements FieldManagerInterface
@@ -1678,7 +1678,7 @@ instance.web.form.FieldInterface = {
  *     a 'changed_value' event that inform the view to trigger on_changes.
  * 
  */
-instance.web.form.AbstractField = instance.web.form.FormWidget.extend(/** @lends instance.web.form.AbstractField# */{
+instance.web.form.AbstractField = instance.web.form.FormWidget.extend(_.extend({}, instance.web.form.FieldInterfaceMixin, {
     /**
      * @constructs instance.web.form.AbstractField
      * @extends instance.web.form.FormWidget
@@ -1783,7 +1783,7 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(/** @lends
     set_input_id: function(id) {
         this.id_for_label = id;
     },
-});
+}));
 
 /**
  * A mixin to apply on any field that has to completely re-render when its readonly state
