@@ -62,7 +62,7 @@
                         </group>
                         <field name="user_id"/>
                         <field name="version_id" colspan="2" widget="selection"/>
-                        <group colspan="2" col="4">
+                        <group colspan="2" col="4" attrs="{'invisible': [('type_id','=', False)]}">
                             <field name="type_id" string="Stages" />
                             <button name="prev_type" string="Previous" type="object" icon="gtk-go-back" help="Change to Previous Stage"/>
                             <button name="next_type" string="Next" type="object" icon="gtk-go-forward" help="Change to Next Stage"/>
@@ -132,8 +132,8 @@
                     <field name="project_id" />
                     <field name="priority" string="Priority"/>
                     <field name="type_id" widget="selection" readonly="1" string="Stages" />
-                    <button name="prev_type" string="Previous" type="object" icon="gtk-go-back" help="Change to Previous Stage"/>
-                    <button name="next_type" string="Next" type="object" icon="gtk-go-forward" help="Change to Next Stage"/>
+                    <button name="prev_type" string="Previous" type="object" icon="gtk-go-back" help="Change to Previous Stage" attrs="{'invisible': [('type_id','=', False)]}"/>
+                    <button name="next_type" string="Next" type="object" icon="gtk-go-forward" help="Change to Next Stage" attrs="{'invisible': [('type_id','=', False)]}"/>
                     <field name="version_id" widget="selection"/>
                     <field name="user_id"/>
                     <field name="progress" widget="progressbar" attrs="{'invisible':[('task_id','=',False)]}"/>
