@@ -6,8 +6,34 @@ var QWeb = instance.web.qweb;
 /** @namespace */
 instance.web.form = {};
 
+/**
+ * Interface implemented by the form view or any other object
+ * able to provide the features necessary for the fields to work.
+ * 
+ * Properties:
+ *     - display_invalid_fields : if true, all fields where is_valid() return true should
+ *     be displayed as invalid.
+ * Events:
+ *     - view_content_has_changed : when the values of the fields have changed. When
+ *     this event is triggered all fields should reprocess their modifiers.
+ */
+instance.web.form.FieldManagerMixin = {
+    /**
+     * Must return the asked field as in fields_get.
+     */
+    get_field: function(field_name) {},
+    /**
+     * Called by the field when the translate button is clicked.
+     */
+    open_translate_dialog: function(field) {},
+    /**
+     * Returns true when the view is in create mode.
+     */
+    is_create_mode: function() {},
+};
+
 instance.web.views.add('form', 'instance.web.FormView');
-instance.web.FormView = instance.web.View.extend({
+instance.web.FormView = instance.web.View.extend(_.extend({}, instance.web.form.FieldManagerMixin, {
     /**
      * Indicates that this view is not searchable, and thus that no search
      * view should be displayed (if there is one active).
@@ -863,23 +889,23 @@ instance.web.FormView = instance.web.View.extend({
     is_create_mode: function() {
         return !this.datarecord.id;
     },
-});
+}));
 
 /**
  * Interface to be implemented by rendering engines for the form view.
  */
-instance.web.form.FormRenderingEngineInterface = {
+instance.web.form.FormRenderingEngineInterface = instance.web.Class.extend({
     set_fields_view: function(fields_view) {},
     set_fields_registry: function(fields_registry) {},
     render_to: function($element) {},
-};
+});
 
 /**
  * Default rendering engine for the form view.
  * 
  * It is necessary to set the view using set_view() before usage.
  */
-instance.web.form.FormRenderingEngine = instance.web.Class.extend({
+instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInterface.extend({
     init: function(view) {
         this.view = view;
     },
@@ -1568,32 +1594,6 @@ instance.web.form.WidgetButton = instance.web.form.FormWidget.extend({
 });
 
 /**
- * Interface implemented by the form view or any other object
- * able to provide the features necessary for the fields to work.
- * 
- * Properties:
- *     - display_invalid_fields : if true, all fields where is_valid() return true should
- *     be displayed as invalid.
- * Events:
- *     - view_content_has_changed : when the values of the fields have changed. When
- *     this event is triggered all fields should reprocess their modifiers.
- */
-instance.web.form.FieldManagerInterface = {
-    /**
-     * Must return the asked field as in fields_get.
-     */
-    get_field: function(field_name) {},
-    /**
-     * Called by the field when the translate button is clicked.
-     */
-    open_translate_dialog: function(field) {},
-    /**
-     * Returns true when the view is in create mode.
-     */
-    is_create_mode: function() {},
-};
-
-/**
  * Interface to be implemented by fields.
  * 
  * Properties:
@@ -1604,10 +1604,10 @@ instance.web.form.FieldManagerInterface = {
  *     - changed_value: triggered to inform the view to check on_changes
  * 
  */
-instance.web.form.FieldInterface = {
+instance.web.form.FieldMixin = {
     /**
      * Constructor takes 2 arguments:
-     * - field_manager: Implements FieldManagerInterface
+     * - field_manager: Implements FieldManagerMixin
      * - node: the "<field>" node in json form
      */
     init: function(field_manager, node) {},
@@ -1668,7 +1668,7 @@ instance.web.form.FieldInterface = {
 };
 
 /**
- * Abstract class for classes implementing FieldInterface.
+ * Abstract class for classes implementing FieldMixin.
  * 
  * Properties:
  *     - effective_readonly: when it is true, the widget is displayed as readonly. Vary depending
@@ -1678,7 +1678,7 @@ instance.web.form.FieldInterface = {
  *     a 'changed_value' event that inform the view to trigger on_changes.
  * 
  */
-instance.web.form.AbstractField = instance.web.form.FormWidget.extend(/** @lends instance.web.form.AbstractField# */{
+instance.web.form.AbstractField = instance.web.form.FormWidget.extend(_.extend({}, instance.web.form.FieldMixin, {
     /**
      * @constructs instance.web.form.AbstractField
      * @extends instance.web.form.FormWidget
@@ -1783,7 +1783,7 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(/** @lends
     set_input_id: function(id) {
         this.id_for_label = id;
     },
-});
+}));
 
 /**
  * A mixin to apply on any field that has to completely re-render when its readonly state
