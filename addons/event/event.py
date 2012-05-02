@@ -102,6 +102,23 @@ class event_event(osv.osv):
             total_confirmed = self.event.register_current
             if total_confirmed < self.event.register_min or total_confirmed > self.event.register_max and self.event.register_max!=0:
                 raise osv.except_osv(_('Error!'),_("The total of confirmed registration for the event '%s' does not meet the expected minimum/maximum. You should maybe reconsider those limits before going further") % (self.event.name))
+            
+    def check_available_seats(self, cr, uid, ids, context=None):
+        if isinstance(ids, list):
+            ids = ids[0]
+        else:
+            ids = ids 
+        total_confirmed = self.browse(cr, uid, ids, context=context).register_current
+        register_max = self.browse(cr, uid, ids, context=context).register_max
+        available_seats = register_max - total_confirmed
+        return available_seats
+            
+    def check_registration_limits_before(self, cr, uid, ids, no_of_registration, context=None):
+        available_seats = self.check_available_seats(cr, uid, ids, context=context)
+        if available_seats and no_of_registration > available_seats:
+             raise osv.except_osv(_('Warning!'),_("Only %d Seats are Available!") % (available_seats))
+        elif available_seats == 0:
+            raise osv.except_osv(_('Warning!'),_("No Tickets Available!"))
 
     def confirm_event(self, cr, uid, ids, context=None):
         register_pool = self.pool.get('event.registration')
@@ -203,6 +220,7 @@ class event_event(osv.osv):
         'note': fields.text('Description', readonly=False, states={'done': [('readonly', True)]}),
         'company_id': fields.many2one('res.company', 'Company', required=False, change_default=True, readonly=False, states={'done': [('readonly', True)]}),
         'is_subscribed' : fields.function(_subscribe_fnc, type="boolean", string='Subscribed'),
+        'location_id': fields.many2one('res.partner','Organization Address', readonly=False, states={'done': [('readonly', True)]}),
     }
 
     _defaults = {
@@ -214,11 +232,15 @@ class event_event(osv.osv):
     def subscribe_to_event(self, cr, uid, ids, context=None):
         register_pool = self.pool.get('event.registration')
         user_pool = self.pool.get('res.users')
+        num_of_seats = int(context.get('ticket', 1))
+        self.check_registration_limits_before(cr, uid, ids, num_of_seats, context=context)
         user = user_pool.browse(cr, uid, uid, context=context)
         curr_reg_ids = register_pool.search(cr, uid, [('user_id', '=', user.id), ('event_id', '=' , ids[0])])
         #the subscription is done with UID = 1 because in case we share the kanban view, we want anyone to be able to subscribe
         if not curr_reg_ids:
-            curr_reg_ids = [register_pool.create(cr, 1, {'event_id': ids[0] ,'email': user.user_email, 'name':user.name, 'user_id': user.id,})]
+            curr_reg_ids = [register_pool.create(cr, 1, {'event_id': ids[0] ,'email': user.user_email, 'name':user.name, 'user_id': user.id, 'nb_register': num_of_seats})]
+        else:
+            register_pool.write(cr, uid, curr_reg_ids, {'nb_register': num_of_seats}, context=context)
         return register_pool.confirm_registration(cr, 1, curr_reg_ids, context=context)
 
     def unsubscribe_to_event(self, cr, uid, ids, context=None):
@@ -236,7 +258,6 @@ class event_event(osv.osv):
     _constraints = [
         (_check_closing_date, 'Error ! Closing Date cannot be set before Beginning Date.', ['date_end']),
     ]
-
     def onchange_event_type(self, cr, uid, ids, type_event, context=None):
         if type_event:
             type_info =  self.pool.get('event.type').browse(cr,uid,type_event,context)
@@ -295,6 +316,10 @@ class event_registration(osv.osv):
     def registration_open(self, cr, uid, ids, context=None):
         """ Open Registration
         """
+        event_obj = self.pool.get('event.event')
+        event_id = self.browse(cr, uid, ids, context=context)[0].event_id.id
+        no_of_registration = self.browse(cr, uid, ids, context=context)[0].nb_register
+        event_obj.check_registration_limits_before(cr, uid, event_id, no_of_registration, context=context)
         res = self.confirm_registration(cr, uid, ids, context=context)
         self.mail_user(cr, uid, ids, context=context)
         return res
@@ -383,6 +408,5 @@ class event_registration(osv.osv):
         return {'value': data}
 
 event_registration()
-
-
+    
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
