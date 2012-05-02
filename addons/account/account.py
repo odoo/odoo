@@ -494,7 +494,6 @@ class account_account(osv.osv):
              store={
                     'account.account': (_get_children_and_consol, ['level', 'parent_id'], 10),
                    }),
-        'decimal_precision': fields.many2one('decimal.precision', 'Decimal Precision on Account'),                
     }
 
     _defaults = {

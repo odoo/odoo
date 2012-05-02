@@ -204,7 +204,6 @@ class purchase_order(osv.osv):
         'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position'),
         'product_id': fields.related('order_line','product_id', type='many2one', relation='product.product', string='Product'),
         'create_uid':  fields.many2one('res.users', 'Responsible'),
-        'decimal_precision': fields.many2one('decimal.precision', 'Decimal Precision on Purchase Price'),
         'company_id': fields.many2one('res.company','Company',required=True,select=1),
     }
     _defaults = {
