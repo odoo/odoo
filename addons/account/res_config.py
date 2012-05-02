@@ -36,7 +36,7 @@ class account_config_settings(osv.osv_memory):
     _columns = {
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'has_default_company': fields.boolean('Has default company', readonly=True),
-
+        'decimal_precision_account': fields.integer('Decimal Precision on Account'),
         'expects_chart_of_accounts': fields.related('company_id', 'expects_chart_of_accounts', type='boolean',
             string='Chart of Accounts for this Company', 
             help=""" Check  this box if this company is a legal entity."""),
@@ -133,6 +133,21 @@ class account_config_settings(osv.osv_memory):
         'period': 'month',
     }
 
+    def get_default_dp(self, cr, uid, fields, context=None):
+        acc_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'product','decimal_account')[1]
+        dec_id =self.pool.get('decimal.precision').browse(cr, uid, acc_id,context=context)
+        return {
+            'decimal_precision_account': dec_id.digits,
+        }
+        
+    def set_default_dp(self, cr, uid, ids, context=None):
+        config = self.browse(cr, uid, ids[0], context)
+        acc_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'product', 'decimal_account')[1]
+        dec_id =self.pool.get('decimal.precision').browse(cr, uid, acc_id,context=context) 
+        dec_id.write({
+            'digits': config.decimal_precision_account,
+        })
+        
     def create(self, cr, uid, values, context=None):
         id = super(account_config_settings, self).create(cr, uid, values, context)
         # Hack: to avoid some nasty bug, related fields are not written upon record creation.

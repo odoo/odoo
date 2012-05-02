@@ -26,6 +26,7 @@ class stock_config_settings(osv.osv_memory):
     _inherit = 'res.config.settings'
 
     _columns = {
+        'decimal_precision_stock': fields.integer('Decimal Precision on Stock Weight'),                
         'module_claim_from_delivery': fields.boolean("Allows Claims on Delivery Orders",
             help="""Adds a Claim link to the delivery order.
                 This installs the module claim_from_delivery."""),
@@ -74,5 +75,20 @@ class stock_config_settings(osv.osv_memory):
             implied_group='product.group_product_variant',
             help="""This allows to configure and use Product Variant."""),                
     }
+    
+    def get_default_dp(self, cr, uid, fields, context=None):
+        stock_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'product', 'decimal_stock_weight')[1]
+        dec_id =self.pool.get('decimal.precision').browse(cr, uid, stock_id, context=context)
+        return {
+            'decimal_precision_stock': dec_id.digits,
+        }
+        
+    def set_default_dp(self, cr, uid, ids, context=None):
+        config = self.browse(cr, uid, ids[0], context)
+        stock_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'product', 'decimal_stock_weight')[1]
+        dec_id =self.pool.get('decimal.precision').browse(cr, uid, stock_id, context=context) 
+        dec_id.write({
+            'digits': config.decimal_precision_stock,
+        })    
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

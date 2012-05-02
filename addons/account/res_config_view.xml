@@ -65,6 +65,7 @@
                                 <field name="default_purchase_tax" domain="[('type_tax_use','=','purchase'), ('company_id','=',company_id)]" attrs="{'invisible': ['|', ('expects_chart_of_accounts','=',True), ('has_fiscal_year','=',False)]}"/>
                                 <field name="currency_id" widget="selection"/>
                                 <field name="module_account_budget"/>
+                                <field name="decimal_precision_account"/>
                             </group>
                         </group>
                         <group colspan="2" col="2">

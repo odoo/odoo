@@ -27,6 +27,7 @@ class sale_configuration(osv.osv_memory):
     _inherit = 'sale.config.settings'
 
     _columns = {
+        'decimal_precision_sale': fields.integer('Decimal Precision on Sales Price'),
         'group_invoice_so_lines': fields.boolean('Based on Sales Orders',
             implied_group='sale.group_invoice_so_lines',
             help="To allow your salesman to make invoices for sale order lines using the menu 'Lines to Invoice'."),
@@ -132,6 +133,21 @@ class sale_configuration(osv.osv_memory):
         'time_unit': _get_default_time_unit,
     }
 
+    def get_default_dp(self, cr, uid, fields, context=None):
+        sale_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'product','decimal_sale')[1]
+        dec_id =self.pool.get('decimal.precision').browse(cr, uid, sale_id,context=context)
+        return {
+            'decimal_precision_sale': dec_id.digits,
+        }
+        
+    def set_default_dp(self, cr, uid, ids, context=None):
+        config = self.browse(cr, uid, ids[0], context)
+        sale_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'product', 'decimal_sale')[1]
+        dec_id =self.pool.get('decimal.precision').browse(cr, uid, sale_id,context=context) 
+        dec_id.write({
+            'digits': config.decimal_precision_sale,
+        })
+        
     def set_sale_defaults(self, cr, uid, ids, context=None):
         ir_values = self.pool.get('ir.values')
         ir_model_data = self.pool.get('ir.model.data')
