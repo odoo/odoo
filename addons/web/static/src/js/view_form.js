@@ -13,6 +13,8 @@ instance.web.form = {};
  * Properties:
  *     - display_invalid_fields : if true, all fields where is_valid() return true should
  *     be displayed as invalid.
+ *     - buttons_invisible: boolean. If true, all buttons should be switched to invisible (TODO: clean
+ *     this later, should be replaced with a better "mode" property)
  * Events:
  *     - view_content_has_changed : when the values of the fields have changed. When
  *     this event is triggered all fields should reprocess their modifiers.
@@ -80,6 +82,10 @@ instance.web.FormView = instance.web.View.extend(_.extend({}, instance.web.form.
         this.reload_mutex = new $.Mutex();
         this.rendering_engine = new instance.web.form.FormRenderingEngineReadonly(this);
         this.qweb = null; // A QWeb instance will be created if the view is a QWeb template
+        var _check_buttons = function() {
+            this.set({"buttons_invisible": this.get("mode") !== "view"});
+        };
+        this.on("change:mode", this, _check_buttons);
     },
     destroy: function() {
         _.each(this.get_widgets(), function(w) {
@@ -1523,6 +1529,11 @@ instance.web.form.WidgetButton = instance.web.form.FormWidget.extend({
             this.view.default_focus_button = this;
         }
         this.view.on('view_content_has_changed', this, this.check_disable);
+        var _check_invisible = function() {
+            this.set({"force_invisible": this.view.get("buttons_invisible")});
+        };
+        this.view.on("change:buttons_invisible", this, _check_invisible);
+        _.bind(_check_invisible, this)();
     },
     start: function() {
         this._super.apply(this, arguments);
