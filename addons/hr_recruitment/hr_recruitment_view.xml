@@ -179,6 +179,7 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Jobs">
+               <filter icon="terp-check" name="inbox" string="Inbox" domain="[('message_state','=','unread')]"/>
                <filter icon="terp-document-new" string="New" name="filter_new" 
                    domain="[('state','=','draft')]"
                    help="All Initial Jobs"

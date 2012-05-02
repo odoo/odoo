@@ -9,7 +9,7 @@
         <field name="domain">['|', ('type','=','lead'), ('type','=',False)]</field>
         <field name="view_id" ref="crm_case_tree_view_leads"/>
         <field name="search_view_id" ref="crm.view_crm_case_leads_filter"/>
-        <field name="context">{'default_type': 'lead', 'search_default_section_id': section_id, 'stage_type': 'lead'}</field>
+        <field name="context">{'default_type': 'lead', 'search_default_section_id': section_id, 'stage_type': 'lead', 'search_default_inbox': 1}</field>
         <field name="help">
             &lt;img src="http://www.thaicrmsoftware.com/wp-content/uploads/2011/11/lead-conversion.jpg" align="right" style="padding: 6px" width="306" height="223"&gt;
             &lt;h2&gt;Create your first OpenERP Lead &lt;/h2&gt;

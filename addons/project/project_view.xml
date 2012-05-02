@@ -299,7 +299,7 @@
                             <separator string="Miscelleanous" colspan="4"/>
                             <field name="partner_id" />
                             <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
-                            <group col="4" colspan="2">
+                            <group col="4" colspan="2" attrs="{'invisible': ['|', ('project_id','=', False), ('type_id','=', False)]}">
                                 <field name="type_id" widget="selection" readonly="1"/>
                                 <button name="prev_type" string="Previous" type="object" icon="gtk-go-back" help="Change to Previous Stage"/>
                                 <button name="next_type" string="Next" type="object" icon="gtk-go-forward" help="Change to Next Stage"/>
@@ -429,11 +429,11 @@
                     <field name="date_deadline" invisible="context.get('deadline_visible',True)"/>
                     <field name="type_id" invisible="context.get('set_visible',False)"/>
                     <button name="next_type" invisible="context.get('set_visible',False)"
-                        states="draft,open,pending"
+                        states="open,pending"
                         string="Change Stage"
                         type="object"
                         icon="gtk-go-forward"
-                        help="Change Type"/>
+                        help="Change Type" attrs="{'invisible': [('type_id','=', False)]}"/>
                     <field name="date_start" invisible="1" groups="base.group_no_one"/>
                     <field name="date_end" invisible="1" groups="base.group_no_one"/>
                     <field name="progress" widget="progressbar" invisible="context.get('set_visible',False)"/>
@@ -489,6 +489,7 @@
             <field name="arch" type="xml">
                <search string="Tasks">
                     <group>
+                        <filter icon="terp-check" name="inbox" string="Inbox" domain="[('message_state','=','unread')]"/>
                         <filter name="draft" string="New" domain="[('state','=','draft')]" help="New Tasks" icon="terp-check"/>
                         <filter name="open" string="In Progress" domain="[('state','=','open')]" help="In Progress Tasks" icon="terp-camera_test"/>
                         <filter string="Pending" domain="[('state','=','pending')]" context="{'show_delegated':False}" help="Pending Tasks" icon="terp-gtk-media-pause"/>
@@ -529,7 +530,7 @@
             <field name="view_mode">kanban,tree,form,calendar,gantt,graph</field>
             <field eval="False" name="filter"/>
             <field name="view_id" eval="False"/>
-            <field name="context">{"search_default_project_id": project_id}</field>
+            <field name="context">{"search_default_project_id": project_id, 'search_default_inbox': 1}</field>
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="help">A task represents a work that has to be done. Each user works in his own list of tasks where he can record his task work in hours. He can work and close the task itself or delegate it to another user. If you delegate a task to another user, you get a new task in pending state, which will be reopened when you have to review the work achieved. If you install the project_timesheet module, task work can be invoiced based on the project configuration. With the project_mrp module, sales orders can create tasks automatically when they are confirmed.</field>
         </record>
