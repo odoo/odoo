@@ -570,7 +570,7 @@ class mail_thread(osv.osv):
             data.update(custom_values)
         res_id = model_pool.create(cr, uid, data, context=context)
         self.message_append_dict(cr, uid, [res_id], msg_dict, context=context)
-        self.write(cr, uid, [res_id], {'message_state':'unread'}, context)
+        self.write(cr, uid, [res_id], {'message_state':'unread'}, context=context)
         return res_id
 
     def message_update(self, cr, uid, ids, msg_dict, vals={}, default_act=None, context=None):
