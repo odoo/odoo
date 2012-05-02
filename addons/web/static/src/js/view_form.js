@@ -17,7 +17,7 @@ instance.web.form = {};
  *     - view_content_has_changed : when the values of the fields have changed. When
  *     this event is triggered all fields should reprocess their modifiers.
  */
-instance.web.form.FieldManagerInterfaceMixin = {
+instance.web.form.FieldManagerMixin = {
     /**
      * Must return the asked field as in fields_get.
      */
@@ -33,7 +33,7 @@ instance.web.form.FieldManagerInterfaceMixin = {
 };
 
 instance.web.views.add('form', 'instance.web.FormView');
-instance.web.FormView = instance.web.View.extend(_.extend({}, instance.web.form.FieldManagerInterfaceMixin, {
+instance.web.FormView = instance.web.View.extend(_.extend({}, instance.web.form.FieldManagerMixin, {
     /**
      * Indicates that this view is not searchable, and thus that no search
      * view should be displayed (if there is one active).
@@ -1604,10 +1604,10 @@ instance.web.form.WidgetButton = instance.web.form.FormWidget.extend({
  *     - changed_value: triggered to inform the view to check on_changes
  * 
  */
-instance.web.form.FieldInterfaceMixin = {
+instance.web.form.FieldMixin = {
     /**
      * Constructor takes 2 arguments:
-     * - field_manager: Implements FieldManagerInterface
+     * - field_manager: Implements FieldManagerMixin
      * - node: the "<field>" node in json form
      */
     init: function(field_manager, node) {},
@@ -1668,7 +1668,7 @@ instance.web.form.FieldInterfaceMixin = {
 };
 
 /**
- * Abstract class for classes implementing FieldInterface.
+ * Abstract class for classes implementing FieldMixin.
  * 
  * Properties:
  *     - effective_readonly: when it is true, the widget is displayed as readonly. Vary depending
@@ -1678,7 +1678,7 @@ instance.web.form.FieldInterfaceMixin = {
  *     a 'changed_value' event that inform the view to trigger on_changes.
  * 
  */
-instance.web.form.AbstractField = instance.web.form.FormWidget.extend(_.extend({}, instance.web.form.FieldInterfaceMixin, {
+instance.web.form.AbstractField = instance.web.form.FormWidget.extend(_.extend({}, instance.web.form.FieldMixin, {
     /**
      * @constructs instance.web.form.AbstractField
      * @extends instance.web.form.FormWidget
