@@ -136,8 +136,8 @@
                     <field name="type"/>
                     <field name="product_image"/>
                     <field name="list_price"/>
-                    <field name="total_reception"/>
-                    <field name="total_delivery"/>
+                    <field name="reception_count"/>
+                    <field name="delivery_count"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_product_vignette">
@@ -152,13 +152,11 @@
                                         <li>Price: <field name="lst_price"></field></li>
                                         <li>Cost: <field name="standard_price"></field></li>
                                     </ul>
-                                    <a name="get_receptions" type="object">
-                                        <t t-if="record.total_reception.raw_value &lt;= 1">Reception(<t t-esc="record.total_reception.value"/>)</t>
-                                        <t t-if="record.total_reception.raw_value > 1">Receptions(<t t-esc="record.total_reception.value"/>)</t>
+                                    <a name="%(stock.action_picking_tree4)d" type="action">
+                                        <t t-if="record.reception_count.value">Receptions(<t t-esc="record.reception_count.value"/>)</t>
                                     </a>
-                                    <a name="get_deliveries" type="object">
-                                        <t t-if="record.total_delivery.raw_value &lt;= 1">Delivery(<t t-esc="record.total_delivery.value"/>)</t>
-                                        <t t-if="record.total_delivery.raw_value > 1">Deliveries(<t t-esc="record.total_delivery.value"/>)</t>
+                                    <a name="%(stock.action_out_picking_move)d" type="action">
+                                        <t t-if="record.delivery_count.value">Deliveries(<t t-esc="record.delivery_count.value"/>)</t>
                                     </a>
                                 </div>
                             </div>
