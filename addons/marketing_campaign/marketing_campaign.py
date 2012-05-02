@@ -269,8 +269,8 @@ class marketing_campaign_segment(osv.osv):
                                            'If the campaign has a "unique field" set, "no duplicates" will also prevent selecting records which have '\
                                            'the same value for the unique field as other records that already entered the campaign.'),
         'state': fields.selection([('draft', 'New'),
-                                   ('running', 'Running'),
                                    ('cancelled', 'Cancelled'),
+                                   ('running', 'Running'),
                                    ('done', 'Done')],
                                    'State',),
         'date_run': fields.datetime('Launch Date', help="Initial start date of this segment."),
