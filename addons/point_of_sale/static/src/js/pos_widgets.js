@@ -72,11 +72,11 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
             this.$element.find('button').click(_.bind(this.performPayment, this));
         },
         performPayment: function(event) {
-            if (this.pos.get('selectedOrder').get('step') === 'receipt')
+            if (this.pos.get('selectedOrder').get('screen') === 'receipt')
                 return;
             var cashRegister, cashRegisterCollection, cashRegisterId;
             /* set correct view */
-            this.pos.get('selectedOrder').set({'step': 'payment'});
+            this.pos.screen_selector.set_current_screen('payment');
 
             cashRegisterId = event.currentTarget.attributes['cash-register-id'].nodeValue;
             cashRegisterCollection = this.pos.get('cashRegisters');
@@ -104,40 +104,6 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
             }));
             return this;
         }
-    });
-    /*
-     There are 3 steps in a POS workflow:
-     1. prepare the order (i.e. chose products, quantities etc.)
-     2. choose payment method(s) and amount(s)
-     3. validae order and print receipt
-     It should be possible to go back to any step as long as step 3 hasn't been completed.
-     Modifying an order after validation shouldn't be allowed.
-     */
-    module.StepSwitcher = instance.web.OldWidget.extend({
-        init: function(parent, options) {
-            this._super(parent);
-            this.pos = options.pos;
-            this.change_order();
-            this.pos.bind('change:selectedOrder', this.change_order, this);
-        },
-        change_order: function() {
-            console.log('change_order',this.selected_order);
-            if (this.selected_order) {
-                this.selected_order.unbind('change:step', this.change_step);
-            }
-            this.selected_order = this.pos.get('selectedOrder');
-            if (this.selected_order) {
-                this.selected_order.bind('change:step', this.change_step, this);
-            }
-            this.change_step();
-        },
-        change_step: function() {
-            console.log('change_step',this.selected_order);
-            var new_step = this.selected_order ? this.selected_order.get('step') : 'products';
-            console.log('new step:', new_step);
-            $('.step-screen').hide();
-            $('#' + new_step + '-screen').show();
-        },
     });
 
 // ---------- "Shopping Carts" ----------
@@ -265,49 +231,10 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
         },
     });
 
-// ---------- "Products" step. ----------
+// ---------- Product Screen ----------
 
-    module.CategoryWidget = instance.web.OldWidget.extend({
-        init: function(parent, options){
-            this._super(parent,options.element_id);
-            this.pos = options.pos;
-        },
-        start: function() {
-            this.$element.find(".oe-pos-categories-list a").click(_.bind(this.changeCategory, this));
-        },
-        template_fct: qweb_template('pos-category-template'),
-        renderElement: function() {
-            var self = this;
-            var c;
-            this.$element.html(this.template_fct({
-                breadcrumb: (function() {
-                    var _i, _len, _results;
-                    _results = [];
-                    for (_i = 0, _len = self.ancestors.length; _i < _len; _i++) {
-                        c = self.ancestors[_i];
-                        _results.push(self.pos.categories[c]);
-                    }
-                    return _results;
-                })(),
-                categories: (function() {
-                    var _i, _len, _results;
-                    _results = [];
-                    for (_i = 0, _len = self.children.length; _i < _len; _i++) {
-                        c = self.children[_i];
-                        _results.push(self.pos.categories[c]);
-                    }
-                    return _results;
-                })()
-            }));
-        },
-        changeCategory: function(a) {
-            var id = $(a.target).data("category-id");
-            this.on_change_category(id);
-        },
-        on_change_category: function(id) {},
-    });
 
-    module.ProductWidget = instance.web.OldWidget.extend({
+    module.ProductWidget = instance.web.Widget.extend({
         tagName:'li',
         template_fct: qweb_template('pos-product-template'),
         init: function(parent, options) {
@@ -326,26 +253,6 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
         renderElement: function() {
             this.$element.addClass("product");
             this.$element.html(this.template_fct(this.model.toJSON()));
-            return this;
-        },
-    });
-
-    module.ProductListWidget = instance.web.OldWidget.extend({
-        init: function(parent, options) {
-            this._super(parent);
-            this.model = options.model;
-            this.pos = options.pos;
-            this.pos.get('products').bind('reset', this.renderElement, this);
-        },
-        renderElement: function() {
-            this.$element.empty();
-            (this.pos.get('products')).each(_.bind( function(product) {
-                var p = new module.ProductWidget(null, {
-                        model: product,
-                        pos: this.pos
-                });
-                p.appendTo(this.$element);
-            }, this));
             return this;
         },
     });
@@ -384,146 +291,6 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
             this.$element.addClass('paymentline');
             $('input', this.$element).keyup(_.bind(this.changeAmount, this));
             $('.delete-payment-line', this.$element).click(this.on_delete);
-        },
-    });
-
-    module.PaymentWidget = instance.web.OldWidget.extend({
-        init: function(parent, options) {
-            this._super(parent);
-            this.model = options.model;
-            this.pos = options.pos;
-            this.pos.bind('change:selectedOrder', this.changeSelectedOrder, this);
-            this.bindPaymentLineEvents();
-            this.bindOrderLineEvents();
-        },
-        paymentLineList: function() {
-            return this.$element.find('#paymentlines');
-        },
-        start: function() {
-            $('button#validate-order', this.$element).click(_.bind(this.validateCurrentOrder, this));
-            $('.oe-back-to-products', this.$element).click(_.bind(this.back, this));
-        },
-        back: function() {
-            this.pos.get('selectedOrder').set({"step": "products"});
-        },
-        validateCurrentOrder: function() {
-            var callback, currentOrder;
-            currentOrder = this.pos.get('selectedOrder');
-            $('button#validate-order', this.$element).attr('disabled', 'disabled');
-            this.pos.push_order(currentOrder.exportAsJSON()).then(_.bind(function() {
-                $('button#validate-order', this.$element).removeAttr('disabled');
-                return currentOrder.set({
-                    validated: true
-                });
-            }, this));
-        },
-        bindPaymentLineEvents: function() {
-            this.currentPaymentLines = (this.pos.get('selectedOrder')).get('paymentLines');
-            this.currentPaymentLines.bind('add', this.addPaymentLine, this);
-            this.currentPaymentLines.bind('remove', this.renderElement, this);
-            this.currentPaymentLines.bind('all', this.updatePaymentSummary, this);
-        },
-        bindOrderLineEvents: function() {
-            this.currentOrderLines = (this.pos.get('selectedOrder')).get('orderLines');
-            this.currentOrderLines.bind('all', this.updatePaymentSummary, this);
-        },
-        changeSelectedOrder: function() {
-            this.currentPaymentLines.unbind();
-            this.bindPaymentLineEvents();
-            this.currentOrderLines.unbind();
-            this.bindOrderLineEvents();
-            this.renderElement();
-        },
-        addPaymentLine: function(newPaymentLine) {
-            var x = new module.PaymentlineWidget(null, {
-                    model: newPaymentLine
-                });
-            x.on_delete.add(_.bind(this.deleteLine, this, x));
-            x.appendTo(this.paymentLineList());
-        },
-        renderElement: function() {
-            this.paymentLineList().empty();
-            this.currentPaymentLines.each(_.bind( function(paymentLine) {
-                this.addPaymentLine(paymentLine);
-            }, this));
-            this.updatePaymentSummary();
-        },
-        deleteLine: function(lineWidget) {
-        	this.currentPaymentLines.remove([lineWidget.model]);
-        },
-        updatePaymentSummary: function() {
-            var currentOrder, dueTotal, paidTotal, remaining, remainingAmount;
-            currentOrder = this.pos.get('selectedOrder');
-            paidTotal = currentOrder.getPaidTotal();
-            dueTotal = currentOrder.getTotal();
-            this.$element.find('#payment-due-total').html(dueTotal.toFixed(2));
-            this.$element.find('#payment-paid-total').html(paidTotal.toFixed(2));
-            remainingAmount = dueTotal - paidTotal;
-            remaining = remainingAmount > 0 ? 0 : (-remainingAmount).toFixed(2);
-            $('#payment-remaining').html(remaining);
-        },
-        setNumpadState: function(numpadState) {
-        	if (this.numpadState) {
-        		this.numpadState.unbind('setValue', this.setValue);
-        		this.numpadState.unbind('change:mode', this.setNumpadMode);
-        	}
-        	this.numpadState = numpadState;
-        	if (this.numpadState) {
-        		this.numpadState.bind('setValue', this.setValue, this);
-        		this.numpadState.bind('change:mode', this.setNumpadMode, this);
-        		this.numpadState.reset();
-        		this.setNumpadMode();
-        	}
-        },
-    	setNumpadMode: function() {
-    		this.numpadState.set({mode: 'payment'});
-    	},
-        setValue: function(val) {
-        	this.currentPaymentLines.last().set({amount: val});
-        },
-    });
-
-    module.ReceiptWidget = instance.web.OldWidget.extend({
-        init: function(parent, options) {
-            this._super(parent);
-            this.model = options.model;
-            this.pos = options.pos;
-            this.pos = options.pos;
-            this.user = this.pos.get('user');
-            this.company = this.pos.get('company');
-            this.shop_obj = this.pos.get('shop');
-        },
-        start: function() {
-            this.pos.bind('change:selectedOrder', this.changeSelectedOrder, this);
-            this.changeSelectedOrder();
-        },
-        renderElement: function() {
-            this.$element.html(qweb_template('pos-receipt-view'));
-            $('button#pos-finish-order', this.$element).click(_.bind(this.finishOrder, this));
-            $('button#print-the-ticket', this.$element).click(_.bind(this.print, this));
-        },
-        print: function() {
-            window.print();
-        },
-        finishOrder: function() {
-            this.pos.get('selectedOrder').destroy();
-        },
-        changeSelectedOrder: function() {
-            if (this.currentOrderLines)
-                this.currentOrderLines.unbind();
-            this.currentOrderLines = (this.pos.get('selectedOrder')).get('orderLines');
-            this.currentOrderLines.bind('add', this.refresh, this);
-            this.currentOrderLines.bind('change', this.refresh, this);
-            this.currentOrderLines.bind('remove', this.refresh, this);
-            if (this.currentPaymentLines)
-                this.currentPaymentLines.unbind();
-            this.currentPaymentLines = (this.pos.get('selectedOrder')).get('paymentLines');
-            this.currentPaymentLines.bind('all', this.refresh, this);
-            this.refresh();
-        },
-        refresh: function() {
-            this.currentOrder = this.pos.get('selectedOrder');
-            $('.pos-receipt-container', this.$element).html(qweb_template('pos-ticket')({widget:this}));
         },
     });
 
@@ -594,7 +361,6 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
             this.right_button_list = [];
         },
         start: function(){
-            console.log('hello world!');
             window.actionbarwidget = this;
         },
         destroyButtons:function(position){
@@ -642,35 +408,220 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
 
 // ---------- Screens Widgets ----------
 
-
     module.ScreenWidget = instance.web.Widget.extend({
         init: function(parent, options){
             this._super(parent, options);
         },
-        show: function(){},
-        hide: function(){},
+        show: function(){
+            if(this.$element){
+                this.$element.show();
+            }
+        },
+        hide: function(){
+            if(this.$element){
+                this.$element.hide();
+            }
+        },
     });
 
-    module.ScreenContainerWidget = instance.web.Widget.extend({
-        init: function(parent, options){
+    module.ScreenSelector = instance.web.Class.extend({
+        init: function(options){
             this.pos = options.pos;
             this.screen_set = options.screen_set || {};
-            this.current_screen = undefined;
+            this.current_screen = options.current_screen ? this.screen_set[options.current_screen] : undefined;
+            this.default_screen = options.default_screen;
+            
+            var current = null;
+            for(screen_name in this.screen_set){
+                var screen = this.screen_set[screen_name];
+                if(screen === this.current_screen){
+                    current = screen;
+                }else{
+                    screen.hide();
+                }
+            }
+            if(current){
+                current.show();
+            }
+
+            this.selected_order = this.pos.get('selectedOrder');
+            this.pos.bind('change:selectedOrder', this.load_saved_screen, this);
         },
-        addScreen: function(screen_name, screen){
+        add_screen: function(screen_name, screen){
             screen.hide();
             this.screen_set[screen_name] = screen;
             return this;
         },
-        setCurrentScreen: function(screen_name){
-            var screen = this.screen_set[screen_name];
-            if(screen && screen != current_screen){
-                if(current_screen){
-                    current_screen.hide();
-                }
-                current_screen = screen;
-                current_screen.show();
+        load_saved_screen:  function(){
+            if(this.selected_order != this.pos.get('selectedOrder')){
+                var screen = this.pos.get('selectedOrder').get('screen') || this.default_screen;
+                this.selected_order = this.pos.get('selectedOrder');
+                this.set_current_screen(screen);
             }
+        },
+        set_current_screen: function(screen_name){
+            var screen = this.screen_set[screen_name];
+            
+            this.pos.get('selectedOrder').set({'screen':screen_name});
+
+            console.log('Set Current Screen: '+screen_name+' :',screen,'old:',this.current_screen);
+            if(screen && screen !== this.current_screen){
+                if(this.current_screen){
+                    this.current_screen.hide();
+                }
+                this.current_screen = screen;
+                this.current_screen.show();
+            }
+        },
+    });
+
+    module.PaymentScreenWidget = module.ScreenWidget.extend({
+        template_fct: qweb_template('PaymentScreenWidget'),
+        init: function(parent, options) {
+            this._super(parent);
+            this.model = options.model;
+            this.pos = options.pos;
+            this.pos_widget = options.pos_widget;
+            this.pos.bind('change:selectedOrder', this.changeSelectedOrder, this);
+            this.bindPaymentLineEvents();
+            this.bindOrderLineEvents();
+        },
+        show: function(){
+            this._super();
+            this.setNumpadState(this.pos_widget.numpadView.state);
+        },
+        hide: function(){
+            this._super();
+            this.pos_widget.orderView.setNumpadState(null);
+            this.pos_widget.payment_screen.setNumpadState(null);
+        },
+        paymentLineList: function() {
+            return this.$element.find('#paymentlines');
+        },
+        back: function() {
+            console.log('back');
+            this.pos.screen_selector.set_current_screen('products');
+        },
+        validateCurrentOrder: function() {
+            var callback, currentOrder;
+            currentOrder = this.pos.get('selectedOrder');
+            $('button#validate-order', this.$element).attr('disabled', 'disabled');
+            this.pos.push_order(currentOrder.exportAsJSON()).then(_.bind(function() {
+                $('button#validate-order', this.$element).removeAttr('disabled');
+                return currentOrder.set({
+                    validated: true
+                });
+            }, this));
+        },
+        bindPaymentLineEvents: function() {
+            this.currentPaymentLines = (this.pos.get('selectedOrder')).get('paymentLines');
+            this.currentPaymentLines.bind('add', this.addPaymentLine, this);
+            this.currentPaymentLines.bind('remove', this.renderElement, this);
+            this.currentPaymentLines.bind('all', this.updatePaymentSummary, this);
+        },
+        bindOrderLineEvents: function() {
+            this.currentOrderLines = (this.pos.get('selectedOrder')).get('orderLines');
+            this.currentOrderLines.bind('all', this.updatePaymentSummary, this);
+        },
+        changeSelectedOrder: function() {
+            this.currentPaymentLines.unbind();
+            this.bindPaymentLineEvents();
+            this.currentOrderLines.unbind();
+            this.bindOrderLineEvents();
+            this.renderElement();
+        },
+        addPaymentLine: function(newPaymentLine) {
+            var x = new module.PaymentlineWidget(null, {
+                    model: newPaymentLine
+                });
+            x.on_delete.add(_.bind(this.deleteLine, this, x));
+            x.appendTo(this.paymentLineList());
+        },
+        renderElement: function() {
+            this._super();
+            this.$element.html(this.template_fct());
+            this.paymentLineList().empty();
+            this.currentPaymentLines.each(_.bind( function(paymentLine) {
+                this.addPaymentLine(paymentLine);
+            }, this));
+            this.updatePaymentSummary();
+            $('button#validate-order', this.$element).click(_.bind(this.validateCurrentOrder, this));
+            $('.oe-back-to-products', this.$element).click(_.bind(this.back, this));
+        },
+        deleteLine: function(lineWidget) {
+        	this.currentPaymentLines.remove([lineWidget.model]);
+        },
+        updatePaymentSummary: function() {
+            var currentOrder, dueTotal, paidTotal, remaining, remainingAmount;
+            currentOrder = this.pos.get('selectedOrder');
+            paidTotal = currentOrder.getPaidTotal();
+            dueTotal = currentOrder.getTotal();
+            this.$element.find('#payment-due-total').html(dueTotal.toFixed(2));
+            this.$element.find('#payment-paid-total').html(paidTotal.toFixed(2));
+            remainingAmount = dueTotal - paidTotal;
+            remaining = remainingAmount > 0 ? 0 : (-remainingAmount).toFixed(2);
+            $('#payment-remaining').html(remaining);
+        },
+        setNumpadState: function(numpadState) {
+        	if (this.numpadState) {
+        		this.numpadState.unbind('setValue', this.setValue);
+        		this.numpadState.unbind('change:mode', this.setNumpadMode);
+        	}
+        	this.numpadState = numpadState;
+        	if (this.numpadState) {
+        		this.numpadState.bind('setValue', this.setValue, this);
+        		this.numpadState.bind('change:mode', this.setNumpadMode, this);
+        		this.numpadState.reset();
+        		this.setNumpadMode();
+        	}
+        },
+    	setNumpadMode: function() {
+    		this.numpadState.set({mode: 'payment'});
+    	},
+        setValue: function(val) {
+        	this.currentPaymentLines.last().set({amount: val});
+        },
+    });
+
+    module.ReceiptScreenWidget = module.ScreenWidget.extend({
+        template: 'ReceiptScreenWidget',
+        init: function(parent, options) {
+            this._super(parent);
+            this.model = options.model;
+            this.pos = options.pos;
+            this.pos = options.pos;
+            this.user = this.pos.get('user');
+            this.company = this.pos.get('company');
+            this.shop_obj = this.pos.get('shop');
+        },
+        start: function() {
+            this.pos.bind('change:selectedOrder', this.changeSelectedOrder, this);
+            this.changeSelectedOrder();
+            $('button#pos-finish-order', this.$element).click(_.bind(this.finishOrder, this));
+            $('button#print-the-ticket', this.$element).click(_.bind(this.print, this));
+        },
+        print: function() {
+            window.print();
+        },
+        finishOrder: function() {
+            this.pos.get('selectedOrder').destroy();
+        },
+        changeSelectedOrder: function() {
+            if (this.currentOrderLines)
+                this.currentOrderLines.unbind();
+            this.currentOrderLines = (this.pos.get('selectedOrder')).get('orderLines');
+            this.currentOrderLines.bind('add', this.refresh, this);
+            this.currentOrderLines.bind('change', this.refresh, this);
+            this.currentOrderLines.bind('remove', this.refresh, this);
+            if (this.currentPaymentLines)
+                this.currentPaymentLines.unbind();
+            this.currentPaymentLines = (this.pos.get('selectedOrder')).get('paymentLines');
+            this.currentPaymentLines.bind('all', this.refresh, this);
+            this.refresh();
+        },
+        refresh: function() {
+            this.currentOrder = this.pos.get('selectedOrder');
+            $('.pos-receipt-container', this.$element).html(qweb_template('pos-ticket')({widget:this}));
         },
     });
 
@@ -680,7 +631,147 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
     module.ScanProductScreenWidget = module.ScreenWidget.extend({
     });
 
+    module.ProductCategoriesWidget = instance.web.Widget.extend({
+        init: function(parent, options){
+            this._super(parent);
+            this.pos = options.pos;
+            this.on_change_category.add_last(_.bind(this.search_and_categories, this));
+            this.search_and_categories(); 
+        },
+        start: function() {
+            this.search_and_categories(); 
+            this.$element.find(".oe-pos-categories-list a").click(_.bind(this.changeCategory, this));
+        },
+        template_fct: qweb_template('ProductCategoriesWidget'),
+        template:'ProductCategoriesWidget',
+        renderElement: function() {
+            var self = this;
+            var c;
+            this.$element.empty();
+            this.$element.html(QWeb.render(this.template, {
+                breadcrumb: (function() {
+                    var _i, _len, _results;
+                    _results = [];
+                    for (_i = 0, _len = self.ancestors.length; _i < _len; _i++) {
+                        c = self.ancestors[_i];
+                        _results.push(self.pos.categories[c]);
+                    }
+                    return _results;
+                })(),
+                categories: (function() {
+                    var _i, _len, _results;
+                    _results = [];
+                    for (_i = 0, _len = self.children.length; _i < _len; _i++) {
+                        c = self.children[_i];
+                        _results.push(self.pos.categories[c]);
+                    }
+                    return _results;
+                })()
+            }));
+        },
+        changeCategory: function(a) {
+            var id = $(a.target).data("category-id");
+            this.on_change_category(id);
+        },
+        search_and_categories: function(id){
+            var self = this,
+                c,
+                product_list,
+                allProducts,
+                allPackages;
+
+            id = id || 0;
+
+            c = this.pos.categories[id];
+            this.ancestors = c.ancestors;
+            this.children = c.children;
+            this.renderElement();
+
+            allProducts = this.pos.get('product_list');
+
+            allPackages = this.pos.get('product.packaging');
+
+            product_list = this.pos.get('product_list').filter( function(p){
+                var _ref = p.pos_categ_id[0];
+                return _.indexOf(c.subtree, _ref) >= 0;
+            });
+
+            this.pos.get('products').reset(product_list);
+
+            this.$element.find('.searchbox input').keyup(function(){
+                var results, search_str;
+                search_str = $(this).val().toLowerCase();
+                if(search_str){
+                    results = product_list.filter( function(p){
+                        return p.name.toLowerCase().indexOf(search_str) != -1;
+                    });
+                    self.$element.find('.search-clear').fadeIn();
+                }else{
+                    results = product_list;
+                    self.$element.find('.search-clear').fadeOut();
+                }
+                self.pos.get('products').reset(results);
+            });
+
+            this.$element.find('.search-clear').click(function(){
+                self.pos.get('products').reset(product_list);
+                self.$element.find('.searchbox input').val('').focus();
+                self.$element.find('.search-clear').fadeOut();
+            });
+        },
+        on_change_category: function(id) {},
+    });
+
+    module.ProductListWidget = module.ScreenWidget.extend({
+        template:'ProductListWidget',
+        init: function(parent, options) {
+            this._super(parent);
+            this.model = options.model;
+            this.pos = options.pos;
+            this.pos.get('products').bind('reset', this.renderElement, this);
+        },
+        renderElement: function() {
+            var self = this;
+            this._super();
+            this.pos.get('products').chain().map(function(product) {
+                return new module.ProductWidget(this, {
+                        model: product,
+                        pos: self.pos
+                })
+            }).invoke('appendTo', this.$element);
+            return this;
+        },
+    });
+
     module.SearchProductScreenWidget = module.ScreenWidget.extend({
+        template:'SearchProductScreenWidget',
+        init: function(parent, options){
+            this._super(parent,options);
+            options = options || {};
+            this.pos = options.pos;
+            this.pos_widget = options.pos_widget;
+        },
+        start: function(){
+            this.product_categories_widget = new module.ProductCategoriesWidget(null,{
+                pos:this.pos,
+            });
+            this.product_categories_widget.replace($('.placeholder-ProductCategoriesWidget'));
+
+            this.product_list_widget = new module.ProductListWidget(null,{
+                pos:this.pos,
+            });
+            this.product_list_widget.replace($('.placeholder-ProductListWidget'));
+        },
+        show: function(){
+            this._super();
+            this.pos_widget.orderView.setNumpadState(this.pos_widget.numpadView.state);
+        },
+        hide: function(){
+            this._super();
+            this.pos_widget.orderView.setNumpadState(null);
+            this.pos_widget.payment_screen.setNumpadState(null);
+        },
+
     });
 
     module.ScaleInviteScreenWidget = module.ScreenWidget.extend({
@@ -690,9 +781,6 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
     });
 
     module.AskForMoneyScreenWidget =  module.ScreenWidget.extend({
-    });
-
-    module.ReceiptScreenWidget = module.ScreenWidget.extend({
     });
 
 
@@ -710,9 +798,6 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
 
     module.TicketOrInvoicePopUp = module.PopUp.extend({
     });
-
-
-    
 
     // A Widget that displays an onscreen keyboard.
     // There are two options when creating the widget :
@@ -976,12 +1061,28 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
 
             (this.pos.get('orders')).bind('add', this.orderAdded, this);
             (this.pos.get('orders')).add(new module.Order({'pos':this.pos}));
-            this.productListView = new module.ProductListWidget(null, {
+            
+
+            this.search_product_screen = new module.SearchProductScreenWidget(this,{
                 pos: this.pos,
+                pos_widget: this,
             });
-            this.productListView.$element = $("#products-screen-ol");
-            this.productListView.renderElement();
-            this.productListView.start();
+            this.search_product_screen.appendTo($('#rightpane'));
+
+
+            this.receipt_screen = new module.ReceiptScreenWidget(this, {
+                pos: this.pos,
+                pos_widget: this,
+            });
+            this.receipt_screen.appendTo($('#rightpane'));
+
+
+            this.payment_screen = new module.PaymentScreenWidget(this, {
+                pos: this.pos,
+                pos_widget: this,
+            });
+            this.payment_screen.appendTo($('#rightpane'));
+
             this.paypadView = new module.PaypadWidget(null, {
                 pos: this.pos
             });
@@ -996,26 +1097,17 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
             });
             this.orderView.$element = $('#current-order-content');
             this.orderView.start();
-            this.paymentView = new module.PaymentWidget(null, {
+            
+            this.pos.screen_selector = new module.ScreenSelector({
                 pos: this.pos,
+                screen_set:{
+                    'products': this.search_product_screen,
+                    'payment' : this.payment_screen,
+                    'receipt' : this.receipt_screen,
+                },
+                current_screen: 'products',
+                default_screen: 'products',
             });
-            this.paymentView.$element = $('#payment-screen');
-            this.paymentView.renderElement();
-            this.paymentView.start();
-            this.receiptView = new module.ReceiptWidget(null, {
-                pos: this.pos,
-            });
-            this.receiptView.replace($('#receipt-screen'));
-            this.stepSwitcher = new module.StepSwitcher(this, {pos: this.pos});
-            this.pos.bind('change:selectedOrder', this.changedSelectedOrder, this);
-            this.changedSelectedOrder();
-
-            this.categoryView = new module.CategoryWidget(null, {
-                'element_id': 'products-screen-categories',
-                'pos': this.pos,
-            });
-            this.categoryView.on_change_category.add_last(_.bind(this.search_and_categories, this));
-            this.search_and_categories();
 
             this.onscreenKeyboard = new module.OnscreenKeyboardWidget(null, {
                 'keyboard_model': 'simple'
@@ -1049,71 +1141,6 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
             });
             newOrderButton.appendTo($('#orders'));
             newOrderButton.selectOrder();
-        },
-        changedSelectedOrder: function() {
-        	if (this.currentOrder) {
-        		this.currentOrder.unbind('change:step', this.changedStep);
-        	}
-        	this.currentOrder = this.pos.get('selectedOrder');
-        	this.currentOrder.bind('change:step', this.changedStep, this);
-        	this.changedStep();
-        },
-        changedStep: function() {
-        	var step = this.currentOrder.get('step');
-        	this.orderView.setNumpadState(null);
-        	this.paymentView.setNumpadState(null);
-        	if (step === 'products') {
-        		this.orderView.setNumpadState(this.numpadView.state);
-        	} else if (step === 'payment') {
-        		this.paymentView.setNumpadState(this.numpadView.state);
-        	}
-        },
-        search_and_categories: function(id){
-            var self = this,
-                c,
-                product_list,
-                allProducts,
-                allPackages;
-
-            id = id || 0;
-
-            c = this.pos.categories[id];
-            this.categoryView.ancestors = c.ancestors;
-            this.categoryView.children = c.children;
-            this.categoryView.renderElement();
-            this.categoryView.start();
-
-            allProducts = this.pos.get('product_list');
-
-            allPackages = this.pos.get('product.packaging');
-
-            product_list = this.pos.get('product_list').filter( function(p){
-                var _ref = p.pos_categ_id[0];
-                return _.indexOf(c.subtree, _ref) >= 0;
-            });
-
-            this.pos.get('products').reset(product_list);
-
-            $('.searchbox input').keyup(function(){
-                var results, search_str;
-                search_str = $(this).val().toLowerCase();
-                if(search_str){
-                    results = product_list.filter( function(p){
-                        return p.name.toLowerCase().indexOf(search_str) != -1;
-                    });
-                    $('.search-clear').fadeIn();
-                }else{
-                    results = product_list;
-                    $('.search-clear').fadeOut();
-                }
-                self.pos.get('products').reset(results);
-            });
-
-            $('.search-clear').click(function(){
-                self.pos.get('products').reset(product_list);
-                $('.searchbox input').val('').focus();
-                $('.search-clear').fadeOut();
-            });
         },
         changed_pending_operations: function () {
             var self = this;

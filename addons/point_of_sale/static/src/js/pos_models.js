@@ -396,7 +396,8 @@ function openerp_pos_models(module, instance){ //module is instance.point_of_sal
         },
         validatedChanged: function() {
             if (this.get("validated") && !this.previous("validated")) {
-                this.set({'step': 'receipt'});
+                this.pos.screen_selector.set_current_screen('receipt'); 
+                //this.set({'screen': 'receipt'});
             }
         },
         generateUniqueId: function() {
