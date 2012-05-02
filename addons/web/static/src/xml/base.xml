@@ -1299,13 +1299,14 @@
 <div t-name="SearchView.InputView"
      class="oe_searchview_input"
      contenteditable="true"/>
-<div t-name="SearchView.FacetView"
+<button t-name="SearchView.FacetView"
+     type="button"
      class="oe_searchview_facet">
     <span class="oe_facet_remove">✖</span>
     <span class="oe_facet_category">
         <t t-esc="widget.model.get('category')"/>
     </span ><span/>
-</div>
+</button>
 <span t-name="SearchView.FacetView.Value">
     <t t-esc="widget.model.get('label')"/>
 </span>

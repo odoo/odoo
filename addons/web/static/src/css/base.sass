@@ -878,11 +878,15 @@ $colour4: #8a89ba
             cursor: pointer
             display: inline-block
             margin: 1px 0
+            padding: 0
+            @include box-shadow(none)
+            text-align: left
             border: 1px solid $facets-border
             @include radius(3px)
             background: #f0f0fa
             height: 18px
             line-height: 18px
+            -webkit-font-smoothing: auto
 
             span
                 display: inline-block
@@ -906,7 +910,7 @@ $colour4: #8a89ba
                 background: #8786b7
                 text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4)
 
-            &.oe_selected
+            &:focus
                 border-color: $facets-border-selected
                 @include box-shadow(0 0 3px 1px $facets-border-selected)
 

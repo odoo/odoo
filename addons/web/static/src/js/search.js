@@ -127,7 +127,6 @@ my.InputView = instance.web.Widget.extend({
         return p;
     },
     onFocus: function () {
-        this.$element.siblings().trigger('deselect');
         this.getParent().$element.trigger('focus');
     },
     onBlur: function () {
@@ -148,16 +147,22 @@ my.FacetView = instance.web.Widget.extend({
     },
     start: function () {
         var self = this;
-        this.$element.on('deselect', function () {
-            self.$element.removeClass('oe_selected');
-        });
         this.$element.on('click', function (e) {
             if ($(e.target).is('.oe_facet_remove')) {
                 return;
             }
+            self.$element.focus();
             e.stopPropagation();
-            self.$element.siblings().trigger('deselect');
-            self.$element.addClass('oe_selected');
+        });
+        this.$element.on('keydown', function (e) {
+            var keys = $.ui.keyCode;
+            switch (e.which) {
+            case keys.BACKSPACE:
+            case keys.DELETE:
+                self.getParent().query.remove(
+                    self.model, {trigger_search: true});
+                return false;
+            }
         });
         var $e = self.$element.find('> span:last-child');
         var q = $.when(this._super());

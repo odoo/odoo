@@ -1115,6 +1115,11 @@
   cursor: pointer;
   display: inline-block;
   margin: 1px 0;
+  padding: 0;
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  -box-shadow: none;
+  text-align: left;
   border: 1px solid #afafb6;
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
@@ -1122,6 +1127,7 @@
   background: #f0f0fa;
   height: 18px;
   line-height: 18px;
+  -webkit-font-smoothing: auto;
 }
 .openerp .oe_searchview .oe_searchview_facet span {
   display: inline-block;
@@ -1146,13 +1152,13 @@
   background: #8786b7;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
 }
-.openerp .oe_searchview .oe_searchview_facet.oe_selected {
+.openerp .oe_searchview .oe_searchview_facet:focus {
   border-color: #a6a6fe;
   -moz-box-shadow: 0 0 3px 1px #a6a6fe;
   -webkit-box-shadow: 0 0 3px 1px #a6a6fe;
   -box-shadow: 0 0 3px 1px #a6a6fe;
 }
-.openerp .oe_searchview .oe_searchview_facet.oe_selected .oe_facet_category {
+.openerp .oe_searchview .oe_searchview_facet:focus .oe_facet_category {
   margin-left: 0;
 }
 .openerp .oe_searchview.oe_searchview_open_drawer .oe_searchview_drawer {
