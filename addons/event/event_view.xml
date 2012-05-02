@@ -45,42 +45,124 @@
         <menuitem name="Configuration" id="base.menu_marketing_config_root" parent="event_main_menu" sequence="30"/>
         <menuitem name="Types of Events" id="menu_event_type" action="action_event_type" parent="base.menu_marketing_config_root" groups="base.group_no_one"/>
 
-
-		<!-- Event Item Tree view-->
-    	<record model="ir.ui.view" id="view_event_items_tree">
-            <field name="name">Event Items Tree</field>
-            <field name="model">event.items</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Event Items">
-                    <field name="product_id"  string="Ticket Type" />
-                    <field name="uom_id"/>
-                    <field name="sales_end_date"/>
-                    <field name="price"/>
-                    <field name="qty"/>
-                </tree>
-            </field>
-        </record>
-        <!-- Event Item Form View -->
-        <record model="ir.ui.view" id="view_event_items_form">
-            <field name="name">Event Items Form</field>
-            <field name="model">event.items</field>
+    <!-- Events Organisation/CONFIGURATION/EVENTS -->
+    
+        <record model="ir.ui.view" id="view_event_form">
+            <field name="name">Events</field>
+            <field name="model">event.event</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Event Items">
-                    <field name="product_id" on_change="onchange_product_id(product_id)"/>
-                    <field name="price"/>
-                    <field name="qty"/>
-                    <field name="uom_id"/>
-                    <field name="discount"/>
-                    <field name="sales_end_date"/>
-                </form>
+ 			 <form string="Events"  layout="manual">
+                <div class="oe_form_topbar">
+                	<button string="Cancel Event" name="button_cancel" states="draft,confirm" type="object" icon="gtk-cancel"/>
+               		<button string="Confirm Event" name="button_confirm" states="draft" type="object" icon="gtk-apply"/>
+               		<button string="Event Done" name="button_done" states="confirm" type="object" icon="gtk-jump-to"/>
+               		<button string="Set To Draft" name="button_draft" states="cancel,done" type="object" icon="gtk-convert"/>
+               		<div class="oe_right">
+                    	<field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
+               		</div>
+            	</div>
+             <sheet string="Event Form" layout="auto">
+            	<group  colspan="4">
+            	     <group colspan="2">
+                        <field name="name"/>
+						 <field name="type" on_change="onchange_event_type(type,context)"/>
+						<field name="user_id"/>
+                        </group>
+			             <group colspan="2">
+			             	<div class="oe_mapbox oe_right"> </div><newline/>
+		                    <table align="right">
+			                   	<tr>
+			                    	<td width="70px" class="oe_td_border">
+			                            Where
+			                        </td>
+			                        <td width="150px">
+			                            <field name="address_id" nolabel="1"/>
+			                        </td>
+			                        <td width="auto">
+	                             		<table>
+											<tr>
+												<td class="oe_td_date_border">Start: </td><td><field name="date_begin" nolabel="1"/></td>
+											</tr>
+											<tr>
+												<td class="oe_td_date_border">End</td><td><field name="date_end" nolabel="1"/></td>
+											</tr>
+										</table>
+			                        </td>
+			                     </tr>
+		                     </table>   
+			             </group>  
+			         </group>
+                    <notebook colspan="4">
+                    <page string="Event">
+                        <separator string="Description" colspan="4"/>
+                        <field name="note" colspan="4" nolabel="1"/>
+                        <field name="registration_ids" colspan="4" nolabel="1" groups="event.group_event_manager,event.group_event_user">
+                            <tree string="Registration" editable="top">
+                                <field name="name" />
+                                <field name="email" />
+                                <field name="phone"/>
+                                <field name="nb_register" />
+                                <field name="state"/>
+                                <button name="registration_open" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
+                                <button name="button_reg_close" string="Attented the Event" states="open" type="object" icon="gtk-jump-to"/>
+                                <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
+                            </tree>
+                            <form string="Registration">
+                                <field name="partner_id" attrs="{'readonly':[('state','!=', 'draft')]}" on_change="onchange_partner_id(partner_id, context)" />
+                                <field name="name"/>
+                                <group colspan="4" col="4">
+                                <field name="email"/>
+                                <field name="phone"/>
+                                </group>
+                                <group colspan="4" col="4">
+                                    <field name="nb_register"/>
+                                </group>
+                                <group colspan="4" col="4">
+                                </group>
+                                    <group col="8" colspan="4">
+                                        <separator string="" colspan="4"/>
+                                        <newline/>
+                                        <field name="state" select="1" colspan="2"/>
+                                        <button name="registration_open" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
+                                        <button name="button_reg_close" string="Attended the Event" states="open" type="object" icon="gtk-jump-to"/>
+                                        <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
+                                    </group>
+                            </form>
+                            </field>
+                        <field name="state" select="1" widget="statusbar" statusbar_visible="draft,confirm,done"/>
+                    </page>
+                    <page string="Speakers">
+                        <field name="main_speaker_id" domain="[('speaker','=',True)]"/>
+                        <field name="speaker_confirmed"/>
+                        <separator string="Other Speakers" colspan="4"/>
+                        <field name="speaker_ids" domain="[('speaker','=',True)]" colspan="4" nolabel="1"/>
+                    </page>
+                    <page string="Extra Info">
+                        <group col="2" colspan="2">
+                            <separator string="Registrations" colspan="2"/>
+                            <field name="register_min"/>
+                            <field name="register_max"/>
+                            <field name="register_prospect"/>
+                            <field name="register_current"/>
+                            <field name="register_attended"/>
+                        </group>
+                        <group col="2" colspan="2">
+                            <separator string="Emails" colspan="2"/>
+                            <field name="reply_to"/>
+                            <field name="email_registration_id" domain="[('model_id.model','=','event.registration')]"/>
+                            <field name="email_confirmation_id" domain="[('model_id.model','=','event.registration')]"/>
+                        </group>
+                    </page>
+                    </notebook>
+                    </sheet>
+            </form>
             </field>
         </record>
-
-    <!-- Events Organisation/CONFIGURATION/EVENTS -->
-
-        <record model="ir.ui.view" id="view_event_form">
+        
+       <!--  Event Page view -->
+       
+        <record model="ir.ui.view" id="view_event_page">
             <field name="name">Events</field>
             <field name="model">event.event</field>
             <field name="type">form</field>
@@ -126,7 +208,6 @@
 												<td class="oe_td_date_border">End</td><td><field name="date_end" nolabel="1"/></td>
 											</tr>
 										</table>
-	                                 
 			                        </td>
 			                     </tr>
 		                     </table>   
@@ -169,7 +250,6 @@
                                     </group>
                             </form>
                             </field>
-                        
                     </page>
                     <page string="Speakers" groups="base.group_extended">
                         <field name="main_speaker_id" domain="[('speaker','=',True)]"/>
@@ -198,8 +278,8 @@
             </form>
             </field>
         </record>
-
-        <!-- Event tree view -->
+        
+       <!-- Event tree view -->
 
         <record model="ir.ui.view" id="view_event_tree">
             <field name="name">event.event.tree</field>

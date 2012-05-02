@@ -36,11 +36,10 @@
 			<field name="type">form</field>
 			<field name="inherit_id" ref="event.view_event_form"/>
 			<field name="arch" type="xml">
-				<xpath expr="//group[@name='venue']" position="after">
-						<field name="event_item_ids" nolabel="1"/><newline/>
-						<div class="oe_right">
-							<button string="Order Now" name="make_quotation" help="Order Event" type="object" icon="gtk-ok" attrs="{'invisible':[('state','=','confirm')]}"/>
-						</div>
+				<xpath expr="//notebook/page[@string='Extra Info']" position="after">
+                    <page string="Event Items">
+                    <field name="event_item_ids" nolabel="1"/>
+                   </page>
 				</xpath>
 			</field>
 		</record>
@@ -51,16 +50,15 @@
 			 <field name="type">tree</field>
 			 <field name="arch" type="xml">
 				 <tree editable="top" string="Event Items">
-					 <field name="product_id"/>
+					 <field name="product_id" domain="[('event_ok','=',True)]" on_change="onchange_product_id(product_id)"/>
 					 <field name="price"/>
+					 <field name="uom_id" invisible="1"/>
 					 <field name="qty"/>
-					 <field name="uom_id"/>
 					 <field name="discount"/>
 					 <field name="sales_end_date"/>
 				 </tree>
 			 </field>
 		 </record>
-
 
 		<record model="ir.ui.view" id="view_event_items_form">
 			 <field name="name">Event Items Form</field>
@@ -71,13 +69,10 @@
 			   	 	<field name="product_id" domain="[('event_ok','=',True)]" on_change="onchange_product_id(product_id)"/>
 			        <field name="price"/>
 			        <field name="qty"/>
-					<field name="uom_id"/>
 					<field name="discount"/>
 					<field name="sales_end_date"/>
 				</form>
 		 	</field>
 		</record>
-        
-        
     </data>
 </openerp>
