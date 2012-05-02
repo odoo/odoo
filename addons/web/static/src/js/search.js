@@ -286,6 +286,15 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         this.$element.on('blur', function () {
             self.$element.removeClass('oe_focused');
         });
+        // when the completion list opens/refreshes, automatically select the
+        // first completion item so if the user just hits [RETURN] or [TAB] it
+        // automatically selects it
+        this.$element.on('autocompleteopen', function () {
+            var menu = self.$element.data('autocomplete').menu;
+            menu.activate(
+                $.Event({ type: "mouseenter" }),
+                menu.element.children().first());
+        });
 
         return $.when(p, this.ready);
     },
