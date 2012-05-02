@@ -377,7 +377,7 @@ openerp.web.list_editable = function (instance) {
         renderElement: function() {}
     });
     
-    instance.web.ListEditableRenderingEngine = instance.web.Class.extend({
+    instance.web.ListEditableRenderingEngine = instance.web.form.FormRenderingEngineInterface.extend({
         init: function(view) {
             this.view = view;
         },

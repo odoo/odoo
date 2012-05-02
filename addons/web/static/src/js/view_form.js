@@ -868,18 +868,18 @@ instance.web.FormView = instance.web.View.extend({
 /**
  * Interface to be implemented by rendering engines for the form view.
  */
-instance.web.form.FormRenderingEngineInterface = {
+instance.web.form.FormRenderingEngineInterface = instance.web.Class.extend({
     set_fields_view: function(fields_view) {},
     set_fields_registry: function(fields_registry) {},
     render_to: function($element) {},
-};
+});
 
 /**
  * Default rendering engine for the form view.
  * 
  * It is necessary to set the view using set_view() before usage.
  */
-instance.web.form.FormRenderingEngine = instance.web.Class.extend({
+instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInterface.extend({
     init: function(view) {
         this.view = view;
     },
