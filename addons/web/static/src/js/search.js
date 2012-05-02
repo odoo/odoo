@@ -286,13 +286,23 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
      * Sets up search view's view-wide auto-completion widget
      */
     setup_global_completion: function () {
-        // Prevent keydown from within a facet's input from reaching the
-        // auto-completion widget and opening the completion list
-        this.$element.on('keydown', '.search_facet input', function (e) {
-            e.stopImmediatePropagation();
+        var self = this;
+
+        // autocomplete only correctly handles being initialized on the actual
+        // editable element (and only an element with a @value in 1.8 e.g.
+        // input or textarea), cheat by setting val() on $element
+        this.$element.on('keydown', function () {
+            // keydown is triggered *before* the element's value is set, so
+            // delay this. Pray that setTimeout are executed in FIFO (if they
+            // have the same delay) as autocomplete uses the exact same trick.
+            // FIXME: brittle as fuck
+            setTimeout(function () {
+                self.$element.val(self.currentInputValue());
+            }, 0);
+
         });
 
-        this.$element.autocomplete({
+        var completer = this.$element.autocomplete({
             source: this.proxy('complete_global_search'),
             select: this.proxy('select_completion'),
             focus: function (e) { e.preventDefault(); },
@@ -305,14 +315,14 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
                 .data( "item.autocomplete", item )
                 .appendTo( ul );
 
-            if (item.value !== undefined) {
+            if (item.facet !== undefined) {
                 // regular completion item
                 return $item.append(
                     (item.label)
                         ? $('<a>').html(item.label)
                         : $('<a>').text(item.value));
             }
-            return $item.text(item.category)
+            return $item.text(item.label)
                 .css({
                     borderTop: '1px solid #cccccc',
                     margin: 0,
@@ -322,7 +332,14 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
                     clear: 'left',
                     width: '100%'
                 });
-        }
+        };
+    },
+    /**
+     * Gets value out of the currently focused "input" (a
+     * div[contenteditable].oe_searchview_input)
+     */
+    currentInputValue: function () {
+        return this.$element.find('div.oe_searchview_input:focus').text();
     },
     /**
      * Provide auto-completion result for req.term (an array to `resp`)
