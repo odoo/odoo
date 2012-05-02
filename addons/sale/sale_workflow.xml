@@ -172,7 +172,7 @@
         <record id="trans_wait_invoice_invoice" model="workflow.transition">
             <field name="act_from" ref="act_wait_invoice"/>
             <field name="act_to" ref="act_invoice"/>
-            <field name="condition">(order_policy=='prepaid') or ((order_policy=='postpaid') and shipped)</field>
+            <field name="condition">(order_policy=='prepaid')</field>
         </record>
 
         <record id="trans_wait_invoice_invoice_manual" model="workflow.transition">
