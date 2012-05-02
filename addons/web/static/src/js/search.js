@@ -122,10 +122,17 @@ my.InputView = instance.web.Widget.extend({
     start: function () {
         var self = this;
         var p = this._super.apply(this, arguments);
-        this.$element.on('focus', function () {
-            self.$element.siblings().trigger('deselect');
-        });
+        this.$element.on('focus', this.proxy('onFocus'));
+        this.$element.on('blur', this.proxy('onBlur'));
         return p;
+    },
+    onFocus: function () {
+        this.$element.siblings().trigger('deselect');
+        this.getParent().$element.trigger('focus');
+    },
+    onBlur: function () {
+        this.$element.text('');
+        this.getParent().$element.trigger('blur');
     }
 });
 my.FacetView = instance.web.Widget.extend({
@@ -302,7 +309,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
 
         });
 
-        var completer = this.$element.autocomplete({
+        this.$element.autocomplete({
             source: this.proxy('complete_global_search'),
             select: this.proxy('select_completion'),
             focus: function (e) { e.preventDefault(); },
