@@ -1,72 +1,97 @@
 
 function openerp_pos_devices(module, instance){ //module is instance.point_of_sale
 
-    // this module interfaces with the local proxy to communicate to the various hardware devices
+    window.debug_devices = new (instance.web.Class.extend({
+        payment_status: 'waiting_for_payment',
+        weight: 0,
+        accept_payment: function(){ this.payment_status = 'payment_accepted'; },
+        reject_payment: function(){ this.payment_status = 'payment_rejected'; },
+        delay_payment:  function(){ this.payment_status = 'waiting_for_payment'; },
+    }))();
+
+    // this object interfaces with the local proxy to communicate to the various hardware devices
     // connected to the Point of Sale. As the communication only goes from the POS to the proxy,
     // methods are used both to signal an event, and to fetch information. 
+
     module.ProxyDevice  = instance.web.Class.extend({
         //a product has been scanned and recognized with success
         scan_item_succes: function(){
+            console.log('PROXY: scan item success');
         },
 
         //a product has been scanned but not recognized
         scan_item_error_unrecognized: function(){
+            console.log('PROXY: scan item error');
         },
 
         //the client is asking for help
         help_needed: function(){
+            console.log('PROXY: help needed');
         },
 
         //the client does not need help anymore
         help_canceled: function(){
+            console.log('PROXY: help canceled');
         },
 
         //the client is starting to weight
         weighting_start: function(){
+            console.log('PROXY: weighting start');
         },
 
         //returns the weight on the scale. 
         // is called at regular interval (up to 10x/sec) between a weighting_start()
         // and a weighting_end()
         weighting_read_kg: function(){
-            return Math.random() + 0.1;
+            console.log('PROXY: weighting read');
+            //return Math.random() + 0.1;
+            return window.debug_devices.weight;
         },
 
         // the client has finished weighting products
         weighting_end: function(){
+            console.log('PROXY: weighting end');
         },
 
         // the pos asks the client to pay 'price' units
         // method: 'mastercard' | 'cash' | ... ? TBD
         // info:   'extra information to display on the payment terminal' ... ? TBD
         payment_request: function(price, method, info){
+            console.log('PROXY: payment request:',price,method,info);
         },
 
         // is called at regular interval after a payment request to see if the client
         // has paid the required money
         // returns 'waiting_for_payment' | 'payment_accepted' | 'payment_rejected'
         is_payment_accepted: function(){
-            return 'waiting_for_payment'; // 'payment_accepted' | 'payment_rejected'
+            console.log('PROXY: is payment accepted ?');
+            //return 'waiting_for_payment'; // 'payment_accepted' | 'payment_rejected'
+            return window.debug_devices.payment_status;
         },
 
         // the client cancels his payment
         payment_canceled: function(){
+            console.log('PROXY: payment canceled by client');
         },
 
         // called when the client logs in or starts to scan product
         transation_start: function(){
+            console.log('PROXY: transaction start');
         },
 
         // called when the clients has finished his interaction with the machine
         transaction_end: function(){
+            console.log('PROXY: transaction end');
         },
 
         // called when the POS turns to cashier mode
         cashier_mode_activated: function(){
+            console.log('PROXY:');
         },
 
         // called when the POS turns to client mode
         cashier_mode_deactivated: function(){
+            console.log('PROXY:');
         },
     });
 
