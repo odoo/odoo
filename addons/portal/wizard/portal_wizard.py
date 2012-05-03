@@ -146,6 +146,7 @@ class wizard(osv.osv_memory):
                     'user_email': u.user_email,
                     'context_lang': u.lang,
                     'share': True,
+                    'action_id': wiz.portal_id.home_action_id and wiz.portal_id.home_action_id.id or False,
                     'partner_id': u.partner_id and u.partner_id.id,
                     'groups_id': [(6, 0, [])],
                 } for u in wiz.user_ids if u.user_email not in existing_logins ]
