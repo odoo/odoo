@@ -343,7 +343,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             select: this.proxy('select_completion'),
             focus: function (e) { e.preventDefault(); },
             html: true,
-            minLength: 0,
+            minLength: 1,
             delay: 0
         }).data('autocomplete')._renderItem = function (ul, item) {
             // item of completion list
