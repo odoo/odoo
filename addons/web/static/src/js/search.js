@@ -1270,6 +1270,7 @@ instance.web.search.DateTimeField = instance.web.search.DateField.extend(/** @le
     }
 });
 instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
+    default_operator: {},
     init: function (view_section, field, view) {
         this._super(view_section, field, view);
         this.model = new instance.web.Model(this.attrs.relation);
@@ -1302,6 +1303,15 @@ instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
             if (_(names).isEmpty()) { return null; }
             return facet_from(self, names[0]);
         })
+    },
+    value_from: function (facetValue) {
+        return facetValue.get('label');
+    },
+    make_domain: function (name, operator, facetValue) {
+        if (operator === this.default_operator) {
+            return [[name, '=', facetValue.get('value')]];
+        }
+        return this._super(name, operator, facetValue);
     }
 });
 

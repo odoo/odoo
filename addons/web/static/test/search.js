@@ -833,6 +833,53 @@ $(document).ready(function () {
             self: "great"
         }, "evaluation context should hold facet value as self");
     });
+    test("M2O default", function () {
+        var f = new instance.web.search.ManyToOneField(
+            {}, {name: 'foo'}, {inputs: []});
+        var facet = new instance.web.search.Facet({
+            field: f,
+            values: [{label: "Foo", value: 42}]
+        });
+
+        deepEqual(f.get_domain(facet), [['foo', '=', 42]],
+            "m2o should use identity if default domain");
+    });
+    test("M2O custom operator", function () {
+        var f = new instance.web.search.ManyToOneField(
+            {attrs: {operator: 'boos'}}, {name: 'foo'}, {inputs: []});
+        var facet = new instance.web.search.Facet({
+            field: f,
+            values: [{label: "Foo", value: 42}]
+        });
+
+        deepEqual(f.get_domain(facet), [['foo', 'boos', 'Foo']],
+            "m2o should use label with custom operators");
+    });
+    test("M2O custom domain & context", function () {
+        var f = new instance.web.search.ManyToOneField({attrs: {
+            context: "{'whee': self}",
+            filter_domain: "[['filter', 'is', self]]"
+        }}, {name: 'foo'}, {inputs: []});
+        var facet = new instance.web.search.Facet({
+            field: f,
+            values: [{label: "Foo", value: 42}]
+        });
+
+        var domain = f.get_domain(facet);
+        deepEqual(domain.__domains, [
+            "[['filter', 'is', self]]"
+        ]);
+        deepEqual(domain.get_eval_context(), {
+            self: "Foo"
+        }, "custom domain's self should be label");
+        var context = f.get_context(facet);
+        deepEqual(context.__contexts, [
+            "{'whee': self}"
+        ]);
+        deepEqual(context.get_eval_context(), {
+            self: "Foo"
+        }, "custom context's self should be label");
+    });
 
     module('drawer', {
         setup: function () {
