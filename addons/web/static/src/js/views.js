@@ -636,8 +636,6 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
         var self = this;
 
         return $.when(this._super(view_type, no_store)).then(function () {
-            self.shortcut_check(self.views[view_type]);
-
             var controller = self.views[self.active_view].controller,
                 fvg = controller.fields_view,
                 view_id = (fvg && fvg.view_id) || '--';
@@ -680,44 +678,6 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
         $.when(defs).then(function() {
             self.views[self.active_view].controller.do_load_state(state, warm);
         });
-    },
-    shortcut_check : function(view) {
-        var self = this;
-        var grandparent = this.getParent() && this.getParent().getParent();
-        // display shortcuts if on the first view for the action
-        var $shortcut_toggle = this.$element.find('.oe-shortcut-toggle');
-        if (!this.action.name ||
-            !(view.view_type === this.views_src[0].view_type
-                && view.view_id === this.views_src[0].view_id)) {
-            $shortcut_toggle.hide();
-            return;
-        }
-        $shortcut_toggle.removeClass('oe-shortcut-remove').show();
-        if (_(this.session.shortcuts).detect(function (shortcut) {
-                    return shortcut.res_id === self.session.active_id; })) {
-            $shortcut_toggle.addClass("oe-shortcut-remove");
-        }
-        this.shortcut_add_remove();
-    },
-    shortcut_add_remove: function() {
-        var self = this;
-        var $shortcut_toggle = this.$element.find('.oe-shortcut-toggle');
-        $shortcut_toggle
-            .unbind("click")
-            .click(function() {
-                if ($shortcut_toggle.hasClass("oe-shortcut-remove")) {
-                    $(self.session.shortcuts.binding).trigger('remove-current');
-                    $shortcut_toggle.removeClass("oe-shortcut-remove");
-                } else {
-                    $(self.session.shortcuts.binding).trigger('add', {
-                        'user_id': self.session.uid,
-                        'res_id': self.session.active_id,
-                        'resource': 'ir.ui.menu',
-                        'name': self.action.name
-                    });
-                    $shortcut_toggle.addClass("oe-shortcut-remove");
-                }
-            });
     },
     display_title: function () {
         return this.action.name;

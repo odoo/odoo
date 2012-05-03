@@ -751,58 +751,11 @@ instance.web.UserMenu =  instance.web.Widget.extend({
                 self.$element.find('.oe_topbar_name').text(topbar_name);
                 var avatar_src = _.str.sprintf('%s/web/binary/image?session_id=%s&model=res.users&field=avatar&id=%s', self.session.prefix, self.session.session_id, self.session.uid);
                 $avatar.attr('src', avatar_src);
-                return self.shortcut_load();
             });
         };
         this.update_promise = this.update_promise.pipe(fct, fct);
     },
     on_action: function() {
-    },
-    shortcut_load :function(){
-        var self = this,
-            sc = self.session.shortcuts,
-            shortcuts_ds = new instance.web.DataSet(this, 'ir.ui.view_sc');
-        self.$element.find('.oe_dropdown_options a[data-menu=shortcut]').each(function() {
-            $(this).parent().remove();
-        });
-        // TODO: better way to communicate between sections.
-        // sc.bindings, because jquery does not bind/trigger on arrays...
-        if (!sc.binding) {
-            sc.binding = {};
-            $(sc.binding).bind({
-                'add': function (e, attrs) {
-                    shortcuts_ds.create(attrs, function (out) {
-                        var shortcut = QWeb.render('UserMenu.shortcut', {
-                            shortcuts : [{
-                                name : attrs.name,
-                                id : out.result,
-                                res_id : attrs.res_id
-                            }]
-                        });
-                        $(shortcut).appendTo(self.$element.find('.oe_dropdown_options'));
-                        attrs.id = out.result;
-                        sc.push(attrs);
-                    });
-                },
-                'remove-current': function () {
-                    var menu_id = self.session.active_id;
-                    var $shortcut = self.$element.find('.oe_dropdown_options li a[data-id=' + menu_id + ']');
-                    var shortcut_id = $shortcut.data('shortcut-id');
-                    $shortcut.remove();
-                    shortcuts_ds.unlink([shortcut_id]);
-                    var sc_new = _.reject(sc, function(shortcut){ return shortcut_id === shortcut.id});
-                    sc.splice(0, sc.length);
-                    sc.push.apply(sc, sc_new);
-                }
-            });
-        }
-        return this.rpc('/web/session/sc_list', {}, function(shortcuts) {
-            sc.splice(0, sc.length);
-            sc.push.apply(sc, shortcuts);
-
-            $(QWeb.render('UserMenu.shortcut', {'shortcuts': shortcuts}))
-                .appendTo(self.$element.find('.oe_dropdown_options'));
-        });
     },
     on_menu_logout: function() {
     },
@@ -860,16 +813,6 @@ instance.web.UserMenu =  instance.web.Widget.extend({
                 modal: true, width: 960, title: _t("About")});
         });
     },
-    on_menu_shortcut: function($link) {
-        var self = this,
-            id = $link.data('id');
-        self.session.active_id = id;
-        self.rpc('/web/menu/action', {'menu_id': id}, function(ir_menu_data) {
-            if (ir_menu_data.action.length){
-                self.on_action(ir_menu_data.action[0][2]);
-            }
-        });
-    }
 });
 
 instance.web.WebClient = instance.web.Widget.extend({
