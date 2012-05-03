@@ -126,6 +126,27 @@
             </field>
         </record>
 
+        <act_window
+            id="act_product_2_reception"
+            name="Receptions"
+            view_mode="tree,form,calendar"
+            res_model="stock.picking"
+            src_model="product.product"
+            context="{'search_default_product_id': [active_id], 'default_product_id': active_id}"
+            domain="[('type','=','in')]"
+            />
+
+        <act_window
+            id="act_product_2_delivery"
+            name="Deliveries"
+            view_mode="tree,form"
+            res_model="stock.picking"
+            src_model="product.product"
+            context="{'search_default_product_id': [active_id], 'default_product_id': active_id}"
+            domain="[('type', '=', 'out')]"
+            />
+		
+
         <record model="ir.ui.view" id="product.product_kanban_view">
             <field name="name">Product Kanban</field>
             <field name="model">product.product</field>
@@ -152,10 +173,10 @@
                                         <li>Price: <field name="lst_price"></field></li>
                                         <li>Cost: <field name="standard_price"></field></li>
                                     </ul>
-                                    <a name="%(stock.action_picking_tree4)d" type="action">
+                                    <a name="%(act_product_2_reception)d" type="action">
                                         <t t-if="record.reception_count.value">Receptions(<t t-esc="record.reception_count.value"/>)</t>
                                     </a>
-                                    <a name="%(stock.action_out_picking_move)d" type="action">
+                                    <a name="%(act_product_2_delivery)d" type="action">
                                         <t t-if="record.delivery_count.value">Deliveries(<t t-esc="record.delivery_count.value"/>)</t>
                                     </a>
                                 </div>

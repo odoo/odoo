@@ -838,6 +838,7 @@
                         <separator orientation="vertical"/>
                         <field name="name"/>
                         <field name="partner_id"/>
+                        <field name="product_id"/>
                         <field name="stock_journal_id" widget="selection"/>
                     </group>
                     <newline/>
@@ -1029,6 +1030,7 @@
                         <separator orientation="vertical"/>
                         <field name="name"/>
                         <field name="origin"/>
+                        <field name="product_id"/>
                         <field name="stock_journal_id" widget="selection"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                    </group>
@@ -1105,7 +1107,7 @@
                         <group colspan="4" col="4">
                             <field name="name" readonly="1"/>
                             <field name="origin"/>
-                            <field name="partner_id" on_change="onchange_partner_in(partner_id)"  colspan="4"/>
+                            <field name="partner_id" on_change="onchange_partner_in(partner_id)" colspan="4"/>
                             <field name="invoice_state" string="Invoice Control"/>
                             <field name="backorder_id" readonly="1"/>
                         </group>
@@ -1244,7 +1246,9 @@
                         <field name="origin"/>
                         <field name="stock_journal_id" widget="selection"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company" />
+                        <field name="product_id"/>
                     </group>
+                    
                     <newline/>
                     <group expand="0" string="Group By...">
                         <separator orientation="vertical" />
@@ -1302,6 +1306,7 @@
                         <separator orientation="vertical"/>
                         <field name="name"/>
                         <field name="origin"/>
+                        <field name="product_id"/>
                         <field name="stock_journal_id" widget="selection"/>
                         <field name="company_id" widget="selection"/>
                     </group>

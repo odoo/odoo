@@ -50,14 +50,15 @@
         view_mode="calendar,tree,form,gantt"
         context="{'search_default_partner_id': [active_id],'default_partner_id': active_id}"
     />
-        <act_window
-            context="{'search_default_partner_id': [active_id],'default_partner_id': active_id}"
-            id="act_res_partner_2_opportunity"
-            name="Opportunity"
-            view_mode="tree,form,graph,calendar"
-            domain="[('type','=','opportunity')]"
-            res_model="crm.lead"
-            src_model="res.partner"/>
+    	<act_window
+        id="act_res_partner_2_opportunity"
+        name="Opportunity"
+        res_model="crm.lead"
+        src_model="res.partner"
+        view_mode="tree,form,graph,calendar"
+        domain="[('type','=','opportunity')]"
+        context="{'search_default_partner_id': [active_id],'default_partner_id': active_id}"
+        />
 
 		<!-- Partner kanban view inherte -->
         <record model="ir.ui.view" id="crm_lead_partner_kanban_view">
