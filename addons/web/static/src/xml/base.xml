@@ -326,17 +326,9 @@
                 <li><a href="#" data-menu="about">About OpenERP</a></li>
                 <li><a href="#" data-menu="settings">Preferences</a></li>
                 <li><a href="#" data-menu="logout">Log out</a></li>
-                <li><hr/></li>
             </ul>
         </li>
     </ul>
-</t>
-<t t-name="UserMenu.shortcut">
-    <li t-foreach="shortcuts" t-as="shortcut">
-        <a href="#" data-menu="shortcut" t-att-data-id="shortcut.res_id" t-att-data-shortcut-id="shortcut.id">
-            <t t-esc="shortcut.name"/>
-        </a>
-    </li>
 </t>
 <t t-name="UserMenu.about">
     <div>
@@ -455,10 +447,6 @@
     </div>
 </t>
 <t t-name="ViewManagerAction" t-extend="ViewManager">
-    <t t-jquery="h2.oe_view_title" t-operation="prepend">
-        <a t-if="widget.flags.display_title !== false" class="oe-shortcut-toggle" title="Add / Remove Shortcut..."
-            href="javascript: void(0)"> </a>
-    </t>
     <t t-jquery="h2.oe_view_title" t-operation="before">
         <select t-if="widget.session.debug" class="oe_debug_view"/>
     </t>

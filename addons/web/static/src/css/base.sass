@@ -358,12 +358,6 @@ $colour4: #8a89ba
         border-top: solid 1px #d3d3d3
         @include vertical-gradient(#646060, #262626)
 
-        .oe_systray
-            float: right
-        .oe_systray > div
-            float: left
-            padding: 0 4px 0 4px
-
         .oe_topbar_item
             li
                 float: left
@@ -449,6 +443,7 @@ $colour4: #8a89ba
             float: left
         .oe_dropdown
             position: relative
+
         .oe_dropdown_options
             float: left
             background: #333
@@ -487,6 +482,49 @@ $colour4: #8a89ba
                 hr
                     border-top: 1px solid #999
                     border-bottom: 0
+    // }}}
+    // Systray {{{
+    .oe_systray > div
+        float: left
+        padding: 0 4px 0 4px
+    .oe_systray
+        float: right
+
+        .oe_systray_dropdown
+            position: relative
+        .oe_systray_dropdown:hover .oe_systray_dropdown_options
+            display: block
+        .oe_systray_dropdown_options
+            background: #333
+            background: rgba(37,37,37,0.9)
+            display: none
+            position: absolute
+            z-index: 900
+            border: 0
+            margin-left: 0
+            margin-right: 0
+            padding: 6px 0
+            border-color: #999
+            border-color: rgba(0, 0, 0, 0.2)
+            border-style: solid
+            border-width: 0 1px 1px
+            @include radius(0 0 6px 6px)
+            @include box-shadow(0 1px 4px rgba(0,0,0,0.3))
+            @include background-clip()
+            li
+                float: none
+                display: block
+                background-color: none
+                a
+                    display: block
+                    padding: 4px 15px
+                    clear: both
+                    font-weight: normal
+                    line-height: 18px
+                    color: #eee
+                    &:hover
+                        @include vertical-gradient(#292929, #191919)
+                        @include box-shadow(none)
     // }}}
     // Menu {{{
     .oe_menu
