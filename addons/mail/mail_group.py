@@ -114,9 +114,16 @@ class mail_group(osv.osv):
                             help="Responsible of the group that has all rights on the record."),
         'public': fields.boolean('Public', help='This group is visible by non members. \
                             Invisible groups can add members through the invite button.'),
-        'models': fields.many2many('ir.model', rel='mail_group_models_rel',
+        'models': fields.many2many('ir.model', rel='mail_group_ir_model_rel',
                             id1='mail_group_id', id2='model_id',
                             string='Linked models', help='Linked models'),
+        'groups': fields.many2many('res.groups', rel='mail_group_res_group_rel',
+                            id1='mail_group_id', id2='groups_id',
+                            string='Linked groups', help='Linked groups'),
+        'push_to_groups': fields.boolean('Push to groups', 
+                            help="When posting a comment on this mail_group, \
+                            the message is pushed to the users beloging to \
+                            the linked user groups."),
         'photo_big': fields.binary('Full-size photo', help='Field holding \
                             the full-sized PIL-supported and base64 encoded \
                             version of the group image. The photo field is \
@@ -142,6 +149,22 @@ class mail_group(osv.osv):
         'photo': _get_default_photo,
     }
     
+    def message_create_get_notification_user_ids(self, cr, uid, thread_ids, new_msg_vals, context=None):
+        """ Overrider OpenChatter message_create_get_notification_user_ids
+            method. The purpose is to add to the subscribers users that 
+            belong to the res.groups linked to the mail.group through the 
+            groups field. The fields push_to_groups allows to control this 
+            feature.
+        """
+        notif_user_ids = super(mail_group, self).message_create_get_notification_user_ids(cr, uid, thread_ids, new_msg_vals, context=context)
+        for thread in self.browse(cr, uid, thread_ids, context=context):
+            if not thread.push_to_groups or not thread.groups:
+                continue
+            for group in thread.groups:
+                for user in group.users:
+                    notif_user_ids.append(user.id)
+        return list(set(notif_user_ids))
+        
     def message_load(self, cr, uid, ids, fetch_ancestors=False, ancestor_ids=None, 
                         limit=100, offset=0, domain=None, count=False, context=None):
         """ Override OpenChatter message_load method.
