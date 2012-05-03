@@ -80,7 +80,7 @@
                             <field name="default_code"/>
                             <field name="ean13"/>
                         </group>
-                        <group colspan="1" col="2">
+                        <group colspan="1" col="2" groups="base.group_user">
                             <separator string="Characteristics" colspan="2"/>
                             <field name="sale_ok"/>
                             <field name="purchase_ok"/>
@@ -95,7 +95,7 @@
                                 <separator string="Procurement" colspan="2"/>
                                 <field name="type"/>
                                 <field name="procure_method"/>
-                                <field name="supply_method"/>
+                                <field name="supply_method" groups="base.group_user"/>
                             </group>
                             <group colspan="2" col="2">
                                 <separator string="Base Prices" colspan="2"/>
@@ -142,7 +142,7 @@
                                 <field name="produce_delay"/>
                                 <field name="warranty"/>
                             </group>
-                            <group colspan="2" col="2" name="store">
+                            <group colspan="2" col="2" name="store" groups="base.group_user">
                                 <separator string="Storage Localisation" colspan="2"/>
                                 <field name="loc_rack" attrs="{'readonly':[('type','=','service')]}" />
                                 <field name="loc_row" attrs="{'readonly':[('type','=','service')]}"/>
@@ -156,16 +156,16 @@
                             </group>
 
                         </page>
-                        <page string="Suppliers">
+                        <page string="Suppliers" groups="base.group_user">
                             <field colspan="4" name="seller_ids" nolabel="1" context="{'uom_id': uom_id}"/>
                         </page>
                         <page string="Descriptions">
-                            <separator string="Description"/>
-                            <field colspan="4" name="description" nolabel="1"/>
+                            <separator string="Description" groups="base.group_user"/>
+                            <field colspan="4" name="description" nolabel="1" groups="base.group_user"/>
                             <separator string="Sale Description"/>
                             <field colspan="4" name="description_sale" nolabel="1"/>
-                            <separator string="Purchase Description"/>
-                            <field colspan="4" name="description_purchase" nolabel="1"/>
+                            <separator string="Purchase Description" groups="base.group_user"/>
+                            <field colspan="4" name="description_purchase" nolabel="1" groups="base.group_user"/>
                         </page>
                         <page groups="product.group_stock_packaging" string="Packaging">
                             <field colspan="4" name="packaging" nolabel="1">

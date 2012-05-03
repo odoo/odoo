@@ -2,15 +2,6 @@
 <openerp>
     <data>
     
-     <!-- <record model="ir.actions.act_window" id="action_event_view_main">
-           <field name="name">Events</field>
-           <field name="type">ir.actions.act_window</field>
-           <field name="res_model">event.event</field>
-           <field name="view_type">tree</field>
-           <field name="view_mode">kanban</field>
-           <field name="view_id" ref="event.view_event_kanban"/>
-           <field name="context">{"search_default_upcoming":1}</field>
-       </record> -->
        
        <record id="action_mail_my_feeds" model="ir.actions.client">
             <field name="name">My Feeds</field>
@@ -25,10 +16,10 @@
                <form string="DashBoard">
                    <board style="2-1">
                        <column>
-                        <action name="%(board.action_res_widgets_tweets)d" string="Latest News" />
+                         <action name="%(mail.action_mail_my_feeds)d" string="My Wall"/>
                        </column>
                        <column>
-                         <action name="%(mail.action_mail_my_feeds)d" string="My Wall"/>
+                        
                        </column>
                    </board>
                </form>

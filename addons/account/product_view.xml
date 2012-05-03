@@ -8,15 +8,15 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <notebook position="inside">
-                    <page string="Accounting">
+                    <page string="Accounting" groups="base.group_user">
                     <group name="properties">
                         <separator string="Sales Properties" colspan="2"/>
                         <separator string="Purchase Properties" colspan="2"/>
                         <field name="property_account_income" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" attrs="{'readonly':[('sale_ok','=',0)]}"/>
                         <field name="property_account_expense" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" attrs="{'readonly':[('purchase_ok','=',0)]}"/>
-					</group>
-					<newline/>
-					<group colspan="2">
+                    </group>
+                    <newline/>
+                    <group colspan="2">
                         <separator string="Sale Taxes" colspan="2"/>
                         <separator string="Purchase Taxes" colspan="2"/>
                         <field name="taxes_id" nolabel="1" colspan="2" attrs="{'readonly':[('sale_ok','=',0)]}"/>
