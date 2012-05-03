@@ -99,7 +99,7 @@ class mail_group(osv.osv):
         message_obj = self.pool.get('mail.message')
         for id in ids:
             lower_date = (DT.datetime.now() - DT.timedelta(days=30)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
-            result[id] = message_obj.search(cr, uid, ['&', '&', ('model', '=', self._name), ('res_id', 'in', ids), ('date', '>=', lower_date)], count=True, context=context)
+            result[id] = self.message_load(cr, uid, [id], limit=None, domain=[('date', '>=', lower_date)], count=True, context=context)
         return result
     
     def _get_default_photo(self, cr, uid, context=None):
@@ -142,31 +142,36 @@ class mail_group(osv.osv):
         'photo': _get_default_photo,
     }
     
-    def message_load(self, cr, uid, ids, limit=100, offset=0, domain=[], ascent=False, root_ids=[], context=None):
-        """ Override OpenChatter method.
+    def message_load(self, cr, uid, ids, fetch_ancestors=False, ancestor_ids=None, 
+                        limit=100, offset=0, domain=None, count=False, context=None):
+        """ Override OpenChatter message_load method.
             if models attribute is set: search all messages from that model
             else: as usual
-            :param domain: domain to add to the search; especially child_of
-                           is interesting when dealing with threaded display
-            :param ascent: performs an ascended search; will add to fetched msgs
-                           all their parents until root_ids
-            :param root_ids: for ascent search
-            :param root_ids: root_ids when performing an ascended search
         """
-        search_domain = []
+        all_msg_ids = []
+        message_obj = self.pool.get('mail.message')
         for group in self.browse(cr, uid, ids, context=context):
             # call super to have default message ids
-            message_obj = self.pool.get('mail.message')
-            group_msgs = super(mail_group, self).message_load(cr, uid, ids, limit, offset, domain, ascent, root_ids, context)
-            msg_ids = map(itemgetter('id'), group_msgs)
-            search_domain = ['|', '&', ('model', '=', self._name), ('id', 'in', ids)]
+            group_msg_ids = super(mail_group, self).message_load(cr, uid, ids, fetch_ancestors, ancestor_ids, limit, offset, domain, False, True, context)
+            group_domain = ['&', ('model', '=', self._name), ('id', 'in', group_msg_ids)]
+            # if no linked domain: go on
+            if not group.models:
+                search_domain = group_domain
             # add message ids linked to group models
-            model_list = []
-            for model in group.models:
-                model_list.append(model.model)
-            search_domain.append(('model', 'in', model_list))
-            msg_ids += message_obj.search(cr, uid, search_domain, limit=limit, offset=offset, context=context)
-        return message_obj.read(cr, uid, msg_ids, context=context)
+            else:
+                model_list = []
+                for model in group.models:
+                    model_list.append(model.model)
+                search_domain = [('|')] + group_domain
+                search_domain += [('model', 'in', model_list)]
+            # perform the search
+            msg_ids = message_obj.search(cr, uid, search_domain, limit=limit, offset=offset, context=context)
+            if (fetch_ancestors): msg_ids = self._message_load_add_ancestor_ids(cr, uid, ids, msg_ids, ancestor_ids, context=context)
+            all_msg_ids += msg_ids
+        if count:
+            return len(all_msg_ids)
+        else:
+            return message_obj.read(cr, uid, all_msg_ids, context=context)
     
     def action_group_join(self, cr, uid, ids, context=None):
         return self.message_subscribe(cr, uid, ids, context=context)
