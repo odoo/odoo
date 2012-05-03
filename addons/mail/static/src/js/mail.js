@@ -259,7 +259,8 @@ openerp.mail = function(session) {
         
         fetch_comments: function (limit, offset, domain) {
             var self = this;
-            var defer = this.ds.call('message_load', [[this.params.res_id], ( (limit+1)||(this.params.limit+1) ), (offset||this.params.offset), (domain||[]), (this.params.thread_level > 0), (this.sorted_comments['root_ids'])]);
+            var defer = this.ds.call('message_load', [[this.params.res_id], (this.params.thread_level > 0), (this.sorted_comments['root_ids']),
+                                    (limit+1) || (this.params.limit+1), offset||this.params.offset, domain||undefined ]);
             $.when(defer).then(function (records) {
                 if (records.length <= self.params.limit) self.display.show_more = false;
                 else { self.display.show_more = true; records.pop(); }
@@ -752,7 +753,7 @@ openerp.mail = function(session) {
             if (additional_context) var fetch_context = _.extend(this.search['context'], additional_context);
             else var fetch_context = this.search['context'];
             return this.ds_thread.call('get_pushed_messages', 
-                [[this.session.uid], (limit || 0), (offset || 0), fetch_domain, true, [], fetch_context]).then(this.proxy('display_comments'));
+                [[this.session.uid], true, [], (limit || 0), (offset || 0), fetch_domain, fetch_context]).then(this.proxy('display_comments'));
         },
 
         /**
