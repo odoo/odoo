@@ -1033,14 +1033,6 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
 
                 this.buildWidgets();
 
-                //self.pos.app = new module.App(self.$element, self.pos);
-                
-                //this.shopView = new module.ShopWidget(null, { 'pos': this.pos } );
-                //this.shopView.$element = self.$element;
-                //this.shopView.start();
-                
-
-
                 instance.webclient.set_content_full_screen(true);
                 
                 if (self.pos.get('bank_statements').length === 0)
@@ -1114,15 +1106,15 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
             });
             this.onscreenKeyboard.appendTo($(".point-of-sale #content"));
 
-            this.barcodeReader = new module.BarcodeReader({'pos': self.pos });
-
-            this.actionBar = new module.ActionbarWidget(null);
-            this.actionBar.appendTo($(".point-of-sale #content"));
-            this.actionBar.addNewButton('left',{
+            this.action_bar = new module.ActionbarWidget(null);
+            this.action_bar.appendTo($(".point-of-sale #content"));
+            this.action_bar.addNewButton('left',{
                 label : 'Hello World',
                 icon  : '/point_of_sale/static/src/img/icons/png48/face-monkey.png',
                 click : function(){ console.log("Hello World!"); } 
             });
+
+            this.pos.barcode_reader.connect();
             
         },
         createNewOrder: function() {
@@ -1177,7 +1169,7 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
             }, this));
         },
         close: function() {
-            this.barcodeReader.disconnect();
+            this.pos.barcode_reader.disconnect();
 
             return new instance.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_pos_close_statement']], ['res_id']).pipe(
                     _.bind(function(res) {

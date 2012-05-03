@@ -57,6 +57,8 @@ function openerp_pos_models(module, instance){ //module is instance.point_of_sal
             this.build_tree = _.bind(this.build_tree, this);
             this.session = session;
             this.categories = {};
+            this.barcode_reader = new module.BarcodeReader({'pos': this});
+            this.proxy = new module.ProxyDevice({'pos': this});
             this.set({
                 'nbr_pending_operations': 0,
                 'currency': {symbol: '$', position: 'after'},
