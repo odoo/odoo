@@ -1123,6 +1123,9 @@ instance.web.form.FormRenderingEngine = instance.web.Class.extend({
                             if (width.substr(-1) === '%') {
                                 total -= iwidth;
                                 width = iwidth + '%';
+                            } else {
+                                // Absolute width
+                                $td.css('min-width', width + 'px');
                             }
                             $td.attr('width', width);
                             $child.removeAttr('width');
