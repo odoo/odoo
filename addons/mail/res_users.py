@@ -67,8 +67,9 @@ class res_users(osv.osv):
         #self.message_broadcast(cr, uid, [user.id], 'Welcome notification', message, context=context)
         return user_id
 
-    def message_load(self, cr, uid, ids, limit=100, offset=0, domain=[], ascent=False, root_ids=[False], context=None):
-        """ Override of message_load
+    def message_load(self, cr, uid, ids, fetch_ancestors=False, ancestor_ids=None, 
+                        limit=100, offset=0, domain=None, count=False, context=None):
+        """ Override OpenChatter message_load method.
             User discussion page :
             - messages posted on res.users, res_id = user.id
             - messages directly sent to user with @user_login
@@ -78,5 +79,8 @@ class res_users(osv.osv):
         for user in self.browse(cr, uid, ids, context=context):
             msg_ids += msg_obj.search(cr, uid, ['|', '|', ('body_text', 'like', '@%s' % (user.login)), ('body_html', 'like', '@%s' % (user.login)), '&', ('res_id', '=', user.id), ('model', '=', self._name)] + domain,
             limit=limit, offset=offset, context=context)
-        if (ascent): msg_ids = self._message_load_add_ancestor_ids(cr, uid, ids, msg_ids, root_ids, context=context)
-        return msg_obj.read(cr, uid, msg_ids, context=context)
+        if (fetch_ancestors): msg_ids = self._message_load_add_ancestor_ids(cr, uid, ids, msg_ids, ancestor_ids, context=context)
+        if count:
+            return len(msg_ids)
+        else:
+            return msg_obj.read(cr, uid, msg_ids, context=context)
