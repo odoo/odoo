@@ -246,21 +246,8 @@
                         <page string="History">
                             <separator colspan="4" string="Invoices"/>
                             <field colspan="4" name="invoice_ids" nolabel="1" context="{'form_view_ref':'account.invoice_form'}"/>
-                            <separator colspan="4" string="Delivery Orders"/>
-                            <field colspan="4" name="picking_ids" nolabel="1" context="{'form_view_ref':'stock.view_picking_out_form', 'default_type': 'out'}">
-                                <tree colors="blue:state == 'draft';grey:state == 'cancel';red:state not in ('cancel', 'done') and min_date &lt; current_date" string="Delivery Orders">
-                                    <field name="name"/>
-                                    <field name="partner_id"/>
-                                    <field name="origin"/>
-                                    <field name="date"/>
-                                    <field name="min_date"/>
-                                    <field name="backorder_id"/>
-                                    <field name="invoice_state"/>
-                                    <field name="stock_journal_id" widget="selection"/>
-                                    <field name="state"/>
-                                    <button name="action_process" states="assigned" string="Deliver" type="object" icon="gtk-go-forward" context="{'default_type': 'out'}"/>
-                                </tree>
-                            </field>
+                            <separator colspan="4" string="Packings"/>
+                            <field colspan="4" name="picking_ids" nolabel="1"/>
                         </page>
                     </notebook>
                 </sheet>

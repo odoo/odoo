@@ -51,12 +51,11 @@
             <field name="act_to" ref="act_confirmed"/>
             <field name="signal">button_confirm</field>
         </record>
-
         <record id="trans_confirmed_assigned_back" model="workflow.transition">
             <field name="act_from" ref="act_assigned"/>
             <field name="act_to" ref="act_confirmed"/>
             <field name="condition">not test_assigned()</field>
-        </record> 
+        </record>
         <record id="trans_confirmed_assigned" model="workflow.transition">
             <field name="act_from" ref="act_confirmed"/>
             <field name="act_to" ref="act_assigned"/>
