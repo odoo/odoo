@@ -1212,9 +1212,6 @@ instance.web.search.SelectionField = instance.web.search.Field.extend(/** @lends
         });
         if (!match) { return $.when(null); }
         return $.when(facet_from(this, match));
-    },
-    value_from: function (facet) {
-        return facet.get('values');
     }
 });
 instance.web.search.BooleanField = instance.web.search.SelectionField.extend(/** @lends instance.web.search.BooleanField# */{
@@ -1225,16 +1222,9 @@ instance.web.search.BooleanField = instance.web.search.SelectionField.extend(/**
     init: function () {
         this._super.apply(this, arguments);
         this.attrs.selection = [
-            ['true', _t("Yes")],
-            ['false', _t("No")]
+            [true, _t("Yes")],
+            [false, _t("No")]
         ];
-    },
-    value_from: function (facet) {
-        switch (this._super(facet)) {
-            case 'false': return false;
-            case 'true': return true;
-            default: return null;
-        }
     }
 });
 /**
@@ -1242,8 +1232,8 @@ instance.web.search.BooleanField = instance.web.search.SelectionField.extend(/**
  * @extends instance.web.search.DateField
  */
 instance.web.search.DateField = instance.web.search.Field.extend(/** @lends instance.web.search.DateField# */{
-    value_from: function (facet) {
-        return openerp.web.date_to_str(facet.get('values'));
+    value_from: function (facetValue) {
+        return openerp.web.date_to_str(facetValue.get('value'));
     },
     complete: function (needle) {
         var d = Date.parse(needle);
@@ -1275,8 +1265,8 @@ instance.web.search.DateField = instance.web.search.Field.extend(/** @lends inst
  * @extends instance.web.DateField
  */
 instance.web.search.DateTimeField = instance.web.search.DateField.extend(/** @lends instance.web.search.DateTimeField# */{
-    value_from: function (facet) {
-        return openerp.web.datetime_to_str(facet.get('values'));
+    value_from: function (facetValue) {
+        return openerp.web.datetime_to_str(facetValue.get('value'));
     }
 });
 instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
@@ -1312,14 +1302,6 @@ instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
             if (_(names).isEmpty()) { return null; }
             return facet_from(self, names[0]);
         })
-    },
-    make_domain: function (name, operator, facet) {
-        // ``json`` -> actual auto-completed id
-        if (facet.get('values')) {
-            return [[name, '=', facet.get('values')]];
-        }
-
-        return this._super(name, operator, facet);
     }
 });
 
