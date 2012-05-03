@@ -811,6 +811,12 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
             });
             this.scale_invite_screen.appendTo($('#rightpane'));
 
+            this.scale_product_screen = new module.ScaleProductScreenWidget(this, {
+                pos: this.pos,
+                pos_widget: this,
+            });
+            this.scale_product_screen.appendTo($('#rightpane'));
+
             this.paypadView = new module.PaypadWidget(null, {
                 pos: this.pos
             });
@@ -842,6 +848,7 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
                     'payment' : this.payment_screen,
                     'client_payment' : this.client_payment_screen,
                     'scale_invite' : this.scale_invite_screen,
+                    'scale_product' : this.scale_product_screen,
                     'receipt' : this.receipt_screen,
                     'welcome' : this.welcome_screen,
                 },
