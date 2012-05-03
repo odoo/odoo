@@ -123,8 +123,8 @@ class mrp_repair(osv.osv):
         'state': fields.selection([
             ('draft','Quotation'),
             ('confirmed','Confirmed'),
-            ('ready','Ready to Repair'),
             ('under_repair','Under Repair'),
+            ('ready','Ready to Repair'),
             ('2binvoiced','To be Invoiced'),
             ('invoice_except','Invoice Exception'),
             ('done','Done'),

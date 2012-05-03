@@ -27,8 +27,25 @@
         <field name="model">mrp.repair</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Repairs order">
-                <group col="6" colspan="4">
+            <form layout="manual">
+               <div class="oe_form_topbar">
+                     <button name="repair_confirm" states="draft" string="Confirm Repair" icon="terp-camera_test"/>
+                     <button name="repair_ready" states="confirmed" string="Start Repair" icon="terp-gtk-jump-to-ltr"/>
+                     <button name="action_repair_start" states="ready" string="Start Repair" icon="terp-gtk-jump-to-ltr"/>
+                     <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" icon="gtk-convert"/>
+                     <button name="action_repair_end" states="under_repair" string="End Repair" icon="terp-dialog-close"/>
+                     <button name="action_invoice_create" states="2binvoiced" string="Make Invoice" icon="terp-dolar"/>
+                     <button name="invoice_recreate" states="invoice_except" string="Recreate Invoice" icon="terp-dolar"/>
+                     <button name="invoice_corrected" states="invoice_except" string="Invoice Corrected" icon="terp-emblem-important"/>
+                     <button name="%(action_cancel_repair)d" states="confirmed,2binvoiced,ready,under_repair" string="Cancel Repair" type="action" icon="gtk-stop"/>
+                     <button name="%(action_cancel_repair)d" states="invoice_except" string="Cancel Repair" type="action" icon="gtk-stop"/>
+                     <button name="cancel" states="draft" string="Cancel Repair" icon="gtk-stop"/>
+               <div class="oe_right">
+                     <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,confirmed,ready" />
+               </div>
+               </div>
+               <sheet string="Repairs order" layout="auto">
+                <group col="6" colspan="4" class="oe_form_header">
                     <field name="name"/>
                     <field name="product_id" select="1"  on_change="onchange_product_id(product_id)"/>
                     <field name="deliver_bool"/>
@@ -99,21 +116,6 @@
                             <field name="amount_total" sum="Total amount"/>
                             <button name="button_dummy" states="draft" string="Compute" type="object" icon="terp-stock_format-scientific"/>
                         </group>
-                        <separator string="" colspan="4"/>
-                        <group col="13" colspan="4">
-                            <field name="state"/>
-                            <button name="cancel" states="draft" string="Cancel Repair" icon="gtk-stop"/>
-                            <button name="%(action_cancel_repair)d" states="confirmed,2binvoiced,ready,under_repair" string="Cancel Repair" type="action" icon="gtk-stop"/>
-                            <button name="%(action_cancel_repair)d" states="invoice_except" string="Cancel Repair" type="action" icon="gtk-stop"/>
-                            <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" icon="gtk-convert"/>
-                            <button name="repair_confirm" states="draft" string="Confirm Repair" icon="terp-camera_test"/>
-                            <button name="repair_ready" states="confirmed" string="Start Repair" icon="terp-gtk-jump-to-ltr"/>
-                            <button name="action_repair_start" states="ready" string="Start Repair" icon="terp-gtk-jump-to-ltr"/>
-                            <button name="action_repair_end" states="under_repair" string="End Repair" icon="terp-dialog-close"/>
-                            <button name="invoice_recreate" states="invoice_except" string="Recreate Invoice" icon="terp-dolar"/>
-                            <button name="invoice_corrected" states="invoice_except" string="Invoice Corrected" icon="terp-emblem-important"/>
-                            <button name="action_invoice_create" states="2binvoiced" string="Make Invoice" icon="terp-dolar"/>
-                        </group>
                     </page>
                     <page string="Invoicing">
                         <field name="invoice_method" colspan="4"/>
@@ -171,6 +173,7 @@
                         <field colspan="4" name="quotation_notes" nolabel="1"/>
                     </page>
                 </notebook>
+                </sheet>
             </form>
         </field>
     </record>
