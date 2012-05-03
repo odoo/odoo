@@ -1416,16 +1416,18 @@ instance.web.search.Advanced = instance.web.search.Input.extend({
         var children = this.getChildren(),
             domain = _.invoke(children, 'get_proposition');
         var filters = _(domain).map(function (section) {
-            return new instance.web.search.Filter({attrs: {
-                string: _.str.sprintf('%s(%s)%s',
-                    section[0], section[1], section[2]),
-                domain: [section]
-            }}, self.view);
+            return {
+                label: _.str.sprintf('%s(%s)%s',
+                        section[0], section[1], section[2]),
+                value: new instance.web.search.Filter({attrs: {
+                    domain: [section]
+                }}, self.view)
+            };
         });
         // Create Filter (& FilterGroup around it) with that domain
         var f = new instance.web.search.FilterGroup(filters, this.view);
         // add group to query
-        this.query.add({
+        this.view.query.add({
             category: _t("Advanced"),
             values: filters,
             field: f
