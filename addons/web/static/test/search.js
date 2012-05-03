@@ -4,6 +4,25 @@ $(document).ready(function () {
     xhr.send(null);
     var doc = xhr.responseXML;
 
+    var noop = function () {};
+    /**
+     * Make connection RPC responses mockable by setting keys on the
+     * Connection#responses object (key is the URL, value is the function to
+     * call with the RPC request payload)
+     *
+     * @param {openerp.web.Connection} connection connection instance to mockify
+     * @param {Object} [responses] url:function mapping to seed the mock connection
+     */
+    var mockifyRPC = function (connection, responses) {
+        connection.responses = responses || {};
+        connection.rpc_function = function (url, payload) {
+            if (!(url.url in this.responses)) {
+                return $.Deferred().reject({}, 'failed', _.str.sprintf("Url %s not found in mock responses", url.url)).promise();
+            }
+            return $.when(this.responses[url.url](payload));
+        };
+    };
+
     var instance;
     module('query', {
         setup: function () {
@@ -157,16 +176,7 @@ $(document).ready(function () {
 
             instance.web.qweb.add_template(doc);
 
-            instance.connection.responses = {};
-            instance.connection.rpc_function = function (url, payload) {
-                if (!(url.url in this.responses)) {
-                    return $.Deferred().reject(
-                        {}, 'failed',
-                        _.str.sprintf("Url %s not found in mock responses",
-                                      url.url)).promise();
-                }
-                return $.when(this.responses[url.url](payload));
-            };
+            mockifyRPC(instance.connection);
         }
     });
 
@@ -220,7 +230,11 @@ $(document).ready(function () {
         };
 
         var dataset = {model: 'dummy.model', get_context: function () { return {}; }};
-        return new instance.web.SearchView(null, dataset, false, defaults);
+        var view = new instance.web.SearchView(null, dataset, false, defaults);
+        view.on_invalid.add(function () {
+            ok(false, JSON.stringify([].slice(arguments)));
+        });
+        return view;
     }
     asyncTest('calling', 2, function () {
         var defaults_called = false;
@@ -401,16 +415,7 @@ $(document).ready(function () {
 
             instance.web.qweb.add_template(doc);
 
-            instance.connection.responses = {};
-            instance.connection.rpc_function = function (url, payload) {
-                if (!(url.url in this.responses)) {
-                    return $.Deferred().reject(
-                        {}, 'failed',
-                        _.str.sprintf("Url %s not found in mock responses",
-                                      url.url)).promise();
-                }
-                return $.when(this.responses[url.url](payload));
-            };
+            mockifyRPC(instance.connection);
         }
     });
     asyncTest('calling', 4, function () {
@@ -449,7 +454,7 @@ $(document).ready(function () {
         var completion = {
             label: "Dummy",
             facet: {
-                field: {},
+                field: {get_domain: noop, get_context: noop, get_groupby: noop},
                 category: 'Dummy',
                 values: [{label: 'dummy', value: 42}]
             }
@@ -471,7 +476,7 @@ $(document).ready(function () {
             });
     });
     asyncTest('facet selection: new value existing facet', 3, function () {
-        var field = {};
+        var field = {get_domain: noop, get_context: noop, get_groupby: noop};
         var completion = {
             label: "Dummy",
             facet: {
@@ -656,6 +661,115 @@ $(document).ready(function () {
             });
     });
 
+    module('search-serialization', {
+        setup: function () {
+            instance = window.openerp.init([]);
+            window.openerp.web.corelib(instance);
+            window.openerp.web.coresetup(instance);
+            window.openerp.web.chrome(instance);
+            window.openerp.web.data(instance);
+            window.openerp.web.search(instance);
+
+            instance.web.qweb.add_template(doc);
+
+            mockifyRPC(instance.connection);
+        }
+    });
+    asyncTest('No facet, no call', 6, function () {
+        var got_domain = false, got_context = false, got_groupby = false;
+        var $fix = $('#qunit-fixture');
+        var view = makeSearchView({
+            get_domain: function () {
+                got_domain = true;
+                return null;
+            },
+            get_context: function () {
+                got_context = true;
+                return null;
+            },
+            get_groupby: function () {
+                got_groupby = true;
+                return null;
+            }
+        });
+        var ds, cs, gs;
+        view.on_search.add(function (d, c, g) {
+            ds = d, cs = c, gs = g;
+        });
+        view.appendTo($fix)
+            .always(start)
+            .fail(function (error) { ok(false, error.message); })
+            .done(function () {
+                view.do_search();
+                ok(!got_domain, "no facet, should not have fetched domain");
+                ok(_(ds).isEmpty(), "domains list should be empty");
+
+                ok(!got_context, "no facet, should not have fetched context");
+                ok(_(cs).isEmpty(), "contexts list should be empty");
+
+                ok(!got_groupby, "no facet, should not have fetched groupby");
+                ok(_(gs).isEmpty(), "groupby list should be empty");
+            })
+    });
+    asyncTest('London, calling', 8, function () {
+        var got_domain = false, got_context = false, got_groupby = false;
+        var $fix = $('#qunit-fixture');
+        var view = makeSearchView({
+            get_domain: function (facet) {
+                equal(facet.get('category'), "dummy");
+                deepEqual(facet.values.toJSON(), [{label: "42", value: 42}]);
+                got_domain = true;
+                return null;
+            },
+            get_context: function () {
+                got_context = true;
+                return null;
+            },
+            get_groupby: function () {
+                got_groupby = true;
+                return null;
+            }
+        }, {dummy: 42});
+        var ds, cs, gs;
+        view.on_search.add(function (d, c, g) {
+            ds = d, cs = c, gs = g;
+        });
+        view.appendTo($fix)
+            .always(start)
+            .fail(function (error) { ok(false, error.message); })
+            .done(function () {
+                view.do_search();
+                ok(got_domain, "should have fetched domain");
+                ok(_(ds).isEmpty(), "domains list should be empty");
+
+                ok(got_context, "should have fetched context");
+                ok(_(cs).isEmpty(), "contexts list should be empty");
+
+                ok(got_groupby, "should have fetched groupby");
+                ok(_(gs).isEmpty(), "groupby list should be empty");
+            })
+    });
+    asyncTest('Generate domains', 1, function () {
+        var $fix = $('#qunit-fixture');
+        var view = makeSearchView({
+            get_domain: function (facet) {
+                return facet.values.map(function (value) {
+                    return ['win', '4', value.get('value')];
+                });
+            }
+        }, {dummy: 42});
+        var ds;
+        view.on_search.add(function (d) { ds = d; });
+        view.appendTo($fix)
+            .always(start)
+            .fail(function (error) { ok(false, error.message); })
+            .done(function () {
+                view.do_search();
+                deepEqual(ds, [[['win', '4', 42]]],
+                    "search should yield an array of contexts");
+            });
+    });
+
     module('drawer', {
         setup: function () {
             instance = window.openerp.init([]);
@@ -667,16 +781,7 @@ $(document).ready(function () {
 
             instance.web.qweb.add_template(doc);
 
-            instance.connection.responses = {};
-            instance.connection.rpc_function = function (url, payload) {
-                if (!(url.url in this.responses)) {
-                    return $.Deferred().reject(
-                        {}, 'failed',
-                        _.str.sprintf("Url %s not found in mock responses",
-                                      url.url)).promise();
-                }
-                return $.when(this.responses[url.url](payload));
-            };
+            mockifyRPC(instance.connection);
         }
     });
     asyncTest('is-drawn', 2, function () {
@@ -704,43 +809,35 @@ $(document).ready(function () {
 
             instance.web.qweb.add_template(doc);
 
-            instance.connection.responses = {};
-            instance.connection.rpc_function = function (url, payload) {
-                if (!(url.url in this.responses)) {
-                    return $.Deferred().reject(
-                        {}, 'failed',
-                        _.str.sprintf("Url %s not found in mock responses",
-                                      url.url)).promise();
+            mockifyRPC(instance.connection, {
+                '/web/searchview/load': function () {
+                    // view with a single group of filters
+                    return {result: {fields_view: {
+                        type: 'search',
+                        fields: {},
+                        arch: {
+                            tag: 'search',
+                            attrs: {},
+                            children: [{
+                                tag: 'filter',
+                                attrs: { string: "Foo1", domain: [ ['foo', '=', '1'] ] },
+                                children: []
+                            }, {
+                                tag: 'filter',
+                                attrs: {
+                                    name: 'foo2',
+                                    string: "Foo2",
+                                    domain: [ ['foo', '=', '2'] ] },
+                                children: []
+                            }, {
+                                tag: 'filter',
+                                attrs: { string: "Foo3", domain: [ ['foo', '=', '3'] ] },
+                                children: []
+                            }]
+                        }
+                    }}};
                 }
-                return $.when(this.responses[url.url](payload));
-            };
-            instance.connection.responses['/web/searchview/load'] = function () {
-                // view with a single group of filters
-                return {result: {fields_view: {
-                    type: 'search',
-                    fields: {},
-                    arch: {
-                        tag: 'search',
-                        attrs: {},
-                        children: [{
-                            tag: 'filter',
-                            attrs: { string: "Foo1", domain: [ ['foo', '=', '1'] ] },
-                            children: []
-                        }, {
-                            tag: 'filter',
-                            attrs: {
-                                name: 'foo2',
-                                string: "Foo2",
-                                domain: [ ['foo', '=', '2'] ] },
-                            children: []
-                        }, {
-                            tag: 'filter',
-                            attrs: { string: "Foo3", domain: [ ['foo', '=', '3'] ] },
-                            children: []
-                        }]
-                    }
-                }}};
-            };
+            });
         }
     });
     asyncTest('drawn', 3, function () {

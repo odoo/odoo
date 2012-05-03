@@ -656,7 +656,6 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
     do_search: function () {
         var domains = [], contexts = [], groupbys = [], errors = [];
 
-        return this.on_search([], [], []);
         this.query.each(function (facet) {
             var field = facet.get('field');
             try {
@@ -902,12 +901,12 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
     /**
      * Fetches contexts for all enabled filters in the group
      *
-     * @param {VS.model.SearchFacet} facet
+     * @param {openerp.web.search.Facet} facet
      * @return {*} combined contexts of the enabled filters in this group
      */
     get_context: function (facet) {
-        var contexts = _(facet.get('values')).chain()
-            .map(function (filter) { return filter.attrs.context; })
+        var contexts = _(facet.values).chain()
+            .map(function (f) { return f.get('value').attrs.context; })
             .reject(_.isEmpty)
             .value();
 
@@ -924,8 +923,8 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
      * @return {Array} enabled filters in this group
      */
     get_groupby: function (facet) {
-        return  _(facet.get('values')).chain()
-            .map(function (filter) { return filter.attrs.context; })
+        return  _(facet.values).chain()
+            .map(function (f) { return f.get('value').attrs.context; })
             .reject(_.isEmpty)
             .value();
     },
@@ -936,8 +935,8 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
      * @return {*} combined domains of the enabled filters in this group
      */
     get_domain: function (facet) {
-        var domains = _(facet.get('values')).chain()
-            .map(function (filter) { return filter.attrs.domain; })
+        var domains = _(facet.values).chain()
+            .map(function (f) { return f.get('value').attrs.domain; })
             .reject(_.isEmpty)
             .value();
 
@@ -1014,14 +1013,14 @@ instance.web.search.Field = instance.web.search.Input.extend( /** @lends instanc
         return facet.value();
     },
     get_context: function (facet) {
-        var val = this.get_value(facet);
         // A field needs a value to be "active", and a context to send when
         // active
-        var has_value = (val !== null && val !== '');
         var context = this.attrs.context;
-        if (!(has_value && context)) {
+        if (!context) {
             return;
         }
+        var val = this.get_value(facet);
+        var has_value = (val !== null && val !== '');
         return new instance.web.CompoundContext(context)
                 .set_eval_context({self: val});
     },
