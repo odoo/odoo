@@ -2,8 +2,8 @@ $(document).ready(function () {
     var openerp;
     module('Registry', {
         setup: function () {
-            openerp = window.openerp.init(true);
-            window.openerp.web.core(openerp);
+            openerp = window.openerp.init([]);
+            window.openerp.web.corelib(openerp);
             openerp.web.Foo = {};
             openerp.web.Bar = {};
             openerp.web.Foo2 = {};

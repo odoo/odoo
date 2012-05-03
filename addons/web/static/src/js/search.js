@@ -1403,7 +1403,6 @@ instance.web.search.ExtendedSearchProposition = instance.web.OldWidget.extend(/*
         var type = field.type;
         var obj = instance.web.search.custom_filters.get_object(type);
         if(obj === null) {
-            console.log('Unknow field type ' + e.key);
             obj = instance.web.search.custom_filters.get_object("char");
         }
         this.value = new (obj) (this);

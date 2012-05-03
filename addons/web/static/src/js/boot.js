@@ -14,8 +14,8 @@
     var openerp = this.openerp =  {
         // Per session namespace
         // openerp.<module> will map to
-        // openerp.sessions.sessionname.<module> using a closure
-        sessions: {},
+        // openerp.instances.sessionname.<module> using a closure
+        instances: {},
         /**
          * OpenERP instance constructor
          *
@@ -23,19 +23,19 @@
          */
         init: function(modules) {
             // By default only web will be loaded, the rest will be by loaded
-            // by openerp.web.Connection on the first session_authenticate
+            // by openerp.web.Session on the first session_authenticate
             modules = modules || ["web"];
             var new_instance = {
                 // links to the global openerp
                 _openerp: openerp,
                 // this unique id will be replaced by hostname_databasename by
-                // openerp.web.Connection on the first connection
-                _session_id: "session" + session_counter++,
+                // openerp.web.Session on the first connection
+                _session_id: "instance" + session_counter++,
                 _modules: modules,
                 web: {},
                 web_mobile: {}
             };
-            openerp.sessions[new_instance._session_id] = new_instance;
+            openerp.instances[new_instance._session_id] = new_instance;
             for(var i=0; i < modules.length; i++) {
                 openerp[modules[i]](new_instance);
             }

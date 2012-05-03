@@ -3,8 +3,9 @@ $(document).ready(function () {
 
     module('server-formats', {
         setup: function () {
-            openerp = window.openerp.init();
-            window.openerp.web.core(openerp);
+            openerp = window.openerp.init([]);
+            window.openerp.web.corelib(openerp);
+            window.openerp.web.coresetup(openerp);
             window.openerp.web.dates(openerp);
         }
     });
@@ -40,8 +41,9 @@ $(document).ready(function () {
 
     module('web-formats', {
         setup: function () {
-            openerp = window.openerp.init();
-            window.openerp.web.core(openerp);
+            openerp = window.openerp.init([]);
+            window.openerp.web.corelib(openerp);
+            window.openerp.web.coresetup(openerp);
             window.openerp.web.dates(openerp);
             window.openerp.web.formats(openerp);
         }
@@ -206,8 +208,9 @@ $(document).ready(function () {
     });
     module('custom-date-formats', {
         setup: function () {
-            openerp = window.openerp.init();
-            window.openerp.web.core(openerp);
+            openerp = window.openerp.init([]);
+            window.openerp.web.corelib(openerp);
+            window.openerp.web.coresetup(openerp);
             window.openerp.web.dates(openerp);
             window.openerp.web.formats(openerp);
         }

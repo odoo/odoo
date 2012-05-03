@@ -7,7 +7,7 @@ if (!instance.web_dashboard) {
     instance.web_dashboard = {};
 }
 
-instance.web.form.DashBoard = instance.web.form.Widget.extend({
+instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
     init: function(view, node) {
         this._super(view, node);
         this.form_template = 'DashBoard';
@@ -278,87 +278,6 @@ instance.web.form.tags.add('vpaned', 'instance.web.form.DashBoardLegacy');
 instance.web.form.tags.add('board', 'instance.web.form.DashBoard');
 
 /*
- * ConfigOverview
- * This client action designed to be used as a dashboard widget display
- * ir.actions.todo in a fancy way
- */
-instance.web.client_actions.add( 'board.config.overview', 'instance.web_dashboard.ConfigOverview');
-instance.web_dashboard.ConfigOverview = instance.web.View.extend({
-    template: 'ConfigOverview',
-    init: function (parent) {
-        this._super(parent);
-        this.user = _.extend(new instance.web.DataSet(this, 'res.users'), {
-            index: 0,
-            ids: [this.session.uid]
-        });
-        this.dataset = new instance.web.DataSetSearch(this, 'ir.actions.todo');
-    },
-    start: function () {
-        var self = this;
-        return this.user.read_index(['groups_id']).pipe(function(record) {
-            var todos_filter = [
-                ['type', '!=', 'automatic'],
-                '|', ['groups_id', '=', false],
-                     ['groups_id', 'in', record['groups_id']]];
-            return $.when(
-                self.dataset.read_slice(
-                    ['state', 'action_id', 'category_id'],
-                    { domain: todos_filter }
-                ),
-                self.dataset.call('progress').pipe(
-                        function (arg) { return arg; }, null))
-        }, null).then(this.on_records_loaded);
-
-    },
-    on_records_loaded: function (records, progress) {
-        var grouped_todos = _(records).chain()
-            .map(function (record) {
-                return {
-                    id: record.id,
-                    name: record.action_id[1],
-                    done: record.state !== 'open',
-                    to_do: record.state === 'open',
-                    category: record['category_id'][1] || _t("Uncategorized")
-                }
-            })
-            .groupBy(function (record) {return record.category})
-            .value();
-        this.$element.html(QWeb.render('ConfigOverview.content', {
-            completion: 100 * progress.done / progress.total,
-            groups: grouped_todos,
-            task_title: _t("Execute task \"%s\""),
-            checkbox_title: _t("Mark this task as done"),
-            _: _
-        }));
-        var $progress = this.$element.find('div.oe-config-progress-bar');
-        $progress.progressbar({value: $progress.data('completion')});
-
-        var self = this;
-        this.$element.find('dl')
-            .delegate('input', 'click', function (e) {
-                // switch todo status
-                e.stopImmediatePropagation();
-                var new_state = this.checked ? 'done' : 'open',
-                      todo_id = parseInt($(this).val(), 10);
-                self.dataset.write(todo_id, {state: new_state}, {}, function () {
-                    self.start();
-                });
-            })
-            .delegate('li:not(.oe-done)', 'click', function () {
-                self.getParent().getParent().getParent().do_execute_action({
-                        type: 'object',
-                        name: 'action_launch'
-                    }, self.dataset,
-                    $(this).data('id'), function () {
-                        // after action popup closed, refresh configuration
-                        // thingie
-                        self.start();
-                    });
-            });
-    }
-});
-
-/*
  * Widgets
  * This client action designed to be used as a dashboard widget display
  * the html content of a res_widget given as argument
@@ -394,80 +313,6 @@ instance.web_dashboard.Widget = instance.web.View.extend(/** @lends instance.web
             widget: widget,
             url: url
         }));
-    }
-});
-
-/*
- * HomeTiles this client action display either the list of application to
- * install (if none is installed yet) or a list of root menu items
- */
-instance.web.client_actions.add('default_home', 'session.web_dashboard.ApplicationTiles');
-instance.web_dashboard.ApplicationTiles = instance.web.OldWidget.extend({
-    template: 'web_dashboard.ApplicationTiles',
-    init: function(parent) {
-        this._super(parent);
-    },
-    start: function() {
-        var self = this;
-        var domain = [['application','=',true], ['state','=','installed'], ['name', '!=', 'base']];
-        var ds = new instance.web.DataSetSearch(this, 'ir.module.module',{},domain);
-        ds.read_slice(['id']).then(function(result) {
-            if(result.length) {
-                self.on_installed_database();
-            } else {
-                self.on_uninstalled_database();
-            }
-        });
-    },
-    on_uninstalled_database: function() {
-        installer = new instance.web_dashboard.ApplicationInstaller(this);
-        installer.appendTo(this.$element);
-    },
-    on_installed_database: function() {
-        var self = this;
-        self.rpc('/web/menu/get_user_roots', {}).then(function (menu_ids) {
-            var menuds = new instance.web.DataSet(this, 'ir.ui.menu',{})
-                .read_ids(menu_ids, ['name', 'web_icon_data', 'web_icon_hover_data', 'module']).then(function (applications) {
-                    var tiles = QWeb.render('ApplicationTiles.content', {applications: applications});
-                    $(tiles).appendTo(self.$element).find('.oe_install-module-link').click(function () {
-                        instance.webclient.menu.on_menu_click(null, $(this).data('menu'))
-                    });
-                });
-        });
-    }
-});
-
-/**
- * ApplicationInstaller
- * This client action  display a list of applications to install.
- */
-instance.web.client_actions.add( 'board.application.installer', 'instance.web_dashboard.ApplicationInstaller');
-instance.web_dashboard.ApplicationInstaller = instance.web.OldWidget.extend({
-    template: 'web_dashboard.ApplicationInstaller',
-    start: function () {
-        // TODO menu hide
-        var r = this._super();
-        this.action_manager = new instance.web.ActionManager(this);
-        this.action_manager.appendTo(this.$element.find('.oe_installer'));
-        this.action_manager.do_action({
-            type: 'ir.actions.act_window',
-            res_model: 'ir.module.module',
-            domain: [['application','=',true]],
-            views: [[false, 'kanban']],
-            flags: {
-                display_title:false,
-                search_view: false,
-                views_switcher: false,
-                action_buttons: false,
-                sidebar: false,
-                pager: false
-            }
-        });
-        return r;
-    },
-    destroy: function() {
-        this.action_manager.destroy();
-        return this._super();
     }
 });
 

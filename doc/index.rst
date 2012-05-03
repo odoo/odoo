@@ -9,6 +9,17 @@ Welcome to OpenERP Web's documentation!
 Contents:
 
 .. toctree::
+    :maxdepth: 1
+
+    changelog-6.2
+
+    async
+    rpc
+
+Older stuff
+-----------
+
+.. toctree::
    :maxdepth: 2
 
    search-view

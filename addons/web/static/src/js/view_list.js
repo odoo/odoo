@@ -56,6 +56,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         this.view_id = view_id;
         this.previous_colspan = null;
         this.colors = null;
+        this.fonts = null;
 
         this.columns = [];
 
@@ -140,29 +141,53 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         return this.reload_view(null, null, true);
     },
     /**
-     * Returns the color for the provided record in the current view (from the
-     * ``@colors`` attribute)
+     * Returns the style for the provided record in the current view (from the
+     * ``@colors`` and ``@fonts`` attributes)
      *
      * @param {Record} record record for the current row
-     * @returns {String} CSS color declaration
+     * @returns {String} CSS style declaration
      */
-    color_for: function (record) {
-        if (!this.colors) { return ''; }
+    style_for: function (record) {
+        var style= '';
+
         var context = _.extend({}, record.attributes, {
             uid: this.session.uid,
             current_date: new Date().toString('yyyy-MM-dd')
             // TODO: time, datetime, relativedelta
         });
+
+        if (this.fonts) {
+            for(var i=0, len=this.fonts.length; i<len; ++i) {
+                var pair = this.fonts[i],
+                font = pair[0],
+                expression = pair[1];
+                if (py.evaluate(expression, context).toJSON()) {
+                    switch(font) {
+                    case 'bold':
+                        style += 'font-weight: bold;';
+                        break;
+                    case 'italic':
+                        style += 'font-style: italic;';
+                        break;
+                    case 'underline':
+                        style += 'text-decoration: underline;';
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (!this.colors) { return style; }
         for(var i=0, len=this.colors.length; i<len; ++i) {
             var pair = this.colors[i],
                 color = pair[0],
                 expression = pair[1];
             if (py.evaluate(expression, context).toJSON()) {
-                return 'color: ' + color + ';';
+                return style += 'color: ' + color + ';';
             }
             // TODO: handle evaluation errors
         }
-        return '';
+        return style;
     },
     /**
      * Called after loading the list view's description, sets up such things
@@ -200,6 +225,16 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
                         color = pair[0],
                         expr = pair[1];
                     return [color, py.parse(py.tokenize(expr)), expr];
+                }).value();
+        }
+
+        if (this.fields_view.arch.attrs.fonts) {
+            this.fonts = _(this.fields_view.arch.attrs.fonts.split(';')).chain().compact()
+                .map(function(font_pair) {
+                    var pair = font_pair.split(':'),
+                        font = pair[0],
+                        expr = pair[1];
+                    return [font, py.parse(py.tokenize(expr)), expr];
                 }).value();
         }
 
@@ -301,7 +336,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         }
 
         // Sidebar
-        if (!this.sidebar && this.options.sidebar && this.options.$sidebar) {
+        if (!this.sidebar && this.options.$sidebar) {
             this.sidebar = new instance.web.Sidebar(this);
             this.sidebar.appendTo(this.options.$sidebar);
             this.sidebar.add_toolbar(this.fields_view.toolbar);
@@ -464,7 +499,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
                 view_id: this.view_id,
                 view_type: "tree",
                 context: this.dataset.get_context(context),
-                toolbar: this.options.sidebar
+                toolbar: !!this.options.$sidebar
             }, callback);
         }
     },
@@ -770,6 +805,17 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
                     .attr('colspan', this.previous_colspan);
             this.previous_colspan = null;
         }
+    },
+    no_result: function () {
+        if (this.groups.group_by
+            || !this.options.action
+            || !this.options.action.help) {
+            return;
+        }
+        this.$element.children('table').replaceWith(
+            $('<div class="oe_listview_nocontent">')
+                .append($('<img>', { src: '/web/static/src/img/list_empty_arrow.png' }))
+                .append($('<div>').html(this.options.action.help)));
     }
 });
 instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.ListView.List# */{
@@ -1367,6 +1413,9 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
             self.records.add(records, {silent: true});
             list.render();
             d.resolve(list);
+            if (_.isEmpty(records)) {
+                view.no_result();
+            }
         });});
         return d.promise();
     },

@@ -324,7 +324,7 @@
     </ul>
 </t>
 <t t-name="Menu.secondary.link">
-    <a href="#"
+    <a t-attf-href="#menu_id=#{menu.id}&amp;action_id=#{menu.action ? menu.action.split(',')[1] : ''}"
         t-att-class="menu.children.length ? 'oe_menu_toggler' : 'oe_menu_leaf'"
         t-att-data-menu="menu.id"
         t-att-data-action-model="menu.action ? menu.action.split(',')[0] : ''"
@@ -342,7 +342,7 @@
     <ul class="oe_user_menu oe_topbar_item">
         <li class="oe_dropdown">
             <a href="#" class="oe_dropdown_toggle">
-                <img class="oe_topbar_avatar" t-att-data-default-src="_s + '/web/static/src/img/topbar-avatar.png'"/>
+                <img class="oe_topbar_avatar" t-att-data-default-src="_s + '/web/static/src/img/user_menu_avatar.png'"/>
                 <span class="oe_topbar_name"/>
             </a>
             <ul class="oe_dropdown_options">
@@ -670,7 +670,7 @@
 </t>
 <tr t-name="ListView.row" t-att-class="row_parity"
         t-att-data-id="record.get('id')"
-        t-att-style="view.color_for(record)">
+        t-att-style="view.style_for(record)">
     <t t-foreach="columns" t-as="column">
         <td t-if="column.meta">
 
@@ -715,8 +715,8 @@
             <button type="button" class="oe_button oe_form_button_delete">Delete</button>
         </span>
         <span class="oe_form_buttons_edit">
-            <button type="button" class="oe_button oe_form_button_save">Save</button>
-            <button type="button" class="oe_button oe_form_button_cancel">Cancel</button>
+            <button type="button" class="oe_button oe_form_button_save">Save</button> or
+            <a href="#" class="oe_form_button_cancel">Discard</a>
         </span>
     </t>
 </div>
@@ -790,9 +790,11 @@
 <t t-name="FormRenderingForm">
     <div class="oe_form_sheetbg">
         <div t-attf-class="oe_form_sheet oe_form_sheet_width #{classnames}">
-            <group col="4"/>
+            <group t-if="layout === 'auto'" col="4"/>
         </div>
     </div>
+</t>
+<t t-name="FormRenderingSheet" t-extend="FormRenderingForm">
 </t>
 <t t-name="FormRenderingGroup">
     <t t-set="table">
@@ -835,7 +837,6 @@
             t-attf-class="#{classnames} oe_form_label#{help ? '_help' : ''} oe_align_#{align}">
         <t t-esc="string"/>
         <span t-if="help">?</span>
-        :
     </label>
 </t>
 
@@ -847,7 +848,7 @@
     <div class="oe_tooltip_string" t-if="widget.string">
         <t t-esc="widget.node.attrs.string"/> <t t-if="debug and widget.nolabel">(nolabel)</t>
     </div>
-    <p t-if="widget.help" class="oe_tooltip_help"><t t-esc="widget.help"/></p>
+    <p t-if="widget.node.attrs.help or (widget.field and widget.field.help)" class="oe_tooltip_help"><t t-esc="widget.node.attrs.help || widget.field.help"/></p>
     <ul t-if="debug" class="oe_tooltip_technical">
         <li data-item="field" t-if="widget.name">
             <span class="oe_tooltip_technical_title">Field:</span>
@@ -917,8 +918,7 @@
         </div>
     </t>
     <t t-if="widget.get('effective_readonly')">
-        <div t-attf-class="oe_form_field_char #{widget.is_field_number ? 'oe-number' : ''}">
-        </div>
+        <span t-attf-class="oe_form_field_char #{widget.is_field_number ? 'oe-number' : ''}"/>
     </t>
 </t>
 <t t-name="FieldEmail">
@@ -941,9 +941,9 @@
         </table>
     </t>
     <t t-if="widget.get('effective_readonly')">
-        <div>
+        <span>
             <a href="#" class="oe_form_uri"/>
-        </div>
+        </span>
     </t>
 </t>
 <t t-name="FieldUrl">
@@ -966,29 +966,29 @@
         </table>
     </t>
     <t t-if="widget.get('effective_readonly')">
-        <div>
+        <span>
             <a href="#" class="oe_form_uri"/>
-        </div>
+        </span>
     </t>
 </t>
 <t t-name="FieldText">
-    <t t-if="!widget.get('effective_readonly')">
-        <div class="oe_form_field_text">
-            <textarea rows="6"
-                t-att-name="widget.name"
-                class="field_text"
-                t-att-tabindex="widget.node.attrs.tabindex"
-                t-att-autofocus="widget.node.attrs.autofocus"
-            ></textarea><img class="oe_field_translate oe_input_icon" t-if="widget.field.translate" t-att-src='_s + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"/>
-        </div>
-    </t>
+    <div class="oe_form_field_text">
+        <textarea rows="6"
+            t-att-name="widget.name"
+            class="field_text"
+            t-att-tabindex="widget.node.attrs.tabindex"
+            t-att-autofocus="widget.node.attrs.autofocus"
+        ></textarea>
+        <img class="oe_field_translate oe_input_icon" t-if="widget.field.translate"
+            t-att-src='_s + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"/>
+    </div>
 </t>
 <t t-name="web.datetimepicker">
     <div class="oe_datepicker_root oe_form_field_datetime">
         <input type="text" class="oe_datepicker_container" disabled="disabled" style="display: none;"/>
         <input type="text"
             t-att-name="widget.name"
-            t-attf-class="oe_datepicker_master field_#{widget.type_of_date}"
+            t-attf-class="oe_datepicker_master field_#{widget.type_of_date} oe_form_field_#{widget.type_of_date}"
         /><img class="oe_input_icon oe_datepicker_trigger" t-att-src='_s + "/web/static/src/img/ui/field_calendar.png"'
              title="Select date" width="16" height="16" border="0"/>
     </div>
@@ -1008,8 +1008,7 @@
         </div>
     </t>
     <t t-if="widget.get('effective_readonly')">
-        <div class="field_selection">
-        </div>
+        <span class="field_selection"/>
     </t>
 </t>
 <t t-name="FieldMany2One">
@@ -1034,25 +1033,20 @@
         </table>
     </t>
     <t t-if="widget.get('effective_readonly')">
-        <div>
+        <span>
             <a href="#" class="oe_form_uri"/>
-        </div>
+        </span>
     </t>
 </t>
 <t t-name="FieldReference">
-    <t t-if="!widget.get('effective_readonly')">
-        <table class="oe_form_field_reference oe_frame oe_forms" border="0" cellpadding="0" cellspacing="0">
-        <tr>
-            <td t-attf-class="oe_form_frame_cell oe_form_selection oe_form_view_reference_selection">
-            </td>
-            <td t-attf-class="oe_form_frame_cell oe_form_many2one oe_form_view_reference_m2o" nowrap="true" style="display: none">
-            </td>
-        </tr>
-        </table>
-    </t>
-    <t t-if="widget.get('effective_readonly')">
-        <a href="#" class="oe_form_uri"/>
-    </t>
+    <table class="oe_form_field_reference oe_frame oe_forms" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td t-attf-class="oe_form_frame_cell oe_form_selection oe_form_view_reference_selection">
+        </td>
+        <td t-attf-class="oe_form_frame_cell oe_form_many2one oe_form_view_reference_m2o" nowrap="true" style="display: none">
+        </td>
+    </tr>
+    </table>
 </t>
 <t t-name="FieldBoolean">
     <span class="oe_form_field_boolean">
@@ -1197,9 +1191,9 @@
         </table>
     </t>
     <t t-if="widget.get('effective_readonly')">
-        <div>
+        <span>
             <a href="javascript:void(0)" class="oe_form_uri"/>
-        </div>
+        </span>
     </t>
 </t>
 <t t-name="WidgetButton">

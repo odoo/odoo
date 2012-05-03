@@ -2,8 +2,8 @@ $(document).ready(function () {
     var openerp;
     module('web-class', {
         setup: function () {
-            openerp = window.openerp.init();
-            window.openerp.web.core(openerp);
+            openerp = window.openerp.init([]);
+            window.openerp.web.corelib(openerp);
         }
     });
     test('Basic class creation', function () {

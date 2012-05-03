@@ -21,15 +21,12 @@
   color: #4c4c4c;
   font-size: 13px;
   background: white;
-}
-.openerp a {
-  text-decoration: none;
-}
-
-.openerp {
   /* http://www.quirksmode.org/dom/inputfile.html
    * http://stackoverflow.com/questions/2855589/replace-input-type-file-by-an-image
    */
+}
+.openerp a {
+  text-decoration: none;
 }
 .openerp table {
   padding: 0;
@@ -1356,10 +1353,6 @@
   padding: 2px;
   height: 25px;
 }
-.openerp .oe_form_autolayout .oe_form_group_cell .oe_form_button {
-  width: 100%;
-  white-space: nowrap;
-}
 .openerp .oe_form_autolayout .oe_form_group_cell > .oe_form_field_many2one,
 .openerp .oe_form_autolayout .oe_form_group_cell > .oe_form_field_many2one input,
 .openerp .oe_form_autolayout .oe_form_group_cell > .oe_form_field_char input,
@@ -1368,31 +1361,38 @@
 .openerp .oe_form_autolayout .oe_form_group_cell > .oe_form_field_email input,
 .openerp .oe_form_autolayout .oe_form_group_cell > .oe_form_field_url,
 .openerp .oe_form_autolayout .oe_form_group_cell > .oe_form_field_url input,
-.openerp .oe_form_autolayout .oe_form_group_cell > .oe_form_field_date input,
 .openerp .oe_form_autolayout .oe_form_group_cell > .oe_form_field_float input,
 .openerp .oe_form_autolayout .oe_form_group_cell > .oe_form_field_selection select,
-.openerp .oe_form_autolayout .oe_form_group_cell > .oe_datepicker_root {
+.openerp .oe_form_autolayout .oe_form_group_cell > div > .oe_datepicker_root,
+.openerp .oe_form_autolayout .oe_form_group_cell > div > .oe_datepicker_root > input.oe_datepicker_master {
   width: 100%;
 }
 .openerp .oe_form_autolayout .oe_form_button.oe_button {
   color: #4c4c4c;
-  white-space: nowrap;
-  min-width: 100%;
-  width: 100%;
-  height: 22px;
 }
 .openerp .oe_form_autolayout .oe_form_button.oe_button span {
   position: relative;
   vertical-align: top;
 }
+.openerp .oe_form_autolayout .oe_form_group_cell > .oe_form_button.oe_button {
+  white-space: nowrap;
+  min-width: 100%;
+  width: 100%;
+}
 .openerp .oe_form_autolayout .oe_form_group_cell.oe_form_group_nested {
   padding: 0;
 }
-.openerp .oe_form label {
-  font-weight: bold;
-}
-.openerp .oe_form_label_help[for], .openerp .oe_form_label[for] {
+.openerp .oe_form .oe_form_label_help[for], .openerp .oe_form .oe_form_label[for] {
   white-space: nowrap;
+  padding-right: 8px;
+}
+.openerp .oe_form .oe_form_label_help[for] span, .openerp .oe_form .oe_form_label[for] span {
+  font-size: 80%;
+  color: darkGreen;
+  vertical-align: top;
+  position: relative;
+  top: -4px;
+  padding: 0 2px;
 }
 .openerp .oe_form textarea {
   resize: vertical;
@@ -1580,6 +1580,9 @@
   border-bottom-color: transparent;
   cursor: default;
 }
+.openerp .oe_form_notebook_page {
+  padding: 0;
+}
 .openerp .ui-tabs-hide {
   display: none;
 }
@@ -1619,6 +1622,32 @@
 .openerp .oe_form .oe_view_manager_header2 td .oe_pager_group li {
   height: auto;
   line-height: 16px;
+}
+.openerp .oe_form .oe_form_title, .openerp .oe_form .oe_form_title input {
+  font-size: 20px;
+  font-weight: bold;
+}
+.openerp .oe_form .oe_form_group_odd_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell:nth-child(odd),
+.openerp .oe_form .oe_form_group_label_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell_label {
+  border-right: 1px solid #dddddd;
+}
+.openerp .oe_form .oe_form_group_odd_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell:nth-child(odd) label,
+.openerp .oe_form .oe_form_group_label_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell_label label {
+  display: block;
+  min-width: 120px;
+}
+.openerp .oe_form .oe_form_group_odd_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell,
+.openerp .oe_form .oe_form_group_label_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell {
+  padding: 2px 2px 2px 8px !important;
+}
+.openerp .oe_listview_nocontent > img {
+  float: left;
+  margin-right: 1.5em;
+}
+.openerp .oe_listview_nocontent > div {
+  overflow: hidden;
+  padding: 6px;
+  font-size: 125%;
 }
 .openerp .oe-listview-content {
   width: 100%;
@@ -1777,23 +1806,24 @@
   font-weight: bold;
 }
 .openerp .oe_layout_debugging .oe_form_group {
-  border: 2px dashed red;
+  outline: 2px dashed green;
 }
 .openerp .oe_layout_debugging .oe_form_group_cell {
-  border: 1px solid blue;
-  padding-bottom: 1em;
+  outline: 1px solid blue;
 }
-.openerp .oe_layout_debugging .oe_layout_debug_cell {
+.openerp .oe_layout_debugging .oe_form_group:hover, .openerp .oe_layout_debugging .oe_form_group_cell:hover {
+  outline-color: red;
+}
+.openerp .oe_layout_debugging .oe_form_group_row_incomplete > td:last-child:after {
+  content: "[Incomplete Row]";
+  background: red;
+  padding: 2px;
+  font-weight: bold;
   color: white;
-  background: #669966;
-  font-size: 80%;
-  text-align: center;
+  float: right;
 }
-.openerp .oe_layout_debugging .oe_layout_debug_cell {
-  display: block;
-}
-.openerp .oe_layout_debug_cell {
-  display: none;
+.openerp .oe_layout_debugging .oe_form_group_row_incomplete.oe_form_group_row_newline > td:last-child:after {
+  content: "[newline]";
 }
 .openerp .oe_debug_view {
   float: left;

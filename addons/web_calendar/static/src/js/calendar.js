@@ -102,9 +102,9 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
 
         this.init_scheduler();
 
-        if (this.options.sidebar) {
+        if (! this.sidebar && this.options.$sidebar) {
             this.sidebar = new instance.web_calendar.Sidebar(this);
-            this.has_been_loaded.pipe(this.sidebar.appendTo(this.$element));
+            this.has_been_loaded.pipe(this.sidebar.appendTo(this.options.$sidebar));
         }
 
         return this.has_been_loaded.resolve();
@@ -158,7 +158,7 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
         scheduler.setCurrentView(scheduler._date);
     },
     refresh_minical: function() {
-        if (this.options.sidebar) {
+        if (this.sidebar) {
             scheduler.updateCalendar(this.sidebar.mini_calendar);
         }
     },
@@ -217,7 +217,7 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
         scheduler.parse(res_events, 'json');
         this.refresh_scheduler();
         this.refresh_minical();
-        if (!no_filter_reload && this.options.sidebar) {
+        if (!no_filter_reload && this.sidebar) {
             this.sidebar.filter.on_events_loaded(sidebar_items);
         }
     },
@@ -289,9 +289,9 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
                 var field_name = self[field];
                 if (field_name && form.fields[field_name]) {
                     var ffield = form.fields[field_name];
-                    ffield.reset();
+                    ffield._dirty_flag = false;
                     $.when(ffield.set_value(data[field_name])).then(function() {
-                        ffield.dirty = true;
+                        ffield._dirty_flag = true;
                         form.do_onchange(ffield);
                     });
                 }
@@ -392,8 +392,17 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
         var self = this;
         $.when(this.has_been_loaded).then(function() {
             self.$element.show();
+            if (self.sidebar) {
+                self.sidebar.$element.show();
+            }
             self.do_push_state({});
         });
+    },
+    do_hide: function() {
+        this._super();
+        if (this.sidebar) {
+            this.sidebar.$element.hide();
+        }
     },
     get_selected_ids: function() {
         // no way to select a record anyway
@@ -412,7 +421,6 @@ instance.web_calendar.CalendarFormDialog = instance.web.Dialog.extend({
         var self = this;
         this._super();
         this.form = new instance.web.FormView(this, this.dataset, this.view_id, {
-            sidebar: false,
             pager: false
         });
         this.form.appendTo(this.$element);

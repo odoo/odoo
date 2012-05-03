@@ -50,6 +50,19 @@ logging_opts.add_option("--log-config", dest="log_config", default=os.path.join(
                         help="Logging configuration file", metavar="FILE")
 optparser.add_option_group(logging_opts)
 
+testing_opts = optparse.OptionGroup(optparser, "Testing")
+testing_opts.add_option('--test-mode', dest='test_mode',
+                        action='store_true', default=False,
+                        help="Starts test mode, which provides a few"
+                             " (utterly unsafe) APIs for testing purposes and"
+                             " sets up a special connector which always raises"
+                             " errors on tentative server access. These errors"
+                             " serialize RPC query information (service,"
+                             " method, arguments list) in the fault_code"
+                             " attribute of the error object returned to the"
+                             " client. This lets javascript code assert the" \
+                             " XMLRPC consequences of its queries.")
+optparser.add_option_group(testing_opts)
 
 if __name__ == "__main__":
     (options, args) = optparser.parse_args(sys.argv[1:])
@@ -77,6 +90,12 @@ if __name__ == "__main__":
 
     options.backend =  'xmlrpc'
     os.environ["TZ"] = "UTC"
+
+    if options.test_mode:
+        import web.test_support
+        import web.test_support.controllers
+        options.connector = web.test_support.TestConnector()
+        logging.getLogger('werkzeug').setLevel(logging.WARNING)
 
     if sys.version_info >= (2, 7) and os.path.exists(options.log_config):
         with open(options.log_config) as file:
