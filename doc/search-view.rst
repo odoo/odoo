@@ -277,6 +277,92 @@ exception if the value is not valid at all for the field.
     ``Array`` of groupby domains rather than a single context. At this
     point, it is only implemented on (and used by) filters.
 
+Field services
+++++++++++++++
+
+:js:class:`~openerp.web.search.Field` provides a default
+implementation of :js:func:`~openerp.web.search.Input.get_domain` and
+:js:func:`~openerp.web.search.Input.get_context` taking care of most
+of the peculiarities pertaining to OpenERP's handling of fields in
+search views. It also provides finer hooks to let developers of new
+fields and widgets customize the behavior they want without
+necessarily having to reimplement all of
+:js:func:`~openerp.web.search.Input.get_domain` or
+:js:func:`~openerp.web.search.Input.get_context`:
+
+.. js:function:: openerp.web.search.Field.get_context(facet)
+
+    If the field has no ``@context``, simply returns
+    ``null``. Otherwise, calls
+    :js:func:`~openerp.web.search.Field.value_from` once for each
+    :js:class:`~openerp.web.search.FacetValue` of the current
+    :js:class:`~openerp.web.search.Facet` (in order to extract the
+    basic javascript object from the
+    :js:class:`~openerp.web.search.FacetValue` then evaluates
+    ``@context`` with each of these values set as ``self``, and
+    returns the union of all these contexts.
+
+    :param facet:
+    :type facet: openerp.web.search.Facet
+    :returns: a context (literal or compound)
+
+.. js:function:: openerp.web.search.Field.get_domain(facet)
+
+    If the field has no ``@filter_domain``, calls
+    :js:func:`~openerp.web.search.Field.make_domain` once with each
+    :js:class:`~openerp.web.search.FacetValue` of the current
+    :js:class:`~openerp.web.search.Facet` as well as the field's
+    ``@name`` and either its ``@operator`` or
+    :js:attr:`~openerp.web.search.Field.default_operator`.
+
+    If the field has an ``@filter_value``, calls
+    :js:func:`~openerp.web.search.Field.value_from` once per
+    :js:class:`~openerp.web.search.FacetValue` and evaluates
+    ``@filter_value`` with each of these values set as ``self``.
+
+    In either case, "ors" all of the resulting domains (using ``|``)
+    if there is more than one
+    :js:class:`~openerp.web.search.FacetValue` and returns the union
+    of the result.
+
+    :param facet:
+    :type facet: openerp.web.search.Facet
+    :returns: a domain (literal or compound)
+
+.. js:function:: openerp.web.search.Field.make_domain(name, operator, facetValue)
+
+    Builds a literal domain from the provided data. Calls
+    :js:func:`~openerp.web.search.Field.value_from` on the
+    :js:class:`~openerp.web.search.FacetValue` and evaluates and sets
+    it as the domain's third value, uses the other two parameters as
+    the first two values.
+
+    Can be overridden to build more complex default domains.
+
+    :param String name: the field's name
+    :param String operator: the operator to use in the field's domain
+    :param facetValue:
+    :type facetValue: openerp.web.search.FacetValue
+    :returns: Array<(String, String, Object)>
+
+.. js:function:: openerp.web.search.Field.value_from(facetValue)
+
+    Extracts a "bare" javascript value from the provided
+    :js:class:`~openerp.web.search.FacetValue`, and returns it.
+
+    The default implementation will simply return the ``value``
+    backbone property of the argument.
+
+    :param facetValue:
+    :type facetValue: openerp.web.search.FacetValue
+    :returns: Object
+
+.. js:attribute:: openerp.web.search.Field.default_operator
+
+    Operator used to build a domain when a field has no ``@operator``
+    or ``@filter_domain``. ``"="`` for
+    :js:class:`~openerp.web.search.Field`
+
 Converting to facet objects
 ---------------------------
 
@@ -314,7 +400,7 @@ Widgets API
 
 * :js:func:`~openerp.web.search.Input.get_domain` and
   :js:func:`~openerp.web.search.Input.get_context` now take a
-  :js:class:`~VS.model.SearchFacet` as parameter, from which it's
+  :js:class:`~openerp.web.search.Facet` as parameter, from which it's
   their job to get whatever value they want
 
 * :js:func:`~openerp.web.search.Input.get_groupby` has been added. It returns
@@ -334,19 +420,16 @@ Filters
 Fields
 ++++++
 
-* ``get_value`` now takes a :js:class:`~VS.model.SearchFacet` (instead
-  of taking no argument).
-
-  A default implementation is provided as
-  :js:func:`openerp.web.search.Field.get_value` and simply calls
-  :js:func:`VS.model.SearchFacet.value`.
+* ``get_value`` has been replaced by
+  :js:func:`~openerp.web.search.Field.value_from` as it now takes a
+  :js:class:`~openerp.web.search.FacetValue` argument (instead of no
+  argument). It provides a default implementation returning the
+  ``value`` property of its argument.
 
 * The third argument to
-  :js:func:`~openerp.web.search.Field.make_domain` is now the
-  :js:class:`~VS.model.SearchFacet` received by
-  :js:func:`~openerp.web.search.Field.get_domain`, so child classes
-  have all the information they need to derive the "right" resulting
-  domain.
+  :js:func:`~openerp.web.search.Field.make_domain` is now a
+  :js:class:`~openerp.web.search.FacetValue` so child classes have all
+  the information they need to derive the "right" resulting domain.
 
 Custom filters
 ++++++++++++++
@@ -362,6 +445,13 @@ Many To One
   view itself,
   :js:func:`openerp.web.search.ManyToOneField.setup_autocomplete` has
   been removed.
+
+Advanced Search
++++++++++++++++
+
+The advanced search is now a more standard
+:js:class:`~openerp.web.search.Input` configured to be rendered in the
+drawer.
 
 .. [#] the original view was implemented on top of a monkey-patched
        VisualSearch, but as our needs diverged from VisualSearch's goal this

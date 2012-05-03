@@ -770,6 +770,70 @@ $(document).ready(function () {
             });
     });
 
+    test('Field single value, default domain & context', function () {
+        var f = new instance.web.search.Field({}, {name: 'foo'}, {inputs: []});
+        var facet = new instance.web.search.Facet({
+            field: f,
+            values: [{value: 42}]
+        });
+
+        deepEqual(f.get_domain(facet), [['foo', '=', 42]],
+            "default field domain is a strict equality of name to facet's value");
+        equal(f.get_context(facet), null,
+            "default field context is null");
+    });
+    test('Field multiple values, default domain & context', function () {
+        var f = new instance.web.search.Field({}, {name: 'foo'}, {inputs: []});
+        var facet = new instance.web.search.Facet({
+            field: f,
+            values: [{value: 42}, {value: 68}, {value: 999}]
+        });
+
+        var actual_domain = f.get_domain(facet);
+        equal(actual_domain.__ref, "compound_domain",
+              "multiple value should yield compound domain");
+        deepEqual(actual_domain.__domains, [
+                    ['|'],
+                    ['|'],
+                    [['foo', '=', 42]],
+                    [['foo', '=', 68]],
+                    [['foo', '=', 999]]
+            ],
+            "domain should OR a default domain for each value");
+        equal(f.get_context(facet), null,
+            "default field context is null");
+    });
+    test('Field single value, custom domain & context', function () {
+        var f = new instance.web.search.Field({attrs:{
+            context: "{'bob': self}",
+            filter_domain: "[['edmund', 'is', self]]"
+        }}, {name: 'foo'}, {inputs: []});
+        var facet = new instance.web.search.Facet({
+            field: f,
+            values: [{value: "great"}]
+        });
+
+        var actual_domain = f.get_domain(facet);
+        equal(actual_domain.__ref, "compound_domain",
+              "@filter_domain should yield compound domain");
+        deepEqual(actual_domain.__domains, [
+            "[['edmund', 'is', self]]"
+        ], 'should hold unevaluated custom domain');
+        deepEqual(actual_domain.get_eval_context(), {
+            self: "great"
+        }, "evaluation context should hold facet value as self");
+
+        var actual_context = f.get_context(facet);
+        equal(actual_context.__ref, "compound_context",
+              "@context should yield compound context");
+        deepEqual(actual_context.__contexts, [
+            "{'bob': self}"
+        ], 'should hold unevaluated custom context');
+        deepEqual(actual_context.get_eval_context(), {
+            self: "great"
+        }, "evaluation context should hold facet value as self");
+    });
+
     module('drawer', {
         setup: function () {
             instance = window.openerp.init([]);

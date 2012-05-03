@@ -1009,20 +1009,26 @@ instance.web.search.Field = instance.web.search.Input.extend( /** @lends instanc
             values: [{label: String(value), value: value}]
         });
     },
-    get_value: function (facet) {
-        return facet.value();
+    value_from: function (facetValue) {
+        return facetValue.get('value');
     },
     get_context: function (facet) {
-        // A field needs a value to be "active", and a context to send when
-        // active
+        var self = this;
+        // A field needs a context to send when active
         var context = this.attrs.context;
-        if (!context) {
+        if (!context || !facet.values.length) {
             return;
         }
-        var val = this.get_value(facet);
-        var has_value = (val !== null && val !== '');
-        return new instance.web.CompoundContext(context)
-                .set_eval_context({self: val});
+        var contexts = facet.values.map(function (facetValue) {
+            return new instance.web.CompoundContext(context)
+                .set_eval_context({self: self.value_from(facetValue)});
+        });
+
+        if (contexts.length === 1) { return contexts[0]; }
+
+        return _.extend(instance.web.CompoundContext, {
+            __contexts: contexts
+        });
     },
     get_groupby: function () { },
     /**
@@ -1037,23 +1043,37 @@ instance.web.search.Field = instance.web.search.Input.extend( /** @lends instanc
      * @returns {Array<Array>} domain to include in the resulting search
      */
     make_domain: function (name, operator, facet) {
-        return [[name, operator, this.get_value(facet)]];
+        return [[name, operator, this.value_from(facet)]];
     },
     get_domain: function (facet) {
-        var val = this.get_value(facet);
-        if (val === null || val === '') {
-            return;
+        if (!facet.values.length) { return; }
+
+        var value_to_domain;
+        var self = this;
+        var domain = this.attrs['filter_domain'];
+        if (domain) {
+            value_to_domain = function (facetValue) {
+                return new instance.web.CompoundDomain(domain)
+                    .set_eval_context({self: self.value_from(facetValue)});
+            };
+        } else {
+            value_to_domain = function (facetValue) {
+                return self.make_domain(
+                    self.attrs.name,
+                    self.attrs.operator || self.default_operator,
+                    facetValue);
+            };
+        }
+        var domains = facet.values.map(value_to_domain);
+
+        if (domains.length === 1) { return domains[0]; }
+        for (var i = domains.length; --i;) {
+            domains.unshift(['|']);
         }
 
-        var domain = this.attrs['filter_domain'];
-        if (!domain) {
-            return this.make_domain(
-                this.attrs.name,
-                this.attrs.operator || this.default_operator,
-                facet);
-        }
-        return new instance.web.CompoundDomain(domain)
-                .set_eval_context({self: val});
+        return _.extend(new instance.web.CompoundDomain, {
+            __domains: domains
+        });
     }
 });
 /**
@@ -1085,7 +1105,7 @@ instance.web.search.CharField = instance.web.search.Field.extend( /** @lends ins
     }
 });
 instance.web.search.NumberField = instance.web.search.Field.extend(/** @lends instance.web.search.NumberField# */{
-    get_value: function () {
+    value_from: function () {
         if (!this.$element.val()) {
             return null;
         }
@@ -1193,7 +1213,7 @@ instance.web.search.SelectionField = instance.web.search.Field.extend(/** @lends
         if (!match) { return $.when(null); }
         return $.when(facet_from(this, match));
     },
-    get_value: function (facet) {
+    value_from: function (facet) {
         return facet.get('values');
     }
 });
@@ -1209,7 +1229,7 @@ instance.web.search.BooleanField = instance.web.search.SelectionField.extend(/**
             ['false', _t("No")]
         ];
     },
-    get_value: function (facet) {
+    value_from: function (facet) {
         switch (this._super(facet)) {
             case 'false': return false;
             case 'true': return true;
@@ -1222,7 +1242,7 @@ instance.web.search.BooleanField = instance.web.search.SelectionField.extend(/**
  * @extends instance.web.search.DateField
  */
 instance.web.search.DateField = instance.web.search.Field.extend(/** @lends instance.web.search.DateField# */{
-    get_value: function (facet) {
+    value_from: function (facet) {
         return openerp.web.date_to_str(facet.get('values'));
     },
     complete: function (needle) {
@@ -1255,7 +1275,7 @@ instance.web.search.DateField = instance.web.search.Field.extend(/** @lends inst
  * @extends instance.web.DateField
  */
 instance.web.search.DateTimeField = instance.web.search.DateField.extend(/** @lends instance.web.search.DateTimeField# */{
-    get_value: function (facet) {
+    value_from: function (facet) {
         return openerp.web.datetime_to_str(facet.get('values'));
     }
 });
