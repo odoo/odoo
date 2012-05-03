@@ -1319,6 +1319,18 @@ instance.web.str_to_xml = function(s) {
 instance.web.client_actions = new instance.web.Registry();
 
 /**
+ * Client action to reload the whole interface; refreshes the menu and reloads the current view
+ */
+instance.web.client_actions.add("reload_all", "instance.web.ReloadAll");
+
+instance.web.ReloadAll = instance.web.Widget.extend({
+    template: "EmptyComponent",
+    start: function() {
+        window.location.reload();
+    }
+});
+
+/**
  * Registry for all the main views
  */
 instance.web.views = new instance.web.Registry();
