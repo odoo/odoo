@@ -1,6 +1,5 @@
 <openerp>
   <data>
-
      <!-- Define default users preferences-->
      <record id="view_user_preferences_config_form" model="ir.ui.view">
           <field name="name">Set default users preferences</field>
@@ -48,22 +47,6 @@
           <field name="type">once</field>
       </record>
 
-      <!-- Create Additional Users  -->
-      <record id="action_config_access_other_user" model="ir.actions.act_window">
-          <field name="name">Create Additional Users</field>
-          <field name="type">ir.actions.act_window</field>
-          <field name="res_model">res.users</field>
-          <field name="view_type">form</field>
-          <field name="view_mode">tree,form</field>
-          <field name="view_id" eval="False"/>
-      </record>
-      <record id="config_wizard_action_config_user_form" model="ir.actions.todo">
-          <field name="action_id" ref="action_config_access_other_user"/>
-          <field name="category_id" ref="base.category_administration_config"/>
-          <field name="sequence">1000</field>
-      </record>
-
-
       <!--   Specify Your Terminology Config Wiz-->
      <record id="base_setup_terminology_form" model="ir.ui.view">
           <field name="name">Specify Your Terminology</field>
@@ -102,13 +85,6 @@
           <field name="view_mode">form</field>
           <field name="target">new</field>
       </record>
-   <!--
-      <record id="config_action_partner_terminology_config_form" model="ir.actions.todo">
-          <field name="action_id" ref="action_partner_terminology_config_form"/>
-          <field name="category_id" ref="base.category_administration_config"/>
-          <field name="type">once</field>
-      </record>
-    -->
 
     <!-- Company config -->
     <record id="action_base_setup_company" model="ir.actions.act_window">
@@ -132,28 +108,31 @@
         <field name="model">sale.config.settings</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Configure Sales">
-                <group name="config_sale" colspan="4"/>
+            <form string="Configure Sales" layout="manual">
+                <div class="oe_form_topbar">
+                    <button string="Apply" type="object" name="execute"/>
+                    <button string="Cancel" special="cancel"/>
+                </div>
+                <sheet layout="auto">
+                    <group>
+                        <group name="config_sale" colspan="4"/>
+                        <!-- this part is necessary to allow the plugins to extend the view -->
+                        <field name="module_crm" invisible="1"/>
+                        <group name="config_fetchmail" colspan="4" attrs="{'invisible': [('module_crm','=',False)]}">
+                            <separator string="Emails"/>
+                        </group>
+                        <field name="module_plugin_thunderbird" attrs="{'invisible': [('module_crm','=',False)]}"/>
+                        <newline/>
+                        <field name="module_plugin_outlook" attrs="{'invisible': [('module_crm','=',False)]}"/>
 
-                <!-- this part is necessary to allow the plugins to extend the view -->
-                <field name="module_crm" invisible="1"/>
-                <group name="config_fetchmail" colspan="4" attrs="{'invisible': [('module_crm','=',False)]}">
-                    <separator string="Emails"/>
-                </group>
-                <field name="module_plugin_thunderbird" attrs="{'invisible': [('module_crm','=',False)]}"/>
-                <newline/>
-                <field name="module_plugin_outlook" attrs="{'invisible': [('module_crm','=',False)]}"/>
-
-                <group name="config_crm" colspan="4"/>
-
-                <newline/>
-                <label colspan="2"/>
-                <button string="Cancel" icon="gtk-cancel" special="cancel"/>
-                <button string="Apply" icon="gtk-apply" type="object" name="execute"/>
+                        <group name="config_crm" colspan="4"/>
+                    </group>
+                </sheet>
             </form>
         </field>
     </record>
-    
+
+    <!-- Sale config wizard -->
     <record id="base.action_sale_config" model="ir.actions.act_window">
         <field name="name">Configure Sales</field>
         <field name="type">ir.actions.act_window</field>

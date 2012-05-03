@@ -66,25 +66,25 @@
                 <form string="Leave Request">
                     <group col="8" colspan="4">
                     <field name="name" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}"/>
-                    <field name="holiday_type" on_change="onchange_type(holiday_type)" attrs="{'readonly':[('state','!=','draft')]}" width="130" string="Mode" groups="base.group_hr_manager"/>
+                    <field name="holiday_type" on_change="onchange_type(holiday_type)" attrs="{'readonly':[('state','!=','draft')]}" width="130" string="Mode" groups="base.group_hr_user"/>
                     <group attrs="{'invisible':[('holiday_type','=','employee')]}">
                         <field name="category_id" attrs="{'required':[('holiday_type','=','category')], 'readonly':[('state','!=','draft')]}"/>
                         </group>
                         <group attrs="{'invisible':[('holiday_type','=','category')]}">
-                        <field name="employee_id" attrs="{'required':[('holiday_type','=','employee')]}"/>
+                        <field name="employee_id" attrs="{'required':[('holiday_type','=','employee')]}" groups="base.group_hr_user"/>
                         </group>
                     </group>
                     <notebook colspan="4">
                         <page string="General">
                             <field name="holiday_status_id" on_change="onchange_sec_id(holiday_status_id)" context="{'employee_id':employee_id}"/>
-                            <field name="department_id" attrs="{'readonly':[('holiday_type','=','category')]}"/>
+                            <field name="department_id" attrs="{'readonly':[('holiday_type','=','category')]}" groups="base.group_hr_user"/>
                             <field name="date_from" on_change="onchange_date_from(date_to, date_from)" required="1"/>
                             <field name="date_to" on_change="onchange_date_from(date_to, date_from)" required="1"/>
                             <field name="number_of_days_temp"/>
                             <field name="double_validation" invisible="1"/>
                             <newline/>
-                            <field name="manager_id"/>
-                            <field name="manager_id2" attrs="{'invisible':[('double_validation', '!=', True)]}"/>
+                            <field name="manager_id" groups="base.group_no_one"/>
+                            <field name="manager_id2" attrs="{'invisible':[('double_validation', '!=', True)]}" groups="base.group_no_one"/>
                             <separator string="Reasons" colspan="4"/>
                             <field name="notes" nolabel="1" colspan="4"/>
                             <group colspan="4" col="8">
@@ -150,9 +150,10 @@
             <field name="model">hr.holidays</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="red:state == 'refuse';blue:state == 'draft';black:state in ('confirm','validate','validate1')" string="Allocation Requests">
-                    <field name="holiday_type"/>
+                <tree fonts="bold:needaction_pending==True" colors="red:state == 'refuse';blue:state == 'draft';black:state in ('confirm','validate','validate1')" string="Allocation Requests">
+                    <field name="needaction_pending" invisible="1"/>
                     <field name="employee_id"/>
+                    <field name="holiday_type"/>
                     <field name="category_id"/>
                     <field name="department_id" invisible="1"/>
                     <field name="holiday_status_id"/>
@@ -205,7 +206,8 @@
             <field name="type">tree</field>
             <field name="priority">20</field>
             <field name="arch" type="xml">
-                <tree colors="red:state == 'refuse';blue:state == ' draft';black:state in ('confirm','validate','validate1')" string="Leaves Summary">
+                <tree fonts="bold:needaction_pending==True" colors="red:state == 'refuse';blue:state == ' draft';black:state in ('confirm','validate','validate1')" string="Leaves Summary">
+                    <field name="needaction_pending" invisible="1"/>
                     <field name="employee_id"/>
                     <field name="category_id" invisible="1"/>
                     <field name="department_id" invisible="1"/>
@@ -231,22 +233,23 @@
             <field name="model">hr.holidays</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="red:state == 'refuse';blue:state == ' draft';black:state in ('confirm','validate','validate1')" string="Leave Requests">
-                    <field name="holiday_type"/>
+                <tree fonts="bold:needaction_pending==True" colors="red:state == 'refuse';blue:state == ' draft';black:state in ('confirm','validate','validate1')" string="Leave Requests">
+                    <field name="needaction_pending" invisible="1"/>
                     <field name="employee_id"/>
-                    <field name="category_id"/>
-                    <field name="department_id" invisible="not context.get('set_visible',False)"/>
-                    <field name="holiday_status_id"/>
+                    <field name="holiday_type" string="Mode" groups="base.group_hr_user"/>
                     <field name="name"/>
-                    <field name="number_of_days" string="Number of Days" sum="Remaining Days"/>
                     <field name="date_from"/>
                     <field name="date_to"/>
+                    <field name="number_of_days" string="Number of Days" sum="Remaining Days"/>
+                    <field name="state"/>
+                    <field name="category_id" invisible="1"/>
+                    <field name="department_id" invisible="not context.get('set_visible',False)"/>
+                    <field name="holiday_status_id" invisible="1"/>
                     <field name="manager_id" invisible="1"/>
                     <field name="user_id" invisible="1"/>
                     <!--field name="type"/-->
-                    <field name="state"/>
-                    <button string="Approve" name="validate" states="confirm" type="workflow" icon="gtk-apply" groups="base.group_hr_user,base.group_hr_manager"/>
-                    <button string="Approved" name="second_validate" states="validate1" type="workflow" icon="gtk-apply" groups="base.group_hr_user,base.group_hr_manager"/>
+                    <button string="Approve" name="validate" states="confirm" type="workflow" icon="gtk-apply" groups="base.group_hr_user"/>
+                    <button string="Approved" name="second_validate" states="validate1" type="workflow" icon="gtk-apply" groups="base.group_hr_user"/>
                 </tree>
             </field>
         </record>
@@ -375,7 +378,7 @@
                     <group colspan="4" col="6">
                         <field name="name"/>
                         <field name="color_name"/>
-                        <field name="categ_id" widget="selection" groups="base.group_extended"/>
+                        <field name="categ_id" widget="selection"/>
                     </group>
                     <notebook colspan="4">
                       <page string="Details">
@@ -484,22 +487,6 @@
            <field name="view_id" ref="hr_holidays_leaves_assign_tree_view"/>
            <field name="help">You can assign remaining Legal Leaves for each employee, OpenERP will automatically create and validate allocation requests.</field>
        </record>
-
-        <!-- Hr Configuration wizard -->
-        <record id="view_config_wizard_inherit" model="ir.ui.view">
-            <field name="name">hr settings for holidays</field>
-            <field name="model">hr.config.settings</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="hr.view_human_resources_configuration"/>
-            <field name="arch" type="xml">
-                <field name="module_hr_holidays" position="after">
-                    <group colspan="2">
-                        <button name="%(hr_holidays.hr_holidays_leaves_assign_legal)d" string="Allocate Leaves"
-                            type="action" icon="gtk-apply"/>
-                    </group>
-                </field>
-            </field>
-        </record>
 
         <!-- Hr employee inherit Legal Leaves -->
 

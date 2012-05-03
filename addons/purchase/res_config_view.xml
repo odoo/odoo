@@ -6,25 +6,26 @@
             <field name="model">purchase.config.settings</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Configure Purchases">
-                    <separator string="Invoicing" colspan="4"/>
-                    <field name="default_invoice_method" />
+                <form string="Configure Purchases" layout="manual">
+                    <div class="oe_form_topbar">
+                        <button string="Apply" type="object" name="execute"/>
+                        <button string="Cancel" special="cancel"/>
+                    </div>
+                    <sheet layout="auto">
+                        <separator string="Invoicing" colspan="4"/>
+                        <field name="default_invoice_method" />
 
-                    <separator string="Purchase Order" colspan="4"/>
-                    <field name="group_purchase_pricelist"/>
-                    <field name="group_uom"/>
-                    <field name="module_purchase_double_validation"/>
-                    <field name="module_purchase_requisition"/>
-                    <field name="module_warning"/>
-                    <field name="module_purchase_analytic_plans"/>
+                        <separator string="Purchase Order" colspan="4"/>
+                        <field name="group_purchase_pricelist"/>
+                        <field name="group_uom"/>
+                        <field name="module_purchase_double_validation"/>
+                        <field name="module_purchase_requisition"/>
+                        <field name="module_warning"/>
+                        <field name="module_purchase_analytic_plans"/>
 
-                    <separator string="Products" colspan="4"/>
-                    <field name="module_product_manufacturer"/>
-
-                    <newline/>
-                    <label colspan="2"/>
-                    <button string="Cancel" icon="gtk-cancel" special="cancel"/>
-                    <button string="Apply" icon="gtk-apply" type="object" name="execute"/>
+                        <separator string="Products" colspan="4"/>
+                        <field name="module_product_manufacturer"/>
+                    </sheet>
                 </form>
             </field>
         </record>
