@@ -191,9 +191,6 @@ instance.web.FormView = instance.web.View.extend({
             this.$buttons.show();
             this.$buttons.find('.oe_form_button_save').removeClass('oe_form_button_save_dirty');
         }
-        if (this.$pager) {
-            this.$pager.show();
-        }
         this.$element.show().css('visibility', 'hidden');
         this.$element.removeClass('oe_form_dirty');
         return this.has_been_loaded.pipe(function() {
@@ -303,6 +300,7 @@ instance.web.FormView = instance.web.View.extend({
         this.$pager.find('button').prop('disabled', this.dataset.ids.length < 2).end()
                    .find('span.oe_pager_index').html(index).end()
                    .find('span.oe_pager_count').html(this.dataset.ids.length);
+        this.$pager.toggle(this.dataset.ids.length > 1);
     },
     parse_on_change: function (on_change, widget) {
         var self = this;
