@@ -39,13 +39,6 @@
           <field name="view_mode">form</field>
           <field name="target">new</field>
       </record>
-   <!--
-      <record id="config_action_partner_terminology_config_form" model="ir.actions.todo">
-          <field name="action_id" ref="action_partner_terminology_config_form"/>
-          <field name="category_id" ref="base.category_administration_config"/>
-          <field name="type">once</field>
-      </record>
-    -->
 
     <record id="base.view_sale_config_settings" model="ir.ui.view">
         <field name="name">sale settings</field>
@@ -77,6 +70,7 @@
         </field>
     </record>
 
+    <!-- Sale config wizard -->
     <record id="base.action_sale_config" model="ir.actions.act_window">
         <field name="name">Configure Sales</field>
         <field name="type">ir.actions.act_window</field>
