@@ -392,49 +392,94 @@ class mail_thread(osv.osv):
                             context = context)
 
     # Message loading
-    def _message_load_add_ancestor_ids(self, cr, uid, ids, child_ids, root_ids, context=None):
-        """ Given message child_ids
-            Find their ancestors until root ids"""
-        if context is None:
-            context = {}
+    def _message_load_add_ancestor_ids(self, cr, uid, ids, child_ids, ancestor_ids, context=None):
+        """ Given message child_ids ids, find their ancestors until ancestor_ids
+            using their parent_id relationship."""
         msg_obj = self.pool.get('mail.message')
         tmp_msgs = msg_obj.read(cr, uid, child_ids, ['id', 'parent_id'], context=context)
-        parent_ids = [msg['parent_id'][0] for msg in tmp_msgs if msg['parent_id'] and msg['parent_id'][0] not in root_ids and msg['parent_id'][0] not in child_ids]
+        parent_ids = [msg['parent_id'][0] for msg in tmp_msgs if msg['parent_id'] and msg['parent_id'][0] not in ancestor_ids and msg['parent_id'][0] not in child_ids]
         child_ids += parent_ids
         cur_iter = 0; max_iter = 100; # avoid infinite loop
         while (parent_ids and (cur_iter < max_iter)):
             cur_iter += 1
             tmp_msgs = msg_obj.read(cr, uid, parent_ids, ['id', 'parent_id'], context=context)
-            parent_ids = [msg['parent_id'][0] for msg in tmp_msgs if msg['parent_id'] and msg['parent_id'][0] not in root_ids and msg['parent_id'][0] not in child_ids]
+            parent_ids = [msg['parent_id'][0] for msg in tmp_msgs if msg['parent_id'] and msg['parent_id'][0] not in ancestor_ids and msg['parent_id'][0] not in child_ids]
             child_ids += parent_ids
         if (cur_iter > max_iter):
-            _logger.warning("Possible infinite loop in _message_add_ancestor_ids. Note that this algorithm is intended to check for cycle in message graph.")
+            _logger.warning("Possible infinite loop in _message_add_ancestor_ids. \
+                            Note that this algorithm is intended to check for cycle \
+                            in message graph, leading to a curious error. Have fun.")
         return child_ids
     
-    def _message_load_ids(self, cr, uid, ids, limit=100, offset=0, domain=[], ascent=False, root_ids=[], context=None):
-        """ OpenChatter feature: return thread messages ids. It searches in
-            mail.messages where res_id = ids, (res_)model = current model.
+    def _message_load_ids(self, cr, uid, ids, fetch_ancestors=False, ancestor_ids=None, 
+                            limit=100, offset=0, domain=None, count=False, context=None):
+        """ OpenChatter feature: returns thread messages ids. It searches in
+            mail.messages where ``res_id = ids, (res_)model = current model``.
+            
+            It is possible to add in the search the parent of messages by
+            setting the fetch_ancestors flag to True. In that case, using
+            the parent_id relationship, the method returns the id list according
+            to the search domain, but then calls ``_message_load_add_ancestor_ids``
+            that will add to the list the ancestors ids. The search is limited
+            to parent messages having an id in ancestor_ids or having
+            parent_id set to False.
+            
+            If ``count==True``, the number of ids is returned instead of the
+            id list. The count is done by hand instead of passing it as an 
+            argument to the search call because we might want to perform
+            a research including parent messages until some ancestor_ids.
+            
+            :param fetch_ancestors: performs an ascended search; will add 
+                                    to fetched msgs all their parents until
+                                    ancestor_ids
+            :param ancestor_ids: used when fetching ancestors
             :param domain: domain to add to the search; especially child_of
-                           is interesting when dealing with threaded display
-            :param ascent: performs an ascended search; will add to fetched msgs
-                           all their parents until root_ids
-            :param root_ids: for ascent search
-            :param root_ids: root_ids when performing an ascended search
+                           is interesting when dealing with threaded display.
+                           Note that the added domain is anded with the 
+                           default domain.
+            :param limit, offset, count, context: as usual
         """
         msg_obj = self.pool.get('mail.message')
-        msg_ids = msg_obj.search(cr, uid, ['&', ('res_id', 'in', ids), ('model', '=', self._name)] + domain,
-            limit=limit, offset=offset, context=context)
-        if (ascent): msg_ids = self._message_load_add_ancestor_ids(cr, uid, ids, msg_ids, root_ids, context=context)
-        return msg_ids
+        search_domain = ['&', ('res_id', 'in', ids), ('model', '=', self._name)]
+        if domain:
+            search_domain += domain
+        msg_ids = msg_obj.search(cr, uid, search_domain, limit=limit, offset=offset, context=context)
+        if (fetch_ancestors): msg_ids = self._message_load_add_ancestor_ids(cr, uid, ids, msg_ids, ancestor_ids, context=context)
+        if count:
+            return len(msg_ids)
+        else:
+            return msg_ids
         
-    def message_load(self, cr, uid, ids, limit=100, offset=0, domain=[], ascent=False, root_ids=[], context=None):
-        """ OpenChatter feature: return thread messages
+    def message_load(self, cr, uid, ids, fetch_ancestors=False, ancestor_ids=None, 
+                        limit=100, offset=0, domain=None, count=False,
+                        get_ids=False, context=None):
+        """ OpenChatter feature: return thread messages. This method calls
+            ``_message_load_ids`` to separate the search from the read.
+            
+            :param fetch_ancestors: performs an ascended search; will add
+                                    to fetched msgs all their parents until
+                                    ancestor_ids
+            :param ancestor_ids: used when fetching ancestors
+            :param domain: domain to add to the search; especially child_of
+                           is interesting when dealing with threaded display
+            :param root_ids: root_ids when performing an ascended search
+            :param limit, offset, count, context: as usual
+            :param get_ids: return ids instead of a read
         """
-        msg_ids = self._message_load_ids(cr, uid, ids, limit, offset, domain, ascent, root_ids, context=context)
-        return self.pool.get('mail.message').read(cr, uid, msg_ids, context=context)
+        load_res = self._message_load_ids(cr, uid, ids, fetch_ancestors, ancestor_ids, limit, offset, domain, count, context=context)
+        if count or get_ids:
+            return load_res
+        else:
+            return self.pool.get('mail.message').read(cr, uid, load_res, context=context)
     
-    def get_pushed_messages(self, cr, uid, ids, limit=100, offset=0, msg_search_domain=[], ascent=False, root_ids=[], context=None):
-        """ OpenChatter: wall: get messages to display (=pushed notifications)
+    def get_pushed_messages(self, cr, uid, ids, fetch_ancestors=False, ancestor_ids=None,
+                            limit=100, offset=0, msg_search_domain=[], context=None):
+        """ OpenChatter: wall: get messages to display (=pushed notifications).
+            
+            :param fetch_ancestors: performs an ascended search; will add
+                                    to fetched msgs all their parents until
+                                    ancestor_ids
+            :param ancestor_ids: used when fetching ancestors
             :param domain: domain to add to the search; especially child_of
                            is interesting when dealing with threaded display
             :param ascent: performs an ascended search; will add to fetched msgs
@@ -456,7 +501,7 @@ class mail_thread(osv.osv):
         msg_ids = [notification.message_id.id for notification in notifications]
         # get messages
         msg_ids = msg_obj.search(cr, uid, [('id', 'in', msg_ids)], context=context)
-        if (ascent): msg_ids = self._message_load_add_ancestor_ids(cr, uid, ids, msg_ids, root_ids, context=context)
+        if (fetch_ancestors): msg_ids = self._message_load_add_ancestor_ids(cr, uid, ids, msg_ids, ancestor_ids, context=context)
         msgs = msg_obj.read(cr, uid, msg_ids, context=context)
         return msgs
         
