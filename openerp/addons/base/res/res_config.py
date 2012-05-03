@@ -539,19 +539,10 @@ class res_config_settings(osv.osv_memory):
         if to_install_ids:
             ir_module.button_immediate_install(cr, uid, to_install_ids, context)
 
-        # open the menu for this wizard (or Settings), and force client-side refresh
-        act_ids = self.pool.get('ir.actions.act_window').search(cr, uid, [('res_model', '=', self._name)])
-        act_refs = ['ir.actions.act_window,%s' % id for id in act_ids]
-        val_ids = ir_values.search(cr, uid, [('model', '=', 'ir.ui.menu'), ('key', '=', 'action'),
-                        ('key2', '=', 'tree_but_open'), ('value', 'in', act_refs)])
-        if val_ids:
-            menu_id = ir_values.browse(cr, uid, val_ids[0]).res_id
-        else:
-            menu_id = ir_model_data.get_object(cr, uid, 'base', 'menu_administration', context).id
+        # force client-side reload (update user menu and current view)
         return {
-            'type': 'ir.ui.menu',
-            'menu_id': menu_id,
-            'reload': True,
+            'type': 'ir.actions.client',
+            'tag': 'reload_all',
         }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
