@@ -892,10 +892,11 @@ class stock_picking(osv.osv):
         ok = True
         for pick in self.browse(cr, uid, ids):
             mt = pick.move_type
-            for move in pick.move_lines:
-                # incomming shipments are always set as available
-                if pick.type == 'in':
+            # incomming shipments are always set as available if they aren't chained
+            if pick.type == 'in':
+                if all([x.state != 'waiting' for x in pick.move_lines]):
                     return True
+            for move in pick.move_lines:
                 if (move.state in ('confirmed', 'draft')) and (mt == 'one'):
                     return False
                 if (mt == 'direct') and (move.state == 'assigned') and (move.product_qty):
