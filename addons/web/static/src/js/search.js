@@ -1026,7 +1026,7 @@ instance.web.search.Field = instance.web.search.Input.extend( /** @lends instanc
 
         if (contexts.length === 1) { return contexts[0]; }
 
-        return _.extend(instance.web.CompoundContext, {
+        return _.extend(new instance.web.CompoundContext, {
             __contexts: contexts
         });
     },
