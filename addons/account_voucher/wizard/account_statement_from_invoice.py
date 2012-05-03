@@ -112,7 +112,7 @@ class account_statement_from_invoice_lines(osv.osv_memory):
                 'statement_id': statement_id,
                 'ref': line.ref,
                 'voucher_id': voucher_id,
-                'date': time.strftime('%Y-%m-%d'), #time.strftime('%Y-%m-%d'), #line.date_maturity or,
+                'date': statement.date,
             }, context=context)
         return {'type': 'ir.actions.act_window_close'}
 
