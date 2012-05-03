@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- vim:fdl=1:
+-->
+<templates id="template" xml:space="preserve">
+<t t-name="Systray.Shortcuts">
+    <div class="oe_systray_shortcuts oe_systray_dropdown">
+        <a href="#"><img src="/web_shortcuts/static/src/img/icon.png" width="22" height="22" border="0"/></a>
+        <ul class="oe_systray_shortcuts_items oe_systray_dropdown_options"/>
+    </div>
+</t>
+<t t-name="Systray.Shortcuts.Item">
+    <li>
+        <a href="#" t-att-data-id="shortcut.res_id" t-att-data-shortcut-id="shortcut.id">
+            <t t-esc="shortcut.name"/>
+        </a>
+    </li>
+</t>
+<t t-extend="ViewManagerAction">
+    <t t-jquery="h2.oe_view_title" t-operation="prepend">
+        <a t-if="widget.flags.display_title !== false" class="oe-shortcut-toggle" title="Add / Remove Shortcut..."
+            href="javascript: void(0)"> </a>
+    </t>
+</t>
+</templates>
