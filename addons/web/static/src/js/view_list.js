@@ -360,6 +360,8 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
 
         this.$pager.find('.oe-pager-state').text(isNaN(total)
                 ? '-' : _.str.sprintf('%d / %d', page, total));
+
+        this.$pager.toggle(total > 1);
     },
     /**
      * Sets up the listview's columns: merges view and fields data, move
@@ -462,9 +464,6 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         }
         if (this.$buttons) {
             this.$buttons.show();
-        }
-        if (this.$pager) {
-            this.$pager.show();
         }
     },
     do_hide: function () {
