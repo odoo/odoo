@@ -30,9 +30,9 @@ class product_product(osv.osv):
         count = dict.fromkeys(ids, 0)
         stock_picking_pool=self.pool.get('stock.picking')
         if field_name == 'reception_count':
-        	stock_picking_ids = stock_picking_pool.search(cr, uid, [('move_lines.product_id','=',ids),('type','=','in')])
+        	stock_picking_ids = stock_picking_pool.search(cr, uid, [('move_lines.product_id','in',ids),('type','=','in')])
         else:
-        	stock_picking_ids = stock_picking_pool.search(cr, uid, [('move_lines.product_id','=',ids),('type','=','out')])
+        	stock_picking_ids = stock_picking_pool.search(cr, uid, [('move_lines.product_id','in',ids),('type','=','out')])
         for stock_picking in stock_picking_pool.browse(cr, uid, stock_picking_ids):
             count[stock_picking.move_lines[0].product_id.id] += 1
         return count
