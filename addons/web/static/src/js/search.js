@@ -149,7 +149,8 @@ my.FacetView = instance.web.Widget.extend({
         var self = this;
         this.$element.on('click', function (e) {
             if ($(e.target).is('.oe_facet_remove')) {
-                return;
+                self.model.destroy();
+                return false;
             }
             self.$element.focus();
             e.stopPropagation();
@@ -159,8 +160,7 @@ my.FacetView = instance.web.Widget.extend({
             switch (e.which) {
             case keys.BACKSPACE:
             case keys.DELETE:
-                self.getParent().query.remove(
-                    self.model, {trigger_search: true});
+                self.model.destroy();
                 return false;
             }
         });
@@ -233,14 +233,8 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
 
         this.setup_global_completion();
         this.query = new my.SearchQuery()
-                .on('add change reset', this.proxy('do_search'))
-                .on('add change reset', this.proxy('renderFacets'))
-                .on('remove', function (record, collection, options) {
-            self.renderFacets();
-            if (options.trigger_search) {
-                self.do_search();
-            }
-        });
+                .on('add change reset remove', this.proxy('do_search'))
+                .on('add change reset remove', this.proxy('renderFacets'));
 
         if (this.hidden) {
             this.$element.hide();
@@ -268,15 +262,6 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         this.$element.on('click', '.oe_searchview_unfold_drawer', function (e) {
             e.stopImmediatePropagation();
             self.$element.toggleClass('oe_searchview_open_drawer');
-        });
-        this.$element.on('click', '.oe_facet_remove', function (e) {
-            e.stopImmediatePropagation();
-            // get index of clicked facet: number of preceding facet siblings
-            var index = $(this).closest('.oe_searchview_facet')
-                   .prevAll('.oe_searchview_facet')
-                   .length;
-            self.query.remove(
-                self.query.at(index), {trigger_search: true});
         });
         // Focus last input if the view itself is clicked
         this.$element.on('click', function (e) {
