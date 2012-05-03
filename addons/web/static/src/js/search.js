@@ -259,6 +259,10 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
                 });
         }
 
+        this.$element.on('click', '.oe_searchview_clear', function (e) {
+            e.stopImmediatePropagation();
+            self.query.reset();
+        });
         this.$element.on('click', '.oe_searchview_unfold_drawer', function (e) {
             e.stopImmediatePropagation();
             self.$element.toggleClass('oe_searchview_open_drawer');
