@@ -149,7 +149,6 @@ class mail_thread(osv.osv):
                 email_to = ''
                 for user in res_users_obj.browse(cr, uid, user_to_push_ids, context=context):
                     if not user.notification_email_pref == 'all' and \
-                        not (user.notification_email_pref == 'comments' and vals['type'] == 'comment') and \
                         not (user.notification_email_pref == 'to_me' and user.id in user_to_push_from_parse_ids):
                         continue
                     if not user.user_email:

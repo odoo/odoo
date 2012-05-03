@@ -33,15 +33,15 @@ class res_users(osv.osv):
     _columns = {
         'notification_email_pref': fields.selection([
                         ('all', 'All feeds'),
-                        ('comments', 'Only comments'),
-                        ('to_me', 'Only when sent directly to me'),
+                        ('to_me', 'Only sent directly to me'),
                         ('none', 'Never')
                         ], 'Receive feeds by email', required=True,
-                        help="Choose in which case you want to receive an email when you receive new feeds."),
+                        help="Choose in which case you want to receive \
+                              an email when you receive new feeds."),
     }
     
     _defaults = {
-        'notification_email_pref': 'none',
+        'notification_email_pref': 'to_me',
     }
     
     def __init__(self, pool, cr):
