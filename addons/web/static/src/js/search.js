@@ -905,7 +905,7 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
      * @return {*} combined contexts of the enabled filters in this group
      */
     get_context: function (facet) {
-        var contexts = _(facet.values).chain()
+        var contexts = facet.values.chain()
             .map(function (f) { return f.get('value').attrs.context; })
             .reject(_.isEmpty)
             .value();
@@ -923,7 +923,7 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
      * @return {Array} enabled filters in this group
      */
     get_groupby: function (facet) {
-        return  _(facet.values).chain()
+        return  facet.values.chain()
             .map(function (f) { return f.get('value').attrs.context; })
             .reject(_.isEmpty)
             .value();
@@ -935,7 +935,7 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
      * @return {*} combined domains of the enabled filters in this group
      */
     get_domain: function (facet) {
-        var domains = _(facet.values).chain()
+        var domains = facet.values.chain()
             .map(function (f) { return f.get('value').attrs.domain; })
             .reject(_.isEmpty)
             .value();

@@ -881,6 +881,42 @@ $(document).ready(function () {
         }, "custom context's self should be label");
     });
 
+    asyncTest('FilterGroup', 6, function () {
+        var view = {inputs: []};
+        var filter_a = new instance.web.search.Filter(
+            {attrs: {name: 'a', context: 'c1', domain: 'd1'}}, view);
+        var filter_b = new instance.web.search.Filter(
+            {attrs: {name: 'b', context: 'c2', domain: 'd2'}}, view);
+        var filter_c = new instance.web.search.Filter(
+            {attrs: {name: 'c', context: 'c3', domain: 'd3'}}, view);
+        var group = new instance.web.search.FilterGroup(
+            [filter_a, filter_b, filter_c], view);
+        group.facet_for_defaults({a: true, c: true})
+            .always(start)
+            .fail(function (error) { ok(false, error && error.message); })
+            .done(function (facet) {
+                var model = facet;
+                if (!(model instanceof instance.web.search.Facet)) {
+                    model = new instance.web.search.Facet(facet);
+                }
+
+                var domain = group.get_domain(model);
+                equal(domain.__ref, 'compound_domain',
+                    "domain should be compound");
+                deepEqual(domain.__domains, [
+                    ['|'], 'd1', 'd3'
+                ], "domain should OR filter domains");
+                ok(!domain.get_eval_context(), "domain should have no evaluation context");
+                var context = group.get_context(model);
+                equal(context.__ref, 'compound_context',
+                    "context should be compound");
+                deepEqual(context.__contexts, [
+                    'c1', 'c3'
+                ], "context should merge all filter contexts");
+                ok(!context.get_eval_context(), "context should have no evaluation context");
+            });
+    });
+
     module('drawer', {
         setup: function () {
             instance = window.openerp.init([]);
