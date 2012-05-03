@@ -10,6 +10,8 @@
             <field name="arch" type="xml">
                 <group name="config_sale" position="after">
                     <separator string="Picking and Invoice Policy" colspan="4"/>
+                    <field name="module_project_timesheet" invisible="1"/>
+                    <field name="module_project_mrp" invisible="1"/>
                     <field name="group_invoice_so_lines" on_change="onchange_invoice_methods(group_invoice_so_lines, group_invoice_deli_orders)"/>
                     <field name="default_order_policy" attrs="{'invisible':['|',('group_invoice_so_lines','=',False),('group_invoice_deli_orders','=',False)]}"/>
                     <newline/>
@@ -17,8 +19,6 @@
                     <field name="module_delivery" attrs="{'invisible':[('group_invoice_so_lines','=',False), ('group_invoice_deli_orders','=',False)]}"/>
                     <newline/>
                     <field name="task_work" on_change="onchange_task_work(task_work)"/>
-                    <field name="module_project_timesheet" invisible="1"/>
-                    <field name="module_project_mrp" invisible="1"/>
                     <field name="default_picking_policy" attrs="{'invisible':[('group_invoice_deli_orders','=',False)]}"/>
                     <newline/>
                     <field name="timesheet" on_change="onchange_timesheet(timesheet)"/>
