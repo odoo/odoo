@@ -24,7 +24,6 @@ openerp.hr_attendance = function(openerp) {
     		this._super(parent)
     		this.event = event
     	},
-    	
         start: function() {
             this.$element.on('click',   this.event);
         },
@@ -57,13 +56,15 @@ openerp.hr_attendance = function(openerp) {
         
         start: function() {
         	var self = this;
+        	//console.log('stttarrrttttt',this.dataset)
             return this.dataset.read_slice(['state']).done(this.do_sign_in_out);
         },
         
         do_sign_in_out: function(user) {
             if(_.isEmpty(user)) return;
+            this.$element.html("");
             if(user[0]['state'] === 'present') {
-                this.sign_out = new openerp.hr_attendance.SignOut(this, this.on_sign_in_out);
+                this.sign_out = new openerp.hr_attendance.SignOut(this, this.on_sign_in_out);                
                 this.sign_out.appendTo(this.$element);
             } else {
                 this.sign_in = new openerp.hr_attendance.SignIn(this, this.on_sign_in_out);
@@ -79,24 +80,15 @@ openerp.hr_attendance = function(openerp) {
                 {},
                 [['res_model', '=', 'hr.sign.in.out']])
             .read_slice().done(function(action) {
+            	console.log('action',action);
                 action = action[0];
                 action.context = JSON.parse(action.context);
                 var action_manager = new openerp.web.ActionManager(self);
-                action_manager.do_action(action, self.on_close);
+                action_manager.do_action(action, function() { 
+                	self.dataset.read_slice(['state']).done(self.do_sign_in_out);
+                	});
             });
         },
-        
-        on_close: function() {
-        	    if(this.sign_in) {
-                this.sign_in.destroy();
-                this.sign_out = new openerp.hr_attendance.SignOut(this);
-                this.sign_out.appendTo(this.$element);
-        	    } else if(this.sign_out) {
-                this.sign_out.destroy();
-                this.sign_in = new openerp.hr_attendance.SignIn(this);
-                this.sign_in.appendTo(this.$element);
-            }
-        }
     });
     
     
