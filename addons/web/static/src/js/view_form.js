@@ -3037,7 +3037,7 @@ instance.web.form.One2ManyKanbanView = instance.web_kanban.KanbanView.extend({
 });
 }
 
-instance.web.form.FieldMany2Many = instance.web.form.AbstractField.extend({
+instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend({
     template: "FieldMany2Many",
     start: function() {
         $("textarea", this.$element).textext({
@@ -3077,7 +3077,7 @@ instance.web.form.FieldMany2Many = instance.web.form.AbstractField.extend({
 /*
  * TODO niv: clean those deferred stuff, it could be better
  */
-instance.web.form.FieldMany2Many61 = instance.web.form.AbstractField.extend({
+instance.web.form.FieldMany2Many = instance.web.form.AbstractField.extend({
     multi_selection: false,
     disable_utility_classes: true,
     init: function(field_manager, node) {
@@ -3091,7 +3091,7 @@ instance.web.form.FieldMany2Many61 = instance.web.form.AbstractField.extend({
 
         var self = this;
 
-        this.dataset = new instance.web.form.Many2ManyDataSet61(this, this.field.relation);
+        this.dataset = new instance.web.form.Many2ManyDataSet(this, this.field.relation);
         this.dataset.m2m = this;
         this.dataset.on_unlink.add_last(function(ids) {
             self.dataset_changed();
@@ -3124,7 +3124,7 @@ instance.web.form.FieldMany2Many61 = instance.web.form.AbstractField.extend({
     },
     load_view: function() {
         var self = this;
-        this.list_view = new instance.web.form.Many2ManyListView61(this, this.dataset, false, {
+        this.list_view = new instance.web.form.Many2ManyListView(this, this.dataset, false, {
                     'addable': self.get("effective_readonly") ? null : _t("Add"),
                     'deletable': self.get("effective_readonly") ? false : true,
                     'selectable': self.multi_selection,
@@ -3156,7 +3156,7 @@ instance.web.form.FieldMany2Many61 = instance.web.form.AbstractField.extend({
     },
 });
 
-instance.web.form.Many2ManyDataSet61 = instance.web.DataSetStatic.extend({
+instance.web.form.Many2ManyDataSet = instance.web.DataSetStatic.extend({
     get_context: function() {
         this.context = this.m2m.build_context();
         return this.context;
@@ -3167,7 +3167,7 @@ instance.web.form.Many2ManyDataSet61 = instance.web.DataSetStatic.extend({
  * @class
  * @extends instance.web.ListView
  */
-instance.web.form.Many2ManyListView61 = instance.web.ListView.extend(/** @lends instance.web.form.Many2ManyListView61# */{
+instance.web.form.Many2ManyListView = instance.web.ListView.extend(/** @lends instance.web.form.Many2ManyListView# */{
     do_add_record: function () {
         var pop = new instance.web.form.SelectCreatePopup(this);
         pop.select_element(
@@ -3861,7 +3861,7 @@ instance.web.form.widgets = new instance.web.Registry({
     'selection' : 'instance.web.form.FieldSelection',
     'many2one' : 'instance.web.form.FieldMany2One',
     'many2many' : 'instance.web.form.FieldMany2Many',
-    'many2many61' : 'instance.web.form.FieldMany2Many61',
+    'many2manytags' : 'instance.web.form.FieldMany2ManyTags',
     'one2many' : 'instance.web.form.FieldOne2Many',
     'one2many_list' : 'instance.web.form.FieldOne2Many',
     'reference' : 'instance.web.form.FieldReference',
