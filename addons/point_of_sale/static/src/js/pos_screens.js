@@ -196,10 +196,6 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
 
             this.pos_widget.action_bar.add_new_button(
                 {
-                    label: 'help',
-                    click: function(){ //TODO Show help popup
-                    }
-                },{
                     label: 'back',
                     click: function(){  //TODO Go to ask for weighting screen
                         clearInterval(this.intervalID);
@@ -239,10 +235,6 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
             this.pos_widget.orderView.setNumpadState(this.pos_widget.numpadView.state);
             this.pos_widget.action_bar.add_new_button(
                 {
-                    label: 'help',
-                    click: function(){ //TODO Show help popup
-                    }
-                },{
                     label: 'back',
                     click: function(){
                         self.pos.screen_selector.set_current_screen('scan');
@@ -291,10 +283,6 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
 
             this.pos_widget.action_bar.add_new_button(
                 {
-                    label: 'help',
-                    click: function(){ //TODO Show help popup
-                    }
-                },{
                     label: 'back',
                     click: function(){  //TODO Go to ask for weighting screen
                         clearInterval(intervalID);
@@ -330,10 +318,6 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
                     label:'scan',
                     click: function(){
                         self.pos.screen_selector.set_current_screen('scan');
-                    }
-                },{
-                    label: 'help',
-                    click: function(){ //TODO Show help popup
                     }
                 },{
                     label: 'peser',
@@ -382,10 +366,6 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
 
             this.pos_widget.action_bar.add_new_button(
                 {
-                    label: 'help',
-                    click: function(){ //TODO Show help popup
-                    }
-                },{
                     label: 'weight',
                     click: function(){  //TODO Go to ask for weighting screen
                         self.pos.screen_selector.set_current_screen('scale_invite');
@@ -441,10 +421,6 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
             this.pos_widget.orderView.setNumpadState(this.pos_widget.numpadView.state);
             this.pos_widget.action_bar.add_new_button(
                 {
-                    label: 'help',
-                    click: function(){ //TODO Show help popup
-                    }
-                },{
                     label: 'weight',
                     click: function(){  //TODO Go to ask for weighting screen
                     }
