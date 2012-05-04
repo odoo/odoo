@@ -30,49 +30,68 @@
              </field>
         </record>
         
+		<record model="ir.ui.view" id="view_event_page_inherit">
+			<field name="name">Events Inherit</field>
+			<field name="model">event.event</field>
+			<field name="type">form</field>
+			<field name="inherit_id" ref="event.view_event_page"/>
+			<field name="arch" type="xml">
+				<xpath expr="//group[@name='venue']" position="after">
+					<field name="event_item_ids" nolabel="1">
+						 <tree editable="top" string="Event Items">
+							 <field name="product_id" readonly="1" string="Ticket Type"  domain="[('event_ok','=',True)]" on_change="onchange_product_id(product_id)"/>
+							 <field name="sales_end_date" readonly="1"/>
+							 <field name="price" readonly="1"/>
+							 <field name="max_qty" readonly="1" groups="event.group_event_manager"/>
+							 <field name="qty"/>
+				 		</tree>
+					</field>
+					<newline/>
+					<div class="oe_right">
+						<button name="order_now" string="Order Now" type="object" icon="gtk-apply"/>
+					</div>
+				</xpath>
+			</field>
+		</record>
+
+
 		<record model="ir.ui.view" id="view_event_form_inherit">
 			<field name="name">Events Inherit</field>
 			<field name="model">event.event</field>
 			<field name="type">form</field>
 			<field name="inherit_id" ref="event.view_event_form"/>
 			<field name="arch" type="xml">
-				<xpath expr="//notebook/page[@string='Extra Info']" position="after">
-                    <page string="Event Items">
-                    <field name="event_item_ids" nolabel="1"/>
-                   </page>
+				<xpath expr="//page[@string='Extra Info']" position="after">
+					<page string="Event Item">
+						<field name="event_item_ids" nolabel="1">
+							 <tree editable="top" string="Event Items">
+								 <field name="product_id" string="Ticket Type"  domain="[('event_ok','=',True)]" on_change="onchange_product_id(product_id)"/>
+								 <field name="sales_end_date" />
+								 <field name="price"/>
+								 <field name="max_qty" groups="event.group_event_manager"/>
+								 <field name="qty"/>
+				 			</tree>
+						</field>
+						<newline/>
+						<div class="oe_right">
+							<button name="order_now" string="Order Now" type="object" icon="gtk-apply"/>
+						</div>
+					</page>
 				</xpath>
 			</field>
 		</record>
 
-		<record model="ir.ui.view" id="view_event_items_tree">
-			 <field name="name">Event Items Tree</field>
-			 <field name="model">event.items</field>
-			 <field name="type">tree</field>
-			 <field name="arch" type="xml">
-				 <tree editable="top" string="Event Items">
-					 <field name="product_id" domain="[('event_ok','=',True)]" on_change="onchange_product_id(product_id)"/>
-					 <field name="price"/>
-					 <field name="uom_id" invisible="1"/>
-					 <field name="qty"/>
-					 <field name="discount"/>
-					 <field name="sales_end_date"/>
-				 </tree>
-			 </field>
-		 </record>
+		<record id="view_event_kanban_inherit" model="ir.ui.view">
+            <field name="name">event.inherit.kanban</field>
+            <field name="model">event.event</field>
+            <field name="type">kanban</field>
+            <field name="inherit_id" ref="event.view_event_kanban"/>
+            <field name="arch" type="xml">
+            	<xpath expr="//div/t/t/input[@name='subscribe']" position="replace">
+            		<input type="hidden"/>
+                </xpath> 
+            </field>
+        </record>
 
-		<record model="ir.ui.view" id="view_event_items_form">
-			 <field name="name">Event Items Form</field>
-			 <field name="model">event.items</field>
-			 <field name="type">form</field>
-		 	 <field name="arch" type="xml">
-			 	 <form string="Event Items">
-			   	 	<field name="product_id" domain="[('event_ok','=',True)]" on_change="onchange_product_id(product_id)"/>
-			        <field name="price"/>
-			        <field name="qty"/>
-					<field name="discount"/>
-					<field name="sales_end_date"/>
-				</form>
-		 	</field>
-		</record>
     </data>
 </openerp>
