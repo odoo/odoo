@@ -14,7 +14,6 @@ openerp.event = function(instance){
 	 	set_value:function(value){
 	 		var self = this;
 			this.get_address(value).done(function(value){
-				console.log("value",value,self);
 				self.__parentedParent.$element.find(".oe_td_border").after(instance.web.qweb.render("address",{'record': value}));
 				var address = _.str.sprintf(' %(street)s, %(city)s, %(country_id[1])s', value);
 				return self.list_addresses(address);
