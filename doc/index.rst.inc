@@ -9,9 +9,10 @@ OpenERP Server Documentation
    02_architecture
    03_module_dev
    04_user_roles
+   90_using_gunicorn
    99_test_framework
 
-OPenERP Server API
+OpenERP Server API
 ''''''''''''''''''
 
 .. toctree::
