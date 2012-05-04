@@ -946,11 +946,11 @@ class account_voucher(osv.osv):
         if amount_residual > 0:
             account_id = line.voucher_id.company_id.expense_currency_exchange_account_id
             if not account_id:
-                raise osv.except_osv(_('Warning'),_("Unable to create accounting entry for currency rate difference. You have to configure the field 'Income Currency Rate' on the company! "))
+                raise osv.except_osv(_('Warning'),_("Unable to create accounting entry for currency rate difference. You have to configure the field 'Expense Currency Rate' on the company! "))
         else:
             account_id = line.voucher_id.company_id.income_currency_exchange_account_id
             if not account_id:
-                raise osv.except_osv(_('Warning'),_("Unable to create accounting entry for currency rate difference. You have to configure the field 'Expense Currency Rate' on the company! "))
+                raise osv.except_osv(_('Warning'),_("Unable to create accounting entry for currency rate difference. You have to configure the field 'Income Currency Rate' on the company! "))
         # Even if the amount_currency is never filled, we need to pass the foreign currency because otherwise
         # the receivable/payable account may have a secondary currency, which render this field mandatory
         account_currency_id = company_currency <> current_currency and current_currency or False
