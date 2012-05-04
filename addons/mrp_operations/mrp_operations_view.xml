@@ -71,8 +71,20 @@
         <field name="type">form</field>
         <field name="inherit_id" eval="False"/>
         <field name="arch" type="xml">
-            <form string="Work Orders">
-                <group col="6" colspan="4">
+            <form layout="manual">
+            <div class="oe_form_topbar">
+                  <button name="button_start_working" string="Start" states="draft" icon="terp-gtk-jump-to-ltr"/>
+                  <button name="button_resume" string="Resume" states="pause" icon="gtk-media-pause"/>
+                  <button name="button_done" string="Finished" states="startworking" icon="terp-check"/>
+                  <button name="button_pause" string="Pending" states="startworking" icon="gtk-media-pause"/>
+                  <button name="button_draft" string="Set Draft" states="cancel" icon="gtk-convert"/>
+                  <button name="button_cancel" string="Cancel" states="draft,startworking" icon="gtk-stop"/>
+            <div class="oe_right">
+                 <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,startworking"/>
+            </div>
+            </div>
+            <sheet string="Work Orders" layout="auto">
+                <group col="6" colspan="4" class="oe_form_header">
                     <field colspan="4" name="name" select="1"/>
                     <field name="workcenter_id" select="1" widget="selection"/>
                     <field name="production_id"/>
@@ -105,19 +117,9 @@
                         <field name="qty"/>
                         <field name="uom" widget="selection"/>
                     </group>
-
-                    <separator string="" colspan="4"/>
-                    <group colspan="8" col="8">
-                        <field name="state"/>
-                        <button name="button_cancel" string="Cancel" states="draft,startworking" icon="gtk-stop"/>
-                        <button name="button_draft" string="Set Draft" states="cancel" icon="gtk-convert"/>
-                        <button name="button_start_working" string="Start" states="draft" icon="terp-gtk-jump-to-ltr"/>
-                        <button name="button_resume" string="Resume" states="pause" icon="gtk-media-pause"/>
-                        <button name="button_pause" string="Pending" states="startworking" icon="gtk-media-pause"/>
-                        <button name="button_done" string="Finished" states="startworking" icon="terp-check"/>
-                    </group>
                 </page>
                 </notebook>
+                </sheet>
                 <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
             </form>
         </field>
