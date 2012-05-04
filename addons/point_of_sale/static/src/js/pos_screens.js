@@ -46,9 +46,22 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
     module.ScreenSelector = instance.web.Class.extend({
         init: function(options){
             this.pos = options.pos;
+
             this.screen_set = options.screen_set || {};
-            this.current_screen = options.current_screen ? this.screen_set[options.current_screen] : undefined;
-            this.default_screen = options.default_screen;
+
+            this.default_client_screen = options.default_client_screen;
+            this.default_cashier_screen = options.default_cashier_screen;
+
+            this.current_client_screen = this.screen_set[this.default_client_screen];
+            
+            this.current_cashier_screen = this.screen_set[this.default_client_screen];
+
+            this.default_mode = options.default_mode || 'client';
+            this.current_mode = this.default_mode;
+
+            this.current_screen = this.current_mode === 'client' ? 
+                this.current_client_screen:
+                this.current_cashier_screen;
             
             var current = null;
             for(screen_name in this.screen_set){
@@ -64,6 +77,12 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
             }
 
             this.selected_order = this.pos.get('selectedOrder');
+            this.selected_order.set({ 
+                user_mode : this.current_mode,
+                client_screen: this.default_client_screen,
+                cashier_screen: this.default_cashier_screen,
+            });
+
             this.pos.bind('change:selectedOrder', this.load_saved_screen, this);
         },
         add_screen: function(screen_name, screen){
@@ -72,18 +91,54 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
             return this;
         },
         load_saved_screen:  function(){
-            if(this.selected_order != this.pos.get('selectedOrder')){
-                var screen = this.pos.get('selectedOrder').get('screen') || this.default_screen;
-                this.selected_order = this.pos.get('selectedOrder');
-                this.set_current_screen(screen);
+            console.log('load_saved_screen');
+            if(true || this.selected_order != this.pos.get('selectedOrder')){
+                var selectedOrder = this.pos.get('selectedOrder');
+                
+                var user_mode = selectedOrder.get('user_mode');
+                console.log('user mode:',user_mode);
+
+                if(user_mode === 'client'){
+                    this.current_mode = 'client';
+                    this.set_current_screen(selectedOrder.get('client_screen') || this.default_client_screen);
+                }else if(user_mode === 'cashier'){
+                    this.current_mode = 'cashier';
+                    console.log('default_cashier_screen:',this.default_cashier_screen);
+                    this.set_current_screen(selectedOrder.get('cashier_screen') || this.default_cashier_screen);
+                }else{
+                    this.current_mode = this.default_mode;
+                    selectedOrder.set({ user_mode: this.current_mode });
+                    if(this.current_mode === 'client'){
+                        this.set_current_screen(this.default_client_screen);
+                    }else{
+                        this.set_current_screen(this.default_cashier_screen);
+                    }
+                }
+                this.selected_order = selectedOrder;
+                // var screen = this.pos.get('selectedOrder').get('screen') || this.default_screen;
+                // this.selected_order = this.pos.get('selectedOrder');
+                // this.set_current_screen(screen);
+            }
+        },
+        set_user_mode: function(user_mode){
+            console.log('set user mode:',user_mode);
+            if(user_mode !== this.current_mode){
+                this.current_mode = user_mode;
+                this.pos.get('selectedOrder').set({ user_mode : this.current_mode });
+                this.load_saved_screen();
             }
         },
         set_current_screen: function(screen_name){
             var screen = this.screen_set[screen_name];
-            
-            this.pos.get('selectedOrder').set({'screen':screen_name});
 
-            console.log('Set Current Screen: '+screen_name+' :',screen,'old:',this.current_screen);
+            var selectedOrder = this.pos.get('selectedOrder');
+            if(this.current_mode === 'client'){
+                selectedOrder.set({'client_screen': screen_name});
+            }else{
+                selectedOrder.set({'cashier_screen': screen_name});
+            }
+
+            console.log('Set Current Screen: '+screen_name+' :',screen,'old:',this.current_screen, 'mode:',this.current_mode);
             if(screen && screen !== this.current_screen){
                 if(this.current_screen){
                     this.current_screen.hide();
@@ -127,7 +182,7 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
 
             self.pos.proxy.weighting_start();
 
-            var intervalID = setInterval(function(){
+            this.intervalID = setInterval(function(){
                 var weight = self.pos.proxy.weighting_read_kg();
                 if(weight > 0.001){
                     clearInterval(intervalID);
@@ -143,12 +198,16 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
                 },{
                     label: 'back',
                     click: function(){  //TODO Go to ask for weighting screen
-                        clearInterval(intervalID);
+                        clearInterval(this.intervalID);
                         self.pos.proxy.weighting_end();
                         self.pos.screen_selector.set_current_screen('scan');
                     }
                 }
             );
+        },
+        hide: function(){
+            this._super();
+            clearInterval(this.intervalID);
         },
     });
 

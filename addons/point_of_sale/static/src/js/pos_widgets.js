@@ -852,9 +852,11 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
                     'receipt' : this.receipt_screen,
                     'welcome' : this.welcome_screen,
                 },
-                current_screen: 'welcome',
-                default_screen: 'welcome',
+                default_client_screen: 'welcome',
+                default_cashier_screen: 'products',
+                default_mode: 'client',
             });
+            window.screen_selector = this.pos.screen_selector;
 
             this.pos.barcode_reader.connect();
             
