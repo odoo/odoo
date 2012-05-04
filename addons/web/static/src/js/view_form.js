@@ -1827,6 +1827,7 @@ instance.web.form.FieldChar = instance.web.form.AbstractField.extend(_.extend({}
     init: function (field_manager, node) {
         this._super(field_manager, node);
         this.password = this.node.attrs.password === 'True' || this.node.attrs.password === '1';
+        this.placeholder = this.node.attrs.placeholder || '';
     },
     initialize_content: function() {
         var self = this;
