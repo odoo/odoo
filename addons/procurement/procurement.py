@@ -106,10 +106,10 @@ class procurement_order(osv.osv):
         'message': fields.char('Latest error', size=64, help="Exception occurred while computing procurement orders."),
         'state': fields.selection([
             ('draft','Draft'),
+            ('cancel','Cancelled'),
             ('confirmed','Confirmed'),
             ('exception','Exception'),
             ('running','Running'),
-            ('cancel','Cancel'),
             ('ready','Ready'),
             ('done','Done'),
             ('waiting','Waiting')], 'State', required=True,
