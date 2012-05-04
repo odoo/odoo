@@ -505,11 +505,17 @@
                             <field colspan="4" name="account_control_ids" nolabel="1"/>
                         </page>
                         <page string="Cash Box">
-                            <field name="cashbox_line_ids" nolabel="1" string="Unit Of Currency Definition">
+                            <field name="profit_account_id" />
+                            <field name="loss_account_id" />
+                            <separator string="Internal Account" colspan="4" />
+                            <field name="internal_account_id" />
+                            <separator string="Cash Box Lines" colspan="4" />
+                            <field name="cashbox_line_ids" nolabel="1" string="Unit Of Currency Definition" colspan="4">
                                 <tree string="CashBox Lines" editable="bottom">
                                     <field name="pieces" />
                                 </tree>
                             </field>
+                            <label string="The Cashbox Lines will be used in the PoS Session" /> 
                         </page>
                     </notebook>
                 </form>
@@ -2659,12 +2665,13 @@ action = pool.get('res.config').next(cr, uid, [], context)
                         </page>
                         <page string="CashBox">
                             <group col="2" expand="1">
-                                <field name="details_ids" nolabel="1">
+                                <field name="details_ids" nolabel="1" > 
+                                    <!--attrs="{'readonly' : [('state', '=', 'open')]}">-->
                                     <tree string="" editable="bottom">
                                         <field name="pieces" readonly="1" />
-                                        <field name="number_opening" string="Opening Unit Numbers" on_change="on_change_sub_opening(pieces, number_opening, parent.balance_end)" />
+                                        <field name="number_opening" string="Opening Unit Numbers" on_change="on_change_sub_opening(pieces, number_opening, parent.balance_end)" attrs="{'readonly' : [('parent.state', '!=', 'open')]}" />
                                         <field name="subtotal_opening" string="Opening Subtotal"/>
-                                        <field name="number_closing" string="Closing Unit Numbers" on_change="on_change_sub_closing(pieces, number_closing, parent.balance_end)" />
+                                        <field name="number_closing" string="Closing Unit Numbers" on_change="on_change_sub_closing(pieces, number_closing, parent.balance_end)" attrs="{'readonly' : [('parent.state', '!=', 'confirm')]}"/>
                                         <field name="subtotal_closing" string="Closing Subtotal"/>
                                     </tree>
                                 </field>
@@ -2677,7 +2684,7 @@ action = pool.get('res.config').next(cr, uid, [], context)
                     <group col="6" colspan="4">
                         <group col="2" colspan="2">
                             <separator string="Dates" colspan="4"/>
-                            <field name="date" select="1" attrs="{'readonly':[('state','!=','draft')]}"  on_change="onchange_date(date, company_id)"/>
+                            <field name="date" select="1" attrs="{'readonly':[('state','!=','draft')]}"  on_change="onchange_date(date, company_id)" string="Started On" />
                             <field name="closing_date" select="1" readonly="1"/>
                         </group>
                         <group col="2" colspan="2">
@@ -2690,6 +2697,7 @@ action = pool.get('res.config').next(cr, uid, [], context)
                             <separator string="Closing Balance" colspan="4"/>
                             <field name="balance_end"/>
                             <field name="balance_end_cash"/>
+                            <field name="difference" />
                         </group>
                     </group>
                     <group col="8" colspan="4">

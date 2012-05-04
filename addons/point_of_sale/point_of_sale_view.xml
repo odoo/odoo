@@ -18,7 +18,7 @@
             <field name="arch" type="xml">
                 <form string="PoS Orders">
                     <group col="7" colspan="4">
-                        <field name="session_id" />
+                        <field name="session_id" required="1" />
                         <field name="name"/>
                         <field name="date_order"/>
                         <field name="partner_id" on_change="onchange_partner_id(partner_id)" context="{'search_default_customer':1}" attrs="{'readonly': [('state','=','invoiced')]}"/>
@@ -55,7 +55,7 @@
                             <separator colspan="4"/>
                             <group colspan="4" col="8">
                                 <field name="state" widget="statusbar" statusbar_visible="draft,paid,done" statusbar_colors='{"cancel":"red"}'/>
-                                <button name="%(action_pos_payment)d" string="Payment" icon="gtk-apply" type="action" states="draft"/>
+                                <button name="%(action_pos_payment)d" string="Payment" icon="gtk-apply" type="action" states="draft" context="{'pos_session_id' : session_id}"/>
                                 <button name="refund" string="Return Products" type="object" icon="gtk-ok"
                                     attrs="{'invisible':[('state','=','draft')]}"/>
                                 <button name="%(action_report_pos_receipt)d" string="Reprint" icon="gtk-print" type="action" states="paid,done,invoiced"/>
@@ -671,16 +671,6 @@
         <menuitem name="Configuration" parent="menu_point_root"
             id="menu_point_config_product" sequence="25" groups="group_pos_manager"/>
 
-        <menuitem
-            parent="menu_point_of_sale"
-            action="action_box_entries"
-            id="menu_wizard_enter_jrnl" sequence="2" />
-
-        <menuitem
-            parent="menu_point_of_sale"
-            action="action_box_out"
-            id="menu_wizard_enter_jrnl2" sequence="3" />
-
         <record id="action_account_journal_form" model="ir.actions.act_window">
             <field name="name">Payment Methods</field>
             <field name="res_model">account.journal</field>
@@ -770,7 +760,15 @@
                     <field name="name" />
                     <notebook colspan="4">
                         <page string="Payment Methods">
-                            <field name="journal_ids" colspan="4" nolabel="1"/>
+                            <field name="journal_ids" colspan="4" nolabel="1">
+                                <tree string="Journals">
+                                    <field name="code" />
+                                    <field name="name" />
+                                    <field name="type" />
+                                    <field name="opening_control" />
+                                    <field name="closing_control" />
+                                </tree>
+                            </field>
                         </page>
                         <page string="Accounting">
                             <separator string="Accounting" colspan="4" />
@@ -943,7 +941,16 @@
             name="Orders"
             src_model="pos.session"
             res_model="pos.order"
-            domain="[('session_id', '=', active_id)]" />         
+            domain="[('session_id', '=', active_id)]" />
+        <!--
+        TODO
+        <act_window
+            id="act_pos_session_statements"
+            name="Statements"
+            src_model="pos.session"
+            res_model="account.bank.statement"
+            domain="[]" />
+        -->
 
         <record id="view_pos_order_filter" model="ir.ui.view">
             <field name="name">pos.order.list.select</field>

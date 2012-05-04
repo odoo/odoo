@@ -188,6 +188,14 @@ class account_cash_statement(osv.osv):
             result[line.statement_id.id] = True
         return result.keys()
 
+    def _compute_difference(self, cr, uid, ids, fieldnames, args, context=None):
+        result =  dict.fromkeys(ids, 0.0)
+
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = obj.balance_end - obj.balance_end_cash
+
+        return result
+
     _columns = {
         'total_entry_encoding': fields.function(_get_sum_entry_encoding, string="Cash Transaction", help="Total cash transactions",
             store = {
@@ -198,6 +206,7 @@ class account_cash_statement(osv.osv):
         'balance_end_cash': fields.function(_balance_end_cash, store=False, string='Closing Balance', help="Closing balance based on cashBox"),
         'details_ids' : fields.one2many('account.cashbox.line', 'bank_statement_id', string='CashBox Lines'),
         'user_id': fields.many2one('res.users', 'Responsible', required=False),
+        'difference' : fields.function(_compute_difference, method=True, string="Difference", type="float"),
     }
     
     _defaults = {
@@ -234,7 +243,8 @@ class account_cash_statement(osv.osv):
             for line in vals.get('details_ids',[]):
                 print "line: %r" % (line,)
                 if line and len(line)==3 and line[2]:
-                    amount_total+= line[2]['pieces'] * line[2]['number_opening']
+                    # FIXME: If there is no piece # does not work with GTK
+                    amount_total+= line[2].get('pieces', 0) * line[2]['number_opening']
 
             vals.update(balance_start= amount_total)
             vals.update(balance_end_real=self._compute_balance_end_real(cr, uid, vals['journal_id'], context=context))
@@ -287,7 +297,7 @@ class account_cash_statement(osv.osv):
         balance_start = 0.0
         if journal_id:
             count = self.search_count(cr, uid, [('journal_id', '=', journal_id),('state', '=', 'open')], context=None)
-            if count:
+            if 0: # count:
                 journal = self.pool.get('account.journal').browse(cr, uid, journal_id, context=context)
                 raise osv.except_osv(_('Error !'), (_('The Account Journal %s is opened by an other Cash Register !') % (journal.name,)))
             else:
@@ -380,6 +390,33 @@ class account_cash_statement(osv.osv):
 
     def button_confirm_cash(self, cr, uid, ids, context=None):
         super(account_cash_statement, self).button_confirm_bank(cr, uid, ids, context=context)
+        absl_proxy = self.pool.get('account.bank.statement.line')
+
+        TABLES = (('Profit', 'profit_account_id'), ('Loss', 'loss_account_id'),)
+
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.difference == 0.0:
+                continue
+
+            for item_label, item_account in TALBES:
+                if getattr(obj.journal_id, item_account):
+                    raise osv.except_osv(_('Error !'), 
+                                         _('There is no %s Account on the Journal %s') % (item_label, obj.journal_id.name,))
+
+            is_profit = obj.difference < 0.0
+
+            account = getattr(obj.journal_id, TABLES[is_profit][1])
+
+            values = {
+                'statement_id' : obj.id,
+                'journal_id' : obj.journal_id.id,
+                'account_id' : account.id,
+                'amount' : obj.difference,
+                'name' : 'Exceptional %s' % TABLES[is_profit][0],
+            }
+
+            absl_proxy.create(cr, uid, values, context=context)
+
         return self.write(cr, uid, ids, {'closing_date': time.strftime("%Y-%m-%d %H:%M:%S")}, context=context)
 
     def button_cancel(self, cr, uid, ids, context=None):

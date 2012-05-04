@@ -100,6 +100,7 @@ module named account_voucher.
         'wizard/account_reconcile_partner_process_view.xml',
         'wizard/account_automatic_reconcile_view.xml',
         'wizard/account_financial_report_view.xml',
+        'wizard/pos_box.xml',
         'project/wizard/project_account_analytic_line_view.xml',
         'account_end_fy.xml',
         'account_invoice_view.xml',

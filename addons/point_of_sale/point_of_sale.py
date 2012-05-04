@@ -40,9 +40,9 @@ class pos_config(osv.osv):
 
     _columns = {
         'name' : fields.char('Name', size=32, select=1, required=True),
-        'journal_ids' : fields.many2many('account.journal', 'pos_config_journal_rel', 'pos_config_id', 'journal_id', 'Payment Methods'),
+        'journal_ids' : fields.many2many('account.journal', 'pos_config_journal_rel', 'pos_config_id', 'journal_id', 'Payment Methods', domain="[('journal_user', '=', True )]"),
         'shop_id' : fields.many2one('sale.shop', 'Shop', required=True, select=1),
-        'journal_id' : fields.many2one('account.journal', 'Journal', required=True, select=1),
+        'journal_id' : fields.many2one('account.journal', 'Journal', required=True, select=1, domain=[('type', '=', 'sale')]),
         'profit_account_id' : fields.many2one('account.account', 'Profit Account', required=True, select=1),
         'loss_account_id' : fields.many2one('account.account', 'Loss Account', required=True, select=1),
 
@@ -350,6 +350,7 @@ class pos_order(osv.osv):
         'partner_id': fields.many2one('res.partner', 'Customer', change_default=True, select=1, states={'draft': [('readonly', False)], 'paid': [('readonly', False)]}),
 
         'session_id' : fields.many2one('pos.session', 'Session', 
+                                        #required=True,
                                         select=1,
                                         domain="[('state', '=', 'opened')]",
                                         states={'draft' : [('readonly', False)]},
@@ -654,7 +655,8 @@ class pos_order(osv.osv):
         property_obj=self.pool.get('ir.property')
 
         for order in self.browse(cr, uid, ids, context=context):
-            if order.state<>'paid': continue
+            if order.state != 'paid':
+                continue
 
             curr_c = res_obj.browse(cr, uid, uid).company_id
             comp_id = res_obj.browse(cr, order.user_id.id, order.user_id.id).company_id
@@ -667,6 +669,7 @@ class pos_order(osv.osv):
 
             # Create an entry for the sale
             move_id = account_move_obj.create(cr, uid, {
+                'ref' : order.name,
                 'journal_id': order.sale_journal.id,
             }, context=context)
 
@@ -714,10 +717,9 @@ class pos_order(osv.osv):
                     if tax_code_id:
                         break
 
-
                 # Create a move for the line
                 account_move_line_obj.create(cr, uid, {
-                    'name': line.name,
+                    'name': line.product_id.name,
                     'date': order.date_order[:10],
                     'ref': order.name,
                     'quantity': line.qty,
@@ -746,7 +748,7 @@ class pos_order(osv.osv):
                         continue
 
                     account_move_line_obj.create(cr, uid, {
-                        'name': "Tax" + line.name,
+                        'name': "Tax" + line.name +  " (%s)" % (tax.name),
                         'date': order.date_order[:10],
                         'ref': order.name,
                         'product_id':line.product_id.id,
@@ -785,7 +787,7 @@ class pos_order(osv.osv):
 
             # counterpart
             to_reconcile.append(account_move_line_obj.create(cr, uid, {
-                'name': order.name,
+                'name': "Trade Receivables", #order.name,
                 'date': order.date_order[:10],
                 'ref': order.name,
                 'move_id': move_id,
@@ -799,6 +801,7 @@ class pos_order(osv.osv):
                 'period_id': period,
                 'partner_id': order.partner_id and order.partner_id.id or False
             }, context=context))
+
             self.write(cr, uid, order.id, {'state':'done', 'account_move': move_id}, context=context)
         return True
 
@@ -806,8 +809,7 @@ class pos_order(osv.osv):
         return self.write(cr, uid, ids, {'state': 'payment'}, context=context)
 
     def action_paid(self, cr, uid, ids, context=None):
-        context = context or {}
-        self.create_picking(cr, uid, ids, context=None)
+        self.create_picking(cr, uid, ids, context=context)
         self.write(cr, uid, ids, {'state': 'paid'}, context=context)
         return True
 

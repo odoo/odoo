@@ -27,10 +27,9 @@ class account_journal(osv.osv):
     _columns = {
         'journal_user': fields.boolean('PoS Payment Method', help="Check this box if this journal define a payment method that can be used in point of sales."),
 
-        'opening_control': fields.boolean('Opening Control'),
-        'closing_control': fields.boolean('Closing Control'),
+        'opening_control': fields.boolean('Opening Control', help="If you want the journal should be control at opening, check this option"),
+        'closing_control': fields.boolean('Closing Control', help="If you want the journal should be control at closing, check this option"),
 
-        'internal_account_id' : fields.many2one('account.account', 'Internal Transfers Account', select=1),
     }
     _defaults = {
         'opening_control' : True,

@@ -26,6 +26,23 @@ from tools.translate import _
 import pos_box_entries
 import netsvc
 
+class account_journal(osv.osv):
+    _inherit = 'account.journal'
+
+    def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
+        if not context:
+            context = {}
+
+        session_id = context.get('pos_session_id', False) or False
+
+        if session_id:
+            session = self.pool.get('pos.session').browse(cr, uid, session_id, context=context)
+
+            if session:
+                journal_ids = [journal.id for journal in session.config_id.journal_ids]
+                args += [('id', 'in', journal_ids)]
+
+        return super(account_journal, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=count)
 
 class pos_make_payment(osv.osv_memory):
     _name = 'pos.make.payment'
@@ -90,7 +107,8 @@ class pos_make_payment(osv.osv_memory):
         return False
 
     _columns = {
-        'journal': fields.selection(pos_box_entries.get_journal, "Payment Mode", required=True),
+        #'journal': fields.selection(pos_box_entries.get_journal, "Payment Mode", required=True),
+        'journal_id' : fields.many2one('account.journal', 'Payment Mode', required=True),
         'amount': fields.float('Amount', digits=(16,2), required= True),
         'payment_name': fields.char('Payment Reference', size=32),
         'payment_date': fields.date('Payment Date', required=True),
@@ -98,7 +116,7 @@ class pos_make_payment(osv.osv_memory):
     _defaults = {
         'payment_date': time.strftime('%Y-%m-%d %H:%M:%S'),
         'amount': _default_amount,
-        'journal': _default_journal
+        #'journal': _default_journal
     }
 
 pos_make_payment()
