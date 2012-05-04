@@ -11,8 +11,16 @@
             <field name="model">account.fiscalyear</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Fiscalyear">
-                    <group>
+                <form layout="manual">
+                <div class="oe_form_topbar">
+                    <button name="create_period" states="draft" string="Create Monthly Periods" type="object" icon="terp-document-new"/>
+                    <button name="create_period3" states="draft" string="Create 3 Months Periods" type="object" icon="terp-document-new"/>
+                <div class="oe_right">
+                    <field name="state" select="1" widget="statusbar" nolabel="1" />
+                </div>
+                </div>
+                <sheet string="Fiscalyear" layout="auto">
+                    <group class="oe_form_header">
                     <field name="name"/>
                     <field name="code"/>
                     <field name="date_start"/>
@@ -31,11 +39,7 @@
                         </form>
                     </field>
                     <separator colspan="4" string="States"/>
-                    <group>
-                        <field name="state" select="1" readonly="1"/>
-                        <button name="create_period" states="draft" string="Create Monthly Periods" type="object" icon="terp-document-new"/>
-                        <button name="create_period3" states="draft" string="Create 3 Months Periods" type="object" icon="terp-document-new"/>
-                    </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -92,7 +96,15 @@
             <field name="model">account.period</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Period">
+                <form layout="manual">
+                <div class="oe_form_topbar">
+                    <button name="action_draft" states="done" string="Set to Draft" type="object" icon="gtk-convert" groups="account.group_account_manager"/>
+                <div class="oe_right">
+                    <field name="state" widget="statusbar" nolabel="1"/>
+                </div>
+                </div>
+                <sheet string="Period" layout="auto">
+                <group class="oe_form_header">
                     <field name="name"/>
                     <field name="code"/>
                     <field name="date_start"/>
@@ -100,9 +112,8 @@
                     <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                     <field name="fiscalyear_id" widget="selection"/>
                     <field name="special"/>
-                    <separator colspan="4" string="States"/>
-                    <field name="state"/>
-                    <button name="action_draft" states="done" string="Set to Draft" type="object" icon="gtk-convert" groups="account.group_account_manager"/>
+                    </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -1345,8 +1356,16 @@
             <field name="model">account.move</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Journal Entries">
-                    <group colspan="4" col="6">
+                <form layout="manual">
+                <div class="oe_form_topbar">
+                      <button name="button_validate" states="draft" string="Post" type="object" icon="terp-camera_test"/>
+                      <button name="button_cancel" states="posted" string="Cancel" type="object" icon="gtk-cancel"/>
+                <div class="oe_right">
+                     <field name="state" select="1" widget="statusbar" nolabel="1" />
+                </div>
+                </div>
+                <sheet string="Journal Entries" layout="auto">
+                    <group colspan="4" col="6" class="oe_form_header">
                         <field name="name" readonly="True"/>
                         <field name="ref"/>
                         <field name="to_check"/>
@@ -1455,13 +1474,9 @@
                             </field>
                             <separator colspan="4" string="Internal Note"/>
                             <field name="narration" colspan="4" nolabel="1" height="50"/>
-                            <group col="4" colspan="4">
-                                <field name="state" select="1"/>
-                                <button name="button_cancel" states="posted" string="Cancel" type="object" icon="gtk-cancel"/>
-                                <button name="button_validate" states="draft" string="Post" type="object" icon="terp-camera_test"/>
-                            </group>
                         </page>
                     </notebook>
+                    </sheet>
                 </form>
             </field>
         </record>
