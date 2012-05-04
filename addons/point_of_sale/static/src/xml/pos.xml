@@ -354,15 +354,17 @@
             </table>
         </div>
     </t>
-    <t t-name="pos-actionbar">
+    <t t-name="ActionBarWidget">
         <div class="pos-actionbar">
-            <ul class="pos-actionbar-left-region">
-                <!-- <li class="button">yoyo</li>
-                <li class="button">foo</li>
-                <li class="button rightalign">bar</li> -->
-            </ul>
-
-            <ul class="pos-actionbar-right-region">
+            <div class="pos-actionbar-left-pane">
+                <div class="button help-button">
+                    Help
+                </div>
+                <p class="total">
+                    Total: <span class="value"> 1234 </span>
+                </p>
+            </div>
+            <ul class="pos-actionbar-button-list">
                 <!-- <li class="button">BUTTOOON</li>
                 <li class="button">JEEENKIINS</li>
                 <li class="button rightalign">ARGH</li> -->

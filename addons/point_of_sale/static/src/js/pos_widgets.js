@@ -353,8 +353,8 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
         },
     });
 
-    module.ActionbarWidget = instance.web.Widget.extend({
-        template:'pos-actionbar',
+    module.ActionBarWidget = instance.web.Widget.extend({
+        template:'ActionBarWidget',
         init: function(parent, options){
             this._super(parent,options);
             this.button_list = [];
@@ -370,7 +370,7 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
             if(arguments.length == 1){
                 var button = new module.ActionButtonWidget(this,button_options);
                 this.button_list.push(button);
-                button.appendTo($('.pos-actionbar-right-region'));
+                button.appendTo($('.pos-actionbar-button-list'));
             }else{
                 for(var i = 0; i < arguments.length; i++){
                     this.add_new_button(arguments[i]);
@@ -836,7 +836,7 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
             this.orderView.$element = $('#current-order-content');
             this.orderView.start();
 
-            this.action_bar = new module.ActionbarWidget(null);
+            this.action_bar = new module.ActionBarWidget(null);
             this.action_bar.appendTo($(".point-of-sale #content"));
 
             this.onscreen_keyboard = new module.OnscreenKeyboardWidget(null, {
