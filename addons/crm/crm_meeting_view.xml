@@ -27,7 +27,7 @@
         <field name="arch" type="xml">
             <form string="Meetings">
                 <group col="6" colspan="4">
-                    <field name="name" select="1" string="Summary"
+                    <field name="name" select="1" string="Title"
                            required="1" />
                     <field name="categ_id" widget="selection"
                         string="Meeting Type"
@@ -44,7 +44,7 @@
                     <field name="alarm_id" string="Reminder"
                         widget="selection" />
                     <group colspan="2" col="4" attrs="{'readonly': ['|', ('recurrent_uid','!=',False), ('state','=','done')]}">
-                           <field name="recurrency"/>
+                           <field name="recurrency" string="Recurrence"/>
                     </group>
                 </group>
                 <notebook colspan="4">
@@ -158,14 +158,14 @@
                             </form>
                         </field>
                     </page>
-                    <page string="Recurrency Option" attrs="{'invisible': [('recurrency','=',False)], 'readonly': ['|', ('recurrent_uid','!=',False), ('state','=','done')]}">
+                    <page string="Recurrence Options" attrs="{'invisible': [('recurrency','=',False)], 'readonly': ['|', ('recurrent_uid','!=',False), ('state','=','done')]}">
                         <group col="4" colspan="4" name="rrule">
                             <group col="4" colspan="4">
-                                <field name="rrule_type" string="Recurrency period" />
+                                <field name="rrule_type" string=" Recurrence Pattern" />
                                 <field name="interval" />
 
 
-                                <separator string="End of recurrency" colspan="4"/>
+                                <separator string="End of Recurrence" colspan="4"/>
                                 <field name="end_type" />
                                 <label string=" " colspan="2" />
                                 <newline />

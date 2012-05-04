@@ -177,14 +177,14 @@ class crm_lead(crm_case, osv.osv):
                                 multi='day_close', type="float", store=True),
         'state': fields.selection(crm.AVAILABLE_STATES, 'State', size=16, readonly=True,
                                   help='The state is set to \'Draft\', when a case is created.\
-                                  \nIf the case is in progress the state is set to \'Open\'.\
+                                  \nIf the case is in progress the state is set to \'In progress\'.\
                                   \nWhen the case is over, the state is set to \'Done\'.\
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
         'message_ids': fields.one2many('mail.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
         'subjects': fields.function(_get_email_subject, fnct_search=_history_search, string='Subject of Email', type='char', size=64),
 
         # Only used for type opportunity
-        'probability': fields.float('Probability (%)',group_operator="avg"),
+        'probability': fields.float('Success Rate (%)',group_operator="avg"),
         'planned_revenue': fields.float('Expected Revenue'),
         'ref': fields.reference('Reference', selection=crm._links_get, size=128),
         'ref2': fields.reference('Reference 2', selection=crm._links_get, size=128),
