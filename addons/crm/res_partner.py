@@ -26,21 +26,14 @@ class res_partner(osv.osv):
     """ Inherits partner and adds CRM information in the partner form """
     _inherit = 'res.partner'
 
-    def _opportunity_count(self, cr, uid, ids, field_name, arg, context=None):
-        count = dict.fromkeys(ids, 0)
-        opportunity_pool=self.pool.get('crm.lead')
-        opportunity_ids = opportunity_pool.search(cr, uid, [('partner_id', 'in', ids)])
-        for opportunity in opportunity_pool.browse(cr, uid, opportunity_ids):
-            count[opportunity.partner_id.id] += 1
-        return count
-
-    def _meeting_count(self, cr, uid, ids, field_name, arg, context=None):
-        count = dict.fromkeys(ids, 0)
-        meeting_pool=self.pool.get('crm.meeting')
-        meeting_ids = meeting_pool.search(cr, uid, [('partner_id', 'in', ids)])
-        for meeting in meeting_pool.browse(cr, uid, meeting_ids):
-            count[meeting.partner_id.id] += 1
-        return count
+    def _opportunity_meeting_count(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        for partner in self.browse(cr, uid, ids, context):
+            res[partner.id] = {
+                'opportunity_count': len(partner.opportunity_ids),
+                'meeting_count': len(partner.meeting_ids),
+            }
+        return res
 
     _columns = {
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
@@ -50,13 +43,8 @@ class res_partner(osv.osv):
             'Meetings'),
         'phonecall_ids': fields.one2many('crm.phonecall', 'partner_id',\
             'Phonecalls'),
-        'opportunity_count': fields.function(_opportunity_count , type='integer',string="Opportunity"),
-        'meeting_count': fields.function(_meeting_count , type='integer',string="Meeting"),
-    }
-
-    _defaults = {
-        'opportunity_count': 0,
-        'meeting_count': 0,
+        'opportunity_count': fields.function(_opportunity_meeting_count, string="Opportunity", type='integer', multi='opp_meet'),
+        'meeting_count': fields.function(_opportunity_meeting_count, string="Meeting", type='integer', multi='opp_meet'),
     }
 
     def redirect_partner_form(self, cr, uid, partner_id, context=None):

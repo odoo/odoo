@@ -27,15 +27,16 @@ class product_product(osv.osv):
     _inherit = "product.product"
 
     def _stock_picking_count(self, cr, uid, ids, field_name, arg, context=None):
-        count = dict.fromkeys(ids, 0)
-        stock_picking_pool=self.pool.get('stock.picking')
-        if field_name == 'reception_count':
-        	stock_picking_ids = stock_picking_pool.search(cr, uid, [('move_lines.product_id','in',ids),('type','=','in')])
-        else:
-        	stock_picking_ids = stock_picking_pool.search(cr, uid, [('move_lines.product_id','in',ids),('type','=','out')])
-        for stock_picking in stock_picking_pool.browse(cr, uid, stock_picking_ids):
-            count[stock_picking.move_lines[0].product_id.id] += 1
-        return count
+        res = dict([(id, {'reception_count': 0, 'delivery_count': 0}) for id in ids])
+        picking_pool=self.pool.get('stock.picking')
+        picking_ids = picking_pool.search(cr, uid, [('move_lines.product_id', 'in', ids)])
+        for picking in picking_pool.browse(cr, uid, picking_ids, context):
+            field = 'reception_count' if picking.type == 'in' else 'delivery_count'
+            product_ids = set([line.product_id.id for line in picking.move_lines])
+            for product_id in product_ids:
+                if product_id in ids:
+                    res[product_id][field] += 1
+        return res
 
     def get_product_accounts(self, cr, uid, product_id, context=None):
         """ To get the stock input account, stock output account and stock journal related to product.
@@ -342,8 +343,8 @@ class product_product(osv.osv):
         return res
 
     _columns = {
-        'reception_count': fields.function(_stock_picking_count , type='integer',string="Reception"),
-        'delivery_count': fields.function(_stock_picking_count , type='integer',string="Delivery"),
+        'reception_count': fields.function(_stock_picking_count, string="Reception", type='integer', multi='pickings'),
+        'delivery_count': fields.function(_stock_picking_count, string="Delivery", type='integer', multi='pickings'),
         'qty_available': fields.function(_product_available, multi='qty_available',
             type='float',  digits_compute=dp.get_precision('Product UoM'),
             string='Quantity On Hand',
@@ -415,8 +416,6 @@ class product_product(osv.osv):
 
     _defaults = {
         'valuation': 'manual_periodic',
-        'reception_count': 0,
-        'delivery_count': 0,
     }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):

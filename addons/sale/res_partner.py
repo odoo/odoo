@@ -24,19 +24,16 @@ from tools.translate import _
 
 class res_partner(osv.osv):
     _inherit = 'res.partner'
-    
+
     def _sale_order_count(self, cr, uid, ids, field_name, arg, context=None):
-        count = dict.fromkeys(ids, 0)
-        sale_order_pool=self.pool.get('sale.order')
-        sale_order_ids = sale_order_pool.search(cr, uid, [('partner_id', 'in', ids)])
-        for sale_order in sale_order_pool.browse(cr, uid, sale_order_ids):
-            count[sale_order.partner_id.id] += 1
-        return count
-    
+        res = {}
+        for partner in self.browse(cr, uid, ids, context):
+            res[partner.id] = len(partner.sale_order_ids)
+        return res
+
     _columns = {
-        'sale_order_count': fields.function(_sale_order_count , type='integer',string="Sale Order"),
+        'sale_order_ids': fields.one2many('sale.order', 'partner_id', 'Quotations and Sale Orders'),
+        'sale_order_count': fields.function(_sale_order_count, string='Sale Order', type='integer'),
     }
-    _defaults = {
-        'sale_order_count': 0,
-    }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
