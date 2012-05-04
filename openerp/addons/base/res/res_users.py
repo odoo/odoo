@@ -96,11 +96,6 @@ class groups(osv.osv):
         self.pool.get('ir.model.access').call_cache_clearing_methods(cr)
         return res
 
-    def get_extended_interface_group(self, cr, uid, context=None):
-        data_obj = self.pool.get('ir.model.data')
-        extended_group_data_id = data_obj._get_id(cr, uid, 'base', 'group_extended')
-        return data_obj.browse(cr, uid, extended_group_data_id, context=context).res_id
-
 groups()
 
 def _lang_get(self, cr, uid, context=None):
@@ -155,35 +150,6 @@ class users(osv.osv):
                                          subject=self.get_welcome_mail_subject(cr, uid, context=context),
                                          body=(self.get_welcome_mail_body(cr, uid, context=context) % user))
         return ir_mail_server.send_email(cr, uid, msg, context=context)
-
-    def _set_interface_type(self, cr, uid, ids, name, value, arg, context=None):
-        """Implementation of 'view' function field setter, sets the type of interface of the users.
-        @param name: Name of the field
-        @param arg: User defined argument
-        @param value: new value returned
-        @return:  True/False
-        """
-        if not value or value not in ['simple','extended']:
-            return False
-        group_obj = self.pool.get('res.groups')
-        extended_group_id = group_obj.get_extended_interface_group(cr, uid, context=context)
-        # First always remove the users from the group (avoids duplication if called twice)
-        self.write(cr, uid, ids, {'groups_id': [(3, extended_group_id)]}, context=context)
-        # Then add them back if requested
-        if value == 'extended':
-            self.write(cr, uid, ids, {'groups_id': [(4, extended_group_id)]}, context=context)
-        return True
-
-    def _get_interface_type(self, cr, uid, ids, name, args, context=None):
-        """Implementation of 'view' function field getter, returns the type of interface of the users.
-        @param field_name: Name of the field
-        @param arg: User defined argument
-        @return:  Dictionary of values
-        """
-        group_obj = self.pool.get('res.groups')
-        extended_group_id = group_obj.get_extended_interface_group(cr, uid, context=context)
-        extended_users = group_obj.read(cr, uid, extended_group_id, ['users'], context=context)['users']
-        return dict(zip(ids, ['extended' if user in extended_users else 'simple' for user in ids]))
 
     def onchange_avatar(self, cr, uid, ids, value, context=None):
         if not value:
@@ -264,9 +230,6 @@ class users(osv.osv):
             help="The user's timezone, used to output proper date and time values inside printed reports. "
                  "It is important to set a value for this field. You should use the same timezone "
                  "that is otherwise used to pick and render date and time values: your computer's timezone."),
-        'view': fields.function(_get_interface_type, type='selection', fnct_inv=_set_interface_type,
-                                selection=[('simple','Simplified'),('extended','Extended')],
-                                string='Interface', help="OpenERP offers a simplified and an extended user interface. If you use OpenERP for the first time we strongly advise you to select the simplified interface, which has less features but is easier to use. You can switch to the other interface from the User/Preferences menu at any time."),
         'menu_tips': fields.boolean('Menu Tips', help="Check out this box if you want to always display tips on each menu action"),
         'date': fields.datetime('Latest Connection', readonly=True),
     }
@@ -375,7 +338,7 @@ class users(osv.osv):
     }
 
     # User can write to a few of her own fields (but not her groups for example)
-    SELF_WRITEABLE_FIELDS = ['menu_tips','view', 'password', 'signature', 'action_id', 'company_id', 'user_email', 'name', 'avatar', 'avatar_big']
+    SELF_WRITEABLE_FIELDS = ['menu_tips','password', 'signature', 'action_id', 'company_id', 'user_email', 'name', 'avatar', 'avatar_big']
 
     def write(self, cr, uid, ids, values, context=None):
         if not hasattr(ids, '__iter__'):

@@ -29,3 +29,4 @@ Main revisions and new features
 
    revisions/user_img_specs
    revisions/need_action_specs
+   api/font_style
