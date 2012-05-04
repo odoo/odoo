@@ -92,8 +92,8 @@ class payment_order(osv.osv):
         'mode': fields.many2one('payment.mode', 'Payment mode', select=True, required=1, states={'done': [('readonly', True)]}, help='Select the Payment Mode to be applied.'),
         'state': fields.selection([
             ('draft', 'Draft'),
-            ('open', 'Confirmed'),
             ('cancel', 'Cancelled'),
+            ('open', 'Confirmed'),
             ('done', 'Done')], 'State', select=True,
             help='When an order is placed the state is \'Draft\'.\n Once the bank is confirmed the state is set to \'Confirmed\'.\n Then the order is paid the state is \'Done\'.'),
         'line_ids': fields.one2many('payment.line', 'order_id', 'Payment lines', states={'done': [('readonly', True)]}),
