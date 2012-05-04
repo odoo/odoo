@@ -3036,6 +3036,43 @@ instance.web.form.One2ManyKanbanView = instance.web_kanban.KanbanView.extend({
 });
 }
 
+instance.web.form.FieldMany2Many = instance.web.form.AbstractField.extend({
+    template: "FieldMany2Many",
+    start: function() {
+        $("textarea", this.$element).textext({
+            plugins : 'arrow prompt autocomplete',
+            prompt : "Add one...",
+            autocomplete: {
+                render: function(suggestion) {
+                    return $('<span>', {'data-id': suggestion['id']}).html(suggestion['label']);
+                }
+            },
+        }).bind('getSuggestions', function(e, data) {
+            var list = [
+                    'Basic',
+                    'Closure',
+                    'Cobol',
+                    'Delphi',
+                    'Erlang',
+                    'Fortran',
+                    'Go',
+                    'Groovy',
+                    'Haskel',
+                    'Java',
+                    'JavaScript',
+                    'OCAML',
+                    'PHP',
+                    'Perl',
+                    'Python',
+                    'Ruby',
+                    'Scala'
+                ];
+
+            $(this).trigger('setSuggestions', {result : _.map(list, function(el) {return {id:1, label:el};})});
+        });
+    },
+});
+
 /*
  * TODO niv: clean those deferred stuff, it could be better
  */
@@ -3822,7 +3859,7 @@ instance.web.form.widgets = new instance.web.Registry({
     'datetime' : 'instance.web.form.FieldDatetime',
     'selection' : 'instance.web.form.FieldSelection',
     'many2one' : 'instance.web.form.FieldMany2One',
-    'many2many' : 'instance.web.form.FieldMany2Many61',
+    'many2many' : 'instance.web.form.FieldMany2Many',
     'many2many61' : 'instance.web.form.FieldMany2Many61',
     'one2many' : 'instance.web.form.FieldOne2Many',
     'one2many_list' : 'instance.web.form.FieldOne2Many',
