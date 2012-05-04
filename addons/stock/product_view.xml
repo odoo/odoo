@@ -132,7 +132,7 @@
             view_mode="tree,form,calendar"
             res_model="stock.picking"
             src_model="product.product"
-            context="{'search_default_product_id': [active_id], 'default_product_id': active_id}"
+            context="{'search_default_product_id': [active_id]}"
             domain="[('type','=','in')]"
             />
 
@@ -142,10 +142,9 @@
             view_mode="tree,form,calendar"
             res_model="stock.picking"
             src_model="product.product"
-            context="{'search_default_product_id': [active_id], 'default_product_id': active_id}"
+            context="{'search_default_product_id': [active_id]}"
             domain="[('type', '=', 'out')]"
             />
-		
 
         <record model="ir.ui.view" id="product.product_kanban_view">
             <field name="name">Product Kanban</field>
