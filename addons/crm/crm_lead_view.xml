@@ -193,13 +193,13 @@
                     icon="gtk-go-forward" />
                 <field name="section_id" invisible="context.get('invisible_section', True)" />
                 <field name="user_id" />
-                <field name="state"/>
+                <field name="state" groups="base.group_no_one"/>
                 <button name="case_open" string="Open"
                     states="draft,pending" type="object"
-                    icon="gtk-go-forward"/>
+                    icon="gtk-go-forward" groups="base.group_no_one"/>
                 <button name="case_close" string="Close"
                     states="open,draft,pending" type="object"
-                    icon="gtk-close"/>
+                    icon="gtk-close" groups="base.group_no_one"/>
                 <button name="%(crm.action_crm_lead2opportunity_partner)d"
                     string="Convert to Opportunity"
                     states="draft,open,pending" icon="gtk-index"
@@ -559,7 +559,7 @@
                 <field name="user_id"/>
                 <field name="priority" invisible="1"/>
                 <field name="categ_id" invisible="1"/>
-                <field name="state"/>
+                <field name="state" groups="base.group_no_one"/>
                 <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward" groups="base.group_no_one"/>
                 <button name="case_pending" string="Pending" states="open,draft" type="object" icon="gtk-media-pause" groups="base.group_no_one"/>
                 <button name="case_mark_lost" string="Lost" states="open,pending" type="object" icon="gtk-cancel" groups="base.group_no_one"/>
