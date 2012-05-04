@@ -58,7 +58,7 @@
             <field name="inherit_id" ref="crm.view_crm_case_opportunities_filter"/>
             <field name="arch" type="xml">
                 <filter string="Team" position="after">
-                    <filter string="Referred Partner" icon="terp-personal" domain="[]" context="{'group_by':'partner_assigned_id'}"/>
+                    <filter string="Assigned Partner" icon="terp-personal" domain="[]" context="{'group_by':'partner_assigned_id'}"/>
                 </filter>
 
                 <field name="user_id" position="after">
