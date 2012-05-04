@@ -27,7 +27,7 @@ class pos_sales_user_today(osv.osv_memory):
     _description = 'Sales User Today'
 
     _columns = {
-       'user_id': fields.many2many('res.users', 'sale_user_rel_today', 'user_id', 'uid', 'Salesman'),
+       'user_id': fields.many2many('res.users', 'sale_user_rel_today', 'user_id', 'uid', 'Salesperson'),
     }
 
     def print_report(self, cr, uid, ids, context=None):

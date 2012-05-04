@@ -360,7 +360,7 @@
                             string="Reference"
                             filter_domain="['|', ('number','ilike',self),('origin','ilike',self)]"/>
                         <field name="partner_id"/>
-                        <field name="user_id" widget="selection" string="Salesman">
+                        <field name="user_id" widget="selection" string="Salesperson">
                             <filter domain="[('user_id','=',uid)]" help="My invoices" icon="terp-personal" />
                         </field>
                     </group>

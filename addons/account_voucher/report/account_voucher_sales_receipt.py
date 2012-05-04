@@ -37,7 +37,7 @@ class sale_receipt_report(osv.osv):
         'journal_id': fields.many2one('account.journal', 'Journal', readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
-        'user_id': fields.many2one('res.users', 'Salesman', readonly=True),
+        'user_id': fields.many2one('res.users', 'Salesperson', readonly=True),
         'price_total': fields.float('Total Without Tax', readonly=True),
         'price_total_tax': fields.float('Total With Tax', readonly=True),
         'nbr':fields.integer('# of Voucher Lines', readonly=True),
