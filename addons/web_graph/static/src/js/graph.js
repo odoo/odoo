@@ -338,6 +338,8 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
             charts.attachEvent("onItemClick", function(id) {
                 self.open_list_view(charts.get(id));
             });
+            //Fixed IE rotation text issue as IE doesn't support text transform rotation.
+            jQuery(self.$element.find(".dhx_axis_item_x")).css('filter', 'progid:DXImageTransform.Microsoft.BasicImage(rotation=0)');
         };
         if (this.renderer) {
             clearTimeout(this.renderer);
