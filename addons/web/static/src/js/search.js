@@ -880,12 +880,26 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
      * @param {instance.web.SearchView} view view in which the filters are contained
      */
     init: function (filters, view) {
+        // If all filters are group_by and we're not initializing a GroupbyGroup,
+        // create a GroupbyGroup instead of the current FilterGroup
+        if (!(this instanceof instance.web.search.GroupbyGroup) &&
+              _(filters).all(function (f) {
+                  return f.attrs.context && f.attrs.context.group_by; })) {
+            return new instance.web.search.GroupbyGroup(filters, view);
+        }
         this._super(view);
         this.filters = filters;
     },
     start: function () {
         this.$element.on('click', 'li', this.proxy('toggle_filter'));
         return $.when(null);
+    },
+    make_facet: function (values) {
+        return {
+            category: _t("Filter"),
+            values: values,
+            field: this
+        }
     },
     facet_for_defaults: function (defaults) {
         var fs = _(this.filters).chain()
@@ -896,11 +910,7 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
                         value: f};
             }).value();
         if (_.isEmpty(fs)) { return $.when(null); }
-        return $.when({
-            category: _t("Filter"),
-            values: fs,
-            field: this
-        });
+        return $.when(this.make_facet(fs));
     },
     /**
      * Fetches contexts for all enabled filters in the group
@@ -957,14 +967,37 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
         this.toggle(this.filters[$(e.target).index()]);
     },
     toggle: function (filter) {
-        this.view.query.toggle({
-            category: _t("Filter"),
-            field: this,
-            values: [{
-                label: filter.attrs.string || filter.attrs.name,
-                value: filter
-            }]
-        });
+        this.view.query.toggle(this.make_facet([{
+            label: filter.attrs.string || filter.attrs.name,
+            value: filter
+        }]));
+    }
+});
+instance.web.search.GroupbyGroup = instance.web.search.FilterGroup.extend({
+    init: function (filters, view) {
+        this._super(filters, view);
+        // Not flanders: facet unicity is handled through the
+        // (category, field) pair of facet attributes. This is all well and
+        // good for regular filter groups where a group matche a facet, but for
+        // groupby we want a single facet. So cheat: add an attribute on the
+        // view which proxies to the first GroupbyGroup, so it can be used
+        // for every GroupbyGroup and still provides the various methods needed
+        // by the search view. Use weirdo name to avoid risks of conflicts
+        if (!this.getParent()._s_groupby) {
+            this.getParent()._s_groupby = {
+                help: "See GroupbyGroup#init",
+                get_context: this.proxy('get_context'),
+                get_domain: this.proxy('get_domain'),
+                get_groupby: this.proxy('get_groupby')
+            }
+        }
+    },
+    make_facet: function (values) {
+        return {
+            category: _t("GroupBy"),
+            values: values,
+            field: this.getParent()._s_groupby
+        };
     }
 });
 instance.web.search.Filter = instance.web.search.Input.extend(/** @lends instance.web.search.Filter# */{
