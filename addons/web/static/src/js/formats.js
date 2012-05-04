@@ -136,7 +136,7 @@ instance.web.format_value = function (value, descriptor, value_if_empty) {
             return value[1];
         case 'one2many':
             // this is to show count of ids related in this o2m relation instead the list of them for example will show this:(5) instead of this 1,2,5,8,76
-            count_ids='('+value.length.toString()+')'
+            count_ids = '('+value.length.toString()+')'
             return count_ids;
         case 'datetime':
             if (typeof(value) == "string")
