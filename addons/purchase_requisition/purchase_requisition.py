@@ -33,7 +33,7 @@ class purchase_requisition(osv.osv):
     _description="Purchase Requisition"
     _columns = {
         'name': fields.char('Requisition Reference', size=32,required=True),
-        'origin': fields.char('Origin', size=32),
+        'origin': fields.char('Source', size=32),
         'date_start': fields.datetime('Requisition Date'),
         'date_end': fields.datetime('Requisition Deadline'),
         'user_id': fields.many2one('res.users', 'Responsible'),
