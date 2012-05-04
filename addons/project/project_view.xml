@@ -437,7 +437,7 @@
                     <field name="date_start" invisible="1" groups="base.group_no_one"/>
                     <field name="date_end" invisible="1" groups="base.group_no_one"/>
                     <field name="progress" widget="progressbar" invisible="context.get('set_visible',False)"/>
-                    <field name="state" invisible="context.get('set_visible',False)"/>
+                    <field name="state" invisible="context.get('set_visible',False)" groups="base.group_no_one"/>
                     <button name="do_open" states="pending,draft,done,cancelled" string="Start Task" type="object" icon="gtk-media-play" help="For changing to open state" invisible="context.get('set_visible',False)" groups="base.group_no_one"/>
                     <button name="%(action_project_task_delegate)d" states="pending,open,draft" string="Delegate" type="action" icon="terp-personal" help="For changing to delegate state"/>
                     <button name="action_close" states="draft,pending,open" string="Done" type="object" icon="terp-dialog-close" help="For changing to done state" groups="base.group_no_one"/>
