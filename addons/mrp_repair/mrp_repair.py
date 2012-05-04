@@ -122,13 +122,13 @@ class mrp_repair(osv.osv):
         'prodlot_id': fields.many2one('stock.production.lot', 'Lot Number', select=True, domain="[('product_id','=',product_id)]"),
         'state': fields.selection([
             ('draft','Quotation'),
+            ('cancel','Cancel'),
             ('confirmed','Confirmed'),
-            ('ready','Ready to Repair'),
             ('under_repair','Under Repair'),
+            ('ready','Ready to Repair'),
             ('2binvoiced','To be Invoiced'),
             ('invoice_except','Invoice Exception'),
-            ('done','Done'),
-            ('cancel','Cancel')
+            ('done','Done')
             ], 'State', readonly=True,
             help=' * The \'Draft\' state is used when a user is encoding a new and unconfirmed repair order. \
             \n* The \'Confirmed\' state is used when a user confirms the repair order. \
