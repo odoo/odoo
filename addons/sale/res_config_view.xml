@@ -33,6 +33,7 @@
                     <field name="module_warning"/>
                     <field name="module_sale_journal"/>
                     <field name="group_multiple_shops"/>
+                    <field name="decimal_precision_sale"/>
                     <field name="default_picking_policy" attrs="{'invisible':[('group_invoice_deli_orders','=',False)]}"/>
                     <separator string="Contracts" colspan="4"/>
                     <field name="module_account_analytic_analysis" on_change="onchange_timesheet(module_account_analytic_analysis)"/>
@@ -53,6 +54,7 @@
             <field name="arch" type="xml">
                 <group name="analytic_accounting" position="after">
                     <field name="group_analytic_account_for_sales"/>
+                    <field name="module_sale_analytic_plans"/>
                 </group>
             </field>
         </record>

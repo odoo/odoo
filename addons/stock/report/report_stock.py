@@ -82,13 +82,13 @@ stock_report_prodlots()
 
 class stock_report_tracklots(osv.osv):
     _name = "stock.report.tracklots"
-    _description = "Stock report by tracking lots"
+    _description = "Stock report by Logistic Serial Number"
     _auto = False
     _columns = {
         'name': fields.float('Quantity', readonly=True),
         'location_id': fields.many2one('stock.location', 'Location', readonly=True, select=True),
         'product_id': fields.many2one('product.product', 'Product', readonly=True, select=True),
-        'tracking_id': fields.many2one('stock.tracking', 'Tracking lot', readonly=True, select=True),
+        'tracking_id': fields.many2one('stock.tracking', 'Logistic Serial Number', readonly=True, select=True),
     }
 
     def init(self, cr):

@@ -22,11 +22,11 @@
                     </div>
                     <sheet layout="auto">
                         <field name="has_default_company" invisible="1" />
+                        <field name="has_chart_of_accounts" invisible="1"/>
                         <field name="company_id" widget="selection" on_change="onchange_company_id(company_id)"
                             attrs="{'invisible': [('has_default_company', '=', True)]}"/>
                         <field name="expects_chart_of_accounts"/>
 
-                        <field name="has_chart_of_accounts" invisible="1"/>
                         <group string="No Chart of Accounts exists for this Company" colspan="4" attrs="{'invisible': ['|', ('expects_chart_of_accounts','=',False), ('has_chart_of_accounts','=',True)]}">
                             <label string="Please select a chart template to install a chart of accounts." colspan="4"/>
                             <field name="chart_template_id" widget="selection" on_change="onchange_chart_template_id(chart_template_id)" domain="[('visible','=', True)]"/>
@@ -57,14 +57,15 @@
                             <field name ="complete_tax_set" invisible="1"/>
                             <newline/>
                             <group colspan="2" col="2">
-                                <field name="default_sale_tax" domain="[('type_tax_use','=','sale'), ('company_id','=',company_id)]"/>
+                                <field name="default_sale_tax" domain="[('type_tax_use','=','sale'), ('company_id','=',company_id)]" attrs="{'invisible': ['|', ('expects_chart_of_accounts','=',True), ('has_fiscal_year','=',False)]}"/>
                                 <field name="module_account_accountant"/>
                                 <field name="module_account_asset"/>
                             </group>
                             <group colspan="2" col="2">
-                                <field name="default_purchase_tax" domain="[('type_tax_use','=','purchase'), ('company_id','=',company_id)]"/>
+                                <field name="default_purchase_tax" domain="[('type_tax_use','=','purchase'), ('company_id','=',company_id)]" attrs="{'invisible': ['|', ('expects_chart_of_accounts','=',True), ('has_fiscal_year','=',False)]}"/>
                                 <field name="currency_id" widget="selection"/>
                                 <field name="module_account_budget"/>
+                                <field name="decimal_precision_account"/>
                             </group>
                         </group>
                         <group colspan="2" col="2">
@@ -97,10 +98,9 @@
                             <field name="company_footer"/>
                             <field name="module_account_check_writing"/>
                         </group>
-                        <group colspan="2" col="2">
-                            <separator string="Analytic Accounting" colspan="2"/>
-                            <group name="analytic_accounting" colspan="2"/>
-                            <field name="module_account_analytic_plans"/>
+                        <group colspan="4" col="4">
+                            <separator string="Analytic Accounting" colspan="4"/>
+                            <group name="analytic_accounting" colspan="4"/>
                         </group>
                     </sheet>
                 </form>

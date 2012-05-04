@@ -36,9 +36,10 @@ class account_config_settings(osv.osv_memory):
     _columns = {
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'has_default_company': fields.boolean('Has default company', readonly=True),
-
+        'decimal_precision_account': fields.integer('Decimal Precision on Account'),
         'expects_chart_of_accounts': fields.related('company_id', 'expects_chart_of_accounts', type='boolean',
-            string='Chart of Accounts for this Company'),
+            string='Chart of Accounts for this Company', 
+            help=""" Check  this box if this company is a legal entity."""),
         'currency_id': fields.related('company_id', 'currency_id', type='many2one', relation='res.currency', required=True,
             string='Default Company Currency', help="Default Company Currency of the company."),
         'paypal_account': fields.related('company_id', 'paypal_account', type='char', size=128,
@@ -78,8 +79,7 @@ class account_config_settings(osv.osv_memory):
             help="""This allows you to check writing and printing.
                 This installs the module account_check_writing."""),
         'module_account_accountant': fields.boolean('Accountant Features',
-            help="""This allows you to access all the accounting features, like the journal items and the chart of accounts.
-                This installs the module account_accountant."""),
+            help="""If you do not check this box, you will be able to  do Invoicing & Payments, but not accounting (Journal Items, Chart of  Accounts, ...)."""),
         'module_account_asset': fields.boolean('Assets Management',
             help="""This allows you to manage the assets owned by a company or a person.
                 It keeps track of the depreciation occurred on those assets, and creates account move for those depreciation lines.
@@ -101,9 +101,6 @@ class account_config_settings(osv.osv_memory):
         'module_account_followup': fields.boolean('Manage Customer Payment Follow-Ups',
             help="""This allows to automate letters for unpaid invoices, with multi-level recalls.
                 This installs the module account_followup."""),
-        'module_account_analytic_plans': fields.boolean('Support Multiple Analytic Plans',
-            help="""This allows to use several analytic plans, according to the general journal.
-                This installs the module account_analytic_plans."""),
         'module_account_invoice_layout': fields.boolean('Allow notes and subtotals',
             help="""This provides some features to improve the layout of invoices.
                 It gives you the possibility to:
@@ -115,7 +112,6 @@ class account_config_settings(osv.osv_memory):
         'group_proforma_invoices': fields.boolean('Allow Pro-forma Invoices',
             implied_group='account.group_proforma_invoices',
             help="Allows you to put invoices in pro-forma state."),
-
         'default_sale_tax': fields.many2one('account.tax', 'Default Sale Tax'),
         'default_purchase_tax': fields.many2one('account.tax', 'Default Purchase Tax'),
     }
@@ -137,6 +133,21 @@ class account_config_settings(osv.osv_memory):
         'period': 'month',
     }
 
+    def get_default_dp(self, cr, uid, fields, context=None):
+        acc_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'product','decimal_account')[1]
+        dec_id =self.pool.get('decimal.precision').browse(cr, uid, acc_id,context=context)
+        return {
+            'decimal_precision_account': dec_id.digits,
+        }
+        
+    def set_default_dp(self, cr, uid, ids, context=None):
+        config = self.browse(cr, uid, ids[0], context)
+        acc_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'product', 'decimal_account')[1]
+        dec_id =self.pool.get('decimal.precision').browse(cr, uid, acc_id,context=context) 
+        dec_id.write({
+            'digits': config.decimal_precision_account,
+        })
+        
     def create(self, cr, uid, values, context=None):
         id = super(account_config_settings, self).create(cr, uid, values, context)
         # Hack: to avoid some nasty bug, related fields are not written upon record creation.

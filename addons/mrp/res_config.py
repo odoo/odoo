@@ -28,7 +28,7 @@ class mrp_config_settings(osv.osv_memory):
     _inherit = 'res.config.settings'
 
     _columns = {
-        'module_stock_planning': fields.boolean('Master Production Schedule',
+        'module_stock_planning': fields.boolean('Master Manufacturing Order Schedule',
             help ="""This allows to create a manual procurement plan apart of the normal MRP scheduling,
                 which works automatically based on minimum stock rules.
                 This installs the module stock_planning."""),
@@ -41,27 +41,33 @@ class mrp_config_settings(osv.osv_memory):
                     * Repair quotation report
                     * Notes for the technician and for the final customer.
                 This installs the module mrp_repair."""),
-        'module_mrp_operations': fields.boolean("Track Dates in Work Order Operations",
+        'module_mrp_operations': fields.boolean("Detailed Planning of Work Orders",
             help="""This allows to add state, date_start,date_stop in production order operation lines (in the "Work Centers" tab).
                 This installs the module mrp_operations."""),
-        'module_mrp_subproduct': fields.boolean("Produce Different Products from one Production",
+        'module_mrp_subproduct': fields.boolean("Produce Several  Product from One Manufacturing Order",
             help="""You can configure sub-products in the bill of material.
                 Without this module: A + B + C -> D.
                 With this module: A + B + C -> D + E.
                 This installs the module mrp_subproduct."""),
-        'module_mrp_jit': fields.boolean("Just in Time Scheduling",
+        'module_mrp_jit': fields.boolean("Real-Time Scheduling",
             help="""This allows Just In Time computation of procurement orders.
                 All procurement orders will be processed immediately, which could in some
                 cases entail a small performance impact.
                 This installs the module mrp_jit."""),
+        'module_stock_no_autopicking': fields.boolean("Manual Picking to Fulfill Manufacturing Orders",
+            help="""This module allows an intermediate picking process to provide raw materials to production orders.
+                For example to manage production made by your suppliers (sub-contracting).
+                To achieve this, set the assembled product which is sub-contracted to "No Auto-Picking"
+                and put the location of the supplier in the routing of the assembly operation.
+                This installs the module stock_no_autopicking."""),                
         'group_mrp_routings': fields.boolean("Manage Routings and Work Orders",
             implied_group='mrp.group_mrp_routings',
             help="""Routings allow you to create and manage the manufacturing operations that should be followed
                 within your work centers in order to produce a product. They are attached to bills of materials
                 that will define the required raw materials."""),
-        'group_mrp_properties': fields.boolean("Manage Properties",
+        'group_mrp_properties': fields.boolean("Allow Several BoMs per Product",
             implied_group='product.group_mrp_properties',
-            help="""Allows to define specific property that can be assigned to your bill of materials."""),
+            help="""The selection of the right Bill of Material to use will depend on the  properties specified on the sale order and the Bill of Material."""),
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

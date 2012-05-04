@@ -26,13 +26,8 @@ class stock_config_settings(osv.osv_memory):
     _inherit = 'res.config.settings'
 
     _columns = {
-        'module_stock_no_autopicking': fields.boolean("Force Picking before Manufactoring Orders",
-            help="""This module allows an intermediate picking process to provide raw materials to production orders.
-                For example to manage production made by your suppliers (sub-contracting).
-                To achieve this, set the assembled product which is sub-contracted to "No Auto-Picking"
-                and put the location of the supplier in the routing of the assembly operation.
-                This installs the module stock_no_autopicking."""),
-        'module_claim_from_delivery': fields.boolean("Track Claims from Delivery",
+                        
+        'module_claim_from_delivery': fields.boolean("Allows Claims on Delivery Orders",
             help="""Adds a Claim link to the delivery order.
                 This installs the module claim_from_delivery."""),
         'module_stock_invoice_directly': fields.boolean("Invoice Directly from the Picking",
@@ -80,5 +75,5 @@ class stock_config_settings(osv.osv_memory):
             implied_group='product.group_product_variant',
             help="""This allows to configure and use Product Variant."""),                
     }
-
+    
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

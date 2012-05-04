@@ -47,7 +47,7 @@
                     <button name="%(stock.action_view_stock_inventory_line_split)d"
                             string="Split inventory lines" groups="stock.group_inventory_valuation"
                             type="action" icon="gtk-justify-fill"/>
-                    <field name="location_id"/>
+                    <field name="location_id" groups="stock.group_locations"/>
                 </tree>
             </field>
         </record>
@@ -116,7 +116,7 @@
                     <page string="General Informations">
                         <field colspan="4" name="inventory_line_id" nolabel="1" widget="one2many_list">
                             <tree string="Products" editable="bottom">
-                                <field domain="[('usage','=','internal')]" name="location_id"/>
+                                <field domain="[('usage','=','internal')]" name="location_id" />
                                 <field context="{'location':location_id, 'uom':product_uom, 'to_date':parent.date}" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom,parent.date)"  domain="[('type','&lt;&gt;','service')]"/>
                                 <field name="product_qty"/>
                                 <field name="product_uom" groups="product.group_uom"/>
@@ -159,8 +159,8 @@
                                         icon="terp-stock_effects-object-colorize"
                                         context="{'inventory_id':parent.id}"
                                         states="draft,done,cancel"/>
-                                    <field name="location_id"/>
-                                    <field name="location_dest_id"/>
+                                    <field name="location_id" groups="stock.group_locations"/>
+                                    <field name="location_dest_id" groups="stock.group_locations"/>
                                     <field name="date" string="Date"/>
                                     <field name="state"  invisible="True"/>
                                 </tree>
@@ -349,8 +349,8 @@
                                     <field name="tracking_id" groups="stock.group_tracking_lot"/>
                                     <field name="date"/>
                                     <field name="prodlot_id"/>
-                                    <field name="location_id"/>
-                                    <field name="location_dest_id"/>
+                                    <field name="location_id" groups="stock.group_locations"/>
+                                    <field name="location_dest_id" groups="stock.group_locations"/>
                                     <field name="state"/>
                                 </tree>
                              </field>
@@ -429,8 +429,8 @@
                     <field name="tracking_id" groups="stock.group_tracking_lot"/>
                     <field name="product_packaging" domain="[('product_id','=',product_id)]" groups="product.group_stock_packaging"/>
                     <field name="picking_id"/>
-                    <field name="location_id" />
-                    <field name="location_dest_id" />
+                    <field name="location_id" groups="stock.group_locations"/>
+                    <field name="location_dest_id" groups="stock.group_locations"/>
                     <field name="create_date" groups="base.group_no_one"/>
                     <field name="date" string="Date" groups="base.group_no_one"/>
                     <field name="date_expected" string="Date Expected"/>
@@ -453,8 +453,8 @@
                     <field name="tracking_id" groups="stock.group_tracking_lot"/>
                     <field name="product_packaging" domain="[('product_id','=',product_id)]" groups="product.group_stock_packaging"/>
                     <field name="picking_id"/>
-                    <field name="location_id" />
-                    <field name="location_dest_id" />
+                    <field name="location_id" groups="stock.group_locations"/>
+                    <field name="location_dest_id" groups="stock.group_locations"/>
                     <field name="create_date" groups="base.group_no_one"/>
                     <field name="date" string="Date" groups="base.group_no_one"/>
                      <field name="date_expected" string="Date Expected"/>
@@ -505,7 +505,7 @@
                         <separator string="Location" colspan="2"/>
                         <field name="name"/>
                         <field name="usage"/>
-                        <field name="location_id"/>
+                        <field name="location_id" groups="stock.group_locations"/>
                     </group>
                     <group col="4" colspan="2">
                         <separator string="Additional Information" colspan="4"/>
@@ -755,20 +755,20 @@
                                         <field groups="product.group_uos" name="product_uos" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)" colspan="4"/>
                                         <field name="product_packaging" groups="product.group_stock_packaging" domain="[('product_id','=',product_id)]" colspan="4"/>
                                     </group>
-
+									
                                     <group colspan="2" col="2">
                                         <separator string="Locations" colspan="2" />
-                                        <field name="location_id" domain="[('usage','&lt;&gt;','view')]" />
-                                        <field name="location_dest_id" domain="[('usage','=','internal')]" />
+                                        <field name="location_id" domain="[('usage','&lt;&gt;','view')]"/>
+                                        <field name="location_dest_id" domain="[('usage','=','internal')]"/>
                                     </group>
-
+									
                                     <group colspan="2" col="2">
                                         <separator string="Dates" colspan="2" />
                                         <field name="create_date" invisible="1"/>
                                         <field name="date"/>
                                         <field name="date_expected" on_change="onchange_date(date,date_expected)"/>
                                     </group>
-
+									
                                     <group colspan="2" col="4" groups="stock.group_tracking_lot">
                                         <separator string="Traceability" colspan="4" groups="stock.group_tracking_lot"/>
                                         <field name="tracking_id" groups="stock.group_tracking_lot"  colspan="3"/>
@@ -924,7 +924,7 @@
                                         icon="terp-stock_effects-object-colorize"
                                         groups="product.group_stock_packaging"
                                         states="draft,assigned,confirmed"/>
-                                    <field name="location_id"/>
+                                    <field name="location_id" groups="stock.group_locations"/>
                                     <field name="date"/>
                                     <field name="state"/>
                                     <button name="%(action_partial_move_server)d" string="Process" type="action" states="confirmed,assigned" icon="gtk-go-forward"/>
@@ -947,17 +947,17 @@
 
                                     <group colspan="2" col="2">
                                         <separator string="Locations" colspan="2" />
-                                        <field name="location_id" domain="[('usage','=','internal')]" />
-                                        <field name="location_dest_id" domain="[('usage','&lt;&gt;','view')]" />
+                                        <field name="location_id" domain="[('usage','=','internal')]"/>
+                                        <field name="location_dest_id" domain="[('usage','&lt;&gt;','view')]"/>
                                     </group>
-
+									
                                     <group colspan="2" col="2">
                                         <separator string="Dates" colspan="2" />
                                         <field name="create_date" invisible="1"/>
                                         <field name="date"/>
                                         <field name="date_expected" on_change="onchange_date(date,date_expected)"/>
                                     </group>
-
+									
                                     <group colspan="2" col="4">
                                         <separator string="Traceability" colspan="4" groups="stock.group_tracking_lot"/>
                                         <field name="tracking_id" groups="stock.group_tracking_lot" colspan="3" />
@@ -1143,7 +1143,7 @@
                                         groups="product.group_stock_packaging"
                                         icon="terp-stock_effects-object-colorize"
                                         states="draft,assigned,confirmed"/>
-                                    <field name="location_dest_id"/>
+                                    <field name="location_dest_id" groups="stock.group_locations"/>
                                     <field name="state"/>
                                 </tree>
                                 <form string="Stock Moves">
@@ -1164,17 +1164,17 @@
 
                                     <group colspan="2" col="2">
                                         <separator string="Locations" colspan="2" />
-                                        <field name="location_id" domain="[('usage','&lt;&gt;','view')]" />
-                                        <field name="location_dest_id" domain="[('usage','=','internal')]" />
+                                        <field name="location_id" domain="[('usage','&lt;&gt;','view')]"/>
+                                        <field name="location_dest_id" domain="[('usage','=','internal')]"/>
                                     </group>
-
+									
                                     <group colspan="2" col="2">
                                         <separator string="Dates" colspan="2" />
                                         <field name="create_date" invisible="1"/>
                                         <field name="date"/>
                                         <field name="date_expected" on_change="onchange_date(date,date_expected)"/>
                                     </group>
-
+									
                                     <group colspan="2" col="4">
                                         <separator string="Traceability" colspan="4" groups="stock.group_tracking_lot"/>
                                         <field name="tracking_id" groups="stock.group_tracking_lot" colspan="3" />
@@ -1383,8 +1383,8 @@
                         groups="product.group_stock_packaging"
                         icon="terp-stock_effects-object-colorize"
                         states="draft,assigned,confirmed,done"/>
-                    <field name="location_id"/>
-                    <field name="location_dest_id"/>
+                    <field name="location_id" groups="stock.group_locations"/>
+                    <field name="location_dest_id" groups="stock.group_locations"/>
                     <field name="date" groups="base.group_no_one"/>
                     <field name="date_expected"/>
                     <field name="state"/>
@@ -1411,8 +1411,8 @@
                                 icon="gtk-convert" context="{'scrap': True}"
                                 states="draft,waiting,confirmed,assigned" colspan="1"/>
                         <newline/>
-                        <field name="location_id"/>
-                        <field name="location_dest_id"/>
+                        <field name="location_id" groups="stock.group_locations"/>
+                        <field name="location_dest_id" groups="stock.group_locations"/>
                         <field name="partner_id" context="{'contact_display':'partner'}"/>
 
                     </group>
@@ -1597,8 +1597,8 @@
                                 icon="gtk-convert" context="{'scrap': True}"
                                 states="draft,waiting,confirmed,assigned" colspan="1"/>
                         <newline/>
-                        <field name="location_id"/>
-                        <field name="location_dest_id"/>
+                        <field name="location_id" groups="stock.group_locations"/>
+                        <field name="location_dest_id" groups="stock.group_locations"/>
                         <field name="partner_id"/>
 
                     </group>

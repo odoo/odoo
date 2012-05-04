@@ -41,7 +41,8 @@ When creating invoices from picking, OpenERP is able to add and compute the ship
         'wizard/delivery_sale_order_view.xml',
         'delivery_report.xml',
         'delivery_view.xml',
-        'partner_view.xml'
+        'partner_view.xml',
+        'res_config_view.xml'
     ],
     'demo_xml': ['delivery_demo.xml'],
     'test': [

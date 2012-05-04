@@ -136,6 +136,9 @@ module named account_voucher.
         'demo/account_invoice_demo.xml',
 #        'account_unit_test.xml',
     ],
+    'data_xml':['data/configurable_account_chart.xml'
+        ],
+    
     'test': [
         'test/account_customer_invoice.yml',
         'test/account_supplier_invoice.yml',

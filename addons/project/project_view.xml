@@ -239,10 +239,10 @@
                     <group colspan="6" col="6">
                         <field name="name" select="1"/>
                         <field name="project_id" select="1"  on_change="onchange_project(project_id)"/>
-                        <field name="total_hours" widget="float_time"/>
+                        <field name="total_hours" widget="float_time" groups="project.group_tasks_work_on_tasks"/>
                         <field name="date_deadline" attrs="{'readonly':[('state','in',['done', 'cancelled'])]}"/>
                         <field name="user_id" select="1" attrs="{'readonly':[('state','in',['done', 'cancelled'])]}"/>
-                        <field name="progress" widget="progressbar"/>
+                        <field name="progress" widget="progressbar" groups="project.group_tasks_work_on_tasks"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Information">
@@ -251,18 +251,19 @@
                                     name="planned_hours"
                                     widget="float_time"
                                     attrs="{'readonly':[('state','!=','draft')]}"
+                                    groups="project.group_time_work_estimation_tasks"									
                                     on_change="onchange_planned(planned_hours, effective_hours)"/>
                                 <field
                                     name="effective_hours"
-                                    widget="float_time" invisible="1"/>
+                                    widget="float_time" invisible="1" groups="project.group_tasks_work_on_tasks"/>
                             </group>
                             <group col="3" colspan="2">
-                                <field name="remaining_hours" widget="float_time" attrs="{'readonly':[('state','!=','draft')]}" colspan="2"/>
+                                <field name="remaining_hours" widget="float_time" attrs="{'readonly':[('state','!=','draft')]}" colspan="2" groups="project.group_time_work_estimation_tasks"/>
                                 <button name="%(action_project_task_reevaluate)d" string="Reevaluate" type="action" colspan="1" target="new" states="open,pending" icon="gtk-edit"/>
                             </group>
 
                             <field colspan="4" name="description" nolabel="1"  attrs="{'readonly':[('state','=','done')]}"/>
-                            <field colspan="4" name="work_ids" nolabel="1" attrs="{'readonly':[('state','in',['done','draft'])]}">
+                            <field colspan="4" name="work_ids" nolabel="1" attrs="{'readonly':[('state','in',['done','draft'])]}" groups="project.group_tasks_work_on_tasks">
                                 <tree string="Task Work" editable="top">
                                     <field name="name" />
                                     <field name="hours" widget="float_time" sum="Spent Hours"/>
@@ -332,7 +333,7 @@
                     <field name="sequence"/>
                     <field name="state"/>
                     <field name="kanban_state"/>
-                    <field name="remaining_hours" sum="Remaining Time"/>
+                    <field name="remaining_hours" sum="Remaining Time" groups="project.group_time_work_estimation_tasks"/>
                     <field name="date_deadline"/>
                     <templates>
                         <t t-name="task_details">
@@ -422,9 +423,9 @@
                     <field name="user_id" invisible="context.get('user_invisible', False)"/>
                     <field name="delegated_user_id" invisible="context.get('show_delegated', True)"/>
                     <field name="total_hours" invisible="1"/>
-                    <field name="planned_hours" invisible="context.get('set_visible',False)"/>
+                    <field name="planned_hours" invisible="context.get('set_visible',False)" groups="project.group_time_work_estimation_tasks"/>
                     <field name="effective_hours" widget="float_time" sum="Spent Hours" invisible="1"/>
-                    <field name="remaining_hours" widget="float_time" sum="Remaining Hours" on_change="onchange_remaining(remaining_hours,planned_hours)" invisible="context.get('set_visible',False)"/>
+                    <field name="remaining_hours" widget="float_time" sum="Remaining Hours" on_change="onchange_remaining(remaining_hours,planned_hours)" invisible="context.get('set_visible',False)" groups="project.group_time_work_estimation_tasks"/>
                     <field name="date_deadline" invisible="context.get('deadline_visible',True)"/>
                     <field name="type_id" invisible="context.get('set_visible',False)"/>
                     <button name="next_type" invisible="context.get('set_visible',False)"
