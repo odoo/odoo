@@ -535,14 +535,6 @@ stock_tracking()
 #----------------------------------------------------------
 # Stock Picking
 #----------------------------------------------------------
-PICK_STATE = [
-            ('draft', 'Draft'),
-            ('auto', 'Waiting Another Operation'),
-            ('confirmed', 'Waiting Availability'),
-            ('assigned', 'Ready to Process'),
-            ('done', 'Done'),
-            ('cancel', 'Cancelled'),
-]
 class stock_picking(osv.osv):
     _name = "stock.picking"
     _inherit = ['mail.thread']
@@ -615,19 +607,6 @@ class stock_picking(osv.osv):
             res[pick]['max_date'] = dt2
         return res
     
-    def _tooltip_picking_state(self, state=None):
-        # Update the tooltip of state field based on shipment type e.g: Delivery, Reception and Internal Transfer
-        if state is None:
-            state = PICK_STATE
-        _tooltip_state_assigned = state.get('assigned', False)
-        _tooltip_state_done = state.get('done', False)
-        return _("* Draft: not confirmed yet and will not be scheduled until confirmed\n"\
-                 "* Waiting Another Operation: waiting for another move to proceed before it becomes automatically available (e.g. in Make-To-Order flows)\n"\
-                 "* Waiting Availability: still waiting for the availability of products\n"\
-                 "* %s: products reserved, simply waiting for confirmation.\n"\
-                 "* %s: has been processed, can't be modified or cancelled anymore\n"\
-                 "* Cancelled: has been cancelled, can't be confirmed anymore") % (_tooltip_state_assigned, _tooltip_state_done)
-
     def create(self, cr, user, vals, context=None):
         if ('name' not in vals) or (vals.get('name')=='/'):
             seq_obj_name =  'stock.picking.' + vals['type']
@@ -649,7 +628,20 @@ class stock_picking(osv.osv):
                 "if you subcontract the manufacturing operations.", select=True),
         'location_dest_id': fields.many2one('stock.location', 'Dest. Location', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="Location where the system will stock the finished products.", select=True),
         'move_type': fields.selection([('direct', 'Partial'), ('one', 'All at once')], 'Delivery Method', required=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="It specifies goods to be deliver partially or all at once"),
-        'state': fields.selection(PICK_STATE, 'State', readonly=True, select=True),
+        'state': fields.selection([
+            ('draft', 'Draft'),
+            ('auto', 'Waiting Another Operation'),
+            ('confirmed', 'Waiting Availability'),
+            ('assigned', 'Ready to Transfer'),
+            ('done', 'Transferred'),
+            ('cancel', 'Cancelled'),], 'State', readonly=True, select=True, help="""
+            * Draft: not confirmed yet and will not be scheduled until confirmed\n
+            * Waiting Another Operation: waiting for another move to proceed before it becomes automatically available (e.g. in Make-To-Order flows)\n
+            * Waiting Availability: still waiting for the availability of products\n
+            * Ready to Transfer: products reserved, simply waiting for confirmation.\n
+            * Transferred: has been processed, can't be modified or cancelled anymore\n
+            * Cancelled: has been cancelled, can't be confirmed anymore"""
+        ),
         'min_date': fields.function(get_min_max_date, fnct_inv=_set_minimum_date, multi="min_max_date",
                  store=True, type='datetime', string='Scheduled Date', select=1, help="Scheduled date for the shipment to be processed"),
         'date': fields.datetime('Order Date', help="Date of order", select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
@@ -678,72 +670,11 @@ class stock_picking(osv.osv):
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per Company!'),
     ]
-    
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        if context is None:
-            context = {}
-        mod_obj = self.pool.get('ir.model.data')
-        # To get the right view of shipment based on type from stock move and Back order.
-        if context.get('default_picking_id', False):
-            picking_type = self.browse(cr, uid, context['default_picking_id'], context=context).type
-            if picking_type == 'out':
-                context.update({'default_type':'out'})
-                view_id = mod_obj.get_object_reference(cr, uid, 'stock', 'view_picking_out_form')[1]
-            elif picking_type == 'in':
-                context.update({'default_type':'in'})
-                view_id = mod_obj.get_object_reference(cr, uid, 'stock', 'view_picking_in_form')[1]
-            elif picking_type == 'internal':
-                context.update({'default_type':'internal'})
-                view_id = mod_obj.get_object_reference(cr, uid, 'stock', 'view_picking_form')[1]
-        type = context.get('default_type', False)
-        res = super(stock_picking, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
-        if type:
-            if res.get('toolbar', False):
-                # To update the report label according to shipping type
-                for report in res['toolbar']['print']:
-                    if report['report_name'] != 'stock.picking.list':
-                        continue
-                    if type == 'in':
-                        report['string'] = _('Receipt Slip')
-                    elif type == 'internal':
-                        report['string'] = _('Picking Slip')
-                    elif type == 'out':
-                        report['string'] = _('Delivery Slip')
-                    report['name'] = report['string']
-            for field in res['fields']:
-                # To update the states label according to shipping type
-                if field == 'state':
-                    _state = dict(PICK_STATE)
-                    if type == 'in':
-                        _state['assigned'] = _('Ready to Receive')
-                        _state['done'] = _('Received')
-                    elif type == 'internal':
-                        _state['assigned'] = _('Ready to Transfer')
-                        _state['done'] = _('Transferred')
-                    elif type == 'out':
-                        _state['assigned'] = _('Ready to Deliver')
-                        _state['done'] = _('Delivered')
-                    res['fields']['state']['selection'] = [(x[0], _state[x[0]]) for x in PICK_STATE]
-                    res['fields']['state']['help'] = self._tooltip_picking_state(_state)
-                # To update the fields tooltips according to shipping type
-                if field == 'partner_id':
-                    _tooltip = ''
-                    if type == 'in':
-                        _tooltip = _('supplier')
-                    elif type == 'internal':
-                        _tooltip = _('warehouse')
-                    elif type == 'out':
-                        _tooltip = _('customer')
-                    res['fields']['partner_id']['help'] = _("Address of %s") %(_tooltip)
-        return res
 
     def action_process(self, cr, uid, ids, context=None):
-        if context is None: context = {}
         mod_obj = self.pool.get('ir.model.data')
         model_data_ids = mod_obj.search(cr, uid, [('model','=','ir.ui.view'),('name','=','stock_partial_picking_form')], context=context)
         resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
-        ctx = context.copy()
-        ctx.update({'active_model': 'stock.picking', 'active_ids': ids })
         return {
             'view_type': 'form',
             'view_mode': 'form',
@@ -752,7 +683,7 @@ class stock_picking(osv.osv):
             'view_id': resource_id,
             'type': 'ir.actions.act_window',
             'target': 'new',
-            'context': ctx,
+            'context': context,
             'nodestroy': True,
         }
 
@@ -2950,5 +2881,81 @@ class stock_warehouse(osv.osv):
     }
 
 stock_warehouse()
+
+#----------------------------------------------------------
+# "Empty" Classes that are used to vary from the original stock.picking  (that are dedicated to the internal pickings)
+#   in order to offer a different usability with different views, labels, available reports/wizards...
+#----------------------------------------------------------
+class stock_picking_in(osv.osv):
+    _name = "stock.picking.in"
+    _inherit = "stock.picking"
+    _table = "stock_picking"
+    _description = "Incomming Shipments"
+
+    def check_access_rights(self, cr, uid, operation, raise_exception=True):
+        #override in order to redirect the check of acces rights on the stock.picking object
+        return self.pool.get('stock.picking').check_access_rights(cr, uid, operation, raise_exception=raise_exception)
+
+    def check_access_rule(self, cr, uid, ids, operation, context=None):
+        #override in order to redirect the check of acces rules on the stock.picking object
+        return self.pool.get('stock.picking').check_access_rule(cr, uid, ids, operation, context=context)
+
+    def _workflow_trigger(self, cr, uid, ids, trigger, context=None):
+        #override in order to trigger the workflow of stock.picking at the end of create, write and unlink operation
+        #instead of it's own workflow (which is not existing)
+        return self.pool.get('stock.picking')._workflow_trigger(cr, uid, ids, trigger, context=context)
+
+    _columns = {
+        'state': fields.selection(
+            [('draft', 'Draft'),
+            ('auto', 'Waiting Another Operation'),
+            ('confirmed', 'Waiting Availability'),
+            ('assigned', 'Ready to Receive'),
+            ('done', 'Received'),
+            ('cancel', 'Cancelled'),], 
+            'State', readonly=True, select=True, 
+            help="""* Draft: not confirmed yet and will not be scheduled until confirmed\n
+                 * Waiting Another Operation: waiting for another move to proceed before it becomes automatically available (e.g. in Make-To-Order flows)\n
+                 * Waiting Availability: still waiting for the availability of products\n
+                 * Ready to Receive: products reserved, simply waiting for confirmation.\n
+                 * Received: has been processed, can't be modified or cancelled anymore\n
+                 * Cancelled: has been cancelled, can't be confirmed anymore"""),
+    }
+
+class stock_picking_out(osv.osv):
+    _name = "stock.picking.out"
+    _inherit = "stock.picking"
+    _table = "stock_picking"
+    _description = "Delivery Orders"
+
+    def check_access_rights(self, cr, uid, operation, raise_exception=True):
+        #override in order to redirect the check of acces rights on the stock.picking object
+        return self.pool.get('stock.picking').check_access_rights(cr, uid, operation, raise_exception=raise_exception)
+
+    def check_access_rule(self, cr, uid, ids, operation, context=None):
+        #override in order to redirect the check of acces rules on the stock.picking object
+        return self.pool.get('stock.picking').check_access_rule(cr, uid, ids, operation, context=context)
+
+    def _workflow_trigger(self, cr, uid, ids, trigger, context=None):
+        #override in order to trigger the workflow of stock.picking at the end of create, write and unlink operation
+        #instead of it's own workflow (which is not existing)
+        return self.pool.get('stock.picking')._workflow_trigger(cr, uid, ids, trigger, context=context)
+
+    _columns = {
+        'state': fields.selection(
+            [('draft', 'Draft'),
+            ('auto', 'Waiting Another Operation'),
+            ('confirmed', 'Waiting Availability'),
+            ('assigned', 'Ready to Deliver'),
+            ('done', 'Delivered'),
+            ('cancel', 'Cancelled'),], 
+            'State', readonly=True, select=True, 
+            help="""* Draft: not confirmed yet and will not be scheduled until confirmed\n
+                 * Waiting Another Operation: waiting for another move to proceed before it becomes automatically available (e.g. in Make-To-Order flows)\n
+                 * Waiting Availability: still waiting for the availability of products\n
+                 * Ready to Deliver: products reserved, simply waiting for confirmation.\n
+                 * Delivered: has been processed, can't be modified or cancelled anymore\n
+                 * Cancelled: has been cancelled, can't be confirmed anymore"""),
+    }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

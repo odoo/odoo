@@ -76,24 +76,18 @@ class stock_partial_picking(osv.osv_memory):
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         if context is None:
             context={}
-        # remove the entry with key 'form_view_ref', otherwise fields_view_get crashes
-        context.pop('form_view_ref', None)
         res = super(stock_partial_picking, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
-        type = context.get('default_type', False)
+        type = context.get('active_model','').split('.')[-1]
         if type:
             doc = etree.XML(res['arch'])
-            for node in doc.xpath("//group/button[@string='_Validate']"):
+            for node in doc.xpath("//group/button[@name='do_partial']"):
                 if type == 'in':
                     node.set('string', _('_Receive'))
-                elif type == 'internal':
-                    node.set('string', _('_Transfer'))
                 elif type == 'out':
                     node.set('string', _('_Deliver'))
-            for node in doc.xpath("//separator[@string='Products']"):
+            for node in doc.xpath("//separator[@name='product_separator']"):
                 if type == 'in':
                     node.set('string', _('Receive Products'))
-                elif type == 'internal':
-                    node.set('string', _('Transfer Products'))
                 elif type == 'out':
                     node.set('string', _('Deliver Products'))
             res['arch'] = etree.tostring(doc)
