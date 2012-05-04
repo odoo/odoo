@@ -114,7 +114,7 @@ class hr_holidays(osv.osv):
         'name': fields.char('Description', required=True, size=64),
         'state': fields.selection([('draft', 'New'), ('confirm', 'Waiting Approval'), ('refuse', 'Refused'),
             ('validate1', 'Waiting Second Approval'), ('validate', 'Approved'), ('cancel', 'Cancelled')],
-            'State', readonly=True, help='The state is set to \'Draft\', when a holiday request is created.\
+            'Status', readonly=True, help='The state is set to \'Draft\', when a holiday request is created.\
             \nThe state is \'Waiting Approval\', when holiday request is confirmed by user.\
             \nThe state is \'Refused\', when holiday request is refused by manager.\
             \nThe state is \'Approved\', when holiday request is approved by manager.'),

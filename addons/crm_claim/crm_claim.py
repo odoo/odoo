@@ -75,7 +75,7 @@ class crm_claim(crm.crm_case, osv.osv):
         'partner_phone': fields.char('Phone', size=32),
         'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_ids','=',section_id)]"), 
         'cause': fields.text('Root Cause'),
-        'state': fields.selection(crm.AVAILABLE_STATES, 'State', size=16, readonly=True,
+        'state': fields.selection(crm.AVAILABLE_STATES, 'Status', size=16, readonly=True,
                                   help='The state is set to \'Draft\', when a case is created.\
                                   \nIf the case is in progress the state is set to \'Open\'.\
                                   \nWhen the case is over, the state is set to \'Done\'.\

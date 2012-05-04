@@ -36,7 +36,7 @@ class pos_order_report(osv.osv):
         'partner_id':fields.many2one('res.partner', 'Partner', readonly=True),
         'product_id':fields.many2one('product.product', 'Product', readonly=True),
         'state': fields.selection([('draft', 'New'), ('paid', 'Closed'), ('done', 'Synchronized'), ('invoiced', 'Invoiced'), ('cancel', 'Cancelled')],
-                                  'State'),
+                                  'Status'),
         'user_id':fields.many2one('res.users', 'Salesman', readonly=True),
         'price_total':fields.float('Total Price', readonly=True),
         'total_discount':fields.float('Total Discount', readonly=True),

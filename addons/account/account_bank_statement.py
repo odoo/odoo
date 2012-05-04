@@ -153,7 +153,7 @@ class account_bank_statement(osv.osv):
         'state': fields.selection([('draft', 'New'),
                                    ('open','Open'), # used by cash statements
                                    ('confirm', 'Closed')],
-                                   'State', required=True, readonly="1",
+                                   'Status', required=True, readonly="1",
                                    help='When new statement is created the state will be \'Draft\'.\n'
                                         'And after getting confirmation from the bank it will be in \'Confirmed\' state.'),
         'currency': fields.function(_currency, string='Currency',

@@ -41,7 +41,7 @@ class report_vote(osv.osv):
         'idea_state': fields.selection([('draft', 'Draft'),('open', 'Opened'),
                             ('close', 'Accepted'),
                             ('cancel', 'Cancelled')],
-                            'State'),
+                            'Status'),
         'category_id': fields.many2one('idea.category', 'Category'),
         'creater_id': fields.many2one('res.users', 'User Name'),
 

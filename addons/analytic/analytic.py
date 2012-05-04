@@ -169,7 +169,7 @@ class account_analytic_account(osv.osv):
         'date_start': fields.date('Date Start'),
         'date': fields.date('Date End', select=True),
         'company_id': fields.many2one('res.company', 'Company', required=False), #not required because we want to allow different companies to use the same chart of account, except for leaf accounts.
-        'state': fields.selection([('template', 'Template'),('draft','New'),('open','Open'), ('pending','Pending'),('cancelled', 'Cancelled'),('close','Closed')], 'State', required=True,
+        'state': fields.selection([('template', 'Template'),('draft','New'),('open','Open'), ('pending','Pending'),('cancelled', 'Cancelled'),('close','Closed')], 'Status', required=True,
                                   help='* When an account is created its in \'Draft\' state.\
                                   \n* If any associated partner is there, it can be in \'Open\' state.\
                                   \n* If any pending balance is there it can be in \'Pending\'. \

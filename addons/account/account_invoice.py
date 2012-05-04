@@ -206,7 +206,7 @@ class account_invoice(osv.osv):
             ('open','Open'),
             ('paid','Paid'),
             ('cancel','Cancelled')
-            ],'State', select=True, readonly=True,
+            ],'Status', select=True, readonly=True,
             help=' * The \'Draft\' state is used when a user is encoding a new and unconfirmed Invoice. \
             \n* The \'Pro-forma\' when invoice is in Pro-forma state,invoice does not have an invoice number. \
             \n* The \'Open\' state is used when user create invoice,a invoice number is generated.Its in open state till user does not pay invoice. \

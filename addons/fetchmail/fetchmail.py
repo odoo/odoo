@@ -53,7 +53,7 @@ class fetchmail_server(osv.osv):
         'state':fields.selection([
             ('draft', 'Not Confirmed'),
             ('done', 'Confirmed'),
-        ], 'State', select=True, readonly=True),
+        ], 'Status', select=True, readonly=True),
         'server' : fields.char('Server Name', size=256, readonly=True, help="Hostname or IP of the mail server", states={'draft':[('readonly', False)]}),
         'port' : fields.integer('Port', readonly=True, states={'draft':[('readonly', False)]}),
         'type':fields.selection([

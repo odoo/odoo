@@ -138,7 +138,7 @@ class lunch_order(osv.osv):
         'descript': fields.char('Description Order', readonly=True, size=250, \
             states = {'draft':[('readonly', False)]}),
         'state': fields.selection([('draft', 'New'), ('confirmed', 'Confirmed'), ], \
-            'State', readonly=True, select=True),
+            'Status', readonly=True, select=True),
         'price': fields.function(_price_get, string="Price"),
         'category': fields.many2one('lunch.category','Category'),
     }

@@ -51,7 +51,7 @@ class account_entries_report(osv.osv):
         'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year', readonly=True),
         'product_id': fields.many2one('product.product', 'Product', readonly=True),
         'product_uom_id': fields.many2one('product.uom', 'Product UOM', readonly=True),
-        'move_state': fields.selection([('draft','Unposted'), ('posted','Posted')], 'State', readonly=True),
+        'move_state': fields.selection([('draft','Unposted'), ('posted','Posted')], 'Status', readonly=True),
         'move_line_state': fields.selection([('draft','Unbalanced'), ('valid','Valid')], 'State of Move Line', readonly=True),
         'reconcile_id': fields.many2one('account.move.reconcile', readonly=True),
         'partner_id': fields.many2one('res.partner','Partner', readonly=True),

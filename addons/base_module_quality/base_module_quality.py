@@ -296,7 +296,7 @@ class module_quality_detail(osv.osv):
         'summary': fields.text('Summary'),
         'detail': fields.text('Details'),
         'message': fields.char('Message', size=64),
-        'state': fields.selection([('done','Done'),('skipped','Skipped'),], 'State', size=24, help='The test will be completed only if the module is installed or if the test may be processed on uninstalled module.'),
+        'state': fields.selection([('done','Done'),('skipped','Skipped'),], 'Status', size=24, help='The test will be completed only if the module is installed or if the test may be processed on uninstalled module.'),
     }
 
 module_quality_detail()

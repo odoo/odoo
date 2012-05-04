@@ -1025,7 +1025,7 @@ class sale_order_line(osv.osv):
         'number_packages': fields.function(_number_packages, type='integer', string='Number Packages'),
         'notes': fields.text('Notes'),
         'th_weight': fields.float('Weight', readonly=True, states={'draft': [('readonly', False)]}),
-        'state': fields.selection([('cancel', 'Cancelled'),('draft', 'Draft'),('confirmed', 'Confirmed'),('exception', 'Exception'),('done', 'Done')], 'State', required=True, readonly=True,
+        'state': fields.selection([('cancel', 'Cancelled'),('draft', 'Draft'),('confirmed', 'Confirmed'),('exception', 'Exception'),('done', 'Done')], 'Status', required=True, readonly=True,
                 help='* The \'Draft\' state is set when the related sales order in draft state. \
                     \n* The \'Confirmed\' state is set when the related sales order is confirmed. \
                     \n* The \'Exception\' state is set when the related sales order is set as exception. \

@@ -51,7 +51,7 @@ class report_project_task_user(osv.osv):
         'priority' : fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Urgent'),
 ('0','Very urgent')], 'Priority', readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')], 'Month', readonly=True),
-        'state': fields.selection([('draft', 'Draft'), ('open', 'In Progress'), ('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')],'State', readonly=True),
+        'state': fields.selection([('draft', 'Draft'), ('open', 'In Progress'), ('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')],'Status', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True, groups="base.group_multi_company"),
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
         'type_id': fields.many2one('project.task.type', 'Stage', readonly=True),
@@ -131,7 +131,7 @@ class project_vs_hours(osv.osv):
         'user_id': fields.many2one('res.users', 'Assigned To', readonly=True),
         'planned_hours': fields.float('Planned Hours', readonly=True),
         'total_hours': fields.float('Total Hours', readonly=True),
-        'state': fields.selection([('draft','Draft'),('open','Open'), ('pending','Pending'),('cancelled', 'Cancelled'),('close','Close'),('template', 'Template')], 'State', required=True, readonly=True)
+        'state': fields.selection([('draft','Draft'),('open','Open'), ('pending','Pending'),('cancelled', 'Cancelled'),('close','Close'),('template', 'Template')], 'Status', required=True, readonly=True)
     }
     _order = 'project desc'
 
@@ -178,7 +178,7 @@ class task_by_days(osv.osv):
     _auto = False
     _columns = {
         'day': fields.char('Day', size=128, required=True),
-        'state': fields.selection([('draft', 'Draft'),('open', 'In Progress'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', readonly=True, required=True),
+        'state': fields.selection([('draft', 'Draft'),('open', 'In Progress'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'Status', readonly=True, required=True),
         'total_task': fields.float('Total tasks', readonly=True),
         'project_id':fields.many2one('project.project', 'Project')
      }

@@ -152,7 +152,7 @@ class pos_order(osv.osv):
                                    ('paid', 'Paid'),
                                    ('done', 'Posted'),
                                    ('invoiced', 'Invoiced')],
-                                  'State', readonly=True),
+                                  'Status', readonly=True),
 
         'invoice_id': fields.many2one('account.invoice', 'Invoice'),
         'account_move': fields.many2one('account.move', 'Journal Entry', readonly=True),

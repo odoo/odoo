@@ -175,7 +175,7 @@ class crm_lead(crm_case, osv.osv):
                                 multi='day_open', type="float", store=True),
         'day_close': fields.function(_compute_day, string='Days to Close', \
                                 multi='day_close', type="float", store=True),
-        'state': fields.selection(crm.AVAILABLE_STATES, 'State', size=16, readonly=True,
+        'state': fields.selection(crm.AVAILABLE_STATES, 'Status', size=16, readonly=True,
                                   help='The state is set to \'Draft\', when a case is created.\
                                   \nIf the case is in progress the state is set to \'In progress\'.\
                                   \nWhen the case is over, the state is set to \'Done\'.\

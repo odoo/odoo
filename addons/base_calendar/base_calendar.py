@@ -337,7 +337,7 @@ class calendar_attendee(osv.osv):
                         ('needs-action', 'Needs Action'),
                         ('accepted', 'Accepted'),
                         ('declined', 'Declined'),
-                        ('delegated', 'Delegated')], 'State', readonly=True, \
+                        ('delegated', 'Delegated')], 'Status', readonly=True, \
                         help="Status of the attendee's participation"),
         'rsvp':  fields.boolean('Required Reply?',
                     help="Indicats whether the favor of a reply is requested"),
@@ -767,7 +767,7 @@ class calendar_alarm(osv.osv):
                     ('run', 'Run'),
                     ('stop', 'Stop'),
                     ('done', 'Done'),
-                ], 'State', select=True, readonly=True),
+                ], 'Status', select=True, readonly=True),
      }
 
     _defaults = {
@@ -1037,7 +1037,7 @@ class calendar_event(osv.osv):
         'base_calendar_url': fields.char('Caldav URL', size=264),
         'state': fields.selection([('tentative', 'Tentative'),
                         ('confirmed', 'Confirmed'),
-                        ('cancelled', 'Cancelled')], 'State', readonly=True),
+                        ('cancelled', 'Cancelled')], 'Status', readonly=True),
         'exdate': fields.text('Exception Date/Times', help="This property \
 defines the list of date/time exceptions for a recurring calendar component."),
         'exrule': fields.char('Exception Rule', size=352, help="Defines a \

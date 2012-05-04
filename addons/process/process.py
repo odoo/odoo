@@ -293,7 +293,7 @@ class process_node(osv.osv):
     _columns = {
         'name': fields.char('Name', size=30,required=True, translate=True),
         'process_id': fields.many2one('process.process', 'Process', required=True, ondelete='cascade'),
-        'kind': fields.selection([('state','State'), ('subflow','Subflow')], 'Kind of Node', required=True),
+        'kind': fields.selection([('state','Status'), ('subflow','Subflow')], 'Kind of Node', required=True),
         'menu_id': fields.many2one('ir.ui.menu', 'Related Menu'),
         'note': fields.text('Notes', translate=True),
         'model_id': fields.many2one('ir.model', 'Object', ondelete='set null'),

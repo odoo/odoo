@@ -165,7 +165,7 @@ class hr_evaluation(osv.osv):
             ('progress','Waiting Appreciation'),
             ('done','Done'),
             ('cancel','Cancelled'),
-        ], 'State', required=True, readonly=True),
+        ], 'Status', required=True, readonly=True),
         'date_close': fields.date('Ending Date', select=True),
         'progress': fields.float("Progress"),
     }

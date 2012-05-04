@@ -218,7 +218,7 @@ class hr_payslip_run(osv.osv):
         'state': fields.selection([
             ('draft', 'Draft'),
             ('close', 'Close'),
-        ], 'State', select=True, readonly=True),
+        ], 'Status', select=True, readonly=True),
         'date_start': fields.date('Date From', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'date_end': fields.date('Date To', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'credit_note': fields.boolean('Credit Note', readonly=True, states={'draft': [('readonly', False)]}, help="If its checked, indicates that all payslips generated from here are refund payslips."),
@@ -271,7 +271,7 @@ class hr_payslip(osv.osv):
             ('verify', 'Waiting'),
             ('done', 'Done'),
             ('cancel', 'Rejected'),
-        ], 'State', select=True, readonly=True,
+        ], 'Status', select=True, readonly=True,
             help='* When the payslip is created the state is \'Draft\'.\
             \n* If the payslip is under verification, the state is \'Waiting\'. \
             \n* If the payslip is confirmed then state is set to \'Done\'.\

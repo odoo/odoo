@@ -54,7 +54,7 @@ class report_auction(osv.osv):
         'net_margin':fields.float('Net Margin', readonly=True),
         'avg_estimation':fields.float('Avg estimation', readonly=True),
         'user_id':fields.many2one('res.users', 'User', select=1),
-        'state': fields.selection((('draft', 'Draft'), ('unsold', 'Unsold'), ('sold', 'Sold')), 'State', readonly=True, select=1),
+        'state': fields.selection((('draft', 'Draft'), ('unsold', 'Unsold'), ('sold', 'Sold')), 'Status', readonly=True, select=1),
 
     }
 

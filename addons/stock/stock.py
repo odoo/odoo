@@ -634,7 +634,7 @@ class stock_picking(osv.osv):
             ('assigned', 'Ready to Process'),
             ('done', 'Done'),
             ('cancel', 'Cancelled'),
-            ], 'State', readonly=True, select=True,
+            ], 'Status', readonly=True, select=True,
             help="* Draft: not confirmed yet and will not be scheduled until confirmed\n"\
                  "* Confirmed: still waiting for the availability of products\n"\
                  "* Available: products reserved, simply waiting for confirmation.\n"\
@@ -1630,7 +1630,7 @@ class stock_move(osv.osv):
         'move_history_ids2': fields.many2many('stock.move', 'stock_move_history_ids', 'child_id', 'parent_id', 'Move History (parent moves)'),
         'picking_id': fields.many2one('stock.picking', 'Reference', select=True,states={'done': [('readonly', True)]}),
         'note': fields.text('Notes'),
-        'state': fields.selection([('draft', 'New'), ('waiting', 'Waiting Another Move'), ('confirmed', 'Waiting Availability'), ('assigned', 'Available'), ('done', 'Done'), ('cancel', 'Cancelled')], 'State', readonly=True, select=True,
+        'state': fields.selection([('draft', 'New'), ('waiting', 'Waiting Another Move'), ('confirmed', 'Waiting Availability'), ('assigned', 'Available'), ('done', 'Done'), ('cancel', 'Cancelled')], 'Status', readonly=True, select=True,
               help='When the stock move is created it is in the \'Draft\' state.\n After that, it is set to \'Not Available\' state if the scheduler did not find the products.\n When products are reserved it is set to \'Available\'.\n When the picking is done the state is \'Done\'.\
               \nThe state is \'Waiting\' if the move is waiting for another one.'),
         'price_unit': fields.float('Unit Price', digits_compute= dp.get_precision('Account'), help="Technical field used to record the product cost set by the user during a picking confirmation (when average price costing method is used)"),
@@ -2656,7 +2656,7 @@ class stock_inventory(osv.osv):
         'date_done': fields.datetime('Date done'),
         'inventory_line_id': fields.one2many('stock.inventory.line', 'inventory_id', 'Inventories', states={'done': [('readonly', True)]}),
         'move_ids': fields.many2many('stock.move', 'stock_inventory_move_rel', 'inventory_id', 'move_id', 'Created Moves'),
-        'state': fields.selection( (('draft', 'Draft'), ('done', 'Done'), ('confirm','Confirmed'),('cancel','Cancelled')), 'State', readonly=True, select=True),
+        'state': fields.selection( (('draft', 'Draft'), ('done', 'Done'), ('confirm','Confirmed'),('cancel','Cancelled')), 'Status', readonly=True, select=True),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True, readonly=True, states={'draft':[('readonly',False)]}),
 
     }
@@ -2782,7 +2782,7 @@ class stock_inventory_line(osv.osv):
         'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product UoM')),
         'company_id': fields.related('inventory_id','company_id',type='many2one',relation='res.company',string='Company',store=True, select=True, readonly=True),
         'prod_lot_id': fields.many2one('stock.production.lot', 'Production Lot', domain="[('product_id','=',product_id)]"),
-        'state': fields.related('inventory_id','state',type='char',string='State',readonly=True),
+        'state': fields.related('inventory_id','state',type='char',string='Status',readonly=True),
     }
 
     def on_change_product_id(self, cr, uid, ids, location_id, product, uom=False, to_date=False):
