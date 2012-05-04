@@ -86,6 +86,7 @@ Main features :
             'static/src/js/pos_models.js',
             'static/src/js/pos_widgets.js',
             'static/src/js/pos_devices.js',
+            'static/src/js/pos_screens.js',
             'static/src/js/pos_main.js'
     ],
     'css': ['static/src/css/pos.css'],

@@ -79,57 +79,12 @@
                 </footer>
             </div>
             <div id="rightpane">
-                <div id="products-screen" class="step-screen selected-step">
+                <!-- <div id="products-screen" class="step-screen selected-step">
                     <div id="products-screen-categories"/>
                     <ol id="products-screen-ol" class="product-list"></ol>
-                </div>
-                <div id="payment-screen" class="step-screen" style="display:none">
-                    <header><h2>Payment</h2></header>
-                    <div class="pos-step-container">
-                        <div class="pos-payment-container">
-                            <br />
-                            <table>
-                                <tr>
-                                    <td class="paymentline-type">Total:</td>
-                                    <td class="paymentline-amount pos-right-align">
-                                        <t t-if="currency.position == 'before'" t-esc="currency.symbol"/>
-                                        <span id="payment-due-total"></span>
-                                        <t t-if="currency.position == 'after'" t-esc="currency.symbol"/>
-                                    </td>
-                                </tr>
-                            </table>
-                            <table id="paymentlines">
-                            </table>
-                            <table>
-                                <tr>
-                                    <td class="paymentline-type">Paid:</td>
-                                    <td class="paymentline-amount pos-right-align">
-                                        <t t-if="currency.position == 'before'" t-esc="currency.symbol"/>
-                                        <span id="payment-paid-total"></span>
-                                        <t t-if="currency.position == 'after'" t-esc="currency.symbol"/>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="paymentline-type">Change:</td>
-                                    <td class="paymentline-amount pos-right-align">
-                                        <t t-if="currency.position == 'before'" t-esc="currency.symbol"/>
-                                        <span id="payment-remaining"></span>
-                                        <t t-if="currency.position == 'after'" t-esc="currency.symbol"/>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                        <div class="pos-payment-buttons">
-                            <button class="oe-back-to-products">
-                                <img src="/web/static/src/img/icons/gtk-go-back.png"></img>
-                                Back to Products</button>
-                            <button id="validate-order">
-                                <img src="/web/static/src/img/icons/gtk-apply.png"></img>
-                                Validate</button>
-                        </div>
-                    </div>
-                </div>
-                <span id="receipt-screen"></span>
+                </div> -->
+                <!-- <div id="payment-screen" class="step-screen" style="display:none"> ... </div> -->
+                <!-- <span id="receipt-screen"></span> -->
             </div>
         </div>
     </div>
@@ -147,7 +102,10 @@
     <t t-name="pos-close-warning">
         <div>There are pending operations that could not be saved into the database, are you sure you want to exit?</div>
     </t>
-    <t t-name="pos-category-template">
+
+    <!--   ************   SEARCH PRODUCT SCREEN   ************    -->
+
+    <t t-name="ProductCategoriesWidget">
         <header>
             <ol class="breadcrumb">
                 <li class="oe-pos-categories-list">
@@ -181,6 +139,122 @@
             </ol>
         </div>
     </t>
+    <t t-name="ProductListWidget">
+        <ol id="products-screen-ol" class="product-list">
+        </ol>
+    </t>
+    <t t-name="SearchProductScreenWidget">
+        <div id="products-screen">
+            <span class="placeholder-ProductCategoriesWidget" />
+            <span class="placeholder-ProductListWidget" />
+        </div>
+    </t>
+
+    <!--   ************   PAYMENT SCREEN   ************    -->
+
+    <t t-name="PaymentScreenWidget">
+        <div id="payment-screen" class="step-screen">
+            <header><h2>Payment</h2></header>
+            <div class="pos-step-container">
+                <div class="pos-payment-container">
+                    <br />
+                    <table>
+                        <tr>
+                            <td class="paymentline-type">Total:</td>
+                            <td class="paymentline-amount pos-right-align">
+                                <t t-if="currency.position == 'before'" t-esc="currency.symbol"/>
+                                <span id="payment-due-total"></span>
+                                <t t-if="currency.position == 'after'" t-esc="currency.symbol"/>
+                            </td>
+                        </tr>
+                    </table>
+                    <table id="paymentlines">
+                    </table>
+                    <table>
+                        <tr>
+                            <td class="paymentline-type">Paid:</td>
+                            <td class="paymentline-amount pos-right-align">
+                                <t t-if="currency.position == 'before'" t-esc="currency.symbol"/>
+                                <span id="payment-paid-total"></span>
+                                <t t-if="currency.position == 'after'" t-esc="currency.symbol"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="paymentline-type">Change:</td>
+                            <td class="paymentline-amount pos-right-align">
+                                <t t-if="currency.position == 'before'" t-esc="currency.symbol"/>
+                                <span id="payment-remaining"></span>
+                                <t t-if="currency.position == 'after'" t-esc="currency.symbol"/>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="pos-payment-buttons">
+                    <button class="oe-back-to-products">
+                        <img src="/web/static/src/img/icons/gtk-go-back.png"></img>
+                        Back to Products</button>
+                    <button id="validate-order">
+                        <img src="/web/static/src/img/icons/gtk-apply.png"></img>
+                        Validate</button>
+                </div>
+            </div>
+        </div>
+    </t> <!-- pos-payment-screen -->
+
+    <!--   ************   RECEIPT SCREEN   ************    -->
+
+    <t t-name="ReceiptScreenWidget">
+        <div id="receipt-screen" class="step-screen" >
+            <header><h2>Receipt</h2></header>
+            <div class="pos-step-container">
+                <div class="pos-receipt-container">
+                </div>
+                <div class='receipt-buttons'>
+	                <button id="print-the-ticket">
+	                    Print</button>
+	                <button id="pos-finish-order">Next Order</button>
+                </div>
+            </div>
+        </div>
+    </t>
+    
+
+    <t t-name="WelcomeScreenWidget">
+        <div class="welcome-screen step-screen">
+            <header><h2>WELCUM</h2></header>
+            <p> plz scan ur card or thingie </p>
+        </div>
+    </t>
+
+
+    <t t-name="ScanProductScreenWidget">
+        <div class="scan-product-screen step-screen">
+            <header><h2>SCAN YOUR PRODUCT</h2></header>
+            <p> please scan another product ! fun !</p>
+        </div>
+    </t>
+
+    <t t-name="ClientPaymentScreenWidget">
+        <div class="scan-product-screen step-screen">
+            <header><h2>GIMME UR MONEY!!!11</h2></header>
+            <p> It's a rubbery </p>
+        </div>
+    </t>
+
+    <t t-name="ScaleInviteScreenWidget">
+        <div class="scale-invite-screen step-screen">
+            <header><h2>Put ur loot on the scale</h2></header>
+            <p> Is it worth a ton ? </p>
+        </div>
+    </t>
+
+    <t t-name="ScaleProductSelectionScreenWidget">
+        <div class="scale-product-selection-screen">
+            <span class="placeholder-ProductCategoriesWidget" />
+            <span class="placeholder-ProductListWidget" />
+        </div>
+    </t>
+
     <t t-name="pos-product-template">
         <a href="#">
             <div class="product-img">
@@ -228,20 +302,6 @@
     </t>
     <t t-name="pos-order-selector-button-template">
         <button class="select-order"><t t-esc="widget.order.get('creationDate').toString('t')"/></button>
-    </t>
-    <t t-name="pos-receipt-view">
-        <div id="receipt-screen" class="step-screen" style="display:none">
-            <header><h2>Receipt</h2></header>
-            <div class="pos-step-container">
-                <div class="pos-receipt-container">
-                </div>
-                <div class='receipt-buttons'>
-	                <button id="print-the-ticket">
-	                    Print</button>
-	                <button id="pos-finish-order">Next Order</button>
-                </div>
-            </div>
-        </div>
     </t>
     <t t-name="pos-ticket">
         <div class="pos-sale-ticket">
@@ -294,15 +354,17 @@
             </table>
         </div>
     </t>
-    <t t-name="pos-actionbar">
+    <t t-name="ActionBarWidget">
         <div class="pos-actionbar">
-            <ul class="pos-actionbar-left-region">
-                <!-- <li class="button">yoyo</li>
-                <li class="button">foo</li>
-                <li class="button rightalign">bar</li> -->
-            </ul>
-
-            <ul class="pos-actionbar-right-region">
+            <div class="pos-actionbar-left-pane">
+                <div class="button help-button">
+                    Help
+                </div>
+                <p class="total">
+                    Total: <span class="value"> 1234 </span>
+                </p>
+            </div>
+            <ul class="pos-actionbar-button-list">
                 <!-- <li class="button">BUTTOOON</li>
                 <li class="button">JEEENKIINS</li>
                 <li class="button rightalign">ARGH</li> -->
