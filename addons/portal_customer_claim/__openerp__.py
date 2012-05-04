@@ -26,7 +26,7 @@
     'category': 'Tools',
     'complexity': "easy",
     'description': """
-    This module add the menu if claim and portal_customer is install.
+    This module add the menu if claim and portal_customer are installed.
     """,
     'author': 'OpenERP SA',
     'depends': ['crm_claim','portal_customer'],
