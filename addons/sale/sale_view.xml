@@ -121,7 +121,7 @@
                     <group col="6" colspan="4" class="oe_form_header">
                         <group col="4" colspan="4">
                             <field name="name"/>
-                            <field name="date_order" />
+                            <field name="date_order"/>
                             <field name="shop_id" on_change="onchange_shop_id(shop_id)" widget="selection" groups="stock.group_locations"/>
                             <field name="client_order_ref" groups="base.group_user"/>
                         </group>
@@ -132,11 +132,11 @@
                     </group>
                     <notebook colspan="5">
                         <page string="Sales Order">
-                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" domain="[('customer','=',True)]" context="{'search_default_customer':1}" required="1" />
+                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" domain="[('customer','=',True)]" context="{'search_default_customer':1}" required="1"/>
                             <field domain="[('parent_id','=',partner_id)]" name="partner_invoice_id" groups="sale.group_delivery_invoice_address" options='{"quick_create": false}'/>
                             <field domain="[('parent_id','=',partner_id)]" name="partner_shipping_id" groups="sale.group_delivery_invoice_address" options='{"quick_create": false}'/>
                             <field domain="[('type','=','sale')]" name="pricelist_id" groups="product.group_sale_pricelist" on_change="onchange_pricelist_id(pricelist_id,order_line)"/>
-                            <field name="project_id" context="{'partner_id':partner_id, 'pricelist_id':pricelist_id, 'default_name':name}" groups="sale.group_analytic_accounting, base.group_user" domain="[('parent_id','!=',False)]" />
+                            <field name="project_id" context="{'partner_id':partner_id, 'pricelist_id':pricelist_id, 'default_name':name}" groups="sale.group_analytic_accounting, base.group_user" domain="[('parent_id','!=',False)]"/>
                             <newline/>
                             <field colspan="4" name="order_line" nolabel="1" widget="one2many_list">
                                 <form string="Sales Order Lines">
@@ -230,7 +230,7 @@
                             </group>
                             <group col="17" colspan="4">
                                 <field name="state" widget="statusbar" statusbar_visible="draft,progress,done" statusbar_colors='{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}'/>
-                                <button name="invoice_recreate" states="invoice_except" string="Recreate Invoice" icon="gtk-go-forward" />
+                                <button name="invoice_recreate" states="invoice_except" string="Recreate Invoice" icon="gtk-go-forward"/>
                                 <button name="invoice_corrected" states="invoice_except" string="Ignore Exception" icon="gtk-apply"/>
                                 <button name="ship_recreate" states="shipping_except" string="Recreate Packing" icon="gtk-ok"/>
                                 <button name="ship_corrected" states="shipping_except" string="Ignore Exception" icon="gtk-apply"/>
@@ -358,7 +358,7 @@
 
         <menuitem id="menu_sale_quotations"
         action="action_order_tree5" parent="base.menu_sales"
-        sequence="3" />
+        sequence="3"/>
 
         <record id="action_order_tree" model="ir.actions.act_window">
             <field name="name">Old Quotations</field>

@@ -13,7 +13,7 @@
                    <filter string="Products" icon="terp-accessories-archiver" domain="['|',('type','=','product'),('type','=','consu')]" help="Both stockable and consumable products"/>
                    <separator orientation="vertical"/>
                    <filter string="To Sell" name="filter_to_sell" icon="terp-accessories-archiver-minus" domain="[('sale_ok','=',1)]"/>
-                   <filter name="filter_to_purchase" string="To Purchase" icon="terp-accessories-archiver+" domain="[('purchase_ok', '=', 1)]" />
+                   <filter name="filter_to_purchase" string="To Purchase" icon="terp-accessories-archiver+" domain="[('purchase_ok', '=', 1)]"/>
                    <separator orientation="vertical"/>
                    <field name="name"
                         filter_domain="['|', ('name','ilike',self),('default_code','ilike',self)]"/>
@@ -21,18 +21,18 @@
                    <newline/>
                    <group expand="0" string="Context...">
                        <field name="pricelist_id" widget="selection" context="{'pricelist': self}" groups="product.group_sale_pricelist"/>
-                       <separator orientation="vertical" groups="base.group_multi_company" />
-                       <field name="company_id" widget="selection" groups="base.group_multi_company" />
+                       <separator orientation="vertical" groups="base.group_multi_company"/>
+                       <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                    </group>
                    <newline/>
                    <group  expand='0' string='Group by...'>
                        <filter string='Category' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'categ_id'}"/>
                        <separator orientation="vertical"/>
-                       <filter string='Default UOM' icon="terp-mrp" domain="[]" context="{'group_by' : 'uom_id'}" />
+                       <filter string='Default UOM' icon="terp-mrp" domain="[]" context="{'group_by' : 'uom_id'}"/>
                        <separator orientation="vertical"/>
-                       <filter string='Type' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'type'}" />
+                       <filter string='Type' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'type'}"/>
                        <separator orientation="vertical" groups="base.group_multi_company"/>
-                       <filter string='Company' icon="terp-go-home" domain="[]" context="{'group_by' : 'company_id'}" groups="base.group_multi_company" />
+                       <filter string='Company' icon="terp-go-home" domain="[]" context="{'group_by' : 'company_id'}" groups="base.group_multi_company"/>
                    </group>
 
                 </search>
@@ -73,7 +73,7 @@
                         <group colspan="4" col="2">
                             <separator string="Name" colspan="2"/>
                             <field name="name"/>
-                            <field groups="product.group_product_variant" name="variants" />
+                            <field groups="product.group_product_variant" name="variants"/>
                         </group>
                         <group colspan="1" col="2">
                             <separator string="Codes" colspan="2"/>
@@ -144,7 +144,7 @@
                             </group>
                             <group colspan="2" col="2" name="store" groups="base.group_user">
                                 <separator string="Storage Localisation" colspan="2"/>
-                                <field name="loc_rack" attrs="{'readonly':[('type','=','service')]}" />
+                                <field name="loc_rack" attrs="{'readonly':[('type','=','service')]}"/>
                                 <field name="loc_row" attrs="{'readonly':[('type','=','service')]}"/>
                                 <field name="loc_case" attrs="{'readonly':[('type','=','service')]}"/>
                             </group>
@@ -467,8 +467,8 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Packaging">
-                    <field name="name" select="1" />
-                    <field name="type" select="1" />
+                    <field name="name" select="1"/>
+                    <field name="type" select="1"/>
                 </form>
             </field>
         </record>
