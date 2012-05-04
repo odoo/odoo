@@ -63,11 +63,13 @@ class pos_config(osv.osv):
 
         'sequence_id' : fields.many2one('ir.sequence', 'Sequence', readonly=True),
         # Add a sequence when we create a new pos.config object
+        'user_id' : fields.many2one('res.users', 'User'),
 
     }
 
     _defaults = {
         'state' : 'draft',
+        'user_id' : lambda obj, cr, uid, context: uid,
     }
 
     def _check_only_one_cash_journal(self, cr, uid, ids, context=None):
@@ -234,6 +236,39 @@ class pos_session(osv.osv):
     def wkf_action_post(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state' : 'post'}, context=context)
 
+    def get_current_session(self, cr, uid, context=None):
+        current_user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        domain = [
+            ('state', '=', 'open'),
+            ('start_at', '>=', time.strftime('%Y-%m-%d 00:00:00')),
+            ('config_id.user_id', '=', uid),
+        ]
+        session_ids = self.search(cr, uid, domain, context=context, limit=1, order='start_at desc')
+        session_id = session_ids[0] if session_ids else False
+
+        if not session_id:
+            pos_config_proxy = self.pool.get('pos.config')
+            pos_config_ids = pos_config_proxy.search(cr, uid, [('user_id', '=', uid),('state', '=', 'active')], limit=1, order='create_date desc')
+
+            if not pos_config_ids:
+                raise osv.except_osv(_('Error !'),
+                                     _('There is no active PoS Config for this User %s') % current_user.name)
+
+            config = pos_config_proxy.browse(cr, uid, pos_config_ids[0], context=context)
+
+            values = {
+                'state' : 'draft',
+                'start_at' : time.strftime('%Y-%m-%d %H:%M:%S'),
+                'config_id' : config.id,
+                'journal_id' : config.journal_id.id,
+                'user_id': current_user.id,
+            }
+            session_id = self.create(cr, uid, values, context=context)
+            wkf_service = netsvc.LocalService('workflow')
+            wkf_service.trg_validate(uid, 'pos.session', session_id, 'open', cr)
+            
+        return session_id
+
 pos_session()
 
 class pos_config_journal(osv.osv):
@@ -257,6 +292,7 @@ class pos_order(osv.osv):
     def create_from_ui(self, cr, uid, orders, context=None):
         #_logger.info("orders: %r", orders)
         list = []
+        session_id = self.pool.get('pos.session').get_current_session()
         for order in orders:
             # order :: {'name': 'Order 1329148448062', 'amount_paid': 9.42, 'lines': [[0, 0, {'discount': 0, 'price_unit': 1.46, 'product_id': 124, 'qty': 5}], [0, 0, {'discount': 0, 'price_unit': 0.53, 'product_id': 62, 'qty': 4}]], 'statement_ids': [[0, 0, {'journal_id': 7, 'amount': 9.42, 'name': '2012-02-13 15:54:12', 'account_id': 12, 'statement_id': 21}]], 'amount_tax': 0, 'amount_return': 0, 'amount_total': 9.42}
             order_obj = self.pool.get('pos.order')

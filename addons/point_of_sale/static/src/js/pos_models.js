@@ -154,7 +154,7 @@ function openerp_pos_models(module, instance){ //module is instance.point_of_sal
         },
         _int_flush : function() {
             var self = this;
-            
+
             this.dao.get_operations().pipe(function(operations) {
                 self.set( {'nbr_pending_operations':operations.length} );
                 if(operations.length === 0){
