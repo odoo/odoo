@@ -729,6 +729,10 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
         init: function() { 
             this._super.apply(this, arguments);
             this.pos = new module.PosModel(this.session);
+            this.numpad_visible = true;
+            this.leftpane_visible = true;
+            this.leftpane_width   = '440px';
+            this.cashier_controls_visible = true;
         },
         start: function() {
             var self = this;
@@ -881,6 +885,43 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
         changed_pending_operations: function () {
             var self = this;
             this.synch_notification.on_change_nbr_pending(self.pos.get('nbr_pending_operations').length);
+        },
+        set_numpad_visible: function(visible){
+            if(visible != this.numpad_visible){
+                this.numpad_visible = visible;
+                if(visible){
+                    $('#numpad').show();
+                    $('#paypad').show();
+                }else{
+                    $('#numpad').hide();
+                    $('#paypad').hide();
+                }
+            }
+        },
+        set_leftpane_visible: function(visible){
+            if(visible != this.leftpane_visible){
+                this.leftpane_visible = visible;
+                if(visible){
+                    $('#leftpane').show().animate({'width':this.leftpane_width},500,'swing');
+                    $('#rightpane').animate({'left':this.leftpane_width},500,'swing');
+                }else{
+                    var leftpane = $('#leftpane');
+                    $('#leftpane').animate({'width':'0px'},500,'swing', function(){ leftpane.hide(); });
+                    $('#rightpane').animate({'left':'0px'},500,'swing');
+                }
+            }
+        },
+        set_cashier_controls_visible: function(visible){
+            if(visible != this.cashier_controls_visible){
+                this.cashier_controls_visible = visible;
+                if(visible){
+                    $('#loggedas').show();
+                    $('#rightheader').show();
+                }else{
+                    $('#loggedas').hide();
+                    $('#rightheader').hide();
+                }
+            }
         },
         try_close: function() {
             var self = this;

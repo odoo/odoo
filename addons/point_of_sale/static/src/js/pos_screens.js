@@ -180,6 +180,10 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
             this._super();
             var self = this;
 
+            this.pos_widget.set_numpad_visible(false);
+            this.pos_widget.set_leftpane_visible(true);
+            this.pos_widget.set_cashier_controls_visible(false);
+
             self.pos.proxy.weighting_start();
 
             this.intervalID = setInterval(function(){
@@ -227,6 +231,11 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
         show: function(){
             this._super();
             var self = this;
+
+            this.pos_widget.set_numpad_visible(false);
+            this.pos_widget.set_leftpane_visible(true);
+            this.pos_widget.set_cashier_controls_visible(false);
+
             this.pos_widget.orderView.setNumpadState(this.pos_widget.numpadView.state);
             this.pos_widget.action_bar.add_new_button(
                 {
@@ -260,6 +269,10 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
         show: function(){
             this._super();
             var self = this;
+
+            this.pos_widget.set_numpad_visible(false);
+            this.pos_widget.set_leftpane_visible(true);
+            this.pos_widget.set_cashier_controls_visible(false);
 
             this.pos.proxy.payment_request(0,'card','info');    //TODO TOTAL
 
@@ -307,6 +320,11 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
         show: function(){
             this._super();
             var self = this;
+
+            this.pos_widget.set_numpad_visible(false);
+            this.pos_widget.set_leftpane_visible(false);
+            this.pos_widget.set_cashier_controls_visible(false);
+
             this.pos_widget.action_bar.add_new_button(
                 {
                     label:'scan',
@@ -357,6 +375,11 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
         show: function(){
             this._super();
             var self = this;
+
+            this.pos_widget.set_numpad_visible(false);
+            this.pos_widget.set_leftpane_visible(true);
+            this.pos_widget.set_cashier_controls_visible(false);
+
             this.pos_widget.action_bar.add_new_button(
                 {
                     label: 'help',
@@ -410,6 +433,11 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
         show: function(){
             this._super();
             var self = this;
+
+            this.pos_widget.set_numpad_visible(true);
+            this.pos_widget.set_leftpane_visible(true);
+            this.pos_widget.set_cashier_controls_visible(true);
+
             this.pos_widget.orderView.setNumpadState(this.pos_widget.numpadView.state);
             this.pos_widget.action_bar.add_new_button(
                 {
@@ -468,6 +496,13 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
             $('button#pos-finish-order', this.$element).click(_.bind(this.finishOrder, this));
             $('button#print-the-ticket', this.$element).click(_.bind(this.print, this));
         },
+        show: function(){
+            this._super();
+
+            this.pos_widget.set_numpad_visible(true);
+            this.pos_widget.set_leftpane_visible(true);
+            this.pos_widget.set_cashier_controls_visible(true);
+        },
         print: function() {
             window.print();
         },
@@ -504,6 +539,11 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
         },
         show: function(){
             this._super();
+
+            this.pos_widget.set_numpad_visible(true);
+            this.pos_widget.set_leftpane_visible(true);
+            this.pos_widget.set_cashier_controls_visible(true);
+
             this.setNumpadState(this.pos_widget.numpadView.state);
         },
         hide: function(){
