@@ -869,6 +869,7 @@ instance.web.search.Input = instance.web.search.Widget.extend( /** @lends instan
 });
 instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends instance.web.search.FilterGroup# */{
     template: 'SearchView.filters',
+    icon: 'q',
     /**
      * Inclusive group of filters, creates a continuous "button" with clickable
      * sections (the normal display for filters is to be a self-contained button)
@@ -897,6 +898,7 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
     make_facet: function (values) {
         return {
             category: _t("Filter"),
+            icon: this.icon,
             values: values,
             field: this
         }
@@ -974,6 +976,7 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
     }
 });
 instance.web.search.GroupbyGroup = instance.web.search.FilterGroup.extend({
+    icon: 'w',
     init: function (filters, view) {
         this._super(filters, view);
         // Not flanders: facet unicity is handled through the
@@ -995,6 +998,7 @@ instance.web.search.GroupbyGroup = instance.web.search.FilterGroup.extend({
     make_facet: function (values) {
         return {
             category: _t("GroupBy"),
+            icon: this.icon,
             values: values,
             field: this.getParent()._s_groupby
         };

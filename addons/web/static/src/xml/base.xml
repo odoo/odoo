@@ -1303,7 +1303,11 @@
      type="button"
      class="oe_searchview_facet">
     <span class="oe_facet_remove">✖</span>
-    <span class="oe_facet_category">
+
+    <span class="oe_facet_category oe_i" t-if="widget.model.has('icon')">
+        <t t-esc="widget.model.get('icon')"/>
+    </span
+    ><span class="oe_facet_category" t-if="!widget.model.has('icon')">
         <t t-esc="widget.model.get('category')"/>
     </span ><span/>
 </button>

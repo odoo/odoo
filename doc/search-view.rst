@@ -218,6 +218,17 @@ with directly by external objects or search view controls
         it serializes to and deserializes from javascript arrays (via
         ``Collection#toJSON`` and ``Collection#reset``).
 
+    .. js:attribute:: [icon]
+
+        optional, a single ASCII letter (a-z or A-Z) mapping to the
+        bundled mnmliconsRegular icon font.
+
+        When a facet with an ``icon`` attribute is rendered, the icon
+        is displayed (in the icon font) in the first section of the
+        facet instead of the ``category``.
+
+        By default, only filters make use of this facility.
+
 .. js:class:: openerp.web.search.FacetValues
 
     `Backbone collection`_ of
