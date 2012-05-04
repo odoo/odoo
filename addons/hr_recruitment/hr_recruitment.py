@@ -156,7 +156,7 @@ class hr_applicant(crm.crm_case, osv.osv):
         if stage_ids:
             return self.write(cr, uid, [applicant_id], {'stage_id': stage_ids[0]}, context=context)
         else:
-            return cr.execute("""UPDATE hr_applicant SET state=%s WHERE id=%s""", (field_value, hr_applicant_id))
+            return cr.execute("""UPDATE hr_applicant SET state=%s WHERE id=%s""", (field_value, applicant_id))
     
 
     _columns = {

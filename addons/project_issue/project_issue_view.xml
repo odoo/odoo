@@ -62,7 +62,7 @@
                         </group>
                         <field name="user_id"/>
                         <field name="version_id" colspan="2" widget="selection"/>
-                        <group colspan="2" col="4">
+                        <group colspan="2" col="4" attrs="{'invisible': [('type_id','=', False)]}">
                             <field name="type_id" string="Stages" />
                             <button name="prev_type" string="Previous" type="object" icon="gtk-go-back" help="Change to Previous Stage"/>
                             <button name="next_type" string="Next" type="object" icon="gtk-go-forward" help="Change to Next Stage"/>
@@ -96,7 +96,7 @@
                             <button name="case_reset" string="Reset to New" states="done,cancel" type="object" icon="gtk-convert" groups="base.group_no_one"/>
                             </group>
                         </page>
-                        <page string="Extra Info" groups="base.group_extended">
+                        <page string="Extra Info">
                             <group col="4" colspan="4">
                                 <separator string="Statistics" colspan="4" col="4"/>
                                 <field name="day_open"/>
@@ -128,12 +128,12 @@
                     <field name="id"/>
                     <field name="create_date" groups="base.group_no_one"/>
                     <field name="name"/>
-                    <field name="partner_id" groups="base.group_extended"/>
+                    <field name="partner_id"/>
                     <field name="project_id" />
                     <field name="priority" string="Priority"/>
                     <field name="type_id" widget="selection" readonly="1" string="Stages" />
-                    <button name="prev_type" string="Previous" type="object" icon="gtk-go-back" help="Change to Previous Stage"/>
-                    <button name="next_type" string="Next" type="object" icon="gtk-go-forward" help="Change to Next Stage"/>
+                    <button name="prev_type" string="Previous" type="object" icon="gtk-go-back" help="Change to Previous Stage" attrs="{'invisible': [('type_id','=', False)]}"/>
+                    <button name="next_type" string="Next" type="object" icon="gtk-go-forward" help="Change to Next Stage" attrs="{'invisible': [('type_id','=', False)]}"/>
                     <field name="version_id" widget="selection"/>
                     <field name="user_id"/>
                     <field name="progress" widget="progressbar" attrs="{'invisible':[('task_id','=',False)]}"/>
@@ -157,6 +157,7 @@
             <field name="arch" type="xml">
                 <search string="Issue Tracker Search">
                     <group>
+                        <filter icon="terp-check" name="inbox" string="Inbox" domain="[('message_state','=','unread')]"/>
                         <filter string="New" icon="terp-document-new" name="draft" domain="[('state','=','draft')]" help="New Issues"/>
                         <filter string="To Do" name="todo" domain="[('state','=','open')]" help="To Do Issues" icon="terp-check"/>
                         <filter string="Pending" domain="[('state','=','pending')]"  help="Pending Issues" icon="terp-gtk-media-pause"/>
@@ -169,7 +170,7 @@
                         <field name="id"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By..."  groups="base.group_extended">
+                    <group expand="0" string="Group By..." >
                         <filter string="Responsible" icon="terp-personal"
                             domain="[]" context="{'group_by':'user_id'}" />
                         <filter string="Partner" icon="terp-partner" domain="[]"
@@ -295,7 +296,7 @@
                     <field name="id"/>
                     <field name="needaction_pending" invisible="1"/>
                     <field name="name" string="Feature description"/>
-                    <field name="partner_id" groups="base.group_extended"/>
+                    <field name="partner_id"/>
                     <field name="priority" string="Priority"/>
                     <field name="type_id" widget="selection" readonly="1"/>
                     <button name="prev_type" string="Previous" type="object" icon="gtk-go-back" help="Change to Previous Stage"/>

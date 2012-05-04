@@ -72,6 +72,7 @@ class mail_thread(osv.osv):
     _columns = {
         'message_ids_social': fields.function(_get_message_ids, method=True,
                         type='one2many', obj='mail.message', string='Temp messages', _fields_id = 'res_id'),
+        'message_state': fields.selection([('read', 'Read'),('unread', 'Unread')], 'Message State'),
     }
 
     #------------------------------------------------------
@@ -569,6 +570,7 @@ class mail_thread(osv.osv):
             data.update(custom_values)
         res_id = model_pool.create(cr, uid, data, context=context)
         self.message_append_dict(cr, uid, [res_id], msg_dict, context=context)
+        self.write(cr, uid, [res_id], {'message_state':'unread'}, context=context)
         return res_id
 
     def message_update(self, cr, uid, ids, msg_dict, vals={}, default_act=None, context=None):
@@ -587,6 +589,7 @@ class mail_thread(osv.osv):
                                 to determine the model of the thread to
                                 update (instead of the current model).
         """
+        self.write(cr, uid, ids, {'message_state':'unread'}, context=context)
         return self.message_append_dict(cr, uid, ids, msg_dict, context=context)
 
     def message_thread_followers(self, cr, uid, ids, context=None):

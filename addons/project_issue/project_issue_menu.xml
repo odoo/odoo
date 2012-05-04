@@ -12,7 +12,7 @@
         <field name="view_mode">kanban,tree,calendar</field>
         <field name="view_id" eval="False"/>
         <field name="domain" eval=""/>
-        <field name="context">{"search_default_user_id": uid, "search_default_draft": 1,"search_default_todo": 1,"search_default_project_id":project_id}</field>
+        <field name="context">{"search_default_user_id": uid, "search_default_draft": 1,"search_default_todo": 1,"search_default_project_id":project_id, 'search_default_inbox': 1}</field>
         <field name="search_view_id" ref="view_project_issue_filter"/>
         <field name="help">Issues such as system bugs, customer complaints, and material breakdowns are collected here. You can define the stages assigned when solving the project issue (analysis, development, done). With the mailgateway module, issues can be integrated through an email address (example: support@mycompany.com)</field>
     </record>

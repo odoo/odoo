@@ -12,7 +12,7 @@
                         <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
                         <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
                         <separator orientation="vertical"/>
-                        <filter icon="terp-gtk-jump-to-ltr" string="To Review" domain="[('state','=','posted')]" groups="base.group_extended" help="To Review"/>
+                        <filter icon="terp-gtk-jump-to-ltr" string="To Review" domain="[('state','=','posted')]" help="To Review"/>
                         <separator orientation="vertical"/>
                         <field name="date"/>
                         <field name="number"/>
@@ -21,7 +21,7 @@
                     <newline/>
                     <group>
                         <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('bank','cash'))]"/>
-                        <field name="period_id" groups="base.group_extended"/>
+                        <field name="period_id"/>
                     </group>
                    <newline/>
                     <group expand="0" string="Group By...">
@@ -45,7 +45,7 @@
                         <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
                         <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
                         <separator orientation="vertical"/>
-                        <filter icon="terp-gtk-jump-to-ltr" string="To Review" domain="[('state','=','posted')]" groups="base.group_extended" help="To Review"/>
+                        <filter icon="terp-gtk-jump-to-ltr" string="To Review" domain="[('state','=','posted')]" help="To Review"/>
                         <separator orientation="vertical"/>
                         <field name="date"/>
                         <field name="number"/>
@@ -54,7 +54,7 @@
                     <newline/>
                     <group>
                         <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('bank','cash'))]"/>
-                        <field name="period_id" groups="base.group_extended"/>
+                        <field name="period_id"/>
                     </group>
                    <newline/>
                     <group expand="0" string="Group By...">
@@ -98,7 +98,7 @@
                                         on_change="onchange_move_line_id(move_line_id)"
                                         domain="[('account_id.type','=','payable'), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id)]"
                                         />
-                                    <field name="account_id" groups="base.group_extended" domain="[('type','=','payable')]"/>
+                                    <field name="account_id" domain="[('type','=','payable')]"/>
                                     <field name="date_original" readonly="1"/>
                                     <field name="date_due" readonly="1"/>
                                     <field name="amount_original" readonly="1"/>
@@ -112,7 +112,7 @@
                                         on_change="onchange_move_line_id(move_line_id)"
                                         domain="[('account_id.type','=','payable'), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id)]"
                                         />
-                                    <field name="account_id" groups="base.group_extended" domain="[('type','=','payable')]"/>
+                                    <field name="account_id" domain="[('type','=','payable')]"/>
                                     <field name="date_original" readonly="1"/>
                                     <field name="date_due" readonly="1"/>
                                     <field name="amount_original" readonly="1"/>
@@ -127,9 +127,9 @@
                             <group col="4" colspan="1">
                                 <separator string="Other Information" colspan="4"/>
                                 <field name="currency_id" colspan="4"/>
-                                <field name="payment_rate" required="1" on_change="onchange_rate(payment_rate, amount, currency_id, payment_rate_currency_id, company_id, context)" groups='base.group_extended' colspan="3"/>
-                                <field name="payment_rate_currency_id" groups='base.group_extended' colspan="1" nolabel="1" on_change="onchange_payment_rate_currency(currency_id, payment_rate, payment_rate_currency_id, date, amount, company_id, context)"/>
-                                <field name="paid_amount_in_company_currency" groups='base.group_extended' colspan="4" invisible="1"/>
+                                <field name="payment_rate" required="1" on_change="onchange_rate(payment_rate, amount, currency_id, payment_rate_currency_id, company_id, context)" colspan="3"/>
+                                <field name="payment_rate_currency_id" colspan="1" nolabel="1" on_change="onchange_payment_rate_currency(currency_id, payment_rate, payment_rate_currency_id, date, amount, company_id, context)"/>
+                                <field name="paid_amount_in_company_currency" colspan="4" invisible="1"/>
                                 <field name="number" colspan="4"/>
                             </group>
                         </page>
@@ -206,9 +206,9 @@
                                 <group col="4" colspan="1" attrs="{'invisible':[('currency_id','=',False),('is_multi_currency','=',False)]}">
                                     <separator string="Currency Options" colspan="4"/>
                                     <field name="is_multi_currency" invisible="1"/>
-                                    <field name="payment_rate" required="1" on_change="onchange_rate(payment_rate, amount, currency_id, payment_rate_currency_id, company_id, context)" groups='base.group_extended' colspan="3"/>
-                                    <field name="payment_rate_currency_id" groups='base.group_extended' colspan="1" nolabel="1" on_change="onchange_payment_rate_currency(currency_id, payment_rate, payment_rate_currency_id, date, amount, company_id, context)"/>
-                                    <field name="paid_amount_in_company_currency" groups='base.group_extended' colspan="4" invisible="1"/>
+                                    <field name="payment_rate" required="1" on_change="onchange_rate(payment_rate, amount, currency_id, payment_rate_currency_id, company_id, context)" colspan="3"/>
+                                    <field name="payment_rate_currency_id" colspan="1" nolabel="1" on_change="onchange_payment_rate_currency(currency_id, payment_rate, payment_rate_currency_id, date, amount, company_id, context)"/>
+                                    <field name="paid_amount_in_company_currency" colspan="4" invisible="1"/>
                                 </group>
                                 <group col="2" colspan="1">
                                     <separator string="Payment Options" colspan="2"/>
@@ -224,7 +224,7 @@
                                 </group>
                             </group>
                         </page>
-                        <page string="Journal Items" groups="base.group_extended" attrs="{'invisible': [('state','!=','posted')]}">
+                        <page string="Journal Items" attrs="{'invisible': [('state','!=','posted')]}">
                             <group col="6" colspan="4">
                                 <field name="period_id"/>
                                 <field name="audit"/>
@@ -356,11 +356,11 @@
                             </group>
                             <group col="2" colspan="1">
                                 <group col="4" colspan="1" attrs="{'invisible':[('currency_id','=',False),('is_multi_currency','=',False)]}">
-                                    <separator string="Currency Options" colspan="4" groups='base.group_extended'/>
+                                    <separator string="Currency Options" colspan="4"/>
                                     <field name="is_multi_currency" invisible="1"/>
-                                    <field name="payment_rate" required="1" on_change="onchange_rate(payment_rate, amount, currency_id, payment_rate_currency_id, company_id, context)" groups='base.group_extended' colspan="3"/>
-                                    <field name="payment_rate_currency_id" groups='base.group_extended' colspan="1" nolabel="1" on_change="onchange_payment_rate_currency(currency_id, payment_rate, payment_rate_currency_id, date, amount, company_id, context)"/>
-                                    <field name="paid_amount_in_company_currency" groups='base.group_extended' colspan="4" invisible="1"/>
+                                    <field name="payment_rate" required="1" on_change="onchange_rate(payment_rate, amount, currency_id, payment_rate_currency_id, company_id, context)" colspan="3"/>
+                                    <field name="payment_rate_currency_id" colspan="1" nolabel="1" on_change="onchange_payment_rate_currency(currency_id, payment_rate, payment_rate_currency_id, date, amount, company_id, context)"/>
+                                    <field name="paid_amount_in_company_currency" colspan="4" invisible="1"/>
                                 </group>
                                 <group col="2" colspan="1">
                                     <separator string="Payment Options" colspan="2"/>
@@ -376,7 +376,7 @@
                                 </group>
                             </group>
                         </page>
-                        <page string="Journal Items" groups="base.group_extended" attrs="{'invisible': [('state','!=','posted')]}">
+                        <page string="Journal Items" attrs="{'invisible': [('state','!=','posted')]}">
                             <group col="6" colspan="4">
                                 <field name="period_id"/>
                                 <field name="audit"/>
