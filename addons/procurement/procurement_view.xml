@@ -162,7 +162,7 @@
             <field name="model">stock.warehouse.orderpoint</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Minimum Stock Rules">
+                <tree string="Reordering Rules">
                     <field name="name"/>
                     <field name="warehouse_id"/>
                     <field name="location_id"/>
@@ -179,7 +179,7 @@
             <field name="model">stock.warehouse.orderpoint</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <search string="Minimum Stock Rules Search">
+                <search string="Reordering Rules Search">
                     <group>
                         <field name="name"/>
                         <field name="warehouse_id" widget="selection"/>
@@ -201,7 +201,7 @@
             <field name="model">stock.warehouse.orderpoint</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Minimum Stock Rules">
+                <form string="Reordering Rules">
                     <group col="2" colspan="2">
                         <separator string="General Information" colspan="2" />
                         <field name="name" />
@@ -234,7 +234,7 @@
         </record>
 
         <record id="action_orderpoint_form" model="ir.actions.act_window">
-            <field name="name">Minimum Stock Rules</field>
+            <field name="name">Reordering Rules</field>
             <field name="res_model">stock.warehouse.orderpoint</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
@@ -246,7 +246,7 @@
         <act_window
         context="{'search_default_warehouse_id': active_id, 'default_warehouse_id': active_id}"
         id="act_stock_warehouse_2_stock_warehouse_orderpoint"
-        name="Minimum Stock Rules"
+        name="Reordering Rules"
         res_model="stock.warehouse.orderpoint"
         src_model="stock.warehouse"
         groups="stock.group_stock_user"/>
@@ -255,7 +255,7 @@
         <act_window
             context="{'product_uom': locals().has_key('uom_id') and uom_id,'search_default_product_id': [active_id], 'default_product_id': active_id}"
             id="act_product_product_2_stock_warehouse_orderpoint"
-            name="Minimum Stock Rules"
+            name="Reordering Rules"
             res_model="stock.warehouse.orderpoint"
             src_model="product.product"
             groups="stock.group_stock_user"/>
@@ -263,7 +263,7 @@
         <act_window
             context="{'product_uom': locals().has_key('uom_id') and uom_id, 'default_procurement_id': active_id}"
             id="act_procurement_2_stock_warehouse_orderpoint"
-            name="Minimum Stock Rules"
+            name="Reordering Rules"
             res_model="stock.warehouse.orderpoint"
             src_model="procurement.order"
             groups="stock.group_stock_user"/>
@@ -284,7 +284,7 @@
             <field name="arch" type="xml">
                   <group name="misc" position="after">
                       <group col="2" colspan="2" attrs="{'invisible':[('type', '=', 'service')]}">
-                          <separator string="Minimum Stock Rules" colspan="2"/>
+                          <separator string="Reordering Rules" colspan="2"/>
                           <field name="orderpoint_ids" context="{'default_product_uom': uom_id}" nolabel="1">
                               <tree string="Minimum Stock Rule" editable="bottom">
                                   <field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)" widget="selection"/>
