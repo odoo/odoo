@@ -107,7 +107,15 @@
         <field name="model">auction.dates</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Auctions">
+            <form layout="manual">
+            <div class="oe_form_topbar">
+                <button name="close" states="draft" string="Create Invoices" type="object" colspan="2" icon="terp-gtk-go-back-rtl"/>
+            <div class="oe_right">
+                <field name="state" widget="statusbar" nolabel="1"/>
+            </div>
+            </div>
+            <sheet string="Auctions" layout="auto">
+            <group class="oe_form_header">
                 <field name="name" colspan="2" select="1"/>
                 <notebook colspan="4">
                     <page string="Auction Dates">
@@ -123,9 +131,6 @@
                                 <field name="auction2" select="1"/>
                             </group>
                         </group>
-                        <separator string="" colspan="4"/>
-                        <field name="state"/>
-                        <button name="close" states="draft" string="Create Invoices" type="object" colspan="2" icon="terp-gtk-go-back-rtl"/>
                     </page>
                     <page string="Accounting" >
                         <group colspan="4" col="4">
@@ -193,6 +198,8 @@
                         </group>
                     </page>
                 </notebook>
+                </group>
+               </sheet>
             </form>
         </field>
     </record>
@@ -296,8 +303,18 @@
         <field name="type">form</field>
         <field name="priority" eval="8"/>
         <field name="arch" type="xml">
-            <form string="Objects">
-              <group colspan="4" col="8">
+            <form layout="manual">
+            <div class="oe_form_topbar">
+                 <button name="button_bought" string="Sold" states="draft" type="object" icon="gtk-jump-to"/>
+                 <button name="button_not_bought" string="Not sold" states="draft" type="object" icon="gtk-undo"/>
+                 <button name="button_taken_away" string="Taken away" states="sold" type="object" icon="gtk-goto-last"/>
+                 <button name="button_unpaid" string="Set to draft" states="sold,unsold,paid" type="object" icon="gtk-convert"/>
+            <div class="oe_right">
+                <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,sold" />
+            </div>
+            </div>
+            <sheet string="Objects" layout="auto">
+              <group colspan="4" col="8" class="oe_form_header">
                 <field name="name" colspan="4"/>
                 <field name="obj_num"/>
                 <newline/>
@@ -363,16 +380,6 @@
                             <field name="paid_vnd"/>
                         </group>
                     </group>
-                       <group colspan="4" col="4">
-                        <separator string="" colspan="4"/>
-                        <field name="state" colspan="1"/>
-                        <group col="8" colspan="2">
-                            <button name="button_bought" string="Sold" states="draft" type="object" icon="gtk-jump-to"/>
-                            <button name="button_not_bought" string="Not sold" states="draft" type="object" icon="gtk-undo"/>
-                            <button name="button_taken_away" string="Taken away" states="sold" type="object" icon="gtk-goto-last"/>
-                            <button name="button_unpaid" string="Set to draft" states="sold,unsold,paid" type="object" icon="gtk-convert"/>
-                        </group>
-                      </group>
                    </page>
                    <page string="Bids">
                        <field name="bid_lines" colspan="4" nolabel="1">
@@ -425,6 +432,7 @@
                         <field name="obj_desc" colspan="4" nolabel="1"/>
                     </page>
                 </notebook>
+                </sheet>
            </form>
         </field>
     </record>
