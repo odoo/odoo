@@ -62,7 +62,7 @@
                 <field name="availability" invisible="1"/>
                 <field name="department_id" invisible="context.get('invisible_department', True)"/>
                 <field name="user_id"/>
-                <field name="state"/>
+                <field name="state" groups="base.group_no_one"/>
                 <button name="case_open" string="In Progress" states="draft,pending" type="object" icon="gtk-go-forward" groups="base.group_no_one"/>
                 <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause" groups="base.group_no_one"/>
             </tree>
