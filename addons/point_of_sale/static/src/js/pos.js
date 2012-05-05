@@ -791,6 +791,7 @@ openerp.point_of_sale = function(db) {
     var CategoryWidget = db.web.OldWidget.extend({
         start: function() {
             this.$element.find(".oe-pos-categories-list a").click(_.bind(this.changeCategory, this));
+            $("#products-screen-ol").css("top",$("#products-screen-categories").height()+"px");
         },
         template_fct: qweb_template('pos-category-template'),
         render_element: function() {
