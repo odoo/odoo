@@ -179,8 +179,9 @@ class event_items(osv.osv):
     _columns = {
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'price': fields.integer('Price'),
-        'max_qty': fields.integer('Max.Quantity available'),
-        'qty': fields.integer('QTY', type ='integer'),
+        #Need to convert  this integer field in to dynamic selection.. TODO
+      #  'max_qty': fields.integer('Max.Quantity available'),
+        'qty': fields.integer('Quantity'),
         'uom_id': fields.many2one('product.uom', 'UoM'),
         'discount': fields.integer('Discount'),
         'event_id': fields.many2one('event.event', 'Event'),

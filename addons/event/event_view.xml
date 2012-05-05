@@ -159,7 +159,7 @@
 		                    </div>
 		                    <newline/>
 		                    <group colspan="4" name="venue">
-                            	<div class="oe_sub1"> Venue   : </div> <separator orientation="vertical"/>
+                            	<div class="oe_sub1"> Venue   : </div> 
                             	<field name="location_id" nolabel="1" readonly="1"/> 
                         	</group>
 			             </group>	
@@ -187,9 +187,10 @@
 			                     </tr>
 		                     </table>   
 			             </group>
-                    </group>	
-                    <separator string="Event Details" colspan="4"/>
-                    <field name="note" colspan="4" nolabel="1" readonly="1"/>
+                    </group>
+                    <separator string="" colspan="4"/>
+                    	<label string="Event Details:" colspan="4"/>
+                    	<field name="note" colspan="4" nolabel="1" readonly="1"/>
                     </sheet>
             </form>
             </field>
