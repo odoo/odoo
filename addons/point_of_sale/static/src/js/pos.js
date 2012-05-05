@@ -69,7 +69,7 @@ openerp.point_of_sale = function(db) {
                 }, this));
             }, this));
             $.when(this.fetch('pos.category', ['name', 'parent_id', 'child_id']),
-                this.fetch('product.product', ['name', 'list_price', 'pos_categ_id', 'taxes_id', 'product_image_small', 'ean13', 'id'], [['pos_categ_id', '!=', 'false']]),
+                this.fetch('product.product', ['name', 'list_price', 'pos_categ_id', 'taxes_id', 'product_image_small', 'ean13', 'id'], [['pos_categ_id', '!=', false]]),
                 this.fetch('product.packaging', ['product_id', 'ean']),
                 this.fetch('account.bank.statement', ['account_id', 'currency', 'journal_id', 'state', 'name'],
                     [['state', '=', 'open'], ['user_id', '=', this.session.uid]]),
