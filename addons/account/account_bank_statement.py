@@ -26,24 +26,18 @@ from tools.translate import _
 import decimal_precision as dp
 
 class account_bank_statement(osv.osv):
-
     def create(self, cr, uid, vals, context=None):
-        seq = 0
         if 'line_ids' in vals:
-            new_line_ids = []
-            for line in vals['line_ids']:
-                seq += 1
-                line[2]['sequence'] = seq
+            for idx, line in enumerate(vals['line_ids']):
+                line[2]['sequence'] = idx + 1
         return super(account_bank_statement, self).create(cr, uid, vals, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
         res = super(account_bank_statement, self).write(cr, uid, ids, vals, context=context)
         account_bank_statement_line_obj = self.pool.get('account.bank.statement.line')
         for statement in self.browse(cr, uid, ids, context):
-            seq = 0
-            for line in statement.line_ids:
-                seq += 1
-                account_bank_statement_line_obj.write(cr, uid, [line.id], {'sequence': seq}, context=context)
+            for idx, line in enumerate(statement.line_ids):
+                account_bank_statement_line_obj.write(cr, uid, [line.id], {'sequence': idx + 1}, context=context)
         return res
 
     def _default_journal_id(self, cr, uid, context=None):
@@ -51,13 +45,12 @@ class account_bank_statement(osv.osv):
             context = {}
         journal_pool = self.pool.get('account.journal')
         journal_type = context.get('journal_type', False)
-        journal_id = False
         company_id = self.pool.get('res.company')._company_default_get(cr, uid, 'account.bank.statement',context=context)
         if journal_type:
             ids = journal_pool.search(cr, uid, [('type', '=', journal_type),('company_id','=',company_id)])
             if ids:
-                journal_id = ids[0]
-        return journal_id
+                return ids[0]
+        return False
 
     def _end_balance(self, cursor, user, ids, name, attr, context=None):
         res_currency_obj = self.pool.get('res.currency')
@@ -379,14 +372,22 @@ class account_bank_statement(osv.osv):
             account_move_obj.unlink(cr, uid, ids, context)
             done.append(st.id)
         return self.write(cr, uid, done, {'state':'draft'}, context=context)
-
-    def onchange_journal_id(self, cr, uid, statement_id, journal_id, context=None):
+    
+    def _compute_balance_end_real(self, cr, uid, journal_id, context=None):
+        
         cr.execute('SELECT balance_end_real \
                 FROM account_bank_statement \
                 WHERE journal_id = %s AND NOT state = %s \
                 ORDER BY date DESC,id DESC LIMIT 1', (journal_id, 'draft'))
         res = cr.fetchone()
-        balance_start = res and res[0] or 0.0
+
+        print "res: %r" % (res,)
+
+        return res and res[0] or 0.0
+
+    def onchange_journal_id(self, cr, uid, statement_id, journal_id, context=None):
+        balance_start = self._compute_balance_end_real(cr, uid, journal_id, context=context)
+
         journal_data = self.pool.get('account.journal').read(cr, uid, journal_id, ['default_debit_account_id', 'company_id'], context=context)
         account_id = journal_data['default_debit_account_id']
         company_id = journal_data['company_id']

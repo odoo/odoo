@@ -154,7 +154,7 @@ function openerp_pos_models(module, instance){ //module is instance.point_of_sal
         },
         _int_flush : function() {
             var self = this;
-            
+
             this.dao.get_operations().pipe(function(operations) {
                 self.set( {'nbr_pending_operations':operations.length} );
                 if(operations.length === 0){
@@ -269,19 +269,37 @@ function openerp_pos_models(module, instance){ //module is instance.point_of_sal
         defaults: {
             quantity: 1,
             list_price: 0,
-            discount: 0
+            discount: 0,
+            weighted: false,
         },
         initialize: function(attributes) {
             this.pos = attributes.pos;
+            console.log(attributes);
             Backbone.Model.prototype.initialize.apply(this, arguments);
+
+            if(attributes.weight){
+                this.setWeight(attributes.weight);
+                this.set({weighted: true});
+            }
+
             this.bind('change:quantity', function(unused, qty) {
                 if (qty == 0)
                     this.trigger('killme');
             }, this);
         },
+        setWeight: function(weight){
+            return this.set({
+                quantity: weight,
+            });
+        },
         incrementQuantity: function() {
             return this.set({
                 quantity: (this.get('quantity')) + 1
+            });
+        },
+        incrementWeight: function(weight){
+            return this.set({
+                quantity: (this.get('quantity')) + weight,
             });
         },
         getPriceWithoutTax: function() {
@@ -409,7 +427,12 @@ function openerp_pos_models(module, instance){ //module is instance.point_of_sal
             var existing;
             existing = (this.get('orderLines')).get(product.id);
             if (existing != null) {
-                existing.incrementQuantity();
+                if(existing.get('weighted')){
+                    console.log('TODO VERIFY THIS');
+                    existing.incrementWeight(product.attributes.weight);
+                }else{
+                    existing.incrementQuantity();
+                }
             } else {
                 var attr = product.toJSON();
                 attr.pos = this.pos;

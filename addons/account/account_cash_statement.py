@@ -43,24 +43,27 @@ class account_cashbox_line(osv.osv):
         """
         res = {}
         for obj in self.browse(cr, uid, ids, context=context):
-            res[obj.id] = obj.pieces * obj.number
+            res[obj.id] = {
+                'subtotal_opening' : obj.pieces * obj.number_opening,
+                'subtotal_closing' : obj.pieces * obj.number_closing,
+            }
         return res
 
-    def on_change_sub(self, cr, uid, ids, pieces, number, *a):
+    def on_change_sub_opening(self, cr, uid, ids, pieces, number, *a):
+        """ Compute the subtotal for the opening """
+        return {'value' : {'subtotal_opening' : (pieces * number) or 0.0 }}
 
-        """ Calculates Sub total on change of number
-        @param pieces: Names of fields.
-        @param number:
-        """
-        sub = pieces * number
-        return {'value': {'subtotal': sub or 0.0}}
+    def on_change_sub_closing(self, cr, uid, ids, pieces, number, *a):
+        """ Compute the subtotal for the closing """
+        return {'value' : {'subtotal_closing' : (pieces * number) or 0.0 }}
 
     _columns = {
-        'pieces': fields.float('Values', digits_compute=dp.get_precision('Account')),
-        'number': fields.integer('Number'),
-        'subtotal': fields.function(_sub_total, string='Sub Total', type='float', digits_compute=dp.get_precision('Account')),
-        'starting_id': fields.many2one('account.bank.statement', ondelete='cascade'),
-        'ending_id': fields.many2one('account.bank.statement', ondelete='cascade'),
+        'pieces': fields.float('Unit of Currency', digits_compute=dp.get_precision('Account')),
+        'number_opening' : fields.integer('Number of Units', help='Opening Unit Numbers'),
+        'number_closing' : fields.integer('Number of Units', help='Closing Unit Numbers'),
+        'subtotal_opening': fields.function(_sub_total, string='Subtotal Opening', type='float', digits_compute=dp.get_precision('Account'), multi='subtotal'),
+        'subtotal_closing': fields.function(_sub_total, string='Subtotal Closing', type='float', digits_compute=dp.get_precision('Account'), multi='subtotal'),
+        'bank_statement_id' : fields.many2one('account.bank.statement', ondelete='cascade'),
      }
 
 account_cashbox_line()
@@ -78,16 +81,14 @@ class account_cash_statement(osv.osv):
         """
         res = {}
         for statement in self.browse(cr, uid, ids, context=context):
-            amount_total = 0.0
-
             if statement.journal_id.type not in('cash'):
                 continue
-
-            for line in statement.starting_details_ids:
-                amount_total+= line.pieces * line.number
             res[statement.id] = {
-                'balance_start': amount_total
+                'balance_start': sum((line.pieces * line.number_opening 
+                                     for line in statement.details_ids), 0.0)
             }
+
+        print "_get_starting_balance: %r" % (res,)
         return res
 
     def _balance_end_cash(self, cr, uid, ids, name, arg, context=None):
@@ -98,10 +99,9 @@ class account_cash_statement(osv.osv):
         """
         res = {}
         for statement in self.browse(cr, uid, ids, context=context):
-            amount_total = 0.0
-            for line in statement.ending_details_ids:
-                amount_total += line.pieces * line.number
-            res[statement.id] = amount_total
+            res[statement.id] = sum((line.pieces * line.number_closing
+                                    for line in statement.details_ids), 0.0)
+        print "_balance_end_cash: %r" % (res,)            
         return res
 
     def _get_sum_entry_encoding(self, cr, uid, ids, name, arg, context=None):
@@ -111,13 +111,11 @@ class account_cash_statement(osv.osv):
         @param arg: User defined arguments
         @return: Dictionary of values.
         """
-        res2 = {}
+        res = {}
         for statement in self.browse(cr, uid, ids, context=context):
-            encoding_total=0.0
-            for line in statement.line_ids:
-               encoding_total += line.amount
-            res2[statement.id] = encoding_total
-        return res2
+            res[statement.id] = sum((line.amount for line in statement.line_ids), 0.0)
+        print "_get_sum_entry_encoding: %r" % (res,)
+        return res
 
     def _get_company(self, cr, uid, context=None):
         user_pool = self.pool.get('res.users')
@@ -190,33 +188,84 @@ class account_cash_statement(osv.osv):
             result[line.statement_id.id] = True
         return result.keys()
 
+    def _compute_difference(self, cr, uid, ids, fieldnames, args, context=None):
+        result =  dict.fromkeys(ids, 0.0)
+
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = obj.balance_end - obj.balance_end_cash
+
+        return result
+
     _columns = {
         'total_entry_encoding': fields.function(_get_sum_entry_encoding, string="Cash Transaction", help="Total cash transactions",
             store = {
-                'account.bank.statement': (lambda self, cr, uid, ids, c={}: ids, ['line_ids','move_line_ids'], 10),
+                'account.bank.statement': (lambda self, cr, uid, ids, context=None: ids, ['line_ids','move_line_ids'], 10),
                 'account.bank.statement.line': (_get_statement, ['amount'], 10),
             }),
         'closing_date': fields.datetime("Closed On"),
-        'balance_end_cash': fields.function(_balance_end_cash, store=True, string='Closing Balance', help="Closing balance based on cashBox"),
-        'starting_details_ids': fields.one2many('account.cashbox.line', 'starting_id', string='Opening Cashbox'),
-        'ending_details_ids': fields.one2many('account.cashbox.line', 'ending_id', string='Closing Cashbox'),
+        'balance_end_cash': fields.function(_balance_end_cash, store=False, string='Closing Balance', help="Closing balance based on cashBox"),
+        'details_ids' : fields.one2many('account.cashbox.line', 'bank_statement_id', string='CashBox Lines'),
         'user_id': fields.many2one('res.users', 'Responsible', required=False),
+        'difference' : fields.function(_compute_difference, method=True, string="Difference", type="float"),
     }
+    
     _defaults = {
         'state': 'draft',
-        'date': lambda self,cr,uid,context={}: context.get('date', time.strftime("%Y-%m-%d %H:%M:%S")),
+        'date': lambda self, cr, uid, context={}: context.get('date', time.strftime("%Y-%m-%d %H:%M:%S")),
         'user_id': lambda self, cr, uid, context=None: uid,
-        'starting_details_ids': _get_cash_open_box_lines,
-        'ending_details_ids': _get_default_cash_close_box_lines
-     }
+    }
+
+    def check_opening_journal(self, cr, uid, ids, context=None):
+        """
+        This constraint will check than the journal is not used twice in the system, 
+        to avoid a concurrency opening of this journal.
+        """
+        for cash in self.browse(cr, uid, ids, context=None):
+            domain = [
+                ('id', '!=', cash.id),
+                ('journal_id', '=', cash.journal_id.id),
+                ('journal_id.type', '=', 'cash'),
+                ('state', 'in', ('open',)),
+            ]
+            count = self.search_count(cr, uid, domain, context=context)
+
+            if count:
+                return False
+        return True
+
+    _constraints = [
+        #(check_opening_journal, "The selected journal has been opened !", ['journal_id']),
+    ]
 
     def create(self, cr, uid, vals, context=None):
         if self.pool.get('account.journal').browse(cr, uid, vals['journal_id'], context=context).type == 'cash':
             amount_total = 0.0
-            for line in vals.get('starting_details_ids',[]):
+            for line in vals.get('details_ids',[]):
+                print "line: %r" % (line,)
                 if line and len(line)==3 and line[2]:
-                    amount_total+= line[2]['pieces'] * line[2]['number']
+                    # FIXME: If there is no piece # does not work with GTK
+                    amount_total+= line[2].get('pieces', 0) * line[2]['number_opening']
+
             vals.update(balance_start= amount_total)
+            vals.update(balance_end_real=self._compute_balance_end_real(cr, uid, vals['journal_id'], context=context))
+
+            details = vals.get('details_ids')
+            if not details:
+                result = self.onchange_journal_id(cr, uid, None, vals['journal_id'], context=context)
+                vals['details_ids'] = []
+
+                for value in (result['value']['details_ids'] or []):
+                    print "value: %r" % (value,)
+                    nested_values = {
+                        'number_closing' : False,
+                        'number_opening' : False,
+                        'pieces' : value['pieces'],
+                        'subtotal_closing' : False,
+                        'subtotal_opening' : False,
+                    }
+
+                    vals['details_ids'].append([0, False, nested_values])
+
         return super(account_cash_statement, self).create(cr, uid, vals, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -245,19 +294,43 @@ class account_cash_statement(osv.osv):
         @param journal_id: Changed journal_id
         @return:  Dictionary of changed values
         """
-        res = {}
         balance_start = 0.0
-        if not journal_id:
-            res.update({
-                'balance_start': balance_start
-            })
-            return res
+        if journal_id:
+            count = self.search_count(cr, uid, [('journal_id', '=', journal_id),('state', '=', 'open')], context=None)
+            if 0: # count:
+                journal = self.pool.get('account.journal').browse(cr, uid, journal_id, context=context)
+                raise osv.except_osv(_('Error !'), (_('The Account Journal %s is opened by an other Cash Register !') % (journal.name,)))
+            else:
+                values = super(account_cash_statement, self).onchange_journal_id(cr, uid, statement_id, journal_id, context=context)
+                proxy_line = self.pool.get('account.cashbox.line')
+
+                values.setdefault('value', {})
+                values['value']['details_ids'] = []
+                values['value']['balance_end_real'] = self._compute_balance_end_real(cr, uid, journal_id, context=context)
+                values['value']['balance_start'] = 0.0
+
+                journal = self.pool.get('account.journal').browse(cr, uid, journal_id, context=context)
+
+                for line in journal.cashbox_line_ids:
+                    values['value']['details_ids'].append({'pieces' : line.pieces})
+
+                return values
+        else:
+            return {
+                'value' : {
+                    'balance_start': balance_start,
+                    'details_ids' : [],
+                }
+            }
         return super(account_cash_statement, self).onchange_journal_id(cr, uid, statement_id, journal_id, context=context)
 
     def _equal_balance(self, cr, uid, cash_id, context=None):
         statement = self.browse(cr, uid, cash_id, context=context)
         self.write(cr, uid, [cash_id], {'balance_end_real': statement.balance_end})
-        statement.balance_end_real = statement.balance_end
+        print "balance_end_real: %r" % (statement.balance_end,)
+        print "balance_end: %r" % (statement.balance_end,)
+        print "balance_end_cash: %r" % (statement.balance_end_cash,)
+
         if statement.balance_end != statement.balance_end_cash:
             return False
         return True
@@ -317,16 +390,64 @@ class account_cash_statement(osv.osv):
 
     def button_confirm_cash(self, cr, uid, ids, context=None):
         super(account_cash_statement, self).button_confirm_bank(cr, uid, ids, context=context)
+        absl_proxy = self.pool.get('account.bank.statement.line')
+
+        TABLES = (('Profit', 'profit_account_id'), ('Loss', 'loss_account_id'),)
+
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.difference == 0.0:
+                continue
+
+            for item_label, item_account in TALBES:
+                if getattr(obj.journal_id, item_account):
+                    raise osv.except_osv(_('Error !'), 
+                                         _('There is no %s Account on the Journal %s') % (item_label, obj.journal_id.name,))
+
+            is_profit = obj.difference < 0.0
+
+            account = getattr(obj.journal_id, TABLES[is_profit][1])
+
+            values = {
+                'statement_id' : obj.id,
+                'journal_id' : obj.journal_id.id,
+                'account_id' : account.id,
+                'amount' : obj.difference,
+                'name' : 'Exceptional %s' % TABLES[is_profit][0],
+            }
+
+            absl_proxy.create(cr, uid, values, context=context)
+
         return self.write(cr, uid, ids, {'closing_date': time.strftime("%Y-%m-%d %H:%M:%S")}, context=context)
 
     def button_cancel(self, cr, uid, ids, context=None):
         cash_box_line_pool = self.pool.get('account.cashbox.line')
         super(account_cash_statement, self).button_cancel(cr, uid, ids, context=context)
         for st in self.browse(cr, uid, ids, context):
-            for end in st.ending_details_ids:
-                cash_box_line_pool.write(cr, uid, [end.id], {'number': 0})
+            for end in st.details_ids:
+                cash_box_line_pool.write(cr, uid, [end.id], {'number_closing': 0})
         return True
 
 account_cash_statement()
+
+class account_journal(osv.osv):
+    _inherit = 'account.journal'
+
+    _columns = {
+        'cashbox_line_ids' : fields.one2many('account.journal.cashbox.line', 'journal_id', 'CashBox'),
+    }
+
+account_journal()
+
+class account_journal_cashbox_line(osv.osv):
+    _name = 'account.journal.cashbox.line'
+    _rec_name = 'value'
+    _columns = {
+        'pieces': fields.float('Values', digits_compute=dp.get_precision('Account')),
+        'journal_id' : fields.many2one('account.journal', 'Journal', required=True, select=1),
+    }
+
+    _order = 'pieces asc'
+
+account_journal_cashbox_line()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

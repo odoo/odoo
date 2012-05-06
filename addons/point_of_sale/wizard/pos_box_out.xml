@@ -9,31 +9,40 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Output Operation">
-                        <separator string="Describe why you take money from the cash register:" colspan="4"/>
-                        <field name="name"/>
-                        <field name="product_id"/>
-                        <field name="journal_id"/>
-                        <field name="amount"/>
-                        <separator colspan="4"/>
-                        <group colspan="4" col="4">
-                            <group col="2" colspan="2"/>
-                             <button icon="gtk-stop" special="cancel"
-                                string="Cancel" />
-                            <button name="get_out" string="Take Money"
-                                colspan="1" type="object" icon="gtk-apply" />
-                        </group>
+                    <separator string="Describe why you take money from the cash register:" colspan="4"/>
+                    <field name="journal_id"/>
+                    <field name="product_id"/>
+                    <field name="amount"/>
+                    <field name="session_id" />
+                    <field name="name"/>
+                    <field name="user_id" invisible="1" />
+                    <separator colspan="4"/>
+                    <group colspan="4" col="4">
+                        <group col="2" colspan="2"/>
+                         <button icon="gtk-stop" special="cancel"
+                            string="Cancel" />
+                        <button name="get_out" string="Take Money"
+                            colspan="1" type="object" icon="gtk-apply" />
+                    </group>
                 </form>
             </field>
         </record>
 
-        <record id="action_box_out" model="ir.actions.act_window">
-            <field name="name">Take Money Out</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">pos.box.out</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-        </record>
+        <act_window name="Take Money Out"
+            res_model="pos.box.out"
+            src_model="account.bank.statement"
+            view_mode="form"
+            target="new"
+            key2="client_action_multi"
+            id="action_box_out" />
+
+        <act_window name="Take Money Out"
+            res_model="pos.box.out"
+            src_model="pos.session"
+            view_mode="form"
+            target="new"
+            key2="client_action_multi"
+            id="action_pos_session_box_out" />
 
     </data>
 </openerp>

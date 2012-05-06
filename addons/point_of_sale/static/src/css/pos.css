@@ -375,6 +375,18 @@ body{
     -webkit-border-radius: 3px;
     border-radius: 3px;
 }
+.point-of-sale .price-subtag {
+    position: absolute;
+    top: 24px;
+    right: 2px;
+    vertical-align: top;
+    color: white;
+    background: #7f82ac;
+    padding: 2px 5px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
 .point-of-sale .product-name {
     padding: 3px;
 }
@@ -504,6 +516,7 @@ body{
     margin: 0;
     background: #f5f5f5;    /*#ebebeb;*/
     border-top: solid 1px #afafb6;
+    z-index:900;
 }
 
 .point-of-sale .pos-actionbar ul{
@@ -551,6 +564,13 @@ body{
     background: -webkit-gradient(linear, left top, left bottom, from(#f0f0f0), to(#e2e2e2));
     -webkit-box-shadow: 0px 2px 2px rgba(0,0,0, 0.3);
 }
+.point-of-sale .total{
+    line-height: 105px;
+    font-size: 26px;
+    margin: 0;
+    margin-left: 180px;
+    font-weight: bold;
+}
 .point-of-sale .pos-actionbar .button .label{
     margin-top: 37px;
 }
@@ -571,6 +591,78 @@ body{
 
 .point-of-sale .pos-actionbar .button.rightalign{
     float:right;
+}
+
+.point-of-sale .modal-dialog{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height:100%;
+    background-color: rgba(0,0,0,0.5);
+    z-index:1000;
+}
+.point-of-sale .modal-dialog .popup{
+    position: absolute;
+    left:50%;
+    top:50%;
+    width:500px;
+    height:400px;
+    margin-left: -250px;
+    margin-top: -200px;
+    padding:10px;
+    padding-top:20px;
+    text-align:center;
+    font-size:20px;
+    font-weight:bold;
+    background-color: #F0EEEE;
+    border: 1px solid #E0DDDD;
+    -webkit-box-shadow: 0px 10px 20px rgba(0,0,0, 0.3);
+    z-index:1200;
+}
+.point-of-sale .popup .footer{
+    position:absolute;
+    bottom:0;
+    left:0;
+    width:100%;
+    height:60px;
+    border-top: 1px solid #E0DDDD;
+}
+.point-of-sale .popup .button{
+    float:right;
+    width: 110px;
+    height: 40px;
+    line-height:40px;
+    text-align:center;
+    margin:3px;
+    margin-top:10px;
+    margin-right:10px;
+
+    font-size:   14px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    border: 1px solid #cacaca;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+
+    background: #e2e2e2;
+    background: -moz-linear-gradient(#f0f0f0, #e2e2e2);
+    background: -webkit-gradient(linear, left top, left bottom, from(#f0f0f0), to(#e2e2e2));
+    -webkit-box-shadow: 0px 2px 2px rgba(0,0,0, 0.3);
+}
+.point-of-sale .popup .button:hover {
+    color: white;
+    background: #7f82ac;
+    border: 1px solid #7f82ac;
+    background: -moz-linear-gradient(#9d9fc5, #7f82ac);
+    background: -webkit-gradient(linear, left top, left bottom, from(#9d9fc5), to(#7f82ac));
+
+    -webkit-transition-property: background, border;
+    -webkit-transition-duration: 0.2s;
+    -webkit-transition-timing-function: ease-out;
 }
 
 /* Onscreen Keyboard http://net.tutsplus.com/tutorials/javascript-ajax/creating-a-keyboard-with-css-and-jquery/ */

@@ -17,7 +17,7 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
                 'currency': pos.get('currency'),
                 'format_amount': function(amount) {
                     if (pos.get('currency').position == 'after') {
-                        return amount + ' ' + pos.get('currency').symbol;
+                        return Math.round(amount*100)/100 + ' ' + pos.get('currency').symbol;
                     } else {
                         return pos.get('currency').symbol + ' ' + amount;
                     }
@@ -236,23 +236,26 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
 
     module.ProductWidget = instance.web.Widget.extend({
         tagName:'li',
-        template_fct: qweb_template('pos-product-template'),
+        template_fct: qweb_template('ProductWidget'),
         init: function(parent, options) {
             this._super(parent);
             this.model = options.model;
             this.pos = options.pos;
-        },
-        start: function(options) {
-            $("a", this.$element).click(_.bind(this.addToOrder, this));
+            this.model.attributes.weight = options.weight || undefined;
         },
         addToOrder: function(event) {
             /* Preserve the category URL */
             event.preventDefault();
             return (this.pos.get('selectedOrder')).addProduct(this.model);
         },
+        setWeight: function(weight){
+            this.model.attributes.weight = weight;
+            this.renderElement();
+        },
         renderElement: function() {
             this.$element.addClass("product");
             this.$element.html(this.template_fct(this.model.toJSON()));
+            $("a", this.$element).click(_.bind(this.addToOrder, this));
             return this;
         },
     });
@@ -358,6 +361,9 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
         init: function(parent, options){
             this._super(parent,options);
             this.button_list = [];
+            this.total_visibility = true;
+            this.help_visibility  = true;
+            this.logout_visibility  = true;
         },
         destroy_buttons:function(){
             for(var i = 0; i < this.button_list.length; i++){
@@ -377,7 +383,46 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
                 }
             }
             return this;
-        }
+        },
+        set_total_visible: function(visible){
+            if(visible !== this.total_visibility){
+                this.total_visibility = visible;
+                if(visible){
+                    this.$element.find('.total').show();
+                }else{
+                    this.$element.find('.total').hide();
+                }
+            }
+        },
+        set_help_visible: function(visible,action){
+            if(visible !== this.help_visibility){
+                this.help_visibility = visible;
+                if(visible){
+                    this.$element.find('.help-button').show();
+                }else{
+                    this.$element.find('.help-button').hide();
+                }
+            }
+            if(visible && action){
+                this.$element.find('.help-button').off('click').click(action);
+            }
+        },
+        set_logout_visible: function(visible,action){
+            if(visible !== this.logout_visibility){
+                this.logout_visibility = visible;
+                if(visible){
+                    this.$element.find('.logout-button').show();
+                }else{
+                    this.$element.find('.logout-button').hide();
+                }
+            }
+            if(visible && action){
+                this.$element.find('.logout-button').off('click').click(action);
+            }
+        },
+        set_total_value: function(value){
+            this.$element.find('.value').hltml(value);
+        },
     });
 
     module.ProductCategoriesWidget = instance.web.Widget.extend({
@@ -478,15 +523,26 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
             this.model = options.model;
             this.pos = options.pos;
             this.pos.get('products').bind('reset', this.renderElement, this);
+            this.product_list = [];
+            this.weight = options.weight;
+        },
+        setWeight: function(weight){
+            for(var i = 0; i < this.product_list.length; i++){
+                this.product_list[i].setWeight(weight);
+            }
         },
         renderElement: function() {
             var self = this;
             this._super();
+            this.product_list = []; 
             this.pos.get('products').chain().map(function(product) {
-                return new module.ProductWidget(this, {
+                var product = new module.ProductWidget(this, {
                         model: product,
-                        pos: self.pos
+                        pos: self.pos,
+                        weight: self.weight,
                 })
+                self.product_list.push(product);
+                return product;
             }).invoke('appendTo', this.$element);
             return this;
         },
@@ -821,6 +877,12 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
             });
             this.scale_product_screen.appendTo($('#rightpane'));
 
+            this.help_popup = new module.HelpPopupWidget(this, {
+                pos: this.pos,
+                pos_widget: this,
+            });
+            this.help_popup.appendTo($('.point-of-sale'));
+
             this.paypadView = new module.PaypadWidget(null, {
                 pos: this.pos
             });
@@ -855,6 +917,9 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
                     'scale_product' : this.scale_product_screen,
                     'receipt' : this.receipt_screen,
                     'welcome' : this.welcome_screen,
+                },
+                popup_set:{
+                    'help': this.help_popup,
                 },
                 default_client_screen: 'welcome',
                 default_cashier_screen: 'products',

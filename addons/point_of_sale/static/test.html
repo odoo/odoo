@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+    <head>
+        <title>JSON</title>
+
+        <script type="text/javascript" src="http://localhost:8069/web/webclient/js"></script>
+    </head>
+
+    <body>
+        <h1>JSON</h1>
+
+        <p id="response"></p>
+
+        <script type="text/javascript">
+            var c = new openerp.init(['web', 'point_of_sale']);
+            c.connection.session_bind('http://localhost:8069').then(function() {
+                var w = new c.point_of_sale.test();
+                w.appendTo($("#response"));
+            });
+        </script>
+    </body>
+</html>

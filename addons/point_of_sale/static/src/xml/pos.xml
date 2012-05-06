@@ -221,30 +221,31 @@
 
     <t t-name="WelcomeScreenWidget">
         <div class="welcome-screen step-screen">
-            <header><h2>WELCUM</h2></header>
-            <p> plz scan ur card or thingie </p>
+            <header><h2>Welcome</h2></header>
+            <p> please scan an item or your member card </p>
         </div>
     </t>
 
 
     <t t-name="ScanProductScreenWidget">
         <div class="scan-product-screen step-screen">
-            <header><h2>SCAN YOUR PRODUCT</h2></header>
-            <p> please scan another product ! fun !</p>
+            <header><h2>Scan your item</h2></header>
+            <p>Please scan an item</p>
         </div>
     </t>
 
     <t t-name="ClientPaymentScreenWidget">
         <div class="scan-product-screen step-screen">
-            <header><h2>GIMME UR MONEY!!!11</h2></header>
-            <p> It's a rubbery </p>
+            <header><h2>Payment</h2></header>
+            <p>Please insert your card in the reader and follow the instructions to complete
+            your purchase</p>
         </div>
     </t>
 
     <t t-name="ScaleInviteScreenWidget">
         <div class="scale-invite-screen step-screen">
-            <header><h2>Put ur loot on the scale</h2></header>
-            <p> Is it worth a ton ? </p>
+            <header><h2>Please put your product on the scale</h2></header>
+            <p></p>
         </div>
     </t>
 
@@ -255,13 +256,44 @@
         </div>
     </t>
 
-    <t t-name="pos-product-template">
+    <t t-name="HelpPopupWidget">
+        <div class="modal-dialog">
+            <div class="popup popup-help">
+                <p class="message">Please be patient, help is on the way</p>
+                <div class="footer">
+                    <div class="button">
+                        Cancel
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+    <t t-name="ErrorPopupWidget">
+        <div class="modal-dialog">
+            <div class="popup popup-help">
+                <p class="message">An unexpected error has occured. A technician is on the way</p>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="ProductWidget">
         <a href="#">
             <div class="product-img">
+                
                 <img t-att-src="'data:image/gif;base64,'+ product_image_small" />
-                <span class="price-tag">
-                    <t t-esc="format_amount(list_price)"/>
-                </span>
+                <t t-if="!weight">
+                    <span class="price-tag">
+                        <t t-esc="format_amount(list_price)"/>
+                    </span>
+                </t>
+                <t t-if="weight">
+                    <span class="price-tag">
+                        <t t-esc="format_amount(list_price)+'/Kg'"/>
+                    </span>
+                    <span class="price-subtag">
+                        <t t-esc="format_amount(list_price *weight)"/>
+                    </span>
+                </t>
             </div>
             <div class="product-name">
                 <t t-esc="name"/>
@@ -279,7 +311,12 @@
             <t t-esc="discount.toFixed(2)"/>
         </td>
         <td>
-            <t t-esc="quantity.toFixed(0)"/>
+            <t t-if="weighted">
+                <t t-esc="Math.round(quantity*100)/100+' Kg'"/>
+            </t>
+            <t t-if="!weighted">
+                <t t-esc="Math.round(quantity*100)/100"/>
+            </t>
         </td>
         <td>
             <t t-esc="format_amount((list_price * (1 - discount/100) * quantity).toFixed(2))"/>
@@ -358,10 +395,19 @@
         <div class="pos-actionbar">
             <div class="pos-actionbar-left-pane">
                 <div class="button help-button">
-                    Help
+                    <div class='icon'>
+                        <img src="/point_of_sale/static/src/img/icons/png48/help.png" />
+                        <div class='iconlabel'>Help</div>
+                    </div>
+                </div>
+                <div class="button logout-button">
+                    <div class='icon'>
+                        <img src="/point_of_sale/static/src/img/icons/png48/system-log-out.png" />
+                        <div class='iconlabel'>Exit</div>
+                    </div>
                 </div>
                 <p class="total">
-                    Total: <span class="value"> 1234 </span>
+                    Total: <span class="value"> 1234 </span>€
                 </p>
             </div>
             <ul class="pos-actionbar-button-list">
@@ -371,6 +417,7 @@
             </ul>
         </div>
     </t>
+
     <t t-name="pos-action-button">
         <li t-att-class=" 'button '+ (widget.rightalign  ? 'rightalign ' : '')">
             <div class='label'>

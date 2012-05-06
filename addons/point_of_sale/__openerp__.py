@@ -51,14 +51,13 @@ Main features :
         'wizard/pos_discount.xml',
         'wizard/pos_open_statement.xml',
         'wizard/pos_close_statement.xml',
-        'wizard/pos_box_entries.xml',
         'wizard/pos_payment_report_user_view.xml',
-        'wizard/pos_box_out.xml',
         'wizard/pos_sales_user.xml',
         'wizard/pos_receipt_view.xml',
         'wizard/pos_payment_report_user.xml',
         'wizard/pos_payment_report.xml',
         'wizard/pos_payment.xml',
+        'wizard/pos_box.xml',
         'point_of_sale_report.xml',
         'point_of_sale_view.xml',
         'report/pos_order_report_view.xml',
@@ -92,5 +91,6 @@ Main features :
     ],
     'css': ['static/src/css/pos.css'],
     'qweb': ['static/src/xml/pos.xml'],
+    'auto_install': True,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

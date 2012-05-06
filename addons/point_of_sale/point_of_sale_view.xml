@@ -18,6 +18,7 @@
             <field name="arch" type="xml">
                 <form string="PoS Orders">
                     <group col="7" colspan="4">
+                        <field name="session_id" required="1" />
                         <field name="name"/>
                         <field name="date_order"/>
                         <field name="partner_id" on_change="onchange_partner_id(partner_id)" context="{'search_default_customer':1}" attrs="{'readonly': [('state','=','invoiced')]}"/>
@@ -54,7 +55,7 @@
                             <separator colspan="4"/>
                             <group colspan="4" col="8">
                                 <field name="state" widget="statusbar" statusbar_visible="draft,paid,done" statusbar_colors='{"cancel":"red"}'/>
-                                <button name="%(action_pos_payment)d" string="Payment" icon="gtk-apply" type="action" states="draft"/>
+                                <button name="%(action_pos_payment)d" string="Payment" icon="gtk-apply" type="action" states="draft" context="{'pos_session_id' : session_id}"/>
                                 <button name="refund" string="Return Products" type="object" icon="gtk-ok"
                                     attrs="{'invisible':[('state','=','draft')]}"/>
                                 <button name="%(action_report_pos_receipt)d" string="Reprint" icon="gtk-print" type="action" states="paid,done,invoiced"/>
@@ -670,46 +671,6 @@
         <menuitem name="Configuration" parent="menu_point_root"
             id="menu_point_config_product" sequence="25" groups="group_pos_manager"/>
 
-        <record model="ir.actions.act_window" id="action_product_input">
-            <field name="name">Products 'Take Money Out'</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">product.product</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('expense_pdt','=',True)]</field>
-            <field name="context">{'default_expense_pdt': True}</field>
-        </record>
-        <menuitem
-            parent="menu_point_config_product"
-            action="action_product_input"
-            id="products_for_input_operations"
-            groups="group_pos_manager"/>
-
-        <record model="ir.actions.act_window" id="action_product_output">
-            <field name="name">Products 'Put Money In'</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">product.product</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('income_pdt','=',True)]</field>
-            <field name="context">{'default_income_pdt': True}</field>
-        </record>
-        <menuitem
-            parent="menu_point_config_product"
-            action="action_product_output"
-            id="products_for_output_operations"
-            groups="group_pos_manager"/>
-
-        <menuitem
-            parent="menu_point_of_sale"
-            action="action_box_entries"
-            id="menu_wizard_enter_jrnl" sequence="2" />
-
-        <menuitem
-            parent="menu_point_of_sale"
-            action="action_box_out"
-            id="menu_wizard_enter_jrnl2" sequence="3" />
-
         <record id="action_account_journal_form" model="ir.actions.act_window">
             <field name="name">Payment Methods</field>
             <field name="res_model">account.journal</field>
@@ -776,8 +737,8 @@
                 id="menu_pos_details" parent="menu_point_of_sale_reporting" sequence="6" />
 
         <record model="ir.actions.client" id="action_pos_pos">
-          <field name="name">Start Point of Sale</field>
-          <field name="tag">pos.ui</field>
+            <field name="name">Start Point of Sale</field>
+            <field name="tag">pos.ui</field>
         </record>
 
         <record id="menu_point_root_touchscreen" model="ir.ui.menu">
@@ -790,5 +751,236 @@
         <menuitem id="menu_point_root_touchscreen"
             web_icon="images/pos.png" web_icon_hover="images/pos-hover.png" groups="point_of_sale.group_pos_manager,point_of_sale.group_pos_user"/>
 
+        <record model="ir.ui.view" id="view_pos_config_form">
+            <field name="name">pos.config.form.view</field>
+            <field name="model">pos.config</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="PoS Configuration">
+                    <field name="name" />
+                    <notebook colspan="4">
+                        <page string="Payment Methods">
+                            <field name="journal_ids" colspan="4" nolabel="1">
+                                <tree string="Journals">
+                                    <field name="code" />
+                                    <field name="name" />
+                                    <field name="type" />
+                                    <field name="opening_control" />
+                                    <field name="closing_control" />
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Accounting">
+                            <separator string="Accounting" colspan="4" />
+                            <field name="shop_id" widget="selection" />
+                            <field name="journal_id" widget="selection" />
+
+                            <separator string="Cash Differences" colspan="4" />
+                            <field name="profit_account_id" />
+                            <field name="loss_account_id" />
+                            <field name="authorized_cashbox_diff" />
+                            <field name="authorized_cashbox_diff_fixed" />
+
+                        </page>
+                        <page string="Interfaces">
+                            <field name="iface_self_checkout" />
+                            <field name="iface_websql" />
+                            <field name="iface_led" />
+                            <field name="iface_cashdrawer" />
+                            <field name="iface_payment_terminal" />
+                            <field name="iface_electronic_scale" />
+                            <field name="iface_barscan" />
+                            <field name="iface_vkeyboard" />
+                        </page>
+                        <page string="Other">
+                            <field name="user_id" />
+                            <field name="sequence_id" />
+                        </page>
+
+
+                    </notebook>
+
+                    <group colspan="4" col="6">
+                        <field name="state" widget="statusbar" statusbar_visible="draft,active,inactive,deprecated" statusbar_colors='{"active":"green", "deprecated" : "red"}'/>
+                        <button string="Set to Draft" name="set_draft" type="object" states="deprecated"/>
+                        <button string="Set to Active" name="set_active" type="object" states="draft,inactive"/>
+                        <button string="Set to Inactive" name="set_inactive" type="object" states="active" />
+                        <button string="Set to Deprecated" name="set_deprecate" type="object" states="active,inactive" />
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_pos_config_tree">
+            <field name="name">pos.config.tree.view</field>
+            <field name="model">pos.config</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="PoS Configuration">
+                    <field name="name" />
+                    <field name="state" />
+                </tree>
+            </field>
+        </record>
+
+        <act_window 
+            id="act_pos_config_sessions" 
+            name="Sessions"
+            src_model="pos.config"
+            res_model="pos.session"
+            domain="[('config_id', '=', active_id)]" />         
+
+        <record model="ir.actions.act_window" id="action_pos_config_pos">
+            <field name="name">Point of Sales</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">pos.config</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem
+            parent="menu_point_config_product"
+            action="action_pos_config_pos"
+            id="menu_pos_config_pos"
+            groups="group_pos_manager"/>
+
+
+        <record model="ir.ui.view" id="view_pos_session_form">
+            <field name="name">pos.session.form.view</field>
+            <field name="model">pos.session</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="PoS Session">
+                    <group colspan="4" col="6">
+                        <field name="config_id" />
+                        <field name="name" />
+                        <field name="user_id" />
+                        <field name="start_at" />
+                        <field name="stop_at" />
+                    </group>
+                    <notebook colspan="4">
+                        <page string="Cash">
+                            <field name="cash_register_id" invisible="0" />
+                            <field name="details_ids" colspan="4" nolabel="1">
+                                <tree string="" editable="bottom">
+                                    <field name="pieces" readonly="1" />
+                                    <field name="number_opening" string="Opening Unit Numbers" on_change="on_change_sub_opening(pieces, number_opening, parent.balance_end)" />
+                                    <field name="subtotal_opening" string="Opening Subtotal"/>
+                                    <field name="number_closing" string="Closing Unit Numbers" on_change="on_change_sub_closing(pieces, number_closing, parent.balance_end)" />
+                                    <field name="subtotal_closing" string="Closing Subtotal"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+
+                    <group colspan="4" col="5">
+                        <field name="state" widget="statusbar" statusbar_visible="new,opened,closed,posted" statusbar_colors='{"posted":"green"}'/>
+                        <button name="open" type="workflow" string="Open" states="new" />
+                        <button name="close" type="workflow" string="Close" states="opened" />
+                        <button name="post" type="workflow" string="Post" states="closed" />
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_pos_session_tree">
+            <field name="name">pos.session.tree.view</field>
+            <field name="model">pos.session</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="PoS Session">
+                    <field name="config_id" />
+                    <field name="name" />
+                    <field name="user_id" />
+                    <field name="start_at" />
+                    <field name="stop_at" />
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_pos_session_search">
+            <field name="name">pos.session.search.view</field>
+            <field name="model">pos.session</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="PoS Session">
+                    <filter string="Open" domain="[('state', '=', 'opened')]" />
+                    <separator orientation="vertical"/>
+                    <filter string="Today" domain="[('start_at', '>=', time.strftime('%%Y-%%m-%%d 00:00:00'))]" />
+                    <separator orientation="vertical"/>
+                    <field name="config_id" />
+                    <field name="name" />
+                    <field name="user_id" />
+
+                    <newline />
+                    <group expand="0" string="Group By...">
+                        <filter string="User" icon="terp-personal" domain="[]" context="{'group_by' : 'user_id'}" />
+                        <filter string="PoS" domain="[]" context="{'group_by': 'user_id'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+
+
+        <record model="ir.actions.act_window" id="action_pos_session">
+            <field name="name">Point of Sales Session</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">pos.session</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_pos_session_search" />
+        </record>
+
+        <menuitem
+            parent="menu_point_of_sale"
+            action="action_pos_session"
+            id="menu_pos_session"
+            groups="group_pos_manager"/>
+
+        <act_window 
+            id="act_pos_session_orders" 
+            name="Orders"
+            src_model="pos.session"
+            res_model="pos.order"
+            domain="[('session_id', '=', active_id)]" />
+        <!--
+        TODO
+        <act_window
+            id="act_pos_session_statements"
+            name="Statements"
+            src_model="pos.session"
+            res_model="account.bank.statement"
+            domain="[]" />
+        -->
+
+        <record id="view_pos_order_filter" model="ir.ui.view">
+            <field name="name">pos.order.list.select</field>
+            <field name="model">pos.order</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Sales Order">
+                    <filter icon="terp-document-new" string="New" domain="[('state','=','draft')]"/>
+                    <filter icon="gtk-apply" string="Done" domain="[('state','in',('paid','invoiced','done'))]"/>
+                    <separator orientation="vertical"/>
+                    <filter icon="terp-check" string="Invoiced" domain="[('state','=','invoiced')]"/>
+                    <filter icon="gtk-convert" string="Posted" domain="[('state','=','done')]"/>
+                    <separator orientation="vertical"/>
+                    <filter icon="terp-go-month" string="Today" domain="[('date_order','&gt;=',datetime.date.today().strftime('%%Y-%%m-%%d 00:00:00')),('date_order','&lt;=',datetime.date.today().strftime('%%Y-%%m-%%d 23:59:59'))]"/>
+                    <filter icon="gtk-go-forward" string="Yesterday" domain="[('date_order','&lt;',datetime.date.today().strftime('%%Y-%%m-%%d 00:00:00')),('date_order','&gt;=',(datetime.date.today() - relativedelta(days=1)).strftime('%%Y-%%m-%%d 00:00:00'))]"/>
+                    <separator orientation="vertical"/>
+                    <field name="name"/>
+                    <field name="user_id"/>
+                    <newline/>
+                    <group expand="0" string="Group By..." groups="base.group_extended">
+                        <filter string="Customer" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Salesman" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
+                        <separator string="" orientation="vertical"/>
+                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                        <separator string="" orientation="vertical"/>
+                        <filter string="Order Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_order'}"/>
+                    </group>
+               </search>
+            </field>
+        </record>
     </data>
 </openerp>

@@ -49,12 +49,16 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
 
             this.screen_set = options.screen_set || {};
 
+            this.popup_set = options.popup_set || {};
+
             this.default_client_screen = options.default_client_screen;
             this.default_cashier_screen = options.default_cashier_screen;
 
             this.current_client_screen = this.screen_set[this.default_client_screen];
             
             this.current_cashier_screen = this.screen_set[this.default_client_screen];
+
+            this.current_popup = null;
 
             this.default_mode = options.default_mode || 'client';
             this.current_mode = this.default_mode;
@@ -72,6 +76,11 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
                     screen.hide();
                 }
             }
+            
+            for(popup_name in this.popup_set){
+                this.popup_set[popup_name].hide();
+            }
+
             if(current){
                 current.show();
             }
@@ -90,8 +99,22 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
             this.screen_set[screen_name] = screen;
             return this;
         },
+        show_popup: function(name){
+            if(this.current_popup){
+                this.close_popup();
+            }
+            this.current_popup = this.popup_set[name];
+            this.current_popup.show();
+        },
+        close_popup: function(){
+            if(this.current_popup){
+                this.current_popup.hide();
+                this.current_popup = null;
+            }
+        },
         load_saved_screen:  function(){
             console.log('load_saved_screen');
+            this.close_popup();
             if(true || this.selected_order != this.pos.get('selectedOrder')){
                 var selectedOrder = this.pos.get('selectedOrder');
                 
@@ -123,6 +146,7 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
         set_user_mode: function(user_mode){
             console.log('set user mode:',user_mode);
             if(user_mode !== this.current_mode){
+                this.close_popup();
                 this.current_mode = user_mode;
                 this.pos.get('selectedOrder').set({ user_mode : this.current_mode });
                 this.load_saved_screen();
@@ -131,6 +155,7 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
         set_current_screen: function(screen_name){
             var screen = this.screen_set[screen_name];
 
+            this.close_popup();
             var selectedOrder = this.pos.get('selectedOrder');
             if(this.current_mode === 'client'){
                 selectedOrder.set({'client_screen': screen_name});
@@ -174,6 +199,25 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
         },
     });
 
+    module.HelpPopupWidget = module.ScreenWidget.extend({
+        template:'HelpPopupWidget',
+        show: function(){
+            this._super();
+            this.pos.proxy.help_needed();
+            var self = this;
+            
+            this.$element.find('.button').off('click').click(function(){
+                self.pos.screen_selector.close_popup();
+                self.pos.proxy.help_canceled();
+            });
+        },
+        hide:function(){
+            if(this.$element){
+                this.$element.hide();
+            }
+        },
+    });
+
     module.ScaleInviteScreenWidget = module.ScreenWidget.extend({
         template:'ScaleInviteScreenWidget',
         show: function(){
@@ -183,13 +227,16 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
             this.pos_widget.set_numpad_visible(false);
             this.pos_widget.set_leftpane_visible(true);
             this.pos_widget.set_cashier_controls_visible(false);
+            this.pos_widget.action_bar.set_total_visible(true);
+            this.pos_widget.action_bar.set_help_visible(true,function(){self.pos.screen_selector.show_popup('help');});
+            this.pos_widget.action_bar.set_logout_visible(false);
 
             self.pos.proxy.weighting_start();
 
             this.intervalID = setInterval(function(){
                 var weight = self.pos.proxy.weighting_read_kg();
                 if(weight > 0.001){
-                    clearInterval(intervalID);
+                    clearInterval(this.intervalID);
                     self.pos.screen_selector.set_current_screen('scale_product');
                 }
             },500);
@@ -197,6 +244,7 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
             this.pos_widget.action_bar.add_new_button(
                 {
                     label: 'back',
+                    icon: '/point_of_sale/static/src/img/icons/png48/go-previous.png',
                     click: function(){  //TODO Go to ask for weighting screen
                         clearInterval(this.intervalID);
                         self.pos.proxy.weighting_end();
@@ -221,6 +269,7 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
 
             this.product_list_widget = new module.ProductListWidget(null,{
                 pos:this.pos,
+                weight: this.pos.proxy.weighting_read_kg(),
             });
             this.product_list_widget.replace($('.placeholder-ProductListWidget'));
         },
@@ -231,11 +280,15 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
             this.pos_widget.set_numpad_visible(false);
             this.pos_widget.set_leftpane_visible(true);
             this.pos_widget.set_cashier_controls_visible(false);
+            this.pos_widget.action_bar.set_total_visible(true);
+            this.pos_widget.action_bar.set_help_visible(true,function(){self.pos.screen_selector.show_popup('help');});
+            this.pos_widget.action_bar.set_logout_visible(false);
 
             this.pos_widget.orderView.setNumpadState(this.pos_widget.numpadView.state);
             this.pos_widget.action_bar.add_new_button(
                 {
                     label: 'back',
+                    icon: '/point_of_sale/static/src/img/icons/png48/go-previous.png',
                     click: function(){
                         self.pos.screen_selector.set_current_screen('scan');
                     }
@@ -247,11 +300,23 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
                     self.proxy.cashier_mode_activated();
                 },
             });
+
+            this.pos.proxy.weighting_start();
+            this.last_weight = this.product_list_widget.weight;
+            this.intervalID = setInterval(function(){
+                var weight = self.pos.proxy.weighting_read_kg();
+                if(weight != self.last_weight){
+                    self.product_list_widget.setWeight(weight);
+                    self.last_weight = weight;
+                }
+            },500);
         },
         hide: function(){
             this._super();
             this.pos_widget.orderView.setNumpadState(null);
             this.pos_widget.payment_screen.setNumpadState(null);
+            clearInterval(this.intervalID);
+            this.pos.proxy.weighting_end();
         },
 
     });
@@ -265,18 +330,21 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
             this.pos_widget.set_numpad_visible(false);
             this.pos_widget.set_leftpane_visible(true);
             this.pos_widget.set_cashier_controls_visible(false);
+            this.pos_widget.action_bar.set_total_visible(true);
+            this.pos_widget.action_bar.set_help_visible(true,function(){self.pos.screen_selector.show_popup('help');});
+            this.pos_widget.action_bar.set_logout_visible(false);
 
             this.pos.proxy.payment_request(0,'card','info');    //TODO TOTAL
 
-            var intervalID = setInterval(function(){
+            this.intervalID = setInterval(function(){
                 var payment = self.pos.proxy.is_payment_accepted();
                 if(payment === 'payment_accepted'){
-                    clearInterval(intervalID);
+                    clearInterval(this.intervalID);
                     //TODO process the payment stuff
                     self.pos.proxy.transaction_end();
                     self.pos.screen_selector.set_current_screen('welcome');
                 }else if(payment === 'payment_rejected'){
-                    clearInterval(intervalID);
+                    clearInterval(this.intervalID);
                     //TODO show a tryagain thingie ? 
                 }
             },500);
@@ -284,8 +352,9 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
             this.pos_widget.action_bar.add_new_button(
                 {
                     label: 'back',
+                    icon: '/point_of_sale/static/src/img/icons/png48/go-previous.png',
                     click: function(){  //TODO Go to ask for weighting screen
-                        clearInterval(intervalID);
+                        clearInterval(this.intervalID);
                         self.pos.proxy.payment_canceled();
                         self.pos.screen_selector.set_current_screen('scan');
                     }
@@ -295,7 +364,7 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
             this.pos.barcode_reader.set_action_callbacks({
                 'cashier': function(ean){
                     //TODO 'switch to cashier mode'
-                    clearInterval(intervalID);
+                    clearInterval(this.intervalID);
                     self.proxy.cashier_mode_activated();
                     self.pos.screen_selector.set_current_screen('products');
                 },
@@ -312,6 +381,9 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
             this.pos_widget.set_numpad_visible(false);
             this.pos_widget.set_leftpane_visible(false);
             this.pos_widget.set_cashier_controls_visible(false);
+            this.pos_widget.action_bar.set_total_visible(false);
+            this.pos_widget.action_bar.set_help_visible(true,function(){self.pos.screen_selector.show_popup('help');});
+            this.pos_widget.action_bar.set_logout_visible(false);
 
             this.pos_widget.action_bar.add_new_button(
                 {
@@ -320,7 +392,8 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
                         self.pos.screen_selector.set_current_screen('scan');
                     }
                 },{
-                    label: 'peser',
+                    label: 'weight',
+                    icon: '/point_of_sale/static/src/img/icons/png48/scale.png',
                     click: function(){  //TODO Go to ask for weighting screen
                         self.pos.screen_selector.set_current_screen('scale_invite');
                     }
@@ -363,15 +436,20 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
             this.pos_widget.set_numpad_visible(false);
             this.pos_widget.set_leftpane_visible(true);
             this.pos_widget.set_cashier_controls_visible(false);
+            this.pos_widget.action_bar.set_total_visible(true);
+            this.pos_widget.action_bar.set_help_visible(true,function(){self.pos.screen_selector.show_popup('help');});
+            this.pos_widget.action_bar.set_logout_visible(false);
 
             this.pos_widget.action_bar.add_new_button(
                 {
                     label: 'weight',
+                    icon: '/point_of_sale/static/src/img/icons/png48/scale.png',
                     click: function(){  //TODO Go to ask for weighting screen
                         self.pos.screen_selector.set_current_screen('scale_invite');
                     }
                 },{
                     label: 'pay',
+                    icon: '/point_of_sale/static/src/img/icons/png48/go-next.png',
                     click: function(){
                         self.pos.screen_selector.set_current_screen('client_payment'); //TODO what stuff ?
                     }
@@ -417,17 +495,18 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
             this.pos_widget.set_numpad_visible(true);
             this.pos_widget.set_leftpane_visible(true);
             this.pos_widget.set_cashier_controls_visible(true);
+            this.pos_widget.action_bar.set_total_visible(true);
+            this.pos_widget.action_bar.set_help_visible(false);
+            this.pos_widget.action_bar.set_logout_visible(true, function(){ 
+                self.pos.screen_selector.set_user_mode('client');
+            });
 
             this.pos_widget.orderView.setNumpadState(this.pos_widget.numpadView.state);
             this.pos_widget.action_bar.add_new_button(
                 {
                     label: 'weight',
+                    icon: '/point_of_sale/static/src/img/icons/png48/scale.png',
                     click: function(){  //TODO Go to ask for weighting screen
-                    }
-                },{
-                    label: 'pay',
-                    click: function(){
-                        self.pos.screen_selector.set_current_screen('payment'); //TODO what stuff ?
                     }
                 }
             );
@@ -474,10 +553,16 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
         },
         show: function(){
             this._super();
+            var self = this;
 
             this.pos_widget.set_numpad_visible(true);
             this.pos_widget.set_leftpane_visible(true);
             this.pos_widget.set_cashier_controls_visible(true);
+            this.pos_widget.action_bar.set_total_visible(true);
+            this.pos_widget.action_bar.set_help_visible(false);
+            this.pos_widget.action_bar.set_logout_visible(true, function(){ 
+                self.pos.screen_selector.set_user_mode('client');
+            });
         },
         print: function() {
             window.print();
@@ -515,10 +600,16 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
         },
         show: function(){
             this._super();
+            var self = this;
 
             this.pos_widget.set_numpad_visible(true);
             this.pos_widget.set_leftpane_visible(true);
             this.pos_widget.set_cashier_controls_visible(true);
+            this.pos_widget.action_bar.set_total_visible(true);
+            this.pos_widget.action_bar.set_help_visible(false);
+            this.pos_widget.action_bar.set_logout_visible(true, function(){ 
+                self.pos.screen_selector.set_user_mode('client');
+            });
 
             this.setNumpadState(this.pos_widget.numpadView.state);
         },
