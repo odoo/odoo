@@ -81,7 +81,7 @@ class procurement_order(osv.osv):
     _name = "procurement.order"
     _description = "Procurement"
     _order = 'priority,date_planned desc'
-    _inherit = ['ir.needaction_mixin', 'mail.thread']
+    _inherit = ['mail.thread']
     _log_create = False
     _columns = {
         'name': fields.char('Reason', size=64, required=True, help='Procurement name.'),
@@ -118,7 +118,6 @@ class procurement_order(osv.osv):
             \nAfter confirming the state is set to \'Running\'.\n If any exception arises in the order then the state is set to \'Exception\'.\n Once the exception is removed the state becomes \'Ready\'.\n It is in \'Waiting\'. state when the procurement is waiting for another one to finish.'),
         'note': fields.text('Note'),
         'company_id': fields.many2one('res.company','Company',required=True),
-        'user_id': fields.many2one('res.users', 'Responsible user'),
     }
     _defaults = {
         'state': 'draft',
@@ -126,7 +125,6 @@ class procurement_order(osv.osv):
         'date_planned': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'close_move': 0,
         'procure_method': 'make_to_order',
-        'user_id': lambda obj, cr, uid, context: uid,
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'procurement.order', context=c)
     }
 
@@ -481,13 +479,6 @@ class procurement_order(osv.osv):
     # OpenChatter methods and notifications
     # ----------------------------------------
 
-    def get_needaction_user_ids(self, cr, uid, ids, context=None):
-        result = dict.fromkeys(ids, [])
-        for obj in self.browse(cr, uid, ids, context=context):
-            if (obj.state == 'draft' or obj.state == 'waiting'):
-                result[obj.id] = [obj.user_id.id]
-        return result
-
     def create(self, cr, uid, vals, context=None):
         obj_id = super(procurement_order, self).create(cr, uid, vals, context)
         self.create_send_note(cr, uid, [obj_id], context=context)
@@ -503,11 +494,11 @@ class procurement_order(osv.osv):
 
     def running_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_append_note(cr, uid, [obj.id], body=_("Procurement has been set to <b>running</b> state."), context=context)
+            self.message_append_note(cr, uid, [obj.id], body=_("Procurement has been set to <b>running</b>"), context=context)
 
     def ready_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_append_note(cr, uid, [obj.id], body=_("Procurement has been set to <b>ready</b> state."), context=context)
+            self.message_append_note(cr, uid, [obj.id], body=_("Procurement has been set to <b>ready</b>"), context=context)
 
     def cancel_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
