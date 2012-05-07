@@ -40,9 +40,17 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
     on_loaded: function(fields_view_get) {
         // TODO: move  to load_view and document
+		var width, height;
         var self = this;
         this.fields_view = fields_view_get;
-        this.container = this.$element.find("#editor-render-body")[0];
+        this.container = this.$element.find("#editor-render-body");
+
+		width = this.$element.parent().width();
+        this.container.css("width", width);
+        this.$element.css("width", width);
+        this.container.css("height", Math.min(500, width*0.8));
+        this.container = this.container[0];
+
         this.$element.find("#graph_bar,#graph_bar_stacked").click(
             {mode: 'bar', stacked: true, legend: 'top'}, $.proxy(this,"graph_render"))
 
@@ -127,7 +135,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
                 show: this.spreadsheet,
                 initialTab: "data"
             },
-            HtmlText : (options && options.labelsAngle)?false:!this.forcehtml,
+            HtmlText : (options && options.xaxis && options.xaxis.labelsAngle)?false:!this.forcehtml,
         }, options)
     },
 
@@ -169,7 +177,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
                     horizontalLines : !this.orientation,
                     outline : "sw",
                 },
-                labelsAngle: 45
+                xaxis : {labelsAngle: 45}
             })
         )
     },
@@ -215,7 +223,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
                     horizontalLines : !this.orientation,
                     outline : "sw",
                 },
-                labelsAngle : 45
+                xaxis : {labelsAngle: 45}
             })
         )
     },
