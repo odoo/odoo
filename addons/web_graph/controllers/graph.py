@@ -78,6 +78,7 @@ class GraphView(View):
                     'label': fields[x]['string']
                 })
         else:
+            xaxis.reverse()
             axis = obj.read_group(domain, yaxis+xaxis[0:1], xaxis[0:1], context=context)
             for x in axis:
                 key = x[xaxis[0]]
