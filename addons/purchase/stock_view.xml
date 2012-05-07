@@ -28,7 +28,7 @@
             domain="[('purchase_id', '=', active_id)]"
             id="act_purchase_order_2_stock_picking"
             name="Receptions"
-            res_model="stock.picking"
+            res_model="stock.picking.in"
             src_model="purchase.order"
             context="{'default_purchase_id': active_id, 'contact_display': 'partner', 'default_type': 'in'}" />
        
@@ -47,7 +47,7 @@
         
         <record id="stock_picking_in_inherit_purchase" model="ir.ui.view">
             <field name="name">Incoming Picking Inherited</field>
-            <field name="model">stock.picking</field>
+            <field name="model">stock.picking.in</field>
             <field name="type">form</field>
             <field name="inherit_id" ref="stock.view_picking_in_form"/>
             <field name="arch" type="xml">
@@ -60,7 +60,7 @@
         <!-- Picking to Invoice -->
         <record id="view_picking_in_search_picking_to_invoice" model="ir.ui.view">
             <field name="name">stock.picking.in.search</field>
-            <field name="model">stock.picking</field>
+            <field name="model">stock.picking.in</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Picking to Invoice">

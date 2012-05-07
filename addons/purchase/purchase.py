@@ -174,7 +174,7 @@ class purchase_order(osv.osv):
         'validator' : fields.many2one('res.users', 'Validated by', readonly=True),
         'notes': fields.text('Notes'),
         'invoice_ids': fields.many2many('account.invoice', 'purchase_invoice_rel', 'purchase_id', 'invoice_id', 'Invoices', help="Invoices generated for a purchase order"),
-        'picking_ids': fields.one2many('stock.picking', 'purchase_id', 'Picking List', readonly=True, help="This is the list of picking list that have been generated for this purchase"),
+        'picking_ids': fields.one2many('stock.picking.in', 'purchase_id', 'Picking List', readonly=True, help="This is the list of incomming shipments that have been generated for this purchase order."),
         'shipped':fields.boolean('Received', readonly=True, select=True, help="It indicates that a picking has been done"),
         'shipped_rate': fields.function(_shipped_rate, string='Received', type='float'),
         'invoiced': fields.function(_invoiced, string='Invoiced & Paid', type='boolean', help="It indicates that an invoice has been paid"),

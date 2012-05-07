@@ -161,7 +161,7 @@ class stock_return_picking(osv.osv_memory):
         else:
             new_type = 'internal'
         new_picking = pick_obj.copy(cr, uid, pick.id, {
-                                        'name':'%s-return' % pick.name,
+                                        'name': _('%s-return') % pick.name,
                                         'move_lines': [], 
                                         'state':'draft', 
                                         'type': new_type,
@@ -202,16 +202,20 @@ class stock_return_picking(osv.osv_memory):
         wf_service.trg_validate(uid, 'stock.picking', new_picking, 'button_confirm', cr)
         pick_obj.force_assign(cr, uid, [new_picking], context)
         # Update view id in context, lp:702939
-        action_list = {
-                'out': 'action_picking_tree',
-                'in': 'action_picking_tree4',
-                'internal': 'action_picking_tree6',
+        model_list = {
+                'out': 'stock.picking.out',
+                'in': 'stock.picking.in',
+                'internal': 'stock.picking',
         }
-        res = model_obj.get_object_reference(cr, uid, 'stock', action_list.get(new_type, 'action_picking_tree6'))
-        id = res and res[1] or False
-        result = act_obj.read(cr, uid, [id], context=context)[0]
-        result['domain'] = "[('id', 'in', ["+str(new_picking)+"])]"
-        return result
+        return {
+            'domain': "[('id', 'in', ["+str(new_picking)+"])]",
+            'name': _('Returned Picking'),
+            'view_type':'form',
+            'view_mode':'tree,form',
+            'res_model': model_list.get(new_type, 'stock.picking'),
+            'type':'ir.actions.act_window',
+            'context':context,
+        }
 
 stock_return_picking()
 

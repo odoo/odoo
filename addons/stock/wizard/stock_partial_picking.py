@@ -74,6 +74,7 @@ class stock_partial_picking(osv.osv_memory):
      }
     
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        #override of fields_view_get in order to change the label of the process button and the separator accordingly to the shipping type
         if context is None:
             context={}
         res = super(stock_partial_picking, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
@@ -97,10 +98,14 @@ class stock_partial_picking(osv.osv_memory):
         if context is None: context = {}
         res = super(stock_partial_picking, self).default_get(cr, uid, fields, context=context)
         picking_ids = context.get('active_ids', [])
-        if not picking_ids or (not context.get('active_model') == 'stock.picking') \
-            or len(picking_ids) != 1:
+        if not picking_ids or len(picking_ids) != 1:
             # Partial Picking Processing may only be done for one picking at a time
             return res
+        # The check about active_model is there in case the client mismatched the context during propagation of it
+        # (already seen in previous bug where context passed was containing ir.ui.menu as active_model and the menu 
+        # ID as active_id). Though this should be fixed in clients now, this place is sensitive enough to ensure the
+        # consistancy of the context.
+        assert context.get('active_model') in ('stock.picking', 'stock.picking.in', 'stock.picking.out'), 'Bad context propagation'
         picking_id, = picking_ids
         if 'picking_id' in fields:
             res.update(picking_id=picking_id)

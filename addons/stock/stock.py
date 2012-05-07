@@ -672,15 +672,10 @@ class stock_picking(osv.osv):
     ]
 
     def action_process(self, cr, uid, ids, context=None):
-        mod_obj = self.pool.get('ir.model.data')
-        model_data_ids = mod_obj.search(cr, uid, [('model','=','ir.ui.view'),('name','=','stock_partial_picking_form')], context=context)
-        resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
         return {
             'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'stock.partial.picking',
-            'views': [(resource_id,'form')],
-            'view_id': resource_id,
             'type': 'ir.actions.act_window',
             'target': 'new',
             'context': context,
@@ -738,9 +733,9 @@ class stock_picking(osv.osv):
         """ Changes state of picking to available if all moves are confirmed.
         @return: True
         """
-        wf_service = netsvc.LocalService("workflow")
         for pick in self.browse(cr, uid, ids):
             if pick.state == 'draft':
+                wf_service = netsvc.LocalService("workflow")
                 wf_service.trg_validate(uid, 'stock.picking', pick.id, 'button_confirm', cr)
             move_ids = [x.id for x in pick.move_lines if x.state == 'confirmed']
             if not move_ids:

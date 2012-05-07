@@ -9,6 +9,7 @@
             <field name="target">new</field>
         </record>
 
+        <!-- this view of stock.partial.picking wizard is dedicated to internal picking. The fields_view_get is ovveridden in order to change the label of the process button and the separator. -->
         <record id="stock_partial_picking_form" model="ir.ui.view">
             <field name="name">stock.partial.picking.form</field>
             <field name="model">stock.partial.picking</field>
