@@ -266,7 +266,6 @@ class event_event(osv.osv):
     def get_needaction_user_ids(self, cr, uid, ids, context=None):
         result = dict.fromkeys(ids, [])
         for obj in self.browse(cr, uid, ids, context=context):
-            # salesman must perform an action when in draft mode
             if obj.state == 'draft' and obj.user_id:
                 result[obj.id] = [obj.user_id.id]
         return result
@@ -285,7 +284,7 @@ class event_event(osv.osv):
 
     def button_draft_send_note(self, cr, uid, ids, context=None):
         for id in ids:
-            message = _("Event has been set to <b>draft</b> state.")
+            message = _("Event has been set to <b>draft</b>.")
             self.message_append_note(cr, uid, [id], body=message, context=context)
         return True
 
@@ -447,20 +446,19 @@ class event_registration(osv.osv):
     def get_needaction_user_ids(self, cr, uid, ids, context=None):
         result = dict.fromkeys(ids, [])
         for obj in self.browse(cr, uid, ids, context=context):
-            # salesman must perform an action when in draft mode
             if obj.state == 'draft' and obj.user_id:
                 result[obj.id] = [obj.user_id.id]
         return result
 
     def create_send_note(self, cr, uid, ids, context=None):
         for id in ids:
-            message = _("Event Registration has been <b>created</b>.")
+            message = _("Registration has been <b>created</b>.")
             self.message_append_note(cr, uid, [id], body=message, context=context)
         return True
 
     def do_draft_send_note(self, cr, uid, ids, context=None):
         for id in ids:
-            message = _("Event Registration has been <b>draft</b>.")
+            message = _("Registration has been <b>draft</b>.")
             self.message_append_note(cr, uid, [id], body=message, context=context)
         return True
 
