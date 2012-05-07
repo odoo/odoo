@@ -271,6 +271,29 @@ function openerp_pos_devices(module, instance){ //module is instance.point_of_sa
             }
         },
 
+        simulate : function(type){
+
+            var parse_result = {
+                ean: '01238534932',
+                type: type,
+                prefix: '012',
+                id: '392',
+                value: 42,
+                unit: 'Kg',
+            };
+
+            if(parse_result.type in {'unit':'', 'weight':'', 'price':''}){    //ean is associated to a product
+                if(this.action_callback['product']){
+                    this.action_callback['product'](parse_result);
+                }
+            }else{
+                if(this.action_callback[parse_result.type]){
+                    this.action_callback[parse_result.type](parse_result);
+                }
+            }
+
+        },
+
         // starts catching keyboard events and tries to interpret codebar 
         // calling the callbacks when needed.
         connect: function(){
