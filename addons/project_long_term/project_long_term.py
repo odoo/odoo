@@ -218,12 +218,12 @@ class project(osv.osv):
     _inherit = "project.project"
     
     def _phase_count(self, cr, uid, ids, field_name, arg, context=None):
-        open_phase={}
-        phase_pool=self.pool.get('project.phase')
-        for id in ids:
-            phase_ids = phase_pool.search(cr, uid, [('project_id', '=', id)])
-            open_phase[id] = len(phase_ids)
-        return open_phase
+        res = dict.fromkeys(ids, 0)
+        phase_pool = self.pool.get('project.phase')
+        phase_ids = phase_pool.search(cr, uid, [('project_id', 'in', ids)])
+        for phase in phase_pool.browse(cr, uid, phase_ids, context):
+            res[phase.project_id.id] += 1
+        return res
      
     _columns = {
         'phase_ids': fields.one2many('project.phase', 'project_id', "Project Phases"),

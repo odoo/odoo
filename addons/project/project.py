@@ -156,12 +156,11 @@ class project(osv.osv):
         return super(project, self).unlink(cr, uid, ids, *args, **kwargs)
     
     def _task_count(self, cr, uid, ids, field_name, arg, context=None):
-        open_task={}
-        task_pool=self.pool.get('project.task')
-        for id in ids:
-            task_ids = task_pool.search(cr, uid, [('project_id', '=', id)])
-            open_task[id] = len(task_ids)
-        return open_task
+        res = dict.fromkeys(ids, 0)
+        task_ids = self.pool.get('project.task').search(cr, uid, [('project_id', 'in', ids)])
+        for task in self.pool.get('project.task').browse(cr, uid, task_ids, context):
+            res[task.project_id.id] += 1
+        return res
     
     _columns = {
         'complete_name': fields.function(_complete_name, string="Project Name", type='char', size=250),
