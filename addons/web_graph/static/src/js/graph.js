@@ -262,7 +262,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
 
     schedule_chart: function(results) {
-        self.graph_render(...)
+        self.graph_render({})
     },
 
     // render the graph using the domain, context and group_by
@@ -271,7 +271,8 @@ instance.web_graph.GraphView = instance.web.View.extend({
         var self = this;
         return $.when(this.is_loaded).pipe(function() {
             // todo: find the right syntax to perform an Ajax call
-            return self.rpc.graph_get_data(self.view_id, domain, context, group_by).then($.proxy(self, 'schedule_chart'));
+            // return self.rpc.graph_get_data(self.view_id, domain, context, group_by).then($.proxy(self, 'schedule_chart'));
+            $.proxy(self, "schedule_chart");
         });
     },
 
