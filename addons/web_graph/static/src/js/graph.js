@@ -152,6 +152,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
         data = this.rpc(
             '/web_graph/graph/data_get',
             {
+                model: this.dataset.model,
                 domain: this.domain,
                 context: this.context,
                 group_by: this.group_by,

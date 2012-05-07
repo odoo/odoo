@@ -8,7 +8,7 @@
 * Stacked / Not Stacked for areas and bars
 * Legends: top, inside (top/left), hidden
 * Features: download as PNG or CSV, browse data grid, switch orientation
-* Unlimited "Group By" levels, multi level analysis
+* Unlimited "Group By" levels (not stacked), two cross level analysis (stacked)
 """,
     "version": "3.0",
     "depends": ['web'],
