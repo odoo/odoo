@@ -9,6 +9,7 @@ var QWeb = instance.web.qweb,
 
 instance.web.views.add('graph', 'instance.web_graph.GraphView');
 instance.web_graph.GraphView = instance.web.View.extend({
+    template: "GraphView",
     display_name: _lt('Graph'),
     view_type: "graph",
 
@@ -18,7 +19,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
         this.dataset = dataset;
         this.view_id = view_id;
 
-        this.mode="pie";          // line, bar, area, pie, radar
+        this.mode="bar";          // line, bar, area, pie, radar
         this.orientation=true;    // true: horizontal, false: vertical
         this.stacked=true;
 
@@ -29,60 +30,59 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
 
         this.is_loaded = $.Deferred();
-        this.renderer = null;
+        this.graph = null;
     },
     destroy: function () {
-        if (this.renderer) {
-            clearTimeout(this.renderer);
-        }
+        if (this.graph)
+            this.graph.destroy();
         this._super();
     },
 
     on_loaded: function(fields_view_get) {
-        var container;
-        this.$element.html(QWeb.render("GraphView", {}));
-
-        container = this.$element.find("#editor-render-body");
+        // TODO: move  to load_view and document
+        var self = this;
+        this.fields_view = fields_view_get;
+        this.container = this.$element.find("#editor-render-body")[0];
         this.$element.find("#graph_bar,#graph_bar_stacked").click(
-            {mode: 'bar', stacked: true, legend: 'top'}, this.graph_render)
+            {mode: 'bar', stacked: true, legend: 'top'}, $.proxy(this,"graph_render"))
 
         this.$element.find("#graph_bar_not_stacked").click(
-            {mode: 'bar', stacked: false, legend: 'top'}, this.graph_render)
+            {mode: 'bar', stacked: false, legend: 'top'}, $.proxy(this,"graph_render"))
 
         this.$element.find("#graph_area,#graph_area_stacked").click(
-            {mode: "area", stacked: true, legend: "top"}, this.graph_render);
+            {mode: "area", stacked: true, legend: "top"}, $.proxy(this,"graph_render"));
 
         this.$element.find("#graph_area_not_stacked").click(
-            {mode: "area", stacked: false, legend: "top"}, this.graph_render);
+            {mode: "area", stacked: false, legend: "top"}, $.proxy(this,"graph_render"));
 
         this.$element.find("#graph_radar").click(
-            {orientation: 0, mode: "radar", legend: "inside"}, this.graph_render);
+            {orientation: 0, mode: "radar", legend: "inside"}, $.proxy(this,"graph_render"));
 
         this.$element.find("#graph_pie").click(
-            {mode: "pie", legend: "inside"}, this.graph_render);
+            {mode: "pie", legend: "inside"}, $.proxy(this,"graph_render"));
 
         this.$element.find("#graph_legend_top").click(
-            {legend: "top"}, this.graph_render);
+            {legend: "top"}, $.proxy(self,"graph_render"));
 
         this.$element.find("#graph_legend_inside").click(
-            {legend: "inside"}, this.graph_render);
+            {legend: "inside"}, $.proxy(self,"graph_render"));
 
         this.$element.find("#graph_legend_no").click(
-            {legend: "no"}, this.graph_render);
+            {legend: "no"}, $.proxy(self,"graph_render"));
 
         this.$element.find("#graph_line").click(
-            {mode: "line"}, this.graph_render);
+            {mode: "line"}, $.proxy(this,"graph_render"));
 
         this.$element.find("#graph_show_data").click(
             function() {
-                spreadsheet = ! spreadsheet;
-                this.graph_render();
+                self.spreadsheet = ! self.spreadsheet;
+                self.graph_render();
             }
         );
         this.$element.find("#graph_switch").click(
             function() {
-                orientation = ! orientation;
-                this.graph_render();
+                self.orientation = ! self.orientation;
+                self.graph_render();
             }
         );
 
@@ -95,26 +95,25 @@ instance.web_graph.GraphView = instance.web.View.extend({
                         "you can only get a VML image that you can use in Microsoft Office."
                     );
                 }
-                if (legend=="top") legend="inside";
-                forcehtml = true;
-                graph = this.graph_render();
+                if (self.legend=="top") self.legend="inside";
+                self.forcehtml = true;
+                graph = self.graph_render();
                 graph.download.saveImage('png');
-                forcehtml = false;
+                self.forcehtml = false;
             }
         );
-
         this._super();
+        this.graph_render()
     },
 
     get_format: function get_format(options) {
          var result = {
             show: this.legend!='no',
         }
-        if (legend=="top") {
+        if (this.legend=="top") {
             result.noColumns = 4;
-            // todo: I guess I should add something like this.renderer ?
-            result.container = this.$element.find("div .graph_header_legend", this)[0];
-        } else if (legend=="inside") {
+            result.container = this.$element.find("div.graph_header_legend")[0];
+        } else if (this.legend=="inside") {
             result.position = 'nw';
             result.backgroundColor = '#D2E8FF';
         }
@@ -157,7 +156,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
 
     graph_bar: function (container, data) {
-        return Flotr.draw(container, data, get_format({
+        return Flotr.draw(container, data, this.get_format({
                 bars : {
                     show : true,
                     stacked : this.stacked,
@@ -176,7 +175,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
     },
 
     graph_pie: function (container, data) {
-        return Flotr.draw(container, data, get_format({
+        return Flotr.draw(container, data, this.get_format({
                 pie : {
                     show: true
                 },
@@ -192,7 +191,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
     },
 
     graph_radar: function (container, data) {
-        return Flotr.draw(container, data, get_format({
+        return Flotr.draw(container, data, this.get_format({
                 radar : {
                     show : true,
                     stacked : this.stacked
@@ -206,7 +205,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
     },
 
     graph_line: function (container, data) {
-        return Flotr.draw(container, data, get_format({
+        return Flotr.draw(container, data, this.get_format({
                 lines : {
                     show : true,
                     stacked : this.stacked
@@ -230,23 +229,25 @@ instance.web_graph.GraphView = instance.web.View.extend({
                 this[i] = options.data[i];
 
         mode_options = (this.mode=='area')?{lines: {fill: true}}:{}
+        if (this.graph)
+            this.graph.destroy();
 
         // Render the graph
         this.$element.find(".graph_header_legend").children().remove()
-        data = this.get_data(mode_options);
-        graph = {
-            radar: graph_radar,
-            pie: graph_pie,
-            bar: graph_bar,
-            area: graph_line,
-            line: graph_line
-        }[this.mode](container, data)
+        data = this.graph_get_data(mode_options);
+        this.graph = {
+            radar: $.proxy(this, "graph_radar"),
+            pie: $.proxy(this, "graph_pie"),
+            bar: $.proxy(this, "graph_bar"),
+            area: $.proxy(this, "graph_line"),
+            line: $.proxy(this, "graph_line")
+        }[this.mode](this.container, data)
 
         // Update styles of menus
 
         this.$element.find("a[id^='graph_']").removeClass("active");
-        this.$element.find("a[id='graph_"+mode+"']").addClass("active");
-        this.$element.find("a[id='graph_"+mode+(this.stacked?"_stacked":"_not_stacked")+"']").addClass("active");
+        this.$element.find("a[id='graph_"+this.mode+"']").addClass("active");
+        this.$element.find("a[id='graph_"+this.mode+(this.stacked?"_stacked":"_not_stacked")+"']").addClass("active");
 
         if (this.legend=='inside')
             this.$element.find("a[id='graph_legend_inside']").addClass("active");
@@ -257,11 +258,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
         if (this.spreadsheet)
             this.$element.find("a[id='graph_show_data']").addClass("active");
-        return graph;
-    },
-
-    schedule_chart: function(results) {
-        this.graph_render({})
+        return this.graph;
     },
 
     // render the graph using the domain, context and group_by
@@ -271,7 +268,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
         return $.when(this.is_loaded).pipe(function() {
             // todo: find the right syntax to perform an Ajax call
             // return self.rpc.graph_get_data(self.view_id, domain, context, group_by).then($.proxy(self, 'schedule_chart'));
-            $.proxy(self, "schedule_chart");
+            $.proxy(self, "graph_render");
         });
     },
 
