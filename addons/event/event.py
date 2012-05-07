@@ -104,13 +104,11 @@ class event_event(osv.osv):
                 raise osv.except_osv(_('Error!'),_("The total of confirmed registration for the event '%s' does not meet the expected minimum/maximum. You should maybe reconsider those limits before going further") % (self.event.name))
             
     def check_available_seats(self, cr, uid, ids, context=None):
-        if isinstance(ids, list):
-            ids = ids[0]
-        else:
-            ids = ids 
-        total_confirmed = self.browse(cr, uid, ids, context=context).register_current
-        register_max = self.browse(cr, uid, ids, context=context).register_max
-        available_seats = register_max - total_confirmed
+        available_seats = False
+        for event in self.browse(cr, uid, ids, context=context):
+            total_confirmed = event.register_current
+            register_max = event.register_max
+            available_seats = register_max - total_confirmed
         return available_seats
             
     def check_registration_limits_before(self, cr, uid, ids, no_of_registration, context=None):
@@ -317,9 +315,10 @@ class event_registration(osv.osv):
         """ Open Registration
         """
         event_obj = self.pool.get('event.event')
-        event_id = self.browse(cr, uid, ids, context=context)[0].event_id.id
-        no_of_registration = self.browse(cr, uid, ids, context=context)[0].nb_register
-        event_obj.check_registration_limits_before(cr, uid, event_id, no_of_registration, context=context)
+        for register in  self.browse(cr, uid, ids, context=context):
+            event_id = register.event_id.id
+            no_of_registration = register.nb_register
+            event_obj.check_registration_limits_before(cr, uid, [event_id], no_of_registration, context=context)
         res = self.confirm_registration(cr, uid, ids, context=context)
         self.mail_user(cr, uid, ids, context=context)
         return res
