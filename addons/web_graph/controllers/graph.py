@@ -48,27 +48,29 @@ class GraphView(View):
         print "X", xaxis, "Y", yaxis
         
         # Convert a field's data into a displayable string
+
+        ticks = {}
         def _convert(field, data):
             if fields[field]['type']=='many2one':
-                return data and data[1] or ""
-            return data or ""
+                data = data and data[1]
+            return ticks.setdefault(data, len(ticks))
+
+        def _orientation(x, y):
+            if not orientation:
+                return (x,y)
+            return (y,x)
 
         result = []
         for x in xaxis:
-
             res = obj.read_group(domain, yaxis+[x], [x], context=context)
-            print res
             result.append( {
-                'data': map(lambda record: (_convert(x, record[x]), record[yaxis[0]]), res),
+                'data': map(lambda record: _orientation(_convert(x, record[x]), record[yaxis[0]]), res),
                 'label': fields[x]['string']
             })
 
         print result
-        return result
-        [
-            {
-                'data': 3,
-                'label': "Axis Name"
-            }
-        ]
+        return {
+            'data': result,
+            'ticks': map(lambda x: (x[1], x[0]), ticks.items())
+        }
 

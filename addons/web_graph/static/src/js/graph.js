@@ -142,51 +142,9 @@ instance.web_graph.GraphView = instance.web.View.extend({
         }, options)
     },
 
-    graph_get_data: function (options) {
-        var i,
-            d1 = [],
-            d2 = [],
-            d3 = [];
-
-        var data;
-        data = this.rpc(
-            '/web_graph/graph/data_get',
-            {
-                model: this.dataset.model,
-                domain: this.domain,
-                context: this.context,
-                group_by: this.group_by,
-                view_id: this.view_id,
-                orientation: this.orientation
-            },
-            function(result) {
-                console.log(result);
-            }
-        );
-
-		// return data
-
-        for (i = -3; i < 3; i++) {
-            if (this.orientation % 2) {
-                d1.push([Math.random(), i]);
-                d2.push([Math.random(), i]);
-                d3.push([Math.random(), i]);
-            } else {
-                d1.push([i, Math.random()]);
-                d2.push([i, Math.random()]);
-                d3.push([i, Math.random()]);
-            }
-        };
-        return [
-                $.extend({ data : d2, label : 'Serie 2'}, options),
-                $.extend({ data : d3, label : 'Serie 3'}, options),
-                $.extend({ data : d1, label : 'Serie 1'}, options),
-        ];
-    },
-
 
     graph_bar: function (container, data) {
-        return Flotr.draw(container, data, this.get_format({
+        return Flotr.draw(container, data.data, this.get_format({
                 bars : {
                     show : true,
                     stacked : this.stacked,
@@ -199,13 +157,16 @@ instance.web_graph.GraphView = instance.web.View.extend({
                     horizontalLines : !this.orientation,
                     outline : "sw",
                 },
-                xaxis : {labelsAngle: 45}
+                xaxis : {
+                    labelsAngle: 45,
+                    ticks: data.ticks
+                }
             })
         )
     },
 
     graph_pie: function (container, data) {
-        return Flotr.draw(container, data, this.get_format({
+        return Flotr.draw(container, data.data, this.get_format({
                 pie : {
                     show: true
                 },
@@ -221,7 +182,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
     },
 
     graph_radar: function (container, data) {
-        return Flotr.draw(container, data, this.get_format({
+        return Flotr.draw(container, data.data, this.get_format({
                 radar : {
                     show : true,
                     stacked : this.stacked
@@ -235,7 +196,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
     },
 
     graph_line: function (container, data) {
-        return Flotr.draw(container, data, this.get_format({
+        return Flotr.draw(container, data.data, this.get_format({
                 lines : {
                     show : true,
                     stacked : this.stacked
@@ -245,26 +206,75 @@ instance.web_graph.GraphView = instance.web.View.extend({
                     horizontalLines : !this.orientation,
                     outline : "sw",
                 },
-                xaxis : {labelsAngle: 45}
+                xaxis : {
+                    labelsAngle: 45,
+                    ticks: data.ticks
+                }
             })
         )
     },
 
+    graph_get_data: function (options, callback) {
+        var data = this.rpc(
+            '/web_graph/graph/data_get',
+            {
+                model: this.dataset.model,
+                domain: this.domain,
+                context: this.context,
+                group_by: this.group_by,
+                view_id: this.view_id,
+                orientation: this.orientation
+            }, callback
+        );
+
+		return data
+
+        // var i,
+        //     d1 = [],
+        //     d2 = [],
+        //     d3 = [];
+        // for (i = -3; i < 3; i++) {
+        //     if (this.orientation % 2) {
+        //         d1.push([Math.random(), i]);
+        //         d2.push([Math.random(), i]);
+        //         d3.push([Math.random(), i]);
+        //     } else {
+        //         d1.push([i, Math.random()]);
+        //         d2.push([i, Math.random()]);
+        //         d3.push([i, Math.random()]);
+        //     }
+        // };
+        // return [
+        //         $.extend({ data : d2, label : 'Serie 2'}, options),
+        //         $.extend({ data : d3, label : 'Serie 3'}, options),
+        //         $.extend({ data : d1, label : 'Serie 1'}, options),
+        // ];
+    },
+
+
     // Render the graph and update menu styles
     graph_render: function (options) {
-        var graph, data, mode_options, i;
+        var mode_options;
+        var self = this;
+        mode_options = (this.mode=='area')?{lines: {fill: true}}:{}
+        return this.graph_get_data(mode_options, 
+            function (result) {
+                self.graph_render_all(options, result)
+            }
+        );
+    },
 
+    graph_render_all: function (options, data) {
+        var graph, i;
         if (options)
             for (i in options.data)
                 this[i] = options.data[i];
 
-        mode_options = (this.mode=='area')?{lines: {fill: true}}:{}
         if (this.graph)
             this.graph.destroy();
 
         // Render the graph
         this.$element.find(".graph_header_legend").children().remove()
-        data = this.graph_get_data(mode_options);
         this.graph = {
             radar: $.proxy(this, "graph_radar"),
             pie: $.proxy(this, "graph_pie"),
@@ -300,9 +310,6 @@ instance.web_graph.GraphView = instance.web.View.extend({
         this.group_by = group_by;
 
         this.graph_render();
-        //return $.when(this.is_loaded).pipe(function() {
-        //    // todo: find the right syntax to perform an Ajax call
-        //    // return self.rpc.graph_get_data(self.view_id, domain, context, group_by).then($.proxy(self, 'schedule_chart'));
         //});
     },
 
