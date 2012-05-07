@@ -91,6 +91,5 @@ class GraphView(View):
             'data': result,
             'ticks': map(lambda x: (x[1], x[0]), ticks.items())
         }
-        print res
         return res
 
