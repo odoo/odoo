@@ -68,7 +68,7 @@ class res_partner(osv.osv):
             }, context=context)
             opportunity_ids[partner_id] = opportunity_id
         return opportunity_ids
-
+res_partner()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
