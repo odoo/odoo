@@ -28,6 +28,10 @@ instance.web_graph.GraphView = instance.web.View.extend({
         this.legend_container;
         this.legend="top";        // top, inside, no
 
+        this.domain = [];
+        this.context = {};
+        this.group_by = {};
+
 
         this.is_loaded = $.Deferred();
         this.graph = null;
@@ -40,12 +44,12 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
     on_loaded: function(fields_view_get) {
         // TODO: move  to load_view and document
-		var width, height;
+        var width, height;
         var self = this;
         this.fields_view = fields_view_get;
         this.container = this.$element.find("#editor-render-body");
 
-		width = this.$element.parent().width();
+        width = this.$element.parent().width();
         this.container.css("width", width);
         this.$element.css("width", width);
         this.container.css("height", Math.min(500, width*0.8));
@@ -111,7 +115,6 @@ instance.web_graph.GraphView = instance.web.View.extend({
             }
         );
         this._super();
-        this.graph_render()
     },
 
     get_format: function get_format(options) {
@@ -144,6 +147,24 @@ instance.web_graph.GraphView = instance.web.View.extend({
             d1 = [],
             d2 = [],
             d3 = [];
+
+        var data;
+        data = this.rpc(
+            '/web_graph/graph/data_get',
+            {
+                domain: this.domain,
+                context: this.context,
+                group_by: this.group_by,
+                view_id: this.view_id,
+                orientation: this.orientation
+            },
+            function(result) {
+                console.log(result);
+            }
+        );
+
+		// return data
+
         for (i = -3; i < 3; i++) {
             if (this.orientation % 2) {
                 d1.push([Math.random(), i]);
@@ -271,13 +292,17 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
     // render the graph using the domain, context and group_by
     // calls the 'graph_data_get' python controller to process all data
+    // TODO: check is group_by should better be in the context
     do_search: function(domain, context, group_by) {
-        var self = this;
-        return $.when(this.is_loaded).pipe(function() {
-            // todo: find the right syntax to perform an Ajax call
-            // return self.rpc.graph_get_data(self.view_id, domain, context, group_by).then($.proxy(self, 'schedule_chart'));
-            $.proxy(self, "graph_render");
-        });
+        this.domain = domain;
+        this.context = context;
+        this.group_by = group_by;
+
+        this.graph_render();
+        //return $.when(this.is_loaded).pipe(function() {
+        //    // todo: find the right syntax to perform an Ajax call
+        //    // return self.rpc.graph_get_data(self.view_id, domain, context, group_by).then($.proxy(self, 'schedule_chart'));
+        //});
     },
 
     do_show: function() {
