@@ -54,7 +54,7 @@ class GraphView(View):
                 data = data and data[1]
             if tick:
                 return ticks.setdefault(data, len(ticks))
-            return data
+            return data or 0
 
         def _orientation(x, y):
             if not orientation:
@@ -74,7 +74,7 @@ class GraphView(View):
             for x in xaxis:
                 res = obj.read_group(domain, yaxis+[x], [x], context=context)
                 result.append( {
-                    'data': map(lambda record: _orientation(_convert(x, record[x]), record[yaxis[0]]), res),
+                    'data': map(lambda record: _orientation(_convert(x, record[x]), record[yaxis[0]] or 0), res),
                     'label': fields[x]['string']
                 })
         else:
@@ -83,12 +83,14 @@ class GraphView(View):
                 key = x[xaxis[0]]
                 res = obj.read_group(domain+[(xaxis[0],'=',_convert_key(xaxis[0], key))], yaxis+xaxis[1:2], xaxis[1:2], context=context)
                 result.append( {
-                    'data': map(lambda record: _orientation(_convert(xaxis[1], record[xaxis[1]]), record[yaxis[0]]), res),
+                    'data': map(lambda record: _orientation(_convert(xaxis[1], record[xaxis[1]]), record[yaxis[0]] or 0), res),
                     'label': _convert(xaxis[0], key, tick=False)
                 })
 
-        return {
+        res = {
             'data': result,
             'ticks': map(lambda x: (x[1], x[0]), ticks.items())
         }
+        print res
+        return res
 
