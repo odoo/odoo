@@ -227,7 +227,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
         )
     },
 
-    graph_get_data: function (options, callback) {
+    graph_get_data: function (callback) {
         var data = this.rpc(
             '/web_graph/graph/data_get',
             {
@@ -247,22 +247,19 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
     // Render the graph and update menu styles
     graph_render: function (options) {
-        var mode_options, i;
+        var i;
         var self = this;
-        mode_options = (this.mode=='area')?{lines: {fill: true}}:{}
         if (options)
             for (i in options.data)
                 this[i] = options.data[i];
 
-        return this.graph_get_data(mode_options, 
+        return this.graph_get_data(
             function (result) {
-                // TODO: apply mode_options on all result.data
                 var i;
                 if (self.mode=='area')
                     for (i=0; i<result.data.length; i++) {
                         result.data[i].lines = {fill: true}
                     }
-                    
                 self.graph_render_all(options, result)
             }
         );
