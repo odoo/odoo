@@ -91,8 +91,8 @@
                             </field>
                             <group col="4" colspan="1">
                                 <field name="state_attendance"/>
-                                <button name="sign_in" string="Sign In" type="object" icon="terp-gtk-jump-to-ltr"/>
-                                <button name="sign_out" string="Sign Out" type="object" icon="terp-gtk-jump-to-rtl"/>
+                                <button name="sign_in" string="Sign In" type="object" icon="terp-gtk-jump-to-ltr" widget="att_button"/>
+                                <button name="sign_out" string="Sign Out" type="object" icon="terp-gtk-jump-to-rtl" widget="att_button"/>
                                 <field name="total_attendance_day" widget="float_time" colspan="4"/>
                             </group>
                             <field colspan="4" context="{'date':date_current,'user_id':user_id}" domain="[('name','=',date_current)]" name="timesheet_ids" nolabel="1">

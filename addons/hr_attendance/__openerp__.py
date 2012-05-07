@@ -54,5 +54,10 @@ actions(Sign in/Sign out) performed by them.
     'installable': True,
     'auto_install': False,
     'certificate': '0063495605613',
+    
+    #web
+    "js": ["static/src/js/sign_in_out.js"],
+    "css":[],
+    'qweb' : ["static/src/xml/sign_in_out.xml"],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

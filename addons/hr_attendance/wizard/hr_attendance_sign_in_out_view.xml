@@ -7,18 +7,18 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Sign in / Sign out">
-                    <separator colspan="4" string="Sign in / Sign out"/>
                     <label colspan="4" nolabel="1" string="If you need your staff to sign in when they arrive at work and sign out again at the end of the day, OpenERP allows you to manage this with this tool. If each employee has been linked to a system user, then they can encode their time with this action button."/>
                     <newline/>
-                    <group colspan="4" >
-                    <field name="name" />
-                    <field name="state" />
+                    <group colspan="4" col="6">
+                        <field name="date"/>
+                        <field name="name" />
+                        <field name="state" />
                     </group>
                     <separator colspan="4"/>
                     <group colspan="4" col="6">
                         <button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                        <button icon="terp-gtk-jump-to-ltr" string="Sign in" name="si_check" type="object"/>
-                        <button icon="terp-gtk-jump-to-rtl" string="Sign out" name="so_check" type="object"/>
+                        <button icon="terp-gtk-jump-to-ltr" string="Sign in" widget="att_button" name="si_check" type="object" attrs="{'invisible':[('state','=','present')]}"/>
+                        <button icon="terp-gtk-jump-to-rtl" string="Sign out" widget="att_button" name="so_check" type="object" attrs="{'invisible':[('state','=','absent')]}"/>
                    </group>
                </form>
             </field>
@@ -65,7 +65,7 @@
                     <separator colspan="4" />
                     <group colspan="4" col="6">
                         <button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                        <button icon="gtk-go-back" string="Sign in" name="sign_in" type="object"/>
+                        <button icon="gtk-go-back" string="Sign in" name="sign_in" widget="att_button" type="object"/>
                    </group>
                </form>
             </field>
@@ -85,7 +85,7 @@
                     <separator colspan="4" />
                     <group colspan="4" col="6">
                         <button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                        <button icon="gtk-go-back" string="Sign out" name="sign_out" type="object"/>
+                        <button icon="gtk-go-back" string="Sign out" name="sign_out" widget="att_button" type="object"/>
                    </group>
                </form>
             </field>
