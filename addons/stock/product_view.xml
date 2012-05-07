@@ -86,9 +86,9 @@
                         </group>
                         <group colspan="2" col="2">
                             <field name="property_stock_account_input" attrs="{'readonly':[('valuation', '!=', 'real_time')]}"
-                                domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" groups="base.group_extended"/>
+                                domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                             <field name="property_stock_account_output" attrs="{'readonly':[('valuation', '!=', 'real_time')]}"
-                                domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" groups="base.group_extended"/>
+                                domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                         </group>
                     </group>
                     <newline/>
@@ -111,7 +111,7 @@
                         <newline/>
                         <field name="virtual_available"/>
                     </group>
-                    <group colspan="2" col="2" name="stock_variations" groups="base.group_extended">
+                    <group colspan="2" col="2" name="stock_variations">
                         <separator string="Expected Stock Variations" colspan="2"/>
                         <field name="incoming_qty"/>
                         <field name="outgoing_qty"/>
