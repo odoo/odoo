@@ -2316,14 +2316,13 @@ instance.web.form.CompletionFieldMixin = {
     /**
      * Call this method to search using a string.
      */
-    get_search_result: function(request, response) {
-        var search_val = request.term;
+    get_search_result: function(search_val) {
         var self = this;
 
         var dataset = new instance.web.DataSet(this, this.field.relation, self.build_context());
 
-        this.orderer.add(dataset.name_search(
-                search_val, self.build_domain(), 'ilike', this.limit + 1)).then(function(data) {
+        return this.orderer.add(dataset.name_search(
+                search_val, self.build_domain(), 'ilike', this.limit + 1)).pipe(function(data) {
             self.last_search = data;
             // possible selections for the m2o
             var values = _.map(data, function(x) {
@@ -2347,9 +2346,7 @@ instance.web.form.CompletionFieldMixin = {
             }
             // quick create
             var raw_result = _(data.result).map(function(x) {return x[1];});
-            if (search_val.length > 0 &&
-                !_.include(raw_result, search_val) &&
-                (!self.get("value") || self.floating)) {
+            if (search_val.length > 0 && !_.include(raw_result, search_val)) {
                 values.push({label: _.str.sprintf(_t('<em>   Create "<strong>%s</strong>"</em>'),
                         $('<span />').text(search_val).html()), action: function() {
                     self._quick_create(search_val);
@@ -2360,7 +2357,7 @@ instance.web.form.CompletionFieldMixin = {
                 self._search_create_popup("form", undefined, {"default_name": search_val});
             }});
 
-            response(values);
+            return values;
         });
     },
     _quick_create: function(name) {
@@ -2524,7 +2521,11 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(_.exten
         var isSelecting = false;
         // autocomplete
         this.$input.autocomplete({
-            source: function(req, resp) { self.get_search_result(req, resp); },
+            source: function(req, resp) {
+                self.get_search_result(req.term).then(function(result) {
+                    resp(result);
+                });
+            },
             select: function(event, ui) {
                 isSelecting = true;
                 var item = ui.item;
