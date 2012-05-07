@@ -3051,17 +3051,27 @@ instance.web.form.One2ManyKanbanView = instance.web_kanban.KanbanView.extend({
 });
 }
 
-instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(_.extend({}, instance.web.form.CompletionFieldMixin, {
+instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(_.extend({}, instance.web.form.CompletionFieldMixin,
+                                                                                       instance.web.form.ReinitializeFieldMixin, {
     template: "FieldMany2ManyTags",
     init: function() {
         this._super.apply(this, arguments);
-        this.limit = 7;
-        this.orderer = new instance.web.DropMisordered();
+        instance.web.form.CompletionFieldMixin.init.call(this);
+        this.set({"value": []});
+        this.display_orderer = new instance.web.DropMisordered();
     },
     start: function() {
+        this._super();
+        instance.web.form.ReinitializeFieldMixin.start.call(this);
+        this.on("change:value", this, this.render_value);
+    },
+    initialize_content: function() {
+        if (this.get("effective_readonly"))
+            return;
         var self = this;
-        var $textarea = $("textarea", this.$element).textext({
-            plugins : 'arrow prompt autocomplete',
+        self. $text = $("textarea", this.$element);
+        self.$text.textext({
+            plugins : 'tags arrow prompt autocomplete',
             prompt : "Add one...",
             autocomplete: {
                 render: function(suggestion) {
@@ -3071,9 +3081,22 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(_.
             ext: {
                 autocomplete: {
                     selectFromDropdown: function(a, b, c) {
-                        var index = this.selectedSuggestionElement().children().children().data('index');
-                        debugger;
                         $(this).trigger('hideDropdown');
+                        var index = Number(this.selectedSuggestionElement().children().children().data('index'));
+                        var data = self.search_result[index];
+                        self.set({'value': self.get('value').concat([data.id])});
+                    },
+                },
+                tags: {
+                    isTagAllowed: function(tag) {
+                        if (! tag.name)
+                            return false;
+                        return true;
+                    },
+                },
+                itemManager: {
+                    itemToString: function(item) {
+                        return item.name;
                     },
                 },
             },
@@ -3086,6 +3109,30 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(_.
                     return _.extend(el, {index:i});
                 })});
             });
+        });
+        self.tags = self.$text.textext()[0].tags();
+    },
+    set_value: function(value_) {
+        value_ = value_ || [];
+        if (value_.length >= 1 && value_[0] instanceof Array) {
+            value_ = value_[0][2];
+        }
+        this._super(value_);
+    },
+    get_value: function() {
+        var tmp = this._super();
+        return tmp;
+    },
+    render_value: function() {
+        var self = this;
+        var dataset = new instance.web.DataSetStatic(this, this.field.relation, self.view.dataset.get_context());
+        this.display_orderer.add(dataset.name_get(self.get("value"))).then(function(data) {
+            if (! self.get("effective_readonly")) {
+                self.tags.containerElement().children().remove();
+                self.tags.addTags(_.map(data, function(el) {return {name: el[1]};}));
+            } else {
+                self.$element.html(QWeb.render("FieldMany2ManyTags.box", {elements: data}));
+            }
         });
     },
 }));
