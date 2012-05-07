@@ -104,7 +104,6 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
         this.$element.find("#graph_download").click(
             function() {
-                var graph;
                 if (Flotr.isIE && Flotr.isIE < 9) {
                     alert(
                         "Your browser doesn't allow you to get a bitmap image from the plot, " +
@@ -113,9 +112,14 @@ instance.web_graph.GraphView = instance.web.View.extend({
                 }
                 if (self.legend=="top") self.legend="inside";
                 self.forcehtml = true;
-                graph = self.graph_render();
-                graph.download.saveImage('png');
-                self.forcehtml = false;
+		return self.graph_get_data(
+		    function (result) {
+		    	var graph;
+			graph = self.graph_render_all(result)
+			graph.download.saveImage('png');
+			self.forcehtml = false;
+		    }
+		);
             }
         );
         this._super();
@@ -255,18 +259,18 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
         return this.graph_get_data(
             function (result) {
-                var i;
-                if (self.mode=='area')
-                    for (i=0; i<result.data.length; i++) {
-                        result.data[i].lines = {fill: true}
-                    }
-                self.graph_render_all(options, result)
+                self.graph_render_all(result)
             }
         );
     },
 
-    graph_render_all: function (options, data) {
+    graph_render_all: function (data) {
         var graph;
+	var i;
+	if (this.mode=='area')
+	    for (i=0; i<data.data.length; i++) {
+		data.data[i].lines = {fill: true}
+	    }
         if (this.graph)
             this.graph.destroy();
 
