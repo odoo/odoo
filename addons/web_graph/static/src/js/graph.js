@@ -256,6 +256,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
         return this.graph_get_data(mode_options, 
             function (result) {
+                // TODO: apply mode_options on all results
                 self.graph_render_all(options, result)
             }
         );
