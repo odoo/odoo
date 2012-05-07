@@ -14,12 +14,7 @@ class GraphView(View):
     _cp_path = '/web_graph/graph'
 
     @openerpweb.jsonrequest
-    def data_get(self, req, model=None, domain=[], context={}, group_by=[], view_id=False, orientation=False, **kwargs):
-        print '---'
-        print req
-        print domain
-        print context
-        print group_by
+    def data_get(self, req, model=None, domain=[], context={}, group_by=[], view_id=False, orientation=False, stacked=False, mode="bar", **kwargs):
         obj = req.session.model(model)
 
         res = obj.fields_view_get(view_id, 'graph')
@@ -50,10 +45,17 @@ class GraphView(View):
         # Convert a field's data into a displayable string
 
         ticks = {}
-        def _convert(field, data):
+        def _convert_key(field, data):
+            if fields[field]['type']=='many2one':
+                data = data and data[0]
+            return data
+
+        def _convert(field, data, tick=True):
             if fields[field]['type']=='many2one':
                 data = data and data[1]
-            return ticks.setdefault(data, len(ticks))
+            if tick:
+                return ticks.setdefault(data, len(ticks))
+            return data
 
         def _orientation(x, y):
             if not orientation:
@@ -61,14 +63,40 @@ class GraphView(View):
             return (y,x)
 
         result = []
-        for x in xaxis:
-            res = obj.read_group(domain, yaxis+[x], [x], context=context)
-            result.append( {
-                'data': map(lambda record: _orientation(_convert(x, record[x]), record[yaxis[0]]), res),
-                'label': fields[x]['string']
-            })
+        if mode=="pie":
+            res = obj.read_group(domain, yaxis+[xaxis[0]], [xaxis[0]], context=context)
+            for record in res:
+                result.append( {
+                    'data': [(_convert(xaxis[0], record[xaxis[0]]), record[yaxis[0]])],
+                    'label': _convert(xaxis[0], record[xaxis[0]], tick=False)
+                })
+            
+        elif (not stacked) or (len(xaxis)<2):
+            for x in xaxis:
+                res = obj.read_group(domain, yaxis+[x], [x], context=context)
+                result.append( {
+                    'data': map(lambda record: _orientation(_convert(x, record[x]), record[yaxis[0]]), res),
+                    'label': fields[x]['string']
+                })
+        else:
+            axis = obj.read_group(domain, yaxis+xaxis[0:1], xaxis[0:1], context=context)
+            for x in axis:
+                key = x[xaxis[0]]
+                print key
+                print x
+                res = obj.read_group(domain+[(xaxis[0],'=',_convert_key(xaxis[0], key))], yaxis+xaxis[1:2], xaxis[1:2], context=context)
+                print '*', res
+                print '**', xaxis[1]
+                result.append( {
+                    'data': map(lambda record: _orientation(_convert(xaxis[1], record[xaxis[1]]), record[yaxis[0]]), res),
+                    'label': _convert(xaxis[0], key, tick=False)
+                })
+                
 
-        print result
+        print '---'
+        print '-', result
+        print '-', map(lambda x: (x[1], x[0]), ticks.items())
+
         return {
             'data': result,
             'ticks': map(lambda x: (x[1], x[0]), ticks.items())

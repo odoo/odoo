@@ -93,7 +93,8 @@ instance.web_graph.GraphView = instance.web.View.extend({
         );
         this.$element.find("#graph_switch").click(
             function() {
-                self.orientation = ! self.orientation;
+                if (this.mode != 'radar')
+                    self.orientation = ! self.orientation;
                 self.graph_render();
             }
         );
@@ -157,9 +158,12 @@ instance.web_graph.GraphView = instance.web.View.extend({
                     horizontalLines : !this.orientation,
                     outline : "sw",
                 },
+                yaxis : {
+                    ticks: this.orientation?data.ticks:false
+                },
                 xaxis : {
                     labelsAngle: 45,
-                    ticks: data.ticks
+                    ticks: this.orientation?false:data.ticks
                 }
             })
         )
@@ -190,7 +194,10 @@ instance.web_graph.GraphView = instance.web.View.extend({
                 grid : {
                     circular : true,
                     minorHorizontalLines : true
-                }
+                },
+                xaxis : {
+                    ticks: data.ticks
+                },
             })
         )
     },
@@ -206,9 +213,12 @@ instance.web_graph.GraphView = instance.web.View.extend({
                     horizontalLines : !this.orientation,
                     outline : "sw",
                 },
+                yaxis : {
+                    ticks: this.orientation?data.ticks:false
+                },
                 xaxis : {
                     labelsAngle: 45,
-                    ticks: data.ticks
+                    ticks: this.orientation?false:data.ticks
                 }
             })
         )
@@ -223,40 +233,24 @@ instance.web_graph.GraphView = instance.web.View.extend({
                 context: this.context,
                 group_by: this.group_by,
                 view_id: this.view_id,
-                orientation: this.orientation
+                mode: this.mode,
+                orientation: this.orientation,
+                stacked: this.stacked
             }, callback
         );
-
 		return data
-
-        // var i,
-        //     d1 = [],
-        //     d2 = [],
-        //     d3 = [];
-        // for (i = -3; i < 3; i++) {
-        //     if (this.orientation % 2) {
-        //         d1.push([Math.random(), i]);
-        //         d2.push([Math.random(), i]);
-        //         d3.push([Math.random(), i]);
-        //     } else {
-        //         d1.push([i, Math.random()]);
-        //         d2.push([i, Math.random()]);
-        //         d3.push([i, Math.random()]);
-        //     }
-        // };
-        // return [
-        //         $.extend({ data : d2, label : 'Serie 2'}, options),
-        //         $.extend({ data : d3, label : 'Serie 3'}, options),
-        //         $.extend({ data : d1, label : 'Serie 1'}, options),
-        // ];
     },
 
 
     // Render the graph and update menu styles
     graph_render: function (options) {
-        var mode_options;
+        var mode_options, i;
         var self = this;
         mode_options = (this.mode=='area')?{lines: {fill: true}}:{}
+        if (options)
+            for (i in options.data)
+                this[i] = options.data[i];
+
         return this.graph_get_data(mode_options, 
             function (result) {
                 self.graph_render_all(options, result)
@@ -265,11 +259,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
     },
 
     graph_render_all: function (options, data) {
-        var graph, i;
-        if (options)
-            for (i in options.data)
-                this[i] = options.data[i];
-
+        var graph;
         if (this.graph)
             this.graph.destroy();
 
