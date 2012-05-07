@@ -148,25 +148,22 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
     do_process_groups: function(groups) {
         var self = this;
         this.add_group_mutex.exec(function() {
-            var def = $.Deferred();
             self.do_clear_groups();
             self.dataset.ids = [];
             var remaining = groups.length - 1,
                 groups_array = [];
-            _.each(groups, function (group, index) {
+            return $.when.apply(null, _.map(groups, function (group, index) {
                 var dataset = new instance.web.DataSetSearch(self, self.dataset.model, group.context, group.domain);
-                dataset.read_slice(self.fields_keys.concat(['__last_update']), { 'limit': self.limit }).then(function(records) {
-                    self.dataset.ids.push.apply(self.dataset.ids, dataset.ids);
-                    groups_array[index] = new instance.web_kanban.KanbanGroup(self, records, group, dataset);
-                    if (!remaining--) {
-                        self.dataset.index = self.dataset.size() ? 0 : null;
-                        def.pipe(self.do_add_groups(groups_array));
-                    }
-                }).then(null, function() {
-                    def.reject();
+                return dataset.read_slice(self.fields_keys.concat(['__last_update']), { 'limit': self.limit })
+                    .pipe(function(records) {
+                        self.dataset.ids.push.apply(self.dataset.ids, dataset.ids);
+                        groups_array[index] = new instance.web_kanban.KanbanGroup(self, records, group, dataset);
+                        if (!remaining--) {
+                            self.dataset.index = self.dataset.size() ? 0 : null;
+                            return self.do_add_groups(groups_array);
+                        }
                 });
-            });
-            return def;
+            }));
         });
     },
     do_process_dataset: function(dataset) {
@@ -196,16 +193,16 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         this.$element.find('.oe_kanban_groups_headers, .oe_kanban_groups_records').empty();
     },
     do_add_groups: function(groups) {
-        var self = this,
-            def = $.Deferred().resolve();
+        var self = this;
         _.each(groups, function(group) {
             self.groups[group.undefined_title ? 'unshift' : 'push'](group);
         });
-        _.each(this.groups, function(group) {
-            def.pipe(group.appendTo(self.$element.find('.oe_kanban_groups_headers')));
+        var groups_started = _.map(this.groups, function(group) {
+            return group.appendTo(self.$element.find('.oe_kanban_groups_headers'));
         });
-        this.on_groups_started();
-        return def;
+        return $.when.apply(null, groups_started).then(function () {
+            self.on_groups_started();
+        });
     },
     on_groups_started: function() {
         var self = this;
