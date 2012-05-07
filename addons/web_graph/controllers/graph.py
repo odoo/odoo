@@ -40,7 +40,7 @@ class GraphView(View):
 
         assert len(xaxis), "No field for the X axis!"
         assert len(yaxis), "No field for the Y axis!"
-        
+
         # Convert a field's data into a displayable string
 
         ticks = {}
