@@ -11,9 +11,9 @@ openerp.project_timesheet = function(openerp) {
 		}
             	if(include(this.view.fields_keys,"issues"))
             	{
-            	    if(!this.record.task.raw_value && !this.record.issues.raw_value && this.record.timesheets.raw_value)$(this.$element).find('.click_button').attr('data-name','open_timesheets');
+            	    if(!this.record.use_tasks.raw_value && !this.record.use_issues.raw_value && this.record.use_timesheets.raw_value)$(this.$element).find('.click_button').attr('data-name','open_timesheets');
             	};
-            	if(this.record.task.raw_value && this.record.timesheets.raw_value)$(this.$element).find('.click_button').attr('data-name','open_tasks');
+            	if(this.record.use_tasks.raw_value && this.record.use_timesheets.raw_value)$(this.$element).find('.click_button').attr('data-name','open_tasks');
             };
         }
     });
