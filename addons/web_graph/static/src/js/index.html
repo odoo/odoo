@@ -1,0 +1,358 @@
+<html>
+	<head>
+		<script src="js/jquery-1.7.1.min.js"></script>
+		<script src="js/dropdown.js"></script>
+	    <script type="text/javascript" src="flotr2/flotr2.js"></script>
+		<style type="text/css">
+			.dropdown-menu-icon {
+				z-index: 5000;
+				position: absolute;
+				right: 0px;
+			}
+
+			.editor-render {
+				width: 650px;
+				position: relative;
+			}
+			#editor-render-body {
+				position: relative;
+				width: 650px;
+				height: 440px;
+			}
+		    .graph-dropdown {
+				padding: 5px;
+				width: 200px;
+				border: 1px #333 solid;
+	      		display: none;
+				position: absolute;
+				right: 0px;
+				background: #fafaf5;
+				z-index: 100;
+		    }
+		    .open .graph-dropdown {
+				display: block;
+		    }
+			.graph-menu {
+				padding: 3px;
+			}
+			.graph-menu .active {
+				background: #aaaaff;
+			}
+			li {
+				padding: 2px;
+				margin-left: 10px;
+			}
+			a .graph-menu-options {
+				color: white;
+			}
+			div .graph-menu-options {
+				float: right;
+				top: 0px;
+			}
+		</style>
+		<link rel="stylesheet" href="css/openerp.css" type="text/css">
+		<link rel="stylesheet" href="css/flotr2.css" type="text/css">
+
+	</head>
+
+<body style="padding:20px;">
+	<h1 id="title">
+		Hello World!
+	</h1>
+
+	<div class="editor-render">
+		<div class="graph_header_legend">
+		</div>
+		<a href="#" class="i dropdown-menu-icon" data-toggle="dropdown">B</a>
+		<div  class="graph-dropdown">
+			<div class="menu-section">
+					Graph Mode:
+			</div>
+			<ul class="graph-menu">
+			  <li><a href="#" id="graph_pie">Pie</a>
+			  </li>
+			  <li>
+				  <a href="#" id="graph_bar">Bars</a>
+			      <div class="i graph-menu-options">
+				  	<a href="#" id="graph_bar_stacked">w</a>
+					<a href="#" id="graph_bar_not_stacked">O</a>
+				  </div>
+			  </li>
+			  <li><a href="#" id="graph_line">Lines</a>
+			      <div class="i graph-menu-options">
+
+				  </div>
+			  </li>
+			  <li><a href="#" id="graph_area">Areas</a>
+			      <div class="i graph-menu-options">
+				  	<a href="#" id="graph_area_stacked">w</a>
+					<a href="#" id="graph_area_not_stacked">O</a>
+				  </div>
+			  
+			  </li>
+			  <li><a href="#" id="graph_radar">Radar</a></li>
+			</ul>
+			<div class="menu-section">
+					Legend:
+			</div>
+			<ul class="graph-menu">
+			  <li><a href="#" id="graph_legend_no">Hide</a></li>
+			  <li><a href="#" id="graph_legend_inside">Inside</a></li>
+			  <li><a href="#" id="graph_legend_top">Top</a></li>
+			</ul>
+			<div class="menu-section">
+					Actions:
+			</div>
+			<ul class="graph-menu">
+			  <li><a href="#" id="graph_switch">Switch Axis</a></li>
+			  <li><a href="#" id="graph_show_data">Show Data</a></li>
+			  <li><a href="#" id="graph_download">Download as PNG</a></li>
+			</ul>
+		</div>
+
+		<div id="editor-render-body">
+		</div>
+	</div>
+
+
+	<script type="text/javascript">
+		var
+			mode="pie",          // line, bar, area, pie, radar
+			orientation=true,    // true: horizontal, false: vertical
+			stacked=true,
+			spreadsheet=false,
+			forcehtml=false,
+			legend_container,
+			legend="top";        // top, inside, no
+
+		function get_format(options) {
+			result = {
+				show: legend!='no',
+			}
+			if (legend=="top") {
+				result.noColumns = 4;
+				result.legend_container = $("div .graph_header_legend")[0];
+			} else if (legend=="inside") {
+				result.position = 'nw';
+				result.backgroundColor = '#D2E8FF';
+			}
+			return $.extend({
+				legend: result,
+				mouse: {
+						track: true,
+						relative: true
+				},
+				spreadsheet : {
+					show: spreadsheet,
+					initialTab: "data"
+				},
+				HtmlText : (options && options.labelsAngle)?false:!forcehtml,
+			}, options)
+		}
+
+		/*
+		 * Fetch data in Ajax. Data is preprocessed by the server, in python
+		*/
+		function get_data(options) {
+			var i,
+			d1 = [],
+			d2 = [],
+			d3 = [];
+
+			for (i = -3; i < 3; i++) {
+				if (orientation % 2) {
+					d1.push([Math.random(), i]);
+					d2.push([Math.random(), i]);
+					d3.push([Math.random(), i]);
+				} else {
+					d1.push([i, Math.random()]);
+					d2.push([i, Math.random()]);
+					d3.push([i, Math.random()]);
+				}
+			};
+			return [
+					$.extend({ data : d2, label : 'Serie 2 '+orientation%2 }, options),
+					$.extend({ data : d3, label : 'Serie 3 '+orientation%2 }, options),
+					$.extend({ data : d1, label : 'Serie 1 '+orientation%2 }, options),
+			];
+		}
+
+		function graph_bar(container, data) {
+			return Flotr.draw(container, data, get_format({
+					bars : {
+						show : true,
+						stacked : stacked,
+						horizontal : orientation,
+						barWidth : 0.7,
+						lineWidth : 1
+					},
+					grid : {
+						verticalLines : orientation,
+						horizontalLines : !orientation,
+						outline : "sw",
+					},
+					labelsAngle: 45
+				})
+			)
+		}
+
+		function graph_pie(container, data) {
+			return Flotr.draw(container, data, get_format({
+					pie : {
+						show: true
+					},
+					grid : {
+						verticalLines : false,
+						horizontalLines : false,
+						outline : "",
+					},
+					xaxis :  {showLabels: false},
+					yaxis :  {showLabels: false},
+				})
+			)
+		}
+
+
+		function graph_radar(container, data) {
+			return Flotr.draw(container, data, get_format({
+					radar : {
+						show : true,
+						stacked : stacked
+					},
+					grid : {
+						circular : true,
+						minorHorizontalLines : true
+					}
+				})
+			)
+		}
+
+
+		function graph_line(container, data) {
+			return Flotr.draw(container, data, get_format({
+					lines : {
+						show : true,
+						stacked : stacked
+					},
+					grid : {
+						verticalLines : orientation,
+						horizontalLines : !orientation,
+						outline : "sw",
+					},
+					labelsAngle : 45
+				})
+			)
+		}
+
+		// Render the graph and update menu styles
+
+		function graph_render(options) {
+			var graph, data, mode_options, i;
+
+			if (options)
+				for (i in options.data)
+					window[i] = options.data[i];
+
+			mode_options = (mode=='area')?{lines: {fill: true}}:{}
+
+			// Render the graph
+			$(".graph_header_legend").children().remove()
+			data = get_data(mode_options);
+			graph = {
+				radar: graph_radar,
+				pie: graph_pie,
+				bar: graph_bar,
+				area: graph_line,
+				line: graph_line
+			}[mode](container, data)
+
+			// Update styles of menus
+
+			$("a[id^='graph_']").removeClass("active");
+			$("a[id='graph_"+mode+"']").addClass("active");
+			$("a[id='graph_"+mode+(stacked?"_stacked":"_not_stacked")+"']").addClass("active");
+
+			if (legend=='inside')
+				$("a[id='graph_legend_inside']").addClass("active");
+			else if (legend=='top')
+				$("a[id='graph_legend_top']").addClass("active");
+			else
+				$("a[id='graph_legend_no']").addClass("active");
+
+			if (spreadsheet)
+				$("a[id='graph_show_data']").addClass("active");
+			return graph;
+		}
+
+
+		$(document).ready(
+			function() {
+				container = document.getElementById("editor-render-body");
+				graph_render();
+
+				$("#graph_bar,#graph_bar_stacked").click(
+					{mode: 'bar', stacked: true, legend: 'top'}, graph_render)
+
+				$("#graph_bar_not_stacked").click(
+					{mode: 'bar', stacked: false, legend: 'top'}, graph_render)
+
+				$("#graph_area,#graph_area_stacked").click(
+					{mode: "area", stacked: true, legend: "top"}, graph_render);
+
+				$("#graph_area_not_stacked").click(
+					{mode: "area", stacked: false, legend: "top"}, graph_render);
+
+				$("#graph_radar").click(
+					{orientation: 0, mode: "radar", legend: "inside"}, graph_render);
+
+				$("#graph_pie").click(
+					{mode: "pie", legend: "inside"}, graph_render);
+
+				$("#graph_legend_top").click(
+					{legend: "top"}, graph_render);
+
+				$("#graph_legend_inside").click(
+					{legend: "inside"}, graph_render);
+
+				$("#graph_legend_no").click(
+					{legend: "no"}, graph_render);
+
+				$("#graph_line").click(
+					{mode: "line"}, graph_render);
+
+				$("#graph_show_data").click(
+					function() {
+						spreadsheet = ! spreadsheet;
+						graph_render();
+					}
+				);
+				$("#graph_switch").click(
+					function() {
+						orientation = ! orientation;
+						graph_render();
+					}
+				);
+
+				$("#graph_download").click(
+					function() {
+						var graph;
+						if (Flotr.isIE && Flotr.isIE < 9) {
+							alert(
+								"Your browser doesn't allow you to get a bitmap image from the plot, " +
+								"you can only get a VML image that you can use in Microsoft Office."
+							);
+						}
+						if (legend=="top") legend="inside";
+						forcehtml = true;
+						graph = graph_render();
+						graph.download.saveImage('png');
+						forcehtml = false;
+					}
+				);
+			}
+		);
+	</script>
+
+</body>
+
+</html>

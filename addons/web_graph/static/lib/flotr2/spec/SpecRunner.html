@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+  "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <title>Jasmine Spec Runner</title>
+
+  <link rel="shortcut icon" type="image/png" href="../lib/jasmine/jasmine_favicon.png">
+
+  <link rel="stylesheet" type="text/css" href="../lib/jasmine/jasmine.css">
+  <script type="text/javascript" src="../lib/jasmine/jasmine.js"></script>
+  <script type="text/javascript" src="../lib/jasmine/jasmine-html.js"></script>
+  <script type="text/javascript" src="../lib/imagediff.js"></script>
+  <script type="text/javascript" src="../examples/lib/randomseed.js"></script>
+
+  <!-- include source files here... -->
+  <script type="text/javascript" src="js/flotr2.stable.js"></script>
+  <script type="text/javascript">
+      var StableFlotr = Flotr.noConflict();
+  </script>
+
+  <script src="../lib/bean.js"></script>
+  <script src="../lib/underscore.js"></script>
+  <script src="../js/Flotr.js"></script>
+  <script src="../js/DefaultOptions.js"></script>
+  <script src="../js/Color.js"></script>
+  <script src="../js/Date.js"></script>
+  <script src="../js/DOM.js"></script>
+  <script src="../js/EventAdapter.js"></script>
+  <script src="../js/Text.js"></script>
+  <script src="../js/Graph.js"></script>
+  <script src="../js/Axis.js"></script>
+  <script src="../js/Series.js"></script>
+  <script src="../js/types/lines.js"></script>
+  <script src="../js/types/bars.js"></script>
+  <script src="../js/types/bubbles.js"></script>
+  <script src="../js/types/candles.js"></script>
+  <script src="../js/types/gantt.js"></script>
+  <script src="../js/types/markers.js"></script>
+  <script src="../js/types/pie.js"></script>
+  <script src="../js/types/points.js"></script>
+  <script src="../js/types/radar.js"></script>
+  <script src="../js/types/timeline.js"></script>
+  <script src="../js/plugins/crosshair.js"></script>
+  <script src="../js/plugins/download.js"></script>
+  <script src="../js/plugins/grid.js"></script>
+  <script src="../js/plugins/hit.js"></script>
+  <script src="../js/plugins/selection.js"></script>
+  <script src="../js/plugins/labels.js"></script>
+  <script src="../js/plugins/legend.js"></script>
+  <script src="../js/plugins/spreadsheet.js"></script>
+  <script src="../js/plugins/titles.js"></script>
+  <script src="../js/charts/lines.js"></script>
+
+  <!-- Test Examples -->
+  <script type="text/javascript" src="../flotr2.examples.types.js"></script>
+  <script type="text/javascript" src="js/test-background.js"></script>
+  <script type="text/javascript" src="js/test-boundaries.js"></script>
+
+  <script type="text/javascript">
+    var TestFlotr = Flotr.noConflict();
+  </script>
+
+  <!-- include spec files here... -->
+  <script type="text/javascript" src="Flotr.js"></script>
+  <script type="text/javascript" src="Color.js"></script>
+  <script type="text/javascript" src="Graph.js"></script>
+  <script type="text/javascript" src="Chart.js"></script>
+
+</head>
+
+<body>
+</body>
+<script type="text/javascript">
+(function() {
+  var jasmineEnv = jasmine.getEnv();
+  jasmineEnv.updateInterval = 1000;
+
+  var trivialReporter = new jasmine.TrivialReporter();
+
+  jasmineEnv.addReporter(trivialReporter);
+
+  jasmineEnv.specFilter = function(spec) {
+    return trivialReporter.specFilter(spec);
+  };
+
+  var currentWindowOnload = window.onload;
+
+  window.onload = function() {
+    if (currentWindowOnload) {
+      currentWindowOnload();
+    }
+    execJasmine();
+  };
+
+  function execJasmine() {
+    jasmineEnv.execute();
+  }
+
+})();
+</script>
+</html>

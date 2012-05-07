@@ -1,0 +1,212 @@
+body {
+  font-family : sans-serif;
+  padding: 0px;
+  margin: 0px;
+}
+
+/* Example */
+
+.flotr-example {
+  display: none;
+  margin: 0px auto 48px auto;
+  position: relative;
+}
+.flotr-example-label {
+  font-size: 18px;
+  padding: 14px 0px;
+}
+.flotr-example-editor .editor .render {
+  width: 600px;
+  height: 400px;
+  margin: 12px auto 18px auto;
+}
+.flotr-example-editor .editor .source {
+  width: 720px;
+}
+
+/* Chart no-select */
+
+.flotr-example-editor .editor .render,
+.flotr-examples-thumb {
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+
+
+/* Examples */
+
+.flotr-examples-thumbs {
+  text-align: center;
+}
+.flotr-examples-reset {
+  z-index: 100;
+  cursor: pointer;
+  text-decoration: underline;
+  position: absolute;
+  top: 260px;
+  right: 24px;
+  display: none;
+}
+.flotr-examples-collapsed .flotr-examples-reset {
+  display: block;
+}
+.flotr-examples-thumb {
+  display: inline-block;
+  font-size : 11px;
+  width : 300px;
+  height : 200px;
+  margin: 10px 15px;
+  border: 2px solid transparent;
+}
+.flotr-examples-thumb.flotr-examples-highlight{
+  font-size : 12px;
+  width : 330px;
+  height : 220px;
+  margin: 0px 0px;
+}
+.flotr-examples-thumb .flotr-legend,
+.flotr-examples-thumb .flotr-mouse-value {
+  display : none;
+}
+
+.flotr-examples-collapsed .flotr-examples-container {
+  margin-top: 20px;
+  position: relative;
+  margin: 0px auto;
+}
+
+.flotr-examples-collapsed .flotr-examples-thumbs {
+  position: relative;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+
+/* Flotr Styles */
+
+.flotr-datagrid-container {
+  border: 1px solid #999;
+  border-bottom: none;
+  background: #fff;
+}
+.flotr-datagrid {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+.flotr-datagrid td, .flotr-datagrid th {
+  border: 1px solid #ccc;
+  padding: 1px 3px;
+  min-width: 2em;
+}
+.flotr-datagrid tr:hover, .flotr-datagrid col.hover {
+  background: #f3f3f3;
+}
+.flotr-datagrid tr:hover th, .flotr-datagrid th.hover {
+  background: #999;
+  color: #fff;
+}
+.flotr-datagrid th {
+  text-align: left;
+  background: #e3e3e3;
+  border: 2px outset #fff;
+}
+.flotr-datagrid-toolbar {
+	padding: 1px;
+  border-bottom: 1px solid #ccc;
+  background: #f9f9f9;
+}
+.flotr-datagrid td:hover {
+  background: #ccc;
+}
+.flotr-datagrid .first-row th {
+  text-align: center;
+}
+.flotr-canvas {
+  margin-bottom: -3px;
+  padding-bottom: 1px;
+}
+.flotr-tabs-group {
+	border-top: 1px solid #999;
+}
+.flotr-tab {
+  border: 1px solid #666;
+  border-top: none;
+  margin: 0 3px;
+  padding: 1px 4px;
+  cursor: pointer;
+  -moz-border-radius: 0 0 4px 4px;
+  -webkit-border-bottom-left-radius: 4px;
+  -webkit-border-bottom-right-radius: 4px;
+  border-radius: 0 0 4px 4px;
+  opacity: 0.5;
+  -moz-opacity: 0.5;
+}
+.flotr-tab.selected {
+  background: #ddd;
+  opacity: 1;
+  -moz-opacity: 1;
+}
+.flotr-tab:hover {
+  background: #ccc;
+}
+
+/* Large */
+.flotr-examples-large .flotr-example {
+  width: 1360px;
+  margin: 0px auto;
+  position: relative;
+}
+.flotr-examples-large .flotr-example-editor .editor .render {
+  margin-left: 0px;
+  margin-right: 0px;
+}
+.flotr-examples-large .flotr-example-editor .controls {
+  top: 0px;
+}
+.flotr-examples-large .flotr-example-editor .source {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+}
+
+/* Veritical Thumbs */
+
+.flotr-examples-large.flotr-examples-collapsed .flotr-examples-reset,
+.flotr-examples-medium.flotr-examples-collapsed .flotr-examples-reset {
+  top: 16px;
+}
+
+.flotr-examples-large.flotr-examples-collapsed .flotr-examples-thumbs,
+.flotr-examples-medium.flotr-examples-collapsed .flotr-examples-thumbs {
+  position: fixed;
+  width: 400px;
+  left: 0px;
+  top: 0px;
+  overflow-y: auto;
+  background: #fff;
+}
+.flotr-examples-large.flotr-examples-collapsed .flotr-examples-thumb,
+.flotr-examples-medium.flotr-examples-collapsed .flotr-examples-thumb {
+  display: block;
+  float: center;
+  margin: 10px auto;
+}
+
+.flotr-examples-large.flotr-examples-collapsed .flotr-examples-container,
+.flotr-examples-medium.flotr-examples-collapsed .flotr-examples-container {
+  margin-left: 400px;
+}
+
+/* Vertical Example */
+
+.flotr-examples-small .flotr-example,
+.flotr-examples-medium .flotr-example {
+  width: 720px;
+}
+.flotr-examples-small .flotr-example-editor .source,
+.flotr-examples-medium .flotr-example-editor .source {
+  position: relative;
+}
