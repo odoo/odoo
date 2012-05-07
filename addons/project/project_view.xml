@@ -45,7 +45,7 @@
                         <page string="Administration">
                             <group col="2" colspan="2" name="kanban">
                                 <separator colspan="2" string="Project Management"/>
-                                    <field name="task"/>
+                                    <field name="use_tasks"/>
                             </group>
                             <group col="2" colspan="2">
                                 <separator colspan="4" string="Performance"/>
@@ -169,14 +169,13 @@
                 <kanban>
                     <field name="effective_hours"/>
                     <field name="planned_hours"/>
-                    <field name="date"/>
                     <field name="name"/>
                     <field name="members"/>
-                    <field name="task"/>
+                    <field name="use_tasks"/>
                     <field name="user_id"/>
                     <field name="date"/>
                     <field name="color"/>
-                    <field name="open_task"/>
+                    <field name="task_count"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div class="project_vignettes">
@@ -198,8 +197,8 @@
                                     </ul>
                                     <h4><t t-esc="record.name.value.substr(0,33)"/><t t-if="record.name.value.length > 33">...</t></h4>
                                     <div id="list">
-                                        <t t-if="record.task.raw_value">
-                                            <a id="1" name="open_tasks" class="oe_project_buttons" type="object"><t t-if="record.open_task.value &lt;= 1"> Task</t><t t-if="record.open_task.value &gt; 1"> Tasks</t>(<t t-esc="record.open_task.value"/>)</a>
+                                        <t t-if="record.use_tasks.raw_value">
+                                            <a id="1" name="open_tasks" class="oe_project_buttons" type="object"><t t-if="record.task_count.value &lt;= 1"> Task</t><t t-if="record.task_count.value &gt; 1"> Tasks</t>(<t t-esc="record.task_count.value"/>)</a>
                                         </t>
                                     </div>
                                     <br/>
@@ -207,16 +206,12 @@
                                         <table class="project_fields">
                                             <tr id="deadline" t-if="record.date.raw_value">
                                                 <th align="left">Deadline</th>
-                                                <td align="left">
-                                                    <t t-esc="record.date.raw_value.toString('MMMM')"/> 
-                                                    <t t-esc="record.date.raw_value.getDate()"/>,
-                                                    <t t-esc="record.date.raw_value.getFullYear()"/>
-                                                </td>
+                                                <td align="left"><field name="date"/></td>
                                             </tr>
                                             <tr>
                                                 <th align="left" width="70px">Progress</th>
                                                 <td align="left">
-                                                    <t t-esc="Math.round(record.effective_hours.raw_value)"/> / <t t-esc="Math.round(record.planned_hours.raw_value)"/> <field name="company_uom_id"/>s
+                                                    <t t-esc="Math.round(record.effective_hours.raw_value)"/> / <t t-esc="Math.round(record.planned_hours.raw_value)"/> <field name="company_uom_id"/>
                                                 </td>
                                             </tr>
                                         </table>

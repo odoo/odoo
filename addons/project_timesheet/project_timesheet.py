@@ -48,7 +48,7 @@ class project_project(osv.osv):
             
         return res
     
-    def _compute_timesheet(self, cr, uid, ids, field_name, arg, context=None):
+    def _timesheet_count(self, cr, uid, ids, field_name, arg, context=None):
         res={}
         aal_pool=self.pool.get('account.analytic.line')
         for project in self.browse(cr, uid, ids, context=context):
@@ -57,13 +57,13 @@ class project_project(osv.osv):
         return res
 
     _columns = {
-        'timesheets' : fields.boolean('Timesheets',help = "If you check this field timesheets appears in kanban view"),
+        'use_timesheets' : fields.boolean('Timesheets',help = "If you check this field timesheets appears in kanban view"),
         'amt_to_invoice': fields.function(_to_invoice,string="Amount to Invoice",multi="sums"),
         'hrs_to_invoice': fields.function(_to_invoice,string="Hours to Invoice",multi="sums"),
-        'total_timesheet': fields.function(_compute_timesheet , type='integer',string="Issue"),
+        'timesheet_count': fields.function(_timesheet_count , type='integer',string="Issue"),
     }
     _defaults = {
-        'timesheets' : True,
+        'use_timesheets' : True,
     }
 
     def onchange_partner_id(self, cr, uid, ids, part=False, context=None):

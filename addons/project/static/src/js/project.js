@@ -17,8 +17,8 @@ openerp.project = function(openerp) {
                  });
                 
                 //if task is true , then open the task when click on the anywhere in the box.
-                if(this.record.task.raw_value)$(this.$element).find('.click_button').attr('data-name','open_tasks');
-                if(!this.record.task.raw_value)$(this.$element).find('.click_button').attr('data-name','dummy');
+                if(this.record.use_tasks.raw_value)$(this.$element).find('.click_button').attr('data-name','open_tasks');
+                if(!this.record.use_tasks.raw_value)$(this.$element).find('.click_button').attr('data-name','dummy');
                 
                 // set sequence like Tasks,Issues,Timesheets and Phases
                 my_list = $("#list a")
