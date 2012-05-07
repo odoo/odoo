@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2011 OpenERP S.A (<http://www.openerp.com>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,32 +19,24 @@
 #
 ##############################################################################
 
+
 {
-    'name' : "Customer Portal",
-    'version' : "1.0",
-    'depends' : ["sale","portal"],
-    'author' : "OpenERP SA",
-    'category': 'Portal',
+    'name': 'Customer Portal Sale',
+    'version': '0.1',
+    'category': 'Tools',
+    'complexity': "easy",
     'description': """
-    The Customer Portal module helps customers to track their Sales Quotations, Orders, Invoices and various
-    other possibilities.
+    This module add the menu if sale and portal_customer are installed.
     """,
-    'website': 'http://www.openerp.com',
-    'data': [
-    ],
-    "init_xml" : [
-    ],
-    "demo_xml" : [ 
-        "portal_customer_demo.xml",
-    ],
-    "update_xml" : [
-        "security/portal_customer_security.xml",
+    'author': 'OpenERP SA',
+    'depends': ['sale','portal_customer'],
+    'update_xml': [
+        'security/portal_customer_security.xml',
+        'portal_customer_sale_view.xml',
         "security/ir.model.access.csv",
-        "board_portal_customer_view.xml",
-        "portal_customer_view.xml",
-        "portal_customer_menu.xml",
     ],
     'installable': True,
+    'auto_install':True,
+    'category':'Hidden',
 }
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

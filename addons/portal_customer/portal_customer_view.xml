@@ -1,18 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
     <data>
-    
-        <record id="action_picking_tree" model="ir.actions.act_window">
-            <field name="name">Delivery Orders</field>
-            <field name="res_model">stock.picking</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree</field>
-            <field name="domain">[('type','=','out')]</field>
-            <field name="context">{'default_type': 'out', 'contact_display': 'partner_address'}</field>
-            <field name="search_view_id" ref="stock.view_picking_out_search"/>
-            <field name="help">This is the list of all delivery orders that have to be prepared, according to your different sales orders and your logistics rules.</field>
-        </record>
         
         <record model="ir.ui.view" id="product.product_kanban_view">
             <field name="name">Product Kanban</field>
@@ -47,20 +35,6 @@
                     </templates>
                 </kanban>
             </field>
-        </record>
-        
-
-
-
-        <record id="product_normal_action" model="ir.actions.act_window">
-            <field name="name">Products</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">product.product</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">kanban,tree,form</field>
-            <field name="view_id" ref="product.product_kanban_view"/>
-            <field name="search_view_id" ref="product.product_search_form_view"/>
-            <field name="help">You must define a Product for everything you buy or sell. Products can be raw materials, stockable products, consumables or services. The Product form contains detailed information about your products related to procurement logistics, sales price, product category, suppliers and so on.</field>
         </record>
 
         <record id="action_contact_us" model="ir.actions.act_window">
