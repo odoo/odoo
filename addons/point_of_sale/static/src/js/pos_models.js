@@ -81,6 +81,7 @@ function openerp_pos_models(module, instance){ //module is instance.point_of_sal
                 ['name', 'list_price', 'pos_categ_id', 'taxes_id','product_image_small'],
                 [['pos_categ_id','!=', false]] 
                 ).then(function(result){
+                    console.log('product_list:',result);
                     return self.set({'product_list': result});
                 });
 
@@ -89,11 +90,13 @@ function openerp_pos_models(module, instance){ //module is instance.point_of_sal
                 ['account_id', 'currency', 'journal_id', 'state', 'name'],
                 [['state','=','open'], ['user_id', '=', this.session.uid]]
                 ).then(function(result){
+                    console.log('bank_statements:',result);
                     return self.set({'bank_statements': result});
                 });
 
             var tax_def = fetch('account.tax', ['amount','price_include','type'])
                 .then(function(result){
+                    console.log('taxes:',result);
                     return self.set({'taxes': result});
                 });
 
