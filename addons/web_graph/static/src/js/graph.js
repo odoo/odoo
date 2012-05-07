@@ -39,54 +39,54 @@ instance.web_graph.GraphView = instance.web.View.extend({
     },
 
     on_loaded: function(fields_view_get) {
+        var container;
         this.$element.html(QWeb.render("GraphView", {}));
 
-        // Should I add this, in every $(...) call ?
-        container = $("#editor-render-body");
-        $("#graph_bar,#graph_bar_stacked").click(
-            {mode: 'bar', stacked: true, legend: 'top'}, graph_render)
+        container = this.$element.find("#editor-render-body");
+        this.$element.find("#graph_bar,#graph_bar_stacked").click(
+            {mode: 'bar', stacked: true, legend: 'top'}, this.graph_render)
 
-        $("#graph_bar_not_stacked").click(
-            {mode: 'bar', stacked: false, legend: 'top'}, graph_render)
+        this.$element.find("#graph_bar_not_stacked").click(
+            {mode: 'bar', stacked: false, legend: 'top'}, this.graph_render)
 
-        $("#graph_area,#graph_area_stacked").click(
-            {mode: "area", stacked: true, legend: "top"}, graph_render);
+        this.$element.find("#graph_area,#graph_area_stacked").click(
+            {mode: "area", stacked: true, legend: "top"}, this.graph_render);
 
-        $("#graph_area_not_stacked").click(
-            {mode: "area", stacked: false, legend: "top"}, graph_render);
+        this.$element.find("#graph_area_not_stacked").click(
+            {mode: "area", stacked: false, legend: "top"}, this.graph_render);
 
-        $("#graph_radar").click(
-            {orientation: 0, mode: "radar", legend: "inside"}, graph_render);
+        this.$element.find("#graph_radar").click(
+            {orientation: 0, mode: "radar", legend: "inside"}, this.graph_render);
 
-        $("#graph_pie").click(
-            {mode: "pie", legend: "inside"}, graph_render);
+        this.$element.find("#graph_pie").click(
+            {mode: "pie", legend: "inside"}, this.graph_render);
 
-        $("#graph_legend_top").click(
-            {legend: "top"}, graph_render);
+        this.$element.find("#graph_legend_top").click(
+            {legend: "top"}, this.graph_render);
 
-        $("#graph_legend_inside").click(
-            {legend: "inside"}, graph_render);
+        this.$element.find("#graph_legend_inside").click(
+            {legend: "inside"}, this.graph_render);
 
-        $("#graph_legend_no").click(
-            {legend: "no"}, graph_render);
+        this.$element.find("#graph_legend_no").click(
+            {legend: "no"}, this.graph_render);
 
-        $("#graph_line").click(
-            {mode: "line"}, graph_render);
+        this.$element.find("#graph_line").click(
+            {mode: "line"}, this.graph_render);
 
-        $("#graph_show_data").click(
+        this.$element.find("#graph_show_data").click(
             function() {
                 spreadsheet = ! spreadsheet;
-                graph_render();
+                this.graph_render();
             }
         );
-        $("#graph_switch").click(
+        this.$element.find("#graph_switch").click(
             function() {
                 orientation = ! orientation;
-                graph_render();
+                this.graph_render();
             }
         );
 
-        $("#graph_download").click(
+        this.$element.find("#graph_download").click(
             function() {
                 var graph;
                 if (Flotr.isIE && Flotr.isIE < 9) {
@@ -97,7 +97,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
                 }
                 if (legend=="top") legend="inside";
                 forcehtml = true;
-                graph = graph_render();
+                graph = this.graph_render();
                 graph.download.saveImage('png');
                 forcehtml = false;
             }
@@ -113,7 +113,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
         if (legend=="top") {
             result.noColumns = 4;
             // todo: I guess I should add something like this.renderer ?
-            result.container = $("div .graph_header_legend", this)[0];
+            result.container = this.$element.find("div .graph_header_legend", this)[0];
         } else if (legend=="inside") {
             result.position = 'nw';
             result.backgroundColor = '#D2E8FF';
@@ -189,7 +189,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
                 yaxis :  {showLabels: false},
             })
         )
-    }
+    },
 
     graph_radar: function (container, data) {
         return Flotr.draw(container, data, get_format({
@@ -203,7 +203,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
                 }
             })
         )
-    }
+    },
 
     graph_line: function (container, data) {
         return Flotr.draw(container, data, get_format({
@@ -219,7 +219,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
                 labelsAngle : 45
             })
         )
-    }
+    },
 
     // Render the graph and update menu styles
     graph_render: function (options) {
@@ -232,7 +232,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
         mode_options = (this.mode=='area')?{lines: {fill: true}}:{}
 
         // Render the graph
-        $(".graph_header_legend").children().remove()
+        this.$element.find(".graph_header_legend").children().remove()
         data = this.get_data(mode_options);
         graph = {
             radar: graph_radar,
@@ -244,25 +244,24 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
         // Update styles of menus
 
-        $("a[id^='graph_']").removeClass("active");
-        $("a[id='graph_"+mode+"']").addClass("active");
-        $("a[id='graph_"+mode+(this.stacked?"_stacked":"_not_stacked")+"']").addClass("active");
+        this.$element.find("a[id^='graph_']").removeClass("active");
+        this.$element.find("a[id='graph_"+mode+"']").addClass("active");
+        this.$element.find("a[id='graph_"+mode+(this.stacked?"_stacked":"_not_stacked")+"']").addClass("active");
 
         if (this.legend=='inside')
-            $("a[id='graph_legend_inside']").addClass("active");
+            this.$element.find("a[id='graph_legend_inside']").addClass("active");
         else if (this.legend=='top')
-            $("a[id='graph_legend_top']").addClass("active");
+            this.$element.find("a[id='graph_legend_top']").addClass("active");
         else
-            $("a[id='graph_legend_no']").addClass("active");
+            this.$element.find("a[id='graph_legend_no']").addClass("active");
 
         if (this.spreadsheet)
-            $("a[id='graph_show_data']").addClass("active");
+            this.$element.find("a[id='graph_show_data']").addClass("active");
         return graph;
-    }
-
+    },
 
     schedule_chart: function(results) {
-        self.graph_render({})
+        this.graph_render({})
     },
 
     // render the graph using the domain, context and group_by

@@ -28,6 +28,11 @@ flotr2-basic: libraries ie
 	cat build/lib.min.js > flotr2-basic.min.js
 	cat build/flotr2-basic.min.js >> flotr2-basic.min.js
 
+flotr2-standalone: ie
+	smoosh make/flotr2.json
+	cat build/flotr2.js > flotr2.js
+	cp build/ie.min.js flotr2.ie.min.js
+
 flotr-examples:
 	smoosh make/examples.json
 	cp build/examples.min.js flotr2.examples.min.js
