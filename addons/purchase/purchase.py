@@ -182,7 +182,7 @@ class purchase_order(osv.osv):
         'invoice_method': fields.selection([('manual','Based on Purchase Order lines'),('order','Based on generated draft invoice'),('picking','Bases on incoming shipments')], 'Invoicing Control', required=True,
             help="Based on Purchase Order lines: place individual lines in 'Invoice Control > Based on P.O. lines' from where you can selectively create an invoice.\n" \
                 "Based on generated invoice: create a draft invoice you can validate later.\n" \
-                "Based on receptions: let you create an invoice when receptions are validated."
+                "Bases on incoming shipments: let you create an invoice when receptions are validated."
         ),
         'minimum_planned_date':fields.function(_minimum_planned_date, fnct_inv=_set_minimum_planned_date, string='Expected Date', type='date', select=True, help="This is computed as the minimum scheduled date of all purchase order lines' products.",
             store = {

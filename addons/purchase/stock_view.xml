@@ -100,7 +100,7 @@
         </record>
  
         <record id="action_picking_tree4_picking_to_invoice" model="ir.actions.act_window">
-            <field name="name">Based on receptions</field>
+            <field name="name">Bases on incoming shipments</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
@@ -108,7 +108,7 @@
             <field name="domain">[('type','=','in')]</field>
             <field name="context">{"default_type": "in", "contact_display": "partner_address", "search_default_done": 1, "search_default_to_invoice": 1}</field>
             <field name="search_view_id" ref="view_picking_in_search_picking_to_invoice"/>
-            <field name="help">If you set the Invoicing Control on a purchase order as "Based on receptions", you can track here all the product receptions and create invoices for those receptions.</field>
+            <field name="help">If you set the Invoicing Control on a purchase order as "Bases on incoming shipments", you can track here all the product receptions and create invoices for those receptions.</field>
        </record>
 
         <menuitem action="action_picking_tree4_picking_to_invoice"
