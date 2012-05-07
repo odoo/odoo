@@ -71,8 +71,10 @@
                         <group colspan="2" col="2">
                             <separator string="Customer Invoices" colspan="2"/>
                             <field name="sale_journal_id" invisible="1"/>
+                            <field name="sale_sequence_prefix"/>
                             <field name="sale_sequence_next" attrs="{'readonly': [('sale_journal_id','=',False)]}"/>
                             <field name="sale_refund_journal_id" invisible="1"/>
+                            <field name="sale_refund_sequence_prefix"/>
                             <field name="sale_refund_sequence_next" attrs="{'readonly': [('sale_refund_journal_id','=',False)]}"/>
                             <field name="module_account_invoice_layout"/>
                             <field name="module_account_voucher"/>
@@ -82,8 +84,10 @@
                         <group colspan="2" col="2">
                             <separator string="Supplier Invoices" colspan="2"/>
                             <field name="purchase_journal_id" invisible="1"/>
+                            <field name="purchase_sequence_prefix"/>
                             <field name="purchase_sequence_next" attrs="{'readonly': [('purchase_journal_id','=',False)]}"/>
                             <field name="purchase_refund_journal_id" invisible="1"/>
+                            <field name="purchase_refund_sequence_prefix"/>
                             <field name="purchase_refund_sequence_next" attrs="{'readonly': [('purchase_refund_journal_id','=',False)]}"/>
                             <field name="module_account_payment"/>
                         </group>
