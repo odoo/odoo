@@ -158,7 +158,7 @@ class event_event(osv.osv):
     def subscribe_to_event(self, cr, uid, ids, context=None):
         res = {}
         data_obj = self.pool.get("ir.model.data")
-        view_id = data_obj._get_id(cr, uid, 'event', 'view_event_page')
+        view_id = data_obj._get_id(cr, uid, 'event_sale', 'view_event_page')
         if view_id:
             res_id = data_obj.browse(cr, uid, view_id, context=context).res_id
         res = {
