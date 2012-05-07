@@ -3051,8 +3051,8 @@ instance.web.form.One2ManyKanbanView = instance.web_kanban.KanbanView.extend({
 });
 }
 
-instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend({
-    template: "FieldMany2Many",
+instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(_.extend({}, instance.web.form.CompletionFieldMixin, {
+    template: "FieldMany2ManyTags",
     init: function() {
         this._super.apply(this, arguments);
         this.limit = 7;
@@ -3060,7 +3060,7 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend({
     },
     start: function() {
         var self = this;
-        var textarea = $("textarea", this.$element).textext({
+        var $textarea = $("textarea", this.$element).textext({
             plugins : 'arrow prompt autocomplete',
             prompt : "Add one...",
             autocomplete: {
@@ -3078,53 +3078,17 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend({
                 },
             },
         }).bind('getSuggestions', function(e, data) {
+            var _this = this;
             var str = !!data ? data.query || '' : '';
-            self.get_search_result(str);
-        });
-    },
-    get_search_result: function(str) {
-        var self = this;
-        var dataset = new instance.web.DataSet(this, this.field.relation, self.build_context());
-        this.orderer.add(dataset.name_search(
-                str, self.build_domain(), 'ilike', this.limit + 1)).then(function(data) {
-            
-            // possible selections for the m2m
-            self.values = _.map(data, function(x) {
-                return {
-                    type: 'data',
-                    label: _.str.escapeHTML(x[1]),
-                    data: x,
-                };
+            self.get_search_result(str).then(function(result) {
+                self.search_result = result;
+                $(_this).trigger('setSuggestions', {result : _.map(result, function(el, i) {
+                    return _.extend(el, {index:i});
+                })});
             });
-
-            // search more... if more results than max
-            if (values.length > self.limit) {
-                values = values.slice(0, self.limit);
-                values.push({type: 'action', label: _t("<em>   Search More...</em>"), action: function() {
-                    dataset.name_search(search_val, self.build_domain(), 'ilike'
-                    , false, function(data) {
-                        self._search_create_popup("search", data);
-                    });
-                }});
-            }
-            // quick create
-            var raw_result = _(data.result).map(function(x) {return x[1];});
-            if (search_val.length > 0 &&
-                !_.include(raw_result, search_val)) {
-                values.push({label: _.str.sprintf(_t('<em>   Create "<strong>%s</strong>"</em>'),
-                        $('<span />').text(search_val).html()), action: function() {
-                    self._quick_create(search_val);
-                }});
-            }
-            // create...
-            values.push({label: _t("<em>   Create and Edit...</em>"), action: function() {
-                self._search_create_popup("form", undefined, {"default_name": search_val});
-            }});
-
-            $(this).trigger('setSuggestions', {result : _.map(list, function(el, i) {return {index:i, label:el};})});
         });
     },
-});
+}));
 
 /*
  * TODO niv: clean those deferred stuff, it could be better
