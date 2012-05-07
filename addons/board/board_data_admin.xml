@@ -35,10 +35,9 @@
                 <form string="Administration Dashboard" layout="manual">
                     <board style="2-1">
                         <column>
-                            <action name="%(board_config_overview)d" string="Configuration Overview"/>
+                            <action name="%(action_user_connection_tree)d" string="Users" />
                         </column>
                         <column>
-                            <action name="%(action_user_connection_tree)d" string="Users" />
                         </column>
                     </board>
                 </form>
@@ -54,12 +53,11 @@
         </record>
 
         <!-- bind adminitration dashboard to the root administration -->
-        <menuitem id="base.menu_administration" icon="terp-administration"  name="Settings" sequence="50" action="open_board_administration_form"/>
+        <menuitem id="base.menu_administration" name="Settings" action="open_board_administration_form"/>
 
         <!-- add a menu item in adminitration/reporting/dashboards -->
-        <menuitem id="base.menu_reporting_board" name="Reporting" parent="base.menu_administration" sequence="11" groups="base.group_extended"/>
-        <menuitem id="base.menu_dashboard" name="Dashboards" parent="base.menu_reporting_board" sequence="0"/>
-        <menuitem id="base.menu_dashboard_admin" action="open_board_administration_form" parent="base.menu_dashboard" icon="terp-graph"/>
+        <menuitem id="base.menu_reporting_admin" name="Administration" parent="base.menu_reporting_dashboard" groups="base.group_system"/>
+        <menuitem id="base.menu_reporting_admin_dashboard" parent="base.menu_reporting_admin" action="open_board_administration_form"/>
 
     </data>
 </openerp>
