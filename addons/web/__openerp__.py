@@ -74,7 +74,6 @@
         "static/lib/jquery.ui.timepicker/css/jquery-ui-timepicker-addon.css",
         "static/lib/jquery.ui.notify/css/ui.notify.css",
         "static/lib/jquery.tipsy/tipsy.css",
-        "static/lib/jquery.textext/jquery.textext.css",
         "static/lib/visualsearch/lib/css/reset.css",
         "static/lib/visualsearch/lib/css/workspace.css",
         "static/lib/visualsearch/lib/css/icons.css",

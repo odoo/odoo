@@ -2305,17 +2305,114 @@ instance.web.form.dialog = function(content, options) {
     return dialog.$element;
 };
 
-instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(_.extend({}, instance.web.form.ReinitializeFieldMixin, {
+/**
+ * A mixin containing some useful methods to handle completion inputs.
+ */
+instance.web.form.CompletionFieldMixin = {
+    init: function() {
+        this.limit = 7;
+        this.orderer = new instance.web.DropMisordered();
+    },
+    /**
+     * Call this method to search using a string.
+     */
+    get_search_result: function(request, response) {
+        var search_val = request.term;
+        var self = this;
+
+        var dataset = new instance.web.DataSet(this, this.field.relation, self.build_context());
+
+        this.orderer.add(dataset.name_search(
+                search_val, self.build_domain(), 'ilike', this.limit + 1)).then(function(data) {
+            self.last_search = data;
+            // possible selections for the m2o
+            var values = _.map(data, function(x) {
+                return {
+                    label: _.str.escapeHTML(x[1]),
+                    value:x[1],
+                    name:x[1],
+                    id:x[0]
+                };
+            });
+
+            // search more... if more results that max
+            if (values.length > self.limit) {
+                values = values.slice(0, self.limit);
+                values.push({label: _t("<em>   Search More...</em>"), action: function() {
+                    dataset.name_search(search_val, self.build_domain(), 'ilike'
+                    , false, function(data) {
+                        self._search_create_popup("search", data);
+                    });
+                }});
+            }
+            // quick create
+            var raw_result = _(data.result).map(function(x) {return x[1];});
+            if (search_val.length > 0 &&
+                !_.include(raw_result, search_val) &&
+                (!self.get("value") || self.floating)) {
+                values.push({label: _.str.sprintf(_t('<em>   Create "<strong>%s</strong>"</em>'),
+                        $('<span />').text(search_val).html()), action: function() {
+                    self._quick_create(search_val);
+                }});
+            }
+            // create...
+            values.push({label: _t("<em>   Create and Edit...</em>"), action: function() {
+                self._search_create_popup("form", undefined, {"default_name": search_val});
+            }});
+
+            response(values);
+        });
+    },
+    _quick_create: function(name) {
+        var self = this;
+        var slow_create = function () {
+            self._search_create_popup("form", undefined, {"default_name": name});
+        };
+        if (self.get_definition_options().quick_create === undefined || self.get_definition_options().quick_create) {
+            new instance.web.DataSet(this, this.field.relation, self.build_context())
+                .name_create(name, function(data) {
+                    self.display_value = {};
+                    self.display_value["" + data[0]] = data[1];
+                    self.set({value: data[0]});
+                }).fail(function(error, event) {
+                    event.preventDefault();
+                    slow_create();
+                });
+        } else
+            slow_create();
+    },
+    // all search/create popup handling
+    _search_create_popup: function(view, ids, context) {
+        var self = this;
+        var pop = new instance.web.form.SelectCreatePopup(this);
+        pop.select_element(
+            self.field.relation,
+            {
+                title: (view === 'search' ? _t("Search: ") : _t("Create: ")) + (this.string || this.name),
+                initial_ids: ids ? _.map(ids, function(x) {return x[0]}) : undefined,
+                initial_view: view,
+                disable_multiple_selection: true
+            },
+            self.build_domain(),
+            new instance.web.CompoundContext(self.build_context(), context || {})
+        );
+        pop.on_select_elements.add(function(element_ids) {
+            self.set({value: element_ids[0]});
+        });
+    },
+};
+
+instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(_.extend({}, instance.web.form.ReinitializeFieldMixin,
+        instance.web.form.CompletionFieldMixin, {
     template: "FieldMany2One",
     init: function(field_manager, node) {
         this._super(field_manager, node);
-        this.limit = 7;
+        instance.web.form.CompletionFieldMixin.init.call(this);
         this.set({'value': false});
         this.display_value = {};
         this.last_search = [];
         this.floating = false;
         this.inhibit_on_change = false;
-        this.orderer = new instance.web.DropMisordered();
     },
     start: function() {
         this._super();
@@ -2459,91 +2556,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(_.exten
             isSelecting = false;
         });
     },
-    // autocomplete component content handling
-    get_search_result: function(request, response) {
-        var search_val = request.term;
-        var self = this;
 
-        var dataset = new instance.web.DataSet(this, this.field.relation, self.build_context());
-
-        this.orderer.add(dataset.name_search(
-                search_val, self.build_domain(), 'ilike', this.limit + 1)).then(function(data) {
-            self.last_search = data;
-            // possible selections for the m2o
-            var values = _.map(data, function(x) {
-                return {
-                    label: _.str.escapeHTML(x[1]),
-                    value:x[1],
-                    name:x[1],
-                    id:x[0]
-                };
-            });
-
-            // search more... if more results that max
-            if (values.length > self.limit) {
-                values = values.slice(0, self.limit);
-                values.push({label: _t("<em>   Search More...</em>"), action: function() {
-                    dataset.name_search(search_val, self.build_domain(), 'ilike'
-                    , false, function(data) {
-                        self._search_create_popup("search", data);
-                    });
-                }});
-            }
-            // quick create
-            var raw_result = _(data.result).map(function(x) {return x[1];});
-            if (search_val.length > 0 &&
-                !_.include(raw_result, search_val) &&
-                (!self.get("value") || self.floating)) {
-                values.push({label: _.str.sprintf(_t('<em>   Create "<strong>%s</strong>"</em>'),
-                        $('<span />').text(search_val).html()), action: function() {
-                    self._quick_create(search_val);
-                }});
-            }
-            // create...
-            values.push({label: _t("<em>   Create and Edit...</em>"), action: function() {
-                self._search_create_popup("form", undefined, {"default_name": search_val});
-            }});
-
-            response(values);
-        });
-    },
-    _quick_create: function(name) {
-        var self = this;
-        var slow_create = function () {
-            self._search_create_popup("form", undefined, {"default_name": name});
-        };
-        if (self.get_definition_options().quick_create === undefined || self.get_definition_options().quick_create) {
-            new instance.web.DataSet(this, this.field.relation, self.build_context())
-                .name_create(name, function(data) {
-                    self.display_value = {};
-                    self.display_value["" + data[0]] = data[1];
-                    self.set({value: data[0]});
-                }).fail(function(error, event) {
-                    event.preventDefault();
-                    slow_create();
-                });
-        } else
-            slow_create();
-    },
-    // all search/create popup handling
-    _search_create_popup: function(view, ids, context) {
-        var self = this;
-        var pop = new instance.web.form.SelectCreatePopup(this);
-        pop.select_element(
-            self.field.relation,
-            {
-                title: (view === 'search' ? _t("Search: ") : _t("Create: ")) + (this.string || this.name),
-                initial_ids: ids ? _.map(ids, function(x) {return x[0]}) : undefined,
-                initial_view: view,
-                disable_multiple_selection: true
-            },
-            self.build_domain(),
-            new instance.web.CompoundContext(self.build_context(), context || {})
-        );
-        pop.on_select_elements.add(function(element_ids) {
-            self.set({value: element_ids[0]});
-        });
-    },
     render_value: function(no_recurse) {
         var self = this;
         if (! this.get("value")) {
@@ -3039,37 +3052,75 @@ instance.web.form.One2ManyKanbanView = instance.web_kanban.KanbanView.extend({
 
 instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend({
     template: "FieldMany2Many",
+    init: function() {
+        this._super.apply(this, arguments);
+        this.limit = 7;
+        this.orderer = new instance.web.DropMisordered();
+    },
     start: function() {
-        $("textarea", this.$element).textext({
+        var self = this;
+        var textarea = $("textarea", this.$element).textext({
             plugins : 'arrow prompt autocomplete',
             prompt : "Add one...",
             autocomplete: {
                 render: function(suggestion) {
-                    return $('<span>', {'data-id': suggestion['id']}).html(suggestion['label']);
+                    return $('<div />', {'data-index': suggestion['index']}).html(suggestion['label']);
                 }
             },
+            ext: {
+                autocomplete: {
+                    selectFromDropdown: function(a, b, c) {
+                        var index = this.selectedSuggestionElement().children().children().data('index');
+                        debugger;
+                        $(this).trigger('hideDropdown');
+                    },
+                },
+            },
         }).bind('getSuggestions', function(e, data) {
-            var list = [
-                    'Basic',
-                    'Closure',
-                    'Cobol',
-                    'Delphi',
-                    'Erlang',
-                    'Fortran',
-                    'Go',
-                    'Groovy',
-                    'Haskel',
-                    'Java',
-                    'JavaScript',
-                    'OCAML',
-                    'PHP',
-                    'Perl',
-                    'Python',
-                    'Ruby',
-                    'Scala'
-                ];
+            var str = !!data ? data.query || '' : '';
+            self.get_search_result(str);
+        });
+    },
+    get_search_result: function(str) {
+        var self = this;
+        var dataset = new instance.web.DataSet(this, this.field.relation, self.build_context());
+        this.orderer.add(dataset.name_search(
+                str, self.build_domain(), 'ilike', this.limit + 1)).then(function(data) {
+            
+            // possible selections for the m2m
+            self.values = _.map(data, function(x) {
+                return {
+                    type: 'data',
+                    label: _.str.escapeHTML(x[1]),
+                    data: x,
+                };
+            });
 
-            $(this).trigger('setSuggestions', {result : _.map(list, function(el) {return {id:1, label:el};})});
+            // search more... if more results than max
+            if (values.length > self.limit) {
+                values = values.slice(0, self.limit);
+                values.push({type: 'action', label: _t("<em>   Search More...</em>"), action: function() {
+                    dataset.name_search(search_val, self.build_domain(), 'ilike'
+                    , false, function(data) {
+                        self._search_create_popup("search", data);
+                    });
+                }});
+            }
+            // quick create
+            var raw_result = _(data.result).map(function(x) {return x[1];});
+            if (search_val.length > 0 &&
+                !_.include(raw_result, search_val)) {
+                values.push({label: _.str.sprintf(_t('<em>   Create "<strong>%s</strong>"</em>'),
+                        $('<span />').text(search_val).html()), action: function() {
+                    self._quick_create(search_val);
+                }});
+            }
+            // create...
+            values.push({label: _t("<em>   Create and Edit...</em>"), action: function() {
+                self._search_create_popup("form", undefined, {"default_name": search_val});
+            }});
+
+            $(this).trigger('setSuggestions', {result : _.map(list, function(el, i) {return {index:i, label:el};})});
         });
     },
 });
