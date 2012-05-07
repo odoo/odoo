@@ -459,6 +459,8 @@ openerp.web.SearchView = openerp.web.OldWidget.extend(/** @lends openerp.web.Sea
      * @event
      */
     on_clear: function () {
+        this.$element.find('option').removeAttrs("selected");
+        this.$element.find('input').val("");
         this.do_search();
     },
     /**
