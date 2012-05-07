@@ -662,7 +662,7 @@ class stock_picking(osv.osv):
         'name': lambda self, cr, uid, context: '/',
         'state': 'draft',
         'move_type': 'direct',
-        'type': 'in',
+        'type': 'internal',
         'invoice_state': 'none',
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.picking', context=c)
@@ -1540,14 +1540,6 @@ stock_production_lot_revision()
 # Fields:
 #   location_dest_id is only used for predicting futur stocks
 #
-MOVE_STATE = [
-            ('draft', 'Draft'),
-            ('waiting', 'Waiting Another Move'),
-            ('confirmed', 'Waiting Availability'),
-            ('assigned', 'Available'),
-            ('done', 'Done'),
-            ('cancel', 'Cancelled')
-]
 class stock_move(osv.osv):
 
     def _getSSCC(self, cr, uid, context=None):
@@ -1611,17 +1603,6 @@ class stock_move(osv.osv):
                 return False
         return True
 
-    def _tooltip_move_state(self, state=None):
-        # Update the tooltip of state field based on shipment type e.g: Delivery, Reception and Internal Transfer
-        if state is None:
-            state = MOVE_STATE
-        _tooltip_state_assigned = state.get('assigned', False)
-        _tooltip_state_done = state.get('done', False)
-        return _("* Draft: When the stock move is created it is in the \'Draft\' state.\n"\
-                 "* Waiting Another Move: it is set to \'Waiting Another Move\' state if the scheduler did not find the products.\n"\
-                 "* Waiting Availability: The state is \'Waiting Availability\' if the move is waiting for another one.\n"\
-                 "* %s: When products are reserved it is set to \'%s\'.\n"\
-                 "* %s: When the shipment is done the state is \'%s\'.") % (_tooltip_state_assigned, _tooltip_state_assigned, _tooltip_state_done, _tooltip_state_done)
     _columns = {
         'name': fields.char('Name', size=250, required=True, select=True),
         'priority': fields.selection([('0', 'Not urgent'), ('1', 'Urgent')], 'Priority'),
@@ -1650,12 +1631,17 @@ class stock_move(osv.osv):
         'move_history_ids2': fields.many2many('stock.move', 'stock_move_history_ids', 'child_id', 'parent_id', 'Move History (parent moves)'),
         'picking_id': fields.many2one('stock.picking', 'Reference', select=True,states={'done': [('readonly', True)]}),
         'note': fields.text('Notes'),
-        'state': fields.selection(MOVE_STATE, 'State', readonly=True, select=True,
-                help= "* Draft: When the stock move is created it is in the \'Draft\' state.\n"\
-                       "* Waiting Another Move: it is set to \'Waiting Another Move\' state if the scheduler did not find the products.\n"\
-                       "* Waiting Availability: The state is \'Waiting Availability\' if the move is waiting for another one.\n"\
-                       "* Available: When products are reserved it is set to \'Available\'.\n"\
-                       "* Done: When the shipment is done the state is \'Done\'."),
+        'state': fields.selection([('draft', 'New'),
+                                   ('waiting', 'Waiting Another Move'),
+                                   ('confirmed', 'Waiting Availability'),
+                                   ('assigned', 'Available'),
+                                   ('done', 'Done'),
+                                   ('cancel', 'Cancelled')], 'State', readonly=True, select=True,
+                 help= "* New: When the stock move is created and not yet confirmed.\n"\
+                       "* Waiting Another Move: This state can be seen when a move is waiting for another one, for example in a chained flow.\n"\
+                       "* Waiting Availability: This state is reached when the procurement resolution is not straight forward. It may need the scheduler to run, a component to me manufactured...\n"\
+                       "* Available: When products are reserved, it is set to \'Available\'.\n"\
+                       "* Done: When the shipment is processed, the state is \'Done\'."),
         'price_unit': fields.float('Unit Price', digits_compute= dp.get_precision('Account'), help="Technical field used to record the product cost set by the user during a picking confirmation (when average price costing method is used)"),
         'price_currency_id': fields.many2one('res.currency', 'Currency for average price', help="Technical field used to record the currency chosen by the user during a picking confirmation (when average price costing method is used)"),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True),
@@ -1680,38 +1666,6 @@ class stock_move(osv.osv):
         (_check_product_lot,
             'You try to assign a lot which is not from the same product',
             ['prodlot_id'])]
-
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        if context is None:
-            context = {}
-        type = context.get('default_type', False)
-        res = super(stock_move, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
-        if type:
-            doc = etree.XML(res['arch'])
-            if type == 'out':
-                #To Update button label in case of shipping type is out
-                if view_type == 'tree':
-                    for node in doc.xpath("//button[@string='Receive']"):
-                        node.set('string', _('Deliver'))
-                for node in doc.xpath("//group/button[@string='Process Now']"):
-                    node.set('string', _('Deliver'))
-            for field in res['fields']:
-                # To update the states label according to shipping type
-                if field == 'state':
-                    _state = dict(MOVE_STATE)
-                    if type == 'in':
-                        _state['assigned'] = _('Ready to Receive')
-                        _state['done'] = _('Received')
-                    elif type == 'internal':
-                        _state['assigned'] = _('Ready to Transfer')
-                        _state['done'] = _('Transferred')
-                    elif type == 'out':
-                        _state['assigned'] = _('Ready to Deliver')
-                        _state['done'] = _('Delivered')
-                    res['fields']['state']['selection'] = [(x[0], _state[x[0]]) for x in MOVE_STATE]
-                    res['fields']['state']['help'] = self._tooltip_move_state(_state)
-                    res['arch'] = etree.tostring(doc)
-        return res
 
     def _default_location_destination(self, cr, uid, context=None):
         """ Gets default address of partner for destination location
@@ -2916,6 +2870,9 @@ class stock_picking_in(osv.osv):
                  * Received: has been processed, can't be modified or cancelled anymore\n
                  * Cancelled: has been cancelled, can't be confirmed anymore"""),
     }
+    _defaults = {
+        'type': 'in',
+    }
 
 class stock_picking_out(osv.osv):
     _name = "stock.picking.out"
@@ -2951,6 +2908,9 @@ class stock_picking_out(osv.osv):
                  * Ready to Deliver: products reserved, simply waiting for confirmation.\n
                  * Delivered: has been processed, can't be modified or cancelled anymore\n
                  * Cancelled: has been cancelled, can't be confirmed anymore"""),
+    }
+    _defaults = {
+        'type': 'out',
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
