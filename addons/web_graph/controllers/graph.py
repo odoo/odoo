@@ -40,7 +40,6 @@ class GraphView(View):
 
         assert len(xaxis), "No field for the X axis!"
         assert len(yaxis), "No field for the Y axis!"
-        print "X", xaxis, "Y", yaxis
         
         # Convert a field's data into a displayable string
 
@@ -82,21 +81,12 @@ class GraphView(View):
             axis = obj.read_group(domain, yaxis+xaxis[0:1], xaxis[0:1], context=context)
             for x in axis:
                 key = x[xaxis[0]]
-                print key
-                print x
                 res = obj.read_group(domain+[(xaxis[0],'=',_convert_key(xaxis[0], key))], yaxis+xaxis[1:2], xaxis[1:2], context=context)
-                print '*', res
-                print '**', xaxis[1]
                 result.append( {
                     'data': map(lambda record: _orientation(_convert(xaxis[1], record[xaxis[1]]), record[yaxis[0]]), res),
                     'label': _convert(xaxis[0], key, tick=False)
                 })
                 
-
-        print '---'
-        print '-', result
-        print '-', map(lambda x: (x[1], x[0]), ticks.items())
-
         return {
             'data': result,
             'ticks': map(lambda x: (x[1], x[0]), ticks.items())

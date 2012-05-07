@@ -20,7 +20,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
         this.view_id = view_id;
 
         this.mode="bar";          // line, bar, area, pie, radar
-        this.orientation=true;    // true: horizontal, false: vertical
+        this.orientation=false;    // true: horizontal, false: vertical
         this.stacked=true;
 
         this.spreadsheet=false;   // Display data gris, allows copy to CSV
@@ -48,6 +48,9 @@ instance.web_graph.GraphView = instance.web.View.extend({
         var self = this;
         this.fields_view = fields_view_get;
         this.container = this.$element.find("#editor-render-body");
+
+        this.mode = this.fields_view.arch.attrs.type || 'bar';
+        this.orientation = this.fields_view.arch.attrs.orientation == 'horizontal';
 
         width = this.$element.parent().width();
         this.container.css("width", width);
