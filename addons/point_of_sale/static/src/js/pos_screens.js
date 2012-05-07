@@ -118,7 +118,7 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
             if(true || this.selected_order != this.pos.get('selectedOrder')){
                 var selectedOrder = this.pos.get('selectedOrder');
                 
-                var user_mode = selectedOrder.get('user_mode');
+                var user_mode = this.current_mode; //selectedOrder.get('user_mode');
                 console.log('user mode:',user_mode);
 
                 if(user_mode === 'client'){
@@ -163,7 +163,7 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
                 selectedOrder.set({'cashier_screen': screen_name});
             }
 
-            console.log('Set Current Screen: '+screen_name+' :',screen,'old:',this.current_screen, 'mode:',this.current_mode);
+           // console.log('Set Current Screen: '+screen_name+' :',screen,'old:',this.current_screen, 'mode:',this.current_mode);
             if(screen && screen !== this.current_screen){
                 if(this.current_screen){
                     this.current_screen.hide();
@@ -199,7 +199,15 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
         },
     });
 
-    module.HelpPopupWidget = module.ScreenWidget.extend({
+    module.PopUpWidget = module.ScreenWidget.extend({
+        hide: function(){
+            if(this.$element){
+                this.$element.hide();
+            }
+        },
+    });
+
+    module.HelpPopupWidget = module.PopUpWidget.extend({
         template:'HelpPopupWidget',
         show: function(){
             this._super();
@@ -211,10 +219,39 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
                 self.pos.proxy.help_canceled();
             });
         },
+    });
+
+    module.ReceiptPopupWidget = module.PopUpWidget.extend({
+        template:'ReceiptPopupWidget',
+        show: function(){
+            this._super();
+            var self = this;
+            this.$element.find('.receipt').off('click').click(function(){
+                console.log('receipt!');     //TODO
+                self.pos.screen_selector.set_current_screen('scan');
+            });
+            this.$element.find('.invoice').off('click').click(function(){
+                console.log('invoice!');     //TODO
+                self.pos.screen_selector.set_current_screen('scan');
+            });
+        },
+    });
+
+    module.ErrorPopupWidget = module.PopUpWidget.extend({
+        template:'ErrorPopupWidget',
+        show: function(){
+            this._super();
+            this.pos.proxy.help_needed();
+            var self = this;
+            
+            this.$element.find('.button').off('click').click(function(){
+                self.pos.screen_selector.close_popup();
+                self.pos.proxy.help_canceled();
+            });
+        },
         hide:function(){
-            if(this.$element){
-                this.$element.hide();
-            }
+            this._super();
+            this.pos.proxy.help_canceled();
         },
     });
 
@@ -413,7 +450,7 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
                 'client': function(ean){
                     self.proxy.transaction_start(); 
                     //TODO 'log the client'
-                    self.pos.screen_selector.set_current_screen('products');
+                    self.pos.screen_selector.show_popup('receipt');
                 },
                 'discount': function(ean){
                     // TODO : what to do in this case ????

@@ -153,6 +153,7 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
         init: function(parent, options) {
             this._super(parent);
             this.pos = options.pos;
+            this.pos_widget = options.pos_widget;
             this.setNumpadState(options.numpadState);
             this.pos.bind('change:selectedOrder', this.changeSelectedOrder, this);
             this.bindOrderLineEvents();
@@ -225,6 +226,7 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
             total = currentOrder.getTotal();
             totalTaxExcluded = currentOrder.getTotalTaxExcluded();
             tax = currentOrder.getTax();
+            this.pos_widget.action_bar.set_total_value(Math.round(total*100)/100);
             $('#subtotal').html(totalTaxExcluded.toFixed(2)).hide().fadeIn();
             $('#tax').html(tax.toFixed(2)).hide().fadeIn();
             $('#total').html(total.toFixed(2)).hide().fadeIn();
@@ -421,7 +423,7 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
             }
         },
         set_total_value: function(value){
-            this.$element.find('.value').hltml(value);
+            this.$element.find('.value').html(value);
         },
     });
 
@@ -883,6 +885,18 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
             });
             this.help_popup.appendTo($('.point-of-sale'));
 
+            this.receipt_popup = new module.ReceiptPopupWidget(this, {
+                pos: this.pos,
+                pos_widget: this,
+            });
+            this.receipt_popup.appendTo($('.point-of-sale'));
+
+            this.error_popup = new module.ErrorPopupWidget(this, {
+                pos: this.pos,
+                pos_widget: this,
+            });
+            this.error_popup.appendTo($('.point-of-sale'));
+
             this.paypadView = new module.PaypadWidget(null, {
                 pos: this.pos
             });
@@ -894,6 +908,7 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
             this.numpadView.start();
             this.orderView = new module.OrderWidget(null, {
                 pos: this.pos,
+                pos_widget: this,
             });
             this.orderView.$element = $('#current-order-content');
             this.orderView.start();
@@ -920,6 +935,8 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
                 },
                 popup_set:{
                     'help': this.help_popup,
+                    'error': this.error_popup,
+                    'receipt': this.receipt_popup,
                 },
                 default_client_screen: 'welcome',
                 default_cashier_screen: 'products',

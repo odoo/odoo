@@ -268,10 +268,26 @@
             </div>
         </div>
     </t>
+    <t t-name="ReceiptPopupWidget">
+        <div class="modal-dialog">
+            <div class="popup popup-help">
+                <p class="message">Welcome Mr. FooBar <br /> Choose your type of receipt:</p>
+                <div class = "button big-left receipt">
+                    Ticket
+                </div>
+                <div class = "button big-right invoice">
+                    Invoice
+                </div>
+                <div class="footer">
+                </div>
+            </div>
+        </div>
+    </t>
+
     <t t-name="ErrorPopupWidget">
         <div class="modal-dialog">
             <div class="popup popup-help">
-                <p class="message">An unexpected error has occured. A technician is on the way</p>
+                <p class="message">An unexpected error has occured.<br /> A technician is on the way</p>
             </div>
         </div>
     </t>
@@ -407,7 +423,7 @@
                     </div>
                 </div>
                 <p class="total">
-                    Total: <span class="value"> 1234 </span>€
+                    Total: <span class="value"> 0 </span>€
                 </p>
             </div>
             <ul class="pos-actionbar-button-list">

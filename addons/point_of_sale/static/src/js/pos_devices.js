@@ -314,6 +314,7 @@ function openerp_pos_devices(module, instance){ //module is instance.point_of_sa
                             if(this.action_callback['product']){
                                 this.action_callback['product'](parse_result);
                             }
+                            //this.trigger("codebar",parse_result );
                         }else{
                             if(this.action_callback[parse_result.type]){
                                 this.action_callback[parse_result.type](parse_result);
