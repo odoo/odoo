@@ -24,6 +24,7 @@ from osv import fields
 
 class res_partner(osv.osv):
     """ Inherits partner and adds CRM information in the partner form """
+    _name = "res.partner"
     _inherit = ['res.partner', 'mail.thread']
     _columns = {
         'emails': fields.one2many('mail.message', 'partner_id', 'Emails', readonly=True, domain=[('email_from','!=',False)]),
