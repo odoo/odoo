@@ -256,7 +256,13 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
         return this.graph_get_data(mode_options, 
             function (result) {
-                // TODO: apply mode_options on all results
+                // TODO: apply mode_options on all result.data
+                var i;
+                if (self.mode=='area')
+                    for (i=0; i<result.data.length; i++) {
+                        result.data[i].lines = {fill: true}
+                    }
+                    
                 self.graph_render_all(options, result)
             }
         );
