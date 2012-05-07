@@ -67,6 +67,9 @@ class pos_config(osv.osv):
 
     }
 
+    #def default_get(self, cr, uid, fieldnames, context=None):
+    #    return dict()
+
     _defaults = {
         'state' : 'draft',
         'user_id' : lambda obj, cr, uid, context: uid,

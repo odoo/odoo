@@ -77,8 +77,6 @@ class account_cash_statement(osv.osv):
     def search(self, cr, uid, domain, offset=0, limit=None, order=None, context=None, count=False):
         if not context:
             context = {}
-        import pdb
-        pdb.set_trace()
         pos_session_id = context.pop('pos_session_id', False) or False
         if pos_session_id and isinstance(pos_session_id, (int, long)):
             session = self.pool.get('pos.session').browse(cr, uid, pos_session_id, context=context)
