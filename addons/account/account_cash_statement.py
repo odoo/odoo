@@ -214,12 +214,12 @@ class account_cash_statement(osv.osv):
         if self.pool.get('account.journal').browse(cr, uid, vals['journal_id'], context=context).type == 'cash':
             open_close = self._get_cash_open_close_box_lines(cr, uid, context)
             if vals.get('starting_details_ids', False):
-                starting_details_ids = [val for val in vals.get('starting_details_ids') if val[2]]
+                starting_details_ids = vals.get('starting_details_ids')
                 for start in starting_details_ids:
-                    dict_val = start[2]
+                    dict_val = start[2] or {}
                     for end in open_close['end']:
-                       if end[2]['pieces'] == dict_val['pieces']:
-                           end[2]['number'] += dict_val['number']
+                       if end[2]['pieces'] == dict_val.get('pieces', 0.0):
+                           end[2]['number'] += dict_val.get('number', 0.0)
             vals.update({
 #                'ending_details_ids': open_close['start'],
                 'starting_details_ids': open_close['end']
