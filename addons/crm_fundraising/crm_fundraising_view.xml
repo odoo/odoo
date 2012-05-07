@@ -86,9 +86,6 @@
                         <field name="date"/>
                         <field name="categ_id" select="1" widget="selection" domain="[('object_id.model', '=', 'crm.fundraising')]"/>
                         <field name="type_id" string="Payment Mode" select="1" widget="selection"/>
-                        <button string="Send New Email"
-	                        name="%(mail.action_email_compose_message_wizard)d"
-	                        icon="terp-mail-message-new" type="action"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Funds">
