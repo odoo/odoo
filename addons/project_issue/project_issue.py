@@ -518,11 +518,11 @@ class project(osv.osv):
     _inherit = "project.project"
 
     def _issue_count(self, cr, uid, ids, field_name, arg, context=None):
-        res={}
-        issue_pool=self.pool.get('project.issue')
-        for project in self.browse(cr, uid, ids, context=context):
-            issues = issue_pool.search(cr, uid, [('project_id','=',project.id)])
-            res[project.id] = len(issues)
+        res = dict.fromkeys(ids, 0)
+        issue_pool = self.pool.get('project.issue')
+        issue_ids = issue_pool.search(cr, uid, [('project_id', 'in', ids)])
+        for issue in issue_pool.browse(cr, uid, issue_ids, context):
+            res[issue.project_id.id] += 1
         return res
 
     _columns = {
