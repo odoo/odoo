@@ -32,9 +32,6 @@ class account_journal(osv.osv):
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
         if not context:
             context = {}
-        import pdb
-        pdb.set_trace()
-
         session_id = context.get('pos_session_id', False) or False
 
         if session_id:
