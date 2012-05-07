@@ -159,7 +159,7 @@ class res_partner(osv.osv):
         'street2': fields.char('Street2', size=128),
         'zip': fields.char('Zip', change_default=True, size=24),
         'city': fields.char('City', size=128),
-        'state_id': fields.many2one("res.country.state", 'Fed. State', domain="[('country_id','=',country_id)]"),
+        'state_id': fields.many2one("res.country.state", 'State', domain="[('country_id','=',country_id)]"),
         'country_id': fields.many2one('res.country', 'Country'),
         'country': fields.related('country_id', type='many2one', relation='res.country', string='Country'),   # for backward compatibility
         'email': fields.char('E-Mail', size=240),
