@@ -44,6 +44,7 @@ class project_scrum_sprint(osv.osv):
     _name = 'project.scrum.sprint'
     _description = 'Project Scrum Sprint'
     _order = 'date_start desc'
+    _inherit = ['mail.thread']
     def _compute(self, cr, uid, ids, fields, arg, context=None):
         res = {}.fromkeys(ids, 0.0)
         progress = {}

@@ -24,6 +24,7 @@ from tools.translate import _
 class backlog_sprint_assign(osv.osv_memory):
     _name = 'project.scrum.backlog.assign.sprint'
     _description = 'Assign sprint to backlogs'
+    _inherit = ['mail.thread']
     _columns = {
         'sprint_id': fields.many2one('project.scrum.sprint', 'Sprint', required=True, help="Select Sprint to assign backlog."),
         'state_open': fields.boolean('Open Backlog', help="Change the state of product backlogs to open if its in draft state"),
