@@ -16,9 +16,6 @@ openerp.project = function(openerp) {
                     });
                  });
                 
-                //if task is true , then open the task when click on the anywhere in the box.
-                if(this.record.use_tasks.raw_value)$(this.$element).find('.click_button').attr('data-name','open_tasks');
-                if(!this.record.use_tasks.raw_value)$(this.$element).find('.click_button').attr('data-name','dummy');
                 
                 // set sequence like Tasks,Issues,Timesheets and Phases
                 my_list = $("#list a")
@@ -28,6 +25,9 @@ openerp.project = function(openerp) {
                     return aValue == bValue ? 0 : aValue < bValue ? -1 : 1;
                   });
                 $('#list').replaceWith(my_list);
+                
+                //if task is true , then open the task when click on the anywhere in the box.
+                if(this.record.use_tasks.raw_value)$(this.$element).find('.click_button').attr('data-name',my_list[0].getAttribute('data-name'));
                 
                 /* set background color.
                   we can do other way to implement new widget.

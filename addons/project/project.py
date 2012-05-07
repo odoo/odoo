@@ -203,31 +203,7 @@ class project(osv.osv):
         'color': fields.integer('Color Index'),
         'company_uom_id': fields.related('company_id', 'project_time_mode_id', type='many2one', relation='product.uom'),
      }
-    def dummy(self, cr, uid, ids, context=None):
-            return False
          
-    def open_tasks(self, cr, uid, ids, context=None):
-        #Open the View for the Tasks for the project
-        """
-        This opens Tasks views
-        @return :Dictionary value for task view
-        """
-        if context is None:
-            context = {}
-        if ids:
-            context = dict(context, search_default_project_id=ids[0])
-        return {
-            'name': _('Task'),
-            'context': context,
-            'view_type': 'form',
-            'view_mode': 'kanban,tree,calendar,form',
-            'res_model': 'project.task',
-            'view_id': False,
-            'domain':[('project_id','in',ids)],
-            'type': 'ir.actions.act_window',
-            'nodestroy': True
-        }
-    
     def _get_type_common(self, cr, uid, context):
         ids = self.pool.get('project.task.type').search(cr, uid, [('project_default','=',1)], context=context)
         return ids
@@ -757,7 +733,6 @@ class task(osv.osv):
         'sequence': 10,
         'active': True,
         'user_id': lambda obj, cr, uid, context: uid,
-        'project_id':lambda self, cr, uid, context: context.get('active_id',False),
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'project.task', context=c)
     }
 
