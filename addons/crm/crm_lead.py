@@ -163,7 +163,7 @@ class crm_lead(crm_case, osv.osv):
         'contact_name': fields.char('Contact Name', size=64),
         'partner_name': fields.char("Customer Name", size=64,help='The name of the future partner company that will be created while converting the lead into opportunity', select=1),
         'optin': fields.boolean('Opt-In', help="If opt-in is checked, this contact has accepted to receive emails."),
-        'optout': fields.boolean('Opt-Out', help="If opt-out is checked, this contact has refused to receive emails or unsubscribed to a campaign."),
+        'opt_out': fields.boolean('Opt-Out', help="If opt-out is checked, this contact has refused to receive emails or unsubscribed to a campaign."),
         'type':fields.selection([ ('lead','Lead'), ('opportunity','Opportunity'), ],'Type', help="Type is used to separate Leads and Opportunities"),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
         'date_closed': fields.datetime('Closed', readonly=True),
@@ -228,10 +228,10 @@ class crm_lead(crm_case, osv.osv):
         return obj_id
     
     def on_change_optin(self, cr, uid, ids, optin):
-        return {'value':{'optin':optin,'optout':False}}
+        return {'value':{'optin':optin,'opt_out':False}}
 
     def on_change_optout(self, cr, uid, ids, optout):
-        return {'value':{'optout':optout,'optin':False}}
+        return {'value':{'opt_out':optout,'optin':False}}
 
     def onchange_stage_id(self, cr, uid, ids, stage_id, context={}):
         if not stage_id:

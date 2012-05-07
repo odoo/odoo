@@ -517,7 +517,7 @@
                     <li t-if="record.current_leave_id.raw_value || record.last_login.raw_value">
                         <span t-if="record.current_leave_id.raw_value" t-att-class="record.current_leave_state.raw_value=='validate'?'oe_kanban_color_3':'oe_kanban_color_2'">
                             <span class="oe_kanban_button" style="font-size: 100%%">
-                                <field name="current_leave_id"/>
+                                <field name="current_leave_id" groups="base.group_user"/>
                             </span>
                         </span>
                         <span t-if="record.last_login.raw_value &amp;&amp; record.last_login.raw_value.is().today()" class="oe_kanban_button" style="font-size: 100%%">
