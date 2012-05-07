@@ -13,6 +13,9 @@
                     <attribute name="invisible">False</attribute>
                 </xpath>
             </field>
+            <xpath expr="/form/notebook" position="after">
+                <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"/>
+            </xpath>
         </record>
         <record id="view_emails_partner_info_form" model="ir.ui.view">
             <field name="name">res.partner.emails.info.inherit</field>

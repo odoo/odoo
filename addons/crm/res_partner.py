@@ -23,8 +23,7 @@ from osv import fields,osv
 
 class res_partner(osv.osv):
     """ Inherits partner and adds CRM information in the partner form """
-    _name = "res.partner"
-    _inherit = ['res.partner', 'mail.thread']
+    _inherit = 'res.partner'
     _columns = {
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
         'opportunity_ids': fields.one2many('crm.lead', 'partner_id',\
@@ -70,22 +69,6 @@ class res_partner(osv.osv):
             opportunity_ids[partner_id] = opportunity_id
         return opportunity_ids
 
-    def message_load_ids(self, cr, uid, ids, limit=100, offset=0, domain=[], ascent=False, root_ids=[False], context=None):
-        """ Override of message_load_ids
-            User discussion page :
-            - messages posted on res.partner, partner_id = user.id
-            - messages directly sent to partner
-        """
-        if context is None:
-            context = {}
-        msg_obj = self.pool.get('mail.message')
-        msg_ids = []
-        for user in self.browse(cr, uid, ids, context=context):
-            msg_ids += msg_obj.search(cr, uid, [('partner_id', '=', user.id)] + domain,
-            limit=limit, offset=offset, context=context)
-        if (ascent): msg_ids = self._message_add_ancestor_ids(cr, uid, ids, msg_ids, root_ids, context=context)
-        return msg_ids
-res_partner()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
