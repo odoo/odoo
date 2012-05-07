@@ -217,7 +217,7 @@ project_user_allocation()
 class project(osv.osv):
     _inherit = "project.project"
     
-    def _open_phase(self, cr, uid, ids, field_name, arg, context=None):
+    def _phase_count(self, cr, uid, ids, field_name, arg, context=None):
         open_phase={}
         phase_pool=self.pool.get('project.phase')
         for id in ids:
@@ -227,12 +227,12 @@ class project(osv.osv):
      
     _columns = {
         'phase_ids': fields.one2many('project.phase', 'project_id', "Project Phases"),
-        'phases' : fields.boolean('Phase',help = "If you check this field Phases are appears in kanban view"),
-        'open_phases' : fields.function(_open_phase , type='integer',string="Open Phases"),
+        'use_phases' : fields.boolean('Phase',help = "If you check this field Phases are appears in kanban view"),
+        'phase_count' : fields.function(_phase_count , type='integer',string="Open Phases"),
         
     }
     _defaults = {
-        'phases' : True,
+        'use_phases' : True,
     }
     def open_phase(self, cr, uid, ids, context=None):
         #Open the View for the Tasks for the project

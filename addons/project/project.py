@@ -155,7 +155,7 @@ class project(osv.osv):
                 raise osv.except_osv(_('Operation Not Permitted !'), _('You cannot delete a project containing tasks. I suggest you to desactivate it.'))
         return super(project, self).unlink(cr, uid, ids, *args, **kwargs)
     
-    def _open_task(self, cr, uid, ids, field_name, arg, context=None):
+    def _task_count(self, cr, uid, ids, field_name, arg, context=None):
         open_task={}
         task_pool=self.pool.get('project.task')
         for id in ids:
@@ -163,14 +163,6 @@ class project(osv.osv):
             open_task[id] = len(task_ids)
         return open_task
     
-    def company_uom_id(self, cr, uid, ids, field_name, arg, context=None):
-        uom_company = {}
-        for project in self.browse(cr,uid,ids):
-            user_browse = self.pool.get('res.users').browse(cr,uid,project.user_id.id)
-            uom_company[project.id] = project.company_id.project_time_mode_id.name or user_browse.company_id.project_time_mode_id.name
-        return uom_company
-                
-
     _columns = {
         'complete_name': fields.function(_complete_name, string="Project Name", type='char', size=250),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the project without removing it."),
@@ -207,10 +199,10 @@ class project(osv.osv):
         'warn_header': fields.text('Mail Header', help="Header added at the beginning of the email for the warning message sent to the customer when a task is closed.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'warn_footer': fields.text('Mail Footer', help="Footer added at the beginning of the email for the warning message sent to the customer when a task is closed.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'type_ids': fields.many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', 'Tasks Stages', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
-        'task': fields.boolean('Task',help = "If you check this field tasks appears in kanban view"),
-        'open_task': fields.function(_open_task , type='integer',string="Open Tasks"),
+        'use_tasks': fields.boolean('Task',help = "If you check this field tasks appears in kanban view"),
+        'task_count': fields.function(_task_count , type='integer',string="Open Tasks"),
         'color': fields.integer('Color Index'),
-        'company_uom_id': fields.function(company_uom_id,type="char"),
+        'company_uom_id': fields.related('company_id', 'project_time_mode_id', type='many2one', relation='product.uom'),
      }
     def dummy(self, cr, uid, ids, context=None):
             return False
@@ -247,7 +239,7 @@ class project(osv.osv):
         'priority': 1,
         'sequence': 10,
         'type_ids': _get_type_common,
-        'task' : True,
+        'use_tasks' : True,
     }
 
     # TODO: Why not using a SQL contraints ?

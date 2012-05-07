@@ -517,7 +517,7 @@ project_issue()
 class project(osv.osv):
     _inherit = "project.project"
 
-    def _compute_issue(self, cr, uid, ids, field_name, arg, context=None):
+    def _issue_count(self, cr, uid, ids, field_name, arg, context=None):
         res={}
         issue_pool=self.pool.get('project.issue')
         for project in self.browse(cr, uid, ids, context=context):
@@ -528,12 +528,12 @@ class project(osv.osv):
     _columns = {
         'project_escalation_id' : fields.many2one('project.project','Project Escalation', help='If any issue is escalated from the current Project, it will be listed under the project selected here.', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'reply_to' : fields.char('Reply-To Email Address', size=256),
-        'issues' : fields.boolean('Issues',help = "If you check this field issues are appears in kanban view"),
-        'total_issues': fields.function(_compute_issue , type='integer',string="Issue"),
+        'use_issues' : fields.boolean('Issues',help = "If you check this field issues are appears in kanban view"),
+        'issue_count': fields.function(_issue_count , type='integer'),
     }
     
     _defaults = {
-        'issues' : True,
+        'use_issues' : True,
     }
 
     def open_issues(self, cr, uid, ids, context=None):

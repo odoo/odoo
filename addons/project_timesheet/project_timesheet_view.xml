@@ -7,8 +7,8 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
-            	<xpath expr="//field[@name='task']" position='after'>
-		    <field name="timesheets"/>
+            	<xpath expr="//field[@name='use_tasks']" position='after'>
+		    <field name="use_timesheets"/>
 		    <field name="amt_to_invoice" invisible="True"/>
 		    <field name="hrs_to_invoice" invisible="True"/>
                 </xpath>
@@ -31,14 +31,14 @@
             <field name="type">kanban</field>
             <field name="inherit_id" ref="project.view_project_kanban"/>
             <field name="arch" type="xml">
-                  <field name="task" position="after">
-                    <field name="timesheets" context="{'search_default_account_id': project_id, 'default_account_id': project_id}"/>
-                    <field name="total_timesheet"/>
+                  <field name="use_tasks" position="after">
+                    <field name="use_timesheets" context="{'search_default_account_id': project_id, 'default_account_id': project_id}"/>
+                    <field name="timesheet_count"/>
 		    <field name="currency_id"/>
                 </field>
 		<xpath expr="//div[@id='list']" position="inside">
-		    <t t-if="record.timesheets.raw_value">
-			<a id="3" name="open_timesheets" class="oe_project_buttons" type="object"><t t-if="record.total_timesheet.value &lt;= 1">Timesheet</t><t t-if="record.total_timesheet.value &gt; 1">Timesheets</t>(<t t-esc="record.total_timesheet.value"/>)</a>
+		    <t t-if="record.use_timesheets.raw_value">
+			<a id="3" name="open_timesheets" class="oe_project_buttons" type="object"><t t-if="record.timesheet_count.value &lt;= 1">Timesheet</t><t t-if="record.timesheet_count.value &gt; 1">Timesheets</t>(<t t-esc="record.timesheet_count.value"/>)</a>
 		    </t>
 		</xpath>
 

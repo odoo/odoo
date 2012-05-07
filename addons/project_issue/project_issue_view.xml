@@ -345,8 +345,8 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
-            	<xpath expr="//field[@name='task']" position="after">
-                    <field name="issues"/>
+            	<xpath expr="//field[@name='use_tasks']" position="after">
+                    <field name="use_issues"/>
                 </xpath>
                 <field name="priority" position="before">
                     <field name="project_escalation_id"/>
@@ -361,19 +361,16 @@
             <field name="type">kanban</field>
             <field name="inherit_id" ref="project.view_project_kanban"/>
             <field name="arch" type="xml">
-                <field name="task" position="after">
-                    <field name="issues"/>
-                    <field name="total_issues" invisible="1"/>
+                <field name="use_tasks" position="after">
+                    <field name="use_issues"/>
+                    <field name="issue_count" invisible="1"/>
                 </field>
                 <xpath expr="//div[@id='list']" position="inside">
-                    <t t-if="record.issues.raw_value">
-                        <a id="2" name="open_issues" class="oe_project_buttons" type="object"><t t-if="record.total_issues.value &lt;= 1">Issue</t><t t-if="record.total_issues.value > 1">Issues</t>(<t t-esc="record.total_issues.value"/>)</a>
+                    <t t-if="record.use_issues.raw_value">
+                        <a id="2" name="open_issues" class="oe_project_buttons" type="object"><t t-if="record.issue_count.value &lt;= 1">Issue</t><t t-if="record.issue_count.value > 1">Issues</t>(<t t-esc="record.issue_count.value"/>)</a>
                     </t>
                 </xpath>
             </field>
         </record>
-        
-        
-
     </data>
 </openerp>
