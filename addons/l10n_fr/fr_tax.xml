@@ -746,13 +746,13 @@
         <field name="description">TVA-import-0</field>
         <field name="amount" eval="0.00"/>
         <field name="type">percent</field>
-        <!-- Les achats import à 0% ne sont pas mentionnés sur la déclaration de TVA
-        par conséquence, il n'y a pas de base_code_id -->
+        <field name="base_code_id" ref="tax_import_0_ht"/>
+        <field name="base_sign" eval="-1"/>
 
         <field name="account_collected_id" ref="pcg_44566"/>
         <field name="account_paid_id" ref="pcg_44566"/>
 
-        <field name="ref_base_code_id" ref=""/>
+        <field name="ref_base_code_id" ref="tax_import_0_ht"/>
         <field name="ref_base_sign" eval="1"/>
         <field name="sequence" eval="10"/>
         <field name="type_tax_use">purchase</field>
