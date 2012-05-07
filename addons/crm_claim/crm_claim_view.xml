@@ -104,22 +104,22 @@
                                 <field name="description" colspan="4" nolabel="1"/>
                                 <separator colspan="4" string=""/>
                                 <group col="8" colspan="4">
-                                    <field name="state" select="1" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
+                                    <field name="state" select="1" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}' groups="base.group_no_one"/>
                                     <button name="case_cancel" string="Cancel"
                                         states="draft,open,pending" type="object"
-                                        icon="gtk-cancel" />
+                                        icon="gtk-cancel" groups="base.group_no_one"/>
                                     <button name="case_pending" string="Pending"
                                         states="draft,open" type="object"
-                                        icon="gtk-media-pause" />
+                                        icon="gtk-media-pause" groups="base.group_no_one"/>
                                     <button name="case_open" string="Open"
                                         states="draft,pending" type="object"
-                                        icon="gtk-go-forward" />
+                                        icon="gtk-go-forward" groups="base.group_no_one"/>
                                     <button name="case_close" string="Done"
                                         states="open,pending" type="object"
-                                        icon="gtk-jump-to" />
+                                        icon="gtk-jump-to" groups="base.group_no_one"/>
                                     <button name="case_reset"
                                         string="Reset to Draft" states="done,cancel"
-                                        type="object" icon="gtk-convert" />
+                                        type="object" icon="gtk-convert" groups="base.group_no_one"/>
                                 </group>
                             </page>
                             <page string="Follow Up">
@@ -233,7 +233,7 @@
                             domain="[]" context="{'group_by':'categ_id'}" />
                         <filter string="State"
                             icon="terp-stock_effects-object-colorize"
-                            domain="[]" context="{'group_by':'state'}" />
+                            domain="[]" context="{'group_by':'state'}" groups="base.group_no_one"/>
                         <separator orientation="vertical"/>
                         <filter string="Claim Date" icon="terp-go-month"
                             domain="[]" help="Claim Date"
