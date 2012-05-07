@@ -69,7 +69,6 @@ class hr_sign_in_out(osv.osv_memory):
     _columns = {
         'name': fields.char('Employees name', size=32, required=True, readonly=True),
         'state': fields.char('Current state', size=32, required=True, readonly=True),
-        'date': fields.datetime('Date'),
         'emp_id': fields.many2one('hr.employee', 'Empoyee ID', readonly=True),
                 }
 

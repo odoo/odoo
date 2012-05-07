@@ -56,8 +56,8 @@ actions(Sign in/Sign out) performed by them.
     'certificate': '0063495605613',
     
     #web
-    "js": ["static/src/js/sign_in_out.js"],
-    "css":[],
-    'qweb' : ["static/src/xml/sign_in_out.xml"],
+    "js": ["static/src/js/attendance.js"],
+    "css":["static/src/css/attendance.css"],
+    'qweb' : ["static/src/xml/attendance.xml"],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
