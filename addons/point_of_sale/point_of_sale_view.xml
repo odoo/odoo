@@ -923,7 +923,7 @@
 
 
         <record model="ir.actions.act_window" id="action_pos_session">
-            <field name="name">Point of Sales Session</field>
+            <field name="name">PoS Sessions</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">pos.session</field>
             <field name="view_type">form</field>
@@ -943,15 +943,14 @@
             src_model="pos.session"
             res_model="pos.order"
             domain="[('session_id', '=', active_id)]" />
-        <!--
-        TODO
+
         <act_window
             id="act_pos_session_statements"
             name="Statements"
             src_model="pos.session"
             res_model="account.bank.statement"
-            domain="[]" />
-        -->
+            domain="[]"
+            context="{'pos_session_id' : active_id}" />
 
         <record id="view_pos_order_filter" model="ir.ui.view">
             <field name="name">pos.order.list.select</field>

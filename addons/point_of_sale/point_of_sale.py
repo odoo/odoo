@@ -151,7 +151,15 @@ pos_config()
 class pos_session(osv.osv):
     _name = 'pos.session'
 
+    #"status [BUTTON TEXT]" -> utiliser 
+    # "opening control (open) -> opened (cashbox control) -> closing control (close) -> closed & posted" 
     POS_SESSION_STATE = [('new', 'New'),('opened', 'Opened'),('closed', 'Closed'),('posted', 'Posted')]
+    #POS_SESSION_STATE = [
+    #    ('new', 'Opening Control'),
+    #    ('opened', 'Opened'),
+    #    ('closed', 'Closing Control'),
+    #    ('posted', 'Closed & Posted'),
+    #]
 
     _columns = {
         'config_id' : fields.many2one('pos.config', 'PoS', required=True, select=1, domain="[('state', '=', 'active')]"),
@@ -168,6 +176,7 @@ class pos_session(osv.osv):
         'details_ids' : fields.related('cash_register_id', 'details_ids', 
                                        type='one2many', relation='account.cashbox.line',
                                        string='CashBox Lines'),
+        'order_ids' : fields.one2many('pos.order', 'session_id', 'Orders'),
     }
 
     _defaults = {
@@ -180,7 +189,7 @@ class pos_session(osv.osv):
         ('uniq_name', 'unique(name)', "The name of this POS Session must be unique !"),
     ]
 
-    def _create_cash_register(self, cr, uid, pos_config, name, context=None):
+    def _create_cash_register(self, cr, uid, pos_config, context=None):
         if not pos_config:
             return False
 
@@ -196,7 +205,6 @@ class pos_session(osv.osv):
             return False
 
         values = {
-            'name' : name,
             'journal_id' : journal_id,
         }
         cash_register_id = proxy.create(cr, uid, values, context=context)
@@ -211,7 +219,7 @@ class pos_session(osv.osv):
             name = pos_config.sequence_id._next()
             values.update(
                 name=name,
-                cash_register_id=self._create_cash_register(cr, uid, pos_config, name, context=context),
+                cash_register_id=self._create_cash_register(cr, uid, pos_config, context=context),
             )
         else:
             raise osv.except_osv(_('Error!'), _('There is no POS Config attached to this POS Session'))
@@ -228,13 +236,32 @@ class pos_session(osv.osv):
 
             record.write(values, context=context)
 
+            record.cash_register_id.button_open(context=context)
+
         return True
 
     def wkf_action_close(self, cr, uid, ids, context=None):
+        # Close CashBox
+        record.cash_register_id.button_confirm_cash(context=context)
         return self.write(cr, uid, ids, {'state' : 'close', 'stop_at' : time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
 
     def wkf_action_post(self, cr, uid, ids, context=None):
+        self._confirm_orders(cr, uid, ids, context=context)
         return self.write(cr, uid, ids, {'state' : 'post'}, context=context)
+
+    def _confirm_orders(self, cr, uid, ids, context=None):
+        wf_service = netsvc.LocalService("workflow")
+
+        for session in self.browse(cr, uid, ids, context=context):
+            for order in session.order_ids:
+                if order.state != 'paid':
+                    raise osv.except_osv(
+                        _('Error !'),
+                        _("You can not confirm all orders of this session, because they have not the 'paid' status"))
+                else:
+                    wf_service.trg_validate(uid, 'pos.order', order.id, 'done', cr)
+
+        return True
 
     def get_current_session(self, cr, uid, context=None):
         current_user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
@@ -295,6 +322,7 @@ class pos_order(osv.osv):
         session_id = self.pool.get('pos.session').get_current_session()
         for order in orders:
             # order :: {'name': 'Order 1329148448062', 'amount_paid': 9.42, 'lines': [[0, 0, {'discount': 0, 'price_unit': 1.46, 'product_id': 124, 'qty': 5}], [0, 0, {'discount': 0, 'price_unit': 0.53, 'product_id': 62, 'qty': 4}]], 'statement_ids': [[0, 0, {'journal_id': 7, 'amount': 9.42, 'name': '2012-02-13 15:54:12', 'account_id': 12, 'statement_id': 21}]], 'amount_tax': 0, 'amount_return': 0, 'amount_total': 9.42}
+            order['session_id'] = session_id
             order_obj = self.pool.get('pos.order')
             # get statements out of order because they will be generated with add_payment to ensure
             # the module behavior is the same when using the front-end or the back-end
@@ -547,11 +575,14 @@ class pos_order(osv.osv):
                 msg = _('There is no receivable account defined to make payment for the partner: "%s" (id:%d)') % (order.partner_id.name, order.partner_id.id,)
             raise osv.except_osv(_('Configuration Error !'), msg)
 
-        statement_id = statement_obj.search(cr,uid, [
-                                                     ('journal_id', '=', int(data['journal'])),
-                                                     ('company_id', '=', curr_company),
-                                                     ('user_id', '=', uid),
-                                                     ('state', '=', 'open')], context=context)
+        context.pop('pos_session_id', False)
+        domain = [
+            ('journal_id', '=', int(data['journal'])),
+            ('company_id', '=', curr_company),
+            ('user_id', '=', uid),
+            ('state', '=', 'open')
+        ]
+        statement_id = statement_obj.search(cr,uid, domain, context=context)
         if len(statement_id) == 0:
             raise osv.except_osv(_('Error !'), _('You have to open at least one cashbox'))
         if statement_id:
