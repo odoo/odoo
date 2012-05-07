@@ -69,7 +69,7 @@ class GraphView(View):
                     'data': [(_convert(xaxis[0], record[xaxis[0]]), record[yaxis[0]])],
                     'label': _convert(xaxis[0], record[xaxis[0]], tick=False)
                 })
-            
+
         elif (not stacked) or (len(xaxis)<2):
             for x in xaxis:
                 res = obj.read_group(domain, yaxis+[x], [x], context=context)
@@ -86,7 +86,7 @@ class GraphView(View):
                     'data': map(lambda record: _orientation(_convert(xaxis[1], record[xaxis[1]]), record[yaxis[0]]), res),
                     'label': _convert(xaxis[0], key, tick=False)
                 })
-                
+
         return {
             'data': result,
             'ticks': map(lambda x: (x[1], x[0]), ticks.items())
