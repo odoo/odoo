@@ -431,7 +431,6 @@ function openerp_pos_models(module, instance){ //module is instance.point_of_sal
             existing = (this.get('orderLines')).get(product.id);
             if (existing != null) {
                 if(existing.get('weighted')){
-                    console.log('TODO VERIFY THIS');
                     existing.incrementWeight(product.attributes.weight);
                 }else{
                     existing.incrementQuantity();

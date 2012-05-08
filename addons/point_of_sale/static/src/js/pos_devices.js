@@ -1,6 +1,8 @@
 
 function openerp_pos_devices(module, instance){ //module is instance.point_of_sale
 
+    var QWeb = instance.web.qweb;
+
     window.debug_devices = new (instance.web.Class.extend({
         payment_status: 'waiting_for_payment',
         weight: 0,
@@ -75,7 +77,7 @@ function openerp_pos_devices(module, instance){ //module is instance.point_of_sa
         },
 
         // called when the client logs in or starts to scan product
-        transation_start: function(){
+        transaction_start: function(){
             console.log('PROXY: transaction start');
         },
 
@@ -103,12 +105,17 @@ function openerp_pos_devices(module, instance){ //module is instance.point_of_sa
 
         init: function(attributes){
             this.pos = attributes.pos;
-            this.action_callbacks = {
+            this.action_callback = {
                 'product': undefined,   
                 'cashier': undefined,
                 'client':  undefined,
                 'discount': undefined,
             };
+            this.price_prefix_set = attributes.price_prefix_set     ||  {'02':'', '22':'', '24':'', '26':'', '28':''};
+            this.weight_prefix_set = attributes.weight_prefix_set   ||  {'21':'','23':'','27':'','29':'','25':''};
+            this.client_prefix_set = attributes.weight_prefix_set   ||  {'42':''};
+            this.cashier_prefix_set = attributes.weight_prefix_set  ||  {'43':''};
+            this.discount_prefix_set = attributes.weight_prefix_set ||  {'44':''};
         },
        
         // when an ean is scanned and parsed, the callback corresponding
@@ -124,14 +131,14 @@ function openerp_pos_devices(module, instance){ //module is instance.point_of_sa
     
         set_action_callbacks: function(callbacks){
             for(action in callbacks){
-                this.action_callbacks[action] = callbacks[action];
+                this.action_callback[action] = callbacks[action];
             }
         },
 
         //remove all action callbacks 
         reset_action_callbacks: function(){
-            for(action in this.action_callbacks){
-                this.action_callbacks[action] = undefined;
+            for(action in this.action_callback){
+                this.action_callback[action] = undefined;
             }
         },
 
@@ -140,6 +147,9 @@ function openerp_pos_devices(module, instance){ //module is instance.point_of_sa
         // ean must be a string
         check_ean: function(ean){
             var code = ean.split('');
+            for(var i = 0; i < code.length; i++){
+                code[i] = Number(code[i]);
+            }
             var st1 = code.slice();
             var st2 = st1.slice(0,st1.length-1).reverse();
             // some EAN13 barcodes have a length of 12, as they start by 0
@@ -196,18 +206,32 @@ function openerp_pos_devices(module, instance){ //module is instance.point_of_sa
 
             if(!this.check_ean(ean)){
                 parse_result.type = 'error';
-            }else if (prefix2 in {'02':'', '22':'', '24':'', '26':'', '28':''}){
+            }else if (prefix2 in this.price_prefix_set){
                 parse_result.type = 'price';
                 parse_result.prefix = prefix2;
                 parse_result.id = ean.substring(0,7);
                 parse_result.value = Number(ean.substring(7,12))/100.0;
                 parse_result.unit  = 'euro';
-            } else if (prefix2 in {'21':'','23':'','27':'','29':'','25':''}) {
+            } else if (prefix2 in this.price_prefix_set){
                 parse_result.type = 'weight';
                 parse_result.prefix = prefix2;
-                prase_result.id = ean.substring(0,7);
+                parse_result.id = ean.substring(0,7);
                 parse_result.value = Number(ean.substring(7,12))/1000.0;
                 parse_result.unit = 'Kg';
+            }else if (prefix2 in this.client_prefix_set){
+                parse_result.type = 'client';
+                parse_result.prefix = prefix2;
+                parse_result.id = ean.substring(0,7);
+            }else if (prefix2 in this.cashier_prefix_set){
+                parse_result.type = 'cashier';
+                parse_result.prefix = prefix2;
+                parse_result.id = ean.substring(0,7);
+            }else if (prefix2 in this.discount_prefix_set){
+                parse_result.type  = 'discount';
+                parse_result.prefix = prefix2;
+                parse_result.id    = ean.substring(0,7);
+                parse_result.value = Number(ean.substring(7,12))/100.0;
+                parse_result.unit  = '%';
             }else{
                 parse_result.type = 'unit';
                 parse_result.prefix = '';
@@ -223,6 +247,8 @@ function openerp_pos_devices(module, instance){ //module is instance.point_of_sa
             var allPackages = this.pos.get('product.packaging');
             var scannedProductModel = undefined;
             var parse_result = this.parse_ean(ean);
+
+            console.log('getting products:',ean,parse_result,allProducts);
 
             if (parse_result.type === 'price') {
                 var itemCode = parse_result.id;
@@ -249,6 +275,7 @@ function openerp_pos_devices(module, instance){ //module is instance.point_of_sa
         // a default callback for the 'product' action. It will select the product
         // corresponding to the ean and add it to the current order. 
         scan_product_callback: function(parse_result){
+            var self = this;
             var selectedOrder = self.pos.get('selectedOrder');
             var scannedProductModel = self.get_product_by_ean(parse_result.ean);
             if (scannedProductModel === undefined) {
@@ -283,15 +310,18 @@ function openerp_pos_devices(module, instance){ //module is instance.point_of_sa
             };
 
             if(parse_result.type in {'unit':'', 'weight':'', 'price':''}){    //ean is associated to a product
+                console.log('calling product callback');
                 if(this.action_callback['product']){
+                    console.log('found product callback');
                     this.action_callback['product'](parse_result);
                 }
             }else{
+                console.log('calling callback:',parse_result.type);
                 if(this.action_callback[parse_result.type]){
+                    console.log('found product callback');
                     this.action_callback[parse_result.type](parse_result);
                 }
             }
-
         },
 
         // starts catching keyboard events and tries to interpret codebar 
@@ -324,7 +354,8 @@ function openerp_pos_devices(module, instance){ //module is instance.point_of_sa
                     lastTimeStamp = new Date().getTime();
                     if (codeNumbers.length == 13) {
                         //We have found what seems to be a valid codebar
-                        var parse_result = this.parse_ean(codeNumbers.join(''));
+                        var parse_result = self.parse_ean(codeNumbers.join(''));
+                        console.log('BARCODE:',parse_result);
 
                         if (parse_result.type === 'error') {    //most likely a checksum error, raise warning
                             $(QWeb.render('pos-scan-warning')).dialog({
@@ -334,13 +365,17 @@ function openerp_pos_devices(module, instance){ //module is instance.point_of_sa
                                 title: "Warning",
                             });
                         }else if(parse_result.type in {'unit':'', 'weight':'', 'price':''}){    //ean is associated to a product
-                            if(this.action_callback['product']){
-                                this.action_callback['product'](parse_result);
+                            console.log('calling product callback');
+                            if(self.action_callback['product']){
+                                console.log('found product callback');
+                                self.action_callback['product'](parse_result);
                             }
                             //this.trigger("codebar",parse_result );
                         }else{
-                            if(this.action_callback[parse_result.type]){
-                                this.action_callback[parse_result.type](parse_result);
+                            console.log('calling callback:',parse_result.type);
+                            if(self.action_callback[parse_result.type]){
+                                console.log('found callback');
+                                self.action_callback[parse_result.type](parse_result);
                             }
                         }
 

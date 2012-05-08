@@ -244,21 +244,30 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
             this.model = options.model;
             this.pos = options.pos;
             this.model.attributes.weight = options.weight || undefined;
+            this.next_screen = options.next_screen || undefined;
         },
         addToOrder: function(event) {
             /* Preserve the category URL */
             event.preventDefault();
             return (this.pos.get('selectedOrder')).addProduct(this.model);
         },
-        setWeight: function(weight){
+        set_weight: function(weight){
             this.model.attributes.weight = weight;
             this.renderElement();
         },
+        set_next_screen: function(screen){
+            this.next_screen = screen;
+        },
         renderElement: function() {
+            var self = this;
             this.$element.addClass("product");
             this.$element.html(this.template_fct(this.model.toJSON()));
-            $("a", this.$element).click(_.bind(this.addToOrder, this));
-            return this;
+            $("a", this.$element).click(function(e){
+                self.addToOrder(e);
+                if(self.next_screen){
+                    self.pos.screen_selector.set_current_screen(self.next_screen);    //FIXME There ought to be a better way to do this ...
+                }
+            });
         },
     });
 
@@ -527,10 +536,16 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
             this.pos.get('products').bind('reset', this.renderElement, this);
             this.product_list = [];
             this.weight = options.weight;
+            this.next_screen = options.next_screen || false;
         },
-        setWeight: function(weight){
+        set_weight: function(weight){
             for(var i = 0; i < this.product_list.length; i++){
-                this.product_list[i].setWeight(weight);
+                this.product_list[i].set_weight(weight);
+            }
+        },
+        set_next_screen: function(screen){
+            for(var i = 0; i < this.product_list.length; i++){
+                this.product_list[i].set_next_screen(screen);
             }
         },
         renderElement: function() {
@@ -974,9 +989,11 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
                 if(visible){
                     $('#numpad').show();
                     $('#paypad').show();
+                    $('#current-order').css({'bottom':'271px'});
                 }else{
                     $('#numpad').hide();
                     $('#paypad').hide();
+                    $('#current-order').css({'bottom':'0px'});
                 }
             }
         },
