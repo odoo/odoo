@@ -697,7 +697,7 @@ class sugar_import(import_framework):
                 'state': map_val('status', self.lead_state) ,
                 'fax': 'phone_fax',
                 'referred': 'refered_by',
-                'optout': 'do_not_call',
+                'opt_out': 'do_not_call',
                 'channel_id/id': call(self.get_channel_id, value('lead_source')),
                 'type_id/id': ref(self.TABLE_COMPAIGN, 'campaign_id'),
                 'country_id/id': 'country_id/id',
