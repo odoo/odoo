@@ -135,7 +135,7 @@ class mail_message_common(osv.TransientModel):
         'date': (lambda *a: fields.datetime.now()),
     }
 
-class mail_message(osv.osv):
+class mail_message(osv.Model):
     """Model holding messages: system notification (replacing res.log
        notifications), comments (for OpenChatter feature) and
        RFC2822 email messages. This model also provides facilities to
@@ -245,12 +245,54 @@ class mail_message(osv.osv):
         if not cr.fetchone():
             cr.execute("""CREATE INDEX mail_message_model_res_id_idx ON mail_message (model, res_id)""")
 
+    def check(self, cr, uid, ids, mode, context=None, values=None):
+        """Restricts the access to a mail.message, according to referred model
+        """
+        if not ids:
+            return
+        res_ids = {}
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        cr.execute('SELECT DISTINCT model, res_id FROM mail_message WHERE id = ANY (%s)', (ids,))
+        for rmod, rid in cr.fetchall():
+            if not (rmod and rid):
+                continue
+            res_ids.setdefault(rmod,set()).add(rid)
+        if values:
+            if 'res_model' in values and 'res_id' in values:
+                res_ids.setdefault(values['res_model'],set()).add(values['res_id'])
+
+        ima_obj = self.pool.get('ir.model.access')
+        for model, mids in res_ids.items():
+            # ignore mail messages that are not attached to a resource anymore when checking access rights
+            # (resource was deleted but attachment was not)
+            mids = self.pool.get(model).exists(cr, uid, mids)
+            ima_obj.check(cr, uid, model, mode)
+            self.pool.get(model).check_access_rule(cr, uid, mids, mode, context=context)
+    
+    def create(self, cr, uid, values, context=None):
+        self.check(cr, uid, [], mode='create', context=context, values=values)
+        return super(mail_message, self).create(cr, uid, values, context)
+
+    def read(self, cr, uid, ids, fields_to_read=None, context=None, load='_classic_read'):
+        self.check(cr, uid, ids, 'read', context=context)
+        return super(mail_message, self).read(cr, uid, ids, fields_to_read, context, load)
+
     def copy(self, cr, uid, id, default=None, context=None):
         """Overridden to avoid duplicating fields that are unique to each email"""
         if default is None:
             default = {}
+        self.check(cr, uid, ids, 'read', context=context)
         default.update(message_id=False,original=False,headers=False)
         return super(mail_message,self).copy(cr, uid, id, default=default, context=context)
+    
+    def write(self, cr, uid, ids, vals, context=None):
+        self.check(cr, uid, ids, 'write', context=context, values=vals)
+        return super(mail_message, self).write(cr, uid, ids, vals, context)
+
+    def unlink(self, cr, uid, ids, context=None):
+        self.check(cr, uid, ids, 'unlink', context=context)
+        return super(mail_message, self).unlink(cr, uid, ids, context)
 
     def schedule_with_attach(self, cr, uid, email_from, email_to, subject, body, model=False,
                              email_cc=None, email_bcc=None, reply_to=False, attachments=None,
