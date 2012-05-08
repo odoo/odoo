@@ -89,13 +89,15 @@ function openerp_pos_models(module, instance){ //module is instance.point_of_sal
                     ['id', 'journal_ids'],
                     [['state', '=', 'opened'], ['user_id', '=', this.session.uid]]
                 ).then(function(result) {
-                    console.log('pos_session:', result);
-                    var journal_def = fetch(
-                        'account.journal',
-                        ['name'], 
-                        [['id', 'in', result[0]['journal_ids']]]).then(function(inner_result) {
-                            self.set({'account_journals' : inner_result});
-                    });
+                    if( result.length !== 0 ) {
+                        console.log('pos_session:', result);
+                        var journal_def = fetch(
+                            'account.journal',
+                            ['name'], 
+                            [['id', 'in', result[0]['journal_ids']]]).then(function(inner_result) {
+                                self.set({'account_journals' : inner_result});
+                        });
+                    }
                     return self; 
                 });
 
