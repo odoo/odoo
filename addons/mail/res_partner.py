@@ -45,7 +45,6 @@ class res_partner(osv.osv):
             limit=limit, offset=offset, context=context)
         if (ascent): msg_ids = self._message_add_ancestor_ids(cr, uid, ids, msg_ids, root_ids, context=context)
         return msg_ids
-res_partner()
 
 res_partner()
 
