@@ -932,6 +932,13 @@ $colour4: #8a89ba
             border: 1px solid #ccc
             text-align: left
 
+            button, .button
+                border: none
+                background: white
+                padding: 0 2px
+                @include box-shadow(none)
+                @include radius(0)
+
             .oe_searchview_filters
                 display: table
                 width: 100%
@@ -959,6 +966,17 @@ $colour4: #8a89ba
 
                     &:hover
                         background-color: #f0f0fa
+
+            .oe_searchview_custom
+                .oe_searchview_custom_save
+                    font-size: 1px
+                    letter-spacing: -1px
+                    color: transparent
+                    &:before
+                        font-family: "mnmliconsRegular"
+                        content: "S"
+                        font-size: 20px
+                        color: #404040
 
             .oe_searchview_advanced
                 h4

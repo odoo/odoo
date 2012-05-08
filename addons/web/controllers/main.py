@@ -1288,25 +1288,6 @@ class SearchView(View):
         return filters
 
     @openerpweb.jsonrequest
-    def save_filter(self, req, model, name, context_to_save, domain):
-        Model = req.session.model("ir.filters")
-        ctx = common.nonliterals.CompoundContext(context_to_save)
-        ctx.session = req.session
-        ctx = ctx.evaluate()
-        domain = common.nonliterals.CompoundDomain(domain)
-        domain.session = req.session
-        domain = domain.evaluate()
-        uid = req.session._uid
-        context = req.session.eval_context(req.context)
-        to_return = Model.create_or_replace({"context": ctx,
-                                             "domain": domain,
-                                             "model_id": model,
-                                             "name": name,
-                                             "user_id": uid
-                                             }, context)
-        return to_return
-
-    @openerpweb.jsonrequest
     def add_to_dashboard(self, req, menu_id, action_id, context_to_save, domain, view_mode, name=''):
         ctx = common.nonliterals.CompoundContext(context_to_save)
         ctx.session = req.session

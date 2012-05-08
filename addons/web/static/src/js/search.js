@@ -221,8 +221,6 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         this.hidden = !!hidden;
         this.headless = this.hidden && !this.has_defaults;
 
-        this.filter_data = {};
-
         this.input_subviews = [];
 
         this.ready = $.Deferred();
@@ -246,13 +244,8 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
                 model: this.model,
                 view_id: this.view_id,
                 context: this.dataset.get_context() });
-            // FIXME: local eval of domain and context to get rid of special endpoint
-            var filters = this.rpc('/web/searchview/get_filters', {
-                model: this.model
-            }).then(function (filters) { self.custom_filters = filters; });
 
-            $.when(load_view, filters)
-                .pipe(function (load) { return load[0]; })
+            $.when(load_view)
                 .pipe(this.on_loaded)
                 .fail(function () {
                     self.ready.reject.apply(null, arguments);
@@ -535,42 +528,6 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
                 limit : 80
             });
             break;
-        case 'save_filter':
-            var data = this.build_search_data();
-            var context = new instance.web.CompoundContext();
-            _.each(data.contexts, function(x) {
-                context.add(x);
-            });
-            var domain = new instance.web.CompoundDomain();
-            _.each(data.domains, function(x) {
-                domain.add(x);
-            });
-            var groupbys = _.pluck(data.groupbys, "group_by").join();
-            context.add({"group_by": groupbys});
-            var dial_html = QWeb.render("SearchView.managed-filters.add");
-            var $dial = $(dial_html);
-            instance.web.dialog($dial, {
-                modal: true,
-                title: _t("Filter Entry"),
-                buttons: [
-                    {text: _t("Cancel"), click: function() {
-                        $(this).dialog("close");
-                    }},
-                    {text: _t("OK"), click: function() {
-                        $(this).dialog("close");
-                        var name = $(this).find("input").val();
-                        self.rpc('/web/searchview/save_filter', {
-                            model: self.dataset.model,
-                            context_to_save: context,
-                            domain: domain,
-                            name: name
-                        }).then(function() {
-                            self.reload_managed_filters();
-                        });
-                    }}
-                ]
-            });
-            break;
         case '':
             this.do_clear();
         }
@@ -647,17 +604,23 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         });
     },
     /**
-     * Performs the search view collection of widget data.
+     * Extract search data from the view's facets.
      *
-     * If the collection went well (all fields are valid), then triggers
-     * :js:func:`instance.web.SearchView.on_search`.
+     * Result is an object with 4 (own) properties:
      *
-     * If at least one field failed its validation, triggers
-     * :js:func:`instance.web.SearchView.on_invalid` instead.
+     * errors
+     *     An array of any error generated during data validation and
+     *     extraction, contains the validation error objects
+     * domains
+     *     Array of domains
+     * contexts
+     *     Array of contexts
+     * groupbys
+     *     Array of domains, in groupby order rather than view order
      *
-     * @param e jQuery event object coming from the "Search" button
+     * @return {Object}
      */
-    do_search: function () {
+    build_search_data: function () {
         var domains = [], contexts = [], groupbys = [], errors = [];
 
         this.query.each(function (facet) {
@@ -683,12 +646,30 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
                 }
             }
         });
-
-        if (!_.isEmpty(errors)) {
-            this.on_invalid(errors);
+        return {
+            domains: domains,
+            contexts: contexts,
+            groupbys: groupbys,
+            errors: errors
+        };
+    }, /**
+     * Performs the search view collection of widget data.
+     *
+     * If the collection went well (all fields are valid), then triggers
+     * :js:func:`instance.web.SearchView.on_search`.
+     *
+     * If at least one field failed its validation, triggers
+     * :js:func:`instance.web.SearchView.on_invalid` instead.
+     *
+     * @param e jQuery event object coming from the "Search" button
+     */
+    do_search: function () {
+        var search = this.build_search_data();
+        if (!_.isEmpty(search.errors)) {
+            this.on_invalid(search.errors);
             return;
         }
-        return this.on_search(domains, contexts, groupbys);
+        return this.on_search(search.domains, search.contexts, search.groupbys);
     },
     /**
      * Triggered after the SearchView has collected all relevant domains and
@@ -1356,6 +1337,68 @@ instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
     }
 });
 
+instance.web.search.CustomFilters = instance.web.search.Input.extend({
+    template: 'SearchView.CustomFilters',
+    start: function () {
+        this.$element.on('submit', 'form', this.proxy('save_current'));
+        // FIXME: local eval of domain and context to get rid of special endpoint
+        return this.rpc('/web/searchview/get_filters', {
+            model: this.view.model
+        }).pipe(this.proxy('set_filters'));
+    },
+    set_filters: function (filters) {
+        var self = this;
+        var content = this.$element.find('.oe_searchview_custom_list');
+        return $.when.apply(null, _(filters).chain()
+            .map(function (filter) {
+                // FIXME: handling of ``disabled`` being set
+                var f = new instance.web.search.Filter({attrs: {
+                    string: filter.name,
+                    context: filter.context,
+                    domain: filter.domain
+                }}, self.view);
+                return new instance.web.search.FilterGroup([f], self.view);
+            })
+            .invoke('appendTo', content)
+            .value());
+    },
+    save_current: function () {
+        var self = this;
+        var $name = this.$element.find('input');
+
+        var search = this.view.build_search_data();
+        this.rpc('/web/session/eval_domain_and_context', {
+            domains: search.domains,
+            contexts: search.contexts,
+            group_by_seq: search.groupbys || []
+        }).pipe(function (results) {
+            if (!_.isEmpty(results.group_by)) {
+                results.context.group_by = results.group_by;
+            }
+            var name = $name.val();
+            // FIXME: creates filter and group even if the call fails :/
+            var f = new instance.web.search.Filter({attrs: {
+                string: name,
+                context: results.context,
+                domain: results.domain
+            }}, self.view);
+            (new instance.web.search.FilterGroup([f], self.view))
+                .appendTo(self.$element.find('.oe_searchview_custom_list'));
+            // FIXME: current context?
+            return new instance.web.Model('ir.filters').call('create_or_replace', [{
+                name: name,
+                user_id: instance.connection.uid,
+                model_id: self.view.model,
+                context: results.context,
+                domain: results.domain
+            }]);
+        }).then(function () {
+            $name.val('');
+        });
+        return false;
+    }
+});
+
 instance.web.search.Filters = instance.web.search.Input.extend({
     template: 'SearchView.Filters',
     _in_drawer: true,
@@ -1395,16 +1438,8 @@ instance.web.search.Filters = instance.web.search.Input.extend({
         // the db, add all of this as a group in the smallest column
         (col1.length <= col2.length ? col1 : col2).push({
             name: _t("Custom Filters"),
-            filters: _.map(this.view.custom_filters, function (filter) {
-                // FIXME: handling of ``disabled`` being set
-                var f = new instance.web.search.Filter({attrs: {
-                    string: filter.name,
-                    context: filter.context,
-                    domain: filter.domain
-                }}, self.view);
-                return new instance.web.search.FilterGroup([f], self.view);
-            }),
-            length: this.view.custom_filters.length
+            filters: [new instance.web.search.CustomFilters(self.view)],
+            length: 1
         });
         return $.when(
             this.render_column(col1, $('<div>').appendTo(this.$element)),

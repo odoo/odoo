@@ -1470,6 +1470,14 @@
 <div t-name="SearchView.Filters" class="oe_searchview_filters">
 
 </div>
+<div t-name="SearchView.CustomFilters" class="oe_searchview_custom">
+    <div class="oe_searchview_custom_list"/>
+    <form>
+        <label for="oe_searchview_custom_input">Save current search:</label>
+        <input id="oe_searchview_custom_input"/>
+        <button class="oe_searchview_custom_save">Save</button>
+    </form>
+</div>
 <div t-name="SearchView.advanced" class="oe_searchview_advanced">
     <h4>Advanced Search...</h4>
     <form>
