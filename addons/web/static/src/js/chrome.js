@@ -77,7 +77,7 @@ openerp.web.Dialog = openerp.web.OldWidget.extend(/** @lends openerp.web.Dialog#
         };
         for (var f in this) {
             if (f.substr(0, 10) == 'on_button_') {
-                this.dialog_options.buttons[f.substr(10)] = this[f];
+                this.dialog_options.buttons[_t(f.substr(10))] = this[f];
             }
         }
         if (options) {

@@ -962,8 +962,6 @@ session.web.TranslateDialog = session.web.Dialog.extend({
         // TODO fme: should add the language to fields_view_get because between the fields view get
         // and the moment the user opens the translation dialog, the user language could have been changed
         this.view_language = view.session.user_context.lang;
-        this['on_button' + _t("Save")] = this.on_button_Save;
-        this['on_button' + _t("Close")] = this.on_button_Close;
         this._super(view, {
             width: '80%',
             height: '80%'
