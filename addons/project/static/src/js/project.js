@@ -31,7 +31,7 @@ openerp.project = function(openerp) {
                     click_button = $(this.$element).find('.click_button')
                     click_button.attr('data-name',my_list[0].getAttribute('data-name'));
                     if(isNaN(parseInt(click_button.attr('data-name')))){
-                    click_button.attr('data-type',"object")
+                        click_button.attr('data-type',"object")
                     }
                 }
                 /* set background color.
