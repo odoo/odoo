@@ -203,7 +203,7 @@
   !python {model: product.product}: |
     product = self.browse(cr, uid, ref('product_icecream'), context=context)
     assert product.qty_available == 135.96, "Stock does not correspond."
-    assert round(product.virtual_available, 2) == 5.96, "Vitual stock does not correspond."
+    assert round(product.virtual_available, 2) == -4.04, "Vitual stock does not correspond."
 -
   I trace all incoming lots.
 -
@@ -274,9 +274,9 @@
     for move_line in shipment.move_lines:
         assert move_line.state == "done", "Move should be closed."
 -
-  I check availabile stock after deliver.
+  I check availaible stock after deliver.
 -
   !python {model: product.product}: |
     product = self.browse(cr, uid, ref('product_icecream'), context=context)
     assert round(product.qty_available, 2) == 5.96, "Stock does not correspond."
-    assert round(product.virtual_available, 2) == 5.96, "Vitual stock does not correspond."
+    assert round(product.virtual_available, 2) == -4.04, "Vitual stock does not correspond."
