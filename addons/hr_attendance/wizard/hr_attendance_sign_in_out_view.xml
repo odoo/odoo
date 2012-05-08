@@ -38,7 +38,7 @@
         </record>
 
         <record id="action_hr_attendance_sigh_in_out" model="ir.actions.act_window">
-            <field name="name">Sign in / Sign out</field>
+            <field name="name">Sign In / Sign Out</field>
             <field name="res_model">hr.sign.in.out</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -47,8 +47,6 @@
            <field name="help">Sign in / Sign out. In some companies, staff have to sign in when they arrive at work and sign out again at the end of the day. If each employee has been linked to a system user, then they can encode their time with this action button.</field>
         </record>
 
-        <menuitem action="action_hr_attendance_sigh_in_out" id="menu_hr_attendance_sigh_in_out"
-            parent="menu_hr_attendance" sequence="4"/>
 
        <record id="view_hr_attendance_so_ask" model="ir.ui.view">
             <field name="name">hr.sign.in.out.ask.form</field>
