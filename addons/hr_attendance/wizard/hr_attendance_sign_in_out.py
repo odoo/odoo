@@ -71,7 +71,7 @@ class hr_sign_in_out(osv.osv_memory):
         'state': fields.char('Current state', size=32, required=True, readonly=True),
         'emp_id': fields.many2one('hr.employee', 'Empoyee ID', readonly=True),
                 }
-
+        
     def _get_empid(self, cr, uid, context=None):
         emp_id = context.get('emp_id', self.pool.get('hr.employee').search(cr, uid, [('user_id', '=', uid)], context=context))
         if emp_id:
@@ -82,6 +82,13 @@ class hr_sign_in_out(osv.osv_memory):
     def default_get(self, cr, uid, fields_list, context=None):
         res = super(hr_sign_in_out, self).default_get(cr, uid, fields_list, context=context)
         res_emp = self._get_empid(cr, uid, context=context)
+        act_obj=self.pool.get('ir.actions.act_window')
+        action_id = act_obj.search(cr, uid, [('res_model','=','hr.sign.in.out')],context=context)
+        action = act_obj.browse(cr, uid, action_id[0], context=context)
+        if res_emp['state']=='present':
+            name = act_obj.write(cr, uid, action_id[0], {'name':'Sign Out'}, context=context)
+        if res_emp['state']=='absent':
+            name = act_obj.write(cr, uid, action_id[0], {'name':'Sign In'}, context=context)
         res.update(res_emp)
         return res
 
@@ -102,7 +109,7 @@ class hr_sign_in_out(osv.osv_memory):
             model_data_ids = obj_model.search(cr,uid,[('model','=','ir.ui.view'),('name','=','view_hr_attendance_so_ask')], context=context)
             resource_id = obj_model.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
             return {
-                'name': _('Sign in / Sign out'),
+                'name': _('Sign in '),
                 'view_type': 'form',
                 'view_mode': 'tree,form',
                 'res_model': 'hr.sign.in.out.ask',
