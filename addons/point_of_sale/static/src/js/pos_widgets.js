@@ -962,6 +962,47 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
             this.pos.barcode_reader.connect();
             
         },
+
+        //FIXME this method is probably not at the right place ... 
+        scan_product: function(parsed_ean){
+            var selectedOrder = this.pos.get('selectedOrder');
+            var scannedProductModel = this.get_product_by_ean(parsed_ean.ean);
+            if (!scannedProductModel){
+                return false;
+            } else {
+                selectedOrder.addProduct(new module.Product(scannedProductModel));
+                return true;
+            }
+        },
+
+        // returns a product that has a packaging with an EAN matching to provided parsed ean . 
+        // returns undefined if no such product is found.
+        get_product_by_ean: function(parsed_ean) {
+            var allProducts = this.pos.get('product_list');
+            var allPackages = this.pos.get('product.packaging');
+            var scannedProductModel = undefined;
+
+            if (parsed_ean.type === 'price') {
+                var itemCode = parse_result.id;
+                var scannedPackaging = _.detect(allPackages, function(pack) { return pack.ean !== undefined && pack.ean.substring(0,7) === itemCode;});
+                if (scannedPackaging !== undefined) {
+                    scannedProductModel = _.detect(allProducts, function(pc) { return pc.id === scannedPackaging.product_id[0];});
+                    scannedProductModel.list_price = parsed_ean.value;
+                }
+            } else if (parsed_ean.type === 'weight') {
+                var weight = parsed_ean.value;
+                var itemCode = parsed_ean.id;
+                var scannedPackaging = _.detect(allPackages, function(pack) { return pack.ean !== undefined && pack.ean.substring(0,7) === itemCode;});
+                if (scannedPackaging !== undefined) {
+                    scannedProductModel = _.detect(allProducts, function(pc) { return pc.id === scannedPackaging.product_id[0];});
+                    scannedProductModel.list_price *= weight;
+                    scannedProductModel.name += ' - ' + weight + ' Kg.';
+                }
+            } else if(parsed_ean.type === 'unit'){
+                scannedProductModel = _.detect(allProducts, function(pc) { return pc.ean13 === parsed_ean.ean;});   //TODO DOES NOT SCALE
+            }
+            return scannedProductModel;
+        },
         createNewOrder: function() {
             var newOrder;
             newOrder = new module.Order({'pos': this.pos});

@@ -221,18 +221,26 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
     module.ErrorPopupWidget = module.PopUpWidget.extend({
         template:'ErrorPopupWidget',
         show: function(){
+            var self = this;
             this._super();
             this.pos.proxy.help_needed();
-            var self = this;
-            
-            this.$element.find('.button').off('click').click(function(){
-                self.pos.screen_selector.close_popup();
-                self.pos.proxy.help_canceled();
+            this.pos.proxy.scan_item_error_unrecognized();
+
+            this.pos.barcode_reader.save_callbacks();
+            this.pos.barcode_reader.reset_action_callbacks();
+            console.log('actionz callbacks zwave been resetses');
+            this.pos.barcode_reader.set_action_callbacks({
+                'cashier': function(ean){
+                    clearInterval(this.intervalID);
+                    self.pos.proxy.cashier_mode_activated();
+                    self.pos.screen_selector.set_user_mode('cashier');
+                },
             });
         },
         hide:function(){
             this._super();
             this.pos.proxy.help_canceled();
+            this.pos.barcode_reader.restore_callbacks();
         },
     });
 
@@ -270,6 +278,21 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
                     }
                 }
             );
+
+            this.pos.barcode_reader.set_action_callbacks({
+                'cashier': function(ean){
+                    self.pos.proxy.cashier_mode_activated();
+                    self.pos.screen_selector.set_user_mode('cashier');
+                },
+                'product': function(ean){
+                    if(self.pos_widget.scan_product(ean)){
+                        self.pos.proxy.scan_item_success();
+                        self.pos.screen_selector.set_current_screen('scan');
+                    }else{
+                        self.pos.screen_selector.show_popup('error');
+                    }
+                },
+            });
         },
         hide: function(){
             this._super();
@@ -314,8 +337,17 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
                 );
                 this.pos.barcode_reader.set_action_callbacks({
                     'cashier': function(ean){
-                        self.proxy.cashier_mode_activated();
+                        self.pos.proxy.cashier_mode_activated();
+                        self.pos.screen_selector.set_user_mode('cashier');
                     },
+                    'product': function(ean){
+                        if(self.pos_widget.scan_product(ean)){
+                            self.pos.proxy.scan_item_success();
+                            self.pos.screen_selector.set_current_screen('scan');
+                        }else{
+                            self.pos.screen_selector.show_popup('error');
+                    }
+                },
                 });
                 this.product_list_widget.set_next_screen('scan');
             }else{  // user_mode === 'cashier'
@@ -370,15 +402,18 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
             this.pos_widget.action_bar.set_help_visible(true,function(){self.pos.screen_selector.show_popup('help');});
             this.pos_widget.action_bar.set_logout_visible(false);
 
-            this.pos.proxy.payment_request(0,'card','info');    //TODO TOTAL
+            this.pos.proxy.payment_request(this.pos.get('selectedOrder').getTotal(),'card','info');    //TODO TOTAL
 
             this.intervalID = setInterval(function(){
                 var payment = self.pos.proxy.is_payment_accepted();
                 if(payment === 'payment_accepted'){
                     clearInterval(this.intervalID);
-                    //TODO process the payment stuff
-                    self.pos.proxy.transaction_end();
-                    self.pos.screen_selector.set_current_screen('welcome');
+                    var currentOrder = self.pos.get('selectedOrder');
+                    self.pos.push_order(currentOrder.exportAsJSON()).then(function() {
+                        currentOrder.destroy();
+                        self.pos.proxy.transaction_end();
+                        self.pos.screen_selector.set_current_screen('welcome');
+                    });
                 }else if(payment === 'payment_rejected'){
                     clearInterval(this.intervalID);
                     //TODO show a tryagain thingie ? 
@@ -399,10 +434,9 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
 
             this.pos.barcode_reader.set_action_callbacks({
                 'cashier': function(ean){
-                    //TODO 'switch to cashier mode'
                     clearInterval(this.intervalID);
-                    self.proxy.cashier_mode_activated();
-                    self.pos.screen_selector.set_current_screen('products');
+                    self.pos.proxy.cashier_mode_activated();
+                    self.pos.screen_selector.set_user_mode('cashier');
                 },
             });
         },
@@ -441,15 +475,18 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
             );
             this.pos.barcode_reader.set_action_callbacks({
                 'product': function(ean){
-                    console.log('product!');
                     self.pos.proxy.transaction_start(); 
-                    self.pos.barcode_reader.scan_product_callback(ean);
-                    self.pos.screen_selector.set_current_screen('products');
+                    if(self.pos_widget.scan_product(ean)){
+                        self.pos.proxy.scan_item_success();
+                        self.pos.screen_selector.set_current_screen('scan');
+                    }else{
+                        self.pos.screen_selector.show_popup('error');
+                    }
                 },
                 'cashier': function(ean){
                     //TODO 'switch to cashier mode'
                     self.pos.proxy.cashier_mode_activated();
-                    self.pos.screen_selector.set_current_screen('products');
+                    self.pos.screen_selector.set_user_mode('cashier');
                 },
                 'client': function(ean){
                     self.pos.proxy.transaction_start(); 
@@ -498,16 +535,15 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
             );
             this.pos.barcode_reader.set_action_callbacks({
                 'product': function(ean){
-                    var success = self.pos.barcode_reader.scan_product_callback(ean);
-                    if(success){
-                        self.proxy.scan_item_success();
+                    if(self.pos_widget.scan_product(ean)){
+                        self.pos.proxy.scan_item_success();
                     }else{
-                        self.proxy.scan_item_error_unrecognized();
+                        self.pos.screen_selector.show_popup('error');
                     }
                 },
                 'cashier': function(ean){
-                    //TODO 'switch to cashier mode'
-                    self.proxy.cashier_mode_activated();
+                    self.pos.proxy.cashier_mode_activated();
+                    self.pos.screen_selector.set_user_mode('cashier');
                 },
                 'discount': function(ean){
                     // TODO : handle the discount
@@ -554,15 +590,15 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
             );
             this.pos.barcode_reader.set_action_callbacks({
                 'product': function(ean){
-                    var success = self.pos.barcode_reader.scan_product_callback(ean);
-                    if(success){
-                        self.proxy.scan_item_success();
+                    if(self.pos_widget.scan_product(ean)){
+                        self.pos.proxy.scan_item_success();
                     }else{
-                        self.proxy.scan_item_error_unrecognized();
+                        self.pos.screen_selector.show_popup('error');
                     }
                 },
                 'cashier': function(ean){
-                    self.proxy.cashier_mode_activated();
+                    self.pos.proxy.cashier_mode_activated();
+                    self.pos.screen_selector.set_user_mode('cashier');
                 },
                 'discount': function(ean){
                     // TODO : handle the discount

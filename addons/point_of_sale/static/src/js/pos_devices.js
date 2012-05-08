@@ -88,12 +88,12 @@ function openerp_pos_devices(module, instance){ //module is instance.point_of_sa
 
         // called when the POS turns to cashier mode
         cashier_mode_activated: function(){
-            console.log('PROXY:');
+            console.log('PROXY: cashier mode activated');
         },
 
         // called when the POS turns to client mode
         cashier_mode_deactivated: function(){
-            console.log('PROXY:');
+            console.log('PROXY: client mode activated');
         },
     });
 
@@ -111,11 +111,27 @@ function openerp_pos_devices(module, instance){ //module is instance.point_of_sa
                 'client':  undefined,
                 'discount': undefined,
             };
+
+            this.action_callback_stack = [];
+
             this.price_prefix_set = attributes.price_prefix_set     ||  {'02':'', '22':'', '24':'', '26':'', '28':''};
             this.weight_prefix_set = attributes.weight_prefix_set   ||  {'21':'','23':'','27':'','29':'','25':''};
             this.client_prefix_set = attributes.weight_prefix_set   ||  {'42':''};
-            this.cashier_prefix_set = attributes.weight_prefix_set  ||  {'43':''};
+            this.cashier_prefix_set = attributes.weight_prefix_set  ||  {'40':''};
             this.discount_prefix_set = attributes.weight_prefix_set ||  {'44':''};
+        },
+        save_callbacks: function(){
+            var callbacks = {};
+            for(name in this.action_callback){
+                callbacks[name] = this.action_callback[name];
+            }
+            this.action_callback_stack.push(callbacks);
+        },
+        restore_callbacks: function(){
+            if(this.action_callback_stack.length){
+                var callbacks = this.action_callback_stack.pop();
+                this.action_callback = callbacks;
+            }
         },
        
         // when an ean is scanned and parsed, the callback corresponding
@@ -238,64 +254,6 @@ function openerp_pos_devices(module, instance){ //module is instance.point_of_sa
                 parse_result.id = ean;
             }
             return parse_result;
-        },
-
-        // returns a product that has a packaging with an EAN matching to provided ean string. 
-        // returns undefined if no such product is found.
-        get_product_by_ean: function(ean) {
-            var allProducts = this.pos.get('product_list');
-            var allPackages = this.pos.get('product.packaging');
-            var scannedProductModel = undefined;
-            var parse_result = this.parse_ean(ean);
-
-            console.log('getting products:',ean,parse_result,allProducts);
-
-            if (parse_result.type === 'price') {
-                var itemCode = parse_result.id;
-                var scannedPackaging = _.detect(allPackages, function(pack) { return pack.ean !== undefined && pack.ean.substring(0,7) === itemCode;});
-                if (scannedPackaging !== undefined) {
-                    scannedProductModel = _.detect(allProducts, function(pc) { return pc.id === scannedPackaging.product_id[0];});
-                    scannedProductModel.list_price = parse_result.value;
-                }
-            } else if (parse_result.type === 'weight') {
-                var weight = parse_result.value;
-                var itemCode = parse_result.id;
-                var scannedPackaging = _.detect(allPackages, function(pack) { return pack.ean !== undefined && pack.ean.substring(0,7) === itemCode;});
-                if (scannedPackaging !== undefined) {
-                    scannedProductModel = _.detect(allProducts, function(pc) { return pc.id === scannedPackaging.product_id[0];});
-                    scannedProductModel.list_price *= weight;
-                    scannedProductModel.name += ' - ' + weight + ' Kg.';
-                }
-            } else if(parse_result.type === 'unit'){
-                scannedProductModel = _.detect(allProducts, function(pc) { return pc.ean13 === ean;});   //TODO DOES NOT SCALE
-            }
-            return scannedProductModel;
-        },
-
-        // a default callback for the 'product' action. It will select the product
-        // corresponding to the ean and add it to the current order. 
-        scan_product_callback: function(parse_result){
-            var self = this;
-            var selectedOrder = self.pos.get('selectedOrder');
-            var scannedProductModel = self.get_product_by_ean(parse_result.ean);
-            if (scannedProductModel === undefined) {
-                // product not recognized, raise warning
-                $(QWeb.render('pos-scan-warning')).dialog({
-                    resizable: false,
-                    height:220,
-                    modal: true,
-                    title: "Warning",
-                    /*
-                    buttons: {
-                        "OK": function() {
-                            $( this ).dialog( "close" );
-                            return;
-                        },
-                    }*/
-                });
-            } else {
-                selectedOrder.addProduct(new module.Product(scannedProductModel));
-            }
         },
 
         simulate : function(type){
