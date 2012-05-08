@@ -234,28 +234,7 @@ class project(osv.osv):
     _defaults = {
         'use_phases' : True,
     }
-    def open_phase(self, cr, uid, ids, context=None):
-        #Open the View for the Tasks for the project
-        """
-        This opens Tasks views
-        @return :Dictionary value for task view
-        """
-        if context is None:
-            context = {}
-        if ids:
-            context = dict(context, search_default_project_id=ids[0])
-        return {
-                'name': _('Phase'),
-                'view_type': 'form',
-                'view_mode': 'tree,calendar,form',
-                'res_model': 'project.phase',
-                'view_id': False,
-                'domain':[('project_id','in',ids)],
-                'context': context,
-                'type': 'ir.actions.act_window',
-                'nodestroy': True
-            }
-    
+        
     def schedule_phases(self, cr, uid, ids, context=None):
         context = context or {}
         if type(ids) in (long, int,):

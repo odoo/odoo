@@ -110,6 +110,16 @@
             </field>
         </record>
         
+        <act_window
+	        context="{'search_default_project_id': active_id, 'default_project_id': active_id}"
+	        id="act_project_phases"
+	        name="Phases"
+	        res_model="project.phase"
+	        src_model="project.project"
+	        view_mode="tree,form"
+	        view_type="form"
+        />
+        
         <record id="view_project_kanban_phase" model="ir.ui.view">
             <field name="name">project.project.kanban.inherited</field>
             <field name="model">project.project</field>
@@ -122,7 +132,7 @@
                 </field>
                 <xpath expr="//div[@id='list']" position="inside">
                     <t t-if="record.use_phases.raw_value">
-                        <a id="4" name="open_phase" class="oe_project_buttons" type="object"><t t-if="record.phase_count.value &lt;= 1">Phase</t><t t-if="record.phase_count.value > 1">Phases</t>(<t t-esc="record.phase_count.value"/>)</a>
+                        <a id="4" name="%(act_project_phases)d" class="oe_project_buttons" type="action"><t t-if="record.phase_count.value &lt;= 1">Phase</t><t t-if="record.phase_count.value > 1">Phases</t>(<t t-esc="record.phase_count.value"/>)</a>
                     </t>
                 </xpath>
             </field>
@@ -355,16 +365,6 @@
         res_model="project.task"
         src_model="project.phase"
         view_mode="tree,form"
-        />
-
-    <act_window
-        context="{'search_default_project_id': active_id, 'default_project_id': active_id}"
-        id="act_project_phases"
-        name="Phases"
-        res_model="project.phase"
-        src_model="project.project"
-        view_mode="tree,form"
-        view_type="form"
         />
 
     # ------------------------------------------------------

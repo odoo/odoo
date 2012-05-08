@@ -16,7 +16,6 @@ openerp.project = function(openerp) {
                     });
                  });
                 
-                
                 // set sequence like Tasks,Issues,Timesheets and Phases
                 my_list = $("#list a")
                 my_list.sort(function (a, b) {
@@ -26,9 +25,13 @@ openerp.project = function(openerp) {
                   });
                 $('#list').replaceWith(my_list);
                 
-                //if task is true , then open the task when click on the anywhere in the box.
-                if(this.record.use_tasks.raw_value)$(this.$element).find('.click_button').attr('data-name',my_list[0].getAttribute('data-name'));
-                
+                //it opens action in sequence which ever is first.
+                if (my_list.length!=0){
+                    $(this.$element).find('.click_button').attr('data-name',my_list[0].getAttribute('data-name'));
+                    if(isNaN(parseInt($(this.$element).find('.click_button').attr('data-name')))){
+                    $(this.$element).find('.click_button').attr('data-type',"object")
+                    }
+                }
                 /* set background color.
                   we can do other way to implement new widget.
                   because we need to rpc call for that.

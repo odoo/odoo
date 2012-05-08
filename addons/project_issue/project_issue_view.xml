@@ -334,6 +334,15 @@
                 </search>
             </field>
         </record>
+        
+            <act_window
+            context="{'search_default_project_id': [active_id], 'default_project_id': active_id}"
+            id="act_project_project_2_project_issue_all"
+            name="Issues"
+            res_model="project.issue"
+            src_model="project.project"
+            view_mode="kanban,tree,form,calendar,graph"
+            view_type="form"/>
 
     # ------------------------------------------------------
     # Project
@@ -367,7 +376,7 @@
                 </field>
                 <xpath expr="//div[@id='list']" position="inside">
                     <t t-if="record.use_issues.raw_value">
-                        <a id="2" name="open_issues" class="oe_project_buttons" type="object"><t t-if="record.issue_count.value &lt;= 1">Issue</t><t t-if="record.issue_count.value > 1">Issues</t>(<t t-esc="record.issue_count.value"/>)</a>
+                        <a id="2" name="%(act_project_project_2_project_issue_all)d" class="oe_project_buttons" type="action"><t t-if="record.issue_count.value &lt;= 1">Issue</t><t t-if="record.issue_count.value > 1">Issues</t>(<t t-esc="record.issue_count.value"/>)</a>
                     </t>
                 </xpath>
             </field>
