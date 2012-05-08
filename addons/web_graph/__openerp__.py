@@ -47,7 +47,7 @@
         "static/src/js/graph.js"
     ],
     "css": [
-        "static/src/css/graph.css",
+        "static/src/css/*.css",
     ],
     'qweb' : [
         "static/src/xml/*.xml",
