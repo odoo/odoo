@@ -1,14 +1,14 @@
-openerp.hr_attendance = function(instance) {	
+openerp.hr_attendance = function(instance) {
     var QWeb = instance.web.qweb;
     instance.hr_attendance.AttendanceNotifier = instance.web.Widget.extend({
         template: 'AttendanceNotifier',
-        
-        init: function(attendance_status){
-          console.log('nnnnnn',this)
-          this.attendance_status = attendance_status;
+        init: function(parent){
+              this._super(parent);
+              this.session = parent.session;
+              this.employee = new instance.web.DataSetSearch(this, 'hr.employee', this.session.user_context, [['user_id','=', this.session.uid]]);
         },
         renderElement: function() {
-            console.log('render',this)
+            var self = this;
             if (this.attendance_status == 'present'){
                 action_type = 'sign_out';
             }
@@ -16,42 +16,47 @@ openerp.hr_attendance = function(instance) {
                 action_type = 'sign_in';
             }
             this.$element = $(QWeb.render(this.template, {'action':action_type}));
-            console.log('element',this.$element)
-            this.$element.click(this.on_attendance);
+            element = $('.oe_attendance_button')
+            if (element.length != 0){
+                element.attr('src', this.$element.attr('src'));
+            }
+            else{
+                this.$element.appendTo($('.oe_systray'));
+                this.$element.click(self.on_click);
+            }
         },
-        
-        
-        
-        on_attendance: function(event) {
+
+        on_click: function() {
             var self = this;
-            console.log('eventtt',event)
             action = new instance.web.DataSetSearch(this, 'ir.actions.act_window', {}, [['res_model', '=', 'hr.sign.in.out']]);
             action.read_slice().done(function(action) {
                 action = action[0];
                 action.context = JSON.parse(action.context);
                 var action_manager = new instance.web.ActionManager(self);
                 action_manager.do_action(action, function(){
-                    window.location.reload();                   
+                    self.employee.read_slice(['state']).done(function(employee) {
+                        if(_.isEmpty(employee)) return;
+                        self.attendance_status = employee[0]['state'];
+                        self.renderElement();
+                    });
                 });
             });
         },
     });
-    
+
     
     instance.web.UserMenu.include({
         do_update: function() {
             var self = this;
             this._super();
             this.update_promise.then(function() {
-                self.employee = new instance.web.DataSetSearch(self, 'hr.employee', self.session.user_context, [['user_id','=', self.session.uid]]);
-                self.employee.read_slice(['state']).done(self.do_update_attendance_status);
+                attendance = new instance.hr_attendance.AttendanceNotifier(self);
+                attendance.employee.read_slice(['state']).done(function(employee) {
+                    if(_.isEmpty(employee)) return;
+                    attendance.attendance_status = employee[0]['state'];
+                    attendance.renderElement();
+                });
             });
-        },
-        do_update_attendance_status: function(employee) {
-            if(_.isEmpty(employee)) return;
-            attendance_status = employee[0]['state']
-            self.attendance = new instance.hr_attendance.AttendanceNotifier(attendance_status);
-            self.attendance.appendTo(instance.webclient.$element.find('.oe_systray'))
         },
     });
 }
