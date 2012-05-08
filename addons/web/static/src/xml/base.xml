@@ -646,7 +646,7 @@
 </table>
 <div t-name="ListView.buttons" class="oe_list_buttons">
     <t t-if="!widget.no_leaf and widget.options.action_buttons !== false">
-        <button type="button" class="oe_button oe_list_add" t-if="widget.options.addable">
+        <button type="button" class="oe_button oe_list_add oe_form_button_hi" t-if="widget.options.addable">
             <t t-esc="widget.options.addable"/>
         </button>
         <button type="button" class="oe_button oe_list_delete" t-if="widget.options.selectable and widget.options.deletable">
