@@ -174,11 +174,12 @@ class pos_session(osv.osv):
 
         'state' : fields.selection(POS_SESSION_STATE, 'State', required=True, readonly=True, select=1),
 
-        'cash_register_id' : fields.many2one('account.bank.statement', 'Bank Account Statement'),
+        'cash_register_id' : fields.many2one('account.bank.statement', 'Bank Account Statement', ondelete='cascade'),
 
         'details_ids' : fields.related('cash_register_id', 'details_ids', 
                                        type='one2many', relation='account.cashbox.line',
                                        string='CashBox Lines'),
+        'journal_ids' : fields.related('config_id', 'journal_ids', type='many2many', relation='account.journal', string='Journals'),
         'order_ids' : fields.one2many('pos.order', 'session_id', 'Orders'),
     }
 
@@ -192,7 +193,7 @@ class pos_session(osv.osv):
         ('uniq_name', 'unique(name)', "The name of this POS Session must be unique !"),
     ]
 
-    def _create_cash_register(self, cr, uid, pos_config, context=None):
+    def _create_cash_register(self, cr, uid, pos_config, user_id, context=None):
         if not pos_config:
             return False
 
@@ -209,6 +210,7 @@ class pos_session(osv.osv):
 
         values = {
             'journal_id' : journal_id,
+            'user_id' : pos_config.user_id and pos_config.user_id.id or uid,
         }
         cash_register_id = proxy.create(cr, uid, values, context=context)
 
@@ -220,14 +222,30 @@ class pos_session(osv.osv):
         if config_id:
             pos_config = self.pool.get('pos.config').browse(cr, uid, config_id, context=context)
             name = pos_config.sequence_id._next()
+            user_id = values.get('user_id', uid) or uid
             values.update(
                 name=name,
-                cash_register_id=self._create_cash_register(cr, uid, pos_config, context=context),
+                cash_register_id=self._create_cash_register(cr, uid, pos_config, user_id=user_id, context=context),
             )
         else:
             raise osv.except_osv(_('Error!'), _('There is no POS Config attached to this POS Session'))
 
         return super(pos_session, self).create(cr, uid, values, context=context)
+
+    def unlink(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.cash_register_id:
+                obj.cash_register_id.unlink(context=context)
+        return True
+
+    def on_change_config(self, cr, uid, ids, config_id, context=None):
+        result = dict(value=dict())
+        if not config_id:
+            result['value']['user_id'] = uid
+        else:
+            result['value']['user_id'] = self.pool.get('pos.config').browse(cr, uid, config_id, context=context).user_id.id
+
+        return result            
 
     def wkf_action_open(self, cr, uid, ids, context=None):
         # si pas de date start_at, je balance une date, sinon on utilise celle de l'utilisateur
@@ -271,7 +289,7 @@ class pos_session(osv.osv):
         domain = [
             ('state', '=', 'open'),
             ('start_at', '>=', time.strftime('%Y-%m-%d 00:00:00')),
-            ('config_id.user_id', '=', uid),
+            ('user_id', '=', uid),
         ]
         session_ids = self.search(cr, uid, domain, context=context, limit=1, order='start_at desc')
         session_id = session_ids[0] if session_ids else False
@@ -287,7 +305,7 @@ class pos_session(osv.osv):
             config = pos_config_proxy.browse(cr, uid, pos_config_ids[0], context=context)
 
             values = {
-                'state' : 'draft',
+                'state' : 'new',
                 'start_at' : time.strftime('%Y-%m-%d %H:%M:%S'),
                 'config_id' : config.id,
                 'journal_id' : config.journal_id.id,
@@ -322,22 +340,24 @@ class pos_order(osv.osv):
     def create_from_ui(self, cr, uid, orders, context=None):
         #_logger.info("orders: %r", orders)
         list = []
-        session_id = self.pool.get('pos.session').get_current_session()
+        session_id = self.pool.get('pos.session').get_current_session(cr, uid, context=context)
         for order in orders:
             # order :: {'name': 'Order 1329148448062', 'amount_paid': 9.42, 'lines': [[0, 0, {'discount': 0, 'price_unit': 1.46, 'product_id': 124, 'qty': 5}], [0, 0, {'discount': 0, 'price_unit': 0.53, 'product_id': 62, 'qty': 4}]], 'statement_ids': [[0, 0, {'journal_id': 7, 'amount': 9.42, 'name': '2012-02-13 15:54:12', 'account_id': 12, 'statement_id': 21}]], 'amount_tax': 0, 'amount_return': 0, 'amount_total': 9.42}
             order['session_id'] = session_id
             order_obj = self.pool.get('pos.order')
             # get statements out of order because they will be generated with add_payment to ensure
             # the module behavior is the same when using the front-end or the back-end
-            statement_ids = order.pop('statement_ids')
+            if not order['data']['statement_ids']:
+                continue
+            statement_ids = order['data'].pop('statement_ids')
             order_id = self.create(cr, uid, order, context)
             list.append(order_id)
             # call add_payment; refer to wizard/pos_payment for data structure
             # add_payment launches the 'paid' signal to advance the workflow to the 'paid' state
             data = {
                 'journal': statement_ids[0][2]['journal_id'],
-                'amount': order['amount_paid'],
-                'payment_name': order['name'],
+                'amount': order['data']['amount_paid'],
+                'payment_name': order['data']['name'],
                 'payment_date': statement_ids[0][2]['name'],
             }
             order_obj.add_payment(cr, uid, order_id, data, context=context)
@@ -550,6 +570,8 @@ class pos_order(osv.osv):
 
     def add_payment(self, cr, uid, order_id, data, context=None):
         """Create a new payment for the order"""
+        if not context:
+            context = {}
         statement_obj = self.pool.get('account.bank.statement')
         statement_line_obj = self.pool.get('account.bank.statement.line')
         prod_obj = self.pool.get('product.product')

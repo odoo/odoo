@@ -852,7 +852,7 @@
             <field name="arch" type="xml">
                 <form string="PoS Session">
                     <group colspan="4" col="6">
-                        <field name="config_id" />
+                        <field name="config_id" on_change="on_change_config(config_id)" />
                         <field name="name" />
                         <field name="user_id" />
                         <field name="start_at" />
@@ -870,6 +870,7 @@
                                     <field name="subtotal_closing" string="Closing Subtotal"/>
                                 </tree>
                             </field>
+                            <field name="journal_ids" colspan="4" nolabel="1" />
                         </page>
                     </notebook>
 

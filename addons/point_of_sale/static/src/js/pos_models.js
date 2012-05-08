@@ -67,7 +67,6 @@ function openerp_pos_models(module, instance){ //module is instance.point_of_sal
                 'user': {},
                 'orders': new module.OrderCollection(),
                 'products': new module.ProductCollection(),
-                //'cashRegisters': [], // new module.CashRegisterCollection(this.pos.get('bank_statements')),
                 'selectedOrder': undefined,
             });
             
@@ -85,13 +84,19 @@ function openerp_pos_models(module, instance){ //module is instance.point_of_sal
                     return self.set({'product_list': result});
                 });
 
-            var bank_def = fetch(
-                'account.bank.statement', 
-                ['account_id', 'currency', 'journal_id', 'state', 'name'],
-                [['state','=','open'], ['user_id', '=', this.session.uid]]
-                ).then(function(result){
-                    console.log('bank_statements:',result);
-                    return self.set({'bank_statements': result});
+            var session_def = fetch(
+                    'pos.session',
+                    ['id', 'journal_ids'],
+                    [['state', '=', 'opened'], ['user_id', '=', this.session.uid]]
+                ).then(function(result) {
+                    console.log('pos_session:', result);
+                    var journal_def = fetch(
+                        'account.journal',
+                        ['name'], 
+                        [['id', 'in', result[0]['journal_ids']]]).then(function(inner_result) {
+                            self.set({'account_journals' : inner_result});
+                    });
+                    return self; 
                 });
 
             var tax_def = fetch('account.tax', ['amount','price_include','type'])
@@ -100,10 +105,10 @@ function openerp_pos_models(module, instance){ //module is instance.point_of_sal
                     return self.set({'taxes': result});
                 });
 
-            $.when(cat_def,prod_def,bank_def,tax_def,this.get_app_data(), this.flush())
+            $.when(cat_def, prod_def, session_def, tax_def, this.get_app_data(), this.flush())
                 .pipe(_.bind(this.build_tree, this))
                 .pipe(function(){
-                    self.set({'cashRegisters': new module.CashRegisterCollection(self.get('bank_statements')) });
+                    self.set({'accountJournals' : new module.AccountJournalCollection(self.get('account_journals'))});
                     self.ready.resolve();
                 });
 
@@ -248,11 +253,11 @@ function openerp_pos_models(module, instance){ //module is instance.point_of_sal
         }
     });
 
-    module.CashRegister = Backbone.Model.extend({
+    module.AccountJournal = Backbone.Model.extend({
     });
 
-    module.CashRegisterCollection = Backbone.Collection.extend({
-        model: module.CashRegister,
+    module.AccountJournalCollection = Backbone.Collection.extend({
+        model: module.AccountJournal,
     });
 
     module.Product = Backbone.Model.extend({
@@ -380,9 +385,11 @@ function openerp_pos_models(module, instance){ //module is instance.point_of_sal
             Backbone.Model.prototype.initialize.apply(this, arguments);
         },
         getAmount: function(){
-            return this.get('amount');
+            // FIXME
+            return 0.0; //this.get('amount');
         },
         exportAsJSON: function(){
+            // FIXME
             return {
                 name: instance.web.datetime_to_str(new Date()),
                 statement_id: this.get('id'),
@@ -445,9 +452,9 @@ function openerp_pos_models(module, instance){ //module is instance.point_of_sal
                 }, this);
             }
         },
-        addPaymentLine: function(cashRegister) {
+        addPaymentLine: function(accountJournal) {
             var newPaymentline;
-            newPaymentline = new module.Paymentline(cashRegister);
+            newPaymentline = new module.Paymentline(accountJournal);
             /* TODO: Should be 0 for cash-like accounts */
             newPaymentline.set({
                 amount: this.getDueLeft()
