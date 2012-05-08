@@ -536,28 +536,6 @@ class project(osv.osv):
         'use_issues' : True,
     }
 
-    def open_issues(self, cr, uid, ids, context=None):
-        #Open the View for the Tasks for the project
-        """
-        This opens Issues views
-        @return :Dictionary value for issue view
-        """
-        if context is None:
-            context = {}
-        if ids:
-            context = dict(context, search_default_project_id=ids[0])
-        return {
-            'name': _('Issue'),
-            'view_type': 'form',
-            'view_mode': 'kanban,tree,calendar,form',
-            'res_model': 'project.issue',
-            'view_id': False,
-            'domain':[('project_id','in',ids)],
-            'context': context,
-            'type': 'ir.actions.act_window',
-            'nodestroy': True
-        }
-
     def _check_escalation(self, cr, uid, ids, context=None):
         project_obj = self.browse(cr, uid, ids[0], context=context)
         if project_obj.project_escalation_id:

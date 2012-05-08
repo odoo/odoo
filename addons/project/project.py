@@ -203,6 +203,9 @@ class project(osv.osv):
         'color': fields.integer('Color Index'),
         'company_uom_id': fields.related('company_id', 'project_time_mode_id', type='many2one', relation='product.uom'),
      }
+    
+    def dummy(self, cr, uid,ids,context):
+        return False   
          
     def _get_type_common(self, cr, uid, context):
         ids = self.pool.get('project.task.type').search(cr, uid, [('project_default','=',1)], context=context)
