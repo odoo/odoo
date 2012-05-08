@@ -280,7 +280,7 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
             instance[mod] = {};
             // init module mod
             if(instance._openerp[mod] != undefined) {
-                instance._openerp[mod](instance);
+                instance._openerp[mod](instance,instance[mod]);
                 this.module_loaded[mod] = true;
             }
         }
