@@ -3085,7 +3085,7 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(_.
                         $(this).trigger('hideDropdown');
                         var index = Number(this.selectedSuggestionElement().children().children().data('index'));
                         var data = self.search_result[index];
-                        self.set({'value': self.get('value').concat([data.id])});
+                        self.set({'value': _.uniq(self.get('value').concat([data.id]))});
                     },
                 },
                 tags: {
@@ -3093,6 +3093,14 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(_.
                         if (! tag.name)
                             return false;
                         return true;
+                    },
+                    removeTag: function(tag) {
+                        var id = tag.data("id");
+                        self.set({"value": _.without(self.get("value"), id)});
+                    },
+                    renderTag: function(stuff) {
+                        return $.fn.textext.TextExtTags.prototype.renderTag.
+                            call(this, stuff).data("id", stuff.id);
                     },
                 },
                 itemManager: {
@@ -3134,7 +3142,7 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(_.
         this._super(value_);
     },
     get_value: function() {
-        var tmp = this._super();
+        var tmp = [commands.replace_with(this.get("value"))];
         return tmp;
     },
     render_value: function() {
