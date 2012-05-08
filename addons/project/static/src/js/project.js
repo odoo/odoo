@@ -26,10 +26,12 @@ openerp.project = function(openerp) {
                 $('#list').replaceWith(my_list);
                 
                 //it opens action in sequence which ever is first.
+                
                 if (my_list.length!=0){
-                    $(this.$element).find('.click_button').attr('data-name',my_list[0].getAttribute('data-name'));
-                    if(isNaN(parseInt($(this.$element).find('.click_button').attr('data-name')))){
-                    $(this.$element).find('.click_button').attr('data-type',"object")
+                    click_button = $(this.$element).find('.click_button')
+                    click_button.attr('data-name',my_list[0].getAttribute('data-name'));
+                    if(isNaN(parseInt(click_button.attr('data-name')))){
+                    click_button.attr('data-type',"object")
                     }
                 }
                 /* set background color.
