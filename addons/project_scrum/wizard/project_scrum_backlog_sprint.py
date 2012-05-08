@@ -56,7 +56,7 @@ class backlog_sprint_assign(osv.osv_memory):
                     'remaining_hours':backlog.expected_hours,
                 })
                 message = _("Product Backlog '%s' is converted into Task %d.")  %(backlog.name, task_id)
-                self.log(cr, uid, backlog.id, message)
+                self.message_append_note(cr, uid, ids, body=message, context=context)
             if data.state_open and backlog.state == "draft":
                 backlog_obj.write(cr, uid, backlog.id, {'state':'open'})
             sprint = sprint_obj.browse(cr, uid, data.sprint_id.id, context=context)
