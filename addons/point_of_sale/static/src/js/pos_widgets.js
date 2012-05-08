@@ -74,22 +74,22 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
         performPayment: function(event) {
             if (this.pos.get('selectedOrder').get('screen') === 'receipt')
                 return;
-            var cashRegister, cashRegisterCollection, cashRegisterId;
+            var accountJournal, accountJournalCollection, accountJournalId;
             /* set correct view */
             this.pos.screen_selector.set_current_screen('payment');
 
-            cashRegisterId = event.currentTarget.attributes['cash-register-id'].nodeValue;
-            cashRegisterCollection = this.pos.get('cashRegisters');
-            cashRegister = cashRegisterCollection.find(_.bind( function(item) {
-                return (item.get('id')) === parseInt(cashRegisterId, 10);
+            accountJournalId = event.currentTarget.attributes['account-journal-id'].nodeValue;
+            accountRegisterCollection = this.pos.get('accountJournals');
+            accountJournal = accountRegisterCollection.find(_.bind(function(item) {
+                return (item.get('id')) === parseInt(accountJournalId, 10);
             }, this));
-            return (this.pos.get('selectedOrder')).addPaymentLine(cashRegister);
+            return (this.pos.get('selectedOrder')).addPaymentLine(accountJournal);
         },
         renderElement: function() {
             this.$element.empty();
-            return (this.pos.get('cashRegisters')).each(_.bind( function(cashRegister) {
+            return (this.pos.get('accountJournals')).each(_.bind(function(accountJournal) {
                 var button = new module.PaymentButtonWidget();
-                button.model = cashRegister;
+                button.model = accountJournal;
                 button.appendTo(this.$element);
             }, this));
         }
@@ -100,7 +100,7 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
         renderElement: function() {
             this.$element.html(this.template_fct({
                 id: this.model.get('id'),
-                name: (this.model.get('journal_id'))[1]
+                name: this.model.get('name')
             }));
             return this;
         }
@@ -825,15 +825,6 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
                 this.buildWidgets();
 
                 instance.webclient.set_content_full_screen(true);
-                
-                if (self.pos.get('bank_statements').length === 0)
-                    return new instance.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_pos_open_statement']], ['res_id']).pipe(
-                        _.bind(function(res) {
-                        return this.rpc('/web/action/load', {'action_id': res[0]['res_id']}).pipe(_.bind(function(result) {
-                            var action = result.result;
-                            this.do_action(action);
-                        }, this));
-                    }, this));
             }, this));
         },
         render: function() {
@@ -1095,15 +1086,6 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
         },
         close: function() {
             this.pos.barcode_reader.disconnect();
-
-            return new instance.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_pos_close_statement']], ['res_id']).pipe(
-                    _.bind(function(res) {
-                return this.rpc('/web/action/load', {'action_id': res[0]['res_id']}).pipe(_.bind(function(result) {
-                    var action = result.result;
-                    action.context = _.extend(action.context || {}, {'cancel_action': {type: 'ir.actions.client', tag: 'default_home'}});
-                    this.do_action(action);
-                }, this));
-            }, this));
         },
         destroy: function() {
             instance.webclient.set_content_full_screen(false);
