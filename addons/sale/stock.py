@@ -186,4 +186,13 @@ class stock_picking(osv.osv):
                         })
         return result
 
+# Redefinition of the new field in order to update the model stock.picking.out in the orm
+# FIXME: this is a temporary workaround because of a framework bug (ref: lpxxxx). It should be removed as soon as 
+#        the bug is fixed
+class stock_picking_out(osv.osv):
+    _inherit = 'stock.picking.out'
+    _columns = {
+        'sale_id': fields.many2one('sale.order', 'Sale Order',
+            ondelete='set null', select=True),
+    }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
