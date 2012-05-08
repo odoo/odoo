@@ -26,14 +26,15 @@ openerp.project = function(openerp) {
                 $('#list').replaceWith(my_list);
                 
                 //it opens action in sequence which ever is first.
-                
+                click_button = $(this.$element).find('.click_button')
                 if (my_list.length!=0){
-                    click_button = $(this.$element).find('.click_button')
                     click_button.attr('data-name',my_list[0].getAttribute('data-name'));
-                    if(isNaN(parseInt(click_button.attr('data-name')))){
-                        click_button.attr('data-type',"object")
-                    }
                 }
+                else{
+                    click_button.attr('data-name','dummy');  
+                }
+                if(isNaN(parseInt(click_button.attr('data-name'))))click_button.attr('data-type',"object");
+
                 /* set background color.
                   we can do other way to implement new widget.
                   because we need to rpc call for that.
