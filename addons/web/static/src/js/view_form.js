@@ -3075,7 +3075,8 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(_.
             prompt : "Add one...",
             autocomplete: {
                 render: function(suggestion) {
-                    return $('<div />', {'data-index': suggestion['index']}).html(suggestion['label']);
+                    return $('<div/>',
+                             {'data-index': suggestion['index']}).html(suggestion['label']);
                 }
             },
             ext: {
@@ -3109,6 +3110,19 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(_.
                     return _.extend(el, {index:i});
                 })});
             });
+        }).bind('tagClick', function(e, tag, value, callback) {
+            var pop = new instance.web.form.FormOpenPopup(self.view);
+            pop.show_element(
+                self.field.relation,
+                value.id,
+                self.build_context(),
+                {
+                    title: _t("Open: ") + (self.string || self.name)
+                }
+            );
+            pop.on_write_completed.add_last(function() {
+                self.render_value();
+            });
         });
         self.tags = self.$text.textext()[0].tags();
     },
@@ -3127,11 +3141,27 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(_.
         var self = this;
         var dataset = new instance.web.DataSetStatic(this, this.field.relation, self.view.dataset.get_context());
         this.display_orderer.add(dataset.name_get(self.get("value"))).then(function(data) {
+            var indexed = {};
+            _.each(data, function(el) {
+                indexed[el[0]] = el;
+            });
+            data = _.map(self.get("value"), function(el) { return indexed[el]; });
             if (! self.get("effective_readonly")) {
                 self.tags.containerElement().children().remove();
-                self.tags.addTags(_.map(data, function(el) {return {name: el[1]};}));
+                self.tags.addTags(_.map(data, function(el) {return {name: el[1], id:el[0]};}));
             } else {
                 self.$element.html(QWeb.render("FieldMany2ManyTags.box", {elements: data}));
+                $(".oe_form_field_many2manytags_box", self.$element).click(function() {
+                    var index = Number($(this).data("index"));
+                    self.do_action({
+                        type: 'ir.actions.act_window',
+                        res_model: self.field.relation,
+                        res_id: self.get("value")[index],
+                        context: self.build_context(),
+                        views: [[false, 'form']],
+                        target: 'current'
+                    });
+                });
             }
         });
     },
