@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2012-05-04 23:40+0000\n"
+"PO-Revision-Date: 2012-05-07 14:42+0000\n"
 "Last-Translator: Dusan Laznik <laznik@mentis.si>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-05-05 05:49+0000\n"
-"X-Generator: Launchpad (build 15195)\n"
+"X-Launchpad-Export-Date: 2012-05-08 05:52+0000\n"
+"X-Generator: Launchpad (build 15204)\n"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -4140,7 +4140,7 @@ msgstr "Opomba"
 #. module: account
 #: selection:account.financial.report,sign:0
 msgid "Reverse balance sign"
-msgstr ""
+msgstr "Stanje z nasprotnim predznakom"
 
 #. module: account
 #: view:account.analytic.account:0
@@ -4831,7 +4831,7 @@ msgstr "Knjigovodja"
 msgid ""
 "From this view, have an analysis of your treasury. It sums the balance of "
 "every accounting entries made on liquidity accounts per period."
-msgstr ""
+msgstr "Ta pregled kaže stanje na kontih vrste \"Gotovina\"."
 
 #. module: account
 #: field:account.journal,group_invoice_lines:0
@@ -4996,6 +4996,8 @@ msgid ""
 "encode the sale and purchase rates or choose from list of taxes. This last "
 "choice assumes that the set of tax defined on this template is complete"
 msgstr ""
+"Tu se lahko odločite ali laho uporabnik sam vpiše davek ali ga mora obvezno "
+"izbrati iz seznama."
 
 #. module: account
 #: view:account.financial.report:0
@@ -5272,7 +5274,7 @@ msgstr "Začetek obdobja"
 #. module: account
 #: model:ir.model,name:account.model_account_common_account_report
 msgid "Account Common Account Report"
-msgstr ""
+msgstr "Standardno finančno poročilo"
 
 #. module: account
 #: field:account.bank.statement.line,name:0
@@ -5779,7 +5781,7 @@ msgstr "Filtriraj po"
 #: code:addons/account/account.py:2256
 #, python-format
 msgid "You have a wrong expression \"%(...)s\" in your model !"
-msgstr ""
+msgstr "Vnesli ste napačen izraz \"%(...)s\" v vaš model!"
 
 #. module: account
 #: field:account.bank.statement.line,date:0
@@ -5797,12 +5799,12 @@ msgstr "Ne morete uporabiti neaktivnega konta!"
 #: code:addons/account/account_move_line.py:830
 #, python-format
 msgid "Entries are not of the same account or already reconciled ! "
-msgstr ""
+msgstr "Postavke ne pripadajo istemu kontu ali pa so že usklajene! "
 
 #. module: account
 #: help:account.bank.statement,balance_end:0
 msgid "Balance as calculated based on Starting Balance and transaction lines"
-msgstr ""
+msgstr "Saldo z upoštevanjem začetnega stanja"
 
 #. module: account
 #: code:addons/account/wizard/account_change_currency.py:64
@@ -5948,6 +5950,7 @@ msgid ""
 "This journal will be created automatically for this bank account when you "
 "save the record"
 msgstr ""
+"Dnevnik za ta bančni račun bo kreiran samodejno , ko boste shranili zapis."
 
 #. module: account
 #: view:account.analytic.line:0
@@ -6015,7 +6018,7 @@ msgstr "Prodajni davki"
 #. module: account
 #: help:account.model,name:0
 msgid "This is a model for recurring accounting entries"
-msgstr ""
+msgstr "To je modul za ponavljajoče knjižbe"
 
 #. module: account
 #: field:wizard.multi.charts.accounts,sale_tax_rate:0
@@ -6072,7 +6075,7 @@ msgstr "Odprti in plačani račini"
 #. module: account
 #: selection:account.financial.report,display_detail:0
 msgid "Display children flat"
-msgstr ""
+msgstr "Prikaži podrejene  v enostavnem seznamu"
 
 #. module: account
 #: code:addons/account/account.py:629
@@ -6180,7 +6183,7 @@ msgstr "Privzeti konto 'v dobro'"
 #. module: account
 #: help:account.analytic.line,currency_id:0
 msgid "The related account currency if not equal to the company one."
-msgstr ""
+msgstr "Valuta konta ni enaka privzeti valuti podjetja."
 
 #. module: account
 #: view:account.analytic.account:0
@@ -6276,7 +6279,7 @@ msgstr "Likvidnost"
 #: model:ir.actions.act_window,name:account.action_account_analytic_journal_open_form
 #: model:ir.ui.menu,name:account.account_analytic_journal_entries
 msgid "Analytic Journal Items"
-msgstr ""
+msgstr "Analitične postavke"
 
 #. module: account
 #: view:account.fiscalyear.close:0
@@ -6289,7 +6292,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_bank_and_cash
 msgid "Bank and Cash"
-msgstr ""
+msgstr "Banka in blagajna"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_analytic_entries_report
@@ -6303,7 +6306,7 @@ msgstr ""
 #. module: account
 #: sql_constraint:account.journal:0
 msgid "The name of the journal must be unique per company !"
-msgstr ""
+msgstr "Ime dnevnika mora biti enotno za podjetje!"
 
 #. module: account
 #: field:account.account.template,nocreate:0
@@ -6322,7 +6325,7 @@ msgstr ""
 #: code:addons/account/wizard/account_report_aged_partner_balance.py:58
 #, python-format
 msgid "Enter a Start date !"
-msgstr ""
+msgstr "Vnesite začetni datum!"
 
 #. module: account
 #: report:account.invoice:0

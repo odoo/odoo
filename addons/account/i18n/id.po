@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2012-03-06 15:23+0000\n"
+"PO-Revision-Date: 2012-05-07 13:19+0000\n"
 "Last-Translator: Budi Iskandar <Unknown>\n"
 "Language-Team: Indonesian <id@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-03-07 06:03+0000\n"
-"X-Generator: Launchpad (build 14907)\n"
+"X-Launchpad-Export-Date: 2012-05-08 05:52+0000\n"
+"X-Generator: Launchpad (build 15204)\n"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -56,7 +56,7 @@ msgstr "Statistik Akun"
 #. module: account
 #: view:account.invoice:0
 msgid "Proforma/Open/Paid Invoices"
-msgstr ""
+msgstr "Proforma/Terbuka/Terbayar Faktur"
 
 #. module: account
 #: field:report.invoice.created,residual:0
@@ -82,7 +82,7 @@ msgstr "Definisi turunan"
 #: code:addons/account/account_bank_statement.py:302
 #, python-format
 msgid "Journal item \"%s\" is not valid."
-msgstr ""
+msgstr "Jurnal item \"%s\" tidak valid"
 
 #. module: account
 #: model:ir.model,name:account.model_report_aged_receivable
@@ -120,6 +120,8 @@ msgid ""
 "Configuration error! The currency chosen should be shared by the default "
 "accounts too."
 msgstr ""
+"Konfigurasi salah ! Mata uang yang dipilih harus sama dengan mata uang pada "
+"akun"
 
 #. module: account
 #: report:account.invoice:0
@@ -170,7 +172,7 @@ msgstr "Perhatian!"
 #: code:addons/account/account.py:3112
 #, python-format
 msgid "Miscellaneous Journal"
-msgstr ""
+msgstr "Jurnal Lain-lain"
 
 #. module: account
 #: field:account.fiscal.position.account,account_src_id:0
@@ -191,7 +193,7 @@ msgstr "Invoice/Tagihan yang Dibuat dalam 15 Hari Terakhir"
 #. module: account
 #: field:accounting.report,label_filter:0
 msgid "Column Label"
-msgstr ""
+msgstr "Nama Kolom"
 
 #. module: account
 #: code:addons/account/wizard/account_move_journal.py:95
@@ -420,7 +422,7 @@ msgstr "Situasi Pembukaan/ Penutupan"
 #. module: account
 #: help:account.journal,currency:0
 msgid "The currency used to enter statement"
-msgstr ""
+msgstr "Mata uang yang digunakan pada Pernyataan Bank"
 
 #. module: account
 #: field:account.open.closed.fiscalyear,fyear_id:0
@@ -728,6 +730,8 @@ msgid ""
 "The date of your Journal Entry is not in the defined period! You should "
 "change the date or remove this constraint from the journal."
 msgstr ""
+"Tanggal pada jurnal entri tidak sesuai dengan Period ! Anda harus merubah "
+"atau menghilangkan tanggal ini pada jurnal."
 
 #. module: account
 #: model:ir.model,name:account.model_account_report_general_ledger
@@ -747,7 +751,7 @@ msgstr "Apakah anda yakin untuk membuat catatan baru?"
 #. module: account
 #: view:account.invoice:0
 msgid "Print Invoice"
-msgstr ""
+msgstr "Print Faktur"
 
 #. module: account
 #: field:account.partner.reconcile.process,today_reconciled:0
@@ -780,7 +784,7 @@ msgstr "Bagan"
 #: model:ir.model,name:account.model_project_account_analytic_line
 #, python-format
 msgid "Analytic Entries by line"
-msgstr ""
+msgstr "analitik entri berdasarkan baris"
 
 #. module: account
 #: field:account.invoice.refund,filter_refund:0
@@ -836,7 +840,7 @@ msgstr "Referensi Mitra untuk tagihan ini"
 #. module: account
 #: view:account.invoice.report:0
 msgid "Supplier Invoices And Refunds"
-msgstr ""
+msgstr "Faktur Pemasok dan Faktur Pengembalian Uang"
 
 #. module: account
 #: view:account.move.line.unreconcile.select:0
@@ -850,6 +854,7 @@ msgstr "Pembatalan rekonsiliasi"
 #: view:account.payment.term.line:0
 msgid "At 14 net days 2 percent, remaining amount at 30 days end of month."
 msgstr ""
+"Pada hari ke 14 sebesar 2 %, sisanya pada dibayar 30 hari pada akhir bulan."
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_journal_report
@@ -864,7 +869,7 @@ msgstr "Rekonsiliasi Otomatis"
 #. module: account
 #: report:account.analytic.account.quantity_cost_ledger:0
 msgid "J.C./Move name"
-msgstr ""
+msgstr "Nama J.C/Move"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_gain_loss
@@ -874,6 +879,10 @@ msgid ""
 "or Loss you'd realized if those transactions were ended today. Only for "
 "accounts having a secondary currency set."
 msgstr ""
+"Ketika melakukan transaksi multi-mata uang, Anda mungkin mendapatkan "
+"keuntungan/kerugian dari selisih kurs. Menu ini memberikan perkiraan "
+"keuntungan/kerugian yang Anda sadari jika transaksi selesai pada hari ini. "
+"Berlaku jika akun memiliki mata uang sekunder"
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -1182,7 +1191,7 @@ msgstr "Menampilkan Catatan-catatan sebelum:"
 #. module: account
 #: view:account.move.line:0
 msgid "Unbalanced Journal Items"
-msgstr ""
+msgstr "jurnal item tidak balance"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_bank
@@ -1208,6 +1217,8 @@ msgid ""
 "Total amount (in Secondary currency) for transactions held in secondary "
 "currency for this account."
 msgstr ""
+"Jumlah Total (pada mata uang sekunder) untuk transaksi pada mata uang "
+"sekunder untuk akun ini."
 
 #. module: account
 #: field:account.fiscal.position.tax,tax_dest_id:0
@@ -1223,7 +1234,7 @@ msgstr "Pemusatan Kredit"
 #. module: account
 #: view:report.account_type.sales:0
 msgid "All Months Sales by type"
-msgstr ""
+msgstr "Total Penjualan dalam bulan ini oleh tipe"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree2
@@ -1243,7 +1254,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_tax_code_template_form
 #: model:ir.ui.menu,name:account.menu_action_account_tax_code_template_form
 msgid "Tax Code Templates"
-msgstr ""
+msgstr "salinan kode pajak"
 
 #. module: account
 #: view:account.invoice.cancel:0
@@ -1253,12 +1264,12 @@ msgstr "Batalkan Tagihan"
 #. module: account
 #: help:account.journal,code:0
 msgid "The code will be displayed on reports."
-msgstr ""
+msgstr "Kode ini akan ditampilkan pada laporan"
 
 #. module: account
 #: view:account.tax.template:0
 msgid "Taxes used in Purchases"
-msgstr ""
+msgstr "Pajak yang digunakan dalam Pembelian"
 
 #. module: account
 #: field:account.invoice.tax,tax_code_id:0
