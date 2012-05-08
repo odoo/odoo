@@ -1005,7 +1005,7 @@ class account_invoice(osv.osv):
                 if obj_inv.type in ('out_invoice', 'out_refund'):
                     ctx = self.get_log_context(cr, uid, context=ctx)
                 message = _("Invoice  '%s' is validated.") % name
-                self.log(cr, uid, inv_id, message, context=ctx)
+                self.message_append_note(cr, uid, ids, body=message, context=context)
         return True
 
     def action_cancel(self, cr, uid, ids, *args):
@@ -1235,7 +1235,7 @@ class account_invoice(osv.osv):
             # TODO: use currency's formatting function
             msg = _("Invoice '%s' is paid partially: %s%s of %s%s (%s%s remaining)") % \
                     (name, pay_amount, code, invoice.amount_total, code, total, code)
-            self.log(cr, uid, inv_id,  msg)
+            self.message_append_note(cr, uid, ids, body=msg, context=context)
             self.pool.get('account.move.line').reconcile_partial(cr, uid, line_ids, 'manual', context)
 
         # Update the stored value (fields.function), so we write to trigger recompute
