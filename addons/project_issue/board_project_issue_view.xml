@@ -101,13 +101,13 @@
                     <button name="next_type" string="Next" type="object" icon="gtk-go-forward" help="Change to Next Stage"/>
                     <field name="version_id" widget="selection"/>
                     <field name="progress" widget="progressbar" attrs="{'invisible':[('task_id','=',False)]}"/>
-                    <field name="state"/>
-                    <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" icon="gtk-cancel"/>
-                    <button name="case_close" string="Done" states="open,draft,pending" type="object" icon="gtk-jump-to"/>
-                    <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward" help="To Do"/>
-                    <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause"/>
-                    <button name="case_escalate" string="Escalate" states="open,draft,pending" type="object" icon="gtk-go-up"/>
-                    <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert"/>
+                    <field name="state" groups="base.group_no_one"/>
+                    <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" icon="gtk-cancel" groups="base.group_no_one"/>
+                    <button name="case_close" string="Done" states="open,draft,pending" type="object" icon="gtk-jump-to" groups="base.group_no_one"/>
+                    <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward" help="To Do" groups="base.group_no_one"/>
+                    <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause" groups="base.group_no_one"/>
+                    <button name="case_escalate" string="Escalate" states="open,draft,pending" type="object" icon="gtk-go-up" groups="base.group_no_one"/>
+                    <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert" groups="base.group_no_one"/>
                     <field name="categ_id" invisible="1"/>
                     <field name="task_id" invisible="1"/>
                 </tree>
