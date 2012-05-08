@@ -469,16 +469,10 @@ class account_invoice(osv.osv):
     def onchange_payment_term_date_invoice(self, cr, uid, ids, payment_term_id, date_invoice):
         res = {}
         if not payment_term_id:
-            if date_invoice:
-                res = {'value':{'date_due': date_invoice}}
-            else:
-                res = {'value':{'date_due': time.strftime('%Y-%m-%d')}}
             return res
         if not date_invoice:
             date_invoice = time.strftime('%Y-%m-%d')
-
         pterm_list = self.pool.get('account.payment.term').compute(cr, uid, payment_term_id, value=1, date_ref=date_invoice)
-
         if pterm_list:
             pterm_list = [line[0] for line in pterm_list]
             pterm_list.sort()
