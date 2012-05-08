@@ -127,7 +127,7 @@ class stock_partial_picking(osv.osv_memory):
         return super(stock_partial_picking, self)._product_cost_for_average_update(cr, uid, move)
 
 # Redefinition of the new field in order to update the model stock.picking.in in the orm
-# FIXME: this is a temporary workaround because of a framework bug (ref: lpxxxx). It should be removed as soon as 
+# FIXME: this is a temporary workaround because of a framework bug (ref: lp996816). It should be removed as soon as
 #        the bug is fixed
 class stock_picking_in(osv.osv):
     _inherit = 'stock.picking.in'
