@@ -247,7 +247,7 @@
                             <separator colspan="4" string="Invoices"/>
                             <field colspan="4" name="invoice_ids" nolabel="1" context="{'form_view_ref':'account.invoice_form'}"/>
                             <separator colspan="4" string="Delivery Orders"/>
-                            <field colspan="4" name="picking_ids" nolabel="1" context="{'form_view_ref':'stock.view_picking_out_form', 'default_type': 'out'}">
+                            <field colspan="4" name="picking_ids" nolabel="1" context="{'default_type': 'out'}">
                                 <tree colors="blue:state == 'draft';grey:state == 'cancel';red:state not in ('cancel', 'done') and min_date &lt; current_date" string="Delivery Orders">
                                     <field name="name"/>
                                     <field name="partner_id"/>
