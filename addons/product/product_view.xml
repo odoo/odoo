@@ -121,7 +121,7 @@
                                 <field name="product_manager"/>
                             </group>
 
-                            <group colspan="2" col="2" name="Unit of Measure" groups="product.group_uom">
+                            <group colspan="2" col="2" name="uom" groups="product.group_uom">
                                 <separator string="Unit of Measure" colspan="2"/>
                                 <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)"/>
                                 <field name="uom_po_id"/>
@@ -431,7 +431,7 @@
             </field>
         </record>
         <record id="product_uom_form_action" model="ir.actions.act_window">
-            <field name="name">Unit of Measure</field>
+            <field name="name">Units of Measure</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.uom</field>
             <field name="view_type">form</field>
@@ -669,7 +669,7 @@
                                 <field name="product_manager"/>
                             </group>
 
-                            <group colspan="2" col="2" name="Unit of Measure">
+                            <group colspan="2" col="2" name="uom">
                                 <separator string="Unit of Measure" colspan="2"/>
                                 <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)" groups="product.group_uom"/>
                                 <field name="uom_po_id"/>
