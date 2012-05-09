@@ -100,7 +100,8 @@ class stock_return_picking(osv.osv_memory):
             valid_lines = 0
             return_history = self.get_return_history(cr, uid, record_id, context)
             for m  in pick.move_lines:
-                if m.product_qty * m.product_uom.factor > return_history[m.id]:
+                if return_history:
+                    if m.product_qty * m.product_uom.factor > return_history[m.id]:
                         valid_lines += 1
             if not valid_lines:
                 raise osv.except_osv(_('Warning !'), _("There are no products to return (only lines in Done state and not fully returned yet can be returned)!"))
