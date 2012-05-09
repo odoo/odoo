@@ -284,7 +284,6 @@ function openerp_pos_models(module, instance){ //module is instance.point_of_sal
         },
         initialize: function(attributes) {
             this.pos = attributes.pos;
-            console.log(attributes);
             Backbone.Model.prototype.initialize.apply(this, arguments);
 
             if(attributes.weight){

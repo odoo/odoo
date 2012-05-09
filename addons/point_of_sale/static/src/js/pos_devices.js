@@ -17,7 +17,7 @@ function openerp_pos_devices(module, instance){ //module is instance.point_of_sa
 
     module.ProxyDevice  = instance.web.Class.extend({
         //a product has been scanned and recognized with success
-        scan_item_succes: function(){
+        scan_item_success: function(){
             console.log('PROXY: scan item success');
         },
 
@@ -323,16 +323,12 @@ function openerp_pos_devices(module, instance){ //module is instance.point_of_sa
                                 title: "Warning",
                             });
                         }else if(parse_result.type in {'unit':'', 'weight':'', 'price':''}){    //ean is associated to a product
-                            console.log('calling product callback');
                             if(self.action_callback['product']){
-                                console.log('found product callback');
                                 self.action_callback['product'](parse_result);
                             }
                             //this.trigger("codebar",parse_result );
                         }else{
-                            console.log('calling callback:',parse_result.type);
                             if(self.action_callback[parse_result.type]){
-                                console.log('found callback');
                                 self.action_callback[parse_result.type](parse_result);
                             }
                         }

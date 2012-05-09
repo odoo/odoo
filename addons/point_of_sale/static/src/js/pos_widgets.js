@@ -957,7 +957,7 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
         //FIXME this method is probably not at the right place ... 
         scan_product: function(parsed_ean){
             var selectedOrder = this.pos.get('selectedOrder');
-            var scannedProductModel = this.get_product_by_ean(parsed_ean.ean);
+            var scannedProductModel = this.get_product_by_ean(parsed_ean);
             if (!scannedProductModel){
                 return false;
             } else {

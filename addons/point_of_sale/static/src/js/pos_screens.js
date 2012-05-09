@@ -119,7 +119,6 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
             if(this.current_mode === 'client'){
                 this.set_current_screen(selectedOrder.get('client_screen') || this.default_client_screen);
             }else if(this.current_mode === 'cashier'){
-                console.log('default_cashier_screen:',this.default_cashier_screen);
                 this.set_current_screen(selectedOrder.get('cashier_screen') || this.default_cashier_screen);
             }
             this.selected_order = selectedOrder;
@@ -228,7 +227,6 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
 
             this.pos.barcode_reader.save_callbacks();
             this.pos.barcode_reader.reset_action_callbacks();
-            console.log('actionz callbacks zwave been resetses');
             this.pos.barcode_reader.set_action_callbacks({
                 'cashier': function(ean){
                     clearInterval(this.intervalID);
@@ -699,7 +697,6 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
             return this.$element.find('#paymentlines');
         },
         back: function() {
-            console.log('back');
             this.pos.screen_selector.set_current_screen('products');
         },
         validateCurrentOrder: function() {
