@@ -32,16 +32,16 @@ class res_partner(osv.osv):
 
     def message_load_ids(self, cr, uid, ids, limit=100, offset=0, domain=[], ascent=False, root_ids=[False], context=None):
         """ Override of message_load_ids
-            User discussion page :
-            - messages posted on res.partner, partner_id = user.id
+            partner discussion page :
+            - messages posted on res.partner, partner_id = partner.id
             - messages directly sent to partner
         """
         if context is None:
             context = {}
         msg_obj = self.pool.get('mail.message')
         msg_ids = []
-        for user in self.browse(cr, uid, ids, context=context):
-            msg_ids += msg_obj.search(cr, uid, ['|',('partner_id', '=', user.id), '&', ('res_id', '=', user.id), ('model', '=', self._name)] + domain,
+        for partner in self.browse(cr, uid, ids, context=context):
+            msg_ids += msg_obj.search(cr, uid, ['|',('partner_id', '=', partner.id), '&', ('res_id', '=', partner.id), ('model', '=', self._name)] + domain,
             limit=limit, offset=offset, context=context)
         if (ascent): msg_ids = self._message_add_ancestor_ids(cr, uid, ids, msg_ids, root_ids, context=context)
         return msg_ids
