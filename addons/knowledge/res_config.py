@@ -25,7 +25,7 @@ class knowledge_config_settings(osv.osv_memory):
     _name = 'knowledge.config.settings'
     _inherit = 'res.config.settings'
     _columns = {
-        'module_wiki_faq': fields.boolean('Internal FAQ as a wiki',
+        'module_wiki_faq': fields.boolean('Internal FAQ as a Wiki',
             help="""This installs the module wiki_faq."""), 
         'module_wiki_quality_manual': fields.boolean('Quality Manual as a Wiki',
             help="""This installs the module wiki_quality_manual."""),
