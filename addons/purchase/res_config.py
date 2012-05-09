@@ -28,7 +28,6 @@ class purchase_config_settings(osv.osv_memory):
     _inherit = 'res.config.settings'
 
     _columns = {
-        'decimal_precision_purchase': fields.integer('Decimal Precision on Purchase Price'),                
         'default_invoice_method': fields.selection(
             [('manual', 'Based on Purchase Order Lines'),
              ('picking', 'Based on Receptions'),
@@ -38,7 +37,7 @@ class purchase_config_settings(osv.osv_memory):
             implied_group='product.group_purchase_pricelist',
             help="""Allows to manage different prices based on rules per category of Supplier.
                 Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
-        'group_uom':fields.boolean("Manage Different Unit of Measure for Products",
+        'group_uom':fields.boolean("Manage Different Units of Measure for Products",
             implied_group='product.group_uom',
             help="""Allows you to select and maintain different units of measure for products."""),
         'module_purchase_analytic_plans': fields.boolean('Use Multiple Analytic Accounts on Purchases',
@@ -63,27 +62,23 @@ class purchase_config_settings(osv.osv_memory):
             help="""Purchase Requisitions are used when you want to request quotations from several suppliers for a given set of products. 
             You can configure per product if you directly do a Request for Quotation 
             to one supplier or if you want a purchase requisition to negociate with several suppliers."""),
+        'decimal_precision': fields.integer('Decimal Precision on Purchase Price'),                
     }
 
     _defaults = {
         'default_invoice_method': 'manual',
     }
 
-
     def get_default_dp(self, cr, uid, fields, context=None):
-        purchase_id = self.pool.get('ir.model.data').get_object_reference(cr,uid, 'product','decimal_purchase')[1]
-        dec_id =self.pool.get('decimal.precision').browse(cr,uid, purchase_id,context=context)
-        return {
-            'decimal_precision_purchase': dec_id.digits,
-        }
-        
+        dp = self.pool.get('ir.model.data').get_object(cr,uid, 'product','decimal_purchase')
+        return {'decimal_precision': dp.digits}
+
     def set_default_dp(self, cr, uid, ids, context=None):
         config = self.browse(cr, uid, ids[0], context)
-        purchase_id = self.pool.get('ir.model.data').get_object_reference(cr,uid, 'product','decimal_purchase')[1]
-        dec_id =self.pool.get('decimal.precision').browse(cr,uid, purchase_id,context=context) 
-        dec_id.write({
-            'digits': config.decimal_precision_purchase,
-        })
+        dp = self.pool.get('ir.model.data').get_object(cr,uid, 'product','decimal_purchase')
+        dp.write({'digits': config.decimal_precision})
+
+
 
 class account_config_settings(osv.osv_memory):
     _inherit = 'account.config.settings'
