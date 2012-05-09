@@ -39,11 +39,11 @@ class res_company(osv.osv):
 
     _defaults = {
         'expects_chart_of_accounts': True,
-        'overdue_msg': '''Our records indicate that the payments on your account are still due. Please find details below.\n
+        'overdue_msg': '''Our records indicate that the payments on your account are still due. Please find details below.
                           \nIf the amount has already been paid, please disregard this notice. 
                           \nOtherwise, please forward us the total amount stated below.
                           \nIf you have any queries regarding your account, Please contact us.
-                          \nThank you in advance for your cooperation.'''
+                          \n\nThank you in advance for your cooperation.'''
     }
 
 res_company()
