@@ -46,7 +46,8 @@
             <field name="help">If you have more than one shop reselling your company products, you can create and manage that from here. Whenever you will record a new quotation or sales order, it has to be linked to a shop. The shop also defines the warehouse from which the products will be delivered for each particular sales.</field>
         </record>
 
-        <menuitem action="action_shop_form" id="menu_action_shop_form" parent="base.menu_base_config" sequence="35"/>
+        <menuitem action="action_shop_form" id="menu_action_shop_form" parent="base.menu_base_config" sequence="35"
+            groups="stock.group_locations"/>
 
         <record id="view_sale_order_calendar" model="ir.ui.view">
             <field name="name">sale.order.calendar</field>
