@@ -1128,16 +1128,21 @@
   min-height: 0;
   border-width: 1px;
   padding: 0;
-  width: 450px;
+  width: 480px;
+  margin-bottom: 8px;
 }
 .openerp .oe_searchview .VS-search .VS-icon {
-  top: 5px;
+  top: 6px;
 }
 .openerp .oe_searchview .VS-search .VS-icon-search {
-  left: 5px;
+  left: 4px;
+  top: 3px;
+  height: 18px;
+  width: 18px;
 }
 .openerp .oe_searchview .VS-search .VS-search-inner {
   margin: 0 40px 0 17px;
+  padding: 1px 0;
   font-size: 13px;
 }
 .openerp .oe_searchview .VS-search .VS-search-inner input {
@@ -1215,11 +1220,23 @@
   height: 100%;
   line-height: 23px;
   padding: 0 7px 0 4px;
-  color: #cccccc;
+  color: #4c4c4c;
   cursor: pointer;
 }
 .openerp .oe_searchview .VS-search .oe_vs_unfold_drawer:before {
-  content: "▾";
+  position: absolute;
+  top: 9px;
+  right: 8px;
+  width: 0;
+  height: 0;
+  display: inline-block;
+  content: "";
+  vertical-align: top;
+  border-top: 5px solid #4c4c4c;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  filter: alpha(opacity=50);
+  opacity: 0.5;
 }
 .openerp .oe_searchview.oe_searchview_open_drawer .oe_searchview_drawer {
   display: block;

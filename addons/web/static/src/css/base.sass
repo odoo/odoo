@@ -881,7 +881,8 @@ $colour4: #8a89ba
                 min-height: 0
                 border-width: 1px
                 padding: 0
-                width: 450px
+                width: 480px
+                margin-bottom: 8px
                 //border: 1px solid #ababab
                 //margin-top: 0
                 //margin-bottom: 0
@@ -892,13 +893,17 @@ $colour4: #8a89ba
                 //@include radius(13px)
                 //@include box-shadow(0 1px 2px rgba(0,0,0,0.2) inset)
             .VS-icon
-                top: 5px
+                top: 6px
 
             .VS-icon-search
-                left: 5px
+                left: 4px
+                top: 3px
+                height: 18px
+                width: 18px
 
             .VS-search-inner
                 margin: 0 40px 0 17px
+                padding: 1px 0
                 font-size: 13px
 
                 input
@@ -970,10 +975,21 @@ $colour4: #8a89ba
                 height: 100%
                 line-height: 23px
                 padding: 0 7px 0 4px
-                color: #ccc
+                color: #4c4c4c
                 cursor: pointer
                 &:before
-                    content: "▾"
+                    position: absolute
+                    top: 9px
+                    right: 8px
+                    width: 0
+                    height: 0
+                    display: inline-block
+                    content: ""
+                    vertical-align: top
+                    border-top: 5px solid #4c4c4c
+                    border-left: 5px solid transparent
+                    border-right: 5px solid transparent
+                    @include opacity(0.5)
 
         &.oe_searchview_open_drawer
             .oe_searchview_drawer
