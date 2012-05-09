@@ -36,8 +36,8 @@ class project_project(osv.osv):
             line_ids = account_analytic_line.search(cr, uid, [('account_id', '=', project.analytic_account_id.id), ('to_invoice','=',1), ('invoice_id','=',False)])
             lines = account_analytic_line.browse(cr, uid, line_ids, context)
             res[project.id] = {
-                'amt_to_invoice': sum(line.amount for line in lines),
-                'hrs_to_invoice': sum(line.unit_amount for line in lines),
+                'amount_to_invoice': sum(line.amount for line in lines),
+                'time_to_invoice': sum(line.unit_amount for line in lines),
             }
         return res
 
@@ -51,8 +51,8 @@ class project_project(osv.osv):
 
     _columns = {
         'use_timesheets': fields.boolean('Timesheets', help="Check this field if this project manages timesheets"),
-        'amt_to_invoice': fields.function(_to_invoice, string="Amount to Invoice", multi="sums"),
-        'hrs_to_invoice': fields.function(_to_invoice, string="Time to Invoice", multi="sums"),
+        'amount_to_invoice': fields.function(_to_invoice, string="Amount to Invoice", multi="sums"),
+        'time_to_invoice': fields.function(_to_invoice, string="Time to Invoice", multi="sums"),
         'timesheet_count': fields.function(_timesheet_count, type='integer', string="Issue"),
     }
     _defaults = {

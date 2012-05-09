@@ -9,8 +9,8 @@
             <field name="arch" type="xml">
                 <field name="use_tasks" position='after'>
                     <field name="use_timesheets"/>
-                    <field name="amt_to_invoice" invisible="True"/>
-                    <field name="hrs_to_invoice" invisible="True"/>
+                    <field name="amount_to_invoice" invisible="True"/>
+                    <field name="time_to_invoice" invisible="True"/>
                 </field>
                 <field name="warn_customer" position="after">
                     <group colspan="4" col="4">
@@ -45,13 +45,13 @@
                         <tr>
                             <th align="left">Amount to invoice</th>
                             <td align="left">
-                                <field name="amt_to_invoice"/> <t t-esc="record.currency_id.raw_value[1].split(' ')[1][1]"/>
+                                <field name="amount_to_invoice"/> <t t-esc="record.currency_id.raw_value[1].split(' ')[1][1]"/>
                             </td>
                         </tr>
                         <tr>
                             <th align="left">Time to Invoice</th>
                             <td align="left">
-                                <field name="hrs_to_invoice"/> <field name="company_uom_id"/>
+                                <field name="time_to_invoice"/> <field name="company_uom_id"/>
                             </td>
                         </tr>
                     </t>
