@@ -74,6 +74,16 @@ class stock_config_settings(osv.osv_memory):
         'group_product_variant': fields.boolean("Product Variant",
             implied_group='product.group_product_variant',
             help="""This allows to configure and use Product Variant."""),                
+        'decimal_precision': fields.integer('Decimal Precision on Stock Weight'),
     }
-    
+
+    def get_default_dp(self, cr, uid, fields, context=None):
+        dp = self.pool.get('ir.model.data').get_object(cr, uid, 'product', 'decimal_stock_weight')
+        return {'decimal_precision': dp.digits}
+
+    def set_default_dp(self, cr, uid, ids, context=None):
+        config = self.browse(cr, uid, ids[0], context)
+        dp = self.pool.get('ir.model.data').get_object(cr, uid, 'product', 'decimal_stock_weight')
+        dp.write({'digits': config.decimal_precision})
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
