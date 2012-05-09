@@ -2930,6 +2930,7 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
     _template: 'One2Many.listview',
     do_add_record: function () {
         if (this.options.editable) {
+            console.log("this.options :: ",this.options);
             this._super.apply(this, arguments);
         } else {
             var self = this;
