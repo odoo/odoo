@@ -57,6 +57,11 @@
                                     icon="STOCK_REMOVE" groups="base.group_no_one"
                                     domain="['!', ('category_id.parent_id','child_of','Hidden')]"/>
                         </field>
+                        <newline/>
+                        <group expand="0" string="Group By...">
+                            <filter string="Author" icon="terp-personal" domain="[]" context="{'group_by':'author'}"/>
+                            <filter string="Category" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'category_id'}"/>
+                        </group>
                     </group>
                </search>
             </field>
