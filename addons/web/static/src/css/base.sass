@@ -1145,6 +1145,23 @@ $colour4: #8a89ba
         .oe_form_steps_active
             font-weight: bold 
             color: #b33630
+    .oe_form_topbar.oe_form_topbar_hifirst button:first-child, button.oe_form_button_hi
+        color: white
+        background: #DC5F59
+        background: -moz-linear-gradient(#DC5F59, #B33630)
+        background: -webkit-gradient(linear, left top, left bottom, from(#DC5F59), to(#B33630))
+        background: -webkit-linear-gradient(#DC5F59, #B33630)
+        -moz-box-shadow: none
+        -webkit-box-shadow: none
+        -box-shadow: none
+    .oe_form_topbar.oe_form_topbar_hifirst button:first-child:hover, button.oe_form_button_hi:hover
+        background: #DF6B66
+        background: -moz-linear-gradient( #DF6B66, #BF3A33)
+        background: -webkit-gradient(linear, left top, left bottom, from( #DF6B66), to( #BF3A33))
+        background: -webkit-linear-gradient( #DF6B66, #BF3A33)
+        -moz-box-shadow: 0 0 1px rgba(0, 0, 0, 0.2)
+        -webkit-box-shadow: 0 0 1px rgba(0, 0, 0, 0.2)
+        -box-shadow: 0 0 1px rgba(0, 0, 0, 0.2)
     .oe_application
         .oe_form_sheetbg
             background: url(/web/static/src/img/form_sheetbg.png)
@@ -1240,8 +1257,14 @@ $colour4: #8a89ba
         textarea[readonly],
         input[disabled],
         select[disabled],
-        textarea[disabled]
             background: #E5E5E5 !important
+            color: #666
+        textarea[disabled]
+            border: none
+            border-left: 8px solid #eee
+            padding-left: 8px
+            @include box-shadow(none)
+            @include radius(0px)
             color: #666
         .oe_form_field_many2one input,
         .oe_form_field_binary input,
@@ -1434,6 +1457,7 @@ $colour4: #8a89ba
         .oe_form_title, .oe_form_title input
             font-size: 20px
             font-weight: bold
+            height: 30px
         .oe_form_group_odd_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell:nth-child(odd),
         .oe_form_group_label_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell_label
             border-right: 1px solid #ddd

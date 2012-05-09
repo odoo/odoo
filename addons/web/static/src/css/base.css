@@ -1418,6 +1418,25 @@
   font-weight: bold;
   color: #b33630;
 }
+.openerp .oe_form_topbar.oe_form_topbar_hifirst button:first-child, .openerp button.oe_form_button_hi {
+  color: white;
+  background: #dc5f59;
+  background: -moz-linear-gradient(#dc5f59, #b33630);
+  background: -webkit-gradient(linear, left top, left bottom, from(#dc5f59), to(#b33630));
+  background: -webkit-linear-gradient(#dc5f59, #b33630);
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  -box-shadow: none;
+}
+.openerp .oe_form_topbar.oe_form_topbar_hifirst button:first-child:hover, .openerp button.oe_form_button_hi:hover {
+  background: #df6b66;
+  background: -moz-linear-gradient(#df6b66, #bf3a33);
+  background: -webkit-gradient(linear, left top, left bottom, from(#df6b66), to(#bf3a33));
+  background: -webkit-linear-gradient(#df6b66, #bf3a33);
+  -moz-box-shadow: 0 0 1px rgba(0, 0, 0, 0.2);
+  -webkit-box-shadow: 0 0 1px rgba(0, 0, 0, 0.2);
+  -box-shadow: 0 0 1px rgba(0, 0, 0, 0.2);
+}
 .openerp .oe_application .oe_form_sheetbg {
   background: url(/web/static/src/img/form_sheetbg.png);
   padding: 8px;
@@ -1519,9 +1538,20 @@
 .openerp .oe_form select[readonly],
 .openerp .oe_form textarea[readonly],
 .openerp .oe_form input[disabled],
-.openerp .oe_form select[disabled],
-.openerp .oe_form textarea[disabled] {
+.openerp .oe_form select[disabled] {
   background: #e5e5e5 !important;
+  color: #666666;
+}
+.openerp .oe_form textarea[disabled] {
+  border: none;
+  border-left: 8px solid #eeeeee;
+  padding-left: 8px;
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  -box-shadow: none;
+  -moz-border-radius: 0px;
+  -webkit-border-radius: 0px;
+  border-radius: 0px;
   color: #666666;
 }
 .openerp .oe_form .oe_form_field_many2one input,
@@ -1725,6 +1755,7 @@
 .openerp .oe_form .oe_form_title, .openerp .oe_form .oe_form_title input {
   font-size: 20px;
   font-weight: bold;
+  height: 30px;
 }
 .openerp .oe_form .oe_form_group_odd_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell:nth-child(odd),
 .openerp .oe_form .oe_form_group_label_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell_label {
