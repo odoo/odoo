@@ -311,12 +311,13 @@ class pos_session(osv.osv):
 
     def wkf_action_close(self, cr, uid, ids, context=None):
         # Close CashBox
-        record.cash_register_id.button_confirm_cash(context=context)
-        return self.write(cr, uid, ids, {'state' : 'close', 'stop_at' : time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
+        for record in self.browse(cr, uid, ids, context=context):
+            record.cash_register_id.button_confirm_cash(context=context)
+        return self.write(cr, uid, ids, {'state' : 'closed', 'stop_at' : time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
 
     def wkf_action_post(self, cr, uid, ids, context=None):
         self._confirm_orders(cr, uid, ids, context=context)
-        return self.write(cr, uid, ids, {'state' : 'post'}, context=context)
+        return self.write(cr, uid, ids, {'state' : 'posted'}, context=context)
 
     def _confirm_orders(self, cr, uid, ids, context=None):
         wf_service = netsvc.LocalService("workflow")
