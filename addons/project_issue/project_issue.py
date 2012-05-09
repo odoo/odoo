@@ -222,14 +222,6 @@ class project_issue(crm.crm_case, osv.osv):
             }),
     }
 
-    def _get_project(self, cr, uid, context=None):
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        if user.context_project_id:
-            return user.context_project_id.id
-        else:
-            project_id = context.get('active_id',False)
-            return project_id
-
     def on_change_project(self, cr, uid, ids, project_id, context=None):
         return {}
 
@@ -519,21 +511,20 @@ class project(osv.osv):
 
     def _issue_count(self, cr, uid, ids, field_name, arg, context=None):
         res = dict.fromkeys(ids, 0)
-        issue_pool = self.pool.get('project.issue')
-        issue_ids = issue_pool.search(cr, uid, [('project_id', 'in', ids)])
-        for issue in issue_pool.browse(cr, uid, issue_ids, context):
+        issue_ids = self.pool.get('project.issue').search(cr, uid, [('project_id', 'in', ids)])
+        for issue in self.pool.get('project.issue').browse(cr, uid, issue_ids, context):
             res[issue.project_id.id] += 1
         return res
 
     _columns = {
         'project_escalation_id' : fields.many2one('project.project','Project Escalation', help='If any issue is escalated from the current Project, it will be listed under the project selected here.', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'reply_to' : fields.char('Reply-To Email Address', size=256),
-        'use_issues' : fields.boolean('Issues',help = "If you check this field issues are appears in kanban view"),
-        'issue_count': fields.function(_issue_count , type='integer'),
+        'use_issues' : fields.boolean('Use Issues', help="Check this field if this project manages issues"),
+        'issue_count': fields.function(_issue_count, type='integer'),
     }
-    
+
     _defaults = {
-        'use_issues' : True,
+        'use_issues': True,
     }
 
     def _check_escalation(self, cr, uid, ids, context=None):
