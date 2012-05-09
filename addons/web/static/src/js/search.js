@@ -125,7 +125,6 @@ function assert(condition, message) {
 my.InputView = instance.web.Widget.extend({
     template: 'SearchView.InputView',
     start: function () {
-        var self = this;
         var p = this._super.apply(this, arguments);
         this.$element.on('focus', this.proxy('onFocus'));
         this.$element.on('blur', this.proxy('onBlur'));
@@ -179,6 +178,18 @@ my.InputView = instance.web.Widget.extend({
         // Do not insert newline, but let it bubble so searchview can use it
         case $.ui.keyCode.ENTER:
             e.preventDefault();
+            break;
+
+        // FIXME: may forget content if non-empty but caret at index 0, ok?
+        case $.ui.keyCode.BACKSPACE:
+            sel = this.getSelection();
+            if (sel.start === 0 && sel.start === sel.end) {
+                e.preventDefault();
+                var preceding = this.getParent().siblingSubview(this, -1);
+                if (preceding && (preceding instanceof my.FacetView)) {
+                    preceding.model.destroy();
+                }
+            }
             break;
 
         // let left/right events propagate to view if caret is at input border
@@ -376,22 +387,24 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             return subview.$element[0] === subview_root;
         });
     },
-    focusRelative: function (subview, direction) {
+    siblingSubview: function (subview, direction, wrap_around) {
         var index = _(this.input_subviews).indexOf(subview) + direction;
-        if (index < 0) {
+        if (wrap_around && index < 0) {
             index = this.input_subviews.length - 1;
-        } else if (index >= this.input_subviews.length) {
+        } else if (wrap_around && index >= this.input_subviews.length) {
             index = 0;
         }
-        this.input_subviews[index].$element.focus();
+        return this.input_subviews[index];
     },
     focusPreceding: function (subview_root) {
-        return this.focusRelative(
-            this.subviewForRoot(subview_root), -1);
+        return this.siblingSubview(
+            this.subviewForRoot(subview_root), -1, true)
+                .$element.focus();
     },
     focusFollowing: function (subview_root) {
-        return this.focusRelative(
-            this.subviewForRoot(subview_root), +1);
+        return this.siblingSubview(
+            this.subviewForRoot(subview_root), +1, true)
+                .$element.focus();
     },
 
     /**
