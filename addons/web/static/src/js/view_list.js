@@ -264,7 +264,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             self.reload_content();
         });
 
-        // Add and delete
+        // Add button
         if (!this.$buttons) {
             this.$buttons = $(QWeb.render("ListView.buttons", {'widget':self}));
             if (this.options.$buttons) {
@@ -274,11 +274,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             }
             this.$buttons.find('.oe_list_add')
                     .click(this.proxy('do_add_record'))
-                    .prop('disabled', grouped && this.options.editable)
-                .end()
-                .find('.oe_list_delete')
-                    .click(this.proxy('do_delete_selected'))
-                    .prop('disabled', true);
+                    .prop('disabled', grouped && this.options.editable);
         }
 
         // Pager
@@ -338,6 +334,9 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         if (!this.sidebar && this.options.$sidebar) {
             this.sidebar = new instance.web.Sidebar(this);
             this.sidebar.appendTo(this.options.$sidebar);
+            this.sidebar.add_items('other', [
+                { label: _t('Delete'), callback: this.do_delete_selected },
+            ]);
             this.sidebar.add_toolbar(this.fields_view.toolbar);
         }
     },
@@ -604,7 +603,6 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
      * @param {Array} records selected record values
      */
     do_select: function (ids, records) {
-        this.$buttons.find('.oe_list_delete').attr('disabled', !ids.length);
         if (!ids.length) {
             this.dataset.index = 0;
             if (this.sidebar) {
@@ -675,7 +673,12 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
      * Handles deletion of all selected lines
      */
     do_delete_selected: function () {
-        this.do_delete(this.groups.get_selection().ids);
+        var ids = this.groups.get_selection().ids;
+        if (ids.length) {
+            this.do_delete(this.groups.get_selection().ids);
+        } else {
+            this.do_warn(_t("Warning"), _t("You must select at least one record."));
+        }
     },
     /**
      * Computes the aggregates for the current list view, either on the
