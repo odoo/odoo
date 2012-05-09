@@ -6,14 +6,14 @@
             <field name="name">Personal Events</field>
             <field ref="event.model_event_event" name="model_id"/>
             <field name="domain_force">[]</field>
-            <field name="groups" eval="[(4, ref('portal_customer.group_sales_portal'))]"/>
+            <field name="groups" eval="[(4, ref('portal_customer.group_portal'))]"/>
         </record>
         
         <record id="portal_registration_rule" model="ir.rule">
             <field name="name">Personal Registrations</field>
             <field ref="event.model_event_registration" name="model_id"/>
             <field name="domain_force">[('partner_id.email','=',user.login)]</field>
-            <field name="groups" eval="[(4, ref('portal_customer.group_sales_portal'))]"/>
+            <field name="groups" eval="[(4, ref('portal_customer.group_portal'))]"/>
         </record>
         
     </data>
