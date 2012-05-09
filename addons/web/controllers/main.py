@@ -331,7 +331,7 @@ class WebClient(openerpweb.Controller):
         req.session.authenticate(db, login, key, {})
         redirect = werkzeug.utils.redirect('/web/webclient/home', 303)
         cookie_val = urllib2.quote(simplejson.dumps(req.session_id))
-        redirect.set_cookie('session0|session_id', cookie_val)
+        redirect.set_cookie('instance0|session_id', cookie_val)
         return redirect
 
     @openerpweb.jsonrequest
