@@ -3156,7 +3156,7 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(_.
     render_value: function() {
         var self = this;
         var dataset = new instance.web.DataSetStatic(this, this.field.relation, self.view.dataset.get_context());
-        this.display_orderer.add(dataset.name_get(self.get("value"))).then(function(data) {
+        var handle_names = function(data) {
             var indexed = {};
             _.each(data, function(el) {
                 indexed[el[0]] = el;
@@ -3180,7 +3180,12 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(_.
                     });
                 });
             }
-        });
+        };
+        if (! self.get('values') || self.get('values').length > 0) {
+            this.display_orderer.add(dataset.name_get(self.get("value"))).then(handle_names);
+        } else {
+            handle_names([]);
+        }
     },
     add_id: function(id) {
         this.set({'value': _.uniq(this.get('value').concat([id]))});
