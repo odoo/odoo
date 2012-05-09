@@ -29,41 +29,34 @@ from tools.translate import _
 class project_project(osv.osv):
     _inherit = 'project.project'
 
-    def _to_invoice(self, cr, uid, ids,field_name, arg, context=None):
+    def _to_invoice(self, cr, uid, ids, field_name, arg, context=None):
+        account_analytic_line = self.pool.get("account.analytic.line")
         res = {}
-        aal_pool = self.pool.get("account.analytic.line")
         for project in self.browse(cr,uid,ids,context=context):
-            line_ids = aal_pool.search(cr, uid, [('account_id','=',project.analytic_account_id.id),('to_invoice','=',1),('invoice_id','=',False)])
+            line_ids = account_analytic_line.search(cr, uid, [('account_id', '=', project.analytic_account_id.id), ('to_invoice','=',1), ('invoice_id','=',False)])
+            lines = account_analytic_line.browse(cr, uid, line_ids, context)
             res[project.id] = {
-                    'amt_to_invoice': 0.0,
-                    'hrs_to_invoice': 0.0,
-                }
-            if line_ids:
-                amt_to_invoice,hrs_to_invoice = 0.0,0.0
-                for line in aal_pool.browse(cr,uid,line_ids,context=context):
-                    amt_to_invoice += line.amount
-                    hrs_to_invoice += line.unit_amount
-                res[project.id]['amt_to_invoice'] = (amt_to_invoice)*-1
-                res[project.id]['hrs_to_invoice'] = hrs_to_invoice
-            
+                'amt_to_invoice': sum(line.amount for line in lines),
+                'hrs_to_invoice': sum(line.unit_amount for line in lines),
+            }
         return res
-    
+
     def _timesheet_count(self, cr, uid, ids, field_name, arg, context=None):
-        res={}
-        aal_pool=self.pool.get('account.analytic.line')
-        for project in self.browse(cr, uid, ids, context=context):
-            timesheet = aal_pool.search(cr, uid, [("account_id","=", project.analytic_account_id.id)])
-            res[project.id] = len(timesheet)
+        account_analytic_line = self.pool.get('account.analytic.line')
+        res = {}
+        for project in self.browse(cr, uid, ids, context):
+            line_ids = account_analytic_line.search(cr, uid, [('account_id', '=', project.analytic_account_id.id)])
+            res[project.id] = len(line_ids)
         return res
 
     _columns = {
-        'use_timesheets' : fields.boolean('Timesheets',help = "If you check this field timesheets appears in kanban view"),
-        'amt_to_invoice': fields.function(_to_invoice,string="Amount to Invoice",multi="sums"),
-        'hrs_to_invoice': fields.function(_to_invoice,string="Hours to Invoice",multi="sums"),
-        'timesheet_count': fields.function(_timesheet_count , type='integer',string="Issue"),
+        'use_timesheets': fields.boolean('Timesheets', help="Check this field if this project manages timesheets"),
+        'amt_to_invoice': fields.function(_to_invoice, string="Amount to Invoice", multi="sums"),
+        'hrs_to_invoice': fields.function(_to_invoice, string="Time to Invoice", multi="sums"),
+        'timesheet_count': fields.function(_timesheet_count, type='integer', string="Issue"),
     }
     _defaults = {
-        'use_timesheets' : True,
+        'use_timesheets': True,
     }
 
     def onchange_partner_id(self, cr, uid, ids, part=False, context=None):
@@ -77,40 +70,27 @@ class project_project(osv.osv):
                 res['value'].update({'to_invoice': factor_id})
         return res
     
-    def getAnalyticJournal(self, cr, uid, context=None):
-        md = self.pool.get('ir.model.data')
-        try:
-            result = md.get_object_reference(cr, uid, 'hr_timesheet', 'analytic_journal')
-            return result[1]
-        except ValueError:
-            pass
-        return False
-
     def open_timesheets(self, cr, uid, ids, context=None):
-        #Open the View for the Timesheet of the project
-        """
-        This opens Timesheets views
-        @return :Dictionary value for timesheet view
-        """
-        if context is None:
-            context = {}
-        if ids:
-            project = self.browse(cr, uid, ids[0], context=context)
-            context = dict(context,
-                           search_default_account_id = project.analytic_account_id.id,
-                           default_account_id = project.analytic_account_id.id,
-                           default_journal_id = self.getAnalyticJournal(cr, uid, context)
-                           )
+        """ open Timesheets view """
+        project = self.browse(cr, uid, ids[0], context)
+        try:
+            journal_id = self.pool.get('ir.model.data').get_object(cr, uid, 'hr_timesheet', 'analytic_journal').id
+        except ValueError:
+            journal_id = False
+        view_context = {
+            'search_default_account_id': [project.analytic_account_id.id],
+            'default_account_id': project.analytic_account_id.id,
+            'default_journal_id': journal_id,
+        }
         return {
-                'name': _('Bill Tasks Works'),
-                'context': context,
-                'view_type': 'form',
-                'view_mode': 'tree,form',
-                'res_model': 'account.analytic.line',
-                'view_id': False,
-                'type': 'ir.actions.act_window',
-                'nodestroy': True
-            }
+            'type': 'ir.actions.act_window',
+            'name': _('Bill Tasks Works'),
+            'res_model': 'account.analytic.line',
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'context': view_context,
+            'nodestroy': True,
+        }
 
 project_project()
 

@@ -7,12 +7,11 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
-            	<xpath expr="//field[@name='use_tasks']" position='after'>
-		    <field name="use_timesheets"/>
-		    <field name="amt_to_invoice" invisible="True"/>
-		    <field name="hrs_to_invoice" invisible="True"/>
-                </xpath>
-            
+                <field name="use_tasks" position='after'>
+                    <field name="use_timesheets"/>
+                    <field name="amt_to_invoice" invisible="True"/>
+                    <field name="hrs_to_invoice" invisible="True"/>
+                </field>
                 <field name="warn_customer" position="after">
                     <group colspan="4" col="4">
                         <separator colspan="4" string="Invoicing Data"/>
@@ -31,31 +30,32 @@
             <field name="type">kanban</field>
             <field name="inherit_id" ref="project.view_project_kanban"/>
             <field name="arch" type="xml">
-                  <field name="use_tasks" position="after">
-                    <field name="use_timesheets" context="{'search_default_account_id': project_id, 'default_account_id': project_id}"/>
+                <field name="use_tasks" position="after">
+                    <field name="use_timesheets"/>
                     <field name="timesheet_count"/>
-		    <field name="currency_id"/>
+                    <field name="currency_id"/>
+                    <field name="partner_id"/>
                 </field>
-		<xpath expr="//div[@id='list']" position="inside">
-		    <t t-if="record.use_timesheets.raw_value">
-			<a id="3" name="open_timesheets" class="oe_project_buttons" type="object"><t t-if="record.timesheet_count.value &lt;= 1">Timesheet</t><t t-if="record.timesheet_count.value &gt; 1">Timesheets</t>(<t t-esc="record.timesheet_count.value"/>)</a>
-		    </t>
-		</xpath>
-
-		<xpath expr="//tr[@id='deadline']" position="before">
-		    <tr >
-			<th align="left">Amount to invoice</th>
-			<td align="left">
-			    <field name="amt_to_invoice"/> <t t-esc="record.currency_id.raw_value[1].split(' ')[1][1]"/>
-			</td>
-		    </tr>
-		    <tr>
-			<th align="left">Hours to Invoice</th>
-			<td align="left">
-			    <field name="hrs_to_invoice"/> h
-			</td>
-		    </tr>
-		</xpath>
+                <xpath expr="//div[@id='list']" position="inside">
+                    <a t-if="record.use_timesheets.raw_value" class="oe_project_buttons"
+                        id="3" name="open_timesheets" type="object">Timesheets(<field name="timesheet_count"/>)</a>
+                </xpath>
+                <xpath expr="//tr[@id='deadline']" position="before">
+                    <t t-if="record.partner_id.raw_value">
+                        <tr>
+                            <th align="left">Amount to invoice</th>
+                            <td align="left">
+                                <field name="amt_to_invoice"/> <t t-esc="record.currency_id.raw_value[1].split(' ')[1][1]"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th align="left">Time to Invoice</th>
+                            <td align="left">
+                                <field name="hrs_to_invoice"/> <field name="company_uom_id"/>
+                            </td>
+                        </tr>
+                    </t>
+                </xpath>
             </field>
         </record>
 
