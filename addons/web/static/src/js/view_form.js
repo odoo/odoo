@@ -3070,12 +3070,11 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(_.
         var self = this;
         self. $text = $("textarea", this.$element);
         self.$text.textext({
-            plugins : 'tags arrow prompt autocomplete',
-            prompt : "Add one...",
+            plugins : 'tags arrow autocomplete',
             autocomplete: {
                 render: function(suggestion) {
-                    return $('<div/>',
-                             {'data-index': suggestion['index']}).html(suggestion['label']);
+                    return $('<span class="text-label"/>').
+                             data('index', suggestion['index']).html(suggestion['label']);
                 }
             },
             ext: {
@@ -3155,6 +3154,7 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(_.
             data = _.map(self.get("value"), function(el) { return indexed[el]; });
             if (! self.get("effective_readonly")) {
                 self.tags.containerElement().children().remove();
+                $("textarea", self.$element).css("padding-left", "3px");
                 self.tags.addTags(_.map(data, function(el) {return {name: el[1], id:el[0]};}));
             } else {
                 self.$element.html(QWeb.render("FieldMany2ManyTags.box", {elements: data}));
