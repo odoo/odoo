@@ -21,6 +21,7 @@
 
 import point_of_sale
 import account_bank_statement
+import product
 import wizard
 import report
 

@@ -66,6 +66,7 @@ Main features :
         'point_of_sale_workflow.xml',
         'account_statement_view.xml',
         'account_statement_report.xml',
+        'product_view.xml',
     ],
     'demo_xml': [
         'point_of_sale_demo.xml',
