@@ -264,6 +264,32 @@
     </div>
 </t>
 
+<t t-name="WebClient">
+    <table class="oe_webclient">
+        <tr>
+            <td colspan="2" class="oe_topbar">
+                <div class="oe_menu_placeholder"/>
+                <div class="oe_user_menu_placeholder"/>
+                <div class="oe_systray"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="oe_leftbar" valign="top">
+                <t t-js="d">
+                    d.url = '/' + (window.location.search || '');
+                </t>
+                <a t-att-href="url" class="oe_logo"><img t-att-src='_s + "/web/static/src/img/logo.png"'/></a>
+                <div class="oe_secondary_menus_container"/>
+                <div class="oe_footer">
+                    Powered by <a href="http://www.openerp.com"><span>Open</span>ERP</a>
+                </div>
+            </td>
+            <td class="oe_application">
+            </td>
+        </tr>
+    </table>
+</t>
+
 <t t-name="Menu">
     <ul class="oe_menu" t-if="widget.data">
         <li t-foreach="widget.data.data.children" t-as="menu">
@@ -307,7 +333,7 @@
         t-att-data-action-model="menu.action ? menu.action.split(',')[0] : ''"
         t-att-data-action-id="menu.action ? menu.action.split(',')[1] : ''">
         <t t-esc="menu.name"/>
-        <t t-if="menu.needaction_enabled &amp;&amp; menu.needaction_counter">
+        <t t-if="menu.needaction_enabled and menu.needaction_counter">
             <div class="oe_menu_counter">
                 <t t-esc="menu.needaction_counter"/>
             </div>
@@ -429,7 +455,7 @@
                 <td>
                     <div class="oe_view_manager_header2_row2">
                     <ul class="oe_view_manager_switch oe_button_group oe_right">
-                        <t t-if="widget.views_src.length > 2" t-foreach="widget.views_src" t-as="view">
+                        <t t-if="widget.views_src.length gt 2" t-foreach="widget.views_src" t-as="view">
                           <li t-if="view.view_type != 'form'"><a t-attf-class="oe_vm_switch_#{view.view_type} oe_i" t-att-data-view-type="view.view_type" t-att-title="view.label || view.view_type">
                             </a></li>
                         </t>
@@ -908,6 +934,7 @@
                 t-att-tabindex="widget.node.attrs.tabindex"
                 t-att-autofocus="widget.node.attrs.autofocus"
                 t-attf-class="field_char #{widget.is_field_number ? 'oe-number' : ''}"
+                t-att-placeholder="widget.node.attrs.placeholder"
             /><img class="oe_field_translate oe_input_icon" t-if="widget.field.translate" t-att-src='_s + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"/>
         </div>
     </t>
@@ -924,6 +951,7 @@
                     t-att-id="widget.id_for_label"
                     t-att-tabindex="widget.node.attrs.tabindex"
                     t-att-autofocus="widget.node.attrs.autofocus"
+                    t-att-placeholder="widget.node.attrs.placeholder"
                 />
             </td>
             <td width="16">
@@ -949,6 +977,7 @@
                     t-att-id="widget.id_for_label"
                     t-att-tabindex="widget.node.attrs.tabindex"
                     t-att-autofocus="widget.node.attrs.autofocus"
+                    t-att-placeholder="widget.node.attrs.placeholder"
                 />
             </td>
             <td width="16">
@@ -972,6 +1001,7 @@
             class="field_text"
             t-att-tabindex="widget.node.attrs.tabindex"
             t-att-autofocus="widget.node.attrs.autofocus"
+            t-att-placeholder="widget.node.attrs.placeholder"
         ></textarea>
         <img class="oe_field_translate oe_input_icon" t-if="widget.field.translate"
             t-att-src='_s + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"/>
@@ -982,6 +1012,7 @@
         <input type="text" class="oe_datepicker_container" disabled="disabled" style="display: none;"/>
         <input type="text"
             t-att-name="widget.name"
+            t-att-placeholder="widget.getParent().node.attrs.placeholder"
             t-attf-class="oe_datepicker_master field_#{widget.type_of_date} oe_form_field_#{widget.type_of_date}"
         /><img class="oe_input_icon oe_datepicker_trigger" t-att-src='_s + "/web/static/src/img/ui/field_calendar.png"'
              title="Select date" width="16" height="16" border="0"/>
@@ -1014,6 +1045,7 @@
                     t-att-id="widget.id_for_label"
                     t-att-tabindex="widget.node.attrs.tabindex"
                     t-att-autofocus="widget.node.attrs.autofocus"
+                    t-att-placeholder="widget.node.attrs.placeholder"
                 />
                 <span class="oe-m2o-drop-down-button">
                     <img t-att-src='_s + "/web/static/src/img/down-arrow.png"' /></span>

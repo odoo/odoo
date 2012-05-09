@@ -37,7 +37,7 @@
             };
             openerp.instances[new_instance._session_id] = new_instance;
             for(var i=0; i < modules.length; i++) {
-                openerp[modules[i]](new_instance);
+                openerp[modules[i]](new_instance,new_instance[modules[i]]);
             }
             return new_instance;
         }

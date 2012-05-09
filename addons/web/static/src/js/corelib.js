@@ -1046,7 +1046,9 @@ instance.web.JsonRPC = instance.web.CallbackEnabled.extend({
                 '<li>Source: %(source)s</li>' +
             '</ul>';
         try {
-            var ctx = this.test_eval_contexts(source.contexts);
+            // see Session.eval_context in Python
+            var ctx = this.test_eval_contexts(
+                ([this.context] || []).concat(source.contexts));
             if (!_.isEqual(ctx, expected.context)) {
                 instance.webclient.notification.warn('Context mismatch, report to xmo',
                     _.str.sprintf(match_template, {
