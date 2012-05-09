@@ -1706,6 +1706,7 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(_.extend({
         });
     },
     renderElement: function() {
+        var self = this;
         this._super();
         if (this.field.translate) {
             this.$element.addClass('oe_form_field_translatable');
@@ -1713,8 +1714,14 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(_.extend({
                 this.field_manager.open_translate_dialog(this);
             }, this));
         }
+        this.$label = this.view.$element.find('label[for=' + this.id_for_label + ']');
         if (instance.connection.debug) {
-            this.do_attach_tooltip(this, this.view.$element.find('label[for=' + this.id_for_label + ']')[0] || this.$element);
+            this.do_attach_tooltip(this, this.$label[0] || this.$element);
+            this.$label.off('dblclick').on('dblclick', function() {
+                console.log("Field '%s' of type '%s' in View: %o", self.name, (self.node.attrs.widget || self.field.type), self.view);
+                window.w = self;
+                console.log("window.w =", window.w);
+            });
         }
         if (!this.disable_utility_classes) {
             this.off("change:required", this, this._set_required);
