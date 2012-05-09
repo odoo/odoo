@@ -119,8 +119,9 @@ class mail_message_common(osv.TransientModel):
         'message_id': fields.char('Message-Id', size=256, help='Message unique identifier', select=1, readonly=1),
         'references': fields.text('References', help='Message references, such as identifiers of previous messages', readonly=1),
         'content_subtype': fields.char('Message content subtype', size=32,
-                                            help="Type of message, usually 'html' or 'plain', used to "
-                                                 "select plain-text or rich-text contents accordingly", readonly=1),
+                                            oldname="subtype", readonly=1,
+                                            help="Type of message, usually 'html' or 'plain', used to \
+                                                  select plain-text or rich-text contents accordingly"),
         'body_text': fields.text('Text contents', help="Plain-text version of the message"),
         'body_html': fields.text('Rich-text contents', help="Rich-text/HTML version of the message"),
         'body': fields.function(get_body, fnct_search = search_body, string='Message content', type='text',
