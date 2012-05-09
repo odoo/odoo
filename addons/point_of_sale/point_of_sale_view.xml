@@ -981,15 +981,6 @@
             res_model="pos.order"
             domain="[('session_id', '=', active_id)]" />
 
-        <act_window
-            id="act_pos_session_statements"
-            name="Statements"
-            src_model="pos.session"
-            res_model="account.bank.statement"
-            domain="[]"
-            context="{'pos_session_id' : active_id}" />
-
-
         <record id="view_pos_order_filter" model="ir.ui.view">
             <field name="name">pos.order.list.select</field>
             <field name="model">pos.order</field>
