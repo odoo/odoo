@@ -1487,7 +1487,7 @@ class stock_production_lot(osv.osv):
             digits_compute=dp.get_precision('Product Unit of Measure')),
         'revisions': fields.one2many('stock.production.lot.revision', 'lot_id', 'Revisions'),
         'company_id': fields.many2one('res.company', 'Company', select=True),
-        'move_ids': fields.one2many('stock.move', 'prodlot_id', 'Moves for this Serial Number', readonly=True),
+        'move_ids': fields.one2many('stock.move', 'prodlot_id', 'Moves for this serial number', readonly=True),
     }
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
@@ -1512,7 +1512,7 @@ stock_production_lot()
 
 class stock_production_lot_revision(osv.osv):
     _name = 'stock.production.lot.revision'
-    _description = 'Serial Number revisions'
+    _description = 'Serial Number Revision'
 
     _columns = {
         'name': fields.char('Revision Name', size=64, required=True),
@@ -1578,7 +1578,7 @@ class stock_move(osv.osv):
         return res
 
     def _check_tracking(self, cr, uid, ids, context=None):
-        """ Checks if Serial Number is assigned to stock move or not.
+        """ Checks if serial number is assigned to stock move or not.
         @return: True or False
         """
         for move in self.browse(cr, uid, ids, context=context):
@@ -1620,7 +1620,7 @@ class stock_move(osv.osv):
         'location_dest_id': fields.many2one('stock.location', 'Destination Location', required=True,states={'done': [('readonly', True)]}, select=True, help="Location where the system will stock the finished products."),
         'partner_id': fields.many2one('res.partner', 'Destination Address ', states={'done': [('readonly', True)]}, help="Optional address where goods are to be delivered, specifically used for allotment"),
 
-        'prodlot_id': fields.many2one('stock.production.lot', 'Serial Number', states={'done': [('readonly', True)]}, help="Serial Number is used to put a serial number on the production", select=True),
+        'prodlot_id': fields.many2one('stock.production.lot', 'Serial Number', states={'done': [('readonly', True)]}, help="Serial number is used to put a serial number on the production", select=True),
         'tracking_id': fields.many2one('stock.tracking', 'Pack', select=True, states={'done': [('readonly', True)]}, help="Logistical shipping unit: pallet, box, pack ..."),
 
         'auto_validate': fields.boolean('Auto Validate'),
@@ -1650,7 +1650,7 @@ class stock_move(osv.osv):
 
     _constraints = [
         (_check_tracking,
-            'You must assign a Serial Number for this product',
+            'You must assign a serial number for this product',
             ['prodlot_id']),
         (_check_location, 'You can not move products from or to a location of the type view.',
             ['location_id','location_dest_id']),

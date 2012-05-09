@@ -26,8 +26,7 @@ class stock_config_settings(osv.osv_memory):
     _inherit = 'res.config.settings'
 
     _columns = {
-                        
-        'module_claim_from_delivery': fields.boolean("Allows Claims on Delivery Orders",
+        'module_claim_from_delivery': fields.boolean("Allow Claims on Delivery Orders",
             help="""Adds a Claim link to the delivery order.
                 This installs the module claim_from_delivery."""),
         'module_stock_invoice_directly': fields.boolean("Invoice Directly from the Picking",
@@ -35,7 +34,7 @@ class stock_config_settings(osv.osv_memory):
                 to be invoiced when you send or deliver goods.
                 This installs the module stock_invoice_directly."""),
         'module_product_expiry': fields.boolean("Expiry Date on Lots",
-            help="""Track different dates on products and Serial Number.
+            help="""Track different dates on products and serial numbers.
                 The following dates can be tracked:
                     - end of life
                     - best before date
@@ -47,7 +46,7 @@ class stock_config_settings(osv.osv_memory):
                 manage product manufacturing chains, manage default locations per product,
                 define routes within your warehouse according to business needs, etc.
                 This installs the module stock_location."""),
-        'group_uom': fields.boolean("Manage Different Unit of Measure for Products",
+        'group_uom': fields.boolean("Manage Different Units of Measure for Products",
             implied_group='product.group_uom',
             help="""Allows you to select and maintain different units of measure for products."""),
         'group_uos': fields.boolean("Manage Secondary Unit of Measure (for Sale)",
@@ -66,7 +65,7 @@ class stock_config_settings(osv.osv_memory):
             help="""Allows you to get the upstream or downstream traceability of the products contained in lot."""),
         'group_stock_inventory_valuation': fields.boolean("Generate Accounting Entries per Stock Movement",
             implied_group='stock.group_inventory_valuation',
-            help="""This allows to split stock inventory lines according to Serial Number."""),
+            help="""This allows to split stock inventory lines according to serial numbers."""),
         'group_stock_multiple_locations': fields.boolean("Manage Multiple Locations and Warehouses",
             implied_group='stock.group_locations',
             help="""This allows to configure and use multiple stock locations and warehouses,

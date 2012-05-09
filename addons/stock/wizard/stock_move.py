@@ -144,7 +144,7 @@ stock_move_scrap()
 
 class split_in_production_lot(osv.osv_memory):
     _name = "stock.move.split"
-    _description = "Split in Serial Number"
+    _description = "Split in Serial Numbers"
 
     def default_get(self, cr, uid, fields, context=None):
         if context is None:
@@ -168,8 +168,8 @@ class split_in_production_lot(osv.osv_memory):
         'qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure')),
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True),
         'product_uom': fields.many2one('product.uom', 'Unit of Measure'),
-        'line_ids': fields.one2many('stock.move.split.lines', 'wizard_id', 'Serial Number'),
-        'line_exist_ids': fields.one2many('stock.move.split.lines', 'wizard_exist_id', 'Serial Number'),
+        'line_ids': fields.one2many('stock.move.split.lines', 'wizard_id', 'Serial Numbers'),
+        'line_exist_ids': fields.one2many('stock.move.split.lines', 'wizard_exist_id', 'Serial Numbers'),
         'use_exist' : fields.boolean('Existing Lots', help="Check this option to select existing lots in the list below, otherwise you should enter new ones line by line."),
         'location_id': fields.many2one('stock.location', 'Source Location')
      }
@@ -182,7 +182,7 @@ class split_in_production_lot(osv.osv_memory):
         return {'type': 'ir.actions.act_window_close'}
 
     def split(self, cr, uid, ids, move_ids, context=None):
-        """ To split stock moves into Serial Number
+        """ To split stock moves into serial numbers
 
         :param move_ids: the ID or list of IDs of stock move we want to split
         """
@@ -210,7 +210,7 @@ class split_in_production_lot(osv.osv_memory):
                     quantity = line.quantity
                     total_move_qty += quantity
                     if total_move_qty > move_qty:
-                        raise osv.except_osv(_('Processing Error'), _('Serial Number quantity %d of %s is larger than available quantity (%d) !') \
+                        raise osv.except_osv(_('Processing Error'), _('Serial number quantity %d of %s is larger than available quantity (%d) !') \
                                 % (total_move_qty, move.product_id.name, move_qty))
                     if quantity <= 0 or move_qty == 0:
                         continue

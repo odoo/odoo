@@ -26,7 +26,7 @@ from tools.sql import drop_view_if_exists
 
 class stock_report_prodlots(osv.osv):
     _name = "stock.report.prodlots"
-    _description = "Stock report by Serial Number"
+    _description = "Stock report by serial number"
     _auto = False
     _columns = {
         'qty': fields.float('Quantity', readonly=True),
@@ -82,7 +82,7 @@ stock_report_prodlots()
 
 class stock_report_tracklots(osv.osv):
     _name = "stock.report.tracklots"
-    _description = "Stock report by Logistic Serial Number"
+    _description = "Stock report by logistic serial number"
     _auto = False
     _columns = {
         'name': fields.float('Quantity', readonly=True),

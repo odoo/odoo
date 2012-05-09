@@ -145,7 +145,7 @@ class stock_partial_picking(osv.osv_memory):
 
             if line_uom.factor and line_uom.factor <> 0:
                 if qty_in_line_uom <> wizard_line.quantity:
-                    raise osv.except_osv(_('Warning'), _('The Unit of Measure rounding does not allow you to ship "%s %s", only roundings of "%s %s" is accepted by the Unit of Measure.') % (wizard_line.quantity, line_uom.name, line_uom.rounding, line_uom.name))
+                    raise osv.except_osv(_('Warning'), _('The unit of measure rounding does not allow you to ship "%s %s", only roundings of "%s %s" is accepted by the Unit of Measure.') % (wizard_line.quantity, line_uom.name, line_uom.rounding, line_uom.name))
             if move_id:
                 #Check rounding Quantity.ex.
                 #picking: 1kg, uom kg rounding = 0.01 (rounding to 10g), 
