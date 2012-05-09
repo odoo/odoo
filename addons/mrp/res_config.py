@@ -44,7 +44,7 @@ class mrp_config_settings(osv.osv_memory):
         'module_mrp_operations': fields.boolean("Detailed Planning of Work Orders",
             help="""This allows to add state, date_start,date_stop in production order operation lines (in the "Work Centers" tab).
                 This installs the module mrp_operations."""),
-        'module_mrp_subproduct': fields.boolean("Produce Several  Product from One Manufacturing Order",
+        'module_mrp_subproduct': fields.boolean("Produce Several Products from One Manufacturing Order",
             help="""You can configure sub-products in the bill of material.
                 Without this module: A + B + C -> D.
                 With this module: A + B + C -> D + E.
