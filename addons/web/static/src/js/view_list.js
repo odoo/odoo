@@ -10,7 +10,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         // records can be selected one by one
         'selectable': true,
         // list rows can be deleted
-        'deletable': true,
+        'deletable': false,
         // whether the column headers should be displayed
         'header': true,
         // display addition button, with that label
