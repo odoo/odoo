@@ -123,7 +123,6 @@ class project_phase(osv.osv):
     _defaults = {
         'state': 'draft',
         'sequence': 10,
-        'project_id':lambda self, cr, uid, context: context.get('active_id',False),
         'product_uom': lambda self,cr,uid,c: self.pool.get('product.uom').search(cr, uid, [('name', '=', _('Day'))], context=c)[0]
     }
     _order = "project_id, date_start, sequence"
