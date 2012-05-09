@@ -36,12 +36,11 @@ class account_config_settings(osv.osv_memory):
     _columns = {
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'has_default_company': fields.boolean('Has default company', readonly=True),
-        'decimal_precision_account': fields.integer('Decimal Precision on Account'),
         'expects_chart_of_accounts': fields.related('company_id', 'expects_chart_of_accounts', type='boolean',
-            string='Chart of Accounts for this Company', 
-            help=""" Check  this box if this company is a legal entity."""),
+            string='Chart of Accounts for this Company',
+            help="""Check this box if this company is a legal entity."""),
         'currency_id': fields.related('company_id', 'currency_id', type='many2one', relation='res.currency', required=True,
-            string='Default Company Currency', help="Default Company Currency of the company."),
+            string='Default Company Currency', help="Main currency of the company."),
         'paypal_account': fields.related('company_id', 'paypal_account', type='char', size=128,
             string='Paypal account', help="Paypal account (email) for receiving online payments (credit card, etc.)"),
         'company_footer': fields.related('company_id', 'rml_footer2', type='char', size=250, readonly=True,
@@ -79,18 +78,18 @@ class account_config_settings(osv.osv_memory):
             help="""This allows you to check writing and printing.
                 This installs the module account_check_writing."""),
         'module_account_accountant': fields.boolean('Accountant Features',
-            help="""If you do not check this box, you will be able to  do Invoicing & Payments, but not accounting (Journal Items, Chart of  Accounts, ...)."""),
+            help="""If you do not check this box, you will be able to do Invoicing & Payments, but not accounting (Journal Items, Chart of  Accounts, ...)."""),
         'module_account_asset': fields.boolean('Assets Management',
             help="""This allows you to manage the assets owned by a company or a person.
                 It keeps track of the depreciation occurred on those assets, and creates account move for those depreciation lines.
-                This installs the module account_asset. If you do not check this box, you will be able to do Invoicing & Payments, 
+                This installs the module account_asset. If you do not check this box, you will be able to do invoicing & payments, 
                 but not accounting (Journal Items, Chart of Accounts, ...) """),
         'module_account_budget': fields.boolean('Budget Management',
             help="""This allows accountants to manage analytic and crossovered budgets.
                 Once the master budgets and the budgets are defined,
                 the project managers can set the planned amount on each analytic account.
                 This installs the module account_budget."""),
-        'module_account_payment': fields.boolean('Manage Payments Order',
+        'module_account_payment': fields.boolean('Manage Payment Orders',
             help="""This allows you to create and manage your payment orders, with purposes to
                     * serve as base for an easy plug-in of various automated payment mechanisms, and
                     * provide a more efficient way to manage invoice payments.
@@ -101,7 +100,7 @@ class account_config_settings(osv.osv_memory):
         'module_account_followup': fields.boolean('Manage Customer Payment Follow-Ups',
             help="""This allows to automate letters for unpaid invoices, with multi-level recalls.
                 This installs the module account_followup."""),
-        'module_account_invoice_layout': fields.boolean('Allow notes and subtotals',
+        'module_account_invoice_layout': fields.boolean('Allow Notes and Subtotals',
             help="""This provides some features to improve the layout of invoices.
                 It gives you the possibility to:
                     * order all the lines of an invoice
@@ -114,6 +113,8 @@ class account_config_settings(osv.osv_memory):
             help="Allows you to put invoices in pro-forma state."),
         'default_sale_tax': fields.many2one('account.tax', 'Default Sale Tax'),
         'default_purchase_tax': fields.many2one('account.tax', 'Default Purchase Tax'),
+        'decimal_precision': fields.integer('Decimal Precision',
+            help="""Set the decimal precision for rounding results in accounting."""),
     }
 
     def _default_company(self, cr, uid, context=None):
@@ -133,21 +134,6 @@ class account_config_settings(osv.osv_memory):
         'period': 'month',
     }
 
-    def get_default_dp(self, cr, uid, fields, context=None):
-        acc_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'product','decimal_account')[1]
-        dec_id =self.pool.get('decimal.precision').browse(cr, uid, acc_id,context=context)
-        return {
-            'decimal_precision_account': dec_id.digits,
-        }
-        
-    def set_default_dp(self, cr, uid, ids, context=None):
-        config = self.browse(cr, uid, ids[0], context)
-        acc_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'product', 'decimal_account')[1]
-        dec_id =self.pool.get('decimal.precision').browse(cr, uid, acc_id,context=context) 
-        dec_id.write({
-            'digits': config.decimal_precision_account,
-        })
-        
     def create(self, cr, uid, values, context=None):
         id = super(account_config_settings, self).create(cr, uid, values, context)
         # Hack: to avoid some nasty bug, related fields are not written upon record creation.
@@ -286,5 +272,14 @@ class account_config_settings(osv.osv_memory):
                     fiscalyear.create_period(cr, uid, [fiscalyear_id])
                 elif config.period == '3months':
                     fiscalyear.create_period3(cr, uid, [fiscalyear_id])
+
+    def get_default_dp(self, cr, uid, fields, context=None):
+        dp = self.pool.get('ir.model.data').get_object(cr, uid, 'product','decimal_account')
+        return {'decimal_precision': dp.digits}
+
+    def set_default_dp(self, cr, uid, ids, context=None):
+        config = self.browse(cr, uid, ids[0], context)
+        dp = self.pool.get('ir.model.data').get_object(cr, uid, 'product','decimal_account')
+        dp.write({'digits': config.decimal_precision})
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
