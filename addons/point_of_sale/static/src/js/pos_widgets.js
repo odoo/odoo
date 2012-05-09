@@ -825,6 +825,10 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
                 this.buildWidgets();
 
                 instance.webclient.set_content_full_screen(true);
+                if (self.pos.get('account_journals').length === 0) {
+                    // TODO: Create a popup to inform there is no PoSSession for this user
+                    self.pos.screen_selector.show_popup('error');
+                }
             }, this));
         },
         render: function() {
