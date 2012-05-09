@@ -53,14 +53,13 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Events">
-                    <group col="8" colspan="4">
+                    <group col="6" colspan="4">
                         <field name="name"/>
                         <field name="date_begin"/>
                         <field name="date_end"/>
                         <field name="type" on_change="onchange_event_type(type,context)"/>
                         <field name="user_id"/>
                         <field name="address_id" />
-                        <field name="location_id"/> 
                     </group>
                     <notebook colspan="4">
                     <page string="Event">
@@ -121,6 +120,7 @@
                             <field name="register_prospect"/>
                             <field name="register_current"/>
                             <field name="register_attended"/>
+                            <field name="location_id"/>
                         </group>
                         <group col="2" colspan="2">
                             <separator string="Emails" colspan="2"/>

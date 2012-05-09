@@ -54,8 +54,6 @@ Note that:
     'demo_xml': ['event_demo.xml'],
     'test': ['test/process/event_draft2done.yml'],
     'css': ['static/src/css/event.css'],
-    'js': ['static/src/js/event.js'],
-    'qweb': ['static/src/xml/event_address.xml'],
     'installable': True,
     'application': True,
     'auto_install': False,
