@@ -9,6 +9,7 @@
             <field name="inherit_id" ref="base.view_sale_config_settings"/>
             <field name="arch" type="xml">
                 <group name="config_sale" position="after">
+                    <separator string="Invoicing Policy" colspan="4"/>
                     <field name="module_project_timesheet" invisible="1"/>
                     <field name="module_project_mrp" invisible="1"/>
                     <field name="group_invoice_so_lines" on_change="onchange_invoice_methods(group_invoice_so_lines, group_invoice_deli_orders)"/>
@@ -33,8 +34,9 @@
                     <field name="module_warning"/>
                     <field name="module_sale_journal"/>
                     <field name="group_multiple_shops"/>
-                    <field name="decimal_precision_sale"/>
+                    <field name="decimal_precision"/>
                     <field name="default_picking_policy" attrs="{'invisible':[('group_invoice_deli_orders','=',False)]}"/>
+
                     <separator string="Contracts" colspan="4"/>
                     <field name="module_account_analytic_analysis" on_change="onchange_timesheet(module_account_analytic_analysis)"/>
                     <field name="module_analytic_user_function" attrs="{'invisible':[('module_account_analytic_analysis','=',False)]}"/>

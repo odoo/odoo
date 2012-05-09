@@ -27,7 +27,6 @@ class sale_configuration(osv.osv_memory):
     _inherit = 'sale.config.settings'
 
     _columns = {
-        'decimal_precision_sale': fields.integer('Decimal Precision on Sales Price'),
         'group_invoice_so_lines': fields.boolean('Based on Sales Orders',
             implied_group='sale.group_invoice_so_lines',
             help="To allow your salesman to make invoices for sale order lines using the menu 'Lines to Invoice'."),
@@ -73,6 +72,9 @@ class sale_configuration(osv.osv_memory):
         'group_discount_per_so_line': fields.boolean("Discount per Line",
             implied_group='sale.group_discount_per_so_line',
             help="Allows you to apply some discount per sale order line."),
+        'group_multiple_shops': fields.boolean("Manage Multiple Shops",
+            implied_group='stock.group_locations',
+            help="This allows to configure and use multiple shops."),                
         'module_sale_layout': fields.boolean("Notes & Subtotals per Line",
             help="""Allows to format sale order lines using notes, separators, titles and subtotals.
                 This installs the module sale_layout."""),
@@ -96,12 +98,10 @@ class sale_configuration(osv.osv_memory):
         'module_analytic_journal_billing_rate': fields.boolean("Billing Rates by Contract",
             help="""Allows you to define the default invoicing rate for a specific journal on a given account.
                 This installs the module analytic_journal_billing_rate."""),
-        'group_multiple_shops':fields.boolean("Manage Multiple Shops",
-            implied_group='sale.group_multiple_shops',
-            help="""This allows to configure and use multiple Shops instead of having a single default one."""),                
         'module_project_timesheet': fields.boolean("Project Timesheet"),
         'module_project_mrp': fields.boolean("Project MRP"),
         'module_project': fields.boolean("Project"),
+        'decimal_precision': fields.integer('Decimal Precision on Sales Price'),
     }
 
     def default_get(self, cr, uid, fields, context=None):
@@ -134,20 +134,14 @@ class sale_configuration(osv.osv_memory):
     }
 
     def get_default_dp(self, cr, uid, fields, context=None):
-        sale_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'product','decimal_sale')[1]
-        dec_id =self.pool.get('decimal.precision').browse(cr, uid, sale_id,context=context)
-        return {
-            'decimal_precision_sale': dec_id.digits,
-        }
-        
+        dp = self.pool.get('ir.model.data').get_object(cr, uid, 'product','decimal_sale')
+        return {'decimal_precision': dp.digits}
+
     def set_default_dp(self, cr, uid, ids, context=None):
         config = self.browse(cr, uid, ids[0], context)
-        sale_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'product', 'decimal_sale')[1]
-        dec_id =self.pool.get('decimal.precision').browse(cr, uid, sale_id,context=context) 
-        dec_id.write({
-            'digits': config.decimal_precision_sale,
-        })
-        
+        dp = self.pool.get('ir.model.data').get_object(cr, uid, 'product','decimal_sale')
+        dp.write({'digits': config.decimal_precision})
+
     def set_sale_defaults(self, cr, uid, ids, context=None):
         ir_values = self.pool.get('ir.values')
         ir_model_data = self.pool.get('ir.model.data')
