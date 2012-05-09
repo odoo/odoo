@@ -264,7 +264,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             self.reload_content();
         });
 
-        // Add button
+        // Add button and Import link
         if (!this.$buttons) {
             this.$buttons = $(QWeb.render("ListView.buttons", {'widget':self}));
             if (this.options.$buttons) {
@@ -275,6 +275,10 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             this.$buttons.find('.oe_list_add')
                     .click(this.proxy('do_add_record'))
                     .prop('disabled', grouped && this.options.editable);
+            this.$buttons.on('click', '.oe_list_button_import', function() {
+                self.on_sidebar_import();
+                return false;
+            });
         }
 
         // Pager
