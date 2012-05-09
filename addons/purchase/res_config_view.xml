@@ -13,7 +13,8 @@
                     </div>
                     <sheet layout="auto">
                         <separator string="Invoicing" colspan="4"/>
-                        <field name="default_invoice_method" />
+                        <field name="default_invoice_method"/>
+                        <field name="decimal_precision"/>
 
                         <separator string="Purchase Order" colspan="4"/>
                         <field name="group_purchase_pricelist"/>
@@ -49,6 +50,7 @@
             <field name="arch" type="xml">
                 <group name="analytic_accounting" position="after">
                     <field name="group_analytic_account_for_purchases"/>
+                    <field name="module_purchase_analytic_plans"/>
                 </group>
             </field>
         </record>

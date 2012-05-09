@@ -43,7 +43,7 @@ class analytic_entries_report(osv.osv):
         'journal_id': fields.many2one('account.analytic.journal', 'Journal', required=True),
         'move_id': fields.many2one('account.move.line', 'Move', required=True),
         'product_id': fields.many2one('product.product', 'Product', required=True),
-        'product_uom_id': fields.many2one('product.uom', 'Product UOM', required=True),
+        'product_uom_id': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
         'amount': fields.float('Amount', readonly=True),
         'unit_amount': fields.float('Quantity', readonly=True),
         'nbr': fields.integer('#Entries', readonly=True),

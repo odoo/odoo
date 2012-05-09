@@ -28,7 +28,7 @@ class change_production_qty(osv.osv_memory):
     _description = 'Change Quantity of Products'
     
     _columns = {
-        'product_qty': fields.float('Product Qty', digits_compute=dp.get_precision('Product UoM'), required=True),
+        'product_qty': fields.float('Product Qty', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
     }
 
     def default_get(self, cr, uid, fields, context=None):

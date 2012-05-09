@@ -37,7 +37,7 @@ user rights to Demo user.
     """,
     'website': 'http://www.openerp.com',
     'init_xml': [],
-    "depends" : ["account"],
+    "depends" : ["account_voucher"],
     'update_xml': [
         'security/account_security.xml',
         'account_accountant_data.xml'
