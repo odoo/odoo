@@ -178,15 +178,24 @@ pos_config()
 class pos_session(osv.osv):
     _name = 'pos.session'
 
-    #"status [BUTTON TEXT]" -> utiliser 
-    # "opening control (open) -> opened (cashbox control) -> closing control (close) -> closed & posted" 
-    #POS_SESSION_STATE = [('new', 'New'),('opened', 'Opened'),('closed', 'Closed'),('posted', 'Posted')]
     POS_SESSION_STATE = [
         ('opening_control', 'Opening Control'),  # Signal open
         ('opened', 'Opened'),                    # Signal closing
         ('closing_control', 'Closing Control'),  # Signal close
         ('closed', 'Closed'),
     ]
+
+    def _compute_cash_register_id(self, cr, uid, ids, fieldnames, args, context=None):
+        result = dict.fromkeys(ids, False)
+        for record in self.browse(cr, uid, ids, context=context):
+            cash_register_id = False
+            for bank_statement in record.statement_ids:
+                if bank_statement.journal_id.type == 'cash':
+                    cash_register_id = bank_statement.id
+                    break
+            result[record.id] = cash_register_id
+
+        return result
 
     _columns = {
         'config_id' : fields.many2one('pos.config', 'PoS',
@@ -217,8 +226,9 @@ class pos_session(osv.osv):
                                    readonly=True,
                                    select=1),
 
-        'cash_register_id' : fields.many2one('account.bank.statement', 'Bank Account Statement',
-                                             ondelete='cascade'),
+        'cash_register_id' : fields.function(_compute_cash_register_id, method=True, 
+                                             type='many2one', relation='account.bank.statement',
+                                             string='Cash Register', store=True),
 
         'details_ids' : fields.related('cash_register_id', 'details_ids', 
                                        type='one2many', relation='account.cashbox.line',
@@ -229,6 +239,13 @@ class pos_session(osv.osv):
                                        relation='account.journal',
                                        string='Journals'),
         'order_ids' : fields.one2many('pos.order', 'session_id', 'Orders'),
+
+        'statement_ids' : fields.many2many('account.bank.statement', 
+                                           'pos_session_statement_rel',
+                                           'session_id',
+                                           'statement_id',
+                                           'Bank Statement',
+                                           readonly=True),
     }
 
     _defaults = {
@@ -241,49 +258,35 @@ class pos_session(osv.osv):
         ('uniq_name', 'unique(name)', "The name of this POS Session must be unique !"),
     ]
 
-    def _create_cash_register(self, cr, uid, pos_config, user_id, context=None):
-        if not pos_config:
-            return False
-
-        proxy = self.pool.get('account.bank.statement')
-
-        journal_id = False
-        for journal in pos_config.journal_ids:
-            if journal.type == 'cash':
-                journal_id = journal.id
-                break
-
-        if not journal_id:
-            return False
-
-        values = {
-            'journal_id' : journal_id,
-            'user_id' : pos_config.user_id and pos_config.user_id.id or uid,
-        }
-        cash_register_id = proxy.create(cr, uid, values, context=context)
-
-        return cash_register_id
-
     def create(self, cr, uid, values, context=None):
         config_id = values.get('config_id', False) or False
 
+        pos_config = None
         if config_id:
             pos_config = self.pool.get('pos.config').browse(cr, uid, config_id, context=context)
-            name = pos_config.sequence_id._next()
-            user_id = values.get('user_id', uid) or uid
-            values.update(
-                name=name,
-                cash_register_id=self._create_cash_register(cr, uid, pos_config, user_id=user_id, context=context),
-            )
-        else:
-            raise osv.except_osv(_('Error!'), _('There is no POS Config attached to this POS Session'))
+
+            bank_statement_ids = []
+            for journal in pos_config.journal_ids:
+                bank_values = {
+                    'journal_id' : journal.id,
+                    'user_id' : pos_config.user_id and pos_config.user_id.id or uid,
+                }
+
+                statement_id = self.pool.get('account.bank.statement').create(cr, uid, bank_values, context=context)
+
+                bank_statement_ids.append(statement_id) 
+
+            values.update({
+                'name' : pos_config.sequence_id._next(),
+                'statement_ids' : [(6, 0, bank_statement_ids)]
+            })  
 
         return super(pos_session, self).create(cr, uid, values, context=context)
 
     def unlink(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            if obj.cash_register_id:
-                obj.cash_register_id.unlink(context=context)
+            for statement in obj.statement_ids:
+                statement.unlink(context=context)
         return True
 
     def on_change_config(self, cr, uid, ids, config_id, context=None):
@@ -305,14 +308,20 @@ class pos_session(osv.osv):
 
             record.write(values, context=context)
 
-            record.cash_register_id.button_open(context=context)
+            for st in record.statement_ids:
+                st.button_open(context=context)
 
         return True
 
     def wkf_action_closing_control(self, cr, uid, ids, context=None):
         # Close CashBox
         for record in self.browse(cr, uid, ids, context=context):
-            record.cash_register_id.button_confirm_cash(context=context)
+            for st in record.statement_ids:
+                if st.journal_id.type == 'cash':
+                    st.button_confirm_cash(context=context)
+                if st.journal_id.type == 'bank':
+                    st.button_confirm_bank(context=context)
+
         return self.write(cr, uid, ids, {'state' : 'closing_control', 'stop_at' : time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
 
     def wkf_action_close(self, cr, uid, ids, context=None):
