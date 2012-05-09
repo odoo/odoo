@@ -355,7 +355,18 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
         this.$element.data('widget', this);
         this.$records.data('widget', this);
         this.$has_been_started.resolve();
+        this.compute_cards_height();
         return def;
+    },
+    compute_cards_height: function() {
+        var self = this;
+        var min_height = 0;
+        _.each(this.records, function(r) {
+            min_height = Math.max(min_height, r.$element.outerHeight());
+        });
+        _.each(this.records, function(r) {
+            r.$element.css('min-height', min_height);
+        });
     },
     destroy: function() {
         this._super();
