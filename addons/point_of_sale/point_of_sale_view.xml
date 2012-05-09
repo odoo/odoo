@@ -774,13 +774,6 @@
                             <separator string="Accounting" colspan="4" />
                             <field name="shop_id" widget="selection" />
                             <field name="journal_id" widget="selection" />
-
-                            <separator string="Cash Differences" colspan="4" />
-                            <field name="profit_account_id" />
-                            <field name="loss_account_id" />
-                            <field name="authorized_cashbox_diff" />
-                            <field name="authorized_cashbox_diff_fixed" />
-
                         </page>
                         <page string="Interfaces">
                             <field name="iface_self_checkout" />
@@ -792,12 +785,10 @@
                             <field name="iface_barscan" />
                             <field name="iface_vkeyboard" />
                         </page>
-                        <page string="Other">
+                        <page string="Others">
                             <field name="user_id" />
                             <field name="sequence_id" />
                         </page>
-
-
                     </notebook>
 
                     <group colspan="4" col="6">
@@ -816,12 +807,40 @@
             <field name="model">pos.config</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="PoS Configuration">
+                <tree string="PoS Configuration" colors="grey:state == 'inactive'">
                     <field name="name" />
+                    <field name="user_id" />
+                    <field name="journal_id" />
+                    <field name="shop_id" />
                     <field name="state" />
                 </tree>
             </field>
         </record>
+
+        <record model="ir.ui.view" id="view_pos_config_search">
+            <field name="name">pos.config.search.view</field>
+            <field name="model">pos.config</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="PoS Config">
+                    <filter string="Active" domain="[('state', '=', 'active')]" />
+                    <filter string="Inactive" domain="[('state', '=', 'inactive')]" />
+                    <separator orientation="vertical"/>
+                    <field name="name" />
+                    <field name="user_id" />
+                    <field name="journal_id" />
+                    <field name="shop_id" />
+
+                    <newline />
+                    <group expand="0" string="Group By...">
+                        <filter string="User" icon="terp-personal" domain="[]" context="{'group_by' : 'user_id'}" />
+                        <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by' : 'journal_id'}" />
+                        <filter string="Shop" icon="terp-go-home" domain="[]" context="{'group_by' : 'shop_id'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+
 
         <act_window 
             id="act_pos_config_sessions" 
@@ -831,11 +850,12 @@
             domain="[('config_id', '=', active_id)]" />         
 
         <record model="ir.actions.act_window" id="action_pos_config_pos">
-            <field name="name">Point of Sales</field>
+            <field name="name">PoS Config</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">pos.config</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_pos_config_search" />
         </record>
 
         <menuitem

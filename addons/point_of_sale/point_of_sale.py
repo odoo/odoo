@@ -36,20 +36,42 @@ _logger = logging.getLogger(__name__)
 class pos_config(osv.osv):
     _name = 'pos.config'
 
-    POS_CONFIG_STATE = [('draft', 'Draft'),('active', 'Active'),('inactive', 'Inactive'),('deprecated', 'Deprecated')]
+    POS_CONFIG_STATE = [
+        ('draft', 'Draft'),
+        ('active', 'Active'),
+        ('inactive', 'Inactive'),
+        ('deprecated', 'Deprecated')
+    ]
 
     _columns = {
-        'name' : fields.char('Name', size=32, select=1, required=True),
-        'journal_ids' : fields.many2many('account.journal', 'pos_config_journal_rel', 'pos_config_id', 'journal_id', 'Payment Methods', domain="[('journal_user', '=', True )]"),
-        'shop_id' : fields.many2one('sale.shop', 'Shop', required=True, select=1),
-        'journal_id' : fields.many2one('account.journal', 'Journal', required=True, select=1, domain=[('type', '=', 'sale')]),
-        'profit_account_id' : fields.many2one('account.account', 'Profit Account', required=True, select=1),
-        'loss_account_id' : fields.many2one('account.account', 'Loss Account', required=True, select=1),
-
-        'authorized_cashbox_diff' : fields.integer('Authorized Cashbox Difference (%)'),
-        'authorized_cashbox_diff_fixed' : fields.integer('Authorized Cashbox Difference (Fixed Amount)'),
-
-
+        'name' : fields.char('Name', size=32,
+                             select=1,
+                             required=True,
+                             readonly=True,
+                             states={'draft' : [('readonly', False)]}
+                            ),
+        'journal_ids' : fields.many2many('account.journal', 
+                                         'pos_config_journal_rel', 
+                                         'pos_config_id', 
+                                         'journal_id', 
+                                         'Payment Methods',
+                                         domain="[('journal_user', '=', True )]",
+                                         readonly=True,
+                                         states={'draft' : [('readonly', False)]}
+                                        ),
+        'shop_id' : fields.many2one('sale.shop', 'Shop',
+                                    required=True,
+                                    select=1,
+                                    readonly=True,
+                                    states={'draft' : [('readonly', False)]} 
+                                   ),
+        'journal_id' : fields.many2one('account.journal', 'Journal',
+                                       required=True,
+                                       select=1,
+                                       domain=[('type', '=', 'sale')],
+                                       readonly=True,
+                                       states={'draft' : [('readonly', False)]}
+                                      ),
         'iface_self_checkout' : fields.boolean('Self Checkout Mode'),
         'iface_websql' : fields.boolean('WebSQL (to store data)'),
         'iface_led' : fields.boolean('LED Interface'),
@@ -59,16 +81,18 @@ class pos_config(osv.osv):
         'iface_barscan' : fields.boolean('BarScan Interface'), 
         'iface_vkeyboard' : fields.boolean('Virtual KeyBoard Interface'),
 
-        'state' : fields.selection(POS_CONFIG_STATE, 'State', required=True, readonly=True),
+        'state' : fields.selection(POS_CONFIG_STATE, 'State',
+                                   required=True,
+                                   readonly=True),
 
-        'sequence_id' : fields.many2one('ir.sequence', 'Sequence', readonly=True),
-        # Add a sequence when we create a new pos.config object
-        'user_id' : fields.many2one('res.users', 'User'),
+        'sequence_id' : fields.many2one('ir.sequence', 'Sequence',
+                                        readonly=True),
+        'user_id' : fields.many2one('res.users', 'User',
+                                    readonly=True,
+                                    states={'draft' : [('readonly', False)]}
+                                   ),
 
     }
-
-    #def default_get(self, cr, uid, fieldnames, context=None):
-    #    return dict()
 
     _defaults = {
         'state' : 'draft',
@@ -165,21 +189,45 @@ class pos_session(osv.osv):
     #]
 
     _columns = {
-        'config_id' : fields.many2one('pos.config', 'PoS', required=True, select=1, domain="[('state', '=', 'active')]"),
+        'config_id' : fields.many2one('pos.config', 'PoS',
+                                      required=True,
+                                      select=1,
+                                      domain="[('state', '=', 'active')]",
+                                      readonly=True,
+                                      states={'draft' : [('readonly', False)]}
+                                     ),
 
-        'name' : fields.char('Session Sequence', size=32, required=True, select=1, readonly=1),
-        'user_id' : fields.many2one('res.users', 'User', required=True, select=1),
-        'start_at' : fields.datetime('Opening Date'), #, readonly=True),
+        'name' : fields.char('Session Sequence', size=32,
+                             required=True,
+                             select=1,
+                             readonly=True,
+                             states={'draft' : [('readonly', False)]}
+                            ),
+        'user_id' : fields.many2one('res.users', 'User',
+                                    required=True,
+                                    select=1,
+                                    readonly=True,
+                                    states={'draft' : [('readonly', False)]}
+                                   ),
+        'start_at' : fields.datetime('Opening Date'), 
         'stop_at' : fields.datetime('Closing Date'),
 
-        'state' : fields.selection(POS_SESSION_STATE, 'State', required=True, readonly=True, select=1),
+        'state' : fields.selection(POS_SESSION_STATE, 'State',
+                                   required=True,
+                                   readonly=True,
+                                   select=1),
 
-        'cash_register_id' : fields.many2one('account.bank.statement', 'Bank Account Statement', ondelete='cascade'),
+        'cash_register_id' : fields.many2one('account.bank.statement', 'Bank Account Statement',
+                                             ondelete='cascade'),
 
         'details_ids' : fields.related('cash_register_id', 'details_ids', 
                                        type='one2many', relation='account.cashbox.line',
                                        string='CashBox Lines'),
-        'journal_ids' : fields.related('config_id', 'journal_ids', type='many2many', relation='account.journal', string='Journals'),
+        'journal_ids' : fields.related('config_id', 'journal_ids',
+                                       type='many2many',
+                                       readonly=True,
+                                       relation='account.journal',
+                                       string='Journals'),
         'order_ids' : fields.one2many('pos.order', 'session_id', 'Orders'),
     }
 
@@ -296,7 +344,14 @@ class pos_session(osv.osv):
 
         if not session_id:
             pos_config_proxy = self.pool.get('pos.config')
-            pos_config_ids = pos_config_proxy.search(cr, uid, [('user_id', '=', uid),('state', '=', 'active')], limit=1, order='create_date desc')
+            domain = [
+                ('user_id', '=', uid),
+                ('state', '=', 'active'),
+            ]
+            pos_config_ids = pos_config_proxy.search(cr, uid, domain,
+                                                     limit=1,
+                                                     order='create_date desc',
+                                                     context=context)
 
             if not pos_config_ids:
                 raise osv.except_osv(_('Error !'),
@@ -311,6 +366,7 @@ class pos_session(osv.osv):
                 'journal_id' : config.journal_id.id,
                 'user_id': current_user.id,
             }
+
             session_id = self.create(cr, uid, values, context=context)
             wkf_service = netsvc.LocalService('workflow')
             wkf_service.trg_validate(uid, 'pos.session', session_id, 'open', cr)
