@@ -365,7 +365,6 @@
                                             <i t-if="record.date_deadline.raw_value">
                                                 <field name="date_deadline"/>
                                             </i>
-                                            <a name="action_open_pad" string="Pad" type="object" class="oe_kanban_button" style="margin-left: 5px;"><b>PAD</b></a>
                                             <span class="oe_kanban_project_times" style="white-space: nowrap; padding-left: 5px;">
                                                 <t t-set="hours" t-value="record.remaining_hours.raw_value"/>
                                                 <t t-set="times" t-value="[

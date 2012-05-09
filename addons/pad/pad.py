@@ -30,7 +30,7 @@ class pad_common(osv.osv_memory):
         return record_id
         
     _columns = {
-        'pad_url': fields.char('Pad URL', size=512),
+        'pad_url': fields.char('Full Screen', size=512),
     }
     _defaults = {
         'pad_url': lambda self, cr, uid, context: self.pool.get('ir.attachment').pad_generate_url(cr, uid, self._name)
