@@ -84,12 +84,12 @@
                 </search>
             </field>
         </record>
-       <record id="act_resouce_allocation" model="ir.actions.act_window">
+        <record id="act_resouce_allocation" model="ir.actions.act_window">
             <field name="name">Planning of Users</field>
             <field name="res_model">project.user.allocation</field>
             <field name="view_type">form</field>
             <field name="view_mode">gantt,tree,form,calendar</field>
-             <field name="context">{}</field>
+            <field name="context">{}</field>
             <field name="search_view_id" ref="view_project_user_allocation_search"/>
         </record>
 
@@ -98,6 +98,44 @@
     # Project Phase
     # ------------------------------------------------------
 
+        <record id="project_phase_form" model="ir.ui.view">
+            <field name="name">Inherit project form : Phase</field>
+            <field name="model">project.project</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="project.edit_project"/>
+            <field name="arch" type="xml">
+                <field name="use_tasks" position="after">
+                    <field name="use_phases"/>
+                </field>
+            </field>
+        </record>
+
+        <act_window id="act_project_phases"
+            name="Phases"
+            src_model="project.project"
+            res_model="project.phase"
+            view_type="form"
+            view_mode="tree,form"
+            context="{'search_default_project_id': [active_id], 'default_project_id': active_id}"
+        />
+
+        <record id="view_project_kanban_phase" model="ir.ui.view">
+            <field name="name">project.project.kanban.inherited</field>
+            <field name="model">project.project</field>
+            <field name="type">kanban</field>
+            <field name="inherit_id" ref="project.view_project_kanban"/>
+            <field name="arch" type="xml">
+                <field name="use_tasks" position="after">
+                    <field name="use_phases"/>
+                    <field name="phase_count"/>
+                </field>
+                <xpath expr="//div[@id='list']" position="inside">
+                    <a t-if="record.use_phases.raw_value" class="oe_project_buttons"
+                        id="4" name="%(act_project_phases)d" type="action">Phases(<field name="phase_count"/>)</a>
+                </xpath>
+            </field>
+        </record>
+        
         <record id="view_project_phase_form" model="ir.ui.view">
             <field name="name">project.phase.form</field>
             <field name="model">project.phase</field>
@@ -278,7 +316,7 @@
             <field name="inherit_id" ref="project.view_task_form2"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='effective_hours']" position="after">
-                    <field name="phase_id"/>
+                    <field name="phase_id" context="{'default_project_id' : project_id}"/>
                 </xpath>
             </field>
         </record>
@@ -325,16 +363,6 @@
         res_model="project.task"
         src_model="project.phase"
         view_mode="tree,form"
-        />
-
-    <act_window
-        context="{'search_default_project_id': active_id, 'default_project_id': active_id}"
-        id="act_project_phases"
-        name="Phases"
-        res_model="project.phase"
-        src_model="project.project"
-        view_mode="tree,form"
-        view_type="form"
         />
 
     # ------------------------------------------------------
