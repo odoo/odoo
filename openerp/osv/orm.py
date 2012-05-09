@@ -3697,6 +3697,12 @@ class BaseModel(object):
                                          _('Operation prohibited by access rules, or performed on an already deleted document (Operation: %s, Document type: %s).')
                                          % (operation, self._description))
 
+    def _workflow_trigger(self, cr, uid, ids, trigger, context=None):
+        """Call given workflow trigger as a result of a CRUD operation""" 
+        wf_service = netsvc.LocalService("workflow")
+        for res_id in ids:
+            getattr(wf_service, trigger)(uid, self._name, res_id, cr)
+
     def unlink(self, cr, uid, ids, context=None):
         """
         Delete records with given ids
@@ -3735,10 +3741,7 @@ class BaseModel(object):
         property_ids = ir_property.search(cr, uid, [('res_id', 'in', ['%s,%s' % (self._name, i) for i in ids])], context=context)
         ir_property.unlink(cr, uid, property_ids, context=context)
 
-        wf_service = netsvc.LocalService("workflow")
-        for oid in ids:
-            wf_service.trg_delete(uid, self._name, oid, cr)
-            
+        self._workflow_trigger(cr, uid, ids, 'trg_delete', context=context)
 
         self.check_access_rule(cr, uid, ids, 'unlink', context=context)
         pool_model_data = self.pool.get('ir.model.data')
@@ -4039,9 +4042,7 @@ class BaseModel(object):
                     todo.append(id)
             self.pool.get(object)._store_set_values(cr, user, todo, fields_to_recompute, context)
 
-        wf_service = netsvc.LocalService("workflow")
-        for id in ids:
-            wf_service.trg_write(user, self._name, id, cr)
+        self._workflow_trigger(cr, user, ids, 'trg_write', context=context)
         return True
 
     #
@@ -4233,8 +4234,7 @@ class BaseModel(object):
                 self.name_get(cr, user, [id_new], context=context)[0][1] + \
                 "' " + _("created.")
             self.log(cr, user, id_new, message, True, context=context)
-        wf_service = netsvc.LocalService("workflow")
-        wf_service.trg_create(user, self._name, id_new, cr)
+        self._workflow_trigger(cr, user, [id_new], 'trg_create', context=context)
         return id_new
 
     def browse(self, cr, uid, select, context=None, list_class=None, fields_process=None):
