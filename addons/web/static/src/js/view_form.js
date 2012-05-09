@@ -3141,6 +3141,9 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(_.
             });
         });
         self.tags = self.$text.textext()[0].tags();
+        $("textarea", this.$element).focusout(function() {
+            $("textarea", this.$element).val("");
+        });
     },
     set_value: function(value_) {
         value_ = value_ || [];
