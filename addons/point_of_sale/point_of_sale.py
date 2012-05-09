@@ -80,6 +80,7 @@ class pos_config(osv.osv):
         'iface_electronic_scale' : fields.boolean('Electronic Scale Interface'),
         'iface_barscan' : fields.boolean('BarScan Interface'), 
         'iface_vkeyboard' : fields.boolean('Virtual KeyBoard Interface'),
+        'iface_print_via_proxy' : fields.boolean('Print via Proxy'),
 
         'state' : fields.selection(POS_CONFIG_STATE, 'State',
                                    required=True,
@@ -664,22 +665,29 @@ class pos_order(osv.osv):
             raise osv.except_osv(_('Configuration Error !'), msg)
 
         context.pop('pos_session_id', False)
-        domain = [
-            ('journal_id', '=', int(data['journal'])),
-            ('company_id', '=', curr_company),
-            ('user_id', '=', uid),
-            ('state', '=', 'open')
-        ]
-        statement_id = statement_obj.search(cr,uid, domain, context=context)
-        if len(statement_id) == 0:
+
+        try:
+            journal_id = long(data['journal'])
+        except Exception:
+            journal_id = False
+
+        statement_id = False
+        for statement in order.session_id.statement_ids:
+            if statement.journal_id.id == journal_id:
+                statement_id = statement.id
+                break
+
+        if not statement_id:
             raise osv.except_osv(_('Error !'), _('You have to open at least one cashbox'))
-        if statement_id:
-            statement_id = statement_id[0]
-        args['statement_id'] = statement_id
-        args['pos_statement_id'] = order_id
-        args['journal_id'] = int(data['journal'])
-        args['type'] = 'customer'
-        args['ref'] = order.name
+
+        args.update({
+            'statement_id' : statement_id,
+            'pos_statement_id' : order_id,
+            'journal_id' : journal_id,
+            'type' : 'customer',
+            'ref' : order.name,
+        })
+
         statement_line_obj.create(cr, uid, args, context=context)
         ids_new.append(statement_id)
 
