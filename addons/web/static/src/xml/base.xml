@@ -1047,6 +1047,22 @@
         </span>
     </t>
 </t>
+<t t-name="FieldMany2ManyTags">
+    <div class="oe_form_field_many2manytags">
+        <t t-if="! widget.get('effective_readonly')">
+            <textarea rows="1" style="width: 100%"></textarea>
+        </t>
+    </div>
+</t>
+<t t-name="FieldMany2ManyTags.box">
+    <t t-set="i" t-value="0"/>
+    <t t-foreach="elements" t-as="el">
+        <span class="oe_form_field_many2manytags_box" t-att-data-index="i">
+            <t t-esc="el[1]"/>
+        </span>
+        <t t-set="i" t-value="i + 1"/>
+    </t>
+</t>
 <t t-name="FieldReference">
     <table class="oe_form_field_reference oe_frame oe_forms" border="0" cellpadding="0" cellspacing="0">
     <tr>
