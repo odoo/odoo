@@ -641,6 +641,7 @@
                         <field name="name"/>
                         <field name="parent_id"/>
                         <field name="sequence"/>
+                        <field name="to_weight" />
                     </group>
                 </form>
             </field>
@@ -671,6 +672,7 @@
         <menuitem name="Configuration" parent="menu_point_root"
             id="menu_point_config_product" sequence="25" groups="group_pos_manager"/>
 
+        <!--
         <record id="action_account_journal_form" model="ir.actions.act_window">
             <field name="name">Payment Methods</field>
             <field name="res_model">account.journal</field>
@@ -685,6 +687,7 @@
             id="menu_action_account_journal_form_open"
             parent="menu_point_config_product"
             sequence="20"/>
+        -->
 
         <record model="ir.ui.view" id="view_pos_order_tree_all_sales_lines">
             <field name="name">POS Sales Lines</field>
@@ -894,10 +897,11 @@
                     </notebook>
 
                     <group colspan="4" col="5">
-                        <field name="state" widget="statusbar" statusbar_visible="new,opened,closed,posted" statusbar_colors='{"posted":"green"}'/>
-                        <button name="open" type="workflow" string="Open" states="new" />
-                        <button name="close" type="workflow" string="Close" states="opened" />
-                        <button name="post" type="workflow" string="Post" states="closed" />
+                        <field name="state" /> <!-- widget="statusbar" statusbar_visible="new,opened,closed,posted" statusbar_colors='{"posted":"green"}'/> -->
+                        <!-- state:opening_control -> signal:open -> state:opened -> signal:cashbox_control -> state:closing_control -> signal:close -> state:close -->
+                        <button name="open" type="workflow" string="Open" states="opening_control"/>
+                        <button name="cashbox_control" type="workflow" string="Cashbox Control" states="opened" />
+                        <button name="close" type="workflow" string="Close" states="closing_control" />
                     </group>
                 </form>
             </field>

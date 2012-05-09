@@ -47,8 +47,8 @@ class pos_config(osv.osv):
         'name' : fields.char('Name', size=32,
                              select=1,
                              required=True,
-                             readonly=True,
-                             states={'draft' : [('readonly', False)]}
+#                             readonly=True,
+#                             states={'draft' : [('readonly', False)]}
                             ),
         'journal_ids' : fields.many2many('account.journal', 
                                          'pos_config_journal_rel', 
@@ -56,21 +56,21 @@ class pos_config(osv.osv):
                                          'journal_id', 
                                          'Payment Methods',
                                          domain="[('journal_user', '=', True )]",
-                                         readonly=True,
-                                         states={'draft' : [('readonly', False)]}
+#                                         readonly=True,
+#                                         states={'draft' : [('readonly', False)]}
                                         ),
         'shop_id' : fields.many2one('sale.shop', 'Shop',
                                     required=True,
                                     select=1,
-                                    readonly=True,
-                                    states={'draft' : [('readonly', False)]} 
+#                                    readonly=True,
+#                                    states={'draft' : [('readonly', False)]} 
                                    ),
         'journal_id' : fields.many2one('account.journal', 'Journal',
                                        required=True,
                                        select=1,
                                        domain=[('type', '=', 'sale')],
-                                       readonly=True,
-                                       states={'draft' : [('readonly', False)]}
+#                                       readonly=True,
+#                                       states={'draft' : [('readonly', False)]}
                                       ),
         'iface_self_checkout' : fields.boolean('Self Checkout Mode'),
         'iface_websql' : fields.boolean('WebSQL (to store data)'),
@@ -88,8 +88,8 @@ class pos_config(osv.osv):
         'sequence_id' : fields.many2one('ir.sequence', 'Sequence',
                                         readonly=True),
         'user_id' : fields.many2one('res.users', 'User',
-                                    readonly=True,
-                                    states={'draft' : [('readonly', False)]}
+#                                    readonly=True,
+#                                    states={'draft' : [('readonly', False)]}
                                    ),
 
     }
@@ -180,34 +180,34 @@ class pos_session(osv.osv):
 
     #"status [BUTTON TEXT]" -> utiliser 
     # "opening control (open) -> opened (cashbox control) -> closing control (close) -> closed & posted" 
-    POS_SESSION_STATE = [('new', 'New'),('opened', 'Opened'),('closed', 'Closed'),('posted', 'Posted')]
-    #POS_SESSION_STATE = [
-    #    ('new', 'Opening Control'),
-    #    ('opened', 'Opened'),
-    #    ('closed', 'Closing Control'),
-    #    ('posted', 'Closed & Posted'),
-    #]
+    #POS_SESSION_STATE = [('new', 'New'),('opened', 'Opened'),('closed', 'Closed'),('posted', 'Posted')]
+    POS_SESSION_STATE = [
+        ('opening_control', 'Opening Control'),  # Signal open
+        ('opened', 'Opened'),                    # Signal closing
+        ('closing_control', 'Closing Control'),  # Signal close
+        ('closed', 'Closed'),
+    ]
 
     _columns = {
         'config_id' : fields.many2one('pos.config', 'PoS',
                                       required=True,
                                       select=1,
                                       domain="[('state', '=', 'active')]",
-                                      readonly=True,
-                                      states={'draft' : [('readonly', False)]}
+#                                      readonly=True,
+#                                      states={'draft' : [('readonly', False)]}
                                      ),
 
         'name' : fields.char('Session Sequence', size=32,
                              required=True,
                              select=1,
-                             readonly=True,
-                             states={'draft' : [('readonly', False)]}
+#                             readonly=True,
+#                             states={'draft' : [('readonly', False)]}
                             ),
         'user_id' : fields.many2one('res.users', 'User',
                                     required=True,
                                     select=1,
-                                    readonly=True,
-                                    states={'draft' : [('readonly', False)]}
+#                                    readonly=True,
+#                                    states={'draft' : [('readonly', False)]}
                                    ),
         'start_at' : fields.datetime('Opening Date'), 
         'stop_at' : fields.datetime('Closing Date'),
@@ -234,7 +234,7 @@ class pos_session(osv.osv):
     _defaults = {
         'name' : '/',
         'user_id' : lambda obj, cr, uid, context: uid,
-        'state' : 'new',
+        'state' : 'opening_control',
     }
 
     _sql_constraints = [
@@ -309,15 +309,15 @@ class pos_session(osv.osv):
 
         return True
 
-    def wkf_action_close(self, cr, uid, ids, context=None):
+    def wkf_action_closing_control(self, cr, uid, ids, context=None):
         # Close CashBox
         for record in self.browse(cr, uid, ids, context=context):
             record.cash_register_id.button_confirm_cash(context=context)
-        return self.write(cr, uid, ids, {'state' : 'closed', 'stop_at' : time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
+        return self.write(cr, uid, ids, {'state' : 'closing_control', 'stop_at' : time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
 
-    def wkf_action_post(self, cr, uid, ids, context=None):
+    def wkf_action_close(self, cr, uid, ids, context=None):
         self._confirm_orders(cr, uid, ids, context=context)
-        return self.write(cr, uid, ids, {'state' : 'posted'}, context=context)
+        return self.write(cr, uid, ids, {'state' : 'closed'}, context=context)
 
     def _confirm_orders(self, cr, uid, ids, context=None):
         wf_service = netsvc.LocalService("workflow")
@@ -370,7 +370,7 @@ class pos_session(osv.osv):
 
             session_id = self.create(cr, uid, values, context=context)
             wkf_service = netsvc.LocalService('workflow')
-            wkf_service.trg_validate(uid, 'pos.session', session_id, 'open', cr)
+            wkf_service.trg_validate(uid, 'pos.session', session_id, 'opening_control', cr)
             
         return session_id
 
@@ -1112,6 +1112,11 @@ class pos_category(osv.osv):
         'parent_id': fields.many2one('pos.category','Parent Category', select=True),
         'child_id': fields.one2many('pos.category', 'parent_id', string='Children Categories'),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of product categories."),
+        'to_weight' : fields.boolean('To Weight'),
+    }
+
+    _defaults = {
+        'to_weight' : False,
     }
 pos_category()
 
