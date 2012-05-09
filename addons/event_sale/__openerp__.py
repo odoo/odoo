@@ -36,6 +36,7 @@ It defines a new kind of service products that offers you the possibility to cho
     'author': 'OpenERP SA',
     'depends': ['event','sale','sale_crm'],
     'update_xml': [
+        'security/ir.model.access.csv',
         'event_sale_view.xml',
     ],
     'demo_xml': ['event_demo.xml'],
