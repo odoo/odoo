@@ -1,4 +1,4 @@
-@charset "utf-8";
+@charset "UTF-8";
 @font-face {
   font-family: "mnmliconsRegular";
   src: url("/web/static/src/font/mnmliconsv21-webfont.eot") format("eot");
@@ -909,7 +909,7 @@
   color: white;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
 }
-.openerp .oe_view_manager_header2 {
+.openerp .oe_view_manager_header {
   width: 100%;
   border-top: 1px solid #cacaca;
   border-bottom: 1px solid #cacaca;
@@ -924,53 +924,58 @@
   -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4), 0 0 9px rgba(0, 0, 0, 0.1);
   -box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4), 0 0 9px rgba(0, 0, 0, 0.1);
 }
-.openerp .oe_view_manager_header2 .oe_view_manager_header2_row1 {
+.openerp .oe_view_manager_header .oe_header_row {
+  min-height: 26px;
   margin: 8px;
+  clear: both;
+  text-shadow: 0 1px 1px white;
 }
-.openerp .oe_view_manager_header2 .oe_view_manager_header2_row2 {
-  margin: 0 8px 8px 8px;
+.openerp .oe_view_manager_header .oe_view_manager_sidebar {
+  margin: 0px auto;
+  width: 400px;
+  text-align: center;
 }
-.openerp .oe_view_manager_header2 td {
+.openerp .oe_view_manager_header td {
   line-height: 26px;
 }
-.openerp .oe_view_manager_header2 h2 {
+.openerp .oe_view_manager_header h2 {
   font-size: 18px;
   margin: 1px 0;
 }
-.openerp .oe_view_manager_header2 h2 a {
+.openerp .oe_view_manager_header h2 a {
   color: #8a89ba;
 }
-.openerp .oe_view_manager_header2 .oe_button_group {
+.openerp .oe_view_manager_header .oe_button_group {
   display: inline-block;
   border: 1px solid #ababab;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
   border-radius: 5px;
 }
-.openerp .oe_view_manager_header2 .oe_button_group li {
+.openerp .oe_view_manager_header .oe_button_group li {
   float: left;
   border-right: 1px solid #ababab;
 }
-.openerp .oe_view_manager_header2 .oe_button_group li:last-child {
+.openerp .oe_view_manager_header .oe_button_group li:last-child {
   border: none;
 }
-.openerp .oe_view_manager_header2 .oe_button_group a {
+.openerp .oe_view_manager_header .oe_button_group a {
   color: #4c4c4c;
 }
-.openerp .oe_view_manager_header2 .oe_button_group a:hover {
+.openerp .oe_view_manager_header .oe_button_group a:hover {
   text-decoration: none;
 }
-.openerp .oe_view_manager_header2 .oe_button_group .active {
+.openerp .oe_view_manager_header .oe_button_group .active {
   background: #999999;
   -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) inset;
   -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) inset;
   -box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) inset;
 }
-.openerp .oe_view_manager_header2 .oe_button_group .active a {
+.openerp .oe_view_manager_header .oe_button_group .active a {
   color: white;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
 }
-.openerp .oe_view_manager_header2 .oe_view_manager_buttons {
+.openerp .oe_view_manager_header .oe_view_manager_buttons {
   white-space: nowrap;
 }
 .openerp .oe_view_manager_body h4 {
@@ -1123,7 +1128,7 @@
   min-height: 0;
   border-width: 1px;
   padding: 0;
-  width: 410px;
+  width: 450px;
 }
 .openerp .oe_searchview .VS-search .VS-icon {
   top: 5px;
