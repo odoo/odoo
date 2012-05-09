@@ -500,7 +500,10 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
     select_completion: function (e, ui) {
         e.preventDefault();
 
-        this.query.add(ui.item.facet);
+        var input_index = _(this.input_subviews).indexOf(
+            this.subviewForRoot(
+                this.$element.find('div.oe_searchview_input:focus')[0]));
+        this.query.add(ui.item.facet, {at: input_index / 2});
     },
     renderFacets: function () {
         var self = this;
