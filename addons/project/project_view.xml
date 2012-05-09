@@ -207,12 +207,12 @@
                                     </ul>
                                     <h4><t t-esc="record.name.value.substr(0,33)"/><t t-if="record.name.value.length > 33">...</t></h4>
                                     <div id="list">
-                                        <t t-if="record.use_tasks.raw_value">
-                                            <a id="1" name="%(act_project_project_2_project_task_all)d" class="oe_project_buttons" type="action"><t t-if="record.task_count.value &lt;= 1"> Task</t><t t-if="record.task_count.value &gt; 1"> Tasks</t>(<t t-esc="record.task_count.value"/>)</a>
-                                        </t>
+                                        <a t-if="record.use_tasks.raw_value" class="oe_project_buttons"
+                                            id="1" name="%(act_project_project_2_project_task_all)d" type="action">
+                                            Tasks(<field name="task_count"/>)</a>
                                     </div>
                                     <br/>
-                                    <button class="click_button" type="action">
+                                    <button class="click_button" name="dummy" type="object">
                                         <table class="project_fields">
                                             <tr id="deadline" t-if="record.date.raw_value">
                                                 <th align="left">Deadline</th>
