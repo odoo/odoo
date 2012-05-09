@@ -12,17 +12,17 @@
                         <field name="model" invisible="1"/>
                         <field name="res_id" invisible="1"/>
 -->
-			<field name='filter_id'/>
-<!--
                         <field name='filter_id' invisible="context.get('active_model',False)"/>
--->
                         <newline/>
-			<field name="email_from" colspan="4" required="1"/>
-                        <field name="email_to" colspan="4" required="1"/>
-                        <field name="email_cc" colspan="4"/>
-                        <field name="email_bcc" colspan="4"/>
-                        <field name="reply_to" colspan="4"/>
-                        <field name="subject" colspan="4" widget="char" size="512"/>
+			<group colspan="4" col="4">
+			    <field name="email_from" colspan="4" required="1"/>
+			    <field name="email_to" colspan="4" required="1"/>
+			    <field name="email_cc" colspan="4"/>
+			    <field name="email_bcc" colspan="4"/>
+			    <field name="reply_to" colspan="4"/>
+			    <field name="subject" colspan="4" widget="char" size="512"/>
+			</group>
+			<newline/>
 			<separator string="Debug information" colspan="6"/>
 			<field name="model"/>
                         <field name="res_id"/>
