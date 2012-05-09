@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from osv import fields, osv
-PAD_TEMPLATE = 'http://beta.etherpad.org/p/%(db)s-%(model)s-%(salt)s'
+PAD_TEMPLATE = 'http://pad.tn/p/%(db)s-%(model)s-%(salt)s'
 
 class company_pad(osv.osv):
     _inherit = 'res.company'
