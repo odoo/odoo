@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2011 OpenERP S.A (<http://www.openerp.com>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,35 +19,24 @@
 #
 ##############################################################################
 
-{
-    'name' : "Portal",
-    'version' : "1.0",
-    'depends' : ["base", "share"],
-    'author' : "OpenERP SA",
-    'category': 'Portal',
-    'description': """
-This module defines 'portals' to customize the access to your OpenERP database
-for external users.
 
-A portal defines customized user menu and access rights for a group of users
-(the ones associated to that portal).  It also associates user groups to the
-portal users (adding a group in the portal automatically adds it to the portal
-users, etc).  That feature is very handy when used in combination with the
-module 'share'.
+{
+    'name': 'Portal Claim',
+    'version': '0.1',
+    'category': 'Tools',
+    'complexity': "easy",
+    'description': """
+    This module adds the menu if claim and portal are installed.
     """,
-    'website': 'http://www.openerp.com',
-    'data': [
+    'author': 'OpenERP SA',
+    'depends': ['crm_claim','portal'],
+    'update_xml': [
         'security/portal_security.xml',
-        'security/ir.model.access.csv',
-        "board_portal_view.xml",
-        'portal_demo.xml',
-        'portal_view.xml',
-        'portal_menu.xml',
-        'res_user_view.xml',
-        'wizard/portal_wizard_view.xml',
-        'wizard/share_wizard_view.xml',
+        'portal_claim_view.xml',
+        "security/ir.model.access.csv",
     ],
     'installable': True,
+    'auto_install':True,
+    'category':'Hidden',
 }
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

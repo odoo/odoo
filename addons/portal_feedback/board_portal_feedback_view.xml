@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+    
+     <record model="ir.actions.act_window" id="action_survey_kanban_view">
+           <field name="name">Feedback</field>
+           <field name="type">ir.actions.act_window</field>
+           <field name="res_model">survey</field>
+           <field name="view_type">tree</field>
+           <field name="view_mode">kanban</field>
+           <field name="view_id" ref="survey.view_survey_kanban"/>
+       </record>
+       
+       <record id="board_portal_inherit_form" model="ir.ui.view">
+           <field name="name">board.portal.inherit.form</field>
+           <field name="model">board.board</field>
+            <field name="inherit_id" ref="portal.board_portal_form"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+            <xpath expr="/form/board/column[1]" position="inside">
+                <action name="%(action_survey_kanban_view)d" string="Feedback"/>
+            </xpath>
+           </field>
+       </record>
+      
+    </data>
+</openerp>

@@ -7,6 +7,12 @@
             <field name="sequence">25</field>
         </record>
 
+        <record id="group_portal_user" model="res.groups">
+            <field name="name">User</field>
+            <field name="comment">Portal users can access information provided by the portal menu and the others module it's linked with.</field>
+            <field name="category_id" ref="module_category_portal"/>
+        </record>
+
         <record id="group_portal_officer" model="res.groups">
             <field name="name">Officer</field>
             <field name="comment">Portal officers can create new portal users with the portal wizard.</field>
@@ -19,6 +25,11 @@
             <field name="category_id" ref="module_category_portal"/>
             <field name="implied_ids" eval="[(4, ref('group_portal_officer'))]"/>
             <field name="users" eval="[(4, ref('base.user_root'))]"/>
+        </record>
+
+        <record id="portal" model="res.portal">
+            <field name="name">Portal</field>
+            <field name="group_id" ref="group_portal_user"/>
         </record>
     </data>
 </openerp>
