@@ -2367,9 +2367,7 @@ instance.web.form.CompletionFieldMixin = {
         if (self.get_definition_options().quick_create === undefined || self.get_definition_options().quick_create) {
             new instance.web.DataSet(this, this.field.relation, self.build_context())
                 .name_create(name, function(data) {
-                    self.display_value = {};
-                    self.display_value["" + data[0]] = data[1];
-                    self.set({value: data[0]});
+                    self.add_id(data[0]);
                 }).fail(function(error, event) {
                     event.preventDefault();
                     slow_create();
@@ -2393,9 +2391,13 @@ instance.web.form.CompletionFieldMixin = {
             new instance.web.CompoundContext(self.build_context(), context || {})
         );
         pop.on_select_elements.add(function(element_ids) {
-            self.set({value: element_ids[0]});
+            self.add_id(element_ids[0]);
         });
     },
+    /**
+     * To implement.
+     */
+    add_id: function(id) {},
 };
 
 instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(_.extend({}, instance.web.form.ReinitializeFieldMixin,
@@ -2608,6 +2610,10 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(_.exten
         this.inhibit_on_change = true;
         this._super(value_);
         this.inhibit_on_change = false;
+    },
+    add_id: function(id) {
+        this.display_value = {};
+        this.set({value: id});
     },
     is_false: function() {
         return ! this.get("value");
@@ -3083,7 +3089,11 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(_.
                         $(this).trigger('hideDropdown');
                         var index = Number(this.selectedSuggestionElement().children().children().data('index'));
                         var data = self.search_result[index];
-                        self.set({'value': _.uniq(self.get('value').concat([data.id]))});
+                        if (data.id) {
+                            self.add_id(data.id);
+                        } else {
+                            data.action();
+                        }
                     },
                 },
                 tags: {
@@ -3171,6 +3181,9 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(_.
                 });
             }
         });
+    },
+    add_id: function(id) {
+        this.set({'value': _.uniq(this.get('value').concat([id]))});
     },
 }));
 
