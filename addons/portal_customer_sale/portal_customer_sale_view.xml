@@ -2,17 +2,6 @@
 <openerp>
     <data>
 
-        <menuitem name="Track Orders" id="customer_portal_track_orders" parent="portal_customer.customer_portal" groups="portal_customer.group_sales_portal"/>
-            <menuitem name="Quotation" id="customer_portal_quotation" parent="customer_portal_track_orders" action="sale.action_order_tree5"/>
-            <menuitem name="Sales Orders" id="customer_portal_sales_orders" parent="customer_portal_track_orders" action="sale.action_order_form"/>
-            <menuitem name="Delivery Orders" id="customer_portal_delivery" parent="customer_portal_track_orders" action="action_picking_tree"/>
-        <menuitem name="Invoice and Payments" id="customer_portal_invoice_payements" parent="portal_customer.customer_portal" groups="portal_customer.group_sales_portal"/>
-            <menuitem name="Invoice" id="customer_portal_invoice" parent="customer_portal_invoice_payements" action="account.action_invoice_tree1"/>
-            <menuitem name="Payments" id="customer_portal_payments" parent="customer_portal_invoice_payements" action="account_voucher.action_vendor_receipt"/>
-        <menuitem name="Services" id="customer_portal_services" parent="portal_customer.customer_portal" groups="portal_customer.group_sales_portal"/>
-            <menuitem name="Products" id="customer_portal_products" parent="customer_portal_services" action="product_normal_action"/>
-        <menuitem name="After Sales Services" id="customer_portal_after_sales" parent="portal_customer.customer_portal" groups="portal_customer.group_sales_portal"/>
-
         <record id="action_picking_tree" model="ir.actions.act_window">
             <field name="name">Delivery Orders</field>
             <field name="res_model">stock.picking</field>
@@ -35,6 +24,15 @@
             <field name="search_view_id" ref="product.product_search_form_view"/>
             <field name="help">You must define a Product for everything you buy or sell. Products can be raw materials, stockable products, consumables or services. The Product form contains detailed information about your products related to procurement logistics, sales price, product category, suppliers and so on.</field>
         </record>
+
+        <menuitem name="Quotation" id="portal_quotation" parent="portal_customer.portal_track_orders" action="sale.action_order_tree5"/>
+        <menuitem name="Sales Orders" id="portal_sales_orders" parent="portal_customer.portal_track_orders" action="sale.action_order_form"/>
+        <menuitem name="Delivery Orders" id="portal_delivery" parent="portal_customer.portal_track_orders" action="action_picking_tree"/>
+
+        <menuitem name="Invoice" id="portal_invoice" parent="portal_customer.portal_invoice_payements" action="account.action_invoice_tree1"/>
+        <menuitem name="Payments" id="portal_payments" parent="portal_customer.portal_invoice_payements" action="account_voucher.action_vendor_receipt"/>
+
+        <menuitem name="Products" id="portal_products" parent="portal_customer.portal_services" action="product_normal_action"/>
 
     </data>
 </openerp>

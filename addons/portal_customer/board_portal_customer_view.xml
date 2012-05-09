@@ -24,7 +24,7 @@
                 </form>
             </field>
         </record>
-         
+        
         <record id="open_customer_portal" model="ir.actions.act_window">
             <field name="name">Customer Portal Dashboard</field>
             <field name="res_model">board.board</field>
@@ -33,10 +33,6 @@
             <field name="usage">menu</field>
             <field name="view_id" ref="board_customer_portal_form"/>
         </record>
-        
-        <menuitem
-            id="portal_customer.customer_portal" action="open_customer_portal"
-            name="Customer Portal" groups="portal_customer.group_sales_portal"/>
         
     </data>
 </openerp>
