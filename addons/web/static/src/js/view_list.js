@@ -355,13 +355,18 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             this.dataset._length = dataset._length;
         }
 
-        var page = this.page + 1,
-           total = Math.floor(dataset.size() / this.limit()) + 1;
+        var total = dataset.size();
+        var spager = '-';
+        if (total) {
+            var range_start = this.page * this.limit() + 1;
+            var range_stop = range_start - 1 + this.limit();
+            if (range_stop > total) {
+                range_stop = total;
+            }
+            spager = _.str.sprintf('%d-%d of %d', range_start, range_stop, total);
+        }
 
-        this.$pager.find('.oe-pager-state').text(isNaN(total)
-                ? '-' : _.str.sprintf('%d / %d', page, total));
-
-        this.$pager.toggle(total > 1);
+        this.$pager.find('.oe-pager-state').text(spager);
     },
     /**
      * Sets up the listview's columns: merges view and fields data, move
@@ -464,6 +469,9 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         }
         if (this.$buttons) {
             this.$buttons.show();
+        }
+        if (this.$pager) {
+            this.$pager.show();
         }
     },
     do_hide: function () {
