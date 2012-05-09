@@ -117,6 +117,11 @@ my.SearchQuery = B.Collection.extend({
     }
 });
 
+function assert(condition, message) {
+    if(!condition) {
+        throw new Error(message);
+    }
+}
 my.InputView = instance.web.Widget.extend({
     template: 'SearchView.InputView',
     start: function () {
@@ -124,6 +129,7 @@ my.InputView = instance.web.Widget.extend({
         var p = this._super.apply(this, arguments);
         this.$element.on('focus', this.proxy('onFocus'));
         this.$element.on('blur', this.proxy('onBlur'));
+        this.$element.on('keydown', this.proxy('onKeydown'));
         return p;
     },
     onFocus: function () {
@@ -132,6 +138,65 @@ my.InputView = instance.web.Widget.extend({
     onBlur: function () {
         this.$element.text('');
         this.getParent().$element.trigger('blur');
+    },
+    getSelection: function () {
+        // get Text node
+        var root = this.$element[0].childNodes[0];
+        if (!root || !root.textContent) {
+            // if input does not have a child node, or the child node is an
+            // empty string, then the selection can only be (0, 0)
+            return {start: 0, end: 0};
+        }
+        if (window.getSelection) {
+            var domRange = window.getSelection().getRangeAt(0);
+            assert(domRange.startContainer === root,
+                   "selection should be in the input view");
+            assert(domRange.endContainer === root,
+                   "selection should be in the input view");
+            return {
+                start: domRange.startOffset,
+                end: domRange.endOffset
+            }
+        } else if (document.selection) {
+            var ieRange = document.selection.createRange();
+            var rangeParent = ieRange.parentElement();
+            assert(rangeParent === root,
+                   "selection should be in the input view");
+            var offsetRange = document.body.createTextRange();
+            offsetRange = offsetRange.moveToElementText(rangeParent);
+            offsetRange.setEndPoint("EndToStart", ieRange);
+            var start = offsetRange.text.length;
+            return {
+                start: start,
+                end: start + ieRange.text.length
+            }
+        }
+        throw new Error("Could not get caret position");
+    },
+    onKeydown: function (e) {
+        var sel;
+        switch (e.which) {
+        // Do not insert newline, but let it bubble so searchview can use it
+        case $.ui.keyCode.ENTER:
+            e.preventDefault();
+            break;
+
+        // let left/right events propagate to view if caret is at input border
+        // and not a selection
+        case $.ui.keyCode.LEFT:
+            sel = this.getSelection();
+            if (sel.start !== 0 || sel.start !== sel.end) {
+                e.stopPropagation();
+            }
+            break;
+        case $.ui.keyCode.RIGHT:
+            sel = this.getSelection();
+            var len = this.$element.text().length;
+            if (sel.start !== len || sel.start !== sel.end) {
+                e.stopPropagation();
+            }
+            break;
+        }
     }
 });
 my.FacetView = instance.web.Widget.extend({
@@ -252,6 +317,20 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
                 });
         }
 
+        this.$element.on('keydown',
+                '.oe_searchview_input, .oe_searchview_facet', function (e) {
+            switch(e.which) {
+            case $.ui.keyCode.LEFT:
+                self.focusPreceding(this);
+                e.preventDefault();
+                break;
+            case $.ui.keyCode.RIGHT:
+                self.focusFollowing(this);
+                e.preventDefault();
+                break;
+            }
+        });
+
         this.$element.on('click', '.oe_searchview_clear', function (e) {
             e.stopImmediatePropagation();
             self.query.reset();
@@ -290,6 +369,29 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
     },
     hide: function () {
         this.$element.hide();
+    },
+
+    subviewForRoot: function (subview_root) {
+        return _(this.input_subviews).detect(function (subview) {
+            return subview.$element[0] === subview_root;
+        });
+    },
+    focusRelative: function (subview, direction) {
+        var index = _(this.input_subviews).indexOf(subview) + direction;
+        if (index < 0) {
+            index = this.input_subviews.length - 1;
+        } else if (index >= this.input_subviews.length) {
+            index = 0;
+        }
+        this.input_subviews[index].$element.focus();
+    },
+    focusPreceding: function (subview_root) {
+        return this.focusRelative(
+            this.subviewForRoot(subview_root), -1);
+    },
+    focusFollowing: function (subview_root) {
+        return this.focusRelative(
+            this.subviewForRoot(subview_root), +1);
     },
 
     /**
