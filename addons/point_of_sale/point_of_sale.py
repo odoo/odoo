@@ -317,10 +317,7 @@ class pos_session(osv.osv):
         # Close CashBox
         for record in self.browse(cr, uid, ids, context=context):
             for st in record.statement_ids:
-                if st.journal_id.type == 'cash':
-                    st.button_confirm_cash(context=context)
-                if st.journal_id.type == 'bank':
-                    st.button_confirm_bank(context=context)
+                getattr(st, 'button_confirm_%s' % st.journal_id.type)(context=context)
 
         return self.write(cr, uid, ids, {'state' : 'closing_control', 'stop_at' : time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
 
