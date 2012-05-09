@@ -43,7 +43,7 @@ class procurement_order(osv.osv):
             cr.execute('update procurement_order set message=%s where id=%s', (_('No BoM defined for this product !'), procurement.id))
             for (id, name) in self.name_get(cr, uid, procurement.id):
                 message = _("Procurement '%s' has an exception: 'No BoM defined for this product !'") % name
-                self.log(cr, uid, id, message)
+                self.message_append_note(cr, uid, [procurement], body=message, context=context)
             return False
         return True
     

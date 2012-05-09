@@ -386,7 +386,8 @@ class procurement_order(osv.osv):
                     message = _("Not enough stock.")
 
                 if message:
-                    self.log(cr, uid, procurement.id, _("Procurement '%s' is in exception: ") % (procurement.name) + message)
+                    message = _("Procurement '%s' is in exception: ") % (procurement.name) + message
+                    self.message_append_note(cr, uid, [procurement], body=message, context=context)
                     cr.execute('update procurement_order set message=%s where id=%s', (message, procurement.id))
         return ok
 
