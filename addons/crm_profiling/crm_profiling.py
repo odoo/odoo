@@ -147,7 +147,7 @@ class question(osv.osv):
 
     _columns={
         'name': fields.char("Question",size=128, required=True),
-        'answers_ids': fields.one2many("crm_profiling.answer","question_id","Avalaible answers",),
+        'answers_ids': fields.one2many("crm_profiling.answer","question_id","Avalaible Answers",),
         }
 
 question()
