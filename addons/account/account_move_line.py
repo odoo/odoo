@@ -556,6 +556,7 @@ class account_move_line(osv.osv):
         'journal_id': lambda self, cr, uid, c: c.get('journal_id', False),
         'credit': 0.0,
         'debit': 0.0,
+        'amount_currency': 0.0,
         'account_id': lambda self, cr, uid, c: c.get('account_id', False),
         'period_id': lambda self, cr, uid, c: c.get('period_id', False),
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.move.line', context=c)
