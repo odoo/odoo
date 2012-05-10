@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="ir_filters_view_form" model="ir.ui.view">
+            <field name="name">ir.filters.form</field>
+            <field name="model">ir.filters</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Filters">
+                    <group colspan="4" col="6" >
+                        <field name="name"/>
+                        <field name="model_id"/>
+                        <field name="user_id"/>
+                    </group>
+                    <group col="4" expand="1">
+                        <separator string="Domain" colspan="2" />
+                        <separator string="Context" colspan="2" />
+                        <field name="domain" nolabel="1" colspan="2"/>
+                        <field name="context" nolabel="1" colspan="2"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="ir_filters_view_tree" model="ir.ui.view">
+             <field name="name">ir.filters.tree</field>
+            <field name="model">ir.filters</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Filters">
+                    <field name="name"/>
+                    <field name="model_id"/>
+                    <field name="user_id"/>
+                    <field name="domain" groups="base.group_no_one"/>
+                    <field name="context" groups="base.group_no_one"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="ir_filters_view_search" model="ir.ui.view">
+            <field name="name">ir.filters.search</field>
+            <field name="model">ir.filters</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Filters">
+                    <filter name="Private" domain="[('user_id','!=',False))]"/>
+                    <filter name="Public" domain="[('user_id','=',False))]"/>
+                    <separator orientation="vertical"/>
+                    <field name="name"/>
+                    <field name="model_id"/>
+                    <field name="user_id">
+                        <filter icon="terp-personal" domain="[('user_id','in',(uid, False))]" name="My Filters" />
+                    </field>
+                </search>
+            </field>
+        </record>
+
+        <record id="actions_ir_filters_view" model="ir.actions.act_window">
+            <field name="name">Filters</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ir.filters</field>
+        </record>
+
+        <menuitem parent="base.next_id_6" name="User-defined Filters"
+            id="menu_ir_filters" action="actions_ir_filters_view"/>
+    </data>
+</openerp>
