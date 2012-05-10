@@ -49,9 +49,9 @@
             <field name="name">Incoming Picking Inherited</field>
             <field name="model">stock.picking.in</field>
             <field name="type">form</field>
-            <field name="inherit_id" ref="stock.view_picking_in_form"/>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
             <field name="arch" type="xml">
-                 <xpath expr="/form/notebook/page/field[@name='date']"  position="before">
+                 <xpath expr="/form/sheet/group/group/field[@name='date']" position="before">
                     <field name="purchase_id"/>
                 </xpath>
             </field>
