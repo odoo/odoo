@@ -99,8 +99,6 @@
                                 <field name="model"/>
                                 <button name="open_document" string="Open" type="object" icon="gtk-jump-to" colspan="2"/>
                                 <field name="res_id"/>
-                                <field name="message_id" colspan="4" attrs="{'invisible':[('message_id', '=', False)]}"/>
-                                <field name="references" colspan="4" widget="char" size="512" attrs="{'invisible':[('references', '=', False)]}"/>
                             </group>
                             <notebook colspan="4">
                                 <page string="Body (Rich)" attrs="{'invisible':[('content_subtype','=','plain')]}">
@@ -128,8 +126,16 @@
                             <group col="2" colspan="4">
                                 <field name="mail_server_id" attrs="{'invisible':[('mail_server_id', '=', False)]}"/>
                                 <field name="auto_delete"/>
-                                <field name="headers" colspan="4" attrs="{'invisible':[('headers', '=', False)]}"/>
-                                <field name="original" colspan="4" attrs="{'invisible':[('original', '=', False)]}"/>
+                                <field name="headers" attrs="{'invisible':[('headers', '=', False)]}"/>
+                                <field name="original" attrs="{'invisible':[('original', '=', False)]}"/>
+                                <field name="message_id"/>
+<!--
+                                <field name="message_id" colspan="4" attrs="{'invisible':[('message_id', '=', False)]}"/>
+-->
+                                <field name="references"/>
+<!--
+                                <field name="references" colspan="4" widget="char" size="512" attrs="{'invisible':[('references', '=', False)]}"/>
+-->
                             </group>
                         </page>
                     </notebook>
