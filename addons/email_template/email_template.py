@@ -119,7 +119,7 @@ class email_template(osv.osv):
         'ref_ir_act_window':fields.many2one('ir.actions.act_window', 'Sidebar action', readonly=True,
                                             help="Sidebar action to make this template available on records "
                                                  "of the related document model"),
-        'ref_ir_value':fields.many2one('ir.values', 'Sidebar button', readonly=True,
+        'ref_ir_value':fields.many2one('ir.values', 'Sidebar Button', readonly=True,
                                        help="Sidebar button to open the sidebar action"),
         'track_campaign_item': fields.boolean('Resource Tracking',
                                               help="Enable this is you wish to include a special tracking marker "
@@ -147,7 +147,7 @@ class email_template(osv.osv):
                                           help="Optional preferred server for outgoing mails. If not set, the highest "
                                                "priority one will be used."),
         'body_text': fields.text('Text Contents', translate=True, help="Plaintext version of the message (placeholders may be used here)"),
-        'body_html': fields.text('Rich-Text Contents', translate=True, help="Rich-text/HTML version of the message (placeholders may be used here)"),
+        'body_html': fields.text('Rich-text Contents', translate=True, help="Rich-text/HTML version of the message (placeholders may be used here)"),
         'message_id': fields.char('Message-Id', size=256, help="Message-ID SMTP header to use in outgoing messages based on this template. "
                                                                "Please note that this overrides the 'Resource Tracking' option, "
                                                                "so if you simply need to track replies to outgoing emails, enable "
