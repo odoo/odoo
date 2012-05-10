@@ -70,7 +70,7 @@ class partner_vat(osv.osv_memory):
                       FROM account_move_line l
                       LEFT JOIN res_partner p ON l.partner_id = p.id
                       LEFT JOIN account_tax_code c ON l.tax_code_id = c.id
-                      WHERE c.code IN ('01','02','03','45','49')
+                      WHERE c.code IN ('00','01','02','03','45','49')
                       AND l.partner_id IN %s
                       AND l.period_id IN %s
                       GROUP BY l.partner_id, p.name, p.vat) AS sub1
