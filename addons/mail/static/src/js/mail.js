@@ -4,12 +4,8 @@ openerp.mail = function(session) {
     
     var mail = session.mail = {};
 
-    /* Add ThreadDisplay widget to registry */
-    session.web.form.widgets.add( 'Thread', 'openerp.mail.Thread');
-//    session.web.page.readonly.add( 'Thread', 'openerp.mail.Thread');
-
     /** 
-     * ThreadDisplay widget: this widget handles the display of a thread of
+     * Thread widget: this widget handles the display of a thread of
      * messages. The [thread_level] parameter sets the thread level number:
      * - root message
      * - - sub message (parent_id = root message)
@@ -18,22 +14,28 @@ openerp.mail = function(session) {
      * This widget has 2 ways of initialization, either you give records to be rendered,
      * either it will fetch [limit] messages related to [res_model]:[res_id].
      */
+
+    /* Add ThreadDisplay widget to registry */
+    session.web.form.widgets.add( 'Thread', 'openerp.mail.Thread');
+
+    /* Thread is an extension of a Widget */
     mail.Thread = session.web.Widget.extend({
         template: 'Thread',
 
         /**
          * @param {Object} parent parent
          * @param {Object} [params]
-         * @param {String} [params.res_model] res_model of mail.thread object
-         * @param {Number} [params.res_id] res_id of record
-         * @param {Number} [params.parent_id=false] parent_id of message
-         * @param {Number} [params.uid] user id
+         * @param {String} [params.res_model] res_model of document [REQUIRED]
+         * @param {Number} [params.res_id] res_id of record [REQUIRED]
+         * @param {Number} [params.uid] user id [REQUIRED]
+         * @param {Bool}   [params.parent_id=false] parent_id of message
          * @param {Number} [params.thread_level=0] number of levels in the thread (only 0 or 1 currently)
-         * @param {Number} [params.msg_more_limit=100] number of character to display before having a "show more" link;
+         * @param {Bool}   [params.wall=false] thread is displayed in the wall
+         * @param {Number} [params.msg_more_limit=150] number of character to display before having a "show more" link;
          *                                             note that the text will not be truncated if it does not have 110% of
          *                                             the parameter (ex: 110 characters needed to be truncated and be displayed
          *                                             as a 100-characters message)
-         * @param {Number} [params.limit=10] maximum number of messages to fetch
+         * @param {Number} [params.limit=100] maximum number of messages to fetch
          * @param {Number} [params.offset=0] offset for fetching messages
          * @param {Number} [params.records=null] records to show instead of fetching messages
          */
@@ -42,7 +44,8 @@ openerp.mail = function(session) {
             this.params = params;
             this.params.parent_id = this.params.parent_id || false;
             this.params.thread_level = this.params.thread_level || 0;
-            this.params.msg_more_limit = this.params.msg_more_limit || 100;
+            this.params.wall = this.params.wall || this.params.records || false;
+            this.params.msg_more_limit = this.params.msg_more_limit || 150;
             this.params.limit = this.params.limit || 100;
             this.params.offset = this.params.offset || 0;
             this.params.records = this.params.records || null;
@@ -55,11 +58,13 @@ openerp.mail = function(session) {
             // display customization vars
             this.display = {};
             this.display.show_post_comment = this.params.show_post_comment || false;
+            this.display.show_msg_menu = this.params.wall;
             this.display.show_reply = (this.params.thread_level > 0);
-            this.display.show_delete = true;
-            this.display.show_hide = this.params.show_hide || false;
+            this.display.show_delete = ! this.params.wall;
+            this.display.show_hide = this.params.wall;
+            this.display.show_reply_by_email = ! this.params.wall;
             this.display.show_more = (this.params.thread_level == 0);
-            // not used currently
+            // internal links mapping
             this.intlinks_mapping = {};
         },
         
@@ -96,7 +101,6 @@ openerp.mail = function(session) {
             });
             // event: click on 'delete' in msg
             this.$element.find('div.oe_mail_thread_display').delegate('a.oe_mail_msg_delete', 'click', function (event) {
-                //console.log('deleting');
                 if (! confirm(_t("Do you really want to delete this message?"))) { return false; }
                 var msg_id = event.srcElement.dataset.id;
                 if (! msg_id) return false;
@@ -109,11 +113,9 @@ openerp.mail = function(session) {
             });
             // event: click on 'hide' in msg
             this.$element.find('div.oe_mail_thread_display').delegate('a.oe_mail_msg_hide', 'click', function (event) {
-                //console.log('hiding');
                 if (! confirm(_t("Do you really want to hide this thread ?"))) { return false; }
                 var msg_id = event.srcElement.dataset.id;
                 if (! msg_id) return false;
-                //console.log(msg_id);
                 var call_defer = self.ds.call('message_remove_pushed_notifications', [[self.params.res_id], [parseInt(msg_id)], true]);
                 $(event.srcElement).parents('li.oe_mail_thread_msg').eq(0).hide();
                 if (self.params.thread_level > 0) {
@@ -121,14 +123,33 @@ openerp.mail = function(session) {
                 }
                 return false;
             });
-            // event: click on 'hide notification' in wheel_menu
+            // event: click on "reply by email" in msg
+            this.$element.find('div.oe_mail_thread_display').delegate('a.oe_mail_msg_reply_by_email', 'click', function (event) {
+                console.log('reply by e-mail');
+                var msg_id = event.srcElement.dataset.id;
+                if (! msg_id) return false;
+                self.do_action({
+                        type: 'ir.actions.act_window',
+                        res_model: 'mail.compose.message',
+                        views: [[false, 'form']],
+                        view_type: 'form',
+                        view_mode: 'form',
+                        target: 'new',
+                        context: {'active_model': self.params.res_model, 'active_id': self.params.res_id, 'message_id': msg_id, 'mail.compose.message.mode': 'reply'},
+                        key2: 'client_action_multi',
+                });
+                return false;
+            });
+            // event: click on the wheel menu in messages
+            this.$element.find('div.oe_mail_thread_display').delegate('img.oe_mail_msg_menu_icon', 'click', function (event) {
+                self.$element.find('ul.oe_mail_msg_menu').toggle();
+            });
+            // event: click on 'hide' in wheel_menu
             this.$element.find('div.oe_mail_thread_display').delegate('a.oe_mail_msg_hide_thread', 'click', function (event) {
-                console.log('hiding notification');
                 if (! confirm(_t("Do you really want to hide this thread ?"))) { return false; }
                 var msg_id = event.srcElement.dataset.id;
                 if (! msg_id) return false;
-                console.log(msg_id);
-                //var call_defer = self.ds.call('message_remove_pushed_notifications', [[self.params.res_id], [parseInt(msg_id)], true]);
+                var call_defer = self.ds.call('message_remove_pushed_notifications', [[self.params.res_id], [parseInt(msg_id)], true]);
                 $(event.srcElement).parents('li.oe_mail_thread_msg').eq(0).hide();
                 if (self.params.thread_level > 0) {
                     $(event.srcElement).parents('ul.oe_mail_thread').eq(0).hide();
@@ -137,11 +158,11 @@ openerp.mail = function(session) {
             });
             // event: click on 'hide this type' in wheel_menu
             this.$element.find('div.oe_mail_thread_display').delegate('a.oe_mail_msg_hide_type', 'click', function (event) {
-                //console.log('hiding type');
-                if (! confirm(_t("Do you really want to hide this thread ?"))) { return false; }
+                console.log('hiding type');
+                if (! confirm(_t("Do you really want to hide this type of thread ?"))) { return false; }
                 var subtype = event.srcElement.dataset.subtype;
                 if (! subtype) return false;
-                //console.log(subtype);
+                console.log(subtype);
                 var call_defer = self.ds.call('message_subscription_hide', [[self.params.res_id], subtype]);
                 $(event.srcElement).parents('li.oe_mail_thread_msg').eq(0).hide();
                 if (self.params.thread_level > 0) {
@@ -168,13 +189,8 @@ openerp.mail = function(session) {
                 }
                 else self.do_action({ type: 'ir.actions.act_window', res_model: res_model, res_id: parseInt(res_id), views: [[false, 'form']]});
             });
-            // event: click on the wheel menu in messages
-            this.$element.find('div.oe_mail_thread_display').delegate('img.oe_mail_msg_menu_icon', 'click', function (event) {
-                self.$element.find('ul.oe_mail_msg_menu').toggle();
-            });
             // event: click on "send an email"
             this.$element.find('div.oe_mail_thread_act').delegate('a.oe_mail_compose', 'click', function (event) {
-                console.log('cacaprout');
                 self.do_action({
                         type: 'ir.actions.act_window',
                         res_model: 'mail.compose.message',
@@ -182,12 +198,11 @@ openerp.mail = function(session) {
                         view_type: 'form',
                         view_mode: 'form',
                         target: 'new',
-                        context: {'active_model': self.params.res_model, 'active_id': self.params.res_id, 'mail.compose.message.mode': 'new'},
+                        context: {'active_model': self.params.res_model, 'active_id': self.params.res_id, 'mail.compose.message.mode': 'document'},
                         key2: 'client_action_multi',
                 });
                 return false;
             });
-            
         },
         
         destroy: function () {
@@ -271,6 +286,8 @@ openerp.mail = function(session) {
             record.body = this.do_clean_text(record.body);
             record.tr_body = this.do_truncate_string(record.body, this.params.msg_more_limit);
             record.body = this.do_replace_internal_links(record.body);
+            console.log(record.body);
+            console.log(record.tr_body);
             if (record.tr_body) record.tr_body = this.do_replace_internal_links(record.tr_body);
             // format date according to the user timezone
             record.date = session.web.format_value(record.date, {type:"datetime"});
@@ -781,7 +798,11 @@ openerp.mail = function(session) {
         },
     });
     
-    
+
+    /**
+     *    TOOLS
+     */
+
     /**
     * Add records to sorted_comments array
     * @param {Array} records records from mail.message sorted by date desc

@@ -67,7 +67,6 @@ class mail_compose_message(osv.osv_memory):
            :param dict context: several context values will modify the behavior
                                 of the wizard, cfr. the class description.
         """
-        print context
         if context is None:
             context = {}
         result = super(mail_compose_message, self).default_get(cr, uid, fields, context=context)
@@ -76,14 +75,22 @@ class mail_compose_message(osv.osv_memory):
         if (not reply_mode) and context.get('active_model') and context.get('active_id'):
             # normal mode when sending an email related to any document, as specified by
             # active_model and active_id in context
-            vals = self.get_value(cr, uid, context.get('active_model'), context.get('active_id'), context)
+            # if a message_id is specified in context, this means we send an e-mail related
+            # to a document, but based on a previous e-mail
+            if context.get('message_id'):
+                vals = self.get_message_data(cr, uid, int(context['message_id']), context=context)
+            vals.update(self.get_value(cr, uid, context.get('active_model'), context.get('active_id'), context))
         elif reply_mode and context.get('active_id'):
             # reply mode, consider active_id is the ID of a mail.message to which we're
             # replying
-            vals = self.get_message_data(cr, uid, int(context['active_id']), context)
+            if context.get('message_id'):
+                vals = self.get_message_data(cr, uid, int(context['message_id']), context=context)
+            else:
+                vals = self.get_message_data(cr, uid, int(context['active_id']), context)
         else:
             # default mode
             result['model'] = context.get('active_model', False)
+        
         for field in vals:
             if field in fields:
                 result.update({field : vals[field]})
