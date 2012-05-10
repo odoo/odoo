@@ -98,7 +98,7 @@ instance.web.ViewEditor =   instance.web.OldWidget.extend({
         var view_widget = [{'name': 'view_name', 'string':'View Name', 'type': 'char', 'required': true, 'value' : this.model + '.custom_' + Math.round(Math.random() * 1000)},
                            {'name': 'view_type', 'string': 'View Type', 'type': 'selection', 'required': true, 'value': 'Form', 'selection': [['',''],['tree', 'Tree'],['form', 'Form'],['graph', 'Graph'],['calendar', 'Calender']]},
                            {'name': 'proirity', 'string': 'Priority', 'type': 'float', 'required': true, 'value':'16'}];
-        this.create_view_dialog.$element.append('<table id="create_view"  style="width:400px" class="oe_forms"></table>');
+        this.create_view_dialog.$element.append('<table id="create_view"  style="width:400px" class="oe_form"></table>');
         this.create_view_widget = [];
         _.each(view_widget, function(widget) {
             var type_widget =  new (self.property.get_any([widget.type])) (self.create_view_dialog, widget);
@@ -877,7 +877,7 @@ instance.web.ViewEditor =   instance.web.OldWidget.extend({
             'fonts' : {'name':'fonts', 'string': 'fonts', 'type': 'char'},
         };
         var arch_val = self.get_object_by_id(this.one_object.clicked_tr_id,this.one_object['main_object'], []);
-        this.edit_node_dialog.$element.append('<table id="rec_table"  style="width:400px" class="oe_forms"></table>');
+        this.edit_node_dialog.$element.append('<table id="rec_table"  style="width:400px" class="oe_form"></table>');
         this.edit_widget = [];
         self.ready  = $.when(self.on_groups(properties)).then(function () {
             _PROPERTIES_ATTRIBUTES['groups']['selection'] = self.groups;
@@ -963,7 +963,7 @@ instance.web.ViewEditor =   instance.web.OldWidget.extend({
                 {text: _t("Cancel"), click: function() { self.add_node_dialog.close(); }}
             ]
         }).open();
-        this.add_node_dialog.$element.append('<table id="rec_table"  style="width:420px" class="oe_forms"><tbody><tr></tbody></table>');
+        this.add_node_dialog.$element.append('<table id="rec_table"  style="width:420px" class="oe_form"><tbody><tr></tbody></table>');
         var table_selector = self.add_node_dialog.$element.find('table[id=rec_table] tbody');
         _.each(render_list, function(node) {
             type_widget = new (self.property.get_any([node.type])) (self.add_node_dialog, node);

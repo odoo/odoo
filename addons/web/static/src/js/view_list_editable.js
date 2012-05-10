@@ -204,7 +204,7 @@ openerp.web.list_editable = function (instance) {
                 var $new_row = $('<tr>', {
                         id: _.uniqueId('oe-editable-row-'),
                         'data-id': record_id,
-                        'class': row ? $(row).attr('class') : '' + ' oe_forms',
+                        'class': (row ? $(row).attr('class') : '') + ' oe_form',
                         click: function (e) {e.stopPropagation();}
                     })
                     .delegate('button.oe-edit-row-save', 'click', function () {

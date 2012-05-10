@@ -1785,24 +1785,16 @@
 .openerp .oe-listview-content {
   width: 100%;
 }
-.openerp .oe-listview-content td, .openerp .oe-listview-content th {
-  padding: 3px 6px;
-  line-height: 18px;
-}
-.openerp .oe-listview-content td button, .openerp .oe-listview-content th button {
-  border: none;
-  background: transparent;
-  padding: 0;
-  -moz-box-shadow: none;
-  -webkit-box-shadow: none;
-  -box-shadow: none;
-}
-.openerp .oe-listview-content thead {
+.openerp .oe-listview-content > thead {
   border-bottom: 2px solid #cacaca;
   background: #eeeeee;
   vertical-align: top;
 }
-.openerp .oe-listview-content thead th:after {
+.openerp .oe-listview-content > thead td, .openerp .oe-listview-content > thead th {
+  padding: 3px 6px;
+  line-height: 18px;
+}
+.openerp .oe-listview-content > thead th:after {
   content: "";
   float: right;
   margin-top: 7px;
@@ -1811,12 +1803,12 @@
   border-color: black transparent;
   visibility: hidden;
 }
-.openerp .oe-listview-content thead th.sortup:after {
+.openerp .oe-listview-content > thead th.sortup:after {
   visibility: visible;
   filter: alpha(opacity=60);
   opacity: 0.6;
 }
-.openerp .oe-listview-content thead th.sortdown:after {
+.openerp .oe-listview-content > thead th.sortdown:after {
   border-bottom: none;
   border-left: 4px solid transparent;
   border-right: 4px solid transparent;
@@ -1828,14 +1820,35 @@
   filter: alpha(opacity=60);
   opacity: 0.6;
 }
-.openerp .oe-listview-content tbody {
+.openerp .oe-listview-content > tbody {
   cursor: pointer;
   background: white;
 }
-.openerp .oe-listview-content tbody tr {
+.openerp .oe-listview-content > tbody > tr {
   border-top: 1px solid #dddddd;
 }
-.openerp .oe-listview-content tbody tr:nth-child(odd) {
+.openerp .oe-listview-content > tbody > tr > td, .openerp .oe-listview-content > tbody > tr > th {
+  padding: 3px 6px;
+  line-height: 18px;
+}
+.openerp .oe-listview-content > tbody > tr > td > button, .openerp .oe-listview-content > tbody > tr > th > button {
+  border: none;
+  background: transparent;
+  padding: 0;
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  -box-shadow: none;
+}
+.openerp .oe-listview-content > tbody > tr > td.oe_list_checkbox:first-child, .openerp .oe-listview-content > tbody > tr th.oe_list_checkbox:first-child {
+  width: 17px;
+}
+.openerp .oe-listview-content > tbody > tr > td.oe_list_checkbox:first-child:after, .openerp .oe-listview-content > tbody > tr th.oe_list_checkbox:first-child:after {
+  border-width: 0;
+}
+.openerp .oe-listview-content > tbody > tr > td.oe-number {
+  text-align: right !important;
+}
+.openerp .oe-listview-content > tbody > tr:nth-child(odd) {
   background-color: #f0f0fa;
   background-color: #f0f0fa;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#f0f0fa), to(#eeeef6));
@@ -1845,13 +1858,13 @@
   background-image: -o-linear-gradient(top, #f0f0fa, #eeeef6);
   background-image: linear-gradient(to bottom, #f0f0fa, #eeeef6);
 }
-.openerp .oe-listview-content tfoot {
+.openerp .oe-listview-content > tfoot {
   border-top: 2px solid #cacaca;
   border-bottom: 1px solid #cacaca;
   background: #eeeeee;
   font-weight: bold;
 }
-.openerp .oe-listview-content tbody tr:hover td, .openerp .oe-listview-content tbody tr:hover th {
+.openerp .oe-listview-content > tbody tr:hover td, .openerp .oe-listview-content tbody tr:hover th {
   background-color: #eeeeee;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#eeeeee), to(#dedede));
   background-image: -webkit-linear-gradient(top, #eeeeee, #dedede);
@@ -1859,15 +1872,6 @@
   background-image: -ms-linear-gradient(top, #eeeeee, #dedede);
   background-image: -o-linear-gradient(top, #eeeeee, #dedede);
   background-image: linear-gradient(to bottom, #eeeeee, #dedede);
-}
-.openerp .oe-listview-content td.oe_list_checkbox:first-child, .openerp .oe-listview-content th.oe_list_checkbox:first-child {
-  width: 17px;
-}
-.openerp .oe-listview-content td.oe_list_checkbox:first-child:after, .openerp .oe-listview-content th.oe_list_checkbox:first-child:after {
-  border-width: 0;
-}
-.openerp .oe-listview-content td.oe-number {
-  text-align: right !important;
 }
 .openerp .oe-listview-content .numeric {
   text-align: right;

@@ -1482,18 +1482,13 @@ $colour4: #8a89ba
     // ListView {{{
     .oe-listview-content
         width: 100%
-        td, th
-            padding: 3px 6px
-            line-height: 18px
-            button
-                border: none
-                background: transparent
-                padding: 0
-                @include box-shadow(none)
-        thead
+        > thead
             border-bottom: 2px solid #cacaca
             background: #eee
             vertical-align: top
+            td, th
+                padding: 3px 6px
+                line-height: 18px
             th:after
                 content: ""
                 float: right
@@ -1522,29 +1517,37 @@ $colour4: #8a89ba
             //    visibility: visible
             //    @include box-shadow(none)
             //    @include opacity(0.6)
-        tbody
+        > tbody
             cursor: pointer
             background: white
-            tr
+            > tr
                 border-top: 1px solid #ddd
-            tr:nth-child(odd)
+                > td, > th
+                    padding: 3px 6px
+                    line-height: 18px
+                    > button
+                        border: none
+                        background: transparent
+                        padding: 0
+                        @include box-shadow(none)
+                > td.oe_list_checkbox:first-child, th.oe_list_checkbox:first-child
+                    width: 17px
+                    &:after
+                        border-width: 0
+                > td.oe-number
+                    text-align: right !important
+            > tr:nth-child(odd)
                 background-color: #f0f0fa
                 @include vertical-gradient(#f0f0fa, #eeeef6)
-        tfoot
+        > tfoot
             border-top: 2px solid #cacaca
             border-bottom: 1px solid #cacaca
             background: #eee
             font-weight: bold
 
-        tbody tr:hover td, tbody tr:hover th
+        > tbody tr:hover td, tbody tr:hover th
             @include vertical-gradient(#eee, #dedede)
 
-        td.oe_list_checkbox:first-child, th.oe_list_checkbox:first-child
-            width: 17px
-            &:after
-                border-width: 0
-        td.oe-number
-            text-align: right !important
         .numeric
             text-align: right
             width: 82px
