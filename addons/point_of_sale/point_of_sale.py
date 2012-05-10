@@ -271,6 +271,41 @@ class pos_session(osv.osv):
         ('uniq_name', 'unique(name)', "The name of this POS Session must be unique !"),
     ]
 
+    def _check_unicity(self, cr, uid, ids, context=None):
+        for session in self.browse(cr, uid, ids, context=None):
+            # open if there is no session in 'opening_control', 'opened', 'closing_control' for one user
+            domain = [
+                ('state', '!=', 'closed'),
+                ('user_id', '=', uid),
+                ('id', '!=', session.id),
+            ]
+            count = self.search_count(cr, uid, domain, context=context)
+
+            if count:
+                return False
+
+        return True
+
+    def _check_pos_config(self, cr, uid, ids, context=None):
+        for session in self.browse(cr, uid, ids, context=None):
+            domain = [
+                ('state', '!=', 'closed'),
+                ('config_id', '=', session.config.id),
+                ('id', '!=', session.id),
+            ]
+
+            count = self.search_count(cr, uid, domain, context=context)
+
+            if count:
+                return False
+
+        return True
+
+    _constraints = [
+        (_check_unicity, "You can create a new session, you have an existing and non closed session !", ['user_id', 'state']),
+        (_check_pos_config, "There is an existing session for the PoS Config", ['config_id']),
+    ]
+
     def create(self, cr, uid, values, context=None):
         config_id = values.get('config_id', False) or False
 

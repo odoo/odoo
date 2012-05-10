@@ -22,6 +22,13 @@ class pos_session_opening(osv.osv_memory):
                 'config_id' : wizard.pos_config_id.id,
             }
             session_id = proxy.create(cr, uid, values, context=context)
+
+            if all(journal.opening_control == False
+                   for journal in wizard.pos_config_id.journal_ids):
+
+                wkf_service = netsvc.LocalService('workflow')
+                wkf_service.trg_validate(uid, 'pos.session', session_id, 'open', cr)
+
             return self._open_session(session_id)
 
     def open_existing_session_cb(self, cr, uid, ids, context=None):
