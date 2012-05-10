@@ -544,7 +544,6 @@ class mail_thread(osv.osv):
             context.update({'thread_model': model})
 
         mail_message = self.pool.get('mail.message')
-        res_id = False
 
         # Parse Message
         # Warning: message_from_string doesn't always work correctly on unicode,
@@ -552,7 +551,7 @@ class mail_thread(osv.osv):
         if isinstance(message, unicode):
             message = message.encode('utf-8')
         msg_txt = email.message_from_string(message)
-        msg = mail_message.parse_message(msg_txt, save_original=save_original)
+        msg = mail_message.parse_message(msg_txt, save_original=save_original, context=context)
 
         if strip_attachments and 'attachments' in msg:
             del msg['attachments']

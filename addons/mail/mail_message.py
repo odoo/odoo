@@ -30,11 +30,13 @@ import datetime
 from email.header import decode_header
 from email.message import Message
 
-import tools
+from openerp import SUPERUSER_ID
 from osv import osv
 from osv import fields
+import pytz
+from tools import DEFAULT_SERVER_DATETIME_FORMAT
 from tools.translate import _
-from openerp import SUPERUSER_ID
+import tools
 
 _logger = logging.getLogger('mail')
 
@@ -410,7 +412,7 @@ class mail_message(osv.Model):
             _logger.exception("Failed processing mail queue")
         return res
 
-    def parse_message(self, message, save_original=False):
+    def parse_message(self, message, save_original=False, context=None):
         """Parses a string or email.message.Message representing an
            RFC-2822 email, and returns a generic dict holding the
            message details.
@@ -467,45 +469,48 @@ class mail_message(osv.Model):
             msg_txt['message-id'] = message_id
             _logger.info('Parsing Message without message-id, generating a random one: %s', message_id)
 
-        fields = msg_txt.keys()
+        msg_fields = msg_txt.keys()
         msg['id'] = message_id
         msg['message-id'] = message_id
 
-        if 'Subject' in fields:
+        if 'Subject' in msg_fields:
             msg['subject'] = decode(msg_txt.get('Subject'))
 
-        if 'Content-Type' in fields:
+        if 'Content-Type' in msg_fields:
             msg['content-type'] = msg_txt.get('Content-Type')
 
-        if 'From' in fields:
+        if 'From' in msg_fields:
             msg['from'] = decode(msg_txt.get('From') or msg_txt.get_unixfrom())
 
-        if 'To' in fields:
+        if 'To' in msg_fields:
             msg['to'] = decode(msg_txt.get('To'))
 
-        if 'Delivered-To' in fields:
+        if 'Delivered-To' in msg_fields:
             msg['to'] = decode(msg_txt.get('Delivered-To'))
 
-        if 'CC' in fields:
+        if 'CC' in msg_fields:
             msg['cc'] = decode(msg_txt.get('CC'))
 
-        if 'Cc' in fields:
+        if 'Cc' in msg_fields:
             msg['cc'] = decode(msg_txt.get('Cc'))
 
-        if 'Reply-To' in fields:
+        if 'Reply-To' in msg_fields:
             msg['reply'] = decode(msg_txt.get('Reply-To'))
 
-        if 'Date' in fields:
+        if 'Date' in msg_fields:
             date_hdr = decode(msg_txt.get('Date'))
-            msg['date'] = dateutil.parser.parse(date_hdr).strftime("%Y-%m-%d %H:%M:%S")
+            # convert from email timezone to server timezone
+            date_server_datetime = dateutil.parser.parse(date_hdr).astimezone(pytz.timezone(tools.get_server_timezone()))
+            date_server_datetime_str = date_server_datetime.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+            msg['date'] = date_server_datetime_str
 
-        if 'Content-Transfer-Encoding' in fields:
+        if 'Content-Transfer-Encoding' in msg_fields:
             msg['encoding'] = msg_txt.get('Content-Transfer-Encoding')
 
-        if 'References' in fields:
+        if 'References' in msg_fields:
             msg['references'] = msg_txt.get('References')
 
-        if 'In-Reply-To' in fields:
+        if 'In-Reply-To' in msg_fields:
             msg['in-reply-to'] = msg_txt.get('In-Reply-To')
 
         msg['headers'] = {}
