@@ -914,19 +914,14 @@
                             </field>
 
 
-                            <group col="6" colspan="4">
-                                <group col="2" colspan="2">
-                                    <separator string="Dates" colspan="4"/>
-                                    <field name="cash_register_date" select="1" readonly="1" />
-                                    <field name="cash_register_closing_date" select="1" readonly="1"/>
-                                </group>
-                                <group col="2" colspan="2">
+                            <group col="4" colspan="4">
+                                <group col="2" colspan="2" attrs="{'invisible' : [('state', 'in', ('closing_control'))]}">
                                     <separator string="Opening Balance" colspan="4"/>
                                     <field name="cash_register_balance_end_real" readonly="1" string="Last Closing Balance"/>
                                     <field name="cash_register_balance_start" readonly="1" string="Computed Amount"/>
                                     <field name="cash_register_total_entry_encoding" />
                                 </group>
-                                <group col="2" colspan="2">
+                                <group col="2" colspan="2" attrs="{'invisible' : [('state', 'in', ('opening_control', 'opened'))]}">
                                     <separator string="Closing Balance" colspan="4"/>
                                     <field name="cash_register_balance_end"/>
                                     <field name="cash_register_balance_end_cash"/>
