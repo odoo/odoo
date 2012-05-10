@@ -135,7 +135,7 @@ class report_xml(osv.osv):
         'report_sxw': fields.function(_report_sxw, type='char', string='SXW Path'),
         'report_sxw_content_data': fields.binary('SXW Content'),
         'report_rml_content_data': fields.binary('RML Content'),
-        'report_sxw_content': fields.function(_report_content, fnct_inv=_report_content_inv, type='binary', string='SXW content',),
+        'report_sxw_content': fields.function(_report_content, fnct_inv=_report_content_inv, type='binary', string='SXW Content',),
         'report_rml_content': fields.function(_report_content, fnct_inv=_report_content_inv, type='binary', string='RML Content'),
 
     }
