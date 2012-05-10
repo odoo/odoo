@@ -553,6 +553,9 @@ class mail_thread(osv.osv):
         msg_txt = email.message_from_string(message)
         msg = mail_message.parse_message(msg_txt, save_original=save_original, context=context)
 
+        # update state
+        msg['state'] = 'received'
+        
         if strip_attachments and 'attachments' in msg:
             del msg['attachments']
 
