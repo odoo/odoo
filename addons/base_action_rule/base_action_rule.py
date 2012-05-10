@@ -37,7 +37,7 @@ def get_datetime(date_field):
     date_split = date_field.split(' ')
     if len(date_split) == 1:
         date_field = date_split[0] + " 00:00:00"
-   
+
     return datetime.strptime(date_field[:19], '%Y-%m-%d %H:%M:%S')
 
 
@@ -79,13 +79,10 @@ class base_action_rule(osv.osv):
  it will allow you to hide the rule without removing it."),
         'sequence': fields.integer('Sequence', help="Gives the sequence order \
 when displaying a list of rules."),
-        'trg_date_type':  fields.selection([
-            ('none', 'None'),
-            ('create', 'Creation Date'),
-            ('action_last', 'Last Action Date'),
-            ('date', 'Date'),
-            ('deadline', 'Deadline'),
-            ], 'Trigger Date', size=16),
+        'trg_date_id': fields.many2one('ir.model.fields',
+                                       'Trigger Date',
+                                       domain="[('model_id', '=', model_id),"
+                                               "('ttype','in',('date','datetime'))]"),
         'trg_date_range': fields.integer('Delay after trigger date', \
                                          help="Delay After Trigger Date,\
 specifies you can put a negative number. If you need a delay before the \
@@ -132,7 +129,6 @@ the rule to mark CC(mail to any other person defined in actions)."),
 
     _defaults = {
         'active': lambda *a: True,
-        'trg_date_type': lambda *a: 'none',
         'trg_date_range_type': lambda *a: 'day',
         'act_mail_to_user': lambda *a: 0,
         'act_remind_partner': lambda *a: 0,
@@ -168,7 +164,7 @@ the rule to mark CC(mail to any other person defined in actions)."),
                 obj = self.pool.get(obj_name)
                 # If the rule doesn't involve a time condition, run it immediately
                 # Otherwise we let the scheduler run the action
-                if self.browse(cr, uid, rule_id, context=context).trg_date_type == 'none':
+                if not self.browse(cr, uid, rule_id, context=context).trg_date_id:
                     self._action(cr, uid, [rule_id], obj.browse(cr, uid, ids, context=context), context=context)
         return True
 
@@ -185,7 +181,7 @@ the rule to mark CC(mail to any other person defined in actions)."),
                 self.post_action(cr, uid, [new_id], model, context=context)
             return new_id
         return wrapper
-    
+
     def _write(self, old_write, model, context=None):
         """
         Return a wrapper around `old_write` calling both `old_write` and
@@ -230,7 +226,7 @@ the rule to mark CC(mail to any other person defined in actions)."),
     def _check(self, cr, uid, automatic=False, use_new_cursor=False, \
                        context=None):
         """
-        This Function is call by scheduler.
+        This Function is called by scheduler.
         """
         rule_pool = self.pool.get('base.action.rule')
         rule_ids = rule_pool.search(cr, uid, [], context=context)
@@ -248,22 +244,17 @@ the rule to mark CC(mail to any other person defined in actions)."),
                 obj = model_pool.browse(cr, uid, obj_id, context=context)
                 # Calculate when this action should next occur for this object
                 base = False
-                if rule.trg_date_type=='create' and hasattr(obj, 'create_date'):
-                    base = obj.create_date
-                elif (rule.trg_date_type=='action_last'
-                        and hasattr(obj, 'create_date')):
-                    if hasattr(obj, 'date_action_last') and obj.date_action_last:
-                        base = obj.date_action_last
-                    else:
-                        base = obj.create_date
-                elif (rule.trg_date_type=='deadline'
-                        and hasattr(obj, 'date_deadline')
-                        and obj.date_deadline):
-                    base = obj.date_deadline
-                elif (rule.trg_date_type=='date'
-                        and hasattr(obj, 'date')
-                        and obj.date):
-                    base = obj.date
+                if rule.trg_date_id:
+                    date_type = rule.trg_date_id.name
+                    if (date_type=='date_action_last'
+                            and hasattr(obj, 'create_date')):
+                        if hasattr(obj, 'date_action_last') and obj.date_action_last:
+                            base = obj.date_action_last
+                        else:
+                            base = obj.create_date
+                    elif (hasattr(obj, date_type)
+                         and obj.read([date_type])[0][date_type]):
+                        base = obj.read([date_type])[0][date_type]
                 if base:
                     fnct = {
                         'minutes': lambda interval: timedelta(minutes=interval),
