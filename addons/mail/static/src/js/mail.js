@@ -285,13 +285,13 @@ openerp.mail = function(session) {
             // body text manipulation
             record.body = this.do_clean_text(record.body);
             record.body = this.do_replace_internal_links(record.body);
-            this.$element.find('span.oe_mail_msg_body:last').expander({slicePoint: this.params.msg_more_limit, moreClass: 'oe_mail_expand', lesClass: 'oe_mail_reduce'});
             // format date according to the user timezone
             record.date = session.web.format_value(record.date, {type:"datetime"});
             // render
             $(session.web.qweb.render('ThreadMsg', {'record': record, 'thread': this, 'params': this.params, 'display': this.display})
                     ).appendTo(this.$element.children('div.oe_mail_thread_display:first'));
-            // truncated: hide full-text, show summary, add buttons
+            // expand feature
+            this.$element.find('span.oe_mail_msg_body:last').expander({slicePoint: this.params.msg_more_limit, moreClass: 'oe_mail_expand', lesClass: 'oe_mail_reduce'});
         },
        
         /**
