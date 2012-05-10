@@ -1,4 +1,4 @@
-@charset "utf-8";
+@charset "UTF-8";
 @font-face {
   font-family: "mnmliconsRegular";
   src: url("/web/static/src/font/mnmliconsv21-webfont.eot") format("eot");
@@ -1131,16 +1131,22 @@
 }
 .openerp .oe_searchview .VS-search .VS-search-box {
   min-height: 0;
-  border-width: 1px;
   padding: 0;
   width: 480px;
   margin-bottom: 8px;
+  border: 1px solid #ababab;
+  -moz-border-radius: 13px;
+  -webkit-border-radius: 13px;
+  border-radius: 13px;
+  -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) inset;
+  -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) inset;
+  -box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) inset;
 }
 .openerp .oe_searchview .VS-search .VS-icon {
   top: 6px;
 }
 .openerp .oe_searchview .VS-search .VS-icon-search {
-  left: 4px;
+  left: 2px;
   top: 3px;
   height: 18px;
   width: 18px;
@@ -1165,7 +1171,6 @@
   height: 22px;
 }
 .openerp .oe_searchview .VS-search .VS-search-inner .search_input input, .openerp .oe_searchview .VS-search .VS-search-inner .search_input .VS-input-width-tester {
-  padding: 0 2px;
   height: inherit;
   margin: 0;
 }
