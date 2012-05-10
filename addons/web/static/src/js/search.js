@@ -505,24 +505,46 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
                 this.$element.find('div.oe_searchview_input:focus')[0]));
         this.query.add(ui.item.facet, {at: input_index / 2});
     },
-    renderFacets: function () {
+    /**
+     *
+     * @param {openerp.web.search.SearchQuery | openerp.web.search.Facet} _1
+     * @param {openerp.web.search.Facet} [_2]
+     * @param {Object} [options]
+     */
+    renderFacets: function (_1, _2, options) {
+        // _1: model if event=change, otherwise collection
+        // _2: undefined if event=change, otherwise model
         var self = this;
+        var started = [];
         var $e = this.$element.find('div.oe_searchview_facets');
         _.invoke(this.input_subviews, 'destroy');
         this.input_subviews = [];
 
         var i = new my.InputView(this);
-        i.appendTo($e);
+        started.push(i.appendTo($e));
         this.input_subviews.push(i);
         this.query.each(function (facet) {
             var f = new my.FacetView(this, facet);
-            f.appendTo($e);
+            started.push(f.appendTo($e));
             self.input_subviews.push(f);
 
             var i = new my.InputView(this);
-            i.appendTo($e);
+            started.push(i.appendTo($e));
             self.input_subviews.push(i);
         }, this);
+
+        $.when.apply(null, started).then(function () {
+            var input_to_focus;
+            // options.at: facet inserted at given index, focus next input
+            // otherwise just focus last input
+            if (!options || typeof options.at !== 'number') {
+                input_to_focus = _.last(self.input_subviews);
+            } else {
+                input_to_focus = self.input_subviews[(options.at + 1) * 2];
+            }
+
+            input_to_focus.$element.focus();
+        });
     },
 
     /**
