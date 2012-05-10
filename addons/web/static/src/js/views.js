@@ -701,6 +701,7 @@ instance.web.Sidebar = instance.web.Widget.extend({
         var self = this;
         this._super(this);
         this.redraw();
+        $('html').bind('click', function() { self.$element.find('.oe_dropdown_menu').hide(); });
         this.$element.on('click','.oe_dropdown_toggle',function(event) {
             $(this).parent().find('ul').toggle();
             return false;
