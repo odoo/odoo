@@ -72,8 +72,6 @@
             <div class="oe_mail_msg_content">
                 <t t-if="record.type == 'email'"><t t-call="EmailDisplay"/></t>
                 <t t-if="record.type == 'notification' || record.type == 'comment'"><t t-call="NoteDisplay"/></t>
-                <br />Message-id: <t t-esc="record.message_id"/>
-                <br />References: <t t-esc="record.references"/>
             </div>
             <t t-if="record.type == 'tmp'"><t t-call="ThreadDisplay" /></t>
         </div>
