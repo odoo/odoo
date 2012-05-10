@@ -111,9 +111,6 @@
                     <group colspan="2" col="3">
                         <separator string="Communication" colspan="4" col="3"/>
                         <field name="email_from" widget="email"/>
-                        <button string="Mail"
-                            name="%(mail.action_email_compose_message_wizard)d"
-                            icon="terp-mail-message-new" type="action" colspan="1"/>
                         <newline/>
                         <field name="phone"/>
                         <newline/>
@@ -461,10 +458,6 @@
                         
                         <group col="3" colspan="2">
                             <field name="email_from" string="Email" />
-                            <button string="Mail"
-                            name="%(mail.action_email_compose_message_wizard)d"
-                            context="{'mail':'new', 'model': 'crm.lead'}"
-                            icon="terp-mail-message-new" type="action" />
                         </group>
                             <field name="phone"/>
 
