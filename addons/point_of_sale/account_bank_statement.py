@@ -30,6 +30,8 @@ class account_journal(osv.osv):
         'opening_control': fields.boolean('Opening Control', help="If you want the journal should be control at opening, check this option"),
         'closing_control': fields.boolean('Closing Control', help="If you want the journal should be control at closing, check this option"),
 
+        'amount_authorized_diff' : fields.float('Amount Authorized Difference'),
+
     }
     _defaults = {
         'opening_control' : True,
@@ -86,6 +88,11 @@ class account_cash_statement(osv.osv):
                 for statement in order.statement_ids
             ]
         return super(account_cash_statement, self).search(cr, uid, domain, offset=offset, limit=limit, order=order, context=context, count=count)
+
+    _columns = {
+        'pos_session_id' : fields.many2one('pos.session'),
+        
+    }
 
 account_cash_statement()
 

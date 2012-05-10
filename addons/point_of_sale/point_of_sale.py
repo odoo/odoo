@@ -183,7 +183,7 @@ class pos_session(osv.osv):
         ('opening_control', 'Opening Control'),  # Signal open
         ('opened', 'Opened'),                    # Signal closing
         ('closing_control', 'Closing Control'),  # Signal close
-        ('closed', 'Closed'),
+        ('closed', 'Closed & Posted'),
     ]
 
     def _compute_cash_register_id(self, cr, uid, ids, fieldnames, args, context=None):
@@ -231,9 +231,26 @@ class pos_session(osv.osv):
                                              type='many2one', relation='account.bank.statement',
                                              string='Cash Register', store=True),
 
+        'opening_details_ids' : fields.related('cash_register_id', 'opening_details_ids', 
+                                       type='one2many', relation='account.cashbox.line',
+                                       string='CashBox Lines'),
+        'closing_details_ids' : fields.related('cash_register_id', 'closing_details_ids', 
+                                       type='one2many', relation='account.cashbox.line',
+                                       string='CashBox Lines'),
+
         'details_ids' : fields.related('cash_register_id', 'details_ids', 
                                        type='one2many', relation='account.cashbox.line',
                                        string='CashBox Lines'),
+
+        'cash_register_date' : fields.related('cash_register_id', 'date', type='datetime', string='Started On'),
+        'cash_register_closing_date' : fields.related('cash_register_id', 'closing_date', type='datetime', string='Closed On'),
+        'cash_register_balance_end_real' : fields.related('cash_register_id', 'balance_end_real', type='float', digits_compute=dp.get_precision('Account'), string="Ending Balance"),
+        'cash_register_balance_start' : fields.related('cash_register_id', 'balance_start', type='float', digits_compute=dp.get_precision('Account'), string="Starting Balance"),
+        'cash_register_total_entry_encoding' : fields.related('cash_register_id', 'total_entry_encoding', string='Total Cash Transaction'),
+        'cash_register_balance_end' : fields.related('cash_register_id', 'balance_end', type='float', digits_compute=dp.get_precision('Account'), string="Computed Balance"),
+        'cash_register_balance_end_cash' : fields.related('cash_register_id', 'balance_end_cash', string='Closing Balance', help="Closing balance based on cashBox"),
+        'cash_register_difference' : fields.related('cash_register_id', 'difference', type='float', string='Difference'),
+
         'journal_ids' : fields.related('config_id', 'journal_ids',
                                        type='many2many',
                                        readonly=True,
@@ -241,12 +258,7 @@ class pos_session(osv.osv):
                                        string='Journals'),
         'order_ids' : fields.one2many('pos.order', 'session_id', 'Orders'),
 
-        'statement_ids' : fields.many2many('account.bank.statement', 
-                                           'pos_session_statement_rel',
-                                           'session_id',
-                                           'statement_id',
-                                           'Bank Statement',
-                                           readonly=True),
+        'statement_ids' : fields.one2many('account.bank.statement', 'pos_session_id', 'Bank Statement', readonly=True),
     }
 
     _defaults = {
@@ -911,7 +923,7 @@ class pos_order(osv.osv):
                         continue
 
                     account_move_line_obj.create(cr, uid, {
-                        'name': "Tax" + line.name +  " (%s)" % (tax.name),
+                        'name': _("Tax") + line.name +  " (%s)" % (tax.name),
                         'date': order.date_order[:10],
                         'ref': order.name,
                         'product_id':line.product_id.id,
@@ -950,7 +962,7 @@ class pos_order(osv.osv):
 
             # counterpart
             to_reconcile.append(account_move_line_obj.create(cr, uid, {
-                'name': "Trade Receivables", #order.name,
+                'name': _("Trade Receivables"), #order.name,
                 'date': order.date_order[:10],
                 'ref': order.name,
                 'move_id': move_id,

@@ -205,6 +205,8 @@ class account_cash_statement(osv.osv):
         'closing_date': fields.datetime("Closed On"),
         'balance_end_cash': fields.function(_balance_end_cash, store=False, string='Closing Balance', help="Closing balance based on cashBox"),
         'details_ids' : fields.one2many('account.cashbox.line', 'bank_statement_id', string='CashBox Lines'),
+        'opening_details_ids' : fields.one2many('account.cashbox.line', 'bank_statement_id', string='Opening Cashbox Lines'),
+        'closing_details_ids' : fields.one2many('account.cashbox.line', 'bank_statement_id', string='Closing Cashbox Lines'),
         'user_id': fields.many2one('res.users', 'Responsible', required=False),
         'difference' : fields.function(_compute_difference, method=True, string="Difference", type="float"),
     }
@@ -327,10 +329,6 @@ class account_cash_statement(osv.osv):
     def _equal_balance(self, cr, uid, cash_id, context=None):
         statement = self.browse(cr, uid, cash_id, context=context)
         self.write(cr, uid, [cash_id], {'balance_end_real': statement.balance_end})
-        print "balance_end_real: %r" % (statement.balance_end,)
-        print "balance_end: %r" % (statement.balance_end,)
-        print "balance_end_cash: %r" % (statement.balance_end_cash,)
-
         if statement.balance_end != statement.balance_end_cash:
             return False
         return True

@@ -505,10 +505,12 @@
                             <field colspan="4" name="account_control_ids" nolabel="1"/>
                         </page>
                         <page string="Cash Box">
+                            <separator string="Profit &amp; Loss Accounts" colspan="4" />
                             <field name="profit_account_id" />
                             <field name="loss_account_id" />
                             <separator string="Internal Account" colspan="4" />
                             <field name="internal_account_id" />
+
                             <separator string="Cash Box Lines" colspan="4" />
                             <field name="cashbox_line_ids" nolabel="1" string="Unit Of Currency Definition" colspan="4">
                                 <tree string="CashBox Lines" editable="bottom">
@@ -2665,9 +2667,25 @@ action = pool.get('res.config').next(cr, uid, [], context)
                         </page>
                         <page string="CashBox">
                             <group col="2" expand="1">
-                                <field name="details_ids" nolabel="1" > 
-                                    <!--attrs="{'readonly' : [('state', '=', 'open')]}">-->
-                                    <tree string="" editable="bottom">
+                                <field name="opening_details_ids" nolabel="1" colspan="4" attrs="{'invisible' : [('state', '!=', 'draft')]}">
+                                    <tree string="Opening Cashbox Lines" editable="bottom">
+                                        <field name="pieces" readonly="1" />
+                                        <field name="number_opening" string="Opening Unit Numbers" on_change="on_change_sub_opening(pieces, number_opening, parent.balance_end)" attrs="{'readonly' : [('parent.state', '!=', 'open')]}" />
+                                        <field name="subtotal_opening" string="Opening Subtotal"/>
+                                    </tree>
+                                </field>
+                                <field name="closing_details_ids" nolabel="1" colspan="4" attrs="{'invisible' : [('state', '!=', 'open')]}">
+                                    <tree string="Closing Cashbox Lines" editable="bottom">
+                                        <field name="pieces" readonly="1" />
+                                        <field name="number_opening" string="Opening Unit Numbers" readonly="1" />
+                                        <field name="subtotal_opening" string="Opening Subtotal" readonly="1" />
+
+                                        <field name="number_closing" string="Closing Unit Numbers" on_change="on_change_sub_closing(pieces, number_closing, parent.balance_end)" attrs="{'readonly' : [('parent.state', '!=', 'confirm')]}"/>
+                                        <field name="subtotal_closing" string="Closing Subtotal"/>
+                                    </tree>
+                                </field>
+                                <field name="details_ids" nolabel="1" readonly="True" attrs="{'invisible' : [('state', '!=', 'confirm')]}"> 
+                                    <tree string="Cashbox Lines">
                                         <field name="pieces" readonly="1" />
                                         <field name="number_opening" string="Opening Unit Numbers" on_change="on_change_sub_opening(pieces, number_opening, parent.balance_end)" attrs="{'readonly' : [('parent.state', '!=', 'open')]}" />
                                         <field name="subtotal_opening" string="Opening Subtotal"/>
