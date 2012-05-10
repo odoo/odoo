@@ -67,11 +67,9 @@ class sale_advance_payment_inv(osv.osv_memory):
         product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
         value['amount'] = product.list_price
         try:
-            res_id = data_obj._get_id(cr, uid, 'sale', 'advance_product_0')
-            if res_id:
-                advance_id = data_obj.browse(cr, uid, res_id, context=context).res_id
-                if product.id ==  advance_id:
-                    value['advance'] = 'True'
+            advance_id = data_obj.get_object_reference(cr, uid, 'sale', 'advance_product_0')[1]
+            if product.id ==  advance_id:
+                value['advance'] = 'True'
         finally:
             return {'value': value}
 
