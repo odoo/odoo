@@ -284,24 +284,14 @@ openerp.mail = function(session) {
             else { record.mini_url = this.thread_get_avatar('res.users', 'avatar', record.user_id[0]); }    
             // body text manipulation
             record.body = this.do_clean_text(record.body);
-            record.tr_body = this.do_truncate_string(record.body, this.params.msg_more_limit);
             record.body = this.do_replace_internal_links(record.body);
-            console.log(record.body);
-            console.log(record.tr_body);
-            if (record.tr_body) record.tr_body = this.do_replace_internal_links(record.tr_body);
+            this.$element.find('span.oe_mail_msg_body:last').expander();
             // format date according to the user timezone
             record.date = session.web.format_value(record.date, {type:"datetime"});
             // render
             $(session.web.qweb.render('ThreadMsg', {'record': record, 'thread': this, 'params': this.params, 'display': this.display})
                     ).appendTo(this.$element.children('div.oe_mail_thread_display:first'));
             // truncated: hide full-text, show summary, add buttons
-            if (record.tr_body) {
-                var node_body = this.$element.find('span.oe_mail_msg_body:last').append(' <a href="#" class="reduce">[ ... Show less]</a>');
-                var node_body_short = this.$element.find('span.oe_mail_msg_body_short:last').append(' <a href="#" class="expand">[ ... Show more]</a>');
-                node_body.hide();
-                node_body.find('a:last').click(function() { node_body.hide(); node_body_short.show(); return false; });
-                node_body_short.find('a:last').click(function() { node_body_short.hide(); node_body.show(); return false; });
-            }
         },
        
         /**
@@ -434,11 +424,6 @@ openerp.mail = function(session) {
         
         thread_get_avatar: function(model, field, id) {
             return this.session.prefix + '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + (id || '');
-        },
-        
-        do_truncate_string: function(string, max_length) {
-            if (string.length <= (max_length * 1.2)) return false;
-            else return string.slice(0, max_length);
         },
         
         do_clean_text: function (string) {
