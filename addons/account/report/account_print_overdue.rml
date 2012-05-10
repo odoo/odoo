@@ -154,30 +154,22 @@
     <para style="terp_default_9">
       <font color="white"> </font>
     </para>
-    <para style="terp_default_9">[[ not getLines(o) and removeParentNode('para') or 'Dear Sir/Madam,']]</para>
     <para style="terp_default_9">
       <font color="white"> </font>
     </para>
     <section>
-      <para style="terp_default_8">[[ not getLines(o) and removeParentNode('section') or repeatIn(message(o, company), 'line') ]]</para>
-      <para style="terp_default_9">[[ line or removeParentNode('para') ]]</para>
-      <para style="terp_default_9">[[ line and removeParentNode('para') ]]<font color="white"> </font></para>
-    </section>
-    <para style="terp_default_9">
-      <font color="white"> </font>
-    </para>
-    <para style="terp_default_Bold_9">[[ getLines(o) and removeParentNode('para') or 'There is nothing due with this customer.']]</para>
-    <para style="terp_default_9">
-      <font color="white"> </font>
-    </para>
-    <para style="terp_default_9">[[ not getLines(o) and removeParentNode('para') or 'Best regards,']]</para>
-    <para style="terp_default_9">
-      <font color="white"> </font>
-    </para>
-    <blockTable colWidths="56.0,136.0,51.0,72.0,54.0,56.0,66.0,18.0" style="Table1">
+      <para style="terp_default_8">[[ not getLines(o) and removeParentNode('section')]]</para>
+      <section>
+          <para>[[repeatIn(message(o, company), 'message_line') ]]</para>
+          <para style="terp_default_9">[[ message_line ]]</para>
+          <para style="terp_default_8">
+            <font color="white"> </font>
+          </para>
+      </section>
+      <blockTable colWidths="56.0,136.0,51.0,72.0,54.0,56.0,66.0,18.0" style="Table1">
       <tr>
         <td>
-          <para style="terp_tblheader_Details">Date[[ not getLines(o) and removeParentNode('blockTable') ]]</para>
+          <para style="terp_tblheader_Details">Date</para>
         </td>
         <td>
           <para style="terp_tblheader_Details">Description</para>
@@ -201,9 +193,8 @@
           <para style="terp_tblheader_Details_Centre">Li.</para>
         </td>
       </tr>
-    </blockTable>
-    <section>
-      <para style="terp_default_8">[[repeatIn(getLines(o), 'line') ]]</para>
+      </blockTable>
+      <section>[[repeatIn(getLines(o), 'line') ]]
       <blockTable colWidths="56.0,136.0,52.0,71.0,55.0,56.0,66.0,17.0" style="Table3">
         <tr>
           <td>
@@ -232,8 +223,8 @@
           </td>
         </tr>
       </blockTable>
-    </section>
-    <blockTable colWidths="244.0,71.0,56.0,56.0,66.0,17.0" style="Table2">
+      </section>
+      <blockTable colWidths="244.0,71.0,56.0,56.0,66.0,17.0" style="Table2">
       <tr>
         <td>
           <para style="terp_default_8">
@@ -241,7 +232,7 @@
           </para>
         </td>
         <td>
-          <para style="terp_default_Bold_9">[[ not getLines(o) and removeParentNode('blockTable') or 'Sub-Total :']]</para>
+          <para style="terp_default_Bold_9">Sub-Total :</para>
         </td>
         <td>
           <para style="terp_default_Right_9">[[ formatLang((reduce(lambda x, y: x + ((y['account_id']['type'] == 'receivable' and y['debit'] or 0) or (y['account_id']['type'] == 'payable' and y['credit'] * -1 or 0)), getLines(o), 0))) ]] </para>
@@ -258,8 +249,8 @@
           </para>
         </td>
       </tr>
-    </blockTable>
-    <blockTable colWidths="250.0,66.0,62.0,131.0" style="Table4">
+      </blockTable>
+      <blockTable colWidths="244.0,71.0,62.0,132.0" style="Table4">
       <tr>
         <td>
           <para style="terp_default_8">
@@ -267,7 +258,7 @@
           </para>
         </td>
         <td>
-          <para style="terp_default_Bold_9">[[ not getLines(o) and removeParentNode('blockTable') or 'Balance :']]</para>
+          <para style="terp_default_Bold_9">Balance :</para>
         </td>
         <td>
           <para style="terp_tblheader_Details_Right">[[ formatLang((reduce(lambda x, y: x +(y['debit'] - y['credit']), getLines(o), 0))) ]] [[ company.currency_id.symbol ]]</para>
@@ -278,14 +269,24 @@
           </para>
         </td>
       </tr>
-    </blockTable>
+      </blockTable>
+      <para style="terp_default_9">
+        <font color="white"> </font>
+      </para>
+      <para style="terp_default_9">
+        <font color="white"> </font>
+      </para>
+      <para style="terp_default_9">Total amount due: [[ formatLang((reduce(lambda x, y: x + (y['debit'] - y['credit']), getLines(o), 0)), currency_obj=company.currency_id) ]]</para>
+    </section>
     <para style="terp_default_9">
       <font color="white"> </font>
     </para>
+    <section>
+       <para style="terp_default_Bold_9">[[ getLines(o) and removeParentNode('section')]]There is nothing due with this customer</para>
+    </section>
     <para style="terp_default_9">
       <font color="white"> </font>
     </para>
-    <para style="terp_default_9">Total amount due: [[ not getLines(o) and removeParentNode('blockTable') or formatLang((reduce(lambda x, y: x + (y['debit'] - y['credit']), getLines(o), 0)), currency_obj=company.currency_id) ]].</para>
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
