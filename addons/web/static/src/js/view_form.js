@@ -3063,7 +3063,8 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(_.
         this._super.apply(this, arguments);
         instance.web.form.CompletionFieldMixin.init.call(this);
         this.set({"value": []});
-        this.display_orderer = new instance.web.DropMisordered();
+        this._display_orderer = new instance.web.DropMisordered();
+        this._drop_shown = false;
     },
     start: function() {
         this._super();
@@ -3085,7 +3086,7 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(_.
             },
             ext: {
                 autocomplete: {
-                    selectFromDropdown: function(a, b, c) {
+                    selectFromDropdown: function() {
                         $(this).trigger('hideDropdown');
                         var index = Number(this.selectedSuggestionElement().children().children().data('index'));
                         var data = self.search_result[index];
@@ -3139,10 +3140,18 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(_.
             pop.on_write_completed.add_last(function() {
                 self.render_value();
             });
+        }).bind('hideDropdown', function() {
+            self._drop_shown = false;
+        }).bind('hideDropdown', function() {
+            self._drop_shown = true;
         });
         self.tags = self.$text.textext()[0].tags();
         $("textarea", this.$element).focusout(function() {
             $("textarea", this.$element).val("");
+        }).keydown(function(e) {
+            if (event.keyCode === 9 && self._drop_shown) {
+                self.$text.textext()[0].autocomplete().selectFromDropdown();
+            }
         });
     },
     set_value: function(value_) {
@@ -3185,7 +3194,7 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(_.
             }
         };
         if (! self.get('values') || self.get('values').length > 0) {
-            this.display_orderer.add(dataset.name_get(self.get("value"))).then(handle_names);
+            this._display_orderer.add(dataset.name_get(self.get("value"))).then(handle_names);
         } else {
             handle_names([]);
         }
