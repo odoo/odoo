@@ -39,6 +39,7 @@ class res_users(osv.osv):
 
     _columns = {
         'ean13' : fields.char('EAN13', size=13, help="BarCode"),
+        'pos_config' : fields.many2one('pos.config', 'PoS Config', domain=[('state', '=', 'active')]),
     }
 
     def _check_ean(self, cr, uid, ids, context=None):

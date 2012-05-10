@@ -58,6 +58,7 @@ Main features :
         'wizard/pos_payment_report.xml',
         'wizard/pos_payment.xml',
         'wizard/pos_box.xml',
+        'wizard/pos_session_opening.xml',
         'point_of_sale_report.xml',
         'point_of_sale_view.xml',
         'report/pos_order_report_view.xml',
