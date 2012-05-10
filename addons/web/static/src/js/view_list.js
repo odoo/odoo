@@ -826,8 +826,8 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             return;
         }
         this.$element.children('table').replaceWith(
-            $('<div class="oe_listview_nocontent">')
-                .append($('<img>', { src: '/web/static/src/img/list_empty_arrow.png' }))
+            $('<div class="oe_view_nocontent">')
+                .append($('<img>', { src: '/web/static/src/img/view_empty_arrow.png' }))
                 .append($('<div>').html(this.options.action.help)));
     }
 });

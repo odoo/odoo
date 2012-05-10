@@ -1068,7 +1068,16 @@ $colour4: #8a89ba
                     div
                         display: block
     // }}}
-    // View.topbar {{{
+    // Views Common {{{
+    .oe_view_nocontent
+        > img
+            float: left
+            margin-right: 1.5em
+        > div
+            // don't encroach on my arrow
+            overflow: hidden
+            padding: 6px
+            font-size: 125%
     .oe_view_topbar
         border-bottom: 1px solid #cacaca
         @include vertical-gradient(#fcfcfc, #dedede)
@@ -1471,15 +1480,6 @@ $colour4: #8a89ba
             padding: 2px 2px 2px 8px !important
     // }}}
     // ListView {{{
-    .oe_listview_nocontent
-        > img
-            float: left
-            margin-right: 1.5em
-        > div
-            // don't encroach on my arrow
-            overflow: hidden
-            padding: 6px
-            font-size: 125%
     .oe-listview-content
         width: 100%
         td, th

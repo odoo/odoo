@@ -1,4 +1,4 @@
-@charset "UTF-8";
+@charset "utf-8";
 @font-face {
   font-family: "mnmliconsRegular";
   src: url("/web/static/src/font/mnmliconsv21-webfont.eot") format("eot");
@@ -1318,6 +1318,15 @@
 .openerp .oe_searchview .oe_searchview_drawer .oe_searchview_advanced.oe_opened div {
   display: block;
 }
+.openerp .oe_view_nocontent > img {
+  float: left;
+  margin-right: 1.5em;
+}
+.openerp .oe_view_nocontent > div {
+  overflow: hidden;
+  padding: 6px;
+  font-size: 125%;
+}
 .openerp .oe_view_topbar {
   border-bottom: 1px solid #cacaca;
   background-color: #fcfcfc;
@@ -1772,15 +1781,6 @@
 .openerp .oe_form .oe_form_group_odd_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell,
 .openerp .oe_form .oe_form_group_label_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell {
   padding: 2px 2px 2px 8px !important;
-}
-.openerp .oe_listview_nocontent > img {
-  float: left;
-  margin-right: 1.5em;
-}
-.openerp .oe_listview_nocontent > div {
-  overflow: hidden;
-  padding: 6px;
-  font-size: 125%;
 }
 .openerp .oe-listview-content {
   width: 100%;
