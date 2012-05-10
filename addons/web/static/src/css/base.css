@@ -1175,6 +1175,14 @@
   border: 1px solid #cccccc;
   text-align: left;
 }
+.openerp .oe_searchview .oe_searchview_drawer > div {
+  border-top: 1px solid #cccccc;
+  margin: 3px 0;
+}
+.openerp .oe_searchview .oe_searchview_drawer > div:first-child {
+  border-top: none;
+  margin: 0;
+}
 .openerp .oe_searchview .oe_searchview_drawer button, .openerp .oe_searchview .oe_searchview_drawer .button {
   border: none;
   background: white;
@@ -1228,8 +1236,7 @@
   color: #404040;
 }
 .openerp .oe_searchview .oe_searchview_drawer .oe_searchview_advanced h4 {
-  border-top: 1px solid #cccccc;
-  margin: 5px 0 3px;
+  margin: 0;
   cursor: pointer;
 }
 .openerp .oe_searchview .oe_searchview_drawer .oe_searchview_advanced h4:before {

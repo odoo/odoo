@@ -624,9 +624,11 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             data.fields_view.fields);
 
         // add Filters to this.inputs, need view.controls filled
-        var filters = new instance.web.search.Filters(this);
+        (new instance.web.search.Filters(this));
+        // add custom filters to this.inputs
+        (new instance.web.search.CustomFilters(this));
         // add Advanced to this.inputs
-        var advanced = new instance.web.search.Advanced(this);
+        (new instance.web.search.Advanced(this));
 
         // build drawer
         var drawer_started = $.when.apply(
@@ -1479,28 +1481,52 @@ instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
 
 instance.web.search.CustomFilters = instance.web.search.Input.extend({
     template: 'SearchView.CustomFilters',
+    _in_drawer: true,
     start: function () {
+        this.model = new instance.web.Model('ir.filters');
+        this.filters = {};
         this.$element.on('submit', 'form', this.proxy('save_current'));
         // FIXME: local eval of domain and context to get rid of special endpoint
         return this.rpc('/web/searchview/get_filters', {
             model: this.view.model
         }).pipe(this.proxy('set_filters'));
     },
-    set_filters: function (filters) {
+    append_filter: function (filter) {
         var self = this;
-        var content = this.$element.find('.oe_searchview_custom_list');
-        return $.when.apply(null, _(filters).chain()
-            .map(function (filter) {
-                // FIXME: handling of ``disabled`` being set
-                var f = new instance.web.search.Filter({attrs: {
-                    string: filter.name,
-                    context: filter.context,
-                    domain: filter.domain
-                }}, self.view);
-                return new instance.web.search.FilterGroup([f], self.view);
-            })
-            .invoke('appendTo', content)
-            .value());
+        var key = _.str.sprintf('(%s)%s', filter.user_id, filter.name);
+
+        var $filter;
+        if (key in this.filters) {
+            $filter = this.filters[key];
+        } else {
+            var id = filter.id;
+            $filter = this.filters[key] = $('<li></li>')
+                .appendTo(this.$element.find('.oe_searchview_custom_list'))
+                .text(filter.name);
+            $('<button type="button">').appendTo($filter)
+                .text(_t("Delete"))
+                .click(function () {
+                    self.model.call('unlink', [id]).then(function () {
+                        $filter.remove();
+                    });
+                });
+        }
+
+        $filter.unbind('click').click(function () {
+            self.view.query.reset([{
+                category: _("Custom Filter"),
+                icon: 'M',
+                field: {
+                    get_context: function () { return filter.context; },
+                    get_groupby: function () { return [filter.context]; },
+                    get_domain: function () { return filter.domain; }
+                },
+                values: [{label: filter.name, value: null}]
+            }]);
+        });
+    },
+    set_filters: function (filters) {
+        _(filters).map(_.bind(this.append_filter, this));
     },
     save_current: function () {
         var self = this;
@@ -1511,29 +1537,26 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
             domains: search.domains,
             contexts: search.contexts,
             group_by_seq: search.groupbys || []
-        }).pipe(function (results) {
+        }).then(function (results) {
             if (!_.isEmpty(results.group_by)) {
                 results.context.group_by = results.group_by;
             }
-            var name = $name.val();
-            // FIXME: creates filter and group even if the call fails :/
-            var f = new instance.web.search.Filter({attrs: {
-                string: name,
-                context: results.context,
-                domain: results.domain
-            }}, self.view);
-            (new instance.web.search.FilterGroup([f], self.view))
-                .appendTo(self.$element.find('.oe_searchview_custom_list'));
-            // FIXME: current context?
-            return new instance.web.Model('ir.filters').call('create_or_replace', [{
-                name: name,
+            var filter = {
+                name: $name.val(),
+                // FIXME: optional on public/private checkbox
                 user_id: instance.connection.uid,
                 model_id: self.view.model,
                 context: results.context,
                 domain: results.domain
-            }]);
-        }).then(function () {
-            $name.val('');
+            };
+            // FIXME: current context?
+            return self.model.call('create_or_replace', [filter]).then(function (id) {
+                if (id) {
+                    filter.id = id;
+                }
+                self.append_filter(filter);
+                $name.val('');
+            });
         });
         return false;
     }
@@ -1574,13 +1597,6 @@ instance.web.search.Filters = instance.web.search.Input.extend({
             }
         }
 
-        // Create a Custom Filter FilterGroup for each custom filter read from
-        // the db, add all of this as a group in the smallest column
-        (col1.length <= col2.length ? col1 : col2).push({
-            name: _t("Custom Filters"),
-            filters: [new instance.web.search.CustomFilters(self.view)],
-            length: 1
-        });
         return $.when(
             this.render_column(col1, $('<div>').appendTo(this.$element)),
             this.render_column(col2, $('<div>').appendTo(this.$element)));

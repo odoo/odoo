@@ -932,6 +932,13 @@ $colour4: #8a89ba
             border: 1px solid #ccc
             text-align: left
 
+            > div
+                border-top: 1px solid #ccc
+                margin: 3px 0
+            > div:first-child
+                border-top: none
+                margin: 0
+
             button, .button
                 border: none
                 background: white
@@ -980,8 +987,7 @@ $colour4: #8a89ba
 
             .oe_searchview_advanced
                 h4
-                    border-top: 1px solid #ccc
-                    margin: 5px 0 3px
+                    margin: 0
                     cursor: pointer
 
                 h4:before
