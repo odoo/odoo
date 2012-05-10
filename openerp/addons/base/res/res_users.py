@@ -203,7 +203,7 @@ class users(osv.osv):
         'password': fields.char('Password', size=64, invisible=True, help="Keep empty if you don't want the user to be able to connect on the system."),
         'new_password': fields.function(_get_password, type='char', size=64,
                                 fnct_inv=_set_new_password,
-                                string='Set password', help="Specify a value only when creating a user or if you're changing the user's password, "
+                                string='Set Password', help="Specify a value only when creating a user or if you're changing the user's password, "
                                                             "otherwise leave empty. After a change of password, the user has to login again."),
         'user_email': fields.char('Email', size=64),
         'signature': fields.text('Signature', size=64),

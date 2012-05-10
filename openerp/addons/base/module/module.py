@@ -175,8 +175,8 @@ class module(osv.osv):
         #   latest_version refer the installed version (the one in database)
         #   published_version refer the version available on the repository
         'installed_version': fields.function(_get_latest_version,
-            string='Latest version', type='char'),
-        'latest_version': fields.char('Installed version', size=64, readonly=True),
+            string='Latest Version', type='char'),
+        'latest_version': fields.char('Installed Version', size=64, readonly=True),
         'published_version': fields.char('Published Version', size=64, readonly=True),
 
         'url': fields.char('URL', size=128, readonly=True),
@@ -195,7 +195,7 @@ class module(osv.osv):
             ('to remove','To be removed'),
             ('to install','To be installed')
         ], string='State', readonly=True, select=True),
-        'demo': fields.boolean('Demo data', readonly=True),
+        'demo': fields.boolean('Demo Data', readonly=True),
         'license': fields.selection([
                 ('GPL-2', 'GPL Version 2'),
                 ('GPL-2 or any later version', 'GPL-2 or later version'),
