@@ -9,7 +9,7 @@
             <field name="model">crm.opportunity2phonecall</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Schedule/Log a call">
+                <form string="Schedule/Log a Call">
                  	<separator string="Schedule/Log a Call" colspan="4"/>
                     <field name="action"/>
                     <separator string="Call Details" colspan="4"/>
@@ -27,7 +27,7 @@
                     <group colspan="4" col="3">
                         <button name="action_cancel" string="_Cancel" icon="gtk-cancel" special="cancel" />
                        	<button name="action_schedule" type="object" string="Log call" icon="gtk-ok" attrs="{'invisible' : [('action', '!=', 'log')]}" />
-                        <button name="action_schedule" type="object" string="Schedule call" icon="gtk-ok" attrs="{'invisible' : [('action', '!=', 'schedule')]}" />
+                        <button name="action_schedule" type="object" string="Schedule Call" icon="gtk-ok" attrs="{'invisible' : [('action', '!=', 'schedule')]}" />
                     </group>
                 </form>
             </field>
