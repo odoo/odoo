@@ -2,7 +2,7 @@
 <openerp>
     <data>
 
-        <menuitem id="menu_portal" name="Portal"/>
+        <menuitem name="Portal" id="menu_portal" action="open_portal"/>
 
           <menuitem name="Track Orders" id="portal_track_orders" parent="menu_portal" groups="portal.group_portal_user"/>
           <menuitem name="Invoice and Payments" id="portal_invoice_payements" parent="menu_portal" groups="portal.group_portal_user"/>
@@ -12,7 +12,7 @@
               <menuitem name="News" id="portal_company_news" parent="portal_company"/>
               <menuitem name="Jobs" id="portal_company_jobs" parent="portal_company"/>
               <menuitem name="Address Book" id="portal_company_address_book" parent="portal_company" action="base.action_partner_form"/>
-              <menuitem name="Contact Us" id="portal_company_contact" parent="portal_company" groups="group_portal_user" action="action_contact_us"/>
+              <menuitem name="Contact Us" id="portal_company_contact" parent="portal_company" action="action_contact_us"/>
 
     </data>
 </openerp>
