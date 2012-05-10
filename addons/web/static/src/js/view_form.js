@@ -1118,8 +1118,6 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
             // invisibility transfer
             var field_modifiers = JSON.parse($child.attr('modifiers') || '{}');
             var invisible = field_modifiers.invisible;
-            field_modifiers.invisible = undefined;
-            $child.attr('modifiers', JSON.stringify(field_modifiers));
             self.handle_common_properties($td, $("<dummy>").attr("modifiers", JSON.stringify({invisible: invisible})));
 
             $tr.append($td.append($child));
@@ -1371,17 +1369,27 @@ instance.web.form.InvisibilityChangerMixin = {
                 instance.web.form.compute_domain(this._ic_invisible_modifier, this._ic_field_manager.fields);
             this.set({"invisible": result});
         });
-        this.set({invisible: this._ic_invisible_modifier === true});
+        this.set({invisible: this._ic_invisible_modifier === true, force_invisible: false});
+        var check = function() {
+            if (this.get("invisible") || this.get('force_invisible')) {
+                this.set({"effective_invisible": true});
+            } else {
+                this.set({"effective_invisible": false});
+            }
+        };
+        this.on('change:invisible', this, check);
+        this.on('change:force_invisible', this, check);
+        _.bind(check, this)();
     },
     start: function() {
         var check_visibility = function() {
-            if (this.get("invisible")) {
+            if (this.get("effective_invisible")) {
                 this.$element.hide();
             } else {
                 this.$element.show();
             }
         };
-        this.on("change:invisible", this, check_visibility);
+        this.on("change:effective_invisible", this, check_visibility);
         _.bind(check_visibility, this)();
     },
 };
