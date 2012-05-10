@@ -722,11 +722,15 @@ $colour4: #8a89ba
         @include vertical-gradient(#fcfcfc, #dedede)
         @include box-shadow((0 1px 0 rgba(255,255,255,0.4), 0 0 9px rgba(0,0,0,0.1)))
         .oe_header_row
-            min-height: 26px
+            //min-height: 26px
             //line-height: 26px
-            margin: 8px
             clear: both
             text-shadow: 0 1px 1px white
+            td
+                padding: 8px
+        .oe_header_row:last-child
+            td
+                padding-top: 0
         .oe_view_manager_sidebar
             margin: 0px auto
             width: 400px
@@ -735,7 +739,7 @@ $colour4: #8a89ba
             line-height: 26px
         h2
             font-size: 18px
-            margin-top: 3px
+            margin: 0
             float: left
             a
                 color: $colour4
@@ -768,7 +772,6 @@ $colour4: #8a89ba
     // }}}
     // ViewManager.pager {{{
     .oe_view_manager_pager
-        height: 26px
         line-height: 26px
     .oe_pager_value
         float: left
@@ -885,7 +888,6 @@ $colour4: #8a89ba
                 min-height: 0
                 padding: 0
                 width: 480px
-                margin-bottom: 8px
                 border: 1px solid #ababab
                 @include radius(13px)
                 @include box-shadow(0 1px 2px rgba(0,0,0,0.2) inset)
@@ -1001,7 +1003,7 @@ $colour4: #8a89ba
             top: 100%
             right: 0
             background-color: white
-            width: 410px
+            width: 480px
             display: none
             border: 1px solid #ccc
             text-align: left

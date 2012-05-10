@@ -925,10 +925,14 @@
   -box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4), 0 0 9px rgba(0, 0, 0, 0.1);
 }
 .openerp .oe_view_manager_header .oe_header_row {
-  min-height: 26px;
-  margin: 8px;
   clear: both;
   text-shadow: 0 1px 1px white;
+}
+.openerp .oe_view_manager_header .oe_header_row td {
+  padding: 8px;
+}
+.openerp .oe_view_manager_header .oe_header_row:last-child td {
+  padding-top: 0;
 }
 .openerp .oe_view_manager_header .oe_view_manager_sidebar {
   margin: 0px auto;
@@ -940,7 +944,7 @@
 }
 .openerp .oe_view_manager_header h2 {
   font-size: 18px;
-  margin-top: 3px;
+  margin: 0;
   float: left;
 }
 .openerp .oe_view_manager_header h2 a {
@@ -983,7 +987,6 @@
   margin: 8px 0;
 }
 .openerp .oe_view_manager_pager {
-  height: 26px;
   line-height: 26px;
 }
 .openerp .oe_pager_value {
@@ -1133,7 +1136,6 @@
   min-height: 0;
   padding: 0;
   width: 480px;
-  margin-bottom: 8px;
   border: 1px solid #ababab;
   -moz-border-radius: 13px;
   -webkit-border-radius: 13px;
@@ -1257,7 +1259,7 @@
   top: 100%;
   right: 0;
   background-color: white;
-  width: 410px;
+  width: 480px;
   display: none;
   border: 1px solid #cccccc;
   text-align: left;
