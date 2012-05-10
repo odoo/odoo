@@ -70,6 +70,8 @@ openerp.web.list_editable = function (instance) {
          */
         do_add_record: function () {
             if (this.options.editable) {
+                this.$element.find('table:first').show();
+                this.$element.find('.oe_view_nocontent').remove();
                 this.groups.new_record();
             } else {
                 this._super();
