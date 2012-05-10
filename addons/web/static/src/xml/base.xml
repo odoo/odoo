@@ -1472,9 +1472,12 @@
 </div>
 <div t-name="SearchView.CustomFilters" class="oe_searchview_custom">
     <ul class="oe_searchview_custom_list"/>
-    <form>
-        <label for="oe_searchview_custom_input">Save current search:</label>
+    <form class="oe_searchview_custom_closed">
+        <label for="oe_searchview_custom_input" class="oe_searchview_custom_title">
+            Save current search</label>
         <input id="oe_searchview_custom_input"/>
+        <label for="oe_searchview_custom_private">Private: </label>
+        <input id="oe_searchview_custom_private" type="checkbox" checked="checked"/>
         <button class="oe_searchview_custom_save">Save</button>
     </form>
 </div>

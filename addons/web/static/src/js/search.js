@@ -1502,7 +1502,10 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
             var id = filter.id;
             $filter = this.filters[key] = $('<li></li>')
                 .appendTo(this.$element.find('.oe_searchview_custom_list'))
+                .addClass(filter.user_id ? 'oe_searchview_custom_private'
+                                         : 'oe_searchview_custom_public')
                 .text(filter.name);
+
             $('<button type="button">').appendTo($filter)
                 .text(_t("Delete"))
                 .click(function () {
@@ -1530,7 +1533,8 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
     },
     save_current: function () {
         var self = this;
-        var $name = this.$element.find('input');
+        var $name = this.$element.find('input:first');
+        var private_filter = this.$element.find('input:last').prop('checked');
 
         var search = this.view.build_search_data();
         this.rpc('/web/session/eval_domain_and_context', {
@@ -1543,8 +1547,7 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
             }
             var filter = {
                 name: $name.val(),
-                // FIXME: optional on public/private checkbox
-                user_id: instance.connection.uid,
+                user_id: private_filter ? instance.connection.uid : false,
                 model_id: self.view.model,
                 context: results.context,
                 domain: results.domain
