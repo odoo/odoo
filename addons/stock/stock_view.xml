@@ -924,6 +924,13 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <data>
+                    <xpath expr="/form/div[@class='oe_form_topbar']/button[@name='%(act_stock_return_picking)d']" position="replace">
+                        <button name="%(report_picking_list_out)d" string="Print Delivery Slip" type="action" icon="gtk-print" states="done"/>
+                        <button name="%(act_stock_return_picking)d" string="Return Products" states="done" type="action" icon="terp-gtk-go-back-rtl" />
+                    </xpath>
+                    <xpath expr="/form/div[@class='oe_form_topbar']/button[@name='draft_validate']" position="replace">
+                        <button name="draft_validate" states="draft" string="Confirm &amp; Deliver" type="object" icon="gtk-media-play"/>
+                    </xpath>
                     <xpath expr="/form/div[@class='oe_form_topbar']/button[@name='action_process']" position="replace">
                         <button name="action_process" states="assigned" string="Deliver" type="object" icon="gtk-go-forward"/>
                     </xpath>
@@ -1037,6 +1044,12 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <data>
+                    <xpath expr="/form/div[@class='oe_form_topbar']/button[@name='%(act_stock_return_picking)d']" position="replace">
+                        <button name="%(act_stock_return_picking)d" string="Return Products" states="done" type="action" icon="terp-gtk-go-back-rtl" />
+                    </xpath>
+                    <xpath expr="/form/div[@class='oe_form_topbar']/button[@name='draft_validate']" position="replace">
+                        <button name="draft_validate" states="draft" string="Confirm &amp; Receive" type="object" icon="gtk-media-play"/>
+                    </xpath>
                     <xpath expr="/form/div[@class='oe_form_topbar']/button[@name='action_process']" position="replace">
                         <button name="action_process" states="assigned" string="Receive" type="object" icon="gtk-go-forward"/>
                     </xpath>
