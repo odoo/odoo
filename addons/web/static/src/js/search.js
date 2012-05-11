@@ -1031,7 +1031,7 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
             .filter(function (f) {
                 return f.attrs && f.attrs.name && !!defaults[f.attrs.name];
             }).map(function (f) {
-                return {label: f.attrs.string || f.attrs.name,
+                return {label: f.attrs.string || f.attrs.help || f.attrs.name,
                         value: f};
             }).value();
         if (_.isEmpty(fs)) { return $.when(null); }
@@ -1093,7 +1093,7 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
     },
     toggle: function (filter) {
         this.view.query.toggle(this.make_facet([{
-            label: filter.attrs.string || filter.attrs.name,
+            label: filter.attrs.string || filter.attrs.help || filter.attrs.name,
             value: filter
         }]));
     }
