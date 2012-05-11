@@ -63,8 +63,9 @@
     </tr>
     </table>
 </t>
-<form t-name="KanbanView.quick_create" class="oe_kanban_quick_create">
+<div t-name="KanbanView.quick_create" class="oe_kanban_quick_create">
     <input/>
-    <button type="submit">Add</button>
-</form>
+    <button class="oe-kanban-quick_create_add">Add</button>
+    <button t-if="widget._close_btn" class="oe-kanban-quick_create_close">Close</button>
+</div>
 </template>

@@ -350,9 +350,12 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
         });
         this.$element.find('.oe_kanban_add').click(function () {
             if (self.quick) { return; }
-            self.quick = new instance.web_kanban.QuickCreate(this)
-                .on('added', self, self.proxy('quick_add'));
+            var ctx = {};
+            ctx['default_' + self.view.group_by] = self.value;
+            self.quick = new instance.web_kanban.QuickCreate(this, self.dataset, ctx, true)
+                .on('added', self, self.proxy('quick_created'));
             self.quick.appendTo(self.$element.find('.oe_kanban_group_header'));
+            self.quick.focus();
         });
         this.$records.find('.oe_kanban_show_more').click(this.do_show_more);
         if (this.state.folded) {
@@ -409,20 +412,6 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
                 self.view.dataset.write(record.id, { sequence : index });
             });
         }
-    },
-    /**
-     * Handles user event from nested quick creation view
-     *
-     * @param {String} name name to give to the new record
-     */
-    quick_add: function (name) {
-        var context = {};
-        context['default_' + this.view.group_by] = this.value;
-        // FIXME: what if name_create fails?
-        new instance.web.Model(this.dataset.model).call(
-            'name_create', [name], {context: new instance.web.CompoundContext(
-                    this.dataset.get_context(), context)})
-            .then(this.proxy('quick_created'))
     },
     /**
      * Handles a non-erroneous response from name_create
@@ -652,17 +641,45 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
  */
 instance.web_kanban.QuickCreate = instance.web.Widget.extend({
     template: 'KanbanView.quick_create',
-
+    
+    /**
+     * close_btn: If true, the widget will display a "Close" button able to trigger
+     * a "close" event.
+     */
+    init: function(parent, dataset, context, close_btn) {
+        this._super(parent);
+        this._dataset = dataset;
+        this._close_btn = close_btn || false;
+        this._context = context || {};
+    },
     start: function () {
         var self = this;
         var $input = this.$element.find('input');
-        $input.focus();
-        this.$element.on('submit', function () {
-            self.trigger('added', $input.val());
-            return false;
+        $(".oe-kanban-quick_create_add", this.$element).click(function () {
+            self.quick_add($input.val());
         });
-        return this._super();
-    }
+        $(".oe-kanban-quick_create_close", this.$element).click(function () {
+            self.trigger('close');
+        });
+    },
+    focus: function() {
+        this.$element.find('input').focus();
+    },
+    /**
+     * Handles user event from nested quick creation view
+     *
+     * @param {String} name name to give to the new record
+     */
+    quick_add: function (name) {
+        var self = this;
+        // FIXME: what if name_create fails?
+        this._dataset.call(
+            'name_create', [name, new instance.web.CompoundContext(
+                    this._dataset.get_context(), this._context)])
+            .then(function(record) {
+                self.trigger('added', record);
+            });
+    },
 });
 };
 
