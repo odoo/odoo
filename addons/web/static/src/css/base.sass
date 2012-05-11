@@ -78,12 +78,10 @@ $colour4: #8a89ba
     color: #4c4c4c
     font-size: 13px
     background: white
+    // }}}
+    // Tag reset {{{
     a
         text-decoration: none
-    // }}}
-
-.openerp
-    // Tag reset {{{
     table
         padding: 0
         font-size: 13px
@@ -705,6 +703,8 @@ $colour4: #8a89ba
                 a
                     color: #fff
                     text-shadow: 0 1px 2px rgba(0,0,0,0.4)
+        .oe_view_manager_buttons
+            white-space: nowrap
     // }}}
     // ViewManager.body {{{
     .oe_view_manager_body
@@ -814,7 +814,8 @@ $colour4: #8a89ba
                     text-decoration: none
                     @include vertical-gradient(#f0f0fa, #eeeef6)
                     @include box-shadow(none)
-
+    .oe_sidebar
+        white-space: nowrap
     // }}}
     // SearchView xmo {{{
     .oe_searchview
@@ -1112,9 +1113,6 @@ $colour4: #8a89ba
             line-height: 18px
             padding: 2px
             height: 25px
-            .oe_form_button
-                width: 100%
-                white-space: nowrap
         .oe_form_group_cell > .oe_form_field_many2one,
         .oe_form_group_cell > .oe_form_field_many2one input,
         .oe_form_group_cell > .oe_form_field_char input,
@@ -1123,29 +1121,35 @@ $colour4: #8a89ba
         .oe_form_group_cell > .oe_form_field_email input,
         .oe_form_group_cell > .oe_form_field_url,
         .oe_form_group_cell > .oe_form_field_url input,
-        .oe_form_group_cell > .oe_form_field_date input,
         .oe_form_group_cell > .oe_form_field_float input,
         .oe_form_group_cell > .oe_form_field_selection select,
-        .oe_form_group_cell > .oe_datepicker_root
+        .oe_form_group_cell > div > .oe_datepicker_root,
+        .oe_form_group_cell > div > .oe_datepicker_root > input.oe_datepicker_master
             width: 100%
         .oe_form_button.oe_button
             color: #4c4c4c
-            white-space: nowrap
-            min-width: 100%
-            width: 100%
-            height: 22px
             span
                 position: relative
                 vertical-align: top
+        .oe_form_group_cell > .oe_form_button.oe_button
+            white-space: nowrap
+            min-width: 100%
+            width: 100%
         .oe_form_group_cell.oe_form_group_nested
             padding: 0
     // }}}
     // FormView.label {{{
     .oe_form
-        label
-            font-weight: bold
-    .oe_form_label_help[for], .oe_form_label[for]
-        white-space: nowrap
+        .oe_form_label_help[for], .oe_form_label[for]
+            white-space: nowrap
+            padding-right: 8px
+            span
+                font-size: 80%
+                color: darkGreen
+                vertical-align: top
+                position: relative
+                top: -4px
+                padding: 0 2px
     // }}}
     // FormView.fields {{{
     .oe_form
@@ -1207,6 +1211,27 @@ $colour4: #8a89ba
             padding-top: 4px
         .oe_form_field_datetime input
             min-width: 11em
+        .oe_form_field_many2manytags
+            .text-wrap
+                width: 100% !important
+                textarea
+                    width: 100% !important
+            .oe_form_field_many2manytags_box
+                border-radius: 2px
+                box-sizing: border-box
+                position: relative
+                float: left
+                border: 1px solid #9DACCC
+                background: #E2E6F0
+                color: black
+                padding: 0px 3px 0px 3px
+                margin: 0 2px 2px 0
+                cursor: pointer
+                height: 16px
+                font: 11px "lucida grande", tahoma, verdana, arial, sans-serif
+            .text-core .text-wrap .text-dropdown .text-list .text-suggestion em
+                font-style: italic
+                text-decoration: none
         .oe_datepicker_container
             display: none
         .oe_datepicker_root
@@ -1318,6 +1343,8 @@ $colour4: #8a89ba
         border: 1px solid #ddd
         border-bottom-color: transparent
         cursor: default
+    .oe_form_notebook_page
+        padding: 0
     .ui-tabs-hide
         display: none
 
@@ -1362,7 +1389,31 @@ $colour4: #8a89ba
                         line-height: 16px
 
     // }}}
+    // FormView.classes for openerp views {{{
+    .oe_form
+        .oe_form_title, .oe_form_title input
+            font-size: 20px
+            font-weight: bold
+        .oe_form_group_odd_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell:nth-child(odd),
+        .oe_form_group_label_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell_label
+            border-right: 1px solid #ddd
+            label
+                display: block
+                min-width: 120px
+        .oe_form_group_odd_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell,
+        .oe_form_group_label_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell
+            padding: 2px 2px 2px 8px !important
+    // }}}
     // ListView {{{
+    .oe_listview_nocontent
+        > img
+            float: left
+            margin-right: 1.5em
+        > div
+            // don't encroach on my arrow
+            overflow: hidden
+            padding: 6px
+            font-size: 125%
     .oe-listview-content
         width: 100%
         thead, tfoot
@@ -1477,23 +1528,23 @@ $colour4: #8a89ba
         .oe_tooltip_technical_title
             font-weight: bold
     // }}}
-
     // Debugging stuff {{{
     .oe_layout_debugging
         .oe_form_group
-            border: 2px dashed red
+            outline: 2px dashed green
         .oe_form_group_cell
-            border: 1px solid blue
-            padding-bottom: 1em
-        .oe_layout_debug_cell
+            outline: 1px solid blue
+        .oe_form_group:hover, .oe_form_group_cell:hover
+            outline-color: red
+        .oe_form_group_row_incomplete > td:last-child:after
+            content: "[Incomplete Row]"
+            background: red
+            padding: 2px
+            font-weight: bold
             color: white
-            background: #696
-            font-size: 80%
-            text-align: center
-        .oe_layout_debug_cell
-            display: block
-    .oe_layout_debug_cell
-        display: none
+            float: right
+        .oe_form_group_row_incomplete.oe_form_group_row_newline > td:last-child:after
+            content: "[newline]"
 
     .oe_debug_view
         float: left
@@ -1526,4 +1577,3 @@ $colour4: #8a89ba
 
 // au BufWritePost,FileWritePost *.sass :!sass --style expanded --line-numbers <afile> > "%:p:r.css"
 // vim:tabstop=4:shiftwidth=4:softtabstop=4:fdm=marker:
-

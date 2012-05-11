@@ -56,71 +56,9 @@
         </board>
     </form>
 </t>
-<div t-name="ConfigOverview" class="oe-dashboard-config-overview"/>
-<t t-name="ConfigOverview.content">
-    <div class="oe-config-progress">
-        <h6 class="oe-config-progress-title">
-            progress: <t t-esc="Math.round(completion)"/>%
-        </h6>
-        <div class="oe-config-progress-bar" t-att-data-completion="completion"/>
-    </div>
-    <p class="oe-config-tip">Click on the functionalites listed below to launch them and configure your system</p>
-    <dl>
-        <t t-foreach="groups" t-as="category">
-            <dt><t t-esc="category"/></dt>
-            <dd><ul>
-                <li t-foreach="category_value" t-as="todo"
-                    t-att-class="todo.done ? 'oe-done' : undefined"
-                    t-att-data-id="todo.id"
-                    t-att-title="!todo.done ? _.str.sprintf(task_title, todo.name) : undefined">
-                    <span  style="text-decoration: underline;"><t t-esc="todo.name"/></span>
-                    <input type="checkbox" t-att-value="todo.id"
-                       t-att-title="!todo.done ? checkbox_title : undefined"
-                       t-att-checked="todo.done ? 'checked' : undefined"/>
-                </li>
-            </ul></dd>
-        </t>
-
-    </dl>
-</t>
-
 <div t-name="HomeWidget" class="oe-dashboard-home-widget"/>
 <t t-name="HomeWidget.content">
     <h3><t t-esc="widget.title"/></h3>
     <iframe width="100%" frameborder="0" t-att-src="url"/>
 </t>
-
-<t t-name="ApplicationTiles.content">
-    <ul class="oe_app_tiles">
-        <t t-foreach="applications" t-as="application" >
-        <li>
-            <a href="#" class="oe_install-module-link" t-att-data-module="application.module" t-att-data-menu="application.id" >
-                <img t-if="application.web_icon_data" t-att-src="'data:image/png;base64,' + application.web_icon_data" 
-                /><img t-if="application.web_icon_hover_data" class="hover" t-att-src="'data:image/png;base64,' + application.web_icon_hover_data"/>
-                <span><t t-esc="application.name"/></span>
-            </a>
-        </li>
-        </t>
-    </ul>
-</t>
-
-<t t-name="web_dashboard.ApplicationTiles">
-    <div>
-        <div class="oe_applications_tiles">
-        <h1 class="oe_welcome_message">Welcome to OpenERP</h1>
-        </div>
-    </div>
-</t>
-
-<div t-name="web_dashboard.ApplicationInstaller">
-    <div class="oe_initial_welcome_message">
-        <ul>
-            <li>Remember to bookmark 
-                <a class="oe_welcome_url" t-att-href="widget.session.origin">This url</a>
-            </li>
-            <li>Your login: <t t-esc="widget.session.username"/></li>
-        </ul>
-    </div>
-    <div class="oe_installer" />
-</div>
 </template>

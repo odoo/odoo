@@ -1,13 +1,13 @@
-openerp.web_dashboard = function(openerp) {
-var QWeb = openerp.web.qweb,
-    _t = openerp.web._t;
+openerp.web_dashboard = function(instance) {
+var QWeb = instance.web.qweb,
+    _t = instance.web._t;
 
-if (!openerp.web_dashboard) {
+if (!instance.web_dashboard) {
     /** @namespace */
-    openerp.web_dashboard = {};
+    instance.web_dashboard = {};
 }
 
-openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
+instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
     init: function(view, node) {
         this._super(view, node);
         this.form_template = 'DashBoard';
@@ -56,7 +56,7 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
         var qdict = {
             current_layout : this.$element.find('.oe-dashboard').attr('data-layout')
         };
-        var $dialog = openerp.web.dialog($('<div>'), {
+        var $dialog = instance.web.dialog($('<div>'), {
                             modal: true,
                             title: _t("Edit Layout"),
                             width: 'auto',
@@ -188,7 +188,7 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
                 selectable: false
             }
         };
-        var am = new openerp.web.ActionManager(this),
+        var am = new instance.web.ActionManager(this),
             // FIXME: ideally the dashboard view shall be refactored like kanban.
             $action = $('#' + this.view.element_id + '_action_' + index);
         $action.parent().data('action_attrs', action_attrs);
@@ -249,7 +249,7 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
         action_manager.do_action(view_manager.action);
     }
 });
-openerp.web.form.DashBoardLegacy = openerp.web.form.DashBoard.extend({
+instance.web.form.DashBoardLegacy = instance.web.form.DashBoard.extend({
     renderElement: function() {
         if (this.node.tag == 'hpaned') {
             this.node.attrs.style = '2-1';
@@ -273,105 +273,24 @@ openerp.web.form.DashBoardLegacy = openerp.web.form.DashBoard.extend({
     }
 });
 
-openerp.web.form.tags.add('hpaned', 'openerp.web.form.DashBoardLegacy');
-openerp.web.form.tags.add('vpaned', 'openerp.web.form.DashBoardLegacy');
-openerp.web.form.tags.add('board', 'openerp.web.form.DashBoard');
-
-/*
- * ConfigOverview
- * This client action designed to be used as a dashboard widget display
- * ir.actions.todo in a fancy way
- */
-openerp.web.client_actions.add( 'board.config.overview', 'openerp.web_dashboard.ConfigOverview');
-openerp.web_dashboard.ConfigOverview = openerp.web.View.extend({
-    template: 'ConfigOverview',
-    init: function (parent) {
-        this._super(parent);
-        this.user = _.extend(new openerp.web.DataSet(this, 'res.users'), {
-            index: 0,
-            ids: [this.session.uid]
-        });
-        this.dataset = new openerp.web.DataSetSearch(this, 'ir.actions.todo');
-    },
-    start: function () {
-        var self = this;
-        return this.user.read_index(['groups_id']).pipe(function(record) {
-            var todos_filter = [
-                ['type', '!=', 'automatic'],
-                '|', ['groups_id', '=', false],
-                     ['groups_id', 'in', record['groups_id']]];
-            return $.when(
-                self.dataset.read_slice(
-                    ['state', 'action_id', 'category_id'],
-                    { domain: todos_filter }
-                ),
-                self.dataset.call('progress').pipe(
-                        function (arg) { return arg; }, null))
-        }, null).then(this.on_records_loaded);
-
-    },
-    on_records_loaded: function (records, progress) {
-        var grouped_todos = _(records).chain()
-            .map(function (record) {
-                return {
-                    id: record.id,
-                    name: record.action_id[1],
-                    done: record.state !== 'open',
-                    to_do: record.state === 'open',
-                    category: record['category_id'][1] || _t("Uncategorized")
-                }
-            })
-            .groupBy(function (record) {return record.category})
-            .value();
-        this.$element.html(QWeb.render('ConfigOverview.content', {
-            completion: 100 * progress.done / progress.total,
-            groups: grouped_todos,
-            task_title: _t("Execute task \"%s\""),
-            checkbox_title: _t("Mark this task as done"),
-            _: _
-        }));
-        var $progress = this.$element.find('div.oe-config-progress-bar');
-        $progress.progressbar({value: $progress.data('completion')});
-
-        var self = this;
-        this.$element.find('dl')
-            .delegate('input', 'click', function (e) {
-                // switch todo status
-                e.stopImmediatePropagation();
-                var new_state = this.checked ? 'done' : 'open',
-                      todo_id = parseInt($(this).val(), 10);
-                self.dataset.write(todo_id, {state: new_state}, {}, function () {
-                    self.start();
-                });
-            })
-            .delegate('li:not(.oe-done)', 'click', function () {
-                self.getParent().getParent().getParent().do_execute_action({
-                        type: 'object',
-                        name: 'action_launch'
-                    }, self.dataset,
-                    $(this).data('id'), function () {
-                        // after action popup closed, refresh configuration
-                        // thingie
-                        self.start();
-                    });
-            });
-    }
-});
+instance.web.form.tags.add('hpaned', 'instance.web.form.DashBoardLegacy');
+instance.web.form.tags.add('vpaned', 'instance.web.form.DashBoardLegacy');
+instance.web.form.tags.add('board', 'instance.web.form.DashBoard');
 
 /*
  * Widgets
  * This client action designed to be used as a dashboard widget display
  * the html content of a res_widget given as argument
  */
-openerp.web.client_actions.add( 'board.home.widgets', 'openerp.web_dashboard.Widget');
-openerp.web_dashboard.Widget = openerp.web.View.extend(/** @lends openerp.web_dashboard.Widgets# */{
+instance.web.client_actions.add( 'board.home.widgets', 'instance.web_dashboard.Widget');
+instance.web_dashboard.Widget = instance.web.View.extend(/** @lends instance.web_dashboard.Widgets# */{
     template: 'HomeWidget',
     /**
      * Initializes a "HomeWidget" client widget: handles the display of a given
      * res.widget objects in an OpenERP view (mainly a dashboard).
      *
-     * @constructs openerp.web_dashboard.Widget
-     * @extends openerp.web.View
+     * @constructs instance.web_dashboard.Widget
+     * @extends instance.web.View
      *
      * @param {Object} parent
      * @param {Object} options
@@ -382,7 +301,7 @@ openerp.web_dashboard.Widget = openerp.web.View.extend(/** @lends openerp.web_da
         this.widget_id = options.widget_id;
     },
     start: function () {
-        var ds = new openerp.web.DataSet(this, 'res.widget');
+        var ds = new instance.web.DataSet(this, 'res.widget');
         return ds.read_ids([this.widget_id], ['title']).then(this.on_widget_loaded);
     },
     on_widget_loaded: function (widgets) {
@@ -394,80 +313,6 @@ openerp.web_dashboard.Widget = openerp.web.View.extend(/** @lends openerp.web_da
             widget: widget,
             url: url
         }));
-    }
-});
-
-/*
- * HomeTiles this client action display either the list of application to
- * install (if none is installed yet) or a list of root menu items
- */
-openerp.web.client_actions.add('default_home', 'session.web_dashboard.ApplicationTiles');
-openerp.web_dashboard.ApplicationTiles = openerp.web.OldWidget.extend({
-    template: 'web_dashboard.ApplicationTiles',
-    init: function(parent) {
-        this._super(parent);
-    },
-    start: function() {
-        var self = this;
-        var domain = [['application','=',true], ['state','=','installed'], ['name', '!=', 'base']];
-        var ds = new openerp.web.DataSetSearch(this, 'ir.module.module',{},domain);
-        ds.read_slice(['id']).then(function(result) {
-            if(result.length) {
-                self.on_installed_database();
-            } else {
-                self.on_uninstalled_database();
-            }
-        });
-    },
-    on_uninstalled_database: function() {
-        installer = new openerp.web_dashboard.ApplicationInstaller(this);
-        installer.appendTo(this.$element);
-    },
-    on_installed_database: function() {
-        var self = this;
-        self.rpc('/web/menu/get_user_roots', {}).then(function (menu_ids) {
-            var menuds = new openerp.web.DataSet(this, 'ir.ui.menu',{})
-                .read_ids(menu_ids, ['name', 'web_icon_data', 'web_icon_hover_data', 'module']).then(function (applications) {
-                    var tiles = QWeb.render('ApplicationTiles.content', {applications: applications});
-                    $(tiles).appendTo(self.$element).find('.oe_install-module-link').click(function () {
-                        openerp.webclient.menu.on_menu_click(null, $(this).data('menu'))
-                    });
-                });
-        });
-    }
-});
-
-/**
- * ApplicationInstaller
- * This client action  display a list of applications to install.
- */
-openerp.web.client_actions.add( 'board.application.installer', 'openerp.web_dashboard.ApplicationInstaller');
-openerp.web_dashboard.ApplicationInstaller = openerp.web.OldWidget.extend({
-    template: 'web_dashboard.ApplicationInstaller',
-    start: function () {
-        // TODO menu hide
-        var r = this._super();
-        this.action_manager = new openerp.web.ActionManager(this);
-        this.action_manager.appendTo(this.$element.find('.oe_installer'));
-        this.action_manager.do_action({
-            type: 'ir.actions.act_window',
-            res_model: 'ir.module.module',
-            domain: [['application','=',true]],
-            views: [[false, 'kanban']],
-            flags: {
-                display_title:false,
-                search_view: false,
-                views_switcher: false,
-                action_buttons: false,
-                sidebar: false,
-                pager: false
-            }
-        });
-        return r;
-    },
-    destroy: function() {
-        this.action_manager.destroy();
-        return this._super();
     }
 });
 

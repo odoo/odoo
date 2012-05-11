@@ -10,7 +10,13 @@ $(document).ready(function () {
         };
     module('list-events', {
         setup: function () {
-            openerp = window.openerp.init();
+            openerp = window.openerp.init([]);
+            window.openerp.web.corelib(openerp);
+            window.openerp.web.coresetup(openerp);
+            window.openerp.web.chrome(openerp);
+            // views loader stuff
+            window.openerp.web.data(openerp);
+            window.openerp.web.views(openerp);
             window.openerp.web.list(openerp);
         }
     });
@@ -90,7 +96,13 @@ $(document).ready(function () {
 
     module('list-records', {
         setup: function () {
-            openerp = window.openerp.init();
+            openerp = window.openerp.init([]);
+            window.openerp.web.corelib(openerp);
+            window.openerp.web.coresetup(openerp);
+            window.openerp.web.chrome(openerp);
+            // views loader stuff
+            window.openerp.web.data(openerp);
+            window.openerp.web.views(openerp);
             window.openerp.web.list(openerp);
         }
     });
@@ -123,7 +135,13 @@ $(document).ready(function () {
 
     module('list-collections-degenerate', {
         setup: function () {
-            openerp = window.openerp.init();
+            openerp = window.openerp.init([]);
+            window.openerp.web.corelib(openerp);
+            window.openerp.web.coresetup(openerp);
+            window.openerp.web.chrome(openerp);
+            // views loader stuff
+            window.openerp.web.data(openerp);
+            window.openerp.web.views(openerp);
             window.openerp.web.list(openerp);
         }
     });
@@ -245,7 +263,13 @@ $(document).ready(function () {
 
     module('list-hofs', {
         setup: function () {
-            openerp = window.openerp.init();
+            openerp = window.openerp.init([]);
+            window.openerp.web.corelib(openerp);
+            window.openerp.web.coresetup(openerp);
+            window.openerp.web.chrome(openerp);
+            // views loader stuff
+            window.openerp.web.data(openerp);
+            window.openerp.web.views(openerp);
             window.openerp.web.list(openerp);
         }
     });

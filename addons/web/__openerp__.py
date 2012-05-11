@@ -29,6 +29,7 @@
         "static/lib/jquery.deferred-queue/jquery.deferred-queue.js",
         "static/lib/jquery.scrollTo/jquery.scrollTo-min.js",
         "static/lib/jquery.tipsy/jquery.tipsy.js",
+        "static/lib/jquery.textext/jquery.textext.js",
         "static/lib/json/json2.js",
         "static/lib/qweb/qweb2.js",
         "static/lib/underscore/underscore.js",
