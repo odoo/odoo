@@ -130,8 +130,8 @@
                 <field name="coach_id" position="after">
                     <group colspan="2">
                         <field name="state"/>
-                        <button name="%(action_hr_attendance_sigh_in_out)d" states="present" type="action" string="Sign Out" icon="gtk-go-forward" context="{'type':'sign_out'}" groups="base.group_hr_user"/>
-                        <button name="%(action_hr_attendance_sigh_in_out)d" states="absent" type="action" string="Sign In" icon="gtk-go-back" context="{'type':'sign_in'}" groups="base.group_hr_user"/>
+                        <button name="attendance_action_change" states="present" type="object" string="Sign Out" icon="gtk-go-forward" groups="base.group_hr_manager"/>
+                        <button name="attendance_action_change" states="absent" type="object" string="Sign In" icon="gtk-go-back" groups="base.group_hr_manager"/>
                     </group>
                 </field>
             </field>
@@ -139,3 +139,5 @@
 
     </data>
 </openerp>
+
+

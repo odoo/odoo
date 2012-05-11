@@ -1,11 +1,7 @@
 <template>
     <t t-name="AttendanceNotifier">
-        <t t-if="action=='sign_in'">
-            <img src="/hr_attendance/static/src/img/emp-in.png" class="oe_attendance_button"></img>
-        </t>
-        <t t-if="action=='sign_out'">
-            <img src="/hr_attendance/static/src/img/emp-out.png" class="oe_attendance_button"></img>
-        </t>    
-        
+        <a href="#" class="oe_attendance_button" t-attf-title="You are #{employee.state}">
+            <img t-attf-src="/hr_attendance/static/src/img/emp-#{employee.state}.png" ></img>
+        </a>
     </t>
 </template>
