@@ -7,6 +7,23 @@ import string
 class pad_common(osv.osv_memory):
     _name = 'pad.common'
     
+    def pad_generate_url(self, cr, uid, model, context=None):
+        pad_url_template = self.pool.get('res.users').browse(cr,uid,[uid])[0].company_id.pad_url_template
+        s = string.ascii_uppercase + string.digits
+        salt = ''.join([s[random.randint(0, len(s) - 1)] for i in range(8)])
+        template_vars = {
+            'db' : cr.dbname,
+            'model' : model,
+            'salt' : salt,
+        }
+        return pad_url_template % template_vars
+
+    def _pad_api_key(self, cr, uid, context=None):
+        return self.pool.get('res.users').browse(cr,uid,[uid])[0].company_id.etherpad_api_key
+
+    def _pad_user_name(self, cr, uid, context=None):
+        return self.pool.get('res.users').browse(cr,uid,[uid])[0].name
+    
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
@@ -31,6 +48,8 @@ class pad_common(osv.osv_memory):
         
     _columns = {
         'pad_url': fields.char('Full Screen', size=512),
+        'pad_api_key': fields.function(_pad_api_key, type='text', string="Pad API Key"),
+        'pad_user_name': fields.function(_pad_user_name, type='text', string="Current Pad User"),
     }
     _defaults = {
         'pad_url': lambda self, cr, uid, context: self.pool.get('ir.attachment').pad_generate_url(cr, uid, self._name)
