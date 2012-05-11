@@ -97,7 +97,8 @@
                             <group col="4" colspan="2">
                                 <separator string="Message Details" colspan="4"/>
                                 <field name="model"/>
-                                <button name="open_document" string="Open" type="object" icon="gtk-jump-to" colspan="2"/>
+                                <button name="open_document" string="Open" type="object" icon="gtk-jump-to" colspan="2"
+                                    attrs="{'invisible':['|', ('model', '=', ''), ('res_id', '=', False)]}"/>
                                 <field name="res_id"/>
                             </group>
                             <notebook colspan="4">
