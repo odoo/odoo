@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2012-05-10 01:24+0000\n"
+"PO-Revision-Date: 2012-05-11 02:12+0000\n"
 "Last-Translator: Akira Hiyama <Unknown>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-05-10 05:20+0000\n"
-"X-Generator: Launchpad (build 15213)\n"
+"X-Launchpad-Export-Date: 2012-05-11 05:08+0000\n"
+"X-Generator: Launchpad (build 15225)\n"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_09_21
@@ -853,7 +853,7 @@ msgstr "第三者による支払"
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_47_60
 msgid "Remittance of documents abroad - credit under usual reserve"
-msgstr "海外証書による送金 - 通常貯められたクレジット"
+msgstr "海外証書による送金 - 通常預金の元でのクレジット"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_04_52
@@ -1822,8 +1822,8 @@ msgid ""
 "globalisation of which this record is the first.\n"
 "The same code will be repeated at the end of the globalisation."
 msgstr ""
-"記載された値（1から9）はこのレコードが最初であるグローバル化の階層レベルを指定します。\n"
-"同じコードはグローバル化の最後に繰り返されます。"
+"記載された値（1から9）はこのレコードが最初である国際化の階層レベルを指定します。\n"
+"同じコードは国際化の最後に繰り返されます。"
 
 #. module: account_coda
 #: field:coda.bank.account,description2:0
@@ -2308,7 +2308,7 @@ msgstr "委託された巡回小切手発行に使用されます。"
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcf_11
 msgid "Securities"
-msgstr ""
+msgstr "証券"
 
 #. module: account_coda
 #: selection:coda.bank.statement.line,type:0
@@ -2322,11 +2322,13 @@ msgid ""
 "credit transfers with a structured communication As a matter of principle, "
 "this type will also be used when no detailed data (type 6 or 7) is following."
 msgstr ""
+"銀行によって合計された金額；例えば：原則として構造化された通信でクレジットの連続する合計金額が転送されます。これに続く詳細データ（タイプ6または7）がない"
+"時にこのタイプは使われます。"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_03_37
 msgid "Cheque-related costs"
-msgstr ""
+msgstr "小切手に関する経費"
 
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_033
@@ -2336,23 +2338,23 @@ msgstr "外国手形手数料"
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_09_13
 msgid "Cash withdrawal by your branch or agents"
-msgstr ""
+msgstr "支店あるいは代理店による現金引出"
 
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_049
 msgid "Fiscal stamps/stamp duty"
-msgstr ""
+msgstr "収入印紙 / 印紙税"
 
 #. module: account_coda
 #: model:account.coda.trans.code,comment:account_coda.actcc_03_58
 msgid ""
 "Also for vouchers, postal orders, anything but bills of exchange, "
 "acquittances, promissory notes, etc."
-msgstr "同じくクーポン、郵便為替。しかし、為替手形、借金返済領収書、約束手形などを除く"
+msgstr "同じくクーポン、郵便為替のため。しかし、為替手形、借金返済領収書、約束手形などを除きます。"
 
 #. module: account_coda
 #: view:account.coda.import:0
-msgid "Select your file :"
+msgid "Select Your File :"
 msgstr ""
 
 #. module: account_coda
@@ -2368,7 +2370,7 @@ msgstr "不渡りクーポン"
 #. module: account_coda
 #: model:account.coda.trans.code,comment:account_coda.actcc_11_13
 msgid "Unissued part (see 64)"
-msgstr ""
+msgstr "未発行の部分（64を参照）"
 
 #. module: account_coda
 #: view:account.coda.import:0
@@ -2377,14 +2379,14 @@ msgstr ""
 #: model:ir.actions.act_window,name:account_coda.wizard_account_coda_import_2
 #: model:ir.model,name:account_coda.model_account_coda_import
 msgid "Import CODA File"
-msgstr ""
+msgstr "CODAファイルのインポート"
 
 #. module: account_coda
 #: code:addons/account_coda/wizard/account_coda_import.py:289
 #: code:addons/account_coda/wizard/account_coda_import.py:481
 #, python-format
 msgid "Transaction Code unknown, please consult your bank."
-msgstr ""
+msgstr "不明な取引コードです。あなたの銀行にご相談下さい。"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_13_55
@@ -2394,54 +2396,54 @@ msgstr "固定金利貸出金 - 利息のみ"
 #. module: account_coda
 #: view:account.coda.trans.type:0
 msgid "CODA Transaction Type"
-msgstr ""
+msgstr "CODA取引タイプ"
 
 #. module: account_coda
 #: field:coda.bank.statement.line,globalisation_level:0
 msgid "Globalisation Level"
-msgstr ""
+msgstr "グローバル化レベル"
 
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_020
 msgid "Costs of physical delivery"
-msgstr ""
+msgstr "物理的な配送費用"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_09_60
 msgid "Sale of foreign bank notes"
-msgstr ""
+msgstr "外国紙幣の販売"
 
 #. module: account_coda
 #: field:account.coda.import,note:0
 msgid "Log"
-msgstr ""
+msgstr "ログ"
 
 #. module: account_coda
 #: view:account.coda:0
 msgid "Search CODA Files"
-msgstr ""
+msgstr "CODAファイルの検索"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_07_52
 msgid "Remittance of commercial paper - credit under usual reserve"
-msgstr ""
+msgstr "コマーシャルペーパーの送金 - 通常預金の元でのクレジット"
 
 #. module: account_coda
 #: help:coda.bank.account,active:0
 msgid ""
 "If the active field is set to False, it will allow you to hide the Bank "
 "Account without removing it."
-msgstr ""
+msgstr "アクティブ項目をFalseに設定した場合は、銀行口座を削除することなく非表示にできます。"
 
 #. module: account_coda
 #: model:account.coda.trans.code,comment:account_coda.actcc_07_54
 msgid "Among other things advances or promissory notes"
-msgstr ""
+msgstr "他の前払物あるいは約束手形"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_80_10
 msgid "Purchase of Smartcard"
-msgstr ""
+msgstr "スマートカードの購入"
 
 #. module: account_coda
 #: code:addons/account_coda/wizard/account_coda_import.py:664
@@ -2454,11 +2456,17 @@ msgid ""
 "Structured Communication Type: %s - %s\n"
 "Communication: %s"
 msgstr ""
+"取引タイプ：%s - %s\n"
+"取引ファミリ：%s - %s\n"
+"取引コード：%s - %s\n"
+"取引分類：%s - %s\n"
+"構造化通信タイプ：%s - %s\n"
+"通信：%s"
 
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_208
 msgid "Commitment fee deferred payment"
-msgstr ""
+msgstr "約定手数料後払"
 
 #. module: account_coda
 #: model:account.coda.comm.type,description:account_coda.acct_005
@@ -2468,20 +2476,20 @@ msgstr "通信員に関するデータ"
 #. module: account_coda
 #: model:account.coda.trans.code,comment:account_coda.actcc_11_66
 msgid "For professionals such as insurances and stockbrokers"
-msgstr ""
+msgstr "保険や株式仲介といった専門家のため"
 
 #. module: account_coda
 #: model:account.coda.trans.code,comment:account_coda.actcc_80_19
 msgid ""
 "Collected for securities, gold, pass-books, etc. placed in safe custody"
-msgstr ""
+msgstr "証券、金、銀行通帳などの収集物を安全な保管庫に置いて下さい。"
 
 #. module: account_coda
 #: model:account.coda.trans.code,comment:account_coda.actcc_09_19
 msgid ""
 "Used in case of payments accepted under reserve of count, result of "
 "overcrediting"
-msgstr ""
+msgstr "計算上で承認された支払が結果的にクレジット超過のケースに使用されます。"
 
 #. module: account_coda
 #: code:addons/account_coda/wizard/account_coda_import.py:630
@@ -2491,6 +2499,9 @@ msgid ""
 "Configuration Error in journal %s!\n"
 "Please verify the Default Debit and Credit Account settings."
 msgstr ""
+"\n"
+"仕訳帳の設定エラー %s\n"
+"デフォルトのデビットとクレジット口座の設定を検証して下さい。"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_07_09
@@ -2500,12 +2511,12 @@ msgstr "仕入先手形の両替手数料"
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_213
 msgid "Financing fee"
-msgstr ""
+msgstr "融資料金"
 
 #. module: account_coda
 #: field:account.bank.statement.line.global,coda_statement_line_ids:0
 msgid "CODA Bank Statement Lines"
-msgstr ""
+msgstr "CODA銀行取引明細書行"
 
 #. module: account_coda
 #: code:addons/account_coda/wizard/account_coda_import.py:170
@@ -2514,35 +2525,37 @@ msgid ""
 "\n"
 "Unsupported bank account structure !"
 msgstr ""
+"\n"
+"サポートされない銀行口座構造です。"
 
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_037
 msgid "Commission for handling charges"
-msgstr ""
+msgstr "取扱手数料"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_11_03
 msgid "Subscription to securities"
-msgstr ""
+msgstr "有価証券のサブスクリプション"
 
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_425
 msgid "Foreign broker's commission"
-msgstr ""
+msgstr "外国仲介人の手数料"
 
 #. module: account_coda
 #: model:account.coda.trans.type,description:account_coda.actt_7
 msgid ""
 "Detail of 2. Simple account with detailed data The records in a separate "
 "application keep type 7."
-msgstr ""
+msgstr "2の詳細。別のアプリケーションの中のレコードに詳細データを持つ単純な口座はタイプ７を保持します。"
 
 #. module: account_coda
 #: model:account.coda.comm.type,description:account_coda.acct_125
 #: model:account.coda.trans.code,description:account_coda.actcf_13
 #: view:coda.bank.statement.line:0
 msgid "Credit"
-msgstr ""
+msgstr "貸方"
 
 #. module: account_coda
 #: code:addons/account_coda/wizard/account_coda_import.py:155
@@ -2551,16 +2564,18 @@ msgid ""
 "\n"
 "Foreign bank accounts with BBAN structure are not supported !"
 msgstr ""
+"\n"
+"BBAN構造の外国の銀行口座はサポートされていません。"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcf_09
 msgid "Counter transactions"
-msgstr ""
+msgstr "店頭取引"
 
 #. module: account_coda
 #: model:ir.model,name:account_coda.model_coda_bank_statement_line
 msgid "CODA Bank Statement Line"
-msgstr ""
+msgstr "CODA銀行取引明細書行"
 
 #. module: account_coda
 #: model:account.coda.trans.code,comment:account_coda.actcc_01_17
@@ -2573,27 +2588,27 @@ msgstr ""
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_057
 msgid "Interest subsidy"
-msgstr ""
+msgstr "利子補給"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcf_41
 msgid "International credit transfers - non-SEPA credit transfers"
-msgstr ""
+msgstr "国際クレジット転送 - 非SEPAクレジット転送"
 
 #. module: account_coda
 #: model:account.coda.trans.code,comment:account_coda.actcc_03_87
 msgid "Overall amount, VAT included"
-msgstr ""
+msgstr "VATが含まれる全体金額"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_43_01
 msgid "Payment of a foreign cheque"
-msgstr ""
+msgstr "外国小切手の支払"
 
 #. module: account_coda
 #: selection:coda.bank.statement.line,type:0
 msgid "General"
-msgstr ""
+msgstr "一般"
 
 #. module: account_coda
 #: code:addons/account_coda/wizard/account_coda_import.py:856
@@ -2602,44 +2617,46 @@ msgid ""
 "\n"
 "Incorrect ending Balance in CODA Statement %s for Bank Account %s!"
 msgstr ""
+"\n"
+"CODA取引明細書の期末残高が正しくありません %s 銀行口座 %s"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_11_04
 msgid "Issues"
-msgstr ""
+msgstr "発行物"
 
 #. module: account_coda
 #: model:account.coda.trans.code,comment:account_coda.actcc_07_37
 msgid ""
 "If any, detail in the category (e.g. costs for presentation for acceptance, "
 "etc.)"
-msgstr ""
+msgstr "分類の中に詳細がある場合（例えば、受け入れのためのプレゼンテーション経費など）"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_09_17
 msgid "Purchase of fiscal stamps"
-msgstr ""
+msgstr "収入印紙の購入"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_41_01
 #: model:account.coda.trans.code,description:account_coda.actcc_41_50
 msgid "Transfer"
-msgstr ""
+msgstr "転送"
 
 #. module: account_coda
 #: view:account.coda.import:0
 msgid "View Bank Statement(s)"
-msgstr ""
+msgstr "銀行取引明細書の表示"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_80_20
 msgid "Drawing up a certificate"
-msgstr ""
+msgstr "証明書の作成"
 
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_013
 msgid "Payment commission"
-msgstr ""
+msgstr "支払手数料"
 
 #. module: account_coda
 #: model:account.coda.trans.code,comment:account_coda.actcc_07_01
@@ -2650,37 +2667,37 @@ msgstr "為替手形、借金返済領収書、約束手形；手形名宛人の
 #. module: account_coda
 #: view:account.coda.import:0
 msgid "View CODA Bank Statement(s)"
-msgstr ""
+msgstr "CODA銀行取引明細書の表示"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_03_15
 msgid "Your purchase bank cheque"
-msgstr ""
+msgstr "購入銀行小切手"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_03_05
 msgid "Payment of voucher"
-msgstr ""
+msgstr "クーポンの支払"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_13_68
 msgid "Documentary export credits"
-msgstr ""
+msgstr "文書の輸出クレジット"
 
 #. module: account_coda
 #: field:coda.bank.account,find_bbacom:0
 msgid "Lookup Invoice"
-msgstr ""
+msgstr "請求書検索"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcf_03
 msgid "Cheques"
-msgstr ""
+msgstr "小切手"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_05_56
 msgid "Unexecutable reimbursement"
-msgstr ""
+msgstr "実行不可能な払い戻し"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_05_03
@@ -2692,7 +2709,7 @@ msgstr "不渡り債務"
 msgid ""
 "First credit of cheques, vouchers, luncheon vouchers, postal orders, credit "
 "under usual reserve"
-msgstr ""
+msgstr "小切手の最初のクレジット、クーポン、昼食券、郵便為替、通常預金の元でのクレジット"
 
 #. module: account_coda
 #: model:account.coda.trans.code,comment:account_coda.actcc_07_05
@@ -2706,7 +2723,7 @@ msgstr "手形振出人の要求により返還請求された手形（満期日
 msgid ""
 "Costs chargeable to clients who ask to have their correspondence kept at "
 "their disposal at the bank's counter"
-msgstr ""
+msgstr "彼らの書状を銀行のカウンターで彼らの自由にできる権利を持ち続けることを依頼する顧客が負担すべき経費"
 
 #. module: account_coda
 #: model:account.coda.trans.code,comment:account_coda.actcc_11_64
@@ -2715,21 +2732,23 @@ msgid ""
 "underwriting or not); also used for the payment in full of partly-paid "
 "shares, see transaction 05"
 msgstr ""
+"金額は配布の責任を持つ銀行（しっかりとした引受業務、あるいはそれ以外）によって発行者に支払われます；また、部分支払済株式の全ての支払のために使われます。取"
+"引05を参照して下さい。"
 
 #. module: account_coda
 #: model:account.coda.trans.code,comment:account_coda.actcc_03_15
 msgid "Cheque drawn by the bank on itself, usually with charges."
-msgstr ""
+msgstr "小切手はそれ自身の銀行によって作成されます。また通常は料金が請求されます。"
 
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_072
 msgid "Countervalue of commission to third party"
-msgstr ""
+msgstr "第三者への委任の対価"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_01_01
 msgid "Individual transfer order"
-msgstr ""
+msgstr "個々の転送順序"
 
 #. module: account_coda
 #: code:addons/account_coda/wizard/account_coda_import.py:436
@@ -2738,11 +2757,13 @@ msgid ""
 "\n"
 "Movement data records of type 2.%s are not supported !"
 msgstr ""
+"\n"
+"タイプ2の移動データレコード %s はサポートされていません。"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_04_02
 msgid "Payment by means of a payment card within the Eurozone"
-msgstr ""
+msgstr "ユーロ圏内で支払カードを使った支払"
 
 #. module: account_coda
 #: model:account.coda.trans.code,comment:account_coda.actcc_01_01
@@ -2750,12 +2771,12 @@ msgid ""
 "Credit transfer given by the customer on paper or electronically, even if "
 "the execution date of this transfer is in the future. Domestic payments as "
 "well as euro payments meeting the requirements."
-msgstr ""
+msgstr "転送の実行日が未来である場合も含む、紙や電子的による顧客による銀行口座振替。国内支払は必要条件を満たすユーロ支払と同様です。"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcf_35
 msgid "Closing (periodical settlements for interest, costs,…)"
-msgstr ""
+msgstr "閉鎖（期間的な利息決済、経費など）"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_04_51
@@ -2765,12 +2786,12 @@ msgstr "Protonの装填解除"
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_019
 msgid "Tax on physical delivery"
-msgstr ""
+msgstr "物理的配送にかかる税金"
 
 #. module: account_coda
 #: field:coda.bank.statement,statement_id:0
 msgid "Associated Bank Statement"
-msgstr ""
+msgstr "関連する銀行取引明細書"
 
 #. module: account_coda
 #: model:account.coda.trans.code,comment:account_coda.actcc_07_08
@@ -2886,7 +2907,7 @@ msgstr ""
 #. module: account_coda
 #: view:coda.bank.statement.line:0
 msgid "Statement"
-msgstr ""
+msgstr "取引明細書"
 
 #. module: account_coda
 #: view:account.coda.trans.type:0
@@ -2950,7 +2971,7 @@ msgstr ""
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_43_52
 msgid "Remittance of foreign cheque credit under usual reserve"
-msgstr ""
+msgstr "通常預金の元での外国小切手クレジットの送金"
 
 #. module: account_coda
 #: field:coda.bank.statement.line,counterparty_number:0
@@ -2978,6 +2999,10 @@ msgid ""
 "otherwise change the corresponding entry manually in the generated Bank "
 "Statement."
 msgstr ""
+"\n"
+"    銀行取引明細書t %s 行 %s：\n"
+"        銀行口座 %s は、このパートナに定義されていません %s\n"
+"        設定を訂正し再度インポートを実行するか、そうでない場合は生成された銀行取引明細書の対応するエントリーを変更して下さい。"
 
 #. module: account_coda
 #: model:account.coda.comm.type,description:account_coda.acct_113
@@ -3024,7 +3049,7 @@ msgstr ""
 #: help:coda.bank.statement,type:0
 msgid ""
 "No Bank Statements are associated with CODA Bank Statements of type 'Info'."
-msgstr ""
+msgstr "銀行取引明細書がタイプが情報となっているCODA銀行取引明細書と関連付けられていません。"
 
 #. module: account_coda
 #: model:account.coda.trans.code,comment:account_coda.actcc_09_58
@@ -3164,7 +3189,7 @@ msgstr ""
 #: help:coda.bank.account,currency:0
 #: help:coda.bank.statement,currency:0
 msgid "The currency of the CODA Bank Statement"
-msgstr ""
+msgstr "CODA銀行取引明細書の通貨"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_41_07
@@ -3178,6 +3203,8 @@ msgid ""
 "\n"
 "CODA V%s statements are not supported, please contact your bank!"
 msgstr ""
+"\n"
+"CODA V%s 取引明細書はサポートされていません。あなたの銀行に連絡して下さい。"
 
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_427
@@ -3374,7 +3401,7 @@ msgstr ""
 #: model:account.coda.trans.code,description:account_coda.actcc_11_15
 #: model:account.coda.trans.code,description:account_coda.actcc_11_62
 msgid "Interim interest on subscription"
-msgstr ""
+msgstr "サブスクリプションの中間利息"
 
 #. module: account_coda
 #: field:coda.bank.statement.line,counterparty_currency:0
@@ -3403,12 +3430,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:account_coda.action_coda_bank_statement_line
 #: model:ir.ui.menu,name:account_coda.coda_bank_statement_line
 msgid "CODA Statement Lines"
-msgstr ""
+msgstr "CODA取引明細書行"
 
 #. module: account_coda
 #: field:coda.bank.statement.line,globalisation_amount:0
 msgid "Globalisation Amount"
-msgstr ""
+msgstr "国際化金額"
 
 #. module: account_coda
 #: model:account.coda.trans.code,comment:account_coda.actcc_01_13
@@ -3439,7 +3466,7 @@ msgstr ""
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_05_52
 msgid "Credit under usual reserve"
-msgstr ""
+msgstr "通常預金の元でのクレジット"
 
 #. module: account_coda
 #: code:addons/account_coda/wizard/account_coda_import.py:125
@@ -3477,7 +3504,7 @@ msgstr ""
 msgid ""
 "No Bank Statements will be generated for CODA Bank Statements from Bank "
 "Accounts of type 'Info'."
-msgstr ""
+msgstr "銀行取引明細書はタイプが情報の銀行口座からCODA銀行取引明細書のためには生成されません。"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_49_03
@@ -3529,7 +3556,7 @@ msgstr ""
 #. module: account_coda
 #: field:account.bank.statement,coda_statement_id:0
 msgid "Associated CODA Bank Statement"
-msgstr ""
+msgstr "関連付けされたCODA銀行取引明細書"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_13_37
@@ -3544,7 +3571,7 @@ msgstr ""
 #. module: account_coda
 #: model:account.coda.trans.code,comment:account_coda.actcc_07_39
 msgid "Debit of the drawer after credit under usual reserve or discount"
-msgstr ""
+msgstr "通常預金の元でのクレジット後での手形振出人のデビット、または割引"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_41_66
@@ -3594,7 +3621,7 @@ msgstr ""
 #: code:addons/account_coda/account_coda.py:280
 #, python-format
 msgid "No CODA Bank Statement found for this Bank Statement!"
-msgstr ""
+msgstr "この銀行取引明細書のためのCODA取引明細書が見つかりません。"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_03_07
@@ -3627,7 +3654,7 @@ msgstr "クレジットカードの決済の取り消し"
 msgid ""
 "Repayable securities from a deposit or delivered at the counter - credit "
 "under usual reserve"
-msgstr ""
+msgstr "保管庫からあるいは店頭で引き渡される払戻可能な証券 - 通常預金の元でのクレジット"
 
 #. module: account_coda
 #: model:account.coda.trans.type,description:account_coda.actt_5
@@ -3798,7 +3825,7 @@ msgstr ""
 #. module: account_coda
 #: view:coda.bank.statement.line:0
 msgid "CODA Statement Line"
-msgstr ""
+msgstr "CODA取引明細書行"
 
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_073
@@ -3819,3 +3846,6 @@ msgstr ""
 #: model:account.coda.trans.code,description:account_coda.actcc_80_01
 msgid "Guarantee card charges"
 msgstr ""
+
+#~ msgid "Select your file :"
+#~ msgstr "ファイル選択："

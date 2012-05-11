@@ -29,7 +29,7 @@ class crm_configuration(osv.osv_memory):
         'module_crm_caldav': fields.boolean("Caldav Synchronization",
             help="""Use protocol caldav to synchronize meetings with other calendar applications (like Sunbird).
                 This installs the module crm_caldav."""),
-        'fetchmail_lead': fields.boolean("Create leads from an email account",
+        'fetchmail_lead': fields.boolean("Create Leads from an E-mail Account",
             fetchmail_model='crm.lead', fetchmail_name='Incoming leads',
             help="""Allows you to configure your incoming mail server, and create leads from incoming emails."""),
         'lead_server': fields.char('Server', size=256),
@@ -49,10 +49,10 @@ class crm_configuration(osv.osv_memory):
         'module_import_google': fields.boolean("Google Import",
             help="""Import google contact in partner address and add google calendar events details in Meeting.
                 This installs the module import_google."""),
-        'module_wiki_sale_faq': fields.boolean("Install a sales FAQ",
+        'module_wiki_sale_faq': fields.boolean("Install a Sales FAQ",
             help="""This provides demo data, thereby creating a Wiki Group and a Wiki Page for Wiki Sale FAQ.
                 This installs the module wiki_sale_faq."""),
-        'module_google_map': fields.boolean("Google maps on customer",
+        'module_google_map': fields.boolean("Google Maps on Customer",
             help="""Locate customers on Google Map.
                 This installs the module google_map."""),
     }

@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:37+0000\n"
-"PO-Revision-Date: 2011-02-11 14:08+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2012-05-10 17:33+0000\n"
+"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:57+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-05-11 05:10+0000\n"
+"X-Generator: Launchpad (build 15225)\n"
 
 #. module: resource
 #: help:resource.calendar.leaves,resource_id:0
@@ -23,8 +23,8 @@ msgid ""
 "If empty, this is a generic holiday for the company. If a resource is set, "
 "the holiday/leave is only for this resource"
 msgstr ""
-"Dacă este necompletat, acesta este un concediu general pentru companie. Dacă "
-"o resursă este setată, concediul este doar pentru această resursă"
+"Daca este necompletat, acesta este un concediu general pentru companie. Daca "
+"este configurata o resursa, concediul este doar pentru aceasta resursa"
 
 #. module: resource
 #: selection:resource.resource,resource_type:0
@@ -45,7 +45,7 @@ msgstr "Detalii concediu"
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_resources_leaves
 msgid "Resources Leaves"
-msgstr "Concedii resurse"
+msgstr "Resurse concedii"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_form
@@ -54,7 +54,7 @@ msgstr "Concedii resurse"
 #: view:resource.calendar.attendance:0
 #: field:resource.resource,calendar_id:0
 msgid "Working Time"
-msgstr "Program de  Lucru"
+msgstr "Program de lucru"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -65,17 +65,17 @@ msgstr "Joi"
 #: view:resource.calendar.leaves:0
 #: view:resource.resource:0
 msgid "Group By..."
-msgstr "Grupează după..."
+msgstr "Grupeaza dupa..."
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Sunday"
-msgstr "Duminică"
+msgstr "Duminica"
 
 #. module: resource
 #: view:resource.resource:0
 msgid "Search Resource"
-msgstr "Caută resursă"
+msgstr "Cauta resursa"
 
 #. module: resource
 #: view:resource.resource:0
@@ -93,28 +93,30 @@ msgstr "Resurse"
 #, python-format
 msgid "Make sure the Working time has been configured with proper week days!"
 msgstr ""
+"Asigurati-va de faptul ca Timpul de lucru a fost configurat cu zilele "
+"corespunzatoare din saptamana!"
 
 #. module: resource
 #: field:resource.calendar,manager:0
-msgid "Workgroup manager"
+msgid "Workgroup Manager"
 msgstr "Responsabil de grup"
 
 #. module: resource
 #: help:resource.calendar.attendance,hour_from:0
 msgid "Working time will start from"
-msgstr "Timpul de lucru va începe de la"
+msgstr "Programul de lucru va incepe de la"
 
 #. module: resource
 #: constraint:resource.calendar.leaves:0
 msgid "Error! leave start-date must be lower then leave end-date."
 msgstr ""
-"Eroare! data de inceput a concediului trebuie să fie sub data de sfarsit a "
-"concediului."
+"Eroare! data de inceput a concediului trebuie sa fie mai mica decat data de "
+"sfarsit a concediului."
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar
 msgid "Resource Calendar"
-msgstr "Resursă calendar"
+msgstr "Calendar resurse"
 
 #. module: resource
 #: field:resource.calendar,company_id:0
@@ -132,23 +134,23 @@ msgstr "Vineri"
 
 #. module: resource
 #: field:resource.calendar.attendance,dayofweek:0
-msgid "Day of week"
+msgid "Day of Week"
 msgstr "Zi a săptămânii"
 
 #. module: resource
 #: help:resource.calendar.attendance,hour_to:0
 msgid "Working time will end at"
-msgstr "Timpul de lucru se va termina la"
+msgstr "Programul de lucru se va termina la"
 
 #. module: resource
 #: field:resource.calendar.attendance,date_from:0
 msgid "Starting date"
-msgstr "Data de început"
+msgstr "Data de inceput"
 
 #. module: resource
 #: view:resource.calendar:0
 msgid "Search Working Time"
-msgstr "Caută programul de lucru"
+msgstr "Cauta programul de lucru"
 
 #. module: resource
 #: view:resource.calendar.leaves:0
@@ -164,27 +166,27 @@ msgstr "Utilizator"
 #. module: resource
 #: view:resource.calendar.leaves:0
 msgid "Date"
-msgstr "Dată"
+msgstr "Data"
 
 #. module: resource
 #: view:resource.calendar.leaves:0
 msgid "Search Working Period Leaves"
-msgstr "Caută Concediile pentru perioada de lucru"
+msgstr "Cauta Concediile pentru perioada de lucru"
 
 #. module: resource
 #: field:resource.resource,time_efficiency:0
-msgid "Efficiency factor"
+msgid "Efficiency Factor"
 msgstr "Factor eficiență"
 
 #. module: resource
 #: field:resource.calendar.leaves,date_to:0
 msgid "End Date"
-msgstr "Data de sfârşit"
+msgstr "Data de sfarsit"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_closing_days
 msgid "Closing Days"
-msgstr "Zile de închidere"
+msgstr "Zile de inchidere"
 
 #. module: resource
 #: model:ir.ui.menu,name:resource.menu_resource_config
@@ -192,7 +194,7 @@ msgstr "Zile de închidere"
 #: field:resource.calendar.leaves,resource_id:0
 #: view:resource.resource:0
 msgid "Resource"
-msgstr "Resursă"
+msgstr "Resursa"
 
 #. module: resource
 #: view:resource.calendar:0
@@ -212,17 +214,17 @@ msgstr "Miercuri"
 #: view:resource.calendar.leaves:0
 #: view:resource.resource:0
 msgid "Working Period"
-msgstr "Perioadă lucru"
+msgstr "Perioada de lucru"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_resource
 msgid "Resource Detail"
-msgstr "Detaliu resursă"
+msgstr "Detaliu resursa"
 
 #. module: resource
 #: field:resource.resource,active:0
 msgid "Active"
-msgstr "Activ(ă)"
+msgstr "Activ(a)"
 
 #. module: resource
 #: help:resource.resource,active:0
@@ -230,8 +232,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
 msgstr ""
-"Dacă campul activ este setat pe Fals, vă va permite să ascundeti "
-"inregistrarea resursei fără a o sterge."
+"Daca campul activ este setat pe Fals, va va permite sa ascundeti "
+"inregistrarea resursei fara a o sterge."
 
 #. module: resource
 #: field:resource.calendar.attendance,calendar_id:0
@@ -249,6 +251,8 @@ msgid ""
 "Define working hours and time table that could be scheduled to your project "
 "members"
 msgstr ""
+"Definiti programul de lucru si tabelul orar care ar putea fi programat "
+"pentru membrii proiectului d-voastra"
 
 #. module: resource
 #: help:resource.resource,user_id:0
@@ -263,7 +267,7 @@ msgstr "Defineste programarea resursei"
 #. module: resource
 #: view:resource.calendar.leaves:0
 msgid "Starting Date of Leave"
-msgstr ""
+msgstr "Data de Inceput a Concediului"
 
 #. module: resource
 #: field:resource.resource,code:0
@@ -278,7 +282,7 @@ msgstr "Luni"
 #. module: resource
 #: field:resource.calendar.attendance,hour_to:0
 msgid "Work to"
-msgstr "Lucru până la"
+msgstr "Lucru pana la"
 
 #. module: resource
 #: help:resource.resource,time_efficiency:0
@@ -288,15 +292,15 @@ msgid ""
 "show a load of 100% for this phase by default, but if we put a efficency of "
 "200%, then his load will only be 50%."
 msgstr ""
-"Acest camp reprezintă eficienta resursei pentru completarea sarcinilor. De "
-"exemplu, o resursă singură intr-o etapă de 5 zile cu 5 sarcini atribuite va "
-"afisa implicit o incărcătură de 100% pentru această etapă, dar dacă ii "
-"atribuim o eficientă de 200% atunci incărcătura ei va fi de doar 50%."
+"Acest camp reprezinta eficienta resursei pentru completarea sarcinilor. De "
+"exemplu, o resursa singura intr-o etapa de 5 zile cu 5 sarcini atribuite va "
+"afisa implicit o incarcare de 100% pentru aceasta etapa, dar daca ii "
+"atribuim o eficienta de 200% atunci incarcarea ei va fi de doar 50%."
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Tuesday"
-msgstr "Marţi"
+msgstr "Marti"
 
 #. module: resource
 #: field:resource.calendar.leaves,calendar_id:0
@@ -307,7 +311,7 @@ msgstr "Programul de lucru"
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_leave_tree
 #: model:ir.ui.menu,name:resource.menu_view_resource_calendar_leaves_search
 msgid "Resource Leaves"
-msgstr "Concediu Resursă"
+msgstr "Resursa Concediu"
 
 #. module: resource
 #: model:ir.actions.act_window,help:resource.action_resource_resource_tree
@@ -316,27 +320,27 @@ msgid ""
 "in a specific project phase. You can also set their efficiency level and "
 "workload based on their weekly working hours."
 msgstr ""
-"Resursele vă permit să creati si să gestionati resursele care ar trebui să "
-"fie implicate intr-o anumită etapă a proiectului. De asemenea, le puteti "
-"seta nivelul de eficientă si volumul de muncă pe baza programului lor de "
-"lucru săptămanal."
+"Resursele va permit sa creati si sa gestionati resursele care ar trebui sa "
+"fie implicate intr-o anumita etapa a proiectului. De asemenea, le puteti "
+"seta nivelul de eficienta si volumul de munca pe baza programului lor de "
+"lucru saptamanal."
 
 #. module: resource
 #: view:resource.resource:0
 msgid "Inactive"
-msgstr "Inactiv(ă)"
+msgstr "Inactiv(a)"
 
 #. module: resource
 #: code:addons/resource/faces/resource.py:340
 #, python-format
 msgid "(vacation)"
-msgstr "(vacantă)"
+msgstr "(concediu)"
 
 #. module: resource
 #: code:addons/resource/resource.py:392
 #, python-format
 msgid "Configuration Error!"
-msgstr ""
+msgstr "Eroare de configurare!"
 
 #. module: resource
 #: selection:resource.resource,resource_type:0
@@ -351,7 +355,7 @@ msgstr "Detaliu lucru"
 #. module: resource
 #: field:resource.calendar.leaves,date_from:0
 msgid "Start Date"
-msgstr "Data de început"
+msgstr "Data de inceput"
 
 #. module: resource
 #: code:addons/resource/resource.py:310
@@ -362,7 +366,16 @@ msgstr " (copie)"
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Saturday"
-msgstr "Sâmbătă"
+msgstr "Sambata"
 
 #~ msgid "General Information"
 #~ msgstr "Informaţii generale"
+
+#~ msgid "Workgroup manager"
+#~ msgstr "Managerul grupului de lucru"
+
+#~ msgid "Day of week"
+#~ msgstr "Ziua din saptamana"
+
+#~ msgid "Efficiency factor"
+#~ msgstr "Factorul de eficienta"

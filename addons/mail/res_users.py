@@ -35,9 +35,14 @@ class res_users(osv.osv):
                         ('all', 'All feeds'),
                         ('to_me', 'Only sent directly to me'),
                         ('none', 'Never')
+<<<<<<< TREE
                         ], 'Receive feeds by email', required=True,
                         help="Choose in which case you want to receive \
                               an email when you receive new feeds."),
+=======
+                        ], 'Receive Feeds by E-mail', required=True,
+                        help="Choose in which case you want to receive an email when you receive new feeds."),
+>>>>>>> MERGE-SOURCE
     }
     
     _defaults = {
