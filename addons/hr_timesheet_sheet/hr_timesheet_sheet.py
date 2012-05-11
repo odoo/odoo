@@ -312,31 +312,14 @@ class hr_timesheet_sheet(osv.osv):
                 self.write(cr, uid, [sheet.id], {'date_current': sheet.date_to,}, context=context)
         return True
 
-    def check_sign(self, cr, uid, ids, typ, context=None):
-        sheet = self.browse(cr, uid, ids, context=context)[0]
-        if not sheet.date_current == time.strftime('%Y-%m-%d'):
-            raise osv.except_osv(_('Error !'), _('You cannot sign in/sign out from an other date than today'))
-        return True
+    
+    def attendance_action_change(self, cr, uid, ids, context=None):
+        hr_employee = self.pool.get('hr.employee')
+        employee_ids = []
+        for sheet in self.browse(cr, uid, ids, context=context):
+            if sheet.employee_id.id not in employee_ids: employee_ids.append(sheet.employee_id.id)
+        return hr_employee.attendance_action_change(cr, uid, employee_ids, context=context)
 
-    def sign(self, cr, uid, ids, typ, context=None):
-        self.check_sign(cr, uid, ids, typ, context=context)
-        sign_obj = self.pool.get('hr.sign.in.out')
-        sheet = self.browse(cr, uid, ids, context=context)[0]
-        context['emp_id'] = [sheet.employee_id.id]
-        sign_id = sign_obj.create(cr, uid, {}, context=context)
-        methods = {'sign_in': sign_obj.si_check,
-                   'sign_out': sign_obj.so_check}
-        wizard_result = methods[typ](cr, uid, [sign_id], context=context)
-        if wizard_result.get('type', False) == 'ir.actions.act_window_close':
-            return True  # ensure we do not close the main window !
-        wizard_result['nodestroy'] = True  # do not destroy the main window !
-        return wizard_result
-
-    def sign_in(self, cr, uid, ids, context=None):
-        return self.sign(cr, uid, ids, 'sign_in', context=context)
-
-    def sign_out(self, cr, uid, ids, context=None):
-        return self.sign(cr, uid, ids, 'sign_out', context=context)
 
     _columns = {
         'name': fields.char('Note', size=64, select=1,

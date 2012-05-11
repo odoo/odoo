@@ -68,7 +68,7 @@ openerp.hr_attendance = function(instance) {
             return this._super(ids, callback, error_callback);
         },
         call_button: function (method, args, callback, error_callback) {
-            if (this._model.name == "hr.employee" && method == "attendance_action_change"){
+            if (method == "attendance_action_change"){
     			callback = instance.hr_attendance.callback(callback);
     		}
             return this._super(method, args, callback, error_callback);

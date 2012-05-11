@@ -91,6 +91,8 @@
                             </field>
                             <group col="4" colspan="1">
                                 <field name="state_attendance"/>
+                                <button name="attendance_action_change" attrs="{'invisible': ['|', ('state_attendance','=',False), ('state_attendance', '=', 'absent')]}" type="object" string="Sign Out" icon="gtk-go-forward" groups="base.group_hr_manager"/>
+                        <button name="attendance_action_change" attrs="{'invisible': [('state_attendance', '=', 'present')]}" type="object" string="Sign In" icon="gtk-go-back" groups="base.group_hr_manager"/>
                                 <field name="total_attendance_day" widget="float_time" colspan="4"/>
                             </group>
                             <field colspan="4" context="{'date':date_current,'user_id':user_id}" domain="[('name','=',date_current)]" name="timesheet_ids" nolabel="1">
