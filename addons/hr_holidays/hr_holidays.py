@@ -371,14 +371,15 @@ class hr_holidays(osv.osv):
                     hr_manager_group = self.pool.get('res.groups').read(cr, uid, [obj_id], ['users'], context=context)[0]
                     result[obj.id] = hr_manager_group['users']
         return result
-    
-    def message_get_subscribers_ids(self, cr, uid, ids, context=None):
-        sub_ids = super(hr_holidays, self).message_get_subscribers_ids(cr, uid, ids, context=context)
-        # add the employee and its manager if specified to the subscribed users
+
+    def message_get_subscribers(self, cr, uid, ids, get_ids=False, context=None):
+        user_ids = super(hr_holidays, self).message_get_subscribers(cr, uid, ids, True, context=context)
         for obj in self.browse(cr, uid, ids, context=context):
-            if obj.employee_id.parent_id:
-                sub_ids.append(obj.employee_id.parent_id.user_id.id)
-        return sub_ids
+            if obj.user_id and not obj.user_id.id in user_ids:
+                self.message_subscribe(cr, uid, [obj.id], [obj.user_id.id], context=context)
+            if obj.employee_id.parent_id and not obj.employee_id.parent_id.id in user_ids:
+                self.message_subscribe(cr, uid, [obj.id], [obj.employee_id.parent_id.id], context=context)
+        return super(hr_holidays, self).message_get_subscribers(cr, uid, ids, get_ids, context=context)
         
     def create_notificate(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):

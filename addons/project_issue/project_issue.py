@@ -475,19 +475,19 @@ class project_issue(crm.crm_case, osv.osv):
             if obj.state == 'draft' and obj.user_id:
                 result[obj.id] = [obj.user_id.id]
         return result
-    
-    def message_get_subscribers_ids(self, cr, uid, ids, context=None):
-        sub_ids = super(project_issue, self).message_get_subscribers_ids(cr, uid, ids, context=context)
+
+    def message_get_subscribers(self, cr, uid, ids, get_ids=False, context=None):
+        user_ids = super(project_issue, self).message_get_subscribers(cr, uid, ids, True, context=context)
         for obj in self.browse(cr, uid, ids, context=context):
-            if obj.user_id:
-                sub_ids.append(obj.user_id.id)
-        return sub_ids
+            if obj.user_id and not obj.user_id.id in user_ids:
+                self.message_subscribe(cr, uid, [obj.id], [obj.user_id.id], context=context)
+        return super(project_issue, self).message_get_subscribers(cr, uid, ids, get_ids, context=context)
     
     def case_get_note_msg_prefix(self, cr, uid, id, context=None):
         return 'Project issue '
 
     def convert_to_task_send_note(self, cr, uid, ids, context=None):
-        message = _("Project issue has been <b>converted</b> in to task.")
+        message = _("Project issue has been <b>converted</b> into task.")
         return self.message_append_note(cr, uid, ids, body=message, context=context)
 
     def create_send_note(self, cr, uid, ids, context=None):

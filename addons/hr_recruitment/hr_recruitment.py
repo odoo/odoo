@@ -483,13 +483,13 @@ class hr_applicant(crm.crm_case, osv.osv):
     # -------------------------------------------------------
     # OpenChatter methods and notifications
     # -------------------------------------------------------
-    
-    def message_get_subscribers_ids(self, cr, uid, ids, context=None):
-        sub_ids = super(hr_applicant, self).message_get_subscribers_ids(cr, uid, ids, context=context)
+
+    def message_get_subscribers(self, cr, uid, ids, get_ids=False, context=None):
+        user_ids = super(hr_applicant, self).message_get_subscribers(cr, uid, ids, True, context=context)
         for obj in self.browse(cr, uid, ids, context=context):
-            if obj.user_id:
-                sub_ids.append(obj.user_id.id)
-        return sub_ids
+            if obj.user_id and not obj.user_id.id in user_ids:
+                self.message_subscribe(cr, uid, [obj.id], [obj.user_id.id], context=context)
+        return super(hr_applicant, self).message_get_subscribers(cr, uid, ids, get_ids, context=context)
 
     def get_needaction_user_ids(self, cr, uid, ids, context=None):
         result = dict.fromkeys(ids, [])
