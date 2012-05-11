@@ -1,7 +1,5 @@
 <template>
     <t t-name="AttendanceNotifier">
-        <a href="#" class="oe_attendance_button" t-attf-title="You are #{employee.state}">
-            <img t-attf-src="/hr_attendance/static/src/img/emp-#{employee.state}.png" ></img>
-        </a>
+        <img style="cursor: pointer;" t-attf-src="/hr_attendance/static/src/img/emp-#{employee.state}.png" class="oe_attendance_button" t-attf-title="You are #{employee.state}"></img>
     </t>
 </template>
