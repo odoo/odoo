@@ -125,10 +125,9 @@ class mail_thread(osv.osv):
         """
         if context is None:
             context = {}
+        
         message_obj = self.pool.get('mail.message')
-        subscription_obj = self.pool.get('mail.subscription')
         notification_obj = self.pool.get('mail.notification')
-        res_users_obj = self.pool.get('res.users')
         body = vals.get('body_html', '') if vals.get('content_subtype') == 'html' else vals.get('body_text', '')
         
         # automatically subscribe the writer of the message
@@ -866,7 +865,6 @@ class mail_thread(osv.osv):
         """
         message_obj = self.pool.get('mail.message')
         res_users_obj = self.pool.get('res.users')
-        
         body = new_msg_values.get('body_html', '') if new_msg_values.get('content_subtype') == 'html' else new_msg_values.get('body_text', '')
         
         # remove message writer
@@ -876,9 +874,8 @@ class mail_thread(osv.osv):
         # get user_ids directly asked
         user_to_push_from_parse_ids = self.message_parse_users(cr, uid, body, context=context)
         
-        email_to = ''
-        
         # try to find an email_to
+        email_to = ''
         for user in res_users_obj.browse(cr, uid, user_to_notify_ids, context=context):
             if not user.notification_email_pref == 'all' and \
                 not (user.notification_email_pref == 'to_me' and user.id in user_to_push_from_parse_ids):
@@ -895,19 +892,16 @@ class mail_thread(osv.osv):
         # try to find an email_from
         current_user = res_users_obj.browse(cr, uid, [uid], context=context)[0]
         email_from = new_msg_values.get('email_from')
-        if email_from:
+        if not email_from:
             email_from = current_user.user_email
         
         # get email content, create it (with mail_message.create)
         email_values = self.message_create_notify_get_email_dict(cr, uid, new_msg_values, email_from, email_to, context)
-        print email_values
         email_id = message_obj.create(cr, uid, email_values, context=context)
         return email_id
     
     def message_create_notify_get_email_dict(self, cr, uid, new_msg_values, email_from, email_to, context=None):
         values = dict(new_msg_values)
-        
-        # get and update body
         body = new_msg_values.get('body_html', '') if new_msg_values.get('content_subtype') == 'html' else new_msg_values.get('body_text', '')
         body += '\n\n----------\nThis email was send automatically by OpenERP, because you have subscribed to a document.'
         values.update({
@@ -917,8 +911,10 @@ class mail_thread(osv.osv):
             'email_to': email_to,
             'subject': 'New message',
             'content_subtype': 'text',
+            'auto_delete': True,
+            'res_model': '',
+            'res_id': False,
         })
-        
         return values
     
     def message_remove_pushed_notifications(self, cr, uid, ids, msg_ids, remove_childs=True, context=None):
