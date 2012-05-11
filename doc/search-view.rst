@@ -14,7 +14,8 @@ multiple fields). The goal for this change is twofold:
   OpenERP Web's new design.
 
 The internal structure of the faceted search is inspired by
-`VisualSearch <http://documentcloud.github.com/visualsearch/>`_ [#]_.
+`VisualSearch <http://documentcloud.github.com/visualsearch/>`_
+[#previous]_.
 
 As does VisualSearch, the new search view is based on `Backbone`_ and
 makes significant use of Backbone's models and collections (OpenERP
@@ -63,7 +64,7 @@ contains a non-falsy value for the field's ``@name`` and calls
 :js:func:`openerp.web.search.Input.facet_for` with that value.
 
 There is no default implementation of
-:js:func:`openerp.web.search.Input.facet_for` [#]_, but
+:js:func:`openerp.web.search.Input.facet_for` [#no_impl]_, but
 :js:class:`openerp.web.search.Field` provides one, which uses the
 value as-is to fetch a :js:class:`~openerp.web.search.Facet`.
 
@@ -76,7 +77,8 @@ inputs through the :js:func:`~openerp.web.search.Input.complete`
 method.
 
 This method should take a single argument (the string being typed by
-the user) and should fetch an ``Array`` of possible completions [#]_.
+the user) and should fetch an ``Array`` of possible completions
+[#completion]_.
 
 A default implementation is provided which fetches nothing.
 
@@ -205,9 +207,9 @@ with directly by external objects or search view controls
     .. js:attribute:: field
 
         The :js:class:`~openerp.web.search.Input` instance which
-        originally created the facet, used to delegate some operations
-        (such as serializing the facet's values to domains and
-        contexts). This is a backbone model attribute.
+        originally created the facet [#facet-field]_, used to delegate
+        some operations (such as serializing the facet's values to
+        domains and contexts). This is a backbone model attribute.
 
     .. js:attribute:: values
 
@@ -262,7 +264,7 @@ OpenERP this is done via :ref:`domains <openerpserver:domains>`. On
 the other hand, the OpenERP Web 7 search view's state is modelled
 after a collection of :js:class:`~openerp.web.search.Facet`, and each
 field of a search view may have special requirements when it comes to
-the domains it produces [#]_.
+the domains it produces [#special]_.
 
 So there needs to be some way of mapping
 :js:class:`~openerp.web.search.Facet` objects to OpenERP search data.
@@ -464,20 +466,47 @@ The advanced search is now a more standard
 :js:class:`~openerp.web.search.Input` configured to be rendered in the
 drawer.
 
-.. [#] the original view was implemented on top of a monkey-patched
-       VisualSearch, but as our needs diverged from VisualSearch's goal this
-       made less and less sense ultimately leading to a clean-room
-       reimplementation
+.. [#previous]
 
-.. [#] In case you are extending the search view with a brand new type
-       of input
+    the original view was implemented on top of a monkey-patched
+    VisualSearch, but as our needs diverged from VisualSearch's goal
+    this made less and less sense ultimately leading to a clean-room
+    reimplementation
 
-.. [#] Ideally this array should not hold more than about 10 items,
-       but the search view does not put any constraint on this at the
-       moment. Note that this may change.
+.. [#no_impl]
 
-.. [#] search view fields may also bundle context data to add to the
-       search context
+    In case you are extending the search view with a brand new type of
+    input
+
+.. [#completion]
+
+    Ideally this array should not hold more than about 10 items, but
+    the search view does not put any constraint on this at the
+    moment. Note that this may change.
+
+.. [#facet-field]
+
+    ``field`` does not actually need to be an instance of
+    :js:class:`~openerp.web.search.Input`, nor does it need to be what
+    created the facet, it just needs to provide the three
+    facet-serialization methods
+    :js:func:`~openerp.web.search.Input.get_domain`,
+    :js:func:`~openerp.web.search.Input.get_context` and
+    :js:func:`~openerp.web.search.Input.get_gropuby`, existing
+    :js:class:`~openerp.web.search.Input` subtypes merely provide
+    convenient base implementation for those methods.
+
+    Complex search view inputs (especially those living in the drawer)
+    may prefer using object literals with the right slots returning
+    closed-over values or some other scheme un-bound to an actual
+    :js:class:`~openerp.web.search.Input`, as
+    :js:class:`~openerp.web.search.CustomFilters` and
+    :js:class:`~openerp.web.search.Advanced` do.
+
+.. [#special]
+
+    search view fields may also bundle context data to add to the
+    search context
 
 .. _Backbone:
     http://documentcloud.github.com/backbone/
