@@ -75,8 +75,9 @@ class mail_message_common(osv.TransientModel):
        emails should inherit from this class and not from mail.message."""
 
     def get_body(self, cr, uid, ids, name, arg, context=None):
-        if context is None:
-            context = {}
+        """ get correct body version: body_html for html messages, and
+            body_text for plain text messages
+        """
         result = dict.fromkeys(ids, '')
         for message in self.browse(cr, uid, ids, context=context):
             if message.content_subtype == 'html':
@@ -186,25 +187,6 @@ class mail_message(osv.Model):
                 'nodestroy': True
                 })
         return action_data
-
-    def _get_display_text(self, cr, uid, ids, name, arg, context=None):
-        if context is None:
-            context = {}
-        tz = context.get('tz')
-        result = {}
-
-        # Read message as UID 1 to allow viewing author even if from different company
-        for message in self.browse(cr, SUPERUSER_ID, ids):
-            msg_txt = ''
-            if message.email_from:
-                msg_txt += _('%s wrote on %s: \n Subject: %s \n\t') % (message.email_from or '/', format_date_tz(message.date, tz), message.subject)
-                if message.body_text:
-                    msg_txt += truncate_text(message.body_text)
-            else:
-                msg_txt = (message.user_id.name or '/') + _(' on ') + format_date_tz(message.date, tz) + ':\n\t'
-                msg_txt += (message.subject or '')
-            result[message.id] = msg_txt
-        return result
     
     _columns = {
         'type': fields.selection([
@@ -220,7 +202,6 @@ class mail_message(osv.Model):
         'partner_id': fields.many2one('res.partner', 'Related partner'),
         'user_id': fields.many2one('res.users', 'Related user', readonly=1),
         'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel', 'message_id', 'attachment_id', 'Attachments'),
-        'display_text': fields.function(_get_display_text, method=True, type='text', size="512", string='Display Text'),
         'mail_server_id': fields.many2one('ir.mail_server', 'Outgoing mail server', readonly=1),
         'state': fields.selection([
                         ('outgoing', 'Outgoing'),
