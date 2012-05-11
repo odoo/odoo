@@ -45,7 +45,7 @@ added to partners that match the segmentation criterions after computation.'),
         'partner_id': fields.integer('Max Partner ID processed'),
         'segmentation_line': fields.one2many('crm.segmentation.line', \
                             'segmentation_id', 'Criteria', required=True),
-        'som_interval': fields.integer('Days per Periode', help="A period is the average number of days between two cycle of sale or purchase for this segmentation.\
+        'som_interval': fields.integer('Days per Period', help="A period is the average number of days between two cycle of sale or purchase for this segmentation.\
                  \nIt's mainly used to detect if a partner has not purchased or buy for a too long time, \
                  \nso we suppose that his state of mind has decreased because he probably bought goods to another supplier. \
                  \nUse this functionality for recurring businesses."),

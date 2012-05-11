@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-02-21 15:51+0000\n"
-"Last-Translator: Erwin <Unknown>\n"
+"PO-Revision-Date: 2012-05-10 17:48+0000\n"
+"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-22 04:56+0000\n"
-"X-Generator: Launchpad (build 14838)\n"
+"X-Launchpad-Export-Date: 2012-05-11 04:37+0000\n"
+"X-Generator: Launchpad (build 15225)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -89,7 +89,7 @@ msgstr "Orders verwerkt vandaag of geplant voor vandaag"
 #: field:stock.partial.picking,move_ids:0 view:stock.partial.picking.line:0
 #: view:stock.return.picking.memory:0
 msgid "Product Moves"
-msgstr "Product verschuivingen"
+msgstr "Productmutaties"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_categ_form_action
@@ -448,7 +448,7 @@ msgstr "Beschikbaar"
 #. module: stock
 #: view:stock.picking:0 field:stock.picking,min_date:0
 msgid "Expected Date"
-msgstr "Verwachte datum"
+msgstr "Datum verwacht"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_warehouse_form
@@ -494,7 +494,7 @@ msgid ""
 "When real-time inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
 msgstr ""
-"Wanneer real-time voorraadwaardering is geactiveerd bij ene product, dan zal "
+"Wanneer real-time voorraadwaardering is geactiveerd bij een product, dan zal "
 "deze rekening de huidige waarde van de producten bevatten."
 
 #. module: stock
@@ -649,7 +649,7 @@ msgid ""
 "worker/team that should perform the operation. Examples of stock journals "
 "may be: quality control, pick lists, packing, etc."
 msgstr ""
-"Met het voorraad dagboek kunt u elk bestand voorraadmutataie toewijzen aan "
+"Met het voorraad dagboek kunt u elk bestand voorraadmutatie toewijzen aan "
 "een specifiek dagboek, volgens de aard van de te verrichten werkzaamheden of "
 "de werknemer/ team dat deze werkzaamheden dient uit te voeren. Voorbeelden "
 "van voorraaddagboeken kunnen zijn: kwaliteitscontrole, picklijsten, "
@@ -1249,6 +1249,8 @@ msgid ""
 "The company the Picking List containing the chained move will belong to "
 "(leave empty to use the default company determination rules"
 msgstr ""
+"De dopinglijst, welke de gekoppelde mutatie bevat zal behoren tot dit "
+"bedrijf (laat leeg om de standaard regels van het bedrijf te gebruiken)"
 
 #. module: stock
 #: help:stock.location,chained_picking_type:0
@@ -1776,7 +1778,7 @@ msgstr "Geplande datum voor het verwerken van deze mutatie"
 #. module: stock
 #: field:stock.inventory,move_ids:0
 msgid "Created Moves"
-msgstr "Creëer Mutatie"
+msgstr "Maak mutatie"
 
 #. module: stock
 #: field:stock.location,valuation_in_account_id:0
@@ -1981,7 +1983,7 @@ msgstr "Kostprijs"
 #. module: stock
 #: view:product.product:0 field:product.product,valuation:0
 msgid "Inventory Valuation"
-msgstr "Voorraad waardering"
+msgstr "Voorraadwaardering"
 
 #. module: stock
 #: view:stock.move:0
@@ -2061,7 +2063,7 @@ msgid ""
 "There is no stock input account defined for this product or its category: "
 "\"%s\" (id: %d)"
 msgstr ""
-"Er is geen voorraadtename rekening gedefinieerd voor dit product of de "
+"Er is geen voorraadtoename rekening gedefinieerd voor dit product of de "
 "productcategorie \"%s\" (id: %d) van het product"
 
 #. module: stock
@@ -3200,7 +3202,7 @@ msgstr "Verpakkingsreferentie"
 #: field:stock.inventory.line.split,location_id:0
 #: field:stock.move,location_id:0 field:stock.move.split,location_id:0
 msgid "Source Location"
-msgstr "Locatie"
+msgstr "Bronlocatie"
 
 #. module: stock
 #: view:stock.move:0
@@ -3245,7 +3247,7 @@ msgstr "Partijen"
 
 #. module: stock
 #: view:stock.move:0 view:stock.picking:0
-msgid "New pack"
+msgid "New Pack"
 msgstr "Nieuwe verpakking"
 
 #. module: stock
@@ -3410,7 +3412,7 @@ msgstr "Fout!"
 
 #. module: stock
 #: view:stock.inventory.merge:0
-msgid "Do you want to merge theses inventories ?"
+msgid "Do you want to merge theses inventories?"
 msgstr "Wilt u deze voorraadtelling samenvoegen?"
 
 #. module: stock
@@ -3536,7 +3538,7 @@ msgstr "Beschikbaarheid controleren"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_view_stock_merge_inventories
 #: view:stock.inventory.merge:0
-msgid "Merge inventories"
+msgid "Merge Inventories"
 msgstr "Voeg voorraadtellingen samen"
 
 #. module: stock
@@ -3604,7 +3606,7 @@ msgstr " voor de "
 
 #. module: stock
 #: view:stock.split.into:0
-msgid "Quantity to leave in the current pack"
+msgid "Quantity to Leave in the Current Pack"
 msgstr "Hoeveelheid achterlaten in huidige verpakking"
 
 #. module: stock
@@ -3616,7 +3618,7 @@ msgstr "Voorraad beschikbaar om te leveren"
 #: model:ir.actions.act_window,name:stock.action_stock_invoice_onshipping
 #: view:stock.invoice.onshipping:0
 msgid "Create invoice"
-msgstr "Creëer factuur"
+msgstr "Maak factuur"
 
 #. module: stock
 #: view:stock.picking:0
@@ -4198,7 +4200,7 @@ msgstr "Warenhuis"
 #. module: stock
 #: field:stock.location,scrap_location:0 view:stock.move.scrap:0
 msgid "Scrap Location"
-msgstr "Afvaallocatie"
+msgstr "Afvallocatie"
 
 #. module: stock
 #: selection:report.stock.inventory,month:0
@@ -5139,3 +5141,15 @@ msgstr "Optionele positie details, alleen voor informatieve redenen"
 #, python-format
 #~ msgid "Receive"
 #~ msgstr "Ontvangen"
+
+#~ msgid "Quantity to leave in the current pack"
+#~ msgstr "Hoeveelheid achterlaten in huidige verpakking"
+
+#~ msgid "New pack"
+#~ msgstr "Nieuwe verpakking"
+
+#~ msgid "Merge inventories"
+#~ msgstr "Voeg voorraadtellingen samen"
+
+#~ msgid "Do you want to merge theses inventories ?"
+#~ msgstr "Wilt u deze voorraadtelling samenvoegen?"

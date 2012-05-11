@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-03-20 02:26+0000\n"
+"PO-Revision-Date: 2012-05-10 18:13+0000\n"
 "Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-03-21 05:00+0000\n"
-"X-Generator: Launchpad (build 14981)\n"
+"X-Launchpad-Export-Date: 2012-05-11 04:39+0000\n"
+"X-Generator: Launchpad (build 15225)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -1240,7 +1240,7 @@ msgstr "分拣单列表："
 #. module: stock
 #: selection:stock.move,state:0
 msgid "Waiting Another Move"
-msgstr ""
+msgstr "等待其他调拨"
 
 #. module: stock
 #: help:product.template,property_stock_production:0
@@ -1351,7 +1351,7 @@ msgstr "内部装箱单"
 #: selection:report.stock.inventory,state:0
 #: selection:report.stock.move,state:0 view:stock.picking:0
 msgid "Waiting"
-msgstr "等待中"
+msgstr "正在等待"
 
 #. module: stock
 #: view:stock.move:0 view:stock.picking:0
@@ -2193,7 +2193,7 @@ msgstr "移库单类型"
 #. module: stock
 #: view:stock.move:0
 msgid "Stock moves that are Confirmed, Available or Waiting"
-msgstr ""
+msgstr "库存调拨处于已确认、可用或者在等待的状态"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_product_location_open
@@ -2921,7 +2921,7 @@ msgstr "产品分类"
 #. module: stock
 #: selection:stock.picking,state:0
 msgid "Waiting Another Operation"
-msgstr ""
+msgstr "正在等待其他操作"
 
 #. module: stock
 #: view:stock.location:0
@@ -2994,7 +2994,7 @@ msgstr "源库位"
 #. module: stock
 #: view:stock.move:0
 msgid " Waiting"
-msgstr ""
+msgstr " 正在等待"
 
 #. module: stock
 #: view:product.template:0
@@ -3034,7 +3034,7 @@ msgstr "批次"
 
 #. module: stock
 #: view:stock.move:0 view:stock.picking:0
-msgid "New pack"
+msgid "New Pack"
 msgstr "新托盘"
 
 #. module: stock
@@ -3187,7 +3187,7 @@ msgstr "错误！"
 
 #. module: stock
 #: view:stock.inventory.merge:0
-msgid "Do you want to merge theses inventories ?"
+msgid "Do you want to merge theses inventories?"
 msgstr "你真的要合并盘点?"
 
 #. module: stock
@@ -3306,7 +3306,7 @@ msgstr "检查可用"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_view_stock_merge_inventories
 #: view:stock.inventory.merge:0
-msgid "Merge inventories"
+msgid "Merge Inventories"
 msgstr "合并盘点"
 
 #. module: stock
@@ -3371,7 +3371,7 @@ msgstr " 为了 "
 
 #. module: stock
 #: view:stock.split.into:0
-msgid "Quantity to leave in the current pack"
+msgid "Quantity to Leave in the Current Pack"
 msgstr "在当前托盘里的数量"
 
 #. module: stock
@@ -3458,7 +3458,7 @@ msgstr "库存盘点明细"
 #. module: stock
 #: view:stock.move:0
 msgid "Waiting "
-msgstr ""
+msgstr "等待中 "
 
 #. module: stock
 #: code:addons/stock/product.py:427
@@ -4902,8 +4902,14 @@ msgstr "可选库位，仅供参考"
 #~ msgid "Internal Picking list"
 #~ msgstr "内部装箱单"
 
+#~ msgid "New pack"
+#~ msgstr "新托盘"
+
 #~ msgid "Delivery Order:"
 #~ msgstr "送货单："
+
+#~ msgid "Quantity to leave in the current pack"
+#~ msgstr "在当前托盘里的数量"
 
 #~ msgid "Outgoing Products Delay"
 #~ msgstr "耽搁出仓的产品"
@@ -5051,6 +5057,12 @@ msgstr "可选库位，仅供参考"
 
 #~ msgid "Stock Replacement result"
 #~ msgstr "库存替换结果"
+
+#~ msgid "Do you want to merge theses inventories ?"
+#~ msgstr "你真的要合并盘点?"
+
+#~ msgid "Merge inventories"
+#~ msgstr "合并盘点"
 
 #, python-format
 #~ msgid "Process Document"

@@ -42,7 +42,7 @@ class account_config_settings(osv.osv_memory):
         'currency_id': fields.related('company_id', 'currency_id', type='many2one', relation='res.currency', required=True,
             string='Main currency', help="Main currency of the company."),
         'paypal_account': fields.related('company_id', 'paypal_account', type='char', size=128,
-            string='Paypal account', help="Paypal account (email) for receiving online payments (credit card, etc.)"),
+            string='Paypal Account', help="Paypal account (email) for receiving online payments (credit card, etc.)"),
         'company_footer': fields.related('company_id', 'rml_footer2', type='char', size=250, readonly=True,
             string='Bank Accounts on Reports', help="Bank accounts as printed on footer of reports."),
 
@@ -74,7 +74,7 @@ class account_config_settings(osv.osv_memory):
         'purchase_refund_sequence_prefix': fields.related('purchase_refund_journal_id', 'sequence_id', 'prefix', type='char', string='Supplier Refund Sequence'),
         'purchase_refund_sequence_next': fields.related('purchase_refund_journal_id', 'sequence_id', 'number_next', type='integer', string='Next Supplier Refund Number'),
 
-        'module_account_check_writing': fields.boolean('Support check writings',
+        'module_account_check_writing': fields.boolean('Support Check Writings',
             help="""This allows you to check writing and printing.
                 This installs the module account_check_writing."""),
         'module_account_accountant': fields.boolean('Accountant Features',

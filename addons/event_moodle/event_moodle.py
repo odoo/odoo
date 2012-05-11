@@ -177,7 +177,7 @@ class event_event(osv.osv):
                 'shortname': '',
                 'startdate': date,
                 'summary': event.note,
-                'categoryid':1, #the category hardcoded is 'Miscelleanous'
+                'categoryid':1, #the category hardcoded is 'Miscellaneous'
                 }]
             #create a course in moodle and keep the id
             response_courses = moodle_pool.create_moodle_courses(cr, uid, moodle_config_wiz_id, dic_courses, context=context)

@@ -96,6 +96,8 @@ class account_analytic_account(osv.osv):
         return self._compute_level_tree(cr, uid, ids, child_ids, res, fields, context)
 
     def name_get(self, cr, uid, ids, context=None):
+        if isinstance(ids, (int, long)):
+            ids=[ids]
         if not ids:
             return []
         res = []
@@ -132,7 +134,7 @@ class account_analytic_account(osv.osv):
         return accounts
 
     def _set_company_currency(self, cr, uid, ids, name, value, arg, context=None):
-        if type(ids) != type([]):
+        if isinstance(ids, (int, long)):
             ids=[ids]
         for account in self.browse(cr, uid, ids, context=context):
             if account.company_id:
