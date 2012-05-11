@@ -80,9 +80,10 @@ class mail_thread(osv.osv):
     
     def create(self, cr, uid, vals, context=None):
         """Automatically subscribe the creator"""
-        thread_id = super(mail_thread, self).create(cr, uid, vals, context=context);
-        self.message_subscribe(cr, uid, [thread_id], [uid], context=context)
-        return thread_id;
+        thread_id = super(mail_thread, self).create(cr, uid, vals, context=context)
+        if thread_id:
+            self.message_subscribe(cr, uid, [thread_id], [uid], context=context)
+        return thread_id
     
     def write(self, cr, uid, ids, vals, context=None):
         """Automatically subscribe the writer"""
@@ -101,8 +102,6 @@ class mail_thread(osv.osv):
            a foreign key with a 'cascade' ondelete attribute.
            Notifications will be deleted with messages
         """
-        if context is None:
-            context = {}
         subscr_obj = self.pool.get('mail.subscription')
         msg_obj = self.pool.get('mail.message')
         # delete subscriptions
@@ -136,50 +135,31 @@ class mail_thread(osv.osv):
         if vals['user_id']:
             self.message_subscribe(cr, uid, [thread_id], [vals['user_id']], context=context)
         
-        # get users that will get a notification pushed
-        user_to_push_ids = self.message_create_get_notification_user_ids(cr, uid, [thread_id], vals, context=context)
-        user_to_push_from_parse_ids = self.message_parse_users(cr, uid, [thread_id], body, context=context)
-        
-        # set email_from and email_to for comments and notifications
-        if vals.get('type', False) and vals['type'] == 'comment' or vals['type'] == 'notification':
-            current_user = res_users_obj.browse(cr, uid, [uid], context=context)[0]
-            if not vals.get('email_from', False):
-                vals['email_from'] = current_user.user_email
-            if not vals.get('email_to', False):
-                email_to = ''
-                for user in res_users_obj.browse(cr, uid, user_to_push_ids, context=context):
-                    if not user.notification_email_pref == 'all' and \
-                        not (user.notification_email_pref == 'to_me' and user.id in user_to_push_from_parse_ids):
-                        continue
-                    if not user.user_email:
-                        continue
-                    email_to = '%s, %s' % (email_to, user.user_email)
-                email_to = email_to.lstrip(', ')
-                if email_to:
-                    vals['email_to'] = email_to
-                    vals['state'] = 'outgoing'
-        
         # create message
         msg_id = message_obj.create(cr, uid, vals, context=context)
         
-        # special: if install mode, do not push demo data
+        # special: if install mode, do not push (demo data: avoid crowdy Wall)
         if context.get('install_mode', False):
-            return True
+            return msg_id
         
-        # push to users
+        # get users that will get a notification pushed
+        user_to_push_ids = self.message_get_user_ids_to_notify(cr, uid, [thread_id], vals, context=context)
         for id in user_to_push_ids:
             notification_obj.create(cr, uid, {'user_id': id, 'message_id': msg_id}, context=context)
         
+        # create the email to send
+        email_id = self.message_create_notify_by_email(cr, uid, vals, user_to_push_ids, context=context)
+        
         return msg_id
     
-    def message_create_get_notification_user_ids(self, cr, uid, thread_ids, new_msg_vals, context=None):
+    def message_get_user_ids_to_notify(self, cr, uid, thread_ids, new_msg_vals, context=None):
         subscription_obj = self.pool.get('mail.subscription')
         hide_obj = self.pool.get('mail.subscription.hide')
         # get body
         body = new_msg_vals.get('body_html', '') if new_msg_vals.get('content_subtype') == 'html' else new_msg_vals.get('body_text', '')
         
         # get subscribers
-        user_sub_ids = self.message_get_subscribers_ids(cr, uid, thread_ids, context=context)
+        user_sub_ids = self.message_get_subscribers(cr, uid, thread_ids, True, context=context)
         
         # get hiden subscriptions
         subscription_ids = subscription_obj.search(cr, uid, [('res_model', '=', self._name), ('res_id', 'in', thread_ids), ('user_id', 'in', user_sub_ids)], context=context)
@@ -192,7 +172,7 @@ class mail_thread(osv.osv):
             notif_user_ids = user_sub_ids
         
         # add users requested via parsing message (@login)
-        notif_user_ids += self.message_parse_users(cr, uid, thread_ids, body, context=context)
+        notif_user_ids += self.message_parse_users(cr, uid, body, context=context)
         
         # add users requested to perform an action (need_action mechanism)
         if hasattr(self, 'get_needaction_user_ids'):
@@ -211,17 +191,17 @@ class mail_thread(osv.osv):
         notif_user_ids = list(set(notif_user_ids))
         return notif_user_ids
 
-    def message_parse_users(self, cr, uid, ids, string, context=None):
+    def message_parse_users(self, cr, uid, string, context=None):
         """Parse message content
            - if find @login -(^|\s)@((\w|@|\.)*)-: returns the related ids
-             this supports login that are emails (such as @admin@lapin.net)
+             this supports login that are emails (such as @raoul@grobedon.net)
         """
         regex = re.compile('(^|\s)@((\w|@|\.)*)')
         login_lst = [item[1] for item in regex.findall(string)]
         if not login_lst: return []
         user_ids = self.pool.get('res.users').search(cr, uid, [('login', 'in', login_lst)], context=context)
         return user_ids
-
+    
     def message_capable_models(self, cr, uid, context=None):
         ret_dict = {}
         for model_name in self.pool.obj_list():
@@ -805,23 +785,26 @@ class mail_thread(osv.osv):
     # Subscription mechanism
     #------------------------------------------------------
     
-    def message_get_subscribers_ids(self, cr, uid, ids, context=None):
+    def message_get_subscribers(self, cr, uid, ids, get_ids=False, context=None):
+        """ Returns the current document followers. Basically this method
+            checks in mail.subscription for entries with mathing res_model,
+            res_id.
+        
+        :param get_ids: if set to True, return the ids of users; if set
+                        to False, returns the result of a read in res.users
+        """
         subscr_obj = self.pool.get('mail.subscription')
         subscr_ids = subscr_obj.search(cr, uid, ['&', ('res_model', '=', self._name), ('res_id', 'in', ids)], context=context)
-        subs = subscr_obj.read(cr, uid, subscr_ids, context=context)
-        return [sub['user_id'][0] for sub in subs]
-    
-    def message_get_subscribers(self, cr, uid, ids, context=None):
-        user_ids = self.message_get_subscribers_ids(cr, uid, ids, context=context)
-        users = self.pool.get('res.users').read(cr, uid, user_ids, fields=['id', 'name', 'avatar'], context=context)
-        return users
+        user_ids = [sub['user_id'][0] for sub in subscr_obj.read(cr, uid, subscr_ids, ['user_id'], context=context)]
+        if get_ids:
+            return user_ids
+        else:
+            return self.pool.get('res.users').read(cr, uid, user_ids, fields=['id', 'name', 'avatar'], context=context)
     
     def message_is_subscriber(self, cr, uid, ids, user_id = None, context=None):
-        users = self.message_get_subscribers(cr, uid, ids, context=context)
+        subscr_obj = self.pool.get('mail.subscription')
         sub_user_id = uid if user_id is None else user_id
-        if sub_user_id in [user['id'] for user in users]:
-            return True
-        return False
+        return (subscr_obj.search(cr, uid, [('res_model', '=', self._name), ('res_id', 'in', ids), ('user_id', '=', sub_user_id)], count=True, context=context) > 0)
     
     def message_subscribe(self, cr, uid, ids, user_ids = None, context=None):
         subscription_obj = self.pool.get('mail.subscription')
@@ -834,7 +817,7 @@ class mail_thread(osv.osv):
         return create_ids
 
     def message_unsubscribe(self, cr, uid, ids, user_ids = None, context=None):
-        if not user_ids and not uid in self.message_get_subscribers_ids(cr, uid, ids, context=context):
+        if not user_ids and not uid in self.message_get_subscribers(cr, uid, ids, True, context=context):
             return False
         subscription_obj = self.pool.get('mail.subscription')
         to_unsubscribe_uids = [uid] if user_ids is None else user_ids
@@ -863,9 +846,82 @@ class mail_thread(osv.osv):
     # Notification API
     #------------------------------------------------------
     
+    def message_create_notify_by_email(self, cr, uid, new_msg_values, user_to_notify_ids, context=None):
+        """ When creating a new message and pushing notifications, emails
+            must be send if users have chosen to receive notifications
+            by email via the notification_email_pref field.
+            
+            ``notification_email_pref`` can have 3 values :
+            - all: receive all notification by email (for example for shared
+              users)
+            - to_me: messages send directly to me (@login, messages on res.users)
+            - never: never receive notifications
+            Note that an user should never receive notifications for messages
+            he has created.
+            
+            :param new_msg_values: dictionary of message values, those that
+                                   are given to the create method
+            :param user_to_notify_ids: list of user_ids, user that will
+                                       receive a notification on their Wall
+        """
+        message_obj = self.pool.get('mail.message')
+        res_users_obj = self.pool.get('res.users')
+        
+        body = new_msg_values.get('body_html', '') if new_msg_values.get('content_subtype') == 'html' else new_msg_values.get('body_text', '')
+        
+        # remove message writer
+        if user_to_notify_ids.count(new_msg_values.get('user_id')) > 0:
+            user_to_notify_ids.remove(new_msg_values.get('user_id'))
+        
+        # get user_ids directly asked
+        user_to_push_from_parse_ids = self.message_parse_users(cr, uid, body, context=context)
+        
+        email_to = ''
+        
+        # try to find an email_to
+        for user in res_users_obj.browse(cr, uid, user_to_notify_ids, context=context):
+            if not user.notification_email_pref == 'all' and \
+                not (user.notification_email_pref == 'to_me' and user.id in user_to_push_from_parse_ids):
+                continue
+            if not user.user_email:
+                continue
+            email_to = '%s, %s' % (email_to, user.user_email)
+            email_to = email_to.lstrip(', ')
+        
+        # did not find any email address: not necessary to create an email
+        if not email_to:
+            return
+        
+        # try to find an email_from
+        current_user = res_users_obj.browse(cr, uid, [uid], context=context)[0]
+        email_from = new_msg_values.get('email_from')
+        if email_from:
+            email_from = current_user.user_email
+        
+        # get email content, create it (with mail_message.create)
+        email_values = self.message_create_notify_get_email_dict(cr, uid, new_msg_values, email_from, email_to, context)
+        print email_values
+        email_id = message_obj.create(cr, uid, email_values, context=context)
+        return email_id
+    
+    def message_create_notify_get_email_dict(self, cr, uid, new_msg_values, email_from, email_to, context=None):
+        values = dict(new_msg_values)
+        
+        # get and update body
+        body = new_msg_values.get('body_html', '') if new_msg_values.get('content_subtype') == 'html' else new_msg_values.get('body_text', '')
+        body += '\n\n----------\nThis email was send automatically by OpenERP, because you have subscribed to a document.'
+        values.update({
+            'type': 'email',
+            'state': 'outgoing',
+            'email_from': email_from,
+            'email_to': email_to,
+            'subject': 'New message',
+            'content_subtype': 'text',
+        })
+        
+        return values
+    
     def message_remove_pushed_notifications(self, cr, uid, ids, msg_ids, remove_childs=True, context=None):
-        if context is None:
-            context = {}
         notif_obj = self.pool.get('mail.notification')
         msg_obj = self.pool.get('mail.message')
         if remove_childs:
