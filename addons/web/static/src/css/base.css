@@ -722,16 +722,16 @@
   width: 100%;
   display: inline-block;
 }
-.openerp .oe_secondary_submenu li {
+.openerp .oe_secondary_submenu > li {
   position: relative;
-  padding: 1px 0 1px 16px;
+  padding: 1px 0 1px 20px;
 }
-.openerp .oe_secondary_submenu li a {
+.openerp .oe_secondary_submenu > li a {
   display: block;
   color: #4c4c4c;
   padding: 2px 4px 2px 0;
 }
-.openerp .oe_secondary_submenu li .oe_menu_label {
+.openerp .oe_secondary_submenu > li .oe_menu_label {
   position: absolute;
   top: 1px;
   right: 1px;
@@ -804,7 +804,7 @@
 }
 .openerp .oe_secondary_submenu .oe_menu_opened:before {
   margin-top: 6px;
-  margin-left: -12px;
+  margin-left: -16px;
   margin-right: 4px;
   border-left: 4px solid transparent;
   border-right: 4px solid transparent;
@@ -934,6 +934,9 @@
 .openerp .oe_view_manager_header .oe_header_row:last-child td {
   padding-top: 0;
 }
+.openerp .oe_view_manager_header .oe_header_row:first-child td {
+  padding-top: 8px;
+}
 .openerp .oe_view_manager_header .oe_view_manager_sidebar {
   margin: 0px auto;
   width: 400px;
@@ -1059,7 +1062,6 @@
 .openerp .oe_form_dropdown_section {
   position: relative;
   display: inline-block;
-  margin-right: 4px;
 }
 .openerp .oe_dropdown_toggle:after {
   width: 0;
@@ -1460,7 +1462,7 @@
 }
 .openerp .oe_application .oe_form_sheetbg {
   background: url(/web/static/src/img/form_sheetbg.png);
-  padding: 8px;
+  padding: 8px 0;
   border-bottom: 1px solid #dddddd;
 }
 .openerp .oe_application .oe_form_sheet_width {

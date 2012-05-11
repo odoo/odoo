@@ -573,9 +573,9 @@ $colour4: #8a89ba
         margin: 0
         width: 100%
         display: inline-block
-        li
+        > li
             position: relative
-            padding: 1px 0 1px 16px
+            padding: 1px 0 1px 20px
             a
                 display: block
                 color: #4c4c4c
@@ -635,7 +635,7 @@ $colour4: #8a89ba
             @include opacity(0.5)
         .oe_menu_opened:before
             margin-top: 6px
-            margin-left: -12px
+            margin-left: -16px
             margin-right: 4px
             border-left: 4px solid transparent
             border-right: 4px solid transparent
@@ -731,6 +731,9 @@ $colour4: #8a89ba
         .oe_header_row:last-child
             td
                 padding-top: 0
+        .oe_header_row:first-child
+            td
+                padding-top: 8px
         .oe_view_manager_sidebar
             margin: 0px auto
             width: 400px
@@ -829,7 +832,6 @@ $colour4: #8a89ba
     .oe_form_dropdown_section
         position: relative
         display: inline-block
-        margin-right: 4px
     .oe_dropdown_toggle:after
         width: 0
         height: 0
@@ -1176,7 +1178,7 @@ $colour4: #8a89ba
     .oe_application
         .oe_form_sheetbg
             background: url(/web/static/src/img/form_sheetbg.png)
-            padding: 8px
+            padding: 8px 0
             border-bottom: 1px solid #ddd 
         .oe_form_sheet_width
             min-width: 650px
