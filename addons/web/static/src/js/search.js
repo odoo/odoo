@@ -1644,25 +1644,28 @@ instance.web.search.Advanced = instance.web.search.Input.extend({
     commit_search: function () {
         var self = this;
         // Get domain sections from all propositions
-        var children = this.getChildren(),
-            domain = _.invoke(children, 'get_proposition');
-        var filters = _(domain).map(function (section) {
+        var children = this.getChildren();
+        var domain = _.invoke(children, 'get_proposition');
+        var vals = _(domain).map(function (section) {
             return {
-                label: _.str.sprintf('%s(%s)%s',
-                        section[0], section[1], section[2]),
-                value: new instance.web.search.Filter({attrs: {
-                    domain: [section]
-                }}, self.view)
-            };
+                label: _.str.sprintf('%s(%s)%s', section[0], section[1], section[2]),
+                value: null
+            }
         });
-        // Create Filter (& FilterGroup around it) with that domain
-        var f = new instance.web.search.FilterGroup(filters, this.view);
-        // add group to query
+        for (var i = domain.length; --i;) {
+            domain.unshift('|');
+        }
+
         this.view.query.add({
             category: _t("Advanced"),
-            values: filters,
-            field: f
+            values: vals,
+            field: {
+                get_context: function () { },
+                get_domain: function () { return domain;},
+                get_groupby: function () { }
+            }
         });
+
         // remove all propositions
         _.invoke(children, 'destroy');
         // add new empty proposition

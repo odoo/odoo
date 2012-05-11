@@ -203,7 +203,7 @@ $(document).ready(function () {
                 return {result: {fields_view: {
                     type: 'search',
                     fields: {
-                        dummy: {type: 'char'}
+                        dummy: {type: 'char', string: "Dummy"}
                     },
                     arch: {
                         tag: 'search',
@@ -225,7 +225,7 @@ $(document).ready(function () {
         };
         instance.connection.responses['/web/searchview/fields_get'] = function () {
             return {result: {fields: {
-                dummy: {type: 'char'}
+                dummy: {type: 'char', string: 'Dummy'}
             }}};
         };
 
@@ -716,7 +716,7 @@ $(document).ready(function () {
         var $fix = $('#qunit-fixture');
         var view = makeSearchView({
             get_domain: function (facet) {
-                equal(facet.get('category'), "dummy");
+                equal(facet.get('category'), "Dummy");
                 deepEqual(facet.values.toJSON(), [{label: "42", value: 42}]);
                 got_domain = true;
                 return null;
@@ -1059,5 +1059,100 @@ $(document).ready(function () {
             });
     });
 
+    module('advanced', {
+        setup: function () {
+            instance = window.openerp.init([]);
+            window.openerp.web.corelib(instance);
+            window.openerp.web.coresetup(instance);
+            window.openerp.web.chrome(instance);
+            window.openerp.web.data(instance);
+            window.openerp.web.formats(instance);
+            window.openerp.web.search(instance);
+
+            instance.web.qweb.add_template(doc);
+
+            mockifyRPC(instance.connection);
+        }
+    });
+    asyncTest('single-advanced', 6, function () {
+        var view = makeSearchView();
+        var $fix = $('#qunit-fixture');
+
+        view.appendTo($fix)
+            .always(start)
+            .fail(function (error) { ok(false, error.message); })
+            .done(function () {
+                var $advanced = $fix.find('.oe_searchview_advanced');
+                // open advanced search (not actually useful)
+                $advanced.find('> h4').click();
+                // select proposition (only one)
+                var $prop = $advanced.find('> form li:first');
+                // field select should have two possible values, dummy and id
+                equal($prop.find('.searchview_extended_prop_field option').length,
+                      2, "advanced search should provide choice between two fields");
+                // field should be dummy
+                equal($prop.find('.searchview_extended_prop_field').val(),
+                      'dummy',
+                      "only field should be dummy");
+                // operator should be "contains"/'ilike'
+                equal($prop.find('.searchview_extended_prop_op').val(),
+                      'ilike', "default char operator should be ilike");
+                // put value in
+                $prop.find('.searchview_extended_prop_value input')
+                     .val("stupid value");
+                // validate advanced search
+                $advanced.find('button.oe_apply').click();
+
+                // resulting search
+                equal(view.query.length, 1, "search query should have a single facet");
+                var facet = view.query.at(0);
+                ok(!facet.get('field').get_context(facet),
+                   "advanced search facets should yield no context");
+                deepEqual(facet.get('field').get_domain(facet),
+                          [['dummy', 'ilike', "stupid value"]],
+                          "advanced search facet should return proposed domain");
+            });
+    });
+    asyncTest('multiple-advanced', 3, function () {
+        var view = makeSearchView();
+        var $fix = $('#qunit-fixture');
+
+        view.appendTo($fix)
+            .always(start)
+            .fail(function (error) { ok(false, error.message); })
+            .done(function () {
+                var $advanced = $fix.find('.oe_searchview_advanced');
+                // open advanced search (not actually useful)
+                $advanced.find('> h4').click();
+                // open second condition
+                $advanced.find('button.oe_add_condition').click();
+                // select first proposition
+                var $prop1 = $advanced.find('> form li:first');
+                $prop1.find('.searchview_extended_prop_field').val('dummy').change();
+                $prop1.find('.searchview_extended_prop_op').val('ilike');
+                $prop1.find('.searchview_extended_prop_value input')
+                     .val("stupid value");
+
+                // select first proposition
+                var $prop2 = $advanced.find('> form li:last');
+                // need to trigger event manually or op not changed
+                $prop2.find('.searchview_extended_prop_field').val('id').change();
+                $prop2.find('.searchview_extended_prop_op').val('=');
+                $prop2.find('.searchview_extended_prop_value input')
+                     .val(42);
+                // validate advanced search
+                $advanced.find('button.oe_apply').click();
+
+                // resulting search
+                equal(view.query.length, 1, "search query should have a single facet");
+                var facet = view.query.at(0);
+                ok(!facet.get('field').get_context(facet),
+                   "advanced search facets should yield no context");
+                deepEqual(facet.get('field').get_domain(facet),
+                          ['|', ['dummy', 'ilike', "stupid value"],
+                                ['id', '=', 42]],
+                          "advanced search facet should return proposed domain");
+            });
+    });
     // TODO: UI tests?
 });
