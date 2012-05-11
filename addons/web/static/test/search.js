@@ -995,9 +995,10 @@ $(document).ready(function () {
             .fail(function (error) { ok(false, error.message); })
             .done(function () {
                 var $fs = $fix.find('.oe_searchview_filters ul');
-                // 3 filters, 1 filtergroup, 1 advanced and 1 Filters widget
-                equal(view.inputs.length, 6,
-                      'view should have 6 inputs total');
+                // 3 filters, 1 filtergroup, 1 custom filters widget,
+                // 1 advanced and 1 Filters widget
+                equal(view.inputs.length, 7,
+                      'view should have 7 inputs total');
                 equal($fs.children().length, 3,
                       "drawer should have a filter group with 3 filters");
                 equal(_.str.strip($fs.children().eq(0).text()), "Foo1",
