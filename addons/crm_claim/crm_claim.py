@@ -39,6 +39,32 @@ class crm_claim(crm.crm_case, osv.osv):
     """
     Crm claim
     """
+    
+    def _get_state(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        for claim in self.browse(cr, uid, ids, context=context):
+            if claim.stage_id:
+                res[claim.id] = claim.stage_id.state
+        return res
+
+    def _get_stage(self, cr, uid, ids, context=None):
+        claim_obj = self.pool.get('crm.claim')
+        result = {}
+        for stage in self.browse(cr, uid, ids, context=context):
+            if stage.state:
+                claim_ids = claim_obj.search(cr, uid, [('state', '=', stage.state)], context=context)
+        for claim in claim_obj.browse(cr, uid, claim_ids, context=context):
+            result[claim.id] = True
+        return result.keys()
+
+    def _save_state(self, cr, uid, claim_id, field_name, field_value, arg, context=None):
+        stage_ids = self.pool.get('crm.case.stage').search(cr, uid, [('state', '=', field_value)], context=context)
+        if stage_ids:
+            self.write(cr, uid, claim_id, {'stage_id': stage_ids[0]}, context=context)
+        else:
+            cr.execute("""UPDATE crm_claim SET state=%s WHERE id=%s""", (field_value, claim_id, ))
+        return True
+
     _name = "crm.claim"
     _description = "Claim"
     _order = "priority,date desc"
@@ -75,7 +101,11 @@ class crm_claim(crm.crm_case, osv.osv):
         'partner_phone': fields.char('Phone', size=32),
         'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_ids','=',section_id)]"), 
         'cause': fields.text('Root Cause'),
-        'state': fields.selection(crm.AVAILABLE_STATES, 'State', size=16, readonly=True,
+        'state': fields.function(_get_state, fnct_inv=_save_state, type='selection', selection=crm.AVAILABLE_STATES, string="State", readonly=True,
+            store = {
+                'crm.claim': (lambda self, cr, uid, ids, c={}: ids, ['stage_id'], 10),
+                'crm.claim.stage': (_get_stage, ['state'], 10)
+                },
                                   help='The state is set to \'Draft\', when a case is created.\
                                   \nIf the case is in progress the state is set to \'Open\'.\
                                   \nWhen the case is over, the state is set to \'Done\'.\

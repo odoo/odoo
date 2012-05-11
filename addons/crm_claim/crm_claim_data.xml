@@ -44,18 +44,22 @@
         
         <record model="crm.case.stage" id="stage_claim1">
             <field name="name">Accepted as Claim</field>
+            <field name="state">draft</field>
             <field name="sequence">26</field>
         </record>
         <record model="crm.case.stage" id="stage_claim5">
             <field name="name">Actions Defined</field>
+            <field name="state">open</field>
             <field name="sequence">27</field>
         </record>
         <record model="crm.case.stage" id="stage_claim2">
             <field name="name">Actions Done</field>
+            <field name="state">done</field>
             <field name="sequence">28</field>
         </record>
         <record model="crm.case.stage" id="stage_claim3">
             <field name="name">Won't fix</field>
+            <field name="state">done</field>
             <field name="sequence">29</field>
         </record>
 
