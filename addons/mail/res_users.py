@@ -33,16 +33,12 @@ class res_users(osv.osv):
     _columns = {
         'notification_email_pref': fields.selection([
                         ('all', 'All feeds'),
-                        ('to_me', 'Only sent directly to me'),
+                        ('comments', 'Only comments'),
+                        ('to_me', 'Only when sent directly to me'),
                         ('none', 'Never')
-<<<<<<< TREE
-                        ], 'Receive feeds by email', required=True,
-                        help="Choose in which case you want to receive \
-                              an email when you receive new feeds."),
-=======
                         ], 'Receive Feeds by E-mail', required=True,
-                        help="Choose in which case you want to receive an email when you receive new feeds."),
->>>>>>> MERGE-SOURCE
+                        help="Choose in which case you want to receive an \
+                              email when you receive new feeds."),
     }
     
     _defaults = {
