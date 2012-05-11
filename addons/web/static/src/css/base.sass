@@ -16,6 +16,16 @@ $colour4: #8a89ba
     font-weight: normal
     font-style: normal
 
+@font-face
+    font-family: 'EntypoRegular'
+    src: url('/web/static/src/font/entypo-webfont.eot') format('eot')
+    src: url('/web/static/src/font/entypo-webfont.eot?#iefix') format('embedded-opentype')
+    src: url('/web/static/src/font/entypo-webfont.woff') format('woff')
+    src: url('/web/static/src/font/entypo-webfont.ttf') format('truetype')
+    src: url('/web/static/src/font/entypo-webfont.svg') format('svg') active
+    font-weight: normal
+    font-style: normal
+
 @mixin vertical-gradient($startColor: #555, $endColor: #333)
     background-color: $startColor
     background-image: -webkit-gradient(linear, left top, left bottom, from($startColor), to($endColor)) /* Saf4+, Chrome */
@@ -122,6 +132,10 @@ $colour4: #8a89ba
     .oe_i
         font-family: "mnmliconsRegular" !important
         font-size: 21px
+        font-weight: 300 !important
+    .oe_e
+        font-family: "entypoRegular" !important
+        font-size: 34px
         font-weight: 300 !important
     .oe_left
         float: left
@@ -810,23 +824,40 @@ $colour4: #8a89ba
     // ViewManager.switches {{{
     .oe_view_manager_switch
         li
-            padding-left: 1px
             text-align: center
             width: 24px
             height: 24px
-            line-height: 24px
+            line-height: 16px
         .oe_vm_switch_list:after, .oe_vm_switch_tree:after
-            content: "ö"
+            padding: 2px
+            content: "i"
         .oe_vm_switch_graph:after
-            content: "ó"
-        .oe_vm_switch_gantt:after
-            content: "y"
-        .oe_vm_switch_calendar:after
-            content: "b"
-        .oe_vm_switch_kanban:after
-            content: "ó"
-        .oe_vm_switch_diagram:after
+            font-family: "mnmliconsRegular" !important
+            font-size: 21px
+            font-weight: 300 !important
             content: "}"
+            position: relative
+            top: -2px
+        .oe_vm_switch_gantt:after
+            content: "c"
+        .oe_vm_switch_calendar:after
+            content: "P"
+        .oe_vm_switch_kanban:after
+            content: "k"
+        .oe_vm_switch_diagram:after
+            content: "f"
+        //.oe_vm_switch_list:after, .oe_vm_switch_tree:after
+            //content: "ö"
+        //.oe_vm_switch_graph:after
+            //content: "ó"
+        //.oe_vm_switch_gantt:after
+            //content: "y"
+        //.oe_vm_switch_calendar:after
+            //content: "b"
+        //.oe_vm_switch_kanban:after
+            //content: "ó"
+        //.oe_vm_switch_diagram:after
+            //content: "}"
     // }}}
     // ViewManager.sidebar {{{
     .oe_form_dropdown_section

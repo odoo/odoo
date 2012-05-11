@@ -423,26 +423,6 @@
 
 <t t-name="ViewManager">
     <div class="oe_view_manager">
-        <!--<div class="oe_view_manager_header">-->
-            <!--<div class="oe_header_row">-->
-                <!--<div class="oe_view_manager_view_search" t-opentag="true"/>-->
-                <!--<h2 class="oe_view_title" t-if="widget.flags.display_title !== false">-->
-                    <!--<span class="oe_view_title_text"><t t-esc="widget.display_title()"/></span>-->
-                <!--</h2>-->
-            <!--</div>-->
-            <!--<div class="oe_header_row">-->
-                <!--<div class="oe_view_manager_buttons oe_left"/>-->
-                <!--<ul class="oe_view_manager_switch oe_button_group oe_right">-->
-                    <!--<t t-if="widget.views_src.length > 1" t-foreach="widget.views_src" t-as="view">-->
-                      <!--<li t-if="view.view_type != 'form'"><a t-attf-class="oe_vm_switch_#{view.view_type} oe_i" t-att-data-view-type="view.view_type" t-att-title="view.label || view.view_type">-->
-                        <!--</a></li>-->
-                    <!--</t>-->
-                <!--</ul>-->
-                <!--<div class="oe_view_manager_pager oe_right"/>-->
-                <!--<div class="oe_view_manager_sidebar"/>-->
-            <!--</div>-->
-          <!--</div>-->
-
         <table class="oe_view_manager_header">
             <col width="33%"/>
             <col width="33%"/>
@@ -467,7 +447,7 @@
                 <td>
                     <ul class="oe_view_manager_switch oe_button_group oe_right">
                         <t t-if="widget.views_src.length > 2" t-foreach="widget.views_src" t-as="view">
-                          <li t-if="view.view_type != 'form'"><a t-attf-class="oe_vm_switch_#{view.view_type} oe_i" t-att-data-view-type="view.view_type" t-att-title="view.label || view.view_type">
+                          <li t-if="view.view_type != 'form'" class="oe_e"><a t-attf-class="oe_vm_switch_#{view.view_type}" t-att-data-view-type="view.view_type" t-att-title="view.label || view.view_type">
                             </a></li>
                         </t>
                     </ul>

@@ -9,6 +9,17 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: "EntypoRegular";
+  src: url("/web/static/src/font/entypo-webfont.eot") format("eot");
+  src: url("/web/static/src/font/entypo-webfont.eot?#iefix") format("embedded-opentype");
+  src: url("/web/static/src/font/entypo-webfont.woff") format("woff");
+  src: url("/web/static/src/font/entypo-webfont.ttf") format("truetype");
+  src: url("/web/static/src/font/entypo-webfont.svg") format("svg") active;
+  font-weight: normal;
+  font-style: normal;
+}
+
 .openerp.openerp-web-client-container {
   height: 100%;
   position: relative;
@@ -91,6 +102,11 @@
 .openerp .oe_i {
   font-family: "mnmliconsRegular" !important;
   font-size: 21px;
+  font-weight: 300 !important;
+}
+.openerp .oe_e {
+  font-family: "entypoRegular" !important;
+  font-size: 34px;
   font-weight: 300 !important;
 }
 .openerp .oe_left {
@@ -1035,29 +1051,34 @@
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
 }
 .openerp .oe_view_manager_switch li {
-  padding-left: 1px;
   text-align: center;
   width: 24px;
   height: 24px;
-  line-height: 24px;
+  line-height: 16px;
 }
 .openerp .oe_view_manager_switch .oe_vm_switch_list:after, .openerp .oe_view_manager_switch .oe_vm_switch_tree:after {
-  content: "ö";
+  padding: 2px;
+  content: "i";
 }
 .openerp .oe_view_manager_switch .oe_vm_switch_graph:after {
-  content: "ó";
+  font-family: "mnmliconsRegular" !important;
+  font-size: 21px;
+  font-weight: 300 !important;
+  content: "}";
+  position: relative;
+  top: -2px;
 }
 .openerp .oe_view_manager_switch .oe_vm_switch_gantt:after {
-  content: "y";
+  content: "c";
 }
 .openerp .oe_view_manager_switch .oe_vm_switch_calendar:after {
-  content: "b";
+  content: "P";
 }
 .openerp .oe_view_manager_switch .oe_vm_switch_kanban:after {
-  content: "ó";
+  content: "k";
 }
 .openerp .oe_view_manager_switch .oe_vm_switch_diagram:after {
-  content: "}";
+  content: "f";
 }
 .openerp .oe_form_dropdown_section {
   position: relative;
