@@ -198,6 +198,14 @@ class pos_session(osv.osv):
 
         return result
 
+    def _compute_show_closing_control(self, cr, uid, ids, fieldnames, args, context=None):
+        result = dict.fromkeys(ids, False)
+
+        for session in self.browse(cr, uid, ids, context=context):
+            result[session.id] = any(journal.closing_control == True for journal in session.config_id.journal_ids)
+
+        return result
+
     _columns = {
         'config_id' : fields.many2one('pos.config', 'PoS',
                                       required=True,
@@ -242,14 +250,40 @@ class pos_session(osv.osv):
                                        type='one2many', relation='account.cashbox.line',
                                        string='CashBox Lines'),
 
-        'cash_register_date' : fields.related('cash_register_id', 'date', type='datetime', string='Started On'),
-        'cash_register_closing_date' : fields.related('cash_register_id', 'closing_date', type='datetime', string='Closed On'),
-        'cash_register_balance_end_real' : fields.related('cash_register_id', 'balance_end_real', type='float', digits_compute=dp.get_precision('Account'), string="Ending Balance"),
-        'cash_register_balance_start' : fields.related('cash_register_id', 'balance_start', type='float', digits_compute=dp.get_precision('Account'), string="Starting Balance"),
-        'cash_register_total_entry_encoding' : fields.related('cash_register_id', 'total_entry_encoding', string='Total Cash Transaction'),
-        'cash_register_balance_end' : fields.related('cash_register_id', 'balance_end', type='float', digits_compute=dp.get_precision('Account'), string="Computed Balance"),
-        'cash_register_balance_end_cash' : fields.related('cash_register_id', 'balance_end_cash', string='Closing Balance', help="Closing balance based on cashBox"),
-        'cash_register_difference' : fields.related('cash_register_id', 'difference', type='float', string='Difference'),
+        'cash_register_date' : fields.related('cash_register_id', 'date',
+                                              type='datetime',
+                                              string='Started On',
+                                              readonly=True),
+        'cash_register_closing_date' : fields.related('cash_register_id', 'closing_date',
+                                                      type='datetime',
+                                                      string='Closed On',
+                                                      readonly=True),
+        'cash_register_balance_end_real' : fields.related('cash_register_id', 'balance_end_real',
+                                                          type='float',
+                                                          digits_compute=dp.get_precision('Account'),
+                                                          string="Ending Balance",
+                                                          readonly=True),
+        'cash_register_balance_start' : fields.related('cash_register_id', 'balance_start',
+                                                       type='float',
+                                                       digits_compute=dp.get_precision('Account'),
+                                                       string="Starting Balance",
+                                                       readonly=True),
+        'cash_register_total_entry_encoding' : fields.related('cash_register_id', 'total_entry_encoding',
+                                                              string='Total Cash Transaction',
+                                                              readonly=True),
+        'cash_register_balance_end' : fields.related('cash_register_id', 'balance_end',
+                                                     type='float',
+                                                     digits_compute=dp.get_precision('Account'),
+                                                     string="Computed Balance",
+                                                     readonly=True),
+        'cash_register_balance_end_cash' : fields.related('cash_register_id', 'balance_end_cash',
+                                                          string='Closing Balance',
+                                                          help="Closing balance based on cashBox",
+                                                          readonly=True),
+        'cash_register_difference' : fields.related('cash_register_id', 'difference',
+                                                    type='float',
+                                                    string='Difference',
+                                                    readonly=True),
 
         'journal_ids' : fields.related('config_id', 'journal_ids',
                                        type='many2many',
@@ -259,6 +293,7 @@ class pos_session(osv.osv):
         'order_ids' : fields.one2many('pos.order', 'session_id', 'Orders'),
 
         'statement_ids' : fields.one2many('account.bank.statement', 'pos_session_id', 'Bank Statement', readonly=True),
+        'show_closing_control': fields.function(_compute_show_closing_control, method=True, type='boolean', string='Show Closing Control Button'),
     }
 
     _defaults = {
@@ -290,7 +325,7 @@ class pos_session(osv.osv):
         for session in self.browse(cr, uid, ids, context=None):
             domain = [
                 ('state', '!=', 'closed'),
-                ('config_id', '=', session.config.id),
+                ('config_id', '=', session.config_id.id),
                 ('id', '!=', session.id),
             ]
 
@@ -301,7 +336,7 @@ class pos_session(osv.osv):
 
         return True
 
-    _constraints = [
+    _constraints2 = [
         (_check_unicity, "You can create a new session, you have an existing and non closed session !", ['user_id', 'state']),
         (_check_pos_config, "There is an existing session for the PoS Config", ['config_id']),
     ]
@@ -372,6 +407,18 @@ class pos_session(osv.osv):
     def wkf_action_close(self, cr, uid, ids, context=None):
         self._confirm_orders(cr, uid, ids, context=context)
         return self.write(cr, uid, ids, {'state' : 'closed'}, context=context)
+
+    def has_opening_control(self, cr, uid, ids, context=None):
+        return any(journal.opening_control == True
+                    for session in self.browse(cr, uid, ids, context=context)
+                    for journal in session.config_id.journal_ids)
+
+    def has_closing_control(self, cr, uid, ids, context=None):
+        result = any(journal.closing_control == True
+                   for session in self.browse(cr, uid, ids, context=context)
+                   for journal in session.config_id.journal_ids)
+        print "result: %r" % (result,)
+        return result
 
     def _confirm_orders(self, cr, uid, ids, context=None):
         wf_service = netsvc.LocalService("workflow")

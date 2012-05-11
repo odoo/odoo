@@ -884,7 +884,7 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Cash">
-                            <field name="cash_register_id" invisible="0" />
+                            <field name="cash_register_id" invisible="1" />
                             <field name="opening_details_ids" colspan="4" nolabel="1" attrs="{'invisible' : [('state', 'not in', ('opening_control', 'opened'))], 'readonly' : [('state', '=', 'opened')]}">
                                 <tree string="Opening Cashbox Lines" editable="bottom">
                                     <field name="pieces" readonly="1" />
@@ -942,14 +942,20 @@
                                 </tree>
                             </field>
                         </page>
+                        <page string="Debug">
+                            <field name="show_closing_control" />
+                        </page>
                     </notebook>
 
                     <group colspan="4" col="5">
-                        <field name="state" /> <!-- widget="statusbar" statusbar_visible="new,opened,closed,posted" statusbar_colors='{"posted":"green"}'/> -->
+                        <field name="state" widget="statusbar" statusbar_visible="opening_control,opened,closing_control,closed" statusbar_colors='{"posted":"green"}'/>
                         <!-- state:opening_control -> signal:open -> state:opened -> signal:cashbox_control -> state:closing_control -> signal:close -> state:close -->
                         <button name="open" type="workflow" string="Open" states="opening_control"/>
-                        <button name="cashbox_control" type="workflow" string="Cashbox Control" states="opened" />
-                        <button name="close" type="workflow" string="Close" states="closing_control" />
+                        <button name="cashbox_control" type="workflow" string="Cashbox Control" states="opened" /> 
+                        <!--
+                            attrs="{'invisible' : [('show_closing_control', '=', False)]}"/> 
+                        -->
+                        <button name="close" type="workflow" string="Close" states="closing_control,opened" />
                     </group>
                 </form>
             </field>

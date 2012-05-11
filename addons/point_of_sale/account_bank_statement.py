@@ -31,7 +31,6 @@ class account_journal(osv.osv):
         'closing_control': fields.boolean('Closing Control', help="If you want the journal should be control at closing, check this option"),
 
         'amount_authorized_diff' : fields.float('Amount Authorized Difference'),
-
     }
     _defaults = {
         'opening_control' : True,
