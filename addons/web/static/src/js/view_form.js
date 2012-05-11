@@ -546,6 +546,7 @@ instance.web.FormView = instance.web.View.extend(_.extend({}, instance.web.form.
     },
     on_button_cancel: function(event) {
         if (this.can_be_discarded()) {
+            this.on_record_loaded(this.datarecord);
             this.set({mode: "view"});
         }
         return false;
