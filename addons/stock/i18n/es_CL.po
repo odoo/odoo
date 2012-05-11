@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-22 04:56+0000\n"
-"X-Generator: Launchpad (build 14838)\n"
+"X-Launchpad-Export-Date: 2012-05-11 04:39+0000\n"
+"X-Generator: Launchpad (build 15225)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -264,7 +264,7 @@ msgstr "Origen"
 #: view:board.board:0
 #: model:ir.actions.act_window,name:stock.action_stock_incoming_product_delay
 msgid "Incoming Products"
-msgstr "Albaranes de entrada"
+msgstr "Movimientos de entrada"
 
 #. module: stock
 #: view:report.stock.lines.date:0
@@ -445,7 +445,7 @@ msgstr "Fecha prevista"
 #: model:ir.actions.act_window,help:stock.action_warehouse_form
 msgid ""
 "Create and manage your warehouses and assign them a location from here"
-msgstr "Crea y gestiona sus almacenes y les asigna una ubicación desde aquí"
+msgstr "Crea y gestiona sus bodegas y les asigna una ubicación desde aquí"
 
 #. module: stock
 #: field:report.stock.move,product_qty_in:0
@@ -526,7 +526,7 @@ msgid ""
 "company warehouses"
 msgstr ""
 "Cantidad actual de productos con este número de lote de producción "
-"disponible en almacenes de la compañía."
+"disponible en bodegas de la compañía."
 
 #. module: stock
 #: field:stock.move,move_history_ids:0
@@ -1127,7 +1127,7 @@ msgstr ""
 "almacén, agregando sus ubicaciones hijas. No puede contener los productos "
 "directamente.\n"
 "\n"
-"* Ubicación interna: Ubicación física dentro de su propios almacenes.\n"
+"* Ubicación interna: Ubicación física dentro de su propios bodegas.\n"
 "\n"
 "* Ubicación cliente: Ubicación virtual que representa la ubicación de "
 "destino para los productos enviados a sus clientes.\n"
@@ -1308,7 +1308,7 @@ msgstr "Identificación paquete"
 #. module: stock
 #: report:stock.picking.list:0
 msgid "Packing List:"
-msgstr "Albarán:"
+msgstr "Guía de despacho:"
 
 #. module: stock
 #: selection:stock.move,state:0
@@ -1329,7 +1329,7 @@ msgstr ""
 #. module: stock
 #: view:product.product:0
 msgid "Expected Stock Variations"
-msgstr ""
+msgstr "Variaciones de stock esperadas"
 
 #. module: stock
 #: help:stock.move,price_unit:0
@@ -1507,7 +1507,7 @@ msgstr "Dirección del cliente o proveedor."
 #. module: stock
 #: view:report.stock.move:0 field:report.stock.move,picking_id:0
 msgid "Packing"
-msgstr "Albarán"
+msgstr "Guía de despacho"
 
 #. module: stock
 #: selection:report.stock.inventory,location_type:0
@@ -2163,7 +2163,7 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_stock_warehouse_mgmt
 #: model:ir.ui.menu,name:stock.menu_warehouse_config
 msgid "Warehouse Management"
-msgstr "Gestión de almacenes"
+msgstr "Gestión de bodegas"
 
 #. module: stock
 #: selection:stock.picking,move_type:0
@@ -2354,7 +2354,7 @@ msgstr ""
 #: view:board.board:0
 #: model:ir.actions.act_window,name:stock.action_stock_outgoing_product_delay
 msgid "Outgoing Products"
-msgstr "Albaranes de salida"
+msgstr "Movimientos de salida"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_reception_picking_move
@@ -2859,7 +2859,7 @@ msgstr "Referencia inventario"
 #: code:addons/stock/stock.py:1334
 #, python-format
 msgid "Internal picking"
-msgstr "Albarán interno"
+msgstr "Movimiento interno"
 
 #. module: stock
 #: view:stock.location.product:0
@@ -2886,7 +2886,7 @@ msgstr "Nombre de revisión"
 #: model:ir.ui.menu,name:stock.menu_stock_root
 #: field:product.product,warehouse_id:0 view:stock.warehouse:0
 msgid "Warehouse"
-msgstr "Almacén"
+msgstr "Inventario"
 
 #. module: stock
 #: view:stock.inventory:0
@@ -2951,7 +2951,7 @@ msgstr "No urgente"
 #: model:ir.actions.act_window,name:stock.action_warehouse_form
 #: model:ir.ui.menu,name:stock.menu_action_warehouse_form
 msgid "Warehouses"
-msgstr "Almacenes"
+msgstr "Bodegas"
 
 #. module: stock
 #: field:stock.journal,user_id:0
@@ -3196,8 +3196,8 @@ msgstr "Lotes"
 
 #. module: stock
 #: view:stock.move:0 view:stock.picking:0
-msgid "New pack"
-msgstr "Nuevo paquete"
+msgid "New Pack"
+msgstr ""
 
 #. module: stock
 #: view:stock.move:0
@@ -3356,8 +3356,8 @@ msgstr "¡Error!"
 
 #. module: stock
 #: view:stock.inventory.merge:0
-msgid "Do you want to merge theses inventories ?"
-msgstr "¿Desea fusionar estos inventarios?"
+msgid "Do you want to merge theses inventories?"
+msgstr ""
 
 #. module: stock
 #: selection:report.stock.inventory,state:0
@@ -3375,7 +3375,7 @@ msgstr ""
 #: view:stock.move:0 field:stock.partial.move,picking_id:0
 #: field:stock.partial.picking,picking_id:0
 msgid "Picking"
-msgstr "Albarán"
+msgstr "Guía de despacho"
 
 #. module: stock
 #: help:stock.picking,move_type:0
@@ -3482,8 +3482,8 @@ msgstr "Comprobar disponibilidad"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_view_stock_merge_inventories
 #: view:stock.inventory.merge:0
-msgid "Merge inventories"
-msgstr "Fusionar inventarios"
+msgid "Merge Inventories"
+msgstr ""
 
 #. module: stock
 #: help:stock.change.product.qty,new_quantity:0
@@ -3506,7 +3506,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_relate_picking
 msgid "Related Picking"
-msgstr "Albarán relacionado"
+msgstr "Guía de despacho"
 
 #. module: stock
 #: view:report.stock.move:0
@@ -3549,8 +3549,8 @@ msgstr " para el "
 
 #. module: stock
 #: view:stock.split.into:0
-msgid "Quantity to leave in the current pack"
-msgstr "Cantidad a dejar en el paquete actual"
+msgid "Quantity to Leave in the Current Pack"
+msgstr ""
 
 #. module: stock
 #: view:stock.move:0
@@ -3607,7 +3607,7 @@ msgstr "Diario encadenamiento"
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_picking_list
 msgid "Packing list"
-msgstr "Albarán"
+msgstr "Guía de despacho"
 
 #. module: stock
 #: code:addons/stock/stock.py:738
@@ -3742,7 +3742,7 @@ msgstr "Fecha prevista máx."
 #. module: stock
 #: field:stock.picking,auto_picking:0
 msgid "Auto-Picking"
-msgstr "Auto-Albarán"
+msgstr "Auto-Guía de despacho"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_shop1
@@ -3911,7 +3911,7 @@ msgid ""
 "click on a location to get the list of the products and their stock level in "
 "this particular location and all its children."
 msgstr ""
-"Esto es la estructura de los almacenes y ubicaciones de su empresa. Puede "
+"Esto es la estructura de las bodegas y ubicaciones de su empresa. Puede "
 "pulsar sobre una ubicación para obtener la lista de los productos y su nivel "
 "de stock en esta ubicación específica y todos sus hijos."
 
@@ -4387,6 +4387,9 @@ msgstr "Detalles de ubicación opcionales, sólo para fines de información."
 #~ msgid "Products Categories"
 #~ msgstr "Categorías de productos"
 
+#~ msgid "New pack"
+#~ msgstr "Nuevo paquete"
+
 #, python-format
 #~ msgid "Message !"
 #~ msgstr "¡ Mensaje !"
@@ -4402,9 +4405,18 @@ msgstr "Detalles de ubicación opcionales, sólo para fines de información."
 #~ "No se ha definido una cuenta de variación de inventario en la categoría del "
 #~ "producto: \"%s\" (id: %d)"
 
+#~ msgid "Do you want to merge theses inventories ?"
+#~ msgstr "¿Desea fusionar estos inventarios?"
+
+#~ msgid "Merge inventories"
+#~ msgstr "Fusionar inventarios"
+
 #, python-format
 #~ msgid "INV: "
 #~ msgstr "INV: "
+
+#~ msgid "Quantity to leave in the current pack"
+#~ msgstr "Cantidad a dejar en el paquete actual"
 
 #, python-format
 #~ msgid "Process Document"

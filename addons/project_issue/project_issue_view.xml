@@ -335,6 +335,14 @@
                 </search>
             </field>
         </record>
+        
+        <act_window id="act_project_project_2_project_issue_all"
+            name="Issues"
+            src_model="project.project"
+            res_model="project.issue"
+            view_type="form"
+            view_mode="kanban,tree,form,calendar,graph"
+            context="{'search_default_project_id': [active_id], 'default_project_id': active_id}"/>
 
     # ------------------------------------------------------
     # Project
@@ -346,12 +354,32 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
+            	<field name="use_tasks" position="after">
+                    <field name="use_issues"/>
+                </field>
                 <field name="priority" position="before">
                     <field name="project_escalation_id"/>
                     <field name="reply_to"/>
                 </field>
             </field>
        </record>
-
+        
+        <record id="view_project_kanban_inherited" model="ir.ui.view">
+            <field name="name">project.project.kanban.inherited</field>
+            <field name="model">project.project</field>
+            <field name="type">kanban</field>
+            <field name="inherit_id" ref="project.view_project_kanban"/>
+            <field name="arch" type="xml">
+                <field name="use_tasks" position="after">
+                    <field name="use_issues"/>
+                    <field name="issue_count" invisible="1"/>
+                </field>
+                <xpath expr="//div[@id='list']" position="inside">
+                    <a t-if="record.use_issues.raw_value" class="oe_project_buttons"
+                        id="2" name="%(act_project_project_2_project_issue_all)d" type="action">
+                        Issues(<field name="issue_count"/>)</a>
+                </xpath>
+            </field>
+        </record>
     </data>
 </openerp>

@@ -186,14 +186,14 @@ class crm_lead(crm_case, osv.osv):
         'channel_id': fields.many2one('crm.case.channel', 'Channel', help="Communication channel (mail, direct, phone, ...)"),
         'contact_name': fields.char('Contact Name', size=64),
         'partner_name': fields.char("Customer Name", size=64,help='The name of the future partner company that will be created while converting the lead into opportunity', select=1),
-        'optin': fields.boolean('Opt-In', help="If opt-in is checked, this contact has accepted to receive emails."),
-        'optout': fields.boolean('Opt-Out', help="If opt-out is checked, this contact has refused to receive emails or unsubscribed to a campaign."),
+        'opt_in': fields.boolean('Opt-In', oldname='optin', help="If opt-in is checked, this contact has accepted to receive emails."),
+        'opt_out': fields.boolean('Opt-Out', oldname='optout', help="If opt-out is checked, this contact has refused to receive emails or unsubscribed to a campaign."),
         'type':fields.selection([ ('lead','Lead'), ('opportunity','Opportunity'), ],'Type', help="Type is used to separate Leads and Opportunities"),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
         'date_closed': fields.datetime('Closed', readonly=True),
         'stage_id': fields.many2one('crm.case.stage', 'Stage', domain="[('section_ids', '=', section_id)]"),
         'user_id': fields.many2one('res.users', 'Salesman'),
-        'referred': fields.char('Referred By', size=64),
+        'referred': fields.char('Referred by', size=64),
         'date_open': fields.datetime('Opened', readonly=True),
         'day_open': fields.function(_compute_day, string='Days to Open', \
                                 multi='day_open', type="float", store=True),
@@ -254,11 +254,11 @@ class crm_lead(crm_case, osv.osv):
         self.create_send_note(cr, uid, [obj_id], context=context)
         return obj_id
     
-    def on_change_optin(self, cr, uid, ids, optin):
-        return {'value':{'optin':optin,'optout':False}}
+    def on_change_opt_in(self, cr, uid, ids, opt_in):
+        return {'value':{'opt_in':opt_in,'opt_out':False}}
 
-    def on_change_optout(self, cr, uid, ids, optout):
-        return {'value':{'optout':optout,'optin':False}}
+    def on_change_opt_out(self, cr, uid, ids, opt_out):
+        return {'value':{'opt_out':opt_out,'opt_in':False}}
 
     def onchange_stage_id(self, cr, uid, ids, stage_id, context={}):
         if not stage_id:

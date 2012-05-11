@@ -13,13 +13,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:28+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-05-11 04:56+0000\n"
+"X-Generator: Launchpad (build 15225)\n"
 
 #. module: sale
 #: field:sale.config.picking_policy,timesheet:0
 msgid "Based on Timesheet"
-msgstr ""
+msgstr "Pagal darbo laiko apskaitos žiniaraštį"
 
 #. module: sale
 #: view:sale.order.line:0
@@ -27,12 +27,14 @@ msgid ""
 "Sale Order Lines that are confirmed, done or in exception state and haven't "
 "yet been invoiced"
 msgstr ""
+"Pardavimo sutartys, kurios yra patvirtintos, baigtos arba kitoje "
+"(išskirtinėje) būsenoje ir kurioms dar nebuvo išrašyta sąskaita"
 
 #. module: sale
 #: view:board.board:0
 #: model:ir.actions.act_window,name:sale.action_sales_by_salesman
 msgid "Sales by Salesman in last 90 days"
-msgstr ""
+msgstr "Pardavėjo pardavimai per paskutinias 90 dienų"
 
 #. module: sale
 #: help:sale.order,picking_policy:0
@@ -50,7 +52,7 @@ msgstr ""
 #. module: sale
 #: help:sale.order,partner_shipping_id:0
 msgid "Shipping address for current sales order."
-msgstr ""
+msgstr "Pristatymo adresas einamiesiems pardavimams."
 
 #. module: sale
 #: field:sale.advance.payment.inv,qtty:0 report:sale.order:0
@@ -72,18 +74,18 @@ msgstr "Atšaukti užsakymą"
 #: code:addons/sale/sale.py:638
 #, python-format
 msgid "The quotation '%s' has been converted to a sales order."
-msgstr ""
+msgstr "Pasiūlymas '%s' buvo paverstas į pardavimo užsakymą."
 
 #. module: sale
 #: view:sale.order:0
 msgid "Print Quotation"
-msgstr ""
+msgstr "Spausdinti pasiūlymą"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice.py:42
 #, python-format
 msgid "Warning !"
-msgstr ""
+msgstr "Įspėjimas!"
 
 #. module: sale
 #: report:sale.order:0
@@ -108,6 +110,10 @@ msgid ""
 "sales orders partially, by lines of sales order. You do not need this list "
 "if you invoice from the delivery orders or if you invoice sales totally."
 msgstr ""
+"Čia yra užsakymų eilutės, kurioms bus išrašytos sąskaitos. Galite išrašyti "
+"užsakymų sąskaitas nepilnas, pagal eulutes arba užsakymus. Jums "
+"nereikalingas šis sąrašas, jei išrašote sąskaitas pagal pristatymo užsakymus "
+"ar išrašote pilnas sąskaitas."
 
 #. module: sale
 #: code:addons/sale/sale.py:295
@@ -117,6 +123,9 @@ msgid ""
 "cancel a sale order, you must first cancel related picking or delivery "
 "orders."
 msgstr ""
+"Norint ištrinti patvirtintą pardavimo užsakymą, turite atšaukti jį prieš "
+"tai! Norėdami atšaukti pardavimą, pirmiausia turite panaikinti susijusį "
+"prekių gavimo ar pristatymo užsakymus."
 
 #. module: sale
 #: model:process.node,name:sale.process_node_saleprocurement0
@@ -126,12 +135,12 @@ msgstr ""
 #. module: sale
 #: view:sale.report:0 field:sale.report,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Partneris"
 
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Invoice based on deliveries"
-msgstr ""
+msgstr "Sąskaita paremta prisatymais"
 
 #. module: sale
 #: view:sale.order:0
@@ -149,6 +158,13 @@ msgid ""
 "configuration of the sales order, a draft invoice will be generated so that "
 "you just have to confirm it when you want to bill your customer."
 msgstr ""
+"Pardavimų užsakymai jums padeda valdyti pasiūlymus ir užsakymus iš jūsų "
+"klientų. OpenERP siūlo jums pradėti nuo pasiūlymo sukūrimo. Kai tik "
+"pasiūlymas bus patvirtintas, jis bus pakeistas į užsakymą. OpenERP gali "
+"tvarkyti keletą produktų rūšių, taip kad pardavimo užsakymas gali iššaukti "
+"užduotis, pristatymo užsakymus, gamybos užsakymus, pirkimus ir pan. "
+"Remiantis pardavimo užsakymo konfigūracija, juodraštinė sąskaita bus "
+"sukurta, kad jūms užtektu tik patvirtinti, kai norėsite apmokestinti klientą."
 
 #. module: sale
 #: help:sale.order,invoice_quantity:0
@@ -159,6 +175,11 @@ msgid ""
 "the product is a service, shipped quantities means hours spent on the "
 "associated tasks."
 msgstr ""
+"Pardavimo užsakymas automatiškai sukuria sąskaitą (juodraštinę sąskaitą "
+"faktūrą). Užsakytas ir pristatytas kiekiai gali būti nevienodi. Jūs turite "
+"pasirinkti, ar norite turėti sąskaitą faktūrą pagal užsakytų ar pristatytų "
+"produktų kiekį. Jei produktas yra paslauga, išsiunčiami kiekiai reiškia "
+"valandas, praleistos susijusiai užduočiai atlikti."
 
 #. module: sale
 #: field:sale.shop,payment_default_id:0
@@ -168,7 +189,7 @@ msgstr "Numatytasis mokėjimo terminas"
 #. module: sale
 #: field:sale.config.picking_policy,deli_orders:0
 msgid "Based on Delivery Orders"
-msgstr ""
+msgstr "Remaintis pristatymo užsakimu"
 
 #. module: sale
 #: field:sale.config.picking_policy,time_unit:0
@@ -189,12 +210,13 @@ msgstr "Nuol. (%)"
 #. module: sale
 #: view:sale.report:0 field:sale.report,price_total:0
 msgid "Total Price"
-msgstr ""
+msgstr "Bendra kaina"
 
 #. module: sale
 #: help:sale.make.invoice,grouped:0
 msgid "Check the box to group the invoices for the same customers"
 msgstr ""
+"Pažymėkite žymės langelį, kad sugrupuoti tų pačių klientų sąskaitas faktūras"
 
 #. module: sale
 #: view:sale.order:0
@@ -246,7 +268,7 @@ msgstr ""
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
 msgid "Quotations and Sales"
-msgstr ""
+msgstr "Pasiūlymai ir pardavimai"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_make_invoice
@@ -257,7 +279,7 @@ msgstr ""
 #: code:addons/sale/sale.py:330
 #, python-format
 msgid "Pricelist Warning!"
-msgstr ""
+msgstr "Kainoraščio Įspėjimas!"
 
 #. module: sale
 #: field:sale.order.line,discount:0
@@ -275,7 +297,7 @@ msgstr "Mano pasiūlymai"
 #: model:ir.actions.act_window,name:sale.open_board_sales_manager
 #: model:ir.ui.menu,name:sale.menu_board_sales_manager
 msgid "Sales Manager Dashboard"
-msgstr ""
+msgstr "Pardavimų vadybininko monitoringas"
 
 #. module: sale
 #: field:sale.order.line,product_packaging:0
@@ -285,7 +307,7 @@ msgstr "Pakavimas"
 #. module: sale
 #: model:process.transition,name:sale.process_transition_saleinvoice0
 msgid "From a sales order"
-msgstr ""
+msgstr "Iš paravimo užsakymo"
 
 #. module: sale
 #: field:sale.shop,name:0
@@ -323,7 +345,7 @@ msgstr "Pardavimų išimtys"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:70
 #, python-format
 msgid "Configuration Error !"
-msgstr ""
+msgstr "Konfigūracijos klaida!"
 
 #. module: sale
 #: view:sale.order:0
@@ -363,12 +385,12 @@ msgstr ""
 #: code:addons/sale/sale.py:617
 #, python-format
 msgid "Could not cancel this sales order !"
-msgstr ""
+msgstr "Nepavyko atšaukti šio pardavimo užsakymo!"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_report
 msgid "Sales Orders Statistics"
-msgstr ""
+msgstr "Pardavimų užsakymų statistika"
 
 #. module: sale
 #: help:sale.order,project_id:0
@@ -388,7 +410,7 @@ msgstr ""
 #. module: sale
 #: view:board.board:0 view:sale.order:0 view:sale.report:0
 msgid "Quotations"
-msgstr ""
+msgstr "Pasiūlymai"
 
 #. module: sale
 #: help:sale.order,pricelist_id:0
@@ -767,7 +789,7 @@ msgstr "Užsakymo būsena"
 
 #. module: sale
 #: view:sale.make.invoice:0 view:sale.order.line.make.invoice:0
-msgid "Do you really want to create the invoice(s) ?"
+msgid "Do you really want to create the invoice(s)?"
 msgstr ""
 
 #. module: sale

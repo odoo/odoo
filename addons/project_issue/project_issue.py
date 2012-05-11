@@ -252,6 +252,8 @@ class project_issue(crm.crm_case, osv.osv):
             }),
     }
 
+    def on_change_project(self, cr, uid, ids, project_id, context=None):
+        return {}
 
     _defaults = {
         'active': 1,
@@ -538,9 +540,23 @@ project_issue()
 
 class project(osv.osv):
     _inherit = "project.project"
+
+    def _issue_count(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict.fromkeys(ids, 0)
+        issue_ids = self.pool.get('project.issue').search(cr, uid, [('project_id', 'in', ids)])
+        for issue in self.pool.get('project.issue').browse(cr, uid, issue_ids, context):
+            res[issue.project_id.id] += 1
+        return res
+
     _columns = {
         'project_escalation_id' : fields.many2one('project.project','Project Escalation', help='If any issue is escalated from the current Project, it will be listed under the project selected here.', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
-        'reply_to' : fields.char('Reply-To Email Address', size=256)
+        'reply_to' : fields.char('Reply-To Email Address', size=256),
+        'use_issues' : fields.boolean('Use Issues', help="Check this field if this project manages issues"),
+        'issue_count': fields.function(_issue_count, type='integer'),
+    }
+
+    _defaults = {
+        'use_issues': True,
     }
 
     def _check_escalation(self, cr, uid, ids, context=None):

@@ -101,9 +101,9 @@ class mail_message_common(osv.osv_memory):
     _rec_name = 'subject'
     _columns = {
         'subject': fields.char('Subject', size=512, required=True),
-        'model': fields.char('Related Document model', size=128, select=1),
+        'model': fields.char('Related Document Model', size=128, select=1),
         'res_id': fields.integer('Related Document ID', select=1),
-        'record_name': fields.function(get_record_name, type='string', string='Message record name',
+        'record_name': fields.function(get_record_name, type='string', string='Message Record Name',
                         help="Name of the record, matching the result of the name_get."),
         'date': fields.datetime('Date'),
         'email_from': fields.char('From', size=128, help='Message sender, taken from user preferences.'),
@@ -111,19 +111,19 @@ class mail_message_common(osv.osv_memory):
         'email_cc': fields.char('Cc', size=256, help='Carbon copy message recipients'),
         'email_bcc': fields.char('Bcc', size=256, help='Blind carbon copy message recipients'),
         'reply_to':fields.char('Reply-To', size=256, help='Preferred response address for the message'),
-        'headers': fields.text('Message headers', readonly=1,
+        'headers': fields.text('Message Headers', readonly=1,
                         help="Full message headers, e.g. SMTP session headers (usually available on inbound messages only)"),
         'message_id': fields.char('Message-Id', size=256, help='Message unique identifier', select=1, readonly=1),
         'references': fields.text('References', help='Message references, such as identifiers of previous messages', readonly=1),
-        'subtype': fields.char('Message type', size=32, help="Type of message, usually 'html' or 'plain', used to "
+        'subtype': fields.char('Message Type', size=32, help="Type of message, usually 'html' or 'plain', used to "
                                                              "select plaintext or rich text contents accordingly", readonly=1),
-        'body_text': fields.text('Text contents', help="Plain-text version of the message"),
-        'body_html': fields.text('Rich-text contents', help="Rich-text/HTML version of the message"),
-        'body': fields.function(get_body, fnct_search = search_body, string='Message content', type='text',
+        'body_text': fields.text('Text Contents', help="Plain-text version of the message"),
+        'body_html': fields.text('Rich-text Contents', help="Rich-text/HTML version of the message"),
+        'body': fields.function(get_body, fnct_search = search_body, string='Message Content', type='text',
                         help="Content of the message. This content equals the body_text field for plain-test messages, and body_html for rich-text/HTML messages. This allows having one field if we want to access the content matching the message subtype."),
-        'parent_id': fields.many2one('mail.message', 'Parent message', help="Parent message, used for displaying as threads with hierarchy",
+        'parent_id': fields.many2one('mail.message', 'Parent Message', help="Parent message, used for displaying as threads with hierarchy",
                         select=True, ondelete='set null',),
-        'child_ids': fields.one2many('mail.message', 'parent_id', 'Child messages'),
+        'child_ids': fields.one2many('mail.message', 'parent_id', 'Child Messages'),
     }
 
     _defaults = {
@@ -207,7 +207,7 @@ class mail_message(osv.osv):
                         ('notification', 'System notification'),
                         ], 'Type', help="Message type: e-mail for e-mail message, notification for system message, comment for other messages such as user replies"),
         'partner_id': fields.many2one('res.partner', 'Related partner'),
-        'user_id': fields.many2one('res.users', 'Related user', readonly=1),
+        'user_id': fields.many2one('res.users', 'Related User', readonly=1),
         'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel', 'message_id', 'attachment_id', 'Attachments'),
         'display_text': fields.function(_get_display_text, method=True, type='text', size="512", string='Display Text'),
         'mail_server_id': fields.many2one('ir.mail_server', 'Outgoing mail server', readonly=1),
