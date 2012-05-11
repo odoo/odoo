@@ -939,6 +939,13 @@ $colour4: #8a89ba
                 border-top: none
                 margin: 0
 
+            h4, h4 *
+                margin: 0
+                cursor: pointer
+
+            h4:before
+                content: "▸ "
+
             button, .button
                 border: none
                 background: white
@@ -975,24 +982,20 @@ $colour4: #8a89ba
                         background-color: #f0f0fa
 
             .oe_searchview_custom
-                .oe_searchview_custom_save
-                    font-size: 1px
-                    letter-spacing: -1px
-                    color: transparent
-                    &:before
-                        font-family: "mnmliconsRegular"
-                        content: "S"
-                        font-size: 20px
-                        color: #404040
+                form
+                    display: none
+
+                    button
+                        font-size: 1px
+                        letter-spacing: -1px
+                        color: transparent
+                        &:before
+                            font-family: "mnmliconsRegular"
+                            content: "S"
+                            font-size: 20px
+                            color: #404040
 
             .oe_searchview_advanced
-                h4
-                    margin: 0
-                    cursor: pointer
-
-                h4:before
-                    content: "▸ "
-
                 form
                     display: none
 
@@ -1008,11 +1011,11 @@ $colour4: #8a89ba
                     list-style: none
                     margin: 0
 
-                &.oe_opened
-                    h4:before
-                        content: "▾ "
-                    form
-                        display: block
+            .oe_opened
+                h4:before
+                    content: "▾ "
+                form
+                    display: block
     // }}}
     // View.topbar {{{
     .oe_view_topbar

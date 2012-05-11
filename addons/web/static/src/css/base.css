@@ -1183,6 +1183,13 @@
   border-top: none;
   margin: 0;
 }
+.openerp .oe_searchview .oe_searchview_drawer h4, .openerp .oe_searchview .oe_searchview_drawer h4 * {
+  margin: 0;
+  cursor: pointer;
+}
+.openerp .oe_searchview .oe_searchview_drawer h4:before {
+  content: "▸ ";
+}
 .openerp .oe_searchview .oe_searchview_drawer button, .openerp .oe_searchview .oe_searchview_drawer .button {
   border: none;
   background: white;
@@ -1224,23 +1231,19 @@
 .openerp .oe_searchview .oe_searchview_drawer .oe_searchview_filters li:hover {
   background-color: #f0f0fa;
 }
-.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_custom .oe_searchview_custom_save {
+.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_custom form {
+  display: none;
+}
+.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_custom form button {
   font-size: 1px;
   letter-spacing: -1px;
   color: transparent;
 }
-.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_custom .oe_searchview_custom_save:before {
+.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_custom form button:before {
   font-family: "mnmliconsRegular";
   content: "S";
   font-size: 20px;
   color: #404040;
-}
-.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_advanced h4 {
-  margin: 0;
-  cursor: pointer;
-}
-.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_advanced h4:before {
-  content: "▸ ";
 }
 .openerp .oe_searchview .oe_searchview_drawer .oe_searchview_advanced form {
   display: none;
@@ -1259,10 +1262,10 @@
   list-style: none;
   margin: 0;
 }
-.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_advanced.oe_opened h4:before {
+.openerp .oe_searchview .oe_searchview_drawer .oe_opened h4:before {
   content: "▾ ";
 }
-.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_advanced.oe_opened form {
+.openerp .oe_searchview .oe_searchview_drawer .oe_opened form {
   display: block;
 }
 .openerp .oe_view_topbar {

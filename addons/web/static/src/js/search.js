@@ -1483,9 +1483,13 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
     template: 'SearchView.CustomFilters',
     _in_drawer: true,
     start: function () {
+        var self = this;
         this.model = new instance.web.Model('ir.filters');
         this.filters = {};
         this.$element.on('submit', 'form', this.proxy('save_current'));
+        this.$element.on('click', 'h4', function () {
+            self.$element.toggleClass('oe_opened');
+        });
         // FIXME: local eval of domain and context to get rid of special endpoint
         return this.rpc('/web/searchview/get_filters', {
             model: this.view.model
@@ -1508,7 +1512,8 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
 
             $('<button type="button">').appendTo($filter)
                 .text(_t("Delete"))
-                .click(function () {
+                .click(function (e) {
+                    e.stopPropagation();
                     self.model.call('unlink', [id]).then(function () {
                         $filter.remove();
                     });
@@ -1534,7 +1539,7 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
     save_current: function () {
         var self = this;
         var $name = this.$element.find('input:first');
-        var private_filter = this.$element.find('input:last').prop('checked');
+        var private_filter = !this.$element.find('input:last').prop('checked');
 
         var search = this.view.build_search_data();
         this.rpc('/web/session/eval_domain_and_context', {
@@ -1558,7 +1563,9 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
                     filter.id = id;
                 }
                 self.append_filter(filter);
-                $name.val('');
+                self.$element
+                    .removeClass('oe_opened')
+                    .find('form')[0].reset();
             });
         });
         return false;
