@@ -228,7 +228,7 @@ function openerp_pos_devices(module, instance){ //module is instance.point_of_sa
                 parse_result.id = ean.substring(0,7);
                 parse_result.value = Number(ean.substring(7,12))/100.0;
                 parse_result.unit  = 'euro';
-            } else if (prefix2 in this.price_prefix_set){
+            } else if (prefix2 in this.weight_prefix_set){
                 parse_result.type = 'weight';
                 parse_result.prefix = prefix2;
                 parse_result.id = ean.substring(0,7);
@@ -254,32 +254,6 @@ function openerp_pos_devices(module, instance){ //module is instance.point_of_sa
                 parse_result.id = ean;
             }
             return parse_result;
-        },
-
-        simulate : function(type){
-
-            var parse_result = {
-                ean: '01238534932',
-                type: type,
-                prefix: '012',
-                id: '392',
-                value: 42,
-                unit: 'Kg',
-            };
-
-            if(parse_result.type in {'unit':'', 'weight':'', 'price':''}){    //ean is associated to a product
-                console.log('calling product callback');
-                if(this.action_callback['product']){
-                    console.log('found product callback');
-                    this.action_callback['product'](parse_result);
-                }
-            }else{
-                console.log('calling callback:',parse_result.type);
-                if(this.action_callback[parse_result.type]){
-                    console.log('found product callback');
-                    this.action_callback[parse_result.type](parse_result);
-                }
-            }
         },
 
         // starts catching keyboard events and tries to interpret codebar 

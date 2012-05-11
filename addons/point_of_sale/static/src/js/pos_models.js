@@ -58,6 +58,7 @@ function openerp_pos_models(module, instance){ //module is instance.point_of_sal
             this.session = session;
             this.categories = {};
             this.barcode_reader = new module.BarcodeReader({'pos': this});
+            window.barcode_reader = this.barcode_reader;
             this.proxy = new module.ProxyDevice({'pos': this});
             this.set({
                 'nbr_pending_operations': 0,
@@ -311,6 +312,9 @@ function openerp_pos_models(module, instance){ //module is instance.point_of_sal
                 quantity: (this.get('quantity')) + weight,
             });
         },
+        set_discount: function(discount){
+            this.set({'discount': discount});
+        },
         getPriceWithoutTax: function() {
             return this.getAllPrices().priceWithoutTax;
         },
@@ -420,6 +424,7 @@ function openerp_pos_models(module, instance){ //module is instance.point_of_sal
             });
             this.pos =     attributes.pos; //TODO put that in set and remember to use 'get' to read it ... 
             this.bind('change:validated', this.validatedChanged);
+            this.last_orderline = undefined;
             return this;
         },
         events: {
@@ -434,10 +439,12 @@ function openerp_pos_models(module, instance){ //module is instance.point_of_sal
         generateUniqueId: function() {
             return new Date().getTime();
         },
+
         addProduct: function(product) {
             var existing;
             existing = (this.get('orderLines')).get(product.id);
             if (existing != null) {
+                this.last_orderline = existing;
                 if(existing.get('weighted')){
                     existing.incrementWeight(product.attributes.weight);
                 }else{
@@ -447,6 +454,7 @@ function openerp_pos_models(module, instance){ //module is instance.point_of_sal
                 var attr = product.toJSON();
                 attr.pos = this.pos;
                 var line = new module.Orderline(attr);
+                this.last_orderline = line;
                 this.get('orderLines').add(line);
                 line.bind('killme', function() {
                     this.get('orderLines').remove(line);
@@ -579,7 +587,7 @@ function openerp_pos_models(module, instance){ //module is instance.point_of_sal
             var bufferContent, params;
             bufferContent = this.get('buffer');
             if (bufferContent && !isNaN(bufferContent)) {
-            	this.trigger('setValue', parseFloat(bufferContent));
+            	this.trigger('set_value', parseFloat(bufferContent));
             }
         },
     });

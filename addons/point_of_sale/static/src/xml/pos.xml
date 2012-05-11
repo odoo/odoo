@@ -2,7 +2,7 @@
 <!-- vim:fdl=1:
 -->
 <templates id="template" xml:space="preserve">
-    <t t-name="POSWidget">
+    <t t-name="PosWidget">
     <div class="point-of-sale">
         <div id="topheader">
             <div id="branding">
@@ -22,72 +22,57 @@
         <div id="content">
 
             <div id="leftpane">
-                <div id="current-order">
-                    <table>
-                        <thead>
-                            <tr>
-                                <td>Product</td>
-                                <td>Price</td>
-                                <td>Disc (%)</td>
-                                <td>Qty</td>
-                                <td>Total</td>
-                            </tr>
-                        </thead>
-                        <tbody id="current-order-content"></tbody>
-                    </table>
-                </div>
+                <div id="placeholder-OrderWidget"></div>
                 <footer>
+
                     <ul id="amounts">
                         <li>
                             Subtotal:
-                            <t t-if="currency.position == 'before'" t-esc="currency.symbol"/> <span id="subtotal">0</span> <t t-if="currency.position == 'after'" t-esc="currency.symbol"/>
+                            <t t-if="widget.currency.position === 'before'" t-esc="widget.currency.symbol"/> 
+                            <span id="subtotal">0</span> 
+                            <t t-if="widget.currency.position === 'after'"  t-esc="widget.currency.symbol"/>
                         </li>
+
                         <li>
                             Tax:
-                            <t t-if="currency.position == 'before'" t-esc="currency.symbol"/> <span id="tax">0</span> <t t-if="currency.position == 'after'" t-esc="currency.symbol"/>
+                            <t t-if="widget.currency.position === 'before'" t-esc="widget.currency.symbol"/> 
+                            <span id="tax">0</span> 
+                            <t t-if="widget.currency.position === 'after'"  t-esc="widget.currency.symbol"/>
                         </li>
+
                         <li>
                             Total:
-                            <t t-if="currency.position == 'before'" t-esc="currency.symbol"/> <span id="total">0</span> <t t-if="currency.position == 'after'" t-esc="currency.symbol"/>
+                            <t t-if="widget.currency.position === 'before'" t-esc="widget.currency.symbol"/> 
+                            <span id="total">0</span> 
+                            <t t-if="widget.currency.position === 'after'"  t-esc="widget.currency.symbol"/>
                         </li>
                     </ul>
-                    <div id="paypad"></div>
-                    <div id="numpad">
-                        <button class="input-button number-char">1</button>
-                        <button class="input-button number-char">2</button>
-                        <button class="input-button number-char">3</button>
-                        <button class="mode-button" data-mode='quantity'>Qty</button>
-                        <br />
-                        <button class="input-button number-char">4</button>
-                        <button class="input-button number-char">5</button>
-                        <button class="input-button number-char">6</button>
-                        <button class="mode-button" data-mode='discount'>Disc</button>
-                        <br />
-                        <button class="input-button number-char">7</button>
-                        <button class="input-button number-char">8</button>
-                        <button class="input-button number-char">9</button>
-                        <button class="mode-button" data-mode='list_price'>Price</button>
-                        <br />
-                        <button class="input-button" id="numpad-minus" >+/-</button>
-                        <button class="input-button number-char">0</button>
-                        <button class="input-button number-char">.</button>
-                        <button class="input-button" id="numpad-backspace">
-                            <img src="/point_of_sale/static/src/img/backspace.png" width="24" height="21" />
-                        </button>
-                        <br />
-                    </div>
+
+                    <div id="placeholder-PaypadWidget"></div>
+                    <div id="placeholder-NumpadWidget"></div>
+
                 </footer>
             </div>
             <div id="rightpane">
-                <!-- <div id="products-screen" class="step-screen selected-step">
-                    <div id="products-screen-categories"/>
-                    <ol id="products-screen-ol" class="product-list"></ol>
-                </div> -->
-                <!-- <div id="payment-screen" class="step-screen" style="display:none"> ... </div> -->
-                <!-- <span id="receipt-screen"></span> -->
             </div>
         </div>
     </div>
+    </t>
+    <t t-name="OrderWidget">
+        <div id="current-order">
+            <table>
+                <thead>
+                    <tr>
+                        <td>Product</td>
+                        <td>Price</td>
+                        <td>Disc (%)</td>
+                        <td>Qty</td>
+                        <td>Total</td>
+                    </tr>
+                </thead>
+                <tbody id="current-order-content"></tbody>
+            </table>
+        </div>
     </t>
     <t t-name="pos-synch-notification">
         <span>
@@ -101,6 +86,36 @@
     </t>
     <t t-name="pos-close-warning">
         <div>There are pending operations that could not be saved into the database, are you sure you want to exit?</div>
+    </t>
+    <t t-name="PaypadWidget">
+        <div id="paypad">
+        </div>
+    </t>
+    <t t-name="NumpadWidget">
+        <div id="numpad">
+            <button class="input-button number-char">1</button>
+            <button class="input-button number-char">2</button>
+            <button class="input-button number-char">3</button>
+            <button class="mode-button" data-mode='quantity'>Qty</button>
+            <br />
+            <button class="input-button number-char">4</button>
+            <button class="input-button number-char">5</button>
+            <button class="input-button number-char">6</button>
+            <button class="mode-button" data-mode='discount'>Disc</button>
+            <br />
+            <button class="input-button number-char">7</button>
+            <button class="input-button number-char">8</button>
+            <button class="input-button number-char">9</button>
+            <button class="mode-button" data-mode='list_price'>Price</button>
+            <br />
+            <button class="input-button" id="numpad-minus" >+/-</button>
+            <button class="input-button number-char">0</button>
+            <button class="input-button number-char">.</button>
+            <button class="input-button" id="numpad-backspace">
+                <img src="/point_of_sale/static/src/img/backspace.png" width="24" height="21" />
+            </button>
+            <br />
+        </div>
     </t>
 
     <!--   ************   SEARCH PRODUCT SCREEN   ************    -->
@@ -273,7 +288,7 @@
     <t t-name="ReceiptPopupWidget">
         <div class="modal-dialog">
             <div class="popup popup-help">
-                <p class="message">Welcome Mr. FooBar <br /> Choose your type of receipt:</p>
+                <p class="message">Welcome Mr. John Smith <br /> Choose your type of receipt:</p>
                 <div class = "button big-left receipt">
                     Ticket
                 </div>
@@ -289,57 +304,65 @@
     <t t-name="ErrorPopupWidget">
         <div class="modal-dialog">
             <div class="popup popup-help">
-                <p class="message">An unexpected error has occured.<br /> A technician is on the way</p>
+                <p class="message">The scanned product was not recognized<br /> Please wait, a cashier is on the way</p>
             </div>
         </div>
     </t>
 
     <t t-name="ProductWidget">
-        <a href="#">
-            <div class="product-img">
-                
-                <img t-att-src="'data:image/gif;base64,'+ product_image_small" />
-                <t t-if="!weight">
-                    <span class="price-tag">
-                        <t t-esc="format_amount(list_price)"/>
-                    </span>
-                </t>
-                <t t-if="weight">
-                    <span class="price-tag">
-                        <t t-esc="format_amount(list_price)+'/Kg'"/>
-                    </span>
-                    <span class="price-subtag">
-                        <t t-esc="format_amount(list_price *weight)"/>
-                    </span>
-                </t>
-            </div>
-            <div class="product-name">
+        <li class='product'>
+            <a href="#">
+                <div class="product-img">
+                    
+                    <img t-att-src="'data:image/gif;base64,'+ widget.model.get('product_image_small')" />
+                    <t t-if="!widget.model.get('weight')">
+                        <span class="price-tag">
+                            <t t-esc="widget.format_currency(widget.model.get('list_price'))"/>
+                        </span>
+                    </t>
+                    <t t-if="widget.model.get('weight')">
+                        <span class="price-tag">
+                            <t t-esc="widget.format_currency(widget.model.get('list_price'))+'/Kg'"/>
+                        </span>
+                        <span class="price-subtag">
+                            <t t-esc="widget.format_currency(widget.model.get('list_price') * widget.model.get('weight'))"/>
+                        </span>
+                    </t>
+                </div>
+                <div class="product-name">
+                    <t t-esc="widget.model.get('name')"/>
+                </div>
+            </a>
+        </li>
+    </t>
+    <t t-name="OrderlineWidget">
+        <tr>
+            <td>
                 <t t-esc="name"/>
-            </div>
-        </a>
+            </td>
+            <td>
+                <t t-esc="widget.format_currency(widget.model.get('list_price'))"/>
+            </td>
+            <td>
+                <t t-js="c">
+                    console.log(c);
+                </t>
+                <t t-esc="widget.model.get('discount').toFixed(2)"/>
+            </td>
+            <td>
+                <t t-if="widget.model.get('weighted')">
+                    <t t-esc="Math.round(widget.model.get('quantity')*100)/100+' Kg'"/>
+                </t>
+                <t t-if="!widget.model.get('weighted')">
+                    <t t-esc="Math.round(widget.model.get('quantity')*100)/100"/>
+                </t>
+            </td>
+            <td>
+                <t t-esc="widget.format_currency(widget.model.get('list_price') * (1 - widget.model.get('discount')/100) * widget.model.get('quantity'))"/>
+            </td>
+        </tr>
     </t>
-    <t t-name="pos-orderline-template">
-        <td>
-            <t t-esc="name"/>
-        </td>
-        <td>
-            <t t-esc="format_amount(list_price.toFixed(2))"/>
-        </td>
-        <td>
-            <t t-esc="discount.toFixed(2)"/>
-        </td>
-        <td>
-            <t t-if="weighted">
-                <t t-esc="Math.round(quantity*100)/100+' Kg'"/>
-            </t>
-            <t t-if="!weighted">
-                <t t-esc="Math.round(quantity*100)/100"/>
-            </t>
-        </td>
-        <td>
-            <t t-esc="format_amount((list_price * (1 - discount/100) * quantity).toFixed(2))"/>
-        </td>
-    </t>
+
     <t t-name="pos-paymentline-template">
         <td class="paymentline-type">
             <t t-esc="name"/>
@@ -349,12 +372,14 @@
             <a href='javascript:void(0)' class='delete-payment-line'><img src="/point_of_sale/static/src/img/search_reset.gif" /></a>
         </td>
     </t>
-    <t t-name="pos-payment-button-template">
-        <button class="payment-button" t-att-account-journal-id="id">
-            <t t-esc="name"/>
+
+    <t t-name="PaymentButtonWidget">
+        <button class="payment-button" t-att-account-journal-id="widget.id">
+            <t t-esc="widget.name"/>
         </button>
         <br />
     </t>
+
     <t t-name="pos-order-selector-button-template">
         <button class="select-order"><t t-esc="widget.order.get('creationDate').toString('t')"/></button>
     </t>
