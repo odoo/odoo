@@ -705,15 +705,16 @@
             <field name="arch" type="xml">
                 <form layout="manual">
                 <div class="oe_form_topbar">
-                    <button name="button_cancel" states="assigned,confirmed,draft" string="_Cancel" icon="gtk-cancel"/>
-                    <button name="draft_force_assign" states="draft" string="Process Later" type="object" icon="gtk-apply"/>
-                    <button name="draft_validate" states="draft" string="Process Now" type="object" icon="gtk-media-play"/>
-                    <button name="action_assign" states="confirmed" string="Check Availability" type="object" icon="gtk-find"/>
+                    <button name="draft_force_assign" states="draft" string="Confirm" type="object" icon="gtk-apply"/>
+                    <button name="draft_validate" states="draft" string="Confirm &amp; Transfer" type="object" icon="gtk-media-play"/>
+                    <!-- <button name="action_assign" states="confirmed" string="Check Availability" type="object" icon="gtk-find"/> -->
                     <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
-                    <button name="action_process" states="assigned" string="Transfer" groups="stock.group_stock_user" type="object" icon="gtk-go-forward"/>
+                    <button name="action_process" states="assigned" string="Confirm &amp; Transfer" groups="stock.group_stock_user" type="object" icon="gtk-go-forward"/>
                     <button name="%(action_stock_invoice_onshipping)d" string="Create Invoice"  attrs="{'invisible': ['|','|',('state','&lt;&gt;','done'),('invoice_state','=','invoiced'),('invoice_state','=','none')]}"  type="action" icon="terp-gtk-go-back-rtl" />
+                    <button name="%(act_stock_return_picking)d" string="Reverse Transfer" states="done" type="action" icon="terp-gtk-go-back-rtl" />
+                    <button name="button_cancel" states="assigned,confirmed,draft" string="_Cancel" icon="gtk-cancel"/>
                     <div class="oe_right">
-                        <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,progress,done" statusbar_colors='{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}'/>
+                        <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,assigned,done" statusbar_colors='{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}'/>
                     </div>
                 </div>
                 <sheet string="Internal Picking List" layout="auto">
@@ -1416,12 +1417,12 @@
                     </group>
 
                     <separator colspan="4"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" statusbar_colors='{"waiting":"blue","confirmed":"blue"}'/>
+                    <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,assigned,done" statusbar_colors='{"waiting":"blue","confirmed":"blue"}'/>
                     <group col="5" colspan="2">
                         <button name="action_cancel" states="assigned,confirmed" string="_Cancel" type="object" icon="gtk-cancel"/>
                         <button name="action_confirm" states="draft" string="Process Later" type="object" icon="gtk-apply"/>
                         <button name="force_assign" states="confirmed" string="Set Available" type="object" icon="gtk-yes"/>
-                        <button name="%(action_partial_move_server)d" string="Process" type="action" states="assigned" icon="gtk-go-forward"/>
+                        <button name="%(action_partial_move_server)d" string="Confirm &amp; Receive" type="action" states="assigned" icon="gtk-go-forward"/>
                     </group>
                 </form>
             </field>
