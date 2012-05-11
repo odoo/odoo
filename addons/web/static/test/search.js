@@ -917,6 +917,41 @@ $(document).ready(function () {
             });
     });
 
+    module('removal', {
+        setup: function () {
+            instance = window.openerp.init([]);
+            window.openerp.web.corelib(instance);
+            window.openerp.web.coresetup(instance);
+            window.openerp.web.chrome(instance);
+            window.openerp.web.data(instance);
+            window.openerp.web.search(instance);
+
+            instance.web.qweb.add_template(doc);
+
+            mockifyRPC(instance.connection);
+        }
+    });
+    asyncTest('clear button', function () {
+        var $fix = $('#qunit-fixture');
+        var view = makeSearchView({
+            facet_for_defaults: function (defaults) {
+                return $.when({
+                    field: this,
+                    category: 'Dummy',
+                    values: [{label: 'dummy', value: defaults.dummy}]
+                });
+            }
+        }, {dummy: 42});
+        view.appendTo($fix)
+            .always(start)
+            .fail(function (error) { ok(false, error.message); })
+            .done(function () {
+                equal(view.query.length, 1, "view should have default facet");
+                $fix.find('.oe_searchview_clear').click();
+                equal(view.query.length, 0, "cleared view should not have any facet");
+            });
+    });
+
     module('drawer', {
         setup: function () {
             instance = window.openerp.init([]);
