@@ -902,15 +902,22 @@ class mail_thread(osv.osv):
     
     def message_create_notify_get_email_dict(self, cr, uid, new_msg_values, email_from, email_to, context=None):
         values = dict(new_msg_values)
-        body = new_msg_values.get('body_html', '') if new_msg_values.get('content_subtype') == 'html' else new_msg_values.get('body_text', '')
-        body += '\n\n----------\nThis email was send automatically by OpenERP, because you have subscribed to a document.'
+        
+        body_html = new_msg_values.get('body_html', '')
+        if body_html:
+            body_html += '\n\n----------\nThis email was send automatically by OpenERP, because you have subscribed to a document.'
+        body_text = new_msg_values.get('body_text', '')
+        if body_text:
+            body_text += '\n\n----------\nThis email was send automatically by OpenERP, because you have subscribed to a document.'
         values.update({
             'type': 'email',
             'state': 'outgoing',
             'email_from': email_from,
             'email_to': email_to,
             'subject': 'New message',
-            'content_subtype': 'text',
+            'content_subtype': new_msg_values.get('content_subtype', 'plain'),
+            'body_html': body_html,
+            'body_text': body_text,
             'auto_delete': True,
             'res_model': '',
             'res_id': False,
