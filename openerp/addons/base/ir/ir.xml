@@ -777,7 +777,7 @@
             <field name="view_id" ref="view_view_tree"/>
             <field name="help">Views allows you to personalize each view of OpenERP. You can add new fields, move fields, rename them or delete the ones that you do not need.</field>
         </record>
-        <menuitem action="action_ui_view" id="menu_action_ui_view" parent="base.next_id_2"/>
+        <menuitem action="action_ui_view" id="menu_action_ui_view" parent="base.next_id_2" sequence="2"/>
 
 
         <!-- View customizations -->
@@ -822,7 +822,7 @@
             <field name="res_model">ir.ui.view.custom</field>
             <field name="help">Customized views are used when users reorganize the content of their dashboard views (via web client)</field>
         </record>
-        <menuitem id="menu_action_ui_view_custom" action="action_ui_view_custom" parent="base.next_id_2"/>
+        <menuitem id="menu_action_ui_view_custom" action="action_ui_view_custom" parent="base.next_id_2" sequence="3"/>
 
 
         <!-- Attachment -->

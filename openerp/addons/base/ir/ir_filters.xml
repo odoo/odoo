@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
+
+    <data noupdate="1">
+        <!-- Restrict modifications on ir.filters to owner only -->
+        <record id="ir_filters_rule" model="ir.rule">
+            <field name="name">ir.filters.owner</field>
+            <field model="ir.model" name="model_id" ref="model_ir_filters"/>
+            <field name="domain_force">[('user_id','in',[False,user.id])]</field>
+        </record>
+    </data>
+
     <data>
         <record id="ir_filters_view_form" model="ir.ui.view">
             <field name="name">ir.filters.form</field>
@@ -43,13 +53,15 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Filters">
-                    <filter name="Private" domain="[('user_id','!=',False))]"/>
-                    <filter name="Public" domain="[('user_id','=',False))]"/>
+                    <filter string="Personal" domain="[('user_id','!=',False)]" help="Filters visible only for one user"/>
+                    <filter string="Shared" domain="[('user_id','=',False)]" help="Filters shared with all users"/>
                     <separator orientation="vertical"/>
                     <field name="name"/>
                     <field name="model_id"/>
                     <field name="user_id">
-                        <filter icon="terp-personal" domain="[('user_id','in',(uid, False))]" name="My Filters" />
+                        <filter icon="terp-personal" domain="[('user_id','in',(uid, False))]"
+                                name="my_filters"
+                                string="My Filters" />
                     </field>
                 </search>
             </field>
@@ -61,7 +73,7 @@
             <field name="res_model">ir.filters</field>
         </record>
 
-        <menuitem parent="base.next_id_6" name="User-defined Filters"
-            id="menu_ir_filters" action="actions_ir_filters_view"/>
+        <menuitem parent="base.next_id_2" name="User-defined Filters"
+            id="menu_ir_filters" action="actions_ir_filters_view" sequence="5"/>
     </data>
 </openerp>
