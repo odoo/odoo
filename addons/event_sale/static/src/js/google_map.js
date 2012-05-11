@@ -1,9 +1,9 @@
 openerp.event = function(instance){
 	instance.web.form.widgets.add('geo_address', 'instance.event.GeoAddress');
 	instance.event.GeoAddress = instance.web.form.AbstractField.extend(_.extend({}, {
-
 		init : function(){
 			this._super.apply(this,arguments);
+			this.googleMapsLoaded = $.Deferred();
 		},
 
 		start:function(){
@@ -11,13 +11,27 @@ openerp.event = function(instance){
 		
 	 	set_input_id:function(id){
 	 	},
+	 	map_load: function() {
+	 		var self = this;
+	 		if(this.googleMapsLoaded.state() != "pending"){return this.googleMapsLoaded.promise();}
+			googleMapsCallback = function () {
+        		self.googleMapsLoaded.resolve();
+    		};
+			 $.ajax({
+	                url: "https://maps.googleapis.com/maps/api/js?v=3&callback=googleMapsCallback&sensor=false",
+	                dataType: "script"
+	            }).fail(self.googleMapsLoaded.reject);
+			return this.googleMapsLoaded.promise();
+		},
 	 	set_value:function(value){
 	 		var self = this;
 			this.get_address(value).done(function(value){
 				if(!self.__parentedParent.$element.find("#address_text").length)self.__parentedParent.$element.find(".oe_td_border").after(instance.web.qweb.render("address",{'record': value}));
 				var address = _.str.sprintf(' %(street)s, %(city)s, %(country_id[1])s', value);
-				return self.list_addresses(address);
-				
+				var defer = self.Map_Load();
+				defer.done(function(){
+					return self.render_map(address);	
+				})
 			});
 			
 	 	},
@@ -28,7 +42,7 @@ openerp.event = function(instance){
 			return new instance.web.DataSet (this,this.field.relation, this.build_context()).read_ids(value[0],["street","city","country_id"]);
 	 	},
 
-	 	list_addresses: function(address){
+	 	render_map: function(address){
 	 		var geocoder = new google.maps.Geocoder();
 			geocoder.geocode( { 'address': address}, function(results, status) 
 			{
