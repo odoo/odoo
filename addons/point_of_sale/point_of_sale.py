@@ -37,40 +37,31 @@ class pos_config(osv.osv):
     _name = 'pos.config'
 
     POS_CONFIG_STATE = [
-        ('draft', 'Draft'),
         ('active', 'Active'),
         ('inactive', 'Inactive'),
         ('deprecated', 'Deprecated')
     ]
 
     _columns = {
-        'name' : fields.char('Name', size=32,
+        'name' : fields.char('Point of Sale Name', size=32,
                              select=1,
                              required=True,
-#                             readonly=True,
-#                             states={'draft' : [('readonly', False)]}
                             ),
         'journal_ids' : fields.many2many('account.journal', 
                                          'pos_config_journal_rel', 
                                          'pos_config_id', 
                                          'journal_id', 
-                                         'Payment Methods',
+                                         'Available Payment Methods',
                                          domain="[('journal_user', '=', True )]",
-#                                         readonly=True,
-#                                         states={'draft' : [('readonly', False)]}
                                         ),
         'shop_id' : fields.many2one('sale.shop', 'Shop',
                                     required=True,
                                     select=1,
-#                                    readonly=True,
-#                                    states={'draft' : [('readonly', False)]} 
                                    ),
         'journal_id' : fields.many2one('account.journal', 'Journal',
                                        required=True,
                                        select=1,
                                        domain=[('type', '=', 'sale')],
-#                                       readonly=True,
-#                                       states={'draft' : [('readonly', False)]}
                                       ),
         'iface_self_checkout' : fields.boolean('Self Checkout Mode'),
         'iface_websql' : fields.boolean('WebSQL (to store data)'),
@@ -86,38 +77,24 @@ class pos_config(osv.osv):
                                    required=True,
                                    readonly=True),
 
-        'sequence_id' : fields.many2one('ir.sequence', 'Sequence',
+        'sequence_id' : fields.many2one('ir.sequence', 'Order IDs Sequence',
                                         readonly=True),
-        'user_id' : fields.many2one('res.users', 'User',
-#                                    readonly=True,
-#                                    states={'draft' : [('readonly', False)]}
-                                   ),
 
     }
+
+    def _default_sale_journal(self, cr, uid, context=None):
+        res = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'sale')], limit=1)
+        return res and res[0] or False
+
+    def _default_shop(self, cr, uid, context=None):
+        res = self.pool.get('sale.shop').search(cr, uid, [])
+        return res and res[0] or False
 
     _defaults = {
-        'state' : 'draft',
-        'user_id' : lambda obj, cr, uid, context: uid,
+        'state' : POS_CONFIG_STATE[0][0],
+        'shop_id': _default_shop,
+        'journal_id': _default_sale_journal
     }
-
-    def _check_only_one_cash_journal(self, cr, uid, ids, context=None):
-        for record in self.browse(cr, uid, ids, context=context):
-            has_cash_journal = False
-
-            for journal in record.journal_ids:
-                if journal.type == 'cash':
-                    if has_cash_journal:
-                        return False
-                    else:
-                        has_cash_journal = True
-        return True
-
-    _constraints = [
-        (_check_only_one_cash_journal, "You should have only one Cash Journal !", ['journal_id']),
-    ]
-
-    def set_draft(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state' : 'draft'}, context=context)
 
     def set_active(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state' : 'active'}, context=context)
@@ -129,43 +106,15 @@ class pos_config(osv.osv):
         return self.write(cr, uid, ids, {'state' : 'deprecated'}, context=context)
 
     def create(self, cr, uid, values, context=None):
-        proxy = self.pool.get('ir.sequence.type')
-
-        sequence_values = dict(
-            code='pos_%s_sequence' % values['name'].lower(),
-            name='POS %s Sequence' % values['name'],
-        )
-
-        proxy.create(cr, uid, sequence_values, context=context)
-
         proxy = self.pool.get('ir.sequence')
-
         sequence_values = dict(
-            code='pos_%s_sequence' % values['name'].lower(),
-            name='POS %s Sequence' % values['name'],
-            padding=4,
-            prefix="%s/%%(year)s/%%(month)s/%%(day)s/"  % values['name'],
+            name='PoS %s' % values['name'],
+            padding=5,
+            prefix="%s/"  % values['name'],
         )
         sequence_id = proxy.create(cr, uid, sequence_values, context=context)
-
         values['sequence_id'] = sequence_id
         return super(pos_config, self).create(cr, uid, values, context=context)
-
-    def write(self, cr, uid, ids, values, context=None):
-        for obj in self.browse(cr, uid, ids, context=context):
-            if obj.sequence_id and values.get('name', False):
-                prefixes = obj.sequence_id.prefix.split('/')
-                if len(prefixes) >= 4 and prefixes[0] == obj.name:
-                    prefixes[0] = values['name']
-
-                sequence_values = dict(
-                    code='pos_%s_sequence' % values['name'].lower(),
-                    name='POS %s Sequence' % values['name'],
-                    prefix="/".join(prefixes),
-                )
-                obj.sequence_id.write(sequence_values)
-
-        return super(pos_config, self).write(cr, uid, ids, values, context=context)
 
     def unlink(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
@@ -189,25 +138,14 @@ class pos_session(osv.osv):
     def _compute_cash_register_id(self, cr, uid, ids, fieldnames, args, context=None):
         result = dict.fromkeys(ids, False)
         for record in self.browse(cr, uid, ids, context=context):
-            cash_register_id = False
-            for bank_statement in record.statement_ids:
-                if bank_statement.journal_id.type == 'cash':
-                    cash_register_id = bank_statement.id
+            for st in record.statement_ids:
+                if st.journal_id.type == 'cash':
+                    result[record.id] = st.id
                     break
-            result[record.id] = cash_register_id
-
-        return result
-
-    def _compute_show_closing_control(self, cr, uid, ids, fieldnames, args, context=None):
-        result = dict.fromkeys(ids, False)
-
-        for session in self.browse(cr, uid, ids, context=context):
-            result[session.id] = any(journal.closing_control == True for journal in session.config_id.journal_ids)
-
         return result
 
     _columns = {
-        'config_id' : fields.many2one('pos.config', 'PoS',
+        'config_id' : fields.many2one('pos.config', 'Point of Sale',
                                       required=True,
                                       select=1,
                                       domain="[('state', '=', 'active')]",
@@ -215,13 +153,13 @@ class pos_session(osv.osv):
 #                                      states={'draft' : [('readonly', False)]}
                                      ),
 
-        'name' : fields.char('Session Sequence', size=32,
+        'name' : fields.char('Session ID', size=32,
                              required=True,
                              select=1,
 #                             readonly=True,
 #                             states={'draft' : [('readonly', False)]}
                             ),
-        'user_id' : fields.many2one('res.users', 'User',
+        'user_id' : fields.many2one('res.users', 'Responsible',
                                     required=True,
                                     select=1,
 #                                    readonly=True,
@@ -242,10 +180,6 @@ class pos_session(osv.osv):
         'opening_details_ids' : fields.related('cash_register_id', 'opening_details_ids', 
                                        type='one2many', relation='account.cashbox.line',
                                        string='CashBox Lines'),
-        'closing_details_ids' : fields.related('cash_register_id', 'closing_details_ids', 
-                                       type='one2many', relation='account.cashbox.line',
-                                       string='CashBox Lines'),
-
         'details_ids' : fields.related('cash_register_id', 'details_ids', 
                                        type='one2many', relation='account.cashbox.line',
                                        string='CashBox Lines'),
@@ -276,10 +210,6 @@ class pos_session(osv.osv):
                                                      digits_compute=dp.get_precision('Account'),
                                                      string="Computed Balance",
                                                      readonly=True),
-        'cash_register_balance_end_cash' : fields.related('cash_register_id', 'balance_end_cash',
-                                                          string='Closing Balance',
-                                                          help="Closing balance based on cashBox",
-                                                          readonly=True),
         'cash_register_difference' : fields.related('cash_register_id', 'difference',
                                                     type='float',
                                                     string='Difference',
@@ -293,7 +223,6 @@ class pos_session(osv.osv):
         'order_ids' : fields.one2many('pos.order', 'session_id', 'Orders'),
 
         'statement_ids' : fields.one2many('account.bank.statement', 'pos_session_id', 'Bank Statement', readonly=True),
-        'show_closing_control': fields.function(_compute_show_closing_control, method=True, type='boolean', string='Show Closing Control Button'),
     }
 
     _defaults = {
@@ -311,34 +240,27 @@ class pos_session(osv.osv):
             # open if there is no session in 'opening_control', 'opened', 'closing_control' for one user
             domain = [
                 ('state', '!=', 'closed'),
-                ('user_id', '=', uid),
-                ('id', '!=', session.id),
+                ('user_id', '=', uid)
             ]
             count = self.search_count(cr, uid, domain, context=context)
-
-            if count:
+            if count>1:
                 return False
-
         return True
 
     def _check_pos_config(self, cr, uid, ids, context=None):
         for session in self.browse(cr, uid, ids, context=None):
             domain = [
                 ('state', '!=', 'closed'),
-                ('config_id', '=', session.config_id.id),
-                ('id', '!=', session.id),
+                ('config_id', '=', session.config_id.id)
             ]
-
             count = self.search_count(cr, uid, domain, context=context)
-
-            if count:
+            if count>1:
                 return False
-
         return True
 
-    _constraints2 = [
-        (_check_unicity, "You can create a new session, you have an existing and non closed session !", ['user_id', 'state']),
-        (_check_pos_config, "There is an existing session for the PoS Config", ['config_id']),
+    _constraints = [
+        (_check_unicity, "You can not create two active sessions with the same responsible!", ['user_id', 'state']),
+        (_check_pos_config, "You can not create two active sessions related to the same point of sale!", ['config_id']),
     ]
 
     def create(self, cr, uid, values, context=None):
@@ -352,17 +274,15 @@ class pos_session(osv.osv):
             for journal in pos_config.journal_ids:
                 bank_values = {
                     'journal_id' : journal.id,
-                    'user_id' : pos_config.user_id and pos_config.user_id.id or uid,
+                    'user_id' : uid,
                 }
-
                 statement_id = self.pool.get('account.bank.statement').create(cr, uid, bank_values, context=context)
-
-                bank_statement_ids.append(statement_id) 
+                bank_statement_ids.append(statement_id)
 
             values.update({
                 'name' : pos_config.sequence_id._next(),
                 'statement_ids' : [(6, 0, bank_statement_ids)]
-            })  
+            })
 
         return super(pos_session, self).create(cr, uid, values, context=context)
 
@@ -372,15 +292,6 @@ class pos_session(osv.osv):
                 statement.unlink(context=context)
         return True
 
-    def on_change_config(self, cr, uid, ids, config_id, context=None):
-        result = dict(value=dict())
-        if not config_id:
-            result['value']['user_id'] = uid
-        else:
-            result['value']['user_id'] = self.pool.get('pos.config').browse(cr, uid, config_id, context=context).user_id.id
-
-        return result            
-
     def wkf_action_open(self, cr, uid, ids, context=None):
         # si pas de date start_at, je balance une date, sinon on utilise celle de l'utilisateur
         for record in self.browse(cr, uid, ids, context=context):
@@ -388,23 +299,49 @@ class pos_session(osv.osv):
             if not record.start_at:
                 values['start_at'] = time.strftime('%Y-%m-%d %H:%M:%S')
             values['state'] = 'opened'
-
             record.write(values, context=context)
-
             for st in record.statement_ids:
                 st.button_open(context=context)
-
         return True
 
     def wkf_action_closing_control(self, cr, uid, ids, context=None):
-        # Close CashBox
-        for record in self.browse(cr, uid, ids, context=context):
-            for st in record.statement_ids:
-                getattr(st, 'button_confirm_%s' % st.journal_id.type)(context=context)
-
         return self.write(cr, uid, ids, {'state' : 'closing_control', 'stop_at' : time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
 
     def wkf_action_close(self, cr, uid, ids, context=None):
+        # Close CashBox
+        bsl = self.pool.get('account.bank.statement.line')
+        for record in self.browse(cr, uid, ids, context=context):
+            for st in record.statement_ids:
+                if abs(st.difference) > st.journal_id.amount_authorized_diff:
+                    raise osv.except_osv( _('Error !'),
+                        _("Your ending balance is too different from the theorical cash closing (%.2f), the maximum allowed is: %.2f.") % (st.difference, st.journal_id.amount_authorized_diff))
+                if st.difference:
+                    if st.difference > 0.0:
+                        name= _('Point of Sale Profit')
+                        account_id = st.journal_id.profit_account_id.id
+                    else:
+                        account_id = st.journal_id.loss_account_id.id
+                        name= _('Point of Sale Loss')
+                    if not account_id:
+                        raise osv.except_osv( _('Error !'),
+                        _("Please set your profit and loss accounts on your payment method '%s'.") % (st.journal_id.name,))
+                    bsl.create(cr, uid, {
+                        'statement_id': st.id,
+                        'amount': st.difference,
+                        'ref': record.name,
+                        'name': name,
+                        'account_id': account_id
+                    }, context=context)
+                    print {
+                        'statement_id': st.id,
+                        'amount': st.difference,
+                        'ref': record.name,
+                        'name': name,
+                        'account_id': account_id
+                    }
+                    # Create lines
+
+                getattr(st, 'button_confirm_%s' % st.journal_id.type)(context=context)
         self._confirm_orders(cr, uid, ids, context=context)
         return self.write(cr, uid, ids, {'state' : 'closed'}, context=context)
 
@@ -457,7 +394,7 @@ class pos_session(osv.osv):
 
             if not pos_config_ids:
                 raise osv.except_osv(_('Error !'),
-                                     _('There is no active PoS Config for this User %s') % current_user.name)
+                                     _('There is no active Point of Sale Config for this User %s') % current_user.name)
 
             config = pos_config_proxy.browse(cr, uid, pos_config_ids[0], context=context)
 
@@ -472,23 +409,9 @@ class pos_session(osv.osv):
             session_id = self.create(cr, uid, values, context=context)
             wkf_service = netsvc.LocalService('workflow')
             wkf_service.trg_validate(uid, 'pos.session', session_id, 'opening_control', cr)
-            
         return session_id
 
 pos_session()
-
-class pos_config_journal(osv.osv):
-    """ Point of Sale journal configuration"""
-    _name = 'pos.config.journal'
-    _description = "Journal Configuration"
-
-    _columns = {
-        'name': fields.char('Description', size=64),
-        'code': fields.char('Code', size=64),
-        'journal_id': fields.many2one('account.journal', "Journal")
-    }
-
-pos_config_journal()
 
 class pos_order(osv.osv):
     _name = "pos.order"
@@ -555,14 +478,6 @@ class pos_order(osv.osv):
             res[order.id]['amount_total'] = cur_obj.round(cr, uid, cur, val1)
         return res
 
-    def _default_sale_journal(self, cr, uid, context=None):
-        res = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'sale')], limit=1)
-        return res and res[0] or False
-
-    def _default_shop(self, cr, uid, context=None):
-        res = self.pool.get('sale.shop').search(cr, uid, [])
-        return res and res[0] or False
-
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
@@ -581,9 +496,8 @@ class pos_order(osv.osv):
     _columns = {
         'name': fields.char('Order Ref', size=64, required=True, readonly=True),
         'company_id':fields.many2one('res.company', 'Company', required=True, readonly=True),
-        'shop_id': fields.many2one('sale.shop', 'Shop', required=True,
-            states={'draft': [('readonly', False)]}, readonly=True),
-        'date_order': fields.datetime('Date Ordered', readonly=True, select=True),
+        'shop_id': fields.related('session_id', 'config_id', 'shop_id', relation='sale.shop', type='many2one', string='Shop', store=True, readonly=True),
+        'date_order': fields.datetime('Order Date', readonly=True, select=True),
         'user_id': fields.many2one('res.users', 'Connected Salesman', help="Person who uses the the cash register. It could be a reliever, a student or an interim employee."),
         'amount_tax': fields.function(_amount_all, string='Taxes', digits_compute=dp.get_precision('Point Of Sale'), multi='all'),
         'amount_total': fields.function(_amount_all, string='Total', multi='all'),
@@ -613,8 +527,14 @@ class pos_order(osv.osv):
         'picking_id': fields.many2one('stock.picking', 'Picking', readonly=True),
         'note': fields.text('Internal Notes'),
         'nb_print': fields.integer('Number of Print', readonly=True),
-        'sale_journal': fields.many2one('account.journal', 'Journal', required=True, states={'draft': [('readonly', False)]}, readonly=True),
+
+        'sale_journal': fields.related('session_id', 'config_id', 'journal_id', relation='sale.journal', type='many2one', string='Sale Journal', store=True, readonly=True),
     }
+
+    def _default_session(self, cr, uid, context=None):
+        so = self.pool.get('pos.session')
+        session_ids = so.search(cr, uid, [('state','=', 'opened'), ('user_id','=',uid)], context=context)
+        return session_ids and session_ids[0] or False
 
     def _default_pricelist(self, cr, uid, context=None):
         res = self.pool.get('sale.shop').search(cr, uid, [], context=context)
@@ -629,9 +549,8 @@ class pos_order(osv.osv):
         'name': '/', 
         'date_order': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'nb_print': 0,
+        'session_id': _default_session,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
-        'sale_journal': _default_sale_journal,
-        'shop_id': _default_shop,
         'pricelist_id': _default_pricelist,
     }
 
@@ -700,18 +619,6 @@ class pos_order(osv.osv):
             wf_service = netsvc.LocalService("workflow")
             wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
             picking_obj.force_assign(cr, uid, [picking_id], context)
-        return True
-
-    def set_to_draft(self, cr, uid, ids, *args):
-        if not len(ids):
-            return False
-        for order in self.browse(cr, uid, ids, context=context):
-            if order.state != 'cancel':
-                raise osv.except_osv(_('Error!'), _('In order to set to draft a sale, it must be cancelled.'))
-        self.write(cr, uid, ids, {'state': 'draft'})
-        wf_service = netsvc.LocalService("workflow")
-        for i in ids:
-            wf_service.trg_create(uid, 'pos.order', i, cr)
         return True
 
     def cancel_order(self, cr, uid, ids, context=None):
@@ -1182,7 +1089,7 @@ pos_order_line()
 
 class pos_category(osv.osv):
     _name = 'pos.category'
-    _description = "PoS Category"
+    _description = "Point of Sale Category"
     _order = "sequence, name"
     def _check_recursion(self, cr, uid, ids, context=None):
         level = 100
@@ -1248,9 +1155,9 @@ class product_product(osv.osv):
         return result
 
     _columns = {
-        'income_pdt': fields.boolean('PoS Cash Input', help="This is a product you can use to put cash into a statement for the point of sale backend."),
-        'expense_pdt': fields.boolean('PoS Cash Output', help="This is a product you can use to take cash from a statement for the point of sale backend, exemple: money lost, transfer to bank, etc."),
-        'pos_categ_id': fields.many2one('pos.category','PoS Category',
+        'income_pdt': fields.boolean('Point of Sale Cash In', help="This is a product you can use to put cash into a statement for the point of sale backend."),
+        'expense_pdt': fields.boolean('Point of Sale Cash Out', help="This is a product you can use to take cash from a statement for the point of sale backend, exemple: money lost, transfer to bank, etc."),
+        'pos_categ_id': fields.many2one('pos.category','Point of Sale Category',
             help="If you want to sell this product through the point of sale, select the category it belongs to."),
         'product_image_small': fields.function(_get_small_image, string='Small Image', type="binary",
             store = {
