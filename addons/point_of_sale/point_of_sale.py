@@ -79,8 +79,26 @@ class pos_config(osv.osv):
 
         'sequence_id' : fields.many2one('ir.sequence', 'Order IDs Sequence',
                                         readonly=True),
+        'session_ids': fields.one2many('pos.session', 'config_id', 'Sessions'),
 
     }
+
+    def name_get(self, cr, uid, ids, context=None):
+        result = []
+        states = {
+            'opening_control': _('Opening Control'),
+            'opened': _('In Progress'),
+            'closing_control': _('Closing Control'),
+            'closed': _('Closed & Posted'),
+        }
+        for record in self.browse(cr, uid, ids, context=context):
+            if (not record.session_ids) or (record.session_ids[0].state=='closed'):
+                result.append((record.id, record.name+' ('+_('not used')+')'))
+                continue
+            session = record.session_ids[0]
+            result.append((record.id, record.name + ' ('+session.user_id.name+', '+states[session.state]+')'))
+        return result
+
 
     def _default_sale_journal(self, cr, uid, context=None):
         res = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'sale')], limit=1)
@@ -120,17 +138,17 @@ class pos_config(osv.osv):
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.sequence_id:
                 obj.sequence_id.unlink()
-
         return super(pos_config, self).unlink(cr, uid, ids, context=context)
 
 pos_config()
 
 class pos_session(osv.osv):
     _name = 'pos.session'
+    _order = 'id desc'
 
     POS_SESSION_STATE = [
         ('opening_control', 'Opening Control'),  # Signal open
-        ('opened', 'Opened'),                    # Signal closing
+        ('opened', 'In Progress'),                    # Signal closing
         ('closing_control', 'Closing Control'),  # Signal close
         ('closed', 'Closed & Posted'),
     ]
@@ -1127,9 +1145,8 @@ class pos_category(osv.osv):
         'parent_id': fields.many2one('pos.category','Parent Category', select=True),
         'child_id': fields.one2many('pos.category', 'parent_id', string='Children Categories'),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of product categories."),
-        'to_weight' : fields.boolean('To Weight'),
+        'to_weight' : fields.boolean('To Weight', help="This category contains products that should be weighted, mainly used for the self-checkout interface"),
     }
-
     _defaults = {
         'to_weight' : False,
     }
