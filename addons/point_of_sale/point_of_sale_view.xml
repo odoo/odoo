@@ -719,16 +719,6 @@
         <menuitem name="Point of Sale" parent="base.menu_reporting" id="menu_point_rep" sequence="50" groups="group_pos_manager"/>
         <!-- Invoice -->
 
-        <record model="ir.actions.act_window" id="action_pos_sale_all">
-            <field name="name">All Sales Orders</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">pos.order</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[]</field>
-        </record>
-        <menuitem parent="menu_point_rep" id="menu_point_ofsale_all" action="action_pos_sale_all" sequence="1"/>
-
         <record model="ir.actions.act_window" id="action_pos_invoice">
             <field name="name">Invoices</field>
             <field name="type">ir.actions.act_window</field>
@@ -986,7 +976,7 @@
 
 
         <record model="ir.actions.act_window" id="action_pos_session">
-            <field name="name">Point of Sale Sessions</field>
+            <field name="name">All Sessions</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">pos.session</field>
             <field name="view_type">form</field>
@@ -998,6 +988,7 @@
             parent="menu_point_rep"
             action="action_pos_session"
             id="menu_pos_session"
+	    sequence="0"
             groups="group_pos_manager"/>
 
         <record id="view_pos_order_filter" model="ir.ui.view">

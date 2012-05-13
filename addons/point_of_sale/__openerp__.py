@@ -62,7 +62,6 @@ Main features :
         'point_of_sale_report.xml',
         'point_of_sale_view.xml',
         'report/pos_order_report_view.xml',
-        'report/report_cash_register_view.xml',
         'point_of_sale_sequence.xml',
         'point_of_sale_workflow.xml',
         'account_statement_view.xml',
