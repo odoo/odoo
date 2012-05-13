@@ -7,7 +7,7 @@
             <field name="arch" type="xml">
                 <form string="PoS Session Opening" layout="auto">
                     <separator string="Select your Point of Sale" colspan="4" />
-                    <field name="pos_config_id" on_change="on_change_config(pos_config_id)" widget="selection"/>
+                    <field name="pos_config_id" on_change="on_change_config(pos_config_id)" widget="selection" domain="[('state','=','active')]"/>
                     <field name="pos_session_id" invisible="1"/>
 		    <group colspan="4">
                         <button special="cancel" icon="gtk-cancel" string="Cancel" />

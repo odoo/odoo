@@ -43,28 +43,23 @@ class pos_config(osv.osv):
     ]
 
     _columns = {
-        'name' : fields.char('Point of Sale Name', size=32,
-                             select=1,
-                             required=True,
-                            ),
-        'journal_ids' : fields.many2many('account.journal', 
-                                         'pos_config_journal_rel', 
-                                         'pos_config_id', 
-                                         'journal_id', 
-                                         'Available Payment Methods',
-                                         domain="[('journal_user', '=', True )]",
-                                        ),
+        'name' : fields.char('Point of Sale Name', size=32, select=1,
+             required=True, help="An internal identification of the point of sale"),
+        'journal_ids' : fields.many2many('account.journal', 'pos_config_journal_rel', 
+             'pos_config_id', 'journal_id', 'Available Payment Methods',
+             domain="[('journal_user', '=', True )]",),
         'shop_id' : fields.many2one('sale.shop', 'Shop',
-                                    required=True,
-                                    select=1,
-                                   ),
-        'journal_id' : fields.many2one('account.journal', 'Journal',
-                                       required=True,
-                                       select=1,
-                                       domain=[('type', '=', 'sale')],
-                                      ),
-        'iface_self_checkout' : fields.boolean('Self Checkout Mode'),
-        'iface_websql' : fields.boolean('WebSQL (to store data)'),
+             required=True),
+        'journal_id' : fields.many2one('account.journal', 'Sale Journal',
+             required=True, domain=[('type', '=', 'sale')],
+             help="Accounting journal used to post sales entries."),
+        'iface_self_checkout' : fields.boolean('Self Checkout Mode',
+             help="Check this if this point of sale should open by default in a self checkout mode. If unchecked, OpenERP uses the normal cashier mode by default."),
+        'iface_websql' : fields.boolean('WebSQL (Faster but Chrome Only)',
+            help="If have more than 200 products, it's highly suggested to use WebSQL "\
+                "to store the data in the browser, instead of localStore mechanism. "\
+                "It's more efficient but works on the Chrome browser only."
+            ),
         'iface_led' : fields.boolean('LED Interface'),
         'iface_cashdrawer' : fields.boolean('Cashdrawer Interface'),
         'iface_payment_terminal' : fields.boolean('Payment Terminal Interface'),
@@ -73,12 +68,10 @@ class pos_config(osv.osv):
         'iface_vkeyboard' : fields.boolean('Virtual KeyBoard Interface'),
         'iface_print_via_proxy' : fields.boolean('Print via Proxy'),
 
-        'state' : fields.selection(POS_CONFIG_STATE, 'State',
-                                   required=True,
-                                   readonly=True),
-
-        'sequence_id' : fields.many2one('ir.sequence', 'Order IDs Sequence',
-                                        readonly=True),
+        'state' : fields.selection(POS_CONFIG_STATE, 'State', required=True, readonly=True),
+        'sequence_id' : fields.many2one('ir.sequence', 'Order IDs Sequence', readonly=True,
+            help="This sequence is automatically created by OpenERP but you can change it "\
+                "to customize the reference numbers of your orders."),
         'session_ids': fields.one2many('pos.session', 'config_id', 'Sessions'),
 
     }
@@ -164,6 +157,7 @@ class pos_session(osv.osv):
 
     _columns = {
         'config_id' : fields.many2one('pos.config', 'Point of Sale',
+                                      help="The physical point of sale you will use.",
                                       required=True,
                                       select=1,
                                       domain="[('state', '=', 'active')]",
@@ -173,7 +167,6 @@ class pos_session(osv.osv):
 
         'name' : fields.char('Session ID', size=32,
                              required=True,
-                             select=1,
 #                             readonly=True,
 #                             states={'draft' : [('readonly', False)]}
                             ),
@@ -187,57 +180,52 @@ class pos_session(osv.osv):
         'stop_at' : fields.datetime('Closing Date'),
 
         'state' : fields.selection(POS_SESSION_STATE, 'State',
-                                   required=True,
-                                   readonly=True,
-                                   select=1),
+                required=True, readonly=True,
+                select=1),
 
         'cash_register_id' : fields.function(_compute_cash_register_id, method=True, 
-                                             type='many2one', relation='account.bank.statement',
-                                             string='Cash Register', store=True),
+                type='many2one', relation='account.bank.statement',
+                string='Cash Register', store=True),
 
         'opening_details_ids' : fields.related('cash_register_id', 'opening_details_ids', 
-                                       type='one2many', relation='account.cashbox.line',
-                                       string='CashBox Lines'),
+                type='one2many', relation='account.cashbox.line',
+                string='Opening Cash Control'),
         'details_ids' : fields.related('cash_register_id', 'details_ids', 
-                                       type='one2many', relation='account.cashbox.line',
-                                       string='CashBox Lines'),
+                type='one2many', relation='account.cashbox.line',
+                string='Cash Control'),
 
-        'cash_register_date' : fields.related('cash_register_id', 'date',
-                                              type='datetime',
-                                              string='Started On',
-                                              readonly=True),
-        'cash_register_closing_date' : fields.related('cash_register_id', 'closing_date',
-                                                      type='datetime',
-                                                      string='Closed On',
-                                                      readonly=True),
         'cash_register_balance_end_real' : fields.related('cash_register_id', 'balance_end_real',
-                                                          type='float',
-                                                          digits_compute=dp.get_precision('Account'),
-                                                          string="Ending Balance",
-                                                          readonly=True),
+                type='float',
+                digits_compute=dp.get_precision('Account'),
+                string="Ending Balance",
+                help="Computed using the cash control lines",
+                readonly=True),
         'cash_register_balance_start' : fields.related('cash_register_id', 'balance_start',
-                                                       type='float',
-                                                       digits_compute=dp.get_precision('Account'),
-                                                       string="Starting Balance",
-                                                       readonly=True),
+                type='float',
+                digits_compute=dp.get_precision('Account'),
+                string="Starting Balance",
+                help="Computed using the cash control at the opening.",
+                readonly=True),
         'cash_register_total_entry_encoding' : fields.related('cash_register_id', 'total_entry_encoding',
-                                                              string='Total Cash Transaction',
-                                                              readonly=True),
+                string='Total Cash Transaction',
+                readonly=True),
         'cash_register_balance_end' : fields.related('cash_register_id', 'balance_end',
-                                                     type='float',
-                                                     digits_compute=dp.get_precision('Account'),
-                                                     string="Computed Balance",
-                                                     readonly=True),
+                type='float',
+                digits_compute=dp.get_precision('Account'),
+                string="Computed Balance",
+                help="Computed with the initial cash control and the sum of all payments.",
+                readonly=True),
         'cash_register_difference' : fields.related('cash_register_id', 'difference',
-                                                    type='float',
-                                                    string='Difference',
-                                                    readonly=True),
+                type='float',
+                string='Difference',
+                help="Difference between the counted cash control at the closing and the computed balance.",
+                readonly=True),
 
         'journal_ids' : fields.related('config_id', 'journal_ids',
                                        type='many2many',
                                        readonly=True,
                                        relation='account.journal',
-                                       string='Journals'),
+                                       string='Available Payment Methods'),
         'order_ids' : fields.one2many('pos.order', 'session_id', 'Orders'),
 
         'statement_ids' : fields.one2many('account.bank.statement', 'pos_session_id', 'Bank Statement', readonly=True),
@@ -350,14 +338,6 @@ class pos_session(osv.osv):
                         'name': name,
                         'account_id': account_id
                     }, context=context)
-                    print {
-                        'statement_id': st.id,
-                        'amount': st.difference,
-                        'ref': record.name,
-                        'name': name,
-                        'account_id': account_id
-                    }
-                    # Create lines
 
                 getattr(st, 'button_confirm_%s' % st.journal_id.type)(context=context)
         self._confirm_orders(cr, uid, ids, context=context)
@@ -372,7 +352,6 @@ class pos_session(osv.osv):
         result = any(journal.closing_control == True
                    for session in self.browse(cr, uid, ids, context=context)
                    for journal in session.config_id.journal_ids)
-        print "result: %r" % (result,)
         return result
 
     def _confirm_orders(self, cr, uid, ids, context=None):
