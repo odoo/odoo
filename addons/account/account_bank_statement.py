@@ -349,15 +349,11 @@ class account_bank_statement(osv.osv):
         return self.write(cr, uid, done, {'state':'draft'}, context=context)
     
     def _compute_balance_end_real(self, cr, uid, journal_id, context=None):
-        
         cr.execute('SELECT balance_end_real \
                 FROM account_bank_statement \
                 WHERE journal_id = %s AND NOT state = %s \
                 ORDER BY date DESC,id DESC LIMIT 1', (journal_id, 'draft'))
         res = cr.fetchone()
-
-        print "res: %r" % (res,)
-
         return res and res[0] or 0.0
 
     def onchange_journal_id(self, cr, uid, statement_id, journal_id, context=None):

@@ -77,7 +77,6 @@ class account_cash_statement(osv.osv):
             Set starting and ending balances according to pieces count
         """
         res = {}
-        print 'Updating'
         for statement in self.browse(cr, uid, ids, context=context):
             if statement.journal_id.type not in ('cash',):
                 continue
@@ -90,7 +89,6 @@ class account_cash_statement(osv.osv):
                 'balance_end_real': end,
             }
             res[statement.id] = data
-            print statement.id, data
             super(account_cash_statement, self).write(cr, uid, [statement.id], data, context=context)
         return res
 

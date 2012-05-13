@@ -311,6 +311,12 @@ class pos_session(osv.osv):
         return True
 
     def wkf_action_closing_control(self, cr, uid, ids, context=None):
+        for session in self.browse(cr, uid, ids, context=context):
+            for statement in session.statement_ids:
+                if not statement.journal_id.closing_control:
+                    if statement.balance_end<>statement.balance_end_real:
+                        self.pool.get('account.bank.statement').write(cr, uid,
+                            [statement.id], {'balance_end_real': statement.balance_end})
         return self.write(cr, uid, ids, {'state' : 'closing_control', 'stop_at' : time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
 
     def wkf_action_close(self, cr, uid, ids, context=None):
@@ -319,8 +325,10 @@ class pos_session(osv.osv):
         for record in self.browse(cr, uid, ids, context=context):
             for st in record.statement_ids:
                 if abs(st.difference) > st.journal_id.amount_authorized_diff:
-                    raise osv.except_osv( _('Error !'),
-                        _("Your ending balance is too different from the theorical cash closing (%.2f), the maximum allowed is: %.2f.") % (st.difference, st.journal_id.amount_authorized_diff))
+                    # The pos manager can close statements with maximums.
+                    if not self.pool.get('ir.model.access').check_groups(cr, uid, "point_of_sale.group_pos_manager"):
+                        raise osv.except_osv( _('Error !'),
+                            _("Your ending balance is too different from the theorical cash closing (%.2f), the maximum allowed is: %.2f. You can contact your manager to force it.") % (st.difference, st.journal_id.amount_authorized_diff))
                 if st.difference:
                     if st.difference > 0.0:
                         name= _('Point of Sale Profit')
