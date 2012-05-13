@@ -498,7 +498,7 @@ class pos_order(osv.osv):
         'company_id':fields.many2one('res.company', 'Company', required=True, readonly=True),
         'shop_id': fields.related('session_id', 'config_id', 'shop_id', relation='sale.shop', type='many2one', string='Shop', store=True, readonly=True),
         'date_order': fields.datetime('Order Date', readonly=True, select=True),
-        'user_id': fields.many2one('res.users', 'Connected Salesman', help="Person who uses the the cash register. It could be a reliever, a student or an interim employee."),
+        'user_id': fields.many2one('res.users', 'Salesman', help="Person who uses the the cash register. It could be a reliever, a student or an interim employee."),
         'amount_tax': fields.function(_amount_all, string='Taxes', digits_compute=dp.get_precision('Point Of Sale'), multi='all'),
         'amount_total': fields.function(_amount_all, string='Total', multi='all'),
         'amount_paid': fields.function(_amount_all, string='Paid', states={'draft': [('readonly', False)]}, readonly=True, digits_compute=dp.get_precision('Point Of Sale'), multi='all'),
@@ -528,7 +528,7 @@ class pos_order(osv.osv):
         'note': fields.text('Internal Notes'),
         'nb_print': fields.integer('Number of Print', readonly=True),
 
-        'sale_journal': fields.related('session_id', 'config_id', 'journal_id', relation='sale.journal', type='many2one', string='Sale Journal', store=True, readonly=True),
+        'sale_journal': fields.related('session_id', 'config_id', 'journal_id', relation='account.journal', type='many2one', string='Sale Journal', store=True, readonly=True),
     }
 
     def _default_session(self, cr, uid, context=None):
