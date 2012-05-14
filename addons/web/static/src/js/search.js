@@ -132,11 +132,11 @@ my.InputView = instance.web.Widget.extend({
         return p;
     },
     onFocus: function () {
-        this.getParent().$element.trigger('focus');
+        this.trigger('focused', this);
     },
     onBlur: function () {
         this.$element.text('');
-        this.getParent().$element.trigger('blur');
+        this.trigger('blurred', this);
     },
     getSelection: function () {
         // get Text node
@@ -223,6 +223,8 @@ my.FacetView = instance.web.Widget.extend({
     },
     start: function () {
         var self = this;
+        this.$element.on('focus', function () { self.trigger('focused', self); });
+        this.$element.on('blur', function () { self.trigger('blurred', self); });
         this.$element.on('click', function (e) {
             if ($(e.target).is('.oe_facet_remove')) {
                 self.model.destroy();
@@ -356,13 +358,6 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             if (e.target === self.$element.find('.oe_searchview_facets')[0]) {
                 self.$element.find('.oe_searchview_input:last').focus();
             }
-        });
-        // focusing class on whole searchview, :focus is not transitive
-        this.$element.on('focus', function () {
-            self.$element.addClass('oe_focused');
-        });
-        this.$element.on('blur', function () {
-            self.$element.removeClass('oe_focused');
         });
         // when the completion list opens/refreshes, automatically select the
         // first completion item so if the user just hits [RETURN] or [TAB] it
@@ -506,6 +501,12 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
                 this.$element.find('div.oe_searchview_input:focus')[0]));
         this.query.add(ui.item.facet, {at: input_index / 2});
     },
+    childFocused: function () {
+        this.$element.addClass('oe_focused');
+    },
+    childBlurred: function () {
+        this.$element.removeClass('oe_focused');
+    },
     /**
      *
      * @param {openerp.web.search.SearchQuery | openerp.web.search.Facet} _1
@@ -533,6 +534,10 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             started.push(i.appendTo($e));
             self.input_subviews.push(i);
         }, this);
+        _.each(this.input_subviews, function (childView) {
+            childView.on('focused', self, self.proxy('childFocused'));
+            childView.on('blurred', self, self.proxy('childBlurred'));
+        });
 
         $.when.apply(null, started).then(function () {
             var input_to_focus;
