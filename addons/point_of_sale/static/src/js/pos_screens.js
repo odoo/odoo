@@ -15,33 +15,8 @@
 // that only one screen is shown at the same time and that show() is called after all
 // hide()s
 
-function openerp_pos_screens(module, instance){ //module is instance.point_of_sale
+function openerp_pos_screens(instance, module){ //module is instance.point_of_sale
     var QWeb = instance.web.qweb;
-
-    var qweb_template = function(template,pos){
-        return function(ctx){
-            if(!pos){  //this is a huge hack that needs to be removed ... TODO
-                var HackPosModel = Backbone.Model.extend({
-                    initialize:function(){
-                        this.set({
-                            'currency': {symbol: '$', position: 'after'},
-                        });
-                    },
-                });
-                pos = new HackPosModel();
-            }
-            return QWeb.render(template, _.extend({}, ctx,{
-                'currency': pos.get('currency'),
-                'format_amount': function(amount) {
-                    if (pos.get('currency').position == 'after') {
-                        return amount + ' ' + pos.get('currency').symbol;
-                    } else {
-                        return pos.get('currency').symbol + ' ' + amount;
-                    }
-                },
-                }));
-        };
-    };
 
     module.ScreenSelector = instance.web.Class.extend({
         init: function(options){
@@ -154,11 +129,10 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
         },
     });
 
-    module.ScreenWidget = instance.web.Widget.extend({
+    module.ScreenWidget = module.PosBaseWidget.extend({
         init: function(parent, options){
             this._super(parent, options);
             options = options || {};
-            this.pos = options.pos;
             this.pos_widget = options.pos_widget;
         },
         show: function(){
@@ -679,12 +653,12 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
         },
         refresh: function() {
             this.currentOrder = this.pos.get('selectedOrder');
-            $('.pos-receipt-container', this.$element).html(qweb_template('pos-ticket')({widget:this}));
+            $('.pos-receipt-container', this.$element).html(QWeb.render('PosTicket',{widget:this}));
         },
     });
 
     module.PaymentScreenWidget = module.ScreenWidget.extend({
-        template_fct: qweb_template('PaymentScreenWidget'),
+        template: 'PaymentScreenWidget',
         init: function(parent, options) {
             this._super(parent,options);
             this.model = options.model;
@@ -755,7 +729,6 @@ function openerp_pos_screens(module, instance){ //module is instance.point_of_sa
         },
         renderElement: function() {
             this._super();
-            this.$element.html(this.template_fct());
             this.paymentLineList().empty();
             this.currentPaymentLines.each(_.bind( function(paymentLine) {
                 this.addPaymentLine(paymentLine);

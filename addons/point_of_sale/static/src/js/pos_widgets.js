@@ -1,65 +1,5 @@
-function openerp_pos_widgets(module, instance){ //module is instance.point_of_sale
+function openerp_pos_widgets(instance, module){ //module is instance.point_of_sale
     var QWeb = instance.web.qweb;
-
-    var qweb_template = function(template,pos){
-        return function(ctx){
-            if(!pos){  //this is a huge hack that needs to be removed ... TODO
-                var HackPosModel = Backbone.Model.extend({
-                    initialize:function(){
-                        this.set({
-                            'currency': {symbol: '$', position: 'after'},
-                        });
-                    },
-                });
-                pos = new HackPosModel();
-            }
-            return QWeb.render(template, _.extend({}, ctx,{
-                'currency': pos.get('currency'),
-                'format_amount': function(amount) {
-                    if (pos.get('currency').position == 'after') {
-                        return Math.round(amount*100)/100 + ' ' + pos.get('currency').symbol;
-                    } else {
-                        return pos.get('currency').symbol + ' ' + amount;
-                    }
-                },
-                }));
-        };
-    };
-
-    // This is a base class for all Widgets in the POS. It exposes relevant data to the 
-    // templates : 
-    // - widget.currency : { symbol: '$' | '€' | ..., position: 'before' | 'after }
-    // - widget.format_currency(amount) : this method returns a formatted string based on the
-    //   symbol, the position, and the amount of money.
-    // if the PoS is not fully loaded when you instanciate the widget, the currency might not
-    // yet have been initialized. Use __build_currency_template() to recompute with correct values
-    // before rendering.
-
-    module.PosBaseWidget = instance.web.Widget.extend({
-        init:function(parent,options){
-            this._super(parent);
-            options = options || {};
-            this.pos = options.pos;
-            this.build_currency_template();
-        },
-        build_currency_template: function(){
-
-            if(this.pos && this.pos.get('currency')){
-                this.currency = this.pos.get('currency');
-            }else{
-                this.currency = {symbol: '$', position: 'after'};
-            }
-
-            this.format_currency = function(amount){
-                if(this.currency.position === 'after'){
-                    return Math.round(amount*100)/100 + ' ' + this.currency.symbol;
-                }else{
-                    return this.currency.symbol + ' ' + Math.round(amount*100)/100;
-                }
-            }
-
-        },
-    });
 
     module.NumpadWidget = instance.web.Widget.extend({
         template:'NumpadWidget',
@@ -312,13 +252,11 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
 
 // ---------- "Payment" step. ----------
 
-    module.PaymentlineWidget = instance.web.OldWidget.extend({
-        tagName: 'tr',
-        template_fct: qweb_template('pos-paymentline-template'),
+    module.PaymentlineWidget = module.PosBaseWidget.extend({
+        template: 'PaymentlineWidget',
         init: function(parent, options) {
-            this._super(parent);
+            this._super(parent,options);
             this.model = options.model;
-            console.log('PaymentlineWidget.model:',this.model);
             this.model.bind('change', this.changedAmount, this);
         },
         on_delete: function() {},
@@ -338,23 +276,17 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
         },
         renderElement: function() {
         	this.amount = this.model.get('amount');
-            this.$element.html(this.template_fct({
-                name: (this.model.get('journal_id'))[1],
-                amount: this.amount,
-            }));
-            this.$element.addClass('paymentline');
+            this.name =   this.model.get('journal_id')[1];
             $('input', this.$element).keyup(_.bind(this.changeAmount, this));
             $('.delete-payment-line', this.$element).click(this.on_delete);
         },
     });
 
-    module.OrderButtonWidget = instance.web.OldWidget.extend({
-        tagName: 'li',
-        template_fct: qweb_template('pos-order-selector-button-template'),
+    module.OrderButtonWidget = module.PosBaseWidget.extend({
+        template:'OrderButtonWidget',
         init: function(parent, options) {
-            this._super(parent);
+            this._super(parent,options);
             this.order = options.order;
-            this.pos = options.pos;
             this.order.bind('destroy', _.bind( function() {
                 this.destroy();
             }, this));
@@ -382,14 +314,10 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
         closeOrder: function(event) {
             this.order.destroy();
         },
-        renderElement: function() {
-            this.$element.html(this.template_fct({widget:this}));
-            this.$element.addClass('order-selector-button');
-        }
     });
 
     module.ActionButtonWidget = instance.web.Widget.extend({
-        template:'pos-action-button',
+        template:'ActionButtonWidget',
         init: function(parent, options){
             this._super(parent, options);
             this.label = options.label || 'button';
@@ -397,7 +325,7 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
             this.click_action = options.click;
             if(options.icon){
                 this.icon = options.icon;
-                this.template = 'pos-action-button-with-icon';
+                this.template = 'ActionButtonWidgetWithIcon';
             }
         },
         start: function(){
@@ -476,17 +404,15 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
         },
     });
 
-    module.ProductCategoriesWidget = instance.web.Widget.extend({
+    module.ProductCategoriesWidget = module.PosBaseWidget.extend({
         init: function(parent, options){
-            this._super(parent);
-            this.pos = options.pos;
+            this._super(parent,options);
             this.on_change_category.add_last(_.bind(this.search_and_categories, this));
             this.search_and_categories(); 
         },
         start: function() {
             this.search_and_categories(); 
         },
-        template_fct: qweb_template('ProductCategoriesWidget'),
         template:'ProductCategoriesWidget',
         renderElement: function() {
             var self = this;
@@ -625,34 +551,18 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
     // automatically shown when the input_selector gets focused.
 
     module.OnscreenKeyboardWidget = instance.web.Widget.extend({
-        tagName: 'div',
-        
+        template: 'OnscreenKeyboardSimple', 
         init: function(parent, options){
             var self = this;
-
             this._super(parent,options);
-            
-            function get_option(opt,default_value){ 
-                if(options){
-                    return options[opt] || default_value;
-                }else{
-                    return default_value;
-                }
+            options = options || {};
+
+            this.keyboard_model = options.keyboard_model || 'full';
+            if(this.keyboard_model === 'full'){
+                this.template = 'OnscreenKeyboardFull';
             }
 
-            this.keyboard_model = get_option('keyboard_model','full');
-            this.template_simple = qweb_template('pos-onscreen-keyboard-simple-template');
-            this.template_full   = qweb_template('pos-onscreen-keyboard-full-template');
-
-            this.template_fct = function(){ 
-                if( this.keyboard_model == 'full' ){
-                    return this.template_full.apply(this,arguments);
-                }else{
-                    return this.template_simple.apply(this,arguments);
-                }
-            };
-
-            this.input_selector = get_option('input_selector','.searchbox input');
+            this.input_selector = options.input_selector || '.searchbox input';
 
             //show the keyboard when the input zone is clicked.
             $(this.input_selector).focus(function(){self.show();});
@@ -695,10 +605,7 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
             $input.keydown();
             $input.keyup();
         },
-        renderElement: function(){
-            this.$element.html(this.template_fct());
-        },
-        
+
         // Makes the keyboard show and slide from the bottom of the screen.
         show:  function(){
             $('.keyboard_frame').show().animate({'height':'235px'}, 500, 'swing');
@@ -814,14 +721,14 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
 // ---------- Main Point of Sale Widget ----------
 
     // this is used to notify the user that data is being synchronized on the network
-    module.SynchNotification = instance.web.OldWidget.extend({
-        template: "pos-synch-notification",
-        init: function() {
-            this._super.apply(this, arguments);
+    module.SynchNotificationWidget = instance.web.Widget.extend({
+        template: "SynchNotificationWidget",
+        init: function(parent) {
+            this._super(parent);
             this.nbr_pending = 0;
         },
         renderElement: function() {
-            this._super.apply(this, arguments);
+            this._super();
             $('.oe_pos_synch-notification-button', this.$element).click(this.on_synch);
         },
         on_change_nbr_pending: function(nbr_pending) {
@@ -858,8 +765,8 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
             return self.pos.ready.then(_.bind(function() {
                 this.build_currency_template();
                 this.renderElement();
-                this.synch_notification = new module.SynchNotification(this);
-                this.synch_notification.replace($('.oe_pos_synch-notification', this.$element));
+                this.synch_notification = new module.SynchNotificationWidget(this);
+                this.synch_notification.replace($('.placeholder-SynchNotificationWidget', this.$element));
                 this.synch_notification.on_synch.add(_.bind(self.pos.flush, self.pos));
                 
                 self.pos.bind('change:nbr_pending_operations', this.changed_pending_operations, this);
@@ -1126,7 +1033,7 @@ function openerp_pos_widgets(module, instance){ //module is instance.point_of_sa
                 var close = _.bind(this.close, this);
                 if (self.pos.get('nbr_pending_operations').length > 0) {
                     var confirm = false;
-                    $(QWeb.render('pos-close-warning')).dialog({
+                    $(QWeb.render('PosCloseWarning')).dialog({
                         resizable: false,
                         height:160,
                         modal: true,

@@ -9,7 +9,7 @@
                 <img src="/point_of_sale/static/src/img/logo.png" />
             </div>
             <div id="loggedas">
-                <span class="oe_pos_synch-notification"></span>
+                <span class="placeholder-SynchNotificationWidget"></span>
                 <button>Close</button>
             </div>
             <div id="rightheader">
@@ -74,17 +74,14 @@
             </table>
         </div>
     </t>
-    <t t-name="pos-synch-notification">
+    <t t-name="SynchNotificationWidget">
         <span>
         <a t-if="widget.nbr_pending &gt; 0" href="javascript:void(0)" class="oe_pos_synch-notification-button">
             <t t-esc="widget.nbr_pending"/> pending orders
         </a>
         </span>
     </t>
-    <t t-name="pos-scan-warning">
-        <div>The product could not be recognized. Please contact an employee.</div>
-    </t>
-    <t t-name="pos-close-warning">
+    <t t-name="PosCloseWarning">
         <div>There are pending operations that could not be saved into the database, are you sure you want to exit?</div>
     </t>
     <t t-name="PaypadWidget">
@@ -177,9 +174,9 @@
                         <tr>
                             <td class="paymentline-type">Total:</td>
                             <td class="paymentline-amount pos-right-align">
-                                <t t-if="currency.position == 'before'" t-esc="currency.symbol"/>
+                                <t t-if="widget.currency.position == 'before'" t-esc="widget.currency.symbol"/>
                                 <span id="payment-due-total"></span>
-                                <t t-if="currency.position == 'after'" t-esc="currency.symbol"/>
+                                <t t-if="widget.currency.position == 'after'" t-esc="widget.currency.symbol"/>
                             </td>
                         </tr>
                     </table>
@@ -189,17 +186,17 @@
                         <tr>
                             <td class="paymentline-type">Paid:</td>
                             <td class="paymentline-amount pos-right-align">
-                                <t t-if="currency.position == 'before'" t-esc="currency.symbol"/>
+                                <t t-if="widget.currency.position == 'before'" t-esc="widget.currency.symbol"/>
                                 <span id="payment-paid-total"></span>
-                                <t t-if="currency.position == 'after'" t-esc="currency.symbol"/>
+                                <t t-if="widget.currency.position == 'after'" t-esc="widget.currency.symbol"/>
                             </td>
                         </tr>
                         <tr>
                             <td class="paymentline-type">Change:</td>
                             <td class="paymentline-amount pos-right-align">
-                                <t t-if="currency.position == 'before'" t-esc="currency.symbol"/>
+                                <t t-if="widget.currency.position == 'before'" t-esc="widget.currency.symbol"/>
                                 <span id="payment-remaining"></span>
-                                <t t-if="currency.position == 'after'" t-esc="currency.symbol"/>
+                                <t t-if="widget.currency.position == 'after'" t-esc="widget.currency.symbol"/>
                             </td>
                         </tr>
                     </table>
@@ -338,7 +335,7 @@
     <t t-name="OrderlineWidget">
         <tr>
             <td>
-                <t t-esc="name"/>
+                <t t-esc="widget.model.get('name')"/>
             </td>
             <td>
                 <t t-esc="widget.format_currency(widget.model.get('list_price'))"/>
@@ -363,14 +360,16 @@
         </tr>
     </t>
 
-    <t t-name="pos-paymentline-template">
-        <td class="paymentline-type">
-            <t t-esc="name"/>
-        </td>
-        <td class="paymentline-amount pos-right-align">
-            <input type="text" t-att-value="amount.toFixed(2)" />
-            <a href='javascript:void(0)' class='delete-payment-line'><img src="/point_of_sale/static/src/img/search_reset.gif" /></a>
-        </td>
+    <t t-name="PaymentlineWidget">
+        <tr class="paymentline">
+            <td class="paymentline-type">
+                <t t-esc="name"/>
+            </td>
+            <td class="paymentline-amount pos-right-align">
+                <input type="text" t-att-value="amount.toFixed(2)" />
+                <a href='javascript:void(0)' class='delete-payment-line'><img src="/point_of_sale/static/src/img/search_reset.gif" /></a>
+            </td>
+        </tr>
     </t>
 
     <t t-name="PaymentButtonWidget">
@@ -380,10 +379,12 @@
         <br />
     </t>
 
-    <t t-name="pos-order-selector-button-template">
-        <button class="select-order"><t t-esc="widget.order.get('creationDate').toString('t')"/></button>
+    <t t-name="OrderButtonWidget">
+        <li class="order-selector-button">
+            <button class="select-order"><t t-esc="widget.order.get('creationDate').toString('t')"/></button>
+        </li>
     </t>
-    <t t-name="pos-ticket">
+    <t t-name="PosTicket">
         <div class="pos-sale-ticket">
             <div class="pos-right-align"><t t-esc="new Date().toString(Date.CultureInfo.formatPatterns.shortDate + ' ' +
                 Date.CultureInfo.formatPatterns.longTime)"/></div>
@@ -402,17 +403,17 @@
                         <t t-esc="order.get('quantity').toFixed(0)"/>
                     </td>
                     <td class="pos-right-align">
-                        <t t-esc="format_amount((order.get('list_price') * (1 - order.get('discount')/100) * order.get('quantity')).toFixed(2))"/>
+                        <t t-esc="widget.format_currency((order.get('list_price') * (1 - order.get('discount')/100) * order.get('quantity')).toFixed(2))"/>
                     </td>
                 </tr>
             </table>
             <br />
             <table>
                 <tr><td>Tax:</td><td class="pos-right-align">
-                    <t t-esc="format_amount(widget.currentOrder.getTax().toFixed(2))"/>
+                    <t t-esc="widget.format_currency(widget.currentOrder.getTax().toFixed(2))"/>
                     </td></tr>
                 <tr><td>Total:</td><td class="pos-right-align">
-                    <t t-esc="format_amount(widget.currentOrder.getTotal().toFixed(2))"/>
+                    <t t-esc="widget.format_currency(widget.currentOrder.getTotal().toFixed(2))"/>
                     </td></tr>
             </table>
             <br />
@@ -422,14 +423,14 @@
                         <t t-esc="pline.get('journal_id')[1]"/>
                     </td>
                     <td class="pos-right-align">
-                        <t t-esc="format_amount((pline.getAmount()).toFixed(2))"/>
+                        <t t-esc="widget.format_currency((pline.getAmount()).toFixed(2))"/>
                     </td>
                 </tr>
             </table>
             <br />
             <table>
                 <tr><td>Change:</td><td class="pos-right-align">
-                    <t t-esc="format_amount((widget.currentOrder.getPaidTotal() - widget.currentOrder.getTotal()).toFixed(2))"/>
+                    <t t-esc="widget.format_currency((widget.currentOrder.getPaidTotal() - widget.currentOrder.getTotal()).toFixed(2))"/>
                     </td></tr>
             </table>
         </div>
@@ -461,14 +462,14 @@
         </div>
     </t>
 
-    <t t-name="pos-action-button">
+    <t t-name="ActionButtonWidget">
         <li t-att-class=" 'button '+ (widget.rightalign  ? 'rightalign ' : '')">
             <div class='label'>
                 <t t-esc="widget.label" />
             </div>
         </li>
     </t>
-    <t t-name="pos-action-button-with-icon">
+    <t t-name="ActionButtonWidgetWithIcon">
         <li t-att-class=" 'button '+ (widget.rightalign  ? 'rightalign ' : '')">
             <div class='icon'>
                 <img t-att-src="widget.icon" />
@@ -478,7 +479,7 @@
     </t>
     <!-- Onscreen Keyboard : 
          http://net.tutsplus.com/tutorials/javascript-ajax/creating-a-keyboard-with-css-and-jquery/ -->
-    <t t-name="pos-onscreen-keyboard-full-template">
+    <t t-name="OnscreenKeyboardFull">
         <div class="keyboard_frame">
             <ul class="keyboard full_keyboard">
                 <li class="symbol"><span class="off">`</span><span class="on">~</span></li>
@@ -539,7 +540,7 @@
             <p class="close_button">close</p>
         </div>
     </t>
-    <t t-name="pos-onscreen-keyboard-simple-template">
+    <t t-name="OnscreenKeyboardSimple">
         <div class="keyboard_frame">
             <ul class="keyboard simple_keyboard">
                 <li class="symbol firstitem row_qwerty"><span class="off">q</span><span class="on">1</span></li>

@@ -1,7 +1,7 @@
 
-function openerp_pos_devices(module, instance){ //module is instance.point_of_sale
+function openerp_pos_devices(instance,module){ //module is instance.point_of_sale
 
-    var QWeb = instance.web.qweb;
+    var QWeb = instance.web.qweb;   //TODO FIXME this should NOT be of any use in this file
 
     window.debug_devices = new (instance.web.Class.extend({
         payment_status: 'waiting_for_payment',

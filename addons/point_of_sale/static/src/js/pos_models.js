@@ -1,4 +1,4 @@
-function openerp_pos_models(module, instance){ //module is instance.point_of_sale
+function openerp_pos_models(instance, module){ //module is instance.point_of_sale
     var QWeb = instance.web.qweb;
 
     module.LocalStorageDAO = instance.web.Class.extend({

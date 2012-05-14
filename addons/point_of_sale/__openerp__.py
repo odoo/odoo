@@ -86,6 +86,7 @@ Main features :
     'js': [
             'static/lib/backbone/backbone-0.5.3.js', 
             'static/src/js/pos_models.js',
+            'static/src/js/pos_basewidget.js',
             'static/src/js/pos_widgets.js',
             'static/src/js/pos_devices.js',
             'static/src/js/pos_screens.js',
