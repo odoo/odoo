@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-17 04:58+0000\n"
-"X-Generator: Launchpad (build 14814)\n"
+"X-Launchpad-Export-Date: 2012-05-11 04:40+0000\n"
+"X-Generator: Launchpad (build 15225)\n"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder0
@@ -23,7 +23,7 @@ msgid ""
 "becomes a confirmed Purchase Order."
 msgstr ""
 "L'acheteur doit d'abord approuver la demande de prix avant de pouvoir "
-"l'envoyer au fournisseur. La demande de prix devient alors un bon de "
+"l'envoyer au fournisseur : la demande de prix devient alors un bon de "
 "commande confirmé."
 
 #. module: purchase
@@ -77,15 +77,15 @@ msgid ""
 "supplier invoices: based on the order, based on the receptions or manual "
 "encoding."
 msgstr ""
-"Vous pouvez créer une demande de devis lorsque vous voulez acheter des "
+"Vous pouvez créer une demande de prix lorsque vous voulez acheter des "
 "produits à un fournisseur mais que l'achat n'est pas encore confirmé. "
-"Utilisez aussi ce menu pour passer en revue les demandes de devis créées "
+"Utilisez aussi ce menu pour passer en revue les demandes de prix créées "
 "automatiquement et basées sur vos règles logistiques (stock minimum, "
-"production à la demande, etc). Vous pouvez convertir une demande de devis en "
+"production à la demande, etc). Vous pouvez convertir une demande de prix en "
 "bon de commande une fois que la commande est confirmée. Si vous utilisez "
-"l'interface étendue (depuis les préférences utilisateurs), vous pouvez "
-"sélectionner comment contrôler vos factures fournisseur : basées sur les "
-"commandes, basées sur les réceptions ou saisie manuelle."
+"l'interface étendue (dans les préférences utilisateurs), vous pouvez "
+"sélectionner comment contrôler vos factures fournisseur : sur les commandes, "
+"sur les réceptions ou par saisie manuelle."
 
 #. module: purchase
 #: view:purchase.order:0
@@ -108,12 +108,12 @@ msgstr "Listes de prix"
 #. module: purchase
 #: view:stock.picking:0
 msgid "To Invoice"
-msgstr ""
+msgstr "À facturer"
 
 #. module: purchase
 #: view:purchase.order.line_invoice:0
 msgid "Do you want to generate the supplier invoices?"
-msgstr "Voulez-vous générer les factures fournisseurs ?"
+msgstr ""
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_form_action
@@ -152,7 +152,7 @@ msgstr "Pas de liste de prix !"
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_config_wizard
 msgid "purchase.config.wizard"
-msgstr ""
+msgstr "purchase.config.wizard"
 
 #. module: purchase
 #: view:board.board:0 model:ir.actions.act_window,name:purchase.purchase_draft
@@ -234,7 +234,7 @@ msgstr "Propriétés d'achat"
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_partial_picking
 msgid "Partial Picking Processing Wizard"
-msgstr ""
+msgstr "Assistant de livraison partielle"
 
 #. module: purchase
 #: view:purchase.order.line:0
@@ -1000,7 +1000,7 @@ msgstr "État de l'ordre d'achat"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_category_config_purchase
 msgid "Product Categories"
-msgstr ""
+msgstr "Catégories de produits"
 
 #. module: purchase
 #: selection:purchase.config.wizard,default_method:0
@@ -1118,7 +1118,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:purchase.action_email_templates
 #: model:ir.ui.menu,name:purchase.menu_email_templates
 msgid "Email Templates"
-msgstr ""
+msgstr "Modèles de courriels"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_report
@@ -1251,7 +1251,7 @@ msgstr "Valeur des produits"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_partner_categories_in_form
 msgid "Partner Categories"
-msgstr ""
+msgstr "Catégories de partenaires"
 
 #. module: purchase
 #: help:purchase.order,amount_tax:0
@@ -1366,7 +1366,7 @@ msgstr "Informations générales"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Not Invoiced"
-msgstr ""
+msgstr "Non facturée"
 
 #. module: purchase
 #: report:purchase.order:0 field:purchase.order.line,price_unit:0
@@ -1829,7 +1829,7 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order.group:0
 msgid "Are you sure you want to merge these orders?"
-msgstr "Êtes-vous sûr de vouloir fusionner ces commandes ?"
+msgstr ""
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_purchaseinvoice0
@@ -2040,6 +2040,9 @@ msgstr "Tableau de bord des achats"
 #~ msgid "Request For Quotations"
 #~ msgstr "Demande de Devis"
 
+#~ msgid "Are you sure you want to merge these orders ?"
+#~ msgstr "Êtes-vous sûr de vouloir fusionner ces commandes ?"
+
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Nom de Modèle non valide dans la définition de l'action"
 
@@ -2077,9 +2080,6 @@ msgstr "Tableau de bord des achats"
 
 #~ msgid "Approve Purchase order after Confirming"
 #~ msgstr "Approuver la commande d'achat après confirmation"
-
-#~ msgid "From Order"
-#~ msgstr "De la Commande"
 
 #~ msgid "Confirming Purchase"
 #~ msgstr "Confirmer l'achat"
@@ -2277,6 +2277,9 @@ msgstr "Tableau de bord des achats"
 #~ "Vous ne pouvez pas confirmer un ordre d'achat qui ne possède pas de ligne de "
 #~ "commande."
 
+#~ msgid "Do you want to generate the supplier invoices ?"
+#~ msgstr "Voulez-vous générer les factures fournisseurs ?"
+
 #~ msgid ""
 #~ "Manages your Purchase Requisition and allows you to easily keep track and "
 #~ "manage all your purchase orders."
@@ -2388,9 +2391,6 @@ msgstr "Tableau de bord des achats"
 #~ msgid "Configuration Progress"
 #~ msgstr "Progression de la Configuration"
 
-#~ msgid "Not Invoiced"
-#~ msgstr "Non facturée"
-
 #, python-format
 #~ msgid "You must first cancel all picking attached to this purchase order."
 #~ msgstr ""
@@ -2412,5 +2412,8 @@ msgstr "Tableau de bord des achats"
 #~ "Manuel : vous permet d'enregistrer les factures fournisseurs en choisissant "
 #~ "les lignes non facturées de tous les bons de commandes manuels."
 
+#~ msgid "From Order"
+#~ msgstr "À partir de la commande"
+
 #~ msgid "From Picking"
-#~ msgstr "Sur bon de réception"
+#~ msgstr "À partir du colisage"

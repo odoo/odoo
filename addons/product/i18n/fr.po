@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:37+0000\n"
-"PO-Revision-Date: 2012-02-09 09:40+0000\n"
-"Last-Translator: Numérigraphe <Unknown>\n"
+"PO-Revision-Date: 2012-05-10 18:23+0000\n"
+"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-10 04:48+0000\n"
-"X-Generator: Launchpad (build 14771)\n"
+"X-Launchpad-Export-Date: 2012-05-11 04:58+0000\n"
+"X-Generator: Launchpad (build 15225)\n"
 
 #. module: product
 #: view:product.product:0
@@ -92,6 +92,16 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location typed as "
 "'internal'."
 msgstr ""
+"Quantité projetée (calculée selon les quantités en stock - sortante + "
+"entrante)\n"
+"Dans le contexte d'un emplacement de stock, cela comprend les marchandises "
+"stockées dans cet emplacement ou ses enfants.\n"
+"Dans le contexte d'un entrepôt, cela comprend les marchandises stockées dans "
+"l'emplacement de stock de cet entrepôt, ou ses enfants.\n"
+"Dans le contexte d'un magasin, cela comprend les marchandises stockées dans "
+"l'emplacement de stock de l'entrepôt de ce magasin, ou ses enfants.\n"
+"Dans les autres cas, cela comprend les marchandises de tous les emplacements "
+"de stock de type \"interne\""
 
 #. module: product
 #: model:product.category,name:product.cat1
@@ -206,11 +216,13 @@ msgid ""
 "Conversion from Product UoM %s to Default UoM %s is not possible as they "
 "both belong to different Category!."
 msgstr ""
+"La conversion d'unité de mesure (UdM) du produit %s en UdM %s  par défaut "
+"n'est pas possible car elles appartiennent à deux catégories différentes !"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_dozen
 msgid "Dozen"
-msgstr ""
+msgstr "Douzaine"
 
 #. module: product
 #: selection:product.template,cost_method:0
@@ -294,6 +306,8 @@ msgid ""
 "Create a product form for everything you buy or sell. Specify a supplier if "
 "the product can be purchased."
 msgstr ""
+"Créer une formulaire de produit pour tout ce que vous achetez ou vendez. "
+"Spécifiez un fournisseur si le produit peut être acheté."
 
 #. module: product
 #: view:product.uom:0
@@ -466,6 +480,15 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location typed as "
 "'internal'."
 msgstr ""
+"Quantité de produits\n"
+"Dans le contexte d'un emplacement de stock, cela comprend les marchandises "
+"stockées dans cet emplacement ou ses enfants.\n"
+"Dans le contexte d'un entrepôt, cela comprend les marchandises stockées dans "
+"l'emplacement de stock de cet entrepôt, ou ses enfants.\n"
+"Dans le contexte d'un magasin, cela comprend les marchandises stockées dans "
+"l'emplacement de stock de l'entrepôt de ce magasin, ou ses enfants.\n"
+"Dans les autres cas, cela comprend les marchandises de tous les emplacements "
+"de stock de type \"interne\""
 
 #. module: product
 #: view:product.pricelist:0
@@ -582,7 +605,7 @@ msgstr "Taquets en métal"
 #: code:addons/product/product.py:175
 #, python-format
 msgid "Cannot change the category of existing UoM '%s'."
-msgstr ""
+msgstr "Impossible de changer la catégorie existante d' UdM '%s'."
 
 #. module: product
 #: model:ir.model,name:product.model_product_uom_categ
@@ -602,7 +625,7 @@ msgstr "Calcul du prix"
 #. module: product
 #: model:res.groups,name:product.group_uos
 msgid "Product UoS View"
-msgstr ""
+msgstr "Vue produit UdV"
 
 #. module: product
 #: field:product.template,purchase_ok:0
@@ -650,7 +673,7 @@ msgstr "Modèles des produits"
 #. module: product
 #: field:product.category,parent_left:0
 msgid "Left Parent"
-msgstr ""
+msgstr "Parent gauche"
 
 #. module: product
 #: model:product.template,name:product.product_product_restaurantexpenses0_product_template
@@ -688,6 +711,10 @@ msgid ""
 "you need to change the unit of measure, you may desactivate this product "
 "from the 'Procurement & Locations' tab and create a new one."
 msgstr ""
+"La nouvelle UdM '%s' doit appartenir à la même catégorie d'UdM '%s' que "
+"l'ancienne '%s'. Si vous avez besoin de changer l'unité de mesure (UdM), "
+"vous pouvez désactiver ce produit dans l'onglet 'Approvisionnements et "
+"emplacements' et en créer une nouvelle."
 
 #. module: product
 #: view:product.pricelist.item:0
@@ -702,7 +729,7 @@ msgstr "Prix de base"
 #. module: product
 #: model:product.template,name:product.product_consultant_product_template
 msgid "Service on Timesheet"
-msgstr ""
+msgstr "Service sur feuille de temps"
 
 #. module: product
 #: model:product.template,name:product.product_product_fan2_product_template
@@ -738,7 +765,7 @@ msgstr "Fournisseur"
 #. module: product
 #: field:product.product,qty_available:0
 msgid "Quantity On Hand"
-msgstr ""
+msgstr "Quantité en stock"
 
 #. module: product
 #: model:product.template,name:product.product_product_26_product_template
@@ -753,7 +780,7 @@ msgstr "Type de prix"
 #. module: product
 #: model:product.template,name:product.product_product_arm_product_template
 msgid "Cabinet"
-msgstr ""
+msgstr "Meuble"
 
 #. module: product
 #: help:product.product,incoming_qty:0
@@ -781,7 +808,7 @@ msgstr ""
 #. module: product
 #: model:product.template,name:product.product_product_woodentable0_product_template
 msgid "Wooden Table"
-msgstr ""
+msgstr "Table en bois"
 
 #. module: product
 #: model:product.template,name:product.product_product_cpu3_product_template
@@ -949,7 +976,7 @@ msgstr "En développement"
 #: code:addons/product/product.py:363
 #, python-format
 msgid "UoM categories Mismatch!"
-msgstr ""
+msgstr "Conflit entre les catégories d'unités"
 
 #. module: product
 #: model:product.template,name:product.product_product_shelfofcm1_product_template
@@ -1197,6 +1224,15 @@ msgid ""
 "Otherwise, this includes goods leaving from any Stock Location typed as "
 "'internal'."
 msgstr ""
+"Quantité de produit à envoyer.\n"
+"Dans le contexte d'un emplacement de stock, cela comprend les marchandises "
+"partant de cet emplacement ou de ses enfants.\n"
+"Dans le contexte d'un entrepôt, cela comprend les marchandises partant de "
+"l'emplacement de stock de cet entrepôt, ou de ses enfants.\n"
+"Dans le contexte d'un magasin, cela comprend les marchandises partant de "
+"l'emplacement de stock de l'entrepôt de ce magasin, ou de ses enfants.\n"
+"Dans les autres cas, cela comprend les marchandises partant de tous les "
+"emplacements de stock de type \"interne\"."
 
 #. module: product
 #: model:product.category,name:product.product_category_services0
@@ -1470,7 +1506,7 @@ msgstr "Version de liste de prix"
 #. module: product
 #: field:product.product,virtual_available:0
 msgid "Quantity Available"
-msgstr ""
+msgstr "Quantité disponible"
 
 #. module: product
 #: help:product.pricelist.item,sequence:0
@@ -1557,6 +1593,8 @@ msgid ""
 "Will change the way procurements are processed. Consumable are product where "
 "you don't manage stock."
 msgstr ""
+"Changera la façon dont les approvisionnements seront traités. Les "
+"consommables sont des produits pour lesquels le stock n'est pas géré."
 
 #. module: product
 #: field:product.pricelist.version,date_start:0
@@ -1632,7 +1670,7 @@ msgstr "Le poids de l'UL vide"
 #. module: product
 #: model:product.template,name:product.product_product_woodmm10_product_template
 msgid "Wood 10mm"
-msgstr ""
+msgstr "Planche 10 mm"
 
 #. module: product
 #: selection:product.uom,uom_type:0
@@ -1666,7 +1704,7 @@ msgstr "Le code EAN de l'unité du colis"
 #. module: product
 #: help:product.supplierinfo,product_uom:0
 msgid "This comes from the product form."
-msgstr ""
+msgstr "A pour origine le formulaire du produit"
 
 #. module: product
 #: field:product.packaging,weight_ul:0
@@ -1799,6 +1837,8 @@ msgid ""
 "Produce will generate production order or tasks, according to the product "
 "type. Buy will trigger purchase orders when requested."
 msgstr ""
+"Produire génère l'ordre de fabrication ou les tâches, en fonction du type de "
+"produit. Acheter déclenchera des commandes d'achat en cas de besoin."
 
 #. module: product
 #: field:product.product,variants:0
@@ -1834,7 +1874,7 @@ msgstr "Méthode d'arrondi"
 #. module: product
 #: model:product.category,name:product.product_category_assembly
 msgid "Assembly Service"
-msgstr ""
+msgstr "Service d'assemblage"
 
 #. module: product
 #: model:ir.actions.report.xml,name:product.report_product_label
@@ -1943,7 +1983,7 @@ msgstr "Autres produits"
 #. module: product
 #: field:product.product,color:0
 msgid "Color Index"
-msgstr ""
+msgstr "Couleur"
 
 #. module: product
 #: view:product.product:0
@@ -1969,7 +2009,7 @@ msgstr "Liste de prix du fournisseur"
 #: code:addons/product/product.py:175
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Avertissement"
 
 #. module: product
 #: field:product.pricelist.item,base:0
@@ -1979,7 +2019,7 @@ msgstr "Basée sur"
 #. module: product
 #: model:product.uom,name:product.product_uom_ton
 msgid "t"
-msgstr ""
+msgstr "t"
 
 #. module: product
 #: model:product.category,name:product.product_category_rawmaterial0
@@ -2058,7 +2098,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:product.product_uom_categ_form_action
 #: model:ir.ui.menu,name:product.menu_product_uom_categ_form_action
 msgid "UoM Categories"
-msgstr ""
+msgstr "Catégories des UdM"
 
 #. module: product
 #: field:product.template,seller_delay:0
@@ -2096,7 +2136,7 @@ msgstr ""
 #. module: product
 #: view:product.product:0
 msgid "Context..."
-msgstr ""
+msgstr "Contexte..."
 
 #. module: product
 #: model:product.template,name:product.product_product_hdd1_product_template
@@ -2141,7 +2181,7 @@ msgstr "Fournisseur du produit"
 #. module: product
 #: field:product.product,product_image:0
 msgid "Image"
-msgstr ""
+msgstr "Image"
 
 #. module: product
 #: field:product.uom,uom_type:0
@@ -2222,6 +2262,8 @@ msgid ""
 "At least one pricelist has no active version !\n"
 "Please create or activate one."
 msgstr ""
+"Au moins une liste de prix n'a pas de version active !\n"
+"Créez ou activez en une."
 
 #. module: product
 #: field:product.pricelist.item,price_max_margin:0
@@ -2289,7 +2331,7 @@ msgstr "Séquence"
 #. module: product
 #: model:product.template,name:product.product_assembly_product_template
 msgid "Assembly Service Cost"
-msgstr ""
+msgstr "Coûts du service d'assemblage"
 
 #. module: product
 #: view:product.price_list:0
@@ -2309,7 +2351,7 @@ msgstr "RAM à la demande"
 #. module: product
 #: view:res.partner:0
 msgid "Sales Properties"
-msgstr "Propriétés des ventes"
+msgstr "Propriétés de vente"
 
 #. module: product
 #: view:product.product:0
@@ -2320,7 +2362,7 @@ msgstr "Délais"
 #. module: product
 #: view:product.product:0
 msgid "Both stockable and consumable products"
-msgstr ""
+msgstr "Produits consommables et stockables"
 
 #. module: product
 #: model:process.node,note:product.process_node_product0
@@ -2428,7 +2470,7 @@ msgstr "Versions de la liste de prix"
 #. module: product
 #: model:product.template,name:product.product_product_span100_product_template
 msgid "Shelf Panel"
-msgstr ""
+msgstr "Tablette"
 
 #. module: product
 #: help:product.pricelist.item,price_round:0
@@ -2450,7 +2492,7 @@ msgstr "Prix de vente"
 #. module: product
 #: constraint:product.category:0
 msgid "Error ! You cannot create recursive categories."
-msgstr ""
+msgstr "Erreur! Vous ne pouvez pas créer de catégories récursives"
 
 #. module: product
 #: field:product.category,type:0
@@ -2475,6 +2517,7 @@ msgstr ""
 #: constraint:res.partner:0
 msgid "Error ! You cannot create recursive associated members."
 msgstr ""
+"Erreur ! Vous ne pouvez pas créer des membres associés de manière récursive."
 
 #. module: product
 #: field:product.pricelist.item,price_discount:0
@@ -2781,6 +2824,15 @@ msgstr "Réduction sur le prix"
 #~ msgid "Procure Method"
 #~ msgstr "Méthode d'approvisionnement"
 
+#~ msgid "Supply method"
+#~ msgstr "Méthode de fourniture"
+
+#~ msgid "Net weight"
+#~ msgstr "Poids net"
+
+#~ msgid "Gross weight"
+#~ msgstr "Poids brut"
+
 #~ msgid "Rentable Product"
 #~ msgstr "Peut être loué"
 
@@ -2789,6 +2841,9 @@ msgstr "Réduction sur le prix"
 
 #~ msgid "Stockable"
 #~ msgstr "Stockable"
+
+#~ msgid "Default Unit Of Measure"
+#~ msgstr "Unité de mesure par défaut"
 
 #~ msgid "tonne"
 #~ msgstr "tonne"
@@ -2807,6 +2862,10 @@ msgstr "Réduction sur le prix"
 #~ msgstr ""
 #~ "Aucune version active pour la liste de prix sélectionnée !\n"
 #~ "Veuillez créer ou activer une liste."
+
+#~ msgid "Calculate Product Price per unit base on pricelist version."
+#~ msgstr ""
+#~ "Calculer le prix du produit par unité selon cette version de liste de prix"
 
 #~ msgid ""
 #~ "Future stock for this product according to the selected locations or all "

@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-19 05:42+0000\n"
-"X-Generator: Launchpad (build 14814)\n"
+"X-Launchpad-Export-Date: 2012-05-11 04:40+0000\n"
+"X-Generator: Launchpad (build 15225)\n"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder0
@@ -113,7 +113,7 @@ msgstr "Te factureren"
 #. module: purchase
 #: view:purchase.order.line_invoice:0
 msgid "Do you want to generate the supplier invoices?"
-msgstr "Wilt u inkoopfacturen genereren?"
+msgstr ""
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_form_action
@@ -141,7 +141,7 @@ msgstr "Inkooporder statistieken"
 #: model:process.transition,name:purchase.process_transition_packinginvoice0
 #: model:process.transition,name:purchase.process_transition_productrecept0
 msgid "From a Pick list"
-msgstr "van een piklijst"
+msgstr "Van een picklijst"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:735
@@ -162,7 +162,7 @@ msgstr "Offerteaanvraag"
 #. module: purchase
 #: selection:purchase.config.wizard,default_method:0
 msgid "Based on Receptions"
-msgstr "Gebaseerd op ontvangsten"
+msgstr "Gebaseerd op ontvangsten (geleverde hoeveelheid)"
 
 #. module: purchase
 #: field:purchase.order,company_id:0 field:purchase.order.line,company_id:0
@@ -452,7 +452,7 @@ msgstr "Order in afgelopen maand"
 msgid "You must first cancel all receptions related to this purchase order."
 msgstr ""
 "Eerst moeten alle ontvangsten gerelateerd aan deze inkooporder worden "
-"geannuleerd"
+"geannuleerd."
 
 #. module: purchase
 #: selection:purchase.order.line,state:0
@@ -516,7 +516,7 @@ msgstr "Bevestigen"
 #: model:ir.ui.menu,name:purchase.menu_action_picking_tree4_picking_to_invoice
 #: selection:purchase.order,invoice_method:0
 msgid "Based on receptions"
-msgstr "Gebaseerd op ontvangsten"
+msgstr "Gebaseerd op ontvangsten (geleverde hoeveelheid)"
 
 #. module: purchase
 #: constraint:res.company:0
@@ -613,7 +613,7 @@ msgstr "Totaalprijs"
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_import_create_supplier_installer
 msgid "Create or Import Suppliers"
-msgstr "Maak of import leveranciers"
+msgstr "Aanmaken of importeren van leveranciers"
 
 #. module: purchase
 #: view:stock.picking:0
@@ -718,7 +718,7 @@ msgstr "Aantal"
 #. module: purchase
 #: model:process.transition.action,name:purchase.process_transition_action_invoicefrompurchaseorder0
 msgid "Create invoice"
-msgstr "Factuur maken"
+msgstr "Maak factuur"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_unit_measure_purchase
@@ -751,7 +751,7 @@ msgstr "Juli"
 #: model:ir.ui.menu,name:purchase.menu_purchase_config_purchase
 #: view:res.company:0
 msgid "Configuration"
-msgstr "Configuratie"
+msgstr "Instellingen"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -777,9 +777,9 @@ msgid ""
 "according to your settings. Once you receive a supplier invoice, you can "
 "match it with the draft invoice and validate it."
 msgstr ""
-"Gebruik dit menu om te ontvangen facturen van leveranciers te beheren. "
-"OpenERP voor-genereert concept facturen van uw inkooporders of ontvangsten, "
-"volgens uw instellingen. Nadat u de inkoopfactuur ontvangt van uw "
+"Gebruik dit menu om te ontvangen facturen van leveranciers te beheren. Op "
+"basis van uw factuurcontrole instelling genereert OpenERP concept facturen "
+"van uw inkooporders of ontvangsten. Nadat u de inkoopfactuur ontvangt van uw "
 "leverancier kunt u hem vergelijken met uw concept factuur en hem goedkeuren."
 
 #. module: purchase
@@ -1036,7 +1036,7 @@ msgstr "Agendaweergave"
 #. module: purchase
 #: selection:purchase.config.wizard,default_method:0
 msgid "Based on Purchase Order Lines"
-msgstr "Gebaseerd op inkooporderregels"
+msgstr "Gebaseerd op inkooporders (bestelde hoeveelheid)"
 
 #. module: purchase
 #: help:purchase.order,amount_untaxed:0
@@ -1066,7 +1066,7 @@ msgid ""
 msgstr ""
 "Een inkooporder genereert een inkoopfactuur zodra deze is bevestigd door de "
 "leveranciers, Afhankelijk van de factuurinstelling van de inkooporder is de "
-"factuur gebaseerd op de ontvangen of de bestelde aantallen."
+"factuur gebaseerd op de ontvangen of de bestelde hoeveelheden."
 
 #. module: purchase
 #: field:purchase.order,amount_untaxed:0
@@ -1223,7 +1223,7 @@ msgstr "Verwijder Inkooporder"
 #: code:addons/purchase/purchase.py:411 code:addons/purchase/purchase.py:418
 #, python-format
 msgid "Unable to cancel this purchase order!"
-msgstr "het is niet mogelijk deze inkooporder te aannuleren!"
+msgstr "Het is niet mogelijk deze inkooporder te aannuleren!"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_createpackinglist0
@@ -1278,7 +1278,7 @@ msgid ""
 "Based on receptions: let you create an invoice when receptions are validated."
 msgstr ""
 "Op basis van inkooporderregels: plaats de afzonderlijke regels in "
-"'Factuurcontrole >Gebaseerd op inkooporderregels' van waar u selectief een "
+"'Factuurcontrole >Gebaseerd op inkooporders' van waar u selectief een "
 "factuur kan maken.\n"
 "Op basis van gegenereerde factuur: maak een ontwerp-factuur welke u later "
 "kunt goedkeuren.\n"
@@ -1494,7 +1494,7 @@ msgstr "Inkooporder zoeken"
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_config
 msgid "Set the Default Invoicing Control Method"
-msgstr "Stel de standaard factureer controle methode in"
+msgstr "Stel uw standaard inkoopfactuurcontrole methode in"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_draftpurchaseorder0
@@ -1693,7 +1693,7 @@ msgstr "Eigen orderreferentie"
 #: report:purchase.quotation:0 field:purchase.report,expected_date:0
 #: view:stock.picking:0
 msgid "Expected Date"
-msgstr "Verwachte datum"
+msgstr "Datum verwacht"
 
 #. module: purchase
 #: report:purchase.quotation:0
@@ -1787,7 +1787,7 @@ msgstr "Goedkeuren"
 #. module: purchase
 #: model:product.pricelist.version,name:purchase.ver0
 msgid "Default Purchase Pricelist Version"
-msgstr "Standaard versie inkoop prijslijst"
+msgstr "Standaard inkoopprijslijst"
 
 #. module: purchase
 #: view:purchase.order.line:0
@@ -1849,7 +1849,7 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order.group:0
 msgid "Are you sure you want to merge these orders?"
-msgstr "Ben je er zeker van dat je deze orders wilt samenvoegen?"
+msgstr ""
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_purchaseinvoice0
@@ -2017,7 +2017,7 @@ msgstr "Jaar"
 #: model:ir.ui.menu,name:purchase.menu_purchase_line_order_draft
 #: selection:purchase.order,invoice_method:0
 msgid "Based on Purchase Order lines"
-msgstr "Gebaseerd op inkooporderregels"
+msgstr "Gebaseerd op inkooporders (bestelde hoeveelheid)"
 
 #. module: purchase
 #: model:ir.actions.todo.category,name:purchase.category_purchase_config
@@ -2046,7 +2046,7 @@ msgid ""
 "unique number of the purchase order,computed automatically when the purchase "
 "order is created"
 msgstr ""
-"uniek nummer van de inkooporder, automatisch berekend als de inkooporder "
+"Uniek nummer van de inkooporder, automatisch berekend als de inkooporder "
 "wordt gemaakt"
 
 #. module: purchase
@@ -2237,6 +2237,9 @@ msgstr "Inkoop dashboard"
 #~ msgid "From Packing list, Create invoice."
 #~ msgstr "Maak factuur vanaf pakbonnen"
 
+#~ msgid "Are you sure you want to merge these orders ?"
+#~ msgstr "Ben je er zeker van dat je deze orders wilt samenvoegen?"
+
 #~ msgid "Approving Purchase Order"
 #~ msgstr "Goedkeuren inkooporder"
 
@@ -2290,6 +2293,9 @@ msgstr "Inkoop dashboard"
 
 #~ msgid "Order Reference must be unique !"
 #~ msgstr "Orderreferentie moet uniek zijn!"
+
+#~ msgid "Do you want to generate the supplier invoices ?"
+#~ msgstr "Wilt u inkoopfacturen genereren?"
 
 #~ msgid "Current purchases"
 #~ msgstr "Actuele inkopen"
@@ -2460,9 +2466,6 @@ msgstr "Inkoop dashboard"
 #~ msgid "Partial Move"
 #~ msgstr "Deelverplaatsing"
 
-#~ msgid "Not Invoiced"
-#~ msgstr "Niet gefactureerd"
-
 #, python-format
 #~ msgid "Wrong Product UOM !"
 #~ msgstr "Verkeerde product meeteenheid !"
@@ -2473,3 +2476,6 @@ msgstr "Inkoop dashboard"
 #, python-format
 #~ msgid "You can not confirm purchase order without Purchase Order Lines."
 #~ msgstr "U kunt een inkooporder zonder orderregels niet bevestigen."
+
+#~ msgid "Not invoiced"
+#~ msgstr "Niet gefactureerd"

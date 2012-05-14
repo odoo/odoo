@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:37+0000\n"
-"PO-Revision-Date: 2011-04-07 04:14+0000\n"
+"PO-Revision-Date: 2012-05-10 17:22+0000\n"
 "Last-Translator: Dorin <dhongu@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:30+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-05-11 04:58+0000\n"
+"X-Generator: Launchpad (build 15225)\n"
 
 #. module: product
 #: model:product.template,name:product.product_product_ram512_product_template
@@ -82,7 +82,7 @@ msgstr "Ziua"
 #. module: product
 #: view:product.product:0
 msgid "UoM"
-msgstr "UM"
+msgstr "UdeM (Unitatea de masură)"
 
 #. module: product
 #: model:product.template,name:product.product_product_pc2_product_template
@@ -615,7 +615,7 @@ msgstr "Sabloane produs"
 #. module: product
 #: field:product.category,parent_left:0
 msgid "Left Parent"
-msgstr ""
+msgstr "Părinte stânga"
 
 #. module: product
 #: model:product.template,name:product.product_product_restaurantexpenses0_product_template
@@ -665,7 +665,7 @@ msgstr "Preț de bază"
 #. module: product
 #: model:product.template,name:product.product_consultant_product_template
 msgid "Service on Timesheet"
-msgstr ""
+msgstr "Serviciu pe foaia de pontaj"
 
 #. module: product
 #: model:product.template,name:product.product_product_fan2_product_template
@@ -701,7 +701,7 @@ msgstr "Furnizor"
 #. module: product
 #: field:product.product,qty_available:0
 msgid "Quantity On Hand"
-msgstr ""
+msgstr "Cantitate în depozit"
 
 #. module: product
 #: model:product.template,name:product.product_product_26_product_template
@@ -979,7 +979,7 @@ msgstr "Greutatea totală a coletului"
 #. module: product
 #: field:product.template,seller_info_id:0
 msgid "unknown"
-msgstr ""
+msgstr "necunoscut(ă)"
 
 #. module: product
 #: help:product.packaging,code:0
@@ -1128,7 +1128,7 @@ msgstr "Mai mare decat UdM de referință"
 #. module: product
 #: field:product.category,parent_right:0
 msgid "Right Parent"
-msgstr ""
+msgstr "Părinte dreapta"
 
 #. module: product
 #: view:product.product:0
@@ -1230,8 +1230,8 @@ msgid ""
 "at the end of the year), Average Price: the cost price is recomputed at each "
 "reception of products."
 msgstr ""
-"Preţul standard: preţul de cost este fixat şi recalculat periodic (de regulă "
-"la sfârşitul anului), Preţul mediu: preţul de cost este recalculat la "
+"Prețul standard: prețul de cost este fixat și recalculat periodic (de regulă "
+"la sfârșitul anului), Prețul mediu: prețul de cost este recalculat la "
 "fiecare primire a produselor."
 
 #. module: product
@@ -1426,7 +1426,7 @@ msgstr "Versiune a listei de preturi"
 #. module: product
 #: field:product.product,virtual_available:0
 msgid "Quantity Available"
-msgstr ""
+msgstr "Cantitate disponibilă"
 
 #. module: product
 #: help:product.pricelist.item,sequence:0
@@ -1949,7 +1949,7 @@ msgstr "Lista de prețuri furnizor"
 #: code:addons/product/product.py:175
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Atenționare"
 
 #. module: product
 #: field:product.pricelist.item,base:0
@@ -2075,7 +2075,7 @@ msgstr ""
 #. module: product
 #: view:product.product:0
 msgid "Context..."
-msgstr ""
+msgstr "Context..."
 
 #. module: product
 #: model:product.template,name:product.product_product_hdd1_product_template
@@ -2120,7 +2120,7 @@ msgstr "Furnizorul produsului"
 #. module: product
 #: field:product.product,product_image:0
 msgid "Image"
-msgstr ""
+msgstr "Imagine"
 
 #. module: product
 #: field:product.uom,uom_type:0
@@ -2232,7 +2232,7 @@ msgstr "Poate fi inchiriat"
 #: model:product.price.type,name:product.standard_price
 #: field:product.template,standard_price:0
 msgid "Cost Price"
-msgstr "Preţ de cost"
+msgstr "Preț de cost"
 
 #. module: product
 #: field:product.pricelist.item,price_min_margin:0
@@ -2557,6 +2557,9 @@ msgstr "Reduceri de pret"
 #~ msgid "Products & Pricelists"
 #~ msgstr "Produse & liste de prețuri"
 
+#~ msgid "Default Unit Of Measure"
+#~ msgstr "Unitate de măsură implicită"
+
 #~ msgid "Weigths"
 #~ msgstr "Mase"
 
@@ -2596,6 +2599,10 @@ msgstr "Reduceri de pret"
 #~ msgstr ""
 #~ "Aici alegeti Unitatea de Măsură in care sunt exprimate preturile si "
 #~ "cantitătile de mai jos."
+
+#~ msgid "Calculate Product Price per unit base on pricelist version."
+#~ msgstr ""
+#~ "Calculează Pretul produsului per unitate pe baza versiunii listei de preturi."
 
 #~ msgid "Stockable"
 #~ msgstr "Care poate fi stocat"
@@ -2670,6 +2677,9 @@ msgstr "Reduceri de pret"
 #~ "toate interne dacă nu a fost selectată niciuna. Este calculat astfel: Stoc "
 #~ "Real - Iesiri + Primiri."
 
+#~ msgid "Gross weight"
+#~ msgstr "Masa brută"
+
 #, python-format
 #~ msgid ""
 #~ "Could not resolve product category, you have defined cyclic categories of "
@@ -2696,3 +2706,9 @@ msgstr "Reduceri de pret"
 #~ msgstr ""
 #~ "Cantitătile de produse care sunt planificate să ajungă in locatiile "
 #~ "selectate sau toate locatiile interne dacă nu a fost selectată niciuna."
+
+#~ msgid "Supply method"
+#~ msgstr "Metodă de alimentare"
+
+#~ msgid "Net weight"
+#~ msgstr "Masă netă"

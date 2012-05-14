@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2011-02-06 17:27+0000\n"
-"Last-Translator: moelyana <Unknown>\n"
+"PO-Revision-Date: 2012-05-10 17:41+0000\n"
+"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:42+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-05-11 05:03+0000\n"
+"X-Generator: Launchpad (build 15225)\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
@@ -24,7 +24,7 @@ msgstr "Pengguna OpenERP"
 #. module: hr
 #: view:hr.job:0 field:hr.job,requirements:0
 msgid "Requirements"
-msgstr ""
+msgstr "Persyaratan"
 
 #. module: hr
 #: constraint:hr.department:0
@@ -39,7 +39,7 @@ msgstr "Link karyawan untuk informasi"
 #. module: hr
 #: field:hr.employee,sinid:0
 msgid "SIN No"
-msgstr ""
+msgstr "No. KTP"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
@@ -56,7 +56,7 @@ msgstr "Dikelompokan berdasarkan ..."
 #. module: hr
 #: model:ir.actions.act_window,name:hr.view_department_form_installer
 msgid "Create Your Departments"
-msgstr ""
+msgstr "Buat Departemen Ansa"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.action_hr_job
@@ -108,7 +108,7 @@ msgstr "Diharapkan pada Rekrutmen"
 #. module: hr
 #: model:ir.actions.todo.category,name:hr.category_hr_management_config
 msgid "HR Management"
-msgstr ""
+msgstr "Managemen HR"
 
 #. module: hr
 #: help:hr.employee,partner_id:0
@@ -127,7 +127,7 @@ msgstr "Link user kepada karyawan"
 #. module: hr
 #: field:hr.department,parent_id:0
 msgid "Parent Department"
-msgstr ""
+msgstr "Departemen Induk"
 
 #. module: hr
 #: view:hr.employee:0 field:hr.employee,notes:0
@@ -147,6 +147,10 @@ msgid ""
 "operations on all the employees of the same category, i.e. allocating "
 "holidays."
 msgstr ""
+"Buat formulir karyawan dan hubungkan mereka ke Pengguna OpenERP jika Anda "
+"ingin agar mereka dapat mengakses instansi ini. Kategori dapat diatur pada "
+"Karyawan agar dapat mengatasi operasi yang banyak pada semua karyawan yang "
+"mempunyai kategori yang sama contoh alokasi liburan"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.open_module_tree_department
@@ -162,7 +166,7 @@ msgstr ""
 #. module: hr
 #: field:hr.employee,color:0
 msgid "Color Index"
-msgstr ""
+msgstr "urutan warna"
 
 #. module: hr
 #: model:process.transition,note:hr.process_transition_employeeuser0
@@ -181,7 +185,7 @@ msgstr "Dalam Perekrutan"
 #. module: hr
 #: field:hr.employee,identification_id:0
 msgid "Identification No"
-msgstr ""
+msgstr "No. Identitas"
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -191,17 +195,17 @@ msgstr "Perempuan"
 #. module: hr
 #: help:hr.job,expected_employees:0
 msgid "Required number of employees in total for that job."
-msgstr ""
+msgstr "Dibutuhkan sejumlah karwayan untuk pekerjaan ini"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_new_config
 msgid "Attendance"
-msgstr ""
+msgstr "Kehadiran"
 
 #. module: hr
 #: view:hr.employee:0
 msgid "Social IDs"
-msgstr ""
+msgstr "Nomor Jaringan Sosial"
 
 #. module: hr
 #: field:hr.employee,work_phone:0
@@ -259,7 +263,7 @@ msgstr "Pelaporan"
 #: model:ir.actions.act_window,name:hr.open_board_hr
 #: model:ir.ui.menu,name:hr.menu_hr_dashboard_user
 msgid "Human Resources Dashboard"
-msgstr ""
+msgstr "Dasbor HR"
 
 #. module: hr
 #: view:hr.employee:0 field:hr.employee,job_id:0 view:hr.job:0
@@ -294,7 +298,7 @@ msgstr "Cerai"
 #. module: hr
 #: field:hr.employee.category,parent_id:0
 msgid "Parent Category"
-msgstr ""
+msgstr "Kategori Induk"
 
 #. module: hr
 #: constraint:hr.employee.category:0
@@ -317,7 +321,7 @@ msgstr "Kontak Karyawan"
 #. module: hr
 #: view:board.board:0
 msgid "My Board"
-msgstr ""
+msgstr "Dasbor saya"
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -344,12 +348,12 @@ msgstr "Kontrak Karyawan"
 #. module: hr
 #: model:ir.model,name:hr.model_hr_department
 msgid "hr.department"
-msgstr ""
+msgstr "departemen hr"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_create_hr_employee_installer
 msgid "Create your Employees"
-msgstr ""
+msgstr "Buat Karyawan"
 
 #. module: hr
 #: field:hr.employee.category,name:0
@@ -418,12 +422,12 @@ msgstr "Alamat Kerja"
 #: model:ir.actions.act_window,name:hr.open_board_hr_manager
 #: model:ir.ui.menu,name:hr.menu_hr_dashboard_manager
 msgid "HR Manager Dashboard"
-msgstr ""
+msgstr "Dasbor Manager HR"
 
 #. module: hr
 #: field:hr.department,child_ids:0
 msgid "Child Departments"
-msgstr ""
+msgstr "Departemen Anak"
 
 #. module: hr
 #: view:hr.employee:0
@@ -444,12 +448,12 @@ msgstr "tak diketahui"
 #. module: hr
 #: help:hr.job,no_of_employee:0
 msgid "Number of employees with that job."
-msgstr ""
+msgstr "Jumlah karwayan untuk pekerjaan itu"
 
 #. module: hr
 #: field:hr.employee,ssnid:0
 msgid "SSN No"
-msgstr ""
+msgstr "Nomor Jamkesmas"
 
 #. module: hr
 #: view:hr.employee:0
@@ -474,11 +478,14 @@ msgid ""
 "employees by departments: expenses and timesheet validation, leaves "
 "management, recruitments, etc."
 msgstr ""
+"Struktur departemen digunakan untuk mengatur semua dokumen yang berhubungan "
+"dengan karyawan tiap departemen, : validasi pengeluaran dan absensi, aturan "
+"cuti, penerimaan karyawan dan lain-lain"
 
 #. module: hr
 #: field:hr.employee,bank_account_id:0
 msgid "Bank Account Number"
-msgstr ""
+msgstr "Nomor Rekening Bank"
 
 #. module: hr
 #: view:hr.department:0
@@ -497,7 +504,7 @@ msgstr ""
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_dashboard
 msgid "Dashboard"
-msgstr ""
+msgstr "Dasbor"
 
 #. module: hr
 #: selection:hr.job,state:0
@@ -522,7 +529,7 @@ msgstr "Status Pernikahan"
 #. module: hr
 #: model:ir.model,name:hr.model_ir_actions_act_window
 msgid "ir.actions.act_window"
-msgstr ""
+msgstr "ir.action.act_window"
 
 #. module: hr
 #: model:process.node,note:hr.process_node_employee0
@@ -537,7 +544,7 @@ msgstr "Foto"
 #. module: hr
 #: model:ir.model,name:hr.model_res_users
 msgid "res.users"
-msgstr ""
+msgstr "res.users"
 
 #. module: hr
 #: view:hr.employee:0
@@ -547,7 +554,7 @@ msgstr "Informasi Pribadi"
 #. module: hr
 #: field:hr.employee,city:0
 msgid "City"
-msgstr ""
+msgstr "Kota"
 
 #. module: hr
 #: field:hr.employee,passport_id:0
@@ -557,7 +564,7 @@ msgstr "Nomor Passport"
 #. module: hr
 #: field:hr.employee,mobile_phone:0
 msgid "Work Mobile"
-msgstr ""
+msgstr "Nomor HP"
 
 #. module: hr
 #: view:hr.employee.category:0
@@ -602,12 +609,12 @@ msgstr "Kewarganegaraan"
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_config
 msgid "Leaves"
-msgstr ""
+msgstr "Cuti"
 
 #. module: hr
 #: view:board.board:0
 msgid "HR Manager Board"
-msgstr ""
+msgstr "Papan HR Manager"
 
 #. module: hr
 #: field:hr.employee,resource_id:0
@@ -645,7 +652,7 @@ msgstr "Nomor Sosial Asuransi"
 #. module: hr
 #: field:hr.department,name:0
 msgid "Department Name"
-msgstr ""
+msgstr "Nama Departemen"
 
 #. module: hr
 #: help:hr.employee,ssnid:0
@@ -660,12 +667,12 @@ msgstr "Membuat User ERP"
 #. module: hr
 #: field:hr.employee,login:0
 msgid "Login"
-msgstr ""
+msgstr "Log masuk"
 
 #. module: hr
 #: view:hr.employee:0
 msgid "Job Information"
-msgstr ""
+msgstr "Informasi Pekerjaan"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_hr_job
@@ -676,7 +683,7 @@ msgstr "Posisi Pekerjaan"
 #. module: hr
 #: field:hr.employee,otherid:0
 msgid "Other Id"
-msgstr ""
+msgstr "ID Lain"
 
 #. module: hr
 #: view:hr.employee:0 field:hr.employee,coach_id:0
@@ -686,12 +693,12 @@ msgstr "Pelatih"
 #. module: hr
 #: sql_constraint:hr.job:0
 msgid "The name of the job position must be unique per company!"
-msgstr ""
+msgstr "Nama posisi pekerjaan harus unik setiap perusahaan"
 
 #. module: hr
 #: view:hr.job:0
 msgid "My Departments Jobs"
-msgstr ""
+msgstr "Pekerjaan departemen saya"
 
 #. module: hr
 #: field:hr.department,manager_id:0 view:hr.employee:0
@@ -707,12 +714,12 @@ msgstr "Duda"
 #. module: hr
 #: field:hr.employee,child_ids:0
 msgid "Subordinates"
-msgstr ""
+msgstr "Bawahan"
 
 #. module: hr
 #: field:hr.job,no_of_employee:0
 msgid "Number of Employees"
-msgstr ""
+msgstr "Jumlah Karyawan"
 
 #~ msgid "Simplifies the management of employee's attendances."
 #~ msgstr "Menyederhanakan pengelolaan kehadiran karyawan."
@@ -790,6 +797,9 @@ msgstr ""
 #~ msgid "Holidays / Leaves Management"
 #~ msgstr "Pengelolaan Libur / Keluar"
 
+#~ msgid "Categories structure"
+#~ msgstr "Struktur Kategori"
+
 #~ msgid "Configure"
 #~ msgstr "Pengaturan"
 
@@ -861,3 +871,6 @@ msgstr ""
 
 #~ msgid "Generic Payroll system Integrated with Accountings."
 #~ msgstr "Generik sistem Penggajian Terintegrasi  dengan  Pembukuan."
+
+#~ msgid "Subordonate Hierarchy"
+#~ msgstr "Susunan Subordinat"

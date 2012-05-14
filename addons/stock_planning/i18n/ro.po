@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:37+0000\n"
-"PO-Revision-Date: 2011-02-11 14:01+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2012-05-10 18:28+0000\n"
+"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 07:01+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-05-11 05:12+0000\n"
+"X-Generator: Launchpad (build 15225)\n"
 
 #. module: stock_planning
 #: code:addons/stock_planning/wizard/stock_planning_createlines.py:73
@@ -34,8 +34,8 @@ msgid ""
 "warehouse."
 msgstr ""
 "Bifati pentru calcularea locatiei stocului doar pentru depozitul selectat. "
-"Daca nu selectati, calculul se face pentru locatia de intrare, stoc si "
-"iesire a depozitului."
+"Daca nu selectati, calculul se face pentru locatia de intrare, a stocului si "
+"de iesire a depozitului."
 
 #. module: stock_planning
 #: field:stock.planning,maximum_op:0
@@ -46,7 +46,7 @@ msgstr "Regula maxima"
 #: view:stock.planning:0
 #: view:stock.sale.forecast:0
 msgid "Group By..."
-msgstr "Grupează după..."
+msgstr "Grupeaza dupa..."
 
 #. module: stock_planning
 #: help:stock.sale.forecast,product_amt:0
@@ -173,16 +173,20 @@ msgid ""
 "are independent of financial periods. If you need periods other than day-, "
 "week- or month-based, you may also add then manually."
 msgstr ""
+"Acest asistent va ajuta la crearea perioadelor de planificare a stocului. "
+"Aceste perioade sunt independente de perioadele financiare. Daca aveti "
+"nevoie de alte perioade decat cele bazate pe zi-, saptamana-, sau luna-, le "
+"puteti de asemenea adauga manual."
 
 #. module: stock_planning
 #: view:stock.period.createlines:0
 msgid "Create Monthly Periods"
-msgstr "Creare perioade lunare"
+msgstr "Creeaza Perioade Lunar"
 
 #. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_period_createlines
 msgid "stock.period.createlines"
-msgstr "stock.period.createlines (stoc.perioada.creeaza_linii)"
+msgstr "stoc.perioada.creeaza_linii"
 
 #. module: stock_planning
 #: field:stock.planning,outgoing_before:0
@@ -198,6 +202,7 @@ msgstr "Toate produsele cu Previziune"
 #: help:stock.planning,maximum_op:0
 msgid "Maximum quantity set in Minimum Stock Rules for this Warehouse"
 msgstr ""
+"Cantitatea maxima setata in Regulile Stocului Minim pentru acest Depozit"
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
@@ -210,6 +215,9 @@ msgid ""
 "Check to make procurement to stock location of selected warehouse. If not "
 "selected procurement will be made into input location of warehouse."
 msgstr ""
+"Bifati pentru a face aprovizionarea in stocul locatiei depozitului selectat. "
+"Daca nu e selectat, aprovizionarea va fi facuta in locatia de intrare a "
+"depozitului."
 
 #. module: stock_planning
 #: help:stock.planning,already_in:0
@@ -222,7 +230,7 @@ msgstr ""
 #: code:addons/stock_planning/wizard/stock_planning_forecast.py:60
 #, python-format
 msgid "No products in selected category !"
-msgstr "Nici un produs in categoria aleasa !"
+msgstr "Nici un produs in categoria selectata !"
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
@@ -232,7 +240,7 @@ msgstr "Stoc si Previziune vanzari"
 #. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_sale_forecast
 msgid "stock.sale.forecast"
-msgstr "stock.sale.forecast (stoc.vanzare.previziune)"
+msgstr "stoc.previziune.vanzare"
 
 #. module: stock_planning
 #: field:stock.planning,to_procure:0
@@ -299,7 +307,7 @@ msgstr "Perioada3 a acestui utilizator"
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Stock Planning"
-msgstr "Planificare stoc"
+msgstr "Planificarea stocului"
 
 #. module: stock_planning
 #: field:stock.planning,minimum_op:0
@@ -315,7 +323,7 @@ msgstr "Asigurarea primirii produselor ramase"
 #: view:stock.planning.createlines:0
 #: view:stock.sale.forecast.createlines:0
 msgid "Create"
-msgstr "Creati"
+msgstr "Creeaza"
 
 #. module: stock_planning
 #: model:ir.actions.act_window,name:stock_planning.action_view_stock_planning_form
@@ -416,6 +424,22 @@ msgid ""
 "  \n"
 " Stock Simulation: %s    Minimum stock: %s"
 msgstr ""
+" Aprovizionare creata de catre MPS pentru utilizator; %s Data Crearii:%s     "
+"                                    \n"
+"  Pentru perioada: %s                                         \n"
+"  in functie de stare:                                         \n"
+"  Previziune Depozit: %s                                         \n"
+"  Stoc Initial: %s                                         \n"
+"  Produse planificate sa iasa: %s Produse planificate sa intre: %s           "
+"                              \n"
+"  Iesite deja: %s Primite deja: %s                                         \n"
+"  Confirmate pentru iesire: %s Confirmate pentru primire: %s                 "
+"                        \n"
+"  Planificate sa iasa inainte de: %s Produse primite confirmate inainte de: "
+"%s                                         \n"
+"  Asteptate sa iasa: %s Primire produse ramase: %s                           "
+"              \n"
+"  Simulare Stoc: %s Stoc Minim: %s"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:626
@@ -446,7 +470,7 @@ msgstr "Aprovizionare dintr-un alt depozit"
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Calculate Planning"
-msgstr "Calcul planificare"
+msgstr "Calculeaza Planificare"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:146
@@ -462,7 +486,7 @@ msgstr "Cantitatea stocului cu o zi inainte de perioada curenta."
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Procurement history"
-msgstr ""
+msgstr "Istoric aprovizionare"
 
 #. module: stock_planning
 #: help:stock.planning,product_uom:0
@@ -470,11 +494,12 @@ msgid ""
 "Unit of Measure used to show the quantities of stock calculation.You can use "
 "units from default category or from second category (UoS category)."
 msgstr ""
+"Unitatea de Masura folosita pentru a afisa cantitatile de calcul stoc."
 
 #. module: stock_planning
 #: view:stock.period.createlines:0
 msgid "Create Weekly Periods"
-msgstr "Creare Perioade saptamanale"
+msgstr "Creeaza Perioade Saptamanale"
 
 #. module: stock_planning
 #: model:ir.actions.act_window,help:stock_planning.action_stock_period_form
@@ -483,6 +508,9 @@ msgid ""
 "account periods. You can use wizard for creating periods and review them "
 "here."
 msgstr ""
+"Perioadele de stoc sunt folosite pentru planificarea stocului. Perioadele de "
+"stoc sunt independente de perioadele de cont. Puteti folosi asistentul "
+"pentru a crea perioade si a le verifica aici."
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -513,6 +541,7 @@ msgstr "Previziune Companie"
 #: help:stock.planning,minimum_op:0
 msgid "Minimum quantity set in Minimum Stock Rules for this Warehouse"
 msgstr ""
+"Cantitatea minima setata in Regulile Stocului Minim pentru acest Depozit"
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
@@ -548,7 +577,7 @@ msgstr ""
 #: code:addons/stock_planning/stock_planning.py:146
 #, python-format
 msgid "Cannot delete a validated sales forecast!"
-msgstr ""
+msgstr "Nu se poate sterge o estimare de vanzari validata!"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period5_per_company:0
@@ -558,22 +587,22 @@ msgstr "Perioada5 a acestei companii"
 #. module: stock_planning
 #: field:stock.sale.forecast,product_uom:0
 msgid "Product UoM"
-msgstr "UdeM (Unitatea de masura) a produsului"
+msgstr "UdeM a produsului"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period1_per_company:0
 msgid "This Company Period1"
-msgstr ""
+msgstr "Perioada1 a acestei Companii"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period2_per_company:0
 msgid "This Company Period2"
-msgstr "Perioada2 a acestei companii"
+msgstr "Perioada2 a acestei Companii"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period3_per_company:0
 msgid "This Company Period3"
-msgstr "Perioada3 a acestei companii"
+msgstr "Perioada3 a acestei Companii"
 
 #. module: stock_planning
 #: field:stock.period,date_start:0
@@ -584,7 +613,7 @@ msgstr "Data de inceput"
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period2_per_user:0
 msgid "This User Period2"
-msgstr "Perioada2 a acestui utilizator"
+msgstr "Perioada2 a acestui Utilizator"
 
 #. module: stock_planning
 #: field:stock.planning,confirmed_forecasts_only:0
@@ -609,7 +638,7 @@ msgstr "Produse planificate sa iasa"
 #. module: stock_planning
 #: field:stock.sale.forecast,product_qty:0
 msgid "Forecast Quantity"
-msgstr ""
+msgstr "Cantitate Estimata"
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -640,6 +669,9 @@ msgid ""
 "Unit of Measure used to show the quantities of stock calculation.You can use "
 "units form default category or from second category (UoS category)."
 msgstr ""
+"Unitatea de Masura folosita pentru a afisa cantitatile calculului de stoc. "
+"Puteti folosi unitatile din categoria predefinita sau din cea de-a doua "
+"categorie (categoria UdeV)."
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -656,12 +688,13 @@ msgstr ""
 "Introduceti cantitatea planificata pentru iesire din Depozitul selectat in "
 "timpul Perioadei selectate a Produsului selectat. Pentru a planifica aceasta "
 "valoare uitati-va in Iesire confirmata sau in Estimarile vanzarilor. Aceasta "
-"valoare ar trebui sa fie egala cusau mai mare decat cea a Iesirii confirmate."
+"valoare ar trebui sa fie egala cu sau mai mare decat cea a Iesirii "
+"confirmate."
 
 #. module: stock_planning
 #: view:stock.period:0
 msgid "Current Periods"
-msgstr ""
+msgstr "Perioade actuale"
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -672,13 +705,13 @@ msgstr "Aprovizionare interna"
 #: code:addons/stock_planning/stock_planning.py:724
 #, python-format
 msgid "%s Pick List %s (%s,  %s) %s %s \n"
-msgstr "%s Lista de prelare %s (%s,    %s) %s %s \n"
+msgstr "%s Lista de ridicare %s (%s,    %s) %s %s \n"
 
 #. module: stock_planning
 #: model:ir.actions.act_window,name:stock_planning.action_stock_sale_forecast_createlines_form
 #: model:ir.ui.menu,name:stock_planning.menu_stock_sale_forecast_createlines
 msgid "Create Sales Forecasts"
-msgstr "Creare Previziuni ale vanzarilor"
+msgstr "Creeaza Estimari ale Vanzarilor"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period4_id:0
@@ -713,6 +746,10 @@ msgid ""
 "warehouse, so you don't have to create them one by one. The wizard doesn't "
 "duplicate lines if they already exist for this selection."
 msgstr ""
+"Acest asistent ajuta la crearea liniilor planificarii MPS pentru o anumita "
+"perioada selectata si un anumit depozit selectat, astfel ca nu trebuie sa le "
+"creati unul cate unul. Asistentul nu copiaza linii daca ele exista deja "
+"pentru aceasta selectie."
 
 #. module: stock_planning
 #: field:stock.planning,outgoing:0
@@ -734,7 +771,7 @@ msgstr "Informatii generale"
 #. module: stock_planning
 #: model:ir.actions.act_window,name:stock_planning.action_view_stock_sale_forecast_form
 msgid "Sales Forecast"
-msgstr "Previziune a vanzarilor"
+msgstr "Estimare Vanzari"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period1_per_warehouse:0
@@ -754,7 +791,7 @@ msgstr "Depozitul Sursa"
 #. module: stock_planning
 #: help:stock.sale.forecast,product_qty:0
 msgid "Forecast Product quantity."
-msgstr ""
+msgstr "Estimeaza cantitatea Produsului."
 
 #. module: stock_planning
 #: field:stock.planning,stock_supply_location:0
@@ -804,6 +841,11 @@ msgid ""
 "manual procurement with this forecast when some periods are exceptional for "
 "usual minimum stock rules."
 msgstr ""
+"Aceasta estimare a cantitatii vanzarilor este un indicator pentru "
+"Planificarea Stocului pentru a face aprovizionarea manual sau pentru a "
+"completa aprovizionarea automata. Puteti folosi aprovizionarea manuala cu "
+"aceasta estimare atunci cand unele perioade sunt exceptionale pentru "
+"regulile obisnuite de stoc minim."
 
 #. module: stock_planning
 #: model:ir.actions.act_window,help:stock_planning.action_view_stock_planning_form
@@ -819,6 +861,17 @@ msgid ""
 "can trigger the procurement of what is missing to reach your desired "
 "quantities"
 msgstr ""
+"Calendarul Aprovizionarii Principale poate fi determinantul principal pentru "
+"reaprovizionarea depozitului, sau poate completa programarea automata MRP "
+"(regulile stocului minim, etc.).\n"
+"Fiecare linie MRP va ofera o privire de ansamblu pre-calculata a "
+"cantitatilor care intra si care ies ale unui anumit produs pentru o anumita "
+"Perioada a Stocului dintr-un anumit Depozit, pe baza nivelurilor de stoc "
+"actuale si viitoare,\n"
+"precum si a miscarilor planificate ale stocului. Cantitatile estimate pot fi "
+"modificate manual, iar atunci cand sunteti multumit de rezultatele "
+"(simulate) ale cantitatii Stocului, atunci puteti declansa aprovizionarea a "
+"ceea ce va lipseste pentru a ajunge la cantitatile dorite de dumneavoastra."
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:685
@@ -837,19 +890,23 @@ msgid ""
 " Expected Out: %s   Incoming Left: %s                                     \n"
 " Stock Simulation: %s   Minimum stock: %s "
 msgstr ""
-"Preluarea creata din PAP de catre utilizator: %s \tData crearii: %s \t\n"
-"Pentru perioada: %s \tin functie de stare: \t\n"
-"Estimare depozit: %s \t\t\t\n"
-"Stoc initial: %s \t\t\t\n"
-"Produse planificate pentru iesire: %s \t\tProduse planificate pentru "
-"intrare: %s \t\t\n"
-"Produse iesite deja: %s \t\t\t\tProduse intrate deja: %s \t\t\t\n"
-"Confirmare iesire produse: %s\t\tConfirmare intrare produse: %s \t\t\t\n"
-"Produse planificate pentru iesire inainte de: %s\t\t\tProduse confirmate "
-"pentru intrare inainte de: %s\t\t\t\n"
-"\t\t \n"
-"Produse asteptate sa iasa: %s \t\t\tPrimire produse ramase: %s \t\t\t\n"
-"Simulare stoc: %s \t\t\tStoc minim: %s "
+"Preluarea creata din PAP de catre utilizator: %s Data crearii: %s            "
+"                         \n"
+"Pentru perioada: %s in functie de stare:                                     "
+" \n"
+"Estimare depozit: %s                                      \n"
+"Stoc initial: %s                                     \n"
+"Produse planificate pentru iesire: %s Produse planificate pentru intrare: %s "
+"                                    \n"
+"Produse iesite deja: %s Produse intrate deja: %s                             "
+"        \n"
+"Confirmare iesire produse: %s Confirmare intrare produse: %s                 "
+"                    \n"
+"Produse planificate pentru iesire inainte de: %s Produse confirmate pentru "
+"intrare inainte de: %s                                      \n"
+"Produse asteptate sa iasa: %s Primire produse ramase: %s                     "
+"                \n"
+"Simulare stoc: %s Stoc minim: %s "
 
 #. module: stock_planning
 #: field:stock.planning,period_id:0
@@ -862,7 +919,7 @@ msgstr "Perioada"
 #. module: stock_planning
 #: field:stock.sale.forecast,product_uos_categ:0
 msgid "Product UoS Category"
-msgstr "Categoria UdeS a produsului"
+msgstr "Categoria UdeV a produsului"
 
 #. module: stock_planning
 #: field:stock.planning,active_uom:0
@@ -898,7 +955,7 @@ msgstr "Perioade"
 #. module: stock_planning
 #: model:ir.ui.menu,name:stock_planning.menu_stock_period_creatlines
 msgid "Create Stock Periods"
-msgstr ""
+msgstr "Creeaza Intervale de Stoc"
 
 #. module: stock_planning
 #: view:stock.period:0
@@ -912,7 +969,7 @@ msgstr "Inchide"
 #: view:stock.sale.forecast:0
 #: selection:stock.sale.forecast,state:0
 msgid "Validated"
-msgstr "Validat"
+msgstr "Validat(a)"
 
 #. module: stock_planning
 #: view:stock.period:0
@@ -928,37 +985,37 @@ msgstr "Copiaza cantitatile din ultima Estimare a stocului si a vanzarii."
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period1_per_dept:0
 msgid "This Dept Period1"
-msgstr "Perioada1 a acestui departament"
+msgstr "Perioada1 a acestui Departament"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period3_per_dept:0
 msgid "This Dept Period3"
-msgstr "Perioada3 a acestui departament"
+msgstr "Perioada3 a acestui Departament"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period2_per_dept:0
 msgid "This Dept Period2"
-msgstr "Perioada2 a acestui departament"
+msgstr "Perioada2 a acestui Departament"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period5_per_dept:0
 msgid "This Dept Period5"
-msgstr "Perioada5 a acestui departament"
+msgstr "Perioada5 a acestui Departament"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period4_per_dept:0
 msgid "This Dept Period4"
-msgstr "Perioada4 a acestui departament"
+msgstr "Perioada4 a acestui Departament"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period2_per_warehouse:0
 msgid "This Warehouse Period2"
-msgstr "Perioada2 a acestui depozit"
+msgstr "Perioada2 a acestui Depozit"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period3_per_warehouse:0
 msgid "This Warehouse Period3"
-msgstr "Perioada3 a acestui depozit"
+msgstr "Perioada3 a acestui Depozit"
 
 #. module: stock_planning
 #: help:stock.planning,stock_supply_location:0
@@ -967,6 +1024,10 @@ msgid ""
 "supply will be made from Output location of Supply Warehouse. Used in "
 "'Supply from Another Warehouse' with Supply Warehouse."
 msgstr ""
+"Bifati pentru a face aprovizionarea din Locatia stocului Depozitului de "
+"Aprovizionare. Daca nu bifati, aprovizionarea se va face din Locatia de "
+"iesire a Depozitului de Aprovizionare. Folosit in 'Aprovizioneaza dintr-un "
+"Alt Depozit' cu Depozitul de Aprovizionare."
 
 #. module: stock_planning
 #: field:stock.sale.forecast,create_uid:0
@@ -981,17 +1042,17 @@ msgstr "UdeM predefinita"
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period4_per_warehouse:0
 msgid "This Warehouse Period4"
-msgstr "Perioada4 a acestui depozit"
+msgstr "Perioada4 a acestui Depozit"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period5_per_warehouse:0
 msgid "This Warehouse Period5"
-msgstr "Perioada5 a acestui depozit"
+msgstr "Perioada5 a acestui Depozit"
 
 #. module: stock_planning
 #: view:stock.period:0
 msgid "Current"
-msgstr "Curent"
+msgstr "Actual(a)"
 
 #. module: stock_planning
 #: help:stock.planning,supply_warehouse_id:0
@@ -999,6 +1060,8 @@ msgid ""
 "Warehouse used as source in supply pick move created by 'Supply from Another "
 "Warehouse'."
 msgstr ""
+"Depozit folosit ca sursa in miscarea de ridicare a aprovizionarii creat de "
+"catre 'Aprovizioneaza dintr-un Alt Depozit'."
 
 #. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_planning
@@ -1019,7 +1082,7 @@ msgstr ""
 #: code:addons/stock_planning/stock_planning.py:661
 #, python-format
 msgid "%s Procurement (%s,  %s) %s %s \n"
-msgstr ""
+msgstr "%s Aprovizionare (%s, %s) %s %s \n"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyze_company:0
@@ -1041,7 +1104,7 @@ msgstr ""
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period4_per_company:0
 msgid "This Company Period4"
-msgstr "Perioada4 a acestei compan"
+msgstr "Perioada4 a acestei Companii"
 
 #. module: stock_planning
 #: help:stock.planning.createlines,period_id:0
@@ -1066,7 +1129,7 @@ msgstr "Per Depozit :"
 #. module: stock_planning
 #: field:stock.planning,history:0
 msgid "Procurement History"
-msgstr "Istoric aprovizionare"
+msgstr "Istoric Aprovizionare"
 
 #. module: stock_planning
 #: help:stock.period.createlines,date_start:0
@@ -1081,7 +1144,7 @@ msgstr "Data de inceput pentru perioada planificata."
 #: view:stock.period:0
 #: view:stock.period.createlines:0
 msgid "Stock Periods"
-msgstr ""
+msgstr "Perioade de Stoc"
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -1103,7 +1166,7 @@ msgstr "Data de sfarsit"
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "No Requisition"
-msgstr "Nici o solicitare"
+msgstr "Nicio Solicitare"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,name:0
@@ -1123,7 +1186,7 @@ msgstr "UdeM"
 #. module: stock_planning
 #: view:stock.period:0
 msgid "Closed Periods"
-msgstr ""
+msgstr "Perioade Inchise"
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -1138,13 +1201,13 @@ msgstr "Produs"
 #: model:ir.ui.menu,name:stock_planning.menu_stock_sale_forecast_all
 #: view:stock.sale.forecast:0
 msgid "Sales Forecasts"
-msgstr "Previziuni ale vanzarilor"
+msgstr "Previziuni Vanzari"
 
 #. module: stock_planning
 #: field:stock.planning.createlines,product_categ_id:0
 #: field:stock.sale.forecast.createlines,product_categ_id:0
 msgid "Product Category"
-msgstr "Categorie produs"
+msgstr "Categoria Produsului"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:672
@@ -1160,7 +1223,7 @@ msgstr "Achizitionare in Locatia stocului"
 #. module: stock_planning
 #: view:stock.sale.forecast:0
 msgid "Approve"
-msgstr "Aprobare"
+msgstr "Aproba"
 
 #. module: stock_planning
 #: help:stock.planning,period_id:0
@@ -1175,7 +1238,7 @@ msgstr ""
 #: code:addons/stock_planning/stock_planning.py:631
 #, python-format
 msgid "MPS planning for %s"
-msgstr ""
+msgstr "Planificarea MPS pentru %s"
 
 #. module: stock_planning
 #: field:stock.planning,stock_start:0
@@ -1214,7 +1277,7 @@ msgstr "Arata cine a creat aceasta estimare sau cine a validat-o."
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_team_id:0
 msgid "Sales Team"
-msgstr ""
+msgstr "Echipa de vanzari"
 
 #. module: stock_planning
 #: help:stock.planning,incoming_left:0
@@ -1235,11 +1298,14 @@ msgid ""
 "difference between Planned Out and Confirmed Out. For current period Already "
 "Out is also calculated"
 msgstr ""
+"Cantitatea prevazuta sa iasa in intervalul selectat pe langa cea Confirmata "
+"sa iasa. Ca o diferenta intre Planificat sa iasa si Confirmat sa iasa. "
+"Pentru perioada actuala sunt calculate si Produsele iesite deja"
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
 msgid "Calculate Sales History"
-msgstr "Istoric calcul vanzari"
+msgstr "Calculeaza Istoric Vanzari"
 
 #. module: stock_planning
 #: model:ir.actions.act_window,help:stock_planning.action_stock_sale_forecast_createlines_form
@@ -1248,6 +1314,10 @@ msgid ""
 "you only have to fill in the forecast quantities. The wizard doesn't "
 "duplicate the line when another one exist for the same selection."
 msgstr ""
+"Acest asistent ajuta la crearea multor linii de estimare deodata. Dupa "
+"crearea lor, d-voastra trebuie doar sa completati cantitatile estimate. "
+"Asistentul nu face copii ale liniei atunci cand deja exista una pentru "
+"aceeasi selectie."
 
 #~ msgid "This Copmany Period1"
 #~ msgstr "Perioada1 pentru aceasta companie"
@@ -1872,6 +1942,9 @@ msgstr ""
 #, python-format
 #~ msgid "    Confirmed In: "
 #~ msgstr "    Produse confirmate pentru primire: "
+
+#~ msgid "Sales history"
+#~ msgstr "Istoric vanzari"
 
 #~ msgid "Forecasted quantity."
 #~ msgstr "Cantitatea estimata."

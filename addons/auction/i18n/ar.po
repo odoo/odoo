@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2012-02-18 20:30+0000\n"
-"Last-Translator: amani ali <applepie9911@yahoo.com>\n"
+"PO-Revision-Date: 2012-05-10 17:39+0000\n"
+"Last-Translator: Pioneer Solutions <wzaki_dotcom@yahoo.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-19 05:43+0000\n"
-"X-Generator: Launchpad (build 14814)\n"
+"X-Launchpad-Export-Date: 2012-05-11 05:01+0000\n"
+"X-Generator: Launchpad (build 15225)\n"
 
 #. module: auction
 #: model:ir.ui.menu,name:auction.auction_report_menu
@@ -299,7 +299,7 @@ msgstr "خريطة المشتري"
 #. module: auction
 #: field:report.object.encoded,obj_ret:0
 msgid "# obj ret"
-msgstr ""
+msgstr "# تعطل المشروع"
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_bid
@@ -719,7 +719,7 @@ msgstr "النوع"
 #. module: auction
 #: help:aie.category,child_ids:0
 msgid "children aie category"
-msgstr ""
+msgstr "تصنيف فرعي"
 
 #. module: auction
 #: help:auction.lots,ach_emp:0
@@ -805,7 +805,7 @@ msgstr "تكاليف البائع (١‎٢‎%)"
 #. module: auction
 #: field:aie.category,parent_id:0
 msgid "Parent aie Category"
-msgstr ""
+msgstr "تصنيف اساسي"
 
 #. module: auction
 #: view:report.auction:0
@@ -1739,7 +1739,7 @@ msgstr "انشيء فاتورة للمشتري"
 #. module: auction
 #: model:res.groups,name:auction.group_auction_manager
 msgid "Manager"
-msgstr ""
+msgstr "المدير"
 
 #. module: auction
 #: view:auction.dates:0
@@ -2150,6 +2150,11 @@ msgid ""
 "* The 'Paid' state is used when user pay for the object                 \n"
 "* The 'Sold' state is used when user buy the object."
 msgstr ""
+" وتستخدم الحالة \"مشروع\" عندما يتم ترميز المشروع كمشروع جديد.\n"
+"* يتم استخدام الحالة \"غير المباعة 'عندما لا تباع لفترة طويلة، يمكن للمستخدم "
+"أيضا تعيين على أنها حالة مشروع بعد غير مباعة.\n"
+"* وتستخدم حالة \"مدفوعة الأجر \" عند دفع المستخدم للمشروع\n"
+"* يتم استخدام الحالة \"مباعة\"  عندما يقوم المستخدم بشراء المشروع.."
 
 #. module: auction
 #: field:auction.artists,pseudo:0
@@ -2365,3 +2370,45 @@ msgstr "سجل المزاد"
 
 #~ msgid "Auction Management"
 #~ msgstr "إدارة المزاد"
+
+#~ msgid "Create Invoices For Seller"
+#~ msgstr "انشيء فواتير للبائع"
+
+#~ msgid "Create Invoices For Buyer"
+#~ msgstr "انشيء فاتورة للمشتري"
+
+#~ msgid "SMS - Gateway: clickatell','Bulk SMS send"
+#~ msgstr ""
+#~ "بوابة-رسائل البريد القصيرة: ‘اضغط على المحاكاة‘, ارسال جزء كبير من رسالة "
+#~ "بريد قصيرة"
+
+#~ msgid ""
+#~ "\n"
+#~ "     This module manages the records of the artists,\n"
+#~ "     the articles to be put up for auction,the buyers and\n"
+#~ "     sellers.\n"
+#~ "\n"
+#~ "     It completely manages an auction such as managing bids,\n"
+#~ "     keeping track of the sold articles along with the paid\n"
+#~ "     and unpaid objects including delivery of the articles.\n"
+#~ "     Dashboards for auction that includes:\n"
+#~ "       * My Latest Objects (list)\n"
+#~ "       * My Latest Deposits (list)\n"
+#~ "       * Objects Statistics (list)\n"
+#~ "       * My Objects By Day (list)\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "     هذه الوحدة تدير سجلات من الفنانين،\n"
+#~ "المقالات يتم طرحها للبيع بالمزاد والمشترين و\n"
+#~ "البائعين.\n"
+#~ "\n"
+#~ "وتدير تماما مزاد مثل إدارة مناقصات،\n"
+#~ "تتبع المواد التي تباع جنبا إلى جنب مع المدفوع اجره\n"
+#~ "والأشياء الغير المدفوعة بما في ذلك تسليم المواد.\n"
+#~ "لوحات للبيع بالمزاد تشمل ما يلي:\n"
+#~ "* اخر المشاريع الخاصة بي (قائمة)\n"
+#~ "* اخر ودائع خاصة بي (القائمة)\n"
+#~ "* احصائيات المشاريع (قائمة)\n"
+#~ "* المشاريع الخصة بي باليوم (قائمة)\n"
+#~ "    "

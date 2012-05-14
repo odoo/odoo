@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-01-08 18:09+0000\n"
-"Last-Translator: kifcaliph <Unknown>\n"
+"PO-Revision-Date: 2012-05-10 17:43+0000\n"
+"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:44+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-05-11 05:04+0000\n"
+"X-Generator: Launchpad (build 15225)\n"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
@@ -203,6 +203,10 @@ msgid ""
 "to you automatically the reconciliation of this payment with the open "
 "invoices or sales receipts."
 msgstr ""
+"يسمح لك دفع المبيعات لتسجيل المدفوعات التي تتلقاها من العملاء. لكي يسجل "
+"الدفع، ويجب إدخال العملاء، وطريقة الدفع (= اليومية)، ودفع المبلغ. وسوف يقترح "
+"OpenERP  عليكم تلقائيا التوفيق بين هذا الدفع مع فواتير أو إيصالات مبيعات "
+"مفتوحة."
 
 #. module: account_voucher
 #: selection:account.voucher,type:0 selection:sale.receipt.report,type:0
@@ -247,7 +251,7 @@ msgstr "تاريخ الدفع"
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_bank_statement_line
 msgid "Bank Statement Line"
-msgstr ""
+msgstr "خط بيان المصرف"
 
 #. module: account_voucher
 #: view:account.voucher:0 view:account.voucher.unreconcile:0
@@ -284,7 +288,7 @@ msgstr "حساب تحليلي"
 #: code:addons/account_voucher/account_voucher.py:931
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "تحذير"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -331,12 +335,12 @@ msgstr "خطوط المبيعات"
 #. module: account_voucher
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr ""
+msgstr "خطأ! لا يمكنك إنشاء شركات متداخلة (شركات تستخدم نفسها)."
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
 msgid "current month"
-msgstr ""
+msgstr "الشهر الجاري"
 
 #. module: account_voucher
 #: view:account.voucher:0 field:account.voucher,period_id:0
@@ -357,7 +361,7 @@ msgstr "مدين"
 #. module: account_voucher
 #: sql_constraint:res.company:0
 msgid "The company name must be unique !"
-msgstr ""
+msgstr "اسم الشركة يجب أن يكون فريداً !"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0 field:sale.receipt.report,nbr:0
@@ -505,7 +509,7 @@ msgstr "اختلاف الدفع"
 msgid ""
 "The amount of the voucher must be the same amount as the one on the "
 "statement line"
-msgstr ""
+msgstr "يجب ان تكون كمية الايصال نفس كمية الايصال في خط البيان"
 
 #. module: account_voucher
 #: view:account.voucher:0 field:account.voucher,audit:0
@@ -518,7 +522,7 @@ msgstr "للمراجعة"
 #: code:addons/account_voucher/account_voucher.py:1103
 #, python-format
 msgid "change"
-msgstr ""
+msgstr "تغيير"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -573,6 +577,9 @@ msgid ""
 "the payment, OpenERP will propose to reconcile your payment with the open "
 "supplier invoices or bills."
 msgstr ""
+"يسمح لك نموذج الدفع للمورد بتعقب الدفع الذي تقوم به للموردين الخاصين بك. عند "
+"اختيارك لمورد, طريقة الدفع والمية المدفوعة, سيقترح OpenERP بإصلاح دفعك بفتح "
+"فواتير المورد او العملات ."
 
 #. module: account_voucher
 #: view:sale.receipt.report:0 field:sale.receipt.report,user_id:0
@@ -634,6 +641,8 @@ msgid ""
 "Check this box if you are unsure of that journal entry and if you want to "
 "note it as 'to be reviewed' by an accounting expert."
 msgstr ""
+"حدد هذا المربع إذا كنت غير متأكد من قيد اليومية، وإذا كنت تريد أن تضعها "
+"كملاحظة \"لإعادة النظر\" من قبل خبير المحاسبة."
 
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
@@ -653,7 +662,7 @@ msgstr ""
 #. module: account_voucher
 #: field:account.voucher,paid:0
 msgid "Paid"
-msgstr ""
+msgstr "مدفوع"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -730,7 +739,7 @@ msgstr "حساب الضريبة"
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "الشركات"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:462
@@ -806,6 +815,12 @@ msgid ""
 "\n"
 "* The 'Cancelled' state is used when user cancel voucher."
 msgstr ""
+" * وتستخدم الحالة \"مشروع\"  عندما يقوم المستخدم بالترميز على قسيمة جديدة "
+"وغير مؤكدة.\n"
+"* إن \"الشكلية\" عندما قسيمة في حالة الشكلية ، قسيمة ليس لديها رقم القسيمة.\n"
+"* يتم استخدام الحالة \"مرسل\" عندما ينشأ المستخدم القسيمة، يتم إنشاء عدد "
+"القسائم ويتم إنشاء مداخل قسيمة في حساب\n"
+"* يتم استخدام الحالة \"ملغاة\"  عندما مستخدم إلغاء قسيمة."
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -901,7 +916,7 @@ msgstr "ادفع"
 #. module: account_voucher
 #: view:sale.receipt.report:0
 msgid "year"
-msgstr ""
+msgstr "سنة"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -979,7 +994,7 @@ msgstr "ملاحظات داخلية"
 #. module: account_voucher
 #: view:account.voucher:0 field:account.voucher,line_cr_ids:0
 msgid "Credits"
-msgstr ""
+msgstr "الاعتمادات"
 
 #. module: account_voucher
 #: field:account.voucher.line,amount_original:0
@@ -1030,7 +1045,7 @@ msgstr "الفواتير المزودة و المعاملات المعلقة"
 #. module: account_voucher
 #: view:sale.receipt.report:0
 msgid "Month-1"
-msgstr ""
+msgstr "شهر- ١"
 
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
@@ -1132,6 +1147,9 @@ msgstr "الإجمالي"
 #~ msgid "Voucher Print"
 #~ msgstr "طباعة الإيصال"
 
+#~ msgid "Unreconciliation transactions"
+#~ msgstr "إلغاء تسوية المعاملات"
+
 #~ msgid "Particulars"
 #~ msgstr "أفراد"
 
@@ -1193,3 +1211,9 @@ msgstr "الإجمالي"
 
 #~ msgid "Write-Off Comment"
 #~ msgstr "شطب التعليق"
+
+#~ msgid "PRO-FORMA"
+#~ msgstr "شكلي"
+
+#~ msgid "Cr/Dr"
+#~ msgstr "Cr/Dr"

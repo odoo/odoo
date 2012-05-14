@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:34+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-05-11 05:00+0000\n"
+"X-Generator: Launchpad (build 15225)\n"
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
@@ -50,7 +50,7 @@ msgstr "الضغط لإستخدام منتج معين"
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
 msgid "    7 Days    "
-msgstr ""
+msgstr "    ٧ أيام    "
 
 #. module: hr_timesheet_invoice
 #: report:account.analytic.profit:0
@@ -150,7 +150,7 @@ msgstr "الوقت المستغرق"
 #. module: hr_timesheet_invoice
 #: field:account.analytic.account,amount_invoiced:0
 msgid "Invoiced Amount"
-msgstr ""
+msgstr "كمية الفاتورة"
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
@@ -374,6 +374,9 @@ msgid ""
 "costs in this analytic account: timesheets, expenses, ...You can configure "
 "an automatic invoice rate on analytic accounts."
 msgstr ""
+"املء هذا الحقل إذا كنت تخطط بإنشاء الفواتير تلقائيًا على أساس التكاليف في "
+"هذا الحساب التحليلي: سجلات الدوام، والنفقات، ... يمكنك تكوين معدل الفاتورة "
+"تلقائي على الحسابات التحليلية."
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.analytic.profit:0
@@ -587,7 +590,7 @@ msgstr "الفترة إلي"
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "خط بياني"
+msgstr "خط تحليلي"
 
 #. module: hr_timesheet_invoice
 #: selection:report.account.analytic.line.to.invoice,month:0
@@ -695,7 +698,7 @@ msgstr "المستخدم"
 #. module: hr_timesheet_invoice
 #: report:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
 msgid "J.C. /Move name"
-msgstr ""
+msgstr "إسم الحركة/.c.j"
 
 #. module: hr_timesheet_invoice
 #: report:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
@@ -847,6 +850,9 @@ msgid ""
 "a customer. From this menu, you can create additional types of invoicing to "
 "speed up your invoicing."
 msgstr ""
+"تسمح لك OpenERP بإنشاء انواع من الفواتير الافتراضية. فد تقوم بتخصيص الخصومات "
+"بسبب عقد محدد او موافقة مع العملي. من هذه القائمة, يمكنك انشاء انواع اضافية "
+"من الفواتير للتسريع من الفواتير الخاصة بك."
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_line_stat_all
@@ -854,7 +860,7 @@ msgstr ""
 #: model:ir.model,name:hr_timesheet_invoice.model_report_timesheet_line
 #: view:report.timesheet.line:0
 msgid "Timesheet Line"
-msgstr ""
+msgstr "خط سجل الدوام"
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create:0
@@ -1044,7 +1050,7 @@ msgstr "سعر مخفض"
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.act_res_users_2_report_timesheet_user
 msgid "Timesheets per day"
-msgstr ""
+msgstr "سجلات الدوام عن كل يوم"
 
 #. module: hr_timesheet_invoice
 #: selection:report.account.analytic.line.to.invoice,month:0
@@ -1063,7 +1069,7 @@ msgstr "بيانات الفواتير"
 #. module: hr_timesheet_invoice
 #: help:hr_timesheet_invoice.factor,factor:0
 msgid "Discount in percentage"
-msgstr ""
+msgstr "الخصم بالنسبة المئوية"
 
 #. module: hr_timesheet_invoice
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:209
@@ -1074,12 +1080,12 @@ msgstr ""
 #. module: hr_timesheet_invoice
 #: view:hr_timesheet_invoice.factor:0
 msgid "Types of invoicing"
-msgstr ""
+msgstr "انواع الفاتورة"
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.act_res_users_2_report_timehsheet_account
 msgid "Timesheets per account"
-msgstr ""
+msgstr "سجلات الدوام لكل حساب"
 
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.invoice.create,name:0
@@ -1100,12 +1106,12 @@ msgstr ""
 #. module: hr_timesheet_invoice
 #: field:account.analytic.line,to_invoice:0
 msgid "Type of Invoicing"
-msgstr ""
+msgstr "نوع الفاتورة"
 
 #. module: hr_timesheet_invoice
 #: view:report.account.analytic.line.to.invoice:0
 msgid "Analytic Lines to Invoice"
-msgstr ""
+msgstr "الخطوط التحليلية للفاتورة"
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
@@ -1196,3 +1202,24 @@ msgstr ""
 
 #~ msgid "Invoice on analytic lines"
 #~ msgstr "الفاتورة على الخطوط التحليلية"
+
+#~ msgid ""
+#~ "Error! The currency has to be the same as the currency of the selected "
+#~ "company"
+#~ msgstr "خطأ! العملة لابد و أن تكون مثل العملة للشركة المختارة"
+
+#, python-format
+#~ msgid "Please fill a Balance product in the wizard"
+#~ msgstr "يرجى ملء المنتج المتوازن في المعالج"
+
+#~ msgid ""
+#~ "\n"
+#~ "Module to generate invoices based on costs (human resources, expenses, "
+#~ "...).\n"
+#~ "You can define price lists in analytic account, make some theoretical "
+#~ "revenue\n"
+#~ "reports, eso."
+#~ msgstr ""
+#~ "\n"
+#~ "الوحدة لإنشاء الفواتير على أساس التكاليف (الموارد البشرية، والنفقات، ...).\n"
+#~ "يمكنك تحديد قوائم الأسعار في حساب التحليل، وجعل بعض تقارير الإيرادات النظرية."

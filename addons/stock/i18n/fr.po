@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-03-12 08:35+0000\n"
-"Last-Translator: Numérigraphe <Unknown>\n"
+"PO-Revision-Date: 2012-05-10 17:19+0000\n"
+"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-03-13 05:07+0000\n"
-"X-Generator: Launchpad (build 14933)\n"
+"X-Launchpad-Export-Date: 2012-05-11 04:37+0000\n"
+"X-Generator: Launchpad (build 15225)\n"
 
 #. module: stock
 #: field:stock.inventory.line,product_uom:0
@@ -320,7 +320,7 @@ msgstr ""
 #. module: stock
 #: view:stock.partial.move:0 view:stock.partial.picking:0
 msgid "_Validate"
-msgstr ""
+msgstr "_Valider"
 
 #. module: stock
 #: code:addons/stock/stock.py:1149
@@ -491,7 +491,7 @@ msgstr "Éclater en"
 #. module: stock
 #: view:stock.location:0
 msgid "Internal Locations"
-msgstr ""
+msgstr "Emplacements internes"
 
 #. module: stock
 #: field:stock.move,price_currency_id:0
@@ -560,8 +560,8 @@ msgid ""
 "There is no stock output account defined for this product or its category: "
 "\"%s\" (id: %d)"
 msgstr ""
-"Il n'y a pas de compte comptable sur la sortie de stock définit sur ce "
-"produit ou sa catégorie: \"%s\" (id: %d)"
+"Il n'y a pas de compte de sortie de stock définit sur ce produit ou sa "
+"catégorie: \"%s\" (id: %d)"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree6
@@ -682,6 +682,11 @@ msgid ""
 "queries regarding your account, please contact us.\n"
 "Thank you in advance.\n"
 msgstr ""
+"Nos comptes indiquent que les paiements suivants sont encore dus. \n"
+"Si ce montant a déjà été payé, ne tenez pas  compte de cet avis. Toutefois, "
+"si vous avez des\n"
+"des questions concernant votre compte, n'hésitez pas à nous contactez-nous.\n"
+"Nous vous remercions par avance.\n"
 
 #. module: stock
 #: view:stock.inventory:0
@@ -700,7 +705,7 @@ msgstr ""
 #. module: stock
 #: field:stock.move.split.lines,wizard_exist_id:0
 msgid "Parent Wizard (for existing lines)"
-msgstr ""
+msgstr "Ligne d'assitant mère (pour les lignes existantes)"
 
 #. module: stock
 #: view:stock.move:0 view:stock.picking:0
@@ -714,6 +719,8 @@ msgid ""
 "There is no inventory Valuation account defined on the product category: "
 "\"%s\" (id: %d)"
 msgstr ""
+"Aucun compte de valorisation n'a été défini pour cette catégorie de produits "
+": \"%s\" (id. : %d)"
 
 #. module: stock
 #: view:report.stock.move:0
@@ -806,7 +813,7 @@ msgstr "Traiter le transfert"
 #. module: stock
 #: sql_constraint:stock.picking:0
 msgid "Reference must be unique per Company!"
-msgstr ""
+msgstr "La référence doit être unique par société !"
 
 #. module: stock
 #: code:addons/stock/product.py:417
@@ -908,7 +915,7 @@ msgstr "Changer la quantité de produit"
 #. module: stock
 #: field:report.stock.inventory,month:0
 msgid "unknown"
-msgstr ""
+msgstr "Inconnu"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_merge
@@ -2453,10 +2460,10 @@ msgid ""
 "levels. Sort and group by selection criteria in order to better analyse and "
 "manage your company  activities."
 msgstr ""
-"Les analyses d'inventaire vous permettent de facilement vérifier et "
-"d'analyser les niveaux de stock de votre société. Triez et groupez par "
-"critère de sélection pour avoir une meilleure analyse et pour gérer les "
-"activités de votre société."
+"L'analyses de stock vous permet de facilement vérifier et d'analyser les "
+"niveaux de stock de votre société. Triez et groupez par critère de sélection "
+"pour avoir une meilleure analyse et pour gérer les activités de votre "
+"société."
 
 #. module: stock
 #: help:report.stock.move,location_id:0 help:stock.move,location_id:0
@@ -2518,7 +2525,7 @@ msgstr "Origine"
 #: field:stock.inventory.line,inventory_id:0 report:stock.inventory.move:0
 #: selection:stock.location,usage:0
 msgid "Inventory"
-msgstr "Inventaire"
+msgstr "Gestion des stocks"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking
@@ -2728,7 +2735,7 @@ msgstr "Unité de mesure"
 msgid ""
 "There is no stock input account defined for this product: \"%s\" (id: %d)"
 msgstr ""
-"Il n'y a pas de compte d'entrée de stock définit pour ce produit: \"%s\" "
+"Il n'y a pas de compte d'entrée en stock définit pour ce produit: \"%s\" "
 "(id: %d)"
 
 #. module: stock
@@ -2979,7 +2986,7 @@ msgstr "Responsable"
 #: model:ir.ui.menu,name:stock.menu_action_stock_inventory_report
 #: view:report.stock.inventory:0
 msgid "Inventory Analysis"
-msgstr "Analyse d'inventaire"
+msgstr "Analyse de stock"
 
 #. module: stock
 #: field:stock.invoice.onshipping,journal_id:0
@@ -3611,7 +3618,7 @@ msgstr ""
 "débitrice et le compte de sortie de stock sera crédité avec la valeur = "
 "(différence du montant * quantité disponible).\n"
 "Si le prix de revient diminue, la variation comptable du stock sera "
-"créditrice et le compte d'entrée de stock sera débiteur."
+"créditrice et le compte d'entrée en stock sera débiteur."
 
 #. module: stock
 #: field:stock.location,chained_journal_id:0
@@ -4112,7 +4119,7 @@ msgstr "Qté produite"
 #: field:product.template,property_stock_account_output:0
 #: field:stock.change.standard.price,stock_account_output:0
 msgid "Stock Output Account"
-msgstr "Compte de Stock Sortant"
+msgstr "Compte de sortie de stock"
 
 #. module: stock
 #: field:stock.location,chained_location_type:0
@@ -4745,6 +4752,9 @@ msgstr ""
 #~ msgid "Components"
 #~ msgstr "Composants"
 
+#~ msgid "Do you want to merge theses inventories ?"
+#~ msgstr "Voulez vous fusionnez ces inventaires"
+
 #~ msgid "Max. Planned Date"
 #~ msgstr "Date précu maxi."
 
@@ -4756,6 +4766,9 @@ msgstr ""
 
 #~ msgid "STOCK_MEDIA_PREVIOUS"
 #~ msgstr "STOCK_MEDIA_PREVIOUS"
+
+#~ msgid "Merge inventories"
+#~ msgstr "Fusionnez les inventaires"
 
 #~ msgid "Stock Locations Structure"
 #~ msgstr "Structure des emplacements de stock"
@@ -5191,9 +5204,6 @@ msgstr ""
 #~ msgid "Receive"
 #~ msgstr "Reçus"
 
-#~ msgid "Stock Variation Account"
-#~ msgstr "COmpte des variation de stock"
-
 #, python-format
 #~ msgid "Variation Account is not specified for Product Category: %s"
 #~ msgstr ""
@@ -5286,6 +5296,9 @@ msgstr ""
 #~ msgid "Stock Replacement result"
 #~ msgstr "Résultat du réapprovisionnement du stock"
 
+#~ msgid "New pack"
+#~ msgstr "Nouveau colis"
+
 #, python-format
 #~ msgid "Process Document"
 #~ msgstr "Document du processus"
@@ -5340,5 +5353,11 @@ msgstr ""
 #~ msgid "Delivery Order:"
 #~ msgstr "Bon de livraison"
 
+#~ msgid "Quantity to leave in the current pack"
+#~ msgstr "Quantité à laisser dans le colis actuel"
+
 #~ msgid "Cost Price:"
 #~ msgstr "Prix de revient :"
+
+#~ msgid "Stock Variation Account"
+#~ msgstr "Compte des variation de stock"
