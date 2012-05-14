@@ -69,7 +69,6 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
             self.module_loaded[mod] = true;
         });
         this.context = {};
-        this.shortcuts = [];
         this.active_id = null;
         return this.session_init();
     },

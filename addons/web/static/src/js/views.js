@@ -237,7 +237,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         var self = this;
         this.$element.find('.oe_view_manager_switch a').click(function() {
             self.on_mode_switch($(this).data('view-type'));
-        });
+        }).tipsy();
         var views_ids = {};
         _.each(this.views_src, function(view) {
             self.views[view.view_type] = $.extend({}, view, {
@@ -636,8 +636,6 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
         var self = this;
 
         return $.when(this._super(view_type, no_store)).then(function () {
-            self.shortcut_check(self.views[view_type]);
-
             var controller = self.views[self.active_view].controller,
                 fvg = controller.fields_view,
                 view_id = (fvg && fvg.view_id) || '--';
@@ -649,15 +647,6 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
                 self.$element.find('.oe_view_title_text').text(fvg.arch.attrs.string || fvg.name);
             }
 
-            var $title = self.$element.find('.oe_view_title_text'),
-                $search_prefix = $title.find('span.oe_searchable_view');
-            if (controller.searchable !== false && self.flags.search_view !== false) {
-                if (!$search_prefix.length) {
-                    $title.prepend('<span class="oe_searchable_view">' + _t("Search: ") + '</span>');
-                }
-            } else {
-                $search_prefix.remove();
-            }
         });
     },
     do_push_state: function(state) {
@@ -680,44 +669,6 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
         $.when(defs).then(function() {
             self.views[self.active_view].controller.do_load_state(state, warm);
         });
-    },
-    shortcut_check : function(view) {
-        var self = this;
-        var grandparent = this.getParent() && this.getParent().getParent();
-        // display shortcuts if on the first view for the action
-        var $shortcut_toggle = this.$element.find('.oe-shortcut-toggle');
-        if (!this.action.name ||
-            !(view.view_type === this.views_src[0].view_type
-                && view.view_id === this.views_src[0].view_id)) {
-            $shortcut_toggle.hide();
-            return;
-        }
-        $shortcut_toggle.removeClass('oe-shortcut-remove').show();
-        if (_(this.session.shortcuts).detect(function (shortcut) {
-                    return shortcut.res_id === self.session.active_id; })) {
-            $shortcut_toggle.addClass("oe-shortcut-remove");
-        }
-        this.shortcut_add_remove();
-    },
-    shortcut_add_remove: function() {
-        var self = this;
-        var $shortcut_toggle = this.$element.find('.oe-shortcut-toggle');
-        $shortcut_toggle
-            .unbind("click")
-            .click(function() {
-                if ($shortcut_toggle.hasClass("oe-shortcut-remove")) {
-                    $(self.session.shortcuts.binding).trigger('remove-current');
-                    $shortcut_toggle.removeClass("oe-shortcut-remove");
-                } else {
-                    $(self.session.shortcuts.binding).trigger('add', {
-                        'user_id': self.session.uid,
-                        'res_id': self.session.active_id,
-                        'resource': 'ir.ui.menu',
-                        'name': self.action.name
-                    });
-                    $shortcut_toggle.addClass("oe-shortcut-remove");
-                }
-            });
     },
     display_title: function () {
         return this.action.name;
@@ -777,25 +728,6 @@ instance.web.Sidebar = instance.web.Widget.extend({
         self.$element.html(QWeb.render('Sidebar', {widget: self}));
         this.$element.find('ul').hide();
     },
-    add_section: function() {
-        var self = this;
-    },
-    add_toolbar: function(toolbar) {
-        var self = this;
-        _.each(['print','action','relate'], function(type) {
-            var items = toolbar[type];
-            if (items) {
-                for (var i = 0; i < items.length; i++) {
-                    items[i] = {
-                        label: items[i]['name'],
-                        action: items[i],
-                        classname: 'oe_sidebar_' + type
-                    }
-                }
-                self.add_items(type=='print' ? 'print' : 'other', items);
-            }
-        });
-    },
     /**
      * For each item added to the section:
      *
@@ -827,6 +759,22 @@ instance.web.Sidebar = instance.web.Widget.extend({
             this.items[section_code].push.apply(this.items[section_code],items);
             this.redraw();
         }
+    },
+    add_toolbar: function(toolbar) {
+        var self = this;
+        _.each(['print','action','relate'], function(type) {
+            var items = toolbar[type];
+            if (items) {
+                for (var i = 0; i < items.length; i++) {
+                    items[i] = {
+                        label: items[i]['name'],
+                        action: items[i],
+                        classname: 'oe_sidebar_' + type
+                    }
+                }
+                self.add_items(type=='print' ? 'print' : 'other', items);
+            }
+        });
     },
     on_item_action_clicked: function(item) {
         var self = this;

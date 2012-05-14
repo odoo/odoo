@@ -70,6 +70,8 @@ openerp.web.list_editable = function (instance) {
          */
         do_add_record: function () {
             if (this.options.editable) {
+                this.$element.find('table:first').show();
+                this.$element.find('.oe_view_nocontent').remove();
                 this.groups.new_record();
             } else {
                 this._super();
@@ -202,7 +204,7 @@ openerp.web.list_editable = function (instance) {
                 var $new_row = $('<tr>', {
                         id: _.uniqueId('oe-editable-row-'),
                         'data-id': record_id,
-                        'class': row ? $(row).attr('class') : '' + ' oe_forms',
+                        'class': (row ? $(row).attr('class') : '') + ' oe_form',
                         click: function (e) {e.stopPropagation();}
                     })
                     .delegate('button.oe-edit-row-save', 'click', function () {
@@ -397,8 +399,6 @@ openerp.web.list_editable = function (instance) {
             var $xml = $(xml);
             
             if (this.view.editable_list.options.selectable)
-                $("<td>").appendTo($element);
-            if (this.view.editable_list.options.isClarkGable)
                 $("<td>").appendTo($element);
                 
             $xml.children().each(function(i, el) {

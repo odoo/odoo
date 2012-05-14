@@ -106,7 +106,6 @@ instance.web.FormView = instance.web.View.extend(_.extend({}, instance.web.form.
             this.rendering_engine.render_to($dest);
         }
 
-        this.$sidebar = this.options.$sidebar || this.$element.find('.oe_form_sidebar');
 
         this.$buttons = $(QWeb.render("FormView.buttons", {'widget':self}));
         if (this.options.$buttons) {
@@ -116,8 +115,6 @@ instance.web.FormView = instance.web.View.extend(_.extend({}, instance.web.form.
         }
         this.$buttons.on('click','.oe_form_button_create',this.on_button_create);
         this.$buttons.on('click','.oe_form_button_edit',this.on_button_edit);
-        this.$buttons.on('click','.oe_form_button_duplicate',this.on_button_duplicate);
-        this.$buttons.on('click','.oe_form_button_delete',this.on_button_delete);
         this.$buttons.on('click','.oe_form_button_save',this.on_button_save);
         this.$buttons.on('click','.oe_form_button_cancel',this.on_button_cancel);
 
@@ -132,19 +129,18 @@ instance.web.FormView = instance.web.View.extend(_.extend({}, instance.web.form.
             self.on_pager_action(action);
         });
 
+        this.$sidebar = this.options.$sidebar || this.$element.find('.oe_form_sidebar');
         if (!this.sidebar && this.options.$sidebar) {
             this.sidebar = new instance.web.Sidebar(this);
             this.sidebar.appendTo(this.$sidebar);
             if(this.fields_view.toolbar) {
                 this.sidebar.add_toolbar(this.fields_view.toolbar);
             }
-            this.sidebar.add_items('other', [{
-                label: _t('Set Default'),
-                form: this,
-                callback: function (item) {
-                    item.form.open_defaults_dialog();
-                }
-            }]);
+            this.sidebar.add_items('other', [
+                { label: _t('Delete'), callback: self.on_button_delete },
+                { label: _t('Duplicate'), callback: self.on_button_duplicate },
+                { label: _t('Set Default'), callback: function (item) { self.open_defaults_dialog(); } },
+            ]);
         }
         this.on("change:mode", this, this.switch_mode);
         this.set({mode: this.options.initial_mode});
@@ -527,12 +523,14 @@ instance.web.FormView = instance.web.View.extend(_.extend({}, instance.web.form.
         if(this.get("mode") == "view") {
             self.$buttons.find('.oe_form_buttons_edit').hide();
             self.$buttons.find('.oe_form_buttons_view').show();
+            self.$sidebar.show();
             _.each(this.fields,function(field){
                 field.set({"force_readonly": true});
             });
         } else {
             self.$buttons.find('.oe_form_buttons_edit').show();
             self.$buttons.find('.oe_form_buttons_view').hide();
+            self.$sidebar.hide();
             _.each(this.fields,function(field){
                 field.set({"force_readonly": false});
             });
@@ -1158,6 +1156,9 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
                             if (width.substr(-1) === '%') {
                                 total -= iwidth;
                                 width = iwidth + '%';
+                            } else {
+                                // Absolute width
+                                $td.css('min-width', width + 'px');
                             }
                             $td.attr('width', width);
                             $child.removeAttr('width');
@@ -1715,6 +1716,7 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(_.extend({
         });
     },
     renderElement: function() {
+        var self = this;
         this._super();
         if (this.field.translate) {
             this.$element.addClass('oe_form_field_translatable');
@@ -1722,8 +1724,14 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(_.extend({
                 this.field_manager.open_translate_dialog(this);
             }, this));
         }
+        this.$label = this.view.$element.find('label[for=' + this.id_for_label + ']');
         if (instance.connection.debug) {
-            this.do_attach_tooltip(this, this.view.$element.find('label[for=' + this.id_for_label + ']')[0] || this.$element);
+            this.do_attach_tooltip(this, this.$label[0] || this.$element);
+            this.$label.off('dblclick').on('dblclick', function() {
+                console.log("Field '%s' of type '%s' in View: %o", self.name, (self.node.attrs.widget || self.field.type), self.view);
+                window.w = self;
+                console.log("window.w =", window.w);
+            });
         }
         if (!this.disable_utility_classes) {
             this.off("change:required", this, this._set_required);
@@ -2742,7 +2750,6 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
                 if (self.get("effective_readonly")) {
                     view.options.addable = null;
                     view.options.deletable = null;
-                    view.options.isClarkGable = false;
                 }
             } else if (view.view_type === "form") {
                 if (self.get("effective_readonly")) {
@@ -3271,7 +3278,6 @@ instance.web.form.FieldMany2Many = instance.web.form.AbstractField.extend({
                     'addable': self.get("effective_readonly") ? null : _t("Add"),
                     'deletable': self.get("effective_readonly") ? false : true,
                     'selectable': self.multi_selection,
-                    'isClarkGable': self.get("effective_readonly") ? false : true
             });
         var embedded = (this.field.views || {}).tree;
         if (embedded) {
