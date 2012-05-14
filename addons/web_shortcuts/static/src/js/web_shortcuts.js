@@ -64,7 +64,7 @@ instance.web_shortcuts.Shortcuts = instance.web.Widget.extend({
     },
     display: function(sc) {
         var self = this;
-        this.$element.find('.oe_systray_shortcuts_items').append()
+        this.$element.find('.oe_systray_shortcuts_items').append();
         var $sc = $(QWeb.render('Systray.Shortcuts.Item', {'shortcut': sc}));
         $sc.appendTo(self.$element.find('.oe_systray_shortcuts_items'));
     },
@@ -81,7 +81,7 @@ instance.web_shortcuts.Shortcuts = instance.web.Widget.extend({
         self.session.active_id = id;
         self.rpc('/web/menu/action', {'menu_id': id}, function(ir_menu_data) {
             if (ir_menu_data.action.length){
-                instance.webclient.menu.on_action(ir_menu_data.action[0][2]);
+                instance.webclient.user_menu.on_action(ir_menu_data.action[0][2]);
             }
         });
         this.$element.find('.oe_systray_shortcuts').trigger('mouseout');
