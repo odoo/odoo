@@ -710,11 +710,11 @@ instance.web_kanban.QuickCreate = instance.web.Widget.extend({
      */
     quick_add: function () {
         var self = this;
-        self.$input.val("");
         this._dataset.call(
             'name_create', [self.$input.val(), new instance.web.CompoundContext(
                     this._dataset.get_context(), this._context)])
             .pipe(function(record) {
+                self.$input.val("");
                 self.trigger('added', record);
             }, function() {
                 return self.slow_create();
@@ -734,6 +734,7 @@ instance.web_kanban.QuickCreate = instance.web.Widget.extend({
             new instance.web.CompoundContext(self.build_context(), {"default_name": self.$input.val("")})
         );
         pop.on_select_elements.add(function(element_ids) {
+            self.$input.val("");
             self.trigger('added', element_ids);
         });
     }
