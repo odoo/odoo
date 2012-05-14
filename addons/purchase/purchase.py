@@ -991,6 +991,7 @@ class procurement_order(osv.osv):
             }
             res[procurement.id] = self.create_procurement_purchase_order(cr, uid, procurement, po_vals, line_vals, context=context)
             self.write(cr, uid, [procurement.id], {'state': 'running', 'purchase_id': res[procurement.id]})
+            self.running_send_note(cr, uid, ids, context=None)
         return res
 
 procurement_order()
