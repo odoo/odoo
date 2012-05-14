@@ -1299,19 +1299,19 @@
 <div t-name="SearchView.InputView"
      class="oe_searchview_input"
      contenteditable="true"/>
-<button t-name="SearchView.FacetView"
-     type="button"
-     class="oe_searchview_facet">
-    <span class="oe_facet_remove">✖</span>
-
-    <span class="oe_facet_category oe_i" t-if="widget.model.has('icon')">
+<!-- tabindex: makes div focusable -->
+<div t-name="SearchView.FacetView"
+     class="oe_searchview_facet"
+     tabindex="0"
+    ><span class="oe_facet_remove">✖</span
+    ><span class="oe_facet_category oe_i" t-if="widget.model.has('icon')">
         <t t-esc="widget.model.get('icon')"/>
     </span
     ><span class="oe_facet_category" t-if="!widget.model.has('icon')">
         <t t-esc="widget.model.get('category')"/>
-    </span ><span/>
-</button>
-<span t-name="SearchView.FacetView.Value">
+    </span ><span class="oe_facet_values"
+/></div>
+<span t-name="SearchView.FacetView.Value" class="oe_facet_value">
     <t t-esc="widget.model.get('label')"/>
 </span>
 

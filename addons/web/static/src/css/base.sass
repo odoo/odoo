@@ -857,7 +857,6 @@ $colour4: #8a89ba
                 content: "▾"
 
         .oe_searchview_facets
-            display: inline-block
             &:before
                 color: #ccc
                 font-family: "mnmliconsRegular"
@@ -866,56 +865,57 @@ $colour4: #8a89ba
                 padding: 0 1px 0 3px
                 display: inline
 
-        .oe_searchview_input
-            height: 2em
-            padding: 0 3px
-            display: inline-block
-            &:focus
-                outline: none
-
-        .oe_searchview_facet
-            position: relative
-            cursor: pointer
-            display: inline-block
-            margin: 1px 0
-            padding: 0
-            @include box-shadow(none)
-            text-align: left
-            border: 1px solid $facets-border
-            @include radius(3px)
-            background: #f0f0fa
-            height: 18px
-            line-height: 18px
-            -webkit-font-smoothing: auto
-
-            span
+            *
+                vertical-align: top
                 display: inline-block
-                height: 18px
-                span
-                    border-left: 1px solid $facets-border
-                    padding: 0 4px
+                line-height: 26px
 
-            .oe_facet_remove
-                position: absolute
-                top: 0
-                left: 2px
-                color: white
+            .oe_searchview_input, .oe_searchview_facet
+                height: 26px
+                &:focus
+                    outline: none
 
-                &:hover
-                    color: #ccc
+            .oe_searchview_input
+                padding: 0 3px
 
-            .oe_facet_category
-                padding: 0 4px 0 14px
-                color: white
+            .oe_searchview_facet
+                position: relative
+                cursor: pointer
+                border: 1px solid $facets-border
+                @include radius(3px)
                 background: #8786b7
-                text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4)
+                -webkit-font-smoothing: auto
+                padding-left: 1.1em
+                // spacing for opera, FF
+                margin: 1px 0
 
-            &:focus
-                border-color: $facets-border-selected
-                @include box-shadow(0 0 3px 1px $facets-border-selected)
+                &:focus
+                    border-color: $facets-border-selected
+                    @include box-shadow(0 0 3px 1px $facets-border-selected)
+
+                .oe_facet_values
+                    background: #f0f0fa
+                    @include radius(0 3px 3px 0)
+
+                .oe_facet_category, .oe_facet_value
+                    height: 24px
+                    padding: 1px 0.1em
 
                 .oe_facet_category
-                    margin-left: 0
+                    color: white
+                    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4)
+
+                .oe_facet_value
+                    border-left: 1px solid $facets-border
+
+                .oe_facet_remove
+                    position: absolute
+                    top: 0
+                    left: 2px
+                    color: white
+
+                    &:hover
+                        color: #ccc
 
         &.oe_searchview_open_drawer
             .oe_searchview_drawer
