@@ -1116,8 +1116,6 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
             // invisibility transfer
             var field_modifiers = JSON.parse($child.attr('modifiers') || '{}');
             var invisible = field_modifiers.invisible;
-            field_modifiers.invisible = undefined;
-            $child.attr('modifiers', JSON.stringify(field_modifiers));
             self.handle_common_properties($td, $("<dummy>").attr("modifiers", JSON.stringify({invisible: invisible})));
 
             $tr.append($td.append($child));
@@ -1372,17 +1370,27 @@ instance.web.form.InvisibilityChangerMixin = {
                 instance.web.form.compute_domain(this._ic_invisible_modifier, this._ic_field_manager.fields);
             this.set({"invisible": result});
         });
-        this.set({invisible: this._ic_invisible_modifier === true});
+        this.set({invisible: this._ic_invisible_modifier === true, force_invisible: false});
+        var check = function() {
+            if (this.get("invisible") || this.get('force_invisible')) {
+                this.set({"effective_invisible": true});
+            } else {
+                this.set({"effective_invisible": false});
+            }
+        };
+        this.on('change:invisible', this, check);
+        this.on('change:force_invisible', this, check);
+        _.bind(check, this)();
     },
     start: function() {
         var check_visibility = function() {
-            if (this.get("invisible")) {
+            if (this.get("effective_invisible")) {
                 this.$element.hide();
             } else {
                 this.$element.show();
             }
         };
-        this.on("change:invisible", this, check_visibility);
+        this.on("change:effective_invisible", this, check_visibility);
         _.bind(check_visibility, this)();
     },
 };
@@ -2312,17 +2320,113 @@ instance.web.form.dialog = function(content, options) {
     return dialog.$element;
 };
 
-instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(_.extend({}, instance.web.form.ReinitializeFieldMixin, {
+/**
+ * A mixin containing some useful methods to handle completion inputs.
+ */
+instance.web.form.CompletionFieldMixin = {
+    init: function() {
+        this.limit = 7;
+        this.orderer = new instance.web.DropMisordered();
+    },
+    /**
+     * Call this method to search using a string.
+     */
+    get_search_result: function(search_val) {
+        var self = this;
+
+        var dataset = new instance.web.DataSet(this, this.field.relation, self.build_context());
+
+        return this.orderer.add(dataset.name_search(
+                search_val, self.build_domain(), 'ilike', this.limit + 1)).pipe(function(data) {
+            self.last_search = data;
+            // possible selections for the m2o
+            var values = _.map(data, function(x) {
+                return {
+                    label: _.str.escapeHTML(x[1]),
+                    value:x[1],
+                    name:x[1],
+                    id:x[0]
+                };
+            });
+
+            // search more... if more results that max
+            if (values.length > self.limit) {
+                values = values.slice(0, self.limit);
+                values.push({label: _t("<em>   Search More...</em>"), action: function() {
+                    dataset.name_search(search_val, self.build_domain(), 'ilike'
+                    , false, function(data) {
+                        self._search_create_popup("search", data);
+                    });
+                }});
+            }
+            // quick create
+            var raw_result = _(data.result).map(function(x) {return x[1];});
+            if (search_val.length > 0 && !_.include(raw_result, search_val)) {
+                values.push({label: _.str.sprintf(_t('<em>   Create "<strong>%s</strong>"</em>'),
+                        $('<span />').text(search_val).html()), action: function() {
+                    self._quick_create(search_val);
+                }});
+            }
+            // create...
+            values.push({label: _t("<em>   Create and Edit...</em>"), action: function() {
+                self._search_create_popup("form", undefined, {"default_name": search_val});
+            }});
+
+            return values;
+        });
+    },
+    _quick_create: function(name) {
+        var self = this;
+        var slow_create = function () {
+            self._search_create_popup("form", undefined, {"default_name": name});
+        };
+        if (self.get_definition_options().quick_create === undefined || self.get_definition_options().quick_create) {
+            new instance.web.DataSet(this, this.field.relation, self.build_context())
+                .name_create(name, function(data) {
+                    self.add_id(data[0]);
+                }).fail(function(error, event) {
+                    event.preventDefault();
+                    slow_create();
+                });
+        } else
+            slow_create();
+    },
+    // all search/create popup handling
+    _search_create_popup: function(view, ids, context) {
+        var self = this;
+        var pop = new instance.web.form.SelectCreatePopup(this);
+        pop.select_element(
+            self.field.relation,
+            {
+                title: (view === 'search' ? _t("Search: ") : _t("Create: ")) + (this.string || this.name),
+                initial_ids: ids ? _.map(ids, function(x) {return x[0]}) : undefined,
+                initial_view: view,
+                disable_multiple_selection: true
+            },
+            self.build_domain(),
+            new instance.web.CompoundContext(self.build_context(), context || {})
+        );
+        pop.on_select_elements.add(function(element_ids) {
+            self.add_id(element_ids[0]);
+        });
+    },
+    /**
+     * To implement.
+     */
+    add_id: function(id) {},
+};
+
+instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(_.extend({}, instance.web.form.ReinitializeFieldMixin,
+        instance.web.form.CompletionFieldMixin, {
     template: "FieldMany2One",
     init: function(field_manager, node) {
         this._super(field_manager, node);
-        this.limit = 7;
+        instance.web.form.CompletionFieldMixin.init.call(this);
         this.set({'value': false});
         this.display_value = {};
         this.last_search = [];
         this.floating = false;
         this.inhibit_on_change = false;
-        this.orderer = new instance.web.DropMisordered();
     },
     start: function() {
         this._super();
@@ -2434,7 +2538,11 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(_.exten
         var isSelecting = false;
         // autocomplete
         this.$input.autocomplete({
-            source: function(req, resp) { self.get_search_result(req, resp); },
+            source: function(req, resp) {
+                self.get_search_result(req.term).then(function(result) {
+                    resp(result);
+                });
+            },
             select: function(event, ui) {
                 isSelecting = true;
                 var item = ui.item;
@@ -2466,91 +2574,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(_.exten
             isSelecting = false;
         });
     },
-    // autocomplete component content handling
-    get_search_result: function(request, response) {
-        var search_val = request.term;
-        var self = this;
 
-        var dataset = new instance.web.DataSet(this, this.field.relation, self.build_context());
-
-        this.orderer.add(dataset.name_search(
-                search_val, self.build_domain(), 'ilike', this.limit + 1)).then(function(data) {
-            self.last_search = data;
-            // possible selections for the m2o
-            var values = _.map(data, function(x) {
-                return {
-                    label: _.str.escapeHTML(x[1]),
-                    value:x[1],
-                    name:x[1],
-                    id:x[0]
-                };
-            });
-
-            // search more... if more results that max
-            if (values.length > self.limit) {
-                values = values.slice(0, self.limit);
-                values.push({label: _t("<em>   Search More...</em>"), action: function() {
-                    dataset.name_search(search_val, self.build_domain(), 'ilike'
-                    , false, function(data) {
-                        self._search_create_popup("search", data);
-                    });
-                }});
-            }
-            // quick create
-            var raw_result = _(data.result).map(function(x) {return x[1];});
-            if (search_val.length > 0 &&
-                !_.include(raw_result, search_val) &&
-                (!self.get("value") || self.floating)) {
-                values.push({label: _.str.sprintf(_t('<em>   Create "<strong>%s</strong>"</em>'),
-                        $('<span />').text(search_val).html()), action: function() {
-                    self._quick_create(search_val);
-                }});
-            }
-            // create...
-            values.push({label: _t("<em>   Create and Edit...</em>"), action: function() {
-                self._search_create_popup("form", undefined, {"default_name": search_val});
-            }});
-
-            response(values);
-        });
-    },
-    _quick_create: function(name) {
-        var self = this;
-        var slow_create = function () {
-            self._search_create_popup("form", undefined, {"default_name": name});
-        };
-        if (self.get_definition_options().quick_create === undefined || self.get_definition_options().quick_create) {
-            new instance.web.DataSet(this, this.field.relation, self.build_context())
-                .name_create(name, function(data) {
-                    self.display_value = {};
-                    self.display_value["" + data[0]] = data[1];
-                    self.set({value: data[0]});
-                }).fail(function(error, event) {
-                    event.preventDefault();
-                    slow_create();
-                });
-        } else
-            slow_create();
-    },
-    // all search/create popup handling
-    _search_create_popup: function(view, ids, context) {
-        var self = this;
-        var pop = new instance.web.form.SelectCreatePopup(this);
-        pop.select_element(
-            self.field.relation,
-            {
-                title: (view === 'search' ? _t("Search: ") : _t("Create: ")) + (this.string || this.name),
-                initial_ids: ids ? _.map(ids, function(x) {return x[0]}) : undefined,
-                initial_view: view,
-                disable_multiple_selection: true
-            },
-            self.build_domain(),
-            new instance.web.CompoundContext(self.build_context(), context || {})
-        );
-        pop.on_select_elements.add(function(element_ids) {
-            self.set({value: element_ids[0]});
-        });
-    },
     render_value: function(no_recurse) {
         var self = this;
         if (! this.get("value")) {
@@ -2602,6 +2626,10 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(_.exten
         this.inhibit_on_change = true;
         this._super(value_);
         this.inhibit_on_change = false;
+    },
+    add_id: function(id) {
+        this.display_value = {};
+        this.set({value: id});
     },
     is_false: function() {
         return ! this.get("value");
@@ -3042,6 +3070,154 @@ instance.web.form.One2ManyKanbanView = instance.web_kanban.KanbanView.extend({
     },
 });
 }
+
+instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(_.extend({}, instance.web.form.CompletionFieldMixin,
+                                                                                       instance.web.form.ReinitializeFieldMixin, {
+    template: "FieldMany2ManyTags",
+    init: function() {
+        this._super.apply(this, arguments);
+        instance.web.form.CompletionFieldMixin.init.call(this);
+        this.set({"value": []});
+        this._display_orderer = new instance.web.DropMisordered();
+        this._drop_shown = false;
+    },
+    start: function() {
+        this._super();
+        instance.web.form.ReinitializeFieldMixin.start.call(this);
+        this.on("change:value", this, this.render_value);
+    },
+    initialize_content: function() {
+        if (this.get("effective_readonly"))
+            return;
+        var self = this;
+        self. $text = $("textarea", this.$element);
+        self.$text.textext({
+            plugins : 'tags arrow autocomplete',
+            autocomplete: {
+                render: function(suggestion) {
+                    return $('<span class="text-label"/>').
+                             data('index', suggestion['index']).html(suggestion['label']);
+                }
+            },
+            ext: {
+                autocomplete: {
+                    selectFromDropdown: function() {
+                        $(this).trigger('hideDropdown');
+                        var index = Number(this.selectedSuggestionElement().children().children().data('index'));
+                        var data = self.search_result[index];
+                        if (data.id) {
+                            self.add_id(data.id);
+                        } else {
+                            data.action();
+                        }
+                    },
+                },
+                tags: {
+                    isTagAllowed: function(tag) {
+                        if (! tag.name)
+                            return false;
+                        return true;
+                    },
+                    removeTag: function(tag) {
+                        var id = tag.data("id");
+                        self.set({"value": _.without(self.get("value"), id)});
+                    },
+                    renderTag: function(stuff) {
+                        return $.fn.textext.TextExtTags.prototype.renderTag.
+                            call(this, stuff).data("id", stuff.id);
+                    },
+                },
+                itemManager: {
+                    itemToString: function(item) {
+                        return item.name;
+                    },
+                },
+            },
+        }).bind('getSuggestions', function(e, data) {
+            var _this = this;
+            var str = !!data ? data.query || '' : '';
+            self.get_search_result(str).then(function(result) {
+                self.search_result = result;
+                $(_this).trigger('setSuggestions', {result : _.map(result, function(el, i) {
+                    return _.extend(el, {index:i});
+                })});
+            });
+        }).bind('tagClick', function(e, tag, value, callback) {
+            var pop = new instance.web.form.FormOpenPopup(self.view);
+            pop.show_element(
+                self.field.relation,
+                value.id,
+                self.build_context(),
+                {
+                    title: _t("Open: ") + (self.string || self.name)
+                }
+            );
+            pop.on_write_completed.add_last(function() {
+                self.render_value();
+            });
+        }).bind('hideDropdown', function() {
+            self._drop_shown = false;
+        }).bind('hideDropdown', function() {
+            self._drop_shown = true;
+        });
+        self.tags = self.$text.textext()[0].tags();
+        $("textarea", this.$element).focusout(function() {
+            $("textarea", this.$element).val("");
+        }).keydown(function(e) {
+            if (event.keyCode === 9 && self._drop_shown) {
+                self.$text.textext()[0].autocomplete().selectFromDropdown();
+            }
+        });
+    },
+    set_value: function(value_) {
+        value_ = value_ || [];
+        if (value_.length >= 1 && value_[0] instanceof Array) {
+            value_ = value_[0][2];
+        }
+        this._super(value_);
+    },
+    get_value: function() {
+        var tmp = [commands.replace_with(this.get("value"))];
+        return tmp;
+    },
+    render_value: function() {
+        var self = this;
+        var dataset = new instance.web.DataSetStatic(this, this.field.relation, self.view.dataset.get_context());
+        var handle_names = function(data) {
+            var indexed = {};
+            _.each(data, function(el) {
+                indexed[el[0]] = el;
+            });
+            data = _.map(self.get("value"), function(el) { return indexed[el]; });
+            if (! self.get("effective_readonly")) {
+                self.tags.containerElement().children().remove();
+                $("textarea", self.$element).css("padding-left", "3px");
+                self.tags.addTags(_.map(data, function(el) {return {name: el[1], id:el[0]};}));
+            } else {
+                self.$element.html(QWeb.render("FieldMany2ManyTags.box", {elements: data}));
+                $(".oe_form_field_many2manytags_box", self.$element).click(function() {
+                    var index = Number($(this).data("index"));
+                    self.do_action({
+                        type: 'ir.actions.act_window',
+                        res_model: self.field.relation,
+                        res_id: self.get("value")[index],
+                        context: self.build_context(),
+                        views: [[false, 'form']],
+                        target: 'current'
+                    });
+                });
+            }
+        };
+        if (! self.get('values') || self.get('values').length > 0) {
+            this._display_orderer.add(dataset.name_get(self.get("value"))).then(handle_names);
+        } else {
+            handle_names([]);
+        }
+    },
+    add_id: function(id) {
+        this.set({'value': _.uniq(this.get('value').concat([id]))});
+    },
+}));
 
 /*
  * TODO niv: clean those deferred stuff, it could be better
@@ -3829,6 +4005,7 @@ instance.web.form.widgets = new instance.web.Registry({
     'selection' : 'instance.web.form.FieldSelection',
     'many2one' : 'instance.web.form.FieldMany2One',
     'many2many' : 'instance.web.form.FieldMany2Many',
+    'many2manytags' : 'instance.web.form.FieldMany2ManyTags',
     'one2many' : 'instance.web.form.FieldOne2Many',
     'one2many_list' : 'instance.web.form.FieldOne2Many',
     'reference' : 'instance.web.form.FieldReference',
