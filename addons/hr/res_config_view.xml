@@ -1,11 +1,12 @@
 <openerp>
     <data>
 
-        <record id="open_payroll1_modules" model="ir.actions.act_window">
+        <record id="open_payroll_modules" model="ir.actions.act_window">
             <field name="name">Payroll</field>
             <field name="res_model">ir.module.module</field>
             <field name="view_mode">kanban,tree,form</field>
-            <field name="domain">[('state','=','uninstalled'), ('name','ilike','payroll'), ('name','!=','hr_payroll_account')]</field>
+            <field name="context" eval="{'search_default_category_id': ref('base.module_category_localization'), 'search_default_name': 'payroll'}"/>
+            <field name="search_view_id" ref="base.view_module_filter"/>
         </record>
 
         <record id="view_human_resources_configuration" model="ir.ui.view">
@@ -25,6 +26,11 @@
                         <field name="module_hr_evaluation"/>
                         <field name="module_hr_contract"/>
                         <field name="module_hr_holidays"/>
+                        <newline/>
+                        <field name="module_hr_payroll"/>
+                        <button name="%(open_payroll_modules)d" type="action"
+                            string="Install Country-Specific Payroll" icon="gtk-go-forward"/>
+                        <newline/>
 
                         <separator string="Timesheets" colspan="4"/>
                         <field name="module_hr_attendance"/>

@@ -42,6 +42,8 @@ class hr_config_settings(osv.osv_memory):
             help ="""This installs the module hr_contract."""),
         'module_hr_evaluation': fields.boolean('Periodic Appraisals',
             help ="""This installs the module hr_evaluation."""),
+        'module_hr_payroll': fields.boolean('Payroll',
+            help ="""This installs the module hr_payroll."""),
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
