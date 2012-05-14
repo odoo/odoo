@@ -283,12 +283,12 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                   <group name="misc" position="after">
-                      <group col="2" colspan="2" attrs="{'invisible':[('type', '=', 'service')]}">
+                      <group col="2" colspan="2" attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_stock_manager">
                           <separator string="Minimum Stock Rules" colspan="2"/>
                           <field name="orderpoint_ids" context="{'default_product_uom': uom_id}" nolabel="1">
                               <tree string="Minimum Stock Rule" editable="bottom">
-                                  <field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)" widget="selection"/>
-                                  <field name="location_id"/>
+                                  <field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)" widget="selection" groups="stock.group_locations"/>
+                                  <field name="location_id" groups="stock.group_locations"/>
                                   <field name="product_min_qty"/>
                                   <field name="product_max_qty"/>
                                   <field name="product_uom" groups="product.group_uom"/>

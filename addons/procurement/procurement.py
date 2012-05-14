@@ -536,6 +536,17 @@ class stock_warehouse_orderpoint(osv.osv):
         ('qty_multiple_check', 'CHECK( qty_multiple > 0 )', 'Qty Multiple must be greater than zero.'),
     ]
 
+    def default_get(self, cr, uid, fields, context=None):
+        res = super(stock_warehouse_orderpoint, self).default_get(cr, uid, fields, context)
+        # default 'warehouse_id' and 'location_id'
+        if 'warehouse_id' not in res:
+            warehouse = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'warehouse0', context)
+            res['warehouse_id'] = warehouse.id
+        if 'location_id' not in res:
+            warehouse = self.pool.get('stock.warehouse').browse(cr, uid, res['warehouse_id'], context)
+            res['location_id'] = warehouse.lot_stock_id.id
+        return res
+
     def onchange_warehouse_id(self, cr, uid, ids, warehouse_id, context=None):
         """ Finds location id for changed warehouse.
         @param warehouse_id: Changed id of warehouse.
