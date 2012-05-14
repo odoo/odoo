@@ -164,8 +164,8 @@ class mail_thread(osv.osv):
         subscription_ids = subscription_obj.search(cr, uid, [('res_model', '=', self._name), ('res_id', 'in', thread_ids), ('user_id', 'in', user_sub_ids)], context=context)
         hide_ids = hide_obj.search(cr, uid, [('subscription_id', 'in', subscription_ids), ('subtype', '=', new_msg_vals.get('subtype'))], context=context)
         if hide_ids:
-            hiden_subscription_ids = map(itemgetter('subscription_id'), hide_obj.read(cr, uid, hide_ids, ['subscription_id'], context=context))
-            hiden_user_ids = map(itemgetter('user_id'), subscription_obj.read(cr, uid, hiden_subscription_ids, ['user_id'], context=context))
+            hiden_subscriptions = hide_obj.browse(cr, uid, hide_ids, context=context)
+            hiden_user_ids = [hiden_subscription.subscription_id.user_id.id for hiden_subscription in hiden_subscriptions]
             notif_user_ids = [user_id for user_id in user_sub_ids if not user_id in hiden_user_ids]
         else:
             notif_user_ids = user_sub_ids
