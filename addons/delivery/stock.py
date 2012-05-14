@@ -173,5 +173,27 @@ class stock_move(osv.osv):
 
 stock_move()
 
+# Redefinition of the new fields in order to update the model stock.picking.out in the orm
+# FIXME: this is a temporary workaround because of a framework bug (ref: lp996816). It should be removed as soon as
+#        the bug is fixed
+class stock_picking_out(osv.osv):
+    _inherit = 'stock.picking.out'
+
+    _columns = {
+        'carrier_id':fields.many2one("delivery.carrier","Carrier"),
+        'volume': fields.float('Volume'),
+        'weight': fields.function(_cal_weight, type='float', string='Weight', digits_compute= dp.get_precision('Stock Weight'), multi='_cal_weight',
+                  store={
+                 'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['move_lines'], 20),
+                 'stock.move': (_get_picking_line, ['product_id','product_qty','product_uom','product_uos_qty'], 20),
+                 }),
+        'weight_net': fields.function(_cal_weight, type='float', string='Net Weight', digits_compute= dp.get_precision('Stock Weight'), multi='_cal_weight',
+                  store={
+                 'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['move_lines'], 20),
+                 'stock.move': (_get_picking_line, ['product_id','product_qty','product_uom','product_uos_qty'], 20),
+                 }),
+        'carrier_tracking_ref': fields.char('Carrier Tracking Ref', size=32),
+        'number_of_packages': fields.integer('Number of Packages'),
+        }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
