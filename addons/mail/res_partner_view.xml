@@ -12,6 +12,9 @@
                 <xpath expr="/form/notebook/page[@string='History']" position="attributes">
                     <attribute name="invisible">False</attribute>
                 </xpath>
+                <xpath expr="/form/notebook" position="after">
+                    <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
+                </xpath>
             </field>
         </record>
         <record id="view_emails_partner_info_form" model="ir.ui.view">
