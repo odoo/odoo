@@ -140,10 +140,6 @@ openerp.mail = function(session) {
                 });
                 return false;
             });
-            // event: click on the wheel menu in messages
-            this.$element.find('div.oe_mail_thread_display').delegate('img.oe_mail_msg_menu_icon', 'click', function (event) {
-                self.$element.find('ul.oe_mail_msg_menu').toggle();
-            });
             // event: click on 'hide' in wheel_menu
             this.$element.find('div.oe_mail_thread_display').delegate('a.oe_mail_msg_hide_thread', 'click', function (event) {
                 if (! confirm(_t("Do you really want to hide this thread ?"))) { return false; }
