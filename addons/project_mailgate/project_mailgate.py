@@ -26,12 +26,7 @@ import binascii
 
 
 class project_tasks(osv.osv):
-    _name = "project.task"
-    _inherit = ['mail.thread','project.task']
-
-    _columns = {
-         'message_ids': fields.one2many('mail.message', 'res_id', 'Messages', domain=[('model','=',_name)], readonly=True),
-    }
+    _inherit = 'project.task'
 
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
         res_id = super(project_tasks,self).message_new(cr, uid, msg, custom_values=custom_values, context=context)
@@ -83,38 +78,6 @@ class project_tasks(osv.osv):
             task_followers.add(task.user_id.user_email)
             followers[task.id] = filter(None, task_followers)
         return followers
-
-    def do_draft(self, cr, uid, ids, context=None):
-        res = super(project_tasks, self).do_draft(cr, uid, ids, context)
-        tasks = self.browse(cr, uid, ids, context=context)
-        self.message_append(cr, uid, tasks, _('Draft'), context=context)
-        return res
-
-    def do_open(self, cr, uid, ids, context=None):
-        res = super(project_tasks, self).do_open(cr, uid, ids, context)
-        tasks = self.browse(cr, uid, ids, context=context)
-        self.message_append(cr, uid, tasks, _('Open'), context=context)
-        return res
-
-    def do_pending(self, cr, uid, ids, context=None):
-        res = super(project_tasks, self).do_pending(cr, uid, ids, context)
-        tasks = self.browse(cr, uid, ids, context=context)
-        self.message_append(cr, uid, tasks, _('Pending'), context=context)
-        return res
-
-    def do_close(self, cr, uid, ids, context=None):
-        res = super(project_tasks, self).do_close(cr, uid, ids, context)
-        tasks = self.browse(cr, uid, ids, context=context)
-        for task in tasks:
-            if task.state == 'done':
-                self.message_append(cr, uid, tasks, _('Done'), context=context)
-        return res
-
-    def do_cancel(self, cr, uid, ids, context=None):
-        res = super(project_tasks, self).do_cancel(cr, uid, ids, context=context)
-        tasks = self.browse(cr, uid, ids, context=context)
-        self.message_append(cr, uid, tasks, _('Cancel'), context=context)
-        return res
 
 project_tasks()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
