@@ -680,15 +680,33 @@ instance.web_kanban.QuickCreate = instance.web.Widget.extend({
      */
     quick_add: function () {
         var self = this;
-        // FIXME: what if name_create fails?
+        self.$input.val("");
         this._dataset.call(
             'name_create', [self.$input.val(), new instance.web.CompoundContext(
                     this._dataset.get_context(), this._context)])
-            .then(function(record) {
-                self.$input.val("");
+            .pipe(function(record) {
                 self.trigger('added', record);
+            }, function() {
+                return self.slow_create();
             });
     },
+    slow_create: function() {
+        var self = this;
+        var pop = new instance.web.form.SelectCreatePopup(this);
+        pop.select_element(
+            self.field.relation,
+            {
+                title: _t("Create: ") + (this.string || this.name),
+                initial_view: "form",
+                disable_multiple_selection: true
+            },
+            undefined,
+            new instance.web.CompoundContext(self.build_context(), {"default_name": self.$input.val("")})
+        );
+        pop.on_select_elements.add(function(element_ids) {
+            self.trigger('added', element_ids);
+        });
+    }
 });
 };
 
