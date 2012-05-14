@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from osv import osv, fields
 import decimal_precision as dp
+from tools.translate import _
 
 class CashBox(osv.osv_memory):
     _register = False
@@ -29,7 +30,7 @@ class CashBox(osv.osv_memory):
             for record in records:
                 if not record.journal_id.internal_account_id:
                     raise osv.except_osv(_('Error !'),
-                                         _('Please check that internal account is set to %s') % (record.journal_id.name,))
+                                         _("Please check that the field 'Internal Transfers Account' is set on the payment method '%s'.") % (record.journal_id.name,))
 
                 self._create_bank_statement_line(cr, uid, box, record, context=context)
 

@@ -9,11 +9,11 @@
             <field name="arch" type="xml">
                 <xpath expr="//notebook[last()]" position="inside">
                     <page string="Point of Sale">
-                        <group col="6" colspan="4">
-                            <separator colspan="6" string="Extended Configuration"/>
+                        <group col="4" colspan="4">
                             <field name="journal_user"/>
-                            <field name="opening_control" />
-                            <field name="closing_control" />
+                            <field name="opening_control"/>
+                            <field name="closing_control"/>
+                            <field name="amount_authorized_diff"/>
                         </group>
                     </page>
                 </xpath>
@@ -129,6 +129,7 @@
             <field name="act_window_id" ref="action_new_bank_statement_all_tree"/>
         </record>
 
+        <!--
         <menuitem name="Cash Register Management" parent="point_of_sale.menu_point_root"
             id="menu_point_open_config" sequence="10"/>
         <menuitem
@@ -156,6 +157,7 @@
             id="menu_all_menu_all_register"
             sequence="4"
         />
+    -->
 
 
     </data>

@@ -16,16 +16,27 @@
             <field name="model">pos.order</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="PoS Orders">
-                    <group col="7" colspan="4">
-                        <field name="session_id" required="1" />
+                <form string="Point of Sale Orders" layout="manual">
+                    <div class="oe_form_topbar">
+                        <button name="%(action_pos_payment)d" string="Payment" icon="gtk-apply" type="action" states="draft" context="{'pos_session_id' : session_id}"/>
+                        <button name="action_invoice" string="Invoice" icon="gtk-apply" type="object" states="paid" attrs="{'readonly': [('partner_id','=',False)]}"/>
+                        <button name="refund" string="Return Products" type="object" icon="gtk-ok"
+                            attrs="{'invisible':[('state','=','draft')]}"/>
+                        <button name="%(action_report_pos_receipt)d" string="Reprint" icon="gtk-print" type="action" states="paid,done,invoiced"/>
+                            <div class="oe_right">
+                                <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,paid,done" statusbar_colors='{"cancel":"red"}'/>
+                            </div>
+                    </div>
+                    <sheet layout="auto">
+                    <group col="4" colspan="4">
                         <field name="name"/>
                         <field name="date_order"/>
+                        <field name="session_id" required="1" />
                         <field name="partner_id" on_change="onchange_partner_id(partner_id)" context="{'search_default_customer':1}" attrs="{'readonly': [('state','=','invoiced')]}"/>
-                        <button name="action_invoice" string="Invoice" icon="gtk-apply" type="object" states="paid" attrs="{'readonly': [('partner_id','=',False)]}"/>
+
                     </group>
                     <notebook colspan="4">
-                        <page string="Sale Order">
+                        <page string="Products">
                             <field name="lines" colspan="4" nolabel="1">
                                 <tree string="Order lines" editable="bottom">
                                     <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,qty,parent.partner_id)"/>
@@ -52,16 +63,8 @@
                                 <button name="%(action_pos_discount)d" string="Discount" icon="gtk-remove" type="action" states="draft" />
                             </group>
 
-                            <separator colspan="4"/>
-                            <group colspan="4" col="8">
-                                <field name="state" widget="statusbar" statusbar_visible="draft,paid,done" statusbar_colors='{"cancel":"red"}'/>
-                                <button name="%(action_pos_payment)d" string="Payment" icon="gtk-apply" type="action" states="draft" context="{'pos_session_id' : session_id}"/>
-                                <button name="refund" string="Return Products" type="object" icon="gtk-ok"
-                                    attrs="{'invisible':[('state','=','draft')]}"/>
-                                <button name="%(action_report_pos_receipt)d" string="Reprint" icon="gtk-print" type="action" states="paid,done,invoiced"/>
-                            </group>
                         </page>
-                        <page string="Payment">
+                        <page string="Payments">
                             <field name="statement_ids" colspan="4" nolabel="1">
                                 <tree editable="bottom" string="Statement lines">
                                     <field name="journal_id"/>
@@ -100,11 +103,12 @@
                             <field colspan="4" name="note" nolabel="1"/>
                         </page>
                     </notebook>
+                    </sheet>
                 </form>
             </field>
         </record>
         <record model="ir.actions.act_window" id="action_pos_pos_form">
-            <field name="name">PoS Orders</field>
+            <field name="name">Orders</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">pos.order</field>
             <field name="view_type">form</field>
@@ -622,11 +626,13 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
-                  <field name="company_id" position="after">
-                  <separator string="Point of Sale" colspan="2"/>
-                      <field name="income_pdt"/>
-                      <field name="expense_pdt"/>
-                  </field>
+                  <group name="misc" position="after">
+              <group name="pos" colspan="2" col="2">
+                      <separator string="Point of Sale" colspan="2"/>
+                  <field name="income_pdt"/>
+                  <field name="expense_pdt"/>
+              </group>
+          </group>
             </field>
         </record>
 
@@ -636,11 +642,12 @@
             <field name="model">pos.category</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="PoS Categories">
+                <form string="Product PoS Categories">
                     <group colspan="4" col="6">
                         <field name="name"/>
                         <field name="parent_id"/>
                         <field name="sequence"/>
+                        <field name="to_weight" />
                     </group>
                 </form>
             </field>
@@ -651,14 +658,14 @@
             <field name="type">tree</field>
             <field name="field_parent" eval="False"/>
             <field name="arch" type="xml">
-                <tree string="PoS Categories">
+                <tree string="Product PoS Categories">
                     <field name="sequence" invisible="1"/>
                     <field name="complete_name"/>
                 </tree>
             </field>
         </record>
         <record id="pos_category_action" model="ir.actions.act_window">
-            <field name="name">PoS Categories</field>
+            <field name="name">Product Categories</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">pos.category</field>
             <field name="view_type">form</field>
@@ -676,7 +683,7 @@
             <field name="res_model">account.journal</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="context" eval="{'default_journal_user': 1, 'default_view_id': ref('account.account_journal_bank_view'), 'default_type': 'cash'}"/>
+            <field name="context" eval="{'default_journal_user': 1, 'default_type': 'cash'}"/>
             <field name="domain">[('journal_user','=', 1)]</field>
             <field name="help">Payment methods are defined by accounting journals having the field Payment Method checked.</field>
         </record>
@@ -712,16 +719,6 @@
         <menuitem name="Point of Sale" parent="base.menu_reporting" id="menu_point_rep" sequence="50" groups="group_pos_manager"/>
         <!-- Invoice -->
 
-        <record model="ir.actions.act_window" id="action_pos_sale_all">
-            <field name="name">All Sales Orders</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">pos.order</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[]</field>
-        </record>
-        <menuitem parent="menu_point_rep" id="menu_point_ofsale_all" action="action_pos_sale_all" sequence="1"/>
-
         <record model="ir.actions.act_window" id="action_pos_invoice">
             <field name="name">Invoices</field>
             <field name="type">ir.actions.act_window</field>
@@ -731,10 +728,8 @@
             <field name="domain">[('origin','like','POS')]</field>
         </record>
 
-		<menuitem name="Reporting" id="menu_point_of_sale_reporting" parent="menu_point_root" sequence="20" />
-		
         <menuitem icon="STOCK_PRINT" action="action_report_pos_details"
-                id="menu_pos_details" parent="menu_point_of_sale_reporting" sequence="6" />
+                id="menu_pos_details" parent="menu_point_rep" sequence="6" />
 
         <record model="ir.actions.client" id="action_pos_pos">
             <field name="name">Start Point of Sale</field>
@@ -756,48 +751,43 @@
             <field name="model">pos.config</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="PoS Configuration">
-                    <field name="name" />
-                    <notebook colspan="4">
-                        <page string="Payment Methods">
-                            <field name="journal_ids" colspan="4" nolabel="1">
-                                <tree string="Journals">
-                                    <field name="code" />
-                                    <field name="name" />
-                                    <field name="type" />
-                                    <field name="opening_control" />
-                                    <field name="closing_control" />
-                                </tree>
-                            </field>
-                        </page>
-                        <page string="Accounting">
-                            <separator string="Accounting" colspan="4" />
-                            <field name="shop_id" widget="selection" />
-                            <field name="journal_id" widget="selection" />
-                        </page>
-                        <page string="Interfaces">
-                            <field name="iface_self_checkout" />
-                            <field name="iface_websql" />
-                            <field name="iface_led" />
-                            <field name="iface_cashdrawer" />
-                            <field name="iface_payment_terminal" />
-                            <field name="iface_electronic_scale" />
-                            <field name="iface_barscan" />
-                            <field name="iface_vkeyboard" />
-                        </page>
-                        <page string="Others">
-                            <field name="user_id" />
-                            <field name="sequence_id" />
-                        </page>
-                    </notebook>
-
-                    <group colspan="4" col="6">
-                        <field name="state" widget="statusbar" statusbar_visible="draft,active,inactive,deprecated" statusbar_colors='{"active":"green", "deprecated" : "red"}'/>
-                        <button string="Set to Draft" name="set_draft" type="object" states="deprecated"/>
-                        <button string="Set to Active" name="set_active" type="object" states="draft,inactive"/>
+                <form string="Point of Sale Configuration" layout="manual">
+                    <div class="oe_form_topbar">
+                        <button string="Set to Active" name="set_active" type="object" states="inactive,deprecated"/>
                         <button string="Set to Inactive" name="set_inactive" type="object" states="active" />
                         <button string="Set to Deprecated" name="set_deprecate" type="object" states="active,inactive" />
-                    </group>
+                        <div class="oe_right">
+                                <field name="state" widget="statusbar" statusbar_visible="active,inactive,deprecated" statusbar_colors='{"deprecated" : "red"}' nolabel="1"/>
+                        </div>
+                    </div>
+
+                    <sheet layout="auto">
+                        <field name="name" placeholder="POS/0001"/>
+                        <field name="shop_id" widget="selection" />
+                        <field name="journal_id" widget="selection" />
+                        <field name="sequence_id" readonly="1"/>
+                        <separator string="Available Payment Methods" colspan="4"/>
+                        <field name="journal_ids" colspan="4" nolabel="1">
+                            <tree string="Journals">
+                                <field name="code" />
+                                <field name="name" />
+                                <field name="type" />
+                                <field name="opening_control" />
+                                <field name="closing_control" />
+                            </tree>
+                        </field>
+                        <separator string="Material Interfaces" colspan="4"/>
+                        <field name="iface_self_checkout" />
+                        <field name="iface_websql" />
+                        <field name="iface_led" />
+                        <field name="iface_cashdrawer" />
+                        <field name="iface_payment_terminal" />
+                        <field name="iface_electronic_scale" />
+                        <field name="iface_barscan" />
+                        <field name="iface_vkeyboard" />
+                        <field name="iface_print_via_proxy" />
+                    </sheet>
+
                 </form>
             </field>
         </record>
@@ -807,10 +797,8 @@
             <field name="model">pos.config</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="PoS Configuration" colors="grey:state == 'inactive'">
+                <tree string="Point of Sale Configuration" colors="grey:state == 'inactive'">
                     <field name="name" />
-                    <field name="user_id" />
-                    <field name="journal_id" />
                     <field name="shop_id" />
                     <field name="state" />
                 </tree>
@@ -822,21 +810,13 @@
             <field name="model">pos.config</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <search string="PoS Config">
+                <search string="Point of Sale Config">
                     <filter string="Active" domain="[('state', '=', 'active')]" />
                     <filter string="Inactive" domain="[('state', '=', 'inactive')]" />
                     <separator orientation="vertical"/>
                     <field name="name" />
-                    <field name="user_id" />
-                    <field name="journal_id" />
                     <field name="shop_id" />
 
-                    <newline />
-                    <group expand="0" string="Group By...">
-                        <filter string="User" icon="terp-personal" domain="[]" context="{'group_by' : 'user_id'}" />
-                        <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by' : 'journal_id'}" />
-                        <filter string="Shop" icon="terp-go-home" domain="[]" context="{'group_by' : 'shop_id'}" />
-                    </group>
                 </search>
             </field>
         </record>
@@ -850,7 +830,7 @@
             domain="[('config_id', '=', active_id)]" />         
 
         <record model="ir.actions.act_window" id="action_pos_config_pos">
-            <field name="name">PoS Config</field>
+            <field name="name">Point of Sales</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">pos.config</field>
             <field name="view_type">form</field>
@@ -864,42 +844,95 @@
             id="menu_pos_config_pos"
             groups="group_pos_manager"/>
 
+        <act_window 
+            id="act_pos_session_orders" 
+            name="Orders"
+            src_model="pos.session"
+            res_model="pos.order"
+            context="{'search_default_session_id': active_id, 'default_session_id' : active_id }" />
+
+
 
         <record model="ir.ui.view" id="view_pos_session_form">
             <field name="name">pos.session.form.view</field>
             <field name="model">pos.session</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="PoS Session">
-                    <group colspan="4" col="6">
-                        <field name="config_id" on_change="on_change_config(config_id)" />
-                        <field name="name" />
+                <form string="Point of Sale Session" layout="manual">
+                    <div class="oe_form_topbar">
+                        <button name="open" type="workflow" string="Validate &amp; Open Session" states="opening_control" /> 
+                        <button name="cashbox_control" type="workflow" string="End of Session" states="opened" /> 
+                        <button name="close" type="workflow" string="Validate &amp; Close" states="closing_control" />
+
+                        <div class="oe_right">
+                            <field name="state" widget="statusbar" statusbar_visible="opening_control,opened,closing_control,closed" nolabel="1"/>
+                        </div>
+                    </div>
+                    <sheet layout="auto">
+
+                    <group colspan="4" col="4">
+                        <field name="config_id"/>
+			<group colspan="2" col="3">
+				<button name="%(action_pos_box_in)d" string="Put Money In" type="action" states="opened"/>
+				<button name="%(action_pos_box_out)d" string="Take Money Out" type="action" states="opened"/>
+				<button name="%(act_pos_session_orders)d" string="Orders" type="action"/>
+			</group>
+                        <newline/>
                         <field name="user_id" />
+                        <field name="name" />
+                        <newline/>
                         <field name="start_at" />
                         <field name="stop_at" />
-                    </group>
-                    <notebook colspan="4">
-                        <page string="Cash">
-                            <field name="cash_register_id" invisible="0" />
-                            <field name="details_ids" colspan="4" nolabel="1">
-                                <tree string="" editable="bottom">
+                        <separator string="Cash Control" colspan="4"/>
+                            <field name="cash_register_id" invisible="1" />
+                            <field name="opening_details_ids" colspan="4" nolabel="1" attrs="{'invisible' : [('state', 'not in', ('opening_control',))]}">
+                                <tree string="Opening Cashbox Lines" editable="bottom">
                                     <field name="pieces" readonly="1" />
                                     <field name="number_opening" string="Opening Unit Numbers" on_change="on_change_sub_opening(pieces, number_opening, parent.balance_end)" />
-                                    <field name="subtotal_opening" string="Opening Subtotal"/>
-                                    <field name="number_closing" string="Closing Unit Numbers" on_change="on_change_sub_closing(pieces, number_closing, parent.balance_end)" />
-                                    <field name="subtotal_closing" string="Closing Subtotal"/>
+                                    <field name="subtotal_opening" string="Opening Subtotal" sum="Total"/>
                                 </tree>
                             </field>
-                            <field name="journal_ids" colspan="4" nolabel="1" />
-                        </page>
-                    </notebook>
 
-                    <group colspan="4" col="5">
-                        <field name="state" widget="statusbar" statusbar_visible="new,opened,closed,posted" statusbar_colors='{"posted":"green"}'/>
-                        <button name="open" type="workflow" string="Open" states="new" />
-                        <button name="close" type="workflow" string="Close" states="opened" />
-                        <button name="post" type="workflow" string="Post" states="closed" />
-                    </group>
+                            <field name="details_ids" colspan="4" nolabel="1" attrs="{'invisible': [('state', '=', 'opening_control')]}">
+                                <tree string="Cashbox Lines" editable="bottom">
+                                    <field name="pieces" readonly="1" />
+                                    <field name="number_opening" readonly="1"/>
+                                    <field name="subtotal_opening"/>
+                                    <field name="number_closing"/>
+                                    <field name="subtotal_closing"/>
+                                </tree>
+                            </field>
+
+
+                            <group col="4" colspan="4">
+                                <group col="2" colspan="2">
+                                    <separator string="Cash Balance" colspan="2"/>
+                                    <field name="cash_register_balance_start" readonly="1" string="Opening Cash Control"/>
+                                    <field name="cash_register_total_entry_encoding"  attrs="{'invisible' : [('state', '=', 'opening_control')]}" string="+ Transactions"/>
+                                    <field name="cash_register_balance_end" attrs="{'invisible' : [('state', '=', 'opening_control')]}" string="= Theorical Cash Closing"/>
+                                </group>
+                                <group col="2" colspan="2" attrs="{'invisible' : [('state', '=', 'opening_control')]}">
+                                    <separator string="Cash Closing Balance" colspan="2"/>
+                                    <field name="cash_register_balance_end_real"/>
+                                    <field name="cash_register_difference" />
+                                </group>
+                            </group>
+                            <separator string="Summary by Payment Methods" colspan="4"/>
+                            <field name="statement_ids" colspan="4" nolabel="1">
+                                <tree string="Statements">
+                                    <field name="name" />
+                                    <field name="journal_id" />
+                                    <field name="balance_start" />
+                                    <field name="total_entry_encoding" />
+                                    <field name="balance_end_real" />
+                                    <field name="difference" />
+                                    <field name="currency" />
+                                    <field name="state" />
+                                </tree>
+                            </field>
+                        </group>
+
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -909,7 +942,7 @@
             <field name="model">pos.session</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="PoS Session">
+                <tree string="Point of Sale Session">
                     <field name="config_id" />
                     <field name="name" />
                     <field name="user_id" />
@@ -924,7 +957,7 @@
             <field name="model">pos.session</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <search string="PoS Session">
+                <search string="Point of Sale Session">
                     <filter string="Open" domain="[('state', '=', 'opened')]" />
                     <separator orientation="vertical"/>
                     <filter string="Today" domain="[('start_at', '>=', time.strftime('%%Y-%%m-%%d 00:00:00'))]" />
@@ -936,7 +969,7 @@
                     <newline />
                     <group expand="0" string="Group By...">
                         <filter string="User" icon="terp-personal" domain="[]" context="{'group_by' : 'user_id'}" />
-                        <filter string="PoS" domain="[]" context="{'group_by': 'user_id'}" />
+                        <filter string="Point of Sales" domain="[]" context="{'group_by': 'user_id'}" />
                     </group>
                 </search>
             </field>
@@ -944,7 +977,7 @@
 
 
         <record model="ir.actions.act_window" id="action_pos_session">
-            <field name="name">PoS Sessions</field>
+            <field name="name">All Sessions</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">pos.session</field>
             <field name="view_type">form</field>
@@ -953,25 +986,11 @@
         </record>
 
         <menuitem
-            parent="menu_point_of_sale"
+            parent="menu_point_rep"
             action="action_pos_session"
             id="menu_pos_session"
+	    sequence="0"
             groups="group_pos_manager"/>
-
-        <act_window 
-            id="act_pos_session_orders" 
-            name="Orders"
-            src_model="pos.session"
-            res_model="pos.order"
-            domain="[('session_id', '=', active_id)]" />
-
-        <act_window
-            id="act_pos_session_statements"
-            name="Statements"
-            src_model="pos.session"
-            res_model="account.bank.statement"
-            domain="[]"
-            context="{'pos_session_id' : active_id}" />
 
         <record id="view_pos_order_filter" model="ir.ui.view">
             <field name="name">pos.order.list.select</field>
@@ -985,15 +1004,15 @@
                     <filter icon="terp-check" string="Invoiced" domain="[('state','=','invoiced')]"/>
                     <filter icon="gtk-convert" string="Posted" domain="[('state','=','done')]"/>
                     <separator orientation="vertical"/>
-                    <filter icon="terp-go-month" string="Today" domain="[('date_order','&gt;=',datetime.date.today().strftime('%%Y-%%m-%%d 00:00:00')),('date_order','&lt;=',datetime.date.today().strftime('%%Y-%%m-%%d 23:59:59'))]"/>
-                    <filter icon="gtk-go-forward" string="Yesterday" domain="[('date_order','&lt;',datetime.date.today().strftime('%%Y-%%m-%%d 00:00:00')),('date_order','&gt;=',(datetime.date.today() - relativedelta(days=1)).strftime('%%Y-%%m-%%d 00:00:00'))]"/>
-                    <separator orientation="vertical"/>
                     <field name="name"/>
                     <field name="user_id"/>
+                    <field name="date_order"/>
+                    <field name="session_id"/>
                     <newline/>
                     <group expand="0" string="Group By..." groups="base.group_extended">
                         <filter string="Customer" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Salesman" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Session" icon="terp-personal" domain="[]" context="{'group_by':'session_id'}"/>
                         <separator string="" orientation="vertical"/>
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                         <separator string="" orientation="vertical"/>
@@ -1002,5 +1021,8 @@
                </search>
             </field>
         </record>
+
+        <menuitem action="action_pos_session_opening" parent="menu_point_of_sale" id="menu_pos_session_opening" />
+
     </data>
 </openerp>

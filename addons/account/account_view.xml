@@ -32,7 +32,7 @@
                     </field>
                     <separator colspan="4" string="States"/>
                     <group>
-                        <field name="state" select="1" readonly="1"/>
+                        <field name="state" readonly="1"/>
                         <button name="create_period" states="draft" string="Create Monthly Periods" type="object" icon="terp-document-new"/>
                         <button name="create_period3" states="draft" string="Create 3 Months Periods" type="object" icon="terp-document-new"/>
                     </group>
@@ -162,13 +162,13 @@
             <field name="arch" type="xml">
                 <form string="Account">
                     <group col="6" colspan="4">
-                        <field name="name" select="1"/>
-                        <field name="code" select="1"/>
+                        <field name="name"/>
+                        <field name="code" />
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                         <newline/>
                         <field name="parent_id"/>
-                        <field name="type" select="1"/>
-                        <field name="user_type" select="1"/>
+                        <field name="type"/>
+                        <field name="user_type"/>
                         <field name="active"/>
                         <newline/>
                         <field name="debit" invisible="context.get('config_invisible', True)" attrs="{'readonly':[('type','=','view')]}"/>
@@ -345,8 +345,8 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Journal Column">
-                    <field colspan="4" name="name" select="1"/>
-                    <field name="field" select="1"/>
+                    <field colspan="4" name="name"/>
+                    <field name="field"/>
                     <field name="sequence"/>
                 </form>
             </field>
@@ -455,8 +455,8 @@
             <field name="arch" type="xml">
                 <form string="Account Journal">
                     <group colspan="4" col="6">
-                        <field name="name" select="1"/>
-                        <field name="code" select="1"/>
+                        <field name="name"/>
+                        <field name="code"/>
                         <field name="type" on_change="onchange_type(type, currency, context)"/>
                     </group>
                     <notebook colspan="4">
@@ -487,6 +487,7 @@
                                 <separator string="Other Configuration" colspan="4"/>
                                 <field name="centralisation"/>
                                 <field name="entry_posted"/>
+                                <field name="with_last_closing_balance" />
                             </group>
                             <group colspan="2" col="2">
                                 <separator string="Invoicing Data" colspan="4"/>
@@ -504,18 +505,19 @@
                             <separator colspan="4" string="Accounts Allowed (empty for no control)"/>
                             <field colspan="4" name="account_control_ids" nolabel="1"/>
                         </page>
-                        <page string="Cash Box">
+                        <page string="Cash">
+                            <separator string="Profit &amp; Loss Accounts" colspan="4" />
                             <field name="profit_account_id" />
                             <field name="loss_account_id" />
                             <separator string="Internal Account" colspan="4" />
                             <field name="internal_account_id" />
-                            <separator string="Cash Box Lines" colspan="4" />
+
+                            <separator string="Available Currencies" colspan="4" />
                             <field name="cashbox_line_ids" nolabel="1" string="Unit Of Currency Definition" colspan="4">
                                 <tree string="CashBox Lines" editable="bottom">
                                     <field name="pieces" />
                                 </tree>
                             </field>
-                            <label string="The Cashbox Lines will be used in the PoS Session" /> 
                         </page>
                     </notebook>
                 </form>
@@ -607,9 +609,9 @@
             <field name="arch" type="xml">
                 <form string="Bank Statement">
                     <group col="7" colspan="4">
-                        <field name="name" select="1"/>
-                        <field name="date" select="1" on_change="onchange_date(date, company_id)"/>
-                        <field name="journal_id" domain="[('type', '=', 'bank')]" on_change="onchange_journal_id(journal_id)" select="1" widget="selection"/>
+                        <field name="name"/>
+                        <field name="date" on_change="onchange_date(date, company_id)"/>
+                        <field name="journal_id" domain="[('type', '=', 'bank')]" on_change="onchange_journal_id(journal_id)" widget="selection"/>
                         <newline/>
                         <field name="period_id"/>
                         <field name="balance_start"/>
@@ -668,8 +670,8 @@
             <field name="arch" type="xml">
                 <form string="Bank Statement">
                     <group col="7" colspan="4">
-                        <field name="name" select="1"/>
-                        <field name="date" select="1" on_change="onchange_date(date, company_id)"/>
+                        <field name="name"/>
+                        <field name="date" on_change="onchange_date(date, company_id)"/>
                         <field name='company_id' widget="selection" groups="base.group_multi_company" />
                         <field name="journal_id" domain="[('type', '=', 'bank')]" on_change="onchange_journal_id(journal_id)" widget="selection"/>
                         <newline/>
@@ -799,12 +801,12 @@
             <field name="arch" type="xml">
                 <form string="Account Type">
                     <group col="6" colspan="4">
-                        <field name="name" select="1"/>
-                        <field name="code" select="1"/>
+                        <field name="name"/>
+                        <field name="code"/>
                     </group>
                     <group col="2" colspan="2">
                         <separator string="Reporting Configuration" colspan="4"/>
-                        <field name="report_type" select="2"/>
+                        <field name="report_type"/>
                     </group>
                     <group col="2" colspan="2">
                         <separator string="Closing Method" colspan="4"/>
@@ -856,9 +858,9 @@
             <field name="arch" type="xml">
                 <form string="Journal Entry Reconcile">
                     <group col="6" colspan="4">
-                        <field name="name" select="1"/>
-                        <field name="create_date" select="1"/>
-                        <field name="type" select="1"/>
+                        <field name="name"/>
+                        <field name="create_date"/>
+                        <field name="type"/>
                     </group>
                     <separator colspan="4" string="Reconcile Entries"/>
                     <field colspan="4" name="line_id" nolabel="1"/>
@@ -1094,9 +1096,9 @@
             <field name="arch" type="xml">
                 <form string="Journal Item">
                     <group col="6" colspan="4">
-                        <field name="name" select="1"/>
+                        <field name="name"/>
                         <field name="ref"/>
-                        <field name="partner_id" select="1" on_change="onchange_partner_id(False,partner_id,account_id,debit,credit,date)"/>
+                        <field name="partner_id" on_change="onchange_partner_id(False,partner_id,account_id,debit,credit,date)"/>
 
                         <field name="journal_id"/>
                         <field name="period_id"/>
@@ -1106,7 +1108,7 @@
                         <page string="Information">
                             <group col="2" colspan="2">
                                 <separator colspan="2" string="Amount"/>
-                                <field name="account_id" select="1" domain="[('company_id', '=', company_id), ('type','&lt;&gt;','view'), ('type','&lt;&gt;','consolidation')]"/>
+                                <field name="account_id" domain="[('company_id', '=', company_id), ('type','&lt;&gt;','view'), ('type','&lt;&gt;','consolidation')]"/>
                                 <field name="debit"/>
                                 <field name="credit"/>
                                 <field name="quantity"/>
@@ -1121,7 +1123,7 @@
 
                             <group col="2" colspan="2">
                                 <separator colspan="2" string="Dates"/>
-                                <field name="date" select="1"/>
+                                <field name="date"/>
                                 <field name="date_maturity"/>
                                 <field name="date_created" readonly="True"/>
                             </group>
@@ -1176,11 +1178,11 @@
                     <notebook colspan="4">
                         <page string="Information">
                             <separator colspan="4" string="General Information"/>
-                            <field name="name" select="1"/>
+                            <field name="name"/>
                             <field name="date"/>
-                            <field name="journal_id" readonly="False" select="1"/>
+                            <field name="journal_id" readonly="False"/>
                             <field name="period_id" readonly="False"/>
-                            <field name="account_id" select="1" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation'),('company_id', '=', company_id)]"/>
+                            <field name="account_id" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation'),('company_id', '=', company_id)]"/>
                             <field name="partner_id" on_change="onchange_partner_id(False,partner_id,account_id,debit,credit,date)"/>
                             <newline/>
                             <field name="debit"/>
@@ -1189,13 +1191,13 @@
                             <separator colspan="4" string="Optional Information"/>
                             <field name="currency_id"/>
                             <field name="amount_currency"/>
-                            <field name="quantity" select="3"/>
+                            <field name="quantity"/>
                             <field name="move_id" required="False"/>
                             <newline/>
                             <field name="date_maturity"/>
                             <field name="date_created"/>
                             <field name="date_created"/>
-                            <field name="blocked" select="3"/>
+                            <field name="blocked"/>
                             <newline/>
                             <field name="account_tax_id" domain="[('parent_id','=',False)]"/>
                             <field name="analytic_account_id" domain="[('parent_id','!=',False)]" groups="analytic.group_analytic_accounting"/>
@@ -2624,9 +2626,18 @@ action = pool.get('res.config').next(cr, uid, [], context)
             <field name="model">account.bank.statement</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Statement">
+                <form string="Statement" layout="manual">
+                    <div class="oe_form_topbar">
+                        <button name="button_cancel" states="confirm,open" string="Cancel" icon="terp-gtk-stop" type="object"/>
+                        <button name="button_confirm_cash" states="open" string="Close CashBox" icon="terp-dialog-close" type="object"/>
+                        <button name="button_open" states="draft" string="Open CashBox" icon="gtk-go-forward" type="object"/>
+                        <div class="oe_right">
+				<field name="state" widget="statusbar" statusbar_visible="draft,open,confirm" nolabel="1"/>
+                        </div>
+                </div>
+                <sheet layout="auto">
                     <group col="6" colspan="4">
-                        <field name="name" select="1"/>
+                        <field name="name"/>
                         <field name='company_id' widget="selection" groups="base.group_multi_company" />
                         <field name="journal_id" on_change="onchange_journal_id(journal_id)" select="1" widget="selection" domain="[('type', '=', 'cash')]"/>
                         <field name="user_id" select="1" readonly="1"/>
@@ -2663,15 +2674,22 @@ action = pool.get('res.config').next(cr, uid, [], context)
                                 </form>
                             </field>
                         </page>
-                        <page string="CashBox">
+                        <page string="Cash Control">
                             <group col="2" expand="1">
-                                <field name="details_ids" nolabel="1" > 
-                                    <!--attrs="{'readonly' : [('state', '=', 'open')]}">-->
-                                    <tree string="" editable="bottom">
-                                        <field name="pieces" readonly="1" />
-                                        <field name="number_opening" string="Opening Unit Numbers" on_change="on_change_sub_opening(pieces, number_opening, parent.balance_end)" attrs="{'readonly' : [('parent.state', '!=', 'open')]}" />
+                                <field name="opening_details_ids" nolabel="1" colspan="4" attrs="{'invisible' : [('state', '!=', 'draft')]}">
+                                    <tree string="Opening Cashbox Lines" editable="bottom">
+                                        <field name="pieces"/>
+                                        <field name="number_opening" string="Opening Unit Numbers" on_change="on_change_sub_opening(pieces, number_opening, parent.balance_end)"/>
                                         <field name="subtotal_opening" string="Opening Subtotal"/>
-                                        <field name="number_closing" string="Closing Unit Numbers" on_change="on_change_sub_closing(pieces, number_closing, parent.balance_end)" attrs="{'readonly' : [('parent.state', '!=', 'confirm')]}"/>
+                                    </tree>
+                                </field>
+                                <field name="closing_details_ids" nolabel="1" colspan="4" attrs="{'invisible' : [('state', '=', 'draft')]}">
+                                    <tree string="Closing Cashbox Lines" editable="bottom">
+                                        <field name="pieces" readonly="1" />
+                                        <field name="number_opening" string="Opening Unit Numbers" readonly="1" />
+                                        <field name="subtotal_opening" string="Opening Subtotal" readonly="1" />
+
+                                        <field name="number_closing" string="Closing Unit Numbers" on_change="on_change_sub_closing(pieces, number_closing, parent.balance_end)"/>
                                         <field name="subtotal_closing" string="Closing Subtotal"/>
                                     </tree>
                                 </field>
@@ -2683,29 +2701,22 @@ action = pool.get('res.config').next(cr, uid, [], context)
                     </notebook>
                     <group col="6" colspan="4">
                         <group col="2" colspan="2">
-                            <separator string="Dates" colspan="4"/>
-                            <field name="date" select="1" attrs="{'readonly':[('state','!=','draft')]}"  on_change="onchange_date(date, company_id)" string="Started On" />
-                            <field name="closing_date" select="1" readonly="1"/>
-                        </group>
-                        <group col="2" colspan="2">
                             <separator string="Opening Balance" colspan="4"/>
-                            <field name="balance_end_real" readonly="1" string="Last Closing Balance"/>
-                            <field name="balance_start" readonly="1" string="Computed Amount"/>
+                            <field name="balance_start" readonly="1" string="Opening Cash Control"/>
                             <field name="total_entry_encoding" />
                         </group>
                         <group col="2" colspan="2">
                             <separator string="Closing Balance" colspan="4"/>
-                            <field name="balance_end"/>
-                            <field name="balance_end_cash"/>
-                            <field name="difference" />
+                            <field name="balance_end_real" readonly="1" string="Closing Cash Control"/>
+                            <field name="balance_end" string="Theorical Cash Closing"/>
+                        </group>
+                        <group col="2" colspan="2">
+                            <separator string="Dates" colspan="4"/>
+                            <field name="date" readonly="1"/>
+                            <field name="closing_date" readonly="1"/>
                         </group>
                     </group>
-                    <group col="8" colspan="4">
-                        <field name="state" widget="statusbar" statusbar_visible="draft,confirm" colspan="4"/>
-                        <button name="button_cancel" states="confirm,open" string="Cancel" icon="terp-gtk-stop" type="object"/>
-                        <button name="button_confirm_cash" states="open" string="Close CashBox" icon="terp-dialog-close" type="object"/>
-                        <button name="button_open" states="draft" string="Open CashBox" icon="gtk-go-forward" type="object"/>
-                    </group>
+                    </sheet>
                 </form>
             </field>
         </record>

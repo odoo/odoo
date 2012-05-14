@@ -53,36 +53,11 @@ class account_bank_statement(osv.osv):
         return False
 
     def _end_balance(self, cursor, user, ids, name, attr, context=None):
-        res_currency_obj = self.pool.get('res.currency')
-        res_users_obj = self.pool.get('res.users')
         res = {}
-
-        company_currency_id = res_users_obj.browse(cursor, user, user,
-                context=context).company_id.currency_id.id
-
-        statements = self.browse(cursor, user, ids, context=context)
-        for statement in statements:
+        for statement in self.browse(cursor, user, ids, context=context):
             res[statement.id] = statement.balance_start
-            currency_id = statement.currency.id
-            for line in statement.move_line_ids:
-                if line.debit > 0:
-                    if line.account_id.id == \
-                            statement.journal_id.default_debit_account_id.id:
-                        res[statement.id] += res_currency_obj.compute(cursor,
-                                user, company_currency_id, currency_id,
-                                line.debit, context=context)
-                else:
-                    if line.account_id.id == \
-                            statement.journal_id.default_credit_account_id.id:
-                        res[statement.id] -= res_currency_obj.compute(cursor,
-                                user, company_currency_id, currency_id,
-                                line.credit, context=context)
-
-            if statement.state in ('draft', 'open'):
-                for line in statement.line_ids:
-                    res[statement.id] += line.amount
-        for r in res:
-            res[r] = round(res[r], 2)
+            for line in statement.line_ids:
+                res[statement.id] += line.amount
         return res
 
     def _get_period(self, cr, uid, context=None):
@@ -122,7 +97,7 @@ class account_bank_statement(osv.osv):
     _description = "Bank Statement"
     _columns = {
         'name': fields.char('Name', size=64, required=True, states={'draft': [('readonly', False)]}, readonly=True, help='if you give the Name other then /, its created Accounting Entries Move will be with same name as statement name. This allows the statement entries to have the same references than the statement itself'), # readonly for account_cash_statement
-        'date': fields.date('Date', required=True, states={'confirm': [('readonly', True)]}, select=True),
+        'date': fields.date('Creation Date', required=True, states={'confirm': [('readonly', True)]}, select=True),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True,
             readonly=True, states={'draft':[('readonly',False)]}),
         'period_id': fields.many2one('account.period', 'Period', required=True,
@@ -133,7 +108,7 @@ class account_bank_statement(osv.osv):
             states={'confirm': [('readonly', True)]}),
         'balance_end': fields.function(_end_balance,
             store = {
-                'account.bank.statement': (lambda self, cr, uid, ids, c={}: ids, ['line_ids','move_line_ids'], 10),
+                'account.bank.statement': (lambda self, cr, uid, ids, c={}: ids, ['line_ids','move_line_ids','balance_start'], 10),
                 'account.bank.statement.line': (_get_statement, ['amount'], 10),
             },
             string="Computed Balance", help='Balance as calculated based on Starting Balance and transaction lines'),
@@ -303,7 +278,7 @@ class account_bank_statement(osv.osv):
 
     def balance_check(self, cr, uid, st_id, journal_type='bank', context=None):
         st = self.browse(cr, uid, st_id, context=context)
-        if not ((abs((st.balance_end or 0.0) - st.balance_end_real) < 0.0001) or (abs((st.balance_end or 0.0) - st.balance_end_cash) < 0.0001)):
+        if not ((abs((st.balance_end or 0.0) - st.balance_end_real) < 0.0001) or (abs((st.balance_end or 0.0) - st.balance_end_real) < 0.0001)):
             raise osv.except_osv(_('Error !'),
                     _('The statement balance is incorrect !\nThe expected balance (%.2f) is different than the computed one. (%.2f)') % (st.balance_end_real, st.balance_end))
         return True
@@ -374,15 +349,11 @@ class account_bank_statement(osv.osv):
         return self.write(cr, uid, done, {'state':'draft'}, context=context)
     
     def _compute_balance_end_real(self, cr, uid, journal_id, context=None):
-        
         cr.execute('SELECT balance_end_real \
                 FROM account_bank_statement \
                 WHERE journal_id = %s AND NOT state = %s \
                 ORDER BY date DESC,id DESC LIMIT 1', (journal_id, 'draft'))
         res = cr.fetchone()
-
-        print "res: %r" % (res,)
-
         return res and res[0] or 0.0
 
     def onchange_journal_id(self, cr, uid, statement_id, journal_id, context=None):

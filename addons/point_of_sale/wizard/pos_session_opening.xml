@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="pos_session_opening_form_view">
+            <field name="name">pos.session.opening.form.view</field>
+            <field name="model">pos.session.opening</field>
+            <field name="arch" type="xml">
+                <form string="PoS Session Opening" layout="auto">
+                    <separator string="Select your Point of Sale" colspan="4" />
+                    <field name="pos_config_id" on_change="on_change_config(pos_config_id)" widget="selection" domain="[('state','=','active')]"/>
+                    <field name="pos_session_id" invisible="1"/>
+		    <group colspan="4">
+                        <button special="cancel" icon="gtk-cancel" string="Cancel" />
+                        <button name="open_existing_session_cb" type="object" string="Open Session" icon="gtk-ok" 
+                            attrs="{'invisible' : [('pos_session_id', '=', False)]}" 
+                        />
+                        <button name="open_session_cb" type="object" string="New Session" icon="gtk-ok" 
+                            attrs="{'invisible' : [('pos_session_id', '&lt;&gt;', False)]}"
+                        />
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_pos_session_opening" model="ir.actions.act_window">
+            <field name="name">Open/Close a Session</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">pos.session.opening</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+    </data>
+</openerp>

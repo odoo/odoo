@@ -218,7 +218,7 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="account.view_bank_statement_form"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page[@name='statement_line_ids']/field[@name='line_ids']/tree/field[@name='amount']" position="after">
+                <xpath expr="//notebook/page[@name='statement_line_ids']/field[@name='line_ids']/tree/field[@name='amount']" position="after">
                     <field name="voucher_id" context="{'line_type': type, 'default_type': amount &lt; 0 and 'payment' or 'receipt', 'type': amount &lt; 0 and 'payment' or 'receipt', 'default_partner_id': partner_id, 'default_journal_id': parent.journal_id, 'default_amount': abs(amount), 'default_reference': ref, 'default_date': date, 'default_name': name}"/>
                 </xpath>
             </field>
@@ -230,7 +230,7 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="account.view_bank_statement_form"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page[@name='statement_line_ids']/field[@name='line_ids']/form/field[@name='sequence']" position="before">
+                <xpath expr="//notebook/page[@name='statement_line_ids']/field[@name='line_ids']/form/field[@name='sequence']" position="before">
                     <field name="voucher_id" context="{'line_type': type, 'default_type': amount &lt; 0 and 'payment' or 'receipt', 'type': amount &lt; 0 and 'payment' or 'receipt', 'default_partner_id': partner_id, 'default_journal_id': parent.journal_id, 'default_amount': abs(amount), 'default_reference': ref, 'default_date': date, 'default_name': name}"/>
                 </xpath>
             </field>
@@ -241,7 +241,7 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="account.view_bank_statement_form2"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page/field[@name='line_ids']/tree/field[@name='amount']" position="after">
+                <xpath expr="//field[@name='line_ids']/tree/field[@name='amount']" position="after">
                     <field name="voucher_id" context="{'line_type': type, 'default_type': amount &lt; 0 and 'payment' or 'receipt', 'type': amount &lt; 0 and 'payment' or 'receipt', 'default_partner_id': partner_id, 'default_journal_id': parent.journal_id, 'default_amount': abs(amount), 'default_reference': ref, 'default_date': date, 'default_name': name}"/>
                 </xpath>
             </field>
@@ -253,7 +253,7 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="account.view_bank_statement_form2"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page/field[@name='line_ids']/form/field[@name='amount']" position="after">
+                <xpath expr="//field[@name='line_ids']/form/field[@name='amount']" position="after">
                     <field name="voucher_id" context="{'line_type': type, 'default_type': amount &lt; 0 and 'payment' or 'receipt', 'type': amount &lt; 0 and 'payment' or 'receipt', 'default_partner_id': partner_id, 'default_journal_id': parent.journal_id, 'default_amount': abs(amount), 'default_reference': ref, 'default_date': date, 'default_name': name}"/>
                 </xpath>
             </field>

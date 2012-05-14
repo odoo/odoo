@@ -69,7 +69,6 @@ class pos_box_entries(osv.osv_memory):
 
     _columns = {
         'name': fields.char('Reason', size=32, required=True),
-        #'journal_id': fields.selection(get_journal, "Cash Register", required=True, size=-1),
         'journal_id': fields.many2one('account.journal', 'Cash Register', required=True, domain="[('journal_id.type', '=', 'cash')]"),
         'product_id': fields.selection(_get_income_product, "Operation", required=True, size=-1),
         'amount': fields.float('Amount', digits=(16, 2), required=True),

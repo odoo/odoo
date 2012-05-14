@@ -30,7 +30,7 @@ import pos_receipt
 import pos_payment_report_user
 import pos_payment_report
 import pos_payment
-
+import pos_session_opening
 import pos_box
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

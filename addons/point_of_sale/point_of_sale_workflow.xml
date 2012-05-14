@@ -86,51 +86,70 @@
 
     <!-- Activities -->
 
-    <record model="workflow.activity" id="act_new">
+    <record model="workflow.activity" id="act_opening_control">
       <field name="wkf_id" ref="wkf_pos_session"/>
       <field name="flow_start">True</field>
-      <field name="name">new</field>
+      <field name="name">opening_control</field>
     </record>
 
     <record model="workflow.activity" id="act_open">
       <field name="wkf_id" ref="wkf_pos_session"/>
-      <field name="name">open</field>
+      <field name="name">opened</field>
       <field name="action">wkf_action_open()</field>
+      <field name="kind">function</field>
+    </record>
+
+    <record model="workflow.activity" id="act_closing_control">
+      <field name="wkf_id" ref="wkf_pos_session"/>
+      <field name="name">closing_control</field>
+      <field name="action">wkf_action_closing_control()</field>
       <field name="kind">function</field>
     </record>
 
     <record model="workflow.activity" id="act_close">
       <field name="wkf_id" ref="wkf_pos_session"/>
-      <field name="name">close</field>
+      <field name="flow_stop">True</field>
+      <field name="name">closed</field>
       <field name="action">wkf_action_close()</field>
       <field name="kind">function</field>
     </record>
 
-    <record model="workflow.activity" id="act_post">
-      <field name="wkf_id" ref="wkf_pos_session"/>
-      <field name="flow_stop">True</field>
-      <field name="name">post</field>
-      <field name="action">wkf_action_post()</field>
-      <field name="kind">function</field>
-    </record>
-
     <!-- Transitions -->
-    <record model="workflow.transition" id="trans_new_open">
-      <field name="act_from" ref="act_new"/>
-      <field name="act_to" ref="act_open"/>
+    <!-- state:opening_control -> signal:open -> state:opened -> signal:cashbox_control -> state:closing_control -> signal:close -> state:close -->
+
+    <record model="workflow.transition" id="trans_opening_control_to_open">
+      <field name="act_from" ref="act_opening_control" />
+      <field name="act_to" ref="act_open" />
       <field name="signal">open</field>
     </record>
+<!--    
+    <record model="workflow.transition" id="trans_opening_control_to_open_automatic">
+      <field name="act_from" ref="act_opening_control" />
+      <field name="act_to" ref="act_open" />
+      <field name="signal" eval="False" />
+      <field name="condition">not has_opening_control()</field>
+    </record>
+-->
 
-    <record model="workflow.transition" id="trans_open_close">
-      <field name="act_from" ref="act_open"/>
-      <field name="act_to" ref="act_close"/>
-      <field name="signal">close</field>
+    <record model="workflow.transition" id="trans_open_to_closing_control">
+      <field name="act_from" ref="act_open" />
+      <field name="act_to" ref="act_closing_control" />
+      <field name="signal">cashbox_control</field>
     </record>
 
-    <record model="workflow.transition" id="trans_close_post">
-      <field name="act_from" ref="act_close"/>
-      <field name="act_to" ref="act_post"/>
-      <field name="signal">post</field>
+<!--
+    <record model="workflow.transition" id="trans_closing_control_to_close_automatic">
+      <field name="act_from" ref="act_closing_control" />
+      <field name="act_to" ref="act_close" />
+      <field name="signal" eval="False" />
+      <field name="condition">not has_closing_control()</field>
+    </record>
+-->    
+
+    <record model="workflow.transition" id="trans_closing_control_to_close">
+      <field name="act_from" ref="act_closing_control" />
+      <field name="act_to" ref="act_close" />
+      <field name="signal">close</field>
     </record>
 
   </data>
