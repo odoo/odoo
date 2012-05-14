@@ -44,7 +44,7 @@ openerp.mail = function(session) {
             this.params = params;
             this.params.parent_id = this.params.parent_id || false;
             this.params.thread_level = this.params.thread_level || 0;
-            this.params.wall = this.params.wall || this.params.records || false;
+            this.params.is_wall = this.params.is_wall || this.params.records || false;
             this.params.msg_more_limit = this.params.msg_more_limit || 150;
             this.params.limit = this.params.limit || 100;
             this.params.offset = this.params.offset || 0;
@@ -58,11 +58,11 @@ openerp.mail = function(session) {
             // display customization vars
             this.display = {};
             this.display.show_post_comment = this.params.show_post_comment || false;
-            this.display.show_msg_menu = this.params.wall;
+            this.display.show_msg_menu = this.params.is_wall;
             this.display.show_reply = (this.params.thread_level > 0);
-            this.display.show_delete = ! this.params.wall;
-            this.display.show_hide = this.params.wall;
-            this.display.show_reply_by_email = ! this.params.wall;
+            this.display.show_delete = ! this.params.is_wall;
+            this.display.show_hide = this.params.is_wall;
+            this.display.show_reply_by_email = ! this.params.is_wall;
             this.display.show_more = (this.params.thread_level == 0);
             // internal links mapping
             this.intlinks_mapping = {};
@@ -71,7 +71,8 @@ openerp.mail = function(session) {
         start: function() {
             this._super.apply(this, arguments);
             // customize display
-            if (! this.display.show_post_comment) this.$element.find('div.oe_mail_thread_act').hide();
+            if (this.display.show_post_comment) { this.$element.find('div.oe_mail_thread_act').show(); }
+            if (this.display.show_reply_by_email) { this.$element.find('a.oe_mail_compose').show(); }
             // add events
             this.add_events();
             /* display user, fetch comments */

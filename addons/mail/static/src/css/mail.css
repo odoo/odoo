@@ -129,6 +129,7 @@
 /* ------------------------------ */
 
 .openerp div.oe_mail_thread_act {
+	display: none;
     white-space: normal;
     margin-bottom: 5px;
     padding: 4px;
@@ -147,6 +148,10 @@
 .openerp div.oe_mail_thread_subthread {
     margin-top: 8px;
     padding-left: 5%;
+}
+
+.openerp a.oe_mail_compose {
+	display: none;
 }
 
 .openerp div.oe_mail_thread_more {
@@ -168,6 +173,41 @@
     content: "";
     display: block;
     clear: both; 
+}
+
+.openerp img.oe_mail_msg_menu_icon {
+    float: right;
+    cursor: pointer;
+}
+
+.openerp ul.oe_mail_msg_menu {
+    display: none;
+    position: absolute;
+    top: 0.5em;
+    right: 1em;
+    overflow-x: hidden;
+    z-index: 900;
+    background: white;
+    padding: 4px;
+    border: 1px solid #AFAFB6;
+    width: 150px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -o-border-radius: 3px;
+    -ms-border-radius: 3px;
+    border-radius: 3px;
+    -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+    -o-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+    -box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+.openerp img.oe_mail_msg_menu_icon:hover + ul.oe_mail_msg_menu {
+    display: block;
+}
+
+.openerp ul.oe_mail_msg_menu:hover {
+	display: block;
 }
 
 .openerp .oe_mail_msg_notification, .openerp .oe_mail_msg_comment, .openerp .oe_mail_msg_email {
@@ -232,37 +272,6 @@
 
 .openerp a.oe_mail_expand, .openerp a.oe_mail_reduce {
     color: #4E43E7;
-}
-
-.openerp img.oe_mail_msg_menu_icon {
-    float: right;
-    cursor: pointer;
-}
-
-.openerp ul.oe_mail_msg_menu {
-    display: none;
-    position: absolute;
-    top: 1em;
-    right: 1em;
-    overflow-x: hidden;
-    z-index: 900;
-    background: white;
-    padding: 4px;
-    border: 1px solid #AFAFB6;
-    width: 150px;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    -o-border-radius: 3px;
-    -ms-border-radius: 3px;
-    border-radius: 3px;
-    -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
-    -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
-    -o-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
-    -box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
-}
-
-.openerp img.oe_mail_msg_menu_icon:hover + .openerp ul.oe_mail_msg_menu {
-    display: block;
 }
 
 /* ------------------------------ */
