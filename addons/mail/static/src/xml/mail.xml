@@ -63,9 +63,13 @@
         <div t-attf-class="oe_mail_msg_#{record.type}">
             <img class="oe_mail_msg_menu_icon" src="/mail/static/src/img/wheel_menu.png" alt="menu"/>
             <ul class="oe_mail_msg_menu">
-                <li><a href="#" class="oe_mail_msg_hide_thread" t-attf-data-id='{record.id}'>Hide this thread</a></li>
-                <li><a href="#" class="oe_mail_msg_hide_type" t-attf-data-subtype='{record.subtype}'>Hide this type: <t t-esc="record.subtype"/>
-                </a></li>
+                <t t-if="display['show_delete']"><t t-if="thread._is_author(record.user_id[0])">
+                    <li><a href="#" class="oe_mail_oe_intlink oe_mail_msg_delete" t-attf-data-id='{record.id}'>Delete</a></li>
+                </t></t>
+                <t t-if="display['show_hide']">
+                    <li><a href="#" class="oe_mail_oe_intlink oe_mail_msg_hide" t-attf-data-id='{record.id}'>Remove from Wall</a></li>
+                    <li><a href="#" class="oe_mail_oe_intlink oe_mail_msg_hide_type" t-attf-data-subtype='{record.subtype}'>Hide this type: <t t-esc="record.subtype"/></a></li>
+                </t>
             </ul>
             <img class="oe_mail_msg_image oe_mail_oe_left" t-att-src="record.mini_url"/>
             <div class="oe_mail_msg_content">
