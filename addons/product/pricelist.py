@@ -204,7 +204,7 @@ class product_pricelist(osv.osv):
 
                 if partner:
                     partner_where = 'base <> -2 OR %s IN (SELECT name FROM product_supplierinfo WHERE product_id = %s) '
-                    partner_args = (partner, product_id)
+                    partner_args = (partner, tmpl_id)
                 else:
                     partner_where = 'base <> -2 '
                     partner_args = ()
