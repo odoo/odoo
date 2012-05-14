@@ -716,7 +716,8 @@ instance.web_kanban.QuickCreate = instance.web.Widget.extend({
             .pipe(function(record) {
                 self.$input.val("");
                 self.trigger('added', record);
-            }, function() {
+            }, function(error, event) {
+                event.preventDefault();
                 return self.slow_create();
             });
     },
@@ -724,14 +725,14 @@ instance.web_kanban.QuickCreate = instance.web.Widget.extend({
         var self = this;
         var pop = new instance.web.form.SelectCreatePopup(this);
         pop.select_element(
-            self.field.relation,
+            self._dataset.model,
             {
                 title: _t("Create: ") + (this.string || this.name),
                 initial_view: "form",
                 disable_multiple_selection: true
             },
-            undefined,
-            new instance.web.CompoundContext(self.build_context(), {"default_name": self.$input.val("")})
+            [],
+            {"default_name": self.$input.val()}
         );
         pop.on_select_elements.add(function(element_ids) {
             self.$input.val("");
