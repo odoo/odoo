@@ -53,7 +53,6 @@ openerp.mail = function(session) {
             this.ds = new session.web.DataSet(this, this.params.res_model);
             this.ds_users = new session.web.DataSet(this, 'res.users');
             this.ds_msg = new session.web.DataSet(this, 'mail.message');
-            this.sorted_comments = {'root_ids': [], 'root_id_msg_list': {}};
             this.comments_structure = {'root_ids': [], 'new_root_ids': [], 'msgs': {}, 'tree_struct': {}, 'model_to_root_ids': {}};
             // display customization vars
             this.display = {};
@@ -200,21 +199,20 @@ openerp.mail = function(session) {
         init_comments: function() {
             var self = this;
             this.params.offset = 0;
-            this.sorted_comments = {'root_ids': [], 'root_id_msg_list': {}};
             this.comments_structure = {'root_ids': [], 'new_root_ids': [], 'msgs': {}, 'tree_struct': {}, 'model_to_root_ids': {}};
             this.$element.find('div.oe_mail_thread_display').empty();
-            domain = this.get_fetch_domain(this.sorted_comments);
+            var domain = this.get_fetch_domain(this.comments_structure);
             return this.fetch_comments(this.params.limit, this.params.offset, domain).then();
         },
         
         fetch_comments: function (limit, offset, domain) {
             var self = this;
-            var defer = this.ds.call('message_load', [[this.params.res_id], (this.params.thread_level > 0), (this.sorted_comments['root_ids']),
-                                    (limit+1) || (this.params.limit+1), offset||this.params.offset, domain||undefined ]);
-            $.when(defer).then(function (records) {
+            var defer = this.ds.call('message_load', [[this.params.res_id], (this.params.thread_level > 0), (this.comments_structure['root_ids']),
+                                    (limit+1) || (this.params.limit+1), offset||this.params.offset, domain||undefined ]).then(function (records) {
                 if (records.length <= self.params.limit) self.display.show_more = false;
                 else { self.display.show_more = true; records.pop(); }
                 self.display_comments(records);
+                // TODO: move to customize display
                 if (self.display.show_more == true) self.$element.find('div.oe_mail_thread_more:last').show();
                 else  self.$element.find('div.oe_mail_thread_more:last').hide();
                 });
@@ -225,6 +223,7 @@ openerp.mail = function(session) {
             if (records.length > 0 && records.length < (records[0].child_ids.length+1) ) this.display.show_more = true;
             else this.display.show_more = false;
             var defer = this.display_comments(records);
+            // TODO: move to customize display
             if (this.display.show_more == true) $('div.oe_mail_thread_more').eq(-2).show();
             else $('div.oe_mail_thread_more').eq(-2).hide();
             return defer;
@@ -232,7 +231,7 @@ openerp.mail = function(session) {
         
         display_comments: function (records) {
             var self = this;
-            this.cs = this.sort_comments_tmp(records);
+            tools_sort_comments(this.comments_structure, records, this.params.parent_id);
             
             /* WIP: map matched regexp -> records to browse with name */
             //_(records).each(function (record) {
@@ -242,7 +241,7 @@ openerp.mail = function(session) {
             _(records).each(function (record) {
                 var sub_msgs = [];
                 if ((record.parent_id == false || record.parent_id[0] == self.params.parent_id) && self.params.thread_level > 0 ) {
-                    var sub_list = self.cs['tree_struct'][record.id]['direct_childs'];
+                    var sub_list = this.comments_structure['tree_struct'][record.id]['direct_childs'];
                     _(records).each(function (record) {
                         //if (record.parent_id == false || record.parent_id[0] == self.params.parent_id) return;
                         if (_.indexOf(sub_list, record.id) != -1) {
@@ -282,13 +281,6 @@ openerp.mail = function(session) {
             this.$element.find('span.oe_mail_msg_body:last').expander({slicePoint: this.params.msg_more_limit, moreClass: 'oe_mail_expand', lesClass: 'oe_mail_reduce'});
         },
         
-        /**
-         * Add records to comments_structure object: see function for details
-         */
-        sort_comments_tmp: function(records) {
-            return tools_sort_comments(this.comments_structure, records, this.params.parent_id);
-        },
-        
         display_current_user: function () {
             return this.$element.find('img.oe_mail_msg_image').attr('src', tools_get_image(this.session.prefix, this.session.session_id, 'res.users', 'avatar', this.params.uid));
         },
@@ -303,17 +295,17 @@ openerp.mail = function(session) {
         
         /**
          * Create a domain to fetch new comments according to
-         * comment already present in sorted_comments
-         * @param {Object} sorted_comments (see tools_sort_comments)
+         * comment already present in comments_structure
+         * @param {Object} comments_structure (see tools_sort_comments)
          * @returns {Array} fetch_domain (OpenERP domain style)
          */
-        get_fetch_domain: function (sorted_comments) {
+        get_fetch_domain: function (comments_structure) {
             var domain = [];
-            var ids = sorted_comments.root_ids.slice();
+            var ids = comments_structure.root_ids.slice();
             var ids2 = [];
             // must be child of current parent
             if (this.params.parent_id) { domain.push(['id', 'child_of', this.params.parent_id]); }
-            _(sorted_comments.root_ids).each(function (id) { // each record
+            _(comments_structure.root_ids).each(function (id) { // each record
                 ids.push(id);
                 ids2.push(id);
             });
@@ -333,7 +325,7 @@ openerp.mail = function(session) {
         },
         
         do_more: function () {
-            domain = this.get_fetch_domain(this.sorted_comments);
+            domain = this.get_fetch_domain(this.comments_structure);
             return this.fetch_comments(this.params.limit, this.params.offset, domain);
         },
 
@@ -537,9 +529,7 @@ openerp.mail = function(session) {
          * @param {Object} [params]
          * @param {Number} [params.limit=20] number of messages to show and fetch
          * @param {Number} [params.search_view_id=false] search view id for messages
-         * @var {Array} sorted_comments records sorted by res_model and res_id
-         *                  records.res_model = {res_ids}
-         *                  records.res_model.res_id = [records]
+         * @var {Array} comments_structure see tools_sort_comments
          */
         init: function (parent, params) {
             this._super(parent);
@@ -689,10 +679,9 @@ openerp.mail = function(session) {
 
         /**
          * Create a domain to fetch new comments according to
-         * comments already present in sorted_comments
+         * comments already present in comments_structure
          * - for each model:
          * -- should not be child of already displayed ids
-         * @param {Object} sorted_comments (see sort_comments)
          * @returns {Array} fetch_domain (OpenERP domain style)
          */
         get_fetch_domain: function () {
@@ -733,7 +722,7 @@ openerp.mail = function(session) {
      */
 
     /**
-    * Add records to sorted_comments array
+    * Add records to comments_structure array
     * @param {Array} records records from mail.message sorted by date desc
     * @returns {Object} cs comments_structure: dict
     *                      cs.model_to_root_ids = {model: [root_ids], }
