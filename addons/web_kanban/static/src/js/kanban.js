@@ -300,6 +300,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             || !this.options.action.help) {
             return;
         }
+        this.$element.find('.oe_view_nocontent').remove();
         this.$element.prepend(
             $('<div class="oe_view_nocontent">')
                 .append($('<img>', { src: '/web/static/src/img/view_empty_arrow.png' }))
