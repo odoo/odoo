@@ -19,10 +19,14 @@ instance.web.form.FieldEtherpad = instance.web.form.AbstractField.extend(_.exten
             this.render_value();
         },
         render_value: function() {            
-            var show_value = instance.web.format_value(this.get('value'), this, '');            
-                            console.log(this);                
-            if (!this.get("effective_readonly")) {            
-                this.$element.find('div').html('<iframe width="100%" height="100%" frameborder="0"  src="'+show_value.split('\n')[0]+'?showChat=false&showLineNumbers=false"></iframe>');                 
+            var show_value = instance.web.format_value(this.get('value'), this, '');                        
+            if (!this.get("effective_readonly")) {     
+               // var pad_url = show_value.split('\n')[0];
+//                var api_url = pad_url.substring( 0, (pad_url.search("/p/")+1) );
+  //              var pad_id = pad_url.substring((pad_url.search("p/")+2) );
+    //            console.log(this);
+                this.$element.find('div').html('<iframe width="100%" height="100%" frameborder="0"  src="'+pad_url+'?showChat=false&showLineNumbers=false"></iframe>');
+            
             } else {
                 if(this.get('value') != false)
                 {
