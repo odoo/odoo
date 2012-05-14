@@ -177,12 +177,14 @@
         <record model="account.account.type" id="account_type_receivable">
             <field name="name">Bilan : Debiteurs</field>
             <field name="code">receivable</field>
+            <field name="partner_account">True</field>
             <field name="close_method">unreconciled</field>
             <field name="report_type">none</field>
         </record>
         <record model="account.account.type" id="account_type_payable">
             <field name="name">Bilan : Fournisseurs</field>
             <field name="code">payable</field>
+            <field name="partner_account">True</field>
             <field name="close_method">unreconciled</field>
             <field name="report_type">none</field>
         </record>
@@ -11832,10 +11834,6 @@
             <field name="default_debit_account_id" eval="False"/>
         </record>
         
-        <record id="misc_transaction_journal" model="account.journal">
-            <field name="default_debit_account_id" eval="False"/>
-            <field name="default_debit_account_id" eval="False"/>
-        </record>
         
         <record model="account.journal" id="bilan_journal">
             <field name="default_debit_account_id" eval="False"/>

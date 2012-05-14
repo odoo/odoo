@@ -23,10 +23,6 @@
             <field name="default_credit_account_id" model="account.account" search="[('code','=', '1000')]"/>
         </record>
         
-        <record id="misc_transaction_journal" model="account.journal">
-            <field name="default_debit_account_id" eval="False"/>
-            <field name="default_credit_account_id" eval="False"/>
-        </record>
         
         <record model="account.journal" id="bilan_journal">
             <field name="default_debit_account_id" model="account.account" search="[('code','=', '2991')]"/>
