@@ -61,8 +61,8 @@ class purchase_config_settings(osv.osv_memory):
         'module_purchase_requisition': fields.boolean("Use Purchase Requisition",
             help="""Purchase Requisitions are used when you want to request quotations from several suppliers for a given set of products. 
             You can configure per product if you directly do a Request for Quotation 
-            to one supplier or if you want a purchase requisition to negociate with several suppliers."""),
-        'decimal_precision': fields.integer('Decimal Precision on Purchase Price'),                
+            to one supplier or if you want a purchase requisition to negotiate with several suppliers."""),
+        'decimal_precision': fields.integer('Decimal Precision on Price'),                
     }
 
     _defaults = {

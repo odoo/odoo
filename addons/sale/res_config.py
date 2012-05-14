@@ -33,7 +33,7 @@ class sale_configuration(osv.osv_memory):
         'group_invoice_deli_orders': fields.boolean('Based on Delivery Orders',
             implied_group='sale.group_invoice_deli_orders',
             help="To allow your salesman to make invoices for Delivery Orders using the menu 'Deliveries to Invoice'."),
-        'task_work': fields.boolean('Tasks\' activity',
+        'task_work': fields.boolean('Based on Task Activities',
             help="""Lets you transfer the entries under tasks defined for Project Management to
                 the Timesheet line entries for particular date and particular user  with the effect of creating, editing and deleting either ways
                 and to automatically creates project tasks from procurement lines.
@@ -101,7 +101,7 @@ class sale_configuration(osv.osv_memory):
         'module_project_timesheet': fields.boolean("Project Timesheet"),
         'module_project_mrp': fields.boolean("Project MRP"),
         'module_project': fields.boolean("Project"),
-        'decimal_precision': fields.integer('Decimal Precision on Sales Price'),
+        'decimal_precision': fields.integer('Decimal Precision on Price'),
     }
 
     def default_get(self, cr, uid, fields, context=None):

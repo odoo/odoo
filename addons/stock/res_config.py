@@ -73,7 +73,7 @@ class stock_config_settings(osv.osv_memory):
         'group_product_variant': fields.boolean("Product Variant",
             implied_group='product.group_product_variant',
             help="""This allows to configure and use Product Variant."""),                
-        'decimal_precision': fields.integer('Decimal Precision on Stock Weight'),
+        'decimal_precision': fields.integer('Decimal Precision on Weight'),
     }
 
     def get_default_dp(self, cr, uid, fields, context=None):
