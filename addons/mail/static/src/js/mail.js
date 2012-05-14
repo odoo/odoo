@@ -271,7 +271,7 @@ openerp.mail = function(session) {
         display_comment: function (record) {
             record.body = this.do_text_nl2br(record.body, true);
             if (record.type == 'email') { record.mini_url = ('/mail/static/src/img/email_icon.png'); }
-            else { record.mini_url = this._get_image('res.users', 'avatar', record.user_id[0]); }    
+            else { record.mini_url = tools_get_image(this.session.prefix, this.session.session_id, 'res.users', 'avatar', record.user_id[0]); }    
             // body text manipulation
             record.body = this.do_clean_text(record.body);
             record.body = this.do_replace_internal_links(record.body);
@@ -292,7 +292,7 @@ openerp.mail = function(session) {
         },
         
         display_current_user: function () {
-            return this.$element.find('img.oe_mail_msg_image').attr('src', this._get_image('res.users', 'avatar', this.params.uid));
+            return this.$element.find('img.oe_mail_msg_image').attr('src', tools_get_image(this.session.prefix, this.session.session_id, 'res.users', 'avatar', this.params.uid));
         },
         
         do_comment: function () {
@@ -413,11 +413,6 @@ openerp.mail = function(session) {
          *    MISC TOOLS METHODS
          */
         
-        /** get an image in /web/binary/image?... */
-        _get_image: function(model, field, id) {
-            return this.session.prefix + '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + (id || '');
-        },
-        
         /** checks if tue current user is the message author */
         _is_author: function (id) {
             return (this.session.uid == id);
@@ -501,7 +496,7 @@ openerp.mail = function(session) {
             $('<h4/>').html('Followers (' + records.length + ')').appendTo(sub_node);
             _(records).each(function (record) {
                 if (record.id == self.session.uid) { self.is_subscriber = true; }
-                var mini_url = self._get_image('res.users', 'avatar', record.id);
+                var mini_url = tools_get_image(self.session.prefix, self.session.session_id, 'res.users', 'avatar', record.id);
                 $('<img class="oe_mail_oe_left oe_mail_msg_image" src="' + mini_url + '" title="' + record.name + '" alt="' + record.name + '"/>').appendTo(sub_node);
             });
             if (self.is_subscriber) {
@@ -528,10 +523,6 @@ openerp.mail = function(session) {
             if (this.see_subscribers) { this.$element.find('button.oe_mail_button_followers').html('Hide followers'); }
             else { this.$element.find('button.oe_mail_button_followers').html('Display followers'); }
             this.$element.find('div.oe_mail_recthread_followers').toggle();
-        },
-        
-        _get_image: function(model, field, id) {
-            return this.session.prefix + '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + (id || '');
         },
     });
     
@@ -795,6 +786,12 @@ openerp.mail = function(session) {
         }
         return cs;
     }
+
+    /** get an image in /web/binary/image?... */
+    function tools_get_image(session_prefix, session_id, model, field, id) {
+        return session_prefix + '/web/binary/image?session_id=' + session_id + '&model=' + model + '&field=' + field + '&id=' + (id || '');
+    }
+        
 };
 
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:
