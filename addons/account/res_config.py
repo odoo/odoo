@@ -65,14 +65,14 @@ class account_config_settings(osv.osv_memory):
         'sale_sequence_prefix': fields.related('sale_journal_id', 'sequence_id', 'prefix', type='char', string='Invoice Sequence'),
         'sale_sequence_next': fields.related('sale_journal_id', 'sequence_id', 'number_next', type='integer', string='Next Invoice Number'),
         'sale_refund_journal_id': fields.many2one('account.journal', 'Sale Refund Journal'),
-        'sale_refund_sequence_prefix': fields.related('sale_refund_journal_id', 'sequence_id', 'prefix', type='char', string='Refund Sequence'),
-        'sale_refund_sequence_next': fields.related('sale_refund_journal_id', 'sequence_id', 'number_next', type='integer', string='Next Refund Number'),
+        'sale_refund_sequence_prefix': fields.related('sale_refund_journal_id', 'sequence_id', 'prefix', type='char', string='Credit Note Sequence'),
+        'sale_refund_sequence_next': fields.related('sale_refund_journal_id', 'sequence_id', 'number_next', type='integer', string='Next Credit Note Number'),
         'purchase_journal_id': fields.many2one('account.journal', 'Purchase Journal'),
         'purchase_sequence_prefix': fields.related('purchase_journal_id', 'sequence_id', 'prefix', type='char', string='Supplier Invoice Sequence'),
         'purchase_sequence_next': fields.related('purchase_journal_id', 'sequence_id', 'number_next', type='integer', string='Next Supplier Invoice Number'),
         'purchase_refund_journal_id': fields.many2one('account.journal', 'Purchase Refund Journal'),
-        'purchase_refund_sequence_prefix': fields.related('purchase_refund_journal_id', 'sequence_id', 'prefix', type='char', string='Supplier Refund Sequence'),
-        'purchase_refund_sequence_next': fields.related('purchase_refund_journal_id', 'sequence_id', 'number_next', type='integer', string='Next Supplier Refund Number'),
+        'purchase_refund_sequence_prefix': fields.related('purchase_refund_journal_id', 'sequence_id', 'prefix', type='char', string='Supplier Credit Note Sequence'),
+        'purchase_refund_sequence_next': fields.related('purchase_refund_journal_id', 'sequence_id', 'number_next', type='integer', string='Next Supplier Credit Note Number'),
 
         'module_account_check_writing': fields.boolean('Check Writing',
             help="""This allows you to check writing and printing.

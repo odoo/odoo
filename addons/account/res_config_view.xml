@@ -77,7 +77,7 @@
                                 <field name="sale_sequence_next" nolabel="1" attrs="{'readonly': [('sale_journal_id','=',False)]}"/>
                             </group>
                             <field name="sale_refund_journal_id" invisible="1"/>
-                            <label string="Refund Sequence" colspan="1"/>
+                            <label string="Credit Note Sequence" colspan="1"/>
                             <group colspan="1" col="2">
                                 <field name="sale_refund_sequence_prefix" nolabel="1"/>
                                 <field name="sale_refund_sequence_next" nolabel="1" attrs="{'readonly': [('sale_refund_journal_id','=',False)]}"/>
@@ -96,7 +96,7 @@
                                 <field name="purchase_sequence_next" nolabel="1" attrs="{'readonly': [('purchase_journal_id','=',False)]}"/>
                             </group>
                             <field name="purchase_refund_journal_id" invisible="1"/>
-                            <label string="Supplier Refund Sequence" colspan="1"/>
+                            <label string="Supplier Credit Note Sequence" colspan="1"/>
                             <group colspan="1" col="2">
                                 <field name="purchase_refund_sequence_prefix" nolabel="1"/>
                                 <field name="purchase_refund_sequence_next" nolabel="1" attrs="{'readonly': [('purchase_refund_journal_id','=',False)]}"/>
