@@ -31,11 +31,9 @@ class project_tasks(osv.osv):
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
         res_id = super(project_tasks,self).message_new(cr, uid, msg, custom_values=custom_values, context=context)
         subject = msg.get('subject')
-        body = msg.get('body_text')
         msg_from = msg.get('from')
         data = {
             'name': subject,
-            'description': body,
             'planned_hours': 0.0,
         }
         data.update(self.message_partner_by_email(cr, uid, msg_from))
@@ -43,12 +41,9 @@ class project_tasks(osv.osv):
         return res_id
 
     def message_update(self, cr, uid, ids, msg, data={}, default_act='pending'):
-        data.update({
-            'description': msg['body_text'],
-        })
         act = 'do_'+default_act
 
-        maps = { 
+        maps = {
             'cost':'planned_hours',
         }
         for line in msg['body_text'].split('\n'):
@@ -68,7 +63,7 @@ class project_tasks(osv.osv):
 
         self.write(cr, uid, ids, data, context=context)
         getattr(self,act)(cr, uid, ids, context=context)
-        self.message_append_dict(cr, uid, [res_id], msg, context=context)
+        self.message_append_note(cr, uid, [res_id], msg, context=context)
         return True
 
     def message_thread_followers(self, cr, uid, ids, context=None):
