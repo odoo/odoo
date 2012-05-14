@@ -11,10 +11,8 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
     default_nr_columns: 3,
     view_type: "kanban",
     init: function (parent, dataset, view_id, options) {
-        this._super(parent);
-        this.set_default_options(options);
-        this.dataset = dataset;
-        this.view_id = view_id;
+        this._super(parent, dataset, view_id, options);
+        _.defaults(this.options, {"quick_creatable": true});
         this.fields_view = {};
         this.fields_keys = [];
         this.group_by = null;
@@ -430,8 +428,7 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
      */
     quick_created: function (record) {
         var id = record[0], self = this;
-        new instance.web.Model(this.dataset.model).call(
-                'read', [[id], this.view.fields_keys], {})
+        this.dataset.read_ids([id], this.view.fields_keys)
             .then(function (records) {
                 self.view.dataset.ids.push(id);
                 self.do_add_records(records, 'prepend');
