@@ -80,10 +80,10 @@ class ir_rule(osv.osv):
         'groups': fields.many2many('res.groups', 'rule_group_rel', 'rule_group_id', 'group_id', 'Groups'),
         'domain_force': fields.text('Domain'),
         'domain': fields.function(_domain_force_get, string='Domain', type='text'),
-        'perm_read': fields.boolean('Apply For Read'),
-        'perm_write': fields.boolean('Apply For Write'),
-        'perm_create': fields.boolean('Apply For Create'),
-        'perm_unlink': fields.boolean('Apply For Delete')
+        'perm_read': fields.boolean('Apply for Read'),
+        'perm_write': fields.boolean('Apply for Write'),
+        'perm_create': fields.boolean('Apply for Create'),
+        'perm_unlink': fields.boolean('Apply for Delete')
     }
 
     _order = 'model_id DESC'

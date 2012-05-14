@@ -23,7 +23,7 @@
 #.apidoc title: Utilities: tools.misc
 
 """
-Miscelleanous tools used by OpenERP.
+Miscellaneous tools used by OpenERP.
 """
 
 from functools import wraps
