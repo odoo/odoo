@@ -89,8 +89,11 @@ class ResPartnerBank(osv.osv):
         pattern = r'^[0-9]{2}-[0-9]{1,6}-[0-9]$'
         if not re.search(pattern, number):
             return False
-        num, checksum = (number.replace('-','')[:-1], number[-1:])
-        return mod10r(num)[-1:] == checksum
+        nums = number.split('-')
+        prefix = nums[0]
+        num = nums[1].rjust(6,'0')
+        checksum = nums[2]
+        return mod10r(prefix + num)[-1:] == checksum
 
 
     def _check_5_pos_postal_num(self, number):
@@ -112,7 +115,7 @@ class ResPartnerBank(osv.osv):
 
  
     _constraints = [(_check_postal_num,
-                    'Please enter a correct postal number. (01-23456-5 or 12345)',
+                    'Please enter a correct postal number. (01-23456-1 or 12345)',
                     ['post_number'])]    
 
     _sql_constraints = [('bvr_adherent_uniq', 'unique (bvr_adherent_num)',
