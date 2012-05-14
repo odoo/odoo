@@ -61,7 +61,7 @@
                     <filter icon="terp-go-month" string="Month-1"
                             domain="[('date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
                             help="last month"/>
-                    <separator orientation="vertical"/>              	
+                    <separator orientation="vertical"/>
                     <filter string="Draft"
                            icon="terp-document-new"
                            domain="[('state','=','draft')]"
