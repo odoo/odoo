@@ -131,7 +131,6 @@ openerp.mail = function(session) {
             });
             // event: click on "reply by email" in msg
             this.$element.find('div.oe_mail_thread_display').delegate('a.oe_mail_msg_reply_by_email', 'click', function (event) {
-                console.log('reply by e-mail');
                 var msg_id = event.srcElement.dataset.id;
                 if (! msg_id) return false;
                 self.do_action({
@@ -148,7 +147,6 @@ openerp.mail = function(session) {
             });
             // event: click on 'hide this type' in wheel_menu
             this.$element.find('div.oe_mail_thread_display').delegate('a.oe_mail_msg_hide_type', 'click', function (event) {
-                console.log('hiding type');
                 if (! confirm(_t("Do you really want to hide this type of thread ?"))) { return false; }
                 var subtype = event.srcElement.dataset.subtype;
                 if (! subtype) return false;
