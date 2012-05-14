@@ -917,7 +917,7 @@
                 t-att-tabindex="widget.node.attrs.tabindex"
                 t-att-autofocus="widget.node.attrs.autofocus"
                 t-attf-class="field_char #{widget.is_field_number ? 'oe-number' : ''}"
-                t-att-placeholder="widget.placeholder"
+                t-att-placeholder="widget.node.attrs.placeholder"
             /><img class="oe_field_translate oe_input_icon" t-if="widget.field.translate" t-att-src='_s + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"/>
         </div>
     </t>
@@ -934,6 +934,7 @@
                     t-att-id="widget.id_for_label"
                     t-att-tabindex="widget.node.attrs.tabindex"
                     t-att-autofocus="widget.node.attrs.autofocus"
+                    t-att-placeholder="widget.node.attrs.placeholder"
                 />
             </td>
             <td width="16">
@@ -959,6 +960,7 @@
                     t-att-id="widget.id_for_label"
                     t-att-tabindex="widget.node.attrs.tabindex"
                     t-att-autofocus="widget.node.attrs.autofocus"
+                    t-att-placeholder="widget.node.attrs.placeholder"
                 />
             </td>
             <td width="16">
@@ -982,6 +984,7 @@
             class="field_text"
             t-att-tabindex="widget.node.attrs.tabindex"
             t-att-autofocus="widget.node.attrs.autofocus"
+            t-att-placeholder="widget.node.attrs.placeholder"
         ></textarea>
         <img class="oe_field_translate oe_input_icon" t-if="widget.field.translate"
             t-att-src='_s + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"/>
@@ -992,6 +995,7 @@
         <input type="text" class="oe_datepicker_container" disabled="disabled" style="display: none;"/>
         <input type="text"
             t-att-name="widget.name"
+            t-att-placeholder="widget.getParent().node.attrs.placeholder"
             t-attf-class="oe_datepicker_master field_#{widget.type_of_date} oe_form_field_#{widget.type_of_date}"
         /><img class="oe_input_icon oe_datepicker_trigger" t-att-src='_s + "/web/static/src/img/ui/field_calendar.png"'
              title="Select date" width="16" height="16" border="0"/>
@@ -1024,6 +1028,7 @@
                     t-att-id="widget.id_for_label"
                     t-att-tabindex="widget.node.attrs.tabindex"
                     t-att-autofocus="widget.node.attrs.autofocus"
+                    t-att-placeholder="widget.node.attrs.placeholder"
                 />
                 <span class="oe-m2o-drop-down-button">
                     <img t-att-src='_s + "/web/static/src/img/down-arrow.png"' /></span>
@@ -1040,6 +1045,22 @@
         <span>
             <a href="#" class="oe_form_uri"/>
         </span>
+    </t>
+</t>
+<t t-name="FieldMany2ManyTags">
+    <div class="oe_form_field_many2manytags">
+        <t t-if="! widget.get('effective_readonly')">
+            <textarea rows="1" style="width: 100%"></textarea>
+        </t>
+    </div>
+</t>
+<t t-name="FieldMany2ManyTags.box">
+    <t t-set="i" t-value="0"/>
+    <t t-foreach="elements" t-as="el">
+        <span class="oe_form_field_many2manytags_box" t-att-data-index="i">
+            <t t-esc="el[1]"/>
+        </span>
+        <t t-set="i" t-value="i + 1"/>
     </t>
 </t>
 <t t-name="FieldReference">
