@@ -930,11 +930,12 @@
                     </xpath>
                     <xpath expr="/form/div[@class='oe_form_topbar']/button[@name='draft_validate']" position="replace">
                         <button name="draft_validate" states="draft" string="Confirm &amp; Deliver" type="object" icon="gtk-media-play"/>
+                        <button name="action_assign" states="confirmed" string="Check Availability" type="object" icon="gtk-find"/>
                     </xpath>
                     <xpath expr="/form/div[@class='oe_form_topbar']/button[@name='action_process']" position="replace">
                         <button name="action_process" states="assigned" string="Deliver" type="object" icon="gtk-go-forward"/>
                     </xpath>
-                    <xpath expr="/form/div[@class='oe_form_topbar']/div[@class='oe_right']" position="replace">
+                    <xpath expr="/form/div[@class='oe_form_topbar']/div[@class='oe_right']/field[@name='state']" position="replace">
                         <field name="state" nolabel="1" readonly="1" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" statusbar_colors='{"auto":"blue", "confirmed":"blue"}'/>
                     </xpath>
                     <xpath expr="/form/sheet/group/group/field[@name='partner_id']" position="replace">
