@@ -42,7 +42,7 @@ class account_config_settings(osv.osv_memory):
         'currency_id': fields.related('company_id', 'currency_id', type='many2one', relation='res.currency', required=True,
             string='Default Company Currency', help="Main currency of the company."),
         'paypal_account': fields.related('company_id', 'paypal_account', type='char', size=128,
-            string='Paypal account', help="Paypal account (email) for receiving online payments (credit card, etc.)"),
+            string='Paypal Account', help="Paypal account (email) for receiving online payments (credit card, etc.)"),
         'company_footer': fields.related('company_id', 'rml_footer2', type='char', size=250, readonly=True,
             string='Bank Accounts on Reports', help="Bank accounts as printed on footer of reports."),
 

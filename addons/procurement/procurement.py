@@ -582,8 +582,9 @@ stock_warehouse_orderpoint()
 class product_product(osv.osv):
     _inherit="product.product"
     _columns = {
-        'orderpoint_ids': fields.one2many('stock.warehouse.orderpoint', 'product_id', 'Minimum Stock Rule')
+        'orderpoint_ids': fields.one2many('stock.warehouse.orderpoint', 'product_id', 'Minimum Stock Rules'),
     }
+
 product_product()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

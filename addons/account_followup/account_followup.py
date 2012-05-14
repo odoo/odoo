@@ -82,7 +82,7 @@ class res_company(osv.osv):
     }
 
     _defaults = {
-        'overdue_msg': '''
+        'follow_up_msg': '''
 Date: %(date)s
 
 Dear %(partner_name)s,

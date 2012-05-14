@@ -46,7 +46,7 @@ class project_configuration(osv.osv_memory):
         'module_project_issue': fields.boolean("Issues and Bug Tracking",
             help="""Provides management of issues/bugs in projects.
                 This installs the module project_issue."""),
-        'module_project_issue_sheet': fields.boolean("Track and invoice issues working time",
+        'module_project_issue_sheet': fields.boolean("Track and Invoice Issues Working Time",
             help="""Provides timesheet support for the issues/bugs management in project.
                 This installs the module project_issue_sheet."""),
         'group_tasks_work_on_tasks': fields.boolean("Task's Work on Tasks",
