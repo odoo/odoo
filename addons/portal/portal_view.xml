@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <!-- menu Administration/Portals -->
-        <menuitem name="Portals" id="portal_menu" parent="base.menu_administration"
-            groups="group_portal_manager"/>
 
         <!-- menu Administration/Portals/Portals -->
         <record id="portal_list_action" model="ir.actions.act_window">
@@ -19,8 +16,9 @@ portal group).  A portal menu, widgets and specific groups may be assigned to
 the portal's users.
             </field>
         </record>
+
         <menuitem name="Portals" id="portal_list_menu"
-            parent="portal_menu" sequence="1" action="portal_list_action"/>
+            parent="portal_menu_settings" sequence="1" action="portal_list_action"/>
 
         <!-- portal tree view -->
         <record id="portal_list_view" model="ir.ui.view">
@@ -115,5 +113,6 @@ the portal's users.
             <field name="domain">[]</field>
             <field name="view_id" ref="base.view_company_form" />
         </record>
+
     </data>
 </openerp>

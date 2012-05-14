@@ -2,12 +2,12 @@
 <openerp>
     <data>
 
-        <menuitem name="Portal" id="menu_portal" action="open_portal"/>
+        <menuitem name="Portal Member's Menu" id="menu_portal" parent="portal_members_root_menu" action="open_portal"/>
 
-          <menuitem name="Track Orders" id="portal_track_orders" parent="menu_portal" groups="portal.group_portal_user"/>
-          <menuitem name="Invoice and Payments" id="portal_invoice_payements" parent="menu_portal" groups="portal.group_portal_user"/>
-          <menuitem name="Services" id="portal_services" parent="menu_portal" groups="portal.group_portal_user"/>
-          <menuitem name="After Sale Services" id="portal_after_sales" parent="menu_portal" groups="portal.group_portal_user"/>
+          <menuitem name="Track Orders" id="portal_track_orders" parent="menu_portal" groups="portal.group_portal_member"/>
+          <menuitem name="Invoice and Payments" id="portal_invoice_payements" parent="menu_portal" groups="portal.group_portal_member"/>
+          <menuitem name="Services" id="portal_services" parent="menu_portal" groups="portal.group_portal_member"/>
+          <menuitem name="After Sale Services" id="portal_after_sales" parent="menu_portal" groups="portal.group_portal_member"/>
           <menuitem name="Our company" id="portal_company" parent="menu_portal"/>
               <menuitem name="News" id="portal_company_news" parent="portal_company"/>
               <menuitem name="Jobs" id="portal_company_jobs" parent="portal_company"/>
