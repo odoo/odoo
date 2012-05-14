@@ -108,6 +108,19 @@ class crm_fundraising(crm.crm_case, osv.osv):
             'planned_revenue': 0.0,
     }
 
+    def case_get_note_msg_prefix(self, cr, uid, id, context=None):
+        return 'Fund'
+
+    def create(self, cr, uid, vals, context=None):
+        obj_id = super(crm_fundraising, self).create(cr, uid, vals, context)
+        self.create_send_note(cr, uid, [obj_id], context=context)
+        return obj_id
+
+    def create_send_note(self, cr, uid, ids, context=None):
+        for id in ids:
+            msg = '%s has been <b>created</b>.' % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
+            self.message_append_note(cr, uid, [id], body=msg, context=context)
+        return True
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
