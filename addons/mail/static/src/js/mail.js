@@ -283,51 +283,6 @@ openerp.mail = function(session) {
             // expand feature
             this.$element.find('span.oe_mail_msg_body:last').expander({slicePoint: this.params.msg_more_limit, moreClass: 'oe_mail_expand', lesClass: 'oe_mail_reduce'});
         },
-       
-        /**
-         * Add records to sorted_comments array
-         * @param {Array} records records from mail.message sorted by date desc
-         * @returns {Object} sc sorted_comments: dict {
-         *                          'root_id_list': list or root_ids
-         *                          'root_id_msg_list': {'record_id': [ancestor_ids]}, still sorted by date desc
-         *                          'id_to_root': {'root_id': [records]}, still sorted by date desc
-         *                          }
-         */
-        sort_comments: function (records) {
-            var self = this;
-            sc = {'root_id_list': [], 'root_id_msg_list': {}, 'id_to_root': {}}
-            var cur_iter = 0; var max_iter = 10; var modif = true;
-            /* step1: get roots */
-            while ( modif && (cur_iter++) < max_iter) {
-                modif = false;
-                _(records).each(function (record) {
-                    if ( (record.parent_id == false || record.parent_id[0] == self.params.parent_id) && (_.indexOf(sc['root_id_list'], record.id) == -1)) {
-                        sc['root_id_list'].push(record.id);
-                        sc['root_id_msg_list'][record.id] = [];
-                        self.sorted_comments['root_ids'].push(record.id);
-                        modif = true;
-                    } 
-                    else {
-                        if (_.indexOf(sc['root_id_list'], record.parent_id[0]) != -1) {
-                             sc['id_to_root'][record.id] = record.parent_id[0];
-                             modif = true;
-                        }
-                        else if ( sc['id_to_root'][record.parent_id[0]] ) {
-                             sc['id_to_root'][record.id] = sc['id_to_root'][record.parent_id[0]];
-                             modif = true;
-                        }
-                    }
-                });
-            }
-            /* step2: add records */
-            _(records).each(function (record) {
-                var root_id = sc['id_to_root'][record.id];
-                if (! root_id) return;
-                sc['root_id_msg_list'][root_id].push(record);
-                //self.sorted_comments['root_id_msg_list'][root_id].push(record.id);
-            });
-            return sc;
-        },
         
         /**
          * Add records to comments_structure object: see function for details
