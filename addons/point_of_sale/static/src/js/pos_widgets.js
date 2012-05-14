@@ -793,14 +793,16 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 this.build_widgets();
 
                 instance.webclient.set_content_full_screen(true);
-                if (self.pos.get('account_journals').length === 0) {
+                if (!self.pos.get('account_journals') ||self.pos.get('account_journals').length === 0) {
                     // TODO: Create a popup to inform there is no PoSSession for this user
-                    self.pos.screen_selector.show_popup('error');
+                    self.screen_selector.show_popup('error-session');
                 }
             }, this));
         },
 
         build_widgets: function() {
+
+            // --------  Screens ---------
 
             this.search_product_screen = new module.SearchProductScreenWidget(this,{
                 pos: this.pos,
@@ -850,6 +852,8 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             });
             this.scale_product_screen.appendTo($('#rightpane'));
 
+            // --------  Popups ---------
+
             this.help_popup = new module.HelpPopupWidget(this, {
                 pos: this.pos,
                 pos_widget: this,
@@ -868,6 +872,18 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             });
             this.error_popup.appendTo($('.point-of-sale'));
 
+            this.error_product_popup = new module.ErrorProductNotRecognizedPopupWidget(this, {
+                pos: this.pos,
+                pos_widget: this,
+            });
+            this.error_product_popup.appendTo($('.point-of-sale'));
+
+            this.error_session_popup = new module.ErrorNoSessionPopupWidget(this, {
+                pos: this.pos,
+                pos_widget: this,
+            });
+            this.error_session_popup.appendTo($('.point-of-sale'));
+
             this.action_bar = new module.ActionBarWidget(this);
             this.action_bar.appendTo($(".point-of-sale #content"));
 
@@ -885,9 +901,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 pos_widget: this,
             });
             this.order_widget.replace($('#placeholder-OrderWidget'));
-
-            //this.orderView.$element = $('#current-order-content');
-            //this.orderView.start();
 
             this.onscreen_keyboard = new module.OnscreenKeyboardWidget(this, {
                 'keyboard_model': 'simple'
@@ -909,6 +922,8 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 popup_set:{
                     'help': this.help_popup,
                     'error': this.error_popup,
+                    'error-product': this.error_product_popup,
+                    'error-session': this.error_session_popup,
                     'receipt': this.receipt_popup,
                 },
                 default_client_screen: 'welcome',

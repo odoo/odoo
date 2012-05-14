@@ -216,6 +216,14 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         },
     });
 
+    module.ErrorProductNotRecognizedPopupWidget = module.ErrorPopupWidget.extend({
+        template:'ErrorProductNotRecognizedPopupWidget',
+    });
+
+    module.ErrorNoSessionPopupWidget = module.ErrorPopupWidget.extend({
+        template:'ErrorNoSessionPopupWidget',
+    });
+
     module.ScaleInviteScreenWidget = module.ScreenWidget.extend({
         template:'ScaleInviteScreenWidget',
         show: function(){

@@ -2,62 +2,64 @@
 <!-- vim:fdl=1:
 -->
 <templates id="template" xml:space="preserve">
+
     <t t-name="PosWidget">
-    <div class="point-of-sale">
-        <div id="topheader">
-            <div id="branding">
-                <img src="/point_of_sale/static/src/img/logo.png" />
+        <div class="point-of-sale">
+            <div id="topheader">
+                <div id="branding">
+                    <img src="/point_of_sale/static/src/img/logo.png" />
+                </div>
+                <div id="loggedas">
+                    <span class="placeholder-SynchNotificationWidget"></span>
+                    <button>Close</button>
+                </div>
+                <div id="rightheader">
+                    <div id="order-selector">
+                        <button id="neworder-button">+</button>
+                        <ol id="orders"></ol>
+                    </div>
+                </div>
             </div>
-            <div id="loggedas">
-                <span class="placeholder-SynchNotificationWidget"></span>
-                <button>Close</button>
-            </div>
-            <div id="rightheader">
-                <div id="order-selector">
-                    <button id="neworder-button">+</button>
-                    <ol id="orders"></ol>
+            <div id="content">
+
+                <div id="leftpane">
+                    <div id="placeholder-OrderWidget"></div>
+                    <footer>
+
+                        <ul id="amounts">
+                            <li>
+                                Subtotal:
+                                <t t-if="widget.currency.position === 'before'" t-esc="widget.currency.symbol"/> 
+                                <span id="subtotal">0</span> 
+                                <t t-if="widget.currency.position === 'after'"  t-esc="widget.currency.symbol"/>
+                            </li>
+
+                            <li>
+                                Tax:
+                                <t t-if="widget.currency.position === 'before'" t-esc="widget.currency.symbol"/> 
+                                <span id="tax">0</span> 
+                                <t t-if="widget.currency.position === 'after'"  t-esc="widget.currency.symbol"/>
+                            </li>
+
+                            <li>
+                                Total:
+                                <t t-if="widget.currency.position === 'before'" t-esc="widget.currency.symbol"/> 
+                                <span id="total">0</span> 
+                                <t t-if="widget.currency.position === 'after'"  t-esc="widget.currency.symbol"/>
+                            </li>
+                        </ul>
+
+                        <div id="placeholder-PaypadWidget"></div>
+                        <div id="placeholder-NumpadWidget"></div>
+
+                    </footer>
+                </div>
+                <div id="rightpane">
                 </div>
             </div>
         </div>
-        <div id="content">
-
-            <div id="leftpane">
-                <div id="placeholder-OrderWidget"></div>
-                <footer>
-
-                    <ul id="amounts">
-                        <li>
-                            Subtotal:
-                            <t t-if="widget.currency.position === 'before'" t-esc="widget.currency.symbol"/> 
-                            <span id="subtotal">0</span> 
-                            <t t-if="widget.currency.position === 'after'"  t-esc="widget.currency.symbol"/>
-                        </li>
-
-                        <li>
-                            Tax:
-                            <t t-if="widget.currency.position === 'before'" t-esc="widget.currency.symbol"/> 
-                            <span id="tax">0</span> 
-                            <t t-if="widget.currency.position === 'after'"  t-esc="widget.currency.symbol"/>
-                        </li>
-
-                        <li>
-                            Total:
-                            <t t-if="widget.currency.position === 'before'" t-esc="widget.currency.symbol"/> 
-                            <span id="total">0</span> 
-                            <t t-if="widget.currency.position === 'after'"  t-esc="widget.currency.symbol"/>
-                        </li>
-                    </ul>
-
-                    <div id="placeholder-PaypadWidget"></div>
-                    <div id="placeholder-NumpadWidget"></div>
-
-                </footer>
-            </div>
-            <div id="rightpane">
-            </div>
-        </div>
-    </div>
     </t>
+
     <t t-name="OrderWidget">
         <div id="current-order">
             <table>
@@ -74,6 +76,7 @@
             </table>
         </div>
     </t>
+
     <t t-name="SynchNotificationWidget">
         <span>
         <a t-if="widget.nbr_pending &gt; 0" href="javascript:void(0)" class="oe_pos_synch-notification-button">
@@ -81,13 +84,16 @@
         </a>
         </span>
     </t>
+
     <t t-name="PosCloseWarning">
         <div>There are pending operations that could not be saved into the database, are you sure you want to exit?</div>
     </t>
+
     <t t-name="PaypadWidget">
         <div id="paypad">
         </div>
     </t>
+
     <t t-name="NumpadWidget">
         <div id="numpad">
             <button class="input-button number-char">1</button>
@@ -114,8 +120,6 @@
             <br />
         </div>
     </t>
-
-    <!--   ************   SEARCH PRODUCT SCREEN   ************    -->
 
     <t t-name="ProductCategoriesWidget">
         <header>
@@ -151,18 +155,18 @@
             </ol>
         </div>
     </t>
+
     <t t-name="ProductListWidget">
         <ol id="products-screen-ol" class="product-list">
         </ol>
     </t>
+
     <t t-name="SearchProductScreenWidget">
         <div id="products-screen">
             <span class="placeholder-ProductCategoriesWidget" />
             <span class="placeholder-ProductListWidget" />
         </div>
     </t>
-
-    <!--   ************   PAYMENT SCREEN   ************    -->
 
     <t t-name="PaymentScreenWidget">
         <div id="payment-screen" class="step-screen">
@@ -213,8 +217,6 @@
         </div>
     </t> <!-- pos-payment-screen -->
 
-    <!--   ************   RECEIPT SCREEN   ************    -->
-
     <t t-name="ReceiptScreenWidget">
         <div id="receipt-screen" class="step-screen" >
             <header><h2>Receipt</h2></header>
@@ -229,7 +231,6 @@
             </div>
         </div>
     </t>
-    
 
     <t t-name="WelcomeScreenWidget">
         <div class="welcome-screen step-screen">
@@ -282,6 +283,7 @@
             </div>
         </div>
     </t>
+
     <t t-name="ReceiptPopupWidget">
         <div class="modal-dialog">
             <div class="popup popup-help">
@@ -294,6 +296,22 @@
                 </div>
                 <div class="footer">
                 </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="ErrorProductNotRecognizedPopupWidget">
+        <div class="modal-dialog">
+            <div class="popup popup-help">
+                <p class="message">The scanned product was not recognized<br /> Please wait, a cashier is on the way</p>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="ErrorNoSessionPopupWidget">
+        <div class="modal-dialog">
+            <div class="popup popup-help">
+                <p class="message">Sorry, we could not create a session for this user.</p>
             </div>
         </div>
     </t>
@@ -332,6 +350,7 @@
             </a>
         </li>
     </t>
+
     <t t-name="OrderlineWidget">
         <tr>
             <td>
@@ -384,6 +403,7 @@
             <button class="select-order"><t t-esc="widget.order.get('creationDate').toString('t')"/></button>
         </li>
     </t>
+
     <t t-name="PosTicket">
         <div class="pos-sale-ticket">
             <div class="pos-right-align"><t t-esc="new Date().toString(Date.CultureInfo.formatPatterns.shortDate + ' ' +
@@ -435,6 +455,7 @@
             </table>
         </div>
     </t>
+
     <t t-name="ActionBarWidget">
         <div class="pos-actionbar">
             <div class="pos-actionbar-left-pane">
@@ -469,6 +490,7 @@
             </div>
         </li>
     </t>
+
     <t t-name="ActionButtonWidgetWithIcon">
         <li t-att-class=" 'button '+ (widget.rightalign  ? 'rightalign ' : '')">
             <div class='icon'>
@@ -477,6 +499,7 @@
             </div>
         </li>
     </t>
+
     <!-- Onscreen Keyboard : 
          http://net.tutsplus.com/tutorials/javascript-ajax/creating-a-keyboard-with-css-and-jquery/ -->
     <t t-name="OnscreenKeyboardFull">
@@ -540,6 +563,7 @@
             <p class="close_button">close</p>
         </div>
     </t>
+
     <t t-name="OnscreenKeyboardSimple">
         <div class="keyboard_frame">
             <ul class="keyboard simple_keyboard">
@@ -581,4 +605,5 @@
             <p class="close_button">close</p>
         </div>
     </t>
+
 </templates>
