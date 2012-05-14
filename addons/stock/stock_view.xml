@@ -29,10 +29,10 @@
             parent="stock.menu_product_in_config_stock"  sequence="35" groups="product.group_uom"/>
          <menuitem
              action="product.product_uom_categ_form_action" id="menu_stock_uom_categ_form_action"
-             parent="menu_stock_configuration" sequence="30" groups="stock.group_locations"/>
+             parent="menu_stock_configuration" sequence="30" groups="product.group_uom"/>
          <menuitem
               action="product.product_uom_form_action" id="menu_stock_uom_form_action"
-              parent="menu_stock_configuration" sequence="35" groups="stock.group_locations"/>
+              parent="menu_stock_configuration" sequence="35" groups="product.group_uom"/>
 
         <record id="stock_inventory_line_tree" model="ir.ui.view">
             <field name="name">stock.inventory.line.tree</field>
