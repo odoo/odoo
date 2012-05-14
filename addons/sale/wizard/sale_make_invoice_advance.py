@@ -39,20 +39,20 @@ class sale_advance_payment_inv(osv.osv_memory):
             help="Select a product of type service which is called 'Advance Product'. You may have to create it and set it as a default value on this field."),
         'amount': fields.float('Advance Amount', digits=(16, 2), required=True, help="The amount to be invoiced in advance."),
         'qtty': fields.float('Quantity', digits=(16, 2), required=True),
-        'pay_type':fields.selection([('percentage','Percentage'), ('fixed','Fixed Price')], 'Pay Type', required=True),
+        'advance_payment_method':fields.selection([('percentage','Percentage'), ('fixed','Fixed Price')], 'Pay Type', required=True),
         'advance': fields.boolean('Advance'),
     }
 
     _defaults = {
         'qtty': 1.0,
-        'pay_type': 'fixed',
+        'advance_payment_method': 'fixed',
         'product_id': _default_product_id,
     }
 
-    def onchange_pay_type(self, cr, uid, ids, pay_type,product_id, context=None):
+    def onchange_advance_payment_method(self, cr, uid, ids, advance_payment_method,product_id, context=None):
         if not product_id:
             return {'value': {'amount': 0}}
-        if pay_type == 'percentage':
+        if advance_payment_method == 'percentage':
             return {'value': {'amount':0,'product_id':False }}
         product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
         return {'value': {'amount':product.list_price}}
@@ -126,7 +126,7 @@ class sale_advance_payment_inv(osv.osv_memory):
                     raise osv.except_osv(_('Data Insufficient !'),
                         _('Please check the Advance Amount, it should not be 0 or less!'))
                 else:
-                    if sale_adv_obj.pay_type == 'percentage':
+                    if sale_adv_obj.advance_payment_method == 'percentage':
                         final_amount = sale.amount_total * sale_adv_obj.amount / 100
                         if not res.get('name'):
                             res['name'] = "Advance of %s"%(final_amount)
@@ -182,7 +182,7 @@ class sale_advance_payment_inv(osv.osv_memory):
                 if sale.order_policy == 'picking':
                     vals = {
                         'order_id': sale.id,
-                        'name': res.get('name')  or ("%s %s %s "%(sale_adv_obj.amount,sale_adv_obj.pay_type,"Advance.")),
+                        'name': res.get('name')  or ("%s %s %s "%(sale_adv_obj.amount,sale_adv_obj.advance_payment_method,"Advance.")),
                         'price_unit': -final_amount,
                         'product_uom_qty': sale_adv_obj.qtty or 1.0,
                         'product_uos_qty': sale_adv_obj.qtty or 1.0,

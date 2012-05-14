@@ -8,13 +8,13 @@
             <field name="arch" type="xml">
                 <form string="Advance Invoice">
                     <group colspan="2">
-                        <field name="product_id" on_change="onchange_advance_product(product_id)" context="{'search_default_services':1}" attrs="{'invisible': [('pay_type','=','percentage')]}" />
+                        <field name="product_id" on_change="onchange_advance_product(product_id)" context="{'search_default_services':1}" attrs="{'invisible': [('advance_payment_method','=','percentage')]}" />
                     </group>
                     <newline />
                     <group colspan="2" col="6">
                         <field name="qtty" invisible="1"/>
                         <field name="amount"/>
-                        <field name="pay_type" nolabel="1" attrs="{'readonly':[('advance','=','True')]}" on_change="onchange_pay_type(pay_type,product_id)"/>
+                        <field name="advance_payment_method" nolabel="1" attrs="{'readonly':[('advance','=','True')]}" on_change="onchange_advance_payment_method(advance_payment_method,product_id)"/>
                         <field name="advance" invisible="1"/>
                     </group>
                     <newline />
