@@ -2749,6 +2749,11 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
                     view.view_type = 'form';
                 }
                 view.options.not_interactible_on_create = true;
+            } else if (view.view_type === "kanban") {
+                if (self.get("effective_readonly")) {
+                    view.options.action_buttons = false;
+                    view.options.quick_creatable = false;
+                }
             }
             views.push(view);
         });
