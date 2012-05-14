@@ -215,9 +215,23 @@ project_user_allocation()
 
 class project(osv.osv):
     _inherit = "project.project"
+
+    def _phase_count(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict.fromkeys(ids, 0)
+        phase_ids = self.pool.get('project.phase').search(cr, uid, [('project_id', 'in', ids)])
+        for phase in self.pool.get('project.phase').browse(cr, uid, phase_ids, context):
+            res[phase.project_id.id] += 1
+        return res
+
     _columns = {
         'phase_ids': fields.one2many('project.phase', 'project_id', "Project Phases"),
+        'use_phases': fields.boolean('Use Phases', help="Check this field if project manages phases"),
+        'phase_count': fields.function(_phase_count, type='integer', string="Open Phases"),
     }
+    _defaults = {
+        'use_phases': True,
+    }
+
     def schedule_phases(self, cr, uid, ids, context=None):
         context = context or {}
         if type(ids) in (long, int,):

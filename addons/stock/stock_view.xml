@@ -798,7 +798,7 @@
                                     <group colspan="2" col="4" groups="stock.group_tracking_lot">
                                         <separator string="Traceability" colspan="4" groups="stock.group_tracking_lot"/>
                                         <field name="tracking_id" groups="stock.group_tracking_lot"  colspan="3"/>
-                                        <button name="%(split_into)d" string="New pack" type="action"
+                                        <button name="%(split_into)d" string="New Pack" type="action"
                                               groups="product.group_stock_packaging"
                                               icon="terp-stock_effects-object-colorize"
                                               states="draft,assigned,confirmed"  colspan="1"/>
@@ -1078,7 +1078,7 @@
                         <separator orientation="vertical" />
                         <filter icon="terp-accessories-archiver-minus" string="Back Orders" domain="[('backorder_id', '!=', False)]" help="Is a Back Order"/>
                         <separator orientation="vertical"/>
-                        <filter string="To invoice" name="to_invoice" icon="terp-dolar" domain="[('invoice_state', '=', '2binvoiced')]" />
+                        <filter string="To Invoice" name="to_invoice" icon="terp-dolar" domain="[('invoice_state', '=', '2binvoiced')]" />
                         <separator orientation="vertical"/>
                         <field name="name"/>
                         <field name="origin"/>
@@ -1230,7 +1230,7 @@
                     <group colspan="2" col="4">
                         <separator string="Traceability" colspan="4"/>
                         <field name="tracking_id" colspan="3" groups="stock.group_tracking_lot"/>
-                        <button name="%(split_into)d" string="New pack" type="action"
+                        <button name="%(split_into)d" string="New Pack" type="action"
                               groups="product.group_stock_packaging"
                               icon="terp-stock_effects-object-colorize"
                               states="draft,assigned,confirmed" colspan="1"/>
@@ -1416,7 +1416,7 @@
                     <group colspan="2" col="4">
                         <separator string="Traceability" colspan="4" groups="stock.group_tracking_lot"/>
                         <field name="tracking_id" colspan="3" groups="stock.group_tracking_lot"/>
-                        <button name="%(split_into)d" string="New pack" type="action"
+                        <button name="%(split_into)d" string="New Pack" type="action"
                               groups="product.group_stock_packaging"
                               icon="terp-stock_effects-object-colorize"
                               states="draft,assigned,confirmed,done" colspan="1"/>
