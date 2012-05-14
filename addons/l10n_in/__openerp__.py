@@ -36,8 +36,13 @@ Indian accounting chart and localization.
     ],
     "demo_xml": [],
     "update_xml": [
-        "l10n_in_chart.xml",
+#        "l10n_in_chart.xml",
+        "l10n_in_partnership_private_chart.xml",
+        "installer_view.xml",
+        "l10n_in_public_firm_chart.xml",
         "l10n_in_wizard.xml",
+        
+
     ],
     "auto_install": False,
     "installable": True,
