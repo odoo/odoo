@@ -28,12 +28,11 @@ class sale_advance_payment_inv(osv.osv_memory):
     def _default_product_id(self, cr, uid, context=None):
         if context is None:
             context = {}
-        product_id = False
-        data_obj = self.pool.get('ir.model.data')
         try:
-            product_id = data_obj.get_object_reference(cr, uid, 'sale', 'advance_product_0')[1]
-        finally:
-            return product_id
+            product_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'sale', 'advance_product_0')[1]
+        except ValueError:
+            return False
+        return product_id
 
     _columns = {
         'product_id': fields.many2one('product.product', 'Advance Product', required=False,
@@ -59,7 +58,6 @@ class sale_advance_payment_inv(osv.osv_memory):
         return {'value': {'amount':product.list_price}}
 
     def onchange_advance_product(self, cr, uid, ids, product_id, context=None):
-        data_obj = self.pool.get('ir.model.data')
         value = {}
         value['advance'] = 'False'
         if not product_id:
@@ -67,7 +65,7 @@ class sale_advance_payment_inv(osv.osv_memory):
         product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
         value['amount'] = product.list_price
         try:
-            advance_id = data_obj.get_object_reference(cr, uid, 'sale', 'advance_product_0')[1]
+            advance_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'sale', 'advance_product_0')[1]
             if product.id ==  advance_id:
                 value['advance'] = 'True'
         finally:
