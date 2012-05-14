@@ -1,9 +1,10 @@
-what is shown
+What is shown
 ==============
- - for every opportunities, sale orders and invoices which are related to partner show in the partner view
+ - for every module which are related to partner show apporopriate message in the partner view like opportunities, sale orders and invoices.
 
 
-how it is done
+How it is done
 ===============
  - _inherit = 'mail.thread'
- - Override def message_load_ids method based on search by the partner_id and res_id
+ 
+ - Override def message_load_ids(self, cr, uid, ids, limit=100, offset=0, domain=[], ascent=False, root_ids=[], context=None) search by the partner
