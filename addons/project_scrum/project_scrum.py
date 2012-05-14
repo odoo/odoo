@@ -44,6 +44,7 @@ class project_scrum_sprint(osv.osv):
     _name = 'project.scrum.sprint'
     _description = 'Project Scrum Sprint'
     _order = 'date_start desc'
+    _inherit = ['mail.thread']
     def _compute(self, cr, uid, ids, fields, arg, context=None):
         res = {}.fromkeys(ids, 0.0)
         progress = {}
@@ -71,28 +72,27 @@ class project_scrum_sprint(osv.osv):
 
     def button_cancel(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'cancel'}, context=context)
+        self.cancel_send_note(cr, uid, ids, context=None)
         return True
 
     def button_draft(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'draft'}, context=context)
+        self.draft_send_note(cr, uid, ids, context=None)
         return True
 
     def button_open(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'open'}, context=context)
-        for (id, name) in self.name_get(cr, uid, ids):
-            message = _("The sprint '%s' has been opened.") % (name,)
-            self.log(cr, uid, id, message)
+        self.open_send_note(cr, uid, ids, context=None)
         return True
 
     def button_close(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'done'}, context=context)
-        for (id, name) in self.name_get(cr, uid, ids):
-            message = _("The sprint '%s' has been closed.") % (name,)
-            self.log(cr, uid, id, message)
+        self.close_send_note(cr, uid, ids, context=None)
         return True
 
     def button_pending(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'pending'}, context=context)
+        self.pending_send_note(cr, uid, ids, context=None)
         return True
 
     _columns = {
@@ -137,6 +137,39 @@ class project_scrum_sprint(osv.osv):
             v['scrum_master_id']= proj.user_id and proj.user_id.id or False
             v['date_stop'] = (datetime.now() + relativedelta(days=int(proj.sprint_size or 14))).strftime('%Y-%m-%d')
         return {'value':v}
+
+    # ----------------------------------------
+    # OpenChatter methods and notifications
+    # ----------------------------------------
+
+    def create(self, cr, uid, vals, context=None):
+        obj_id = super(project_scrum_sprint, self).create(cr, uid, vals, context)
+        self.create_send_note(cr, uid, [obj_id], context=context)
+        return obj_id
+
+    def draft_send_note(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            self.message_append_note(cr, uid, [obj.id], body=_("Sprint has been set to <b>draft</b>."), context=context)
+
+    def create_send_note(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            self.message_append_note(cr, uid, [obj.id], body=_("Sprint has been <b>created</b>."), context=context)
+
+    def open_send_note(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            self.message_append_note(cr, uid, [obj.id], body=_("Sprint has been <b>opened</b>."), context=context)
+
+    def pending_send_note(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            self.message_append_note(cr, uid, [obj.id], body=_("Sprint has been set to <b>pending</b>."), context=context)
+
+    def cancel_send_note(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            self.message_append_note(cr, uid, [obj.id], body=_("Sprint has been <b>cancelled</b>."), context=context)
+
+    def close_send_note(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            self.message_append_note(cr, uid, [obj.id], body=_("Sprint has been <b>closed</b>."), context=context)
 
 project_scrum_sprint()
 

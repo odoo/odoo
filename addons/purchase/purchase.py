@@ -290,8 +290,6 @@ class purchase_order(osv.osv):
             for line in po.order_line:
                 if line.state=='draft':
                     todo.append(line.id)
-            message = _("Purchase order '%s' is confirmed.") % (po.name,)
-            self.log(cr, uid, po.id, message)
 #        current_name = self.name_get(cr, uid, ids)[0][1]
         self.pool.get('purchase.order.line').action_confirm(cr, uid, todo, context)
         for id in ids:
@@ -327,9 +325,7 @@ class purchase_order(osv.osv):
             # Deleting the existing instance of workflow for PO
             wf_service.trg_delete(uid, 'purchase.order', p_id, cr)
             wf_service.trg_create(uid, 'purchase.order', p_id, cr)
-        for (id,name) in self.name_get(cr, uid, ids):
-            message = _("Purchase order '%s' has been set in draft state.") % name
-            self.log(cr, uid, id, message)
+        self.draft_send_note(cr, uid, ids, context=None)
         return True
 
     def action_invoice_create(self, cr, uid, ids, context=None):
@@ -433,8 +429,7 @@ class purchase_order(osv.osv):
 
         for (id, name) in self.name_get(cr, uid, ids):
             wf_service.trg_validate(uid, 'purchase.order', id, 'purchase_cancel', cr)
-            message = _("Purchase order '%s' is cancelled.") % name
-            self.log(cr, uid, id, message)
+        self.cancel_send_note(cr, uid, ids, context)
         return True
 
     def _prepare_order_picking(self, cr, uid, order, context=None):
@@ -688,6 +683,9 @@ class purchase_order(osv.osv):
      
     def invoice_done_send_note(self, cr, uid, ids, context=None):
         self.message_append_note(cr, uid, ids, body=_("Invoice <b>paid</b>."), context=context)
+        
+    def draft_send_note(self, cr, uid, ids, context=None):
+        return self.message_append_note(cr, uid, ids, body=_("Purchase Order has been set to <b>draft</b>."), context=context)
     
     def cancel_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):

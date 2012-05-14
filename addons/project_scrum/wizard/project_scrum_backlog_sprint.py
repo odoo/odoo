@@ -24,6 +24,7 @@ from tools.translate import _
 class backlog_sprint_assign(osv.osv_memory):
     _name = 'project.scrum.backlog.assign.sprint'
     _description = 'Assign sprint to backlogs'
+    _inherit = ['mail.thread']
     _columns = {
         'sprint_id': fields.many2one('project.scrum.sprint', 'Sprint', required=True, help="Select Sprint to assign backlog."),
         'state_open': fields.boolean('Open Backlog', help="Change the state of product backlogs to open if its in draft state"),
@@ -55,12 +56,12 @@ class backlog_sprint_assign(osv.osv_memory):
                     'remaining_hours':backlog.expected_hours,
                 })
                 message = _("Product Backlog '%s' is converted into Task %d.")  %(backlog.name, task_id)
-                self.log(cr, uid, backlog.id, message)
+                self.message_append_note(cr, uid, ids, body=message, context=context)
             if data.state_open and backlog.state == "draft":
                 backlog_obj.write(cr, uid, backlog.id, {'state':'open'})
             sprint = sprint_obj.browse(cr, uid, data.sprint_id.id, context=context)
             message = _("Product Backlog '%s' is assigned to sprint %s") %(backlog.name, sprint.name)
-            self.log(cr, uid, backlog.id, message)
+            self.message_append_note(cr, uid, ids, body=message, context=context)
         backlog_obj.write(cr, uid, backlog_ids, {'sprint_id': data.sprint_id.id}, context=context)
         return {'type': 'ir.actions.act_window_close'}
 
