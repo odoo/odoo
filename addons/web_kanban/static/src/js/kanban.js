@@ -136,6 +136,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
     },
     do_search: function(domain, context, group_by) {
         var self = this;
+        this.$element.find('.oe_view_nocontent').remove();
         this.search_domain = domain;
         this.search_context = context;
         this.search_group_by = group_by;
@@ -172,10 +173,15 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             var def = $.Deferred();
             self.do_clear_groups();
             self.dataset.read_slice(self.fields_keys.concat(['__last_update']), { 'limit': self.limit }).then(function(records) {
-                var kgroup = new instance.web_kanban.KanbanGroup(self, records, null, self.dataset);
-                self.do_add_groups([kgroup]).then(function() {
-                    def.resolve();
-                });
+                if (_.isEmpty(records)) {
+                    self.no_result();
+                    def.reject();
+                } else {
+                    var kgroup = new instance.web_kanban.KanbanGroup(self, records, null, self.dataset);
+                    self.do_add_groups([kgroup]).then(function() {
+                        def.resolve();
+                    });
+                }
             }).then(null, function() {
                 def.reject();
             });
@@ -288,6 +294,19 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             this.do_warn("Kanban: could not find id#" + id);
         }
     },
+    no_result: function() {
+        if (this.groups.group_by
+            || !this.options.action
+            || !this.options.action.help) {
+            return;
+        }
+        this.$element.find('.oe_view_nocontent').remove();
+        this.$element.prepend(
+            $('<div class="oe_view_nocontent">')
+                .append($('<img>', { src: '/web/static/src/img/view_empty_arrow.png' }))
+                .append($('<div>').html(this.options.action.help))
+        );
+    }
 });
 
 instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
@@ -361,7 +380,18 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
         this.$element.data('widget', this);
         this.$records.data('widget', this);
         this.$has_been_started.resolve();
+        this.compute_cards_height();
         return def;
+    },
+    compute_cards_height: function() {
+        var self = this;
+        var min_height = 0;
+        _.each(this.records, function(r) {
+            min_height = Math.max(min_height, r.$element.outerHeight());
+        });
+        _.each(this.records, function(r) {
+            r.$element.css('min-height', min_height);
+        });
     },
     destroy: function() {
         this._super();
