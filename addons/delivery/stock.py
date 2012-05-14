@@ -179,6 +179,13 @@ stock_move()
 class stock_picking_out(osv.osv):
     _inherit = 'stock.picking.out'
 
+    def _cal_weight(self, cr, uid, ids, name, args, context=None):
+        return self.pool.get('stock.picking')._cal_weight(cr, uid, ids, name, args, context=context)
+
+
+    def _get_picking_line(self, cr, uid, ids, context=None):
+        return self.pool.get('stock.picking')._get_picking_line(cr, uid, ids, context=context)
+
     _columns = {
         'carrier_id':fields.many2one("delivery.carrier","Carrier"),
         'volume': fields.float('Volume'),
