@@ -60,10 +60,9 @@ class crm_claim(crm.crm_case, osv.osv):
     def _save_state(self, cr, uid, claim_id, field_name, field_value, arg, context=None):
         stage_ids = self.pool.get('crm.case.stage').search(cr, uid, [('state', '=', field_value)], context=context)
         if stage_ids:
-            self.write(cr, uid, claim_id, {'stage_id': stage_ids[0]}, context=context)
+            return self.write(cr, uid, claim_id, {'stage_id': stage_ids[0]}, context=context)
         else:
-            cr.execute("""UPDATE crm_claim SET state=%s WHERE id=%s""", (field_value, claim_id, ))
-        return True
+            return cr.execute("""UPDATE crm_claim SET state=%s WHERE id=%s""", (field_value, claim_id, ))
 
     _name = "crm.claim"
     _description = "Claim"
@@ -104,7 +103,7 @@ class crm_claim(crm.crm_case, osv.osv):
         'state': fields.function(_get_state, fnct_inv=_save_state, type='selection', selection=crm.AVAILABLE_STATES, string="State", readonly=True,
             store = {
                 'crm.claim': (lambda self, cr, uid, ids, c={}: ids, ['stage_id'], 10),
-                'crm.claim.stage': (_get_stage, ['state'], 10)
+                'crm.case.stage': (_get_stage, ['state'], 10)
                 },
                                   help='The state is set to \'Draft\', when a case is created.\
                                   \nIf the case is in progress the state is set to \'Open\'.\
