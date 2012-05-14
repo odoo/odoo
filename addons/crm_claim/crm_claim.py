@@ -98,6 +98,17 @@ class crm_claim(crm.crm_case, osv.osv):
     def case_get_note_msg_prefix(self, cr, uid, id, context=None):
         return 'Claim'
 
+    def create(self, cr, uid, vals, context=None):
+        obj_id = super(crm_claim, self).create(cr, uid, vals, context)
+        self.create_send_note(cr, uid, [obj_id], context=context)
+        return obj_id
+
+    def create_send_note(self, cr, uid, ids, context=None):
+        for id in ids:
+            msg = '%s has been <b>created</b>.' % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
+            self.message_append_note(cr, uid, [id], body=msg, context=context)
+        return True
+
     def onchange_partner_id(self, cr, uid, ids, part, email=False):
         """This function returns value of partner address based on partner
            :param part: Partner's id
