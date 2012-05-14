@@ -102,7 +102,7 @@ class portal(osv.osv):
         """ create a parent menu for the given portals """
         menu_obj = self.pool.get('ir.ui.menu')
         ir_data = self.pool.get('ir.model.data')
-        menu_root = self._res_xml_id(cr, uid, 'portal', 'portal_menu')
+        menu_root = self._res_xml_id(cr, uid, 'portal', 'portal_menu_settings')
         
         for p in self.browse(cr, uid, ids, context):
             # create a menuitem under 'portal.portal_menu'
@@ -124,7 +124,7 @@ class portal(osv.osv):
         return True
 
     def _assign_menu(self, cr, uid, ids, context=None):
-        """ assign portal menu to users of portals (ids) """
+        """ assign portal_menu_settings to users of portals (ids) """
         user_obj = self.pool.get('res.users')
         for p in self.browse(cr, uid, ids, context):
             # user menu action = portal menu action if set in portal
