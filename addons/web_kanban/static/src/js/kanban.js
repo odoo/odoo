@@ -341,6 +341,12 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
     start: function() {
         var self = this,
             def = this._super();
+        if (! self.view.group_by) {
+            self.$element.addClass("oe_kanban_no_group");
+            self.quick = new instance.web_kanban.QuickCreate(this, self.dataset, {}, false)
+                .on('added', self, self.proxy('quick_created'));
+            self.quick.replace($(".oe_kanban_no_group_qc_placeholder"));
+        }
         this.$records = $(QWeb.render('KanbanView.group_records_container', { widget : this}));
         this.$records.appendTo(this.view.$element.find('.oe_kanban_groups_records'));
         this.$element.find(".oe_kanban_fold_icon").click(function() {
@@ -353,7 +359,11 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
             var ctx = {};
             ctx['default_' + self.view.group_by] = self.value;
             self.quick = new instance.web_kanban.QuickCreate(this, self.dataset, ctx, true)
-                .on('added', self, self.proxy('quick_created'));
+                .on('added', self, self.proxy('quick_created'))
+                .on('close', self, function() {
+                    this.quick.destroy();
+                    delete this.quick;
+                });
             self.quick.appendTo(self.$element.find('.oe_kanban_group_header'));
             self.quick.focus();
         });
@@ -420,8 +430,6 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
      */
     quick_created: function (record) {
         var id = record[0], self = this;
-        this.quick.destroy();
-        delete this.quick;
         new instance.web.Model(this.dataset.model).call(
                 'read', [[id], this.view.fields_keys], {})
             .then(function (records) {
@@ -646,17 +654,22 @@ instance.web_kanban.QuickCreate = instance.web.Widget.extend({
      * close_btn: If true, the widget will display a "Close" button able to trigger
      * a "close" event.
      */
-    init: function(parent, dataset, context, close_btn) {
+    init: function(parent, dataset, context, buttons) {
         this._super(parent);
         this._dataset = dataset;
-        this._close_btn = close_btn || false;
+        this._buttons = buttons || false;
         this._context = context || {};
     },
     start: function () {
         var self = this;
-        var $input = this.$element.find('input');
+        self.$input = this.$element.find('input');
+        self.$input.keyup(function(event){
+            if(event.keyCode == 13){
+                self.quick_add();
+            }
+        });
         $(".oe-kanban-quick_create_add", this.$element).click(function () {
-            self.quick_add($input.val());
+            self.quick_add();
         });
         $(".oe-kanban-quick_create_close", this.$element).click(function () {
             self.trigger('close');
@@ -667,16 +680,15 @@ instance.web_kanban.QuickCreate = instance.web.Widget.extend({
     },
     /**
      * Handles user event from nested quick creation view
-     *
-     * @param {String} name name to give to the new record
      */
-    quick_add: function (name) {
+    quick_add: function () {
         var self = this;
         // FIXME: what if name_create fails?
         this._dataset.call(
-            'name_create', [name, new instance.web.CompoundContext(
+            'name_create', [self.$input.val(), new instance.web.CompoundContext(
                     this._dataset.get_context(), this._context)])
             .then(function(record) {
+                self.$input.val("");
                 self.trigger('added', record);
             });
     },

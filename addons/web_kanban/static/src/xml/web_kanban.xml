@@ -35,6 +35,9 @@
                 <p t-if="widget.title" class="oe_kanban_group_title_vertical"><t t-esc="widget.title"/></p>
             </div>
         </t>
+        <t t-if="! widget.view.group_by">
+            <span class="oe_kanban_no_group_qc_placeholder"/>
+        </t>
     </td>
 </t>
 <t t-name="KanbanView.group_records_container">
@@ -64,8 +67,10 @@
     </table>
 </t>
 <div t-name="KanbanView.quick_create" class="oe_kanban_quick_create">
-    <input/>
-    <button class="oe-kanban-quick_create_add">Add</button>
-    <button t-if="widget._close_btn" class="oe-kanban-quick_create_close">Close</button>
+    <input t-att-placeholder="_t('Type name')"/>
+    <t t-if="widget._buttons">
+        <button class="oe-kanban-quick_create_add">Add</button>
+        <button class="oe-kanban-quick_create_close">Close</button>
+    </t>
 </div>
 </template>
