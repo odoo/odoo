@@ -70,16 +70,21 @@ openerp.mail = function(session) {
         
         start: function() {
             this._super.apply(this, arguments);
-            // customize display
-            if (this.display.show_post_comment) { this.$element.find('div.oe_mail_thread_act').show(); }
-            if (this.display.show_reply_by_email) { this.$element.find('a.oe_mail_compose').show(); }
             // add events
             this.add_events();
             /* display user, fetch comments */
             this.display_current_user();
             if (this.params.records) var display_done = this.display_comments_from_parameters(this.params.records);
             else var display_done = this.init_comments();
+            // customize display
+            $.when(display_done).then(this.proxy('do_customize_display'));
             return display_done
+        },
+        
+        do_customize_display: function() {
+            if (this.display.show_post_comment) { this.$element.find('div.oe_mail_thread_act').show(); }
+            if (this.display.show_reply_by_email) { this.$element.find('a.oe_mail_compose').show(); }
+            if (! this.display.show_msg_menu) { this.$element.find('img.oe_mail_msg_menu_icon').hide(); }
         },
         
         add_events: function() {
