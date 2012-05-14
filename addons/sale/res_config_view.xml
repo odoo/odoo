@@ -53,8 +53,12 @@
             <field name="model">account.config.settings</field>
             <field name="type">form</field>
             <field name="inherit_id" ref="account.view_account_config_settings"/>
+            <field name="priority" eval="16"/>
             <field name="arch" type="xml">
-                <group name="analytic_accounting" position="after">
+                <group name="analytic_accounting" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                </group>
+                <group name="analytic_accounting" position="inside">
                     <field name="group_analytic_account_for_sales"/>
                     <field name="module_sale_analytic_plans"/>
                 </group>
