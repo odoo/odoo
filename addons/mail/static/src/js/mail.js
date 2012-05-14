@@ -306,7 +306,7 @@ openerp.mail = function(session) {
         /**
          * Create a domain to fetch new comments according to
          * comment already present in sorted_comments
-         * @param {Object} sorted_comments (see sort_comments)
+         * @param {Object} sorted_comments (see tools_sort_comments)
          * @returns {Array} fetch_domain (OpenERP domain style)
          */
         get_fetch_domain: function (sorted_comments) {
@@ -338,9 +338,13 @@ openerp.mail = function(session) {
             domain = this.get_fetch_domain(this.sorted_comments);
             return this.fetch_comments(this.params.limit, this.params.offset, domain);
         },
+
+
+        /**
+         *    CONTENT MANIPULATION
+         */
         
         /**
-         *
          * var regex_login = new RegExp(/(^|\s)@((\w|@|\.)*)/g);
          * var regex_intlink = new RegExp(/(^|\s)#(\w*[a-zA-Z_]+\w*)\.(\w+[a-zA-Z_]+\w*),(\w+)/g);
          */
@@ -367,8 +371,31 @@ openerp.mail = function(session) {
             return string;
         },
         
-        thread_get_avatar: function(model, field, id) {
-            return this.session.prefix + '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + (id || '');
+        /**
+         * var regex_login = new RegExp(/(^|\s)@((\w|@|\.)*)/g);
+         * var regex_intlink = new RegExp(/(^|\s)#(\w*[a-zA-Z_]+\w*)\.(\w+[a-zA-Z_]+\w*),(\w+)/g);
+         */
+        do_check_for_internal_links: function(string) {
+            /* shortcut to user: @login */
+            var regex_login = new RegExp(/(^|\s)@((\w|@|\.)*)/g);
+            var regex_res = regex_login.exec(string);
+            while (regex_res != null) {
+                var login = regex_res[2];
+                if (! ('res.users' in this.map_hash)) { this.map_hash['res.users']['name'] = []; }
+                this.map_hash['res.users']['login'].push(login);
+                regex_res = regex_login.exec(string);
+            }
+            /* document link with name_get: [res.model,name] */
+            /* internal link with id: [res.model,id], or [res.model,id|display_name] */
+            var regex_intlink = new RegExp(/(^|\s)#(\w*[a-zA-Z_]+\w*)\.(\w+[a-zA-Z_]+\w*),(\w+)/g);
+            regex_res = regex_intlink.exec(string);
+            while (regex_res != null) {
+                var res_model = regex_res[2] + '.' + regex_res[3];
+                var res_name = regex_res[4];
+                if (! (res_model in this.map_hash)) { this.map_hash[res_model]['name'] = []; }
+                this.map_hash[res_model]['name'].push(res_name);
+                regex_res = regex_intlink.exec(string);
+            }
         },
         
         do_clean_text: function (string) {
@@ -380,32 +407,15 @@ openerp.mail = function(session) {
             var break_tag = (is_xhtml || typeof is_xhtml === 'undefined') ? '<br />' : '<br>';    
             return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1'+ break_tag +'$2');
         },
-        
+
+
         /**
-         *
-         * var regex_login = new RegExp(/(^|\s)@((\w|@|\.)*)/g);
-         * var regex_intlink = new RegExp(/(^|\s)#(\w*[a-zA-Z_]+\w*)\.(\w+[a-zA-Z_]+\w*),(\w+)/g);
+         *    MISC TOOLS METHODS
          */
-        do_check_internal_links: function(string) {
-            /* shortcut to user: @login */
-            var regex_login = new RegExp(/(^|\s)@((\w|@|\.)*)/g);
-            var regex_res = regex_login.exec(string);
-            while (regex_res != null) {
-                var login = regex_res[2];
-                if (! ('res.users' in this.map_hash)) { this.map_hash['res.users']['name'] = []; }
-                this.map_hash['res.users']['login'].push(login);
-                regex_res = regex_login.exec(string);
-            }
-            /* internal links: #res.model,name */
-            var regex_intlink = new RegExp(/(^|\s)#(\w*[a-zA-Z_]+\w*)\.(\w+[a-zA-Z_]+\w*),(\w+)/g);
-            regex_res = regex_intlink.exec(string);
-            while (regex_res != null) {
-                var res_model = regex_res[2] + '.' + regex_res[3];
-                var res_name = regex_res[4];
-                if (! (res_model in this.map_hash)) { this.map_hash[res_model]['name'] = []; }
-                this.map_hash[res_model]['name'].push(res_name);
-                regex_res = regex_intlink.exec(string);
-            }
+        
+        /** get an image in /web/binary/image?... */
+        thread_get_avatar: function(model, field, id) {
+            return this.session.prefix + '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + (id || '');
         },
         
         /** checks if tue current user is the message author */

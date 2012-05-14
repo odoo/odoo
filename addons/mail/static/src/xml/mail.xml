@@ -68,7 +68,7 @@
                 </t></t>
                 <t t-if="display['show_hide']">
                     <li><a href="#" class="oe_mail_oe_intlink oe_mail_msg_hide" t-attf-data-id='{record.id}'>Remove from Wall</a></li>
-                    <li><a href="#" class="oe_mail_oe_intlink oe_mail_msg_hide_type" t-attf-data-subtype='{record.subtype}'>Hide this type: <t t-esc="record.subtype"/></a></li>
+                    <li><a href="#" class="oe_mail_oe_intlink oe_mail_msg_hide_type" t-attf-data-subtype='{record.subtype}'>Hide '<t t-esc="record.subtype"/>' for this document</a></li>
                 </t>
             </ul>
             <img class="oe_mail_msg_image oe_mail_oe_left" t-att-src="record.mini_url"/>
