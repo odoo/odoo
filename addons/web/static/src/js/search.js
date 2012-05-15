@@ -999,6 +999,7 @@ instance.web.search.Input = instance.web.search.Widget.extend( /** @lends instan
 instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends instance.web.search.FilterGroup# */{
     template: 'SearchView.filters',
     icon: 'q',
+    completion_label: _lt("Filter on: %s"),
     /**
      * Inclusive group of filters, creates a continuous "button" with clickable
      * sections (the normal display for filters is to be a self-contained button)
@@ -1032,13 +1033,19 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
             field: this
         }
     },
+    make_value: function (filter) {
+        return {
+            label: filter.attrs.string || filter.attrs.help || filter.attrs.name,
+            value: filter
+        };
+    },
     facet_for_defaults: function (defaults) {
+        var self = this;
         var fs = _(this.filters).chain()
             .filter(function (f) {
                 return f.attrs && f.attrs.name && !!defaults[f.attrs.name];
             }).map(function (f) {
-                return {label: f.attrs.string || f.attrs.help || f.attrs.name,
-                        value: f};
+                return self.make_value(f);
             }).value();
         if (_.isEmpty(fs)) { return $.when(null); }
         return $.when(this.make_facet(fs));
@@ -1098,14 +1105,38 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
         this.toggle(this.filters[$(e.target).index()]);
     },
     toggle: function (filter) {
-        this.view.query.toggle(this.make_facet([{
-            label: filter.attrs.string || filter.attrs.help || filter.attrs.name,
-            value: filter
-        }]));
+        this.view.query.toggle(this.make_facet([this.make_value(filter)]));
+    },
+    complete: function (item) {
+        var self = this;
+        item = item.toLowerCase();
+        var facet_values = _(this.filters).chain()
+            .filter(function (filter) {
+                var at = {
+                    string: filter.attrs.string || '',
+                    help: filter.attrs.help || '',
+                    name: filter.attrs.name || ''
+                };
+                var include = _.str.include;
+                return include(at.string.toLowerCase(), item)
+                    || include(at.help.toLowerCase(), item)
+                    || include(at.name.toLowerCase(), item);
+            })
+            .map(this.make_value)
+            .value();
+        if (_(facet_values).isEmpty()) { return $.when(null); }
+        return $.when(_.map(facet_values, function (facet_value) {
+            return {
+                label: _.str.sprintf(self.completion_label.toString(),
+                                     facet_value.label),
+                facet: self.make_facet([facet_value])
+            }
+        }));
     }
 });
 instance.web.search.GroupbyGroup = instance.web.search.FilterGroup.extend({
     icon: 'w',
+    completion_label: _lt("Group by: %s"),
     init: function (filters, view) {
         this._super(filters, view);
         // Not flanders: facet unicity is handled through the
