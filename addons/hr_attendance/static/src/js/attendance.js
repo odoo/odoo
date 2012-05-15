@@ -45,7 +45,10 @@ openerp.hr_attendance = function(instance) {
         on_click: function() {
             var self = this;
             hr_employee = new instance.web.DataSet(self, 'hr.employee');
-            hr_employee.call('attendance_action_change', [[self.employee.id]]).done(function(result){self.renderElement()});
+            hr_employee.call('attendance_action_change', [[self.employee.id]]).done(function(result){
+                window.location.reload();
+                //self.renderElement()
+            });
         },
     });
     instance.web.DataSet.include({
