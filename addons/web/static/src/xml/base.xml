@@ -189,7 +189,7 @@
             </tr>
         <tr>
                 <td><label for="new_db">New database name:</label></td>
-                <td><input type="text" name="new_db" class="required"/></td>
+                <td><input type="text" name="new_db" class="required" matches="^[a-zA-Z][a-zA-Z0-9_]+$"/></td>
             </tr>
         <tr>
             <td colspan="2" align="right"><button class="oe_button">Restore</button></td>
