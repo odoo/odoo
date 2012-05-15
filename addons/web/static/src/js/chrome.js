@@ -966,7 +966,9 @@ instance.web.WebClient = instance.web.Widget.extend({
         if (!_.isEqual(this._current_state, state)) {
             if(state.action_id === undefined && state.menu_id) {
                 self.menu.has_been_loaded.then(function() {
-                    self.menu.menu_click(state.menu_id);
+                    self.menu.do_reload().then(function() {
+                        self.menu.menu_click(state.menu_id)
+                    });
                 });
             } else {
                 this.action_manager.do_load_state(state, !!this._current_state);
