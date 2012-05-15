@@ -716,10 +716,10 @@ class purchase_order_line(osv.osv):
 
     _columns = {
         'name': fields.char('Description', size=256, required=True),
-        'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product UoM'), required=True),
+        'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
         'date_planned': fields.date('Scheduled Date', required=True, select=True),
         'taxes_id': fields.many2many('account.tax', 'purchase_order_taxe', 'ord_id', 'tax_id', 'Taxes'),
-        'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
+        'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
         'product_id': fields.many2one('product.product', 'Product', domain=[('purchase_ok','=',True)], change_default=True),
         'move_ids': fields.one2many('stock.move', 'purchase_line_id', 'Reservation', readonly=True, ondelete='set null'),
         'move_dest_id': fields.many2one('stock.move', 'Reservation Destination', ondelete='set null'),
@@ -825,7 +825,7 @@ class purchase_order_line(osv.osv):
             uom_id = product_uom_po_id
 
         if product.uom_id.category_id.id != product_uom.browse(cr, uid, uom_id, context=context).category_id.id:
-            res['warning'] = {'title': _('Warning'), 'message': _('Selected UOM does not belong to the same category as the product UOM')}
+            res['warning'] = {'title': _('Warning'), 'message': _('Selected Unit of Measure does not belong to the same category as the product Unit of Measure')}
             uom_id = product_uom_po_id
 
         res['value'].update({'product_uom': uom_id})

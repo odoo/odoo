@@ -43,9 +43,9 @@ class stock_partial_picking_line(osv.TransientModel):
     _rec_name = 'product_id'
     _columns = {
         'product_id' : fields.many2one('product.product', string="Product", required=True, ondelete='CASCADE'),
-        'quantity' : fields.float("Quantity", digits_compute=dp.get_precision('Product UoM'), required=True),
+        'quantity' : fields.float("Quantity", digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
         'product_uom': fields.many2one('product.uom', 'Unit of Measure', required=True, ondelete='CASCADE'),
-        'prodlot_id' : fields.many2one('stock.production.lot', 'Production Lot', ondelete='CASCADE'),
+        'prodlot_id' : fields.many2one('stock.production.lot', 'Serial Number', ondelete='CASCADE'),
         'location_id': fields.many2one('stock.location', 'Location', required=True, ondelete='CASCADE', domain = [('usage','<>','view')]),
         'location_dest_id': fields.many2one('stock.location', 'Dest. Location', required=True, ondelete='CASCADE',domain = [('usage','<>','view')]),
         'move_id' : fields.many2one('stock.move', "Move", ondelete='CASCADE'),
@@ -171,7 +171,7 @@ class stock_partial_picking(osv.osv_memory):
 
             if line_uom.factor and line_uom.factor <> 0:
                 if qty_in_line_uom <> wizard_line.quantity:
-                    raise osv.except_osv(_('Warning'), _('The uom rounding does not allow you to ship "%s %s", only roundings of "%s %s" is accepted by the uom.') % (wizard_line.quantity, line_uom.name, line_uom.rounding, line_uom.name))
+                    raise osv.except_osv(_('Warning'), _('The unit of measure rounding does not allow you to ship "%s %s", only roundings of "%s %s" is accepted by the Unit of Measure.') % (wizard_line.quantity, line_uom.name, line_uom.rounding, line_uom.name))
             if move_id:
                 #Check rounding Quantity.ex.
                 #picking: 1kg, uom kg rounding = 0.01 (rounding to 10g), 

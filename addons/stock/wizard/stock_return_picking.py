@@ -31,7 +31,7 @@ class stock_return_picking_memory(osv.osv_memory):
     _rec_name = 'product_id'
     _columns = {
         'product_id' : fields.many2one('product.product', string="Product", required=True),
-        'quantity' : fields.float("Quantity", digits_compute=dp.get_precision('Product UoM'), required=True),
+        'quantity' : fields.float("Quantity", digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
         'wizard_id' : fields.many2one('stock.return.picking', string="Wizard"),
         'move_id' : fields.many2one('stock.move', "Move"),
     }

@@ -91,8 +91,8 @@ class procurement_order(osv.osv):
         'date_planned': fields.datetime('Scheduled date', required=True, select=True),
         'date_close': fields.datetime('Date Closed'),
         'product_id': fields.many2one('product.product', 'Product', required=True, states={'draft':[('readonly',False)]}, readonly=True),
-        'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product UoM'), required=True, states={'draft':[('readonly',False)]}, readonly=True),
-        'product_uom': fields.many2one('product.uom', 'Product UoM', required=True, states={'draft':[('readonly',False)]}, readonly=True),
+        'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True, states={'draft':[('readonly',False)]}, readonly=True),
+        'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True, states={'draft':[('readonly',False)]}, readonly=True),
         'product_uos_qty': fields.float('UoS Quantity', states={'draft':[('readonly',False)]}, readonly=True),
         'product_uos': fields.many2one('product.uom', 'Product UoS', states={'draft':[('readonly',False)]}, readonly=True),
         'move_id': fields.many2one('stock.move', 'Reservation', ondelete='set null'),
@@ -510,7 +510,7 @@ class stock_warehouse_orderpoint(osv.osv):
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', required=True, ondelete="cascade"),
         'location_id': fields.many2one('stock.location', 'Location', required=True, ondelete="cascade"),
         'product_id': fields.many2one('product.product', 'Product', required=True, ondelete='cascade', domain=[('type','=','product')]),
-        'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
+        'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
         'product_min_qty': fields.float('Min Quantity', required=True,
             help="When the virtual stock goes below the Min Quantity specified for this field, OpenERP generates "\
             "a procurement to bring the virtual stock to the Max Quantity."),
@@ -535,6 +535,17 @@ class stock_warehouse_orderpoint(osv.osv):
     _sql_constraints = [
         ('qty_multiple_check', 'CHECK( qty_multiple > 0 )', 'Qty Multiple must be greater than zero.'),
     ]
+
+    def default_get(self, cr, uid, fields, context=None):
+        res = super(stock_warehouse_orderpoint, self).default_get(cr, uid, fields, context)
+        # default 'warehouse_id' and 'location_id'
+        if 'warehouse_id' not in res:
+            warehouse = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'warehouse0', context)
+            res['warehouse_id'] = warehouse.id
+        if 'location_id' not in res:
+            warehouse = self.pool.get('stock.warehouse').browse(cr, uid, res['warehouse_id'], context)
+            res['location_id'] = warehouse.lot_stock_id.id
+        return res
 
     def onchange_warehouse_id(self, cr, uid, ids, warehouse_id, context=None):
         """ Finds location id for changed warehouse.
