@@ -29,7 +29,7 @@ class event_type(osv.osv):
     _name = 'event.type'
     _description = __doc__
     _columns = {
-        'name': fields.char('Event type', size=64, required=True),
+        'name': fields.char('Event Type', size=64, required=True),
         'default_reply_to': fields.char('Default Reply-To', size=64,help="The email address of the organizer which is put in the 'Reply-To' of all emails sent automatically at event or registrations confirmation. You can also put your email address of your mail gateway if you use one." ),
         'default_email_event': fields.many2one('email.template','Event Confirmation Email', help="It will select this default confirmation event mail value when you choose this event"),
         'default_email_registration': fields.many2one('email.template','Registration Confirmation Email', help="It will select this default confirmation registration mail value when you choose this event"),
