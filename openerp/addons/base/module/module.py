@@ -352,14 +352,12 @@ class module(osv.osv):
             return config
 
         # reload the client
-        action = {
+        menu_ids = self.root_menus(cr,uid,ids,context)
+        return {
             'type': 'ir.actions.client',
             'tag': 'reload',
+            'params': {'menu_id': menu_ids and menu_ids[0] or False},
         }
-        menu_ids = self.root_menus(cr,uid,ids,context)
-        if menu_ids:
-            action['params'] = {'menu_id': menu_ids[0]}
-        return action
 
     def button_install_cancel(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'uninstalled', 'demo':False})
