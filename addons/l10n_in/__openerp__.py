@@ -39,10 +39,12 @@ Indian accounting chart and localization.
 #        "l10n_in_chart.xml",
         "l10n_in_partnership_private_chart.xml",
         "installer_view.xml",
+        "account_tax_code_template.xml",
+#        "account_tax_code.xml",
         "l10n_in_public_firm_chart.xml",
+        "account_tax.xml",
         "l10n_in_wizard.xml",
-        
-
+        "account_wizard_view.xml",
     ],
     "auto_install": False,
     "installable": True,

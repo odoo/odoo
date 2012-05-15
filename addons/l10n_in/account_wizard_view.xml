@@ -1,0 +1,21 @@
+<openerp>
+    <data>
+    	
+		
+        <record id="view_wizard_multi_chart_india" model="ir.ui.view">
+            <field name="name">Generate Chart of Accounts from a Chart Template</field>
+            <field name="model">wizard.multi.charts.accounts</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="account.view_wizard_multi_chart"/>
+            <field name="arch" type="xml">
+                <field name="purchase_tax_rate" position="after">
+                    <newline/>
+                    <field name="sales_tax_central"/>
+                    <field name="vat_resellers"/>
+                    <field name="service_tax"/>
+                    <field name="excise_duty"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</openerp>
