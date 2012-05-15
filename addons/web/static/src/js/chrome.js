@@ -284,7 +284,11 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
     do_render: function() {
         var self = this;
         self.$element.html(QWeb.render("DatabaseManager", { widget : self }));
-        self.$element.find(".oe_database_manager_menu").tabs();
+        self.$element.find(".oe_database_manager_menu").tabs({
+            show: function(event, ui) {
+                $('*[autofocus]:first', ui.panel).focus();
+            }
+        });
         self.$element.find("form[name=create_db_form]").validate({ submitHandler: self.do_create });
         self.$element.find("form[name=drop_db_form]").validate({ submitHandler: self.do_drop });
         self.$element.find("form[name=backup_db_form]").validate({ submitHandler: self.do_backup });
