@@ -961,9 +961,16 @@ instance.web.WebClient = instance.web.Widget.extend({
         }
     },
     on_hashchange: function(event) {
+        var self = this;
         var state = event.getState(true);
         if (!_.isEqual(this._current_state, state)) {
-            this.action_manager.do_load_state(state, !!this._current_state);
+            if(state.action_id === undefined && state.menu_id) {
+                self.menu.has_been_loaded.then(function() {
+                    self.menu.menu_click(state.menu_id);
+                });
+            } else {
+                this.action_manager.do_load_state(state, !!this._current_state);
+            }
         }
         this._current_state = state;
     },
