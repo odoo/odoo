@@ -271,33 +271,28 @@ class event_event(osv.osv):
         return result
 
     def create_send_note(self, cr, uid, ids, context=None):
-        for id in ids:
-            message = _("Event has been <b>created</b>.")
-            self.message_append_note(cr, uid, [id], body=message, context=context)
+        message = _("Event has been <b>created</b>.")
+        self.message_append_note(cr, uid, ids, body=message, context=context)
         return True
 
     def button_cancel_send_note(self, cr, uid, ids, context=None):
-        for id in ids:
-            message = _("Event has been <b>cancelled</b>.")
-            self.message_append_note(cr, uid, [id], body=message, context=context)
+        message = _("Event has been <b>cancelled</b>.")
+        self.message_append_note(cr, uid, ids, body=message, context=context)
         return True
 
     def button_draft_send_note(self, cr, uid, ids, context=None):
-        for id in ids:
-            message = _("Event has been set to <b>draft</b>.")
-            self.message_append_note(cr, uid, [id], body=message, context=context)
+        message = _("Event has been set to <b>draft</b>.")
+        self.message_append_note(cr, uid, ids, body=message, context=context)
         return True
 
     def button_done_send_note(self, cr, uid, ids, context=None):
-        for id in ids:
-            message = _("Event has been <b>done</b>.")
-            self.message_append_note(cr, uid, [id], body=message, context=context)
+        message = _("Event has been <b>done</b>.")
+        self.message_append_note(cr, uid, ids, body=message, context=context)
         return True
 
     def button_confirm_send_note(self, cr, uid, ids, context=None):
-        for id in ids:
-            message = _("Event has been <b>confirmed</b>.")
-            self.message_append_note(cr, uid, [id], body=message, context=context)
+        message = _("Event has been <b>confirmed</b>.")
+        self.message_append_note(cr, uid, ids, body=message, context=context)
         return True
 
 event_event()
@@ -451,15 +446,13 @@ class event_registration(osv.osv):
         return result
 
     def create_send_note(self, cr, uid, ids, context=None):
-        for id in ids:
-            message = _("Registration has been <b>created</b>.")
-            self.message_append_note(cr, uid, [id], body=message, context=context)
+        message = _("Registration has been <b>created</b>.")
+        self.message_append_note(cr, uid, ids, body=message, context=context)
         return True
 
     def do_draft_send_note(self, cr, uid, ids, context=None):
-        for id in ids:
-            message = _("Registration has been <b>draft</b>.")
-            self.message_append_note(cr, uid, [id], body=message, context=context)
+        message = _("Registration has been set as <b>draft</b>.")
+        self.message_append_note(cr, uid, ids, body=message, context=context)
         return True
 
 event_registration()
