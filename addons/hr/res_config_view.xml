@@ -28,9 +28,10 @@
                         <field name="module_hr_holidays"/>
                         <newline/>
                         <field name="module_hr_payroll"/>
-                        <button name="%(open_payroll_modules)d" type="action"
-                            string="Install Country-Specific Payroll" icon="gtk-go-forward"/>
-                        <newline/>
+                        <group colspan="2">
+                            <button name="%(open_payroll_modules)d" type="action"
+                                string="Install Country-Specific Payroll" icon="gtk-go-forward"/>
+                        </group>
 
                         <separator string="Timesheets" colspan="4"/>
                         <field name="module_hr_attendance"/>
