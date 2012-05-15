@@ -936,13 +936,17 @@ $colour4: #8a89ba
         .oe_searchview_drawer
             position: absolute
             z-index: 1
+            // detach drawer from field slightly
+            margin-top: 3px
             top: 100%
             right: 0
             background-color: white
-            width: 410px
+            width: 100%
             display: none
             border: 1px solid #ccc
             text-align: left
+            padding-bottom: 0.5em
+            @include radius(1em)
 
             > div
                 border-top: 1px solid #ccc
