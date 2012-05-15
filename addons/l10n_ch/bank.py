@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    Author: Nicolas Bessi. Copyright Camptocamp SA
@@ -19,8 +19,8 @@
 #
 ##############################################################################
 
-from tools.translate import _
 from osv import fields, osv
+from tools import mod10r
 import re
 
 class Bank(osv.osv):
@@ -35,10 +35,15 @@ class Bank(osv.osv):
         'city': fields.char('City', size=128, select=1),
     }
 
-Bank()
-
 
 class ResPartnerBank(osv.osv):
+    """
+    Inherit res.partner.bank class in order to add swiss specific fields
+    such as:
+     - A postnumber
+     - BVR data
+     - BVR print options for company accounts
+    """
     _inherit = "res.partner.bank"
 
     _columns = {
@@ -85,7 +90,6 @@ class ResPartnerBank(osv.osv):
         return true if it matches the pattern
         and if check sum mod10 is ok
         """
-        from tools import mod10r
         pattern = r'^[0-9]{2}-[0-9]{1,6}-[0-9]$'
         if not re.search(pattern, number):
             return False
@@ -93,7 +97,8 @@ class ResPartnerBank(osv.osv):
         prefix = nums[0]
         num = nums[1].rjust(6,'0')
         checksum = nums[2]
-        return mod10r(prefix + num)[-1:] == checksum
+        expected_checksum = mod10r(prefix + num)[-1]
+        return expected_checksum == checksum
 
 
     def _check_5_pos_postal_num(self, number):
@@ -106,6 +111,9 @@ class ResPartnerBank(osv.osv):
         return True
 
     def _check_postal_num(self, cursor, uid, ids):
+        """
+        validate postal number format
+        """
         banks = self.browse(cursor, uid, ids)
         for b in banks:
             if not b.post_number:
@@ -113,14 +121,12 @@ class ResPartnerBank(osv.osv):
             return self._check_9_pos_postal_num(b.post_number) or \
                    self._check_5_pos_postal_num(b.post_number)
 
- 
+
     _constraints = [(_check_postal_num,
                     'Please enter a correct postal number. (01-23456-1 or 12345)',
-                    ['post_number'])]    
+                    ['post_number'])]
 
     _sql_constraints = [('bvr_adherent_uniq', 'unique (bvr_adherent_num)',
         'The BVR adherent number must be unique !')]
-
-ResPartnerBank()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
