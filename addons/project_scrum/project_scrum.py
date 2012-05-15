@@ -148,28 +148,22 @@ class project_scrum_sprint(osv.osv):
         return obj_id
 
     def draft_send_note(self, cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids, context=context):
-            self.message_append_note(cr, uid, [obj.id], body=_("Sprint has been set to <b>draft</b>."), context=context)
+        self.message_append_note(cr, uid, ids, body=_("Sprint has been set to <b>draft</b>."), context=context)
 
     def create_send_note(self, cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids, context=context):
-            self.message_append_note(cr, uid, [obj.id], body=_("Sprint has been <b>created</b>."), context=context)
+        self.message_append_note(cr, uid, ids, body=_("Sprint has been <b>created</b>."), context=context)
 
     def open_send_note(self, cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids, context=context):
-            self.message_append_note(cr, uid, [obj.id], body=_("Sprint has been <b>opened</b>."), context=context)
+        self.message_append_note(cr, uid, ids, body=_("Sprint has been <b>opened</b>."), context=context)
 
     def pending_send_note(self, cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids, context=context):
-            self.message_append_note(cr, uid, [obj.id], body=_("Sprint has been set to <b>pending</b>."), context=context)
+        self.message_append_note(cr, uid, ids, body=_("Sprint has been set to <b>pending</b>."), context=context)
 
     def cancel_send_note(self, cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids, context=context):
-            self.message_append_note(cr, uid, [obj.id], body=_("Sprint has been <b>cancelled</b>."), context=context)
+        self.message_append_note(cr, uid, ids, body=_("Sprint has been <b>cancelled</b>."), context=context)
 
     def close_send_note(self, cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids, context=context):
-            self.message_append_note(cr, uid, [obj.id], body=_("Sprint has been <b>closed</b>."), context=context)
+        self.message_append_note(cr, uid, ids, body=_("Sprint has been <b>closed</b>."), context=context)
 
 project_scrum_sprint()
 
