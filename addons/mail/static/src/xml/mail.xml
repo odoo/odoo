@@ -2,15 +2,16 @@
 <template>
 
     <div t-name="Wall" class="oe_mail_wall">
-        <div class="oe_view_manager_header">
-            <div class="oe_view_manager_row">
-                <h2 class="oe_view_title">All Feeds</h2>
-            </div>
-        </div>
+        <table class="oe_view_manager_header">
+            <tr class="oe_header_row">
+                <td><h2 class="oe_view_title">All Feeds</h2></td>
+                <td><div class="oe_view_manager_view_search" t-opentag="true"/></td>
+            </tr>
+        </table>
         <div class="oe_mail_wall_left">
             <div class="oe_mail_wall_act">
                 <textarea class="oe_mail oe_mail_wall_action_textarea" placeholder="Add a personnal message here..."/>
-                <button class="oe_mail_oe_right oe_mail_wall_button_comment" type="button">Post comment</button>
+                <button class="oe_right oe_mail_wall_button_comment" type="button">Post comment</button>
             </div>
             <div class="oe_clear"></div>
             <div class="oe_mail_wall_threads">
@@ -45,7 +46,7 @@
 
     <ul t-name="Thread" class="oe_mail oe_mail_thread">
         <div class="oe_mail_thread_act">
-            <img class="oe_mail_msg_image oe_mail_oe_left" alt="User img"/>
+            <img class="oe_mail_msg_image oe_left" alt="User img"/>
             <div class="oe_mail_msg_content">
                 <textarea class="oe_mail oe_mail_action_textarea" placeholder="Add your comment here..." onfocus="this.value = '';"/><br />
             </div>
@@ -71,7 +72,7 @@
                     <li><a href="#" class="oe_mail_oe_intlink oe_mail_msg_hide_type" t-attf-data-subtype='{record.subtype}'>Hide '<t t-esc="record.subtype"/>' for this document</a></li>
                 </t>
             </ul>
-            <img class="oe_mail_msg_image oe_mail_oe_left" t-att-src="record.mini_url"/>
+            <img class="oe_mail_msg_image oe_left" t-att-src="record.mini_url"/>
             <div class="oe_mail_msg_content">
                 <t t-if="record.type == 'email'"><t t-call="EmailDisplay"/></t>
                 <t t-if="record.type == 'notification' || record.type == 'comment'"><t t-call="NoteDisplay"/></t>
