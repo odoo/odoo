@@ -43,14 +43,19 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Administration">
+                            <group col="2" colspan="2" name="kanban">
+                                <separator colspan="2" string="Project Management"/>
+                                    <field name="use_tasks"/>
+                            </group>
                             <group col="2" colspan="2">
-                                <separator colspan="2" string="Performance"/>
+                                <separator colspan="4" string="Performance"/>
                                 <field name="planned_hours" widget="float_time"/>
                                 <field name="effective_hours" widget="float_time" />
                                 <field name="resource_calendar_id"/>
                             </group>
+                            <newline/>
                             <group col="2" colspan="2" name="misc">
-                                <separator colspan="4" string="Miscelleanous"/>
+                                <separator colspan="4" string="Miscellaneous"/>
                                 <field name="company_id" select="1" groups="base.group_multi_company" widget="selection" required="1"/>
                                 <field name="warn_manager"/>
                                 <field name="priority"/>
@@ -155,6 +160,94 @@
                 </tree>
             </field>
         </record>
+        
+        <act_window
+            context="{'search_default_project_id': [active_id], 'default_project_id': active_id}"
+            id="act_project_project_2_project_task_all"
+            name="Tasks"
+            res_model="project.task"
+            src_model="project.project"
+            view_mode="kanban,tree,form,calendar,graph"
+            view_type="form"/>
+
+        
+        <record model="ir.ui.view" id="view_project_kanban">
+            <field name="name">project.project.kanban</field>
+            <field name="model">project.project</field>
+            <field name="type">kanban</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="effective_hours"/>
+                    <field name="planned_hours"/>
+                    <field name="name"/>
+                    <field name="members"/>
+                    <field name="use_tasks"/>
+                    <field name="user_id"/>
+                    <field name="date"/>
+                    <field name="color"/>
+                    <field name="task_count"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="project_vignettes">
+                                <li t-attf-class="#{kanban_color(record.color.raw_value)} oe_project_kanban_vignette" id="oe_project_kanban_vignette">
+                                    <a href="#" class="oe_project_kanban_action dropdown-toggle"><span class="oe_i">B</span></a>
+                                    <ul class="dropdown-menu">
+                                      <li ><a type="edit" >Edit...</a></li>
+                                      <li ><a type="delete">Delete</a></li>
+                                      <li>
+                                        <ul class="color-chooser">
+                                            <li><a t-att-id="record.id.value" class="bgcolor"><span class="oe_kanban_color_0 square"></span></a></li>
+                                            <li><a t-att-id="record.id.value" class="bgcolor"><span class="oe_kanban_color_1 square"></span></a></li>
+                                            <li><a t-att-id="record.id.value" class="bgcolor"><span class="oe_kanban_color_2 square"></span></a></li>
+                                            <li><a t-att-id="record.id.value" class="bgcolor"><span class="oe_kanban_color_3 square"></span></a></li>
+                                            <li><a t-att-id="record.id.value" class="bgcolor"><span class="oe_kanban_color_4 square"></span></a></li>
+                                            <li><a t-att-id="record.id.value" class="bgcolor"><span class="oe_kanban_color_5 square"></span></a></li>
+                                        </ul>
+                                      </li>
+                                    </ul>
+                                    <h4><t t-esc="record.name.value.substr(0,33)"/><t t-if="record.name.value.length > 33">...</t></h4>
+                                    <div id="list">
+                                        <a t-if="record.use_tasks.raw_value" class="oe_project_buttons"
+                                            id="1" name="%(act_project_project_2_project_task_all)d" type="action">
+                                            Tasks(<field name="task_count"/>)</a>
+                                    </div>
+                                    <br/>
+                                    <button class="click_button" name="dummy" type="object">
+                                        <table class="project_fields">
+                                            <tr id="deadline" t-if="record.date.raw_value">
+                                                <th align="left">Deadline</th>
+                                                <td align="left"><field name="date"/></td>
+                                            </tr>
+                                            <tr>
+                                                <th align="left" width="70px">Progress</th>
+                                                <td align="left">
+                                                    <t t-esc="Math.round(record.effective_hours.raw_value)"/> / <t t-esc="Math.round(record.planned_hours.raw_value)"/> <field name="company_uom_id"/>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <br/>
+                                        <t t-foreach="record.members.raw_value" t-as="member">
+                                            <img t-att-src="kanban_image('res.users', 'avatar', member)" t-att-id="member" class="project_avatar"/>
+                                        </t>
+                                    </button>
+                                </li>
+                            </div>
+                            <script type="text/javascript">
+                                //open dropdwon when click on the icon.
+                                $('.dropdown-toggle').dropdown();
+                                
+                                //show and hide the dropdown icon when mouseover and mouseour.
+                                $('.oe_project_kanban_vignette').mouseover(function() {
+                                    return $(this).find('.oe_project_kanban_action').show();
+                                    }).mouseout(function() {
+                                    return $(this).find('.oe_project_kanban_action').hide();
+                                });
+                            </script>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
 
        <record id="view_project_project_gantt" model="ir.ui.view">
             <field name="name">project.project.gantt</field>
@@ -171,8 +264,8 @@
             <field name="res_model">project.project</field>
             <field name="view_type">form</field>
             <field name="domain">[]</field>
-            <field name="view_mode">tree,form,gantt</field>
-            <field name="view_id" ref="view_project"/>
+            <field name="view_mode">kanban,tree,form,gantt</field>
+            <field name="view_id" ref="view_project_kanban"/>
             <field name="search_view_id" ref="view_project_project_filter"/>
             <field name="context">{}</field>
             <field name="help">A project contains a set of tasks or issues that will be performed by your resources assigned to it. A project can be hierarchically structured, as a child of a Parent Project. This allows you to design large project structures with different phases spread over the project duration cycle. Each user can set his default project in his own preferences to automatically filter the tasks or issues he usually works on. If you choose to invoice the time spent on a project task, you can find project tasks to be invoiced in the billing section.</field>
@@ -295,7 +388,7 @@
                                 <field name="sequence"/>
                             </group>
 
-                            <separator string="Miscelleanous" colspan="4"/>
+                            <separator string="Miscellaneous" colspan="4"/>
                             <field name="partner_id" />
                             <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                             <group col="4" colspan="2">
@@ -314,8 +407,7 @@
                 </form>
             </field>
         </record>
-
-
+        
         <!-- Project Task Kanban View  -->
         <record model="ir.ui.view" id="view_task_kanban">
             <field name="name">project.task.kanban</field>
@@ -630,21 +722,12 @@
 
         <menuitem id="menu_tasks_config" name="GTD" parent="project.menu_definitions" sequence="1"/>
 
-        <menuitem id="menu_project_config_project" name="Projects and Stages" parent="menu_definitions" sequence="1"/>
+        <menuitem id="menu_project_config_project" name="Stages" parent="menu_definitions" sequence="1"/>
 
         <menuitem action="open_task_type_form" id="menu_task_types_view" parent="menu_project_config_project" sequence="2" groups="base.group_no_one"/>
         <menuitem action="open_view_project_all" id="menu_open_view_project_all" parent="menu_project_management" sequence="1" groups="base.group_no_one"/>
 
         <act_window context="{'search_default_user_id': [active_id], 'default_user_id': active_id}" id="act_res_users_2_project_project" name="User's projects" res_model="project.project" src_model="res.users" view_mode="tree,form" view_type="form"/>
-
-        <act_window
-            context="{'search_default_project_id': [active_id], 'default_project_id': active_id}"
-            id="act_project_project_2_project_task_all"
-            name="Tasks"
-            res_model="project.task"
-            src_model="project.project"
-            view_mode="tree,form,calendar,graph"
-            view_type="form"/>
 
          <record id="task_company" model="ir.ui.view">
             <field name="name">res.company.task.config</field>
