@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import ir_attachment
 import pad
 import res_company
 
