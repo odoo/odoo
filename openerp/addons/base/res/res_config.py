@@ -542,7 +542,7 @@ class res_config_settings(osv.osv_memory):
         # force client-side reload (update user menu and current view)
         return {
             'type': 'ir.actions.client',
-            'tag': 'reload_all',
+            'tag': 'reload',
         }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
