@@ -1324,7 +1324,6 @@ instance.web.client_actions = new instance.web.Registry();
 instance.web.client_actions.add("reload_all", "instance.web.ReloadAll");
 
 instance.web.ReloadAll = instance.web.Widget.extend({
-    template: "EmptyComponent",
     start: function() {
         window.location.reload();
     }
