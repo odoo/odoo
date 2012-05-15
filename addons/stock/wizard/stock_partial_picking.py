@@ -20,6 +20,7 @@
 ##############################################################################
 
 import time
+from lxml import etree
 from osv import fields, osv
 from tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 import decimal_precision as dp
@@ -71,15 +72,40 @@ class stock_partial_picking(osv.osv_memory):
         'picking_id': fields.many2one('stock.picking', 'Picking', required=True, ondelete='CASCADE'),
         'hide_tracking': fields.function(_hide_tracking, string='Tracking', type='boolean', help='This field is for internal purpose. It is used to decide if the column prodlot has to be shown on the move_ids field or not'),
      }
+    
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        #override of fields_view_get in order to change the label of the process button and the separator accordingly to the shipping type
+        if context is None:
+            context={}
+        res = super(stock_partial_picking, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
+        type = context.get('active_model','').split('.')[-1]
+        if type:
+            doc = etree.XML(res['arch'])
+            for node in doc.xpath("//button[@name='do_partial']"):
+                if type == 'in':
+                    node.set('string', _('_Receive'))
+                elif type == 'out':
+                    node.set('string', _('_Deliver'))
+            for node in doc.xpath("//separator[@name='product_separator']"):
+                if type == 'in':
+                    node.set('string', _('Receive Products'))
+                elif type == 'out':
+                    node.set('string', _('Deliver Products'))
+            res['arch'] = etree.tostring(doc)
+        return res
 
     def default_get(self, cr, uid, fields, context=None):
         if context is None: context = {}
         res = super(stock_partial_picking, self).default_get(cr, uid, fields, context=context)
         picking_ids = context.get('active_ids', [])
-        if not picking_ids or (not context.get('active_model') == 'stock.picking') \
-            or len(picking_ids) != 1:
+        if not picking_ids or len(picking_ids) != 1:
             # Partial Picking Processing may only be done for one picking at a time
             return res
+        # The check about active_model is there in case the client mismatched the context during propagation of it
+        # (already seen in previous bug where context passed was containing ir.ui.menu as active_model and the menu 
+        # ID as active_id). Though this should be fixed in clients now, this place is sensitive enough to ensure the
+        # consistancy of the context.
+        assert context.get('active_model') in ('stock.picking', 'stock.picking.in', 'stock.picking.out'), 'Bad context propagation'
         picking_id, = picking_ids
         if 'picking_id' in fields:
             res.update(picking_id=picking_id)
@@ -111,7 +137,7 @@ class stock_partial_picking(osv.osv_memory):
     def _partial_move_for(self, cr, uid, move):
         partial_move = {
             'product_id' : move.product_id.id,
-            'quantity' : move.state in ('assigned','new') and move.product_qty or 0,
+            'quantity' : move.state in ('assigned','draft','confirmed') and move.product_qty or 0,
             'product_uom' : move.product_uom.id,
             'prodlot_id' : move.prodlot_id.id,
             'move_id' : move.id,
