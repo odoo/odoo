@@ -1321,9 +1321,9 @@ instance.web.client_actions = new instance.web.Registry();
 /**
  * Client action to reload the whole interface; refreshes the menu and reloads the current view
  */
-instance.web.client_actions.add("reload_all", "instance.web.ReloadAll");
+instance.web.client_actions.add("reload", "instance.web.Reload");
 
-instance.web.ReloadAll = instance.web.Widget.extend({
+instance.web.Reload = instance.web.Widget.extend({
     start: function() {
         window.location.reload();
     }
