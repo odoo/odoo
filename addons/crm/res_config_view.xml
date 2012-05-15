@@ -10,9 +10,7 @@
             <field name="arch" type="xml">
                 <group name="config_fetchmail" position="after">
                     <field name="fetchmail_lead"/>
-                    <group colspan="2">
-                        <button type="object" name="configure_fetchmail_lead" string="Configure" icon="gtk-execute"/>
-                    </group>
+                    <button colspan="2" type="object" name="configure_fetchmail_lead" string="Configure" icon="gtk-execute"/>
                 </group>
 
                 <group name="config_crm" position="after">
