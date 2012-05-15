@@ -104,7 +104,7 @@ class procurement_order(osv.osv):
             " a make to order method."),
 
         'note': fields.text('Note'),
-        'message': fields.char('Latest error', size=64, help="Exception occurred while computing procurement orders."),
+        'message': fields.char('Latest error', size=124, help="Exception occurred while computing procurement orders."),
         'state': fields.selection([
             ('draft','Draft'),
             ('confirmed','Confirmed'),
