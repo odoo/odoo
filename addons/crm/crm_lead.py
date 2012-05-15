@@ -228,21 +228,11 @@ class crm_lead(crm_case, osv.osv):
         self.create_send_note(cr, uid, [obj_id], context=context)
         return obj_id
     
-<<<<<<< TREE
-    def on_change_optin(self, cr, uid, ids, optin):
-        return {'value':{'optin':optin,'opt_out':False}}
-=======
     def on_change_opt_in(self, cr, uid, ids, opt_in):
         return {'value':{'opt_in':opt_in,'opt_out':False}}
->>>>>>> MERGE-SOURCE
 
-<<<<<<< TREE
-    def on_change_optout(self, cr, uid, ids, optout):
-        return {'value':{'opt_out':optout,'optin':False}}
-=======
     def on_change_opt_out(self, cr, uid, ids, opt_out):
         return {'value':{'opt_out':opt_out,'opt_in':False}}
->>>>>>> MERGE-SOURCE
 
     def onchange_stage_id(self, cr, uid, ids, stage_id, context={}):
         if not stage_id:
