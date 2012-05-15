@@ -259,7 +259,7 @@ class BVRWebKitParser(webkit_report.WebKitParser):
             except Exception, e:
                raise Exception(exceptions.text_error_template().render())
             return (deb, 'html')
-        bin = self.get_lib(cursor, uid, company.id)
+        bin = self.get_lib(cursor, uid)
         pdf = self.generate_pdf(bin, report_xml, head, foot, htmls)
         return (pdf, 'pdf')
 
