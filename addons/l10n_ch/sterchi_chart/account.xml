@@ -177,14 +177,14 @@
         <record model="account.account.type" id="account_type_receivable">
             <field name="name">Bilan : Debiteurs</field>
             <field name="code">receivable</field>
-            <field name="partner_account">True</field>
+            <field name="partner_account" eval="True"/>
             <field name="close_method">unreconciled</field>
             <field name="report_type">none</field>
         </record>
         <record model="account.account.type" id="account_type_payable">
             <field name="name">Bilan : Fournisseurs</field>
             <field name="code">payable</field>
-            <field name="partner_account">True</field>
+            <field name="partner_account" eval="True"/>
             <field name="close_method">unreconciled</field>
             <field name="report_type">none</field>
         </record>
@@ -584,7 +584,7 @@
         </record>
         <record id="ch_1100" model="account.account.template">
             <field name="type">receivable</field>
-            <field name="reconcile">True</field>
+            <field name="reconcile" eval="True"/>
             <field name="name">Créances envers des tiers suisses</field>
             <field name="code">1100</field>
             <field name="user_type" ref="account_type_receivable"/>
@@ -593,7 +593,7 @@
         </record>
         <record id="ch_1101" model="account.account.template">
             <field name="type">receivable</field>
-            <field name="reconcile">True</field>
+            <field name="reconcile" eval="True"/>
             <field name="name">Créances envers des tiers étrangers</field>
             <field name="code">1101</field>
             <field name="user_type" ref="account_type_receivable"/>
@@ -618,7 +618,7 @@
         </record>
         <record id="ch_1110" model="account.account.template">
             <field name="type">receivable</field>
-            <field name="reconcile">True</field>
+            <field name="reconcile" eval="True"/>
             <field name="name">Créances envers la filiale A</field>
             <field name="code">1110</field>
             <field name="user_type" ref="account_type_receivable"/>
@@ -627,7 +627,7 @@
         </record>
         <record id="ch_1111" model="account.account.template">
             <field name="type">receivable</field>
-            <field name="reconcile">True</field>
+            <field name="reconcile" eval="True"/>
             <field name="name">Créances envers la filiale B</field>
             <field name="code">1111</field>
             <field name="user_type" ref="account_type_receivable"/>
@@ -652,7 +652,7 @@
         </record>
         <record id="ch_1120" model="account.account.template">
             <field name="type">receivable</field>
-            <field name="reconcile">True</field>
+            <field name="reconcile" eval="True"/>
             <field name="name">Créances envers l'actionnaire X</field>
             <field name="code">1120</field>
             <field name="user_type" ref="account_type_receivable"/>
@@ -661,7 +661,7 @@
         </record>
         <record id="ch_1121" model="account.account.template">
             <field name="type">receivable</field>
-            <field name="reconcile">True</field>
+            <field name="reconcile" eval="True"/>
             <field name="name">Créances envers l'actionnaire Y</field>
             <field name="code">1121</field>
             <field name="user_type" ref="account_type_receivable"/>
