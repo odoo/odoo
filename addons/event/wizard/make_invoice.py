@@ -45,7 +45,6 @@ def _makeInvoices(self, cr, uid, data, context):
     invoices = {}
     invoice_ids = []
     create_ids=[]
-    tax_ids=[]
     pool_obj=pooler.get_pool(cr.dbname)
 
     inv_create = 0
@@ -57,6 +56,7 @@ def _makeInvoices(self, cr, uid, data, context):
     obj_lines=pool_obj.get('account.invoice.line')
 
     for reg in data_event_reg:
+        tax_ids=[]
         if reg.state=='draft':
             inv_reject = inv_reject + 1
             inv_rej_reason += "ID "+str(reg.id)+": Invoice cannot be created if the registration is in draft state. \n"
