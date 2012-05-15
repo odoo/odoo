@@ -36,8 +36,6 @@ class res_partner(osv.osv):
             - messages posted on res.partner, partner_id = partner.id
             - messages directly sent to partner
         """
-        if context is None:
-            context = {}
         msg_obj = self.pool.get('mail.message')
         msg_ids = []
         for partner in self.browse(cr, uid, ids, context=context):
