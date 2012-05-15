@@ -224,6 +224,30 @@
     line-height: 1em;
 }
 
+.openerp .oe_kanban_add {
+    cursor: pointer;
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 16px;
+    height: 16px;
+    background: url(/web_kanban/static/src/img/plus-icon.png) no-repeat;
+}
+
+.openerp .oe_kanban_quick_create {
+    /* apply block formatting context */
+    overflow: hidden;
+}
+.openerp .oe_kanban_quick_create input {
+    display: block;
+    /* margins within width */
+    box-sizing: border-box;
+    width: 100%;
+}
+.openerp .oe_kanban_quick_create button {
+    float: right;
+}
+
 /* Custom colors are also present in kanban.js */
 /* Custom color#0 */
 .openerp .oe_kanban_color_0 .oe_kanban_color_bglight {

@@ -7,7 +7,7 @@ if (!instance.web_dashboard) {
     instance.web_dashboard = {};
 }
 
-instance.web.form.DashBoard = instance.web.form.Widget.extend({
+instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
     init: function(view, node) {
         this._super(view, node);
         this.form_template = 'DashBoard';

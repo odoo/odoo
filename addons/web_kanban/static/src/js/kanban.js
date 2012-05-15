@@ -136,6 +136,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
     },
     do_search: function(domain, context, group_by) {
         var self = this;
+        this.$element.find('.oe_view_nocontent').remove();
         this.search_domain = domain;
         this.search_context = context;
         this.search_group_by = group_by;
@@ -148,25 +149,22 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
     do_process_groups: function(groups) {
         var self = this;
         this.add_group_mutex.exec(function() {
-            var def = $.Deferred();
             self.do_clear_groups();
             self.dataset.ids = [];
             var remaining = groups.length - 1,
                 groups_array = [];
-            _.each(groups, function (group, index) {
+            return $.when.apply(null, _.map(groups, function (group, index) {
                 var dataset = new instance.web.DataSetSearch(self, self.dataset.model, group.context, group.domain);
-                dataset.read_slice(self.fields_keys.concat(['__last_update']), { 'limit': self.limit }).then(function(records) {
-                    self.dataset.ids.push.apply(self.dataset.ids, dataset.ids);
-                    groups_array[index] = new instance.web_kanban.KanbanGroup(self, records, group, dataset);
-                    if (!remaining--) {
-                        self.dataset.index = self.dataset.size() ? 0 : null;
-                        def.pipe(self.do_add_groups(groups_array));
-                    }
-                }).then(null, function() {
-                    def.reject();
+                return dataset.read_slice(self.fields_keys.concat(['__last_update']), { 'limit': self.limit })
+                    .pipe(function(records) {
+                        self.dataset.ids.push.apply(self.dataset.ids, dataset.ids);
+                        groups_array[index] = new instance.web_kanban.KanbanGroup(self, records, group, dataset);
+                        if (!remaining--) {
+                            self.dataset.index = self.dataset.size() ? 0 : null;
+                            return self.do_add_groups(groups_array);
+                        }
                 });
-            });
-            return def;
+            }));
         });
     },
     do_process_dataset: function(dataset) {
@@ -175,10 +173,15 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             var def = $.Deferred();
             self.do_clear_groups();
             self.dataset.read_slice(self.fields_keys.concat(['__last_update']), { 'limit': self.limit }).then(function(records) {
-                var kgroup = new instance.web_kanban.KanbanGroup(self, records, null, self.dataset);
-                self.do_add_groups([kgroup]).then(function() {
-                    def.resolve();
-                });
+                if (_.isEmpty(records)) {
+                    self.no_result();
+                    def.reject();
+                } else {
+                    var kgroup = new instance.web_kanban.KanbanGroup(self, records, null, self.dataset);
+                    self.do_add_groups([kgroup]).then(function() {
+                        def.resolve();
+                    });
+                }
             }).then(null, function() {
                 def.reject();
             });
@@ -196,16 +199,16 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         this.$element.find('.oe_kanban_groups_headers, .oe_kanban_groups_records').empty();
     },
     do_add_groups: function(groups) {
-        var self = this,
-            def = $.Deferred().resolve();
+        var self = this;
         _.each(groups, function(group) {
             self.groups[group.undefined_title ? 'unshift' : 'push'](group);
         });
-        _.each(this.groups, function(group) {
-            def.pipe(group.appendTo(self.$element.find('.oe_kanban_groups_headers')));
+        var groups_started = _.map(this.groups, function(group) {
+            return group.appendTo(self.$element.find('.oe_kanban_groups_headers'));
         });
-        this.on_groups_started();
-        return def;
+        return $.when.apply(null, groups_started).then(function () {
+            self.on_groups_started();
+        });
     },
     on_groups_started: function() {
         var self = this;
@@ -291,6 +294,19 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             this.do_warn("Kanban: could not find id#" + id);
         }
     },
+    no_result: function() {
+        if (this.groups.group_by
+            || !this.options.action
+            || !this.options.action.help) {
+            return;
+        }
+        this.$element.find('.oe_view_nocontent').remove();
+        this.$element.prepend(
+            $('<div class="oe_view_nocontent">')
+                .append($('<img>', { src: '/web/static/src/img/view_empty_arrow.png' }))
+                .append($('<div>').html(this.options.action.help))
+        );
+    }
 });
 
 instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
@@ -351,6 +367,12 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
             self.view.compute_groups_width();
             return false;
         });
+        this.$element.find('.oe_kanban_add').click(function () {
+            if (self.quick) { return; }
+            self.quick = new instance.web_kanban.QuickCreate(this)
+                .on('added', self, self.proxy('quick_add'));
+            self.quick.appendTo(self.$element.find('.oe_kanban_group_header'));
+        });
         this.$records.find('.oe_kanban_show_more').click(this.do_show_more);
         if (this.state.folded) {
             this.do_toggle_fold();
@@ -358,7 +380,18 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
         this.$element.data('widget', this);
         this.$records.data('widget', this);
         this.$has_been_started.resolve();
+        this.compute_cards_height();
         return def;
+    },
+    compute_cards_height: function() {
+        var self = this;
+        var min_height = 0;
+        _.each(this.records, function(r) {
+            min_height = Math.max(min_height, r.$element.outerHeight());
+        });
+        _.each(this.records, function(r) {
+            r.$element.css('min-height', min_height);
+        });
     },
     destroy: function() {
         this._super();
@@ -373,12 +406,17 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
             'offset': self.dataset_offset += self.view.limit
         }).then(this.do_add_records);
     },
-    do_add_records: function(records) {
+    do_add_records: function(records, prepend) {
         var self = this;
         _.each(records, function(record) {
             var rec = new instance.web_kanban.KanbanRecord(self, record);
-            rec.insertBefore(self.$records.find('.oe_kanban_show_more'));
-            self.records.push(rec);
+            if (!prepend) {
+                rec.insertBefore(self.$records.find('.oe_kanban_show_more'));
+                self.records.push(rec);
+            } else {
+                rec.prependTo(self.$records);
+                self.records.unshift(rec);
+            }
         });
         this.$records.find('.oe_kanban_show_more').toggle(this.records.length < this.dataset.size())
             .find('.oe_kanban_remaining').text(this.dataset.size() - this.records.length);
@@ -401,6 +439,36 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
                 self.view.dataset.write(record.id, { sequence : index });
             });
         }
+    },
+    /**
+     * Handles user event from nested quick creation view
+     *
+     * @param {String} name name to give to the new record
+     */
+    quick_add: function (name) {
+        var context = {};
+        context['default_' + this.view.group_by] = this.value;
+        // FIXME: what if name_create fails?
+        new instance.web.Model(this.dataset.model).call(
+            'name_create', [name], {context: new instance.web.CompoundContext(
+                    this.dataset.get_context(), context)})
+            .then(this.proxy('quick_created'))
+    },
+    /**
+     * Handles a non-erroneous response from name_create
+     *
+     * @param {(Id, String)} record name_get format for the newly created record
+     */
+    quick_created: function (record) {
+        var id = record[0], self = this;
+        this.quick.destroy();
+        delete this.quick;
+        new instance.web.Model(this.dataset.model).call(
+                'read', [[id], this.view.fields_keys], {})
+            .then(function (records) {
+                self.view.dataset.ids.push(id);
+                self.do_add_records(records, 'prepend');
+            });
     }
 });
 
@@ -600,6 +668,30 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
         } else {
             return s.substr(0, size) + '...';
         }
+    }
+});
+
+/**
+ * Quick creation view.
+ *
+ * Triggers a single event "added" with a single parameter "name", which is the
+ * name entered by the user
+ *
+ * @class
+ * @type {*}
+ */
+instance.web_kanban.QuickCreate = instance.web.Widget.extend({
+    template: 'KanbanView.quick_create',
+
+    start: function () {
+        var self = this;
+        var $input = this.$element.find('input');
+        $input.focus();
+        this.$element.on('submit', function () {
+            self.trigger('added', $input.val());
+            return false;
+        });
+        return this._super();
     }
 });
 };

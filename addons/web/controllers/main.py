@@ -331,7 +331,7 @@ class WebClient(openerpweb.Controller):
         req.session.authenticate(db, login, key, {})
         redirect = werkzeug.utils.redirect('/web/webclient/home', 303)
         cookie_val = urllib2.quote(simplejson.dumps(req.session_id))
-        redirect.set_cookie('session0|session_id', cookie_val)
+        redirect.set_cookie('instance0|session_id', cookie_val)
         return redirect
 
     @openerpweb.jsonrequest
@@ -1799,9 +1799,15 @@ class Reports(View):
             report = zlib.decompress(report)
         report_mimetype = self.TYPES_MAPPING.get(
             report_struct['format'], 'octet-stream')
+        if 'name' not in action:
+            reports = req.session.model('ir.actions.report.xml')
+            res_id = reports.search([('report_name', '=',action['report_name']),],
+                                    0, False, False, context)
+            action['name'] = reports.read(res_id, ['name'], context)[0]['name']
+
         return req.make_response(report,
              headers=[
-                 ('Content-Disposition', 'attachment; filename="%s.%s"' % (action['report_name'], report_struct['format'])),
+                 ('Content-Disposition', 'attachment; filename="%s.%s"' % (action['name'], report_struct['format'])),
                  ('Content-Type', report_mimetype),
                  ('Content-Length', len(report))],
              cookies={'fileToken': int(token)})

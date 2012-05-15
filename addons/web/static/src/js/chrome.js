@@ -544,34 +544,33 @@ instance.web.Menu =  instance.web.Widget.extend({
         this._super.apply(this, arguments);
         this.has_been_loaded = $.Deferred();
         this.maximum_visible_links = 'auto'; // # of menu to show. 0 = do not crop, 'auto' = algo
+        this.data = {data:{children:[]}};
     },
     start: function() {
         this._super.apply(this, arguments);
         this.$secondary_menus = this.getParent().$element.find('.oe_secondary_menus_container');
-        this.$secondary_menus.on('click', 'a[data-menu]', this.on_menu_click);
-        $('html').bind('click', this.do_hide_more);
+        return this.do_reload();
     },
     do_reload: function() {
-        var self = this;
-        return this.rpc("/web/menu/load", {}, this.on_loaded).then(function () {
-            if (self.current_menu) {
-                self.open_menu(self.current_menu);
-            }
-        });
+        return this.rpc("/web/menu/load", {}).then(this.on_loaded);
     },
     on_loaded: function(data) {
         var self = this;
         this.data = data;
         this.renderElement();
         this.limit_entries();
-        this.$element.on('click', 'a[data-menu]', this.on_menu_click);
+        this.$secondary_menus.html(QWeb.render("Menu.secondary", { widget : this }));
         this.$element.on('click', 'a.oe_menu_more_link', function() {
             self.$element.find('.oe_menu_more').toggle();
             return false;
         });
-        this.$secondary_menus.html(QWeb.render("Menu.secondary", { widget : this }));
+        this.$element.on('click', 'a[data-menu]', this.on_menu_click);
+        this.$secondary_menus.on('click', 'a[data-menu]', this.on_menu_click);
         // Hide second level submenus
         this.$secondary_menus.find('.oe_menu_toggler').siblings('.oe_secondary_submenu').hide();
+        if (self.current_menu) {
+            self.open_menu(self.current_menu);
+        }
         this.has_been_loaded.resolve();
     },
     limit_entries: function() {
@@ -585,6 +584,7 @@ instance.web.Menu =  instance.web.Widget.extend({
             $index.after($more);
             $more.find('.oe_menu_more').append($index.next().nextAll());
         }
+        this.do_hide_more();
     },
     auto_limit_entries: function() {
         // TODO: auto detect overflow and bind window on resize
@@ -603,6 +603,7 @@ instance.web.Menu =  instance.web.Widget.extend({
     open_menu: function (id) {
         var $clicked_menu, $sub_menu, $main_menu;
         $clicked_menu = this.$element.add(this.$secondary_menus).find('a[data-menu=' + id + ']');
+        this.trigger('open_menu', id, $clicked_menu);
 
         if (this.$secondary_menus.has($clicked_menu).length) {
             $sub_menu = $clicked_menu.parents('.oe_secondary_menu');
@@ -620,6 +621,9 @@ instance.web.Menu =  instance.web.Widget.extend({
         this.$secondary_menus.find('.oe_secondary_menu').hide();
         $sub_menu.show();
 
+        // Hide/Show the leftbar menu depending of the presence of sub-items
+        this.$secondary_menus.parent('.oe_leftbar').toggle(!!$sub_menu.children().length);
+
         // Activate current menu item and show parents
         this.$secondary_menus.find('.oe_active').removeClass('oe_active');
         if ($main_menu !== $clicked_menu) {
@@ -631,56 +635,60 @@ instance.web.Menu =  instance.web.Widget.extend({
             }
         }
     },
+    /**
+     * Call open_menu with the first menu_item matching an action_id
+     *
+     * @param {Number} id the action_id to match
+     */
     open_action: function (id) {
         var menu_id, $menu = this.$element.add(this.$secondary_menus).find('a[data-action-id=' + id + ']');
         if (menu_id = $menu.data('menu')) {
             this.open_menu(menu_id);
         }
     },
-    on_menu_click: function(ev, id) {
-        // TODO If first level menu doesnt have action trigger first leaf
-        this.do_hide_more();
-        id = id || 0;
-        var $clicked_menu, manual = false;
-
+    /**
+     * Process a click on a menu item
+     *
+     * @param {Number} id the menu_id
+     */
+    menu_click: function(id) {
         if (id) {
-            // We can manually activate a menu with it's id (for hash url mapping)
-            manual = true;
-            $clicked_menu = this.$element.find('a[data-menu=' + id + ']');
-            if (!$clicked_menu.length) {
-                $clicked_menu = this.$secondary_menus.find('a[data-menu=' + id + ']');
+            this.do_hide_more();
+            // find back the menuitem in dom to get the action
+            var $item = this.$element.find('a[data-menu=' + id + ']');
+            if (!$item.length) {
+                $item = this.$secondary_menus.find('a[data-menu=' + id + ']');
             }
-        } else {
-            $clicked_menu = $(ev.currentTarget);
-            id = $clicked_menu.data('menu');
-        }
-
-        this.trigger('menuClicked', id, $clicked_menu);
-
-        if (id) {
+            var action_id = $item.data('action-id');
+            // If first level menu doesnt have action trigger first leaf
+            if (!action_id) {
+                if(this.$element.has($item).length) {
+                    $sub_menu = this.$secondary_menus.find('.oe_secondary_menu[data-menu-parent=' + id + ']');
+                    $items = $sub_menu.find('a[data-action-id]').filter('[data-action-id!=""]');
+                    if($items.length) {
+                        action_id = $items.data('action-id');
+                        id = $items.data('menu');
+                    }
+                } 
+            }
             this.open_menu(id);
             this.current_menu = id;
             this.session.active_id = id;
-            var action_id = $clicked_menu.data('action-id');
             if (action_id) {
-                this.on_action(action_id);
+                this.trigger('menu_click', action_id, id, $item);
             }
         }
-        if (ev) {
-            ev.stopPropagation();
-        }
+    },
+    /**
+     * Jquery event handler for menu click
+     *
+     * @param {Event} ev the jquery event
+     */
+    on_menu_click: function(ev) {
+        this.menu_click($(ev.currentTarget).data('menu'));
+        ev.stopPropagation();
         return false;
     },
-    do_show_secondary: function($sub_menu, $main_menu) {
-        var self = this;
-        this.$secondary_menus.show();
-        if (!arguments.length) {
-            return;
-        }
-        $sub_menu.show();
-    },
-    on_action: function(action) {
-    }
 });
 
 instance.web.UserMenu =  instance.web.Widget.extend({
@@ -712,7 +720,7 @@ instance.web.UserMenu =  instance.web.Widget.extend({
             title: _t("Change Password"),
             width : 'auto'
         }).open();
-        this.dialog.$element.html(QWeb.render("Change_Pwd", self));
+        this.dialog.$element.html(QWeb.render("UserMenu.password", self));
         this.dialog.$element.find("form[name=change_password_form]").validate({
             submitHandler: function (form) {
                 self.rpc("/web/session/change_password",{
@@ -746,63 +754,19 @@ instance.web.UserMenu =  instance.web.Widget.extend({
                 return;
             var func = new instance.web.Model("res.users").get_func("read");
             return func(self.session.uid, ["name", "company_id"]).pipe(function(res) {
-                // TODO: Show company if multicompany is in use
-                var topbar_name = _.str.sprintf("%s (%s)", res.name, instance.connection.db, res.company_id[1]);
+                var topbar_name = res.name;
+                if(instance.connection.debug)
+                    topbar_name = _.str.sprintf("%s (%s)", topbar_name, instance.connection.db);
+                if(res.company_id[0] > 1)
+                    topbar_name = _.str.sprintf("%s (%s)", topbar_name, res.company_id[1]);
                 self.$element.find('.oe_topbar_name').text(topbar_name);
                 var avatar_src = _.str.sprintf('%s/web/binary/image?session_id=%s&model=res.users&field=avatar&id=%s', self.session.prefix, self.session.session_id, self.session.uid);
                 $avatar.attr('src', avatar_src);
-                return self.shortcut_load();
             });
         };
         this.update_promise = this.update_promise.pipe(fct, fct);
     },
     on_action: function() {
-    },
-    shortcut_load :function(){
-        var self = this,
-            sc = self.session.shortcuts,
-            shortcuts_ds = new instance.web.DataSet(this, 'ir.ui.view_sc');
-        self.$element.find('.oe_dropdown_options a[data-menu=shortcut]').each(function() {
-            $(this).parent().remove();
-        });
-        // TODO: better way to communicate between sections.
-        // sc.bindings, because jquery does not bind/trigger on arrays...
-        if (!sc.binding) {
-            sc.binding = {};
-            $(sc.binding).bind({
-                'add': function (e, attrs) {
-                    shortcuts_ds.create(attrs, function (out) {
-                        var shortcut = QWeb.render('UserMenu.shortcut', {
-                            shortcuts : [{
-                                name : attrs.name,
-                                id : out.result,
-                                res_id : attrs.res_id
-                            }]
-                        });
-                        $(shortcut).appendTo(self.$element.find('.oe_dropdown_options'));
-                        attrs.id = out.result;
-                        sc.push(attrs);
-                    });
-                },
-                'remove-current': function () {
-                    var menu_id = self.session.active_id;
-                    var $shortcut = self.$element.find('.oe_dropdown_options li a[data-id=' + menu_id + ']');
-                    var shortcut_id = $shortcut.data('shortcut-id');
-                    $shortcut.remove();
-                    shortcuts_ds.unlink([shortcut_id]);
-                    var sc_new = _.reject(sc, function(shortcut){ return shortcut_id === shortcut.id});
-                    sc.splice(0, sc.length);
-                    sc.push.apply(sc, sc_new);
-                }
-            });
-        }
-        return this.rpc('/web/session/sc_list', {}, function(shortcuts) {
-            sc.splice(0, sc.length);
-            sc.push.apply(sc, shortcuts);
-
-            $(QWeb.render('UserMenu.shortcut', {'shortcuts': shortcuts}))
-                .appendTo(self.$element.find('.oe_dropdown_options'));
-        });
     },
     on_menu_logout: function() {
     },
@@ -830,8 +794,8 @@ instance.web.UserMenu =  instance.web.Widget.extend({
             title: _t("Preferences"),
             width: '700px',
             buttons: [
-                {text: _t("Cancel"), click: function(){ $(this).dialog('destroy'); }},
                 {text: _t("Change password"), click: function(){ self.change_password(); }},
+                {text: _t("Cancel"), click: function(){ $(this).dialog('destroy'); }},
                 {text: _t("Save"), click: function(){
                         var inner_viewmanager = action_manager.inner_viewmanager;
                         inner_viewmanager.views[inner_viewmanager.active_view].controller.do_save()
@@ -850,7 +814,7 @@ instance.web.UserMenu =  instance.web.Widget.extend({
     on_menu_about: function() {
         var self = this;
         self.rpc("/web/webclient/version_info", {}).then(function(res) {
-            var $help = $(QWeb.render("About-Page", {version_info: res}));
+            var $help = $(QWeb.render("UserMenu.about", {version_info: res}));
             $help.find('a.oe_activate_debug_mode').click(function (e) {
                 e.preventDefault();
                 window.location = $.param.querystring(
@@ -860,16 +824,6 @@ instance.web.UserMenu =  instance.web.Widget.extend({
                 modal: true, width: 960, title: _t("About")});
         });
     },
-    on_menu_shortcut: function($link) {
-        var self = this,
-            id = $link.data('id');
-        self.session.active_id = id;
-        self.rpc('/web/menu/action', {'menu_id': id}, function(ir_menu_data) {
-            if (ir_menu_data.action.length){
-                self.on_action(ir_menu_data.action[0][2]);
-            }
-        });
-    }
 });
 
 instance.web.WebClient = instance.web.Widget.extend({
@@ -897,8 +851,6 @@ instance.web.WebClient = instance.web.Widget.extend({
         this.session.on_session_valid.add(function() {
             self.show_application();
 
-            self.user_menu.do_update();
-            self.menu.do_reload();
             if(self.action_manager)
                 self.action_manager.destroy();
             self.action_manager = new instance.web.ActionManager(self);
@@ -929,11 +881,12 @@ instance.web.WebClient = instance.web.Widget.extend({
         self.$element.append(self.$table);
         self.menu = new instance.web.Menu(self);
         self.menu.replace(this.$element.find('.oe_menu_placeholder'));
-        self.menu.on_action.add(this.proxy('on_menu_action'));
+        self.menu.on('menu_click', this, this.on_menu_action);
         self.user_menu = new instance.web.UserMenu(self);
         self.user_menu.replace(this.$element.find('.oe_user_menu_placeholder'));
         self.user_menu.on_menu_logout.add(this.proxy('on_logout'));
         self.user_menu.on_action.add(this.proxy('on_menu_action'));
+        self.user_menu.do_update();
     },
     show_common: function() {
         var self = this;
@@ -994,8 +947,9 @@ instance.web.WebClient = instance.web.Widget.extend({
         } else {
             self.menu.has_been_loaded.then(function() {
                 var first_menu_id = self.menu.$element.find("a:first").data("menu");
-                if(first_menu_id)
-                    self.menu.on_menu_click(null,first_menu_id);
+                if(first_menu_id) {
+                    self.menu.menu_click(first_menu_id);
+                }
             });
         }
     },
@@ -1019,7 +973,7 @@ instance.web.WebClient = instance.web.Widget.extend({
         // TODO replace by client action menuclick 
         if(action.menu_id) {
             this.do_reload().then(function () {
-                self.menu.on_menu_click(null, action.menu_id);
+                self.menu.menu_click(action.menu_id);
             });
         }
     },
