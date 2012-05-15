@@ -50,41 +50,41 @@
             <field name="type">form</field>
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
-                <form string="Group">
-                    <group colspan="4" col="8">
-                        <group colspan="6" col="4">
-                            <separator string="General Information" colspan="4"/>
-                            <field name="name" colspan="2"/>
-                            <field name="responsible_id" colspan="2"/>
-                            <newline/>
-                            <field name="description" colspan="4"/>
-                        </group>
-                        <group colspan="1" col="2">
-                            <separator string="Group Image" colspan="2"/>
+                <form string="Group Form" layout="manual">
+                    <sheet layout="auto">
+                        <group colspan="1">
                             <field name="photo" widget='image' nolabel="1" on_change="onchange_photo(photo)"/>
                         </group>
-                        <group colspan="1" col="2">
-                            <separator string="Privacy Settings" colspan="2"/>
-                            <field name="public" nolabel="1"/>
-                            <label string="This group is visible by non members" colspan="2"/>
+                        <group colspan="3" col="6">
+                            <h2><field name="name" nolabel="1" colspan="4"/></h2>
+                            <newline/>
+                            <group colspan="2" col="2">
+                                <field name="responsible_id" colspan="2"/>
+                                <label string="Visible by non members" colspan="1"/>
+                                <field name="public" nolabel="1"/>
+                                <field name="push_to_groups" colspan="2"/>
+                            </group>
+                            <group colspan="4" col="4">
+                                <field name="description" colspan="4" nolabel="1"/>
+                            </group>
                         </group>
-                    </group>
-                    <notebook colspan="4">
-                        <page string="Links">
-                            <field name="models" colspan="4">
+                        <group colspan="4" col="6">
+                            <field name="models" colspan="3">
                                 <tree string="Document models">
                                     <field name="name"/>
                                 </tree>
                             </field>
-                            <field name="groups" colspan="4">
+                            <field name="groups" colspan="3">
                                 <tree string="Document groups">
                                     <field name="name"/>
                                 </tree>
                             </field>
-                            <field name="push_to_groups"/>
-                        </page>
-                    </notebook>
-                    <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_form_sheet_width">
+                        <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"
+                                options='{"thread_level": 1}'/>
+                    </div>
                 </form>
             </field>
         </record>
