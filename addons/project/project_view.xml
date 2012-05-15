@@ -354,7 +354,8 @@
                                 <button name="%(action_project_task_reevaluate)d" string="Reevaluate" type="action" colspan="1" target="new" states="open,pending" icon="gtk-edit"/>
                             </group>
 
-                            <field colspan="4" name="description" nolabel="1"  attrs="{'readonly':[('state','=','done')]}"/>
+                            <field colspan="4" name="pad_url" widget="etherpad" nolabel="1"  attrs="{'readonly':[('state','=','done')]}"/>
+                            <field name="pad_username" invisible="1" />
                             <field colspan="4" name="work_ids" nolabel="1" attrs="{'readonly':[('state','in',['done','draft'])]}">
                                 <tree string="Task Work" editable="top">
                                     <field name="name" />
