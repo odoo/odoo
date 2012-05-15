@@ -42,21 +42,10 @@
             <field name="condition_select">python</field>
             <field name="condition_python">result = bool(employee.children)</field>
             <field name="amount_select">fix</field>
-            <field name="note">Education allowance of Rs. 50 per month per child for up to 2 children of the employee is exempted.</field>
+            <field name="note">Per school going child 1200 per annum is non-taxable. Maximum for 2 children, so max 2400 per annum becomes non-taxable.</field>
             <field name="sequence" eval="22"/>
         </record>
 
-        <record id="hr_payroll_rule_child2" model="hr.salary.rule">
-            <field name="code">CHEAH</field>
-            <field name="name">Education Allowance with Hostel</field>
-            <field name="category_id" ref="hr_payroll.ALW"/>
-            <field name="parent_rule_id" ref="hr_payroll_rule_child_edu"/>
-            <field name="condition_select">python</field>
-            <field name="condition_python">result = bool(employee.children)</field>
-            <field name="amount_select">fix</field>
-            <field name="note">In case the children are in hostel, the exemption available is Rs.150 per month per child for up to 2 children.</field>
-            <field name="sequence" eval="25"/>
-        </record>
 
         <record id="hr_salary_rule_special" model="hr.salary.rule">
             <field name="code">MGMTA</field>
@@ -129,7 +118,7 @@
             <field name="amount_select">fix</field>
             <field name="amount_fix">0.0</field>
             <field name="sequence" eval="33"/>
-            <field name="note">Payment by way of leave encashment received by Central & State Govt.
+            <field name="note"> Payment by way of leave encashment received by Central and State Govt.
               employees at the time of retirement in respect of the period of earned 
               leave at credit is fully exempt. In case of other employees, the exemption 
               is to be limited to minimum of all below:
@@ -137,7 +126,8 @@
                 2.The cash equivalent of leave balance (max 30 days per year of service)
                 3.Maximum of 10 months of leave encashment, based on last 10 months average salary
                 4.Rs. 3 Lakh
-                Read more: http://www.pankajbatra.com/finance/income-tax-calculator-2012-2013-2014/#ixzz1uuunHwjE</field>
+                Read more: http://www.pankajbatra.com/finance/income-tax-calculator-2012-2013-2014/#ixzz1uuunHwjE
+                </field>
         </record>
 
         <record id="hr_salary_rule_bonus" model="hr.salary.rule">
@@ -190,9 +180,10 @@
             <field name="amount_select">fix</field>
             <field eval="500.0" name="amount_fix"/>
             <field name="sequence" eval="38"/>
-            <field name="note"></field>In some of the cases, companies may provide a component for telephone bills.
+            <field name="note">In some of the cases, companies may provide a component for telephone bills.
             Employees may provide actual phone usage bills to reimburse this component and make it non-taxable.
-            Read more: http://www.pankajbatra.com/finance/income-tax-calculator-2012-2013-2014/#ixzz1uuvaUK7A</note>
+            Read more: http://www.pankajbatra.com/finance/income-tax-calculator-2012-2013-2014/#ixzz1uuvaUK7A
+            </field>
         </record>
 
         <record id="hr_payroll_rule_car" model="hr.salary.rule">
