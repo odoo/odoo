@@ -58,7 +58,7 @@ openerp.mail = function(session) {
             this.display = {};
             this.display.show_post_comment = this.params.show_post_comment || false;
             this.display.show_msg_menu = this.params.is_wall;
-            this.display.show_reply = (this.params.thread_level > 0);
+            this.display.show_reply = (this.params.thread_level > 0 && this.params.is_wall);
             this.display.show_delete = ! this.params.is_wall;
             this.display.show_hide = this.params.is_wall;
             this.display.show_reply_by_email = ! this.params.is_wall;
@@ -81,7 +81,7 @@ openerp.mail = function(session) {
         },
         
         do_customize_display: function() {
-            if (this.display.show_post_comment) { this.$element.find('div.oe_mail_thread_act').show(); }
+            if (this.display.show_post_comment) { this.$element.find('div.oe_mail_thread_act').eq(0).show(); }
             if (this.display.show_reply_by_email) { this.$element.find('a.oe_mail_compose').show(); }
             if (! this.display.show_msg_menu) { this.$element.find('img.oe_mail_msg_menu_icon').hide(); }
         },
@@ -250,7 +250,8 @@ openerp.mail = function(session) {
                     });
                     self.display_comment(record);
                     self.thread = new mail.Thread(self, {'res_model': self.params.res_model, 'res_id': self.params.res_id, 'uid': self.params.uid,
-                                                            'records': sub_msgs, 'thread_level': (self.params.thread_level-1), 'parent_id': record.id});
+                                                            'records': sub_msgs, 'thread_level': (self.params.thread_level-1), 'parent_id': record.id,
+                                                            'is_wall': self.params.is_wall});
                     self.$element.find('li.oe_mail_thread_msg:last').append('<div class="oe_mail_thread_subthread"/>');
                     self.thread.appendTo(self.$element.find('div.oe_mail_thread_subthread:last'));
                 }
@@ -658,7 +659,7 @@ openerp.mail = function(session) {
                 $('<div class="oe_mail_wall_thread">').html(render_res).appendTo(self.$element.find('div.oe_mail_wall_threads'));
                 var thread = new mail.Thread(self, {
                     'res_model': model_name, 'res_id': res_id, 'uid': self.session.uid, 'records': records,
-                    'parent_id': false, 'thread_level': self.params.thread_level, 'show_hide': true}
+                    'parent_id': false, 'thread_level': self.params.thread_level, 'show_hide': true, 'is_wall': true}
                     );
                 self.thread_list.push(thread);
                 return thread.appendTo(self.$element.find('div.oe_mail_wall_thread:last'));
