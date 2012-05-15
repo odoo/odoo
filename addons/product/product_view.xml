@@ -216,6 +216,7 @@
                                     </div>
                                     <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger">
                                         <img t-att-src="kanban_image('product.product', 'product_image', record.id.value)" width="48" style="float: left; padding: 0 4px 4px 0"/>
+                                        Code: <field name="code"/>
                                         <div t-if="record.type.raw_value == 'service'">No Stock</div>
                                         <t t-if="record.type.raw_value != 'service'">
                                             <div>Stock: <field name="qty_available"/> on hand, <field name="virtual_available"/> available</div>
@@ -275,7 +276,7 @@
             <field name="act_window_id" ref="product_normal_action_sell"/>
         </record>
 
-        <menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" sequence="9"/>
+        <menuitem id="base.menu_product" parent="base.menu_base_partner" name="Products"  sequence="9"/>
         <menuitem action="product.product_normal_action_sell" id="product.menu_products" parent="base.menu_product" sequence="1"/>
 
         <record id="product_normal_action_puchased" model="ir.actions.act_window">
@@ -670,7 +671,7 @@
                             </group>
 
                             <group colspan="2" col="2" name="uom">
-                                <separator string="UOM" colspan="2"/>
+                                <separator string="UoM" colspan="2"/>
                                 <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)" groups="product.group_uom"/>
                                 <field name="uom_po_id"/>
                             </group>
