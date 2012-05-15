@@ -1516,14 +1516,15 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
                                          : 'oe_searchview_custom_public')
                 .text(filter.name);
 
-            $('<button type="button">').appendTo($filter)
+            $('<button type="button" class="oe_searchview_custom_delete">')
                 .text(_t("Delete"))
                 .click(function (e) {
                     e.stopPropagation();
                     self.model.call('unlink', [id]).then(function () {
                         $filter.remove();
                     });
-                });
+                })
+                .appendTo($filter);
         }
 
         $filter.unbind('click').click(function () {

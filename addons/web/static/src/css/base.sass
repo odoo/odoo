@@ -64,6 +64,18 @@ $colour4: #8a89ba
     -webkit-box-sizing: border-box
     box-sizing: border-box
 
+// Transforms the (readable) text of an inline element into an mmlicons icon,
+// allows for actual readable text in-code (and in readers?) with iconic looks
+@mixin text-to-icon($icon-name, $color: #404040)
+    font-size: 1px
+    letter-spacing: -1px
+    color: transparent
+    &:before
+        font-family: "mnmliconsRegular"
+        content: $icon-name
+        font-size: 20px
+        color: $color
+
 // }}}
 
 .openerp.openerp-web-client-container
@@ -986,14 +998,7 @@ $colour4: #8a89ba
                     display: none
 
                     button
-                        font-size: 1px
-                        letter-spacing: -1px
-                        color: transparent
-                        &:before
-                            font-family: "mnmliconsRegular"
-                            content: "S"
-                            font-size: 20px
-                            color: #404040
+                        @include text-to-icon("S")
 
             .oe_searchview_advanced
                 form
@@ -1016,6 +1021,10 @@ $colour4: #8a89ba
                     content: "▾ "
                 form
                     display: block
+
+            // delete buttons
+            .oe_searchview_custom_delete, .searchview_extended_delete_prop
+                @include text-to-icon("d")
     // }}}
     // View.topbar {{{
     .oe_view_topbar

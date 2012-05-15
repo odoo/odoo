@@ -1264,6 +1264,17 @@
 .openerp .oe_searchview .oe_searchview_drawer .oe_opened form {
   display: block;
 }
+.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_custom_delete, .openerp .oe_searchview .oe_searchview_drawer .searchview_extended_delete_prop {
+  font-size: 1px;
+  letter-spacing: -1px;
+  color: transparent;
+}
+.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_custom_delete:before, .openerp .oe_searchview .oe_searchview_drawer .searchview_extended_delete_prop:before {
+  font-family: "mnmliconsRegular";
+  content: "d";
+  font-size: 20px;
+  color: #404040;
+}
 .openerp .oe_view_topbar {
   border-bottom: 1px solid #cacaca;
   background-color: #fcfcfc;
