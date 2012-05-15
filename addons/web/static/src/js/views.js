@@ -1267,6 +1267,28 @@ instance.web.str_to_xml = function(s) {
 instance.web.client_actions = new instance.web.Registry();
 
 /**
+ * Client action to reload the whole interface.
+ * If params has an entry 'menu_id', it opens the given menu entry.
+ */
+instance.web.client_actions.add("reload", "instance.web.Reload");
+
+instance.web.Reload = instance.web.Widget.extend({
+    init: function(parent, params) {
+        this._super(parent);
+        this.menu_id = (params && params.menu_id) || false;
+    },
+    start: function() {
+        if (this.menu_id) {
+            // open the given menu id
+            var url_without_fragment = window.location.toString().split("#", 1)[0];
+            window.location = url_without_fragment + "#menu_id=" + this.menu_id;
+        } else {
+            window.location.reload();
+        }
+    }
+});
+
+/**
  * Registry for all the main views
  */
 instance.web.views = new instance.web.Registry();
