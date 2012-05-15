@@ -81,7 +81,7 @@ class stock_partial_picking(osv.osv_memory):
         type = context.get('active_model','').split('.')[-1]
         if type:
             doc = etree.XML(res['arch'])
-            for node in doc.xpath("//group/button[@name='do_partial']"):
+            for node in doc.xpath("//button[@name='do_partial']"):
                 if type == 'in':
                     node.set('string', _('_Receive'))
                 elif type == 'out':

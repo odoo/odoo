@@ -2119,11 +2119,11 @@ class stock_move(osv.osv):
             return True
         if context is None:
             context = {}
-        pickings = []
+        pickings = set()
         for move in self.browse(cr, uid, ids, context=context):
             if move.state in ('confirmed', 'waiting', 'assigned', 'draft'):
                 if move.picking_id:
-                    pickings += [move.picking_id.id]
+                    pickings.add(move.picking_id.id)
             if move.move_dest_id and move.move_dest_id.state == 'waiting':
                 self.write(cr, uid, [move.move_dest_id.id], {'state': 'assigned'})
                 if context.get('call_unlink',False) and move.move_dest_id.picking_id:
@@ -2131,7 +2131,7 @@ class stock_move(osv.osv):
                     wf_service.trg_write(uid, 'stock.picking', move.move_dest_id.picking_id.id, cr)
         self.write(cr, uid, ids, {'state': 'cancel', 'move_dest_id': False})
         if not context.get('call_unlink',False):
-            for pick in self.pool.get('stock.picking').browse(cr, uid, pickings, context=context):
+            for pick in self.pool.get('stock.picking').browse(cr, uid, list(pickings), context=context):
                 if all(move.state == 'cancel' for move in pick.move_lines):
                     self.pool.get('stock.picking').write(cr, uid, [pick.id], {'state': 'cancel'})
 
