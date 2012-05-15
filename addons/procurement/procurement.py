@@ -495,7 +495,7 @@ class procurement_order(osv.osv):
         self.message_append_note(cr, uid, ids, body=_("Procurement has been set to <b>running</b>."), context=context)
 
     def ready_send_note(self, cr, uid, ids, context=None):
-        sself.message_append_note(cr, uid, ids, body=_("Procurement has been set to <b>ready</b>."), context=context)
+        self.message_append_note(cr, uid, ids, body=_("Procurement has been set to <b>ready</b>."), context=context)
 
     def cancel_send_note(self, cr, uid, ids, context=None):
         self.message_append_note(cr, uid, ids, body=_("Procurement has been <b>cancelled</b>."), context=context)
