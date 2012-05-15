@@ -116,7 +116,7 @@ class procurement_order(osv.osv):
                 move_obj.write(cr, uid, [proc.move_id.id],
                     {'location_id':proc.location_id.id})
             self.write(cr, uid, [proc.id], {'state':'running', 'message':_('Pulled from another location via procurement %d')%proc_id})
-            self.running_send_note(cr, uid, ids, context=None)
+            self.running_send_note(cr, uid, ids, context=context)
 
             # trigger direct processing (the new procurement shares the same planned date as the original one, which is already being processed)
             wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_check', cr)

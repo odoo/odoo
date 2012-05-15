@@ -259,7 +259,7 @@ class procurement_order(osv.osv):
                     })],
                     'purchase_ids': [(6,0,[po_id])]
                 })
-            self.write(cr,uid,[proc_id],{'requisition_id':requisition_id})
+            self.write(cr,uid,[proc_id],{'requisition_id':requisition_id},context=context)
         return res
 
 procurement_order()
