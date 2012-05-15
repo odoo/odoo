@@ -71,7 +71,7 @@ openerp.mail = function(session) {
             this._super.apply(this, arguments);
             // add events
             this.add_events();
-            /* display user, fetch comments */
+            // display user, fetch comments
             this.display_current_user();
             if (this.params.records) var display_done = this.display_comments_from_parameters(this.params.records);
             else var display_done = this.init_comments();
@@ -241,7 +241,7 @@ openerp.mail = function(session) {
             _(records).each(function (record) {
                 var sub_msgs = [];
                 if ((record.parent_id == false || record.parent_id[0] == self.params.parent_id) && self.params.thread_level > 0 ) {
-                    var sub_list = this.comments_structure['tree_struct'][record.id]['direct_childs'];
+                    var sub_list = self.comments_structure['tree_struct'][record.id]['direct_childs'];
                     _(records).each(function (record) {
                         //if (record.parent_id == false || record.parent_id[0] == self.params.parent_id) return;
                         if (_.indexOf(sub_list, record.id) != -1) {
