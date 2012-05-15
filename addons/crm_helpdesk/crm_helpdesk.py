@@ -101,9 +101,8 @@ class crm_helpdesk(crm.crm_case, osv.osv):
         return obj_id
 
     def create_send_note(self, cr, uid, ids, context=None):
-        for id in ids:
-            msg = '%s has been <b>created</b>.' % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
-            self.message_append_note(cr, uid, [id], body=msg, context=context)
+        msg = '%s has been <b>created</b>.' % (self.case_get_note_msg_prefix(cr, uid, ids, context=context))
+        self.message_append_note(cr, uid, ids, body=msg, context=context)
         return True
 
     def message_new(self, cr, uid, msg_dict, custom_values=None, context=None):
