@@ -102,13 +102,13 @@
                     <button name="ship_corrected" states="shipping_except" string="Ignore Exception" icon="gtk-apply"/>
                     <button name="action_cancel" states="manual,progress" string="Cancel Order" type="object" icon="gtk-cancel"/>
                     <button name="%(report_sale_order)d" string="Print Order" type="action" icon="gtk-print" states="waiting_date,manual,progress,done,shipping_except,invoice_except"/>
-                    <button name="manual_invoice" states="manual" string="Create Final Invoice" icon="gtk-go-forward" type="object"/>
+                    <button name="manual_invoice" states="manual" string="Create Final Invoice" icon="gtk-go-forward" type="object" class="oe_form_button_hi"/>
                     <button name="ship_cancel" states="shipping_except" string="Cancel Order" icon="gtk-cancel"/>
                     <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" icon="gtk-convert"/>
                     <button name="cancel" states="draft" string="Cancel Order" icon="gtk-cancel"/>
                     <button name="invoice_cancel" states="invoice_except" string="Cancel Order" icon="gtk-cancel"/>
-                    <button name="%(report_sale_order)d" string="Print Quotation" type="action" icon="gtk-print" states="draft"/>
-                    <button name="order_confirm" states="draft" string="Confirm Order" icon="gtk-apply"/>
+                    <button name="%(report_sale_order)d" string="Print Quotation" type="action" icon="gtk-print" states="draft" class="oe_form_button_hi"/>
+                    <button name="order_confirm" states="draft" string="Confirm Order" icon="gtk-apply" class="oe_form_button_hi"/>
                     <button name="%(action_view_sale_advance_payment_inv)d" string="Advance Invoice" type="action" icon="gtk-execute" states="draft,manual"/>
                     <div class="oe_right">
                         <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,progress,done" statusbar_colors='{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}'/>
@@ -340,6 +340,7 @@
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="context">{"search_default_draft":1}</field>
             <field name="search_view_id" ref="view_sales_order_filter"/>
+            <field name="help">Create a quotation and send it to your customer. Once confirmed, it is converted to a sale order. From that point on, you can control how the sale order is invoiced, and how products are delivered.</field>
         </record>
 
         <menuitem id="menu_sale_quotations"
