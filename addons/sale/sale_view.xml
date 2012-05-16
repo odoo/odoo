@@ -206,12 +206,16 @@
                                 </tree>
                             </field>
 
-                            <div class="oe_right">
-                                <group col="2">
+                            <div class="oe_form_subtotal_footer" colspan="4">
+                                <div>
                                     <field name="amount_untaxed" sum="Untaxed amount"/>
+                                </div>
+                                <div>
                                     <field name="amount_tax"/>
+                                </div>
+                                <div class="oe_form_subtotal_footer_separator">
                                     <field name="amount_total"/>
-                                </group>
+                                </div>
                             </div>
                             <div class="oe_clear"/>
 
