@@ -1307,7 +1307,7 @@
 }
 .openerp .oe_searchview .oe_searchview_drawer button, .openerp .oe_searchview .oe_searchview_drawer .button {
   border: none;
-  background: white;
+  background: transparent;
   padding: 0 2px;
   -moz-box-shadow: none;
   -webkit-box-shadow: none;
@@ -1340,6 +1340,7 @@
   list-style: none;
   padding: 3px 6px;
   height: 14px;
+  line-height: 14px;
   color: inherit;
   cursor: pointer;
 }
@@ -1359,6 +1360,20 @@
   content: "S";
   font-size: 20px;
   color: #404040;
+}
+.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_custom li {
+  cursor: pointer;
+  position: relative;
+  line-height: 1.2em;
+  padding: 2px 20px 2px 10px;
+}
+.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_custom li:hover {
+  background-color: #f0f0fa;
+}
+.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_custom li button {
+  position: absolute;
+  top: 0;
+  right: 5px;
 }
 .openerp .oe_searchview .oe_searchview_drawer .oe_searchview_advanced form {
   display: none;

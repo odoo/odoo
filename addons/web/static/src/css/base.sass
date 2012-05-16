@@ -4,6 +4,7 @@
 $section-title-color: #8786b7
 $facets-border: #afafb6
 $facets-border-selected: #a6a6fe
+$hover-background: #f0f0fa
 $colour4: #8a89ba
 // }}}
 // Mixins {{{
@@ -1066,7 +1067,7 @@ $colour4: #8a89ba
 
             button, .button
                 border: none
-                background: white
+                background: transparent
                 padding: 0 2px
                 @include box-shadow(none)
                 @include radius(0)
@@ -1093,11 +1094,12 @@ $colour4: #8a89ba
                     list-style: none
                     padding: 3px 6px
                     height: 14px
+                    line-height: 14px
                     color: inherit
                     cursor: pointer
 
                     &:hover
-                        background-color: #f0f0fa
+                        background-color: $hover-background
 
             .oe_searchview_custom
                 form
@@ -1105,6 +1107,19 @@ $colour4: #8a89ba
 
                     button
                         @include text-to-icon("S")
+                li
+                    cursor: pointer
+                    position: relative
+                    line-height: 1.2em
+                    padding: 2px 20px 2px 10px
+
+                    &:hover
+                        background-color: $hover-background
+
+                    button
+                        position: absolute
+                        top: 0
+                        right: 5px
 
             .oe_searchview_advanced
                 form
