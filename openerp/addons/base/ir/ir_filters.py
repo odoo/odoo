@@ -53,6 +53,9 @@ class ir_filters(osv.osv):
         lower_name = vals['name'].lower()
         matching_filters = [f for f in self.get_filters(cr, uid, vals['model_id'])
                                 if f['name'].lower() == lower_name
+                                # next line looks for matching user_ids (specific or global), i.e.
+                                # f.user_id is False and vals.user_id is False or missing,
+                                # or f.user_id.id == vals.user_id
                                 if (f['user_id'] and f['user_id'][0]) == vals.get('user_id', False)]
         # When a filter exists for the same (name, model, user) triple, we simply
         # replace its definition.
@@ -88,6 +91,7 @@ class ir_filters(osv.osv):
     _defaults = {
         'domain': '[]',
         'context':'{}',
+        'user_id': lambda self,cr,uid,context=None: uid,
     }
 
 ir_filters()
