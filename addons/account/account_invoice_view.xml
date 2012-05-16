@@ -144,7 +144,8 @@
             <field name="type">form</field>
             <field name="priority">2</field>
             <field name="arch" type="xml">
-                <form string="Supplier Invoice">
+                <form layout="manual">
+                <sheet string="Supplier Invoice" layout="auto">
                     <group col="8" colspan="4">
                         <field name="journal_id" on_change="onchange_journal_id(journal_id)" widget="selection"/>
                         <field name="number" readonly="1"/>
@@ -243,7 +244,10 @@
                             </field>
                         </page>
                     </notebook>
+                </sheet>
+                <div class="oe_form_sheet_width">
                     <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"/>
+                </div>
                 </form>
             </field>
         </record>
@@ -253,7 +257,8 @@
             <field name="model">account.invoice</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Invoice">
+                <form layout="manual">
+                <sheet string="Invoice" layout="auto">
                     <group colspan="4" col="8">
                     <field name="journal_id" groups="base.group_user" on_change="onchange_journal_id(journal_id, context)" widget="selection"/>
                     <field name="number"/>
@@ -338,7 +343,10 @@
                             </field>
                         </page>
                     </notebook>
+                </sheet>
+                <div class="oe_form_sheet_width">
                     <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"/>
+                </div>
                 </form>
             </field>
         </record>
