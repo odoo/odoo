@@ -73,6 +73,7 @@
     assert shipment.state == 'done', "shipment should be close after received."
     for move_line in shipment.move_lines:
         assert move_line.product_qty == 10, "Qty does not correspond."
+        assert move_line.product_id.virtual_available == 20, "Virtual stock does not correspond."
         assert move_line.state == 'done', "Move line should be closed."
 
 -
@@ -82,11 +83,15 @@
     invoice_state: none
 -
   !python {model: stock.return.picking }: |
+    # this work without giving the id of the picking to return, magically, thanks to the context
     self.create_returns(cr, uid, [ref('return_incomming')], context=context)
 -
   I cancel incomming shipment after return it.
 -
   !python {model: stock.picking}: |
+    # the cancel is not on the return, but on the incomming shipment (which now has a quantity of 10, thanks to the 
+    # backorder). This situation is a little weird as we returned a move that we finally cancelled... As result, only
+    # 30Kg from the original 50Kg will be counted in the stock (50 - 10 (cancelled quantity) - 10 (returned quantity))
     self.action_cancel(cr, uid, [ref("incomming_shipment")], context=context)
 -
   I make invoice of backorder of incomming shipment.
@@ -107,12 +112,12 @@
     shipment = self.browse(cr, uid, ref("incomming_shipment"))
     assert shipment.backorder_id.invoice_state == 'invoiced', 'Invoice state is not upadted.'
 -
-  I check availabile stock after received incomming shipping.
+  I check available stock after received incomming shipping.
 -
   !python {model: product.product}: |
     product = self.browse(cr, uid, ref('product_icecream'), context=context)
     assert product.qty_available == 140, "Stock does not correspond."
-    assert product.virtual_available == 10, "Vitual stock does not correspond."
+    assert product.virtual_available == 0, "Vitual stock does not correspond."
 -
   I split incomming shipment into lots. each lot contain 10 kgm Ice-cream.
 -
@@ -198,7 +203,7 @@
   !python {model: product.product}: |
     product = self.browse(cr, uid, ref('product_icecream'), context=context)
     assert product.qty_available == 135.96, "Stock does not correspond."
-    assert round(product.virtual_available, 2) == 5.96, "Vitual stock does not correspond."
+    assert round(product.virtual_available, 2) == -4.04, "Vitual stock does not correspond."
 -
   I trace all incoming lots.
 -
@@ -269,9 +274,9 @@
     for move_line in shipment.move_lines:
         assert move_line.state == "done", "Move should be closed."
 -
-  I check availabile stock after deliver.
+  I check availaible stock after deliver.
 -
   !python {model: product.product}: |
     product = self.browse(cr, uid, ref('product_icecream'), context=context)
     assert round(product.qty_available, 2) == 5.96, "Stock does not correspond."
-    assert round(product.virtual_available, 2) == 5.96, "Vitual stock does not correspond."
+    assert round(product.virtual_available, 2) == -4.04, "Vitual stock does not correspond."

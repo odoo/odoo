@@ -136,7 +136,7 @@ class report_custom(report_rml):
                     <col t='yes'>%s</col>
                     <col t='yes'>%s</col>
                 </row>
-        """ % (_('Components'), _('Components suppliers'), _('Quantity'),_('Cost Price per Uom'), _('Supplier Price per Uom'))
+        """ % (_('Components'), _('Components suppliers'), _('Quantity'),_('Cost Price per Unit of Measure'), _('Supplier Price per Unit of Measure'))
 
         purchase_price_digits = rml_obj.get_digits(dp='Purchase Price')
 

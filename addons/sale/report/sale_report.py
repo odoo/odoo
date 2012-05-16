@@ -38,7 +38,7 @@ class sale_report(osv.osv):
             ('10', 'October'), ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
         'product_id': fields.many2one('product.product', 'Product', readonly=True),
-        'product_uom': fields.many2one('product.uom', 'UoM', readonly=True),
+        'product_uom': fields.many2one('product.uom', 'Unit of Measure', readonly=True),
         'product_uom_qty': fields.float('# of Qty', readonly=True),
 
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),

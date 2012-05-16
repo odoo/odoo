@@ -13,7 +13,8 @@
                     </div>
                     <sheet layout="auto">
                         <separator string="Invoicing" colspan="4"/>
-                        <field name="default_invoice_method" />
+                        <field name="default_invoice_method"/>
+                        <field name="decimal_precision"/>
 
                         <separator string="Purchase Order" colspan="4"/>
                         <field name="group_purchase_pricelist"/>
@@ -39,16 +40,21 @@
         </record>
 
         <menuitem id="menu_purchase_config" name="Purchases" parent="base.menu_config"
-            sequence="2" action="action_purchase_configuration"/>
+            sequence="3" action="action_purchase_configuration"/>
 
         <record id="view_account_config" model="ir.ui.view">
             <field name="name">account settings</field>
             <field name="model">account.config.settings</field>
             <field name="type">form</field>
             <field name="inherit_id" ref="account.view_account_config_settings"/>
+            <field name="priority" eval="18"/>
             <field name="arch" type="xml">
-                <group name="analytic_accounting" position="after">
+                <group name="analytic_accounting" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                </group>
+                <group name="analytic_accounting" position="inside">
                     <field name="group_analytic_account_for_purchases"/>
+                    <field name="module_purchase_analytic_plans"/>
                 </group>
             </field>
         </record>
