@@ -3358,11 +3358,21 @@ instance.web.form.Many2ManyListView = instance.web.ListView.extend(/** @lends in
     }
 });
 
+/**
+ * Class with everything which is common between FormOpenPopup and SelectCreatePopup.
+ */
 instance.web.form.AbstractFormPopup = instance.web.OldWidget.extend({
     template: "AbstractFormPopup.render",
     /**
      *  options:
      *  -readonly: only applicable when not in creation mode, default to false
+     * - alternative_form_view
+     * - write_function
+     * - read_function
+     * - create_function
+     * - parent_view
+     * - child_name
+     * - form_view_options
      */
     init_popup: function(model, row_id, domain, context, options) {
         this.row_id = row_id;
@@ -3467,22 +3477,33 @@ instance.web.form.AbstractFormPopup = instance.web.OldWidget.extend({
 });
 
 /**
- * @class
- * @extends instance.web.OldWidget
+ * Class to display a popup containing a form view.
  */
-instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend(/** @lends instance.web.form.SelectCreatePopup# */{
+instance.web.form.FormOpenPopup = instance.web.form.AbstractFormPopup.extend({
+    show_element: function(model, row_id, context, options) {
+        this.init_popup(model, row_id, [], context,  options);
+        _.defaults(this.options, {
+        });
+        this.display_popup();
+    },
+    start: function() {
+        this._super();
+        this.init_dataset();
+        this.setup_form_view();
+    },
+});
+
+/**
+ * Class to display a popup to display a list to search a row. It also allows
+ * to switch to a form view to create a new row.
+ */
+instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend({
     /**
      * options:
      * - initial_ids
      * - initial_view: form or search (default search)
      * - disable_multiple_selection
-     * - alternative_form_view
-     * - create_function (defaults to a naive saving behavior)
-     * - parent_view
-     * - child_name
-     * - form_view_options
      * - list_view_options
-     * - read_function
      */
     select_element: function(model, options, domain, context) {
         this.init_popup(model, null, domain, context, options);
@@ -3602,34 +3623,6 @@ instance.web.form.SelectCreateListView = instance.web.ListView.extend({
         this._super(ids, records);
         this.popup.on_click_element(ids);
     }
-});
-
-/**
- * @class
- * @extends instance.web.OldWidget
- */
-instance.web.form.FormOpenPopup = instance.web.form.AbstractFormPopup.extend(/** @lends instance.web.form.FormOpenPopup# */{
-    /**
-     * options:
-     * - alternative_form_view
-     * - write_function
-     * - read_function
-     * - parent_view
-     * - child_name
-     * - form_view_options
-     */
-    show_element: function(model, row_id, context, options) {
-        this.init_popup(model, row_id, [], context,  options);
-        _.defaults(this.options, {
-            auto_write: true,
-        });
-        this.display_popup();
-    },
-    start: function() {
-        this._super();
-        this.init_dataset();
-        this.setup_form_view();
-    },
 });
 
 instance.web.form.FieldReference = instance.web.form.AbstractField.extend(_.extend({}, instance.web.form.ReinitializeFieldMixin, {
