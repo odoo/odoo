@@ -143,6 +143,8 @@ $colour4: #8a89ba
     .oe_right
         float: right
         margin-left: 8px
+    .oe_text_right
+        text-align: right
     .oe_clear
         clear: both
     .oe_wait
@@ -1152,7 +1154,7 @@ $colour4: #8a89ba
         line-height: 30px 
         button
             font-size: 12px 
-            height: 24px 
+            height: 24px !important
             line-height: 24px 
             vertical-align: top
             padding: 0 10px 
@@ -1229,10 +1231,8 @@ $colour4: #8a89ba
             border: 1px solid #afafb6
             @include box-shadow(0 0 10px rgba(0,0,0,0.3))
     // }}}
-    // FormView.autolayout {{{
-    .oe_form_autolayout
-        .oe_button
-            height: 20px
+    // FormView.layout {{{
+    .oe_form
         .oe_form_group_cell
             line-height: 18px
             padding: 2px
@@ -1250,21 +1250,13 @@ $colour4: #8a89ba
         .oe_form_group_cell > div > .oe_datepicker_root,
         .oe_form_group_cell > div > .oe_datepicker_root > input.oe_datepicker_master
             width: 100%
-        .oe_form_button.oe_button
-            color: #4c4c4c
-            span
-                position: relative
-                vertical-align: top
-        .oe_form_group_cell > .oe_form_button.oe_button
-            white-space: nowrap
-            min-width: 100%
-            width: 100%
         .oe_form_group_cell.oe_form_group_nested
             padding: 0
     // }}}
     // FormView.label {{{
     .oe_form
         .oe_form_label_help[for], .oe_form_label[for]
+            font-weight: bold
             white-space: nowrap
             padding-right: 8px
             span
@@ -1373,10 +1365,8 @@ $colour4: #8a89ba
             input, select, textarea
                 background-color: #F66 !important
                 border: 1px solid #D00 !important
-    // }}}
-    // FormView.buttons {{{
-    .oe_form
         .oe_button.oe_field_button
+            display: block
             -webkit-border-top-left-radius: 0px
             -webkit-border-bottom-left-radius: 0px
             -moz-border-radius-topleft: 0px
@@ -1396,9 +1386,23 @@ $colour4: #8a89ba
             filter: alpha(opacity=50)
             right: 5px
             top: 3px
+    // }}}
+    // FormView.buttons {{{
+    .oe_form
+        .oe_form_button.oe_button
+            height: 22px
+            color: #4c4c4c
+            span
+                position: relative
+                vertical-align: top
         .oe_form_button > img
             vertical-align: -3px
             padding: 0 2px
+        .oe_form_group_cell > .oe_form_button.oe_button
+            display: block
+            white-space: nowrap
+            min-width: 100%
+            width: 100%
     // }}}
     // FormView.binaryfile {{{
     /* http://www.quirksmode.org/dom/inputfile.html
@@ -1536,7 +1540,7 @@ $colour4: #8a89ba
                 min-width: 120px
         .oe_form_group_odd_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell,
         .oe_form_group_label_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell
-            padding: 2px 2px 2px 8px !important
+            padding-left: 8px
     // }}}
     // ListView {{{
     .oe-listview-content
