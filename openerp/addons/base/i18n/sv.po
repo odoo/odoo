@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:44+0000\n"
-"PO-Revision-Date: 2012-04-25 11:04+0000\n"
+"PO-Revision-Date: 2012-05-03 08:45+0000\n"
 "Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
 "Language-Team: <>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-04-26 05:18+0000\n"
-"X-Generator: Launchpad (build 15149)\n"
+"X-Launchpad-Export-Date: 2012-05-04 05:19+0000\n"
+"X-Generator: Launchpad (build 15195)\n"
 
 #. module: base
 #: model:res.country,name:base.sh
@@ -271,7 +271,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_sales_management
 #: model:ir.module.module,shortdesc:base.module_sale
 msgid "Sales Management"
-msgstr "Försäljningsadministration"
+msgstr "Kundorder"
 
 #. module: base
 #: view:res.partner:0
@@ -567,7 +567,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_layout
 msgid "Sales Orders Print Layout"
-msgstr ""
+msgstr "Utskriftslayout för kundorder"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -647,7 +647,7 @@ msgstr "Palau"
 #. module: base
 #: view:res.partner:0
 msgid "Sales & Purchases"
-msgstr "Försäljning och inköp"
+msgstr "Kundorder och inköp"
 
 #. module: base
 #: view:ir.translation:0
@@ -1436,7 +1436,7 @@ msgid ""
 "system. After the contract has been registered, you will be able to send "
 "issues directly to OpenERP."
 msgstr ""
-"Denna guide hjälper dig att registrera ett garantikontrakt från utgivaren i "
+"Denna guide hjälper dig att registrera ett utgivarens underhållsavtal för "
 "ditt OpenERP-system. Sedan kontraktet registrerats kan du skicka ärenden "
 "direkt till utgivaren."
 
@@ -2374,8 +2374,8 @@ msgid ""
 "order in Object, and you can have loop on the sales order line. Expression = "
 "`object.order_line`."
 msgstr ""
-"Skriv in de fält/uttryck som returnernar listan. Välj t ex 'säljorder' i "
-"'Object', och du kan loopa över säljordrar. Uttryck är av formen "
+"Skriv in de fält/uttryck som returnernar listan. Välj t ex 'sale.order' i "
+"'Object', och du kan loopa över kundordrar. Uttryck är av formen "
 "object.order_line."
 
 #. module: base
@@ -2652,7 +2652,7 @@ msgstr "Fältmappning"
 #: code:addons/base/publisher_warranty/publisher_warranty.py:163
 #, python-format
 msgid "Error during communication with the publisher warranty server."
-msgstr "Fel vid kommunikation med servern för 'publisher warranty'."
+msgstr "Fel vid kommunikation med servern för 'utgivarens underhållsavtal'."
 
 #. module: base
 #: model:res.groups,name:base.group_sale_manager
@@ -4217,6 +4217,8 @@ msgid ""
 "Your OpenERP Publisher's Warranty Contract unique key, also called serial "
 "number."
 msgstr ""
+"Din OpenERP utgivarens underhållsavtals unika nyckel, även kallat "
+"serienummer."
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_setup
@@ -5327,10 +5329,10 @@ msgid ""
 msgstr ""
 "En kund är någon du gör affärer med, ett företag eller en organisation. En "
 "kund kan ha flera kontakter eller adresser för de personer som arbetar där. "
-"Du kan använda historiefliken för att följa alla transaktioner relaterade "
-"till en viss kund: säljordrar, e-post, offerter, krav etc. Om du använder "
+"Du kan använda historikfliken för att följa alla händelser relaterade till "
+"en viss kund: ordrar, e-post, offerter, krav etc. Om du använder "
 "epostbryggan, eller Thunderbird-plugin, glöm inte att registrera så att "
-"inkommande epost hamnar hos rätt kund,"
+"inkommande epost hamnar hos rätt kund."
 
 #. module: base
 #: field:ir.actions.report.xml,name:0
@@ -7155,6 +7157,7 @@ msgstr "Spanska (MX) / Español (MX)"
 #, python-format
 msgid "Please verify your publisher warranty serial number and validity."
 msgstr ""
+"Vänligen verifiera giltigheten och serienumret i utgivarens underhållsavtal"
 
 #. module: base
 #: view:res.log:0
@@ -7184,7 +7187,7 @@ msgstr "Detta fönster"
 #. module: base
 #: view:publisher_warranty.contract:0
 msgid "Publisher Warranty Contracts"
-msgstr ""
+msgstr "Utgivarens underhållsavtal"
 
 #. module: base
 #: help:res.log,name:0
@@ -9521,7 +9524,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_margin
 msgid "Margins in Sales Orders"
-msgstr ""
+msgstr "Marginal på kundorder"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_9
@@ -10769,6 +10772,8 @@ msgid ""
 "Checked if this is an OpenERP Publisher's Warranty contract (versus older "
 "contract types"
 msgstr ""
+"Ikryssad om detta är ett OpenERP utgivarens underhållsavtal (jämfört med "
+"äldre avtalstyper"
 
 #. module: base
 #: field:ir.model.fields,model:0
@@ -12512,7 +12517,7 @@ msgstr "Binär fil eller extern URL"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_order_dates
 msgid "Dates on Sales Order"
-msgstr ""
+msgstr "Datum på kundordern"
 
 #. module: base
 #: view:ir.attachment:0
@@ -13198,7 +13203,7 @@ msgstr "Bulgaria"
 #. module: base
 #: view:publisher_warranty.contract.wizard:0
 msgid "Publisher warranty contract successfully registered!"
-msgstr "Utgivarens underhållskontrakt registrerat, inga fel."
+msgstr "Utgivarens underhållsavtal registrerat, inga fel."
 
 #. module: base
 #: model:res.country,name:base.ao
@@ -14495,7 +14500,7 @@ msgstr "Slovakiska republiken"
 #. module: base
 #: model:ir.ui.menu,name:base.publisher_warranty
 msgid "Publisher Warranty"
-msgstr ""
+msgstr "Utgivarens underhållsavtal"
 
 #. module: base
 #: model:res.country,name:base.aw
@@ -14630,7 +14635,7 @@ msgstr "ir.model.data"
 #. module: base
 #: view:publisher_warranty.contract:0
 msgid "Publisher Warranty Contract"
-msgstr "Utgivarens garantikontrakt"
+msgstr "Utgivarens underhållsavtal"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -15340,7 +15345,7 @@ msgstr "Innehåll"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_mrp
 msgid "Sales and MRP Management"
-msgstr ""
+msgstr "Kundorder och MPS"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_sms_send

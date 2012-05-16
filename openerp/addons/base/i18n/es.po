@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:44+0000\n"
-"PO-Revision-Date: 2012-03-08 04:34+0000\n"
-"Last-Translator: Angel Moya - Domatix <Unknown>\n"
+"PO-Revision-Date: 2012-05-02 23:07+0000\n"
+"Last-Translator: Jorge L Tupac-Yupanqui <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-03-09 05:28+0000\n"
-"X-Generator: Launchpad (build 14914)\n"
+"X-Launchpad-Export-Date: 2012-05-03 05:59+0000\n"
+"X-Generator: Launchpad (build 15185)\n"
 
 #. module: base
 #: model:res.country,name:base.sh
@@ -370,6 +370,11 @@ msgid ""
 "  - tree_but_open\n"
 "For defaults, an optional condition"
 msgstr ""
+"Para accciones, uno de los posibles slots:\n"
+"  - client_action_multi\n"
+"  - client_print_multi\n"
+"  - client_action_relate\n"
+"  - tree_but_open"
 
 #. module: base
 #: sql_constraint:res.lang:0
@@ -500,7 +505,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pad_project
 msgid "Specifications on PADs"
-msgstr ""
+msgstr "Especificaciones en PADs"
 
 #. module: base
 #: help:ir.filters,user_id:0
@@ -524,6 +529,10 @@ msgid ""
 "and reference view. The result is returned as an ordered list of pairs "
 "(view_id,view_mode)."
 msgstr ""
+"Esta función genera una lista de vistas ordenada que puede activar cuando se "
+"muestra el resultado de una acción, del sistema de vistas, vistas y vistas "
+"relacionadas. El resultado se devuelve como una lista ordenada emparejada "
+"(view_id, view_mode)."
 
 #. module: base
 #: model:res.country,name:base.tv
@@ -847,6 +856,10 @@ msgid ""
 "Launch Manually Once: after hacing been launched manually, it sets "
 "automatically to Done."
 msgstr ""
+"Manual: Se lanza manualmente.\n"
+"Automático: Se ejecuta cuando el sistema se reconfigura.\n"
+"Manual una vez: después de lanzarlo manualmente, automáticamente se marca "
+"como Aceptado"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -926,6 +939,8 @@ msgid ""
 "The module adds google contact in partner address and add google calendar "
 "events details in Meeting"
 msgstr ""
+"El módulo añade contacto de google en la dirección de la empresa y "
+"calendario de google en las reuniones."
 
 #. module: base
 #: view:res.users:0
@@ -1034,7 +1049,7 @@ msgstr "Niue"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_membership
 msgid "Membership Management"
-msgstr ""
+msgstr "Gestión de suscriptores"
 
 #. module: base
 #: selection:ir.module.module,license:0
@@ -1072,6 +1087,12 @@ msgid ""
 "If Value type is selected, the value will be used directly without "
 "evaluation."
 msgstr ""
+"Expresión que contiene una especificación de valor.\n"
+"Cuando se selecciona el tipo fórmula, este campo puede ser una expresión "
+"Python que puede utilizar los mismos valores para el campo de condición de "
+"la acción del servidor.\n"
+"Si se selecciona el tipo valor, el valor se puede utilizar directamente sin "
+"evaluación."
 
 #. module: base
 #: model:res.country,name:base.ad
@@ -1215,6 +1236,23 @@ msgid ""
 "At the end of the month, the planning manager can also check if the encoded "
 "timesheets are respecting the planned time on each analytic account.\n"
 msgstr ""
+"Realizar un seguimiento de su planificación\n"
+"Este módulo le ayuda a gestionar sus planificaciones.\n"
+"===============================================\n"
+"\n"
+"Este módulo es la base de la contabilidad analítica y está totalmente "
+"integrado con\n"
+"* Hojas de servicio\n"
+"* Gestión de ausencias\n"
+"* Gestión de proyectos\n"
+"\n"
+"Así, cada director de departamento puede saber si alguien en su equipo aún "
+"tiene tiempo asignado para una planificación determinada (teniendo en cuenta "
+"las hojas de validación) o si todavía necesita codificar tareas.\n"
+"\n"
+"Al final del mes, el encargado de la planificación también puede comprobar "
+"si la tabla de tiempos codificados están respetando los plazos previstos en "
+"cada cuenta analítica.\n"
 
 #. module: base
 #: selection:ir.property,type:0
@@ -1412,6 +1450,11 @@ msgid ""
 "use the accounting application of OpenERP, journals and accounts will be "
 "created automatically based on these data."
 msgstr ""
+"Configure las cuentas bancarias de su empresa y seleccione las que deben "
+"figurar en el pie del informe. Puede cambiar el orden de las cuentas "
+"bancarias desde la vista de lista. Si utiliza la aplicación de contabilidad "
+"de OpenERP, los diarios y las cuentas se crearán automáticamente con base en "
+"estos datos."
 
 #. module: base
 #: view:ir.module.module:0
@@ -1480,6 +1523,26 @@ msgid ""
 "database,\n"
 "      but in the servers rootpad like /server/bin/filestore.\n"
 msgstr ""
+"\n"
+"Este es un sistema de gestión documental completo.\n"
+"==============================================\n"
+"\n"
+"    * Autenticación de usuarios\n"
+"    * Indexación de documentos: -.. Pptx y docx no son compatibles con la "
+"plataforma Windows.\n"
+"    * El tablero de documentos que incluye:\n"
+"        * Nuevos archivos (lista)\n"
+"        * Los archivos por tipo de recurso (gráfico)\n"
+"        * Los archivos por empresa (gráfico)\n"
+"        * Tamaño de archivos por mes (gráfico)\n"
+"\n"
+"ATENCIÓN:\n"
+"    - Al instalar este módulo en una compañía en funcionamiento que que "
+"tienen ya PDF almacenados en la base de datos, \n"
+"      los pierde todos.\n"
+"    - Después de instalar este módulo los PDF ya no se almacenan en la base "
+"de datos,\n"
+"      si no en los servidores rootpad como / server / bin / filestore.\n"
 
 #. module: base
 #: view:res.lang:0
@@ -1548,6 +1611,15 @@ msgid ""
 "Web.\n"
 "    "
 msgstr ""
+"\n"
+"Este es el módulo test que permite mostrar etiquetas HTML en vistas de "
+"formulario en XML.\n"
+"============================================================================="
+"\n"
+"\n"
+"Crea una vista de formulario ejemplo utilizando etiquetas HTML. Esto es "
+"visible solo en el cliente Web.\n"
+"    "
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_purchase_management
@@ -1616,7 +1688,7 @@ msgstr "Usuario"
 #: model:ir.actions.act_window,name:base.action_wizard_update_translations
 #: model:ir.ui.menu,name:base.menu_wizard_update_translations
 msgid "Synchronize Terms"
-msgstr ""
+msgstr "Sincronizar términos"
 
 #. module: base
 #: view:ir.actions.server:0
@@ -1760,6 +1832,24 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Este módulo agrega herramientas para compartir genéricas a su base de datos "
+"de OpenERP.\n"
+"========================================================================\n"
+"\n"
+"Específicamente agrega un botón 'compartir' disponible en el cliente Web "
+"para\n"
+"compartir cualquier tipo de datos OpenERP con colegas, clientes, amigos, "
+"etc.\n"
+"\n"
+"El sistema funciona creando nuevos usuarios y grupos sobre la marcha, y\n"
+"combinando los derechos de acceso adecuados y reglas para asegurar que los\n"
+"usuarios compartidos sólo tienen acceso a los datos compartidos con ellos.\n"
+"\n"
+"Esto es muy útil para el trabajo colaborativo, compartir conocimientos,\n"
+"sincronización con otras empresas, etc\n"
+"\n"
+"    "
 
 #. module: base
 #: field:res.currency,accuracy:0
@@ -1840,6 +1930,49 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Validación de IVA para números IVA de las empresas\n"
+"========================================\n"
+"\n"
+"Después de instalar este módulo, los valores ingresados en el campo IVA de "
+"Empresas\n"
+"serán validados para todos los países soportados. El país se infiere del "
+"código\n"
+"de país de 2 letras que es prefijo del número IVA, por ejemplo "
+"\"BE0477472701\"\n"
+"se validará usando las reglas belgas.\n"
+"\n"
+"Hay dos niveles diferentes de validación de números IVA:\n"
+"\n"
+" * Por defecto, se ejecuta una validación simple fuera de línea usando las "
+"reglas de\n"
+"   validación conocidas para el país, usualmente un simple control de "
+"dígitos. Esto es \n"
+"   rápido y está siempre disponible, pero permite números que quizá no "
+"están\n"
+"   verdaderamente asignados, o que ya no son válidos.\n"
+" * Cuando la opción \"Verificación VAT VIES\" está  activada (en la "
+"configuración de la\n"
+"   compañía del usuario), los números IVA se enviarán a la base de datos en "
+"línea\n"
+"   VIES de la UE, que verificará realmente si el número es válido y está "
+"asignado\n"
+"   actualmente a una empresa de la UE. Esto es un poco mas lento que la "
+"validación\n"
+"   simple fuera de línea, requiere una conexión a Internet, y podría no "
+"estar disponible\n"
+"   todo el tiempo. Si el servicio no está disponible o no es compatible con "
+"el país\n"
+"   requerido (por ejemplo, para países no comunitarios), se ejecutará en su "
+"lugar una\n"
+"   validación simple.\n"
+"\n"
+"Los países soportados actualmente son los países de la UE, y algunos países "
+"no\n"
+"comunitarios como Chile, Colombia, México, Noruega o Rusia. Para países no\n"
+"soportados, solo se validará el código de país.\n"
+"\n"
+"    "
 
 #. module: base
 #: view:ir.sequence:0
@@ -1853,6 +1986,9 @@ msgid ""
 "simplified payment mode encoding, automatic picking lists generation and "
 "more."
 msgstr ""
+"Ayuda a sacar lo mejor de sus puntos de venta con la codificación rápida de "
+"las ventas, codificación simplificada de modos de pago, generación "
+"automática de albaranes y más."
 
 #. module: base
 #: model:res.country,name:base.mv
@@ -1888,32 +2024,32 @@ msgstr "Días"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_rpc
 msgid "OpenERP Web web"
-msgstr ""
+msgstr "OpenERP Web web"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_html_view
 msgid "Html View"
-msgstr ""
+msgstr "Vista HTML"
 
 #. module: base
 #: field:res.currency,position:0
 msgid "Symbol position"
-msgstr ""
+msgstr "Posición del simbolo"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_process
 msgid "Enterprise Process"
-msgstr ""
+msgstr "Proceso de la empresa"
 
 #. module: base
 #: help:ir.cron,function:0
 msgid "Name of the method to be called when this job is processed."
-msgstr ""
+msgstr "Nombre del método que se llamará cuando este trabajo se procese."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_evaluation
 msgid "Employee Appraisals"
-msgstr ""
+msgstr "Evaluación de empleados"
 
 #. module: base
 #: selection:ir.actions.server,state:0
@@ -1930,7 +2066,7 @@ msgstr " (copia)"
 #. module: base
 #: field:res.company,rml_footer1:0
 msgid "General Information Footer"
-msgstr ""
+msgstr "Pie de página Información General"
 
 #. module: base
 #: view:res.lang:0
@@ -1952,7 +2088,7 @@ msgstr "Padre izquierdo"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_mrp
 msgid "Create Tasks on SO"
-msgstr ""
+msgstr "Crear tareas en OV"
 
 #. module: base
 #: field:ir.attachment,res_model:0
@@ -2129,7 +2265,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.menu,name:base.menu_administration
 msgid "Settings"
-msgstr ""
+msgstr "Configuración"
 
 #. module: base
 #: selection:ir.actions.act_window,view_type:0
