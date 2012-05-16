@@ -1,4 +1,4 @@
-@charset "UTF-8";
+@charset "utf-8";
 @font-face {
   font-family: "mnmliconsRegular";
   src: url("/web/static/src/font/mnmliconsv21-webfont.eot") format("eot");
@@ -116,6 +116,9 @@
 .openerp .oe_right {
   float: right;
   margin-left: 8px;
+}
+.openerp .oe_text_right {
+  text-align: right;
 }
 .openerp .oe_clear {
   clear: both;
@@ -1546,6 +1549,7 @@
   padding: 0;
 }
 .openerp .oe_form .oe_form_label_help[for], .openerp .oe_form .oe_form_label[for] {
+  font-weight: bold;
   white-space: nowrap;
   padding-right: 8px;
 }
