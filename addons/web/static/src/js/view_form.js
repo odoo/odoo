@@ -2970,7 +2970,11 @@ instance.web.form.One2ManyViewManager = instance.web.ViewManager.extend({
         var pop = new instance.web.form.FormOpenPopup(self.o2m.view);
         pop.show_element(self.o2m.field.relation, id, self.o2m.build_context(), {
             title: _t("Open: ") + self.name,
-            auto_write: false,
+            write_function: function(id, data, options) {
+                return self.o2m.dataset.write(id, data, {}).then(function() {
+                    self.o2m.reload_current_view();
+                });
+            },
             alternative_form_view: self.o2m.field.views ? self.o2m.field.views["form"] : undefined,
             parent_view: self.o2m.view,
             child_name: self.o2m.name,
@@ -2979,11 +2983,6 @@ instance.web.form.One2ManyViewManager = instance.web.ViewManager.extend({
             },
             form_view_options: {'not_interactible_on_create':true},
             readonly: self.o2m.get("effective_readonly")
-        });
-        pop.on_write.add(function(id, data) {
-            self.o2m.dataset.write(id, data, {}, function(r) {
-                self.o2m.reload_current_view();
-            });
         });
     },
 });
@@ -3003,7 +3002,6 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         } else {
             var self = this;
             var pop = new instance.web.form.SelectCreatePopup(this);
-            pop.on_default_get.add(self.dataset.on_default_get);
             pop.select_element(
                 self.o2m.field.relation,
                 {
@@ -3036,7 +3034,11 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         var pop = new instance.web.form.FormOpenPopup(self.o2m.view);
         pop.show_element(self.o2m.field.relation, id, self.o2m.build_context(), {
             title: _t("Open: ") + self.name,
-            auto_write: false,
+            write_function: function(id, data) {
+                return self.o2m.dataset.write(id, data, {}, function(r) {
+                    self.o2m.reload_current_view();
+                });
+            },
             alternative_form_view: self.o2m.field.views ? self.o2m.field.views["form"] : undefined,
             parent_view: self.o2m.view,
             child_name: self.o2m.name,
@@ -3045,11 +3047,6 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
             },
             form_view_options: {'not_interactible_on_create':true},
             readonly: self.o2m.get("effective_readonly")
-        });
-        pop.on_write.add(function(id, data) {
-            self.o2m.dataset.write(id, data, {}, function(r) {
-                self.o2m.reload_current_view();
-            });
         });
     },
     do_button_action: function (name, id, callback) {
@@ -3365,6 +3362,7 @@ instance.web.form.AbstractFormPopup = instance.web.OldWidget.extend({
     template: "AbstractFormPopup.render",
     /**
      *  options:
+     *  -readonly: only applicable when not in creation mode, default to false
      */
     init_popup: function(model, row_id, domain, context, options) {
         this.row_id = row_id;
@@ -3375,6 +3373,34 @@ instance.web.form.AbstractFormPopup = instance.web.OldWidget.extend({
         _.defaults(this.options, {
         });
     },
+    init_dataset: function() {
+        var self = this;
+        this.dataset = new instance.web.ProxyDataSet(this, this.model, this.context);
+        this.dataset.read_function = this.options.read_function;
+        this.dataset.create_function = function(data, sup) {
+            var fct = self.options.create_function || sup;
+            return fct.call(this, data).then(function(r) {
+                self.created_elements.push(r.result);
+            });
+        };
+        this.dataset.write_function = function(id, data, options, sup) {
+            var fct = self.options.write_function || sup;
+            return sup.call(this, id, data, options).then(self.on_write_completed);
+        };
+        this.dataset.parent_view = this.options.parent_view;
+        this.dataset.child_name = this.options.child_name;
+    },
+    display_popup: function() {
+        this.renderElement();
+        instance.web.form.dialog(this.$element, {
+            close: function() {
+                self.check_exit();
+            },
+            title: this.options.title || ""
+        });
+        this.start();
+    },
+    on_write_completed: function() {},
     setup_form_view: function() {
         var self = this;
         var options = _.clone(self.options.form_view_options) || {};
@@ -3442,43 +3468,22 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
      * - read_function
      */
     select_element: function(model, options, domain, context) {
+        this.init_popup(model, null, domain, context, options);
         var self = this;
-        this.init_popup(model, null, domain, context, _.extend({}, options, {create_mode:true}));
         _.defaults(this.options, {
-            "initial_view": "search",
-            "create_function": function() {
+            initial_view: "search",
+            create_function: function() {
                 return self.create_row.apply(self, arguments);
             },
             read_function: null,
         });
         this.initial_ids = this.options.initial_ids;
         this.created_elements = [];
-        this.renderElement();
-        instance.web.form.dialog(this.$element, {
-            close: function() {
-                self.check_exit();
-            },
-            title: options.title || ""
-        });
-        this.start();
+        this.display_popup();
     },
     start: function() {
-        this._super();
         var self = this;
-        this.dataset = new instance.web.ProxyDataSet(this, this.model,
-            this.context);
-        this.dataset.create_function = function() {
-            return self.options.create_function.apply(null, arguments).then(function(r) {
-                self.created_elements.push(r.result);
-            });
-        };
-        this.dataset.write_function = function() {
-            return self.write_row.apply(self, arguments);
-        };
-        this.dataset.read_function = this.options.read_function;
-        this.dataset.parent_view = this.options.parent_view;
-        this.dataset.child_name = this.options.child_name;
-        this.dataset.on_default_get.add(this.on_default_get);
+        this.init_dataset();
         if (this.options.initial_view == "search") {
             self.rpc('/web/session/eval_domain_and_context', {
                 domains: [],
@@ -3565,13 +3570,6 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
         wdataset.child_name = this.options.child_name;
         return wdataset.create.apply(wdataset, arguments);
     },
-    write_row: function() {
-        var self = this;
-        var wdataset = new instance.web.DataSetSearch(this, this.model, this.context, this.domain);
-        wdataset.parent_view = this.options.parent_view;
-        wdataset.child_name = this.options.child_name;
-        return wdataset.write.apply(wdataset, arguments);
-    },
     on_select_elements: function(element_ids) {
     },
     on_click_element: function(ids) {
@@ -3596,9 +3594,8 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
         if (this.created_elements.length > 0) {
             this.on_select_elements(this.created_elements);
         }
-        this.destroy();
+        this._super();
     },
-    on_default_get: function(res) {}
 });
 
 instance.web.form.SelectCreateListView = instance.web.ListView.extend({
@@ -3623,50 +3620,26 @@ instance.web.form.FormOpenPopup = instance.web.form.AbstractFormPopup.extend(/**
     /**
      * options:
      * - alternative_form_view
-     * - auto_write (default true)
+     * - write_function
      * - read_function
      * - parent_view
      * - child_name
      * - form_view_options
-     * - readonly
      */
     show_element: function(model, row_id, context, options) {
-        this.init_popup(model, row_id, [], context,  _.extend({}, options, {create_mode:false}));
+        this.init_popup(model, row_id, [], context,  options);
         _.defaults(this.options, {
-            "auto_write": true,
+            auto_write: true,
         });
-        this.renderElement();
-        instance.web.dialog(this.$element, {
-            title: options.title || '',
-            modal: true,
-            width: 960,
-            height: 600
-        });
-        this.start();
+        this.display_popup();
     },
     start: function() {
         this._super();
-        this.dataset = new instance.web.ProxyDataSet(this, this.model, this.context);
-        this.dataset.read_function = this.options.read_function;
+        this.init_dataset();
         this.dataset.ids = [this.row_id];
         this.dataset.index = 0;
-        this.dataset.parent_view = this.options.parent_view;
-        this.dataset.child_name = this.options.child_name;
-        this.dataset.on_write.add(this.write_row);
         this.setup_form_view();
     },
-    write_row: function(id, data) {
-        if (!this.options.auto_write)
-            return;
-        var self = this;
-        var wdataset = new instance.web.DataSetSearch(this, this.model, this.context, this.domain);
-        wdataset.parent_view = this.options.parent_view;
-        wdataset.child_name = this.options.child_name;
-        wdataset.write(id, data, {}, function(r) {
-            self.on_write_completed();
-        });
-    },
-    on_write_completed: function() {},
 });
 
 instance.web.form.FieldReference = instance.web.form.AbstractField.extend(_.extend({}, instance.web.form.ReinitializeFieldMixin, {
