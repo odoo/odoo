@@ -3220,7 +3220,6 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(_.
  * TODO niv: clean those deferred stuff, it could be better
  */
 instance.web.form.FieldMany2Many = instance.web.form.AbstractField.extend({
-    template: "FieldMany2Many.render",
     multi_selection: false,
     disable_utility_classes: true,
     init: function(field_manager, node) {
@@ -3271,7 +3270,6 @@ instance.web.form.FieldMany2Many = instance.web.form.AbstractField.extend({
                     'addable': self.get("effective_readonly") ? null : _t("Add"),
                     'deletable': self.get("effective_readonly") ? false : true,
                     'selectable': self.multi_selection,
-                    '$buttons': $(".oe_form_view_m2m_buttons", self.$element),
             });
         var embedded = (this.field.views || {}).tree;
         if (embedded) {
@@ -3284,7 +3282,7 @@ instance.web.form.FieldMany2Many = instance.web.form.AbstractField.extend({
             loaded.resolve();
         });
         $.async_when().then(function () {
-            self.list_view.appendTo($(".oe_form_view_m2m_view", self.$element));
+            self.list_view.appendTo(self.$element);
         });
         return loaded;
     },
