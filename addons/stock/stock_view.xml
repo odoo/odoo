@@ -729,7 +729,7 @@
                         <group colspan="2" col="2">
                             <field name="date"/>
                             <field name="min_date" readonly="1"/>
-                            <field name="stock_journal_id" widget="selection"/>
+                            <field name="stock_journal_id" widget="selection" groups="account.group_account_user"/>
                         </group>
                     </group>
                     <notebook colspan="4">
@@ -762,7 +762,7 @@
                                         groups="product.group_stock_packaging"
                                         icon="terp-stock_effects-object-colorize"
                                         states="draft,assigned,confirmed"/>
-                                    <field name="location_dest_id"/>
+                                    <field name="location_dest_id" groups="stock.group_locations"/>
                                     <field name="date_expected" string="Date Expected"/>
                                     <field name="state"/>
                                 </tree>
@@ -782,7 +782,7 @@
                                         <field name="product_packaging" groups="product.group_stock_packaging" domain="[('product_id','=',product_id)]" colspan="4"/>
                                     </group>
 
-                                    <group colspan="2" col="2">
+                                    <group colspan="2" col="2" groups="stock.group_locations">
                                         <separator string="Locations" colspan="2" />
                                         <field name="location_id" domain="[('usage','&lt;&gt;','view')]"/>
                                         <field name="location_dest_id" domain="[('usage','=','internal')]"/>
