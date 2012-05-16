@@ -16,21 +16,22 @@
                         <separator string="Traceability" colspan="4"/>
                         <field name="group_stock_production_lot"/>
                         <field name="module_product_expiry"
-                            attrs="{'invisible': [('group_stock_production_lot','=',False), ('group_stock_tracking_lot','=',False)]}"/>
+                            attrs="{'invisible': [('group_stock_production_lot','=',False)]}"/>
                         <newline/>
                         <field name="group_stock_tracking_lot"/>
 
                         <separator string="Logistics" colspan="4"/>
                         <field name="group_stock_multiple_locations"/>
-                        <field name="module_stock_no_autopicking"/>
                         <field name="module_stock_location"/>
                         <field name="module_stock_invoice_directly"/>
+                        <field name="decimal_precision"/>
 
                         <separator string="Products" colspan="4"/>
                         <field name="group_stock_packaging"/>
                         <field name="group_stock_inventory_valuation"/>
                         <field name="group_uom"/>
                         <field name="group_uos"/>
+                        <field name="group_product_variant"/>
 
                         <separator string="Partners" colspan="4"/>
                         <field name="module_claim_from_delivery"/>
@@ -48,7 +49,7 @@
         </record>
 
         <menuitem id="menu_stock_config_settings" name="Warehouse" parent="base.menu_config"
-            sequence="3" action="action_stock_config_settings"/>
+            sequence="5" action="action_stock_config_settings"/>
 
     </data>
 </openerp>

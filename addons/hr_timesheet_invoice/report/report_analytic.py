@@ -70,7 +70,7 @@ class report_account_analytic_line_to_invoice(osv.osv):
         'name': fields.char('Year',size=64,required=False, readonly=True),
         'product_id':fields.many2one('product.product', 'Product', readonly=True),
         'account_id':fields.many2one('account.analytic.account', 'Analytic account', readonly=True),
-        'product_uom_id':fields.many2one('product.uom', 'UoM', readonly=True),
+        'product_uom_id':fields.many2one('product.uom', 'Unit of Measure', readonly=True),
         'unit_amount': fields.float('Units', readonly=True),
         'sale_price': fields.float('Sale price', readonly=True, digits_compute=dp.get_precision('Sale Price')),
         'amount': fields.float('Amount', readonly=True, digits_compute=dp.get_precision('Account')),

@@ -28,7 +28,7 @@
                    <group  expand='0' string='Group by...'>
                        <filter string='Category' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'categ_id'}"/>
                        <separator orientation="vertical"/>
-                       <filter string='Default UOM' icon="terp-mrp" domain="[]" context="{'group_by' : 'uom_id'}" />
+                       <filter string='Default Unit of Measure' icon="terp-mrp" domain="[]" context="{'group_by' : 'uom_id'}" />
                        <separator orientation="vertical"/>
                        <filter string='Type' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'type'}" />
                        <separator orientation="vertical" groups="base.group_multi_company"/>
@@ -50,7 +50,7 @@
                     <field name="name"/>
                     <field name="categ_id" invisible="1"/>
                     <field name="variants" groups="product.group_product_variant"/>
-                    <field name="uom_id" string="UoM" groups="product.group_uom"/>
+                    <field name="uom_id" string="Unit of Measure" groups="product.group_uom"/>
                     <field name="type"/>
                     <field name="qty_available"/>
                     <field name="virtual_available"/>
@@ -107,7 +107,7 @@
                                 <field name="price_extra" groups="product.group_product_variant"/>
                             </group>
 
-                            <group colspan="2" col="2">
+                            <group colspan="2" col="2" groups="product.group_stock_packaging">
                                 <separator string="Weights" colspan="2"/>
                                 <field digits="(14, 3)" name="volume" attrs="{'readonly':[('type','=','service')]}"/>
                                 <field name="weight" attrs="{'readonly':[('type','=','service')]}"/>
@@ -128,7 +128,7 @@
                             </group>
 
                             <group colspan="2" col="2" name="uos" groups="product.group_uos">
-                                <separator string="Second UoM" colspan="2"/>
+                                <separator string="Second Unit of Measure" colspan="2"/>
                                 <field name="uos_id"/>
                                 <field name="uos_coeff"/>
                                 <field name="mes_type"/>
@@ -139,7 +139,7 @@
                             <group colspan="2" col="2" name="delay">
                                 <separator string="Delays" colspan="2"/>
                                 <field name="sale_delay" attrs="{'readonly':[('sale_ok','=',0)]}"/>
-                                <field name="produce_delay"/>
+                                <field name="produce_delay" attrs="{'invisible':[('type','=','service')]}"/>
                                 <field name="warranty"/>
                             </group>
                             <group colspan="2" col="2" name="store">
@@ -440,7 +440,7 @@
             <field name="help">Create and manage the units of measure you want to be used in your system. You can define a conversion rate between several Units of Measure within the same category.</field>
         </record>
         <menuitem id="next_id_16" name="Units of Measure" parent="prod_config_main" sequence="30" groups="product.group_uom"/>
-        <menuitem action="product_uom_form_action" id="menu_product_uom_form_action" parent="base.menu_base_config" sequence="30"/>
+        <menuitem action="product_uom_form_action" id="menu_product_uom_form_action" parent="base.menu_base_config" sequence="30" groups="product.group_uom"/>
 
         <record id="product_uom_categ_form_view" model="ir.ui.view">
             <field name="name">product.uom.categ.form</field>
@@ -453,14 +453,14 @@
             </field>
         </record>
         <record id="product_uom_categ_form_action" model="ir.actions.act_window">
-            <field name="name">UoM Categories</field>
+            <field name="name">Unit of Measure Categories</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.uom.categ</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="help">Create and manage the units of measure categories you want to be used in your system. If several units of measure are in the same category, they can be converted to each other. For example, in the unit of measure category "Time", you will have the following UoM: Hours, Days.</field>
         </record>
-        <menuitem action="product_uom_categ_form_action" id="menu_product_uom_categ_form_action" parent="base.menu_base_config" sequence="25"/>
+        <menuitem action="product_uom_categ_form_action" id="menu_product_uom_categ_form_action" parent="base.menu_base_config" sequence="25" groups="product.group_uom"/>
 
         <record id="product_ul_form_view" model="ir.ui.view">
             <field name="name">product.ul.form.view</field>
@@ -671,13 +671,13 @@
                             </group>
 
                             <group colspan="2" col="2" name="uom">
-                                <separator string="UoM" colspan="2"/>
+                                <separator string="Unit of Measure" colspan="2"/>
                                 <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)" groups="product.group_uom"/>
                                 <field name="uom_po_id"/>
                             </group>
 
                             <group colspan="2" col="2" name="uos" groups="product.group_uom">
-                                <separator string="Second UoM" colspan="2"/>
+                                <separator string="Second Unit of Measure" colspan="2"/>
                                 <field name="uos_id"/>
                                 <field name="uos_coeff"/>
                                 <field name="mes_type"/>

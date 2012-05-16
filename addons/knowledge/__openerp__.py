@@ -40,6 +40,7 @@ document and Wiki based Hidden.
         'security/knowledge_security.xml',
         'security/ir.model.access.csv',
         'knowledge_view.xml',
+        'res_config_view.xml',
     ],
     'demo_xml': ['knowledge_demo.xml'],
     'installable': True,
