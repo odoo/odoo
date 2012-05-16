@@ -1418,7 +1418,7 @@
 }
 .openerp .oe_form_topbar button {
   font-size: 12px;
-  height: 24px;
+  height: 24px !important;
   line-height: 24px;
   vertical-align: top;
   padding: 0 10px;
@@ -1511,41 +1511,26 @@
   -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   -box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
-.openerp .oe_form_autolayout .oe_button {
-  height: 20px;
-}
-.openerp .oe_form_autolayout .oe_form_group_cell {
+.openerp .oe_form .oe_form_group_cell {
   line-height: 18px;
   padding: 2px;
   height: 20px;
 }
-.openerp .oe_form_autolayout .oe_form_group_cell > .oe_form_field_many2one,
-.openerp .oe_form_autolayout .oe_form_group_cell > .oe_form_field_many2one input,
-.openerp .oe_form_autolayout .oe_form_group_cell > .oe_form_field_char input,
-.openerp .oe_form_autolayout .oe_form_group_cell > .oe_form_field_text textarea,
-.openerp .oe_form_autolayout .oe_form_group_cell > .oe_form_field_email,
-.openerp .oe_form_autolayout .oe_form_group_cell > .oe_form_field_email input,
-.openerp .oe_form_autolayout .oe_form_group_cell > .oe_form_field_url,
-.openerp .oe_form_autolayout .oe_form_group_cell > .oe_form_field_url input,
-.openerp .oe_form_autolayout .oe_form_group_cell > .oe_form_field_float input,
-.openerp .oe_form_autolayout .oe_form_group_cell > .oe_form_field_selection select,
-.openerp .oe_form_autolayout .oe_form_group_cell > div > .oe_datepicker_root,
-.openerp .oe_form_autolayout .oe_form_group_cell > div > .oe_datepicker_root > input.oe_datepicker_master {
+.openerp .oe_form .oe_form_group_cell > .oe_form_field_many2one,
+.openerp .oe_form .oe_form_group_cell > .oe_form_field_many2one input,
+.openerp .oe_form .oe_form_group_cell > .oe_form_field_char input,
+.openerp .oe_form .oe_form_group_cell > .oe_form_field_text textarea,
+.openerp .oe_form .oe_form_group_cell > .oe_form_field_email,
+.openerp .oe_form .oe_form_group_cell > .oe_form_field_email input,
+.openerp .oe_form .oe_form_group_cell > .oe_form_field_url,
+.openerp .oe_form .oe_form_group_cell > .oe_form_field_url input,
+.openerp .oe_form .oe_form_group_cell > .oe_form_field_float input,
+.openerp .oe_form .oe_form_group_cell > .oe_form_field_selection select,
+.openerp .oe_form .oe_form_group_cell > div > .oe_datepicker_root,
+.openerp .oe_form .oe_form_group_cell > div > .oe_datepicker_root > input.oe_datepicker_master {
   width: 100%;
 }
-.openerp .oe_form_autolayout .oe_form_button.oe_button {
-  color: #4c4c4c;
-}
-.openerp .oe_form_autolayout .oe_form_button.oe_button span {
-  position: relative;
-  vertical-align: top;
-}
-.openerp .oe_form_autolayout .oe_form_group_cell > .oe_form_button.oe_button {
-  white-space: nowrap;
-  min-width: 100%;
-  width: 100%;
-}
-.openerp .oe_form_autolayout .oe_form_group_cell.oe_form_group_nested {
+.openerp .oe_form .oe_form_group_cell.oe_form_group_nested {
   padding: 0;
 }
 .openerp .oe_form .oe_form_label_help[for], .openerp .oe_form .oe_form_label[for] {
@@ -1699,9 +1684,22 @@
   right: 5px;
   top: 3px;
 }
+.openerp .oe_form .oe_form_button.oe_button {
+  height: 22px;
+  color: #4c4c4c;
+}
+.openerp .oe_form .oe_form_button.oe_button span {
+  position: relative;
+  vertical-align: top;
+}
 .openerp .oe_form .oe_form_button > img {
   vertical-align: -3px;
   padding: 0 2px;
+}
+.openerp .oe_form .oe_form_group_cell > .oe_form_button.oe_button {
+  white-space: nowrap;
+  min-width: 100%;
+  width: 100%;
 }
 .openerp .oe_form .oe-binary-file-set {
   overflow: hidden;

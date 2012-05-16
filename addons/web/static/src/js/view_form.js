@@ -984,9 +984,6 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
     },
     process: function($tag, layout) {
         var self = this;
-        if ($tag.attr('layout') === 'auto') {
-            $tag.addClass('oe_form_autolayout');
-        }
         layout = $tag.attr('layout') || layout || 'auto';
         $tag.removeAttr('layout');
         var tagname = $tag[0].nodeName.toLowerCase();
