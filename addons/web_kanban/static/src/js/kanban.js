@@ -371,7 +371,7 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
             if (self.quick) { return; }
             self.quick = new instance.web_kanban.QuickCreate(this)
                 .on('added', self, self.proxy('quick_add'));
-            self.quick.appendTo(self.$element.find('.oe_kanban_group_header'));
+            self.quick.appendTo(self.$element.find('.oe_kanban_header'));
         });
         this.$records.find('.oe_kanban_show_more').click(this.do_show_more);
         if (this.state.folded) {
