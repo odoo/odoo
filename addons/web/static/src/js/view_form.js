@@ -2307,16 +2307,6 @@ instance.web.form.FieldSelection = instance.web.form.AbstractField.extend(_.exte
     });
 })();
 
-instance.web.form.dialog = function(content, options) {
-    options = _.extend({
-        width: '90%',
-        height: 'auto',
-        min_width: '800px'
-    }, options || {});
-    var dialog = new instance.web.Dialog(null, options, content).open();
-    return dialog.$element;
-};
-
 /**
  * A mixin containing some useful methods to handle completion inputs.
  */
@@ -3401,12 +3391,14 @@ instance.web.form.AbstractFormPopup = instance.web.OldWidget.extend({
     display_popup: function() {
         var self = this;
         this.renderElement();
-        instance.web.form.dialog(this.$element, {
+        new instance.web.Dialog(this, {
+            width: '90%',
+            min_width: '800px',
             close: function() {
                 self.check_exit();
             },
-            title: this.options.title || ""
-        });
+            title: this.options.title || "",
+        }, this.$element).open();
         this.start();
     },
     on_write_completed: function() {},

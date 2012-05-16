@@ -43,6 +43,10 @@ instance.web.Notification =  instance.web.Widget.extend({
     }
 });
 
+/**
+ * The very minimal function everything should call to create a dialog
+ * in OpenERP Web Client.
+ */
 instance.web.dialog = function(element) {
     var result = element.dialog.apply(element, _.rest(_.toArray(arguments)));
     result.dialog("widget").addClass("openerp");
