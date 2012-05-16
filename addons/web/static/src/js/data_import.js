@@ -330,7 +330,7 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
         if (_.isEmpty(duplicates)) {
             this.toggle_import_button(required_valid);
         } else {
-            var $err = $('<div id="msg" style="color: red;">Destination fields should only be selected once, some fields are selected more than once:</div>').insertBefore(this.$element.find('#result'));
+            var $err = $('<div id="msg" style="color: red;">'+_t("Destination fields should only be selected once, some fields are selected more than once:")+'</div>').insertBefore(this.$element.find('#result'));
             var $dupes = $('<dl>').appendTo($err);
             _(duplicates).each(function(elements, value) {
                 $('<dt>').text(value).appendTo($dupes);
