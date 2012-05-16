@@ -2966,8 +2966,7 @@ instance.web.form.One2ManyViewManager = instance.web.ViewManager.extend({
             return this._super(mode, unused);
         }
         var self = this;
-        var id = typeof(self.o2m.dataset.index) === "number" && self.o2m.dataset.index >= 0 ?
-            self.o2m.dataset.ids[self.o2m.dataset.index] : null;
+        var id = self.o2m.dataset.index !== null ? self.o2m.dataset.ids[self.o2m.dataset.index] : null;
         var pop = new instance.web.form.FormOpenPopup(self.o2m.view);
         pop.show_element(self.o2m.field.relation, id, self.o2m.build_context(), {
             title: _t("Open: ") + self.name,
@@ -3362,12 +3361,73 @@ instance.web.form.Many2ManyListView = instance.web.ListView.extend(/** @lends in
     }
 });
 
+instance.web.form.AbstractFormPopup = instance.web.OldWidget.extend({
+    template: "AbstractFormPopup.render",
+    /**
+     *  options:
+     */
+    init_popup: function(model, row_id, domain, context, options) {
+        this.row_id = row_id;
+        this.model = model;
+        this.domain = domain || [];
+        this.context = context || {};
+        this.options = options;
+        _.defaults(this.options, {
+        });
+    },
+    setup_form_view: function() {
+        var self = this;
+        var options = _.clone(self.options.form_view_options) || {};
+        if (this.row_id !== null) {
+            options.initial_mode = this.options.readonly ? "view" : "edit";
+        }
+        this.view_form = new instance.web.FormView(this, this.dataset, false, options);
+        if (this.options.alternative_form_view) {
+            this.view_form.set_embedded_view(this.options.alternative_form_view);
+        }
+        this.view_form.appendTo(this.$element.find(".oe-form-view-popup-form-placeholder"));
+        this.view_form.on_loaded.add_last(function() {
+            var $buttons = self.view_form.$element.find(".oe_form_buttons");
+            var multi_select = self.row_id === null && ! self.options.disable_multiple_selection;
+            $buttons.html(QWeb.render("AbstractFormPopup.buttons", {multi_select: multi_select}));
+            var $snbutton = $buttons.find(".oe_abstractformpopup-form-save-new");
+            $snbutton.click(function() {
+                $.when(self.view_form.do_save()).then(function() {
+                    self.view_form.reload_mutex.exec(function() {
+                        self.view_form.on_button_new();
+                    });
+                });
+            });
+            var $sbutton = $buttons.find(".oe_abstractformpopup-form-save");
+            $sbutton.click(function() {
+                $.when(self.view_form.do_save()).then(function() {
+                    self.view_form.reload_mutex.exec(function() {
+                        self.check_exit();
+                    });
+                });
+            });
+            var $cbutton = $buttons.find(".oe_abstractformpopup-form-close");
+            $cbutton.click(function() {
+                self.check_exit();
+            });
+            if (self.row_id !== null && self.options.readonly) {
+                $snbutton.hide();
+                $sbutton.hide();
+                $cbutton.text(_t("Close"));
+            }
+            self.view_form.do_show();
+        });
+    },
+    check_exit: function() {
+        this.destroy();
+    },
+});
+
 /**
  * @class
  * @extends instance.web.OldWidget
  */
-instance.web.form.SelectCreatePopup = instance.web.OldWidget.extend(/** @lends instance.web.form.SelectCreatePopup# */{
-    template: "SelectCreatePopup",
+instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend(/** @lends instance.web.form.SelectCreatePopup# */{
     /**
      * options:
      * - initial_ids
@@ -3383,12 +3443,14 @@ instance.web.form.SelectCreatePopup = instance.web.OldWidget.extend(/** @lends i
      */
     select_element: function(model, options, domain, context) {
         var self = this;
-        this.model = model;
-        this.domain = domain || [];
-        this.context = context || {};
-        this.options = _.defaults(options || {}, {"initial_view": "search", "create_function": function() {
-            return self.create_row.apply(self, arguments);
-        }, read_function: null});
+        this.init_popup(model, null, domain, context, _.extend({}, options, {create_mode:true}));
+        _.defaults(this.options, {
+            "initial_view": "search",
+            "create_function": function() {
+                return self.create_row.apply(self, arguments);
+            },
+            read_function: null,
+        });
         this.initial_ids = this.options.initial_ids;
         this.created_elements = [];
         this.renderElement();
@@ -3521,7 +3583,6 @@ instance.web.form.SelectCreatePopup = instance.web.OldWidget.extend(/** @lends i
         }
     },
     new_object: function() {
-        var self = this;
         if (this.searchview) {
             this.searchview.hide();
         }
@@ -3529,36 +3590,7 @@ instance.web.form.SelectCreatePopup = instance.web.OldWidget.extend(/** @lends i
             this.view_list.$element.hide();
         }
         this.dataset.index = null;
-        this.view_form = new instance.web.FormView(this, this.dataset, false, self.options.form_view_options);
-        if (this.options.alternative_form_view) {
-            this.view_form.set_embedded_view(this.options.alternative_form_view);
-        }
-        this.view_form.appendTo(this.$element.find(".oe-select-create-popup-view-form"));
-        this.view_form.on_loaded.add_last(function() {
-            var $buttons = self.view_form.$element.find(".oe_form_buttons");
-            $buttons.html(QWeb.render("SelectCreatePopup.form.buttons", {widget:self}));
-            var $nbutton = $buttons.find(".oe_selectcreatepopup-form-save-new");
-            $nbutton.click(function() {
-                $.when(self.view_form.do_save()).then(function() {
-                    self.view_form.reload_mutex.exec(function() {
-                        self.view_form.on_button_new();
-                    });
-                });
-            });
-            var $nbutton = $buttons.find(".oe_selectcreatepopup-form-save");
-            $nbutton.click(function() {
-                $.when(self.view_form.do_save()).then(function() {
-                    self.view_form.reload_mutex.exec(function() {
-                        self.check_exit();
-                    });
-                });
-            });
-            var $cbutton = $buttons.find(".oe_selectcreatepopup-form-close");
-            $cbutton.click(function() {
-                self.check_exit();
-            });
-        });
-        this.view_form.do_show();
+        this.setup_form_view();
     },
     check_exit: function() {
         if (this.created_elements.length > 0) {
@@ -3587,8 +3619,7 @@ instance.web.form.SelectCreateListView = instance.web.ListView.extend({
  * @class
  * @extends instance.web.OldWidget
  */
-instance.web.form.FormOpenPopup = instance.web.OldWidget.extend(/** @lends instance.web.form.FormOpenPopup# */{
-    template: "FormOpenPopup",
+instance.web.form.FormOpenPopup = instance.web.form.AbstractFormPopup.extend(/** @lends instance.web.form.FormOpenPopup# */{
     /**
      * options:
      * - alternative_form_view
@@ -3600,10 +3631,10 @@ instance.web.form.FormOpenPopup = instance.web.OldWidget.extend(/** @lends insta
      * - readonly
      */
     show_element: function(model, row_id, context, options) {
-        this.model = model;
-        this.row_id = row_id;
-        this.context = context || {};
-        this.options = _.defaults(options || {}, {"auto_write": true});
+        this.init_popup(model, row_id, [], context,  _.extend({}, options, {create_mode:false}));
+        _.defaults(this.options, {
+            "auto_write": true,
+        });
         this.renderElement();
         instance.web.dialog(this.$element, {
             title: options.title || '',
@@ -3615,15 +3646,16 @@ instance.web.form.FormOpenPopup = instance.web.OldWidget.extend(/** @lends insta
     },
     start: function() {
         this._super();
-        this.dataset = new instance.web.form.FormOpenDataset(this, this.model, this.context);
-        this.dataset.fop = this;
+        this.dataset = new instance.web.ProxyDataSet(this, this.model, this.context);
+        this.dataset.read_function = this.options.read_function;
         this.dataset.ids = [this.row_id];
         this.dataset.index = 0;
         this.dataset.parent_view = this.options.parent_view;
         this.dataset.child_name = this.options.child_name;
+        this.dataset.on_write.add(this.write_row);
         this.setup_form_view();
     },
-    on_write: function(id, data) {
+    write_row: function(id, data) {
         if (!this.options.auto_write)
             return;
         var self = this;
@@ -3635,47 +3667,6 @@ instance.web.form.FormOpenPopup = instance.web.OldWidget.extend(/** @lends insta
         });
     },
     on_write_completed: function() {},
-    setup_form_view: function() {
-        var self = this;
-        var FormClass = instance.web.views.get_object('form');
-        var options = _.clone(self.options.form_view_options) || {};
-        options.initial_mode = this.options.readonly ? "view" : "edit";
-        this.view_form = new FormClass(this, this.dataset, false, options);
-        if (this.options.alternative_form_view) {
-            this.view_form.set_embedded_view(this.options.alternative_form_view);
-        }
-        this.view_form.appendTo(this.$element.find(".oe-form-open-popup-form-view"));
-        this.view_form.on_loaded.add_last(function() {
-            var $buttons = self.view_form.$element.find(".oe_form_buttons");
-            $buttons.html(QWeb.render("FormOpenPopup.form.buttons"));
-            var $nbutton = $buttons.find(".oe_formopenpopup-form-save");
-            $nbutton.click(function() {
-                self.view_form.do_save().then(function() {
-                    self.destroy();
-                });
-            });
-            var $cbutton = $buttons.find(".oe_formopenpopup-form-close");
-            $cbutton.click(function() {
-                self.destroy();
-            });
-            if (self.options.readonly) {
-                $nbutton.hide();
-                $cbutton.text(_t("Close"));
-            }
-            self.view_form.do_show();
-        });
-        this.dataset.on_write.add(this.on_write);
-    }
-});
-
-instance.web.form.FormOpenDataset = instance.web.ProxyDataSet.extend({
-    read_ids: function() {
-        if (this.fop.options.read_function) {
-            return this.fop.options.read_function.apply(null, arguments);
-        } else {
-            return this._super.apply(this, arguments);
-        }
-    }
 });
 
 instance.web.form.FieldReference = instance.web.form.AbstractField.extend(_.extend({}, instance.web.form.ReinitializeFieldMixin, {

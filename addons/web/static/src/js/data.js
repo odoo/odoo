@@ -1096,7 +1096,6 @@ instance.web.ProxyDataSet = instance.web.DataSetSearch.extend({
         if (this.create_function) {
             return this.create_function(data, callback, error_callback);
         } else {
-            console.warn("trying to create a record using default proxy dataset behavior");
             return $.async_when({"result": undefined}).then(callback);
         }
     },
@@ -1106,14 +1105,12 @@ instance.web.ProxyDataSet = instance.web.DataSetSearch.extend({
         if (this.write_function) {
             return this.write_function(id, data, options, callback);
         } else {
-            console.warn("trying to write a record using default proxy dataset behavior");
             return $.async_when({"result": true}).then(callback);
         }
     },
     on_write: function(id, data) {},
     unlink: function(ids, callback, error_callback) {
         this.on_unlink(ids);
-        console.warn("trying to unlink a record using default proxy dataset behavior");
         return $.async_when({"result": true}).then(callback);
     },
     on_unlink: function(ids) {}
