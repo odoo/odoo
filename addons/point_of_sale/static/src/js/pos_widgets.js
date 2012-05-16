@@ -64,13 +64,15 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             return (this.pos.get('selectedOrder')).addPaymentLine(accountJournal);
         },
         renderElement: function() {
-            this.$element.empty();
+            this._super();
             return (this.pos.get('accountJournals')).each(_.bind(function(accountJournal) {
+                console.log('journal:',accountJournal);
                 var button = new module.PaymentButtonWidget(this,{
                     pos:this.pos,
                 });
                 button.model = accountJournal;
                 button.appendTo(this.$element);
+                console.log(this.$element);
             }, this));
         }
     });
@@ -793,10 +795,22 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 this.build_widgets();
 
                 instance.webclient.set_content_full_screen(true);
-                if (!self.pos.get('account_journals') ||self.pos.get('account_journals').length === 0) {
-                    // TODO: Create a popup to inform there is no PoSSession for this user
-                    self.screen_selector.show_popup('error-session');
+
+                if (!self.pos.get('pos_session')) {
+                    self.screen_selector.show_popup('error',
+                        'Sorry, we could not create a user session');
+                }else if (!self.pos.get('account_journals') || self.pos.get('account_journals').length === 0){
+                    self.screen_selector.show_popup('error',
+                        'Sorry, we could not find any accounting journals in the configuration');
+                }else if(!self.pos.get('pos_config')){
+                    self.screen_selector.show_popup('error',
+                        'Sorry, we could not find any PoS Configuration for this session');
                 }
+                
+            
+                $('.loader').animate({opacity:0},3000,'swing',function(){$('.loader').hide();});
+                $('.loader img').hide();
+
             }, this));
         },
 
@@ -891,7 +905,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 pos: this.pos,
                 pos_widget: this,
             });
-            this.paypad.replace($('placeholder-PaypadWidget'));
+            this.paypad.replace($('#placeholder-PaypadWidget'));
 
             this.numpad = new module.NumpadWidget(this);
             this.numpad.replace($('#placeholder-NumpadWidget'));
@@ -907,6 +921,10 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             });
             this.onscreen_keyboard.appendTo($(".point-of-sale #content"));
             
+            var self_checkout = this.pos.get('pos_config').iface_self_checkout;
+            console.log('pos:',this.pos);
+            console.log('self_checkout:',self_checkout);
+
             this.screen_selector = new module.ScreenSelector({
                 pos: this.pos,
                 screen_set:{
@@ -928,7 +946,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 },
                 default_client_screen: 'welcome',
                 default_cashier_screen: 'products',
-                default_mode: 'client',
+                default_mode: this.pos.get('pos_config').iface_self_checkout ?  'client' : 'cashier',
             });
             window.screen_selector = this.screen_selector;
 

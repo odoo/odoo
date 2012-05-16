@@ -31,7 +31,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
             this.current_client_screen = this.screen_set[this.default_client_screen];
             
-            this.current_cashier_screen = this.screen_set[this.default_client_screen];
+            this.current_cashier_screen = this.screen_set[this.default_cashier_screen];
 
             this.current_popup = null;
 
@@ -40,7 +40,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.current_screen = this.current_mode === 'client' ? 
                 this.current_client_screen:
                 this.current_cashier_screen;
-            
+
             var current = null;
             for(screen_name in this.screen_set){
                 var screen = this.screen_set[screen_name];
@@ -73,11 +73,13 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.screen_set[screen_name] = screen;
             return this;
         },
-        show_popup: function(name){
+        show_popup: function(name,message){
+            console.log('show_popup:',message);
             if(this.current_popup){
                 this.close_popup();
             }
             this.current_popup = this.popup_set[name];
+            this.current_popup.set_message(message);
             this.current_popup.show();
         },
         close_popup: function(){
@@ -158,6 +160,10 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             if(this.$element){
                 this.$element.hide();
             }
+        },
+        set_message: function(message){
+            this.message = message || '';
+            this.renderElement();
         },
     });
 

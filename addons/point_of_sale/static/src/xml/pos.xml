@@ -57,6 +57,9 @@
                 <div id="rightpane">
                 </div>
             </div>
+            <div class="loader">
+                <img src="/point_of_sale/static/src/img/loader.gif" />
+            </div>
         </div>
     </t>
 
@@ -319,7 +322,7 @@
     <t t-name="ErrorPopupWidget">
         <div class="modal-dialog">
             <div class="popup popup-help">
-                <p class="message">The scanned product was not recognized<br /> Please wait, a cashier is on the way</p>
+                <p class="message"><t t-esc=" widget.message || 'Error.' " /></p>
             </div>
         </div>
     </t>

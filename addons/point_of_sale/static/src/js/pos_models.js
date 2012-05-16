@@ -68,6 +68,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 'user': {},
                 'orders': new module.OrderCollection(),
                 'products': new module.ProductCollection(),
+                'cashRegisters': [], //new module.CashRegisterCollection(this.pos.get('bank_statements'));
                 'selectedOrder': undefined,
             });
             
@@ -87,19 +88,39 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
 
             var session_def = fetch(
                     'pos.session',
-                    ['id', 'journal_ids'],
+                    ['id', 'journal_ids','name','config_id','start_at','stop_at'],
                     [['state', '=', 'opened'], ['user_id', '=', this.session.uid]]
                 ).then(function(result) {
                     if( result.length !== 0 ) {
-                        console.log('pos_session:', result);
+                        var pos_session = result[0];
+                        console.log('pos_session:', pos_session);
+
+                        self.set({'pos_session': pos_session});
+
                         var journal_def = fetch(
-                            'account.journal',
-                            ['name'], 
-                            [['id', 'in', result[0]['journal_ids']]]).then(function(inner_result) {
-                                self.set({'account_journals' : inner_result});
-                        });
+                                'account.journal',
+                                ['name'], 
+                                [['id', 'in', pos_session['journal_ids']]]
+                            ).then(function(inner_result) {
+                                console.log('account_journals:',inner_result);
+                                return self.set({'account_journals' : inner_result});
+                            });
+
+                        var pos_config_def = fetch(
+                                'pos.config',
+                                ['name','journal_ids','shop_id','journal_id',
+                                 'iface_self_checkout', 'iface_websql', 'iface_led', 'iface_cashdrawer',
+                                 'iface_payment_terminal', 'iface_electronic_scale', 'iface_barscan', 'iface_vkeyboard',
+                                 'iface_print_via_proxy','state','sequence_id','session_ids'],
+                                [['id','=', pos_session.config_id[0]]]
+                            ).then(function(result){
+                                console.log('pos_config:',result[0]);
+                                return self.set({'pos_config': result[0]});
+                            });
+                        return $.when(journal_def, pos_config_def);
+                    }else{
+                        return self;
                     }
-                    return self; 
                 });
 
             var tax_def = fetch('account.tax', ['amount','price_include','type'])
@@ -112,6 +133,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 .pipe(_.bind(this.build_tree, this))
                 .pipe(function(){
                     self.set({'accountJournals' : new module.AccountJournalCollection(self.get('account_journals'))});
+                    console.log('accountJournals:',self.get('accountJournals'));
                     self.ready.resolve();
                 });
 
@@ -261,6 +283,13 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
 
     module.AccountJournalCollection = Backbone.Collection.extend({
         model: module.AccountJournal,
+    });
+
+    module.CashRegister = Backbone.Model.extend({
+    });
+
+    module.CashRegisterCollection = Backbone.Collection.extend({
+        model: module.CashRegister,
     });
 
     module.Product = Backbone.Model.extend({
