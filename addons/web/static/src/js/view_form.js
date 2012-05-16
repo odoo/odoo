@@ -3925,6 +3925,71 @@ instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
     }
 });
 
+instance.web.form.FieldStatusO2M = instance.web.form.AbstractField.extend({
+    template: "EmptyComponent",
+    start: function() {
+        this._super();
+        this.selected_value = null;
+
+        this.render_list();
+    },
+    set_value: function(value_) {
+        this._super(value_);
+        this.selected_value = value_;
+
+        this.render_list();
+    },
+    render_list: function() {
+        var self = this;
+        var shown = _.map(((this.node.attrs || {}).statusbar_visible || "").split(","),
+            function(x) { return _.str.trim(x); });
+        shown = _.select(shown, function(x) { return x.length > 0; });
+
+        if (shown.length == 0) {
+            this.to_show = this.field.selection;
+        } else {
+            this.to_show = _.select(this.field.selection, function(x) {
+                return _.indexOf(shown, x[0]) !== -1 || x[0] === self.selected_value;
+            });
+        }
+
+        var content = instance.web.qweb.render("FieldStatus.content", {widget: this, _:_});
+        this.$element.html(content);
+
+        var colors = JSON.parse((this.node.attrs || {}).statusbar_colors || "{}");
+        var color = colors[this.selected_value];
+        if (color) {
+            var elem = this.$element.find("li.oe-arrow-list-selected span");
+            elem.css("border-color", color);
+            if (this.check_white(color))
+                elem.css("color", "white");
+            elem = this.$element.find("li.oe-arrow-list-selected .oe-arrow-list-before");
+            elem.css("border-left-color", "rgba(0,0,0,0)");
+            elem = this.$element.find("li.oe-arrow-list-selected .oe-arrow-list-after");
+            elem.css("border-color", "rgba(0,0,0,0)");
+            elem.css("border-left-color", color);
+        }
+    },
+    check_white: function(color) {
+        var div = $("<div></div>");
+        div.css("display", "none");
+        div.css("color", color);
+        div.appendTo($("body"));
+        var ncolor = div.css("color");
+        div.remove();
+        var res = /^\s*rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*$/.exec(ncolor);
+        if (!res) {
+            return false;
+        }
+        var comps = [parseInt(res[1]), parseInt(res[2]), parseInt(res[3])];
+        var lum = comps[0] * 0.3 + comps[1] * 0.59 + comps[1] * 0.11;
+        if (lum < 128) {
+            return true;
+        }
+        return false;
+    }
+});
+
 instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
     template: "EmptyComponent",
     start: function() {
@@ -4018,7 +4083,8 @@ instance.web.form.widgets = new instance.web.Registry({
     'progressbar': 'instance.web.form.FieldProgressBar',
     'image': 'instance.web.form.FieldBinaryImage',
     'binary': 'instance.web.form.FieldBinaryFile',
-    'statusbar': 'instance.web.form.FieldStatus'
+    'statusbar': 'instance.web.form.FieldStatus',
+    'statusbaro2m': 'instance.web.form.FieldStatusO2M',
 });
 
 /**
