@@ -1060,7 +1060,6 @@ class task(osv.osv):
                 elif typeid and typeid in sorted_types and sorted_types.index(typeid) != len(sorted_types)-1:
                     index = sorted_types.index(typeid)
                     self.write(cr, uid, task.id, {'type_id': sorted_types[index+1]})
-                self.state_change_send_note(cr, uid, [task.id], context)
         return True
 
     def next_type(self, cr, uid, ids, context=None):
@@ -1103,9 +1102,9 @@ class task(osv.osv):
             result = True
         else:
             result = super(task,self).write(cr, uid, ids, vals, context=context)
-        if ('type_id' in vals) or ('remaining_hours' in vals) or ('user_id' in vals) or ('kanban_state' in vals):
+        if ('type_id' in vals) or ('remaining_hours' in vals) or ('user_id' in vals) or ('state' in vals) or ('kanban_state' in vals):
             self._store_history(cr, uid, ids, context=context)
-            self.state_change_send_note(cr, uid, ids, context)
+            self.stage_change_send_note(cr, uid, ids, context)
         return result
 
     def unlink(self, cr, uid, ids, context=None):
@@ -1192,7 +1191,7 @@ class task(osv.osv):
             self.message_append_note(cr, uid, [task.id], body=msg, context=context)
         return True
 
-    def state_change_send_note(self, cr, uid, ids, context=None):
+    def stage_change_send_note(self, cr, uid, ids, context=None):
         for task in self.browse(cr, uid, ids, context=context):
             msg = _('Stage changed to <b>%s</b>') % (task.type_id.name)
             self.message_append_note(cr, uid, [task.id], body=msg, context=context)

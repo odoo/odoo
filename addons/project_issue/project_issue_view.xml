@@ -50,7 +50,8 @@
             <field name="model">project.issue</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Issue Tracker Form">
+                <form layout="manual">
+                <sheet string="Issue Tracker Form" layout="auto">
                     <group colspan="4" col="6">
                         <field name="name"/>
                         <field name="project_id" required="True" on_change="on_change_project(project_id)"/>
@@ -113,7 +114,10 @@
                             </group>
                         </page>
                     </notebook>
-                    <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"/>
+                </sheet>
+	            <div class="oe_form_sheet_width">
+	                <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"/>
+	            </div>
                 </form>
             </field>
         </record>
