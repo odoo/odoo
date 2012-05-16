@@ -3952,7 +3952,31 @@ instance.web.form.FieldStatusO2M = instance.web.form.AbstractField.extend({
                 return _.indexOf(shown, x[0]) !== -1 || x[0] === self.selected_value;
             });
         }
-
+        
+        // get a DataSet on the current model (ex: crm.lead)
+        this.model = new instance.web.DataSet(this, this.field_manager.dataset.model);
+        
+        // get the domain of the current field (ex: crm.lead.stage_id -> section_ids = section_id)
+        var fields_get_defer = this.model.call('fields_get', [[this.name]]).pipe( function (record) {
+            this.field_domain = record.domain;
+        });
+        
+        // get a DataSetSearch on the current field relation (ex: crm.lead.stage_id -> crm.case.stage)
+        this.model_ext = new instance.web.DataSetSearch(this, this.field.relation);
+        
+        // search in the external relation for all possible values, then render them
+        var rendering_done = $.when(fields_get_defer).pipe( function () {
+            self.model_ext.read_slice(['name'], {'domain': self.field_domain}).pipe( function (records) {
+                self.to_show = [];
+                 _(records).each(function (record) {
+                    self.to_show.push([record.id, record.name]);
+                });
+            }).then(self.proxy('render_elements'));
+        });
+        
+        return rendering_done;
+    },
+    render_elements: function () {
         var content = instance.web.qweb.render("FieldStatus.content", {widget: this, _:_});
         this.$element.html(content);
 
