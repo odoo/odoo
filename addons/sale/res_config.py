@@ -33,7 +33,7 @@ class sale_configuration(osv.osv_memory):
         'group_invoice_deli_orders': fields.boolean('Based on Delivery Orders',
             implied_group='sale.group_invoice_deli_orders',
             help="To allow your salesman to make invoices for Delivery Orders using the menu 'Deliveries to Invoice'."),
-        'task_work': fields.boolean('Based on Tasks\' Work',
+        'task_work': fields.boolean('Based on Task Activities',
             help="""Lets you transfer the entries under tasks defined for Project Management to
                 the Timesheet line entries for particular date and particular user  with the effect of creating, editing and deleting either ways
                 and to automatically creates project tasks from procurement lines.
@@ -42,13 +42,17 @@ class sale_configuration(osv.osv_memory):
             help = """For modifying account analytic view to show important data to project manager of services companies.
                 You can also view the report of account analytic summary user-wise as well as month wise.
                 This installs the module account_analytic_analysis."""),
-        'module_account_analytic_analysis': fields.boolean('Manage Contracts',
-            help = """This installs the module account_analytic_analysis."""),
+        'module_account_analytic_analysis': fields.boolean('Manage Customer Contracts',
+            help = """Allows to define your customer contracts conditions: invoicing
+            method (fixed price, on timesheet, advance invoice), the exact pricing 
+            (650€/day for a developer), the duration (one year support contract). 
+            You will be able to follow the progress of the contract and invoice automatically. 
+            It installs the account_analytic_analysis module."""),
         'default_order_policy': fields.selection(
             [('manual', 'Invoice Based on Sales Orders'), ('picking', 'Invoice Based on Deliveries')],
-            'Main Method Based On', required=True, default_model='sale.order',
+            'Default Method', default_model='sale.order',
             help="You can generate invoices based on sales orders or based on shippings."),
-        'module_delivery': fields.boolean('Charge Delivery Costs',
+        'module_delivery': fields.boolean('Charge Shipping Cost',
             help ="""Allows you to add delivery methods in sale orders and delivery orders.
                 You can define your own carrier and delivery grids for prices.
                 This installs the module delivery."""),
@@ -59,7 +63,7 @@ class sale_configuration(osv.osv_memory):
             implied_group='product.group_sale_pricelist',
             help="""Allows to manage different prices based on rules per category of customers. 
                 Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
-        'group_uom':fields.boolean("Manage Different UoM for Products",
+        'group_uom':fields.boolean("Allow Different Units of Measure",
             implied_group='product.group_uom',
             help="""Allows you to select and maintain different units of measure for products."""),
         'group_sale_delivery_address': fields.boolean("Allow Different Addresses for Delivery and Invoice",
@@ -68,13 +72,17 @@ class sale_configuration(osv.osv_memory):
         'group_discount_per_so_line': fields.boolean("Discount per Line",
             implied_group='sale.group_discount_per_so_line',
             help="Allows you to apply some discount per sale order line."),
+        'group_multiple_shops': fields.boolean("Manage Multiple Shops",
+            implied_group='stock.group_locations',
+            help="This allows to configure and use multiple shops."),                
         'module_sale_layout': fields.boolean("Notes & Subtotals per Line",
             help="""Allows to format sale order lines using notes, separators, titles and subtotals.
                 This installs the module sale_layout."""),
         'module_warning': fields.boolean("Alerts by Products or Customers",
-            help="""To raise user specific warning messages on different products used in Sales Orders, Purchase Orders, Invoices and Deliveries.
-                This installs the module warning."""),
-        'module_sale_margin': fields.boolean("Display Margins for Users",
+            help="""Allow to configure warnings on products and trigger them when a user wants to sale a given product or a given customer. 
+            Example: Product: this product is deprecated, do not purchase more than 5.
+            Supplier: don't forget to ask for an express delivery."""),
+        'module_sale_margin': fields.boolean("Display Margins on Sale Orders",
             help="""This adds the 'Margin' on sales order.
                 This gives the profitability by calculating the difference between the Unit Price and Cost Price.
                 This installs the module sale_margin."""),
@@ -82,7 +90,7 @@ class sale_configuration(osv.osv_memory):
             help="""Allows you to categorize your sales and deliveries (picking lists) between different journals,
                 and perform batch operations on journals.
                 This installs the module sale_journal."""),
-        'module_analytic_user_function': fields.boolean("User Function by Contract",
+        'module_analytic_user_function': fields.boolean("Assign User Roles per Contract",
             help="""Allows you to define what is the default function of a specific user on a given account.
                 This is mostly used when a user encodes his timesheet. The values are retrieved and the fields are auto-filled.
                 But the possibility to change these values is still available.
@@ -93,6 +101,7 @@ class sale_configuration(osv.osv_memory):
         'module_project_timesheet': fields.boolean("Project Timesheet"),
         'module_project_mrp': fields.boolean("Project MRP"),
         'module_project': fields.boolean("Project"),
+        'decimal_precision': fields.integer('Decimal Precision on Price'),
     }
 
     def default_get(self, cr, uid, fields, context=None):
@@ -123,6 +132,15 @@ class sale_configuration(osv.osv_memory):
         'default_order_policy': 'manual',
         'time_unit': _get_default_time_unit,
     }
+
+    def get_default_dp(self, cr, uid, fields, context=None):
+        dp = self.pool.get('ir.model.data').get_object(cr, uid, 'product','decimal_sale')
+        return {'decimal_precision': dp.digits}
+
+    def set_default_dp(self, cr, uid, ids, context=None):
+        config = self.browse(cr, uid, ids[0], context)
+        dp = self.pool.get('ir.model.data').get_object(cr, uid, 'product','decimal_sale')
+        dp.write({'digits': config.decimal_precision})
 
     def set_sale_defaults(self, cr, uid, ids, context=None):
         ir_values = self.pool.get('ir.values')
@@ -166,6 +184,8 @@ class sale_configuration(osv.osv_memory):
 class account_config_settings(osv.osv_memory):
     _inherit = 'account.config.settings'
     _columns = {
+        'module_sale_analytic_plans': fields.boolean('Several Analytic Accounts on Sales',
+            help="""This allows install module sale_analytic_plans."""),                 
         'group_analytic_account_for_sales': fields.boolean('Analytic Accounting for Sales',
             implied_group='sale.group_analytic_accounting',
             help="Allows you to specify an analytic account on sale orders."),

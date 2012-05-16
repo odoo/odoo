@@ -175,8 +175,8 @@ class purchase_requisition_line(osv.osv):
 
     _columns = {
         'product_id': fields.many2one('product.product', 'Product' ),
-        'product_uom_id': fields.many2one('product.uom', 'Product UoM'),
-        'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product UoM')),
+        'product_uom_id': fields.many2one('product.uom', 'Product Unit of Measure'),
+        'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure')),
         'requisition_id' : fields.many2one('purchase.requisition','Purchase Requisition', ondelete='cascade'),
         'company_id': fields.related('requisition_id','company_id',type='many2one',relation='res.company',string='Company', store=True, readonly=True),
     }

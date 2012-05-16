@@ -16,7 +16,7 @@
                     <field name="origin"/>
                     <field name="product_id"/>
                     <field name="product_qty"/>
-                    <field name="product_uom" string="UOM"/>
+                    <field name="product_uom" string="Unit of Measure"/>
                     <field name="procure_method"/>
                     <field name="state"/>
                     <field name="message"/>
@@ -35,7 +35,7 @@
                     <field name="origin"/>
                     <field name="product_id"/>
                     <field name="product_qty"/>
-                    <field name="product_uom" string="UOM"/>
+                    <field name="product_uom" string="Unit of Measure"/>
                     <field name="state" invisible = "1"/>
                     <field name="message"/>
                 </tree>
@@ -170,7 +170,7 @@
                 <tree string="Minimum Stock Rules">
                     <field name="name"/>
                     <field name="warehouse_id"/>
-                    <field name="location_id"/>
+                    <field name="location_id" groups="stock.group_locations"/>
                     <field name="product_id"/>
                     <field name="product_uom"/>
                     <field name="product_min_qty"/>
@@ -188,7 +188,7 @@
                     <group>
                         <field name="name"/>
                         <field name="warehouse_id" widget="selection"/>
-                        <field name="location_id"/>
+                        <field name="location_id" groups="stock.group_locations"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                         <field name="product_id"/>
                     </group>
@@ -216,7 +216,7 @@
                     <group col="2" colspan="2">
                         <separator string="Locations" colspan="2" />
                         <field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)" widget="selection"/>
-                        <field name="location_id"/>
+                        <field name="location_id" groups="stock.group_locations"/>
                         <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     </group>
                     <group col="2" colspan="2">
@@ -278,8 +278,10 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <group name="misc" position="after">
-                    <separator string="Minimum Stock Rules" colspan="4"/>
-                    <field name="orderpoint_ids" nolabel="1" colspan="4" context="{'default_product_id': active_id}"/>
+                    <group colspan="4" attrs="{'invisible':[('type','=','service')]}" groups="stock.group_stock_manager">
+                        <separator string="Minimum Stock Rules" colspan="4"/>
+                        <field name="orderpoint_ids" nolabel="1" colspan="4" context="{'default_product_id': active_id}"/>
+                    </group>
                 </group>
             </field>
         </record>
