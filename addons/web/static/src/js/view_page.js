@@ -24,10 +24,17 @@ openerp.web.page = function (openerp) {
             this.$form_header.find('button.oe_form_button_duplicate').click(this.on_button_duplicate);
             this.$form_header.find('button.oe_form_button_delete').click(this.on_button_delete);
         },
+        do_show: function() {
+            if (this.dataset.index === null) {
+                this.dataset.index = this.previous_index || this.dataset.ids.length - 1;
+            }
+            this._super.apply(this, arguments);
+        },
         on_button_edit: function() {
             return this.do_switch_view('form');
         },
         on_button_create: function() {
+            this.previous_index = this.dataset.index;
             this.dataset.index = null;
             return this.do_switch_view('form');
         },
