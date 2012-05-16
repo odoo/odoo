@@ -1690,20 +1690,15 @@ instance.web.search.Advanced = instance.web.search.Input.extend({
         var self = this;
         // Get domain sections from all propositions
         var children = this.getChildren();
-        var domain = _.invoke(children, 'get_proposition');
-        var vals = _(domain).map(function (section) {
-            return {
-                label: _.str.sprintf('%s(%s)%s', section[0], section[1], section[2]),
-                value: null
-            }
-        });
+        var propositions = _.invoke(children, 'get_proposition');
+        var domain = _(propositions).pluck('value');
         for (var i = domain.length; --i;) {
             domain.unshift('|');
         }
 
         this.view.query.add({
             category: _t("Advanced"),
-            values: vals,
+            values: propositions,
             field: {
                 get_context: function () { },
                 get_domain: function () { return domain;},
@@ -1789,10 +1784,21 @@ instance.web.search.ExtendedSearchProposition = instance.web.OldWidget.extend(/*
     get_proposition: function() {
         if ( this.attrs.selected == null)
             return null;
-        var field = this.attrs.selected.name;
-        var op =  this.$element.find('.searchview_extended_prop_op').val();
-        var value = this.value.get_value();
-        return [field, op, value];
+        var field = this.attrs.selected;
+        var op = this.$element.find('.searchview_extended_prop_op')[0];
+        var operator = op.options[op.selectedIndex];
+        return {
+            label: _.str.sprintf(_t('%(field)s %(operator)s "%(value)s"'), {
+                field: field.string,
+                // According to spec, HTMLOptionElement#label should return
+                // HTMLOptionElement#text when not defined/empty, but it does
+                // not in older Webkit (between Safari 5.1.5 and Chrome 17) and
+                // Gecko (pre Firefox 7) browsers, so we need a manual fallback
+                // for those
+                operator: operator.label || operator.text,
+                value: this.value}),
+            value: [field.name, operator.value, this.value.get_value()]
+        };
     }
 });
 
@@ -1800,6 +1806,18 @@ instance.web.search.ExtendedSearchProposition.Field = instance.web.Widget.extend
     init: function (parent, field) {
         this._super(parent);
         this.field = field;
+    },
+    /**
+     * Returns a human-readable version of the value, in case the "logical"
+     * and the "semantic" values of a field differ (as for selection fields,
+     * for instance).
+     *
+     * The default implementation simply returns the value itself.
+     *
+     * @return {String} human-readable version of the value
+     */
+    toString: function () {
+        return this.get_value();
     }
 });
 instance.web.search.ExtendedSearchProposition.Char = instance.web.search.ExtendedSearchProposition.Field.extend({
@@ -1852,6 +1870,9 @@ instance.web.search.ExtendedSearchProposition.Integer = instance.web.search.Exte
         {value: ">=", text: _lt("greater or equal than")},
         {value: "<=", text: _lt("less or equal than")}
     ],
+    toString: function () {
+        return this.$element.val();
+    },
     get_value: function() {
         try {
             return instance.web.parse_value(this.$element.val(), {'widget': 'integer'});
@@ -1873,6 +1894,9 @@ instance.web.search.ExtendedSearchProposition.Float = instance.web.search.Extend
         {value: ">=", text: _lt("greater or equal than")},
         {value: "<=", text: _lt("less or equal than")}
     ],
+    toString: function () {
+        return this.$element.val();
+    },
     get_value: function() {
         try {
             return instance.web.parse_value(this.$element.val(), {'widget': 'float'});
@@ -1887,6 +1911,11 @@ instance.web.search.ExtendedSearchProposition.Selection = instance.web.search.Ex
         {value: "=", text: _lt("is")},
         {value: "!=", text: _lt("is not")}
     ],
+    toString: function () {
+        var select = this.$element[0];
+        var option = select.options[select.selectedIndex];
+        return option.label || option.text;
+    },
     get_value: function() {
         return this.$element.val();
     }
@@ -1897,6 +1926,7 @@ instance.web.search.ExtendedSearchProposition.Boolean = instance.web.search.Exte
         {value: "=", text: _lt("is true")},
         {value: "!=", text: _lt("is false")}
     ],
+    toString: function () { return ''; },
     get_value: function() {
         return true;
     }

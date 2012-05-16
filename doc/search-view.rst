@@ -478,6 +478,12 @@ Advanced Search
   constructor, and bound to its
   :js:attr:`~openerp.web.search.ExtendedSearchProposition.Field.field`.
 
+* Instead of its former domain triplet ``(field, operator, value)``,
+  :js:func:`~openerp.web.search.ExtendedSearchProposition.get_proposition`
+  now returns an object with two fields ``label`` and ``value``,
+  respectively a human-readable version of the proposition and the
+  corresponding domain triplet for the proposition.
+
 .. [#previous]
 
     the original view was implemented on top of a monkey-patched
