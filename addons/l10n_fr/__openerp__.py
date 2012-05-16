@@ -48,6 +48,7 @@ Credits: Sistheo, Zeekom, CrysaLEAD, Akretion and Camptocamp.
     "update_xml" : [
         "fr_report.xml",
         "plan_comptable_general.xml",
+        "l10n_fr_view.xml",
         "l10n_fr_wizard.xml",
         "fr_pcg_taxes.xml",
         "fr_tax.xml",

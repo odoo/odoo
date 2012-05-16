@@ -1,0 +1,57 @@
+/* Shortcuts*/
+.oe_systray_shortcuts {
+    margin: 3px;
+}
+.oe-shortcut-toggle {
+    height: 20px;
+    margin-top: 3px;
+    padding: 0;
+    width: 24px;
+    cursor: pointer;
+    display: block;
+    background: url(/web/static/src/img/add-shortcut.png) no-repeat center center;
+    float: left;
+}
+.oe-shortcut-remove{
+    background: url(/web/static/src/img/remove-shortcut.png) no-repeat center center;
+}
+.oe-shortcuts {
+    position: absolute;
+    margin: 0;
+    padding: 6px 15px;
+    top: 37px;
+    left: 197px;
+    right: 0;
+    height: 17px;
+    line-height: 1.2;
+}
+.oe-shortcuts ul {
+    display: block;
+    overflow: hidden;
+    list-style: none;
+    white-space: nowrap;
+    padding: 0;
+    margin: 0;
+}
+.oe-shortcuts li {
+    cursor: pointer;
+    display: -moz-inline-stack;
+    display: inline-block;
+    display: inline; /*IE7 */
+    color: #fff;
+    text-align: center;
+    border-left: 1px solid #909090;
+    padding: 0 4px;
+    font-size: 80%;
+    font-weight: normal;
+    vertical-align: top;
+}
+
+.oe-shortcuts li:hover {
+    background-color: #666;
+}
+.oe-shortcuts li:first-child {
+    border-left: none;
+    padding-left: 0;
+}
+
