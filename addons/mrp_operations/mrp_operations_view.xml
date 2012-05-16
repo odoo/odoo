@@ -8,7 +8,7 @@
 	    <field name="type">form</field>
 	    <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
 	    <field name="arch" type="xml">
-	       <xpath expr="/form/notebook/page/field[@name='workcenter_lines']/form/field[@name='hour']" position="after">
+	       <xpath expr="/form/sheet/notebook/page/field[@name='workcenter_lines']/form/field[@name='hour']" position="after">
 	           <group colspan="8" col="8">
 	               <separator colspan="8"/>
                    <field name="state"/>
@@ -29,7 +29,7 @@
         <field name="type">form</field>
         <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
         <field name="arch" type="xml">
-           <xpath expr="/form/notebook/page/field[@name='workcenter_lines']/tree/field[@name='hour']" position="after">
+           <xpath expr="/form/sheet/notebook/page/field[@name='workcenter_lines']/tree/field[@name='hour']" position="after">
                 <field name="state"/>
                 <button name="button_draft" string="Set Draft" states="cancel" icon="gtk-convert"/>
                 <button name="button_start_working" string="Start" states="draft" icon="terp-gtk-jump-to-ltr"/>

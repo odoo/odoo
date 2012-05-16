@@ -631,8 +631,9 @@
             <field name="model">mrp.production</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Manufacturing Orders">
-                    <group colspan="4" col="7">
+                <form string="Manufacturing Orders" layout="manual">
+                <sheet layout="auto">
+                    <group colspan="6" col="7">
                         <field name="name" string="Reference"/>
                         <field name="date_planned"/>
                         <field name="origin"/>
@@ -644,6 +645,8 @@
                             icon="terp-accessories-archiver+"
                             name="%(mrp.action_change_production_qty)d"
                             string="Change Qty" states="ready,confirmed" />
+                    </group>
+                    <group colspan="2" col="2">
                         <label string="" colspan="2"/>
                         <field name="product_uos_qty" groups="product.group_uos"/>
                         <field name="product_uos" groups="product.group_uos"/>
@@ -786,7 +789,10 @@
                             <field name="move_prod_id"/>
                         </page>
                     </notebook>
+                    </sheet>
+                    <div class="oe_form_sheet_width">
                     <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"/>
+                    </div>
                 </form>
             </field>
         </record>
