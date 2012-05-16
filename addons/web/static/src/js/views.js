@@ -342,6 +342,11 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         });
         return view_promise;
     },
+    /**
+     * Method used internally when a view asks to switch view. This method is meant
+     * to be extended by child classes to change the default behavior, which simply
+     * consist to switch to the asked view.
+     */
     switch_view: function(view_type, no_store) {
         return this.on_mode_switch(view_type, no_store);
     },

@@ -2962,7 +2962,30 @@ instance.web.form.One2ManyViewManager = instance.web.ViewManager.extend({
         });
     },
     switch_view: function(mode, unused) {
-        return this._super(mode, unused);
+        if (mode !== 'form') {
+            return this._super(mode, unused);
+        }
+        var self = this;
+        var id = typeof(self.o2m.dataset.index) === "number" && self.o2m.dataset.index >= 0 ?
+            self.o2m.dataset.ids[self.o2m.dataset.index] : null;
+        var pop = new instance.web.form.FormOpenPopup(self.o2m.view);
+        pop.show_element(self.o2m.field.relation, id, self.o2m.build_context(), {
+            title: _t("Open: ") + self.name,
+            auto_write: false,
+            alternative_form_view: self.o2m.field.views ? self.o2m.field.views["form"] : undefined,
+            parent_view: self.o2m.view,
+            child_name: self.o2m.name,
+            read_function: function() {
+                return self.o2m.dataset.read_ids.apply(self.o2m.dataset, arguments);
+            },
+            form_view_options: {'not_interactible_on_create':true},
+            readonly: self.o2m.get("effective_readonly")
+        });
+        pop.on_write.add(function(id, data) {
+            self.o2m.dataset.write(id, data, {}, function(r) {
+                self.o2m.reload_current_view();
+            });
+        });
     },
 });
 
@@ -3059,28 +3082,6 @@ var lazy_build_o2m_kanban_view = function() {
 if (! instance.web_kanban || instance.web.form.One2ManyKanbanView)
     return;
 instance.web.form.One2ManyKanbanView = instance.web_kanban.KanbanView.extend({
-    open_record: function(id) {
-        var self = this;
-        var pop = new instance.web.form.FormOpenPopup(self.o2m.view);
-        pop.show_element(self.o2m.field.relation, id, self.o2m.build_context(), {
-            title: _t("Open: ") + self.name,
-            auto_write: false,
-            alternative_form_view: self.o2m.field.views ? self.o2m.field.views["form"] : undefined,
-            parent_view: self.o2m.view,
-            child_name: self.o2m.name,
-            read_function: function() {
-                return self.o2m.dataset.read_ids.apply(self.o2m.dataset, arguments);
-            },
-            form_view_options: {'not_interactible_on_create':true},
-            readonly: self.o2m.get("effective_readonly"),
-        });
-        pop.on_write.add(function(id, data) {
-            self.o2m.dataset.write(id, data, {}, function(r) {
-                self.o2m.reload_current_view();
-            });
-        });
-        
-    },
 });
 }
 
