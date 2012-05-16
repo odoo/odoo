@@ -48,6 +48,7 @@ class event_event(osv.osv):
     _name = 'event.event'
     _description = __doc__
     _order = 'date_begin'
+    _inherit = ['ir.needaction_mixin','mail.thread']
 
     def name_get(self, cr, uid, ids, context=None):
         if not ids:
@@ -70,6 +71,11 @@ class event_event(osv.osv):
         res = self.name_get(cr, uid, ids, context=context)
         return dict(res)
 
+    def create(self, cr, uid, vals, context=None):
+        obj_id = super(event_event, self).create(cr, uid, vals, context)
+        self.create_send_note(cr, uid, [obj_id], context=context)
+        return obj_id
+
     def copy(self, cr, uid, id, default=None, context=None):
         """ Reset the state and the registrations while copying an event
         """
@@ -82,6 +88,7 @@ class event_event(osv.osv):
         return super(event_event, self).copy(cr, uid, id, default=default, context=context)
 
     def button_draft(self, cr, uid, ids, context=None):
+        self.button_draft_send_note(cr, uid, ids, context=context)
         return self.write(cr, uid, ids, {'state': 'draft'}, context=context)
 
     def button_cancel(self, cr, uid, ids, context=None):
@@ -91,9 +98,11 @@ class event_event(osv.osv):
             if event_reg.state == 'done':
                 raise osv.except_osv(_('Error!'),_("You have already set a registration for this event as 'Attended'. Please reset it to draft if you want to cancel this event.") )
         registration.write(cr, uid, reg_ids, {'state': 'cancel'}, context=context)
+        self.button_cancel_send_note(cr, uid, ids, context=context)
         return self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
 
     def button_done(self, cr, uid, ids, context=None):
+        self.button_done_send_note(cr, uid, ids, context=context)
         return self.write(cr, uid, ids, {'state': 'done'}, context=context)
 
     def check_registration_limits(self, cr, uid, ids, context=None):
@@ -119,6 +128,7 @@ class event_event(osv.osv):
         if isinstance(ids, (int, long)):
             ids = [ids]
         self.check_registration_limits(cr, uid, ids, context=context)
+        self.button_confirm_send_note(cr, uid, ids, context=context)
         return self.confirm_event(cr, uid, ids, context=context)
 
     def _get_register(self, cr, uid, ids, fields, args, context=None):
@@ -248,13 +258,50 @@ class event_event(osv.osv):
               'register_max': type_info.default_registration_max,
             }
             return {'value': dic}
+        
+    # ----------------------------------------
+    # OpenChatter methods and notifications
+    # ----------------------------------------
+
+    def get_needaction_user_ids(self, cr, uid, ids, context=None):
+        result = dict.fromkeys(ids, [])
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.state == 'draft' and obj.user_id:
+                result[obj.id] = [obj.user_id.id]
+        return result
+
+    def create_send_note(self, cr, uid, ids, context=None):
+        message = _("Event has been <b>created</b>.")
+        self.message_append_note(cr, uid, ids, body=message, context=context)
+        return True
+
+    def button_cancel_send_note(self, cr, uid, ids, context=None):
+        message = _("Event has been <b>cancelled</b>.")
+        self.message_append_note(cr, uid, ids, body=message, context=context)
+        return True
+
+    def button_draft_send_note(self, cr, uid, ids, context=None):
+        message = _("Event has been set to <b>draft</b>.")
+        self.message_append_note(cr, uid, ids, body=message, context=context)
+        return True
+
+    def button_done_send_note(self, cr, uid, ids, context=None):
+        message = _("Event has been <b>done</b>.")
+        self.message_append_note(cr, uid, ids, body=message, context=context)
+        return True
+
+    def button_confirm_send_note(self, cr, uid, ids, context=None):
+        message = _("Event has been <b>confirmed</b>.")
+        self.message_append_note(cr, uid, ids, body=message, context=context)
+        return True
+
 event_event()
 
 class event_registration(osv.osv):
     """Event Registration"""
     _name= 'event.registration'
     _description = __doc__
-    _inherit = ['mail.thread','res.partner']
+    _inherit = ['ir.needaction_mixin','mail.thread','res.partner']
     _columns = {
         'id': fields.integer('ID'),
         'origin': fields.char('Origin', size=124,readonly=True,help="Name of the sale order which create the registration"),
@@ -285,12 +332,17 @@ class event_registration(osv.osv):
 
 
     def do_draft(self, cr, uid, ids, context=None):
+        self.do_draft_send_note(cr, uid, ids, context=context)
         return self.write(cr, uid, ids, {'state': 'draft'}, context=context)
 
     def confirm_registration(self, cr, uid, ids, context=None):
         self.message_append(cr, uid, ids,_('State set to open'),body_text= _('Open'))
         return self.write(cr, uid, ids, {'state': 'open'}, context=context)
 
+    def create(self, cr, uid, vals, context=None):
+        obj_id = super(event_registration, self).create(cr, uid, vals, context)
+        self.create_send_note(cr, uid, [obj_id], context=context)
+        return obj_id
 
     def registration_open(self, cr, uid, ids, context=None):
         """ Open Registration
@@ -381,6 +433,27 @@ class event_registration(osv.osv):
             d = self.onchange_contact_id(cr, uid, ids, addr, part, context)
             data.update(d['value'])
         return {'value': data}
+
+    # ----------------------------------------
+    # OpenChatter methods and notifications
+    # ----------------------------------------
+
+    def get_needaction_user_ids(self, cr, uid, ids, context=None):
+        result = dict.fromkeys(ids, [])
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.state == 'draft' and obj.user_id:
+                result[obj.id] = [obj.user_id.id]
+        return result
+
+    def create_send_note(self, cr, uid, ids, context=None):
+        message = _("Registration has been <b>created</b>.")
+        self.message_append_note(cr, uid, ids, body=message, context=context)
+        return True
+
+    def do_draft_send_note(self, cr, uid, ids, context=None):
+        message = _("Registration has been set as <b>draft</b>.")
+        self.message_append_note(cr, uid, ids, body=message, context=context)
+        return True
 
 event_registration()
 

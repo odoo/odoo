@@ -203,7 +203,7 @@
                             <field colspan="4" name="notes" nolabel="1"/>
                         </page>
                     </notebook>
-                   <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
+                   <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"/>
                 </form>
             </field>
         </record>
@@ -506,7 +506,7 @@
             <field name="inherit_id" ref="procurement.procurement_form_view"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page/field[@name='close_move']" position="before">
+                <xpath expr="/form/sheet/notebook/page/field[@name='close_move']" position="before">
                     <field name="purchase_id"/>
                 </xpath>
             </field>

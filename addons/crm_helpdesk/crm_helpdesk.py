@@ -92,6 +92,19 @@ class crm_helpdesk(crm.crm_case, osv.osv):
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
     }
 
+    def case_get_note_msg_prefix(self, cr, uid, id, context=None):
+        return 'Case'
+
+    def create(self, cr, uid, vals, context=None):
+        obj_id = super(crm_helpdesk, self).create(cr, uid, vals, context)
+        self.create_send_note(cr, uid, [obj_id], context=context)
+        return obj_id
+
+    def create_send_note(self, cr, uid, ids, context=None):
+        msg = '%s has been <b>created</b>.' % (self.case_get_note_msg_prefix(cr, uid, ids, context=context))
+        self.message_append_note(cr, uid, ids, body=msg, context=context)
+        return True
+
     def message_new(self, cr, uid, msg_dict, custom_values=None, context=None):
         """Automatically called when new email message arrives"""
         res_id = super(crm_helpdesk,self).message_new(cr, uid, msg_dict, custom_values=custom_values, context=context)
