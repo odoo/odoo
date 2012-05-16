@@ -41,7 +41,6 @@ module 'share'.
         'security/ir.model.access.csv',
         'board_portal_view.xml',
         'portal_view.xml',
-        'portal_menu.xml',
         'portal_data.xml',
         'res_user_view.xml',
         'wizard/portal_wizard_view.xml',
