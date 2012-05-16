@@ -60,7 +60,7 @@
                     <button name="case_escalate" string="Escalate" states="open,pending" type="object" icon="gtk-go-up" groups="base.group_no_one"/>
                     <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert" groups="base.group_no_one"/>
                     <div class="oe_right">
-                        <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}' groups="base.group_no_one"/>
+                        <field name="stage_id" nolabel="1" widget="statusbaro2m" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}' groups="base.group_no_one"/>
                     </div>
                 </div>
                 <sheet layout="auto">
@@ -79,7 +79,6 @@
                     <newline />
                     <field name="user_id" />
                     <field name="section_id" widget="selection" />
-                    <field name="stage_id" domain="section_id and [('section_ids', '=', section_id)] or []" />
                     <group col="2" colspan="1">
                         <button name="stage_previous" string=""
                             states="open,pending,draft" type="object"
@@ -141,6 +140,7 @@
                         <field name="type_id" select="1" widget="selection"/>
                         <field name="channel_id" select="1" widget="selection"/>
                         <field name="referred"/>
+                        <field name="state" groups="base.group_no_one"/>
                     </group>
                     <group colspan="2" col="2">
                         <separator string="Mailings" colspan="2" col="2"/>
