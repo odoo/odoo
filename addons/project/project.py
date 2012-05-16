@@ -514,7 +514,6 @@ users()
 class task(osv.osv):
     _name = "project.task"
     _description = "Task"
-    _log_create = True
     _date_name = "date_start"
     _inherit = ['ir.needaction_mixin', 'mail.thread']
 
@@ -1104,7 +1103,7 @@ class task(osv.osv):
             result = True
         else:
             result = super(task,self).write(cr, uid, ids, vals, context=context)
-        if ('type_id' in vals) or ('remaining_hours' in vals) or ('user_id' in vals) or ('state' in vals) or ('kanban_state' in vals):
+        if ('type_id' in vals) or ('remaining_hours' in vals) or ('user_id' in vals) or ('kanban_state' in vals):
             self._store_history(cr, uid, ids, context=context)
             self.state_change_send_note(cr, uid, ids, context)
         return result

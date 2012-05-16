@@ -9,3 +9,4 @@ Mail Module documentation topics
    mail_thread
    mail_openchatter_howto
    mail_needaction_howto
+   mail_partner

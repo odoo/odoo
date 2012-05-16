@@ -232,7 +232,8 @@
             <field name="model">project.scrum.sprint</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Scrum Sprint">
+                <form string="Scrum Sprint" layout="manual">
+                <sheet layout="auto">
                     <group colspan="4" col="6">
                         <field name="name" select="1"/>
                         <field name="project_id" on_change="onchange_project_id(project_id)"/>
@@ -307,6 +308,10 @@
                         <button type="object" string="Close" name="button_close" states="open,pending" icon="terp-dialog-close"/>
                         <button type="object" string="Set to Draft" name="button_draft" states="cancel,done" icon="gtk-convert"/>
                     </group>
+                    </sheet>
+                    <div class="oe_form_sheet_width">
+                        <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"/>
+                    </div>
                 </form>
             </field>
         </record>

@@ -81,6 +81,7 @@ class procurement_order(osv.osv):
     _name = "procurement.order"
     _description = "Procurement"
     _order = 'priority,date_planned desc'
+    _inherit = ['mail.thread']
     _log_create = False
     _columns = {
         'name': fields.char('Reason', size=64, required=True, help='Procurement name.'),
@@ -103,7 +104,7 @@ class procurement_order(osv.osv):
             " a make to order method."),
 
         'note': fields.text('Note'),
-        'message': fields.char('Latest error', size=64, help="Exception occurred while computing procurement orders."),
+        'message': fields.char('Latest error', size=124, help="Exception occurred while computing procurement orders."),
         'state': fields.selection([
             ('draft','Draft'),
             ('confirmed','Confirmed'),
@@ -346,6 +347,7 @@ class procurement_order(osv.osv):
                     move_obj.action_confirm(cr, uid, [id], context=context)
                     self.write(cr, uid, [procurement.id], {'move_id': id, 'close_move': 1})
         self.write(cr, uid, ids, {'state': 'confirmed', 'message': ''})
+        self.confirm_send_note(cr, uid, ids, context)
         return True
 
     def action_move_assigned(self, cr, uid, ids, context=None):
@@ -354,6 +356,7 @@ class procurement_order(osv.osv):
         """
         self.write(cr, uid, ids, {'state': 'running',
                 'message': _('from stock: products assigned.')})
+        self.running_send_note(cr, uid, ids, context=None)
         return True
 
     def _check_make_to_stock_service(self, cr, uid, procurement, context=None):
@@ -383,7 +386,8 @@ class procurement_order(osv.osv):
                     message = _("Not enough stock.")
 
                 if message:
-                    self.log(cr, uid, procurement.id, _("Procurement '%s' is in exception: ") % (procurement.name) + message)
+                    message = _("Procurement '%s' is in exception: ") % (procurement.name) + message
+                    self.message_append_note(cr, uid, [procurement.id], body=message, context=context)
                     cr.execute('update procurement_order set message=%s where id=%s', (message, procurement.id))
         return ok
 
@@ -393,6 +397,7 @@ class procurement_order(osv.osv):
         """
         for procurement in self.browse(cr, uid, ids, context=context):
             self.write(cr, uid, [procurement.id], {'state': 'running'})
+        self.running_send_note(cr, uid, ids, context=None)
         return True
 
     def action_produce_assign_product(self, cr, uid, ids, context=None):
@@ -427,6 +432,7 @@ class procurement_order(osv.osv):
         if len(todo):
             move_obj.write(cr, uid, todo, {'state': 'assigned'})
         self.write(cr, uid, ids, {'state': 'cancel'})
+        self.cancel_send_note(cr, uid, ids, context=None)
         wf_service = netsvc.LocalService("workflow")
         for id in ids:
             wf_service.trg_trigger(uid, 'procurement.order', id, cr)
@@ -451,6 +457,7 @@ class procurement_order(osv.osv):
         @return: True
         """
         res = self.write(cr, uid, ids, {'state': 'ready'})
+        self.ready_send_note(cr, uid, ids, context=None)
         return res
 
     def action_done(self, cr, uid, ids):
@@ -463,10 +470,38 @@ class procurement_order(osv.osv):
                 if procurement.close_move and (procurement.move_id.state <> 'done'):
                     move_obj.action_done(cr, uid, [procurement.move_id.id])
         res = self.write(cr, uid, ids, {'state': 'done', 'date_close': time.strftime('%Y-%m-%d')})
+        self.done_send_note(cr, uid, ids, context=None)
         wf_service = netsvc.LocalService("workflow")
         for id in ids:
             wf_service.trg_trigger(uid, 'procurement.order', id, cr)
         return res
+
+    # ----------------------------------------
+    # OpenChatter methods and notifications
+    # ----------------------------------------
+
+    def create(self, cr, uid, vals, context=None):
+        obj_id = super(procurement_order, self).create(cr, uid, vals, context)
+        self.create_send_note(cr, uid, [obj_id], context=context)
+        return obj_id
+
+    def create_send_note(self, cr, uid, ids, context=None):
+        self.message_append_note(cr, uid, ids, body=_("Procurement has been <b>created</b>."), context=context)
+
+    def confirm_send_note(self, cr, uid, ids, context=None):
+        self.message_append_note(cr, uid, ids, body=_("Procurement has been <b>confirmed</b>."), context=context)
+
+    def running_send_note(self, cr, uid, ids, context=None):
+        self.message_append_note(cr, uid, ids, body=_("Procurement has been set to <b>running</b>."), context=context)
+
+    def ready_send_note(self, cr, uid, ids, context=None):
+        self.message_append_note(cr, uid, ids, body=_("Procurement has been set to <b>ready</b>."), context=context)
+
+    def cancel_send_note(self, cr, uid, ids, context=None):
+        self.message_append_note(cr, uid, ids, body=_("Procurement has been <b>cancelled</b>."), context=context)
+
+    def done_send_note(self, cr, uid, ids, context=None):
+        self.message_append_note(cr, uid, ids, body=_("Procurement has been <b>done</b>."), context=context)
 
 procurement_order()
 
