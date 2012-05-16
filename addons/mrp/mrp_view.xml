@@ -631,8 +631,7 @@
             <field name="model">mrp.production</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Manufacturing Orders" layout="manual">
-                <sheet layout="auto">
+                <form string="Manufacturing Orders" layout="auto">
                     <group colspan="6" col="7">
                         <field name="name" string="Reference"/>
                         <field name="date_planned"/>
@@ -789,7 +788,6 @@
                             <field name="move_prod_id"/>
                         </page>
                     </notebook>
-                    </sheet>
                     <div class="oe_form_sheet_width">
                     <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"/>
                     </div>
