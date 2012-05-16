@@ -136,7 +136,7 @@
                     </tr>
                     <tr>
                         <td><label for="db_name">New database name:</label></td>
-                        <td><input type="text" name="db_name" class="required" matches="^[a-zA-Z][a-zA-Z0-9_]+$"/></td>
+                        <td><input type="text" name="db_name" class="required" matches="^[a-zA-Z][a-zA-Z0-9_]+$" autofocus="true"/></td>
                     </tr>
                     <tr>
                         <td><label for="demo_data">Load Demonstration data:</label></td>
@@ -1053,6 +1053,12 @@
             <a href="#" class="oe_form_uri"/>
         </span>
     </t>
+</t>
+<t t-name="FieldMany2Many.render">
+    <div class="oe_form_view_m2m">
+        <div class="oe_form_view_m2m_buttons" />
+        <div class="oe_form_view_m2m_view" />
+    </div>
 </t>
 <t t-name="FieldMany2ManyTags">
     <div class="oe_form_field_many2manytags">

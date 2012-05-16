@@ -1262,11 +1262,6 @@ instance.web.str_to_xml = function(s) {
 }
 
 /**
- * Registry for all the client actions key: tag value: widget
- */
-instance.web.client_actions = new instance.web.Registry();
-
-/**
  * Registry for all the main views
  */
 instance.web.views = new instance.web.Registry();
