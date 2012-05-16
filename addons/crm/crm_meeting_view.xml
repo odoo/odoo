@@ -30,7 +30,7 @@
                     <field name="name" select="1" string="Summary"
                            required="1" />
                     <field name="categ_id" widget="selection"
-                        string="Meeting Type" groups="base.group_extended"
+                        string="Meeting Type"
                         domain="[('object_id.model', '=', 'crm.meeting')]" />
                     <field name="allday" on_change="onchange_dates(date,False,False,allday)" />
                     <newline/>
@@ -53,9 +53,8 @@
                         <group col="2" colspan="2">
                             <separator colspan="2" string="Assignment"/>
                             <field name="user_id" />
-                            <field name="organizer" groups="base.group_extended"/>
-                            <field name="section_id" widget="selection"
-                                groups="base.group_extended"/>
+                            <field name="organizer"/>
+                            <field name="section_id" widget="selection"/>
                         </group><group col="2" colspan="2">
                             <separator colspan="2" string="Contacts"/>
                             <field name="partner_id" string="Partner"
@@ -63,8 +62,8 @@
                             <field name="email_from"/>
                         </group><group col="2" colspan="2">
                             <separator colspan="2" string="Visibility"/>
-                            <field name="class" string="Privacy" groups="base.group_extended"/>
-                            <field name="show_as" string="Show time as" groups="base.group_extended"/>
+                            <field name="class" string="Privacy"/>
+                            <field name="show_as" string="Show Time as"/>
                             <field name="rrule" invisible="1" readonly="1"/>
                             <field name="recurrent_id" invisible="1"/>
                             <field name="recurrent_uid" invisible="1"/>
@@ -73,7 +72,7 @@
                     <separator string="Description" colspan="4" />
                     <field name="description" nolabel="1" colspan="4" />
                     <separator colspan="4"/>
-                    <group col="8" colspan="4" groups="base.group_extended">
+                    <group col="8" colspan="4" groups="base.group_no_one">
                         <field name="state" />
                         <button name="case_close" string="Done"
                             states="open" type="object"
@@ -166,7 +165,7 @@
                                 <field name="interval" />
 
 
-                                <separator string="End of recurrency" colspan="4"/>
+                                <separator string="End of Recurrency" colspan="4"/>
                                 <field name="end_type" />
                                 <label string=" " colspan="2" />
                                 <newline />
@@ -234,7 +233,7 @@
                 <field name="duration" />
                 <field name="partner_id" string="Partner" />
                 <field name="location" />
-                <field name="categ_id" groups="base.group_extended" />
+                <field name="categ_id"/>
             </tree>
         </field>
     </record>
@@ -278,13 +277,13 @@
                        <group>
                            <field name="name" string="Meeting / Partner"
                                filter_domain="['|', ('name','ilike',self), ('partner_id','ilike', self)]"/>
-                           <field name="user_id" groups="base.group_extended">
-                               <filter icon="terp-personal" groups="base.group_extended"
+                           <field name="user_id">
+                               <filter icon="terp-personal"
                                    domain="[('user_id','=',uid)]"
                                    help="My Meetings" />
                            </field>
-                           <field name="section_id" widget="selection" groups="base.group_extended">
-                               <filter icon="terp-personal+" groups="base.group_extended"
+                           <field name="section_id" widget="selection">
+                               <filter icon="terp-personal+"
                                    domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                                    help="My Sales Team(s)" />
                            </field>

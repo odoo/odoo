@@ -7,15 +7,55 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
+                <field name="use_tasks" position='after'>
+                    <field name="use_timesheets"/>
+                    <field name="amount_to_invoice" invisible="True"/>
+                    <field name="time_to_invoice" invisible="True"/>
+                </field>
                 <field name="warn_customer" position="after">
                     <group colspan="4" col="4">
                         <separator colspan="4" string="Invoicing Data"/>
                         <field name="pricelist_id" groups="product.group_sale_pricelist" domain="[('type','=','sale')]" widget="selection"/>
                         <field name="to_invoice" widget="selection" string="Invoice Task Work"/>
-                        <field name="amount_max" groups="base.group_extended"/>
-                        <field name="amount_invoiced" groups="base.group_extended"/>
+                        <field name="amount_max"/>
+                        <field name="amount_invoiced"/>
                     </group>
                 </field>
+            </field>
+        </record>
+
+        <record id="view_project_kanban_inherited" model="ir.ui.view">
+            <field name="name">project.project.kanban.inherited</field>
+            <field name="model">project.project</field>
+            <field name="type">kanban</field>
+            <field name="inherit_id" ref="project.view_project_kanban"/>
+            <field name="arch" type="xml">
+                <field name="use_tasks" position="after">
+                    <field name="use_timesheets"/>
+                    <field name="timesheet_count"/>
+                    <field name="currency_id"/>
+                    <field name="partner_id"/>
+                </field>
+                <xpath expr="//div[@id='list']" position="inside">
+                    <a t-if="record.use_timesheets.raw_value" class="oe_project_buttons"
+                        id="3" name="open_timesheets" type="object">Timesheets(<field name="timesheet_count"/>)</a>
+                </xpath>
+                <xpath expr="//tr[@id='deadline']" position="before">
+                    <t t-if="record.partner_id.raw_value">
+                        <tr>
+                            <th align="left">Amount to invoice</th>
+                            <td align="left">
+                                <field name="amount_to_invoice"/> <t t-esc="record.currency_id.raw_value[1].split(' ')[1][1]"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th align="left">Time to Invoice</th>
+                            <td align="left">
+                                <field name="time_to_invoice"/> <field name="company_uom_id"/>
+                            </td>
+                        </tr>
+                    </t>
+                </xpath>
             </field>
         </record>
 
@@ -93,7 +133,6 @@ the project form.</field>
         </record>
         <menuitem action="hr_timesheet.action_hr_timesheet_sign_in"
             id="menu_hr_timesheet_sign_in"
-            groups="base.group_extended"
             parent="hr_attendance.menu_hr_attendance"
             sequence="5" />
 

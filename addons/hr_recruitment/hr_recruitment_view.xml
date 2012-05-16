@@ -64,7 +64,7 @@
                 <field name="user_id"/>
                 <field name="state"/>
                 <button name="case_open" string="In Progress" states="draft,pending" type="object" icon="gtk-go-forward"/>
-                <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause"/>
+                <button name="case_pending" string="Pending" states="open" type="object" icon="gtk-media-pause"/>
             </tree>
         </field>
     </record>
@@ -106,7 +106,7 @@
                         <field name="title_action"/>
                         <field name="survey" invisible="1"/>
                         <button name="action_print_survey" string="Interview" type="object" icon="gtk-print" attrs="{'readonly':[('survey','=',False)]}"/>
-                        <button name="%(survey.action_view_survey_question_message)d" string="Answer" type="action" icon="gtk-execute" context="{'survey_id': survey, 'response_id': [response], 'response_no':0 ,'active' : response, 'object' : 'hr.applicant'}" attrs="{'readonly':[('survey','=',False)]}" groups="base.group_extended"/>
+                        <button name="%(survey.action_view_survey_question_message)d" string="Answer" type="action" icon="gtk-execute" context="{'survey_id': survey, 'response_id': [response], 'response_no':0 ,'active' : response, 'object' : 'hr.applicant'}" attrs="{'readonly':[('survey','=',False)]}"/>
                         <field name="response" invisible="1"/>
                     </group>
                     <newline/>
@@ -319,8 +319,10 @@
                                         <a t-if="record.survey.raw_value" name="action_print_survey" type="object" string="Print Interview" icon="gtk-print" />
                                     </div>
                                     <div class="oe_kanban_right">
+                                        <a name="case_cancel" string="Refuse" states="draft,open,pending" type="object" icon="gtk-cancel"/>
                                         <a name="case_open" string="In Progress" states="draft,pending" type="object" icon="kanban-apply"/>
-                                        <a name="case_pending" string="Pending" states="draft,open" type="object" icon="kanban-pause"/>
+                                        <a name="case_pending" string="Pending" states="open" type="object" icon="kanban-pause"/>
+                                        <a name="%(action_hr_recruitment_hired_employee)d" string="Hire" states="open,pending" type="action" icon="terp-partner"/>
                                     </div>
                                     <br class="oe_kanban_clear"/>
                                 </div>
@@ -357,7 +359,7 @@
             <tree string="Stages">
                 <field name="sequence" invisible="1"/>
                 <field name="name"/>
-                <field name="department_id" groups="base.group_extended"/>
+                <field name="department_id"/>
             </tree>
         </field>
     </record>
@@ -373,7 +375,7 @@
                 <group colspan="4" col="6">
                     <separator string="Stage Definition" colspan="6"/>
                     <field name="name" select="1"/>
-                    <field name="department_id" groups="base.group_extended"/>
+                    <field name="department_id"/>
                     <field name="sequence"/>
                 </group>
                 <separator string="Requirements" colspan="4"/>

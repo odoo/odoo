@@ -12,7 +12,7 @@
                     <field name="reference"/>
                     <field name="partner_id"/>
                     <field name="journal_id"/>
-                    <field name="period_id" groups="base.group_extended" invisible="context.get('visible', True)"/>
+                    <field name="period_id" invisible="context.get('visible', True)"/>
                     <field name="type" invisible="context.get('visible', True)"/>
                     <field name="amount" sum="Total Amount"/>
                     <field name="audit"/>
@@ -74,12 +74,12 @@
                                 </group>
                                 <group col="4" colspan="1" attrs="{'invisible':[('type','in',['payment', 'receipt', False])]}">
                                     <separator string="Total" colspan="4"/>
-                                    <field name="tax_id" on_change="onchange_price(line_ids, tax_id, partner_id)" widget="selection"/><field name="tax_amount" nolabel="1"/><button type="object" icon="terp-stock_format-scientific" name="compute_tax" groups="base.group_extended" string="Compute Tax" attrs="{'invisible': [('state','!=','draft')]}"/>
+                                    <field name="tax_id" on_change="onchange_price(line_ids, tax_id, partner_id)" widget="selection"/><field name="tax_amount" nolabel="1"/><button type="object" icon="terp-stock_format-scientific" name="compute_tax" string="Compute Tax" attrs="{'invisible': [('state','!=','draft')]}"/>
                                     <label colspan="1" string=""/><field name="amount" string="Total"/>
                                 </group>
                             </group>
                         </page>
-                        <page string="Journal Items" groups="base.group_extended" attrs="{'invisible': [('state','!=','posted')]}">
+                        <page string="Journal Items" attrs="{'invisible': [('state','!=','posted')]}">
                             <group col="6" colspan="4">
                                 <field name="period_id"/>
                                 <field name="audit"/>
@@ -123,7 +123,7 @@
                         <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
                         <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
                         <separator orientation="vertical"/>
-                        <filter icon="terp-gtk-jump-to-ltr" string="To Review" domain="[('state','=','posted'), ('audit','=',False)]" groups="base.group_extended" help="To Review"/>
+                        <filter icon="terp-gtk-jump-to-ltr" string="To Review" domain="[('state','=','posted'), ('audit','=',False)]" help="To Review"/>
                         <separator orientation="vertical"/>
                         <field name="date"/>
                         <field name="number"/>
@@ -132,7 +132,7 @@
                     <newline/>
                     <group>
                         <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" />
-                        <field name="period_id" groups="base.group_extended"/>
+                        <field name="period_id"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">

@@ -222,24 +222,23 @@ class sale_order(osv.osv):
 
         'incoterm': fields.many2one('stock.incoterms', 'Incoterm', help="Incoterm which stands for 'International Commercial terms' implies its a series of sales terms which are used in the commercial transaction."),
         'picking_policy': fields.selection([('direct', 'Deliver each product when available'), ('one', 'Deliver all products at once')],
-            'Picking Policy', required=True, readonly=True, states={'draft': [('readonly', False)]}, help="""If you don't have enough stock available to deliver all at once, do you accept partial shipments or not?"""),
+            'Shipping Policy', required=True, readonly=True, states={'draft': [('readonly', False)]},
+            help="""If you don't have enough stock available to deliver all at once, do you accept partial shipments or not?"""),
         'order_policy': fields.selection([
-            ('prepaid', 'Pay before delivery'),
-            ('manual', 'Deliver & invoice on demand'),
-            ('picking', 'Invoice based on deliveries'),
-            ('postpaid', 'Invoice on order after delivery'),
-        ], 'Invoice Policy', required=True, readonly=True, states={'draft': [('readonly', False)]},
-                    help="""The Invoice Policy is used to synchronise invoice and delivery operations.
-  - The 'Pay before delivery' choice will first generate the invoice and then generate the picking order after the payment of this invoice.
-  - The 'Deliver & Invoice on demand' will create the picking order directly and wait for the user to manually click on the 'Invoice' button to generate the draft invoice based on the sale order or the sale order lines.
-  - The 'Invoice on order after delivery' choice will generate the draft invoice based on sales order after all picking lists have been finished.
-  - The 'Invoice based on deliveries' choice is used to create an invoice during the picking process."""),
+                ('manual', 'On Demand'),
+                ('picking', 'On Delivery Order'),
+                ('prepaid', 'Before Delivery'),
+            ], 'Create Invoice', required=True, readonly=True, states={'draft': [('readonly', False)]},
+            help="""This field controls how invoice and delivery operations are synchronized.
+  - With 'On Demand', the invoice is created manually when needed.
+  - With 'On Delivery Order', a draft invoice is generated after all pickings have been processed.
+  - With 'Before Delivery', a draft invoice is created, and it must be paid before delivery."""),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', required=True, readonly=True, states={'draft': [('readonly', False)]}, help="Pricelist for current sales order."),
         'project_id': fields.many2one('account.analytic.account', 'Contract/Analytic Account', readonly=True, states={'draft': [('readonly', False)]}, help="The analytic account related to a sales order."),
 
         'order_line': fields.one2many('sale.order.line', 'order_id', 'Order Lines', readonly=True, states={'draft': [('readonly', False)]}),
         'invoice_ids': fields.many2many('account.invoice', 'sale_order_invoice_rel', 'order_id', 'invoice_id', 'Invoices', readonly=True, help="This is the list of invoices that have been generated for this sales order. The same sales order may have been invoiced in several times (by line for example)."),
-        'picking_ids': fields.one2many('stock.picking', 'sale_id', 'Related Picking', readonly=True, help="This is a list of picking that has been generated for this sales order."),
+        'picking_ids': fields.one2many('stock.picking.out', 'sale_id', 'Related Picking', readonly=True, help="This is a list of delivery orders that has been generated for this sales order."),
         'shipped': fields.boolean('Delivered', readonly=True, help="It indicates that the sales order has been delivered. This field is updated only after the scheduler(s) have been launched."),
         'picked_rate': fields.function(_picked_rate, string='Picked', type='float'),
         'invoiced_rate': fields.function(_invoiced_rate, string='Invoiced', type='float'),

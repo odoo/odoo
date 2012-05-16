@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem groups="base.group_extended" id="prod_config_main" name="Products" parent="base.menu_base_config" sequence="70"/>
+        <menuitem id="prod_config_main" name="Products" parent="base.menu_base_config" sequence="70"/>
 
         <record id="product_search_form_view" model="ir.ui.view">
             <field name="name">product.search.form</field>
@@ -17,16 +17,16 @@
                    <separator orientation="vertical"/>
                    <field name="name"
                         filter_domain="['|', ('name','ilike',self),('default_code','ilike',self)]"/>
-                   <field name="categ_id" widget="selection" operator="child_of" groups="base.group_extended"/>
+                   <field name="categ_id" widget="selection" operator="child_of"/>
                    <newline/>
-                   <group expand="0" string="Context..." groups="base.group_extended">
+                   <group expand="0" string="Context...">
                        <field name="pricelist_id" widget="selection" context="{'pricelist': self}" groups="product.group_sale_pricelist"/>
                        <separator orientation="vertical" groups="base.group_multi_company" />
                        <field name="company_id" widget="selection" groups="base.group_multi_company" />
                    </group>
                    <newline/>
-                   <group  expand='0' string='Group by...' groups="base.group_extended">
-                       <filter string='Category' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'categ_id'}" groups="base.group_extended"/>
+                   <group  expand='0' string='Group by...'>
+                       <filter string='Category' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'categ_id'}"/>
                        <separator orientation="vertical"/>
                        <filter string='Default UOM' icon="terp-mrp" domain="[]" context="{'group_by' : 'uom_id'}" />
                        <separator orientation="vertical"/>
@@ -56,8 +56,8 @@
                     <field name="virtual_available"/>
                     <field name="lst_price"/>
                     <field name="price" invisible="not context.get('pricelist',False)"/>
-                    <field name="standard_price" groups="base.group_extended"/>
-                    <field name="state" groups="base.group_extended"/>
+                    <field name="standard_price"/>
+                    <field name="state"/>
                     <field name="company_id" groups="base.group_multi_company" invisible="1"/>
                 </tree>
             </field>
@@ -78,7 +78,7 @@
                         <group colspan="1" col="2">
                             <separator string="Codes" colspan="2"/>
                             <field name="default_code"/>
-                            <field name="ean13" groups="base.group_extended"/>
+                            <field name="ean13"/>
                         </group>
                         <group colspan="1" col="2">
                             <separator string="Characteristics" colspan="2"/>
@@ -94,28 +94,27 @@
                             <group colspan="2" col="2">
                                 <separator string="Procurement" colspan="2"/>
                                 <field name="type"/>
-                                <field name="procure_method" groups="base.group_extended"/>
+                                <field name="procure_method"/>
                                 <field name="supply_method"/>
                             </group>
                             <group colspan="2" col="2">
                                 <separator string="Base Prices" colspan="2"/>
                                 <field name="list_price"/>
-                                <field groups="base.group_extended" name="cost_method"/>
-                                <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"
-                                    groups="base.group_extended"/>
+                                <field name="cost_method"/>
+                                <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"/>
                                 <newline/>
                                 <field name="price_margin" groups="product.group_product_variant"/>
                                 <field name="price_extra" groups="product.group_product_variant"/>
                             </group>
 
-                            <group colspan="2" col="2" groups="base.group_extended">
+                            <group colspan="2" col="2">
                                 <separator string="Weights" colspan="2"/>
                                 <field digits="(14, 3)" name="volume" attrs="{'readonly':[('type','=','service')]}"/>
                                 <field name="weight" attrs="{'readonly':[('type','=','service')]}"/>
                                 <field name="weight_net" attrs="{'readonly':[('type','=','service')]}"/>
                             </group>
 
-                            <group colspan="2" col="2" name="status" groups="base.group_extended">
+                            <group colspan="2" col="2" name="status">
                                 <separator string="Status" colspan="2"/>
                                 <field name="categ_id"/>
                                 <field name="state"/>
@@ -150,7 +149,7 @@
                                 <field name="loc_case" attrs="{'readonly':[('type','=','service')]}"/>
                             </group>
 
-                            <group colspan="2" col="2" name="misc" groups="base.group_extended">
+                            <group colspan="2" col="2" name="misc">
                                 <separator string="Miscellaneous" colspan="2"/>
                                 <field name="active"/>
                                 <field name="company_id" groups="base.group_multi_company" widget="selection"/>
@@ -217,6 +216,7 @@
                                     </div>
                                     <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger">
                                         <img t-att-src="kanban_image('product.product', 'product_image', record.id.value)" width="48" style="float: left; padding: 0 4px 4px 0"/>
+                                        Code: <field name="code"/>
                                         <div t-if="record.type.raw_value == 'service'">No Stock</div>
                                         <t t-if="record.type.raw_value != 'service'">
                                             <div>Stock: <field name="qty_available"/> on hand, <field name="virtual_available"/> available</div>
@@ -276,7 +276,7 @@
             <field name="act_window_id" ref="product_normal_action_sell"/>
         </record>
 
-        <menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" sequence="9"/>
+        <menuitem id="base.menu_product" parent="base.menu_base_partner" name="Products"  sequence="9"/>
         <menuitem action="product.product_normal_action_sell" id="product.menu_products" parent="base.menu_product" sequence="1"/>
 
         <record id="product_normal_action_puchased" model="ir.actions.act_window">
@@ -350,7 +350,6 @@
         <menuitem
             action="product_category_action"
             id="product.menu_products_category"
-            groups="base.group_extended"
             parent="base.menu_product"
             sequence="0"/>
         <record id="product_category_action_form" model="ir.actions.act_window">
@@ -546,8 +545,8 @@
                 <form string="Supplier Information">
                     <field name="name" context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}" options='{"quick_create": false}'/>
                     <field name="sequence"/>
-                    <field name="product_name" groups="base.group_extended"/>
-                    <field name="product_code" groups="base.group_extended"/>
+                    <field name="product_name"/>
+                    <field name="product_code"/>
                     <field name="min_qty"/>
                     <field name="product_uom"/>
                     <field name="delay"/>
@@ -621,7 +620,7 @@
                     <field name="name"/>
                     <field name="categ_id"/>
                     <field name="type"/>
-                    <field name="state" groups="base.group_extended"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
@@ -646,26 +645,25 @@
                             <group colspan="2" col="2">
                                 <separator string="Procurement" colspan="2"/>
                                 <field name="type"/>
-                                <field name="procure_method" groups="base.group_extended"/>
+                                <field name="procure_method"/>
                                 <field name="supply_method"/>
                             </group>
 
                             <group colspan="2" col="2">
                                 <separator string="Base Prices" colspan="2"/>
                                 <field name="list_price"/>
-                                <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"
-                                    groups="base.group_extended"/>
-                                <field groups="base.group_extended" name="cost_method"/>
+                                <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"/>
+                                <field name="cost_method"/>
                             </group>
 
-                            <group colspan="2" col="2" groups="base.group_extended">
+                            <group colspan="2" col="2">
                                 <separator string="Weights" colspan="2"/>
                                 <field digits="(14, 3)" name="volume" attrs="{'readonly':[('type','=','service')]}"/>
                                 <field digits="(14, 3)" name="weight" attrs="{'readonly':[('type','=','service')]}"/>
                                 <field digits="(14, 3)" name="weight_net" attrs="{'readonly':[('type','=','service')]}"/>
                             </group>
 
-                            <group colspan="2" col="2" name="status" groups="base.group_extended">
+                            <group colspan="2" col="2" name="status">
                                 <separator string="Status" colspan="2"/>
                                 <field name="categ_id" select="1"/>
                                 <field name="state"/>
@@ -673,9 +671,9 @@
                             </group>
 
                             <group colspan="2" col="2" name="uom">
-                                <separator string="UOM" colspan="2"/>
+                                <separator string="UoM" colspan="2"/>
                                 <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)" groups="product.group_uom"/>
-                                <field name="uom_po_id" groups="base.group_extended"/>
+                                <field name="uom_po_id"/>
                             </group>
 
                             <group colspan="2" col="2" name="uos" groups="product.group_uom">
@@ -686,7 +684,7 @@
                             </group>
 
                         </page>
-                        <page string="Procurement &amp; Locations" groups="base.group_extended">
+                        <page string="Procurement &amp; Locations">
                             <group colspan="2" col="2" name="delay">
                                 <separator string="Delays" colspan="2"/>
                                 <field name="sale_delay" attrs="{'readonly':[('sale_ok','=',0)]}"/>

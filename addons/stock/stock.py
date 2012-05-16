@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from lxml import etree
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import time
@@ -605,7 +606,7 @@ class stock_picking(osv.osv):
             res[pick]['min_date'] = dt1
             res[pick]['max_date'] = dt2
         return res
-
+    
     def create(self, cr, user, vals, context=None):
         if ('name' not in vals) or (vals.get('name')=='/'):
             seq_obj_name =  'stock.picking.' + vals['type']
@@ -616,52 +617,52 @@ class stock_picking(osv.osv):
         return new_id
 
     _columns = {
-        'name': fields.char('Reference', size=64, select=True),
-        'origin': fields.char('Origin', size=64, help="Reference of the document that produced this picking.", select=True),
-        'backorder_id': fields.many2one('stock.picking', 'Back Order of', help="If this picking was split this field links to the picking that contains the other part that has been processed already.", select=True),
-        'type': fields.selection([('out', 'Sending Goods'), ('in', 'Getting Goods'), ('internal', 'Internal')], 'Shipping Type', required=True, select=True, help="Shipping type specify, goods coming in or going out."),
-        'note': fields.text('Notes'),
-        'stock_journal_id': fields.many2one('stock.journal','Stock Journal', select=True),
-        'location_id': fields.many2one('stock.location', 'Location', help="Keep empty if you produce at the location where the finished products are needed." \
+        'name': fields.char('Reference', size=64, select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
+        'origin': fields.char('Origin', size=64, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="Reference of the document", select=True),
+        'backorder_id': fields.many2one('stock.picking', 'Back Order of', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="If this shipment was split, then this field links to the shipment which contains the already processed part.", select=True),
+        'type': fields.selection([('out', 'Sending Goods'), ('in', 'Getting Goods'), ('internal', 'Internal')], 'Shipping Type', required=True, select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="Shipping type specify, goods coming in or going out."),
+        'note': fields.text('Notes', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
+        'stock_journal_id': fields.many2one('stock.journal','Stock Journal', select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
+        'location_id': fields.many2one('stock.location', 'Location', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="Keep empty if you produce at the location where the finished products are needed." \
                 "Set a location if you produce at a fixed location. This can be a partner location " \
                 "if you subcontract the manufacturing operations.", select=True),
-        'location_dest_id': fields.many2one('stock.location', 'Dest. Location',help="Location where the system will stock the finished products.", select=True),
-        'move_type': fields.selection([('direct', 'Partial Delivery'), ('one', 'All at once')], 'Delivery Method', required=True, help="It specifies goods to be delivered all at once or by direct delivery"),
+        'location_dest_id': fields.many2one('stock.location', 'Dest. Location', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="Location where the system will stock the finished products.", select=True),
+        'move_type': fields.selection([('direct', 'Partial'), ('one', 'All at once')], 'Delivery Method', required=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="It specifies goods to be deliver partially or all at once"),
         'state': fields.selection([
-            ('draft', 'New'),
+            ('draft', 'Draft'),
             ('auto', 'Waiting Another Operation'),
             ('confirmed', 'Waiting Availability'),
-            ('assigned', 'Ready to Process'),
-            ('done', 'Done'),
-            ('cancel', 'Cancelled'),
-            ], 'State', readonly=True, select=True,
-            help="* Draft: not confirmed yet and will not be scheduled until confirmed\n"\
-                 "* Confirmed: still waiting for the availability of products\n"\
-                 "* Available: products reserved, simply waiting for confirmation.\n"\
-                 "* Waiting: waiting for another move to proceed before it becomes automatically available (e.g. in Make-To-Order flows)\n"\
-                 "* Done: has been processed, can't be modified or cancelled anymore\n"\
-                 "* Cancelled: has been cancelled, can't be confirmed anymore"),
+            ('assigned', 'Ready to Transfer'),
+            ('done', 'Transferred'),
+            ('cancel', 'Cancelled'),], 'State', readonly=True, select=True, help="""
+            * Draft: not confirmed yet and will not be scheduled until confirmed\n
+            * Waiting Another Operation: waiting for another move to proceed before it becomes automatically available (e.g. in Make-To-Order flows)\n
+            * Waiting Availability: still waiting for the availability of products\n
+            * Ready to Transfer: products reserved, simply waiting for confirmation.\n
+            * Transferred: has been processed, can't be modified or cancelled anymore\n
+            * Cancelled: has been cancelled, can't be confirmed anymore"""
+        ),
         'min_date': fields.function(get_min_max_date, fnct_inv=_set_minimum_date, multi="min_max_date",
-                 store=True, type='datetime', string='Expected Date', select=1, help="Expected date for the picking to be processed"),
-        'date': fields.datetime('Order Date', help="Date of Order", select=True),
-        'date_done': fields.datetime('Date Done', help="Date of Completion"),
+                 store=True, type='datetime', string='Scheduled Date', select=1, help="Scheduled date for the shipment to be processed"),
+        'date': fields.datetime('Order Date', help="Date of order", select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
+        'date_done': fields.datetime('Date Done', help="Date of Completion", states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
         'max_date': fields.function(get_min_max_date, fnct_inv=_set_maximum_date, multi="min_max_date",
                  store=True, type='datetime', string='Max. Expected Date', select=2),
         'move_lines': fields.one2many('stock.move', 'picking_id', 'Internal Moves', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}),
-        'auto_picking': fields.boolean('Auto-Picking'),
-        'partner_id': fields.many2one('res.partner', 'Partner'),
+        'auto_picking': fields.boolean('Auto-Picking', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
+        'partner_id': fields.many2one('res.partner', 'Partner', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
         'invoice_state': fields.selection([
             ("invoiced", "Invoiced"),
             ("2binvoiced", "To Be Invoiced"),
             ("none", "Not Applicable")], "Invoice Control",
             select=True, required=True, readonly=True, states={'draft': [('readonly', False)]}),
-        'company_id': fields.many2one('res.company', 'Company', required=True, select=True),
+        'company_id': fields.many2one('res.company', 'Company', required=True, select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
     }
     _defaults = {
         'name': lambda self, cr, uid, context: '/',
         'state': 'draft',
         'move_type': 'direct',
-        'type': 'in',
+        'type': 'internal',
         'invoice_state': 'none',
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.picking', context=c)
@@ -671,21 +672,14 @@ class stock_picking(osv.osv):
     ]
 
     def action_process(self, cr, uid, ids, context=None):
-        if context is None: context = {}
-        context = dict(context, active_ids=ids, active_model=self._name)
-        partial_id = self.pool.get("stock.partial.picking").create(cr, uid, {}, context=context)
         return {
-            'name':_("Products to Process"),
-            'view_mode': 'form',
-            'view_id': False,
             'view_type': 'form',
+            'view_mode': 'form',
             'res_model': 'stock.partial.picking',
-            'res_id': partial_id,
             'type': 'ir.actions.act_window',
-            'nodestroy': True,
             'target': 'new',
-            'domain': '[]',
             'context': context,
+            'nodestroy': True,
         }
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -740,6 +734,9 @@ class stock_picking(osv.osv):
         @return: True
         """
         for pick in self.browse(cr, uid, ids):
+            if pick.state == 'draft':
+                wf_service = netsvc.LocalService("workflow")
+                wf_service.trg_validate(uid, 'stock.picking', pick.id, 'button_confirm', cr)
             move_ids = [x.id for x in pick.move_lines if x.state == 'confirmed']
             if not move_ids:
                 raise osv.except_osv(_('Warning !'),_('Not enough stock, unable to reserve the products.'))
@@ -821,6 +818,10 @@ class stock_picking(osv.osv):
         ok = True
         for pick in self.browse(cr, uid, ids):
             mt = pick.move_type
+            # incomming shipments are always set as available if they aren't chained
+            if pick.type == 'in':
+                if all([x.state != 'waiting' for x in pick.move_lines]):
+                    return True
             for move in pick.move_lines:
                 if (move.state in ('confirmed', 'draft')) and (mt == 'one'):
                     return False
@@ -873,7 +874,7 @@ class stock_picking(osv.osv):
 
     def _get_partner_to_invoice(self, cr, uid, picking, context=None):
         """ Gets the partner that will be invoiced
-            Note that this function is inherited in the sale module
+            Note that this function is inherited in the sale and purchase modules
             @param picking: object of the picking for which we are selecting the partner to invoice
             @return: object of the partner to invoice
         """
@@ -1630,9 +1631,17 @@ class stock_move(osv.osv):
         'move_history_ids2': fields.many2many('stock.move', 'stock_move_history_ids', 'child_id', 'parent_id', 'Move History (parent moves)'),
         'picking_id': fields.many2one('stock.picking', 'Reference', select=True,states={'done': [('readonly', True)]}),
         'note': fields.text('Notes'),
-        'state': fields.selection([('draft', 'New'), ('waiting', 'Waiting Another Move'), ('confirmed', 'Waiting Availability'), ('assigned', 'Available'), ('done', 'Done'), ('cancel', 'Cancelled')], 'State', readonly=True, select=True,
-              help='When the stock move is created it is in the \'Draft\' state.\n After that, it is set to \'Not Available\' state if the scheduler did not find the products.\n When products are reserved it is set to \'Available\'.\n When the picking is done the state is \'Done\'.\
-              \nThe state is \'Waiting\' if the move is waiting for another one.'),
+        'state': fields.selection([('draft', 'New'),
+                                   ('waiting', 'Waiting Another Move'),
+                                   ('confirmed', 'Waiting Availability'),
+                                   ('assigned', 'Available'),
+                                   ('done', 'Done'),
+                                   ('cancel', 'Cancelled')], 'State', readonly=True, select=True,
+                 help= "* New: When the stock move is created and not yet confirmed.\n"\
+                       "* Waiting Another Move: This state can be seen when a move is waiting for another one, for example in a chained flow.\n"\
+                       "* Waiting Availability: This state is reached when the procurement resolution is not straight forward. It may need the scheduler to run, a component to me manufactured...\n"\
+                       "* Available: When products are reserved, it is set to \'Available\'.\n"\
+                       "* Done: When the shipment is processed, the state is \'Done\'."),
         'price_unit': fields.float('Unit Price', digits_compute= dp.get_precision('Account'), help="Technical field used to record the product cost set by the user during a picking confirmation (when average price costing method is used)"),
         'price_currency_id': fields.many2one('res.currency', 'Currency for average price', help="Technical field used to record the currency chosen by the user during a picking confirmation (when average price costing method is used)"),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True),
@@ -2110,11 +2119,11 @@ class stock_move(osv.osv):
             return True
         if context is None:
             context = {}
-        pickings = {}
+        pickings = set()
         for move in self.browse(cr, uid, ids, context=context):
             if move.state in ('confirmed', 'waiting', 'assigned', 'draft'):
                 if move.picking_id:
-                    pickings[move.picking_id.id] = True
+                    pickings.add(move.picking_id.id)
             if move.move_dest_id and move.move_dest_id.state == 'waiting':
                 self.write(cr, uid, [move.move_dest_id.id], {'state': 'assigned'})
                 if context.get('call_unlink',False) and move.move_dest_id.picking_id:
@@ -2122,7 +2131,7 @@ class stock_move(osv.osv):
                     wf_service.trg_write(uid, 'stock.picking', move.move_dest_id.picking_id.id, cr)
         self.write(cr, uid, ids, {'state': 'cancel', 'move_dest_id': False})
         if not context.get('call_unlink',False):
-            for pick in self.pool.get('stock.picking').browse(cr, uid, pickings.keys()):
+            for pick in self.pool.get('stock.picking').browse(cr, uid, list(pickings), context=context):
                 if all(move.state == 'cancel' for move in pick.move_lines):
                     self.pool.get('stock.picking').write(cr, uid, [pick.id], {'state': 'cancel'})
 
@@ -2821,5 +2830,87 @@ class stock_warehouse(osv.osv):
     }
 
 stock_warehouse()
+
+#----------------------------------------------------------
+# "Empty" Classes that are used to vary from the original stock.picking  (that are dedicated to the internal pickings)
+#   in order to offer a different usability with different views, labels, available reports/wizards...
+#----------------------------------------------------------
+class stock_picking_in(osv.osv):
+    _name = "stock.picking.in"
+    _inherit = "stock.picking"
+    _table = "stock_picking"
+    _description = "Incomming Shipments"
+
+    def check_access_rights(self, cr, uid, operation, raise_exception=True):
+        #override in order to redirect the check of acces rights on the stock.picking object
+        return self.pool.get('stock.picking').check_access_rights(cr, uid, operation, raise_exception=raise_exception)
+
+    def check_access_rule(self, cr, uid, ids, operation, context=None):
+        #override in order to redirect the check of acces rules on the stock.picking object
+        return self.pool.get('stock.picking').check_access_rule(cr, uid, ids, operation, context=context)
+
+    def _workflow_trigger(self, cr, uid, ids, trigger, context=None):
+        #override in order to trigger the workflow of stock.picking at the end of create, write and unlink operation
+        #instead of it's own workflow (which is not existing)
+        return self.pool.get('stock.picking')._workflow_trigger(cr, uid, ids, trigger, context=context)
+
+    _columns = {
+        'state': fields.selection(
+            [('draft', 'Draft'),
+            ('auto', 'Waiting Another Operation'),
+            ('confirmed', 'Waiting Availability'),
+            ('assigned', 'Ready to Receive'),
+            ('done', 'Received'),
+            ('cancel', 'Cancelled'),], 
+            'State', readonly=True, select=True, 
+            help="""* Draft: not confirmed yet and will not be scheduled until confirmed\n
+                 * Waiting Another Operation: waiting for another move to proceed before it becomes automatically available (e.g. in Make-To-Order flows)\n
+                 * Waiting Availability: still waiting for the availability of products\n
+                 * Ready to Receive: products reserved, simply waiting for confirmation.\n
+                 * Received: has been processed, can't be modified or cancelled anymore\n
+                 * Cancelled: has been cancelled, can't be confirmed anymore"""),
+    }
+    _defaults = {
+        'type': 'in',
+    }
+
+class stock_picking_out(osv.osv):
+    _name = "stock.picking.out"
+    _inherit = "stock.picking"
+    _table = "stock_picking"
+    _description = "Delivery Orders"
+
+    def check_access_rights(self, cr, uid, operation, raise_exception=True):
+        #override in order to redirect the check of acces rights on the stock.picking object
+        return self.pool.get('stock.picking').check_access_rights(cr, uid, operation, raise_exception=raise_exception)
+
+    def check_access_rule(self, cr, uid, ids, operation, context=None):
+        #override in order to redirect the check of acces rules on the stock.picking object
+        return self.pool.get('stock.picking').check_access_rule(cr, uid, ids, operation, context=context)
+
+    def _workflow_trigger(self, cr, uid, ids, trigger, context=None):
+        #override in order to trigger the workflow of stock.picking at the end of create, write and unlink operation
+        #instead of it's own workflow (which is not existing)
+        return self.pool.get('stock.picking')._workflow_trigger(cr, uid, ids, trigger, context=context)
+
+    _columns = {
+        'state': fields.selection(
+            [('draft', 'Draft'),
+            ('auto', 'Waiting Another Operation'),
+            ('confirmed', 'Waiting Availability'),
+            ('assigned', 'Ready to Deliver'),
+            ('done', 'Delivered'),
+            ('cancel', 'Cancelled'),], 
+            'State', readonly=True, select=True, 
+            help="""* Draft: not confirmed yet and will not be scheduled until confirmed\n
+                 * Waiting Another Operation: waiting for another move to proceed before it becomes automatically available (e.g. in Make-To-Order flows)\n
+                 * Waiting Availability: still waiting for the availability of products\n
+                 * Ready to Deliver: products reserved, simply waiting for confirmation.\n
+                 * Delivered: has been processed, can't be modified or cancelled anymore\n
+                 * Cancelled: has been cancelled, can't be confirmed anymore"""),
+    }
+    _defaults = {
+        'type': 'out',
+    }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

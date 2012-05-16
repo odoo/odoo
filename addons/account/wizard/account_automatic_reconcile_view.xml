@@ -49,15 +49,14 @@
             name="Automatic Reconciliation"
             action="action_account_automatic_reconcile"
             id="menu_automatic_reconcile"
-            parent="periodical_processing_reconciliation"
-            groups="base.group_extended"/>
+            parent="periodical_processing_reconciliation"/>
 
         <record id="account_automatic_reconcile_view1" model="ir.ui.view">
              <field name="name">Automatic reconcile unreconcile</field>
              <field name="model">account.automatic.reconcile</field>
              <field name="type">form</field>
              <field name="arch" type="xml">
-                <form string="Reconciliation result">
+                <form string="Reconciliation Result">
                     <field name="reconciled"/>
                     <newline/>
                     <field name="unreconciled"/>

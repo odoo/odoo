@@ -19,7 +19,7 @@
                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                    </group>
                    <newline/>
-                   <group expand="0" string="Group By..." groups="base.group_extended">
+                   <group expand="0" string="Group By...">
                         <filter string="User" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'resource_type'}"/>
@@ -182,7 +182,7 @@
                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                        <newline/>
                        <field name="calendar_id" string="Working Period"/>
-                       <field name="time_efficiency" groups="base.group_extended"/>
+                       <field name="time_efficiency"/>
                     </group>
                 </form>
             </field>
@@ -199,7 +199,7 @@
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="resource_type" />
                     <field name="calendar_id" string="Working Period"/>
-                    <field name="time_efficiency" groups="base.group_extended"/>
+                    <field name="time_efficiency"/>
                 </tree>
             </field>
         </record>
@@ -257,7 +257,7 @@
             <field name="view_mode">tree,form,calendar</field>
             <field name="search_view_id" ref="view_resource_calendar_leaves_search"/>
         </record>
-       <menuitem id="menu_resource_config" name="Resource" parent="base.next_id_4" sequence="5" groups="base.group_extended"/>
+       <menuitem id="menu_resource_config" name="Resource" parent="base.next_id_4" sequence="5"/>
        <menuitem action="resource.action_resource_calendar_leave_tree" id="menu_view_resource_calendar_leaves_search" parent="menu_resource_config" sequence="1"/>
     </data>
 </openerp>

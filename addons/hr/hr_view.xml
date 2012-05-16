@@ -27,8 +27,8 @@
                         <group colspan="6" col="6">
                         <field colspan="6" name="name" />
                         <field name="user_id" on_change="onchange_user(user_id)"/>
-                        <field name="company_id" widget="selection" groups="base.group_multi_company,base.group_extended" on_change="onchange_company(company_id)"/>
-                        <field name="active" groups="base.group_extended"/>
+                        <field name="company_id" widget="selection" groups="base.group_multi_company" on_change="onchange_company(company_id)"/>
+                        <field name="active"/>
                         <newline/>
                         <field name="department_id" on_change="onchange_department_id(department_id)" />
                         <field name="parent_id" />
@@ -42,8 +42,8 @@
                             <group col="2" colspan="2" groups="base.group_hr_user">
                                 <separator colspan="2" string="Social IDs"/>
                                 <field name="ssnid"/>
-                                <field name="sinid" groups="base.group_extended"/>
-                                <field name="identification_id" groups="base.group_extended"/>
+                                <field name="sinid"/>
+                                <field name="identification_id"/>
                                 <field name="passport_id"/>
                                 <field name="otherid"/>
                             </group>
@@ -109,12 +109,12 @@
                     <filter icon="terp-personal+" domain="[('department_id','=',context.get('department_id',False))]" string="My Departments Employee"/>
                     </field>
                     <field name="job_id" widget="selection"/>
-                    <field name="category_ids" select="1" groups="base.group_extended"/>
+                    <field name="category_ids" select="1"/>
                     <field name="parent_id"/>
                     <newline />
                     <group expand="0" string="Group By...">
                     <filter string="Manager" icon="terp-personal" domain="[]" context="{'group_by':'parent_id'}"/>
-                    <filter string="Coach" icon="terp-personal" domain="[]" context="{'group_by':'coach_id'}" groups="base.group_extended"/>
+                    <filter string="Coach" icon="terp-personal" domain="[]" context="{'group_by':'coach_id'}"/>
                     <separator orientation="vertical" />
                     <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
                     <filter string="Job" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'job_id'}"/>
@@ -242,7 +242,7 @@
         </record>
 
         <record id="action2" model="ir.actions.act_window">
-            <field name="name">Subordonate Hierarchy</field>
+            <field name="name">Subordinate Hierarchy</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hr.employee</field>
             <field name="domain">[('id','in',active_ids)]</field>
@@ -254,7 +254,7 @@
             <field eval="'action'" name="key"/>
             <field eval="'client_action_multi'" name="key2"/>
             <field eval="['hr.employee']" name="models"/>
-            <field name="name">Subordonate Hierarchy</field>
+            <field name="name">Subordinate Hierarchy</field>
             <field eval="'ir.actions.act_window,'+str(action2)" name="value"/>
             <field eval="True" name="isobject"/>
             <field eval="True" name="replace"/>
@@ -315,7 +315,7 @@
             parent="hr.menu_hr_configuration" sequence="1"/>
 
         <record id="open_view_categ_tree" model="ir.actions.act_window">
-            <field name="name">Categories structure</field>
+            <field name="name">Categories Structure</field>
             <field name="res_model">hr.employee.category</field>
             <field name="view_type">tree</field>
             <field name="view_id" ref="view_employee_category_tree"/>

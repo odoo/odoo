@@ -82,7 +82,7 @@
                 <field string="Timebox" name="timebox_id" invisible=" not context.get('gtd', False)"/>
                 <button name="prev_timebox" type="object" icon="gtk-go-back" string="Previous" states="draft,pending,open" invisible=" not context.get('gtd',False)"/>
                 <button name="next_timebox" type="object" icon="gtk-go-forward" string="Next" states="draft,pending,open" invisible=" not context.get('gtd',False)"/>
-                <field name="context_id" invisible="not context.get('context_show', False)" widget="selection" groups="base.group_extended"/>
+                <field name="context_id" invisible="not context.get('context_show', False)" widget="selection"/>
                 <button name="do_reopen" states="done,cancelled" string="Reactivate" type="object" icon="gtk-convert" help="For reopening the tasks" invisible="not context.get('set_visible',False)"/>
             </field>
         </field>
@@ -117,7 +117,7 @@
                 <separator orientation="vertical"/>
                 <separator name="gtdsep"/>
                 <field name="name"/>
-                <field name="context_id" widget="selection" groups="base.group_extended"
+                <field name="context_id" widget="selection"
                     context="{'context_show': True}">
                     <filter string="Show Context"
                         name="context_show"

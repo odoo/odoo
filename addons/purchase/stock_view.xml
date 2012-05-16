@@ -19,7 +19,7 @@
             <field name="inherit_id" ref="stock.view_picking_form"/>
             <field name="arch" type="xml">
                 <field name="auto_picking" position="after">
-                    <field name="purchase_id"/>
+                    <field name="purchase_id" invisible="1"/>
                 </field>
             </field>
         </record>
@@ -28,10 +28,9 @@
             domain="[('purchase_id', '=', active_id)]"
             id="act_purchase_order_2_stock_picking"
             name="Receptions"
-            res_model="stock.picking"
-            groups="base.group_extended"
+            res_model="stock.picking.in"
             src_model="purchase.order"
-            context="{'default_purchase_id': active_id, 'contact_display': 'partner'}" />
+            context="{'default_purchase_id': active_id, 'contact_display': 'partner', 'default_type': 'in'}" />
        
         <record id="action_picking_in_tree_view" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
@@ -48,38 +47,38 @@
         
         <record id="stock_picking_in_inherit_purchase" model="ir.ui.view">
             <field name="name">Incoming Picking Inherited</field>
-            <field name="model">stock.picking</field>
+            <field name="model">stock.picking.in</field>
             <field name="type">form</field>
-            <field name="inherit_id" ref="stock.view_picking_in_form"/>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
             <field name="arch" type="xml">
-                <field name="backorder_id" position="after">
+                 <xpath expr="/form/sheet/group/group/field[@name='date']" position="before">
                     <field name="purchase_id"/>
-                </field>
+                </xpath>
             </field>
         </record>
         
         <!-- Picking to Invoice -->
         <record id="view_picking_in_search_picking_to_invoice" model="ir.ui.view">
             <field name="name">stock.picking.in.search</field>
-            <field name="model">stock.picking</field>
+            <field name="model">stock.picking.in</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Picking to Invoice">
                     <group col="8" colspan="4">
                         <filter icon="terp-check" name="available" string="Available"
                             domain="[('state','=','assigned')]" help="Incoming Shipments Available"/>
-                        <filter icon="terp-dialog-close" name="done" string="Done"
-                            domain="[('state','=','done')]" help="Incoming Shipments already processed"/>
+                        <filter icon="terp-dialog-close" name="done" string="Received"
+                            domain="[('state','=','done')]" help="Incoming Shipments already Received"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-accessories-archiver-minus" string="Back Orders"
-                            domain="[('backorder_id', '!=', False)]" help="Is a Back Order" groups="base.group_extended"/>
+                            domain="[('backorder_id', '!=', False)]" help="Is a Back Order"/>
                         <separator orientation="vertical"/>
                         <filter string="To Invoice" name="to_invoice" icon="terp-dolar"
                             domain="[('invoice_state', '=', '2binvoiced')]"/>
                         <separator orientation="vertical"/>
                         <field name="name"/>
                         <field name="origin"/>
-                        <field name="stock_journal_id" groups="base.group_extended" widget="selection"/>
+                        <field name="stock_journal_id" widget="selection"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                     </group>                    
                     <newline/>
@@ -90,11 +89,11 @@
                         <separator orientation="vertical"/>
                         <filter string="Order Date" icon="terp-go-month"
                             domain="[]"  context="{'group_by':'date'}"/>
-                        <filter string="Expected Date" icon="terp-go-month"
+                        <filter string="Scheduled Date" icon="terp-go-month"
                             domain="[]"  context="{'group_by':'min_date'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Journal" icon="terp-folder-orange"
-                            domain="[]" context="{'group_by':'stock_journal_id'}"  groups="base.group_extended"/>
+                            domain="[]" context="{'group_by':'stock_journal_id'}"/>
                     </group>
                 </search>
             </field>

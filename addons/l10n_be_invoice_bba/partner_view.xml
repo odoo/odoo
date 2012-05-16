@@ -10,8 +10,8 @@
       <field name="inherit_id" ref="base.view_partner_form"/>
       <field name="arch" type="xml">
         <field name="property_payment_term" position="after">
-          <field name="out_inv_comm_type" groups="base.group_extended"/>
-          <field name="out_inv_comm_algorithm" groups="base.group_extended" attrs="{'invisible':[('out_inv_comm_type','!=','bba')]}"/>
+          <field name="out_inv_comm_type"/>
+          <field name="out_inv_comm_algorithm" attrs="{'invisible':[('out_inv_comm_type','!=','bba')]}"/>
         </field>
       </field>
     </record>    

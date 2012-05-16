@@ -28,55 +28,7 @@ from osv import fields, osv
 from tools.translate import _
 from lxml import etree
 
-#Migrate data from another application Conf wiz
-
-class migrade_application_installer_modules(osv.osv_memory):
-    _name = 'migrade.application.installer.modules'
-    _inherit = 'res.config.installer'
-    _columns = {
-        'import_saleforce': fields.boolean('Import Saleforce',
-            help="For Import Saleforce"),
-        'import_sugarcrm': fields.boolean('Import Sugarcrm',
-            help="For Import Sugarcrm"),
-        'sync_google_contact': fields.boolean('Sync Google Contact',
-            help="For Sync Google Contact"),
-        'quickbooks_ippids': fields.boolean('Quickbooks Ippids',
-            help="For Quickbooks Ippids"),
-    }
-
-class product_installer(osv.osv_memory):
-    _name = 'product.installer'
-    _inherit = 'res.config'
-    _columns = {
-        'customers': fields.selection([('create','Create'), ('import','Import')], 'Customers', size=32, required=True, help="Import or create customers"),
-    }
-    _defaults = {
-        'customers': 'create',
-    }
-
-    def execute(self, cr, uid, ids, context=None):
-        if context is None:
-             context = {}
-        data_obj = self.pool.get('ir.model.data')
-        val = self.browse(cr, uid, ids, context=context)[0]
-        if val.customers == 'create':
-            id2 = data_obj._get_id(cr, uid, 'base', 'view_partner_form')
-            if id2:
-                id2 = data_obj.browse(cr, uid, id2, context=context).res_id
-            return {
-                    'view_type': 'form',
-                    'view_mode': 'form',
-                    'res_model': 'res.partner',
-                    'views': [(id2, 'form')],
-                    'type': 'ir.actions.act_window',
-                    'target': 'current',
-                    'nodestroy':False,
-                }
-        if val.customers == 'import':
-            return {'type': 'ir.actions.act_window'}
-
 # Define users preferences for new users (ir.values)
-
 def _lang_get(self, cr, uid, context=None):
     obj = self.pool.get('res.lang')
     ids = obj.search(cr, uid, [('translatable','=',True)])
@@ -130,8 +82,7 @@ class user_preferences_config(osv.osv_memory):
             ir_values_obj.set(cr, uid, 'default', False, 'menu_tips', ['res.users'], o.menu_tips)
         return {}
 
-# Specify Your Terminology
-
+# Specify Your Terminology will move to 'partner' module
 class specify_partner_terminology(osv.osv_memory):
     _name = 'base.setup.terminology'
     _inherit = 'res.config'
@@ -201,25 +152,22 @@ class specify_partner_terminology(osv.osv_memory):
                 self.make_translations(cr, uid, ids, act_ref, 'model', act_id.help, _case_insensitive_replace(act_id.help,'Customer',o.partner), res_id=act_id.id, context=context)
         return {}
 
-
-
 # Preferences wizard for Sales & CRM.
 # It is defined here because it is inherited independently in modules sale, crm,
 # plugin_outlook and plugin_thunderbird.
-#
 class sale_config_settings(osv.osv_memory):
     _name = 'sale.config.settings'
     _inherit = 'res.config.settings'
     _columns = {
         'module_crm': fields.boolean('CRM'),
-        'module_plugin_thunderbird': fields.boolean('Thunderbird plugin',
+        'module_plugin_thunderbird': fields.boolean('Thunderbird Plugin',
             help="""The plugin allows you archive email and its attachments to the selected
                 OpenERP objects. You can select a partner, a task, a project, an analytical
                 account, or any other object and attach the selected mail as a .eml file in
                 the attachment of a selected record. You can create documents for CRM Lead,
                 HR Applicant and Project Issue from the selected emails.
                 This installs the module plugin_thunderbird."""),
-        'module_plugin_outlook': fields.boolean('Outlook plugin',
+        'module_plugin_outlook': fields.boolean('Outlook Plugin',
             help="""The Outlook plugin allows you to select an object that you would like to add
                 to your email and its attachments from MS Outlook. You can select a partner, a task,
                 a project, an analytical account, or any other object and archive a selected

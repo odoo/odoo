@@ -8,9 +8,11 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
             <field name="arch" type="xml">
-                <field name="priority" position="after">
-                    <button string="Convert to Quote" icon="gtk-go-forward" name="%(action_crm_make_sale)d" type="action"/>
-                </field>
+                <data>
+                    <xpath expr="//div[contains(@class,'oe_form_topbar')]/div[contains(@class,'oe_right')]" position="before">
+                        <button string="Convert to Quote" icon="gtk-go-forward" name="%(action_crm_make_sale)d" type="action"/>
+                    </xpath>
+                </data>
             </field>
         </record>
 
@@ -21,8 +23,8 @@
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
                 <field name="user_id" position="after">
-                <field name="section_id" widget="selection" groups="base.group_extended"/>
-                <field name="categ_id" widget="selection" groups="base.group_extended"/>
+                    <field name="section_id" widget="selection"/>
+                    <field name="categ_id" widget="selection"/>
                 </field>
             </field>
         </record>
@@ -34,10 +36,9 @@
             <field name="inherit_id" ref="sale.view_sales_order_filter"/>
             <field name="arch" type="xml">
                 <field name="user_id" position="after">
-                    <field name="section_id" widget="selection" string="Sales Team" groups="base.group_extended">
+                    <field name="section_id" widget="selection" string="Sales Team">
                         <filter icon="terp-personal+"
                                 domain="[('section_id.user_id','=',uid)]"
-                                groups="base.group_extended"
                                 help="My Sales Team(s)"/>
                     </field>
                 </field>

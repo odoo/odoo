@@ -142,7 +142,7 @@
                     string="Partner" />
                 <field name="partner_phone"
                     invisible="1"/>
-                <field name="user_id" groups="base.group_extended"/>
+                <field name="user_id"/>
                 <field name="categ_id" widget="selection"
                     domain="[('object_id.model', '=', 'crm.phonecall')]"
                     invisible="1"/>
@@ -210,7 +210,7 @@
                </field>
                <field name="section_id"
                    widget="selection" string="Sales Team">
-                   <filter icon="terp-personal+" groups="base.group_extended"
+                   <filter icon="terp-personal+"
                        domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                        help="My Sales Team(s)" />
                </field>
@@ -260,7 +260,7 @@
                </field>
                <field name="section_id"
                    widget="selection" string="Sales Team">
-                   <filter icon="terp-personal+" groups="base.group_extended"
+                   <filter icon="terp-personal+"
                        domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                        help="My Sales Team(s)" />
                </field>

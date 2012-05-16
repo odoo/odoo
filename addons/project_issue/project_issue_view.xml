@@ -96,7 +96,7 @@
                             <button name="case_reset" string="Reset to New" states="done,cancel" type="object" icon="gtk-convert"/>
                             </group>
                         </page>
-                        <page string="Extra Info" groups="base.group_extended">
+                        <page string="Extra Info">
                             <group col="4" colspan="4">
                                 <separator string="Statistics" colspan="4" col="4"/>
                                 <field name="day_open"/>
@@ -128,7 +128,7 @@
                     <field name="id"/>
                     <field name="create_date" groups="base.group_no_one"/>
                     <field name="name"/>
-                    <field name="partner_id" groups="base.group_extended"/>
+                    <field name="partner_id"/>
                     <field name="project_id" />
                     <field name="priority" string="Priority"/>
                     <field name="type_id" widget="selection" readonly="1" string="Stages" />
@@ -169,7 +169,7 @@
                         <field name="id"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By..."  groups="base.group_extended">
+                    <group expand="0" string="Group By..." >
                         <filter string="Responsible" icon="terp-personal"
                             domain="[]" context="{'group_by':'user_id'}" />
                         <filter string="Partner" icon="terp-partner" domain="[]"
@@ -295,7 +295,7 @@
                     <field name="id"/>
                     <field name="needaction_pending" invisible="1"/>
                     <field name="name" string="Feature description"/>
-                    <field name="partner_id" groups="base.group_extended"/>
+                    <field name="partner_id"/>
                     <field name="priority" string="Priority"/>
                     <field name="type_id" widget="selection" readonly="1"/>
                     <button name="prev_type" string="Previous" type="object" icon="gtk-go-back" help="Change to Previous Stage"/>
@@ -334,6 +334,14 @@
                 </search>
             </field>
         </record>
+        
+        <act_window id="act_project_project_2_project_issue_all"
+            name="Issues"
+            src_model="project.project"
+            res_model="project.issue"
+            view_type="form"
+            view_mode="kanban,tree,form,calendar,graph"
+            context="{'search_default_project_id': [active_id], 'default_project_id': active_id}"/>
 
     # ------------------------------------------------------
     # Project
@@ -345,12 +353,32 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
+            	<field name="use_tasks" position="after">
+                    <field name="use_issues"/>
+                </field>
                 <field name="priority" position="before">
                     <field name="project_escalation_id"/>
                     <field name="reply_to"/>
                 </field>
             </field>
        </record>
-
+        
+        <record id="view_project_kanban_inherited" model="ir.ui.view">
+            <field name="name">project.project.kanban.inherited</field>
+            <field name="model">project.project</field>
+            <field name="type">kanban</field>
+            <field name="inherit_id" ref="project.view_project_kanban"/>
+            <field name="arch" type="xml">
+                <field name="use_tasks" position="after">
+                    <field name="use_issues"/>
+                    <field name="issue_count" invisible="1"/>
+                </field>
+                <xpath expr="//div[@id='list']" position="inside">
+                    <a t-if="record.use_issues.raw_value" class="oe_project_buttons"
+                        id="2" name="%(act_project_project_2_project_issue_all)d" type="action">
+                        Issues(<field name="issue_count"/>)</a>
+                </xpath>
+            </field>
+        </record>
     </data>
 </openerp>

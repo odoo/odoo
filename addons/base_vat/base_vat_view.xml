@@ -10,8 +10,8 @@
                 <field name="property_account_payable" position="after">
                     <group colspan="2" col="6">
                         <field name="vat" on_change="vat_change(vat)"/>
-                        <button name="button_check_vat" string="Check VAT" type="object" icon="gtk-execute"/>
-                        <field name="vat_subjected" colspan="1" groups="base.group_extended" />
+                        <button colspan="2" name="button_check_vat" string="Check VAT" type="object" icon="gtk-execute"/>
+                        <field name="vat_subjected" colspan="1"/>
                     </group>
                 </field>
             </field>
@@ -23,7 +23,7 @@
             <field name="inherit_id" ref="base.view_company_form"/>
             <field name="arch" type="xml">
                 <field name="currency_id" position="after">
-                    <field name="vat_check_vies" groups="base.group_extended" />
+                    <field name="vat_check_vies" />
                 </field>
             </field>
         </record>

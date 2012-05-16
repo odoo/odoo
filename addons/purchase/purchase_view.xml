@@ -26,8 +26,7 @@
 
         <!--<menuitem
             action="product.product_pricelist_type_action" id="menu_purchase_product_pricelist_type"
-            parent="menu_purchase_config_pricelist" sequence="2"
-            groups="base.group_extended"/>-->
+            parent="menu_purchase_config_pricelist" sequence="2"/>-->
 
         <menuitem
             id="menu_product_in_config_purchase" name="Products"
@@ -64,13 +63,11 @@
 
           <!--Inventory control-->
       <menuitem id="menu_procurement_management_inventory" name="Receive Products"
-            parent="base.menu_purchase_root" sequence="4"
-            groups="base.group_extended"/>
+            parent="base.menu_purchase_root" sequence="4"/>
       <menuitem action="stock.action_picking_tree4" id="menu_action_picking_tree4" parent="menu_procurement_management_inventory"
             name="Incoming Shipments" sequence="9"/>
       <menuitem action="stock.action_reception_picking_move" id="menu_action_picking_tree_in_move"
-            parent="menu_procurement_management_inventory" sequence="11"
-            groups="base.group_extended"/>
+            parent="menu_procurement_management_inventory" sequence="11"/>
 
      <!--Invoice control-->
      <menuitem id="menu_procurement_management_invoice" name="Invoice Control"
@@ -148,7 +145,7 @@
                         <page string="Purchase Order">
                             <field name="partner_id" on_change="onchange_partner_id(partner_id)" context="{'search_default_supplier':1,'default_supplier':1,'default_customer':0}"  options='{"quick_create": false}'/>
                             <field domain="[('type','=','purchase')]" name="pricelist_id" groups="product.group_purchase_pricelist"/>
-                            <field name="origin" groups="base.group_extended"/>
+                            <field name="origin"/>
                             <newline/>
                             <field colspan="4" name="order_line" nolabel="1" mode="tree,form">
                                 <tree string="Purchase Order Lines">
@@ -180,7 +177,7 @@
                                 <button name="%(report_purchase_order)d" string="Print" states="approved" type="action" icon="gtk-print"/>
                             </group>
                         </page>
-                        <page string="Delivery &amp; Invoicing" groups="base.group_extended">
+                        <page string="Delivery &amp; Invoicing">
                             <group colspan="2" col="2">
                                 <separator string="Delivery" colspan="2"/>
                                 <field name="dest_address_id" on_change="onchange_dest_address_id(dest_address_id)"/>
@@ -200,7 +197,7 @@
                             </group>
                             <separator string="Invoices" colspan="4"/>
                             <newline/>
-                            <field name="invoice_ids" groups="base.group_extended" nolabel="1" colspan="4" context="{'type':'in_invoice', 'journal_type':'purchase'}"/>
+                            <field name="invoice_ids" nolabel="1" colspan="4" context="{'type':'in_invoice', 'journal_type':'purchase'}"/>
                         </page>
                         <page string="Notes">
                             <field colspan="4" name="notes" nolabel="1"/>
@@ -223,7 +220,7 @@
                     <separator orientation="vertical"/>
                     <filter icon="terp-emblem-important" name="exception" string="Exception" domain="[('state','in',('except_invoice','except_picking'))]"  help="Purchase order which are in the exception state"/>
                     <separator orientation="vertical"/>
-                    <filter icon="terp-gtk-go-back-rtl" name="not_invoiced" string="Not invoiced" domain="[('invoice_ids','=', False)]"  help="Purchase orders that include lines not invoiced." groups="base.group_extended"/>
+                    <filter icon="terp-gtk-go-back-rtl" name="not_invoiced" string="Not Invoiced" domain="[('invoice_ids','=', False)]"  help="Purchase orders that include lines not invoiced."/>
                     <separator orientation="vertical"/>
                     <field name="name" string="Reference"/>
                     <field name="partner_id"/>
@@ -231,7 +228,7 @@
                     <field name="create_uid"/>
                 </group>
                 <newline/>
-                  <group expand="0" string="Group By..." groups="base.group_extended">
+                  <group expand="0" string="Group By...">
                     <filter string="Supplier" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                      <separator orientation="vertical"/>
                     <filter string="Origin" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
@@ -259,7 +256,7 @@
                     <separator orientation="vertical"/>
                     <filter icon="terp-emblem-important" name="exception" string="Exception" domain="[('state','in',('except_invoice','except_picking'))]" help="Purchase orders which are in exception state"/>
                     <separator orientation="vertical"/>
-                    <filter icon="terp-gtk-go-back-rtl" name="not_invoiced" string="Not invoiced" domain="[('invoice_ids','=', False)]"  help="Purchase orders that include lines not invoiced." groups="base.group_extended"/>
+                    <filter icon="terp-gtk-go-back-rtl" name="not_invoiced" string="Not Invoiced" domain="[('invoice_ids','=', False)]"  help="Purchase orders that include lines not invoiced."/>
                     <separator orientation="vertical"/>
                     <field name="name" string="Reference"/>
                     <field name="partner_id"/>
@@ -267,7 +264,7 @@
                     <field name="create_uid"/>
                 </group>
                 <newline/>
-                  <group expand="0" string="Group By..." groups="base.group_extended">
+                  <group expand="0" string="Group By...">
                     <filter string="Supplier" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                      <separator orientation="vertical"/>
                     <filter string="Origin" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
@@ -350,7 +347,7 @@
                                     domain="[('parent_id','=',False),('type_tax_use','!=','sale')]"/>
                             </group>
                         </page>
-                        <page string="Invoicing" groups="base.group_extended">
+                        <page string="Invoicing">
                             <separator colspan="4" string="Manual Invoices"/>
                             <field name="invoiced"/>
                             <newline/>
@@ -359,7 +356,7 @@
                            <page string="Notes">
                             <field colspan="4" name="notes" nolabel="1"/>
                         </page>
-                        <page string="History" groups="base.group_extended">
+                        <page string="History">
                                <separator colspan="4" string="Stock Moves"/>
                                <field colspan="4" name="move_ids" nolabel="1" widget="many2many"/>
                         </page>
@@ -407,13 +404,13 @@
                             <field name="price_unit"/>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             <field name="account_analytic_id" colspan="4" groups="purchase.group_analytic_accounting" domain="[('parent_id','!=',False)]"/>
-                            <group colspan="4" col="4" groups="base.group_extended">
+                            <group colspan="4" col="4">
                                 <separator colspan="4" string="Taxes"/>
                                 <field colspan="4" nolabel="1" name="taxes_id"
                                     domain="[('parent_id','=',False),('type_tax_use','!=','sale')]"/>
                             </group>
                         </page>
-                        <page string="Invoicing" groups="base.group_extended">
+                        <page string="Invoicing">
                             <separator colspan="4" string="Manual Invoices"/>
                             <field name="invoiced"/>
                             <newline/>
@@ -422,7 +419,7 @@
                          <page string="Notes">
                             <field colspan="4" name="notes" nolabel="1"/>
                         </page>
-                        <page string="History" groups="base.group_extended">
+                        <page string="History">
                                <separator colspan="4" string="Stock Moves"/>
                                <field colspan="4" name="move_ids" nolabel="1" widget="many2many"/>
                         </page>
@@ -496,7 +493,6 @@
         <menuitem
             action="purchase_line_form_action2"
             id="menu_purchase_line_order_draft"
-            groups="base.group_extended"
             parent="menu_procurement_management_invoice"
             sequence="72"/>
 
