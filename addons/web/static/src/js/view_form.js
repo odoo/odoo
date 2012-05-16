@@ -2766,15 +2766,8 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
         });
         this.views = views;
 
-        this.viewmanager = new instance.web.ViewManager(this, this.dataset, views, {
-            $sidebar: false,
-        });
-        this.viewmanager.template = 'One2Many.viewmanager';
-        this.viewmanager.registry = instance.web.views.extend({
-            list: 'instance.web.form.One2ManyListView',
-            form: 'instance.web.form.One2ManyFormView',
-            kanban: 'instance.web.form.One2ManyKanbanView',
-        });
+        this.viewmanager = new instance.web.form.One2ManyViewManager(this, this.dataset, views, {});
+        this.viewmanager.o2m = self;
         var once = $.Deferred().then(function() {
             self.init_form_last_update.resolve();
         });
@@ -2955,6 +2948,21 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
             }
         }
         return true;
+    },
+});
+
+instance.web.form.One2ManyViewManager = instance.web.ViewManager.extend({
+    template: 'One2Many.viewmanager',
+    init: function(parent, dataset, views, flags) {
+        this._super(parent, dataset, views, _.extend({}, flags, {$sidebar: false}));
+        this.registry = this.registry.extend({
+            list: 'instance.web.form.One2ManyListView',
+            form: 'instance.web.form.One2ManyFormView',
+            kanban: 'instance.web.form.One2ManyKanbanView',
+        });
+    },
+    switch_view: function(mode, unused) {
+        return this._super(mode, unused);
     },
 });
 

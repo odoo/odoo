@@ -295,7 +295,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             if (view.embedded_view) {
                 controller.set_embedded_view(view.embedded_view);
             }
-            controller.do_switch_view.add_last(this.on_mode_switch);
+            controller.do_switch_view.add_last(_.bind(this.switch_view, this));
             controller.do_prev_view.add_last(this.on_prev_view);
             var container = this.$element.find(".oe_view_manager_view_" + view_type);
             view_promise = controller.appendTo(container);
@@ -341,6 +341,9 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                     self.display_title());
         });
         return view_promise;
+    },
+    switch_view: function(view_type, no_store) {
+        return this.on_mode_switch(view_type, no_store);
     },
     /**
      * Returns to the view preceding the caller view in this manager's
