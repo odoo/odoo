@@ -68,7 +68,8 @@
             <field name="type">form</field>
             <field eval="7" name="priority"/>
             <field name="arch" type="xml">
-                <form string="Product">
+                <form layout="manual">
+                <sheet string="Product" layout="auto">
                     <group colspan="4" col="8">
                         <group colspan="4" col="2">
                             <separator string="Name" colspan="2"/>
@@ -190,7 +191,10 @@
                             </field>
                         </page>
                     </notebook>
+                </sheet>
+                <div class="oe_form_sheet_width">
                     <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"/>
+                </div>
                 </form>
             </field>
         </record>
