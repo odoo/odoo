@@ -19,17 +19,29 @@
 #
 ##############################################################################
 import tools
-from osv import  osv
 from osv import fields, osv
+from os.path import join as opj
 
-class account_wizard(osv.osv_memory):
+class account_multi_charts_wizard(osv.osv_memory):
     _inherit ='wizard.multi.charts.accounts'
     _columns = {
-        'sales_tax_central': fields.boolean('Sales tax central'),     
-        'vat_resellers': fields.boolean('VAT resellers'),
+        'sales_tax': fields.boolean('Sales tax central'),     
+        'vat': fields.boolean('VAT resellers'),
         'service_tax': fields.boolean('Service tax'),
         'excise_duty': fields.boolean('Excise duty'),
     }    
 
+    def execute(self, cr, uid, ids, context=None):
+        super(account_multi_charts_wizard, self).execute(cr, uid, ids, context)
+        obj_multi = self.browse(cr, uid, ids[0])
+        if obj_multi.chart_template_id.name == 'Public Firm Chart of Account':
+            path = tools.file_open(opj('l10n_in', 'account_sale_tax.xml'))
+            tools.convert_xml_import(cr, 'l10n_in', path, {}, 'init', True, None)
+            path.close()   
+        elif obj_multi.chart_template_id.name == 'Partnership/Private Firm Chart of Account':
+            path = tools.file_open(opj('l10n_in', 'account_vat.xml'))
+            tools.convert_xml_import(cr, 'l10n_in', path, {}, 'init', True, None)
+            path.close() 
+            
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

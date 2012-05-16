@@ -3,8 +3,13 @@
 <openerp>
     <data noupdate="True">
 
+        <record model="account.tax.code.template" id="vat_code_tax_01">
+            <field name="name">Tax</field>
+        </record>
+
         <record model="account.tax.code.template" id="vat_code_balance_net_01">
-            <field name="name">Tax balance to pay</field>
+            <field name="name">Tax Balance to Pay</field>
+            <field name="parent_id" ref="vat_code_tax_01"/>
         </record>
 
         <record model="account.tax.code.template" id="vat_code_due_tva_01">
@@ -13,23 +18,24 @@
         </record>
 
         <record model="account.tax.code.template" id="vat_code_payable_01">
-            <field name="name">Tax payable</field>
+            <field name="name">Tax Payable</field>
             <field name="parent_id" ref="vat_code_balance_net_01"/>
         </record>
 
         <record model="account.tax.code.template" id="vat_code_base_net_01">
-            <field name="name">Tax bases</field>
+            <field name="name">Tax Bases</field>
+            <field name="parent_id" ref="vat_code_tax_01"/>
         </record>
+
 
         <record model="account.tax.code.template" id="vat_code_base_due_01">
-            <field name="name">Base of taxed sales</field>
-            <field name="parent_id" ref="vat_code_balance_net_01"/>
+            <field name="name">Base of Taxed Sales</field>
+            <field name="parent_id" ref="vat_code_base_net_01"/>
         </record>
 
-
         <record model="account.tax.code.template" id="vat_code_receivable_net_01">
-            <field name="name">Base of taxed purchases</field>
-            <field name="parent_id" ref="vat_code_balance_net_01"/>
+            <field name="name">Base of Taxed Purchases</field>
+            <field name="parent_id" ref="vat_code_base_net_01"/>
         </record>
 
     </data>

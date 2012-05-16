@@ -41,13 +41,13 @@ class l10n_installer(osv.osv_memory):
         fy_obj = self.pool.get('account.fiscalyear')
         for res in self.read(cr, uid, ids, context=context):
             if res['charts'] =='l10n_in' and res['company_type']=='public_company':
-                fp = tools.file_open(opj('l10n_in', 'l10n_in_public_firm_chart.xml'))
-                tools.convert_xml_import(cr, 'l10n_in', fp, {}, 'init', True, None)
-                fp.close() 
+                path = tools.file_open(opj('l10n_in', 'l10n_in_public_firm_chart.xml'))
+                tools.convert_xml_import(cr, 'l10n_in', path, {}, 'init', True, None)
+                path.close() 
             if res['charts'] =='l10n_in' and res['company_type']=='partnership_private_company':
-                fp = tools.file_open(opj('l10n_in', 'l10n_in_partnership_private_chart.xml'))
-                tools.convert_xml_import(cr, 'l10n_in', fp, {}, 'init', True, None)
-                fp.close()      
+                path = tools.file_open(opj('l10n_in', 'l10n_in_partnership_private_chart.xml'))
+                tools.convert_xml_import(cr, 'l10n_in', path, {}, 'init', True, None)
+                path.close()      
             if 'date_start' in res and 'date_stop' in res:
                 f_ids = fy_obj.search(cr, uid, [('date_start', '<=', res['date_start']), ('date_stop', '>=', res['date_stop']), ('company_id', '=', res['company_id'][0])], context=context)
                 if not f_ids:
