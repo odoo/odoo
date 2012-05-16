@@ -407,7 +407,7 @@
                         <group col="2"  colspan="2">
                             <separator string="Unit of Measure Properties" colspan="4"/>
                             <field name="name" select="1"/>
-                            <field name="category_id" select="1" widget="selection"/>
+                            <field name="category_id" select="1"/>
                             <field name="active"/>
                         </group>
                         <group col="4"  colspan="4">
@@ -460,7 +460,7 @@
             <field name="view_mode">tree,form</field>
             <field name="help">Create and manage the units of measure categories you want to be used in your system. If several units of measure are in the same category, they can be converted to each other. For example, in the unit of measure category "Time", you will have the following UoM: Hours, Days.</field>
         </record>
-        <menuitem action="product_uom_categ_form_action" id="menu_product_uom_categ_form_action" parent="base.menu_base_config" sequence="25" groups="product.group_uom"/>
+        <menuitem action="product_uom_categ_form_action" id="menu_product_uom_categ_form_action" parent="base.menu_base_config" sequence="25" groups="base.group_no_one"/>
 
         <record id="product_ul_form_view" model="ir.ui.view">
             <field name="name">product.ul.form.view</field>
