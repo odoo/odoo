@@ -305,8 +305,8 @@ openerp.web.SearchView = openerp.web.OldWidget.extend(/** @lends openerp.web.Sea
                     var menu_id = $(this).find("select").val(),
                         title = $(this).find("input").val(),
                         data = self.build_search_data(),
-                        context = new openerp.web.CompoundContext(),
-                        domain = new openerp.web.CompoundDomain();
+                        context = new openerp.web.CompoundContext(self.dataset.get_context()),
+                        domain = new openerp.web.CompoundDomain(self.dataset.get_domain());
                     _.each(data.contexts, function(x) {
                         context.add(x);
                     });

@@ -1331,9 +1331,10 @@ class SearchView(View):
 
     @openerpweb.jsonrequest
     def add_to_dashboard(self, req, menu_id, action_id, context_to_save, domain, view_mode, name=''):
-        ctx = common.nonliterals.CompoundContext(context_to_save)
-        ctx.session = req.session
-        ctx = ctx.evaluate()
+        to_eval = common.nonliterals.CompoundContext(context_to_save)
+        to_eval.session = req.session
+        ctx = dict((k, v) for k, v in to_eval.evaluate().iteritems()
+                   if not k.startswith('search_default_'))
         ctx['dashboard_merge_domains_contexts'] = False # TODO: replace this 6.1 workaround by attribute on <action/>
         domain = common.nonliterals.CompoundDomain(domain)
         domain.session = req.session
