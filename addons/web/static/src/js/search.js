@@ -1772,22 +1772,18 @@ instance.web.search.ExtendedSearchProposition = instance.web.OldWidget.extend(/*
         }
 
         var type = field.type;
-        var obj = instance.web.search.custom_filters.get_object(type);
-        if(obj === null) {
-            obj = instance.web.search.custom_filters.get_object("char");
+        var Field = instance.web.search.custom_filters.get_object(type);
+        if(!Field) {
+            Field = instance.web.search.custom_filters.get_object("char");
         }
-        this.value = new (obj) (this);
-        if(this.value.set_field) {
-            this.value.set_field(field);
-        }
+        this.value = new Field(this, field);
         _.each(this.value.operators, function(operator) {
             $('<option>', {value: operator.value})
                 .text(String(operator.text))
                 .appendTo(self.$element.find('.searchview_extended_prop_op'));
         });
-        this.$element.find('.searchview_extended_prop_value').html(
-            this.value.render({}));
-        this.value.start();
+        var $value_loc = this.$element.find('.searchview_extended_prop_value').empty();
+        this.value.appendTo($value_loc);
 
     },
     get_proposition: function() {
@@ -1800,9 +1796,10 @@ instance.web.search.ExtendedSearchProposition = instance.web.OldWidget.extend(/*
     }
 });
 
-instance.web.search.ExtendedSearchProposition.Field = instance.web.OldWidget.extend({
-    start: function () {
-        this.$element = $("#" + this.element_id);
+instance.web.search.ExtendedSearchProposition.Field = instance.web.Widget.extend({
+    init: function (parent, field) {
+        this._super(parent);
+        this.field = field;
     }
 });
 instance.web.search.ExtendedSearchProposition.Char = instance.web.search.ExtendedSearchProposition.Field.extend({
@@ -1827,33 +1824,23 @@ instance.web.search.ExtendedSearchProposition.DateTime = instance.web.search.Ext
         {value: ">=", text: _lt("greater or equal than")},
         {value: "<=", text: _lt("less or equal than")}
     ],
+    /**
+     * Date widgets live in view_form which is not yet loaded when this is
+     * initialized -_-
+     */
+    widget: function () { return instance.web.DateTimeWidget; },
     get_value: function() {
         return this.datewidget.get_value();
     },
     start: function() {
-        this._super();
-        this.datewidget = new instance.web.DateTimeWidget(this);
-        this.datewidget.prependTo(this.$element);
+        var ready = this._super();
+        this.datewidget = new (this.widget())(this);
+        this.datewidget.appendTo(this.$element);
+        return ready;
     }
 });
-instance.web.search.ExtendedSearchProposition.Date = instance.web.search.ExtendedSearchProposition.Field.extend({
-    template: 'SearchView.extended_search.proposition.empty',
-    operators: [
-        {value: "=", text: _lt("is equal to")},
-        {value: "!=", text: _lt("is not equal to")},
-        {value: ">", text: _lt("greater than")},
-        {value: "<", text: _lt("less than")},
-        {value: ">=", text: _lt("greater or equal than")},
-        {value: "<=", text: _lt("less or equal than")}
-    ],
-    get_value: function() {
-        return this.datewidget.get_value();
-    },
-    start: function() {
-        this._super();
-        this.datewidget = new instance.web.DateWidget(this);
-        this.datewidget.prependTo(this.$element);
-    }
+instance.web.search.ExtendedSearchProposition.Date = instance.web.search.ExtendedSearchProposition.DateTime.extend({
+    widget: function () { return instance.web.DateWidget; }
 });
 instance.web.search.ExtendedSearchProposition.Integer = instance.web.search.ExtendedSearchProposition.Field.extend({
     template: 'SearchView.extended_search.proposition.integer',
@@ -1900,9 +1887,6 @@ instance.web.search.ExtendedSearchProposition.Selection = instance.web.search.Ex
         {value: "=", text: _lt("is")},
         {value: "!=", text: _lt("is not")}
     ],
-    set_field: function(field) {
-        this.field = field;
-    },
     get_value: function() {
         return this.$element.val();
     }

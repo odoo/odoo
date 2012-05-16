@@ -462,9 +462,21 @@ Many To One
 Advanced Search
 +++++++++++++++
 
-The advanced search is now a more standard
-:js:class:`~openerp.web.search.Input` configured to be rendered in the
-drawer.
+* The advanced search is now a more standard
+  :js:class:`~openerp.web.search.Input` configured to be rendered in
+  the drawer.
+
+* :js:class:`~openerp.web.search.ExtendedSearchProposition.Field` are
+  now standard widgets, with the "right" behaviors (they don't rebind
+  their ``$element`` in ``start()``)
+
+* The ad-hoc optional setting of the openerp field descriptor on a
+  :js:class:`~openerp.web.search.ExtendedSearchProposition.Field` has
+  been removed, the field descriptor is now passed as second argument
+  to the
+  :js:class:`~openerp.web.search.ExtendedSearchProposition.Field`'s
+  constructor, and bound to its
+  :js:attr:`~openerp.web.search.ExtendedSearchProposition.Field.field`.
 
 .. [#previous]
 
