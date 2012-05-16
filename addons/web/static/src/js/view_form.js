@@ -3375,6 +3375,7 @@ instance.web.form.AbstractFormPopup = instance.web.OldWidget.extend({
     },
     init_dataset: function() {
         var self = this;
+        this.created_elements = [];
         this.dataset = new instance.web.ProxyDataSet(this, this.model, this.context);
         this.dataset.read_function = this.options.read_function;
         this.dataset.create_function = function(data, sup) {
@@ -3391,6 +3392,7 @@ instance.web.form.AbstractFormPopup = instance.web.OldWidget.extend({
         this.dataset.child_name = this.options.child_name;
     },
     display_popup: function() {
+        var self = this;
         this.renderElement();
         instance.web.form.dialog(this.$element, {
             close: function() {
@@ -3403,6 +3405,12 @@ instance.web.form.AbstractFormPopup = instance.web.OldWidget.extend({
     on_write_completed: function() {},
     setup_form_view: function() {
         var self = this;
+        if (this.row_id) {
+            this.dataset.ids = [this.row_id];
+            this.dataset.index = 0;
+        } else {
+            this.dataset.index = null;
+        }
         var options = _.clone(self.options.form_view_options) || {};
         if (this.row_id !== null) {
             options.initial_mode = this.options.readonly ? "view" : "edit";
@@ -3444,8 +3452,17 @@ instance.web.form.AbstractFormPopup = instance.web.OldWidget.extend({
             self.view_form.do_show();
         });
     },
+    on_select_elements: function(element_ids) {
+    },
     check_exit: function() {
+        if (this.created_elements.length > 0) {
+            this.on_select_elements(this.created_elements);
+        }
         this.destroy();
+    },
+    destroy: function () {
+        this.$element.dialog('close');
+        this._super();
     },
 });
 
@@ -3472,13 +3489,8 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
         var self = this;
         _.defaults(this.options, {
             initial_view: "search",
-            create_function: function() {
-                return self.create_row.apply(self, arguments);
-            },
-            read_function: null,
         });
         this.initial_ids = this.options.initial_ids;
-        this.created_elements = [];
         this.display_popup();
     },
     start: function() {
@@ -3501,10 +3513,6 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
         } else { // "form"
             this.new_object();
         }
-    },
-    stop: function () {
-        this.$element.dialog('close');
-        this._super();
     },
     setup_search_view: function(search_defaults) {
         var self = this;
@@ -3563,15 +3571,6 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
             self.view_list.do_search(results.domain, results.context, results.group_by);
         });
     },
-    create_row: function() {
-        var self = this;
-        var wdataset = new instance.web.DataSetSearch(this, this.model, this.context, this.domain);
-        wdataset.parent_view = this.options.parent_view;
-        wdataset.child_name = this.options.child_name;
-        return wdataset.create.apply(wdataset, arguments);
-    },
-    on_select_elements: function(element_ids) {
-    },
     on_click_element: function(ids) {
         this.selected_ids = ids || [];
         if(this.selected_ids.length > 0) {
@@ -3587,14 +3586,7 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
         if (this.view_list) {
             this.view_list.$element.hide();
         }
-        this.dataset.index = null;
         this.setup_form_view();
-    },
-    check_exit: function() {
-        if (this.created_elements.length > 0) {
-            this.on_select_elements(this.created_elements);
-        }
-        this._super();
     },
 });
 
@@ -3636,8 +3628,6 @@ instance.web.form.FormOpenPopup = instance.web.form.AbstractFormPopup.extend(/**
     start: function() {
         this._super();
         this.init_dataset();
-        this.dataset.ids = [this.row_id];
-        this.dataset.index = 0;
         this.setup_form_view();
     },
 });
