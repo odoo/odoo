@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data noupdate="1">
+    <data>
 
         <!-- Don't use any implied_ids here; this group behavior is particular -->
         <record id="group_portal_member" model="res.groups">
@@ -27,20 +27,6 @@
             <field name="category_id" ref="module_category_portal"/>
             <field name="implied_ids" eval="[(4, ref('group_portal_officer'))]"/>
             <field name="users" eval="[(4, ref('base.user_root'))]"/>
-        </record>
-
-        <!-- menu Administration/Portals -->
-        <menuitem name="Portals Settings" id="portal_menu_settings" parent="base.menu_administration"
-            groups="group_portal_manager"/>
-
-        <!-- root menu for portal members (chrooted in this menu) -->
-        <menuitem name="Portal Members Root Menu" id="portal_members_root_menu" parent="portal_menu_settings"/>
-
-        <record id="portal" model="res.portal">
-            <field name="name">Portal</field>
-            <field name="group_id" ref="group_portal_member"/>
-            <field name="override_menu" eval="True"/>
-            <field name="parent_menu_id" ref="portal_members_root_menu"/>
         </record>
 
     </data>
