@@ -58,7 +58,8 @@
         <field name="model">crm.phonecall</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Phone Call">
+            <form layout="manual">
+            <sheet string="Phone Call" layout="auto">
                  <group colspan="6" col="7">
                     <field name="name" required="1"/>
                     <field name="partner_phone"/>
@@ -121,7 +122,10 @@
                         states="cancel" type="object"
                         icon="gtk-convert" />
                 </group>
+            </sheet>
+            <div class="oe_form_sheet_width">
                 <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"/>
+            </div>
             </form>
         </field>
     </record>
