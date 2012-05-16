@@ -8,24 +8,24 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2012-02-17 09:10+0000\n"
-"Last-Translator: Magnus Brandt (mba), Aspirix AB <Unknown>\n"
+"PO-Revision-Date: 2012-05-08 20:14+0000\n"
+"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-18 06:27+0000\n"
-"X-Generator: Launchpad (build 14814)\n"
+"X-Launchpad-Export-Date: 2012-05-09 05:27+0000\n"
+"X-Generator: Launchpad (build 15213)\n"
 
 #. module: caldav
 #: view:basic.calendar:0
 msgid "Value Mapping"
-msgstr ""
+msgstr "Värdemappning"
 
 #. module: caldav
 #: help:caldav.browse,url:0
 msgid "Url of the caldav server, use for synchronization"
-msgstr ""
+msgstr "Url till caldav-servern, används för synkronisering"
 
 #. module: caldav
 #: code:addons/caldav/wizard/caldav_browse.py:99
@@ -57,6 +57,32 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Förutsättningar\n"
+"----------\n"
+"Det finns inget egentlig inbyggd metod för att synkronisera två "
+"kalenderservrar med CalDAV.\n"
+"Så denna modul tillför denna funktion.\n"
+"\n"
+"\n"
+"konfiguration\n"
+"-------------\n"
+"\n"
+"1. Öppna Kalender Sync\n"
+"    Jag får ett gränssnitt med 2 flikar\n"
+"    Bo på den första\n"
+"\n"
+"2. CaDAV Kalender URL: sätta URL ovan (dvs. "
+"http://host.com:8069/webdav/db/calendars/users/demo/c/Meetings)\n"
+"\n"
+"3. Sätt ditt openerp användarnamn och lösenord\n"
+"\n"
+"4. Om din server inte använder SSL, får du en warnign, säger \"Yes\"\n"
+"\n"
+"5. Sedan kan du synkronisera manuellt eller anpassad inställningarna för att "
+"synkronisera varje x minuter.\n"
+"\n"
+"    "
 
 #. module: caldav
 #: field:basic.calendar.alias,name:0
@@ -66,12 +92,12 @@ msgstr "Filnamn"
 #. module: caldav
 #: model:ir.model,name:caldav.model_calendar_event_export
 msgid "Event Export"
-msgstr ""
+msgstr "Exportera händelser"
 
 #. module: caldav
 #: view:calendar.event.subscribe:0
 msgid "Provide path for Remote Calendar"
-msgstr ""
+msgstr "Ange en sökväg till den främmande kalendern"
 
 #. module: caldav
 #: model:ir.actions.act_window,name:caldav.action_calendar_event_import_values
@@ -93,7 +119,7 @@ msgstr "Deltagare"
 #. module: caldav
 #: sql_constraint:basic.calendar.fields:0
 msgid "Can not map a field more than once"
-msgstr ""
+msgstr "Kan bara mappa ett fält en gång"
 
 #. module: caldav
 #: model:ir.actions.act_window,help:caldav.action_caldav_form
@@ -104,6 +130,11 @@ msgid ""
 "to synchronize Meeting with Calendars client.You can access Calendars using "
 "CalDAV clients, like sunbird, Calendar Evaluation, Mobile."
 msgstr ""
+"\"Kalendrar\" kan du anpassa kalendern händelse och att-göra-attribut med "
+"någon av OpenERP modell. Caledars ger iCal Import / Export "
+"functionality.Webdav server som ger fjärråtkomst till calendar.Help du "
+"synkronisera Möte med kalendrar client.You kan komma kalendrar med CalDAV "
+"kunder, som Sunbird, Kalender utvärdering, Mobile."
 
 #. module: caldav
 #: code:addons/caldav/calendar.py:789
@@ -131,7 +162,7 @@ msgstr ""
 #. module: caldav
 #: field:user.preference,service:0
 msgid "Services"
-msgstr ""
+msgstr "Tjänster"
 
 #. module: caldav
 #: selection:basic.calendar.fields,fn:0
@@ -141,7 +172,7 @@ msgstr ""
 #. module: caldav
 #: selection:user.preference,device:0
 msgid "Evolution"
-msgstr ""
+msgstr "Evolution"
 
 #. module: caldav
 #: view:calendar.event.import:0

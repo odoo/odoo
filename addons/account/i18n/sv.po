@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2012-04-22 10:35+0000\n"
+"PO-Revision-Date: 2012-05-14 09:00+0000\n"
 "Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-04-23 05:29+0000\n"
-"X-Generator: Launchpad (build 15135)\n"
+"X-Launchpad-Export-Date: 2012-05-15 05:26+0000\n"
+"X-Generator: Launchpad (build 15238)\n"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -346,6 +346,9 @@ msgid ""
 "leave the automatic formatting, it will be computed based on the financial "
 "reports hierarchy (auto-computed field 'level')."
 msgstr ""
+"Du kan ställa in det format du vill denna att post ska visas med. Om du "
+"lämnar det för automatisk formatering, kommer det att beräknas baserat på "
+"den finansiella rapporthierarkin (auto-beräknade fältet \"nivå\")."
 
 #. module: account
 #: view:account.installer:0
@@ -1970,6 +1973,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:account.action_account_financial_report_tree
 msgid "Makes a generic system to draw financial reports easily."
 msgstr ""
+"Gör ett generiskt system för att enkelt skapa  finansiella rapporter."
 
 #. module: account
 #: view:account.invoice:0
@@ -2299,6 +2303,9 @@ msgid ""
 "'Setup Your Bank Accounts' tool that will automatically create the accounts "
 "and journals for you."
 msgstr ""
+"Ställ in dina bokföringsjournaler. För bankkonton, är det bättre att använda "
+"\"Ställ in dina bankkonton\"-verktyget som automatiskt kommer att skapa "
+"konton och journaler för dig."
 
 #. module: account
 #: model:ir.model,name:account.model_account_move
@@ -2964,7 +2971,7 @@ msgstr "Fakturavaluta"
 #: field:accounting.report,account_report_id:0
 #: model:ir.ui.menu,name:account.menu_account_financial_reports_tree
 msgid "Account Reports"
-msgstr ""
+msgstr "Kontorapporter"
 
 #. module: account
 #: field:account.payment.term,line_ids:0
@@ -3764,7 +3771,7 @@ msgstr "Effective date"
 #: model:ir.actions.act_window,name:account.action_bank_tree
 #: model:ir.ui.menu,name:account.menu_action_bank_tree
 msgid "Setup your Bank Accounts"
-msgstr ""
+msgstr "Ställ in dina bankkonton"
 
 #. module: account
 #: code:addons/account/wizard/account_move_bank_reconcile.py:53
@@ -4000,7 +4007,7 @@ msgstr "Kontotyp"
 #. module: account
 #: view:res.partner:0
 msgid "Bank Account Owner"
-msgstr ""
+msgstr "Bankkontoägare"
 
 #. module: account
 #: report:account.account.balance:0
@@ -4617,6 +4624,9 @@ msgid ""
 "account if this is a Customer Invoice or Supplier Refund, otherwise a "
 "Partner bank account number."
 msgstr ""
+"Bankkontonummer som skall knytas till faktureringen. Ett bolagsbankkonto om "
+"detta är en kundfaktura eller kredit från leverantör, annars en företags "
+"bankkontonummer."
 
 #. module: account
 #: view:account.state.open:0
@@ -4963,7 +4973,7 @@ msgstr ""
 #: field:account.financial.report,children_ids:0
 #: model:ir.model,name:account.model_account_financial_report
 msgid "Account Report"
-msgstr ""
+msgstr "Kontorapport"
 
 #. module: account
 #: field:account.journal.column,name:0
@@ -5232,7 +5242,7 @@ msgstr "Startdatum"
 #. module: account
 #: model:ir.model,name:account.model_account_common_account_report
 msgid "Account Common Account Report"
-msgstr ""
+msgstr "Allmän kontorapport"
 
 #. module: account
 #: field:account.bank.statement.line,name:0
@@ -5905,6 +5915,8 @@ msgid ""
 "This journal will be created automatically for this bank account when you "
 "save the record"
 msgstr ""
+"Denna journal kommer att skapas automatiskt för detta bankkonto när du "
+"sparar posten"
 
 #. module: account
 #: view:account.analytic.line:0
@@ -6916,6 +6928,10 @@ msgid ""
 "accounting application of OpenERP, journals and accounts will be created "
 "automatically based on these data."
 msgstr ""
+"Konfigurera ditt bolagsbankkonto och välja ut dem som måste finnas på "
+"sidfoten i rapporter. Du kan ordna banker i listvyn. Om du använder "
+"bokföringsmodulen av OpenERP kommer journaler och konton skapas automatiskt "
+"baserat på dessa uppgifter."
 
 #. module: account
 #: model:process.transition,note:account.process_transition_invoicemanually0
@@ -6985,7 +7001,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_report_tree_hierarchy
 msgid "Financial Reports Hierarchy"
-msgstr ""
+msgstr "Hierarki för finansiella rapporter"
 
 #. module: account
 #: field:account.entries.report,product_uom_id:0
@@ -7225,7 +7241,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_reporting
 msgid "Reporting"
-msgstr "Rapportering"
+msgstr "Rapporter"
 
 #. module: account
 #: code:addons/account/account_move_line.py:759
@@ -7429,7 +7445,7 @@ msgstr "No piece number !"
 #: view:account.financial.report:0
 #: model:ir.ui.menu,name:account.menu_account_report_tree_hierarchy
 msgid "Account Reports Hierarchy"
-msgstr ""
+msgstr "Hierarki för kontorapporten"
 
 #. module: account
 #: help:account.account.template,chart_template_id:0
@@ -7660,6 +7676,10 @@ msgid ""
 "in which they will appear. Then you can create a new journal and link your "
 "view to it."
 msgstr ""
+"Här kan du anpassa en befintlig Journalvy eller skapa en ny vy. Journalvyer "
+"avgör hur du kan visa transaktioner i din journal. Markera de fält som du "
+"vill ska visas i en journal och bestäm i vilken ordning de skall visas. "
+"Därefter kan du skapa en ny journal och länka vyn till den."
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_asset
@@ -7802,7 +7822,7 @@ msgstr "Välj valuta för fakturan"
 #, python-format
 msgid ""
 "The bank account defined on the selected chart of accounts hasn't a code."
-msgstr ""
+msgstr "Bankkontot definierat på vald kontoplan saknar kod."
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_refund.py:108
@@ -8257,7 +8277,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_journal_view
 #: model:ir.ui.menu,name:account.menu_action_account_journal_view
 msgid "Journal Views"
-msgstr ""
+msgstr "Journalvyer"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_bank_reconcile
@@ -8906,7 +8926,7 @@ msgstr "Slutdatum"
 #: model:ir.actions.act_window,name:account.action_account_report_pl
 #: model:ir.ui.menu,name:account.menu_account_reports
 msgid "Financial Reports"
-msgstr ""
+msgstr "Finansiella rapporter"
 
 #. module: account
 #: report:account.account.balance:0
@@ -9180,8 +9200,8 @@ msgid ""
 "You have to define the bank account\n"
 "in the journal definition for reconciliation."
 msgstr ""
-"You have to define the bank account\n"
-"in the journal definition for reconciliation."
+"Du måste ange det bankkonto\n"
+"i journaldefinitionen för balansering."
 
 #. module: account
 #: view:account.move.line.reconcile:0
@@ -10364,7 +10384,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_res_partner_bank
 msgid "Bank Accounts"
-msgstr "Bank Accounts"
+msgstr "Bankkonton"
 
 #. module: account
 #: field:res.partner,credit:0
