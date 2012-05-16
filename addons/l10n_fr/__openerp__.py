@@ -42,6 +42,7 @@ Credits: Sistheo Zeekom CrysaLEAD
     "update_xml" : [
         "fr_report_demo.xml",
         "plan_comptable_general_demo.xml",
+        "l10n_fr_view.xml",
         "l10n_fr_wizard.xml",
         "fr_pcg_taxes_demo.xml",
         "fr_tax_demo.xml",
