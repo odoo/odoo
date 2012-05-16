@@ -962,14 +962,14 @@ $colour4: #8a89ba
             top: 0
             right: 0
             height: 100%
-            line-height: 2em
+            line-height: 2.5em
             padding: 0 7px 0 4px
             color: #ccc
             cursor: pointer
             &:hover
                 color: #999
             &:before
-                content: "▾"
+                content: "◀"
 
         .oe_searchview_facets
             &:before
@@ -1035,6 +1035,8 @@ $colour4: #8a89ba
         &.oe_searchview_open_drawer
             .oe_searchview_drawer
                 display: block
+            .oe_searchview_unfold_drawer:before
+                content: "▼"
 
         .oe_searchview_drawer
             position: absolute

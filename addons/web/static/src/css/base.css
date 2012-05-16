@@ -1194,7 +1194,7 @@
   top: 0;
   right: 0;
   height: 100%;
-  line-height: 2em;
+  line-height: 2.5em;
   padding: 0 7px 0 4px;
   color: #cccccc;
   cursor: pointer;
@@ -1203,7 +1203,7 @@
   color: #999999;
 }
 .openerp .oe_searchview .oe_searchview_unfold_drawer:before {
-  content: "▾";
+  content: "◀";
 }
 .openerp .oe_searchview .oe_searchview_facets:before {
   color: #cccccc;
@@ -1273,6 +1273,9 @@
 }
 .openerp .oe_searchview.oe_searchview_open_drawer .oe_searchview_drawer {
   display: block;
+}
+.openerp .oe_searchview.oe_searchview_open_drawer .oe_searchview_unfold_drawer:before {
+  content: "▼";
 }
 .openerp .oe_searchview .oe_searchview_drawer {
   position: absolute;
