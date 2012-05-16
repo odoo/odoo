@@ -11,7 +11,7 @@
             <field name="inherit_id" ref="base.view_company_form"/>
             <field name="arch" type="xml">
             <data>
-                 <xpath expr="/form/notebook/page[@string='Configuration']" position="after">
+                 <xpath expr="//notebook" position="inside">
                     <page string="Paye">
                             <field name="plafond_secu"/>
                             <field name="nombre_employes"/>
@@ -48,7 +48,7 @@
             <field name="inherit_id" ref="hr_payroll.view_hr_payslip_form"/>
             <field name="arch" type="xml">
             <data>
-                 <xpath expr="/form/notebook/page[@string='Other Information']/group/field[@name='paid']" position="after">
+                 <xpath expr="//field[@name='paid']" position="after">
                      <field name="payment_mode"/>
                  </xpath>
             </data>
@@ -63,7 +63,7 @@
             model="hr.payslip"
             name="fiche.paye"
             rml="l10n_fr_hr_payroll/report/fiche_paye.rml"
-            string="Fiche de Paye" />
+            string="Fiche de Paie" />
 
 
     </data>

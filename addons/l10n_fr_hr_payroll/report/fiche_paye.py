@@ -34,13 +34,13 @@ class fiche_paye_parser(report_sxw.rml_parse):
             'get_employer_line': self.get_employer_line,
         })
 
-    def get_payslip_lines(self, obj):
+    def get_payslip_lines(self, objs):
         payslip_line = self.pool.get('hr.payslip.line')
         res = []
         ids = []
-        for id in range(len(obj)):
-            if obj[id].appears_on_payslip == True and not obj[id].salary_rule_id.parent_rule_id :
-                ids.append(obj[id].id)
+        for item in objs:
+            if item.appears_on_payslip == True and not item.salary_rule_id.parent_rule_id :
+                ids.append(item.id)
         if ids:
             res = payslip_line.browse(self.cr, self.uid, ids)
         return res
@@ -53,20 +53,20 @@ class fiche_paye_parser(report_sxw.rml_parse):
         cate_ids = rule_cate_obj.search(self.cr, self.uid, [('code', '=', code)])
 
         category_total = 0
-        line_ids = payslip_line.search(self.cr, self.uid, [('slip_id', '=', obj.id),('category_id.id', '=', cate_ids[0] )])
-
-        for line in payslip_line.browse(self.cr, self.uid, line_ids):
-             category_total += line.total
+        if cate_ids:
+            line_ids = payslip_line.search(self.cr, self.uid, [('slip_id', '=', obj.id),('category_id.id', '=', cate_ids[0] )])
+            for line in payslip_line.browse(self.cr, self.uid, line_ids):
+                 category_total += line.total
 
         return category_total
 
 
     def get_employer_line(self, obj, parent_line):
         
-        payslip_line = self.pool.get('hr.payslip.line')	
+        payslip_line = self.pool.get('hr.payslip.line')
 
         line_ids = payslip_line.search(self.cr, self.uid, [('slip_id', '=', obj.id), ('salary_rule_id.parent_rule_id.id', '=', parent_line.salary_rule_id.id )])
-        res = payslip_line.browse(self.cr, self.uid, line_ids[0])
+        res = line_ids and payslip_line.browse(self.cr, self.uid, line_ids[0]) or False
 
         return res
 

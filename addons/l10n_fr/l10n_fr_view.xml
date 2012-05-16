@@ -10,7 +10,7 @@
             <field name="inherit_id" ref="base.view_company_form"/>
             <field name="arch" type="xml">
             <data>
-                 <xpath expr="/form/notebook/page[@string='General Information']/field[@name='company_registry']" position="after">
+                 <xpath expr="//field[@name='company_registry']" position="after">
                     <field name="siret"/>
                     <field name="ape"/>
                  </xpath>

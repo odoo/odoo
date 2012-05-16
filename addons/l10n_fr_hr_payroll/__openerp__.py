@@ -22,7 +22,7 @@
     'name': 'French Payroll',
     'category': 'Localization/Payroll',
     'author': 'Yannick Buron (SYNERPGY)',
-    'depends': ['hr_payroll', 'hr_payroll_account', 'l10n_fr'],
+    'depends': ['hr_payroll', 'l10n_fr'],
     'version': '1.0',
     'description': """
 French Payroll Rules
