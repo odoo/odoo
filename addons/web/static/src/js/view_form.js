@@ -3224,6 +3224,13 @@ openerp.web.form.FieldBinary = openerp.web.form.Field.extend({
             error: openerp.webclient.crashmanager.on_rpc_error
         });
     },
+    set_filename: function(value) {
+        var filename = this.node.attrs.filename;
+        if (this.view.fields[filename]) {
+            this.view.fields[filename].set_value(value);
+            this.view.fields[filename].on_ui_change();
+        }
+    },
     on_clear: function() {
         if (this.value !== false) {
             this.value = false;
@@ -3257,13 +3264,6 @@ openerp.web.form.FieldBinaryFile = openerp.web.form.FieldBinary.extend({
         var show_value = name + " (" + this.human_filesize(size) + ")";
         this.$element.find('input').eq(0).val(show_value);
         this.set_filename(name);
-    },
-    set_filename: function(value) {
-        var filename = this.node.attrs.filename;
-        if (this.view.fields[filename]) {
-            this.view.fields[filename].set_value(value);
-            this.view.fields[filename].on_ui_change();
-        }
     },
     on_clear: function() {
         this._super.apply(this, arguments);
@@ -3300,10 +3300,12 @@ openerp.web.form.FieldBinaryImage = openerp.web.form.FieldBinary.extend({
         this.value = file_base64;
         this.binary_value = true;
         this.$image.attr('src', 'data:' + (content_type || 'image/png') + ';base64,' + file_base64);
+        this.set_filename(name);
     },
     on_clear: function() {
         this._super.apply(this, arguments);
         this.$image.attr('src', '/web/static/src/img/placeholder.png');
+        this.set_filename('');
     }
 });
 
