@@ -27,6 +27,8 @@ class hr_contract_in(osv.osv):
 
     _columns = {
         'tds': fields.float('TDS', digits_compute=dp.get_precision('Payroll')),
+        'food_coupon_amount': fields.float('Food Coupons ', digits_compute=dp.get_precision('Payroll')),
+
     }
 
 hr_contract_in()

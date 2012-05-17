@@ -18,10 +18,11 @@
             <field name="category_id" ref="hr_payroll.ALW"/>
             <field name="amount_select">percentage</field>
             <field name="amount_percentage_base">contract.wage</field>
-            <field name="amount_percentage" eval="51"/>
+            <field name="amount_percentage" eval="50"/>
             <field name="sequence" eval="20"/>
-             <field name="note">DA is calculated in % 
-                for more details:http://www.citehr.com/26809-how-calculate-dearness-allowance-da.html</field>
+             <field name="note">
+DA is calculated in % 
+for more details:http://www.citehr.com/26809-how-calculate-dearness-allowance-da.html</field>
         </record>
 
         <record id="hr_payroll_rule_child_edu" model="hr.salary.rule">
@@ -31,7 +32,9 @@
             <field name="amount_select">fix</field>
             <field name="condition_select">none</field>
             <field name="sequence" eval="21"/>
-            <field name="note"> Per school going child 1200 per annum is non-taxable. Maximum for 2 children, so max 2400 per annum becomes non-taxable.</field>
+            <field name="note"> 
+Per school going child 1200 per annum is non-taxable. 
+ Maximum for 2 children, so max 2400 per annum becomes non-taxable.</field>
         </record>
 
         <record id="hr_payroll_rule_child1" model="hr.salary.rule">
@@ -42,7 +45,6 @@
             <field name="condition_select">python</field>
             <field name="condition_python">result = bool(employee.children)</field>
             <field name="amount_select">fix</field>
-            <field name="note">Per school going child 1200 per annum is non-taxable. Maximum for 2 children, so max 2400 per annum becomes non-taxable.</field>
             <field name="sequence" eval="22"/>
         </record>
 
@@ -54,19 +56,40 @@
             <field name="amount_select">fix</field>
             <field eval="100.0" name="amount_fix"/>
             <field name="sequence" eval="28"/>
-            <field name="note">This allowance is normally given as an additional benefit to employees and is fully taxable.
-                for more details : http://www.rupeetalk.com/finance-basics/income-tax-basics/income-tax-guides/tax-implications-of-salary-components.php</field>
+            <field name="note">
+This allowance is normally given as an additional benefit to employees and is fully taxable.
+for more details : http://www.rupeetalk.com/finance-basics/income-tax-basics/income-tax-guides/tax-implications-of-salary-components.php</field>
         </record>
 
-        <record id="hr_salary_rule_city" model="hr.salary.rule">
-            <field name="code">CCA</field>
+        <record id="hr_payroll_rule_city1" model="hr.salary.rule">
+            <field name="code">CBDA</field>
             <field name="name">City Compensatory Allowance</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="condition_select">none</field>
+            <field name="sequence" eval="50"/>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = (contract.wage + DA) * 0.10</field>
+        </record>
+
+        
+        <record id="hr_payroll_rule_metrocity" model="hr.salary.rule">
+            <field name="code">CMETRO</field>
+            <field name="name">City Allowance for Metro city</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="condition_select">none</field>
+            <field name="sequence" eval="51"/>
             <field name="amount_select">fix</field>
-            <field eval="100.0" name="amount_fix"/>
-            <field name="sequence" eval="29"/>
-            <field name="note">10% of basic+da is the maximum.
-                for more details :http://www.citehr.com/250071-what-cca-allowance.html</field>
+            <field name="amount_fix">850.0</field>
+        </record>
+
+        <record id="hr_payroll_rule_nonmetrocity" model="hr.salary.rule">
+            <field name="code">CNMETRO</field>
+            <field name="name">City Allowance for Non Metro city</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="condition_select">none</field>
+            <field name="sequence" eval="52"/>
+            <field name="amount_select">fix</field>
+            <field name="amount_fix">800.0</field>
         </record>
 
         <record id="hr_salary_rule_arrears" model="hr.salary.rule">
@@ -76,10 +99,11 @@
             <field name="amount_select">fix</field>
             <field eval="100.0" name="amount_fix"/>
             <field name="sequence" eval="30"/>
-             <field name="note">Generally arrears are fully taxable, but employee may claim exemption u/s 89(1). 
-              One would need to compute income tax on the arrears if it would have been received in actual year.
-              Now difference of income tax between payment year and actual year would be allowed for deduction.
-                Read more: http://www.pankajbatra.com/finance/income-tax-calculator-2012-2013-2014/#ixzz1uurtGGGd</field>
+             <field name="note">
+Generally arrears are fully taxable, but employee may claim exemption u/s 89(1). 
+One would need to compute income tax on the arrears if it would have been received in actual year.
+Now difference of income tax between payment year and actual year would be allowed for deduction.
+Read more: http://www.pankajbatra.com/finance/income-tax-calculator-2012-2013-2014/#ixzz1uurtGGGd</field>
         </record>
 
         <record id="hr_salary_rule_gratuity" model="hr.salary.rule">
@@ -90,7 +114,10 @@
             <field name="amount_select">code</field>
             <field name="amount_python_compute">result = (categories.NET/26) * 15 * 5</field>
             <field name="sequence" eval="500"/>
-            <field name="note">Covered under the Payment of Gratuity Act, 1971: (Last drawn monthly basic salary + dearness allowance)/26 x 15 days x number of years of service (date of joining – date of retirement/leaving job)
+            <field name="note">
+Covered under the Payment of Gratuity Act, 1971: 
+(Last drawn monthly basic salary + dearness allowance)/26 x 15 days x 
+number of years of service (date of joining – date of retirement/leaving job)
             </field>
         </record>
 
@@ -102,12 +129,14 @@
             <field name="amount_percentage_base">contract.wage</field>
             <field name="amount_percentage" eval="0.0833"/>
             <field name="sequence" eval="32"/>
-            <field name="note">As per Income tax rules of India, if transport bills for LTA are not provided,
-            the amount will be taxed. E.g. If an employee has LTA allowance as Rs 50,000 in his CTC(cost to company),
-            and he provides proofs of Rs 40,000 (boarding pass, air tickets, taxi vouchers) then income tax will be 
-            deducted for rest of the Rs 10,000. Does not matter whats the amount of LTA in an employee’s package, 
-            income tax laws only permits domestic air tickets only for LTA claim.
-            Read more: http://www.pankajbatra.com/news/lta-proof-reimbursement-to-employer-not-required-supreme-court-india-ruling/#ixzz1uutlHSez</field>
+            <field name="note">
+As per Income tax rules of India, if transport bills for LTA are not provided,
+the amount will be taxed. E.g. If an employee has LTA allowance as Rs 50,000 
+in his CTC(cost to company),and he provides proofs of Rs 40,000 (boarding pass,
+air tickets, taxi vouchers) then income tax will be deducted for rest of the 
+Rs 10,000. Does not matter whats the amount of LTA in an employee’s package, 
+income tax laws only permits domestic air tickets only for LTA claim.
+Read more: http://www.pankajbatra.com/news/lta-proof-reimbursement-to-employer-not-required-supreme-court-india-ruling/#ixzz1uutlHSez</field>
         </record>
 
         <record id="hr_salary_rule_le" model="hr.salary.rule">
@@ -118,15 +147,16 @@
             <field name="amount_select">fix</field>
             <field name="amount_fix">0.0</field>
             <field name="sequence" eval="33"/>
-            <field name="note"> Payment by way of leave encashment received by Central and State Govt.
-              employees at the time of retirement in respect of the period of earned 
-              leave at credit is fully exempt. In case of other employees, the exemption 
-              is to be limited to minimum of all below:
-                1.The actual amount received
-                2.The cash equivalent of leave balance (max 30 days per year of service)
-                3.Maximum of 10 months of leave encashment, based on last 10 months average salary
-                4.Rs. 3 Lakh
-                Read more: http://www.pankajbatra.com/finance/income-tax-calculator-2012-2013-2014/#ixzz1uuunHwjE
+            <field name="note"> 
+Payment by way of leave encashment received by Central and State Govt.
+employees at the time of retirement in respect of the period of earned 
+leave at credit is fully exempt. In case of other employees, the exemption 
+is to be limited to minimum of all below:
+    1.The actual amount received
+    2.The cash equivalent of leave balance (max 30 days per year of service)
+    3.Maximum of 10 months of leave encashment, based on last 10 months average salary
+    4.Rs. 3 Lakh
+    Read more: http://www.pankajbatra.com/finance/income-tax-calculator-2012-2013-2014/#ixzz1uuunHwjE
                 </field>
         </record>
 
@@ -155,11 +185,12 @@
             <field name="name">Periodical Journals</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
             <field name="amount_select">fix</field>
-            <field eval="5000.0" name="amount_fix"/>
+            <field eval="0.0" name="amount_fix"/>
             <field name="sequence" eval="36"/>
-            <field name="note">Some employers may provide component for buying magazines, 
-                journals and books as a part of knowledge enhancement for business growth. 
-                This part would become non taxable on providing original bills.</field>
+            <field name="note">
+Some employers may provide component for buying magazines, 
+journals and books as a part of knowledge enhancement for 
+business growth.This part would become non taxable on providing original bills.</field>
         </record>
 
         <record id="hr_salary_rule_uniform" model="hr.salary.rule">
@@ -169,8 +200,9 @@
             <field name="amount_select">fix</field>
             <field eval="500.0" name="amount_fix"/>
             <field name="sequence" eval="37"/>
-            <field name="note">Some sections of employees mat get allowance for purchase of office dress/uniform.
-                 In such case, the component would become non-taxable.</field>
+            <field name="note">
+Some sections of employees mat get allowance for purchase of office dress/uniform.
+In such case, the component would become non-taxable.</field>
         </record>
 
         <record id="hr_salary_rule_telephone" model="hr.salary.rule">
@@ -180,9 +212,11 @@
             <field name="amount_select">fix</field>
             <field eval="500.0" name="amount_fix"/>
             <field name="sequence" eval="38"/>
-            <field name="note">In some of the cases, companies may provide a component for telephone bills.
-            Employees may provide actual phone usage bills to reimburse this component and make it non-taxable.
-            Read more: http://www.pankajbatra.com/finance/income-tax-calculator-2012-2013-2014/#ixzz1uuvaUK7A
+            <field name="note">
+In some of the cases, companies may provide a component for telephone bills.
+Employees may provide actual phone usage bills to reimburse this component 
+and make it non-taxable.
+Read more: http://www.pankajbatra.com/finance/income-tax-calculator-2012-2013-2014/#ixzz1uuvaUK7A
             </field>
         </record>
 
@@ -193,10 +227,11 @@
             <field name="amount_select">fix</field>
             <field eval="500.0" name="amount_fix"/>
             <field name="sequence" eval="39"/>
-            <field name="note">In case company provides component for this and employee use self owned car for official 
-            and personal purposes, Rs 1800 per month would be non-taxable on showing bills for fuel or
-            can maintenance. This amount would be Rs 2400 in case car is more capacity than 1600cc.
-            Read more: http://www.pankajbatra.com/finance/income-tax-calculator-2012-2013-2014/#ixzz1uuw12Cjj</field>
+            <field name="note">
+In case company provides component for this and employee use self owned car for official 
+and personal purposes, Rs 1800 per month would be non-taxable on showing bills for fuel or
+can maintenance. This amount would be Rs 2400 in case car is more capacity than 1600cc.
+Read more: http://www.pankajbatra.com/finance/income-tax-calculator-2012-2013-2014/#ixzz1uuw12Cjj</field>
         </record>
 
         <record id="hr_salary_rule_internet" model="hr.salary.rule">
@@ -214,7 +249,10 @@
             <field name="name">Driver Salary</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
             <field name="amount_select">fix</field>
-            <field eval="500.0" name="amount_fix"/>
+            <field eval="900.0" name="amount_fix"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = bool(employee.vehicle)</field>
+
             <field name="sequence" eval="41"/>
              <field name="note">Rs. 900 per month (non taxable)</field>
         </record>
@@ -226,8 +264,9 @@
             <field name="amount_select">fix</field>
             <field eval="5000.0" name="amount_fix"/>
             <field name="sequence" eval="42"/>
-            <field name="note"> gift  gift is from non relatives person worth more than Rs.50000, 
-                one is liable to pay the tax what ever he received excess of the limit or Rs 50,000.</field>
+            <field name="note">
+gift  gift is from non relatives person worth more than Rs.50000, 
+one is liable to pay the tax what ever he received excess of the limit or Rs 50,000.</field>
         </record>
 
         <record id="hr_salary_rule_Gift_r" model="hr.salary.rule">
@@ -251,6 +290,15 @@
             <field name="note">30% of the rental income can be reduced as a standard deduction</field>
         </record>
 
+        <record id="hr_salary_trans_allownce" model="hr.salary.rule">
+            <field name="code">TA</field>
+            <field name="name">Transport/Conveyance Allownace</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="amount_select">fix</field>
+            <field eval="800.0" name="amount_fix"/>
+            <field name="sequence" eval="48"/>
+        </record>
+
         <record id="hr_salary_rule_Other" model="hr.salary.rule">
             <field name="code">OTI</field>
             <field name="name">Other Income</field>
@@ -270,9 +318,10 @@
             <field name="amount_select">fix</field>
             <field eval="5000.0" name="amount_fix"/>
             <field name="sequence" eval="46"/>
-            <field name="note">if stocks/equity mutual funds are sold before one year, 
-                15% tax would be payable on such gains. STT should have been on transaction.
-            Read more: http://www.pankajbatra.com/finance/income-tax-calculator-2012-2013-2014/#ixzz1uuwSxEvI</field>
+            <field name="note">
+If stocks/equity mutual funds are sold before one year, 
+15% tax would be payable on such gains. STT should have been on transaction.
+Read more: http://www.pankajbatra.com/finance/income-tax-calculator-2012-2013-2014/#ixzz1uuwSxEvI</field>
         </record>
 
         <record id="hr_salary_rule_lt_gains" model="hr.salary.rule">
@@ -282,11 +331,12 @@
             <field name="amount_select">fix</field>
             <field eval="5000.0" name="amount_fix"/>
             <field name="sequence" eval="47"/>
-            <field name="note">If stocks/equity mutual funds are kept for more than a year before sale,
-                 it would be long term gains and such gains would be fully exempt from income tax. 
-                 Securities transaction tax (STT) must have been paid on transactions for availing 
-                 this exemption.
-                 Read more: http://www.pankajbatra.com/finance/income-tax-calculator-2012-2013-2014/#ixzz1uuwtRkCT</field>
+            <field name="note">
+If stocks/equity mutual funds are kept for more than a year before sale,
+it would be long term gains and such gains would be fully exempt from income tax. 
+Securities transaction tax (STT) must have been paid on transactions for availing 
+this exemption.
+Read more: http://www.pankajbatra.com/finance/income-tax-calculator-2012-2013-2014/#ixzz1uuwtRkCT</field>
         </record>
 
         <!--Deductions -->
@@ -299,9 +349,9 @@
             <field eval="-0.0" name="amount_fix"/>
             <field eval="False" name="appears_on_payslip"/>
             <field name="note">
-            PROFESSIONAL TAX FOR COMPANY SHOULD BE PAID ON OR BEFORE 30TH SEPT, 
-            THE AMOUNT IS Rs. 2000 PER YEAR. THERE IS NO PAYMENT FORM TO BE FLLED.
-            Attribution: http://www.citehr.com/249518-companys-professional-tax-gujarat.html#ixzz1uuyvgt2L</field>
+Professional tax for company should be paid on or before 30th sept,
+The amount is Rs.2000 per year.There is no payment form to be filled. 
+Read more: http://www.citehr.com/249518-companys-professional-tax-gujarat.html#ixzz1uuyvgt2L</field>
         </record>
 
         <record id="hr_payslip_rule_tds" model="hr.salary.rule">
@@ -313,12 +363,13 @@
             <field name="amount_select">code</field>
             <field name="amount_python_compute">result = -(contract.tds)</field>
             <field name="sequence" eval="140"/>
-            <field name="note">As per income tax rules, all payment which are taxable in nature should be 
-            done after deduction of taxes at the source itself. Hence employer compute 
-            income tax on salary payment and deduct it every month. This TDS is based 
-            on employee’s saving/investment declaration at the start of year. If 
-            investments for tax saving is not done, large amount may be deducted in last few months.
-            Read more: http://www.pankajbatra.com/finance/income-tax-calculator-2012-2013-2014/#ixzz1uv0gPhgQ</field>
+            <field name="note">
+As per income tax rules, all payment which are taxable in nature should be 
+done after deduction of taxes at the source itself. Hence employer compute 
+income tax on salary payment and deduct it every month. This TDS is based 
+on employee’s saving/investment declaration at the start of year. If investments 
+for tax saving is not done, large amount may be deducted in last few months.
+Read more: http://www.pankajbatra.com/finance/income-tax-calculator-2012-2013-2014/#ixzz1uv0gPhgQ</field>
         </record>
 
         <record id="hr_payslip_rule_vpf" model="hr.salary.rule">
@@ -329,17 +380,17 @@
             <field eval="-200.0" name="amount_fix"/>
             <field name="sequence" eval="130"/>
             <field name="note">
-             VPF is a safe option wherein you can contribute more than the PF ceiling of 12% 
-             that has been mandated by the government. This additional amount enjoys all the 
-             benefits of PF except that the employer is not liable to contribute any extra amount 
-             apart from 12%. An added advantage is that the interest rate is equal to the interest 
-             rate of PF and the withdrawal is tax free. Please note that the maximum contribution 
-             towards VPF is 100% of your Basic. The highest rate of interest (close to 9%) makes 
-             it a very attractive saving scheme. Because of these advantages many  employees chose 
-             not to close their PF account even after getting employment else where other than India. 
-             Employees also get a major tax break on their entire contribution to the fund up to a 
-             ceiling of Rs. 70,000/-
-             for more details:http://www.dotcominfoway.com/blog/vpf-or-voluntary-provident-fund-special-benefits-for-employees</field>
+VPF is a safe option wherein you can contribute more than the PF ceiling of 12% 
+that has been mandated by the government. This additional amount enjoys all the 
+benefits of PF except that the employer is not liable to contribute any extra amount 
+apart from 12%. An added advantage is that the interest rate is equal to the interest 
+rate of PF and the withdrawal is tax free. Please note that the maximum contribution 
+towards VPF is 100% of your Basic. The highest rate of interest (close to 9%) makes 
+it a very attractive saving scheme. Because of these advantages many  employees chose 
+not to close their PF account even after getting employment else where other than India. 
+Employees also get a major tax break on their entire contribution to the fund up to a 
+ceiling of Rs. 70,000/-
+read more: more:http://www.dotcominfoway.com/blog/vpf-or-voluntary-provident-fund-special-benefits-for-employees</field>
         </record>
 
         <record id="hr_payslip_rule_cpt" model="hr.salary.rule">
@@ -347,7 +398,7 @@
             <field name="name">Dedution for Company Provided Transport</field>
             <field name="category_id" ref="hr_payroll.DED"/>
             <field name="amount_select">fix</field>
-            <field eval="-1800.0" name="amount_fix"/>
+            <field eval="0.0" name="amount_fix"/>
             <field name="sequence" eval="155"/>
         </record>
 
@@ -358,13 +409,14 @@
             <field name="amount_select">fix</field>
             <field eval="-3.0" name="amount_fix"/>
             <field name="sequence" eval="160"/>
-            <field name="note">The LWF is applicable to all the members of the organisation except the 
-            Management staff (Staffs having authority to sign on the cheque/official 
-            documents on behalf of the organisation) 
-                Employee Contribution is Rs. 3.00 and Employer contribution Rs. 6.00 
-                Total Rs 9.00 and deposited to the LWF office.
-                It is half yearly contribution (June and December) 
-                Attribution: http://www.citehr.com/270132-labour-welfare-fund-deduction-salary.html</field>
+            <field name="note">
+The LWF is applicable to all the members of the organisation except the 
+Management staff (Staffs having authority to sign on the cheque/official 
+documents on behalf of the organisation). 
+for e.x. Employee Contribution is Rs. 3.00 and Employer contribution Rs. 6.00 
+Total Rs 9.00 and deposited to the LWF office.
+It is half yearly contribution (June and December) 
+read more: http://www.citehr.com/270132-labour-welfare-fund-deduction-salary.html</field>
         </record>
 
         <record id="hr_payslip_rule_cgti" model="hr.salary.rule">
