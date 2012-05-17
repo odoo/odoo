@@ -1031,7 +1031,7 @@
                     <field name="date"/>
                     <field name="min_date"/>
                     <field name="invoice_state" groups="account.group_account_user"/>
-                    <field name="stock_journal_id" widget="selection"/ groups="account.group_account_invoice"/>
+                    <field name="stock_journal_id" widget="selection" groups="account.group_account_invoice"/>
                     <field name="state"/>
                     <button name="action_process" states="assigned" string="Process" type="object" icon="gtk-go-forward"/>
                     <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel" icon="gtk-cancel" confirm="This operation will cancel the shipment. Do you want to continue?" />
