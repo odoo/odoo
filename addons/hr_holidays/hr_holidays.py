@@ -22,6 +22,7 @@
 ##############################################################################
 
 import datetime, time
+from datetime import datetime
 from itertools import groupby
 from operator import itemgetter
 
@@ -484,18 +485,23 @@ class hr_employee(osv.osv):
                 remaining[employee_id] = 0.0
         return remaining
 
-    def _get_leave_status(self, cr, uid, ids, name, args, context=None):
-        holidays_id = self.pool.get('hr.holidays').search(cr, uid, 
-           [('employee_id', 'in', ids), ('date_from','<=',time.strftime('%Y-%m-%d %H:%M:%S')), 
-            ('type','=','remove'),('state','not in',('cancel','refuse'))],
+    def _get_leave_status(self, cr, uid, ids, name, args, context=None):       
+        holidays_obj = self.pool.get('hr.holidays')
+        holidays_id = holidays_obj.search(cr, uid, 
+           [('employee_id', 'in', ids), ('date_from','<=',time.strftime('%Y-%m-%d')),
+           ('date_to','>=',time.strftime('%Y-%m-%d')),('type','=','remove'),('state','not in',('cancel','refuse'))],
            context=context)
         result = {}
         for id in ids:
             result[id] = {
                 'current_leave_state': False,
                 'current_leave_id': False,
+                'date_from':False,
+                'date_to':False,
             }
         for holiday in self.pool.get('hr.holidays').browse(cr, uid, holidays_id, context=context):
+            result[holiday.employee_id.id]['date_from'] = holiday.date_from
+            result[holiday.employee_id.id]['date_to'] = holiday.date_to
             result[holiday.employee_id.id]['current_leave_state'] = holiday.state
             result[holiday.employee_id.id]['current_leave_id'] = holiday.holiday_status_id.id
         return result
@@ -506,6 +512,8 @@ class hr_employee(osv.osv):
             selection=[('draft', 'New'), ('confirm', 'Waiting Approval'), ('refuse', 'Refused'),
             ('validate1', 'Waiting Second Approval'), ('validate', 'Approved'), ('cancel', 'Cancelled')]),
         'current_leave_id': fields.function(_get_leave_status, multi="leave_status", string="Current Leave Type",type='many2one', relation='hr.holidays.status'),
+        'date_from': fields.function(_get_leave_status, multi='leave_status', type='date', string='From Date'),
+        'date_to': fields.function(_get_leave_status, multi='leave_status', type='date', string='To Date'),        
         'last_login': fields.related('user_id', 'date', type='datetime', string='Latest Connection', readonly=1)
     }
 
