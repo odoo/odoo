@@ -723,13 +723,13 @@
                             <field name="name" readonly="1"/>
                             <field name="origin"/>
                             <field name="partner_id" on_change="onchange_partner_in(partner_id)" colspan="4"/>
-                            <field name="invoice_state" string="Invoice Control"/>
+                            <field name="invoice_state" string="Invoice Control" groups="account.group_account_invoice"/>
                             <field name="backorder_id" readonly="1"/>
                         </group>
                         <group colspan="2" col="2">
                             <field name="date"/>
                             <field name="min_date" readonly="1"/>
-                            <field name="stock_journal_id" widget="selection"/>
+                            <field name="stock_journal_id" widget="selection" groups="account.group_account_user"/>
                         </group>
                     </group>
                     <notebook colspan="4">
@@ -762,7 +762,7 @@
                                         groups="product.group_stock_packaging"
                                         icon="terp-stock_effects-object-colorize"
                                         states="draft,assigned,confirmed"/>
-                                    <field name="location_dest_id"/>
+                                    <field name="location_dest_id" groups="stock.group_locations"/>
                                     <field name="date_expected" string="Date Expected"/>
                                     <field name="state"/>
                                 </tree>
@@ -785,7 +785,7 @@
                                     <group colspan="2" col="2">
                                         <separator string="Locations" colspan="2" />
                                         <field name="location_id" domain="[('usage','&lt;&gt;','view')]"/>
-                                        <field name="location_dest_id" domain="[('usage','=','internal')]"/>
+                                        <field name="location_dest_id" domain="[('usage','=','internal')]" groups="stock.group_locations"/>
                                     </group>
 
                                     <group colspan="2" col="2">
@@ -1030,8 +1030,8 @@
                     <field name="origin"/>
                     <field name="date"/>
                     <field name="min_date"/>
-                    <field name="invoice_state"/>
-                    <field name="stock_journal_id" widget="selection"/>
+                    <field name="invoice_state" groups="account.group_account_user"/>
+                    <field name="stock_journal_id" widget="selection"/ groups="account.group_account_invoice">
                     <field name="state"/>
                     <button name="action_process" states="assigned" string="Process" type="object" icon="gtk-go-forward"/>
                     <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel" icon="gtk-cancel" confirm="This operation will cancel the shipment. Do you want to continue?" />
@@ -1388,9 +1388,9 @@
                                 icon="gtk-convert" context="{'scrap': True}"
                                 states="draft,waiting,confirmed,assigned" colspan="1"/>
                         <newline/>
-                        <field name="location_id" groups="stock.group_locations"/>
+                        <field name="location_id" groups="stock.group_locations" />
                         <field name="location_dest_id" groups="stock.group_locations"/>
-                        <field name="partner_id"/>
+                        <field name="partner_id" groups="stock.group_locations"/>
 
                     </group>
                     <group colspan="2" col="2">

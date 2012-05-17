@@ -22,9 +22,9 @@
                         <tree editable="bottom" string="Product Moves">
                             <field name="product_id" />
                             <field name="quantity" />
-                            <field name="product_uom" />
+                            <field name="product_uom" groups="product.group_uom"/>
                             <field name="tracking" invisible="1"/>
-                            <field name="prodlot_id" domain="[('product_id', '=', product_id)]" invisible="context.get('hide_tracking',False)" attrs="{'required':[('tracking','=',True)]}"/>
+                            <field name="prodlot_id" domain="[('product_id', '=', product_id)]" invisible="context.get('hide_tracking',False)" attrs="{'required':[('tracking','=',True)]}" groups="stock.group_production_lot"/>
                             <!-- Removed as this feature is not logic: price must be updated upon reception of invoice -->
                             <field name="update_cost" invisible="1"/>
                             <field name="cost"  invisible="1"/>

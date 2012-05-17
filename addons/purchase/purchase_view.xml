@@ -130,11 +130,26 @@
             <field name="model">purchase.order</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Purchase Order">
+                <form layout="manual">
+                <div class="oe_form_topbar">
+                    <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" icon="gtk-convert"/>
+                    <button name="picking_ok" states="except_picking" string="Manually Corrected" icon="gtk-convert"/>
+                    <button name="invoice_ok" states="except_invoice" string="Manually Corrected" icon="gtk-convert"/>
+                    <button name="purchase_confirm" states="draft" string="Convert to Purchase Order" icon="gtk-go-forward" class="oe_form_button_hi"/>
+                    <button name="purchase_appbuyer" states="wait_auth" string="Approve Purchase" icon="gtk-ok"/>
+                    <button name="purchase_approve" states="confirmed" string="Approved" icon="gtk-go-forward" class="oe_form_button_hi"/>
+                    <button name="%(report_purchase_order)d" string="Print" states="approved" type="action" icon="gtk-print"/>
+                    <button name="action_cancel" states="approved,except_picking,except_invoice,wait" string="Cancel Purchase Order" type="object" icon="gtk-cancel"/>
+                    <button name="purchase_cancel" states="draft,confirmed,wait_auth" string="Cancel" icon="gtk-cancel"/>
+                <div class="oe_right">
+                    <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,approved,done" statusbar_colors='{"except_picking":"red","except_invoice":"red","confirmed":"blue","wait":"blue"}'/>
+                </div>
+                </div>
+                <sheet string="Purchase Order" layout="auto">
                     <group col="6" colspan="4">
                         <field name="name"/>
                         <field name="date_order"/>
-                        <field name="invoiced"/>
+                        <field name="invoiced" groups="base.group_no_one"/>
                         <newline/>
                         <field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)" widget="selection" groups="stock.group_locations"/>
                         <field name="partner_ref"/>
@@ -164,23 +179,11 @@
                                 <field name="amount_total" sum="Total amount"/>
                                 <button name="button_dummy" states="draft" string="Compute" type="object" icon="gtk-execute"/>
                             </group>
-                            <group col="11" colspan="4">
-                                <field name="state" widget="statusbar" statusbar_visible="draft,approved,done" statusbar_colors='{"except_picking":"red","except_invoice":"red","confirmed":"blue","wait":"blue"}' readonly="1"/>
-                                <button name="purchase_cancel" states="draft,confirmed,wait_auth" string="Cancel" icon="gtk-cancel"/>
-                                <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" icon="gtk-convert"/>
-                                <button name="action_cancel" states="approved,except_picking,except_invoice,wait" string="Cancel Purchase Order" type="object" icon="gtk-cancel"/>
-                                <button name="picking_ok" states="except_picking" string="Manually Corrected" icon="gtk-convert"/>
-                                <button name="invoice_ok" states="except_invoice" string="Manually Corrected" icon="gtk-convert"/>
-                                <button name="purchase_confirm" states="draft" string="Convert to Purchase Order" icon="gtk-go-forward"/>
-                                <button name="purchase_appbuyer" states="wait_auth" string="Approve Purchase" icon="gtk-ok"/>
-                                <button name="purchase_approve" states="confirmed" string="Approved" icon="gtk-go-forward"/>
-                                <button name="%(report_purchase_order)d" string="Print" states="approved" type="action" icon="gtk-print"/>
-                            </group>
                         </page>
                         <page string="Delivery &amp; Invoicing">
                             <group colspan="2" col="2">
                                 <separator string="Delivery" colspan="2"/>
-                                <field name="dest_address_id" on_change="onchange_dest_address_id(dest_address_id)"/>
+                                <field name="dest_address_id" on_change="onchange_dest_address_id(dest_address_id)" gropus="purchase.group_delivery_invoice_address"/>
                                 <field name="minimum_planned_date"/>
                                 <field name="location_id" groups="stock.group_locations"/>
                             </group>
@@ -203,7 +206,10 @@
                             <field colspan="4" name="notes" nolabel="1"/>
                         </page>
                     </notebook>
-                   <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
+                    </sheet>
+                    <div class="oe_form_sheet_width">
+                        <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
+                    </div>
                 </form>
             </field>
         </record>
@@ -301,13 +307,13 @@
         </record>
 
         <record id="purchase_rfq" model="ir.actions.act_window">
-            <field name="name">Requests for Quotation</field>
+            <field name="name">Quotations</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order</field>
             <field name="context">{'search_default_draft': 1}</field>
             <field name="view_mode">tree,form,graph,calendar</field>
             <field name="search_view_id" ref="view_request_for_quotation_filter"/>
-            <field name="help">You can create a request for quotation when you want to buy products to a supplier but the purchase is not confirmed yet. Use also this menu to review requests for quotation created automatically based on your logistic rules (minimum stock, MTO, etc). You can convert the request for quotation into a purchase order once the order is confirmed. If you use the extended interface (from user's preferences), you can select the way to control your supplier invoices: based on the order, based on the receptions or manual encoding.</field>
+            <field name="help">Here you can create purchase orders. They allow you to manage receptions, and control your supplier invoices.</field>
         </record>
         <menuitem action="purchase_rfq" id="menu_purchase_rfq"
             parent="menu_procurement_management"
