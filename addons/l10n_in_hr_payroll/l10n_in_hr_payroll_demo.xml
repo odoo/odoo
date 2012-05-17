@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- Hr Salary structure-->
+
+        <record id="hr_payroll_salary_structure_emp_ind" model="hr.payroll.structure">
+            <field name="code">IND</field>
+            <field name="name">Indian Employee</field>
+            <field eval="[(6, 0, [ref('hr_salary_rule_medical'),ref('hr_salary_rule_lta'),ref('hr_salary_rule_telephone'), ref('hr_salary_rule_internet'),ref('hr_payroll_rule_child_edu'),ref('hr_salary_rule_gratuity')])]" name="rule_ids"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="parent_id" ref="hr_payroll.structure_base"/>
+        </record>
+
+    </data>
+</openerp>
