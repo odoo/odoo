@@ -537,6 +537,16 @@ class hr_job(osv.osv):
     _columns = {
         'survey_id': fields.many2one('survey', 'Interview Form', help="Choose an interview form for this job position and you will be able to print/answer this interview from all applicants who apply for this job"),
     }
+    
+    def action_print_survey(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        for rec in self.browse(cr, uid, ids, context=context):
+            if rec.survey_id:
+                context.update({'survey_id': rec.survey_id.id, 'response_id': [0], 'response_no': 0,})
+        value = self.pool.get("survey").action_print_survey(cr, uid, ids, context=context)
+        return value
+   
 hr_job()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
