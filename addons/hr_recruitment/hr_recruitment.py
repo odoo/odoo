@@ -543,7 +543,7 @@ hr_job()
 class crm_meeting(osv.osv):
     _inherit = 'crm.meeting'
     _columns = {
-        'applicant_id': fields.many2one('hr.applicant','Previous Meeting'),
+        'applicant_id': fields.many2one('hr.applicant','Applicant Meeting'),
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
