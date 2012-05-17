@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2012-02-13 13:18+0000\n"
+"PO-Revision-Date: 2012-05-10 17:19+0000\n"
 "Last-Translator: walid sayed <mashyuser@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-14 05:45+0000\n"
-"X-Generator: Launchpad (build 14781)\n"
+"X-Launchpad-Export-Date: 2012-05-11 05:04+0000\n"
+"X-Generator: Launchpad (build 15225)\n"
 
 #. module: crm_profiling
 #: view:crm_profiling.questionnaire:0
@@ -29,6 +29,9 @@ msgid ""
 "segmentation tool allows you to automatically assign a partner to a category "
 "according to his answers to the different questionnaires."
 msgstr ""
+"يمكنك إنشاء موضوع محدد ذو صلة بالاستبيانات لتوجيه الفريق الخاص بك في دورة "
+"المبيعات من خلال مساعدتهم على طرح الأسئلة المناسبة. تسمح لك أداة التجزئة "
+"تلقائيا بتعيين شريك للفئة وفقا لإجاباته على الاستبيانات المختلفة."
 
 #. module: crm_profiling
 #: field:crm_profiling.answer,question_id:0
@@ -64,7 +67,7 @@ msgstr "جواب"
 #. module: crm_profiling
 #: model:ir.model,name:crm_profiling.model_open_questionnaire_line
 msgid "open.questionnaire.line"
-msgstr ""
+msgstr "open.questionnaire.line"
 
 #. module: crm_profiling
 #: model:ir.model,name:crm_profiling.model_crm_segmentation
@@ -97,7 +100,7 @@ msgstr "الأجوبة"
 #. module: crm_profiling
 #: model:ir.model,name:crm_profiling.model_open_questionnaire
 msgid "open.questionnaire"
-msgstr ""
+msgstr "open.questionnaire"
 
 #. module: crm_profiling
 #: field:open.questionnaire,questionnaire_id:0
@@ -112,12 +115,12 @@ msgstr "استخدم استبيان"
 #. module: crm_profiling
 #: view:open.questionnaire:0
 msgid "_Cancel"
-msgstr ""
+msgstr "إل_غاء"
 
 #. module: crm_profiling
 #: field:open.questionnaire,question_ans_ids:0
 msgid "Question / Answers"
-msgstr ""
+msgstr "سؤال / جواب"
 
 #. module: crm_profiling
 #: view:crm_profiling.questionnaire:0
@@ -150,12 +153,12 @@ msgstr "استخدم قواعد للملف الشخصى"
 #. module: crm_profiling
 #: constraint:res.partner:0
 msgid "Error ! You cannot create recursive associated members."
-msgstr ""
+msgstr "خطأ ! لا يمكنك إنشاء أعضاء مرتبطين و متداخلين."
 
 #. module: crm_profiling
 #: view:crm_profiling.question:0
 #: field:crm_profiling.question,answers_ids:0
-msgid "Avalaible answers"
+msgid "Avalaible Answers"
 msgstr "الإجابات المتاحة"
 
 #. module: crm_profiling
@@ -205,9 +208,48 @@ msgstr "حفظ البيانات"
 #~ msgid "Error ! You can not create recursive associated members."
 #~ msgstr "خطأ! لا يمكنك إنشاء أعضاء ذوي ارتباطات متداخلة."
 
+#~ msgid "Avalaible answers"
+#~ msgstr "الإجابات المتاحة"
+
 #~ msgid "Using a questionnaire"
 #~ msgstr "إستخدام إستبيان"
 
 #~ msgid "Crm Profiling management - To Perform Segmentation within Partners"
 #~ msgstr ""
-#~ "الإدارة الجانبية لإدارة علاقات العملاء - ليؤدي الانقسام من خلال الشركاء"
+#~ "الإدارة للملفات الشخصية لإدارة علاقات العملاء - لتأدية الانقسام من خلال "
+#~ "الشركاء"
+
+#~ msgid ""
+#~ "\n"
+#~ "    This module allows users to perform segmentation within partners.\n"
+#~ "    It uses the profiles criteria from the earlier segmentation module and "
+#~ "improve it. Thanks to the new concept of questionnaire. You can now regroup "
+#~ "questions into a questionnaire and directly use it on a partner.\n"
+#~ "\n"
+#~ "    It also has been merged with the earlier CRM & SRM segmentation tool "
+#~ "because they were overlapping.\n"
+#~ "\n"
+#~ "    The menu items related are in \"CRM & SRM\\Configuration\\"
+#~ "Segmentations\"\n"
+#~ "\n"
+#~ "\n"
+#~ "    * Note: this module is not compatible with the module segmentation, "
+#~ "since it's the same which has been renamed.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    هذا النموذج يسمح للمستخدمين لتنفيذ تجزئة ضمن الشركاء.\n"
+#~ "ويستخدم معايير الملفات الشخصية من وحدة التجزئة المبكرة وتحسينه. وذلك بفضل "
+#~ "مفهوم جديد للاستبيان. يمكنك الآن تجميع الأسئلة في استبيان واستخدامها مباشرة "
+#~ "على شريك.\n"
+#~ "\n"
+#~ "كما تم دمجها مع أداة التجزئة في وقت سابق من إدارة علاقات العملاء و SRM لأنها "
+#~ "كانت متداخلة.\n"
+#~ "\n"
+#~ "عناصر القائمة ذات الصلة هي في \"إدارة علاقات العملاء و SRM \\ الإنقسامات \\ "
+#~ "تكوين\"\n"
+#~ "\n"
+#~ "\n"
+#~ "* ملاحظة: هذه الوحدة غير متوافق مع تقسيم وحدة، لأنه هو نفسه الذي تمت إعادة "
+#~ "تسمية.\n"
+#~ "    "

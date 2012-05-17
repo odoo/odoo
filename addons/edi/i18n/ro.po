@@ -1,0 +1,416 @@
+# Romanian translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-02-08 01:37+0100\n"
+"PO-Revision-Date: 2012-05-15 17:48+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Romanian <ro@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2012-05-16 04:51+0000\n"
+"X-Generator: Launchpad (build 15247)\n"
+
+#. module: edi
+#: sql_constraint:res.currency:0
+msgid "The currency code must be unique per company!"
+msgstr "Codul monedei trebuie sa fie unic per companie!"
+
+#. module: edi
+#: model:ir.model,name:edi.model_res_partner_address
+msgid "Partner Addresses"
+msgstr "Adrese Partener"
+
+#. module: edi
+#: sql_constraint:res.company:0
+msgid "The company name must be unique !"
+msgstr "Numele companiei trebuie sa fie unic !"
+
+#. module: edi
+#: constraint:res.partner:0
+msgid "Error ! You cannot create recursive associated members."
+msgstr "Eroare ! Nu puteti crea membri asociati recursiv."
+
+#. module: edi
+#: field:edi.document,name:0
+msgid "EDI token"
+msgstr "Simbol EDI"
+
+#. module: edi
+#: help:edi.document,name:0
+msgid "Unique identifier for retrieving an EDI document."
+msgstr "Identificator unic pentru recuperarea unui document EDI."
+
+#. module: edi
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr "Eroare! Nu puteti crea companii recursive."
+
+#. module: edi
+#: model:ir.model,name:edi.model_res_company
+msgid "Companies"
+msgstr "Companii"
+
+#. module: edi
+#: sql_constraint:edi.document:0
+msgid "EDI Tokens must be unique!"
+msgstr "Simbolurile EDI trebuie sa fie unice!"
+
+#. module: edi
+#: model:ir.model,name:edi.model_res_currency
+msgid "Currency"
+msgstr "Moneda"
+
+#. module: edi
+#: code:addons/edi/models/edi.py:153
+#, python-format
+msgid ""
+"The document you are trying to import requires the OpenERP `%s` application. "
+"You can install it by connecting as the administrator and opening the "
+"configuration assistant."
+msgstr ""
+"Documentul pe care incercati sa il importati necesita aplicatia `%s` "
+"OpenERP. O puteti instala conectandu-va ca administrator si deschizand "
+"asistentul configurare."
+
+#. module: edi
+#: help:edi.document,document:0
+msgid "EDI document content"
+msgstr "Continut document EDI"
+
+#. module: edi
+#: model:ir.model,name:edi.model_edi_document
+msgid "EDI Document"
+msgstr "Document EDI"
+
+#. module: edi
+#: code:addons/edi/models/edi.py:48
+#, python-format
+msgid "'%s' is an invalid external ID"
+msgstr "'%s' este un ID extern nevalid"
+
+#. module: edi
+#: model:ir.model,name:edi.model_res_partner
+msgid "Partner"
+msgstr "Partener"
+
+#. module: edi
+#: code:addons/edi/models/edi.py:152
+#, python-format
+msgid "Missing Application"
+msgstr "Aplicatie Lipsa"
+
+#. module: edi
+#: field:edi.document,document:0
+msgid "Document"
+msgstr "Document"
+
+#. openerp-web
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:23
+msgid "View/Print"
+msgstr "Vizualizeaza/Printeaza"
+
+#. openerp-web
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:28
+msgid "Import this document"
+msgstr "Importa acest document"
+
+#. openerp-web
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:33
+msgid "Import it into an existing OpenERP instance"
+msgstr "Importati-l intr-un caz OpenERP existent"
+
+#. openerp-web
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:36
+msgid "OpenERP instance address:"
+msgstr "Adresa caz OpenERP"
+
+#. openerp-web
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:39
+msgid "Import"
+msgstr "Importa"
+
+#. openerp-web
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:44
+msgid "Import it into a new OpenERP Online instance"
+msgstr "Importati-l intr-o noua instanta OpenERP Online"
+
+#. openerp-web
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:47
+msgid "Create my new OpenERP instance"
+msgstr "Creeaza noul meu caz OpenERP"
+
+#. openerp-web
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:52
+msgid "Import into another application"
+msgstr "Importa intr-o alta aplicatie"
+
+#. openerp-web
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:54
+msgid ""
+"OpenERP's Electronic Data Interchange documents are based on a generic and "
+"language\n"
+"                            independent"
+msgstr ""
+"Documentele Schimb Electronic de Date OpenERP se bazeaza pe o serializare "
+"generala si independenta\n"
+"                            de limba"
+
+#. openerp-web
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:56
+msgid "JSON"
+msgstr "JSON"
+
+#. openerp-web
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:56
+msgid ""
+"serialization of the document's attribute.\n"
+"                            It is usually very quick and straightforward to "
+"create a small plug-in for your preferred\n"
+"                            application that will be capable of importing "
+"any OpenERP EDI document.\n"
+"                            You can find out more details about how to do "
+"this and what the content of OpenERP EDI documents\n"
+"                            is like in the"
+msgstr ""
+"serializare a atributului documentului.\n"
+"                            De obicei este foarte rapid si direct sa creezi "
+"un plug-in mic pentru aplicatia dumneavoastra\n"
+"\n"
+"                            preferata care va putea sa importe orice "
+"document EDI OpenERP.\n"
+"                            Puteti afla mai multe detalii despre cum sa "
+"faceti acest lucru si care este continutul documentelor EDI\n"
+"OpenERP\n"
+"                            in"
+
+#. openerp-web
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:60
+msgid "OpenERP documentation"
+msgstr "documentatia OpenERP"
+
+#. openerp-web
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:61
+msgid "To get started immediately,"
+msgstr "Pentru a incepe imediat,"
+
+#. openerp-web
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:62
+msgid "see is all it takes to use this EDI document in Python"
+msgstr ""
+"sa vedeti este tot ceea este nevoie pentru a folosi acest document EDI in "
+"Python"
+
+#. openerp-web
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:70
+msgid "You can download the raw EDI document here:"
+msgstr "Puteti descarca documentul EDI brut de aici:"
+
+#. openerp-web
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:73
+msgid "Download"
+msgstr "Descarca"
+
+#. openerp-web
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:87
+msgid "Powered by"
+msgstr "Oferit de"
+
+#. openerp-web
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:87
+msgid "OpenERP"
+msgstr "OpenERP"
+
+#. openerp-web
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:34
+msgid "Invoice"
+msgstr "Factureaza"
+
+#. openerp-web
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:37
+msgid "Description"
+msgstr "Descriere"
+
+#. openerp-web
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:38
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:41
+msgid "Date"
+msgstr "Data"
+
+#. openerp-web
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:39
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:40
+msgid "Your Reference"
+msgstr "Referinta dumneavoastra"
+
+#. openerp-web
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:50
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:57
+msgid "Product Description"
+msgstr "Descriere produs"
+
+#. openerp-web
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:51
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:58
+msgid "Quantity"
+msgstr "Cantitate"
+
+#. openerp-web
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:52
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:59
+msgid "Unit Price"
+msgstr "Pret unitar"
+
+#. openerp-web
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:53
+msgid "Discount"
+msgstr "Reducere"
+
+#. openerp-web
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:54
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:61
+msgid "Price"
+msgstr "Pret"
+
+#. openerp-web
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:72
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:81
+msgid "Net Total:"
+msgstr "Net Total:"
+
+#. openerp-web
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:83
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:92
+msgid "Taxes:"
+msgstr "Taxe:"
+
+#. openerp-web
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:94
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:103
+msgid "Total:"
+msgstr "Total:"
+
+#. openerp-web
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:106
+msgid "Tax"
+msgstr "Taxa"
+
+#. openerp-web
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:107
+msgid "Base Amount"
+msgstr "Suma de baza"
+
+#. openerp-web
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:108
+msgid "Amount"
+msgstr "Suma"
+
+#. openerp-web
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:121
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:113
+msgid "Notes:"
+msgstr "Note:"
+
+#. openerp-web
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:129
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:121
+msgid "Pay Online"
+msgstr "Plateste Online"
+
+#. openerp-web
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:133
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:125
+msgid "Paypal"
+msgstr "Paypal"
+
+#. openerp-web
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:135
+msgid ""
+"You may directly pay this invoice online via Paypal's secure payment gateway:"
+msgstr ""
+"Puteti plati aceasta factura direct online prin intermediul lui Paypal "
+"gateway plata in siguranta:"
+
+#. openerp-web
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:145
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:137
+msgid "Bank Wire Transfer"
+msgstr "Transfer Bancar"
+
+#. openerp-web
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:147
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:139
+msgid "Please transfer"
+msgstr "Va rugam sa transferati"
+
+#. openerp-web
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:148
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:140
+msgid "to"
+msgstr "la"
+
+#. openerp-web
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:149
+msgid ""
+"(postal address on the invoice header)\n"
+"                     using one of the following bank accounts. Be sure to "
+"mention the invoice\n"
+"                     reference"
+msgstr ""
+"(adresa postala de pe antetul facturii)\n"
+"                     folosind unul dintre urmatoarele conturi bancare. "
+"Asigurati-va ca mentionati referinta\n"
+"                     facturii"
+
+#. openerp-web
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:151
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:143
+msgid "on the transfer:"
+msgstr "in transfer:"
+
+#. openerp-web
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:36
+msgid "Order"
+msgstr "Comanda"
+
+#. openerp-web
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:42
+msgid "Salesman"
+msgstr "Agent de vanzari"
+
+#. openerp-web
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:43
+msgid "Payment terms"
+msgstr "Termeni de plata"
+
+#. openerp-web
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:60
+msgid "Discount(%)"
+msgstr "Reducere(%)"
+
+#. openerp-web
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:127
+msgid ""
+"You may directly pay this order online via Paypal's secure payment gateway:"
+msgstr ""
+"Puteti plati aceasta comanda direct online prin Paypay gateway plata in "
+"siguranta:"
+
+#. openerp-web
+#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:141
+msgid ""
+"(postal address on the order header)\n"
+"                     using one of the following bank accounts. Be sure to "
+"mention the document\n"
+"                     reference"
+msgstr ""
+"(adresa postala de pe antetul facturii)\n"
+"                     folosind unul dintre urmatoarele conturi bancare. "
+"Asigurati-va ca mentionati referinta\n"
+"                     documentului"

@@ -1,10 +1,6 @@
 <openerp>
     <data>
-        <menuitem icon="terp-partner"
-            id="base.menu_base_partner" name="Sales"
-            sequence="1" groups="base.group_sale_salesman,base.group_sale_manager"/>
-
-        <menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" sequence="9"/>
+        <menuitem icon="terp-partner" id="base.menu_base_partner" name="Sales" sequence="1" groups="base.group_sale_salesman"/>
 
         <record id="view_shop_form" model="ir.ui.view">
             <field name="name">sale.shop</field>
@@ -46,7 +42,8 @@
             <field name="help">If you have more than one shop reselling your company products, you can create and manage that from here. Whenever you will record a new quotation or sales order, it has to be linked to a shop. The shop also defines the warehouse from which the products will be delivered for each particular sales.</field>
         </record>
 
-        <menuitem action="action_shop_form" id="menu_action_shop_form" parent="base.menu_base_config" sequence="35"/>
+        <menuitem action="action_shop_form" id="menu_action_shop_form" parent="base.menu_base_config" sequence="35"
+            groups="stock.group_locations"/>
 
         <record id="view_sale_order_calendar" model="ir.ui.view">
             <field name="name">sale.order.calendar</field>
@@ -118,7 +115,7 @@
                         <button name="invoice_cancel" states="invoice_except" string="Cancel Order" icon="gtk-cancel"/>
                         <button name="%(action_view_sale_advance_payment_inv)d" string="Advance Invoice" type="action" icon="gtk-execute" states="draft,manual"/>
                     <div class="oe_right">
-                        <field name="state" widget="statusbar" statusbar_visible="draft,sent,progress,invoiced,done" statusbar_colors='{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}'/>
+                        <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,sent,progress,invoiced,done" statusbar_colors='{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}'/>
                     </div>
                 </div>
                 <sheet string="Sales Order" layout="auto">
@@ -203,8 +200,8 @@
                                 </form>
                                 <tree string="Sales Order Lines">
                                     <field colspan="4" name="name"/>
-                                    <field name="product_uom_qty" string="Qty(UoM)"/>
-                                    <field name="product_uom" string="UoM" groups="product.group_uom"/>
+                                    <field name="product_uom_qty" string="Qty(Unit of Measure)"/>
+                                    <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
                                     <field groups="product.group_uos" name="product_uos_qty" string="Qty(UoS)"/>
                                     <field groups="product.group_uos" name="product_uos" string="UoS"/>
                                     <field name="discount" groups="sale.group_discount_per_so_line"/>
@@ -213,12 +210,16 @@
                                 </tree>
                             </field>
 
-                            <div class="oe_right">
-                                <group col="2">
+                            <div class="oe_form_subtotal_footer" colspan="4">
+                                <div>
                                     <field name="amount_untaxed" sum="Untaxed amount"/>
+                                </div>
+                                <div>
                                     <field name="amount_tax"/>
+                                </div>
+                                <div class="oe_form_subtotal_footer_separator">
                                     <field name="amount_total"/>
-                                </group>
+                                </div>
                             </div>
                             <div class="oe_clear"/>
 
@@ -250,8 +251,21 @@
                         <page string="History">
                             <separator colspan="4" string="Invoices"/>
                             <field colspan="4" name="invoice_ids" nolabel="1" context="{'form_view_ref':'account.invoice_form'}"/>
-                            <separator colspan="4" string="Packings"/>
-                            <field colspan="4" name="picking_ids" nolabel="1"/>
+                            <separator colspan="4" string="Delivery Orders"/>
+                            <field colspan="4" name="picking_ids" nolabel="1" context="{'default_type': 'out'}">
+                                <tree colors="blue:state == 'draft';grey:state == 'cancel';red:state not in ('cancel', 'done') and min_date &lt; current_date" string="Delivery Orders">
+                                    <field name="name"/>
+                                    <field name="partner_id"/>
+                                    <field name="origin"/>
+                                    <field name="date"/>
+                                    <field name="min_date"/>
+                                    <field name="backorder_id"/>
+                                    <field name="invoice_state"/>
+                                    <field name="stock_journal_id" widget="selection"/>
+                                    <field name="state"/>
+                                    <button name="action_process" states="assigned" string="Deliver" type="object" icon="gtk-go-forward" context="{'default_type': 'out'}"/>
+                                </tree>
+                            </field>
                         </page>
                     </notebook>
                 </sheet>
@@ -373,7 +387,7 @@
                     <field name="order_partner_id"/>
                     <field name="product_id"/>
                     <field name="product_uom_qty" string="Qty"/>
-                    <field name="product_uom" string="UoM" groups="product.group_uom"/>
+                    <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
                     <field name="salesman_id"/>
                     <field name="price_subtotal" sum="Total" groups="base.group_sale_notes_subtotal"/>
                     <field name="state"/>

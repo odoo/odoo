@@ -121,7 +121,7 @@ class email_template(osv.osv):
         'ref_ir_act_window':fields.many2one('ir.actions.act_window', 'Sidebar action', readonly=True,
                                             help="Sidebar action to make this template available on records "
                                                  "of the related document model"),
-        'ref_ir_value':fields.many2one('ir.values', 'Sidebar button', readonly=True,
+        'ref_ir_value':fields.many2one('ir.values', 'Sidebar Button', readonly=True,
                                        help="Sidebar button to open the sidebar action"),
         'track_campaign_item': fields.boolean('Resource Tracking',
                                               help="Enable this is you wish to include a special tracking marker "
@@ -130,7 +130,7 @@ class email_template(osv.osv):
                                                    "This is useful for CRM leads for example"),
 
         # Overridden mail.message.common fields for technical reasons:
-        'model': fields.related('model_id','model', type='char', string='Related Document model',
+        'model': fields.related('model_id','model', type='char', string='Related Document Model',
                                 size=128, select=True, store=True, readonly=True),
         # we need a separate m2m table to avoid ID collisions with the original mail.message entries
         'attachment_ids': fields.many2many('ir.attachment', 'email_template_attachment_rel', 'email_template_id',
@@ -148,8 +148,8 @@ class email_template(osv.osv):
         'mail_server_id': fields.many2one('ir.mail_server', 'Outgoing Mail Server', readonly=False,
                                           help="Optional preferred server for outgoing mails. If not set, the highest "
                                                "priority one will be used."),
-        'body_text': fields.text('Text contents', translate=True, help="Plaintext version of the message (placeholders may be used here)"),
-        'body_html': fields.text('Rich-text contents', translate=True, help="Rich-text/HTML version of the message (placeholders may be used here)"),
+        'body_text': fields.text('Text Contents', translate=True, help="Plaintext version of the message (placeholders may be used here)"),
+        'body_html': fields.text('Rich-Text Contents', translate=True, help="Rich-Text/HTML version of the message (placeholders may be used here)"),
         'message_id': fields.char('Message-Id', size=256, help="Message-ID SMTP header to use in outgoing messages based on this template. "
                                                                "Please note that this overrides the 'Resource Tracking' option, "
                                                                "so if you simply need to track replies to outgoing emails, enable "
