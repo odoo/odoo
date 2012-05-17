@@ -194,11 +194,13 @@
             <field name="usage">menu</field>
             <field name="view_id" ref="board_crm_statistical_form"/>
         </record>
+        <menuitem id="menu_dashboard_crm" name="CRM"  sequence="20" parent="base.menu_reporting_dashboard"/>
         <menuitem 
             id="menu_board_statistics_dash"
-            parent="base.menu_reporting_dashboard"
+            parent="menu_dashboard_crm"
+            icon="terp-graph"
             action="open_board_statistical_dash"
-            sequence="11"
+            sequence="1"
             groups="base.group_sale_manager"/>
 
     </data>
