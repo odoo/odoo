@@ -218,7 +218,8 @@ class event_event(osv.osv):
         'note': fields.text('Description', readonly=False, states={'done': [('readonly', True)]}),
         'company_id': fields.many2one('res.company', 'Company', required=False, change_default=True, readonly=False, states={'done': [('readonly', True)]}),
         'is_subscribed' : fields.function(_subscribe_fnc, type="boolean", string='Subscribed'),
-        'location_id': fields.many2one('res.partner','Organization Address', readonly=False, states={'done': [('readonly', True)]}),
+        'available_qty': fields.integer('Availabel Quantity'),
+      
     }
 
     _defaults = {
@@ -226,7 +227,41 @@ class event_event(osv.osv):
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'event.event', context=c),
         'user_id': lambda obj, cr, uid, context: uid,
     }
-
+    
+    def order_now(self, cr, uid, ids, context=None):
+          register_pool = self.pool.get('event.registration')
+          user_pool = self.pool.get('res.users')
+          data_obj = self.pool.get('ir.model.data')
+          user = user_pool.browse(cr, uid, uid, context=context)
+          for event in self.browse(cr, uid, ids, context):
+              self.check_registration_limits_before(cr, uid, ids, event.available_qty, context=context)
+              curr_reg_ids = register_pool.search(cr, uid, [('user_id', '=', user.id), ('event_id', '=' , event.id)])
+        #the subscription is done with UID = 1 because in case we share the kanban view, we want anyone to be able to subscribe
+              print "event.curre_reg_ids",event.available_qty
+              if not curr_reg_ids and event.available_qty > 0:
+                print "cccccccccccc",event.available_qty  
+                curr_reg_ids = [register_pool.create(cr, 1, {'event_id': event.id ,'email': user.user_email, 'name':user.name, 'user_id': user.id, 'nb_register': event.available_qty})]
+              elif event.available_qty > 0:
+                print "mmmmmmm",event.available_qty
+                register_pool.write(cr, uid, curr_reg_ids, {'nb_register': event.available_qty}, context=context)
+              if event.available_qty > 0:  
+                register_pool.confirm_registration(cr, 1, curr_reg_ids, context=context)      
+          view_id = data_obj._get_id(cr, uid, 'event', 'view_event_registration_form')
+          if view_id:
+              res_id = data_obj.browse(cr, uid, view_id, context=context).res_id
+          res = {
+                    'name': _('Registration'),
+                    'view_type': 'form',
+                    'view_mode': 'form',
+                    'res_model': 'event.registration',
+                    'res_id': curr_reg_ids[0],
+                    'views':[(res_id,'form'), (False, 'tree')],
+                    'type': 'ir.actions.act_window',
+                    'nodestroy': True,
+                    'target': 'current',
+          }
+          return res
+         
     def subscribe_to_event(self, cr, uid, ids, context=None):
         register_pool = self.pool.get('event.registration')
         user_pool = self.pool.get('res.users')
