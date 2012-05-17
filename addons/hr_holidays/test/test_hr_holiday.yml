@@ -6,8 +6,8 @@
   !record {model: hr.holidays, id: hr_holiday1}:
     name: Sick Leave
     holiday_status_id: holiday_status_cl
-    date_from: !eval time.strftime('%Y-%m-10 10:00:00')
-    date_to: !eval time.strftime('%Y-%m-11 19:00:00')
+    date_from: !eval time.strftime('%Y-%m-10 00:00:00')
+    date_to: !eval time.strftime('%Y-%m-11 00:00:00')
     employee_id: hr.employee_fp
     type: remove
 -
