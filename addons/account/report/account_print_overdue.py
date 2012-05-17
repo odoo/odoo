@@ -83,7 +83,7 @@ class Overdue(report_sxw.rml_parse):
     def _message(self, obj, company):
         company_pool = pooler.get_pool(self.cr.dbname).get('res.company')
         message = company_pool.browse(self.cr, self.uid, company.id, {'lang':obj.lang}).overdue_msg
-        return message
+        return message.split('\n')
 
 report_sxw.report_sxw('report.account.overdue', 'res.partner',
         'addons/account/report/account_print_overdue.rml', parser=Overdue)

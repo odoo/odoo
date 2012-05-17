@@ -155,6 +155,13 @@ class project(osv.osv):
                 raise osv.except_osv(_('Operation Not Permitted !'), _('You cannot delete a project containing tasks. I suggest you to desactivate it.'))
         return super(project, self).unlink(cr, uid, ids, *args, **kwargs)
 
+    def _task_count(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict.fromkeys(ids, 0)
+        task_ids = self.pool.get('project.task').search(cr, uid, [('project_id', 'in', ids)])
+        for task in self.pool.get('project.task').browse(cr, uid, task_ids, context):
+            res[task.project_id.id] += 1
+        return res
+
     _columns = {
         'complete_name': fields.function(_complete_name, string="Project Name", type='char', size=250),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the project without removing it."),
@@ -165,7 +172,7 @@ class project(osv.osv):
 
         'members': fields.many2many('res.users', 'project_user_rel', 'project_id', 'uid', 'Project Members',
             help="Project's members are users who can have an access to the tasks related to this project.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
-        'tasks': fields.one2many('project.task', 'project_id', "Project tasks"),
+        'tasks': fields.one2many('project.task', 'project_id', "Task Activities"),
         'planned_hours': fields.function(_progress_rate, multi="progress", string='Planned Time', help="Sum of planned hours of all tasks related to this project and its child projects.",
             store = {
                 'project.project': (_get_project_and_parents, ['tasks', 'parent_id', 'child_ids'], 10),
@@ -191,7 +198,15 @@ class project(osv.osv):
         'warn_header': fields.text('Mail Header', help="Header added at the beginning of the email for the warning message sent to the customer when a task is closed.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'warn_footer': fields.text('Mail Footer', help="Footer added at the beginning of the email for the warning message sent to the customer when a task is closed.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'type_ids': fields.many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', 'Tasks Stages', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
+        'use_tasks': fields.boolean('Use Tasks', help="Check this field if this project is aimed at managing tasks"),
+        'task_count': fields.function(_task_count, type='integer', string="Open Tasks"),
+        'color': fields.integer('Color Index'),
+        'company_uom_id': fields.related('company_id', 'project_time_mode_id', type='many2one', relation='product.uom'),
      }
+    
+    def dummy(self, cr, uid, ids, context):
+        return True
+       
     def _get_type_common(self, cr, uid, context):
         ids = self.pool.get('project.task.type').search(cr, uid, [('project_default','=',1)], context=context)
         return ids
@@ -201,7 +216,8 @@ class project(osv.osv):
         'active': True,
         'priority': 1,
         'sequence': 10,
-        'type_ids': _get_type_common
+        'type_ids': _get_type_common,
+        'use_tasks': True,
     }
 
     # TODO: Why not using a SQL contraints ?

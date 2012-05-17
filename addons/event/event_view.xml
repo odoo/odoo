@@ -108,10 +108,10 @@
                             </field>
                     </page>
                     <page string="Speakers">
-                        <field name="main_speaker_id" domain="[('speaker','=',True)]"/>
+                        <field name="main_speaker_id" domain="[('speaker','=',True)]" context="{'default_speaker':1}"/>
                         <field name="speaker_confirmed"/>
                         <separator string="Other Speakers" colspan="4"/>
-                        <field name="speaker_ids" domain="[('speaker','=',True)]" colspan="4" nolabel="1"/>
+                        <field name="speaker_ids" domain="[('speaker','=',True)]" context="{'default_speaker':1}" colspan="4" nolabel="1"/>
                     </page>
                     <page string="Extra Info">
                         <group col="2" colspan="2">

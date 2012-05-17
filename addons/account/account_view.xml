@@ -1831,7 +1831,7 @@
                     <separator colspan="4" string="Information"/>
                     <field name="name" select="1"/>
                     <field name="active" select="1"/>
-                    <separator colspan="4" string="Description On Invoices"/>
+                    <separator colspan="4" string="Description on Invoices"/>
                     <field colspan="4" name="note" nolabel="1"/>
                     <separator colspan="4" string="Computation"/>
                     <field colspan="4" name="line_ids" nolabel="1"/>
@@ -2079,7 +2079,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Create Account">
-                    <separator col="4" colspan="4" string="Create an Account based on this template"/>
+                    <separator col="4" colspan="4" string="Create an Account Based on this Template"/>
                     <field name="cparent_id"/>
                     <newline/>
                     <group col="2" colspan="2">
@@ -2135,7 +2135,7 @@
                             <field name="currency_id"/>
                             <field name="reconcile"/>
                             <field name="chart_template_id"/>
-                            <separator string="Default taxes" colspan="4"/>
+                            <separator string="Default Taxes" colspan="4"/>
                             <field name="tax_ids" colspan="4" nolabel="1"/>
                         </page>
                         <page string="Notes">
@@ -2329,7 +2329,7 @@
                         <page string="Special Computation">
                             <separator colspan="4" string="Compute Code (if type=code)"/>
                             <field colspan="4" name="python_compute" nolabel="1" attrs="{'readonly':[('type','!=','code')]}"/>
-                            <separator colspan="4" string="Compute Code for Taxes included prices"/>
+                            <separator colspan="4" string="Compute Code for Taxes Included Prices"/>
                             <field colspan="4" name="python_compute_inv" nolabel="1"/>
                             <separator colspan="4" string="Applicable Code (if type=code)"/>
                             <field colspan="4" name="python_applicable" nolabel="1" attrs="{'readonly':[('applicable_type','=','true')]}"/>

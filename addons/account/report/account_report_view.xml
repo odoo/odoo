@@ -9,7 +9,7 @@
             <field name="model">report.account.receivable</field>
             <field name="type">graph</field>
             <field name="arch" type="xml">
-                <graph string="Accounts by type" type="bar">
+                <graph string="Accounts by Type" type="bar">
                     <field name="name"/>
                     <field name="balance" operator="+"/>
                 </graph>
@@ -20,7 +20,7 @@
             <field name="model">report.account.receivable</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Accounts by type">
+                <tree string="Accounts by Type">
                     <field name="name"/>
                     <field name="type"/>
                     <field name="balance"/>
@@ -34,7 +34,7 @@
             <field name="model">report.account.receivable</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Accounts by type">
+                <form string="Accounts by Type">
                     <field name="name" select="1"/>
                     <field name="type" select="1"/>
                 </form>
@@ -171,7 +171,7 @@
             <field name="model">report.account_type.sales</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Sales by Account type">
+                <tree string="Sales by Account Type">
                     <field name="name"/>
                     <field name="month"/>
                     <field name="period_id"/>
@@ -189,7 +189,7 @@
             <field name="model">report.account_type.sales</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <tree string="Sales by Account type">
+                <tree string="Sales by Account Type">
                     <field name="name" select="1"/>
                     <field name="month" select="1"/>
                     <field name="product_id" select="1"/>

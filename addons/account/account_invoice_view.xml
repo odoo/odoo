@@ -53,7 +53,7 @@
                 <form string="Invoice Line">
                     <field name="product_id" on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.currency_id, context, parent.company_id)"/>
                     <field colspan="2" name="name"/>
-                    <label string="Quantity :" align="1.0"/>
+                    <label string="Quantity" for="quantity" align="1.0"/>
                     <group colspan="1" col="2">
                         <field name="quantity" nolabel="1"/>
                         <field name="uos_id" on_change="uos_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.currency_id, context, parent.company_id)" nolabel="1"/>
@@ -99,7 +99,7 @@
                     <field name="manual"/>
                     <field name="amount"/>
                     <field name="base" readonly="0"/>
-                    <separator colspan="4" string="Tax codes"/>
+                    <separator colspan="4" string="Tax Codes"/>
                     <field name="base_code_id"/>
                     <field name="base_amount"/>
                     <field name="tax_code_id"/>

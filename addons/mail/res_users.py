@@ -36,7 +36,7 @@ class res_users(osv.osv):
                         ('comments', 'Only comments'),
                         ('to_me', 'Only when sent directly to me'),
                         ('none', 'Never')
-                        ], 'Receive feeds by email', required=True,
+                        ], 'Receive Feeds by E-mail', required=True,
                         help="Choose in which case you want to receive an email when you receive new feeds."),
     }
     

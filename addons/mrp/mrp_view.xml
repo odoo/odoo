@@ -413,7 +413,6 @@
                         </page>
                     </notebook>
                     <newline/>
-                    <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
                 </form>
             </field>
         </record>
@@ -433,7 +432,7 @@
                     <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
-                        <filter string='Default UOM' icon="terp-mrp" domain="[]" context="{'group_by' : 'product_uom'}" />
+                        <filter string='Default Unit of Measure' icon="terp-mrp" domain="[]" context="{'group_by' : 'product_uom'}" />
                         <separator orientation="vertical"/>
                         <filter string="Routing" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'routing_id'}"/>
                         <filter string='Type' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'type'}" />
@@ -450,7 +449,7 @@
             <field name="type">tree</field>
             <field name="field_parent">child_complete_ids</field>
             <field name="arch" type="xml">
-                <tree string="BoM Structure" colors="blue:method">
+                <tree string="Bill of Materials" colors="blue:method">
                     <field name="sequence" invisible="1"/>
                     <field name="name"/>
                     <field name="code"/>
@@ -677,7 +676,7 @@
                                 <tree colors="blue:state == 'draft';black:state in ('picking_except','confirmed','ready','in_production');gray:state in ('cancel','done') " string="Products to Consume">
                                     <field name="product_id" />
                                     <field name="product_qty"  string="Qty"/>
-                                    <field name="product_uom"  string="UOM"/>
+                                    <field name="product_uom"  string="Unit of Measure"/>
                                     <field name="location_id"  string="Source Loc."/>
                                     <field name="state" invisible="1"/>
                                     <button name="%(stock.move_consume)d"
@@ -686,7 +685,7 @@
                                         states="draft,waiting,confirmed,assigned" />
                                     <button
                                            name="%(stock.track_line)d"
-                                           string="Split in production lots"
+                                           string="Split in Serial Numbers"
                                            type="action" icon="gtk-justify-fill"
                                            states="draft,waiting,confirmed,assigned" />
                                     <button name="%(stock.move_scrap)d"
@@ -701,7 +700,7 @@
                                    <tree colors="red:scrapped==True;blue:state == 'draft';black:state in('picking_except','confirmed','ready','in_production');gray:state == 'cancel' " string="Consumed Products" editable="bottom">
                                        <field name="product_id" readonly="1"/>
                                        <field name="product_qty" readonly="1" string="Qty"/>
-                                       <field name="product_uom" readonly="1" string="UOM"/>
+                                       <field name="product_uom" readonly="1" string="Unit of Measure"/>
                                        <field name="prodlot_id" context="{'product_id': product_id}"/>
                                        <field name="state" invisible="1"/>
                                        <field name="scrapped" invisible="1"/>
@@ -719,7 +718,7 @@
                                 <tree string="Products to Finish">
                                     <field name="product_id" />
                                     <field name="product_qty"  string="Qty"/>
-                                    <field name="product_uom"  string="UOM"/>
+                                    <field name="product_uom"  string="Unit of Measure"/>
                                     <field name="state" invisible="1"/>
                                     <button name="%(stock.action_partial_move_server)d"
                                         string="Partial"
@@ -737,13 +736,13 @@
                                    <tree colors="red:scrapped==True;blue:state == 'draft';black:state in('picking_except','confirmed','ready','in_production');gray:state in('cancel','done') " string="Finished Products">
                                        <field name="product_id" readonly="1"/>
                                        <field name="product_qty" readonly="1" string="Qty"/>
-                                       <field name="product_uom" readonly="1" string="UOM"/>
+                                       <field name="product_uom" readonly="1" string="Unit of Measure"/>
                                        <field name="location_dest_id"  readonly="1" string="Destination Loc." widget="selection"/>
                                        <field name="prodlot_id" context="{'product_id': product_id}"/>
                                        <field name="scrapped" invisible="1"/>
                                        <field name="state" invisible="1"/>
                                        <button name="%(stock.track_line)d"
-                                            string="Split in production lots" type="action" icon="gtk-justify-fill" states="done,cancel"/>
+                                            string="Split in Serial Numbers" type="action" icon="gtk-justify-fill" states="done,cancel"/>
                                        <button name="%(stock.move_scrap)d"
                                            string="Scrap Products" type="action" icon="gtk-convert"
                                            states="done,cancel" />
@@ -980,6 +979,19 @@
             </field>
         </record>
 
+        <record id="product_normal_form_view" model="ir.ui.view">
+            <field name="name">product.normal.form.mrp.inherit</field>
+            <field name="model">product.product</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <group name="misc" position="after">
+                    <separator string="Bill of Materials" colspan="4"/>
+                    <field name="bom_ids" nolabel="1" colspan="4" context="{'default_product_id': active_id}"/>
+                </group>
+            </field>
+        </record>
+
         <act_window
             context="{'search_default_product_id': [active_id]}"
             id="act_product_manufacturing_open"
@@ -996,15 +1008,6 @@
             view_type="tree"
             view_mode="tree"
             view_id="mrp_bom_tree_view"
-            res_model="mrp.bom"
-            src_model="product.product"
-            groups="mrp.group_mrp_user"/>
-
-        <act_window
-            domain="[('bom_id','=',False)]"
-            context="{'search_default_product_id': [active_id],'default_product_id':active_id}"
-            id="act_product_product_2_mrp_bom"
-            name="Bill of Materials"
             res_model="mrp.bom"
             src_model="product.product"
             groups="mrp.group_mrp_user"/>

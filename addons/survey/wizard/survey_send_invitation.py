@@ -39,8 +39,8 @@ class survey_send_invitation(osv.osv_memory):
     _columns = {
         'partner_ids': fields.many2many('res.partner','survey_res_partner','partner_id',\
                                 'survey_id', "Answer", required=1),
-        'send_mail': fields.boolean('Send mail for new user'),
-        'send_mail_existing': fields.boolean('Send reminder for existing user'),
+        'send_mail': fields.boolean('Send Mail for New User'),
+        'send_mail_existing': fields.boolean('Send Reminder for Existing User'),
         'mail_subject': fields.char('Subject', size=256),
         'mail_subject_existing': fields.char('Subject', size=256),
         'mail_from': fields.char('From', size=256, required=1),

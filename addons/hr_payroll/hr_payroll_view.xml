@@ -620,13 +620,13 @@
                                     <field name="amount_fix"  attrs="{'invisible':[('amount_select','&lt;&gt;','fix')], 'required':[('amount_select','=','fix')]}"/><newline/>
                                     <field name="amount_percentage" attrs="{'invisible':[('amount_select','&lt;&gt;','percentage')], 'required':[('amount_select','=','percentage')]}"/>
                                     <field colspan="4" name="amount_python_compute" attrs="{'invisible':[('amount_select','&lt;&gt;','code')], 'required':[('amount_select','=','code')]}"/>
-                                    <separator colspan="4" string="Company contribution"/>
+                                    <separator colspan="4" string="Company Contribution"/>
                                     <field name="register_id"/>
                                 </group>
                         </page>
                         <page string="Child Rules">
                            <field name="parent_rule_id"/>
-                           <separator colspan="4" string="Children definition"/>
+                           <separator colspan="4" string="Children Definition"/>
                            <field colspan="4" name="child_ids" nolabel="1"/>
                         </page>
                            <page string="Inputs">

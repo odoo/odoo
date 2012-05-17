@@ -268,9 +268,9 @@ class mrp_repair(osv.osv):
         }
 
     def onchange_lot_id(self, cr, uid, ids, lot, product_id):
-        """ On change of production lot sets the values of source location,
+        """ On change of Serial Number sets the values of source location,
         destination location, move and guarantee limit.
-        @param lot: Changed id of production lot.
+        @param lot: Changed id of Serial Number.
         @param product_id: Product id from current record.
         @return: Dictionary of values.
         """
@@ -334,7 +334,7 @@ class mrp_repair(osv.osv):
                     raise osv.except_osv(_('Error !'),_('You cannot confirm a repair order which has no line.'))
                 for line in o.operations:
                     if line.product_id.track_production and not line.prodlot_id:
-                        raise osv.except_osv(_('Warning'), _("Production lot is required for opration line with product '%s'") % (line.product_id.name))
+                        raise osv.except_osv(_('Warning'), _("Serial number is required for operation line with product '%s'") % (line.product_id.name))
                 mrp_line_obj.write(cr, uid, [l.id for l in o.operations], {'state': 'confirmed'})
         return True
 
@@ -644,8 +644,8 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
         'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Sale Price')),
         'price_subtotal': fields.function(_amount_line, string='Subtotal',digits_compute= dp.get_precision('Sale Price')),
         'tax_id': fields.many2many('account.tax', 'repair_operation_line_tax', 'repair_operation_line_id', 'tax_id', 'Taxes'),
-        'product_uom_qty': fields.float('Quantity (UoM)', digits=(16,2), required=True),
-        'product_uom': fields.many2one('product.uom', 'Product UoM', required=True),
+        'product_uom_qty': fields.float('Quantity (Unit of Measure)', digits=(16,2), required=True),
+        'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
         'prodlot_id': fields.many2one('stock.production.lot', 'Lot Number',domain="[('product_id','=',product_id)]"),
         'invoice_line_id': fields.many2one('account.invoice.line', 'Invoice Line', readonly=True),
         'location_id': fields.many2one('stock.location', 'Source Location', required=True, select=True),
@@ -735,7 +735,7 @@ class mrp_repair_fee(osv.osv, ProductChangeMixin):
         'product_id': fields.many2one('product.product', 'Product'),
         'product_uom_qty': fields.float('Quantity', digits=(16,2), required=True),
         'price_unit': fields.float('Unit Price', required=True),
-        'product_uom': fields.many2one('product.uom', 'Product UoM', required=True),
+        'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
         'price_subtotal': fields.function(_amount_line, string='Subtotal',digits_compute= dp.get_precision('Sale Price')),
         'tax_id': fields.many2many('account.tax', 'repair_fee_line_tax', 'repair_fee_line_id', 'tax_id', 'Taxes'),
         'invoice_line_id': fields.many2one('account.invoice.line', 'Invoice Line', readonly=True),

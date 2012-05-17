@@ -261,7 +261,7 @@ class hr_expense_line(osv.osv):
         'unit_amount': fields.float('Unit Price', digits_compute=dp.get_precision('Account')),
         'unit_quantity': fields.float('Quantities' ),
         'product_id': fields.many2one('product.product', 'Product', domain=[('hr_expense_ok','=',True)]),
-        'uom_id': fields.many2one('product.uom', 'UoM'),
+        'uom_id': fields.many2one('product.uom', 'Unit of Measure'),
         'description': fields.text('Description'),
         'analytic_account': fields.many2one('account.analytic.account','Analytic account'),
         'ref': fields.char('Reference', size=32),

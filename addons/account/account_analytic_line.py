@@ -27,7 +27,7 @@ class account_analytic_line(osv.osv):
     _inherit = 'account.analytic.line'
     _description = 'Analytic Line'
     _columns = {
-        'product_uom_id': fields.many2one('product.uom', 'UoM'),
+        'product_uom_id': fields.many2one('product.uom', 'Unit of Measure'),
         'product_id': fields.many2one('product.product', 'Product'),
         'general_account_id': fields.many2one('account.account', 'General Account', required=True, ondelete='restrict'),
         'move_id': fields.many2one('account.move.line', 'Move Line', ondelete='cascade', select=True),
