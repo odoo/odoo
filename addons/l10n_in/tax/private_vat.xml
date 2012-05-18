@@ -22,13 +22,12 @@
     </record>
 	
 	<record id="vat_private_main" model="account.tax.template">
-        <field name="sequence">10</field>
-        <field name="description">VAT(12%)</field>
+        <field name="description">VAT(%4)</field>
         <field name="name">VAT resellers</field>
         <field name="price_include" eval="0"/>
-        <field name="amount">0.15</field>
+        <field name="amount">0.04</field>
         <field name="type">percent</field>
-        <field name="type_tax_use">sale</field>
+        <field name="type_tax_use">all</field>
         <field name="account_collected_id" ref="124"/>
         <field name="account_paid_id" ref="217"/> 		
         <field name="base_code_id" ref="vat_code_base_due"/>
@@ -42,6 +41,69 @@
         <field name="child_depend" eval="1"/>
         <field name="chart_template_id" ref="indian_chart_template_private"/>
     </record>	
+	
+	<record id="vat_private_parent" model="account.tax.template">
+        <field name="description">VAT(4%)(%1)</field>
+        <field name="name">VAT (%1)</field>
+        <field name="amount">0.01</field>
+        <field name="type">percent</field>
+        <field name="type_tax_use">all</field>
+        <field name="parent_id" ref="vat_private_main"/>
+        <field name="chart_template_id" ref="indian_chart_template_private"/>
+    </record>	
+
+	<record id="vat_private_main_tax" model="account.tax.template">
+        <field name="description">VAT(12.5%)</field>
+        <field name="name">VAT (12.5%)</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">0.125</field>
+        <field name="type">percent</field>
+        <field name="type_tax_use">all</field>
+        <field name="account_collected_id" ref="124"/>
+        <field name="account_paid_id" ref="217"/> 		
+        <field name="base_code_id" ref="vat_code_base_due"/>
+        <field name="base_sign">1</field>
+        <field name="tax_code_id" ref="vat_code_due_tva"/>
+        <field name="tax_sign">1</field>
+        <field name="ref_base_code_id" ref="vat_code_receivable_net"/>
+        <field name="ref_base_sign">1</field>
+        <field name="ref_tax_code_id" ref="vat_code_payable"/>
+        <field name="ref_tax_sign">1</field>
+        <field name="child_depend" eval="1"/>
+        <field name="chart_template_id" ref="indian_chart_template_private"/>
+    </record>
+		
+	<record id="vat_private_parent_tax" model="account.tax.template">
+        <field name="description">VAT(12.5%)(%2.5)</field>
+        <field name="name">VAT (%2.5)</field>
+        <field name="amount">0.025</field>
+        <field name="type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="parent_id" ref="vat_private_main_tax"/>
+        <field name="chart_template_id" ref="indian_chart_template_private"/>
+    </record>	
+			
+	<record id="vat_private_tax" model="account.tax.template">
+        <field name="description">VAT(8%)</field>
+        <field name="name">VAT (8%)</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">0.8</field>
+        <field name="type">percent</field>
+        <field name="type_tax_use">all</field>
+        <field name="account_collected_id" ref="124"/>
+        <field name="account_paid_id" ref="217"/> 		
+        <field name="base_code_id" ref="vat_code_base_due"/>
+        <field name="base_sign">1</field>
+        <field name="tax_code_id" ref="vat_code_due_tva"/>
+        <field name="tax_sign">1</field>
+        <field name="ref_base_code_id" ref="vat_code_receivable_net"/>
+        <field name="ref_base_sign">1</field>
+        <field name="ref_tax_code_id" ref="vat_code_payable"/>
+        <field name="ref_tax_sign">1</field>
+        <field name="child_depend" eval="1"/>
+        <field name="chart_template_id" ref="indian_chart_template_private"/>
+    </record>
+
 	
 </data>
 </openerp>

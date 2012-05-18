@@ -29,7 +29,7 @@
         <field name="price_include" eval="1"/>
         <field name="amount">0.12</field>
         <field name="type">percent</field>
-        <field name="type_tax_use">sale</field>
+        <field name="type_tax_use">all</field>
         <field name="base_code_id" ref="vat_code_balance_net"/>
         <field name="base_sign">1</field>
         <field name="tax_code_id" ref="vat_code_due_tva"/>
@@ -47,7 +47,7 @@
         <field name="name">Service (%2)</field>
         <field name="amount">0.02</field>
         <field name="type">percent</field>
-        <field name="type_tax_use">sale</field>
+        <field name="type_tax_use">all</field>
         <field name="parent_id" ref="service_public_main"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>	
@@ -57,7 +57,7 @@
         <field name="name">Service (%1)</field>
         <field name="amount">0.01</field>
         <field name="type">percent</field>
-        <field name="type_tax_use">sale</field>
+        <field name="type_tax_use">all</field>
         <field name="parent_id" ref="service_public_main"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>	
