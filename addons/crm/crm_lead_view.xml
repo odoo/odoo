@@ -60,7 +60,7 @@
                     <button name="case_escalate" string="Escalate" states="open,pending" type="object" icon="gtk-go-up" groups="base.group_no_one"/>
                     <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert" groups="base.group_no_one"/>
                     <div class="oe_right">
-                        <field name="stage_id" nolabel="1" widget="statusbaro2m" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}' groups="base.group_no_one"/>
+                        <field name="stage_id" nolabel="1" widget="statusbar" statusbar_visible="New,Qualification,Proposition,Won" statusbar_colors='{"Negotiation":"blue"}' groups="base.group_no_one"/>
                     </div>
                 </div>
                 <sheet layout="auto">
