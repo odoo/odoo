@@ -1,6 +1,8 @@
 User avatar
 ===========
 
+.. versionadded:: 7.0
+
 This revision adds an avatar for users. This replaces the use of gravatar to emulate avatars, used in views like the tasks kanban view. Two fields have been added to the res.users model:
  - avatar_big, a binary field holding the image. It is base-64 encoded, and PIL-supported. Images stored are resized to 540x450 px, to limitate the binary field size.
  - avatar, a function binary field holding an automatically resized version of the avatar_big field. It is also base-64 encoded, and PIL-supported. Dimensions of the resized avatar are 180x150. This field is used as an inteface to get and set the user avatar.

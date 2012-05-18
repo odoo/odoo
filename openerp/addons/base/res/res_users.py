@@ -540,6 +540,22 @@ class users(osv.osv):
             return self.write(cr, uid, uid, {'password': new_passwd})
         raise osv.except_osv(_('Warning!'), _("Setting empty passwords is not allowed for security reasons!"))
 
+    def has_group(self, cr, uid, group_ext_id):
+        """Checks whether user belongs to given group.
+
+        :param str group_ext_id: external ID (XML ID) of the group.
+           Must be provided in fully-qualified form (``module.ext_id``), as there
+           is no implicit module to use..
+        :return: True if the current user is a member of the group with the
+           given external ID (XML ID), else False.
+        """
+        assert group_ext_id and '.' in group_ext_id, "External ID must be fully qualified"
+        module, ext_id = group_ext_id.split('.')
+        cr.execute("""SELECT 1 FROM res_groups_users_rel WHERE uid=%s AND gid IN 
+                        (SELECT res_id FROM ir_model_data WHERE module=%s AND name=%s)""",
+                   (uid, module, ext_id))
+        return bool(cr.fetchone())
+
 users()
 
 
