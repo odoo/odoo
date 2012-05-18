@@ -1597,9 +1597,7 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
             };
             // FIXME: current context?
             return self.model.call('create_or_replace', [filter]).then(function (id) {
-                if (id) {
-                    filter.id = id;
-                }
+                filter.id = id;
                 self.append_filter(filter);
                 self.$element
                     .removeClass('oe_opened')
