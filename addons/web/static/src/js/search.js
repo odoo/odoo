@@ -310,6 +310,9 @@ openerp.web.SearchView = openerp.web.OldWidget.extend(/** @lends openerp.web.Sea
                     _.each(data.contexts, function(x) {
                         context.add(x);
                     });
+                    context.add({
+                        group_by: _(data.groupbys).pluck('group_by')
+                    });
                     _.each(data.domains, function(x) {
                            domain.add(x);
                     });
