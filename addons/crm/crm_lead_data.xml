@@ -1,15 +1,11 @@
 <?xml version="1.0"?>
 <openerp>
+<!--
     <data noupdate="1">
+-->
+    <data>
 
         <!-- Crm stages -->
-        <record model="crm.case.stage" id="stage_lead6">
-            <field name="name">Lost</field>
-            <field eval="1" name="case_default"/>
-            <field name="state">done</field>
-            <field eval="'0'" name="probability"/>
-            <field eval="'0'" name="sequence"/>
-        </record>
         <record model="crm.case.stage" id="stage_lead1">
             <field name="name">New</field>
             <field eval="1" name="case_default"/>
@@ -45,6 +41,20 @@
             <field eval="'100'" name="probability"/>
             <field eval="'15'" name="sequence"/>
             <field eval="1" name="on_change"/>
+        </record>
+        <record model="crm.case.stage" id="stage_lead6">
+            <field name="name">Lost</field>
+            <field eval="1" name="case_default"/>
+            <field name="state">done</field>
+            <field eval="'0'" name="probability"/>
+            <field eval="'16'" name="sequence"/>
+        </record>
+        <record model="crm.case.stage" id="stage_lead7">
+            <field name="name">Cancelled</field>
+            <field eval="1" name="case_default"/>
+            <field name="state">cancel</field>
+            <field eval="'0'" name="probability"/>
+            <field eval="'17'" name="sequence"/>
         </record>
         <record model="crm.case.section" id="section_sales_department">
             <field name="name">Sales Department</field>
