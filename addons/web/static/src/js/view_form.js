@@ -3902,9 +3902,7 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
         
         // search in the external relation for all possible values, then render them
         var rendering_done = $.when(selection_done).pipe(function () {
-            //self.filter_selection();
-            self.to_show = self.selection;
-            console.log(self.to_show);
+            self.filter_selection();
         }).pipe(self.proxy('render_elements'));
         
         return rendering_done;
@@ -3936,6 +3934,7 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
         return true;
     },
     filter_selection: function() {
+        var self = this;
         var shown = _.map(((this.node.attrs || {}).statusbar_visible || "").split(","),
             function(x) { return _.str.trim(x); });
         shown = _.select(shown, function(x) { return x.length > 0; });
