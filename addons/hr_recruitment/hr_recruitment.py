@@ -300,12 +300,13 @@ class hr_applicant(crm.crm_case, osv.osv):
             if id3:
                 id3 = data_obj.browse(cr, uid, id3, context=context).res_id
 
-            context = {
+            context.update({
+                'default_applicant_id': opp.id,
                 'default_partner_id': opp.partner_id and opp.partner_id.id or False,
                 'default_email_from': opp.email_from,
                 'default_state': 'open',
                 'default_name': opp.name
-            }
+            })
             value = {
                 'name': ('Meetings'),
                 'domain': "[('user_id','=',%s)]" % (uid),
@@ -538,5 +539,11 @@ class hr_job(osv.osv):
         'survey_id': fields.many2one('survey', 'Interview Form', help="Choose an interview form for this job position and you will be able to print/answer this interview from all applicants who apply for this job"),
     }
 hr_job()
+
+class crm_meeting(osv.osv):
+    _inherit = 'crm.meeting'
+    _columns = {
+        'applicant_id': fields.many2one('hr.applicant','Applicant Meeting'),
+    }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
