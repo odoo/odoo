@@ -3902,15 +3902,12 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
      */
     render_list: function() {
         var self = this;
-        
         // get selection values
         var selection_done = this.get_selection();
-        
         // search in the external relation for all possible values, then render them
         var rendering_done = $.when(selection_done).pipe(function () {
             self.filter_selection();
         }).pipe(self.proxy('render_elements'));
-        
         return rendering_done;
     },
     get_selection: function() {
@@ -3964,7 +3961,7 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
             this.to_show = this.selection;
         } else {
             this.to_show = _.select(this.selection, function(x) {
-                return _.indexOf(shown, x[index]) !== -1 || x[index] === self.selected_value;
+                return _.indexOf(shown, x[index]) !== -1 || x[0] === self.selected_value;
             });
         }
     },
@@ -3975,35 +3972,10 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
         var colors = JSON.parse((this.node.attrs || {}).statusbar_colors || "{}");
         var color = colors[this.selected_value];
         if (color) {
-            var elem = this.$element.find("li.oe-arrow-list-selected span");
-            elem.css("border-color", color);
-            if (this.check_white(color))
-                elem.css("color", "white");
-            elem = this.$element.find("li.oe-arrow-list-selected .oe-arrow-list-before");
-            elem.css("border-left-color", "rgba(0,0,0,0)");
-            elem = this.$element.find("li.oe-arrow-list-selected .oe-arrow-list-after");
-            elem.css("border-color", "rgba(0,0,0,0)");
-            elem.css("border-left-color", color);
+            var elem = this.$element.find("li.oe_form_steps_active span");
+            elem.css("color", color);
         }
     },
-    check_white: function(color) {
-        var div = $("<div></div>");
-        div.css("display", "none");
-        div.css("color", color);
-        div.appendTo($("body"));
-        var ncolor = div.css("color");
-        div.remove();
-        var res = /^\s*rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*$/.exec(ncolor);
-        if (!res) {
-            return false;
-        }
-        var comps = [parseInt(res[1]), parseInt(res[2]), parseInt(res[3])];
-        var lum = comps[0] * 0.3 + comps[1] * 0.59 + comps[1] * 0.11;
-        if (lum < 128) {
-            return true;
-        }
-        return false;
-    }
 });
 
 /**
