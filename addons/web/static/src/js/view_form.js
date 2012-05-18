@@ -3884,8 +3884,8 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
     set_value: function(value_) {
         this._super(value_);
         /** find selected value: ex:
-         * - many2one: [2, "New"]
-         * - selection: new */
+         * - many2one: [2, "New"] -> 2
+         * - selection: new -> new */
         if (this.field.type == "many2one") {
             this.selected_value = value_[0];
         }
@@ -3894,6 +3894,12 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
         }
         this.render_list();
     },
+    /** Get the status list and render them
+     *  to_show: [[identifier, value_to_displaty]] where
+     *   - identifier = db value for a selection, id for a many2one
+     *   - display_val = value that will be displayed
+     *   - ex: [[0, "New"]] (selection) or [["new", "new"]] (many2one)
+     */
     render_list: function() {
         var self = this;
         
@@ -3933,8 +3939,23 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
         }
         return true;
     },
+    /** Filters this.selection, according to values coming from the statusbar_visible
+     *  attribute of the field. For example: statusbar_visible="draft,open"
+     *  There is however two main possibilities :
+     *  - the value is the identifier, for a selection (new for [new, "New"])
+     *    -> in this case, the options values refer to list[x][0]
+     *  - the value is the name or displayed value, for a many2one
+     *    (Draft for [0, "Draft"])
+     *    -> in this case, the options values refer to list[x][0]
+     */
     filter_selection: function() {
         var self = this;
+        if (this.field.type == "many2one") {
+            var index = 1;
+        }
+        else {
+            var index = 0;
+        }
         var shown = _.map(((this.node.attrs || {}).statusbar_visible || "").split(","),
             function(x) { return _.str.trim(x); });
         shown = _.select(shown, function(x) { return x.length > 0; });
@@ -3943,7 +3964,7 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
             this.to_show = this.selection;
         } else {
             this.to_show = _.select(this.selection, function(x) {
-                return _.indexOf(shown, x[0]) !== -1 || x[0] === self.selected_value;
+                return _.indexOf(shown, x[index]) !== -1 || x[index] === self.selected_value;
             });
         }
     },
