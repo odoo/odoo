@@ -642,6 +642,26 @@ class sale_order(osv.osv):
             self.cancel_send_note(cr, uid, [sale.id], context=None)
         self.write(cr, uid, ids, {'state': 'cancel'})
         return True
+    
+    def action_button_confirm(self, cr, uid, ids, context=None):
+        wf_service = netsvc.LocalService('workflow')
+        for id in ids:
+            wf_service.trg_validate(uid, 'sale.order', id, 'order_confirm', cr)
+
+        result = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'sale', 'view_order_form')
+        view_id = result and result[1] or False,
+
+        return {
+            'name': _('Sales Order'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': view_id,
+            'res_model': 'sale.order',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'current',
+            'res_id': ids and ids[0] or False,
+        }
 
     def action_wait(self, cr, uid, ids, context=None):
         for o in self.browse(cr, uid, ids):
