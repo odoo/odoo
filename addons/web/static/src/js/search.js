@@ -665,17 +665,6 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         case 'add_to_dashboard':
             this.on_add_to_dashboard();
             break;
-        case 'manage_filters':
-            this.do_action({
-                res_model: 'ir.filters',
-                views: [[false, 'list'], [false, 'form']],
-                type: 'ir.actions.act_window',
-                context: {"search_default_user_id": this.session.uid,
-                "search_default_model_id": this.dataset.model},
-                target: "current",
-                limit : 80
-            });
-            break;
         case '':
             this.do_clear();
         }

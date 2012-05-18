@@ -607,6 +607,17 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
             case 'edit':
                 this.do_edit_resource($option.data('model'), $option.data('id'), { name : $option.text() });
                 break;
+            case 'manage_filters':
+                this.do_action({
+                    res_model: 'ir.filters',
+                    views: [[false, 'list'], [false, 'form']],
+                    type: 'ir.actions.act_window',
+                    context: {
+                        search_default_my_filters: true,
+                        search_default_model_id: this.dataset.model
+                    }
+                });
+                break;
             default:
                 if (val) {
                     console.log("No debug handler for ", val);
