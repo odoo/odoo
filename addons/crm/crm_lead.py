@@ -137,30 +137,6 @@ class crm_lead(crm_case, osv.osv):
                     res[obj.id] = msg.subject
                     break
         return res
-
-    def _get_state(self, cr, uid, ids, name, arg, context=None):
-        res = {}
-        for lead in self.browse(cr, uid, ids, context=context):
-            if lead.stage_id:
-                res[lead.id] = lead.stage_id.state
-        return res
-
-    def _get_stage(self, cr, uid, ids, context=None):
-        crm_lead_obj = self.pool.get('crm.lead')
-        result = {}
-        for stage in self.browse(cr, uid, ids, context=context):
-            if stage.state:
-                crm_lead_ids = crm_lead_obj.search(cr, uid, [('state', '=', stage.state)], context=context)
-        for lead in crm_lead_obj.browse(cr, uid, crm_lead_ids, context=context):
-            result[lead.id] = True
-        return result.keys()
-
-    def _save_state(self, cr, uid, lead_id, field_name, field_value, arg, context=None):
-        stage_ids = self.pool.get('crm.case.stage').search(cr, uid, [('state', '=', field_value)], order='sequence', context=context)
-        if stage_ids:
-            return self.write(cr, uid, [lead_id], {'stage_id': stage_ids[0]}, context=context)
-        else:
-            return cr.execute("""update crm_lead set state=%s where id=%s""", (field_value, lead_id))
  
     _columns = {
         'partner_id': fields.many2one('res.partner', 'Partner', ondelete='set null',
@@ -199,11 +175,9 @@ class crm_lead(crm_case, osv.osv):
                                 multi='day_open', type="float", store=True),
         'day_close': fields.function(_compute_day, string='Days to Close', \
                                 multi='day_close', type="float", store=True),
-        'state': fields.function(_get_state, fnct_inv=_save_state, type='selection', selection=crm.AVAILABLE_STATES, string="State", readonly=True,
-            store = {
-                    'crm.lead': (lambda self, cr, uid, ids, c={}: ids, ['stage_id'], 10),
-                    'crm.case.stage': (_get_stage, ['state'], 10)
-            }, help='The state is set to \'Draft\', when a case is created.\
+        'state': fields.related('stage_id', 'state', type="selection",
+                selection=crm.AVAILABLE_STATES, string="State", store=True, readonly=True,
+                help='The state is set to \'Draft\', when a case is created.\
                     \nIf the case is in progress the state is set to \'Open\'.\
                     \nWhen the case is over, the state is set to \'Done\'.\
                     \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
@@ -233,7 +207,6 @@ class crm_lead(crm_case, osv.osv):
         'active': 1,
         'user_id': crm_case._get_default_user,
         'email_from': crm_case._get_default_email,
-        'state': 'draft',
         'type': 'lead',
         'section_id': crm_case._get_section,
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.lead', context=c),
