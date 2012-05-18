@@ -334,7 +334,7 @@
                                         on_change="onchange_move_line_id(move_line_id)"
                                         domain="[('account_id.type','in',('receivable','payable')), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id)]"
                                         required="1"
-                                        />
+                                        groups="account.group_account_user"/>
                                     <field name="account_id"  groups="base.group_no_one" domain="[('type','=','receivable')]"/>
                                     <field name="date_original" readonly="1"/>
                                     <field name="date_due" readonly="1"/>
@@ -386,7 +386,7 @@
                                 </group>
                             </group>
                         </page>
-                        <page string="Journal Items" attrs="{'invisible': [('state','!=','posted')]}" groups="account.group_account_user">
+                        <page string="Journal Items" attrs="{'invisible': [('state','!=','posted')]}">
                             <group col="6" colspan="4">
                                 <field name="period_id"/>
                                 <field name="audit"/>
