@@ -27,7 +27,7 @@ class mrp_product_produce(osv.osv_memory):
     _description = "Product Produce"
 
     _columns = {
-        'product_qty': fields.float('Select Quantity', digits_compute=dp.get_precision('Product UoM'), required=True),
+        'product_qty': fields.float('Select Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
         'mode': fields.selection([('consume_produce', 'Consume & Produce'),
                                   ('consume', 'Consume Only')], 'Mode', required=True,
                                   help="'Consume only' mode will only consume the products with the quantity selected.\n"
