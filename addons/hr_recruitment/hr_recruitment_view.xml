@@ -7,6 +7,15 @@
             parent="hr.menu_hr_configuration"
             sequence="40" />
 
+        <act_window
+            domain="[('applicant_id', '=', active_id)]"
+            id="act_hr_applicant_to_meeting"
+            name="Meetings"
+            res_model="crm.meeting"
+            src_model="hr.applicant"
+            view_mode="tree,form,calendar,graph"
+            view_type="form"/>
+
     # ------------------------------------------------------
     # Job Categories
     # ------------------------------------------------------
