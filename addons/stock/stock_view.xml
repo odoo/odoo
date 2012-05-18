@@ -911,7 +911,7 @@
                     <field name="min_date"/>
                     <field name="backorder_id"/>
                     <field name="invoice_state"/>
-                    <field name="stock_journal_id" widget="selection"/>
+                    <field name="stock_journal_id" widget="selection" groups="account.group_account_user"/>
                     <field name="state"/>
                     <button name="action_process" states="assigned" string="Process" type="object" icon="gtk-go-forward"/>
                 </tree>
