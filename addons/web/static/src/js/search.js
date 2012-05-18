@@ -644,8 +644,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         // load defaults
         var defaults_fetched = $.when.apply(null, _(this.inputs).invoke(
             'facet_for_defaults', this.defaults)).then(function () {
-                self.query.reset(_(arguments).compact(), {silent: true});
-                self.renderFacets();
+                self.query.reset(_(arguments).compact(), {preventSearch: true});
             });
 
         return $.when(drawer_started, defaults_fetched)
@@ -800,7 +799,10 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
      *
      * @param e jQuery event object coming from the "Search" button
      */
-    do_search: function () {
+    do_search: function (_query, options) {
+        if (options && options.preventSearch) {
+            return;
+        }
         var search = this.build_search_data();
         if (!_.isEmpty(search.errors)) {
             this.on_invalid(search.errors);
@@ -1009,10 +1011,33 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
         }
         this._super(view);
         this.filters = filters;
+        this.view.query.on('add remove change reset', this.proxy('search_change'));
     },
     start: function () {
         this.$element.on('click', 'li', this.proxy('toggle_filter'));
         return $.when(null);
+    },
+    /**
+     * Handles change of the search query: any of the group's filter which is
+     * in the search query should be visually checked in the drawer
+     */
+    search_change: function () {
+        var self = this;
+        var $filters = this.$element.find('> li').removeClass('oe_selected');
+        var facet = this.view.query.find(_.bind(this.match_facet, this));
+        if (!facet) { return; }
+        facet.values.each(function (v) {
+            var i = _(self.filters).indexOf(v.get('value'));
+            if (i === -1) { return; }
+            $filters.eq(i).addClass('oe_selected');
+        });
+    },
+    /**
+     * Matches the group to a facet, in order to find if the group is
+     * represented in the current search query
+     */
+    match_facet: function (facet) {
+        return facet.get('field') === this;
     },
     make_facet: function (values) {
         return {
@@ -1130,7 +1155,7 @@ instance.web.search.GroupbyGroup = instance.web.search.FilterGroup.extend({
         this._super(filters, view);
         // Not flanders: facet unicity is handled through the
         // (category, field) pair of facet attributes. This is all well and
-        // good for regular filter groups where a group matche a facet, but for
+        // good for regular filter groups where a group matches a facet, but for
         // groupby we want a single facet. So cheat: add an attribute on the
         // view which proxies to the first GroupbyGroup, so it can be used
         // for every GroupbyGroup and still provides the various methods needed
@@ -1143,6 +1168,9 @@ instance.web.search.GroupbyGroup = instance.web.search.FilterGroup.extend({
                 get_groupby: this.proxy('get_groupby')
             }
         }
+    },
+    match_facet: function (facet) {
+        return facet.get('field') === this.getParent()._s_groupby;
     },
     make_facet: function (values) {
         return {

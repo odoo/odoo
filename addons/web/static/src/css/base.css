@@ -1341,11 +1341,14 @@
 }
 .openerp .oe_searchview .oe_searchview_drawer .oe_searchview_filters li {
   list-style: none;
-  padding: 3px 6px;
+  padding: 3px 6px 3px 18px;
   height: 14px;
   line-height: 14px;
   color: inherit;
   cursor: pointer;
+}
+.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_filters li.oe_selected {
+  background: url(/web/static/src/img/icons/gtk-apply.png) left center no-repeat;
 }
 .openerp .oe_searchview .oe_searchview_drawer .oe_searchview_filters li:hover {
   background-color: #f0f0fa;
