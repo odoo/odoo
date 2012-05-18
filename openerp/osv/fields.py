@@ -108,10 +108,11 @@ class _column(object):
         self.manual = manual
         self.selectable = True
         self.group_operator = args.get('group_operator', False)
+        self.groups = False  # CSV list of ext IDs of groups that can access this field
         for a in args:
             if args[a]:
                 setattr(self, a, args[a])
-
+ 
     def restart(self):
         pass
 
@@ -1502,7 +1503,7 @@ def field_to_dict(model, cr, user, field, context=None):
         res['related_columns'] = [col1, col2]
         res['third_table'] = table
     for arg in ('string', 'readonly', 'states', 'size', 'required', 'group_operator',
-            'change_default', 'translate', 'help', 'select', 'selectable'):
+            'change_default', 'translate', 'help', 'select', 'selectable', 'groups'):
         if getattr(field, arg):
             res[arg] = getattr(field, arg)
     for arg in ('digits', 'invisible', 'filters'):
