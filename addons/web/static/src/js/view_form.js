@@ -3883,8 +3883,15 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
     },
     set_value: function(value_) {
         this._super(value_);
-        this.selected_value = value_;
-
+        /** find selected value: ex:
+         * - many2one: [2, "New"]
+         * - selection: new */
+        if (this.field.type == "many2one") {
+            this.selected_value = value_[0];
+        }
+        else {
+            this.selected_value = value_;
+        }
         this.render_list();
     },
     render_list: function() {
