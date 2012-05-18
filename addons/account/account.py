@@ -106,7 +106,7 @@ class account_payment_term_line(osv.osv):
         'days': fields.integer('Number of Days', required=True, help="Number of days to add before computation of the day of month." \
             "If Date=15/01, Number of Days=22, Day of Month=-1, then the due date is 28/02."),
         'days2': fields.integer('Day of the Month', required=True, help="Day of the month, set -1 for the last day of the current month. If it's positive, it gives the day of the next month. Set 0 for net days (otherwise it's based on the beginning of the month)."),
-        'payment_id': fields.many2one('account.payment.term', 'Payment Term', required=True, select=True),
+        'payment_id': fields.many2one('account.payment.term', 'Payment Term', required=True, select=True, ondelete='cascade'),
     }
     _defaults = {
         'value': 'balance',
