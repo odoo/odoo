@@ -1,5 +1,19 @@
 <template>
-    <t t-name="AttendanceNotifier">
-        <img style="cursor: pointer;" t-attf-src="/hr_attendance/static/src/img/emp-#{employee.state}.png" class="oe_attendance_button" t-attf-title="You are #{employee.state}"></img>
+    <t t-extend="UserMenu">
+        <t t-jquery="li.oe_dropdown" t-operation="before" >  
+             <li>
+                   <div class="oe_attendance_status" style="height:20px;width:100px;background-color:white;padding: 5px 10px 7px;margin:3px;">
+                        <div class="oe_attendance_present" style="float:left;">Present</div>
+                        <div class="oe_attendance_absent" style="float:right">Absent</div>
+                        <div class="oe_attendance_slider" style="cursor:pointer;width: 60px;background-color: gray;position: relative;top: -4px;left: -8px;height: 30px;-webkit-border-radius:4px;"><span  style="visibility:hidden;">slider</span></div>
+                   </div>
+             </li>
+        </t>
     </t>
+    
 </template>
+
+
+
+
+
