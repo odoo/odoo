@@ -219,7 +219,7 @@
             <field name="view_id" ref="sequence_view_tree"/>
             <field name="context">{'active_test': False}</field>
         </record>
-        <menuitem id="next_id_5" name="Sequences &amp; Identifiers" parent="base.menu_config" sequence="21" groups="base.group_no_one"/>
+        <menuitem id="next_id_5" name="Sequences &amp; Identifiers" parent="base.menu_custom" sequence="21" groups="base.group_no_one"/>
         <menuitem action="ir_sequence_form" id="menu_ir_sequence_form" parent="next_id_5"/>
 
         <!-- Sequences Types -->
@@ -613,87 +613,7 @@
         </record>
 
         <menuitem id="menu_needaction_users_rel" name="Need actions" parent="base.menu_users" sequence="20" action="action_view_needaction_users_rel" groups="base.group_no_one"/>
-        
-        <!-- Companies -->
-        <menuitem id="menu_res_company_global"
-            parent="base.menu_administration"
-            name="Companies"
-            sequence="2"/>
 
-        <record id="action_res_company_tree" model="ir.actions.act_window">
-            <field name="name">Company's Structure</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.company</field>
-            <field name="domain">[('parent_id','=',False)]</field>
-            <field name="view_type">tree</field>
-        </record>
-        <menuitem action="action_res_company_tree"
-            groups="base.group_multi_company"
-            id="menu_action_res_company_tree" parent="base.menu_res_company_global"
-            sequence="16"/>
-        <record id="action_res_company_form" model="ir.actions.act_window">
-            <field name="name">Companies</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.company</field>
-            <field name="view_type">form</field>
-            <field name="help">Create and manage the companies that will be managed by OpenERP from here. Shops or subsidiaries can be created and maintained from here.</field>
-        </record>
-        <menuitem action="action_res_company_form" id="menu_action_res_company_form" parent="base.menu_res_company_global"/>
-
-        <!-- Users -->
-        <record id="action_res_users" model="ir.actions.act_window">
-            <field name="name">Users</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.users</field>
-            <field name="view_type">form</field>
-            <field name="view_id" ref="view_users_tree"/>
-            <field name="search_view_id" ref="view_users_search"/>
-            <field name="help">Create and manage users that will connect to the system. Users can be deactivated should there be a period of time during which they will/should not connect to the system. You can assign them groups in order to give them specific access to the applications they need to use in the system.</field>
-        </record>
-        <record id="action_res_users_view1" model="ir.actions.act_window.view">
-            <field eval="10" name="sequence"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="view_users_tree"/>
-            <field name="act_window_id" ref="action_res_users"/>
-        </record>
-        <record id="action_res_users_view2" model="ir.actions.act_window.view">
-            <field eval="20" name="sequence"/>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="view_users_form"/>
-            <field name="act_window_id" ref="action_res_users"/>
-        </record>
-
-        <menuitem action="action_res_users" id="menu_action_res_users" parent="base.menu_users"/>
-
-        <record id="action_res_users_my" model="ir.actions.act_window">
-            <field name="name">Change My Preferences</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.users</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form,tree</field>
-            <field name="domain">[('id','=',uid)]</field>
-        </record>
-        <record id="action_res_users_my_view1" model="ir.actions.act_window.view">
-            <field eval="20" name="sequence"/>
-            <field name="view_mode">tree</field>
-            <field name="act_window_id" ref="action_res_users_my"/>
-        </record>
-        <record id="action_res_users_my_view2" model="ir.actions.act_window.view">
-            <field eval="10" name="sequence"/>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="view_users_form_simple_modif"/>
-            <field name="act_window_id" ref="action_res_users_my"/>
-        </record>
-
-        <record id="action_res_groups" model="ir.actions.act_window">
-            <field name="name">Groups</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.groups</field>
-            <field name="view_type">form</field>
-            <field name="help">A group is a set of functional areas that will be assigned to the user in order to give them access and rights to specific applications and tasks in the system. You can create custom groups or edit the ones existing by default in order to customize the view of the menu that users will be able to see. Whether they can have a read, write, create and delete access right can be managed from here.</field>
-        </record>
-        <menuitem action="action_res_groups" id="menu_action_res_groups" parent="base.menu_users"
-            groups="base.group_no_one"/>
 
         <!-- View -->
         <record id="view_view_form" model="ir.ui.view">
@@ -1919,6 +1839,11 @@
                         <field name="sequence"/>
                 </tree>
             </field>
+        </record>
+
+        <record id="category_administration_config" model="ir.actions.todo.category">
+            <field name="name">Administration</field>
+            <field name="sequence">1</field>
         </record>
 
         <record id="category_sales_management_config" model="ir.actions.todo.category">
