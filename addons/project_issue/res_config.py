@@ -26,21 +26,7 @@ class project_issue_settings(osv.osv_memory):
     _inherit = ['project.config.settings', 'fetchmail.config.settings']
 
     _columns = {
-        'fetchmail_issue': fields.boolean("Create Issues from an E-mail Account",
-            fetchmail_model='project.issue', fetchmail_name='Incoming issues',
+        'fetchmail_issue': fields.boolean("Create Issues from Incoming Mails", readonly=True,
+            fetchmail_model='project.issue', fetchmail_name='Incoming Issues',
             help="""Allows you to configure your incoming mail server, and create issues from incoming emails."""),
-        'issue_server' : fields.char('Server', size=256),
-        'issue_port' : fields.integer('Port'),
-        'issue_type': fields.selection([
-                ('pop', 'POP Server'),
-                ('imap', 'IMAP Server'),
-                ('local', 'Local Server'),
-            ], 'Type'),
-        'issue_is_ssl': fields.boolean('SSL/TLS', help="Connections are encrypted with SSL/TLS through a dedicated port (default: IMAPS=993, POP=995)"),
-        'issue_user' : fields.char('Username', size=256),
-        'issue_password' : fields.char('Password', size=1024),
-    }
-
-    _defaults = {
-        'issue_type': 'pop',
     }

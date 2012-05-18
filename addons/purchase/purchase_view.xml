@@ -136,7 +136,7 @@
                         <field name="date_order"/>
                         <field name="invoiced"/>
                         <newline/>
-                        <field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)" widget="selection"/>
+                        <field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)" widget="selection" groups="stock.group_locations"/>
                         <field name="partner_ref"/>
                         <field name="shipped"/>
                         <field name="company_id" groups="base.group_multi_company" widget="selection"/>
@@ -182,7 +182,7 @@
                                 <separator string="Delivery" colspan="2"/>
                                 <field name="dest_address_id" on_change="onchange_dest_address_id(dest_address_id)"/>
                                 <field name="minimum_planned_date"/>
-                                <field name="location_id"/>
+                                <field name="location_id" groups="stock.group_locations"/>
                             </group>
                             <group colspan="2" col="2">
                                 <separator string="Invoice Control" colspan="2"/>
