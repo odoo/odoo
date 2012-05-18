@@ -1054,12 +1054,6 @@
         </span>
     </t>
 </t>
-<t t-name="FieldMany2Many.render">
-    <div class="oe_form_view_m2m">
-        <div class="oe_form_view_m2m_buttons" />
-        <div class="oe_form_view_m2m_view" />
-    </div>
-</t>
 <t t-name="FieldMany2ManyTags">
     <div class="oe_form_field_many2manytags">
         <t t-if="! widget.get('effective_readonly')">
@@ -1525,7 +1519,7 @@
         </t>
     </select>
 </t>
-<t t-name="SelectCreatePopup">
+<t t-name="AbstractFormPopup.render">
     <div>
         <table style="width:100%">
             <tr style="width:100%">
@@ -1539,31 +1533,22 @@
                 </td>
             </tr>
         </table>
-        <div class="oe-select-create-popup-view-form" style="width:100%"></div>
+        <div class="oe-form-view-popup-form-placeholder oe-select-create-popup-view-form" style="width:100%"></div>
     </div>
 </t>
 <t t-name="SelectCreatePopup.search.buttons">
     <button type="button" class="oe_button oe_selectcreatepopup-search-select" disabled="disabled">Select</button>
     <button type="button" class="oe_button oe_selectcreatepopup-search-close">Cancel</button>
 </t>
-<t t-name="SelectCreatePopup.form.buttons">
-    <t t-if="widget.options.disable_multiple_selection">
-        <button type="button" class="oe_button oe_selectcreatepopup-form-save">Save</button>
+<t t-name="AbstractFormPopup.buttons">
+    <t t-if="! multi_select">
+        <button type="button" class="oe_button oe_abstractformpopup-form-save">Save</button>
     </t>
-    <t t-if="! widget.options.disable_multiple_selection">
-        <button type="button" class="oe_button oe_selectcreatepopup-form-save-new">Save &amp; New</button>
-        <button type="button" class="oe_button oe_selectcreatepopup-form-save">Save &amp; Close</button>
+    <t t-if="multi_select">
+        <button type="button" class="oe_button oe_abstractformpopup-form-save-new">Save &amp; New</button>
+        <button type="button" class="oe_button oe_abstractformpopup-form-save">Save &amp; Close</button>
     </t>
-    <button type="button" class="oe_button oe_selectcreatepopup-form-close">Cancel</button>
-</t>
-<t t-name="FormOpenPopup">
-    <div>
-        <div class="oe-form-open-popup-form-view" style="width:100%"></div>
-    </div>
-</t>
-<t t-name="FormOpenPopup.form.buttons">
-    <button type="button" class="oe_button oe_formopenpopup-form-save">Save</button>
-    <button type="button" class="oe_button oe_formopenpopup-form-close">Cancel</button>
+    <button type="button" class="oe_button oe_abstractformpopup-form-close">Cancel</button>
 </t>
 <t t-extend="ListView.row">
     <!-- adds back padding to row being rendered after edition, if necessary
