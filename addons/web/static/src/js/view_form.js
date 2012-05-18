@@ -3889,24 +3889,15 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
     },
     render_list: function() {
         var self = this;
-        var shown = _.map(((this.node.attrs || {}).statusbar_visible || "").split(","),
-            function(x) { return _.str.trim(x); });
-        shown = _.select(shown, function(x) { return x.length > 0; });
-
+        
+        // get selection values
         var selection_done = this.get_selection();
         
-        if (shown.length == 0) {
-            this.to_show = this.selection;
-        } else {
-            this.to_show = _.select(this.selection, function(x) {
-                return _.indexOf(shown, x[0]) !== -1 || x[0] === self.selected_value;
-            });
-        }
-        
         // search in the external relation for all possible values, then render them
-        var rendering_done = $.when(selection_done).then(function () {
-            console.log(self.selection);
+        var rendering_done = $.when(selection_done).pipe(function () {
+            //self.filter_selection();
             self.to_show = self.selection;
+            console.log(self.to_show);
         }).pipe(self.proxy('render_elements'));
         
         return rendering_done;
@@ -3936,6 +3927,19 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
             this.selection = this.field.selection;
         }
         return true;
+    },
+    filter_selection: function() {
+        var shown = _.map(((this.node.attrs || {}).statusbar_visible || "").split(","),
+            function(x) { return _.str.trim(x); });
+        shown = _.select(shown, function(x) { return x.length > 0; });
+        
+        if (shown.length == 0) {
+            this.to_show = this.selection;
+        } else {
+            this.to_show = _.select(this.selection, function(x) {
+                return _.indexOf(shown, x[0]) !== -1 || x[0] === self.selected_value;
+            });
+        }
     },
     render_elements: function () {
         var content = instance.web.qweb.render("FieldStatus.content", {widget: this, _:_});
