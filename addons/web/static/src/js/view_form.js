@@ -3873,95 +3873,6 @@ instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
     }
 });
 
-instance.web.form.FieldStatusO2M = instance.web.form.AbstractField.extend({
-    template: "EmptyComponent",
-    start: function() {
-        this._super();
-        this.selected_value = null;
-
-        this.render_list();
-    },
-    set_value: function(value_) {
-        this._super(value_);
-        this.selected_value = value_;
-
-        this.render_list();
-    },
-    render_list: function() {
-        var self = this;
-        var shown = _.map(((this.node.attrs || {}).statusbar_visible || "").split(","),
-            function(x) { return _.str.trim(x); });
-        shown = _.select(shown, function(x) { return x.length > 0; });
-
-        if (shown.length == 0) {
-            this.to_show = this.field.selection;
-        } else {
-            this.to_show = _.select(this.field.selection, function(x) {
-                return _.indexOf(shown, x[0]) !== -1 || x[0] === self.selected_value;
-            });
-        }
-        
-        // get a DataSet on the current model (ex: crm.lead)
-        this.model = new instance.web.DataSet(this, this.field_manager.dataset.model);
-        
-        // get the domain of the current field (ex: crm.lead.stage_id -> section_ids = section_id)
-        var fields_get_defer = this.model.call('fields_get', [[this.name]]).pipe( function (record) {
-            this.field_domain = record.domain;
-        });
-        
-        // get a DataSetSearch on the current field relation (ex: crm.lead.stage_id -> crm.case.stage)
-        this.model_ext = new instance.web.DataSetSearch(this, this.field.relation);
-        
-        // search in the external relation for all possible values, then render them
-        var rendering_done = $.when(fields_get_defer).pipe( function () {
-            self.model_ext.read_slice(['name'], {'domain': self.field_domain}).pipe( function (records) {
-                self.to_show = [];
-                 _(records).each(function (record) {
-                    self.to_show.push([record.id, record.name]);
-                });
-            }).then(self.proxy('render_elements'));
-        });
-        
-        return rendering_done;
-    },
-    render_elements: function () {
-        var content = instance.web.qweb.render("FieldStatus.content", {widget: this, _:_});
-        this.$element.html(content);
-
-        var colors = JSON.parse((this.node.attrs || {}).statusbar_colors || "{}");
-        var color = colors[this.selected_value];
-        if (color) {
-            var elem = this.$element.find("li.oe-arrow-list-selected span");
-            elem.css("border-color", color);
-            if (this.check_white(color))
-                elem.css("color", "white");
-            elem = this.$element.find("li.oe-arrow-list-selected .oe-arrow-list-before");
-            elem.css("border-left-color", "rgba(0,0,0,0)");
-            elem = this.$element.find("li.oe-arrow-list-selected .oe-arrow-list-after");
-            elem.css("border-color", "rgba(0,0,0,0)");
-            elem.css("border-left-color", color);
-        }
-    },
-    check_white: function(color) {
-        var div = $("<div></div>");
-        div.css("display", "none");
-        div.css("color", color);
-        div.appendTo($("body"));
-        var ncolor = div.css("color");
-        div.remove();
-        var res = /^\s*rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*$/.exec(ncolor);
-        if (!res) {
-            return false;
-        }
-        var comps = [parseInt(res[1]), parseInt(res[2]), parseInt(res[3])];
-        var lum = comps[0] * 0.3 + comps[1] * 0.59 + comps[1] * 0.11;
-        if (lum < 128) {
-            return true;
-        }
-        return false;
-    }
-});
-
 instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
     template: "EmptyComponent",
     start: function() {
@@ -3982,14 +3893,51 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
             function(x) { return _.str.trim(x); });
         shown = _.select(shown, function(x) { return x.length > 0; });
 
+        var selection_done = this.get_selection();
+        
         if (shown.length == 0) {
-            this.to_show = this.field.selection;
+            this.to_show = this.selection;
         } else {
-            this.to_show = _.select(this.field.selection, function(x) {
+            this.to_show = _.select(this.selection, function(x) {
                 return _.indexOf(shown, x[0]) !== -1 || x[0] === self.selected_value;
             });
         }
-
+        
+        // search in the external relation for all possible values, then render them
+        var rendering_done = $.when(selection_done).then(function () {
+            console.log(self.selection);
+            self.to_show = self.selection;
+        }).pipe(self.proxy('render_elements'));
+        
+        return rendering_done;
+    },
+    get_selection: function() {
+        var self = this;
+        if (this.field.type == "many2one") {
+            this.selection = [];
+            // get a DataSet on the current model (ex: crm.lead)
+            var model = new instance.web.DataSet(this, this.field_manager.dataset.model);
+            // get the domain of the current field (ex: crm.lead.stage_id -> section_ids = section_id)
+            var fields_get_defer = model.call('fields_get', [[this.name]]).pipe( function (record) {
+                var field_domain = record.domain;
+            });
+            // get a DataSetSearch on the current field relation (ex: crm.lead.stage_id -> crm.case.stage)
+            var model_ext = new instance.web.DataSetSearch(this, this.field.relation);
+            // fetch selection
+            var read_defer = model_ext.read_slice(['name'], {'domain': self.field_domain}).pipe( function (records) {
+                self.to_show = [];
+                _(records).each(function (record) {
+                    self.selection.push([record.id, record.name]);
+                });
+            });
+            return read_defer;
+        }
+        else {
+            this.selection = this.field.selection;
+        }
+        return true;
+    },
+    render_elements: function () {
         var content = instance.web.qweb.render("FieldStatus.content", {widget: this, _:_});
         this.$element.html(content);
 
@@ -4056,7 +4004,6 @@ instance.web.form.widgets = new instance.web.Registry({
     'image': 'instance.web.form.FieldBinaryImage',
     'binary': 'instance.web.form.FieldBinaryFile',
     'statusbar': 'instance.web.form.FieldStatus',
-    'statusbaro2m': 'instance.web.form.FieldStatusO2M',
 });
 
 /**
