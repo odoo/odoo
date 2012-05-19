@@ -1176,6 +1176,7 @@ class related(function):
                 # name_get as root, as seeing the name of a related
                 # object depends on access right of source document,
                 # not target, so user may not have access.
+                print self._obj, self.string
                 ng = dict(obj.pool.get(self._obj).name_get(cr, 1, ids, context=context))
                 for r in res:
                     if res[r]:
