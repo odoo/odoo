@@ -1,0 +1,504 @@
+# Japanese translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"PO-Revision-Date: 2012-05-19 02:19+0000\n"
+"Last-Translator: Akira Hiyama <Unknown>\n"
+"Language-Team: Japanese <ja@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2012-05-19 05:21+0000\n"
+"X-Generator: Launchpad (build 15259)\n"
+
+#. module: base_action_rule
+#: help:base.action.rule,act_mail_to_user:0
+msgid ""
+"Check this if you want the rule to send an email to the responsible person."
+msgstr "責任者にメールを送信するためのルールを望む場合は、ここをチェックして下さい。"
+
+#. module: base_action_rule
+#: field:base.action.rule,act_remind_partner:0
+msgid "Remind Partner"
+msgstr "パートナを思い出して下さい。"
+
+#. module: base_action_rule
+#: field:base.action.rule,trg_partner_categ_id:0
+msgid "Partner Category"
+msgstr "取引先分類"
+
+#. module: base_action_rule
+#: field:base.action.rule,act_mail_to_watchers:0
+msgid "Mail to Watchers (CC)"
+msgstr "関連人にCCを送信"
+
+#. module: base_action_rule
+#: field:base.action.rule,trg_state_to:0
+msgid "Button Pressed"
+msgstr "ボタンが押されました。"
+
+#. module: base_action_rule
+#: field:base.action.rule,model_id:0
+msgid "Object"
+msgstr "オブジェクト"
+
+#. module: base_action_rule
+#: field:base.action.rule,act_mail_to_email:0
+msgid "Mail to these Emails"
+msgstr "これらのEメールへのメール"
+
+#. module: base_action_rule
+#: field:base.action.rule,act_state:0
+msgid "Set State to"
+msgstr "状態を設定："
+
+#. module: base_action_rule
+#: field:base.action.rule,act_email_from:0
+msgid "Email From"
+msgstr "Eメールフォーム"
+
+#. module: base_action_rule
+#: view:base.action.rule:0
+msgid "Email Body"
+msgstr "Eメール本体"
+
+#. module: base_action_rule
+#: selection:base.action.rule,trg_date_range_type:0
+msgid "Days"
+msgstr "日"
+
+#. module: base_action_rule
+#: field:base.action.rule,last_run:0
+msgid "Last Run"
+msgstr "最終実行"
+
+#. module: base_action_rule
+#: code:addons/base_action_rule/base_action_rule.py:328
+#, python-format
+msgid "Error!"
+msgstr "エラー"
+
+#. module: base_action_rule
+#: field:base.action.rule,act_reply_to:0
+msgid "Reply-To"
+msgstr "返信先"
+
+#. module: base_action_rule
+#: help:base.action.rule,act_email_cc:0
+msgid ""
+"These people will receive a copy of the future communication between partner "
+"and users by email"
+msgstr "これらの人達はEメールによるパートナとユーザ間の未来の通信のコピーを受け取ります。"
+
+#. module: base_action_rule
+#: selection:base.action.rule,trg_date_range_type:0
+msgid "Minutes"
+msgstr "分"
+
+#. module: base_action_rule
+#: field:base.action.rule,name:0
+msgid "Rule Name"
+msgstr "ルール名"
+
+#. module: base_action_rule
+#: help:base.action.rule,act_remind_partner:0
+msgid ""
+"Check this if you want the rule to send a reminder by email to the partner."
+msgstr "パートナにEメールによる通知を送るルールが必要な場合、これをチェックして下さい。"
+
+#. module: base_action_rule
+#: view:base.action.rule:0
+msgid "Conditions on Model Partner"
+msgstr "モデルパートナとしての条件"
+
+#. module: base_action_rule
+#: selection:base.action.rule,trg_date_type:0
+msgid "Deadline"
+msgstr "締切期限"
+
+#. module: base_action_rule
+#: field:base.action.rule,trg_partner_id:0
+msgid "Partner"
+msgstr "パートナ"
+
+#. module: base_action_rule
+#: view:base.action.rule:0
+msgid "%(object_subject)s = Object subject"
+msgstr "%(object_subject)s = オブジェクトの件名"
+
+#. module: base_action_rule
+#: view:base.action.rule:0
+msgid "Email Reminders"
+msgstr "Eメールの通知"
+
+#. module: base_action_rule
+#: view:base.action.rule:0
+msgid "Special Keywords to be Used in the Body"
+msgstr "本文に使用する特別なキーワード"
+
+#. module: base_action_rule
+#: field:base.action.rule,trg_state_from:0
+msgid "State"
+msgstr "状態"
+
+#. module: base_action_rule
+#: model:ir.actions.act_window,help:base_action_rule.base_action_rule_act
+msgid ""
+"Use automated actions to automatically trigger actions for various screens. "
+"Example: a lead created by a specific user may be automatically set to a "
+"specific sales team, or an opportunity which still has status pending after "
+"14 days might trigger an automatic reminder email."
+msgstr ""
+"多種の画面のために自動的なアクションを自動的にトリガー実行するために使って下さい。例えば、特定のユーザにより作成されたリードには自動的に特定の営業チームを"
+"設定したり、オポチュニティが保留中になって14日を経過したので、自動的に通知Eメールの送信をトリガーしたりできます。"
+
+#. module: base_action_rule
+#: help:base.action.rule,act_mail_to_email:0
+msgid "Email-id of the persons whom mail is to be sent"
+msgstr "メールを送信した人のEメールID"
+
+#. module: base_action_rule
+#: view:base.action.rule:0
+msgid "Action Rule"
+msgstr "アクションルール"
+
+#. module: base_action_rule
+#: view:base.action.rule:0
+msgid "Fields to Change"
+msgstr "変更する項目"
+
+#. module: base_action_rule
+#: selection:base.action.rule,trg_date_type:0
+msgid "Creation Date"
+msgstr "作成日"
+
+#. module: base_action_rule
+#: selection:base.action.rule,trg_date_type:0
+msgid "Last Action Date"
+msgstr "最新実行日"
+
+#. module: base_action_rule
+#: selection:base.action.rule,trg_date_range_type:0
+msgid "Hours"
+msgstr "時間"
+
+#. module: base_action_rule
+#: view:base.action.rule:0
+msgid "%(object_id)s = Object ID"
+msgstr "%(object_id)s = オブジェクトID"
+
+#. module: base_action_rule
+#: view:base.action.rule:0
+msgid "Delay After Trigger Date"
+msgstr "トリガー日後の遅延"
+
+#. module: base_action_rule
+#: field:base.action.rule,act_remind_attach:0
+msgid "Remind with Attachment"
+msgstr "添付とともに通知"
+
+#. module: base_action_rule
+#: constraint:ir.cron:0
+msgid "Invalid arguments"
+msgstr "無効な引数"
+
+#. module: base_action_rule
+#: field:base.action.rule,act_user_id:0
+msgid "Set Responsible to"
+msgstr "責任者の設定"
+
+#. module: base_action_rule
+#: selection:base.action.rule,trg_date_type:0
+msgid "None"
+msgstr "なし"
+
+#. module: base_action_rule
+#: help:base.action.rule,act_email_to:0
+msgid ""
+"Use a python expression to specify the right field on which one than we will "
+"use for the 'To' field of the header"
+msgstr "ヘッダーのTo項目を使用するよりも正しい項目を定義するにはPython表現を使用して下さい。"
+
+#. module: base_action_rule
+#: view:base.action.rule:0
+msgid "%(object_user_phone)s = Responsible phone"
+msgstr "%(object_user_phone)s = 連絡先電話"
+
+#. module: base_action_rule
+#: view:base.action.rule:0
+msgid ""
+"The rule uses the AND operator. The model must match all non-empty fields so "
+"that the rule executes the action described in the 'Actions' tab."
+msgstr ""
+"ルールはAND演算子を使用します。アクションタブで定義されたアクションを実行するルールのために、モデルは全ての空でない項目と一致する必要があります。"
+
+#. module: base_action_rule
+#: field:base.action.rule,trg_date_range_type:0
+msgid "Delay type"
+msgstr "遅延タイプ"
+
+#. module: base_action_rule
+#: help:base.action.rule,regex_name:0
+msgid ""
+"Regular expression for matching name of the resource\n"
+"e.g.: 'urgent.*' will search for records having name starting with the "
+"string 'urgent'\n"
+"Note: This is case sensitive search."
+msgstr ""
+"リソースの名前を一致させる正規表現\n"
+"例：\"urgent.*\"  は文字列 \"urgent\" で始まる名前を持つレコードが検索されます.\n"
+"注記：この検索は大文字と小文字を区別します。"
+
+#. module: base_action_rule
+#: field:base.action.rule,act_method:0
+msgid "Call Object Method"
+msgstr "オブジェクトメソッドの呼び出し"
+
+#. module: base_action_rule
+#: field:base.action.rule,act_email_to:0
+msgid "Email To"
+msgstr "Eメール宛先"
+
+#. module: base_action_rule
+#: help:base.action.rule,act_mail_to_watchers:0
+msgid ""
+"Check this if you want the rule to mark CC(mail to any other person defined "
+"in actions)."
+msgstr "ルールにCC（アクションで定義されている他の人へのメール）を付けることを望む場合、ここをチェックして下さい。"
+
+#. module: base_action_rule
+#: view:base.action.rule:0
+msgid "%(partner)s = Partner name"
+msgstr "%(partner)s = パートナ名"
+
+#. module: base_action_rule
+#: view:base.action.rule:0
+msgid "Note"
+msgstr "注記"
+
+#. module: base_action_rule
+#: help:base.action.rule,act_email_from:0
+msgid ""
+"Use a python expression to specify the right field on which one than we will "
+"use for the 'From' field of the header"
+msgstr "ヘッダーのFrom項目を使うより正しい項目を定義するためにはPython表現を使用して下さい。"
+
+#. module: base_action_rule
+#: field:base.action.rule,trg_date_range:0
+msgid "Delay after trigger date"
+msgstr "トリガー日後の遅延"
+
+#. module: base_action_rule
+#: view:base.action.rule:0
+msgid "Conditions"
+msgstr "条件"
+
+#. module: base_action_rule
+#: help:base.action.rule,trg_date_range:0
+msgid ""
+"Delay After Trigger Date,specifies you can put a negative number. If you "
+"need a delay before the trigger date, like sending a reminder 15 minutes "
+"before a meeting."
+msgstr "ミーティングの15分前に通知を送信したいといったトリガー日前の遅延が必要な場合には、トリガー日後の遅延は負の数値を定義できます。"
+
+#. module: base_action_rule
+#: field:base.action.rule,active:0
+msgid "Active"
+msgstr "アクティブ"
+
+#. module: base_action_rule
+#: code:addons/base_action_rule/base_action_rule.py:329
+#, python-format
+msgid "No E-Mail ID Found for your Company address!"
+msgstr "あなたの会社住所にEメールアドレスが見つかりません。"
+
+#. module: base_action_rule
+#: field:base.action.rule,act_remind_user:0
+msgid "Remind Responsible"
+msgstr "責任者への通知"
+
+#. module: base_action_rule
+#: help:base.action.rule,sequence:0
+msgid "Gives the sequence order when displaying a list of rules."
+msgstr "ルールのリストを表示する時には、並び順を指定して下さい。"
+
+#. module: base_action_rule
+#: selection:base.action.rule,trg_date_range_type:0
+msgid "Months"
+msgstr "月"
+
+#. module: base_action_rule
+#: field:base.action.rule,filter_id:0
+msgid "Filter"
+msgstr "フィルタ"
+
+#. module: base_action_rule
+#: selection:base.action.rule,trg_date_type:0
+msgid "Date"
+msgstr "日付"
+
+#. module: base_action_rule
+#: help:base.action.rule,server_action_id:0
+msgid ""
+"Describes the action name.\n"
+"eg:on which object which action to be taken on basis of which condition"
+msgstr ""
+"アクション名を記述して下さい：\n"
+"例：どのオブジェクトがどの条件に基づきどのアクションを実行するか"
+
+#. module: base_action_rule
+#: model:ir.model,name:base_action_rule.model_ir_cron
+msgid "ir.cron"
+msgstr ""
+
+#. module: base_action_rule
+#: view:base.action.rule:0
+msgid "%(object_description)s = Object description"
+msgstr "%(object_description)s = オブジェクトの説明"
+
+#. module: base_action_rule
+#: constraint:base.action.rule:0
+msgid "Error: The mail is not well formated"
+msgstr "エラー：メールが上手くフォーマットされていません。"
+
+#. module: base_action_rule
+#: view:base.action.rule:0
+msgid "Email Actions"
+msgstr "Eメールアクション"
+
+#. module: base_action_rule
+#: view:base.action.rule:0
+msgid "Email Information"
+msgstr "Eメール情報"
+
+#. module: base_action_rule
+#: model:ir.model,name:base_action_rule.model_base_action_rule
+msgid "Action Rules"
+msgstr "アクションルール"
+
+#. module: base_action_rule
+#: help:base.action.rule,act_mail_body:0
+msgid "Content of mail"
+msgstr "メールのコンテンツ"
+
+#. module: base_action_rule
+#: field:base.action.rule,trg_user_id:0
+msgid "Responsible"
+msgstr "責任者"
+
+#. module: base_action_rule
+#: view:base.action.rule:0
+msgid "%(partner_email)s = Partner Email"
+msgstr "%(partner_email)s = パートナEメール"
+
+#. module: base_action_rule
+#: view:base.action.rule:0
+msgid "%(object_date)s = Creation date"
+msgstr "%(object_date)s = 作成日"
+
+#. module: base_action_rule
+#: view:base.action.rule:0
+msgid "%(object_user_email)s = Responsible Email"
+msgstr "%(object_user_email)s = 責任者Eメール"
+
+#. module: base_action_rule
+#: field:base.action.rule,act_mail_body:0
+msgid "Mail body"
+msgstr "メール本文"
+
+#. module: base_action_rule
+#: help:base.action.rule,act_remind_user:0
+msgid ""
+"Check this if you want the rule to send a reminder by email to the user."
+msgstr "ユーザにEメールによって通知を送信するルールを希望する場合、ここをチェックして下さい。"
+
+#. module: base_action_rule
+#: view:base.action.rule:0
+msgid "Server Action to be Triggered"
+msgstr "トリガーされるサーバアクション"
+
+#. module: base_action_rule
+#: field:base.action.rule,act_mail_to_user:0
+msgid "Mail to Responsible"
+msgstr "責任者へのメール"
+
+#. module: base_action_rule
+#: field:base.action.rule,act_email_cc:0
+msgid "Add Watchers (Cc)"
+msgstr "関連人（CC）を追加"
+
+#. module: base_action_rule
+#: view:base.action.rule:0
+msgid "Conditions on Model Fields"
+msgstr "モデル項目の条件"
+
+#. module: base_action_rule
+#: model:ir.actions.act_window,name:base_action_rule.base_action_rule_act
+#: model:ir.ui.menu,name:base_action_rule.menu_base_action_rule_form
+msgid "Automated Actions"
+msgstr "自動的なアクション"
+
+#. module: base_action_rule
+#: field:base.action.rule,server_action_id:0
+msgid "Server Action"
+msgstr "サーバアクション"
+
+#. module: base_action_rule
+#: field:base.action.rule,regex_name:0
+msgid "Regex on Resource Name"
+msgstr "リソース名の正規表現"
+
+#. module: base_action_rule
+#: help:base.action.rule,act_remind_attach:0
+msgid ""
+"Check this if you want that all documents attached to the object be attached "
+"to the reminder email sent."
+msgstr "通知メール送信の際にオブジェクトに添付された全てのドキュメントを添付したい場合は、ここをチェックして下さい。"
+
+#. module: base_action_rule
+#: view:base.action.rule:0
+msgid "Conditions on Timing"
+msgstr "タイミングの条件"
+
+#. module: base_action_rule
+#: field:base.action.rule,sequence:0
+msgid "Sequence"
+msgstr "順序"
+
+#. module: base_action_rule
+#: view:base.action.rule:0
+msgid "Actions"
+msgstr "アクション"
+
+#. module: base_action_rule
+#: help:base.action.rule,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the rule "
+"without removing it."
+msgstr "アクティブ項目がFalseに設定された場合、ルールを削除することなく非表示にできます。"
+
+#. module: base_action_rule
+#: view:base.action.rule:0
+msgid "%(object_user)s = Responsible name"
+msgstr "%(object_user)s = 責任者名"
+
+#. module: base_action_rule
+#: field:base.action.rule,create_date:0
+msgid "Create Date"
+msgstr "作成日"
+
+#. module: base_action_rule
+#: view:base.action.rule:0
+msgid "Conditions on States"
+msgstr "状態の条件"
+
+#. module: base_action_rule
+#: field:base.action.rule,trg_date_type:0
+msgid "Trigger Date"
+msgstr "トリガー日"
