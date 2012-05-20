@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-18 06:24+0000\n"
-"X-Generator: Launchpad (build 14814)\n"
+"X-Launchpad-Export-Date: 2012-05-17 05:34+0000\n"
+"X-Generator: Launchpad (build 15259)\n"
 
 #. module: base_iban
 #: constraint:res.partner.bank:0
@@ -23,27 +23,30 @@ msgid ""
 "Please define BIC/Swift code on bank for bank type IBAN Account to make "
 "valid payments"
 msgstr ""
+"\n"
+"Prosíme určete kód BIC/Swift u banky pro IBAN účet bankovního typu k ověření "
+"plateb"
 
 #. module: base_iban
 #: code:addons/base_iban/base_iban.py:139
 #, python-format
 msgid "This IBAN does not pass the validation check, please verify it"
-msgstr ""
+msgstr "Tento IBAN neprošel testem ověření, prosíme zkontrolujte jej"
 
 #. module: base_iban
 #: model:res.partner.bank.type,format_layout:base_iban.bank_iban
 msgid "%(bank_name)s: IBAN %(acc_number)s - BIC %(bank_bic)s"
-msgstr ""
+msgstr "%(bank_name)s: IBAN %(acc_number)s - BIC %(bank_bic)s"
 
 #. module: base_iban
 #: model:res.partner.bank.type.field,name:base_iban.bank_swift_field
 msgid "bank_bic"
-msgstr ""
+msgstr "bank_bic"
 
 #. module: base_iban
 #: model:res.partner.bank.type.field,name:base_iban.bank_zip_field
 msgid "zip"
-msgstr "zip"
+msgstr "psč"
 
 #. module: base_iban
 #: help:res.partner.bank,iban:0
@@ -53,12 +56,12 @@ msgstr "Mezinárodní Bankovní Číslo Účtu"
 #. module: base_iban
 #: model:ir.model,name:base_iban.model_res_partner_bank
 msgid "Bank Accounts"
-msgstr ""
+msgstr "Bankovní účty"
 
 #. module: base_iban
 #: model:res.partner.bank.type.field,name:base_iban.bank_country_field
 msgid "country_id"
-msgstr "id_státu"
+msgstr "country_id"
 
 #. module: base_iban
 #: code:addons/base_iban/base_iban.py:136
@@ -66,7 +69,7 @@ msgstr "id_státu"
 msgid ""
 "The IBAN does not seem to be correct. You should have entered something like "
 "this %s"
-msgstr ""
+msgstr "IBAN nevypadá jako správný. Měli byste zadat něco jako toto %s"
 
 #. module: base_iban
 #: field:res.partner.bank,iban:0
@@ -77,7 +80,7 @@ msgstr "IBAN"
 #: code:addons/base_iban/base_iban.py:140
 #, python-format
 msgid "The IBAN is invalid, it should begin with the country code"
-msgstr ""
+msgstr "IBAN je neplatný, měl by začínat kódem země"
 
 #. module: base_iban
 #: model:res.partner.bank.type,name:base_iban.bank_iban
@@ -87,4 +90,4 @@ msgstr "Účet IBAN"
 #. module: base_iban
 #: constraint:res.partner.bank:0
 msgid "The RIB and/or IBAN is not valid"
-msgstr ""
+msgstr "RIB a/nebo IBAN není platný"

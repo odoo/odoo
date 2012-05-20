@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-03-16 05:29+0000\n"
-"X-Generator: Launchpad (build 14951)\n"
+"X-Launchpad-Export-Date: 2012-05-17 05:20+0000\n"
+"X-Generator: Launchpad (build 15259)\n"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -644,7 +644,7 @@ msgstr "Nodokļu Formēšana/Aizvietošana"
 #. module: account
 #: report:account.central.journal:0
 msgid "Centralized Journal"
-msgstr "Centralizētais Žurnāls"
+msgstr "Kontu Apgrozījums"
 
 #. module: account
 #: sql_constraint:account.sequence.fiscalyear:0
@@ -1209,6 +1209,10 @@ msgid ""
 "purchase orders or receipts. This way, you can control the invoice from your "
 "supplier according to what you purchased or received."
 msgstr ""
+"Piegādātāju Rēķinu sadaļā var ievadīt un pārvaldīt piegādātāju izdotos "
+"rēķinus. OpenERP iespējams automātiski veidot neapstiprinātus rēķinus no "
+"iepirkumu pasūtījumiem vai čekiem. Šādi var kontrolēt piegādātāja rēķinu, "
+"vadoties pēc tā, kas ir nopirkts vai saņemts."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_tax_code_template_form
@@ -1634,6 +1638,11 @@ msgid ""
 "the Payment column of a line, you can press F1 to open the reconciliation "
 "form."
 msgstr ""
+"Bankas izraksts ir kopsavilkums par visiem finansiālajiem darījumiem "
+"noteiktā periodā bankas kontā, kredītkartes kontā vai jebkurā citā finanšu "
+"kontā. Sākuma bilance tiks aprēķināta automātiski, beigu bilance tiks "
+"veidota no konta izraksta. Atrodoties Maksājuma kolonnas rindā un nopiežot "
+"F1, var tikt atvērta sasaistes forma."
 
 #. module: account
 #: report:account.analytic.account.cost_ledger:0
@@ -1768,7 +1777,7 @@ msgstr "Ieņēmumi/Izdevumi"
 #. module: account
 #: model:ir.model,name:account.model_account_common_journal_report
 msgid "Account Common Journal Report"
-msgstr ""
+msgstr "Žurnālu Izdruka"
 
 #. module: account
 #: selection:account.partner.balance,display_partner:0
@@ -2173,6 +2182,9 @@ msgid ""
 "certified Chart of Accounts exists for your specified country, a generic one "
 "can be installed and will be selected by default."
 msgstr ""
+"Noklusējuma Kontu Plāns atbilst izvēlētajai vaalstij. Ja izvēlētajai valstij "
+"nav sertificēta Kontu Plāna, iespējams uzinstalēt ģenerisko, un tas tiks "
+"uzstādīts kā noklusējuma."
 
 #. module: account
 #: view:account.account.type:0
@@ -2319,6 +2331,8 @@ msgid ""
 "There is no default default credit account defined \n"
 "on journal \"%s\""
 msgstr ""
+"Nav definēts noklusējuma kredīta konts \n"
+"žurnālā \"%s\""
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_review_financial_journals_installer
@@ -2470,6 +2484,11 @@ msgid ""
 "useful because it enables you to preview at any time the tax that you owe at "
 "the start and end of the month or quarter."
 msgstr ""
+"Izvēlne drukā PVN deklarāciju, balstoties uz rēķiniem vai maksājumiem. "
+"Izvēlēties vienu vai vairākus fiskālā gada periodus. Nodokļu deklarācijai "
+"nepieciešamo informāciju veido OpenERP no rēķiniem (vai maksājumiem dažās "
+"valstīs). Šie dati tiek atjaunināti reālajā laikā. Tas ir noder, jo ļauj "
+"veikt nodokļu priekšskatījumu mēneša vai ceturkšņa sākumā vai beigās."
 
 #. module: account
 #: selection:account.move.line,centralisation:0
@@ -2751,6 +2770,9 @@ msgid ""
 "Note that journal entries that are automatically created by the system are "
 "always skipping that state."
 msgstr ""
+"Atzīmējot, jauni grāmatojumi nebūs \"melnraksta\" stāvoklī, bet uzreiz kļūs "
+"\"kontēti\", bez manuālas apstiprināšanas. \n"
+"Sistēmas automātiski veidotie grāmatojumi vienmēr izlaiž šo stāvokli."
 
 #. module: account
 #: model:ir.actions.server,name:account.ir_actions_server_action_wizard_multi_chart
@@ -2834,7 +2856,7 @@ msgstr "Augusts"
 #. module: account
 #: model:process.transition,note:account.process_transition_paymentreconcile0
 msgid "Payment entries are the second input of the reconciliation."
-msgstr ""
+msgstr "Maksājumu rindas kontu savienošanai."
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -2851,6 +2873,8 @@ msgid ""
 "The optional quantity expressed by this line, eg: number of product sold. "
 "The quantity is not a legal requirement but is very useful for some reports."
 msgstr ""
+"Rindas izsaka neobligāto skaitu, piem., pārdoto produktu skaitu. Skaits nav "
+"obligāts, bet tas ir noderīgs atsevišķām atskaitēm."
 
 #. module: account
 #: view:account.payment.term.line:0
@@ -2911,6 +2935,8 @@ msgid ""
 "between the creation date or the creation date of the entries plus the "
 "partner payment terms."
 msgstr ""
+"Ierakstu saistību iestāšanās datums modelī. Var izvēlēties starp izveides "
+"datumu vai ierakstu izveides datumu ar partnera maksājuma nosacījumiem."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_accounting
@@ -2920,7 +2946,7 @@ msgstr "Finansu Grāmatvedība"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_report_pl
 msgid "Profit And Loss"
-msgstr "Peļņa un Zaudējumi"
+msgstr "Peļņa / Zaudējumi"
 
 #. module: account
 #: view:account.fiscal.position:0
@@ -3027,6 +3053,11 @@ msgid ""
 "software system you may have to use the rate at date. Incoming transactions "
 "always use the rate at date."
 msgstr ""
+"Izvēlēsies, kā tiks aprēķināts pašreizējais valūtas kurss. Lielākajā daļā "
+"valstu obligātā metode ir \"vidējais\", bet tikai dažas sistēmas to "
+"atbalsta. Importējot no citas sistēmas, iespējams, vajadzēs izmantot "
+"attiecīgā datuma valūtas kursu. Ienākošajiem darījumiem izmanto attiecīgā "
+"datuma valūtas kursu."
 
 #. module: account
 #: help:account.chart.template,code_digits:0
@@ -3508,7 +3539,7 @@ msgstr "(Neizvēloties periodu, tiks izvēlēti visi aktīvie periodi)"
 #. module: account
 #: field:account.journal,centralisation:0
 msgid "Centralised counterpart"
-msgstr ""
+msgstr "Žurnālu kopsavilkums"
 
 #. module: account
 #: code:addons/account/account_move_line.py:584
@@ -3681,7 +3712,7 @@ msgstr "Kontaktadrese"
 #. module: account
 #: field:account.move.line,blocked:0
 msgid "Litigation"
-msgstr ""
+msgstr "Diskusijas statusā"
 
 #. module: account
 #: view:account.analytic.line:0
@@ -4037,7 +4068,7 @@ msgstr ""
 #: model:ir.actions.report.xml,name:account.account_account_balance
 #: model:ir.ui.menu,name:account.menu_general_Balance_report
 msgid "Trial Balance"
-msgstr "Saldo"
+msgstr "Operatīvā Bilance"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_cancel
@@ -4051,6 +4082,8 @@ msgid ""
 "This account will be used to value outgoing stock for the current product "
 "category using sale price"
 msgstr ""
+"Konts tiks lietots, lai novērtētu izejošo krājumu pašreizējai preču "
+"kategorijai, lietojot pārdošanas cenu"
 
 #. module: account
 #: selection:account.automatic.reconcile,power:0
@@ -4071,6 +4104,9 @@ msgid ""
 "Analytic costs (timesheets, some purchased products, ...) come from analytic "
 "accounts. These generate draft supplier invoices."
 msgstr ""
+"Analītiskās izmaksas (darba uzskaites tabeles, daži nopirktie produkti, ...) "
+" tiej ņemti no analītiskajiem kontiem. Tie veido neapstiprinātus piegādātāju "
+"rēķinus."
 
 #. module: account
 #: view:account.bank.statement:0
@@ -4391,7 +4427,7 @@ msgstr "Nodoklis iekļauts cenā"
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_cost_ledger_journal_report
 msgid "Account Analytic Cost Ledger For Journal Report"
-msgstr ""
+msgstr "Analītisko Izmaksu Grāmata Žurnāla Atskaitei"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_model_form
@@ -4448,7 +4484,7 @@ msgstr "Atcelts"
 #. module: account
 #: help:account.bank.statement,balance_end_cash:0
 msgid "Closing balance based on cashBox"
-msgstr ""
+msgstr "Beigu bilance, bāzēta uz kasi"
 
 #. module: account
 #: view:account.payment.term.line:0
@@ -4523,6 +4559,9 @@ msgid ""
 "the account \"%s - %s\". Clear the secondary currency field of the account "
 "definition if you want to accept all currencies."
 msgstr ""
+"Nevar veidot grāmatojumu, kura valūta atšķiras no sekundārās konta \"%s - "
+"%s\" valūtas. Dzēst sekundārās valūtas lauku konta definīcijā, ja vēlaties "
+"pieņemt visas valūtas."
 
 #. module: account
 #: selection:account.bank.statement,state:0
@@ -4551,6 +4590,8 @@ msgid ""
 "All draft account entries in this journal and period will be validated. It "
 "means you won't be able to modify their accounting fields anymore."
 msgstr ""
+"Visi kontējumu melnraksti šajā žurnālā un periodā tiks apstiprināti. Tas "
+"nozīmē, ka vairs nebūs iespējams tos labot."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_configuration
@@ -4785,6 +4826,9 @@ msgid ""
 "To print an analytics (or costs) journal for a given period. The report give "
 "code, move name, account number, general amount and analytic amount."
 msgstr ""
+"Lai drukātu analītisko (vai izmaksu) žurnālu attiecīgajam periodam. Atskaitē "
+"parādās kods, grāmatojuma nosaukums, konta numurs, summa kopā un analītiskā "
+"summa."
 
 #. module: account
 #: sql_constraint:account.invoice:0
@@ -4893,7 +4937,7 @@ msgstr "Sākuma periodam jābūt pirms Beigu perioda"
 msgid ""
 "Check this if the price you use on the product and invoices includes this "
 "tax."
-msgstr ""
+msgstr "Atzīmēt, ja produktos un rēķinos izmantotā cena iekļauj nodokli."
 
 #. module: account
 #: report:account.analytic.account.balance:0
@@ -5011,7 +5055,7 @@ msgstr "Gads"
 #. module: account
 #: field:account.bank.statement,starting_details_ids:0
 msgid "Opening Cashbox"
-msgstr ""
+msgstr "Kases Atvēršana"
 
 #. module: account
 #: view:account.payment.term.line:0
@@ -5060,7 +5104,7 @@ msgstr "Bilance"
 #: view:account.general.journal:0
 #: model:ir.ui.menu,name:account.menu_account_general_journal
 msgid "General Journals"
-msgstr "Virsgrāmata"
+msgstr "Žurnālu Apgrozījums"
 
 #. module: account
 #: field:account.journal,allow_date:0
@@ -5222,6 +5266,8 @@ msgid ""
 "Number of days to add before computation of the day of month.If Date=15/01, "
 "Number of Days=22, Day of Month=-1, then the due date is 28/02."
 msgstr ""
+"Pievienojamais dienu skaits pirms aprēķināšanas. Piemēram, ja  Datums ir "
+"15/01, Dienu Skaits = 22, Mēneša Diena = -1, tad apmaksas termiņš ir 28/02."
 
 #. module: account
 #: view:account.payment.term.line:0
@@ -5251,7 +5297,7 @@ msgstr "Perioda sākums"
 #. module: account
 #: model:ir.model,name:account.model_account_common_account_report
 msgid "Account Common Account Report"
-msgstr ""
+msgstr "Grāmatvedības Vispārējās Atskaites"
 
 #. module: account
 #: field:account.bank.statement.line,name:0
@@ -5456,6 +5502,8 @@ msgid ""
 "The sequence field is used to order the payment term lines from the lowest "
 "sequences to the higher ones"
 msgstr ""
+"Kārtas lauks tiek lietots, lai sakārtotu maksājumu nosacījumus no zemākās "
+"secības līdz augstākai"
 
 #. module: account
 #: view:account.fiscal.position.template:0
@@ -5492,7 +5540,7 @@ msgstr "Ar Valūtu"
 #. module: account
 #: view:account.bank.statement:0
 msgid "Open CashBox"
-msgstr ""
+msgstr "Atvērt Kasi"
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -5694,6 +5742,9 @@ msgid ""
 "document shows your debit and credit taking in consideration some criteria "
 "you can choose by using the search tool."
 msgstr ""
+"No šī skata iespējams veikt dažādu finansiālo kontu analīzi. Dokuments "
+"parāda debetu un kredītu, ņemot vērā dažus kritērijus, kurus var izvēlēties, "
+"izmantojot meklēšanu."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_tax_code_list
@@ -5709,6 +5760,9 @@ msgid ""
 "Shows you the progress made today on the reconciliation process. Given by \n"
 "Partners Reconciled Today \\ (Remaining Partners + Partners Reconciled Today)"
 msgstr ""
+"Parāda šodienas sasaistes procesa progresu. \n"
+"Attiecība = Šodien Sasaistītie Partneri / (Atlikušie Partneri + Šodien "
+"Sasaistītie Partneri)"
 
 #. module: account
 #: help:account.payment.term.line,value:0
@@ -5896,7 +5950,7 @@ msgstr ""
 #. module: account
 #: report:account.invoice:0
 msgid "Fiscal Position Remark :"
-msgstr ""
+msgstr "Nodokļu Profila Piezīme:"
 
 #. module: account
 #: view:analytic.entries.report:0
@@ -6078,7 +6132,7 @@ msgstr ""
 #. module: account
 #: view:account.move.line.reconcile.writeoff:0
 msgid "Information addendum"
-msgstr ""
+msgstr "Papildus informācija"
 
 #. module: account
 #: field:account.chart,fiscalyear:0
@@ -6158,7 +6212,7 @@ msgstr "Noklusējuma Kredīta Konts"
 #. module: account
 #: help:account.analytic.line,currency_id:0
 msgid "The related account currency if not equal to the company one."
-msgstr ""
+msgstr "Saistītā konta valūta, ja nav vienāda ar uzņēmuma valūtu."
 
 #. module: account
 #: view:account.analytic.account:0
@@ -6168,7 +6222,7 @@ msgstr "Pašreizējais"
 #. module: account
 #: view:account.bank.statement:0
 msgid "CashBox"
-msgstr ""
+msgstr "Kase"
 
 #. module: account
 #: model:account.account.type,name:account.account_type_cash_equity
@@ -6265,6 +6319,9 @@ msgid ""
 "year. Note that you can run this wizard many times for the same fiscal year: "
 "it will simply replace the old opening entries with the new ones."
 msgstr ""
+"Šis vednis veidos izvēlētā fiskālā gada beigu grāmatojumus. Iegaumēt, ka šis "
+"vednis var tikt palaists vairākkārt tam pašam fiskālajam gadam: tas "
+"aizvietos vecos grāmatojumus ar jauniem."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_bank_and_cash
@@ -6467,7 +6524,7 @@ msgstr "Ieraksti: "
 #. module: account
 #: view:account.use.model:0
 msgid "Create manual recurring entries in a chosen journal."
-msgstr ""
+msgstr "Izveidot manuāli atkārtojošus ierakstus izvēlētajā žurnālā."
 
 #. module: account
 #: help:res.partner.bank,currency_id:0
@@ -6491,6 +6548,13 @@ msgid ""
 "account. From this view, you can create and manage the account types you "
 "need for your company."
 msgstr ""
+"Un type de compte est utilisé pour déterminer comment un compte est utilisé "
+"dans chaque journal. La méthode d'ajournement d'un type de compte détermine "
+"le processus pour la clôture annuelle. Les rapports tels que le bilan et les "
+"pertes et profits utilisent la catégorie (pertes/profits ou bilan). Par "
+"exemple, le type de compte peut être associé à un compte d'actifs, un compte "
+"de dépense ou un compte fournisseur. De cette vue, vous pouvez créer et "
+"gérer les types de comptes dont vous avez besoin pour votre société."
 
 #. module: account
 #: selection:account.account.type,report_type:0
@@ -6506,6 +6570,9 @@ msgid ""
 "corresponds with the entries (or records) of that account in your accounting "
 "system."
 msgstr ""
+"Le rapprochement bancaire consiste à pointer votre relevé bancaire avec les "
+"écritures (ou pièces) comptables saisies pour ce compte bancaire dans votre "
+"système."
 
 #. module: account
 #: model:process.node,note:account.process_node_draftstatement0
@@ -6667,6 +6734,11 @@ msgid ""
 "reconcile in a series of accounts. It finds entries for each partner where "
 "the amounts correspond."
 msgstr ""
+"Une facture est considérée comme payée dès que ses lignes sont rapprochées "
+"de leurs contreparties (généralement des paiements). Avec la fonctionnalité "
+"de lettrage automatique, OpenERP recherche automatiquement les écritures à "
+"rapprocher dans une série de comptes. OpenERP repère les écritures dont les "
+"montants correspondent pour chaque partenaire."
 
 #. module: account
 #: view:account.move:0
@@ -6727,7 +6799,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Selected Entry Lines does not have any account move enties in draft state"
-msgstr ""
+msgstr "Izvēlētajām Ierakstu Rindām nav neapstiprinātu kontējumu."
 
 #. module: account
 #: selection:account.aged.trial.balance,target_move:0
@@ -6864,6 +6936,14 @@ msgid ""
 "\n"
 "e.g. My model on %(date)s"
 msgstr ""
+"Var norādīt gadu, mēnesi, datumu modeļa nosaukumā, izmantojot sekojošās "
+"etiķetes:\n"
+"\n"
+"%(year)s: Lai Norādītu Gadu \n"
+"%(month)s: Lai Norādītu Mēnesi \n"
+"%(date)s: Pašreizējais Datums\n"
+"\n"
+"piem., Mans %(date)s modelis"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_aged_income
@@ -6987,6 +7067,7 @@ msgstr "Nodokļi:"
 #: help:account.tax,amount:0
 msgid "For taxes of type percentage, enter % ratio between 0-1."
 msgstr ""
+"Procentuālajiem nodokļiem ievadīt procentuālo attiecību starp 0 un 1."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_subscription_form
@@ -7163,6 +7244,8 @@ msgid ""
 "new counterpart but will share the same counterpart. This is used in fiscal "
 "year closing."
 msgstr ""
+"Atzīmēt šo lauku, lai norādītu, ka katrs šī žurnāla ieraksts neveidos jaunu "
+"pretējo kontējumu. Tiek lietots fiskālā gada slēgšanā."
 
 #. module: account
 #: field:account.bank.statement,closing_date:0
@@ -7254,7 +7337,7 @@ msgstr ""
 #. module: account
 #: field:account.bank.statement,ending_details_ids:0
 msgid "Closing Cashbox"
-msgstr ""
+msgstr "Kases Aizvēršana"
 
 #. module: account
 #: view:account.journal:0
@@ -7275,6 +7358,8 @@ msgid ""
 "the system to go through the reconciliation process, based on the latest day "
 "it have been reconciled."
 msgstr ""
+"Lauks parāda nākamo partneri, kuru sistēma automātiski izvēlēsies, lai "
+"veiktu sasaistes procesu no dienas, kad veikta pēdējā sasaiste."
 
 #. module: account
 #: field:account.move.line.reconcile.writeoff,comment:0
@@ -7306,6 +7391,10 @@ msgid ""
 "line of the expense account, OpenERP will propose to you automatically the "
 "Tax related to this account and the counter-part \"Account Payable\"."
 msgstr ""
+"Skatījumu izmanto grāmatveži, lai veiktu ierakstus OpenERP grāmatvedības "
+"sistēmā. Ievadot piegādātāja rēķinu, no sākuma ierakstīt izdevumu konta "
+"rindu, OpenERP automātiski piedāvās ar kontu saistīto Nodokli un \"Izdevumu "
+"Konta\" pretējo pusi."
 
 #. module: account
 #: view:account.invoice.line:0
@@ -7392,6 +7481,8 @@ msgid ""
 "This field is used for payable and receivable journal entries. You can put "
 "the limit date for the payment of this line."
 msgstr ""
+"Lauks tiek izmantot izdevumu un ieņēmumu grāmatojumiem. Iespējams uzstādīt "
+"datumu, līdz kuram jāapmaksā."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_multi_currency
@@ -7557,7 +7648,7 @@ msgstr "Piemērošanas Kods"
 #. module: account
 #: view:validate.account.move:0
 msgid "Post Journal Entries of a Journal"
-msgstr ""
+msgstr "Apstiprināt Grāmatojumus Žurnālā"
 
 #. module: account
 #: view:product.product:0
@@ -7651,7 +7742,7 @@ msgstr "Pārdošana pēc Kontu tipa"
 #. module: account
 #: help:account.invoice,move_id:0
 msgid "Link to the automatically generated Journal Items."
-msgstr ""
+msgstr "Saistīt ar automātiski veidotajiem Grāmatojumiem."
 
 #. module: account
 #: selection:account.installer,period:0
@@ -7721,7 +7812,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_cashbox_line
 msgid "CashBox Line"
-msgstr ""
+msgstr "Kases Rinda"
 
 #. module: account
 #: view:account.partner.ledger:0
@@ -7769,7 +7860,7 @@ msgstr "Kontējumu sasaiste"
 #: view:account.subscription.generate:0
 #: model:ir.model,name:account.model_account_subscription_generate
 msgid "Subscription Compute"
-msgstr ""
+msgstr "Ikmēneša grāmatvedības ierakstu kalkulēšana"
 
 #. module: account
 #: field:account.bank.statement.line,partner_id:0
@@ -7852,6 +7943,7 @@ msgid ""
 "Select Fiscal Year which you want to remove entries for its End of year "
 "entries journal"
 msgstr ""
+"Izvēlēties Fiskālo Gadu, kuram dzēst Gada Beigu grāmatojumus žurnālā."
 
 #. module: account
 #: field:account.tax.template,type_tax_use:0
@@ -7902,7 +7994,7 @@ msgstr "Automātiska ievade"
 #. module: account
 #: constraint:account.tax.code.template:0
 msgid "Error ! You can not create recursive Tax Codes."
-msgstr ""
+msgstr "Kļūda! Nevar veidot rekursīvus Nodokļu Kodus."
 
 #. module: account
 #: help:account.journal,group_invoice_lines:0
@@ -7931,7 +8023,7 @@ msgstr ""
 #. module: account
 #: report:account.analytic.account.inverted.balance:0
 msgid "Inverted Analytic Balance -"
-msgstr ""
+msgstr "Apgrieztā Analītiskā Bilance -"
 
 #. module: account
 #: view:account.move.bank.reconcile:0
@@ -7999,6 +8091,7 @@ msgid ""
 "will see the taxes with codes related to your legal statement according to "
 "your country."
 msgstr ""
+"Nodokļu kontu plāns tiek izmantots, lai veidotu ikmēneša nodokļu deklarāciju."
 
 #. module: account
 #: code:addons/account/account_invoice.py:428
@@ -8015,7 +8108,7 @@ msgstr "Priekšapmaksas"
 #. module: account
 #: report:account.analytic.account.cost_ledger:0
 msgid "J.C. /Move name"
-msgstr ""
+msgstr "Žurnāls / Grāmatojuma nosaukums"
 
 #. module: account
 #: model:ir.model,name:account.model_account_open_closed_fiscalyear
@@ -8102,7 +8195,7 @@ msgstr "Norakstīšanas Žurnāls"
 msgid ""
 "This payment term will be used instead of the default one for the current "
 "partner"
-msgstr ""
+msgstr "Apmaksas noteikumi partnerim,  kas tiks izmantoti noklusēto vietā."
 
 #. module: account
 #: view:account.tax.template:0
@@ -8156,6 +8249,9 @@ msgid ""
 "can easily generate refunds and reconcile them directly from the invoice "
 "form."
 msgstr ""
+"TIek pārvaldīti klientu kredītrēķi. Kredītrēķins ir dokuments, ar ko daļēji "
+"vai pilnīgi tiek dzēsts piestādītais rēķins. Iespējams veidot kredītrēķinus "
+"un tos tieši sasaistīt caur rēķina formu."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_vat_declaration
@@ -8213,7 +8309,7 @@ msgstr "Noslēdzošā Bilance"
 msgid ""
 "You can check this box to mark this journal item as a litigation with the "
 "associated partner"
-msgstr ""
+msgstr "Iespējams atzīmēt šo kontējumu kā diskutējamu ar saistīto partneri"
 
 #. module: account
 #: field:account.move.line,reconcile_partial_id:0
@@ -8224,7 +8320,7 @@ msgstr "Daļēja Sasaiste"
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_inverted_balance
 msgid "Account Analytic Inverted Balance"
-msgstr ""
+msgstr "Apgrieztā Analītiskā Bilance"
 
 #. module: account
 #: model:ir.model,name:account.model_account_common_report
@@ -8307,7 +8403,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_fiscalyear_close_state
 msgid "Fiscalyear Close state"
-msgstr ""
+msgstr "Fiskālā gada Slēgšanas stāvoklis"
 
 #. module: account
 #: field:account.invoice.refund,journal_id:0
@@ -8332,6 +8428,9 @@ msgid ""
 "sales orders or deliveries. You should only confirm them before sending them "
 "to your customers."
 msgstr ""
+"Veido un pārvalda klientiem piestādītos pārdošanas rēķinus. OpenERP sistēmā "
+"iespējams arī automātiski veidot rēķinu melnrakstus no pasūtījumiem vai "
+"piegādēm. Tie ir jāapstiprina tikai pirms sūtīšanas klientiem."
 
 #. module: account
 #: code:addons/account/wizard/account_period_close.py:51
@@ -8399,7 +8498,7 @@ msgstr "Drukāt Nodokļu Deklarāciju"
 #. module: account
 #: view:account.model.line:0
 msgid "Journal Entry Model Line"
-msgstr ""
+msgstr "Žurnāla Ievades Modeļa Rinda"
 
 #. module: account
 #: view:account.invoice:0
@@ -8419,7 +8518,7 @@ msgstr "Piegādātāji"
 #. module: account
 #: view:account.journal:0
 msgid "Accounts Type Allowed (empty for no control)"
-msgstr ""
+msgstr "Atļauto Kontu Tips (netiek ņemts vērā, ja lauks ir tukšs)"
 
 #. module: account
 #: view:res.partner:0
@@ -8447,7 +8546,7 @@ msgstr "No"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscalyear_close
 msgid "Fiscalyear Close"
-msgstr ""
+msgstr "Fiskālā gada Slēgšana"
 
 #. module: account
 #: sql_constraint:account.account:0
@@ -8491,12 +8590,12 @@ msgstr "Drukāt"
 #. module: account
 #: view:account.journal:0
 msgid "Accounts Allowed (empty for no control)"
-msgstr ""
+msgstr "Atļautie Konti (netiek ņemts vērā, ja tukšs)"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account_template
 msgid "Template Account Fiscal Mapping"
-msgstr ""
+msgstr "Nodokļu Profilu Sasaistes Veidnes"
 
 #. module: account
 #: view:board.board:0
@@ -8547,6 +8646,7 @@ msgid ""
 "Unique number of the invoice, computed automatically when the invoice is "
 "created."
 msgstr ""
+"Rēķina unikālais numurs, tiek automātiski veidots pie rēķina izveides."
 
 #. module: account
 #: constraint:account.bank.statement.line:0
@@ -8564,13 +8664,13 @@ msgstr ""
 #. module: account
 #: help:account.chart,fiscalyear:0
 msgid "Keep empty for all open fiscal years"
-msgstr ""
+msgstr "Atstāt tukšu visiem atvērtajiem fiskālajiem gadiem"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1105
 #, python-format
 msgid "The account move (%s) for centralisation has been confirmed!"
-msgstr ""
+msgstr "Grāmatojums (%s) ir apstiprināts centralizācijai!"
 
 #. module: account
 #: help:account.move.line,amount_currency:0
@@ -8627,7 +8727,7 @@ msgstr ""
 #. module: account
 #: model:process.transition,note:account.process_transition_validentries0
 msgid "Accountant validates the accounting entries coming from the invoice."
-msgstr ""
+msgstr "Grāmatvedis apstiprina no rēķina grāmatvedības ierakstus."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_fiscalyear_form
@@ -8666,7 +8766,7 @@ msgstr "Grāmatot periodā"
 #. module: account
 #: model:ir.model,name:account.model_account_partner_balance
 msgid "Print Account Partner Balance"
-msgstr ""
+msgstr "Drukāt Partnera Bilanci"
 
 #. module: account
 #: help:account.financial.report,sign:0
@@ -8710,6 +8810,8 @@ msgid ""
 "will be added, Loss: Amount will be deducted.), Which is calculated from "
 "Profilt & Loss Report"
 msgstr ""
+"Konts Peļņas/Zaudējumu kontējumiem (Ja ir peļņa: Summa tiks pievienota, "
+"Zaudējumi: Summa tiks atņemta.). Tiek izmantots Peļņas/Zaudējumu aprēķinā."
 
 #. module: account
 #: code:addons/account/account_invoice.py:808
@@ -8818,7 +8920,7 @@ msgstr "Reģistrēts maksājums"
 #. module: account
 #: view:account.fiscalyear.close.state:0
 msgid "Close states of Fiscal year and periods"
-msgstr ""
+msgstr "Fiskālo gadu un periodu Slēgšanas stāvokļi"
 
 #. module: account
 #: view:account.analytic.line:0
@@ -8872,6 +8974,8 @@ msgid ""
 "Analytic costs (timesheets, some purchased products, ...) come from analytic "
 "accounts. These generate draft invoices."
 msgstr ""
+"Analītiskās izmaksas (darba uzskaites tabeles, daži nopirktie produkti, ...) "
+"no analītiskajiem kontiem. Tie veido neapstiprinātus rēķinus."
 
 #. module: account
 #: help:account.journal,view_id:0
@@ -8881,6 +8985,10 @@ msgid ""
 "in which order. You can create your own view for a faster encoding in each "
 "journal."
 msgstr ""
+"Skatījums, kurš tiek lietots, rakstot vai pārlūkojot grāmatojumus.Skatījums "
+"norāda OpenERP sistēmai, kuriem laukiem jābūt redzamiem, obligātiem vai "
+"tikai lasāmiem un kādā secībā. Iespējams  veidot savu skatījumu, ātrākai "
+"datu ievadei attiecīgajā žurnālā."
 
 #. module: account
 #: field:account.period,date_stop:0
@@ -8956,7 +9064,7 @@ msgstr "Kredīta summa"
 #. module: account
 #: model:process.transition,note:account.process_transition_suppliervalidentries0
 msgid "Accountant validates the accounting entries coming from the invoice. "
-msgstr ""
+msgstr "Grāmatvedis apstiprina no rēķina grāmatvedības ierakstus. "
 
 #. module: account
 #: report:account.overdue:0
@@ -8976,7 +9084,7 @@ msgstr "Nodokļa Kodu Veidne/Paraugs"
 #. module: account
 #: report:account.overdue:0
 msgid "Document: Customer account statement"
-msgstr ""
+msgstr "Dokuments: Klienta konta izraksts"
 
 #. module: account
 #: field:account.account.type,report_type:0
@@ -9096,7 +9204,7 @@ msgstr "Jāizvēlas  kontus savienošanai"
 #. module: account
 #: model:process.transition,note:account.process_transition_entriesreconcile0
 msgid "Accounting entries are the first input of the reconciliation."
-msgstr ""
+msgstr "Grāmatvedības ieraksti ir pirmie sasaistes elementi."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_period_form
@@ -9108,6 +9216,11 @@ msgid ""
 "closed or left open depending on your company's activities over a specific "
 "period."
 msgstr ""
+"Šeit tiek definēts finansiālais periods, laika intervāls uzņēmuma "
+"finansiālajā gadā. Grāmatvedības periods parasti ir mēnesis vai ceturksnis. "
+"Tas parasti atbilst nodokļu deklarācijas periodiem. Šeit iespējams veidot "
+"vai pārvaldīt periodus un izlemt, vai periodam jābūt slēgtam vai atvērtam, "
+"atkarībā no uzņēmuma aktivitātes noteiktā periodā."
 
 #. module: account
 #: report:account.third_party_ledger:0
@@ -9135,7 +9248,7 @@ msgstr "Grāmatojums"
 #: code:addons/account/account_move_line.py:1153
 #, python-format
 msgid "You can not change the tax, you should remove and recreate lines !"
-msgstr ""
+msgstr "Nav  iespējams mainīt nodokli,  dzēst un izveidot rindas no jauna!"
 
 #. module: account
 #: view:analytic.entries.report:0
@@ -9145,7 +9258,7 @@ msgstr ""
 #. module: account
 #: report:account.central.journal:0
 msgid "A/C No."
-msgstr ""
+msgstr "Konta Nr."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_journal_2_account_bank_statement
@@ -9156,7 +9269,7 @@ msgstr "Bankas konta izraksts"
 #: help:account.addtmpl.wizard,cparent_id:0
 msgid ""
 "Creates an account with the selected template under this existing parent."
-msgstr ""
+msgstr "Tiek veidots konts ar izvēlēto veidni zem virskonta."
 
 #. module: account
 #: selection:account.model.line,date_maturity:0
@@ -9170,6 +9283,8 @@ msgid ""
 "You have to define the bank account\n"
 "in the journal definition for reconciliation."
 msgstr ""
+"Nepieciešams definēt bankas kontu\n"
+"sasaistes ierakstu žurnālam."
 
 #. module: account
 #: view:account.move.line.reconcile:0
@@ -9224,7 +9339,7 @@ msgstr "Kontu plāns"
 #. module: account
 #: field:account.subscription.line,subscription_id:0
 msgid "Subscription"
-msgstr ""
+msgstr "Regulārie kontējumi"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_balance
@@ -9290,7 +9405,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_subscription
 msgid "Account Subscription"
-msgstr ""
+msgstr "Grāmatvedības Regulārie Ieraksti"
 
 #. module: account
 #: report:account.overdue:0
@@ -9300,7 +9415,7 @@ msgstr "Termiņš"
 #. module: account
 #: view:account.subscription:0
 msgid "Entry Subscription"
-msgstr ""
+msgstr "Regulārie Grāmatvedības Kontējumi"
 
 #. module: account
 #: report:account.account.balance:0
@@ -9588,7 +9703,7 @@ msgstr "Atvērt Sasaistei"
 #. module: account
 #: field:account.account,parent_left:0
 msgid "Parent Left"
-msgstr ""
+msgstr "Virskonts Pa Kreisi"
 
 #. module: account
 #: help:account.invoice.refund,filter_refund:0
@@ -9655,6 +9770,8 @@ msgid ""
 "This report allows you to print or generate a pdf of your general ledger "
 "with details of all your account journals"
 msgstr ""
+"Pārskats ļauj drukāt vai veidot virsgrāmatu PDF formātā, iekļaujot visu "
+"žurnālu detaļas"
 
 #. module: account
 #: selection:account.account,type:0
@@ -9675,7 +9792,7 @@ msgstr "Iekšējais Tips"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_subscription_form_running
 msgid "Running Subscriptions"
-msgstr ""
+msgstr "Aktīvie Regulārie Kontējumi"
 
 #. module: account
 #: view:report.account.sales:0
@@ -9751,7 +9868,7 @@ msgstr "Nodoklis"
 #. module: account
 #: view:ir.sequence:0
 msgid "Fiscal Year Sequences"
-msgstr ""
+msgstr "Fiskālo Gadu Kārtojums"
 
 #. module: account
 #: selection:account.financial.report,display_detail:0
@@ -9861,7 +9978,7 @@ msgstr "Uzņēmums"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_subscription_form
 msgid "Define Recurring Entries"
-msgstr ""
+msgstr "Definēt Periodiskos Ierakstus"
 
 #. module: account
 #: field:account.entries.report,date_maturity:0
@@ -9889,7 +10006,7 @@ msgstr "Veidot 1-Mēneša Periodus"
 #. module: account
 #: field:account.tax.code.template,sign:0
 msgid "Sign For Parent"
-msgstr ""
+msgstr "Zīme Virsnodoklim"
 
 #. module: account
 #: model:ir.model,name:account.model_account_balance_report
@@ -10060,7 +10177,7 @@ msgstr "Partnera Apmaksas Termiņš"
 #. module: account
 #: field:temp.range,name:0
 msgid "Range"
-msgstr ""
+msgstr "Apgabals"
 
 #. module: account
 #: view:account.analytic.line:0
@@ -10092,7 +10209,7 @@ msgstr "Analītiskie dati"
 #. module: account
 #: view:account.tax.code.template:0
 msgid "Account Tax Code Template"
-msgstr ""
+msgstr "Nodokļa Kodu Veidne"
 
 #. module: account
 #: model:process.node,name:account.process_node_manually0
@@ -10182,17 +10299,17 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_chart
 msgid "Account Analytic Chart"
-msgstr ""
+msgstr "Analītiskais Kontu Plāns"
 
 #. module: account
 #: help:account.invoice,residual:0
 msgid "Remaining amount due."
-msgstr ""
+msgstr "Summa apmaksai."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_statistic_report_statement
 msgid "Statistic Reports"
-msgstr ""
+msgstr "Statistiskās Atskaites"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1155
@@ -10219,13 +10336,13 @@ msgstr ""
 #. module: account
 #: view:account.fiscal.position.template:0
 msgid "Accounts Mapping"
-msgstr ""
+msgstr "Kontu Savienošana"
 
 #. module: account
 #: code:addons/account/account_invoice.py:364
 #, python-format
 msgid "Invoice '%s' is waiting for validation."
-msgstr ""
+msgstr "Rēķins \"%s\" gaida apstiprināšanu."
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -10234,7 +10351,7 @@ msgstr ""
 #: selection:report.account.sales,month:0
 #: selection:report.account_type.sales,month:0
 msgid "November"
-msgstr ""
+msgstr "Novembris"
 
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
@@ -10244,7 +10361,7 @@ msgstr ""
 #. module: account
 #: help:account.invoice.line,account_id:0
 msgid "The income or expense account related to the selected product."
-msgstr ""
+msgstr "Ar izvēlēto produktu saistītais ienākumu vai izdevumu konts."
 
 #. module: account
 #: field:account.subscription,period_total:0
@@ -10255,12 +10372,12 @@ msgstr "Periodu Skaits"
 #: report:account.general.journal:0
 #: model:ir.actions.report.xml,name:account.account_general_journal
 msgid "General Journal"
-msgstr ""
+msgstr "Virsgrāmata"
 
 #. module: account
 #: view:account.invoice:0
 msgid "Search Invoice"
-msgstr ""
+msgstr "Meklēt Rēķinu"
 
 #. module: account
 #: report:account.invoice:0
@@ -10269,7 +10386,7 @@ msgstr ""
 #: view:account.invoice.report:0
 #: model:ir.actions.act_window,name:account.action_account_invoice_refund
 msgid "Refund"
-msgstr ""
+msgstr "Atmaksa"
 
 #. module: account
 #: model:email.template,body_text:account.email_template_edi_invoice
@@ -10353,7 +10470,7 @@ msgstr "Bankas Konti"
 #. module: account
 #: field:res.partner,credit:0
 msgid "Total Receivable"
-msgstr ""
+msgstr "Ieņēmumu Summa"
 
 #. module: account
 #: view:account.account:0
@@ -10367,43 +10484,43 @@ msgstr "Vispārīgā informācija"
 #: view:account.move:0
 #: view:account.move.line:0
 msgid "Accounting Documents"
-msgstr ""
+msgstr "Grāmatvedības Dokumenti"
 
 #. module: account
 #: model:ir.model,name:account.model_validate_account_move_lines
 msgid "Validate Account Move Lines"
-msgstr ""
+msgstr "Apstiprināt Grāmatojumu Rindas"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_analytic_cost_ledger_journal
 #: model:ir.actions.report.xml,name:account.account_analytic_account_quantity_cost_ledger
 msgid "Cost Ledger (Only quantities)"
-msgstr ""
+msgstr "Virsgrāmata (Tikai skaits)"
 
 #. module: account
 #: model:process.node,note:account.process_node_supplierpaidinvoice0
 msgid "Invoice's state is Done."
-msgstr ""
+msgstr "Rēķina statuss ir Pabeigts"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_reconcilepaid0
 msgid "As soon as the reconciliation is done, the invoice can be paid."
-msgstr ""
+msgstr "Tiklīdz sasaiste tiks pabeigta, rēķins tiks atzīmēts kā apmaksāts."
 
 #. module: account
 #: view:account.account.template:0
 msgid "Search Account Templates"
-msgstr ""
+msgstr "Meklēt Kontu Veidnes"
 
 #. module: account
 #: view:account.invoice.tax:0
 msgid "Manual Invoice Taxes"
-msgstr ""
+msgstr "Manuāli Rēķina Nodokļi"
 
 #. module: account
 #: field:account.account,parent_right:0
 msgid "Parent Right"
-msgstr ""
+msgstr "Virskonts Pa Labi"
 
 #. module: account
 #: model:ir.model,name:account.model_account_addtmpl_wizard
@@ -10419,7 +10536,7 @@ msgstr ""
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 msgid "Partner's"
-msgstr ""
+msgstr "Partnera"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscalyear_form
@@ -10438,13 +10555,13 @@ msgstr ""
 #. module: account
 #: field:account.analytic.line,ref:0
 msgid "Ref."
-msgstr ""
+msgstr "Ats."
 
 #. module: account
 #: field:account.use.model,model:0
 #: model:ir.model,name:account.model_account_model
 msgid "Account Model"
-msgstr ""
+msgstr "Grāmatvedības Modelis"
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -10453,7 +10570,7 @@ msgstr ""
 #: selection:report.account.sales,month:0
 #: selection:report.account_type.sales,month:0
 msgid "February"
-msgstr ""
+msgstr "Februāris"
 
 #. module: account
 #: help:account.bank.statement,name:0
@@ -10462,6 +10579,9 @@ msgid ""
 "be with same name as statement name. This allows the statement entries to "
 "have the same references than the statement itself"
 msgstr ""
+"ja Nosaukums nav \"/\", tā izveidotajam Grāmatojumam būs tāds pats nosaukums "
+"kā izrakstam. Tādā veidā izraksta rindām var būt tāda pati atsauce kā pašam "
+"izrakstam."
 
 #. module: account
 #: field:account.bank.accounts.wizard,bank_account_id:0
@@ -10476,22 +10596,22 @@ msgstr "Bankas Konts"
 #: model:ir.actions.act_window,name:account.action_account_central_journal
 #: model:ir.model,name:account.model_account_central_journal
 msgid "Account Central Journal"
-msgstr ""
+msgstr "Virsgrāmata"
 
 #. module: account
 #: report:account.overdue:0
 msgid "Maturity"
-msgstr ""
+msgstr "Saistības"
 
 #. module: account
 #: selection:account.aged.trial.balance,direction_selection:0
 msgid "Future"
-msgstr ""
+msgstr "Nākotnē"
 
 #. module: account
 #: view:account.move.line:0
 msgid "Search Journal Items"
-msgstr ""
+msgstr "Meklēt Žurnāla Grāmatojumus"
 
 #. module: account
 #: help:account.tax,base_sign:0
@@ -10503,7 +10623,7 @@ msgstr ""
 #: help:account.tax.template,ref_tax_sign:0
 #: help:account.tax.template,tax_sign:0
 msgid "Usually 1 or -1."
-msgstr ""
+msgstr "Parasti 1 vai -1"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_analytic_account_tree2
@@ -10515,7 +10635,7 @@ msgstr "Analītisko Kontu Plāns"
 #. module: account
 #: field:account.chart.template,property_account_expense:0
 msgid "Expense Account on Product Template"
-msgstr ""
+msgstr "Izdevumu Konts Preces Veidnē"
 
 #. module: account
 #: help:accounting.report,label_filter:0
@@ -10528,7 +10648,7 @@ msgstr ""
 #: code:addons/account/wizard/account_report_aged_partner_balance.py:56
 #, python-format
 msgid "You must enter a period length that cannot be 0 or below !"
-msgstr ""
+msgstr "Jāievada perioda ilgums, kas nevar būt 0 vai īsāks!"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_form

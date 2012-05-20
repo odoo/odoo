@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-19 06:33+0000\n"
-"X-Generator: Launchpad (build 14814)\n"
+"X-Launchpad-Export-Date: 2012-05-17 05:54+0000\n"
+"X-Generator: Launchpad (build 15259)\n"
 
 #. module: procurement
 #: view:make.procurement:0
@@ -135,7 +135,7 @@ msgstr "Bij order"
 #. module: procurement
 #: help:procurement.order,message:0
 msgid "Exception occurred while computing procurement orders."
-msgstr "Uitzondering opgetreden bij het berekenen van verwervingsopdrachten."
+msgstr "Fouten opgetreden bij het berekenen van verwervingsopdrachten."
 
 #. module: procurement
 #: help:procurement.order,state:0
@@ -153,8 +153,7 @@ msgstr ""
 "Als de verwerving is bevestigd, gaat de status naar 'Bevestigd'.            "
 "\n"
 "Na bevestiging gaat de status naar 'Loopt'.\n"
-"Als er een uitzondering optreedt in de order gaat de status naar "
-"'Uitzondering'.\n"
+"Als er een fout optreedt in de order gaat de status naar 'Fout'.\n"
 "Als de uitzondering is verwijderd gaat de status naar 'Gereed'.\n"
 "De status is 'Wachtend' als de verwerving wacht op het afronden van een "
 "andere."
@@ -620,7 +619,7 @@ msgstr "Datum ingepland"
 #. module: procurement
 #: selection:procurement.order,state:0
 msgid "Exception"
-msgstr "Uitzondering"
+msgstr "Fout"
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:381
@@ -983,11 +982,11 @@ msgstr ""
 "documenten). Afhankelijk van de verwerving parameters en de product "
 "configuratie, probeert het verwervingsprogramma de aan behoefte te voldoen "
 "door producten te reserveren op voorraad, producten te bestellen bij een "
-"leverancier of een productieorder uit te geven, etc. Een verwerving "
-"uitzondering treedt op als het systeem geen manier kan vinden om de "
-"verwerving te vervullen. Sommige uitzonderingen lossen zichzelf automatisch "
-"op , maar anderen vereisen handmatig ingrijpen (die zijn van een specifieke "
-"foutmelding voorzien) ."
+"leverancier of een productieorder uit te geven, etc. Een verwervingsfout "
+"treedt op als het systeem geen manier kan vinden om de verwerving te "
+"vervullen. Sommige fouten lossen zichzelf automatisch op , maar anderen "
+"vereisen handmatig ingrijpen (die zijn van een specifieke foutmelding "
+"voorzien) ."
 
 #. module: procurement
 #: field:procurement.order,product_uom:0

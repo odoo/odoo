@@ -1,21 +1,20 @@
-# Portuguese translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* product_expiry
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: OpenERP Server 6.0.2\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:37+0000\n"
 "PO-Revision-Date: 2012-02-17 09:10+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
-"Language-Team: Portuguese <pt@li.org>\n"
+"Last-Translator: \n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-18 06:56+0000\n"
-"X-Generator: Launchpad (build 14814)\n"
+"X-Launchpad-Export-Date: 2012-05-17 05:55+0000\n"
+"X-Generator: Launchpad (build 15259)\n"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_production_lot
@@ -35,7 +34,7 @@ msgstr "Leite de vaca"
 #. module: product_expiry
 #: field:product.product,life_time:0
 msgid "Product Life Time"
-msgstr "Tempo de vida do produto"
+msgstr "Tempo de vida do artigo"
 
 #. module: product_expiry
 #: help:stock.production.lot,use_date:0
@@ -48,7 +47,7 @@ msgstr ""
 #. module: product_expiry
 #: field:product.product,use_time:0
 msgid "Product Use Time"
-msgstr ""
+msgstr "Data Validade do Artigo"
 
 #. module: product_expiry
 #: sql_constraint:stock.production.lot:0
@@ -65,7 +64,7 @@ msgstr "Data em que o lote deve ser retirado."
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_product_product
 msgid "Product"
-msgstr "Produto"
+msgstr "Artigo"
 
 #. module: product_expiry
 #: help:product.product,alert_time:0
@@ -73,22 +72,25 @@ msgid ""
 "The number of days after which an alert should be notified about the "
 "production lot."
 msgstr ""
+"O número de dias após o que um alerta deve ser notificado sobre o lote de "
+"produção."
 
 #. module: product_expiry
 #: field:product.product,removal_time:0
 msgid "Product Removal Time"
-msgstr ""
+msgstr "Tempo de remoção do artigo"
 
 #. module: product_expiry
 #: field:stock.production.lot,removal_date:0
 msgid "Removal Date"
-msgstr ""
+msgstr "Data de remoção"
 
 #. module: product_expiry
 #: help:stock.production.lot,life_date:0
 msgid ""
 "The date on which the lot may become dangerous and should not be consumed."
 msgstr ""
+"A data em que o lote pode tornar-se perigoso e não deve ser consumido."
 
 #. module: product_expiry
 #: model:product.template,name:product_expiry.product_product_pain_product_template
@@ -99,7 +101,7 @@ msgstr "Pão"
 #: model:product.uom,name:product_expiry.product_uom_ltr
 #: model:product.uom.categ,name:product_expiry.product_uom_categ_vol
 msgid "LTR"
-msgstr ""
+msgstr "LTR"
 
 #. module: product_expiry
 #: view:product.product:0
@@ -110,12 +112,12 @@ msgstr "Datas"
 #. module: product_expiry
 #: field:stock.production.lot,life_date:0
 msgid "End of Life Date"
-msgstr ""
+msgstr "Fim da data de validade"
 
 #. module: product_expiry
 #: field:stock.production.lot,use_date:0
 msgid "Best before Date"
-msgstr ""
+msgstr "Consumir antes da data"
 
 #. module: product_expiry
 #: model:product.template,name:product_expiry.product_product_jambon_product_template
@@ -125,12 +127,12 @@ msgstr "Queijo Camembert francês"
 #. module: product_expiry
 #: help:product.product,removal_time:0
 msgid "The number of days before a production lot should be removed."
-msgstr "Número de dias antes de um lote dever ser retirado."
+msgstr "Número de dias antes de um lote deve ser retirado."
 
 #. module: product_expiry
 #: field:stock.production.lot,alert_date:0
 msgid "Alert Date"
-msgstr ""
+msgstr "Data Alerta"
 
 #. module: product_expiry
 #: help:product.product,use_time:0
@@ -138,6 +140,8 @@ msgid ""
 "The number of days before a production lot starts deteriorating without "
 "becoming dangerous."
 msgstr ""
+"O número de dias antes de um lote de produção começa a deteriorar-se sem se "
+"tornar perigoso."
 
 #. module: product_expiry
 #: constraint:product.product:0
@@ -150,14 +154,17 @@ msgid ""
 "The number of days before a production lot may become dangerous and should "
 "not be consumed."
 msgstr ""
+"O número de dias antes de um lote de produção poder tornar-se perigoso e que "
+"não deve ser consumido."
 
 #. module: product_expiry
 #: help:stock.production.lot,alert_date:0
 msgid ""
 "The date on which an alert should be notified about the production lot."
 msgstr ""
+"A data em que um alerta deve ser notificado sobre o lote de produção."
 
 #. module: product_expiry
 #: field:product.product,alert_time:0
 msgid "Product Alert Time"
-msgstr ""
+msgstr "Alerta da validade do Artigo"
