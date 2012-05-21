@@ -323,12 +323,11 @@ class YamlInterpreter(object):
                 self.cr.commit()
 
     def _create_record(self, model, fields, view=False, parent={}, default=True):
-        allfields = model.fields_get(self.cr, 1, context=self.context)
         if view is not False:
-            defaults = default and model.default_get(self.cr, 1, allfields, context=self.context) or {}
+            defaults = default and model._add_missing_default_values(self.cr, 1, {}, context=self.context) or {}
             fg = model.fields_get(self.cr, 1, context=self.context)
         else:
-            default = {}
+            defaults = {}
             fg = {}
         record_dict = {}
         fields = fields or {}
