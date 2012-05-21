@@ -52,25 +52,25 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         performPayment: function(event) {
             if (this.pos.get('selectedOrder').get('screen') === 'receipt')
                 return;
-            var accountJournal, accountJournalCollection, accountJournalId;
+            var cashRegister, cashRegisterCollection, cashRegisterId;
             /* set correct view */
             this.pos_widget.screen_selector.set_current_screen('payment');
 
-            accountJournalId = event.currentTarget.attributes['account-journal-id'].nodeValue;
-            accountRegisterCollection = this.pos.get('accountJournals');
-            accountJournal = accountRegisterCollection.find(_.bind(function(item) {
-                return (item.get('id')) === parseInt(accountJournalId, 10);
+            cashRegisterId = event.currentTarget.attributes['cash-register-id'].nodeValue;
+            cashRegisterCollection = this.pos.get('cashRegisters');
+            cashRegister = cashRegisterCollection.find(_.bind(function(item) {
+                return (item.get('id')) === parseInt(cashRegisterId, 10);
             }, this));
-            return (this.pos.get('selectedOrder')).addPaymentLine(accountJournal);
+            return (this.pos.get('selectedOrder')).addPaymentLine(cashRegister);
         },
         renderElement: function() {
             this._super();
-            return (this.pos.get('accountJournals')).each(_.bind(function(accountJournal) {
-                console.log('journal:',accountJournal);
+            return (this.pos.get('cashRegisters')).each(_.bind(function(cashRegister) {
+                console.log('cashRegisters:',cashRegister);
                 var button = new module.PaymentButtonWidget(this,{
                     pos:this.pos,
                 });
-                button.model = accountJournal;
+                button.model = cashRegister;
                 button.appendTo(this.$element);
                 console.log(this.$element);
             }, this));
@@ -799,14 +799,13 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 if (!self.pos.get('pos_session')) {
                     self.screen_selector.show_popup('error',
                         'Sorry, we could not create a user session');
-                }else if (!self.pos.get('account_journals') || self.pos.get('account_journals').length === 0){
-                    self.screen_selector.show_popup('error',
-                        'Sorry, we could not find any accounting journals in the configuration');
+                //}else if (!self.pos.get('bank_statements') || self.pos.get('bank_statements').length === 0){
+                //    self.screen_selector.show_popup('error',
+                //        'Sorry, we could not find any accounting journals in the configuration');
                 }else if(!self.pos.get('pos_config')){
                     self.screen_selector.show_popup('error',
                         'Sorry, we could not find any PoS Configuration for this session');
                 }
-                
             
                 $('.loader').animate({opacity:0},3000,'swing',function(){$('.loader').hide();});
                 $('.loader img').hide();

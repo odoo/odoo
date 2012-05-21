@@ -86,6 +86,15 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     return self.set({'product_list': result});
                 });
 
+            var bank_def = fetch(
+                'account.bank.statement',
+                ['account_id','currency','journal_id','state','name'],
+                [['state','=','open'], ['user_id', '=', this.session.uid]]
+                ).then(function(result){
+                    console.log('bank_statements:',result);
+                    return self.set({'bank_statements':result});
+                });
+
             var session_def = fetch(
                     'pos.session',
                     ['id', 'journal_ids','name','config_id','start_at','stop_at'],
@@ -96,15 +105,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                         console.log('pos_session:', pos_session);
 
                         self.set({'pos_session': pos_session});
-
-                        var journal_def = fetch(
-                                'account.journal',
-                                ['name'], 
-                                [['id', 'in', pos_session['journal_ids']]]
-                            ).then(function(inner_result) {
-                                console.log('account_journals:',inner_result);
-                                return self.set({'account_journals' : inner_result});
-                            });
 
                         var pos_config_def = fetch(
                                 'pos.config',
@@ -117,7 +117,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                                 console.log('pos_config:',result[0]);
                                 return self.set({'pos_config': result[0]});
                             });
-                        return $.when(journal_def, pos_config_def);
+                        return pos_config_def;
                     }else{
                         return self;
                     }
@@ -132,8 +132,10 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             $.when(cat_def, prod_def, session_def, tax_def, this.get_app_data(), this.flush())
                 .pipe(_.bind(this.build_tree, this))
                 .pipe(function(){
-                    self.set({'accountJournals' : new module.AccountJournalCollection(self.get('account_journals'))});
-                    console.log('accountJournals:',self.get('accountJournals'));
+                    self.set({'cashRegisters' : new module.CashRegisterCollection(self.get('bank_statements'))});
+                    console.log('cashRegisters:',self.get('cashRegisters'));
+                    //self.set({'accountJournals' : new module.AccountJournalCollection(self.get('account_journals'))});
+                    //console.log('accountJournals:',self.get('accountJournals'));
                     self.ready.resolve();
                 });
 
@@ -277,14 +279,14 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             return _results;
         }
     });
-
+/*
     module.AccountJournal = Backbone.Model.extend({
     });
 
     module.AccountJournalCollection = Backbone.Collection.extend({
         model: module.AccountJournal,
     });
-
+*/
     module.CashRegister = Backbone.Model.extend({
     });
 
@@ -419,11 +421,9 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             Backbone.Model.prototype.initialize.apply(this, arguments);
         },
         getAmount: function(){
-            // FIXME
-            return 0.0; //this.get('amount');
+            return this.get('amount');
         },
         exportAsJSON: function(){
-            // FIXME
             return {
                 name: instance.web.datetime_to_str(new Date()),
                 statement_id: this.get('id'),
@@ -461,7 +461,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         },
         validatedChanged: function() {
             if (this.get("validated") && !this.previous("validated")) {
-                this.pos.screen_selector.set_current_screen('receipt'); 
+                this.pos_widget.screen_selector.set_current_screen('receipt'); 
                 //this.set({'screen': 'receipt'});
             }
         },
@@ -490,9 +490,9 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 }, this);
             }
         },
-        addPaymentLine: function(accountJournal) {
+        addPaymentLine: function(cashRegister) {
             var newPaymentline;
-            newPaymentline = new module.Paymentline(accountJournal);
+            newPaymentline = new module.Paymentline(cashRegister);
             /* TODO: Should be 0 for cash-like accounts */
             newPaymentline.set({
                 amount: this.getDueLeft()
