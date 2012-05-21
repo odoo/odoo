@@ -1335,7 +1335,7 @@ class project_task_history_cumulative(osv.osv):
                     id as history_id,
                     date+generate_series(0, CAST((coalesce(end_date,DATE 'tomorrow')::date - date)AS integer)-1) as date,
                     task_id, type_id, user_id, kanban_state, state,
-                    remaining_hours, planned_hours
+                    greatest(remaining_hours,1) as remaining_hours, greatest(planned_hours,1) as planned_hours
                 FROM
                     project_task_history
             ) as history
