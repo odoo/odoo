@@ -351,6 +351,10 @@ class crm_case(crm_base):
     And object that inherit (orm inheritance) from a class the overwrite copy
     """
     
+    def _get_default_stage_id(self, cr, uid, context=None):
+        """ Gives default stage_id """
+        return self.stage_find(cr, uid, False, [('state', '=', 'draft')], context=context)
+    
     def stage_set_with_state_name(self, cr, uid, cases, state_name, context=None):
         """ TODO
         """
