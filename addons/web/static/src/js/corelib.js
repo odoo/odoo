@@ -710,6 +710,12 @@ instance.web.Widget = instance.web.Class.extend(instance.web.WidgetMixin, {
         }
     },
     /**
+     * Shortcut for $element.find() like backbone
+     */
+    "$": function() {
+        return this.$element.find.apply(this.$element,arguments);
+    },
+    /**
      * Informs the action manager to do an action. This supposes that
      * the action manager can be found amongst the ancestors of the current widget.
      * If that's not the case this method will simply return `false`.
