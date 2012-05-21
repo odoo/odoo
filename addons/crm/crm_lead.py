@@ -272,47 +272,39 @@ class crm_lead(crm_case, osv.osv):
         res = super(crm_lead, self).case_open(cr, uid, ids, context)
         return res
 
-    def case_close(self, cr, uid, ids, context=None):
-        res = super(crm_lead, self).case_close(cr, uid, ids, context)
-        self.write(cr, uid, ids, {'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')})
-        return res
-
     def case_cancel(self, cr, uid, ids, context=None):
         """Overrides cancel for crm_case for setting probability
         """
-        res = super(crm_lead, self).case_cancel(cr, uid, ids, context)
-        self.write(cr, uid, ids, {'probability' : 0.0})
+        res = super(crm_lead, self).case_cancel(cr, uid, ids, context=context)
+        self.write(cr, uid, ids, {'probability' : 0.0}, context=context)
         return res
 
     def case_reset(self, cr, uid, ids, context=None):
         """Overrides reset as draft in order to set the stage field as empty
         """
-        res = super(crm_lead, self).case_reset(cr, uid, ids, context)
-        self.write(cr, uid, ids, {'stage_id': False, 'probability': 0.0})
+        res = super(crm_lead, self).case_reset(cr, uid, ids, context=context)
+        self.write(cr, uid, ids, {'probability': 0.0}, context=context)
         return res
 
     def case_mark_lost(self, cr, uid, ids, context=None):
         """Mark the case as lost: state = done and probability = 0%
         """
-        res = super(crm_lead, self).case_close(cr, uid, ids, context)
-        self.write(cr, uid, ids, {'probability' : 0.0})
         for lead in self.browse(cr, uid, ids):
             stage_id = self.stage_find_lost(cr, uid, lead.section_id.id or False)
             if stage_id:
-                self.stage_set(cr, uid, [lead.id], stage_id)
-        return res
+                self.case_set(cr, uid, [lead.id], values_to_update={'probability': 0.0}, new_stage_id=stage_id, context=context)
+        self.case_close_send_note(cr, uid, ids, context=context)
+        return True
 
     def case_mark_won(self, cr, uid, ids, context=None):
         """Mark the case as lost: state = done and probability = 0%
         """
-        res = super(crm_lead, self).case_close(cr, uid, ids, context=None)
-        self.write(cr, uid, ids, {'probability' : 100.0})
         for lead in self.browse(cr, uid, ids):
             stage_id = self.stage_find_won(cr, uid, lead.section_id.id or False)
             if stage_id:
-                self.stage_set(cr, uid, [lead.id], stage_id)
-            self.case_mark_won_send_note(cr, uid, [lead.id], context=context)
-        return res
+                self.case_set(cr, uid, [lead.id], values_to_update={'probability': 87.0}, new_stage_id=stage_id, context=context)
+        self.case_close_send_note(cr, uid, ids, context=context)
+        return True
 
     def set_priority(self, cr, uid, ids, priority):
         """Set lead priority
