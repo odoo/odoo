@@ -113,7 +113,6 @@ class crm_claim(crm.crm_case, osv.osv):
         'user_id': crm.crm_case._get_default_user,
         'partner_id': crm.crm_case._get_default_partner,
         'email_from':crm.crm_case. _get_default_email,
-        'state': lambda *a: 'draft',
         'section_id':crm.crm_case. _get_section,
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.case', context=c),

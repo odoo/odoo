@@ -101,7 +101,6 @@ class crm_fundraising(crm.crm_case, osv.osv):
             'user_id': crm.crm_case._get_default_user,
             'partner_id': crm.crm_case._get_default_partner,
             'email_from': crm.crm_case. _get_default_email,
-            'state': 'draft',
             'section_id': crm.crm_case. _get_section,
             'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.case', context=c),
             'priority': crm.AVAILABLE_PRIORITIES[2][0],
