@@ -44,34 +44,56 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         return dataSetSearch.read_slice(fields, 0);
     };
     
-    /*
-     Gets all the necessary data from the OpenERP web client (instance, shop data etc.)
-     */
+    // The PosModel contains the Point Of Sale's representation of the backend.
+    // Since the PoS must work in standalone ( Without connection to the server ) 
+    // it must contains a representation of the server's PoS backend. 
+    // (taxes, product list, configuration options, etc.)  this representation
+    // is fetched and stored by the PosModel at the initialisation. 
+    // this is done asynchronously, a ready deferred alows the GUI to wait interactively 
+    // for the loading to be completed 
+    // There is a single instance of the PosModel for each Front-End instance, it is usually called
+    // 'pos' and is available to almost all widgets.
+
     module.PosModel = Backbone.Model.extend({
         initialize: function(session, attributes) {
             Backbone.Model.prototype.initialize.call(this, attributes);
             var  self = this;
-            this.dao = new module.LocalStorageDAO();
-            this.ready = $.Deferred();
-            this.flush_mutex = new $.Mutex();
-            this.build_tree = _.bind(this.build_tree, this);
-            this.session = session;
+            this.dao = new module.LocalStorageDAO();            // used to store the order's data on the Hard Drive
+            this.ready = $.Deferred();                          // used to notify the GUI that the PosModel has loaded all resources
+            this.flush_mutex = new $.Mutex();                   // used to make sure the orders are sent to the server once at time
+            this.build_tree = _.bind(this.build_tree, this);    // ???
+            this.session = session;                 
             this.categories = {};
-            this.barcode_reader = new module.BarcodeReader({'pos': this});
-            window.barcode_reader = this.barcode_reader;
-            this.proxy = new module.ProxyDevice({'pos': this});
+            this.barcode_reader = new module.BarcodeReader({'pos': this});  // used to read barcodes
+            this.proxy = new module.ProxyDevice({'pos': this});             // used to communicate to the hardware devices via a local proxy
+
+            // default attributes values. If null, it will be loaded below.
             this.set({
-                'nbr_pending_operations': 0,
-                'currency': {symbol: '$', position: 'after'},
-                'shop': {},
-                'company': {},
-                'user': {},
-                'orders': new module.OrderCollection(),
-                'products': new module.ProductCollection(),
-                'cashRegisters': [], //new module.CashRegisterCollection(this.pos.get('bank_statements'));
-                'selectedOrder': undefined,
+                'nbr_pending_operations': 0,    
+
+                'currency':         {symbol: '$', position: 'after'},
+                'shop':             null, 
+                'company':          null,
+                'user':             null,
+
+                'orders':           new module.OrderCollection(),
+                'products':         new module.ProductCollection(),
+                'cashRegisters':    null, 
+
+                'product_list':     null,
+                'bank_statements':  null,
+                'taxes':            null,
+                'pos_session':      null,
+                'pos_config':       null,
+                'categories':       null,
+
+                'selectedOrder':    undefined,
             });
+
+            this.get('orders').bind('remove', _.bind( this.on_removed_order, this ) );
             
+            // We fetch the backend data on the server asynchronously
+
             var cat_def = fetch('pos.category', ['name', 'parent_id', 'child_id'])
                 .pipe(function(result){
                     return self.set({'categories': result});
@@ -82,8 +104,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 ['name', 'list_price', 'pos_categ_id', 'taxes_id','product_image_small', 'ean13'],
                 [['pos_categ_id','!=', false]] 
                 ).then(function(result){
-                    console.log('product_list:',result);
-                    return self.set({'product_list': result});
+                    self.set({'product_list': result});
                 });
 
             var bank_def = fetch(
@@ -91,22 +112,31 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 ['account_id','currency','journal_id','state','name'],
                 [['state','=','open'], ['user_id', '=', this.session.uid]]
                 ).then(function(result){
-                    console.log('bank_statements:',result);
-                    return self.set({'bank_statements':result});
+                    self.set({'bank_statements':result});
                 });
 
-            var session_def = fetch(
+            var tax_def = fetch('account.tax', ['amount','price_include','type'])
+                .then(function(result){
+                    self.set({'taxes': result});
+                });
+
+            var session_def = fetch(    // loading the PoS Session.
                     'pos.session',
                     ['id', 'journal_ids','name','config_id','start_at','stop_at'],
                     [['state', '=', 'opened'], ['user_id', '=', this.session.uid]]
-                ).then(function(result) {
+                ).pipe(function(result) {
+
+                    // some data are associated with the pos session, like the pos config.
+                    // we must have a valid session before we can read those. 
+                    
+                    var pos_config_def = new $.Deferred();
+
                     if( result.length !== 0 ) {
                         var pos_session = result[0];
-                        console.log('pos_session:', pos_session);
 
                         self.set({'pos_session': pos_session});
 
-                        var pos_config_def = fetch(
+                        pos_config_def = fetch(
                                 'pos.config',
                                 ['name','journal_ids','shop_id','journal_id',
                                  'iface_self_checkout', 'iface_websql', 'iface_led', 'iface_cashdrawer',
@@ -114,44 +144,56 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                                  'iface_print_via_proxy','state','sequence_id','session_ids'],
                                 [['id','=', pos_session.config_id[0]]]
                             ).then(function(result){
-                                console.log('pos_config:',result[0]);
-                                return self.set({'pos_config': result[0]});
+                                self.set({'pos_config': result[0]});
                             });
-                        return pos_config_def;
                     }else{
-                        return self;
+                        pos_config_def.reject();
                     }
+                    return pos_config_def;
                 });
 
-            var tax_def = fetch('account.tax', ['amount','price_include','type'])
-                .then(function(result){
-                    console.log('taxes:',result);
-                    return self.set({'taxes': result});
-                });
-
-            $.when(cat_def, prod_def, session_def, tax_def, this.get_app_data(), this.flush())
-                .pipe(_.bind(this.build_tree, this))
-                .pipe(function(){
+            // when all the data has loaded, we compute some stuff, and declare the Pos ready to be used. 
+            $.when(cat_def, prod_def, bank_def, session_def, tax_def, this.get_app_data(), this.flush())
+                .then(function(){ 
+                    self.build_tree();
                     self.set({'cashRegisters' : new module.CashRegisterCollection(self.get('bank_statements'))});
                     console.log('cashRegisters:',self.get('cashRegisters'));
-                    //self.set({'accountJournals' : new module.AccountJournalCollection(self.get('account_journals'))});
-                    //console.log('accountJournals:',self.get('accountJournals'));
                     self.ready.resolve();
+                    self.log_loaded_data();
                 });
-
-            return (this.get('orders')).bind('remove', _.bind( function(removedOrder) {
-                if ((this.get('orders')).isEmpty()) {
-                    this.addAndSelectOrder(new module.Order({pos: self}));
-                }
-                if ((this.get('selectedOrder')) === removedOrder) {
-                    return this.set({
-                        selectedOrder: (this.get('orders')).last()
-                    });
-                }
-            }, this));
-
         },
 
+        // logs the usefull posmodel data to the console for debug purposes
+        log_loaded_data: function(){
+            console.log('PosModel data has been loaded:');
+            console.log('PosModel: categories:',this.get('categories'));
+            console.log('PosModel: product_list:',this.get('product_list'));
+            console.log('PosModel: bank_statements:',this.get('bank_statements'));
+            console.log('PosModel: taxes:',this.get('taxes'));
+            console.log('PosModel: pos_session:',this.get('pos_session'));
+            console.log('PosModel: pos_config:',this.get('pos_config'));
+            console.log('PosModel: cashRegisters:',this.get('cashRegisters'));
+            console.log('PosModel: shop:',this.get('shop'));
+            console.log('PosModel: company:',this.get('company'));
+            console.log('PosModel: currency:',this.get('currency'));
+            console.log('PosModel.session:',this.session);
+            console.log('PosModel.categories:',this.categories);
+            console.log('PosModel end of data log.');
+
+        },
+        
+        // this is called when an order is removed from the order collection. It ensures that there is always an existing
+        // order and a valid selected order
+        on_removed_order: function(removed_order){
+            if( this.get('orders').isEmpty()){
+                this.add_and_select_order(new module.Order({ pos: this }));
+            }
+            if( this.get('selectedOrder') === removed_order){
+                this.set({ selectedOrder: this.get('orders').last() });
+            }
+        },
+
+        // load some data from the server, used in initialize
         get_app_data: function() {
             var self = this;
             return $.when(new instance.web.Model("sale.shop").get_func("search_read")([]).pipe(function(result) {
@@ -170,19 +212,26 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 self.set({'user': result});
             }));
         },
+
         push_order: function(record) {
             var self = this;
             return this.dao.add_operation(record).pipe(function(){
                     return self.flush();
             });
         },
-        addAndSelectOrder: function(newOrder) {
+
+        add_and_select_order: function(newOrder) {
             (this.get('orders')).add(newOrder);
             return this.set({
                 selectedOrder: newOrder
             });
         },
+        
+        // attemps to send all pending orders ( stored in the DAO ) to the server.
+        // it will do it one by one, and remove the successfully sent ones from the DAO once
+        // it has been confirmed that they have been received.
         flush: function() {
+            //this makes sure only one _int_flush is called at the same time
             return this.flush_mutex.exec(_.bind(function() {
                 return this._int_flush();
             }, this));
@@ -205,7 +254,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                                 event.preventDefault();
                             })
                             .pipe(function(){
-                                console.debug('saved 1 record'); //TODO Debug this
                                 self.dao.remove_operation(operations[0].id).pipe(function(){
                                     return self._int_flush();
                                 });
@@ -214,6 +262,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                             });
             });
         },
+        // I guess this builds a tree of categories ? TODO ask Niv for more info.
         build_tree: function() {
             var c, id, _i, _len, _ref, _ref2;
             _ref = this.get('categories');
@@ -279,14 +328,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             return _results;
         }
     });
-/*
-    module.AccountJournal = Backbone.Model.extend({
-    });
 
-    module.AccountJournalCollection = Backbone.Collection.extend({
-        model: module.AccountJournal,
-    });
-*/
     module.CashRegister = Backbone.Model.extend({
     });
 
@@ -301,12 +343,12 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         model: module.Product,
     });
 
-    /*
-     Each Order contains zero or more Orderlines (i.e. the content of the "shopping cart".)
-     There should only ever be one Orderline per distinct product in an Order.
-     To add more of the same product, just update the quantity accordingly.
-     The Order also contains payment information.
-     */
+    // An orderline represent one element of the content of a client's shopping cart.
+    // An orderline contains a product, its quantity, its price, discount. etc. 
+    // Currently there is a limitation in that there can only be once orderline by type
+    // of product, but this will be subject to changes TODO
+    //
+    // An Order contains zero or more Orderlines.
     module.Orderline = Backbone.Model.extend({
         defaults: {
             quantity: 1,
@@ -438,10 +480,14 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         model: module.Paymentline,
     });
     
+    // An order more or less represents the content of a client's shopping cart (the OrderLines) 
+    // plus the associated payment information (the PaymentLines) 
+    // there is always an active ('selected') order in the Pos, a new one is created
+    // automaticaly once an order is completed and sent to the server.
+
     module.Order = Backbone.Model.extend({
         defaults:{
             validated: false,
-            step: 'products',
         },
         initialize: function(attributes){
             Backbone.Model.prototype.initialize.apply(this, arguments);

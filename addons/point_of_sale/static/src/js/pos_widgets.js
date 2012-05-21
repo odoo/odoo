@@ -252,8 +252,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
     });
 
-// ---------- "Payment" step. ----------
-
     module.PaymentlineWidget = module.PosBaseWidget.extend({
         template: 'PaymentlineWidget',
         init: function(parent, options) {
