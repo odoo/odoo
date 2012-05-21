@@ -148,8 +148,8 @@
                       <field name="employee_id"/>
                       <field name="date"/>
                       <field name="department_id" widget="selection" string="Department" context="{'invisible_department': False}">
-                   <filter icon="terp-personal+" context="{'invisible_department': False}" domain="[('department_id','=',context.get('department_id',False))]" help="My Department"/>
-                    </field>
+                          <filter string="My Department" icon="terp-personal+" context="{'invisible_department': False}" domain="[('department_id','=',context.get('department_id',False))]" help="My Department"/>
+                      </field>
                       <field name="name"/>
                       <field name="user_id"  string="User">
                       <filter icon="terp-personal+" domain="[('department_id','=',context.get('department_id',False))]"
