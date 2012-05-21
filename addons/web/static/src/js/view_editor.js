@@ -891,7 +891,7 @@ instance.web.ViewEditor =   instance.web.OldWidget.extend({
                 var value = _.detect(arch_val[0]['att_list'],function(res) {
                     return res instanceof Array? _.include(res, widget.name): false;
                 });
-                
+
                 value = value instanceof Array ? value[1] : value;
                 self.edit_node_dialog.$element.find('table[id=rec_table]').append('<tr><td align="right">' + widget.string + ':</td>' + type_widget.render() + '</tr>');
                 type_widget.start();
@@ -983,14 +983,14 @@ instance.web.ViewEditor =   instance.web.OldWidget.extend({
         self.add_node_dialog.$element.find('#new_field').click(function() {
             model_data = new instance.web.DataSetSearch(self,'ir.model', null, null);
             model_data.read_slice([], {domain: [['model','=', self.model]]}).then(function(result) {
-                self.render_new_field(result[0].id);
+                self.render_new_field(result[0].id, result[0].modules);
             });
         });
     },
-    render_new_field :function(id){
+    render_new_field :function(id, module){
         var self = this;
         var action = {
-            context: {'default_model_id': id, 'manual': true},
+            context: {'default_model_id': id, 'manual': true, 'module' : module},
             res_model: "ir.model.fields",
             views: [[false, 'form']],
             type: 'ir.actions.act_window',
@@ -1007,7 +1007,7 @@ instance.web.ViewEditor =   instance.web.OldWidget.extend({
             });
             controller.do_save.add_last(function(){
                 action_manager.destroy();
-                var value =controller.fields.name.value;
+                var value =controller.fields.name.get('value');
                 self.add_node_dialog.$element.find('select[id=field_value]').append($("<option selected></option>").attr("value",value).text(value));
                     _.detect(self.add_widget,function(widget){
                         widget.name == "field_value"? widget.selection.push(value): false;
