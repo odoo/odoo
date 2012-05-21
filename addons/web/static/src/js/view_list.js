@@ -20,6 +20,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         'sortable': true,
         // whether the view rows can be reordered (via vertical drag & drop)
         'reorderable': true,
+        'action_buttons': true,
     },
     /**
      * Core class for list-type displays.

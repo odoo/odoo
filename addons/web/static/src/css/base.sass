@@ -1429,6 +1429,8 @@ $colour4: #8a89ba
             padding: 0
     // }}}
     // FormView.separator {{{
+    .oe_horizontal_border
+        border-bottom: 1px solid black
     .oe_horizontal_separator
         font-weight: bold
         font-size: 16px
@@ -1541,6 +1543,23 @@ $colour4: #8a89ba
         .oe_form_group_odd_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell,
         .oe_form_group_label_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell
             padding-left: 8px
+        .oe_form_subtotal_footer
+            float: right
+            > div
+                text-align: right
+                padding: 3px
+            label
+                font-weight: normal !important
+            span
+                display: inline-block
+                min-width: 80px
+                text-align: right
+            .oe_form_subtotal_footer_separator
+                border-top: 1px solid #cacaca
+                font-size: 120%
+                font-weight: bold
+                label
+                    font-weight: bold !important
     // }}}
     // ListView {{{
     .oe-listview-content
