@@ -376,8 +376,17 @@ necessarily having to reimplement all of
     or ``@filter_domain``. ``"="`` for
     :js:class:`~openerp.web.search.Field`
 
-Converting to facet objects
----------------------------
+Arbitrary data storage
+++++++++++++++++++++++
+
+:js:class:`~openerp.web.search.Facet` and
+:js:class:`~openerp.web.search.FacetValue` objects (and structures)
+provided by your widgets should never be altered by the search view
+(or an other widget). This means you are free to add arbitrary fields
+in these structures if you need to (because you have more complex
+needs than the attributes described in this document).
+
+Ideally this should be avoided, but the possibility remains.
 
 Changes
 -------
