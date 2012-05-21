@@ -34,10 +34,10 @@
                         <separator orientation="vertical"/>
                         <field name="name" filter_domain="['|', ('name','ilike',self),('code','ilike',self)]" string="Contract"/>
                         <field name="partner_id">
-                            <filter help="A contract in OpenERP is an analytic account having a partner set on it." name="has_partner" domain="[('partner_id', '!=', False)]" icon="terp-partner" />
+                            <filter string="Partner set on analytic account" help="A contract in OpenERP is an analytic account having a partner set on it." name="has_partner" domain="[('partner_id', '!=', False)]" icon="terp-partner" />
                         </field>
                         <field name="user_id">
-                            <filter help="Contracts that are not assigned to an account manager." domain="[('user_id', '=', False)]" icon="terp-personal-" />
+                            <filter string="Contracts not assigned to an account manager" help="Contracts that are not assigned to an account manager." domain="[('user_id', '=', False)]" icon="terp-personal-" />
                         </field>
 
                     </group>
