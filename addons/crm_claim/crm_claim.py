@@ -99,15 +99,13 @@ class crm_claim(crm.crm_case, osv.osv):
         'partner_phone': fields.char('Phone', size=32),
         'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_ids','=',section_id)]"), 
         'cause': fields.text('Root Cause'),
-        'state': fields.function(_get_state, fnct_inv=_save_state, type='selection', selection=crm.AVAILABLE_STATES, string="State", readonly=True,
-            store = {
-                'crm.claim': (lambda self, cr, uid, ids, c={}: ids, ['stage_id'], 10),
-                'crm.case.stage': (_get_stage, ['state'], 10)
-            },
-                                  help='The state is set to \'Draft\', when a case is created.\
-                                  \nIf the case is in progress the state is set to \'Open\'.\
-                                  \nWhen the case is over, the state is set to \'Done\'.\
-                                  \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
+        'state': fields.related('stage_id', 'state', type="selection", store=True,
+                selection=crm.AVAILABLE_STATES, string="State", readonly=True,
+                help='The state is set to \'Draft\', when a case is created.\
+                      If the case is in progress the state is set to \'Open\'.\
+                      When the case is over, the state is set to \'Done\'.\
+                      If the case needs to be reviewed then the state is \
+                      set to \'Pending\'.'),
         'message_ids': fields.one2many('mail.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
     }
 
@@ -138,19 +136,6 @@ class crm_claim(crm.crm_case, osv.osv):
                    }
         address = self.pool.get('res.partner').browse(cr, uid, part)
         return {'value': {'email_from': address.email, 'partner_phone': address.phone}}
-
-    def case_open(self, cr, uid, ids, *args):
-        """Opens Claim"""
-        for l in self.browse(cr, uid, ids):
-            # When coming from draft override date and stage otherwise just set state
-            if l.state == 'draft':
-                message = _("The claim '%s' has been opened.") % l.name
-                self.log(cr, uid, l.id, message)
-                stage_id = self.stage_find(cr, uid, l.section_id.id or False, [('sequence','>',0)])
-                if stage_id:
-                    self.stage_set(cr, uid, [l.id], stage_id)
-        res = super(crm_claim, self).case_open(cr, uid, ids, *args)
-        return res
     
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
         """Automatically called when new email message arrives"""

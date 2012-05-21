@@ -68,11 +68,13 @@ class crm_fundraising(crm.crm_case, osv.osv):
             'duration': fields.float('Duration'),
             'ref': fields.reference('Reference', selection=crm._links_get, size=128),
             'ref2': fields.reference('Reference 2', selection=crm._links_get, size=128),
-            'state': fields.selection(crm.AVAILABLE_STATES, 'State', size=16, readonly=True,
-                                  help='The state is set to \'Draft\', when a case is created.\
-                                  \nIf the case is in progress the state is set to \'Open\'.\
-                                  \nWhen the case is over, the state is set to \'Done\'.\
-                                  \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
+            'state': fields.related('stage_id', 'state', type="selection", store=True,
+                    selection=crm.AVAILABLE_STATES, string="State", readonly=True,
+                    help='The state is set to \'Draft\', when a case is created.\
+                        If the case is in progress the state is set to \'Open\'.\
+                        When the case is over, the state is set to \'Done\'.\
+                        If the case needs to be reviewed then the state is \
+                        set to \'Pending\'.'),
             'message_ids': fields.one2many('mail.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
         }
 
