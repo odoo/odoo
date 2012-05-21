@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2012-05-10 17:51+0000\n"
-"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
+"PO-Revision-Date: 2012-05-15 06:17+0000\n"
+"Last-Translator: Akira Hiyama <Unknown>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-05-11 04:50+0000\n"
-"X-Generator: Launchpad (build 15225)\n"
+"X-Launchpad-Export-Date: 2012-05-16 04:50+0000\n"
+"X-Generator: Launchpad (build 15247)\n"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -43,7 +43,7 @@ msgstr "会計 \\ レポート \\ 一般的なレポート \\ 税金 \\ 税金�
 #. module: account
 #: view:account.move.reconcile:0
 msgid "Journal Entry Reconcile"
-msgstr "仕訳帳エントリーの調整"
+msgstr "仕訳帳エントリーの消し込み"
 
 #. module: account
 #: view:account.account:0
@@ -109,7 +109,7 @@ msgstr "借方合計"
 msgid ""
 "If you unreconciliate transactions, you must also verify all the actions "
 "that are linked to those transactions because they will not be disabled"
-msgstr "取引を調整しない場合、それらが無効にされないためには、それら取引にリンクされた全てのアクションを検証しなければなりません。"
+msgstr "取引を消し込みしない場合、それらが無効にされないためには、それら取引にリンクされた全てのアクションを検証しなければなりません。"
 
 #. module: account
 #: constraint:account.journal:0
@@ -131,7 +131,7 @@ msgstr "起点"
 #: view:account.move.line.reconcile:0
 #: view:account.move.line.reconcile.writeoff:0
 msgid "Reconcile"
-msgstr "調整"
+msgstr "消し込み"
 
 #. module: account
 #: field:account.bank.statement.line,ref:0
@@ -218,7 +218,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_move_line_reconcile_select
 msgid "Move line reconcile select"
-msgstr "調整選択行の移動"
+msgstr "消し込み選択行の移動"
 
 #. module: account
 #: help:account.tax.code,notprintable:0
@@ -237,7 +237,7 @@ msgstr "請求書 %s は部分的に支払われます：%s%s / %s%s（%s%s 残�
 #. module: account
 #: model:process.transition,note:account.process_transition_supplierentriesreconcile0
 msgid "Accounting entries are an input of the reconciliation."
-msgstr "会計エントリーは調整の入力です。"
+msgstr "会計エントリーは消し込みの入力です。"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_management_belgian_reports
@@ -327,7 +327,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_unreconcile
 msgid "Account Unreconcile"
-msgstr "調整なしアカウント"
+msgstr "消し込みなしアカウント"
 
 #. module: account
 #: view:product.product:0
@@ -430,7 +430,7 @@ msgstr "貸方合計"
 #. module: account
 #: view:account.move.line.unreconcile.select:0
 msgid "Open for Unreconciliation"
-msgstr "不一致を開く"
+msgstr "未消し込みを開く"
 
 #. module: account
 #: field:account.account.template,chart_template_id:0
@@ -457,7 +457,7 @@ msgid ""
 "it comes to 'Printed' state. When all transactions are done, it comes in "
 "'Done' state."
 msgstr ""
-"仕訳帳期間が作成される場合、その状態はドラフトです。レポートが印刷された場合は、印刷済状態になります。全ての取引が終了すると終了状態となります。"
+"仕訳帳期間が作成される場合、その状態はドラフトです。レポートが印刷された場合は、印刷済状態になります。全ての取引が完了すると完了状態となります。"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_tax_chart
@@ -551,7 +551,7 @@ msgstr ""
 #. module: account
 #: field:account.automatic.reconcile,unreconciled:0
 msgid "Not reconciled transactions"
-msgstr "調整なし取引"
+msgstr "未消し込み取引"
 
 #. module: account
 #: report:account.general.ledger:0
@@ -601,7 +601,7 @@ msgstr "３ヶ月毎"
 msgid ""
 "If you unreconciliate transactions, you must also verify all the actions "
 "that are linked to those transactions because they will not be disable"
-msgstr "取引を調整しない場合、それらが無効にされないためにそれらの取引にリンクされる全てのアクションを検査しなければなりません。"
+msgstr "取引を消し込みしない場合、それらが無効にされないためにそれらの取引にリンクされる全てのアクションを検査しなければなりません。"
 
 #. module: account
 #: view:analytic.entries.report:0
@@ -677,7 +677,7 @@ msgstr "仕訳帳期間"
 #: code:addons/account/account_move_line.py:803
 #, python-format
 msgid "To reconcile the entries company should be the same for all entries"
-msgstr "エントリーを調整するために、会社は全てのエントリーに対して同じであるべきです。"
+msgstr "エントリーを消し込みするために、会社は全てのエントリーに対して同じであるべきです。"
 
 #. module: account
 #: view:account.account:0
@@ -721,7 +721,7 @@ msgstr "請求書印刷"
 #. module: account
 #: field:account.partner.reconcile.process,today_reconciled:0
 msgid "Partners Reconciled Today"
-msgstr "本日パートナ調整後"
+msgstr "本日パートナ消し込み済"
 
 #. module: account
 #: view:report.hr.timesheet.invoice.journal:0
@@ -813,7 +813,7 @@ msgstr "仕入先請求書と返金"
 #: view:account.unreconcile.reconcile:0
 #: model:ir.model,name:account.model_account_move_line_unreconcile_select
 msgid "Unreconciliation"
-msgstr "不一致"
+msgstr "未消し込み"
 
 #. module: account
 #: view:account.payment.term.line:0
@@ -828,7 +828,7 @@ msgstr "アカウント分析仕訳帳"
 #. module: account
 #: model:ir.model,name:account.model_account_automatic_reconcile
 msgid "Automatic Reconcile"
-msgstr "自動調整"
+msgstr "自動消し込み"
 
 #. module: account
 #: report:account.analytic.account.quantity_cost_ledger:0
@@ -872,7 +872,7 @@ msgstr "これをチェックした場合、アカウントの新しいチャー
 msgid ""
 "Can not %s invoice which is already reconciled, invoice should be "
 "unreconciled first. You can only Refund this invoice"
-msgstr "請求書 %s は既に調整済のため変更できません。請求書は最初に未調整であるべきです。この請求書の返金のみができます。"
+msgstr "請求書 %s は既に消し込み済のため変更できません。請求書は最初に消し込みなしであるべきです。この請求書の返金のみができます。"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_subscription_form_new
@@ -887,7 +887,7 @@ msgstr "計算"
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Cancel: refund invoice and reconcile"
-msgstr "キャンセル：請求書と調整の返金"
+msgstr "キャンセル：請求書と消し込みの返金"
 
 #. module: account
 #: field:account.cashbox.line,pieces:0
@@ -931,7 +931,7 @@ msgstr "アカウント %s は勘定科目表 %s に属していないため、�
 msgid ""
 "This account does not allow reconciliation! You should update the account "
 "definition to change this."
-msgstr "このアカウントは調整を許されていません。これを変更するにはアカウントの定義を更新する必要があります。"
+msgstr "このアカウントは消し込みを許されていません。これを変更するにはアカウントの定義を更新する必要があります。"
 
 #. module: account
 #: view:account.invoice:0
@@ -1370,7 +1370,7 @@ msgstr "税金テンプレート検索"
 #: model:ir.actions.act_window,name:account.action_account_reconcile_select
 #: model:ir.actions.act_window,name:account.action_view_account_move_line_reconcile
 msgid "Reconcile Entries"
-msgstr "エントリーの調整"
+msgstr "エントリーの消し込み"
 
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_overdue
@@ -1527,7 +1527,7 @@ msgstr "仕入先返金"
 #: selection:account.fiscalyear,state:0
 #: selection:account.period,state:0
 msgid "Closed"
-msgstr "閉鎖"
+msgstr "閉じた"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_recurrent_entries
@@ -1542,7 +1542,7 @@ msgstr "会計ポジションテンプレート"
 #. module: account
 #: field:account.automatic.reconcile,reconciled:0
 msgid "Reconciled transactions"
-msgstr "調整済取引"
+msgstr "消し込み済取引"
 
 #. module: account
 #: field:account.journal.view,columns_id:0
@@ -1614,7 +1614,7 @@ msgid ""
 "form."
 msgstr ""
 "銀行取引明細書は預金口座、クレジットカードまたは金融口座の任意の口座タイプ上で、所定の期間に発生した全ての金融取引を要約したものです。期首残高は自動的に繰"
-"り越され、期末残高は取引明細書に示されています。行の支払カラムで F1 を押すと照合フォームが開きます。"
+"り越され、期末残高は取引明細書に示されています。行の支払カラムで F1 を押すと消し込みフォームが開きます。"
 
 #. module: account
 #: report:account.analytic.account.cost_ledger:0
@@ -1674,7 +1674,7 @@ msgstr "アカウントタイプ別売上"
 msgid ""
 "Cancel Invoice: Creates the refund invoice, validate and reconcile it to "
 "cancel the current invoice."
-msgstr "請求書のキャンセル：現在の請求書をキャンセルするために返金請求書を作成し、検証し、調整して下さい。"
+msgstr "請求書のキャンセル：現在の請求書をキャンセルするために返金請求書を作成、検証、消し込みして下さい。"
 
 #. module: account
 #: model:ir.ui.menu,name:account.periodical_processing_invoicing
@@ -2030,7 +2030,7 @@ msgstr "エントリーを開く"
 #. module: account
 #: field:account.automatic.reconcile,account_ids:0
 msgid "Accounts to Reconcile"
-msgstr "調整用のアカウント"
+msgstr "消し込み用のアカウント"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_filestatement0
@@ -2383,7 +2383,7 @@ msgstr "請求書のドラフト状態"
 #. module: account
 #: view:account.partner.reconcile.process:0
 msgid "Partner Reconciliation"
-msgstr "パートナ照合"
+msgstr "パートナ消し込み"
 
 #. module: account
 #: field:account.tax,tax_code_id:0
@@ -2414,7 +2414,7 @@ msgstr "30%の前払い30日期限"
 #. module: account
 #: view:account.entries.report:0
 msgid "Unreconciled entries"
-msgstr "未照合のエントリー"
+msgstr "未消し込みのエントリー"
 
 #. module: account
 #: field:account.invoice.tax,base_code_id:0
@@ -2538,7 +2538,7 @@ msgstr "このレポートは特定の仕訳帳の状況の概要を示してい
 #. module: account
 #: model:ir.model,name:account.model_account_move_line_reconcile_writeoff
 msgid "Account move line reconcile (writeoff)"
-msgstr "アカウント移動行の調整（償却）"
+msgstr "アカウント移動行の消し込み（償却）"
 
 #. module: account
 #: model:account.account.type,name:account.account_type_tax
@@ -2610,7 +2610,7 @@ msgstr "特殊な計算"
 #: view:account.move.bank.reconcile:0
 #: model:ir.actions.act_window,name:account.action_account_bank_reconcile_tree
 msgid "Bank reconciliation"
-msgstr "銀行照合"
+msgstr "銀行消し込み"
 
 #. module: account
 #: report:account.invoice:0
@@ -2639,12 +2639,12 @@ msgstr "モデルの中で誤った借方または貸方の値があります。
 #. module: account
 #: model:ir.ui.menu,name:account.menu_automatic_reconcile
 msgid "Automatic Reconciliation"
-msgstr "自動調整"
+msgstr "自動消し込み"
 
 #. module: account
 #: field:account.invoice,reconciled:0
 msgid "Paid/Reconciled"
-msgstr "支払済 / 調整後"
+msgstr "支払済 / 消し込み済"
 
 #. module: account
 #: field:account.tax,ref_base_code_id:0
@@ -2808,7 +2808,7 @@ msgstr "8月"
 #. module: account
 #: model:process.transition,note:account.process_transition_paymentreconcile0
 msgid "Payment entries are the second input of the reconciliation."
-msgstr "支払いエントリーは調整の第２の入力です。"
+msgstr "支払いエントリーは消し込みの第２の入力です。"
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -2853,7 +2853,7 @@ msgstr "検証（請求書）日の期間を使うために空のままにして
 #: help:account.bank.statement,account_id:0
 msgid ""
 "used in statement reconciliation domain, but shouldn't be used elswhere."
-msgstr "取引明細書の照合領域で使用されます。その他の場所では使うべきではありません。"
+msgstr "取引明細書の消し込み領域で使用されます。その他の場所では使うべきではありません。"
 
 #. module: account
 #: field:account.invoice.tax,base_amount:0
@@ -3142,7 +3142,7 @@ msgstr "タイプ別今月の売上"
 #. module: account
 #: model:ir.model,name:account.model_account_unreconcile_reconcile
 msgid "Account Unreconcile Reconcile"
-msgstr "調整 / 未調整アカウント"
+msgstr "未消し込み / 消し込み アカウント"
 
 #. module: account
 #: sql_constraint:account.tax:0
@@ -3166,8 +3166,8 @@ msgstr ""
 "\n"
 "　\"なし\" は何も行われないことを意味します。\n"
 "　\"残高\"は一般的には現金のアカウントのために使用されます。\n"
-"　\"詳細\"は調整されたものも含む前年のそれぞれの既存仕訳帳項目をコピーします。\n"
-"　\"未調整\"は未調整だった仕訳帳項目のみを新会計年度の初日としてコピーします。"
+"　\"詳細\"は消し込みされたものも含む前年のそれぞれの既存仕訳帳項目をコピーします。\n"
+"　\"未消し込み\"は未消し込みだった仕訳帳項目のみを新会計年度の初日としてコピーします。"
 
 #. module: account
 #: code:addons/account/wizard/account_open_closed_fiscalyear.py:39
@@ -3300,7 +3300,7 @@ msgstr "会社の通貨と異なっている場合は、金額は関係するア
 #: model:ir.actions.act_window,name:account.action_account_unreconcile_reconcile
 #: model:ir.actions.act_window,name:account.action_account_unreconcile_select
 msgid "Unreconcile Entries"
-msgstr "未調整エントリー"
+msgstr "未消し込みエントリー"
 
 #. module: account
 #: field:account.tax.code,notprintable:0
@@ -3387,7 +3387,7 @@ msgstr "ドラフト請求書"
 msgid ""
 "Selected Invoice(s) cannot be cancelled as they are already in 'Cancelled' "
 "or 'Done' state!"
-msgstr "選択した請求書は既にキャンセルあるいは終了状態であるためキャンセルできません。"
+msgstr "選択した請求書は既にキャンセルあるいは完了状態であるためキャンセルできません。"
 
 #. module: account
 #: view:account.invoice.line:0
@@ -3429,7 +3429,7 @@ msgstr "アカウントタイプ別売上レポート"
 #. module: account
 #: view:account.move.line:0
 msgid "Unreconciled Journal Items"
-msgstr "未調整仕訳帳項目"
+msgstr "未消し込み仕訳帳項目"
 
 #. module: account
 #: sql_constraint:res.currency:0
@@ -3491,7 +3491,7 @@ msgstr "ビューアカウントでは仕訳帳項目を作ることはできま
 #. module: account
 #: model:ir.model,name:account.model_account_partner_reconcile_process
 msgid "Reconcilation Process partner by partner"
-msgstr "パートナ毎のパートナ調整プロセス"
+msgstr "パートナ毎のパートナ消し込みプロセス"
 
 #. module: account
 #: selection:account.automatic.reconcile,power:0
@@ -3551,7 +3551,7 @@ msgstr "記帳"
 #: view:account.unreconcile:0
 #: view:account.unreconcile.reconcile:0
 msgid "Unreconcile"
-msgstr "未調整"
+msgstr "未消し込み"
 
 #. module: account
 #: view:account.analytic.line:0
@@ -3583,7 +3583,7 @@ msgstr ""
 #: code:addons/account/account_move_line.py:837
 #, python-format
 msgid "Some entries are already reconciled !"
-msgstr "幾つかのエントリーは既に調整済です。"
+msgstr "幾つかのエントリーは既に消し込み済です。"
 
 #. module: account
 #: view:account.tax:0
@@ -3673,7 +3673,7 @@ msgstr "支払オーダー"
 #: help:account.account.template,reconcile:0
 msgid ""
 "Check this option if you want the user to reconcile entries in this account."
-msgstr "ユーザがこのアカウントのエントリーを調整したい場合はこのオプションをチェックして下さい。"
+msgstr "ユーザがこのアカウントのエントリーを消し込みしたい場合はこのオプションをチェックして下さい。"
 
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_account_balance_landscape
@@ -3912,7 +3912,7 @@ msgstr "アカウントの表示"
 #. module: account
 #: view:account.state.open:0
 msgid "(Invoice should be unreconciled if you want to open it)"
-msgstr "（請求書を開く場合は、それは未調整でなければなりません）"
+msgstr "（請求書を開く場合は、それは未消し込みでなければなりません）"
 
 #. module: account
 #: field:account.chart,period_from:0
@@ -4218,7 +4218,7 @@ msgid ""
 "* When all the payments are done it will be in 'Valid' state."
 msgstr ""
 "新しい移動行が作成された時はドラフト状態になります。\n"
-"・ 全ての支払いが終了した時に、有効状態になります。"
+"・ 全ての支払いが完了した時に、有効状態になります。"
 
 #. module: account
 #: field:account.journal,view_id:0
@@ -4270,7 +4270,7 @@ msgstr "銀行取引明細書はシステムに入力されます。"
 #: code:addons/account/wizard/account_reconcile.py:133
 #, python-format
 msgid "Reconcile Writeoff"
-msgstr "償却の調整"
+msgstr "償却の消し込み"
 
 #. module: account
 #: view:report.account.receivable:0
@@ -4317,7 +4317,7 @@ msgstr ""
 #. module: account
 #: view:account.unreconcile:0
 msgid "Unreconciliate Transactions"
-msgstr "未調整取引"
+msgstr "未消し込み取引"
 
 #. module: account
 #: help:account.chart.template,visible:0
@@ -4339,7 +4339,7 @@ msgstr "モデルからエントリーを作成"
 #: field:account.account,reconcile:0
 #: field:account.account.template,reconcile:0
 msgid "Allow Reconciliation"
-msgstr "調整の許可"
+msgstr "消し込みの許可"
 
 #. module: account
 #: code:addons/account/account.py:1077
@@ -4515,7 +4515,7 @@ msgstr "実施日"
 #. module: account
 #: view:account.unreconcile.reconcile:0
 msgid "Unreconciliation Transactions"
-msgstr "不一致取引"
+msgstr "未消し込み取引"
 
 #. module: account
 #: field:account.tax,ref_tax_code_id:0
@@ -4560,7 +4560,7 @@ msgstr "${object.company_id.name} 請求書（参照 ${object.number or 'n/a' }�
 #: help:res.partner,last_reconciliation_date:0
 msgid ""
 "Date on which the partner accounting entries were reconciled last time"
-msgstr "最後にパートナー会計エントリーが調整された日付"
+msgstr "最後にパートナー会計エントリーが消し込みされた日付"
 
 #. module: account
 #: field:account.fiscalyear.close,fy2_id:0
@@ -4649,7 +4649,7 @@ msgstr "確かでしょうか？"
 #. module: account
 #: help:account.move.line,statement_id:0
 msgid "The bank statement used for bank reconciliation"
-msgstr "銀行照合のために使用される銀行取引明細書"
+msgstr "銀行消し込みのために使用される銀行取引明細書"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_suppliercustomerinvoice0
@@ -5031,7 +5031,7 @@ msgstr "税金アカウント"
 #. module: account
 #: view:account.automatic.reconcile:0
 msgid "Reconciliation Result"
-msgstr "調整結果"
+msgstr "消し込み結果"
 
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_balancesheet0
@@ -5313,7 +5313,8 @@ msgid ""
 "This is the remaining partners for who you should check if there is "
 "something to reconcile or not. This figure already count the current partner "
 "as reconciled."
-msgstr "これは調整有無によらず、何らかの確認しなければならない残りのパートナです。調整としてこの数値には既に現在のパートナが含まれています。"
+msgstr ""
+"これは消し込みの有無によらず、何らかの確認しなければならない残りのパートナです。消し込みとしてこの数値には既に現在のパートナが含まれています。"
 
 #. module: account
 #: view:account.subscription.line:0
@@ -5388,7 +5389,7 @@ msgstr "指定された仕訳帳はこの期間にひとつもドラフト状態
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_move_line
 msgid "Lines to reconcile"
-msgstr "調整行"
+msgstr "消し込み行"
 
 #. module: account
 #: report:account.analytic.account.balance:0
@@ -5430,7 +5431,7 @@ msgstr "返金請求書オプション"
 msgid ""
 "Number of partial amounts that can be combined to find a balance point can "
 "be chosen as the power of the automatic reconciliation"
-msgstr "バランスポイントを見つけるために組み合わせることのできる部分的な量の数は、自動調整の能力として選択されます。"
+msgstr "バランスポイントを見つけるために組み合わせることのできる部分的な量の数は、自動消し込みの能力として選択されます。"
 
 #. module: account
 #: help:account.payment.term.line,sequence:0
@@ -5496,7 +5497,7 @@ msgstr ""
 #. module: account
 #: view:account.move.line.reconcile:0
 msgid "Reconcile With Write-Off"
-msgstr "償却して調整"
+msgstr "償却して消し込み"
 
 #. module: account
 #: selection:account.payment.term.line,value:0
@@ -5517,7 +5518,7 @@ msgstr "請求日"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_automatic_reconcile
 msgid "Account Automatic Reconcile"
-msgstr "アカウント自動調整"
+msgstr "アカウント自動消し込み"
 
 #. module: account
 #: view:account.move:0
@@ -5540,7 +5541,7 @@ msgstr "開始エントリーの生成"
 #: code:addons/account/account_move_line.py:759
 #, python-format
 msgid "Already Reconciled!"
-msgstr "既に調整済です。"
+msgstr "既に消し込み済です。"
 
 #. module: account
 #: help:account.tax,type:0
@@ -5698,8 +5699,8 @@ msgid ""
 "Shows you the progress made today on the reconciliation process. Given by \n"
 "Partners Reconciled Today \\ (Remaining Partners + Partners Reconciled Today)"
 msgstr ""
-"本日の調整処理の進捗状況を示してます。それは次式で計算されます。\n"
-"本日のパートナ調整後 / （残りのパートナ + 本日のパートナ調整後 ）"
+"本日の消し込み処理の進捗状況を示してます。それは次式で計算されます。\n"
+"本日のパートナ消し込み後 / （残りのパートナ + 本日のパートナ消し込み後 ）"
 
 #. module: account
 #: help:account.payment.term.line,value:0
@@ -5766,7 +5767,7 @@ msgstr "非アクティブなアカウントを使うことはできません。
 #: code:addons/account/account_move_line.py:830
 #, python-format
 msgid "Entries are not of the same account or already reconciled ! "
-msgstr "エントリーは同じアカウントのものでないか、または既に調整済です。 "
+msgstr "エントリーは同じアカウントのものでないか、または既に消し込み済です。 "
 
 #. module: account
 #: help:account.bank.statement,balance_end:0
@@ -5960,7 +5961,7 @@ msgstr "（今期を使う場合は空のままとして下さい）"
 msgid ""
 "As soon as the reconciliation is done, the invoice's state turns to “done” "
 "(i.e. paid) in the system."
-msgstr "調整を終了するや否や、請求書の状態はシステム内で終了（すなわち支払済）となります。"
+msgstr "消し込みを完了するや否や、請求書の状態はシステム内で完了（すなわち支払済）となります。"
 
 #. module: account
 #: view:account.chart.template:0
@@ -5971,7 +5972,7 @@ msgstr "ルートアカウント"
 #. module: account
 #: field:res.partner,last_reconciliation_date:0
 msgid "Latest Reconciliation Date"
-msgstr "最終調整日"
+msgstr "消し込み調整日"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_line
@@ -6083,7 +6084,7 @@ msgstr "会計年度"
 #. module: account
 #: view:account.move.reconcile:0
 msgid "Partial Reconcile Entries"
-msgstr "部分調整エントリー"
+msgstr "部分消し込みエントリー"
 
 #. module: account
 #: view:account.addtmpl.wizard:0
@@ -6212,7 +6213,7 @@ msgstr "次回税金の計算のために基本金額に税額が含まれるべ
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_partner_reconcile
 msgid "Reconciliation: Go to Next Partner"
-msgstr "調整：次のパートナへ"
+msgstr "消し込み：次のパートナへ"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_analytic_invert_balance
@@ -6401,7 +6402,7 @@ msgstr "幾つかの仕訳帳項目を含むアカウントを無効にするこ
 #. module: account
 #: view:account.entries.report:0
 msgid "Reconciled"
-msgstr "調整済"
+msgstr "消し込み済"
 
 #. module: account
 #: report:account.invoice:0
@@ -6428,7 +6429,7 @@ msgstr "現金取引"
 #: code:addons/account/wizard/account_state_open.py:37
 #, python-format
 msgid "Invoice is already reconciled"
-msgstr "請求書は既に調整済です。"
+msgstr "請求書は既に消し込み済です。"
 
 #. module: account
 #: view:account.account:0
@@ -6506,7 +6507,7 @@ msgid ""
 "Bank Reconciliation consists of verifying that your bank statement "
 "corresponds with the entries (or records) of that account in your accounting "
 "system."
-msgstr "銀行照合は、銀行取引明細書が会計システムのそのアカウントのエントリー（またはレコード）と対応することを検証することから構成されます。"
+msgstr "銀行消し込みは、銀行取引明細書が会計システムのそのアカウントのエントリー（またはレコード）と対応することを検証することから構成されます。"
 
 #. module: account
 #: model:process.node,note:account.process_node_draftstatement0
@@ -6664,8 +6665,8 @@ msgid ""
 "reconcile in a series of accounts. It finds entries for each partner where "
 "the amounts correspond."
 msgstr ""
-"支払いとみなされる請求書のため、請求書エントリーは通常の支払いでは相手方とともに調整されなければなりません。自動調整機能では、OpenERPは調整のため一"
-"連のアカウントの中を独自の検索を行います。それは金額が対応する各パートナのエントリーを見つけます。"
+"支払いとみなされる請求書のため、請求書エントリーは通常の支払いでは相手方とともに消し込みされなければなりません。自動消し込み機能では、OpenERPは消し"
+"込みのため一連のアカウントの中を独自の検索を行います。それは金額が対応する各パートナのエントリーを見つけます。"
 
 #. module: account
 #: view:account.move:0
@@ -6705,7 +6706,7 @@ msgid ""
 "some non legal fields or you must unreconcile first!\n"
 "%s"
 msgstr ""
-"調整済エントリーにはこの変更はできません。変更できるのは幾つかの非法定項目のみです。または最初に未調整にしなければなりません。\n"
+"消し込み済エントリーにはこの変更はできません。変更できるのは幾つかの非法定項目のみです。または最初に未消し込みにしなければなりません。\n"
 "%s"
 
 #. module: account
@@ -6776,7 +6777,7 @@ msgstr "期首残高"
 #. module: account
 #: model:ir.model,name:account.model_account_move_reconcile
 msgid "Account Reconciliation"
-msgstr "調整アカウント"
+msgstr "消し込みアカウント"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax
@@ -6812,7 +6813,7 @@ msgstr "このレポートは１枚のレポートでアカウントのそれぞ
 msgid ""
 "Check this box if you are unsure of that journal entry and if you want to "
 "note it as 'to be reviewed' by an accounting expert."
-msgstr "その仕訳帳エントリーに確信がなく、会計専門家によるレビューされることを付記したい場合はこのボックスをチェックして下さい。"
+msgstr "その仕訳帳エントリーに確信がなく、会計専門家のレビューが必要と付記したい場合はこのボックスをチェックして下さい。"
 
 #. module: account
 #: field:account.chart.template,complete_tax_set:0
@@ -6930,7 +6931,7 @@ msgstr "仕訳帳カラム"
 #: selection:account.subscription,state:0
 #: selection:report.invoice.created,state:0
 msgid "Done"
-msgstr "終了"
+msgstr "完了"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_tree
@@ -6980,12 +6981,12 @@ msgstr "記帳された仕訳帳エントリー %s を削除することはで�
 #: model:ir.actions.act_window,name:account.act_account_acount_move_line_open_unreconciled
 #, python-format
 msgid "Unreconciled Entries"
-msgstr "未調整エントリー"
+msgstr "未消し込みエントリー"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_menu_Bank_process
 msgid "Statements Reconciliation"
-msgstr "取引明細書調整"
+msgstr "取引明細書消し込み"
 
 #. module: account
 #: model:ir.model,name:account.model_accounting_report
@@ -7147,7 +7148,7 @@ msgstr "請求日"
 #. module: account
 #: view:account.invoice.report:0
 msgid "Group by year of Invoice Date"
-msgstr "請求日の年毎のグループ"
+msgstr "請求年によるグループ"
 
 #. module: account
 #: help:res.partner,credit:0
@@ -7294,7 +7295,7 @@ msgid ""
 "This field shows you the next partner that will be automatically chosen by "
 "the system to go through the reconciliation process, based on the latest day "
 "it have been reconciled."
-msgstr "この項目は調整済の最終日を基準に調整処理を通過することでシステムによって自動的に選択された次のパートナを示します。"
+msgstr "この項目は消し込み済の最終日を基準に消し込み処理を通過することでシステムによって自動的に選択された次のパートナを示します。"
 
 #. module: account
 #: field:account.move.line.reconcile.writeoff,comment:0
@@ -7487,7 +7488,7 @@ msgstr "売上属性"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_manual_reconcile
 msgid "Manual Reconciliation"
-msgstr "手動調整"
+msgstr "手動消し込み"
 
 #. module: account
 #: report:account.overdue:0
@@ -7792,7 +7793,7 @@ msgstr "移動行の状態"
 #. module: account
 #: model:ir.model,name:account.model_account_move_line_reconcile
 msgid "Account move line reconcile"
-msgstr "アカウント移動行調整"
+msgstr "アカウント移動行消し込み"
 
 #. module: account
 #: view:account.subscription.generate:0
@@ -7949,14 +7950,14 @@ msgstr "このボックスがチェックされると、システムは請求書
 #: help:account.account,reconcile:0
 msgid ""
 "Check this box if this account allows reconciliation of journal items."
-msgstr "このアカウントが仕訳帳項目の調整を許す場合は、このボックスをチェックして下さい。"
+msgstr "このアカウントが仕訳帳項目の消し込みを許す場合は、このボックスをチェックして下さい。"
 
 #. module: account
 #: help:account.period,state:0
 msgid ""
 "When monthly periods are created. The state is 'Draft'. At the end of "
 "monthly period it is in 'Done' state."
-msgstr "月次の期間が作成される時はその状態はドラフトです。月次の期間の終わりには状態は終了になります。"
+msgstr "月次の期間が作成される時はその状態はドラフトです。月次の期間の終わりには状態は完了になります。"
 
 #. module: account
 #: report:account.analytic.account.inverted.balance:0
@@ -7966,7 +7967,7 @@ msgstr "反転分析残高 -"
 #. module: account
 #: view:account.move.bank.reconcile:0
 msgid "Open for Bank Reconciliation"
-msgstr "銀行調整を開く"
+msgstr "銀行消し込みを開く"
 
 #. module: account
 #: view:account.analytic.line:0
@@ -8012,7 +8013,7 @@ msgstr ""
 " ・ ドラフト：ユーザが新しく確認未済の請求書をエンコードした時に使用されます。\n"
 "・ プロフォーマ：請求書がプロフォーマ状態である時は、請求書は請求書番号を持っていません。\n"
 "・ 開く：請求書が作成され、請求書番号が生成された時に使用されます。開く状態はユーザが支払を終えるまで続きます。  \n"
-"・ 支払済：請求書が支払われると自動的にセットされます。関係する仕訳帳エントリーは調整されるかもしれません。\n"
+"・ 支払済：請求書が支払われると自動的にセットされます。関係する仕訳帳エントリーは消し込みされるかもしれません。\n"
 "・ キャンセル済：ユーザが請求書をキャンセルする時に使われます。"
 
 #. module: account
@@ -8150,7 +8151,7 @@ msgstr "税込価格の計算コード"
 msgid ""
 "You can not cancel an invoice which is partially paid! You need to "
 "unreconcile related payment entries first!"
-msgstr "一部が支払済の請求書のキャンセルはできません。まず、関連する支払エントリーを未調整にする必要があります。"
+msgstr "一部が支払済の請求書のキャンセルはできません。まず、関連する支払エントリーを未消し込みにする必要があります。"
 
 #. module: account
 #: field:account.chart.template,property_account_income_categ:0
@@ -8192,7 +8193,7 @@ msgid ""
 "form."
 msgstr ""
 "顧客返金とともに顧客のためのクレジットノートを管理することができます。返金は全部あるいは部分的な請求書のクレジットのドキュメントです。請求書フォームから簡"
-"単に返金を生成したり、それを直接調整することができます。"
+"単に返金を生成したり、それを直接消し込みすることができます。"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_vat_declaration
@@ -8259,7 +8260,7 @@ msgstr "関連するパートナとの訴訟としてこの仕訳帳項目をマ
 #: field:account.move.line,reconcile_partial_id:0
 #: view:account.move.line.reconcile:0
 msgid "Partial Reconcile"
-msgstr "部分調整"
+msgstr "部分消し込み"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_inverted_balance
@@ -8301,7 +8302,7 @@ msgstr "仕訳帳ビュー"
 #. module: account
 #: model:ir.model,name:account.model_account_move_bank_reconcile
 msgid "Move bank reconcile"
-msgstr "銀行調整の移動"
+msgstr "銀行消し込みの移動"
 
 #. module: account
 #: field:account.financial.report,account_type_ids:0
@@ -8345,9 +8346,9 @@ msgid ""
 "You should press this button to re-open it and let it continue its normal "
 "process after having resolved the eventual exceptions it may have created."
 msgstr ""
-"このボタンは請求書の状態が支払済（全てが調整済であることを示す）で、自動計算されたブール値の調整済がFalse（もはやそのケースではないことを示す）の時に"
-"のみ表示されます。言い換えれば、請求書の調整は除去されもはや支払済状態と適合していません。結果的に作成されたかもしれない例外を解決した後に、それを再度開い"
-"て通常処理を継続させるためにこのボタンを押すべきです。"
+"このボタンは請求書の状態が支払済（全てが消し込み済であることを示す）で、自動計算されたブール値の消し込み済がFalse（もはやそのケースではないことを示す"
+"）の時にのみ表示されます。言い換えれば、請求書の消し込みは除去されもはや支払済状態と適合していません。結果的に作成されたかもしれない例外を解決した後に、そ"
+"れを再度開いて通常処理を継続させるためにこのボタンを押すべきです。"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscalyear_close_state
@@ -8576,7 +8577,7 @@ msgstr "仕訳帳名"
 #. module: account
 #: view:account.move.line:0
 msgid "Next Partner Entries to reconcile"
-msgstr "調整する次のパートナエントリー"
+msgstr "消し込みする次のパートナエントリー"
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -8698,7 +8699,7 @@ msgstr ""
 #: view:account.entries.report:0
 #: model:ir.actions.act_window,name:account.act_account_acount_move_line_reconcile_open
 msgid "Reconciled entries"
-msgstr "調整済エントリー"
+msgstr "消し込み済エントリー"
 
 #. module: account
 #: field:account.invoice,address_contact_id:0
@@ -9051,7 +9052,7 @@ msgid ""
 "the invoice form."
 msgstr ""
 "仕入先返金とともに仕入先から受け取ったクレジットノートを管理することができます。返金は全部あるいは部分的な請求書のクレジットのドキュメントです。請求書フォ"
-"ームから簡単に返金を生成したり、それを直接調整することができます。"
+"ームから簡単に返金を生成したり、それを直接消し込みすることができます。"
 
 #. module: account
 #: view:account.account.template:0
@@ -9154,12 +9155,12 @@ msgstr ""
 #: code:addons/account/wizard/account_automatic_reconcile.py:152
 #, python-format
 msgid "You must select accounts to reconcile"
-msgstr "調整のためにアカウントを選択する必要があります。"
+msgstr "消し込みのためにアカウントを選択する必要があります。"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_entriesreconcile0
 msgid "Accounting entries are the first input of the reconciliation."
-msgstr "会計エントリーは調整の最初の入力です。"
+msgstr "会計エントリーは消し込みの最初の入力です。"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_period_form
@@ -9235,13 +9236,13 @@ msgid ""
 "You have to define the bank account\n"
 "in the journal definition for reconciliation."
 msgstr ""
-"調整のために仕訳帳定義の中に\n"
+"消し込みのために仕訳帳定義の中に\n"
 "銀行口座を定義する必要があります。"
 
 #. module: account
 #: view:account.move.line.reconcile:0
 msgid "Reconciliation Transactions"
-msgstr "調整取引"
+msgstr "消し込み取引"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_common_menu
@@ -9407,7 +9408,8 @@ msgstr "開始日"
 msgid ""
 "It indicates that the invoice has been paid and the journal entry of the "
 "invoice has been reconciled with one or several journal entries of payment."
-msgstr "この請求書は既に支払済で、１つあるいは幾つかの支払の仕訳帳エントリーを持ち、請求書が調整済みの仕訳帳エントリーであることを示しています。"
+msgstr ""
+"この請求書は既に支払済で、１つあるいは幾つかの支払の仕訳帳エントリーを持ち、請求書が消し込み済みの仕訳帳エントリーであることを示しています。"
 
 #. module: account
 #: view:account.invoice:0
@@ -9421,7 +9423,7 @@ msgstr "ドラフト請求書"
 #: view:account.entries.report:0
 #: view:account.move.line:0
 msgid "Unreconciled"
-msgstr "未調整"
+msgstr "未消し込み"
 
 #. module: account
 #: code:addons/account/account_invoice.py:828
@@ -9478,7 +9480,7 @@ msgstr "コード / 日付"
 #: field:account.payment.term,active:0
 #: field:account.tax,active:0
 msgid "Active"
-msgstr "活動中"
+msgstr "アクティブ"
 
 #. module: account
 #: view:accounting.report:0
@@ -9562,7 +9564,7 @@ msgid ""
 "\"Unreconciled\" for accounts with internal type \"Payable/Receivable\"! "
 msgstr ""
 "設定エラー\n"
-"内部タイプが売掛金 / 買掛金のアカウントに対して未調整と異なる繰延方法を持つアカウントタイプを選択できません。 "
+"内部タイプが売掛金 / 買掛金のアカウントに対して未消し込みと異なる繰延方法を持つアカウントタイプを選択できません。 "
 
 #. module: account
 #: view:account.model:0
@@ -9660,7 +9662,7 @@ msgstr "損益計算書"
 #. module: account
 #: view:account.move.line.reconcile.select:0
 msgid "Open for Reconciliation"
-msgstr "調整のために開く"
+msgstr "消し込みのために開く"
 
 #. module: account
 #: field:account.account,parent_left:0
@@ -9672,7 +9674,7 @@ msgstr "親の左"
 msgid ""
 "Refund invoice base on this type. You can not Modify and Cancel if the "
 "invoice is already reconciled"
-msgstr "このタイプを基にした返金請求書。既に調整された請求書は変更やキャンセルができません。"
+msgstr "このタイプを基にした返金請求書。既に消し込みされた請求書は変更やキャンセルができません。"
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -9958,7 +9960,7 @@ msgid ""
 "This figure depicts the total number of partners that have gone throught the "
 "reconciliation process today. The current partner is counted as already "
 "processed."
-msgstr "この図は本日調整処理を通過したパートナの合計数を描画したものです。現在のパートナは既に処理されたとして数えられています。"
+msgstr "この図は本日消し込み処理を通過したパートナの合計数を描画したものです。現在のパートナは既に処理されたとして数えられています。"
 
 #. module: account
 #: view:account.fiscalyear:0
@@ -10043,7 +10045,7 @@ msgstr "償却の移動"
 #. module: account
 #: model:process.node,note:account.process_node_paidinvoice0
 msgid "Invoice's state is Done"
-msgstr "請求書は終了状態です。"
+msgstr "請求書は完了状態です。"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_sales
@@ -10126,7 +10128,7 @@ msgstr "アカウントタイプは閉鎖のものから他のタイプには変
 #: code:addons/account/account_move_line.py:832
 #, python-format
 msgid "Entry is already reconciled"
-msgstr "エントリーは既に調整済です。"
+msgstr "エントリーは既に消し込み済です。"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_receivable
@@ -10201,7 +10203,7 @@ msgstr "分析仕訳帳の印刷"
 #. module: account
 #: view:account.invoice.report:0
 msgid "Group by month of Invoice Date"
-msgstr "請求日の月によるグループ化"
+msgstr "請求月によるグループ化"
 
 #. module: account
 #: view:account.analytic.line:0
@@ -10328,7 +10330,7 @@ msgstr "11月"
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Modify: refund invoice, reconcile and create a new draft invoice"
-msgstr "変更：返金請求書、調整、新しいドラフト請求書の作成"
+msgstr "変更：返金請求書、消し込み、新しいドラフト請求書の作成"
 
 #. module: account
 #: help:account.invoice.line,account_id:0
@@ -10540,12 +10542,12 @@ msgstr "原価元帳（数量のみ）"
 #. module: account
 #: model:process.node,note:account.process_node_supplierpaidinvoice0
 msgid "Invoice's state is Done."
-msgstr "請求書は終了状態です。"
+msgstr "請求書は完了状態です。"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_reconcilepaid0
 msgid "As soon as the reconciliation is done, the invoice can be paid."
-msgstr "できるだけ早く調整を終えるために請求書の支払が可能です。"
+msgstr "できるだけ早く消し込みを完了するために請求書の支払が可能です。"
 
 #. module: account
 #: view:account.account.template:0
