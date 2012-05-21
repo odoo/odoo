@@ -211,8 +211,8 @@
         <function model="crm.lead" name="case_open"
             eval="[ref('crm_case_electonicgoodsdealer0'), ref('crm_case_company_partnership0'), ref('crm_case_webvisitor0'), ref('crm_case_business_card0'), ref('crm.crm_case_employee0')], {'install_mode': True}"
         />
-        <!--        Call Function to mark the lead as Pending-->
-        <function model="crm.lead" name="case_pending"
+        <!--        Call Function to Reset the Lead-->
+        <function model="crm.lead" name="case_reset"
             eval="[ref('crm_case_itdeveloper0')], {'install_mode': True}"
         />
         <!--        Call Function to Close the leads-->

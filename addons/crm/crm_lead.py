@@ -32,7 +32,6 @@ from mail.mail_message import to_email
 CRM_LEAD_PENDING_STATES = (
     crm.AVAILABLE_STATES[2][0], # Cancelled
     crm.AVAILABLE_STATES[3][0], # Done
-    crm.AVAILABLE_STATES[4][0], # Pending
 )
 
 class crm_lead(crm_case, osv.osv):
@@ -175,7 +174,7 @@ class crm_lead(crm_case, osv.osv):
                                 multi='day_open', type="float", store=True),
         'day_close': fields.function(_compute_day, string='Days to Close', \
                                 multi='day_close', type="float", store=True),
-        'state': fields.related('stage_id', 'state', type="selection",
+        'state': fields.related('stage_id', 'state', type="selection", store=True,
                 selection=crm.AVAILABLE_STATES, string="State", readonly=True,
                 help='The state is set to \'Draft\', when a case is created.\
                       If the case is in progress the state is set to \'Open\'.\
