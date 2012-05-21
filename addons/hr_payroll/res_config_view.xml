@@ -7,10 +7,9 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="hr.view_human_resources_configuration"/>
             <field name="arch" type="xml">
-                <group name="config_payroll" position="after">
-                    <separator string="Account Payroll" colspan="4"/>
+                <field name="module_hr_holidays" position="after">
                     <field name="module_hr_payroll_account"/>
-                </group>
+                </field>
             </field>
         </record>
     </data>
