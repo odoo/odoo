@@ -358,7 +358,7 @@
                     context="{'invisible_section': False}">
                     <filter icon="terp-personal+"
                         context="{'invisible_section': False}"
-                        domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
+                        domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                         help="My Sales Team(s)"/>
                     <filter icon="terp-personal+"
                         context="{'invisible_section': False}"
@@ -605,7 +605,7 @@
                     context="{'invisible_section': False}"
                     widget="selection">
                     <filter icon="terp-personal+"
-                        domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
+                        domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                         context="{'invisible_section': False}"
                         help="My Sales Team(s)" />
                     <filter icon="terp-personal+"

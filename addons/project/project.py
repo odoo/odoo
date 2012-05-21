@@ -517,11 +517,11 @@ class task(osv.osv):
            context key, or None if it cannot be resolved to a single project.
         """
         if context is None: context = {}
-        if type(context.get('project_id')) in (int, long):
-            project_id = context['project_id']
+        if type(context.get('default_project_id')) in (int, long):
+            project_id = context['default_project_id']
             return project_id
-        if isinstance(context.get('project_id'), basestring):
-            project_name = context['project_id']
+        if isinstance(context.get('default_project_id'), basestring):
+            project_name = context['default_project_id']
             project_ids = self.pool.get('project.project').name_search(cr, uid, name=project_name)
             if len(project_ids) == 1:
                 return project_ids[0][0]
