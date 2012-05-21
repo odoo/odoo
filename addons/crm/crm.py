@@ -33,7 +33,6 @@ AVAILABLE_STATES = [
     ('open', 'In Progress'),
     ('cancel', 'Cancelled'),
     ('done', 'Closed'),
-    ('pending', 'Pending'),
 ]
 
 AVAILABLE_PRIORITIES = [
@@ -279,12 +278,6 @@ class crm_base(object):
             self.message_append_note(cr, uid, [id], body=msg, context=context)
         return True
 
-    def case_pending_send_note(self, cr, uid, ids, context=None):
-        for id in ids:
-            msg = '%s is now <b>pending</b>.' % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
-            self.message_append_note(cr, uid, [id], body=msg, context=context)
-        return True
-
     def case_reset_send_note(self, cr, uid, ids, context=None):
         for id in ids:
             msg = '%s has been <b>renewed</b>.' % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
@@ -328,17 +321,6 @@ class crm_base(object):
         # We use the cache of cases to keep the old case state
         self.case_cancel_send_note(cr, uid, ids, context=context)
         self._action(cr, uid, cases, 'cancel')
-        return True
-
-    def case_pending(self, cr, uid, ids, context=None):
-        """Marks case as pending
-        :param ids: List of case Ids
-        """
-        cases = self.browse(cr, uid, ids)
-        cases[0].state # to fill the browse record cache
-        self.write(cr, uid, ids, {'state': 'pending', 'active': True})
-        self.case_pending_send_note(cr, uid, ids, context=context)
-        self._action(cr, uid, cases, 'pending')
         return True
 
     def case_reset(self, cr, uid, ids, context=None):
@@ -491,15 +473,6 @@ class crm_case(crm_base):
                                   'active': True})
         self.case_cancel_send_note(cr, uid, ids, context=context)
         self._action(cr, uid, cases, 'cancel')
-        return True
-
-    def case_pending(self, cr, uid, ids, context=None):
-        """Marks case as pending"""
-        cases = self.browse(cr, uid, ids)
-        cases[0].state # to fill the browse record cache
-        self.write(cr, uid, ids, {'state': 'pending', 'active': True})
-        self.case_pending_send_note(cr, uid, ids, context=context)
-        self._action(cr, uid, cases, 'pending')
         return True
 
     def case_reset(self, cr, uid, ids, context=None):

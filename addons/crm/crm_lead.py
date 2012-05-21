@@ -176,11 +176,12 @@ class crm_lead(crm_case, osv.osv):
         'day_close': fields.function(_compute_day, string='Days to Close', \
                                 multi='day_close', type="float", store=True),
         'state': fields.related('stage_id', 'state', type="selection",
-                selection=crm.AVAILABLE_STATES, string="State", store=True, readonly=True,
+                selection=crm.AVAILABLE_STATES, string="State", readonly=True,
                 help='The state is set to \'Draft\', when a case is created.\
-                    \nIf the case is in progress the state is set to \'Open\'.\
-                    \nWhen the case is over, the state is set to \'Done\'.\
-                    \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
+                      If the case is in progress the state is set to \'Open\'.\
+                      When the case is over, the state is set to \'Done\'.\
+                      If the case needs to be reviewed then the state is \
+                      set to \'Pending\'.'),
         'message_ids': fields.one2many('mail.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
         'subjects': fields.function(_get_email_subject, fnct_search=_history_search, string='Subject of Email', type='char', size=64),
 
