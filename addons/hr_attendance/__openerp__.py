@@ -57,5 +57,6 @@ actions(Sign in/Sign out) performed by them.
     #web
     "js": ["static/src/js/attendance.js"],
     'qweb' : ["static/src/xml/attendance.xml"],
+    'css' : ["static/src/css/slider.css"],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
