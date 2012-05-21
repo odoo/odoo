@@ -228,12 +228,14 @@
                                 string="Fund Description" />
                             <field name="user_id"
                                 widget="selection">
-                                <filter icon="terp-personal-"
+                                <filter string="Unassigned"
+                                    icon="terp-personal-"
                                     domain="[('user_id','=', False)]"
                                     help="Unassigned" />
                             </field>
                             <field name="section_id" widget="selection" string="Sales Team">
-                                <filter icon="terp-personal+"
+                                <filter string="My Sales Team(s)"
+                                    icon="terp-personal+"
                                     domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                                     help="My Sales Team(s)" />
                             </field>
