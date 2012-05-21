@@ -22,12 +22,49 @@
 from osv import fields, osv
 import decimal_precision as dp
 
+import time
+from datetime import datetime
+from datetime import timedelta
+from datetime import date
+from calendar import isleap
+from dateutil.relativedelta import relativedelta
+
 class hr_contract_in(osv.osv):
     _inherit = 'hr.contract'
+    
+    def _compute_year(self, cr, uid, ids, fields, args, context=None):
+        """
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of Openday’s IDs
+        @return: No. of years of experience.
+        @param context: A standard dictionary for contextual values
+        """
+        res = {}
+        for contract in self.browse(cr, uid, ids, context=context):
+            c_date = time.strftime('%Y-%m-%d')
+            DATETIME_FORMAT = "%Y-%m-%d"
+            date_start = datetime.strptime(contract.date_start, DATETIME_FORMAT)
+            current_date = datetime.strptime(c_date,DATETIME_FORMAT)
+            diffyears = current_date.year - date_start.year
+            difference  = current_date - date_start.replace(current_date.year)
+            days_in_year = isleap(current_date.year) and 366 or 365
+            difference_in_years = diffyears + (difference.days + difference.seconds/86400.0)/days_in_year
+            years = relativedelta(current_date, date_start).years
+            months = relativedelta(current_date, date_start).months
+            mnth = months * 0.01
+            if months < 10:
+                year_month= float(mnth) + float(years)
+                res[contract.id] = year_month
+            else:
+                year_months = float(mnth) + float(years)
+                res[contract.id] = year_months
+        return res
 
     _columns = {
         'tds': fields.float('TDS', digits_compute=dp.get_precision('Payroll')),
         'food_coupon_amount': fields.float('Food Coupons ', digits_compute=dp.get_precision('Payroll')),
+        'No_of_year':fields.function(_compute_year, string='No. of Years of service',type="float",readonly=True),
 
     }
 
