@@ -206,6 +206,8 @@
                      grouping is selected in the search view -->
                 <rng:attribute name="default_group_by" />
             </rng:optional>
+            <rng:optional><rng:attribute name="create" /></rng:optional>
+            <rng:optional><rng:attribute name="quick_create" /></rng:optional>
             <rng:zeroOrMore>
                 <rng:ref name="field"/>
             </rng:zeroOrMore>
