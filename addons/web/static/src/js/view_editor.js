@@ -633,7 +633,6 @@ instance.web.ViewEditor =   instance.web.OldWidget.extend({
             xml_arch = QWeb.load_xml(arch.arch);
         }
         return self.do_save_xml(xml_arch.documentElement, obj[0].child_id[0],obj[0].child_id, move_direct, update_values,arch);
-        //return self.do_save_xml(arch_to_pass[0], obj[0].child_id[0],obj[0].child_id, move_direct, update_values,arch);
     },
     get_object_by_id: function(id, one_object, result) {
         var self = this;
