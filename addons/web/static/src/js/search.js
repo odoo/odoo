@@ -1451,7 +1451,7 @@ instance.web.search.BooleanField = instance.web.search.SelectionField.extend(/**
  */
 instance.web.search.DateField = instance.web.search.Field.extend(/** @lends instance.web.search.DateField# */{
     value_from: function (facetValue) {
-        return openerp.web.date_to_str(facetValue.get('value'));
+        return instance.web.date_to_str(facetValue.get('value'));
     },
     complete: function (needle) {
         var d = Date.parse(needle);
@@ -1484,7 +1484,7 @@ instance.web.search.DateField = instance.web.search.Field.extend(/** @lends inst
  */
 instance.web.search.DateTimeField = instance.web.search.DateField.extend(/** @lends instance.web.search.DateTimeField# */{
     value_from: function (facetValue) {
-        return openerp.web.datetime_to_str(facetValue.get('value'));
+        return instance.web.datetime_to_str(facetValue.get('value'));
     }
 });
 instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
