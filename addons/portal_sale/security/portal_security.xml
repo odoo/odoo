@@ -8,35 +8,35 @@
             <field name="name">Personal Quotations/Sales</field>
             <field ref="sale.model_sale_order" name="model_id"/>
             <field name="domain_force">[('partner_id.email','=',user.login)]</field>
-            <field name="groups" eval="[(4, ref('group_portal_member'))]"/>
+            <field name="groups" eval="[(4, ref('portal.group_portal_member'))]"/>
         </record>
 
         <record id="portal_stock_picking_user_rule" model="ir.rule">
             <field name="name">Personal Delivery Orders</field>
             <field ref="stock.model_stock_picking" name="model_id"/>
             <field name="domain_force">[('partner_id.email','=',user.login)]</field>
-            <field name="groups" eval="[(4, ref('group_portal_member'))]"/>
+            <field name="groups" eval="[(4, ref('portal.group_portal_member'))]"/>
         </record>
 
         <record id="portal_account_invoice_user_rule" model="ir.rule">
             <field name="name">Personal Account Invoices</field>
             <field ref="account.model_account_invoice" name="model_id"/>
             <field name="domain_force">[('partner_id.email','=',user.login)]</field>
-            <field name="groups" eval="[(4, ref('group_portal_member'))]"/>
+            <field name="groups" eval="[(4, ref('portal.group_portal_member'))]"/>
         </record>
 
         <record id="portal_personal_payment" model="ir.rule">
             <field name="name">Personal Payments</field>
             <field ref="account_voucher.model_account_voucher" name="model_id"/>
             <field name="domain_force">[('partner_id.email','=',user.login)]</field>
-            <field name="groups" eval="[(4, ref('group_portal_member'))]"/>
+            <field name="groups" eval="[(4, ref('portal.group_portal_member'))]"/>
         </record>
 
         <record id="portal_personal_contact" model="ir.rule">
             <field name="name">Personal Contacts</field>
             <field ref="base.model_res_partner" name="model_id"/>
             <field name="domain_force">[('email','=',user.login)]</field>
-            <field name="groups" eval="[(4, ref('group_portal_member'))]"/>
+            <field name="groups" eval="[(4, ref('portal.group_portal_member'))]"/>
         </record>
 
     </data>
