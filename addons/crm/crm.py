@@ -454,7 +454,7 @@ class crm_case(crm_base):
         """ Closes case """
         cases = self.browse(cr, uid, ids, context=context)
         cases[0].state # fill browse record cache, for _action having old and new values
-        self.stage_set_with_state_name(cr, uid, cases, 'open', context=context)
+        self.stage_set_with_state_name(cr, uid, cases, 'done', context=context)
         self.write(cr, uid, ids, {'date_closed': fields.datetime.now()}, context=context)
         self._action(cr, uid, cases, 'done', context=context)
         self.case_close_send_note(cr, uid, ids, context=context)
@@ -472,14 +472,36 @@ class crm_case(crm_base):
 
     def case_reset(self, cr, uid, ids, context=None):
         """ Resets case as draft """
-        cases = self.browse(cr, uid, ids, context=context)
-        cases[0].state # fill browse record cache, for _action having old and new values
-        self.stage_set_with_state_name(cr, uid, cases, 'draft', context=context)
-        self.write(cr, uid, ids, {'active': True}, context=context)
-        self._action(cr, uid, cases, 'draft', context=context)
+        self.case_set(cr, uid, ids, 'draft', {'active': True}, context=context)
+        #cases = self.browse(cr, uid, ids, context=context)
+        #cases[0].state # fill browse record cache, for _action having old and new values
+        #self.stage_set_with_state_name(cr, uid, cases, 'draft', context=context)
+        #self.write(cr, uid, ids, {'active': True}, context=context)
+        #self._action(cr, uid, cases, 'draft', context=context)
         self.case_reset_send_note(cr, uid, ids, context=context)
         return True
 
+    def case_set(self, cr, uid, ids, new_state_name=None, values_to_update=None, new_stage_id=None, context=None):
+        """ TODO """
+        cases = self.browse(cr, uid, ids, context=context)
+        cases[0].state # fill browse record cache, for _action having old and new values
+        # 1. update the stage
+        if new_state_name:
+            self.stage_set_with_state_name(cr, uid, cases, new_state_name, context=context)
+        elif not (new_stage_id is None):
+            self.stage_set(cr, uid, ids, new_stage_id, context=context)
+        # 2. update values
+        if values_to_update:
+            self.write(cr, uid, ids, values_to_update, context=context)
+        # 3. call _action for base action rule
+        if new_state_name:
+            self._action(cr, uid, cases, new_state_name, context=context)
+        elif not (new_stage_id is None):
+            stage = self.pool.get('crm.case.stage').browse(cr, uid, [new_stage_id], context=context)[0]
+            new_state_name = stage.state
+            self._action(cr, uid, cases, new_state_name, context=context)
+        return True
+    
     def remind_partner(self, cr, uid, ids, context=None, attach=False):
         return self.remind_user(cr, uid, ids, context, attach,
                 destination=False)
