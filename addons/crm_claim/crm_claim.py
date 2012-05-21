@@ -31,7 +31,6 @@ wizard.mail_compose_message.SUPPORTED_MODELS.append('crm.claim')
 CRM_CLAIM_PENDING_STATES = (
     crm.AVAILABLE_STATES[2][0], # Cancelled
     crm.AVAILABLE_STATES[3][0], # Done
-    crm.AVAILABLE_STATES[4][0], # Pending
 )
 
 
