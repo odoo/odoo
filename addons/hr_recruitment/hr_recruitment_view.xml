@@ -193,7 +193,7 @@
                <field name="partner_name" filter_domain="['|','|',('name','ilike',self),('partner_name','ilike',self),('email_from','ilike',self)]" string="Subject / Applicant"/>
                <field name="job_id" widget="selection"/>
                <field name="user_id">
-                    <filter domain="[('user_id','=',False)]" help="Unassigned Recruitments" icon="terp-personal-" />
+                    <filter string="Unassigned Recruitments" domain="[('user_id','=',False)]" help="Unassigned Recruitments" icon="terp-personal-" />
                </field>
                <newline/>
                 <group expand="0" string="Group By...">
