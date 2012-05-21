@@ -983,14 +983,14 @@ instance.web.ViewEditor =   instance.web.OldWidget.extend({
         self.add_node_dialog.$element.find('#new_field').click(function() {
             model_data = new instance.web.DataSetSearch(self,'ir.model', null, null);
             model_data.read_slice([], {domain: [['model','=', self.model]]}).then(function(result) {
-                self.render_new_field(result[0].id, result[0].modules);
+                self.render_new_field(result[0]);
             });
         });
     },
-    render_new_field :function(id, module){
+    render_new_field :function( result ) {
         var self = this;
         var action = {
-            context: {'default_model_id': id, 'manual': true, 'module' : module},
+            context: {'default_model_id': result.id, 'manual': true, 'module' : result.modules},
             res_model: "ir.model.fields",
             views: [[false, 'form']],
             type: 'ir.actions.act_window',
