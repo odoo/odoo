@@ -260,18 +260,6 @@ class crm_lead(crm_case, osv.osv):
     def stage_find_won(self, cr, uid, section_id):
         return self.stage_find_percent(cr, uid, 100.0, section_id)
 
-    def case_open(self, cr, uid, ids, context=None):
-        for lead in self.browse(cr, uid, ids, context=context):
-            if lead.state == 'draft':
-                value = {'date_open': time.strftime('%Y-%m-%d %H:%M:%S')}
-                self.write(cr, uid, [lead.id], value)
-                if lead.type == 'opportunity' and not lead.stage_id:
-                    stage_id = self.stage_find(cr, uid, lead.section_id.id or False, [('sequence','>',0)])
-                    if stage_id:
-                        self.stage_set(cr, uid, [lead.id], stage_id)
-        res = super(crm_lead, self).case_open(cr, uid, ids, context)
-        return res
-
     def case_cancel(self, cr, uid, ids, context=None):
         """Overrides cancel for crm_case for setting probability
         """
@@ -302,7 +290,7 @@ class crm_lead(crm_case, osv.osv):
         for lead in self.browse(cr, uid, ids):
             stage_id = self.stage_find_won(cr, uid, lead.section_id.id or False)
             if stage_id:
-                self.case_set(cr, uid, [lead.id], values_to_update={'probability': 87.0}, new_stage_id=stage_id, context=context)
+                self.case_set(cr, uid, [lead.id], values_to_update={'probability': 100.0}, new_stage_id=stage_id, context=context)
         self.case_close_send_note(cr, uid, ids, context=context)
         return True
 
