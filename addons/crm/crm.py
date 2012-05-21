@@ -173,13 +173,15 @@ class crm_case_resource_type(osv.osv):
     }
 
 class crm_base(object):
-    """ Base utility mixin class for crm objects,
-    Object subclassing this should define colums:
-        date_open
-        date_closed
-        user_id
-        partner_id
+    """ Base utility mixin class for crm objects.
+        Object subclassing this should define colums:
+        - date_open
+        - date_closed
+        - user_id
+        - partner_id
+        - state (selection field)
     """
+    
     def _get_default_partner_address(self, cr, uid, context=None):
         """Gives id of default address for current user
         :param context: if portal in context is false return false anyway
@@ -257,6 +259,62 @@ class crm_base(object):
             data.update(self.onchange_partner_address_id(cr, uid, ids, addr['contact'])['value'])
         return {'value': data}
 
+    def case_open(self, cr, uid, ids, context=None):
+        """ Opens case """
+        cases = self.browse(cr, uid, ids, context=context)
+        for case in cases:
+            data = {'state': 'open', 'active': True}
+            if not case.user_id:
+                data['user_id'] = uid
+            self.write(cr, uid, [case.id], data, context=context)
+        self.case_open_send_note(cr, uid, ids, context=context)
+        self._action(cr, uid, cases, 'open', context=context)
+
+        return True
+
+    def case_close(self, cr, uid, ids, context=None):
+        """ Closes case """
+        cases = self.browse(cr, uid, ids, context=context)
+        cases[0].state # to fill the browse record cache
+        self.write(cr, uid, ids, {'state': 'done', 'date_closed': fields.datetime.now(), }, context=context)
+        # We use the cache of cases to keep the old case state
+        self.case_close_send_note(cr, uid, ids, context=context)
+        self._action(cr, uid, cases, 'done', context=context)
+        return True
+
+    def case_cancel(self, cr, uid, ids, context=None):
+        """ Cancels case """
+        cases = self.browse(cr, uid, ids, context=context)
+        cases[0].state # to fill the browse record cache
+        self.write(cr, uid, ids, {'state': 'cancel', 'active': True}, context=context)
+        # We use the cache of cases to keep the old case state
+        self.case_cancel_send_note(cr, uid, ids, context=context)
+        self._action(cr, uid, cases, 'cancel', context=context)
+        return True
+
+    def case_reset(self, cr, uid, ids, context=None):
+        """ Resets case as draft """
+        cases = self.browse(cr, uid, ids, context=context)
+        cases[0].state # to fill the browse record cache
+        self.write(cr, uid, ids, {'state': 'draft', 'active': True}, context=context)
+        self.case_reset_send_note(cr, uid, ids, context=context)
+        self._action(cr, uid, cases, 'draft', context=context)
+        return True
+
+    def _action(self, cr, uid, cases, state_to, scrit=None, context=None):
+        if context is None:
+            context = {}
+        context['state_to'] = state_to
+        rule_obj = self.pool.get('base.action.rule')
+        model_obj = self.pool.get('ir.model')
+        model_ids = model_obj.search(cr, uid, [('model','=',self._name)])
+        rule_ids = rule_obj.search(cr, uid, [('model_id','=',model_ids[0])])
+        return rule_obj._action(cr, uid, rule_ids, cases, scrit=scrit, context=context)
+    
+    # ******************************
+    # Notifications
+    # ******************************
+    
 	def case_get_note_msg_prefix(self, cr, uid, id, context=None):
 		return ''
 	
@@ -283,66 +341,6 @@ class crm_base(object):
             msg = '%s has been <b>renewed</b>.' % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
             self.message_append_note(cr, uid, [id], body=msg, context=context)
         return True
-
-    def case_open(self, cr, uid, ids, context=None):
-        """Opens Case
-        :param ids: List of case Ids
-        """
-        cases = self.browse(cr, uid, ids)
-        for case in cases:
-            data = {'state': 'open', 'active': True}
-            if not case.user_id:
-                data['user_id'] = uid
-            self.write(cr, uid, [case.id], data)
-        self.case_open_send_note(cr, uid, ids, context=context)
-        self._action(cr, uid, cases, 'open')
-
-        return True
-
-    def case_close(self, cr, uid, ids, context=None):
-        """Closes Case
-        :param ids: List of case Ids
-        """
-        cases = self.browse(cr, uid, ids)
-        cases[0].state # to fill the browse record cache
-        self.write(cr, uid, ids, {'state': 'done', 'date_closed': time.strftime('%Y-%m-%d %H:%M:%S'), })
-        # We use the cache of cases to keep the old case state
-        self.case_close_send_note(cr, uid, ids, context=context)
-        self._action(cr, uid, cases, 'done')
-        return True
-
-    def case_cancel(self, cr, uid, ids, context=None):
-        """Cancels Case
-        :param ids: List of case Ids
-        """
-        cases = self.browse(cr, uid, ids)
-        cases[0].state # to fill the browse record cache
-        self.write(cr, uid, ids, {'state': 'cancel', 'active': True})
-        # We use the cache of cases to keep the old case state
-        self.case_cancel_send_note(cr, uid, ids, context=context)
-        self._action(cr, uid, cases, 'cancel')
-        return True
-
-    def case_reset(self, cr, uid, ids, context=None):
-        """Resets case as draft
-        :param ids: List of case Ids
-        """
-        cases = self.browse(cr, uid, ids)
-        cases[0].state # to fill the browse record cache
-        self.write(cr, uid, ids, {'state': 'draft', 'active': True})
-        self.case_reset_send_note(cr, uid, ids, context=context)
-        self._action(cr, uid, cases, 'draft')
-        return True
-
-    def _action(self, cr, uid, cases, state_to, scrit=None, context=None):
-        if context is None:
-            context = {}
-        context['state_to'] = state_to
-        rule_obj = self.pool.get('base.action.rule')
-        model_obj = self.pool.get('ir.model')
-        model_ids = model_obj.search(cr, uid, [('model','=',self._name)])
-        rule_ids = rule_obj.search(cr, uid, [('model_id','=',model_ids[0])])
-        return rule_obj._action(cr, uid, rule_ids, cases, scrit=scrit, context=context)
 
 class crm_case(crm_base):
     """ A simple python class to be used for common functions
