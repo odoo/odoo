@@ -214,9 +214,10 @@
                     <field name="name"/>
                     <field name="partner_id"/>
                     <field name="user_id" widget="selection">
-                            <filter icon="terp-personal-"
-                                domain="[('user_id','=', False)]"
-                                help="Unassigned Claims" />
+                        <filter string="Unassigned Claims"
+                            icon="terp-personal-"
+                            domain="[('user_id','=', False)]"
+                            help="Unassigned Claims" />
                     </field>
                     <newline/>
                     <group expand="0" string="Group By...">
