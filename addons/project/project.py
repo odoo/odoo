@@ -504,13 +504,6 @@ def Project():
     
 project()
 
-class users(osv.osv):
-    _inherit = 'res.users'
-    _columns = {
-        'context_project_id': fields.many2one('project.project', 'Project')
-    }
-users()
-
 class task(osv.osv):
     _name = "project.task"
     _description = "Task"

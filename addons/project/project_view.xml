@@ -745,31 +745,6 @@
         </record>
 
       <!--     User Form-->
-      <record id="view_project_users_form_simple" model="ir.ui.view">
-          <field name="name">res.users.project.form1</field>
-          <field name="model">res.users</field>
-          <field name="type">form</field>
-          <field name="inherit_id" ref="base.view_users_form"/>
-          <field eval="18" name="priority"/>
-          <field name="arch" type="xml">
-              <group name="default_filters" position="inside">
-                   <field name="context_project_id"/>
-              </group>
-          </field>
-     </record>
-
-     <record model="ir.ui.view" id="view_users_form_project_modif_inherited1">
-         <field name="name">view.users.form.project.modif.inherited1</field>
-         <field name="model">res.users</field>
-         <field name="inherit_id" ref="base.view_users_form_simple_modif" />
-         <field name="type">form</field>
-         <field eval="18" name="priority"/>
-         <field name="arch" type="xml">
-            <group name="default_filters" position="inside">
-                <field name="context_project_id" context="{'user_preference':True}" widget="selection" readonly="0"/>
-            </group>
-       </field>
-    </record>
-    <act_window context="{'search_default_user_id': [active_id], 'default_user_id': active_id}" domain="[('state', '&lt;&gt;', 'cancelled'),('state', '&lt;&gt;', 'done')]" id="act_res_users_2_project_task_opened" name="Assigned Tasks" res_model="project.task" src_model="res.users" view_mode="tree,form,gantt,calendar,graph" view_type="form"/>
+        <act_window context="{'search_default_user_id': [active_id], 'default_user_id': active_id}" domain="[('state', '&lt;&gt;', 'cancelled'),('state', '&lt;&gt;', 'done')]" id="act_res_users_2_project_task_opened" name="Assigned Tasks" res_model="project.task" src_model="res.users" view_mode="tree,form,gantt,calendar,graph" view_type="form"/>
     </data>
 </openerp>
