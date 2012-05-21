@@ -105,7 +105,6 @@ $colour4: #8a89ba
                 border-right: none
     th, td
         padding: 0
-        line-height: 18px
         text-align: left
     th
         font-weight: bold
@@ -423,6 +422,7 @@ $colour4: #8a89ba
         border-right: 1px solid #afafb6
         text-shadow: 0 1px 1px white
         padding-bottom: 16px
+        line-height: 18px
     a.oe_logo
         width: 220px
         display: block
@@ -784,11 +784,6 @@ $colour4: #8a89ba
         .oe_view_manager_buttons
             white-space: nowrap
     // }}}
-    // ViewManager.body {{{
-    .oe_view_manager_body
-        h4
-            margin: 8px 0
-    // }}}
     // ViewManager.pager {{{
     .oe_view_manager_pager
         line-height: 26px
@@ -1112,11 +1107,12 @@ $colour4: #8a89ba
     .oe_view_nocontent
         > img
             float: left
-            margin-right: 1.5em
+            margin: 1.5em
         > div
             // don't encroach on my arrow
             overflow: hidden
-            padding: 6px
+            padding: 35px 0px 0px 0px
+            max-width: 700px
             font-size: 125%
     .oe_view_topbar
         border-bottom: 1px solid #cacaca
@@ -1308,7 +1304,6 @@ $colour4: #8a89ba
             padding-left: 8px
             @include box-shadow(none)
             @include radius(0px)
-            color: #666
         .oe_form_field_many2one input,
         .oe_form_field_binary input,
         .oe_form_field_binary input,
