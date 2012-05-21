@@ -4,10 +4,10 @@
 
         <record id="portal_demo_user" model="res.users">
             <field name="name">Demo Portal User</field>
-            <field name="login">test</field>
-            <field name="password">test</field>
+            <field name="login">portal</field>
+            <field name="password">portal</field>
             <!-- Avoid auto-including this demo user in any default group -->
-            <field name="groups_id" eval="[]"/>
+            <field name="groups_id" eval="[(5,)]"/>
         </record>
 
         <record id="portal" model="res.portal">
