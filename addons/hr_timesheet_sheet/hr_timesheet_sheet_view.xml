@@ -166,7 +166,8 @@
                         <field name="employee_id"/>
                         <field name="date_from"/>
                         <field name="department_id" widget="selection">
-                            <filter icon="terp-personal+"
+                            <filter string="My Departments Timesheet"
+                                icon="terp-personal+"
                                 domain="[('department_id','=',context.get('department_id',False))]"
                                 help="My Departments Timesheet"/>
                         </field>
