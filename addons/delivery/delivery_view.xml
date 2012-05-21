@@ -263,7 +263,7 @@
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
-                    <xpath expr="//button[@name='order_confirm']" position="after">
+                    <xpath expr="//button[@name='action_button_confirm']" position="after">
                          <button name="%(action_delivery_cost)d" states="draft" string="Delivery Costs" type="action" icon="gtk-add" context="{'order_id':active_id}"/>
                     </xpath>
             </field>
