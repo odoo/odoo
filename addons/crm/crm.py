@@ -456,32 +456,19 @@ class crm_case(crm_base):
         
     def case_close(self, cr, uid, ids, context=None):
         """ Closes case """
-        cases = self.browse(cr, uid, ids, context=context)
-        cases[0].state # fill browse record cache, for _action having old and new values
-        self.stage_set_with_state_name(cr, uid, cases, 'done', context=context)
-        self.write(cr, uid, ids, {'date_closed': fields.datetime.now()}, context=context)
-        self._action(cr, uid, cases, 'done', context=context)
+        self.case_set(cr, uid, ids, 'done', {'active': True, 'date_closed': fields.datetime.now()}, context=context)
         self.case_close_send_note(cr, uid, ids, context=context)
         return True
 
     def case_cancel(self, cr, uid, ids, context=None):
         """ Cancels case """
-        cases = self.browse(cr, uid, ids, context=context)
-        cases[0].state # fill browse record cache, for _action having old and new values
-        self.stage_set_with_state_name(cr, uid, cases, 'cancel', context=context)
-        self.write(cr, uid, ids, {'active': True}, context=context)
-        self._action(cr, uid, cases, 'cancel', context=context)
+        self.case_set(cr, uid, ids, 'cancel', {'active': True}, context=context)
         self.case_cancel_send_note(cr, uid, ids, context=context)
         return True
 
     def case_reset(self, cr, uid, ids, context=None):
         """ Resets case as draft """
         self.case_set(cr, uid, ids, 'draft', {'active': True}, context=context)
-        #cases = self.browse(cr, uid, ids, context=context)
-        #cases[0].state # fill browse record cache, for _action having old and new values
-        #self.stage_set_with_state_name(cr, uid, cases, 'draft', context=context)
-        #self.write(cr, uid, ids, {'active': True}, context=context)
-        #self._action(cr, uid, cases, 'draft', context=context)
         self.case_reset_send_note(cr, uid, ids, context=context)
         return True
 
