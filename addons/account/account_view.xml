@@ -1235,7 +1235,7 @@
                         <field name="date"/>
                         <field name="account_id"/>
                         <field name="partner_id">
-                            <filter help="Next Partner Entries to reconcile" name="next_partner" context="{'next_partner_only': 1}" icon="terp-gtk-jump-to-ltr" domain="[('account_id.reconcile','=',True),('reconcile_id','=',False)]"/>
+                            <filter string="Next Partner Entries to reconcile" help="Next Partner Entries to reconcile" name="next_partner" context="{'next_partner_only': 1}" icon="terp-gtk-jump-to-ltr" domain="[('account_id.reconcile','=',True),('reconcile_id','=',False)]"/>
                         </field>
                     </group>
                     <newline/>
@@ -2213,7 +2213,7 @@
             <field name="arch" type="xml">
                 <search string="Search Chart of Account Templates">
                       <group>
-                          <field name="name"/>
+                        <field name="name"/>
                         <field name="account_root_id"/>
                         <field name="bank_account_view_id"/>
                       </group>
