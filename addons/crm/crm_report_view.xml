@@ -163,13 +163,13 @@
             <field name="arch" type="xml">
                 <search string="Cases by Team and Stage">
                    <group>
-                           <filter string="This Year" icon="terp-go-year"
-                               domain="[('name','=',time.localtime()[0])]"
-                               help="Cases by Team and Stage for this year" />
-                           <filter string="This Month" icon="terp-go-month"
-                               domain="[('month','=',time.localtime()[1])]"
-                               help="Cases by Team and Stage for this month" />
-                           <separator orientation="vertical"/>
+                        <filter string="This Year" icon="terp-go-year"
+                            domain="[('name','=',time.localtime()[0])]"
+                            help="Cases by Team and Stage for this year" />
+                        <filter string="This Month" icon="terp-go-month"
+                            domain="[('month','=',time.localtime()[1])]"
+                            help="Cases by Team and Stage for this month" />
+                        <separator orientation="vertical"/>
                         <field name="section_id" widget="selection"/>
                         <field name="nbr"/>
                         <field name="state"/>
@@ -238,19 +238,18 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Cases by Section, Category and Stage">
-                   <group>
-                           <filter string="This Year" icon="terp-go-year"
-                               domain="[('name','=',time.localtime()[0])]"
-                               help="Cases by Section, Category and Stage for this year" />
-                           <filter string="This Month" icon="terp-go-month"
-                               domain="[('month','=',time.localtime()[1])]"
-                               help="Cases by Section, Category and Stage for this month" />
-                           <separator orientation="vertical"/>
+                    <group>
+                        <filter string="This Year" icon="terp-go-year"
+                            domain="[('name','=',time.localtime()[0])]"
+                            help="Cases by Section, Category and Stage for this year" />
+                        <filter string="This Month" icon="terp-go-month"
+                            domain="[('month','=',time.localtime()[1])]"
+                            help="Cases by Section, Category and Stage for this month" />
+                        <separator orientation="vertical"/>
                         <field name="section_id" widget="selection"/>
                         <field name="nbr"/>
                         <field name="state"/>
-
-                   </group>
+                    </group>
                </search>
             </field>
         </record>
@@ -332,18 +331,18 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Cases by User">
-                   <group>
-                           <filter string="This Year" icon="terp-go-year"
-                               domain="[('name','=',time.localtime()[0])]"
-                               help="Cases by User for this year" />
-                           <filter string="This Month" icon="terp-go-month"
-                               domain="[('month','=',time.localtime()[1])]"
-                               help="Cases by User for this month" />
-                           <separator orientation="vertical"/>
+                    <group>
+                        <filter string="This Year" icon="terp-go-year"
+                            domain="[('name','=',time.localtime()[0])]"
+                            help="Cases by User for this year" />
+                        <filter string="This Month" icon="terp-go-month"
+                            domain="[('month','=',time.localtime()[1])]"
+                            help="Cases by User for this month" />
+                        <separator orientation="vertical"/>
                         <field name="section_id" widget="selection"/>
                         <field name="nbr"/>
                         <field name="state"/>
-                   </group>
+                    </group>
                </search>
             </field>
     </record>

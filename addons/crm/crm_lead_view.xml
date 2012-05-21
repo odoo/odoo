@@ -349,25 +349,28 @@
                 <field name="name" string="Lead / Customer"
                     filter_domain="['|','|',('partner_name','ilike',self),('email_from','ilike',self),('name','ilike',self)]"/>
                 <field name="user_id">
-                    <filter icon="terp-personal-"
+                    <filter string="Unassigned Leads"
+                        icon="terp-personal-"
                         domain="[('user_id','=', False)]"
                         help="Unassigned Leads" />
                 </field>
                 <field name="subjects"/>
                 <field name="section_id" widget="selection"
                     context="{'invisible_section': False}">
-                    <filter icon="terp-personal+"
+                    <filter string="My Sales Team(s)"
+                        icon="terp-personal+"
                         context="{'invisible_section': False}"
                         domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                         help="My Sales Team(s)"/>
-                    <filter icon="terp-personal+"
+                    <filter string="Show Sales Team"
+                        icon="terp-personal+"
                         context="{'invisible_section': False}"
                         domain="[]"
                         help="Show Sales Team"/>
                 </field>
                 <separator orientation="vertical"/>
                 <field name="country_id" context="{'invisible_country': False}">
-                    <filter icon="terp-personal+" context="{'invisible_country': False}" help="Show countries"/>
+                    <filter string="Show countries" icon="terp-personal+" context="{'invisible_country': False}" help="Show countries"/>
                 </field>
                 <newline/>
                 <group expand="0" string="Group By...">
@@ -597,18 +600,21 @@
                 <field name="name" string="Opportunity / Customer"
                     filter_domain="['|','|','|',('partner_id','ilike',self),('partner_name','ilike',self),('email_from','ilike',self),('name', 'ilike', self)]"/>
                 <field name="user_id">
-                    <filter icon="terp-personal-"
+                    <filter string="Unassigned Opportunities"
+                        icon="terp-personal-"
                         domain="[('user_id','=', False)]"
                         help="Unassigned Opportunities" />
                 </field>
                 <field name="section_id"
                     context="{'invisible_section': False}"
                     widget="selection">
-                    <filter icon="terp-personal+"
+                    <filter string="My Sales Team(s)"
+                        icon="terp-personal+"
                         domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                         context="{'invisible_section': False}"
                         help="My Sales Team(s)" />
-                    <filter icon="terp-personal+"
+                    <filter string="Show Sales Team"
+                        icon="terp-personal+"
                         context="{'invisible_section': False}"
                         domain="[]"
                         help="Show Sales Team"/>

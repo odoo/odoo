@@ -278,12 +278,14 @@
                            <field name="name" string="Meeting / Partner"
                                filter_domain="['|', ('name','ilike',self), ('partner_id','ilike', self)]"/>
                            <field name="user_id">
-                               <filter icon="terp-personal"
+                               <filter string="My Meetings"
+                                   icon="terp-personal"
                                    domain="[('user_id','=',uid)]"
                                    help="My Meetings" />
                            </field>
                            <field name="section_id" widget="selection">
-                               <filter icon="terp-personal+"
+                               <filter string="My Sales Team(s)"
+                                   icon="terp-personal+"
                                    domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                                    help="My Sales Team(s)" />
                            </field>
