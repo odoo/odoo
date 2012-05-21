@@ -78,7 +78,7 @@ class calendar_event_import(osv.osv_memory):
     _description = "Event Import"
 
     _columns = {
-                  'file_path': fields.binary('Select ICS file', filters='*.ics', required=True),
+                  'file_path': fields.binary('Select ICS File', filters='*.ics', required=True),
                   'msg': fields.text('', readonly=True),
                }
 
