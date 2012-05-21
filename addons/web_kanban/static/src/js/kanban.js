@@ -12,7 +12,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
     view_type: "kanban",
     init: function (parent, dataset, view_id, options) {
         this._super(parent, dataset, view_id, options);
-        _.defaults(this.options, {"quick_creatable": true});
+        _.defaults(this.options, {"quick_creatable": true, "creatable": true});
         this.fields_view = {};
         this.fields_keys = [];
         this.group_by = null;
@@ -35,6 +35,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         this.add_group_mutex = new $.Mutex();
     },
     on_loaded: function(data) {
+        this.fields_view = data;
         this.$buttons = $(QWeb.render("KanbanView.buttons", {'widget': this}));
         if (this.options.$buttons) {
             this.$buttons.appendTo(this.options.$buttons);
@@ -44,11 +45,24 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         this.$buttons
             .on('click','button.oe_kanban_button_new', this.do_add_record);
         this.$groups = this.$element.find('.oe_kanban_groups tr');
-        this.fields_view = data;
         this.fields_keys = _.keys(this.fields_view.fields);
         this.add_qweb_template();
         this.has_been_loaded.resolve();
         return $.when();
+    },
+    _is_quick_create_enabled: function() {
+        if (! this.options.quick_creatable)
+            return false;
+        if (this.fields_view.arch.attrs.quick_create !== undefined)
+            return JSON.parse(this.fields_view.arch.attrs.quick_create);
+        return !! this.group_by;
+    },
+    _is_create_enabled: function() {
+        if (! this.options.creatable)
+            return false;
+        if (this.fields_view.arch.attrs.create !== undefined)
+            return JSON.parse(this.fields_view.arch.attrs.create);
+        return true;
     },
     add_qweb_template: function() {
         for (var i=0, ii=this.fields_view.arch.children.length; i < ii; i++) {
