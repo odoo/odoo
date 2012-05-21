@@ -63,9 +63,19 @@ class hr_contract_in(osv.osv):
 
     _columns = {
         'tds': fields.float('TDS', digits_compute=dp.get_precision('Payroll')),
+        'house_rent_income': fields.float('House Rent Income ', digits_compute=dp.get_precision('Payroll')),
+        'saving_bank_account': fields.float('Saving Bank Account Income ', digits_compute=dp.get_precision('Payroll')),
+        'other_income': fields.float('Other Income ', digits_compute=dp.get_precision('Payroll')),
+        'short_term_gain':fields.float('Short Term Gain from Share Trading/Equity MFs ', digits_compute=dp.get_precision('Payroll')),
+        'long_term_gain':fields.float('Long Term Gain from Share Trading/Equity MFs', digits_compute=dp.get_precision('Payroll')),
         'food_coupon_amount': fields.float('Food Coupons ', digits_compute=dp.get_precision('Payroll')),
+        'driver_salay': fields.boolean('Driver salary '),
+        'professional_tax': fields.float('Professional Tax ', digits_compute=dp.get_precision('Payroll')),
+        'leave_avail_dedution': fields.float('leave Avail deduction ', digits_compute=dp.get_precision('Payroll')),
         'No_of_year':fields.function(_compute_year, string='No. of Years of service',type="float",readonly=True),
-
+        'medical_insurance': fields.float('Medical Insurance', digits_compute=dp.get_precision('Payroll')), 
+        'voluntarily_provident_fund': fields.float('Voluntarily Provident Fund', digits_compute=dp.get_precision('Payroll')), 
+        'company_transport': fields.float('Company provided transport', digits_compute=dp.get_precision('Payroll')), 
     }
 
 hr_contract_in()
