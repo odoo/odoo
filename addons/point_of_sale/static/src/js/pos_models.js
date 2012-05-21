@@ -486,9 +486,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
     // automaticaly once an order is completed and sent to the server.
 
     module.Order = Backbone.Model.extend({
-        defaults:{
-            validated: false,
-        },
         initialize: function(attributes){
             Backbone.Model.prototype.initialize.apply(this, arguments);
             this.set({
@@ -498,23 +495,13 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 name:           "Order " + this.generateUniqueId(),
             });
             this.pos =     attributes.pos; //TODO put that in set and remember to use 'get' to read it ... 
-            this.bind('change:validated', this.validatedChanged);
+            this.pos_widget = attributes.pos_widget;    //FIXME we shouldn't depend on pos_widget in the models
             this.last_orderline = undefined;
             return this;
-        },
-        events: {
-            'change:validated': 'validatedChanged'
-        },
-        validatedChanged: function() {
-            if (this.get("validated") && !this.previous("validated")) {
-                this.pos_widget.screen_selector.set_current_screen('receipt'); 
-                //this.set({'screen': 'receipt'});
-            }
         },
         generateUniqueId: function() {
             return new Date().getTime();
         },
-
         addProduct: function(product) {
             var existing;
             existing = (this.get('orderLines')).get(product.id);

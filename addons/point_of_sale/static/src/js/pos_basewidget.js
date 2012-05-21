@@ -13,7 +13,8 @@ function openerp_pos_basewidget(instance, module){ //module is instance.point_of
         init:function(parent,options){
             this._super(parent);
             options = options || {};
-            this.pos = options.pos;
+            this.pos = options.pos || (parent ? parent.pos : undefined);
+            this.pos_widget = options.pos_widget || (parent ? parent.pos_widget : undefined);
             this.build_currency_template();
         },
         build_currency_template: function(){

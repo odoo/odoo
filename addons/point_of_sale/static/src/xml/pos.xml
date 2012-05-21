@@ -363,9 +363,6 @@
                 <t t-esc="widget.format_currency(widget.model.get('list_price'))"/>
             </td>
             <td>
-                <t t-js="c">
-                    console.log(c);
-                </t>
                 <t t-esc="widget.model.get('discount').toFixed(2)"/>
             </td>
             <td>
@@ -394,9 +391,9 @@
         </tr>
     </t>
 
-    <t t-name="PaymentButtonWidget">
-        <button class="payment-button" t-att-cash-register-id="widget.id">
-            <t t-esc="widget.name"/>
+    <t t-name="PaypadButtonWidget">
+        <button class="payment-button" t-att-cash-register-id="widget.cashRegister.get('id')">
+            <t t-esc="widget.cashRegister.get('name')"/>
         </button>
         <br />
     </t>

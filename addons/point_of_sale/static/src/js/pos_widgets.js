@@ -36,53 +36,46 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             $(_.str.sprintf('.mode-button[data-mode="%s"]', mode), this.$element).addClass('selected-mode');
         },
     });
-    /*
-     Gives access to the payment methods (aka. 'cash registers')
-     */
-    module.PaypadWidget = instance.web.Widget.extend({
-        template: 'PaypadWidget',
-        init: function(parent, options) {
-            this._super(parent);
-            this.pos = options.pos;
-            this.pos_widget = options.pos_widget;
-        },
-        start: function() {
-            this.$element.find('button').click(_.bind(this.performPayment, this));
-        },
-        performPayment: function(event) {
-            if (this.pos.get('selectedOrder').get('screen') === 'receipt')
-                return;
-            var cashRegister, cashRegisterCollection, cashRegisterId;
-            /* set correct view */
-            this.pos_widget.screen_selector.set_current_screen('payment');
 
-            cashRegisterId = event.currentTarget.attributes['cash-register-id'].nodeValue;
-            cashRegisterCollection = this.pos.get('cashRegisters');
-            cashRegister = cashRegisterCollection.find(_.bind(function(item) {
-                return (item.get('id')) === parseInt(cashRegisterId, 10);
-            }, this));
-            return (this.pos.get('selectedOrder')).addPaymentLine(cashRegister);
-        },
+    // The paypad allows to select the payment method (cashRegisters) 
+    // used to pay the order.
+    module.PaypadWidget = module.PosBaseWidget.extend({
+        template: 'PaypadWidget',
         renderElement: function() {
+            var self = this;
             this._super();
-            return (this.pos.get('cashRegisters')).each(_.bind(function(cashRegister) {
-                console.log('cashRegisters:',cashRegister);
-                var button = new module.PaymentButtonWidget(this,{
-                    pos:this.pos,
+            console.log('PaypadWidget:',this);
+
+            this.pos.get('cashRegisters').each(function(cashRegister) {
+                var button = new module.PaypadButtonWidget(self,{
+                    pos: self.pos,
+                    pos_widget : self.pos_widget,
+                    cashRegister: cashRegister,
                 });
-                button.model = cashRegister;
-                button.appendTo(this.$element);
-                console.log(this.$element);
-            }, this));
+                button.appendTo(self.$element);
+            });
         }
     });
 
-    module.PaymentButtonWidget = module.PosBaseWidget.extend({
-        template: 'PaymentButtonWidget',
+    module.PaypadButtonWidget = module.PosBaseWidget.extend({
+        template: 'PaypadButtonWidget',
+        init: function(parent, options){
+            this._super(parent, options);
+            this.cashRegister = options.cashRegister;
+        },
         renderElement: function() {
-            this.id = this.model.get('id');
-            this.name = this.model.get('name');
+            var self = this;
             this._super();
+            console.log('PaypadButtonWidget:',this);
+
+            this.$element.click(function(){
+                if (self.pos.get('selectedOrder').get('screen') === 'receipt'){  //TODO Why ?
+                    console.log('TODO should not get there...?');
+                    return;
+                }
+                self.pos.get('selectedOrder').addPaymentLine(self.cashRegister);
+                self.pos_widget.screen_selector.set_current_screen('payment');
+            });
         },
     });
 
@@ -132,7 +125,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         template:'OrderWidget',
         init: function(parent, options) {
             this._super(parent,options);
-            this.pos_widget = options.pos_widget;
             console.log('OrderWidget init:',options)
             this.set_numpad_state(options.numpadState);
             this.pos.bind('change:selectedOrder', this.change_selected_order, this);
@@ -224,7 +216,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         init: function(parent, options) {
             this._super(parent,options);
             this.model = options.model;
-            this.pos_widget = options.pos_widget; //FIXME ... 
             this.model.attributes.weight = options.weight || undefined;
             this.next_screen = options.next_screen || undefined;
         },
@@ -503,7 +494,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.model = options.model;
             this.pos = options.pos;
             this.pos.get('products').bind('reset', this.renderElement, this);
-            this.pos_widget = options.pos_widget,
             this.product_list = [];
             this.weight = options.weight;
             this.next_screen = options.next_screen || false;
@@ -753,7 +743,10 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         init: function() { 
             console.log('PosArguments:',arguments);
             this._super(arguments[0],{});
+            
             this.pos = new module.PosModel(this.session);
+            this.pos_widget = this; //So that pos_widget's childs have pos_widget set automatically
+
             this.numpad_visible = true;
             this.leftpane_visible = true;
             this.leftpane_width   = '440px';
@@ -779,7 +772,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 $('button#neworder-button', this.$element).click(_.bind(this.create_new_order, this));
                 
                 //when a new order is created, add an order button widget
-                (this.pos.get('orders')).bind('add', function(new_order){
+                this.pos.get('orders').bind('add', function(new_order){
                     var new_order_button = new module.OrderButtonWidget(null, {
                         order: new_order,
                         pos: this.pos
@@ -788,7 +781,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                     new_order_button.selectOrder();
                 }, this);
 
-                (this.pos.get('orders')).add(new module.Order({'pos':this.pos}));
+                this.pos.get('orders').add(new module.Order({ pos: this.pos }));
 
                 this.build_widgets();
 
@@ -815,102 +808,59 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
 
             // --------  Screens ---------
 
-            this.search_product_screen = new module.SearchProductScreenWidget(this,{
-                pos: this.pos,
-                pos_widget: this,
-            });
+            this.search_product_screen = new module.SearchProductScreenWidget(this,{});
             this.search_product_screen.appendTo($('#rightpane'));
 
-            this.scan_product_screen = new module.ScanProductScreenWidget(this,{
-                pos: this.pos,
-                pos_widget: this,
-            });
+            this.scan_product_screen = new module.ScanProductScreenWidget(this,{});
             this.scan_product_screen.appendTo($('#rightpane'));
 
-            this.receipt_screen = new module.ReceiptScreenWidget(this, {
-                pos: this.pos,
-                pos_widget: this,
-            });
+            this.receipt_screen = new module.ReceiptScreenWidget(this, {});
             this.receipt_screen.appendTo($('#rightpane'));
 
-            this.payment_screen = new module.PaymentScreenWidget(this, {
-                pos: this.pos,
-                pos_widget: this,
-            });
+            this.payment_screen = new module.PaymentScreenWidget(this, {});
             this.payment_screen.appendTo($('#rightpane'));
 
-            this.welcome_screen = new module.WelcomeScreenWidget(this,{
-                pos:this.pos,
-                pos_widget: this,
-            });
+            this.welcome_screen = new module.WelcomeScreenWidget(this,{});
             this.welcome_screen.appendTo($('#rightpane'));
 
-            this.client_payment_screen = new module.ClientPaymentScreenWidget(this, {
-                pos: this.pos,
-                pos_widget: this,
-            });
+            this.client_payment_screen = new module.ClientPaymentScreenWidget(this, {});
             this.client_payment_screen.appendTo($('#rightpane'));
 
-            this.scale_invite_screen = new module.ScaleInviteScreenWidget(this, {
-                pos: this.pos,
-                pos_widget: this,
-            });
+            this.scale_invite_screen = new module.ScaleInviteScreenWidget(this, {});
             this.scale_invite_screen.appendTo($('#rightpane'));
 
-            this.scale_product_screen = new module.ScaleProductScreenWidget(this, {
-                pos: this.pos,
-                pos_widget: this,
-            });
+            this.scale_product_screen = new module.ScaleProductScreenWidget(this, {});
             this.scale_product_screen.appendTo($('#rightpane'));
 
             // --------  Popups ---------
 
-            this.help_popup = new module.HelpPopupWidget(this, {
-                pos: this.pos,
-                pos_widget: this,
-            });
+            this.help_popup = new module.HelpPopupWidget(this, {});
             this.help_popup.appendTo($('.point-of-sale'));
 
-            this.receipt_popup = new module.ReceiptPopupWidget(this, {
-                pos: this.pos,
-                pos_widget: this,
-            });
+            this.receipt_popup = new module.ReceiptPopupWidget(this, {});
             this.receipt_popup.appendTo($('.point-of-sale'));
 
-            this.error_popup = new module.ErrorPopupWidget(this, {
-                pos: this.pos,
-                pos_widget: this,
-            });
+            this.error_popup = new module.ErrorPopupWidget(this, {});
             this.error_popup.appendTo($('.point-of-sale'));
 
-            this.error_product_popup = new module.ErrorProductNotRecognizedPopupWidget(this, {
-                pos: this.pos,
-                pos_widget: this,
-            });
+            this.error_product_popup = new module.ErrorProductNotRecognizedPopupWidget(this, {});
             this.error_product_popup.appendTo($('.point-of-sale'));
 
-            this.error_session_popup = new module.ErrorNoSessionPopupWidget(this, {
-                pos: this.pos,
-                pos_widget: this,
-            });
+            this.error_session_popup = new module.ErrorNoSessionPopupWidget(this, {});
             this.error_session_popup.appendTo($('.point-of-sale'));
+
+            // --------  Misc ---------
 
             this.action_bar = new module.ActionBarWidget(this);
             this.action_bar.appendTo($(".point-of-sale #content"));
 
-            this.paypad = new module.PaypadWidget(this, {
-                pos: this.pos,
-                pos_widget: this,
-            });
+            this.paypad = new module.PaypadWidget(this, {});
             this.paypad.replace($('#placeholder-PaypadWidget'));
 
             this.numpad = new module.NumpadWidget(this);
             this.numpad.replace($('#placeholder-NumpadWidget'));
 
-            this.order_widget = new module.OrderWidget(this, {
-                pos: this.pos,
-                pos_widget: this,
-            });
+            this.order_widget = new module.OrderWidget(this, {});
             this.order_widget.replace($('#placeholder-OrderWidget'));
 
             this.onscreen_keyboard = new module.OnscreenKeyboardWidget(this, {
@@ -918,9 +868,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             });
             this.onscreen_keyboard.appendTo($(".point-of-sale #content"));
             
-            var self_checkout = this.pos.get('pos_config').iface_self_checkout;
-            console.log('pos:',this.pos);
-            console.log('self_checkout:',self_checkout);
+            // --------  Screen Selector ---------
 
             this.screen_selector = new module.ScreenSelector({
                 pos: this.pos,
@@ -945,7 +893,8 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 default_cashier_screen: 'products',
                 default_mode: this.pos.get('pos_config').iface_self_checkout ?  'client' : 'cashier',
             });
-            window.screen_selector = this.screen_selector;
+
+            window.screen_selector = this.screen_selector; //DEBUG
 
             this.pos.barcode_reader.connect();
             
@@ -1011,7 +960,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         // creates a new order, and add it to the list of orders.
         create_new_order: function() {
             var new_order;
-            new_order = new module.Order({'pos': this.pos});
+            new_order = new module.Order({ pos: this.pos });
             this.pos.get('orders').add(new_order);
             this.pos.set({ selectedOrder: new_order });
         },

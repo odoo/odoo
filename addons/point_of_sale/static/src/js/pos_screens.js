@@ -132,11 +132,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
     });
 
     module.ScreenWidget = module.PosBaseWidget.extend({
-        init: function(parent, options){
-            this._super(parent, options);
-            options = options || {};
-            this.pos_widget = options.pos_widget;
-        },
         show: function(){
             if(this.$element){
                 this.$element.show();
@@ -683,6 +678,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         show: function(){
             this._super();
             var self = this;
+            console.log('Payment Screen!');
 
             this.pos_widget.set_numpad_visible(true);
             this.pos_widget.set_leftpane_visible(true);
@@ -707,15 +703,15 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.pos_widget.screen_selector.set_current_screen('products');
         },
         validateCurrentOrder: function() {
-            var callback, currentOrder;
-            currentOrder = this.pos.get('selectedOrder');
+            var self = this;
+            var currentOrder = this.pos.get('selectedOrder');
+
             $('button#validate-order', this.$element).attr('disabled', 'disabled');
-            this.pos.push_order(currentOrder.exportAsJSON()).then(_.bind(function() {
-                $('button#validate-order', this.$element).removeAttr('disabled');
-                return currentOrder.set({
-                    validated: true
-                });
-            }, this));
+
+            this.pos.push_order(currentOrder.exportAsJSON()).then(function() {
+                $('button#validate-order', self.$element).removeAttr('disabled');
+                self.pos_widget.screen_selector.set_current_screen('receipt');
+            });
         },
         bindPaymentLineEvents: function() {
             this.currentPaymentLines = (this.pos.get('selectedOrder')).get('paymentLines');
