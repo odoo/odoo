@@ -22,11 +22,11 @@
     </record>
 	
 	<record id="vat_public_main" model="account.tax.template">
-        <field name="description">VAT(%4)</field>
-        <field name="name">VAT(%4)</field>
+        <field name="description">VAT - 4%</field>
+        <field name="name">VAT - 4%</field>
         <field name="account_collected_id" ref="a157000"/>
         <field name="account_paid_id" ref="a24800"/> 
-        <field name="price_include" eval="0"/>
+        <field name="price_include" eval="1"/>
         <field name="amount">0.04</field>
         <field name="type">percent</field>
         <field name="type_tax_use">all</field>
@@ -43,8 +43,8 @@
     </record>
 
 	<record id="vat_public_parent" model="account.tax.template">
-        <field name="description">VAT(4%)(%1)</field>
-        <field name="name">VAT (%1)</field>
+        <field name="description">VAT - 4% -1%</field>
+        <field name="name">VAT - 1%</field>
         <field name="amount">0.01</field>
         <field name="type">percent</field>
         <field name="type_tax_use">all</field>
@@ -53,8 +53,8 @@
     </record>	
 		
 	<record id="vat_public_main_tax" model="account.tax.template">
-        <field name="description">VAT(12.5%)</field>
-        <field name="name">VAT (12.5%)</field>
+        <field name="description">VAT - 12.5%</field>
+        <field name="name">VAT - 12.5%</field>
         <field name="account_collected_id" ref="a157000"/>
         <field name="account_paid_id" ref="a24800"/> 
         <field name="price_include" eval="0"/>
@@ -74,8 +74,8 @@
     </record>	
 
 	<record id="vat_public_parent_tax" model="account.tax.template">
-        <field name="description">VAT(12.5%)(%2.5)</field>
-        <field name="name">VAT(12.5%)(%2.5)</field>
+        <field name="description">VAT - 12.5% - %2.5</field>
+        <field name="name">VAT - 12.5% - %2.5</field>
         <field name="amount">0.025</field>
         <field name="type">percent</field>
         <field name="type_tax_use">all</field>
@@ -84,8 +84,8 @@
     </record>	
 	
 	<record id="vat_public_tax" model="account.tax.template">
-        <field name="description">VAT(8%)</field>
-        <field name="name">VAT(8%)</field>
+        <field name="description">VAT - 8%</field>
+        <field name="name">VAT - 8%</field>
         <field name="account_collected_id" ref="a157000"/>
         <field name="account_paid_id" ref="a24800"/> 
         <field name="price_include" eval="0"/>

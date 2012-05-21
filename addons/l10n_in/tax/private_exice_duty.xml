@@ -22,10 +22,10 @@
     </record>
 				
 	<record id="exice_duty_private_main" model="account.tax.template">
-        <field name="sequence">10</field>
-        <field name="description">Exice Duty(10.30%)</field>
+        <field name="description">Exice Duty - 10.30%</field>
+        <field name="sequence">10</field>		
         <field name="name">Exice Duty</field>
-        <field name="price_include" eval="0"/>
+        <field name="price_include" eval="1"/>
         <field name="amount">0.10</field>
         <field name="type">percent</field>
         <field name="type_tax_use">sale</field>
@@ -44,8 +44,9 @@
     </record>	
 	
 	<record id="exice_private_duty_parent" model="account.tax.template">
-        <field name="description">Excise duty(10%)(%2)</field>
-        <field name="name">Excise duty (%2)</field>
+        <field name="sequence">11</field>		
+        <field name="description">Excise duty -10% -%2</field>
+        <field name="name">Excise duty - 2%</field>
         <field name="amount">0.02</field>
         <field name="type">percent</field>
         <field name="type_tax_use">sale</field>
@@ -54,8 +55,9 @@
     </record>	
 	
 	<record id="exice_private_duty" model="account.tax.template">
-        <field name="description">Excise duty(10%)(%1)</field>
-        <field name="name">Excise duty (%1)</field>
+        <field name="sequence">11</field>		
+        <field name="description">Excise duty - 10% - %1</field>
+        <field name="name">Excise duty - 1%</field>
         <field name="amount">0.01</field>
         <field name="type">percent</field>
         <field name="type_tax_use">sale</field>

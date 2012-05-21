@@ -22,7 +22,7 @@
     </record>
 	
 	<record id="service_public_main" model="account.tax.template">
-        <field name="description">Service(12%)</field>
+        <field name="description">Service - 12%</field>
         <field name="name">Service</field>
         <field name="account_collected_id" ref="a156000"/>
         <field name="account_paid_id" ref="a24700"/> 
@@ -43,7 +43,7 @@
     </record>	
 	
 	<record id="service_tax_parent" model="account.tax.template">
-        <field name="description">Service(12%)(%2)</field>
+        <field name="description">Service - 12% - 2%</field>
         <field name="name">Service (%2)</field>
         <field name="amount">0.02</field>
         <field name="type">percent</field>
@@ -53,7 +53,7 @@
     </record>	
 	
 	<record id="service_tax" model="account.tax.template">
-        <field name="description">Service(12%)(%1)</field>
+        <field name="description">Service - 12% - 1%</field>
         <field name="name">Service (%1)</field>
         <field name="amount">0.01</field>
         <field name="type">percent</field>

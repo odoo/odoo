@@ -69,5 +69,7 @@ class account_multi_charts_wizard(osv.osv_memory):
                 tools.convert_xml_import(cr, 'l10n_in', path, {}, 'init', True, None)
                 path.close()                        
         return super(account_multi_charts_wizard, self).execute(cr, uid, ids, context)
+
+account_multi_charts_wizard()
     
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -20,10 +20,10 @@
         <field name="reconcile" eval="True"/>
         <field name="parent_id" ref="20"/>
     </record>
-	
+
 	<record id="sales_private" model="account.tax.template">
-        <field name="description">Sale Central (15%)</field>
-        <field name="name">Sale Central</field>
+        <field name="description">Sale Tax - 15%</field>
+        <field name="name">Sale Tax - 15%</field>
         <field name="price_include" eval="0"/>
         <field name="amount">0.15</field>
         <field name="type">percent</field>
@@ -38,13 +38,13 @@
         <field name="ref_base_sign">1</field>
         <field name="ref_tax_code_id" ref="vat_code_payable"/>
         <field name="ref_tax_sign">1</field>
-        <field name="child_depend" eval="1"/>
+        <field name="child_depend" eval="0"/>
         <field name="chart_template_id" ref="indian_chart_template_private"/>
     </record>	
 	
 	<record id="sales_private_main" model="account.tax.template">
-        <field name="description">Sale Central (12%)</field>
-        <field name="name">Sale Central</field>
+        <field name="description">Sale Tax -12%</field>
+        <field name="name">Sale Tax - 12%</field>
         <field name="price_include" eval="0"/>
         <field name="amount">0.12</field>
         <field name="type">percent</field>
@@ -59,7 +59,7 @@
         <field name="ref_base_sign">1</field>
         <field name="ref_tax_code_id" ref="vat_code_payable"/>
         <field name="ref_tax_sign">1</field>
-        <field name="child_depend" eval="1"/>
+        <field name="child_depend" eval="0"/>
         <field name="chart_template_id" ref="indian_chart_template_private"/>
     </record>	
 	
