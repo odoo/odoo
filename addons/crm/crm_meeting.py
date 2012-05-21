@@ -66,7 +66,6 @@ class crm_meeting(crm_base, osv.osv):
                                  'event_id', 'attendee_id', 'Attendees', states={'done': [('readonly', True)]}),
         'date_closed': fields.datetime('Closed', readonly=True),
         'date_deadline': fields.datetime('Deadline', states={'done': [('readonly', True)]}),
-        'message_ids': fields.one2many('mail.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
         'state': fields.selection([('open', 'Confirmed'),
                                     ('draft', 'Unconfirmed'),
                                     ('cancel', 'Cancelled'),

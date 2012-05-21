@@ -72,7 +72,6 @@ class crm_phonecall(crm_base, osv.osv):
         'date_closed': fields.datetime('Closed', readonly=True),
         'date': fields.datetime('Date'),
         'opportunity_id': fields.many2one ('crm.lead', 'Lead/Opportunity'),
-        'message_ids': fields.one2many('mail.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
     }
 
     def _get_default_state(self, cr, uid, context=None):

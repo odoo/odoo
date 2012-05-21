@@ -211,7 +211,6 @@ class project_issue(crm.crm_case, osv.osv):
                                 multi='compute_day', type="integer", help="Difference in days between last action and current date"),
         'color': fields.integer('Color Index'),
         'user_email': fields.related('user_id', 'user_email', type='char', string='User Email', readonly=True),
-        'message_ids': fields.one2many('mail.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
         'progress': fields.function(_hours_get, string='Progress (%)', multi='hours', group_operator="avg", help="Computed as: Time Spent / Total Time.",

@@ -134,7 +134,6 @@ class hr_applicant(crm.crm_case, osv.osv):
 
     _columns = {
         'name': fields.char('Name', size=128, required=True),
-        'message_ids': fields.one2many('mail.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
         'active': fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the case without removing it."),
         'description': fields.text('Description'),
         'email_from': fields.char('Email', size=128, help="These people will receive email."),
