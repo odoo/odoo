@@ -231,7 +231,7 @@
         <menuitem name="Feeds" id="menu_email_message_all" parent="base.menu_email" action="action_view_all_messages_short" groups="base.group_no_one"/>
 
         <record id="action_mail_all_feeds" model="ir.actions.client">
-            <field name="name">Wall</field>
+            <field name="name">News Feed</field>
             <field name="tag">mail.all_feeds</field>
             <field name="params" eval="{'search_view_id': ref('view_message_search_wall')}"/>
         </record>
