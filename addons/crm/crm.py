@@ -263,7 +263,7 @@ class crm_base(object):
         """ Opens case """
         cases = self.browse(cr, uid, ids, context=context)
         for case in cases:
-            data = {'state': 'open', 'active': True}
+            data = {'state': 'open', 'date_open': fields.datetime.now(), 'active': True}
             if not case.user_id:
                 data['user_id'] = uid
             self.write(cr, uid, [case.id], data, context=context)
@@ -442,7 +442,7 @@ class crm_case(crm_base):
         cases[0].state # fill browse record cache, for _action having old and new values
         self.stage_set_with_state_name(cr, uid, cases, 'open', context=context)
         for case in cases:            
-            data = {'active': True}
+            data = {'active': True, 'date_open': fields.datetime.now()}
             if not case.user_id:
                 data['user_id'] = uid
             self.write(cr, uid, [case.id], data, context=context)
