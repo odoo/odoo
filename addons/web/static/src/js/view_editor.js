@@ -630,11 +630,10 @@ instance.web.ViewEditor =   instance.web.OldWidget.extend({
                     insert = _.intersection(_.flatten(temp_obj.att_list),_.uniq(check_list));
                 if (insert.length == _.uniq(check_list).length ) {return xml_child;}
             });
+            xml_arch = QWeb.load_xml(arch.arch);
         }
-        arch_to_pass = _.filter($(arch.arch), function (child) {
-            return child.nodeType == 1;
-        });
-        return self.do_save_xml(arch_to_pass[0], obj[0].child_id[0],obj[0].child_id, move_direct, update_values,arch);
+        return self.do_save_xml(xml_arch.documentElement, obj[0].child_id[0],obj[0].child_id, move_direct, update_values,arch);
+        //return self.do_save_xml(arch_to_pass[0], obj[0].child_id[0],obj[0].child_id, move_direct, update_values,arch);
     },
     get_object_by_id: function(id, one_object, result) {
         var self = this;
