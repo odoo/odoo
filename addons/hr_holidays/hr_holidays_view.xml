@@ -19,10 +19,10 @@
                          help="Holidays during last month"/>
                         <separator orientation="vertical"/>
                         <field name="employee_id">
-                            <filter icon="terp-personal" name="my_leaves" domain="[('employee_id.user_id','=', uid)]" help="My Leaves"/>
+                            <filter string="My Leaves" icon="terp-personal" name="my_leaves" domain="[('employee_id.user_id','=', uid)]" help="My Leaves"/>
                         </field>
                         <field name="department_id" widget="selection">
-                            <filter icon="terp-personal+" help="My Department Leaves" domain="[('department_id.manager_id','=',uid)]"/>
+                            <filter string="My Department Leaves" icon="terp-personal+" help="My Department Leaves" domain="[('department_id.manager_id','=',uid)]"/>
                         </field>
                         <field name="holiday_status_id" widget="selection"/>
                     </group>
