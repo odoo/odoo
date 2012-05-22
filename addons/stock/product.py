@@ -26,16 +26,18 @@ import decimal_precision as dp
 class product_product(osv.osv):
     _inherit = "product.product"
 
-    def _stock_picking_count(self, cr, uid, ids, field_name, arg, context=None):
+    def _stock_move_count(self, cr, uid, ids, field_name, arg, context=None):
         res = dict([(id, {'reception_count': 0, 'delivery_count': 0}) for id in ids])
-        picking_pool=self.pool.get('stock.picking')
-        picking_ids = picking_pool.search(cr, uid, [('move_lines.product_id', 'in', ids)])
-        for picking in picking_pool.browse(cr, uid, picking_ids, context):
-            field = 'reception_count' if picking.type == 'in' else 'delivery_count'
-            product_ids = set([line.product_id.id for line in picking.move_lines])
-            for product_id in product_ids:
-                if product_id in ids:
-                    res[product_id][field] += 1
+        move_pool=self.pool.get('stock.move')
+        move_ids = move_pool.search(cr, uid, [('product_id', 'in', ids)])
+        for move in move_pool.browse(cr, uid, move_ids, context):
+            product_id = move.product_id.id
+            if product_id in ids:
+                if move.picking_id.type == 'in':
+                    field = 'reception_count' 
+                elif move.picking_id.type == 'out':
+                    field = 'delivery_count'
+                res[product_id][field] += 1
         return res
 
     def get_product_accounts(self, cr, uid, product_id, context=None):
@@ -343,8 +345,8 @@ class product_product(osv.osv):
         return res
 
     _columns = {
-        'reception_count': fields.function(_stock_picking_count, string="Reception", type='integer', multi='pickings'),
-        'delivery_count': fields.function(_stock_picking_count, string="Delivery", type='integer', multi='pickings'),
+        'reception_count': fields.function(_stock_move_count, string="Reception", type='integer', multi='pickings'),
+        'delivery_count': fields.function(_stock_move_count, string="Delivery", type='integer', multi='pickings'),
         'qty_available': fields.function(_product_available, multi='qty_available',
             type='float',  digits_compute=dp.get_precision('Product Unit of Measure'),
             string='Quantity On Hand',
