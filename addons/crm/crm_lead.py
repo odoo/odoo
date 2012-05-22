@@ -32,6 +32,7 @@ from mail.mail_message import to_email
 CRM_LEAD_PENDING_STATES = (
     crm.AVAILABLE_STATES[2][0], # Cancelled
     crm.AVAILABLE_STATES[3][0], # Done
+    crm.AVAILABLE_STATES[4][0], # Pending
 )
 
 class crm_lead(crm_case, osv.osv):
@@ -58,24 +59,22 @@ class crm_lead(crm_case, osv.osv):
 
     def _read_group_stage_ids(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
         access_rights_uid = access_rights_uid or uid
-        stage_obj = self.pool.get('crm.case.stage')
         order = stage_obj._order
+        # lame hack to allow reverting search, should just work in the trivial case
         if read_group_order == 'stage_id desc':
-            # lame hack to allow reverting search, should just work in the trivial case
             order = "%s desc" % order
-        # retrieve section_id from the context
-        section_id = self._resolve_section_id_from_context(cr, uid, context=context)
-        # write domain
+        # retrieve section_id from the context and write the domain
         search_domain = []
+        section_id = self._resolve_section_id_from_context(cr, uid, context=context)
         if section_id:
             search_domain += ['|', '&', ('section_ids', '=', section_id), ('fold', '=', True)]
         search_domain += ['|', ('id', 'in', ids), '&', ('case_default', '=', 1), ('fold', '=', False)]
         # perform search
+        stage_obj = self.pool.get('crm.case.stage')
         stage_ids = stage_obj._search(cr, uid, search_domain, order=order, access_rights_uid=access_rights_uid, context=context)
         result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
         # restore order of the search
         result.sort(lambda x,y: cmp(stage_ids.index(x[0]), stage_ids.index(y[0])))
-        print result
         return result
 
     _group_by_full = {
@@ -159,7 +158,7 @@ class crm_lead(crm_case, osv.osv):
                     res[obj.id] = msg.subject
                     break
         return res
- 
+
     _columns = {
         'partner_id': fields.many2one('res.partner', 'Partner', ondelete='set null',
             select=True, help="Optional linked partner, usually after conversion of the lead"),
@@ -305,7 +304,7 @@ class crm_lead(crm_case, osv.osv):
             stage_id = self.stage_find_lost(cr, uid, lead.section_id.id or False)
             if stage_id:
                 self.case_set(cr, uid, [lead.id], values_to_update={'probability': 0.0}, new_stage_id=stage_id, context=context)
-        self.case_close_send_note(cr, uid, ids, context=context)
+        self.case_mark_lost_send_note(cr, uid, ids, context=context)
         return True
 
     def case_mark_won(self, cr, uid, ids, context=None):
@@ -315,7 +314,7 @@ class crm_lead(crm_case, osv.osv):
             stage_id = self.stage_find_won(cr, uid, lead.section_id.id or False)
             if stage_id:
                 self.case_set(cr, uid, [lead.id], values_to_update={'probability': 100.0}, new_stage_id=stage_id, context=context)
-        self.case_close_send_note(cr, uid, ids, context=context)
+        self.case_mark_won_send_note(cr, uid, ids, context=context)
         return True
 
     def set_priority(self, cr, uid, ids, priority):
