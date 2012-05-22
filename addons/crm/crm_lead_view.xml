@@ -251,12 +251,11 @@
                         </ul>
                     </t>
                     <t t-name="kanban-box">
-
-                        <div class="oe_kanban_card oe_kanban_draghandle">
+                        <div class="oe_kanban_card">
                             <a class="oe_kanban_menuaction oe_i">B</a>
-                            <ul class="oe_kanban_menu" style="display:none;">
-                                <li>item1</li>
-                                <li>item2</li>
+                            <ul class="oe_kanban_menu">
+                                <li><a type="edit" >Edit...</a></li>
+                                <li><a type="delete">Delete</a></li>
                             </ul>
                             <div class="oe_kanban_content">
                                 <h3>
@@ -265,7 +264,6 @@
                                         - <t t-esc="Math.round(record.planned_revenue.value)"/>
                                         <field name="company_currency"/>
                                     </t>
-
                                 </h3>
                                 <div>
                                     <b> <field name="partner_address_name"/> </b>
