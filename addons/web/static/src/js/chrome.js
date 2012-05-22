@@ -535,6 +535,7 @@ instance.web.Login =  instance.web.Widget.extend({
                     localStorage.setItem('last_password_login_success', '');
                 }
             }
+            self.$(".oe_login_pane").fadeOut("slow");
             self.trigger("login");
         },function () {
             self.$element.addClass("oe_login_invalid");
