@@ -31,38 +31,13 @@ wizard.mail_compose_message.SUPPORTED_MODELS.append('crm.claim')
 CRM_CLAIM_PENDING_STATES = (
     crm.AVAILABLE_STATES[2][0], # Cancelled
     crm.AVAILABLE_STATES[3][0], # Done
+    crm.AVAILABLE_STATES[4][0], # Pending
 )
 
 
 class crm_claim(crm.crm_case, osv.osv):
+    """ Crm claim
     """
-    Crm claim
-    """
-    
-    def _get_state(self, cr, uid, ids, name, arg, context=None):
-        res = {}
-        for claim in self.browse(cr, uid, ids, context=context):
-            if claim.stage_id:
-                res[claim.id] = claim.stage_id.state
-        return res
-
-    def _get_stage(self, cr, uid, ids, context=None):
-        claim_obj = self.pool.get('crm.claim')
-        result = {}
-        for stage in self.browse(cr, uid, ids, context=context):
-            if stage.state:
-                claim_ids = claim_obj.search(cr, uid, [('state', '=', stage.state)], context=context)
-        for claim in claim_obj.browse(cr, uid, claim_ids, context=context):
-            result[claim.id] = True
-        return result.keys()
-
-    def _save_state(self, cr, uid, claim_id, field_name, field_value, arg, context=None):
-        stage_ids = self.pool.get('crm.case.stage').search(cr, uid, [('state', '=', field_value)], context=context)
-        if stage_ids:
-            return self.write(cr, uid, claim_id, {'stage_id': stage_ids[0]}, context=context)
-        else:
-            return cr.execute("""UPDATE crm_claim SET state=%s WHERE id=%s""", (field_value, claim_id, ))
-
     _name = "crm.claim"
     _description = "Claim"
     _order = "priority,date desc"
