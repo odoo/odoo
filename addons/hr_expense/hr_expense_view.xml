@@ -142,9 +142,6 @@
                       <filter icon="terp-dolar" domain="[('state','=','accepted')]" string="To Pay"
                         help="Expenses to Invoice"/>
                       <separator orientation="vertical"/>
-                      <filter icon="terp-go-month" string="This Month" name="this"
-                              domain="[('date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"/>
-                      <separator orientation="vertical"/>
                       <field name="employee_id"/>
                       <field name="date"/>
                       <field name="department_id" widget="selection" string="Department" context="{'invisible_department': False}">
