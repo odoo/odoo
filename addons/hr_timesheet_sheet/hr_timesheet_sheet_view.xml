@@ -165,11 +165,7 @@
                         <separator orientation="vertical"/>
                         <field name="employee_id"/>
                         <field name="date_from"/>
-                        <field name="department_id" widget="selection">
-                            <filter icon="terp-personal+"
-                                domain="[('department_id','=',context.get('department_id',False))]"
-                                help="My Departments Timesheet"/>
-                        </field>
+                        <field name="department_id" widget="selection"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
