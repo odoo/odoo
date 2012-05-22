@@ -8,16 +8,6 @@
             <field name="arch" type="xml">
                 <search string="Search Leave">
                     <group>
-                        <filter icon="terp-check" domain="[('state','=','draft')]" string="To Confirm"/>
-                        <filter icon="terp-camera_test" domain="[('state','=','confirm')]" string="To Approve" name="approve"/>
-                        <filter icon="terp-camera_test" domain="[('state','=','validate')]" string="Validated" name="validated"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-go-year" name="year" string="Year" domain="[('holiday_status_id.active','=',True)]" help="Filters only on allocations and requests that belong to an holiday type that is 'active' (active field is True)"/>
-                        <filter icon="terp-go-month" name="This Month" string="Month" domain="[('date_from','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date_from','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"/>
-                        <filter icon="terp-go-month" name="This Month-1" string=" Month-1"
-                         domain="[('date_from','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('date_from','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
-                         help="Holidays during last month"/>
-                        <separator orientation="vertical"/>
                         <field name="employee_id">
                             <filter string="My Leaves" icon="terp-personal" name="my_leaves" domain="[('employee_id.user_id','=', uid)]" help="My Leaves"/>
                         </field>
@@ -25,6 +15,7 @@
                             <filter string="My Department Leaves" icon="terp-personal+" help="My Department Leaves" domain="[('department_id.manager_id','=',uid)]"/>
                         </field>
                         <field name="holiday_status_id" widget="selection"/>
+                        <field name="date_from"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
