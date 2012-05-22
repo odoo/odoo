@@ -398,8 +398,6 @@
        <field name="arch" type="xml">
            <search string="Marketing Campaign Activities">
                <group>
-                <filter icon="terp-go-today" string="Today" name="today" domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d 23:59:59')), ('date','&gt;=', time.strftime('%%Y-%%m-%%d 00:00:00'))]"/>
-                <separator orientation="vertical"/>
                 <filter icon="terp-gtk-go-back-rtl" string="To Do" name="todo" domain="[('state','=','todo')]"/>
                 <filter icon="terp-emblem-important" string="Exception" domain="[('state','=','exception')]"/>
                 <separator orientation="vertical"/>
