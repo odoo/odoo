@@ -187,8 +187,8 @@ class idea_idea(osv.osv):
         'category_id': fields.many2one('idea.category', 'Category', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'state': fields.selection([('draft', 'New'),
             ('open', 'Opened'),
-            ('close', 'Accepted'),
-            ('cancel', 'Refused')],
+            ('cancel', 'Refused'),
+            ('close', 'Accepted')],
             'State', readonly=True,
             help='When the Idea is created the state is \'Draft\'.\n It is \
             opened by the user, the state is \'Opened\'.\

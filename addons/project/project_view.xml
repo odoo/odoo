@@ -20,16 +20,17 @@
             <field name="arch" type="xml">
                 <form string="Project" layout="manual">
                 <div class="oe_form_topbar">
-                    <button name="set_cancel" string="Cancel" type="object" states="open,pending" icon="gtk-cancel"/>
-                    <button name="set_template" string="Set as Template" type="object" states="open" icon="gtk-convert"/>
-                    <button name="set_open" string="Re-open project" type="object" states="pending,cancelled,close" icon="gtk-ok"/>
-                    <button name="set_pending" string="Pending" type="object" states="open" icon="gtk-media-pause"/>
-                    <button name="set_done" string="Done" type="object" states="open,pending" icon="terp-dialog-close"/>
-                    <button name="reset_project" string="Reset as Project" type="object" states="template" icon="gtk-convert"/>
-                    <button string="New Project Based on Template" name="duplicate_template"  type="object" states="template" icon="gtk-new" context="{'parent_id':parent_id}"/>
+                    <button name="set_done" string="Done" type="object" states="open,pending"/>
+                    <button name="set_open" string="Re-open project" type="object" states="pending,cancelled,close"/>
+                    <button name="set_pending" string="Pending" type="object" states="open"/>
+                    <button name="set_template" string="Set as Template" type="object" states="open"/>
+                    <button string="New Project Based on Template" name="duplicate_template"  type="object" states="template" context="{'parent_id':parent_id}"/>
+                    <button name="reset_project" string="Reset as Project" type="object" states="template"/>
+                    <button name="set_cancel" string="Cancel" type="object" states="open,pending"/>
                     <div class="oe_right">
                         <field name="state" nolabel="1" widget="statusbar" statusbar_visible="open,close" statusbar_colors='{"pending":"blue"}' select="1" readonly="1"/>
                     </div>
+                    <div class="oe_clear"/>
                 </div>
                 <sheet string="Project" layout="auto">
                     <group colspan="6" col="6">
@@ -320,16 +321,17 @@
             <field name="arch" type="xml">
                 <form string="Project" layout="manual">
                     <div class="oe_form_topbar">
-                        <button name="do_cancel" states="draft,open,pending" string="Cancel" type="object" icon="gtk-cancel" groups="base.group_no_one"/>
-                        <button name="do_draft" states="open" string="Draft" type="object" icon="gtk-indent" groups="base.group_no_one"/>
-                        <button name="do_open" states="pending,draft" string="Start Task" type="object" icon="gtk-media-play" groups="base.group_no_one"/>
-                        <button name="%(action_project_task_reevaluate)d" states="done,cancelled" string="Reactivate" type="action" icon="gtk-convert" context="{'button_reactivate':True}" />
-                        <button name="do_pending" states="open" string="Pending" type="object" icon="gtk-media-pause" groups="base.group_no_one"/>
-                        <button name="%(action_project_task_delegate)d" states="pending,open,draft" string="Delegate" type="action" icon="terp-personal"/>
-                        <button name="action_close" states="pending,open" string="Done" type="object" icon="terp-dialog-close" groups="base.group_no_one"/>
+                        <button name="action_close" states="pending,open" string="Done" type="object"/>
+                        <button name="do_open" states="pending,draft" string="Start Task" type="object"/>
+                        <button name="%(action_project_task_reevaluate)d" states="done,cancelled" string="Reactivate" type="action" context="{'button_reactivate':True}" />
+                        <button name="do_pending" states="open" string="Pending" type="object"/>
+                        <button name="do_draft" states="open" string="Draft" type="object"/>
+                        <button name="%(action_project_task_delegate)d" states="pending,open,draft" string="Delegate" type="action"/>
+                        <button name="do_cancel" states="draft,open,pending" string="Cancel" type="object"/>
                         <div class="oe_right">
                             <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}' select="1" groups="base.group_no_one"/>
                         </div>
+                        <div class="oe_clear"/>
                     </div>
                     <sheet string="Task edition" layout="auto">
                     <group colspan="6" col="6">

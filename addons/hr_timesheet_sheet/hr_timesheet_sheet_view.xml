@@ -60,8 +60,19 @@
             <field name="model">hr_timesheet_sheet.sheet</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Timesheet">
-                    <group colspan="4" col="6">
+                <form layout="manual">
+                <div class="oe_form_topbar">
+                    <button name="button_confirm" states="draft" string="Submited to Manager" type="object"/>
+                    <button name="done" states="confirm" string="Approve" type="workflow" groups="base.group_hr_user"/>
+                    <button name="action_set_to_draft" states="done" string="Set to Draft" type="object"/>
+                    <button name="cancel" states="confirm" string="Refuse" type="workflow" groups="base.group_hr_user"/>
+                    <div class="oe_right">
+                        <field name="state" widget="statusbar" nolabel="1" statusbar_visible="new,confirm,done"/>
+                    </div>
+                    <div class="oe_clear"/>
+                </div>
+                <sheet string="Timesheet" layout="auto">
+                    <group colspan="4" col="6" class="oe_form_header">
                         <field name="employee_id" on_change="onchange_employee_id(employee_id)"/>
                         <field name="user_id" invisible="1"/>
                         <field name="date_from"/>
@@ -142,13 +153,7 @@
                             </group>
                         </page>
                     </notebook>
-                    <group col="6" colspan="4">
-                        <field name="state" widget="statusbar" statusbar_visible="new,confirm,done"/>
-                        <button name="button_confirm" states="draft" string="Submited to Manager" type="object" icon="terp-check"/>
-                        <button name="action_set_to_draft" states="done" string="Set to Draft" type="object" icon="terp-stock_effects-object-colorize"/>
-                        <button name="cancel" states="confirm" string="Refuse" type="workflow" icon="gtk-cancel" groups="base.group_hr_user"/>
-                        <button name="done" states="confirm" string="Approve" type="workflow" icon="terp-camera_test" groups="base.group_hr_user"/>
-                    </group>
+                </sheet>
                 </form>
             </field>
         </record>

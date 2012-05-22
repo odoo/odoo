@@ -115,8 +115,8 @@ With Manual Confirmation - the campaigns runs normally, but the user has to vali
 Normal - the campaign runs normally and automatically sends all emails and reports (be very careful with this mode, you're live!)"""),
         'state': fields.selection([('draft', 'New'),
                                    ('running', 'Running'),
-                                   ('done', 'Done'),
-                                   ('cancelled', 'Cancelled'),],
+                                   ('cancelled', 'Cancelled'),
+                                   ('done', 'Done')],
                                    'State',),
         'activity_ids': fields.one2many('marketing.campaign.activity',
                                        'campaign_id', 'Activities'),
@@ -269,9 +269,9 @@ class marketing_campaign_segment(osv.osv):
                                            'If the campaign has a "unique field" set, "no duplicates" will also prevent selecting records which have '\
                                            'the same value for the unique field as other records that already entered the campaign.'),
         'state': fields.selection([('draft', 'New'),
+                                   ('cancelled', 'Cancelled'),
                                    ('running', 'Running'),
-                                   ('done', 'Done'),
-                                   ('cancelled', 'Cancelled')],
+                                   ('done', 'Done')],
                                    'State',),
         'date_run': fields.datetime('Launch Date', help="Initial start date of this segment."),
         'date_done': fields.datetime('End Date', help="Date this segment was last closed or cancelled."),
@@ -648,9 +648,11 @@ class marketing_campaign_workitem(osv.osv):
         'res_name': fields.function(_res_name_get, string='Resource Name', fnct_search=_resource_search, type="char", size=64),
         'date': fields.datetime('Execution Date', help='If date is not set, this workitem has to be run manually', readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner', select=1, readonly=True),
-        'state': fields.selection([('todo', 'To Do'),
-                                   ('exception', 'Exception'), ('done', 'Done'),
-                                   ('cancelled', 'Cancelled')], 'State', readonly=True),
+        'state': fields.selection([ ('todo', 'To Do'),
+                                    ('cancelled', 'Cancelled'),
+                                    ('exception', 'Exception'),
+                                    ('done', 'Done'),
+                                   ], 'State', readonly=True),
 
         'error_msg' : fields.text('Error Message', readonly=True)
     }
