@@ -630,11 +630,12 @@ class stock_picking(osv.osv):
         'move_type': fields.selection([('direct', 'Partial'), ('one', 'All at once')], 'Delivery Method', required=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="It specifies goods to be deliver partially or all at once"),
         'state': fields.selection([
             ('draft', 'Draft'),
+            ('cancel', 'Cancelled'),
             ('auto', 'Waiting Another Operation'),
             ('confirmed', 'Waiting Availability'),
             ('assigned', 'Ready to Transfer'),
             ('done', 'Transferred'),
-            ('cancel', 'Cancelled'),], 'State', readonly=True, select=True, help="""
+            ], 'State', readonly=True, select=True, help="""
             * Draft: not confirmed yet and will not be scheduled until confirmed\n
             * Waiting Another Operation: waiting for another move to proceed before it becomes automatically available (e.g. in Make-To-Order flows)\n
             * Waiting Availability: still waiting for the availability of products\n
@@ -1633,11 +1634,12 @@ class stock_move(osv.osv):
         'picking_id': fields.many2one('stock.picking', 'Reference', select=True,states={'done': [('readonly', True)]}),
         'note': fields.text('Notes'),
         'state': fields.selection([('draft', 'New'),
+                                   ('cancel', 'Cancelled'),
                                    ('waiting', 'Waiting Another Move'),
                                    ('confirmed', 'Waiting Availability'),
                                    ('assigned', 'Available'),
                                    ('done', 'Done'),
-                                   ('cancel', 'Cancelled')], 'State', readonly=True, select=True,
+                                   ], 'State', readonly=True, select=True,
                  help= "* New: When the stock move is created and not yet confirmed.\n"\
                        "* Waiting Another Move: This state can be seen when a move is waiting for another one, for example in a chained flow.\n"\
                        "* Waiting Availability: This state is reached when the procurement resolution is not straight forward. It may need the scheduler to run, a component to me manufactured...\n"\
@@ -2666,7 +2668,7 @@ class stock_inventory(osv.osv):
         'date_done': fields.datetime('Date done'),
         'inventory_line_id': fields.one2many('stock.inventory.line', 'inventory_id', 'Inventories', states={'done': [('readonly', True)]}),
         'move_ids': fields.many2many('stock.move', 'stock_inventory_move_rel', 'inventory_id', 'move_id', 'Created Moves'),
-        'state': fields.selection( (('draft', 'Draft'), ('done', 'Done'), ('confirm','Confirmed'),('cancel','Cancelled')), 'State', readonly=True, select=True),
+        'state': fields.selection( (('draft', 'Draft'), ('cancel','Cancelled'), ('confirm','Confirmed'), ('done', 'Done')), 'State', readonly=True, select=True),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True, readonly=True, states={'draft':[('readonly',False)]}),
 
     }

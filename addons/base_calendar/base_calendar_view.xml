@@ -8,59 +8,64 @@
             <field name="model">calendar.attendee</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Invitation details">
-                    <group col="6" colspan="4">
-                        <field name="email" string="Invitation To"/>
-                        <field name="cutype" string="Invitation Type" />
-                        <field name="rsvp" />
-                        <field name="role" string="Role" />
-                        <field name="sent_by_uid" string="Invitation From" />
-                    </group>
-                    <notebook colspan="4">
-                        <page string="Invitation">
-                            <separator string="Invitation Detail" colspan="4" />
-                            <group colspan="4" col="4">
-                                <field name="user_id" string="Invited User"/>
-                                <newline/>
-                                <field name="partner_id"
-                                    string="Contact" />
-                            </group>
-                            <separator string="Event Detail" colspan="4" />
-                            <group colspan="4" col="4">
-                                <field name="event_date" />
-                                <field name="event_end_date" />
-                                <field name="language"/>
-                                <field name="ref" colspan="4" readonly="1"/>
-                            </group>
-                        </page>
-                        <page string="Delegation Info">
-                            <separator string="Delegated From" colspan="4" />
-                            <field name="parent_ids" nolabel="1"
-                                colspan="4" readonly="1" />
-                            <separator string="Delegated To" colspan="4" />
-                            <field name="child_ids" nolabel="1"
-                                colspan="4" readonly="1" />
-                        </page>
-                    </notebook>
-                    <group col="6" colspan="4">
-                            <field name="state" />
-                            <button name="do_tentative"
-                                states="needs-action,declined,accepted"
-                                string="Uncertain" type="object"
-                                icon="terp-crm" />
-                            <button name="do_accept" string="Accept"
-                                states="needs-action,tentative,declined"
-                                type="object" icon="gtk-apply" />
-                            <button name="do_decline" string="Decline"
-                                states="needs-action,tentative,accepted"
-                                type="object" icon="gtk-cancel" />
-                            <button
-                                name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d"
-                                string="Delegate" type="action"
-                                icon="gtk-sort-descending"
-                                states="needs-action,tentative,declined,accepted"
-                                context="{'model' : 'calendar.attendee', 'attendee_field' : 'child_ids'}" />
-                    </group>
+                <form layout="manual">
+                    <div class="oe_form_topbar">
+                        <button name="do_tentative"
+                            states="needs-action,declined,accepted"
+                            string="Uncertain" type="object"
+                            />
+                        <button name="do_accept" string="Accept"
+                            states="needs-action,tentative,declined"
+                            type="object" />
+                        <button
+                            name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d"
+                            string="Delegate" type="action"
+                           
+                            states="needs-action,tentative,declined,accepted"
+                            context="{'model' : 'calendar.attendee', 'attendee_field' : 'child_ids'}" />
+                        <button name="do_decline" string="Decline"
+                            states="needs-action,tentative,accepted"
+                            type="object" />
+                        <div class="oe_right">
+                            <field name="state" widget="statusbar" nolabel="1" statusbar_visible="tentative,needs-action,accepted" statusbar_colors='{"proforma":"blue"}'/>
+                        </div>
+                        <div class="oe_clear"/>
+                    </div>
+                    <sheet string="Invitation details" layout="auto">
+                        <group col="6" colspan="4">
+                            <field name="email" string="Invitation To"/>
+                            <field name="cutype" string="Invitation Type" />
+                            <field name="rsvp" />
+                            <field name="role" string="Role" />
+                            <field name="sent_by_uid" string="Invitation From" />
+                        </group>
+                        <notebook colspan="4">
+                            <page string="Invitation">
+                                <separator string="Invitation Detail" colspan="4" />
+                                <group colspan="4" col="4">
+                                    <field name="user_id" string="Invited User"/>
+                                    <newline/>
+                                    <field name="partner_id"
+                                        string="Contact" />
+                                </group>
+                                <separator string="Event Detail" colspan="4" />
+                                <group colspan="4" col="4">
+                                    <field name="event_date" />
+                                    <field name="event_end_date" />
+                                    <field name="language"/>
+                                    <field name="ref" colspan="4" readonly="1"/>
+                                </group>
+                            </page>
+                            <page string="Delegation Info">
+                                <separator string="Delegated From" colspan="4" />
+                                <field name="parent_ids" nolabel="1"
+                                    colspan="4" readonly="1" />
+                                <separator string="Delegated To" colspan="4" />
+                                <field name="child_ids" nolabel="1"
+                                    colspan="4" readonly="1" />
+                            </page>
+                        </notebook>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -223,7 +228,29 @@
             <field name="model">calendar.event</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Events">
+                <form layout="manual">
+                <div class="oe_form_topbar">
+                    <button name="do_confirm"
+                        string="Confirm"
+                        states="tentative,cancelled"
+                        type="object"
+                        />
+                    <button name="do_tentative"
+                        states="confirmed,cancelled"
+                        string="Uncertain"
+                        type="object"
+                        />
+                    <button name="do_cancel"
+                        string="Cancel"
+                        states="tentative,confirmed"
+                        type="object"
+                        />
+                    <div class="oe_right">
+                        <field name="state" widget="statusbar" nolabel="1" statusbar_visible="tentative,confirmed" statusbar_colors='{"proforma":"blue"}'/>
+                    </div>
+                    <div class="oe_clear"/>
+                </div>
+                <sheet string="Events" layout="auto">
                     <group col="6" colspan="4">
                         <field name="name" select="1" string="Summary"
                             colspan="4" required="1" />
@@ -254,25 +281,6 @@
                         </group>
                         <separator string="Description" colspan="4" />
                         <field name="description" nolabel="1" colspan="4" />
-                        <separator colspan="4" string="" />
-                           <group col="5" colspan="4">
-                               <field name="state" select="2" />
-                               <button name="do_cancel"
-                                   string="Cancel"
-                                   states="tentative,confirmed"
-                                   type="object"
-                                   icon="gtk-cancel" />
-                               <button name="do_tentative"
-                                   states="confirmed,cancelled"
-                                   string="Uncertain"
-                                   type="object"
-                                   icon="terp-crm" />
-                               <button name="do_confirm"
-                                   string="Confirm"
-                                   states="tentative,cancelled"
-                                   type="object"
-                                   icon="gtk-apply" />
-                           </group>
                         </page>
                         <page string="Invitation Detail">
                             <button string="Invite People"
@@ -397,6 +405,7 @@
 
                     </page>
                     </notebook>
+                </sheet>
                 </form>
             </field>
         </record>
