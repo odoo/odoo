@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-today OpenERP SA (<http://www.openerp.com>)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,13 +19,13 @@
 #
 ##############################################################################
 
-from crm import crm_base
-from osv import fields, osv
-from tools.translate import _
 import crm
+from crm import crm_base
+from datetime import datetime
+from osv import fields, osv
 import time
 from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP
-from datetime import datetime
+from tools.translate import _
 
 class crm_phonecall(crm_base, osv.osv):
     """ Phonecall Cases """
