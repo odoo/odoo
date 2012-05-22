@@ -1347,6 +1347,9 @@ instance.web.JsonRPC = instance.web.CallbackEnabled.extend({
     },
     on_rpc_error: function(error) {
     },
+    get_url: function (file) {
+        return this.prefix + file;
+    },
 });
 
 }
