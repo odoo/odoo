@@ -47,17 +47,6 @@
         <field name="arch" type="xml">
             <search string="Appraisal Analysis">
             	<group>
-            		<filter icon="terp-go-year" string="Year"
-                        name="year"
-                    	domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;=',time.strftime('%%Y-01-01'))]" help="Evaluation done in current year"/>
-                    <separator orientation="vertical"/>						
-                    <filter icon="terp-go-month" string=" Month " name="month" 
-                            domain="[('create_date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
-                            help="Evaluation done in current month"/>
-	                <filter icon="terp-go-month" string="    Month-1    " 
-                        domain="[('create_date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
-                        help="Evaluation done in last month"/>
-                    <separator orientation="vertical"/>
 	                <filter string="In Progress" icon="terp-camera_test" domain="[('state', '=' ,'wait')]"
 	                	help = "In progress Evaluations"/>
                    	<filter string="Final Validation" icon="terp-camera_test" domain="[('state','=','progress')]"
@@ -74,6 +63,7 @@
                     <field name="deadline"/>
                     <separator orientation="vertical"/>
                     <field name="state"/>
+                    <field name="create_date"/>
                 </group>
                 <newline/>
                 <group expand="1" string="Group By...">

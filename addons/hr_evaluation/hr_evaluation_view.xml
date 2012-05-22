@@ -254,14 +254,12 @@
                     <filter icon="terp-check" string="Pending" domain="[('state','=','wait')]" help="Appraisal that are in Plan In Progress state"/>
                     <filter icon="terp-camera_test" string="In progress" domain="[('state','=','progress')]" help="Appraisal that are in waiting appreciation state"/>
                     <separator orientation="vertical"/>
-                    <filter icon="terp-go-week" string="7 Days" help="Appraisal to close within the next 7 days"
-                        domain="[('date', '&gt;=', (datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]" />
-                    <separator orientation="vertical"/>
                     <filter icon="terp-gnome-cpu-frequency-applet+" string="Late"
                         help="Appraisal that overpassed the deadline" domain="[('date','&lt;=',(datetime.date.today()).strftime('%%Y-%%m-%%d'))]" />
                     <separator orientation="vertical"/>
                     <field name="employee_id" />
                     <field name="plan_id" widget="selection" />
+                    <field name="date"/>
                     </group>
                     <newline/>
                     <group expand='0' string='Group by...'>
