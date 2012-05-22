@@ -230,7 +230,7 @@ class publisher_warranty_contract(osv.osv):
         'date_stop' : fields.date('Ending Date', readonly=True),
         'state' : fields.selection([('unvalidated', 'Unvalidated'), ('valid', 'Valid')
                             , ('terminated', 'Terminated'), ('canceled', 'Canceled')], string="State", readonly=True),
-        'kind' : fields.char('Kind', size=64, readonly=True),
+        'kind' : fields.char('Contract Category', size=64, readonly=True),
         "check_support": fields.boolean("Support Level 1", readonly=True),
         "check_opw": fields.boolean("OPW", readonly=True, help="Checked if this is an OpenERP Publisher's Warranty contract (versus older contract types"),
     }
