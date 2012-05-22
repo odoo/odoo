@@ -378,32 +378,6 @@
             groups="base.group_no_one" sequence="15"
             parent="base.menu_base_config" />
 
-        <record model="ir.ui.view" id="view_users_form_simple_modif_inherited1">
-            <field name="name">view.users.form.crm.modif.inherited1</field>
-            <field name="model">res.users</field>
-            <field name="inherit_id" ref="base.view_users_form_simple_modif" />
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <group name="default_filters" position="inside">
-                    <field name="context_section_id" completion="1"
-                        readonly="0"/>
-                </group>
-            </field>
-        </record>
-
-        <record id="view_users_form_simple_modif_inherited2" model="ir.ui.view">
-                <field name="name">view.users.form.crm.modif.inherited2</field>
-                <field name="model">res.users</field>
-                <field name="type">form</field>
-                <field name="inherit_id" ref="base.view_users_form"/>
-                <field eval="18" name="priority"/>
-                <field name="arch" type="xml">
-                    <group name="default_filters" position="inside">
-                        <field name="context_section_id" completion="1"/>
-                    </group>
-                </field>
-        </record>
-
         <!-- menu for the working time -->
         <menuitem action="resource.action_resource_calendar_form" id="menu_action_resource_calendar_form" parent="resource.menu_resource_config" sequence="1"/>
 

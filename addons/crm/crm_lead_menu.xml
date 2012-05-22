@@ -9,7 +9,7 @@
         <field name="domain">['|', ('type','=','lead'), ('type','=',False)]</field>
         <field name="view_id" ref="crm_case_tree_view_leads"/>
         <field name="search_view_id" ref="crm.view_crm_case_leads_filter"/>
-        <field name="context">{'default_type': 'lead', 'search_default_section_id': section_id, 'stage_type': 'lead', 'search_default_inbox': 1}</field>
+        <field name="context">{'default_type':'lead', 'stage_type':'lead'}</field>
         <field name="help">
             &lt;img src="http://www.thaicrmsoftware.com/wp-content/uploads/2011/11/lead-conversion.jpg" align="right" style="padding: 6px" width="306" height="223"&gt;
             &lt;h2&gt;Create your first OpenERP Lead &lt;/h2&gt;
@@ -66,7 +66,7 @@
           <field name="res_model">crm.lead</field>
           <field name="view_mode">kanban,tree,form,graph,calendar</field>
           <field name="domain">[('type','=','opportunity')]</field>
-          <field name="context">{'search_default_new':1, 'search_default_open':1, 'search_default_section_id':section_id, 'stage_type': 'opportunity', 'default_type': 'opportunity'}</field>
+          <field name="context">{'search_default_new':1, 'search_default_open':1, 'stage_type': 'opportunity', 'default_type': 'opportunity'}</field>
           <field name="view_id" eval="False"/>
           <field name="search_view_id" ref="crm.view_crm_case_opportunities_filter"/>
           <field name="help">With opportunities you can manage and keep track of your sales pipeline by creating specific customer- or prospect-related sales documents to follow up potential sales. Information such as expected revenue, opportunity stage, expected closing date, communication history and much more can be stored. Opportunities can be connected to the email gateway: new emails may create opportunities, each of them automatically gets the history of the conversation with the customer.
