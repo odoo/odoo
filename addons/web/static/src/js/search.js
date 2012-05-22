@@ -27,7 +27,7 @@ var SearchBox_renderFacet = function (facet, position) {
     return view;
   }; // warning: will not match
 // Ensure we're replacing the function we think
-if (SearchBox_renderFacet.toString() !== VS.ui.SearchBox.prototype.renderFacet.toString().replace(/(VS\.ui\.SearchFacet)/, "(this.app.options.callbacks['make_facet'] || $1)")) {
+if (SearchBox_renderFacet.toString() == VS.ui.SearchBox.prototype.renderFacet.toString().replace(/(VS\.ui\.SearchFacet)/, "(this.app.options.callbacks['make_facet'] || $1)")) {
     throw new Error(
         "Trying to replace wrong version of VS.ui.SearchBox#renderFacet. "
         + "Please fix replacement.");
@@ -38,7 +38,7 @@ var SearchBox_renderSearchInput = function () {
     this.inputViews.push(input);
   };
 // Ensure we're replacing the function we think
-if (SearchBox_renderSearchInput.toString() !== VS.ui.SearchBox.prototype.renderSearchInput.toString().replace(/(VS\.ui\.SearchInput)/, "(this.app.options.callbacks['make_input'] || $1)")) {
+if (SearchBox_renderSearchInput.toString() == VS.ui.SearchBox.prototype.renderSearchInput.toString().replace(/(VS\.ui\.SearchInput)/, "(this.app.options.callbacks['make_input'] || $1)")) {
     throw new Error(
         "Trying to replace wrong version of VS.ui.SearchBox#renderSearchInput. "
         + "Please fix replacement.");
