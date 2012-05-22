@@ -113,6 +113,28 @@
         float: right
     // }}}
     // KanbanRecords {{{
+    .oe_kanban_vignette
+        padding: 8px
+        min-height: 100px
+    .oe_kanban_image
+        display: inline-block
+        vertical-align: top
+        width: 64px
+        height: 64px
+        text-align: center
+        overflow: hidden
+        @include radius(3px)
+        @include box-shadow(0 1px 4px rgba(0, 0, 0, 0.4))
+    .oe_kanban_details
+        display: inline-block
+        vertical-align: top
+        width: 240px
+        font-size: 13px
+        padding: 0 5px
+        color: #4c4c4c
+        min-height: 120px
+        h4
+            margin: 0 0 4px 0
     .oe_kanban_record
         position: relative
         display: block
