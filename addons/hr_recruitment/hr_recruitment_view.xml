@@ -95,41 +95,35 @@
                 </div>
             </div>
             <sheet string="Jobs - Recruitment Form" layout="auto">
-                <group colspan="4" col="4">
-                    <field name="name" string="Subject"/>
-                    <group colspan="2" col="4">
-                        <field name="partner_name"/>
-                        <button name="action_makeMeeting" type="object" string="Meeting" icon="gtk-index"/>
-                        <button string="Send New Email" name="%(mail.action_email_compose_message_wizard)d" icon="terp-mail-message-new" type="action"/>
-                    </group>
-                    <field name="user_id"/>
-                    <field name="job_id" on_change="onchange_job(job_id)"/>
-                    <field name="department_id" widget="selection" on_change="onchange_department_id(department_id)"/>
-                    <group colspan="2" col="4">
+                <field name="name" string="Subject"/>
+                <field name="partner_name"/>
+                <field name="job_id" on_change="onchange_job(job_id)"/>
+                <field name="department_id" widget="selection" on_change="onchange_department_id(department_id)"/>
+                <group col="11" colspan="4">
+                        <field name="user_id"/>
+                        <field name="title_action"/>
+                        <field name="date_action"/>
+                        <field name="survey" invisible="1"/>
+                        <button name="action_makeMeeting" type="object" string="Meeting" icon="gtk-index" help="Create meeting"/>
+                        <button name="action_print_survey" string="Print Interview" type="object" icon="gtk-print" attrs="{'invisible':[('survey','=',False)]}" help="Print interview report"/>
+                        <button name="%(survey.action_view_survey_question_message)d" string="Answer" type="action" icon="gtk-execute" context="{'survey_id': survey, 'response_id': [response], 'response_no':0 ,'active' : response, 'object' : 'hr.applicant'}" attrs="{'invisible':[('survey','=',False)]}" help="Answer related job question"/>
+                        <field name="response" invisible="1"/>
+                </group>
+                <group colspan="2" col="4">
                         <field name="stage_id" domain="['|',('department_id','=',department_id),('department_id','=',False)]"/>
                         <button name="stage_previous" string="" type="object" icon="gtk-go-back"/>
                         <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
                     </group>
-                    <field name="date_action"/>
-                    <group colspan="2" col="8">
-                        <field name="title_action"/>
-                        <field name="survey" invisible="1"/>
-                        <button name="action_print_survey" string="Interview" type="object" icon="gtk-print" attrs="{'readonly':[('survey','=',False)]}"/>
-                        <button name="%(survey.action_view_survey_question_message)d" string="Answer" type="action" icon="gtk-execute" context="{'survey_id': survey, 'response_id': [response], 'response_no':0 ,'active' : response, 'object' : 'hr.applicant'}" attrs="{'readonly':[('survey','=',False)]}"/>
-                        <field name="response" invisible="1"/>
-                    </group>
-                    <newline/>
-                </group>
                 <notebook colspan="4">
                     <page string="Job Info">
                         <group col="3" colspan="2">
                             <separator colspan="3" string="Contact"/>
-                            <field name="partner_id" on_change="onchange_partner_id(partner_id, email_from)"/>
-                            <button string="Create Partner"
+                            <field name="partner_id" on_change="onchange_partner_id(partner_id, email_from)" colspan="2"/>
+                            <button string="Create Contact"
                                     name="%(action_hr_recruitment_partner_create)d"
-                                    icon="gtk-index" type="action" attrs="{'readonly':[('partner_id','!=',False)]}" groups="base.group_partner_manager"/>
-                            <newline/>
-                            <field name="email_from" colspan="3"/>
+                                    icon="gtk-index" type="action" attrs="{'invisible':[('partner_id','!=',False)]}"/>
+                            <field name="email_from" colspan="2"/>
+                            <button string="Send New Email" name="%(mail.action_email_compose_message_wizard)d" icon="terp-mail-message-new" type="action" attrs="{'invisible':[('email_from','=',False)]}"/>
                             <field name="partner_phone" colspan="3"/>
                             <field name="partner_mobile" colspan="3"/>
                         </group>
