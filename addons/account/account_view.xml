@@ -72,7 +72,7 @@
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
-                        <filter string="State" context="{'group_by': 'state'}" icon="terp-stock_effects-object-colorize"/>
+                        <filter string="Status" context="{'group_by': 'state'}" icon="terp-stock_effects-object-colorize"/>
                     </group>
                 </search>
             </field>
@@ -547,7 +547,7 @@
                     <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Journal" context="{'group_by': 'journal_id'}" icon="terp-folder-orange"/>
-                        <filter string="State" context="{'group_by': 'state'}" icon="terp-stock_effects-object-colorize"/>
+                        <filter string="Status" context="{'group_by': 'state'}" icon="terp-stock_effects-object-colorize"/>
                         <separator orientation="vertical"/>
                         <filter string="Period" context="{'group_by': 'period_id'}" icon="terp-go-month"/>
                     </group>
@@ -592,7 +592,7 @@
                     <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Journal" context="{'group_by': 'journal_id'}" icon="terp-folder-orange"/>
-                        <filter string="State" context="{'group_by': 'state'}" icon="terp-stock_effects-object-colorize"/>
+                        <filter string="Status" context="{'group_by': 'state'}" icon="terp-stock_effects-object-colorize"/>
                         <separator orientation="vertical"/>
                         <filter string="Period" context="{'group_by': 'period_id'}" icon="terp-go-month"/>
                     </group>
@@ -1209,7 +1209,7 @@
                             <newline/>
                             <field name="account_tax_id" domain="[('parent_id','=',False)]"/>
                             <field name="analytic_account_id" domain="[('parent_id','!=',False)]" groups="analytic.group_analytic_accounting"/>
-                            <separator colspan="4" string="State"/>
+                            <separator colspan="4" string="Status"/>
                             <newline/>
                             <field name="reconcile_id"/>
                             <field name="reconcile_partial_id"/>

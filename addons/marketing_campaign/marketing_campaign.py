@@ -115,9 +115,15 @@ With Manual Confirmation - the campaigns runs normally, but the user has to vali
 Normal - the campaign runs normally and automatically sends all emails and reports (be very careful with this mode, you're live!)"""),
         'state': fields.selection([('draft', 'New'),
                                    ('running', 'Running'),
+<<<<<<< TREE
                                    ('cancelled', 'Cancelled'),
                                    ('done', 'Done')],
                                    'State',),
+=======
+                                   ('done', 'Done'),
+                                   ('cancelled', 'Cancelled'),],
+                                   'Status',),
+>>>>>>> MERGE-SOURCE
         'activity_ids': fields.one2many('marketing.campaign.activity',
                                        'campaign_id', 'Activities'),
         'fixed_cost': fields.float('Fixed Cost', help="Fixed cost for running this campaign. You may also specify variable cost and revenue on each campaign activity. Cost and Revenue statistics are included in Campaign Reporting.", digits_compute=dp.get_precision('Purchase Price')),
@@ -271,8 +277,14 @@ class marketing_campaign_segment(osv.osv):
         'state': fields.selection([('draft', 'New'),
                                    ('cancelled', 'Cancelled'),
                                    ('running', 'Running'),
+<<<<<<< TREE
                                    ('done', 'Done')],
                                    'State',),
+=======
+                                   ('done', 'Done'),
+                                   ('cancelled', 'Cancelled')],
+                                   'Status',),
+>>>>>>> MERGE-SOURCE
         'date_run': fields.datetime('Launch Date', help="Initial start date of this segment."),
         'date_done': fields.datetime('End Date', help="Date this segment was last closed or cancelled."),
         'date_next_sync': fields.function(_get_next_sync, string='Next Synchronization', type='datetime', help="Next time the synchronization job is scheduled to run automatically"),
@@ -648,11 +660,17 @@ class marketing_campaign_workitem(osv.osv):
         'res_name': fields.function(_res_name_get, string='Resource Name', fnct_search=_resource_search, type="char", size=64),
         'date': fields.datetime('Execution Date', help='If date is not set, this workitem has to be run manually', readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner', select=1, readonly=True),
+<<<<<<< TREE
         'state': fields.selection([ ('todo', 'To Do'),
                                     ('cancelled', 'Cancelled'),
                                     ('exception', 'Exception'),
                                     ('done', 'Done'),
                                    ], 'State', readonly=True),
+=======
+        'state': fields.selection([('todo', 'To Do'),
+                                   ('exception', 'Exception'), ('done', 'Done'),
+                                   ('cancelled', 'Cancelled')], 'Status', readonly=True),
+>>>>>>> MERGE-SOURCE
 
         'error_msg' : fields.text('Error Message', readonly=True)
     }

@@ -144,7 +144,7 @@
                         <filter string="Required Reply" icon="terp-mail-replied"
                             domain="[]" context="{'group_by':'rsvp'}" />
                         <separator orientation="vertical" />
-                        <filter string="State" icon="terp-stock_effects-object-colorize" help="Invitation Type"
+                        <filter string="Status" icon="terp-stock_effects-object-colorize" help="Invitation Type"
                             domain="[]" context="{'group_by':'state'}" />
                     </group>
                </search>
@@ -356,9 +356,7 @@
                                 <field name="rrule_type" string="Recurrency period"
                                    attrs="{'readonly':[('recurrent_uid','!=',False)]}" />
                                 <field name="interval" />
-
-
-                                <separator string="End of Recurrency" colspan="4"/>
+                                <separator string="End of Recurrence" colspan="4"/>
                                 <field name="end_type" />
                                 <label string=" " colspan="2" />
                                 <newline />
@@ -479,7 +477,7 @@
                                 domain="[]" context="{'group_by':'show_as'}" />
                             <filter string="Privacy" icon="terp-locked"
                                 domain="[]" context="{'group_by':'class'}" />
-                            <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]"
+                            <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]"
                                 context="{'group_by':'state'}" />
                             <separator orientation="vertical" />
                             <filter string="Date" icon="terp-go-month"

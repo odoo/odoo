@@ -114,10 +114,10 @@ class hr_holidays(osv.osv):
         'name': fields.char('Description', required=True, size=64),
         'state': fields.selection([('draft', 'New'), ('cancel', 'Cancelled'),('confirm', 'Waiting Approval'), ('refuse', 'Refused'),
             ('validate1', 'Waiting Second Approval'), ('validate', 'Approved')],
-            'State', readonly=True, help='The state is set to \'Draft\', when a holiday request is created.\
-            \nThe state is \'Waiting Approval\', when holiday request is confirmed by user.\
-            \nThe state is \'Refused\', when holiday request is refused by manager.\
-            \nThe state is \'Approved\', when holiday request is approved by manager.'),
+            'Status', readonly=True, help='The status is set to \'Draft\', when a holiday request is created.\
+            \nThe status is \'Waiting Approval\', when holiday request is confirmed by user.\
+            \nThe status is \'Refused\', when holiday request is refused by manager.\
+            \nThe status is \'Approved\', when holiday request is approved by manager.'),
         'user_id':fields.related('employee_id', 'user_id', type='many2one', relation='res.users', string='User', store=True),
         'date_from': fields.datetime('Start Date', readonly=True, states={'draft':[('readonly',False)]}, select=True),
         'date_to': fields.datetime('End Date', readonly=True, states={'draft':[('readonly',False)]}),
@@ -202,7 +202,7 @@ class hr_holidays(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         for rec in self.browse(cr, uid, ids, context=context):
             if rec.state<>'draft':
-                raise osv.except_osv(_('Warning!'),_('You cannot delete a leave which is not in draft state !'))
+                raise osv.except_osv(_('Warning!'),_('You cannot delete a leave which is not in draft status !'))
         return super(hr_holidays, self).unlink(cr, uid, ids, context)
 
     def onchange_date_from(self, cr, uid, ids, date_to, date_from):
