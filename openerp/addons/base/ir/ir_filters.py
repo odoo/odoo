@@ -92,9 +92,11 @@ class ir_filters(osv.osv):
 
         if vals.get('is_default'):
             if vals.get('user_id'):
-                act_ids = self.search(cr, uid, [('model_id', '=', vals['model_id']),
-                                                ('user_id', '=', vals['user_id'])],
-                                      context=context)
+                act_ids = self.search(cr, uid, [
+                        ('model_id', '=', vals['model_id']),
+                        ('user_id', '=', vals['user_id']),
+                        ('is_default', '=', True),
+                    ], context=context)
                 self.write(cr, uid, act_ids, {'is_default': False}, context=context)
             else:
                 self._check_global_default(
