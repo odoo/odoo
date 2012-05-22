@@ -1006,7 +1006,7 @@ class sale_order_line(osv.osv):
     def copy_data(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
-        default.update({'state': 'draft', 'move_ids': [], 'invoiced': False, 'invoice_lines': []})
+        default.update({'state': 'draft', 'move_ids': [], 'invoiced': False, 'invoice_lines': [], 'procurement_id': False})
         return super(sale_order_line, self).copy_data(cr, uid, id, default, context=context)
 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
