@@ -39,10 +39,12 @@ openerp.hr_attendance = function(instance) {
         },
         do_slide:function(attendance_state)
         {
-            if(attendance_state == 'present')
-                this.$oe_attendance_slider.animate({"left": "48px"}, "slow");                                               
-            else                        
-                this.$oe_attendance_slider.animate({"left": "-8px"}, "slow");
+            if(attendance_state == 'present'){
+                this.$oe_attendance_slider.attr("title",_t("Sign Out"));
+                this.$oe_attendance_slider.animate({"left": "48px"}, "slow");}
+            else{
+                this.$oe_attendance_slider.attr("title",_t("Sign In"));
+                this.$oe_attendance_slider.animate({"left": "-8px"}, "slow");}
 
         },
         check_attendance: function(){
@@ -60,7 +62,7 @@ openerp.hr_attendance = function(instance) {
         init:function(parent, dataset, view_id, options)
         {
             this._super(parent, dataset, view_id, options);
-            if (this.model == 'hr.employee' || this.model == 'hr.attendance')
+            if (this.model == 'hr.employee' || this.model == 'hr.attendance' || this.model == 'hr_timesheet_sheet.sheet')
                 instance.web.currentform = this;
         }
     });
@@ -69,13 +71,13 @@ openerp.hr_attendance = function(instance) {
     instance.web.FormView.include({
         init: function(parent, dataset, view_id, options) {
             this._super(parent, dataset, view_id, options);
-            if (this.model == 'hr.employee' || this.model == 'hr.attendance')
+            if (this.model == 'hr.employee' || this.model == 'hr.attendance' || this.model == 'hr_timesheet_sheet.sheet')
                 instance.web.currentform = this;
         },
         reload: function(){
             var re = this._super();
             if (!instance.web.attendanceslider) return re;
-            if (this.model == 'hr.employee' || this.model == 'hr.attendance')
+            if (this.model == 'hr.employee' || this.model == 'hr.attendance' || this.model == 'hr_timesheet_sheet.sheet')
                 instance.web.attendanceslider.check_attendance();            
             return re;            
         },                
