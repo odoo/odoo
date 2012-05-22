@@ -173,7 +173,7 @@ class project_issue(crm.crm_case, osv.osv):
         'partner_id': fields.many2one('res.partner', 'Partner', select=1),
         'company_id': fields.many2one('res.company', 'Company'),
         'description': fields.text('Description'),
-        'state': fields.selection([('draft', 'New'), ('open', 'In Progress'), ('cancel', 'Cancelled'), ('done', 'Done'),('pending', 'Pending'), ], 'State', size=16, readonly=True,
+        'state': fields.selection([('draft', 'New'), ('cancel', 'Cancelled'), ('open', 'In Progress'),('pending', 'Pending'),('done', 'Done') ], 'State', size=16, readonly=True,
                                   help='The state is set to \'Draft\', when a case is created.\
                                   \nIf the case is in progress the state is set to \'Open\'.\
                                   \nWhen the case is over, the state is set to \'Done\'.\

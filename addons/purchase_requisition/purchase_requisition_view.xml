@@ -33,7 +33,18 @@
         <field name="type">form</field>
         <field name="model">purchase.requisition</field>
         <field name="arch" type="xml">
-            <form string="Purchase Requisition">
+            <form layout="manual">
+            <div class="oe_form_topbar">
+                <button name="tender_in_progress" states="draft" string="Start" type="object" />
+                <button name="tender_reset" states="done,cancel" string="Reset to Draft" type="object" />
+                <button name="tender_done" states="in_progress" string="Done" type="object" />
+                <button name="tender_cancel" states="draft,in_progress" string="Cancel" type="object" />
+                <div class="oe_right">
+                    <field name="state" nolabel="1" select="1" readonly ="1" widget="statusbar" statusbar_visible="draft,in_progress,done" statusbar_colors='{"in_progress":"blue"}'/>
+                </div>
+                <div class="oe_clear"/>
+            </div>
+            <sheet string="Purchase Requisition" layout="auto">
                 <group colspan="4" col="6">
                     <field name="name"/>
                     <field name="user_id"/>
@@ -60,14 +71,6 @@
                             </form>
 
                         </field>
-                    <separator colspan="4"/>
-                    <group col="8" colspan="4">
-                        <field name="state" select="1" readonly ="1" widget="statusbar" statusbar_visible="draft,in_progress,done" statusbar_colors='{"in_progress":"blue"}'/>
-                        <button name="tender_cancel" states="draft,in_progress" string="Cancel" type="object" icon="gtk-cancel" />
-                        <button name="tender_in_progress" states="draft" string="Start" type="object" icon="gtk-apply" />
-                        <button name="tender_reset" states="done,cancel" string="Reset to Draft" type="object" icon="gtk-convert" />
-                        <button name="tender_done" states="in_progress" string="Done" type="object" icon="gtk-jump-to" />
-                    </group>
                     </page>
                     <page string="Quotations">
                         <field colspan="4" name="purchase_ids" nolabel="1" mode="tree,form">
@@ -96,6 +99,7 @@
                         <field name="description" colspan="4" nolabel="1"/>
                     </page>
                 </notebook>
+            </sheet>
             </form>
         </field>
     </record>
@@ -184,7 +188,7 @@
         <field name="model">procurement.order</field>
         <field name="inherit_id" ref="procurement.procurement_form_view"/>
         <field name="arch" type="xml">
-             <xpath expr="/form/notebook/page/field[@name='close_move']" position="after">
+             <xpath expr="//field[@name='close_move']" position="after">
                 <field name="requisition_id"/>
             </xpath>
         </field>

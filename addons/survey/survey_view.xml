@@ -18,7 +18,17 @@
             <field name="model">survey</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Survey">
+                <form layout="manual">
+                <div class="oe_form_topbar">
+                    <button name="survey_open" string="Open" states="cancel,close" type="object"/>
+                    <button name="survey_close" string="Close" states="open" type="object"/>
+                    <button name="survey_cancel" string="Cancel" states="open" type="object"/>
+                    <div class="oe_right">
+                        <field name="state" widget="statusbar" nolabel="1" statusbar_visible="open,close"/>
+                    </div>
+                    <div class="oe_clear"/>
+                </div>
+                <sheet string="Survey" layout="auto">
                     <field name="title" select="1"/>
                     <group col="6" colspan="6">
                         <field name="responsible_id"/>
@@ -180,16 +190,6 @@
                                     </field>
                                 </form>
                             </field>
-                            <group col="9" colspan="4">
-                                <field name="state" widget="statusbar" statusbar_visible="open,close"/>
-                                <button name="survey_cancel"
-                                    string="Cancel" states="open" type="object" icon="gtk-cancel"/>
-                                <button name="survey_open"
-                                    string="Open" states="cancel,close" type="object"
-                                    icon="gtk-go-forward"/>
-                                <button name="survey_close"
-                                    string="Close" states="open" type="object" icon="gtk-close"/>
-                            </group>
                         </page>
                         <page string="Other">
                             <group colspan="6" col='4'>
@@ -223,6 +223,7 @@
                                </field>
                            </page>
                     </notebook>
+                </sheet>
                 </form>
             </field>
         </record>
@@ -1058,18 +1059,25 @@
             <field name="model">survey.request</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Survey Request">
+                <form layout="manual">
+                <div class="oe_form_topbar">
+                    <button name="survey_req_draft" string="Set to Draft" states="cancel,done" type="object"/>
+                    <button name="survey_req_waiting_answer" string="Waiting Answer" states="draft" type="object"/>
+                    <button name="survey_req_done" string="Done" states="waiting_answer" type="object"/>
+                    <button name="survey_req_cancel" string="Cancel" states="waiting_answer" type="object"/>
+                    <div class="oe_right">
+                        <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,waiting_answer"/>
+                    </div>
+                    <div class="oe_clear"/>
+                </div>
+                <sheet string="Survey Request" layout="auto">
+                    <group class="oe_form_header">
                     <field name="date_deadline"/>
                     <field name="survey_id"/>
                     <field name="user_id" on_change="on_change_user(user_id)"/>
                      <field name="response" readonly="1"/>
-                    <group colspan="4" col="6">
-                     <field name="state"/>
-                        <button name="survey_req_cancel" string="Cancelled" states="waiting_answer" type="object" icon="gtk-cancel"/>
-                        <button name="survey_req_draft" string="Set to Draft" states="cancel,done" type="object" icon="gtk-new"/>
-                        <button name="survey_req_waiting_answer" string="Waiting Answer" states="draft" type="object" icon="gtk-new"/>
-                        <button name="survey_req_done" string="Done" states="waiting_answer" type="object" icon="gtk-ok"/>
                     </group>
+                    </sheet>
                 </form>
             </field>
         </record>

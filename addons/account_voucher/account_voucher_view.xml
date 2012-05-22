@@ -40,8 +40,19 @@
             <field name="model">account.voucher</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Accounting Voucher">
-                    <group col="6" colspan="4">
+                <form layout="manual">
+                  <div class="oe_form_topbar">
+                      <button name="proforma_voucher" string="Post" states="draft"/>
+                      <button name="cancel_voucher" string="Cancel" type="object" states="posted" confirm="Are you sure to unreconcile this record?"/>
+                      <button name="cancel_voucher" string="Cancel" states="draft,proforma" />
+                      <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft"/>
+                      <div class="oe_right">
+                          <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue"}'/>
+                      </div>
+                      <div class="oe_clear"/>
+                  </div>
+                  <sheet string="Accounting Voucher" layout="auto">
+                    <group col="6" colspan="4" class="oe_form_header">
                         <field name="partner_id" required="1" on_change="onchange_journal_voucher(line_ids, tax_id, amount, partner_id, journal_id, type)"/>
                         <field name="date" on_change="onchange_date(date, currency_id, payment_rate_currency_id, amount, company_id)"/>
                         <field name="journal_id" widget="selection" select="1" on_change="onchange_journal_voucher(line_ids, tax_id, amount, partner_id, journal_id, type)"/>
@@ -101,13 +112,7 @@
                             </field>
                         </page>
                     </notebook>
-                    <group col="10" colspan="4">
-                        <field name="state" widget="statusbar" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue"}'/>
-                        <button name="proforma_voucher" string="Post" states="draft" icon="terp-camera_test"/>
-                        <button name="cancel_voucher" string="Cancel" states="draft,proforma"  icon="gtk-cancel"/>
-                        <button name="cancel_voucher" string="Cancel" type="object" states="posted" icon="terp-stock_effects-object-colorize" confirm="Are you sure to unreconcile this record ?"/>
-                        <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" icon="terp-stock_effects-object-colorize"/>
-                    </group>
+                   </sheet>
                 </form>
             </field>
         </record>
@@ -218,7 +223,7 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="account.view_bank_statement_form"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page[@name='statement_line_ids']/field[@name='line_ids']/tree/field[@name='amount']" position="after">
+                <xpath expr="//page[@name='statement_line_ids']/field[@name='line_ids']/tree/field[@name='amount']" position="after">
                     <field name="voucher_id" context="{'line_type': type, 'default_type': amount &lt; 0 and 'payment' or 'receipt', 'type': amount &lt; 0 and 'payment' or 'receipt', 'default_partner_id': partner_id, 'default_journal_id': parent.journal_id, 'default_amount': abs(amount), 'default_reference': ref, 'default_date': date, 'default_name': name}"/>
                 </xpath>
             </field>
@@ -230,7 +235,7 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="account.view_bank_statement_form"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page[@name='statement_line_ids']/field[@name='line_ids']/form/field[@name='sequence']" position="before">
+                <xpath expr="//page[@name='statement_line_ids']/field[@name='line_ids']/form/field[@name='sequence']" position="before">
                     <field name="voucher_id" context="{'line_type': type, 'default_type': amount &lt; 0 and 'payment' or 'receipt', 'type': amount &lt; 0 and 'payment' or 'receipt', 'default_partner_id': partner_id, 'default_journal_id': parent.journal_id, 'default_amount': abs(amount), 'default_reference': ref, 'default_date': date, 'default_name': name}"/>
                 </xpath>
             </field>
@@ -241,7 +246,7 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="account.view_bank_statement_form2"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page/field[@name='line_ids']/tree/field[@name='amount']" position="after">
+                <xpath expr="//page/field[@name='line_ids']/tree/field[@name='amount']" position="after">
                     <field name="voucher_id" context="{'line_type': type, 'default_type': amount &lt; 0 and 'payment' or 'receipt', 'type': amount &lt; 0 and 'payment' or 'receipt', 'default_partner_id': partner_id, 'default_journal_id': parent.journal_id, 'default_amount': abs(amount), 'default_reference': ref, 'default_date': date, 'default_name': name}"/>
                 </xpath>
             </field>
@@ -253,7 +258,7 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="account.view_bank_statement_form2"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page/field[@name='line_ids']/form/field[@name='amount']" position="after">
+                <xpath expr="//page/field[@name='line_ids']/form/field[@name='amount']" position="after">
                     <field name="voucher_id" context="{'line_type': type, 'default_type': amount &lt; 0 and 'payment' or 'receipt', 'type': amount &lt; 0 and 'payment' or 'receipt', 'default_partner_id': partner_id, 'default_journal_id': parent.journal_id, 'default_amount': abs(amount), 'default_reference': ref, 'default_date': date, 'default_name': name}"/>
                 </xpath>
             </field>

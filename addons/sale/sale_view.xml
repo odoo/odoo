@@ -96,27 +96,28 @@
             <field name="arch" type="xml">
                 <form layout="manual">
                     <div class="oe_form_topbar">
-                        <button name="invoice_recreate" states="invoice_except" string="Recreate Invoice" icon="gtk-go-forward"/>
-                        <button name="invoice_corrected" states="invoice_except" string="Ignore Exception" icon="gtk-apply"/>
-                        <button name="ship_recreate" states="shipping_except" string="Recreate Delivery Order" icon="gtk-ok"/>
-                        <button name="ship_corrected" states="shipping_except" string="Ignore Exception" icon="gtk-apply"/>
-                        <button name="action_quotation_sent" string="Send" type="object" icon="terp-mail-message-new" states="draft"/>
-                        <button name="manual_invoice" states="manual" string="Create Final Invoice" icon="gtk-go-forward" type="object"/>
-                        <button name="action_cancel_draft" states="sent,cancel" string="Set to Draft" type="object" icon="gtk-convert"/>
-                        <button name="print_quotation" string="Print Quotation" type="object" icon="gtk-print" states="draft"/>
-                        <button name="order_confirm" states="draft,sent" string="Confirm Order" icon="gtk-apply"/>
-                        <button name="action_view_invoice" string="Open Invoice" icon="gtk-go-forward" type="object" 
+                        <button name="invoice_recreate" states="invoice_except" string="Recreate Invoice"/>
+                        <button name="invoice_corrected" states="invoice_except" string="Ignore Exception"/>
+                        <button name="ship_recreate" states="shipping_except" string="Recreate Delivery Order"/>
+                        <button name="ship_corrected" states="shipping_except" string="Ignore Exception"/>
+                        <button name="action_quotation_sent" string="Send" type="object" states="draft"/>
+                        <button name="manual_invoice" states="manual" string="Create Final Invoice" type="object"/>
+                        <button name="action_cancel_draft" states="sent,cancel" string="Set to Draft" type="object"/>
+                        <button name="print_quotation" string="Print Quotation" type="object" states="draft"/>
+                        <button name="order_confirm" states="draft,sent" string="Confirm Order" />
+                        <button name="action_view_invoice" string="Open Invoice" type="object" 
                         attrs="{'invisible': ['|','|',('state', '!=','progress'), ('invoiced', '=', True),('order_policy','=','picking')]}"/>
-                        <button name="action_view_delivery" string="Open Delivery Order" icon="gtk-go-forward" type="object" 
+                        <button name="action_view_delivery" string="Open Delivery Order" type="object" 
                         attrs="{'invisible': ['|','|','|',('picking_ids','=',False),('picking_ids','=',[]), ('state', 'not in', ('progress','manual')),('shipped','=',True)]}"/>
-                        <button name="cancel" states="draft,sent" string="Cancel Order" icon="gtk-cancel"/>
-                        <button name="action_cancel" states="manual,progress" string="Cancel Order" type="object" icon="gtk-cancel"/>
-                        <button name="ship_cancel" states="shipping_except" string="Cancel Order" icon="gtk-cancel"/>
-                        <button name="invoice_cancel" states="invoice_except" string="Cancel Order" icon="gtk-cancel"/>
-                        <button name="%(action_view_sale_advance_payment_inv)d" string="Advance Invoice" type="action" icon="gtk-execute" states="draft,manual"/>
+                        <button name="cancel" states="draft,sent" string="Cancel Order"/>
+                        <button name="action_cancel" states="manual,progress" string="Cancel Order" type="object"/>
+                        <button name="ship_cancel" states="shipping_except" string="Cancel Order"/>
+                        <button name="invoice_cancel" states="invoice_except" string="Cancel Order"/>
+                        <button name="%(action_view_sale_advance_payment_inv)d" string="Advance Invoice" type="action" states="draft,manual"/>
                     <div class="oe_right">
                         <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,sent,progress,invoiced,done" statusbar_colors='{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}'/>
                     </div>
+                    <div class="oe_clear"/>
                 </div>
                 <sheet string="Sales Order" layout="auto">
                     <group col="6" colspan="4" class="oe_form_header">

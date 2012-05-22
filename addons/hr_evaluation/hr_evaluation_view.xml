@@ -154,7 +154,19 @@
             <field name="model">hr_evaluation.evaluation</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Appraisal">
+                <form layout="manual">
+                <div class="oe_form_topbar">
+                    <button name="button_plan_in_progress" string="Start Appraisal" states="draft" type="object"/>
+                    <button name="button_final_validation" string="Validate Appraisal" states="wait" type="object"/>
+                    <button name="button_done" string="Done" states="progress" type="object"/>
+                    <button name="button_draft" string="Reset to Draft" states="cancel" type="object"/>
+                    <button name="button_cancel" string="Cancel" states="draft,wait,progress" type="object"/>
+                    <div class="oe_right">
+                        <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,progress,wait,done" statusbar_colors='{"progress":"blue"}'/>
+                    </div>
+                    <div class="oe_clear"/>
+                </div>
+                <sheet string="Appraisal" layout="auto">
                     <group col="4" colspan="3">
                         <separator string="Appraisal Data" colspan="4"/>
                         <field name="employee_id" on_change="onchange_employee_id(employee_id)"/>
@@ -198,20 +210,7 @@
                             <field name="note_summary" colspan="4" nolabel="1"/>
                         </page>
                     </notebook>
-                    <newline/>
-                    <group col="8" colspan="4">
-                        <field name="state" widget="statusbar" statusbar_visible="draft,progress,wait,done" statusbar_colors='{"progress":"blue"}'/>
-                        <button name="button_plan_in_progress" string="Start Appraisal" states="draft" type="object"
-                                icon="gtk-execute"/>
-                        <button name="button_done" string="Done" states="progress" type="object"
-                                icon="gtk-jump-to"/>
-                        <button name="button_draft" string="Reset to Draft" states="cancel" type="object"
-                                icon="terp-stock_effects-object-colorize"/>
-                        <button name="button_final_validation" string="Validate Appraisal" states="wait" type="object"
-                                icon="gtk-go-forward"/>
-                        <button name="button_cancel" string="Cancel" states="draft,wait,progress" type="object"
-                                icon="gtk-cancel"/>
-                    </group>
+              </sheet>
               </form>
             </field>
         </record>
