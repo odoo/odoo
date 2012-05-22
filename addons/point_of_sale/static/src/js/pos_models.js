@@ -107,13 +107,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     self.set({'product_list': result});
                 });
 
-            var bank_def = fetch(
-                'account.bank.statement',
-                ['account_id','currency','journal_id','state','name'],
-                [['state','=','open'], ['user_id', '=', this.session.uid]]
-                ).then(function(result){
-                    self.set({'bank_statements':result});
-                });
 
             var tax_def = fetch('account.tax', ['amount','price_include','type'])
                 .then(function(result){
@@ -122,21 +115,21 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
 
             var session_def = fetch(    // loading the PoS Session.
                     'pos.session',
-                    ['id', 'journal_ids','name','config_id','start_at','stop_at'],
+                    ['id', 'journal_ids','name','user_id','config_id','start_at','stop_at'],
                     [['state', '=', 'opened'], ['user_id', '=', this.session.uid]]
                 ).pipe(function(result) {
 
-                    // some data are associated with the pos session, like the pos config.
+                    // some data are associated with the pos session, like the pos config and bank statements.
                     // we must have a valid session before we can read those. 
                     
-                    var pos_config_def = new $.Deferred();
+                    var session_data_def = new $.Deferred();
 
                     if( result.length !== 0 ) {
                         var pos_session = result[0];
 
                         self.set({'pos_session': pos_session});
 
-                        pos_config_def = fetch(
+                        var pos_config_def = fetch(
                                 'pos.config',
                                 ['name','journal_ids','shop_id','journal_id',
                                  'iface_self_checkout', 'iface_websql', 'iface_led', 'iface_cashdrawer',
@@ -146,14 +139,25 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                             ).then(function(result){
                                 self.set({'pos_config': result[0]});
                             });
+
+                        var bank_def = fetch(
+                            'account.bank.statement',
+                            ['account_id','currency','journal_id','state','name','user_id'],
+                            [['state','=','open'],['user_id', '=', pos_session.user_id[0]]]
+                            ).then(function(result){
+                                self.set({'bank_statements':result});
+                            });
+
+                        session_data_def = $.when(pos_config_def,bank_def);
+
                     }else{
-                        pos_config_def.reject();
+                        session_data_def.reject();
                     }
-                    return pos_config_def;
+                    return session_data_def;
                 });
 
             // when all the data has loaded, we compute some stuff, and declare the Pos ready to be used. 
-            $.when(cat_def, prod_def, bank_def, session_def, tax_def, this.get_app_data(), this.flush())
+            $.when(cat_def, prod_def, session_def, tax_def, this.get_app_data(), this.flush())
                 .then(function(){ 
                     self.build_tree();
                     self.set({'cashRegisters' : new module.CashRegisterCollection(self.get('bank_statements'))});
