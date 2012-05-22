@@ -1220,7 +1220,13 @@ openerp.web.search.ExtendedSearchProposition = openerp.web.OldWidget.extend(/** 
      */
     init: function (parent, fields) {
         this._super(parent);
-        this.fields = _(fields).chain()
+        filtered_fields = {}
+        _.each(fields, function(field, name){
+            if(typeof field.store === 'undefined' || field.store || field.fnct_search){
+                filtered_fields[name] = field
+            }
+        });
+        this.fields = _(filtered_fields).chain()
             .map(function(val, key) { return _.extend({}, val, {'name': key}); })
             .sortBy(function(field) {return field.string;})
             .value();
