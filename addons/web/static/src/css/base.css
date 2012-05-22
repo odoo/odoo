@@ -56,7 +56,6 @@
 }
 .openerp th, .openerp td {
   padding: 0;
-  line-height: 18px;
   text-align: left;
 }
 .openerp th {
@@ -518,6 +517,7 @@
   border-right: 1px solid #afafb6;
   text-shadow: 0 1px 1px white;
   padding-bottom: 16px;
+  line-height: 18px;
 }
 .openerp a.oe_logo {
   width: 220px;
@@ -1005,9 +1005,6 @@
 .openerp .oe_view_manager_header .oe_view_manager_buttons {
   white-space: nowrap;
 }
-.openerp .oe_view_manager_body h4 {
-  margin: 8px 0;
-}
 .openerp .oe_view_manager_pager {
   line-height: 26px;
 }
@@ -1361,11 +1358,12 @@
 }
 .openerp .oe_view_nocontent > img {
   float: left;
-  margin-right: 1.5em;
+  margin: 1.5em;
 }
 .openerp .oe_view_nocontent > div {
   overflow: hidden;
-  padding: 6px;
+  padding: 35px 0px 0px 0px;
+  max-width: 700px;
   font-size: 125%;
 }
 .openerp .oe_view_topbar {
@@ -1497,7 +1495,7 @@
   padding: 8px 0;
   border-bottom: 1px solid #dddddd;
 }
-.openerp .oe_application .oe_form_sheet_width {
+.openerp .oe_application .oe_form_sheet_width, .openerp .oe_application .oe_form_bottom {
   min-width: 650px;
   max-width: 980px;
   margin: 0 auto;
@@ -1593,7 +1591,6 @@
   -moz-border-radius: 0px;
   -webkit-border-radius: 0px;
   border-radius: 0px;
-  color: #666666;
 }
 .openerp .oe_form .oe_form_field_many2one input,
 .openerp .oe_form .oe_form_field_binary input,
