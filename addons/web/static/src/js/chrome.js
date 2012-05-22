@@ -386,6 +386,13 @@ openerp.web.Database = openerp.web.OldWidget.extend(/** @lends openerp.web.Datab
        	self.$option_id.html(QWeb.render("Database.CreateDB", self));
         self.$option_id.find("form[name=create_db_form]").validate({
             submitHandler: function (form) {
+                if(jQuery.inArray(jQuery('input[name=db_name]').val(), self.db_list)){
+                    self.display_error({
+                                title: 'Create Database',
+                                error: 'Database '+ jQuery('input[name=db_name]').val() +' Already Exist'
+                            })
+                    return;
+                }
                 var fields = $(form).serializeArray();
                 self.rpc("/web/database/create", {'fields': fields}, function(result) {
                     if (self.db_list) {
