@@ -145,7 +145,7 @@ class hr_applicant(crm.crm_case, osv.osv):
         'write_date': fields.datetime('Update Date', readonly=True),
         'stage_id': fields.many2one ('hr.recruitment.stage', 'Stage'),
         'state': fields.related('stage_id', 'state', type="selection", store=True,
-                selection=hr_recruitment.AVAILABLE_STATES, string="State", readonly=True,
+                selection=AVAILABLE_STATES, string="State", readonly=True,
                 help='The state is set to \'Draft\', when a case is created.\
                       If the case is in progress the state is set to \'Open\'.\
                       When the case is over, the state is set to \'Done\'.\
