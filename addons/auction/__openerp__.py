@@ -24,6 +24,7 @@
     'name': 'Auction Houses',
     'version': '1.0',
     'category': 'Specific Industry Applications',
+    'complexity': "normal",
     'description': """
 This module manages the records of artists, auction articles, buyers and sellers.
 =================================================================================
