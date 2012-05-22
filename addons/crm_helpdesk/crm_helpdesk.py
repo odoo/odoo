@@ -29,6 +29,7 @@ from tools.translate import _
 CRM_HELPDESK_STATES = (
     crm.AVAILABLE_STATES[2][0], # Cancelled
     crm.AVAILABLE_STATES[3][0], # Done
+    crm.AVAILABLE_STATES[4][0], # Pending
 )
 
 wizard.mail_compose_message.SUPPORTED_MODELS.append('crm.helpdesk')
