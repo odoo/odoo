@@ -133,31 +133,6 @@ class hr_applicant(crm.crm_case, osv.osv):
                     duration = float(ans.days)
                     res[issue.id][field] = abs(float(duration))
         return res
- 
-    def _get_state(self, cr, uid, ids, name, arg, context=None):
-        res = {}
-        for applicant in self.browse(cr, uid, ids, context=context):
-            if applicant.stage_id:
-                res[applicant.id] = applicant.stage_id.state
-        return res
-
-    def _get_stage(self, cr, uid, ids, context=None):
-        applicant_obj = self.pool.get('hr.applicant')
-        result = {}
-        for stage in self.browse(cr, uid, ids, context=context):
-            if stage.state:
-                applicant_ids = applicant_obj.search(cr, uid, [('state', '=', stage.state)], context=context)
-        for applicant in applicant_obj.browse(cr, uid, applicant_ids, context=context):
-            result[applicant.id] = True
-        return result.keys()
-
-    def _save_state(self, cr, uid, applicant_id, field_name, field_value, arg, context=None):
-        stage_ids = self.pool.get('hr.recruitment.stage').search(cr, uid, [('state', '=', field_value)], order='sequence', context=context)
-        if stage_ids:
-            return self.write(cr, uid, [applicant_id], {'stage_id': stage_ids[0]}, context=context)
-        else:
-            return cr.execute("""UPDATE hr_applicant SET state=%s WHERE id=%s""", (field_value, applicant_id))
-    
 
     _columns = {
         'name': fields.char('Name', size=128, required=True),
@@ -171,14 +146,13 @@ class hr_applicant(crm.crm_case, osv.osv):
         'create_date': fields.datetime('Creation Date', readonly=True, select=True),
         'write_date': fields.datetime('Update Date', readonly=True),
         'stage_id': fields.many2one ('hr.recruitment.stage', 'Stage'),
-        'state': fields.function(_get_state, fnct_inv=_save_state, type='selection', selection=AVAILABLE_STATES, string="State", readonly=True,
-            store = {
-                     'hr.applicant': (lambda self, cr, uid, ids, c={}: ids, ['stage_id'], 10),
-                     'hr.recruitment.stage': (_get_stage, ['state'], 10)
-            }, help='The state is set to \'Draft\', when a case is created.\
-                  \nIf the case is in progress the state is set to \'Open\'.\
-                  \nWhen the case is over, the state is set to \'Done\'.\
-                  \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
+        'state': fields.related('stage_id', 'state', type="selection", store=True,
+                selection=hr_recruitment.AVAILABLE_STATES, string="State", readonly=True,
+                help='The state is set to \'Draft\', when a case is created.\
+                      If the case is in progress the state is set to \'Open\'.\
+                      When the case is over, the state is set to \'Done\'.\
+                      If the case needs to be reviewed then the state is \
+                      set to \'Pending\'.'),
         'company_id': fields.many2one('res.company', 'Company'),
         'user_id': fields.many2one('res.users', 'Responsible'),
         # Applicant Columns
@@ -239,7 +213,6 @@ class hr_applicant(crm.crm_case, osv.osv):
     _group_by_full = {
         'stage_id': _read_group_stage_ids
     }
-
 
     def onchange_job(self,cr, uid, ids, job, context=None):
         result = {}
