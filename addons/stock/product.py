@@ -37,7 +37,8 @@ class product_product(osv.osv):
                     field = 'reception_count' 
                 elif move.picking_id.type == 'out':
                     field = 'delivery_count'
-                res[product_id][field] += 1
+                if field:
+                    res[product_id][field] += 1
         return res
 
     def get_product_accounts(self, cr, uid, product_id, context=None):
