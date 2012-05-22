@@ -65,7 +65,19 @@
             <field name="type">form</field>
             <field name="model">hr.expense.expense</field>
             <field name="arch" type="xml">
-                <form string="Expenses Sheet">
+                <form layout="manual">
+                <div class="oe_form_topbar">
+                    <button name="confirm" states="draft" string="Submit to Manager" type="workflow" icon="gtk-apply"/>
+                    <button name="validate" states="confirm" string="Approve" type="workflow" icon="gtk-go-forward" groups="base.group_hr_user"/>
+                    <button name="draft" states="confirm,cancelled" string="Set to Draft" type="workflow" icon="gtk-convert" groups="base.group_hr_user"/>
+                    <button name="invoice" states="accepted" string="Invoice" type="object" icon="gtk-go-forward" groups="base.group_hr_user"/>
+                    <button name="refuse" states="confirm,accepted" string="Refuse" type="workflow" icon="gtk-no" groups="base.group_hr_user" />
+                    <div class="oe_right">
+                        <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,confirm,accepted" statusbar_colors='{"confirm":"blue","cancelled":"red"}'/>
+                    </div>
+                    <div class="oe_clear"/>
+                </div>
+                <sheet string="Expenses Sheet" layout="auto">
                     <group colspan="4" col="6">
                         <field name="employee_id" on_change="onchange_employee_id(employee_id)"/>
                         <field name="name"/>
@@ -99,14 +111,6 @@
                                     </group>
                                 </form>
                             </field>
-                            <field name="state" widget="statusbar" statusbar_visible="draft,confirm,accepted,invoiced" statusbar_colors='{"confirm":"blue","cancelled":"red"}'/>
-                            <group col="6" colspan="2">
-                                <button name="draft" states="confirm,cancelled" string="Set to Draft" type="workflow" icon="gtk-convert" groups="base.group_hr_user"/>
-                                <button name="refuse" states="confirm,accepted" string="Refuse" type="workflow" icon="gtk-no" groups="base.group_hr_user" />
-                                <button name="confirm" states="draft" string="Submit to Manager" type="workflow" icon="gtk-apply"/>
-                                <button name="invoice" states="accepted" string="Invoice" type="object" icon="gtk-go-forward" groups="base.group_hr_user"/>
-                                <button name="validate" states="confirm" string="Approve" type="workflow" icon="gtk-go-forward" groups="base.group_hr_user"/>
-                            </group>
                         </page>
                         <page string="Other Info">
                             <group col="2" colspan="2">
@@ -124,6 +128,7 @@
                             <field colspan="4" name="note" nolabel="1"/>
                         </page>
                     </notebook>
+                </sheet>
                 </form>
             </field>
         </record>
