@@ -1578,8 +1578,21 @@ class BaseModel(object):
     def view_header_get(self, cr, user, view_id=None, view_type='form', context=None):
         return False
 
+    def user_has_groups(self, cr, uid, groups, context=None):
+        """Return true if the user is at least member of one of the groups
+           in groups_str. Typically used to resolve ``groups`` attribute
+           in view and model definitions. 
+
+           :param str groups: comma-separated list of fully-qualified group
+                              external IDs, e.g.: ``base.group_user,base.group_system``
+           :return: True if the current user is a member of one of the
+                    given groups
+        """
+        return any([self.pool.get('res.users').has_group(cr, uid, group_ext_id)
+                        for group_ext_id in groups.split(',')])
+
     def __view_look_dom(self, cr, user, node, view_id, in_tree_view, model_fields, context=None):
-        """ Return the description of the fields in the node.
+        """Return the description of the fields in the node.
 
         In a normal call to this method, node is a complete view architecture
         but it is actually possible to give some sub-node (this is used so
@@ -1604,17 +1617,35 @@ class BaseModel(object):
             return s
 
         def check_group(node):
-            """ Set invisible to true if the user is not in the specified groups. """
+            """Apply group restrictions,  may be set at view level or model level::
+               * at view level this means the element should be made invisible to
+                 people who are not members
+               * at model level (exclusively for fields, obviously), this means
+                 the field should be completely removed from the view, as it is
+                 completely unavailable for non-members
+
+               :return: True if field should be included in the result of fields_view_get 
+            """
+            if node.tag == 'field' and node.get('name') in self._all_columns:
+                column = self._all_columns[node.get('name')].column
+                if column.groups and not self.user_has_groups(cr, user,
+                                                              groups=column.groups,
+                                                              context=context):
+                    node.getparent().remove(node)
+                    fields.pop(node.get('name'), None)
+                    # no point processing view-level ``groups`` anymore, return
+                    return False
             if node.get('groups'):
-                groups = node.get('groups').split(',')
-                ir_model_access = self.pool.get('ir.model.access')
-                can_see = any(ir_model_access.check_groups(cr, user, group) for group in groups)
+                can_see = self.user_has_groups(cr, user,
+                                               groups=node.get('groups'),
+                                               context=context)
                 if not can_see:
                     node.set('invisible', '1')
                     modifiers['invisible'] = True
                     if 'attrs' in node.attrib:
                         del(node.attrib['attrs']) #avoid making field visible later
                 del(node.attrib['groups'])
+            return True
 
         if node.tag in ('field', 'node', 'arrow'):
             if node.get('object'):
@@ -1699,7 +1730,9 @@ class BaseModel(object):
                 if node.get(additional_field):
                     fields[node.get(additional_field)] = {}
 
-        check_group(node)
+        if not check_group(node):
+            # node must be removed, no need to proceed further with its children
+            return fields
 
         # The view architeture overrides the python model.
         # Get the attrs before they are (possibly) deleted by check_group below
@@ -3344,7 +3377,8 @@ class BaseModel(object):
             res.update(self.pool.get(parent).fields_get(cr, user, allfields, context))
 
         for f, field in self._columns.iteritems():
-            if allfields and f not in allfields:
+            if (allfields and f not in allfields) or \
+                (field.groups and not self.user_has_groups(cr, user, groups=field.groups, context=context)):
                 continue
 
             res[f] = fields.field_to_dict(self, cr, user, field, context=context)

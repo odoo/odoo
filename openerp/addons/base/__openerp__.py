@@ -41,6 +41,7 @@
     'update_xml': [
         'ir/wizard/wizard_menu_view.xml',
         'ir/ir.xml',
+        'ir/ir_filters.xml',
         'ir/ir_config_parameter_view.xml',
         'ir/workflow/workflow_view.xml',
         'ir/report/ir_report.xml',

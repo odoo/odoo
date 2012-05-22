@@ -93,3 +93,7 @@ class test_ir_values(common.TransactionCase):
         assert len(actions[0]) == 3, "Malformed action definition"
         assert actions[0][1] == 'Related Stuff', 'Bound action does not match definition'
         assert isinstance(actions[0][2], dict) and actions[0][2]['id'] == 14, 'Bound action does not match definition'
+
+
+if __name__ == '__main__':
+    unittest2.main()
