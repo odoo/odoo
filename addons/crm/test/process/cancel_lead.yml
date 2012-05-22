@@ -19,15 +19,17 @@
   !assert {model: crm.lead, id: crm.crm_case_itisatelesalescampaign0, string: Lead is in draft state}:
     - state == "draft"
 -
-  I put unqualified lead into pending.
+  I re-open the opportunity
 -
   !python {model: crm.lead}: |
-    self.case_pending(cr, uid, [ref("crm_case_itisatelesalescampaign0")])
+    self.case_open(cr, uid, [ref("crm_case_itisatelesalescampaign0")])
 -
-  I check status of pending lead.
+ I check stage and state of the re-opened opportunity
 -
-  !assert {model: crm.lead, id: crm.crm_case_itisatelesalescampaign0, string: Lead is in pending state}:
-    - state == "pending"
+  !python {model: crm.lead}: |
+    lead = self.browse(cr, uid, ref('crm.crm_case_itisatelesalescampaign0'))
+    assert lead.stage_id.id == ref('crm.stage_lead2'), "Opportunity should be 'New'."
+    assert lead.state == 'open', "Opportunity should be in 'open' state."
 -
   I escalate the lead to parent team.
 -
@@ -48,6 +50,6 @@
 -
   !python {model: crm.lead}: |
     lead = self.browse(cr, uid, ref('crm_case_itisatelesalescampaign0'))
-    assert lead.state == 'done', "lead is not done state"
-    assert lead.stage_id.id == ref('crm.stage_lead6'), 'Stage is not changed!'
-    assert lead.probability == 0.0, 'Probability is wrong!'
+    assert lead.stage_id.id == ref('crm.stage_lead6'), "Stage should be 'Lost'."
+    assert lead.state == 'done', "Opportunity is not in 'done' state."
+    assert lead.probability == 0.0, 'Opportunity probability is wrong and should be 0.0.'
