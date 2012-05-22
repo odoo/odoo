@@ -284,18 +284,27 @@ class crm_base(object):
         return True
 
     def case_pending(self, cr, uid, ids, context=None):
-        """ Closes case """
+        """ Set case as pending """
         self.case_set(cr, uid, ids, 'pending', {'active': True}, context=context)
-        self.case_close_send_note(cr, uid, ids, context=context)
+        self.case_pending_send_note(cr, uid, ids, context=context)
         return True
 
     def case_reset(self, cr, uid, ids, context=None):
         """ Resets case as draft """
         self.case_set(cr, uid, ids, 'draft', {'active': True}, context=context)
-        self.case_pending_send_note(cr, uid, ids, context=context)
+        self.case_close_send_note(cr, uid, ids, context=context)
         return True
     
     def case_set(self, cr, uid, ids, state_name, update_values=None, context=None):
+        """ Generic method for setting case. This methods wraps the update
+            of the record, as well as call to _action and browse record
+            case setting.
+            
+            :params: state_name: the new value of the state, such as 
+                     'draft' or 'close'.
+            :params: update_values: values that will be added with the state
+                     update when writing values to the record.
+        """
         cases = self.browse(cr, uid, ids, context=context)
         cases[0].state # fill browse record cache, for _action having old and new values
         if update_values is None:
@@ -354,9 +363,9 @@ class crm_base(object):
 
 class crm_case(crm_base):
     """ A simple python class to be used for common functions
-    Object that inherit from this class should inherit from mailgate.thread
-    And need a stage_id field
-    And object that inherit (orm inheritance) from a class the overwrite copy
+        Object that inherit from this class should inherit from mailgate.thread
+        And need a stage_id field
+        And object that inherit (orm inheritance) from a class the overwrite copy
     """
     
     def _get_default_stage_id(self, cr, uid, context=None):
@@ -476,6 +485,12 @@ class crm_case(crm_base):
         """ Cancels case """
         self.case_set(cr, uid, ids, 'cancel', {'active': True}, context=context)
         self.case_cancel_send_note(cr, uid, ids, context=context)
+        return True
+
+    def case_pending(self, cr, uid, ids, context=None):
+        """ Set case as pending """
+        self.case_set(cr, uid, ids, 'pending', {'active': True}, context=context)
+        self.case_pending_send_note(cr, uid, ids, context=context)
         return True
 
     def case_reset(self, cr, uid, ids, context=None):
