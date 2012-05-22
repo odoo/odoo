@@ -41,6 +41,16 @@ class crm_lead(crm_case, osv.osv):
     _order = "priority,date_action,id desc"
     _inherit = ['ir.needaction_mixin', 'mail.thread','res.partner']
 
+    def _resolve_section_id_from_context(self, cr, uid, context=None):
+        """ Returns ID of section based on the value of 'section_id'
+            context key, or None if it cannot be resolved to a single project
+        """
+        if context is None:
+            context = {}
+        if type(context.get('default_project_id')) in (int, long):
+            return context.get('default_project_id')
+        return None
+
     def _read_group_stage_ids(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
         access_rights_uid = access_rights_uid or uid
         stage_obj = self.pool.get('crm.case.stage')
@@ -48,11 +58,19 @@ class crm_lead(crm_case, osv.osv):
         if read_group_order == 'stage_id desc':
             # lame hack to allow reverting search, should just work in the trivial case
             order = "%s desc" % order
-        stage_ids = stage_obj._search(cr, uid, ['|', ('id','in',ids),('case_default','=',1)], order=order,
-                                      access_rights_uid=access_rights_uid, context=context)
+        # retrieve section_id from the context
+        section_id = self._resolve_section_id_from_context(cr, uid, context=context)
+        # write domain
+        search_domain = []
+        if section_id:
+            search_domain += ['|', '&', ('section_ids', '=', section_id), ('fold', '=', True)]
+        search_domain += ['|', ('id', 'in', ids), '&', ('case_default', '=', 1), ('fold', '=', False)]
+        # perform search
+        stage_ids = stage_obj._search(cr, uid, search_domain, order=order, access_rights_uid=access_rights_uid, context=context)
         result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
         # restore order of the search
         result.sort(lambda x,y: cmp(stage_ids.index(x[0]), stage_ids.index(y[0])))
+        print result
         return result
 
     _group_by_full = {

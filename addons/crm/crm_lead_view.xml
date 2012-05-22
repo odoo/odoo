@@ -584,7 +584,7 @@
                         help="Unassigned Opportunities" />
                 </field>
                 <field name="section_id"
-                    context="{'invisible_section': False}"
+                    context="{'invisible_section': False, 'section_id': self}"
                     widget="selection">
                     <filter icon="terp-personal+"
                         domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
