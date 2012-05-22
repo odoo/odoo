@@ -373,9 +373,9 @@
                     <field name="use_issues"/>
                     <field name="issue_count" invisible="1"/>
                 </field>
-                <xpath expr="//div[@id='list']" position="inside">
-                    <a t-if="record.use_issues.raw_value" class="oe_project_buttons"
-                        id="2" name="%(act_project_project_2_project_issue_all)d" type="action">
+                <xpath expr="//div[contains(@class, 'oe_kanban_project_list')]" position="inside">
+                    <a t-if="record.use_issues.raw_value"
+                        name="%(act_project_project_2_project_issue_all)d" type="action">
                         Issues(<field name="issue_count"/>)</a>
                 </xpath>
             </field>
