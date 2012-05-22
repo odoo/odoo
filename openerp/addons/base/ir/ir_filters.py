@@ -42,13 +42,16 @@ class ir_filters(osv.osv):
     def get_filters(self, cr, uid, model):
         """Obtain the list of filters available for the user on the given model.
 
-        :return: list of :meth:`~osv.read`-like dicts containing the ``name``,
-            ``domain``, ``user_id`` (m2o tuple) and ``context`` of the matching ``ir.filters``.
+        :return: list of :meth:`~osv.read`-like dicts containing the
+            ``name``, ``is_default``, ``domain``, ``user_id`` (m2o tuple) and
+            ``context`` of the matching ``ir.filters``.
         """
         # available filters: private filters (user_id=uid) and public filters (uid=NULL) 
-        act_ids = self.search(cr, uid, [('model_id','=',model),('user_id','in',[uid, False])])
-        my_acts = self.read(cr, uid, act_ids, ['name', 'is_default', 'domain', 'context', 'user_id'])
-        return my_acts
+        filter_ids = self.search(cr, uid,
+            [('model_id','=',model),('user_id','in',[uid, False])])
+        my_filters = self.read(cr, uid, filter_ids,
+            ['name', 'is_default', 'domain', 'context', 'user_id'])
+        return my_filters
 
     def _check_global_default(self, cr, uid, vals, matching_filters, context=None):
         """ _check_global_default(cursor, UID, dict, list(dict), dict) -> None
@@ -101,7 +104,6 @@ class ir_filters(osv.osv):
             else:
                 self._check_global_default(
                     cr, uid, vals, matching_filters, context=None)
-
 
         # When a filter exists for the same (name, model, user) triple, we simply
         # replace its definition.
