@@ -100,7 +100,7 @@
                     </notebook>
                     <newline/>
                 </sheet>
-                <div class="oe_form_sheet_width">
+                <div class="oe_form_bottom">
                     <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
                 </div>
                 </form>
@@ -268,7 +268,10 @@
             <field name="view_id" ref="view_project_kanban"/>
             <field name="search_view_id" ref="view_project_project_filter"/>
             <field name="context">{}</field>
-            <field name="help">A project contains a set of tasks or issues that will be performed by your resources assigned to it. A project can be hierarchically structured, as a child of a Parent Project. This allows you to design large project structures with different phases spread over the project duration cycle. Each user can set his default project in his own preferences to automatically filter the tasks or issues he usually works on. If you choose to invoice the time spent on a project task, you can find project tasks to be invoiced in the billing section.</field>
+            <field name="help" type="xml"><p>You have no projects.</p>
+<p>Projects are used to organize your activities; plan tasks, track issues, invoice timesheets. You can define internal projects (R&amp;D, Improve Sales Process), private projects (My Todos) or customer ones.</p>
+<p>Click <i>'create'</i> to start a new project.</p>
+	    </field>
         </record>
 
         <record id="open_view_template_project" model="ir.actions.act_window">
@@ -402,7 +405,7 @@
                         </page>
                     </notebook>
                     </sheet>
-                    <div class="oe_form_sheet_width">
+                    <div class="oe_form_bottom">
                         <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
                     </div>
                 </form>
@@ -621,7 +624,7 @@
             <field name="view_mode">kanban,tree,form,calendar,gantt,graph</field>
             <field eval="False" name="filter"/>
             <field name="view_id" eval="False"/>
-            <field name="context">{"search_default_project_id": project_id}</field>
+            <field name="context">{}</field>
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="help">A task represents a work that has to be done. Each user works in his own list of tasks where he can record his task work in hours. He can work and close the task itself or delegate it to another user. If you delegate a task to another user, you get a new task in pending state, which will be reopened when you have to review the work achieved. If you install the project_timesheet module, task work can be invoiced based on the project configuration. With the project_mrp module, sales orders can create tasks automatically when they are confirmed.</field>
         </record>
@@ -742,31 +745,6 @@
         </record>
 
       <!--     User Form-->
-      <record id="view_project_users_form_simple" model="ir.ui.view">
-          <field name="name">res.users.project.form1</field>
-          <field name="model">res.users</field>
-          <field name="type">form</field>
-          <field name="inherit_id" ref="base.view_users_form"/>
-          <field eval="18" name="priority"/>
-          <field name="arch" type="xml">
-              <group name="default_filters" position="inside">
-                   <field name="context_project_id"/>
-              </group>
-          </field>
-     </record>
-
-     <record model="ir.ui.view" id="view_users_form_project_modif_inherited1">
-         <field name="name">view.users.form.project.modif.inherited1</field>
-         <field name="model">res.users</field>
-         <field name="inherit_id" ref="base.view_users_form_simple_modif" />
-         <field name="type">form</field>
-         <field eval="18" name="priority"/>
-         <field name="arch" type="xml">
-            <group name="default_filters" position="inside">
-                <field name="context_project_id" context="{'user_preference':True}" widget="selection" readonly="0"/>
-            </group>
-       </field>
-    </record>
-    <act_window context="{'search_default_user_id': [active_id], 'default_user_id': active_id}" domain="[('state', '&lt;&gt;', 'cancelled'),('state', '&lt;&gt;', 'done')]" id="act_res_users_2_project_task_opened" name="Assigned Tasks" res_model="project.task" src_model="res.users" view_mode="tree,form,gantt,calendar,graph" view_type="form"/>
+        <act_window context="{'search_default_user_id': [active_id], 'default_user_id': active_id}" domain="[('state', '&lt;&gt;', 'cancelled'),('state', '&lt;&gt;', 'done')]" id="act_res_users_2_project_task_opened" name="Assigned Tasks" res_model="project.task" src_model="res.users" view_mode="tree,form,gantt,calendar,graph" view_type="form"/>
     </data>
 </openerp>
