@@ -820,7 +820,7 @@ instance.web.FormView = instance.web.View.extend(_.extend({}, instance.web.form.
 
                 return {
                     name: name,
-                    string: field.node_atts.string,
+                    string: field.node.attrs.string,
                     value: value_,
                     displayed: displayed,
                     // convert undefined to false
@@ -828,7 +828,7 @@ instance.web.FormView = instance.web.View.extend(_.extend({}, instance.web.form.
                 }
             })
             .compact()
-            .sortBy(function (field) { return field.node_atts.string; })
+            .sortBy(function (field) { return field.string; })
             .value();
         var conditions = _.chain(fields)
             .filter(function (field) { return field.change_default; })
