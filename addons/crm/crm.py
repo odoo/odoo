@@ -231,6 +231,9 @@ class crm_base(object):
             return False
         return uid
 
+    def _get_section(self, cr, uid, context=None):
+        return False
+
     def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
         """This function returns value of partner email based on Partner Address
         :param ids: List of case IDs
