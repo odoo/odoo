@@ -292,7 +292,7 @@ class crm_base(object):
     def case_reset(self, cr, uid, ids, context=None):
         """ Resets case as draft """
         self.case_set(cr, uid, ids, 'draft', {'active': True}, context=context)
-        self.case_reset_send_note(cr, uid, ids, context=context)
+        self.case_pending_send_note(cr, uid, ids, context=context)
         return True
     
     def case_set(self, cr, uid, ids, state_name, update_values=None, context=None):
@@ -337,6 +337,12 @@ class crm_base(object):
     def case_cancel_send_note(self, cr, uid, ids, context=None):
         for id in ids:
             msg = '%s has been <b>canceled</b>.' % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
+            self.message_append_note(cr, uid, [id], body=msg, context=context)
+        return True
+
+    def case_pending_send_note(self, cr, uid, ids, context=None):
+        for id in ids:
+            msg = '%s is now <b>pending</b>.' % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
             self.message_append_note(cr, uid, [id], body=msg, context=context)
         return True
 
