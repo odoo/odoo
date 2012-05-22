@@ -820,7 +820,7 @@ instance.web.FormView = instance.web.View.extend(_.extend({}, instance.web.form.
 
                 return {
                     name: name,
-                    string: field.node.attrs.string,
+                    string: field.node.attrs.string || field.field.string,
                     value: value_,
                     displayed: displayed,
                     // convert undefined to false
