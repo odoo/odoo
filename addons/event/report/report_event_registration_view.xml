@@ -53,17 +53,6 @@
             <field name="arch" type="xml">
                 <search string="Event on Registration">
                     <group>
-                    <filter string="Year" icon="terp-go-year" name="year"
-                          domain="[('event_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('event_date','&gt;=',time.strftime('%%Y-01-01'))]"
-                          help="Events happening this year"/>
-                    <separator orientation="vertical"/>
-                    <filter string="Month" icon="terp-go-month" name="this_month"
-                          domain="[('event_date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('event_date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
-                          help="Events happening in current month"/>
-                    <filter icon="terp-go-month" string="    Month-1    "
-                          domain="[('event_date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('event_date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
-                          help="Events happened in last month"/>
-                    <separator orientation="vertical"/>
                     <filter icon="terp-document-new"
                         string="New"
                         domain="[('event_state','=','draft')]"
