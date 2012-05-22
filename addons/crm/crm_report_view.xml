@@ -69,17 +69,11 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Cases by Team and Type">
-                   <group>
-                           <filter string="This Year" icon="terp-go-year"
-                               domain="[('name','=',time.localtime()[0])]"
-                               help="Cases by Team and Type for this year" />
-                           <filter string="This Month" icon="terp-go-month"
-                               domain="[('month','=',time.localtime()[1])]"
-                               help="Cases by Team and Type for this month" />
-                           <separator orientation="vertical"/>
-                           <field name="section_id"
-                               widget="selection" />
-                           <field name="category2_id"/>
+                    <group>
+                        <field name="name"/>
+                        <field name="month"/>
+                        <field name="section_id" widget="selection" />
+                        <field name="category2_id"/>
                         <field name="nbr"/>
                         <field name="state"/>
                    </group>
@@ -163,13 +157,8 @@
             <field name="arch" type="xml">
                 <search string="Cases by Team and Stage">
                    <group>
-                        <filter string="This Year" icon="terp-go-year"
-                            domain="[('name','=',time.localtime()[0])]"
-                            help="Cases by Team and Stage for this year" />
-                        <filter string="This Month" icon="terp-go-month"
-                            domain="[('month','=',time.localtime()[1])]"
-                            help="Cases by Team and Stage for this month" />
-                        <separator orientation="vertical"/>
+                        <field name="name"/>
+                        <field name="month"/>
                         <field name="section_id" widget="selection"/>
                         <field name="nbr"/>
                         <field name="state"/>
@@ -239,13 +228,8 @@
             <field name="arch" type="xml">
                 <search string="Cases by Section, Category and Stage">
                     <group>
-                        <filter string="This Year" icon="terp-go-year"
-                            domain="[('name','=',time.localtime()[0])]"
-                            help="Cases by Section, Category and Stage for this year" />
-                        <filter string="This Month" icon="terp-go-month"
-                            domain="[('month','=',time.localtime()[1])]"
-                            help="Cases by Section, Category and Stage for this month" />
-                        <separator orientation="vertical"/>
+                        <field name="name"/>
+                        <field name="month"/>
                         <field name="section_id" widget="selection"/>
                         <field name="nbr"/>
                         <field name="state"/>
@@ -332,13 +316,8 @@
             <field name="arch" type="xml">
                 <search string="Search Cases by User">
                     <group>
-                        <filter string="This Year" icon="terp-go-year"
-                            domain="[('name','=',time.localtime()[0])]"
-                            help="Cases by User for this year" />
-                        <filter string="This Month" icon="terp-go-month"
-                            domain="[('month','=',time.localtime()[1])]"
-                            help="Cases by User for this month" />
-                        <separator orientation="vertical"/>
+                        <field name="name"/>
+                        <field name="month"/>
                         <field name="section_id" widget="selection"/>
                         <field name="nbr"/>
                         <field name="state"/>

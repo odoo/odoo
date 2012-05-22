@@ -52,17 +52,6 @@
             <field name="arch" type="xml">
                 <search string="Search">
                   <group>
-                        <filter string="Year" icon="terp-go-year" name="year"
-                               domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;=',time.strftime('%%Y-01-01'))]"
-                               help="Phone calls made in current year"/>
-                        <separator orientation="vertical" />
-                        <filter string="Month" icon="terp-go-month" name="This Month"
-                           domain="[('create_date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
-                           help="Phone calls made in current month"/>
-                        <filter icon="terp-go-month" string="Month-1"
-                            domain="[('create_date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
-                            help="Phone calls made in last month"/>
-                        <separator orientation="vertical" />
                         <filter icon="terp-gtk-go-back-rtl"
                             string="Todo"
                             domain="[('state','in',('draft','open'))]"

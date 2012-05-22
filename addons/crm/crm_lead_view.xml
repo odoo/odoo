@@ -338,14 +338,6 @@
                     domain="[('state','=','pending')]"/>
 
                 <separator orientation="vertical"/>
-                <filter icon="terp-go-today" string="Today"
-                    domain="[('create_date','&lt;', time.strftime('%%Y-%%m-%%d 23:59:59')), ('create_date','&gt;=', time.strftime('%%Y-%%m-%%d 00:00:00'))]"
-                    help="Todays' Leads" />
-                <filter icon="terp-go-week" string="7 Days"
-                    help="Leads creating during last 7 days"
-                    domain="[('create_date','&lt;', time.strftime('%%Y-%%m-%%d 23:59:59')),('create_date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d 00:00:00'))]"
-                />
-                <separator orientation="vertical"/>
                 <field name="name" string="Lead / Customer"
                     filter_domain="['|','|',('partner_name','ilike',self),('email_from','ilike',self),('name','ilike',self)]"/>
                 <field name="user_id">
@@ -372,6 +364,7 @@
                 <field name="country_id" context="{'invisible_country': False}">
                     <filter string="Show countries" icon="terp-personal+" context="{'invisible_country': False}" help="Show countries"/>
                 </field>
+                </field name="create_date"/>
                 <newline/>
                 <group expand="0" string="Group By...">
                     <filter string="Salesman" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
