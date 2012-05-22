@@ -538,6 +538,24 @@ class hr_job(osv.osv):
     _columns = {
         'survey_id': fields.many2one('survey', 'Interview Form', help="Choose an interview form for this job position and you will be able to print/answer this interview from all applicants who apply for this job"),
     }
+    
+    def action_print_survey(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        datas = {}
+        record = self.browse(cr, uid, ids, context=context)[0]
+        if record.survey_id:
+            datas['ids'] = [record.survey_id.id]
+        datas['model'] = 'survey.print'
+        context.update({'response_id': [0], 'response_no': 0,})
+        return {
+                'type': 'ir.actions.report.xml',
+                'report_name': 'survey.form',
+                'datas': datas,
+                'context' : context,
+                'nodestroy':True,
+            }
+   
 hr_job()
 
 class crm_meeting(osv.osv):
