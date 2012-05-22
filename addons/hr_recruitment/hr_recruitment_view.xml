@@ -352,11 +352,9 @@
         <field name="type">form</field>
         <field name="inherit_id" ref="hr.view_hr_job_form"/>
         <field name="arch" type="xml">
-            <field name="department_id" position="after">
-                <field name="survey_id"/>
-            </field>
             <field name="expected_employees" position="after">
-                <button name="action_print_survey"  string="Interview" type="object" icon="gtk-print" attrs="{'invisible':[('survey_id','=',False)]}" colspan="2"/>
+                <field name="survey_id" />
+				<button name="action_print_survey" string="Interview" type="object" icon="gtk-print" attrs="{'invisible':[('survey_id','=',False)]}"/>
             </field>
         </field>
     </record>

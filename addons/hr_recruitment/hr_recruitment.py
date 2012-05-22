@@ -542,11 +542,19 @@ class hr_job(osv.osv):
     def action_print_survey(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        for rec in self.browse(cr, uid, ids, context=context):
-            if rec.survey_id:
-                context.update({'survey_id': rec.survey_id.id, 'response_id': [0], 'response_no': 0,})
-        value = self.pool.get("survey").action_print_survey(cr, uid, ids, context=context)
-        return value
+        datas = {}
+        record = self.browse(cr, uid, ids, context=context)[0]
+        if record.survey_id:
+            datas['ids'] = [record.survey_id.id]
+        datas['model'] = 'survey.print'
+        context.update({'response_id': [0], 'response_no': 0,})
+        return {
+                'type': 'ir.actions.report.xml',
+                'report_name': 'survey.form',
+                'datas': datas,
+                'context' : context,
+                'nodestroy':True,
+            }
    
 hr_job()
 
