@@ -100,7 +100,7 @@
                     </notebook>
                     <newline/>
                 </sheet>
-                <div class="oe_form_sheet_width">
+                <div class="oe_form_bottom">
                     <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
                 </div>
                 </form>
@@ -268,7 +268,7 @@
             <field name="view_id" ref="view_project_kanban"/>
             <field name="search_view_id" ref="view_project_project_filter"/>
             <field name="context">{}</field>
-            <field name="help">You have no project.  Projects are used to classify company activities: tasks, issues and timesheets.  Click on button "Create" to create one.</field>
+            <field name="help">You have no project.Projects are used to classify company activities: tasks, issues and timesheets.Click on button "Create" to create one.</field>
         </record>
 
         <record id="open_view_template_project" model="ir.actions.act_window">
@@ -402,7 +402,7 @@
                         </page>
                     </notebook>
                     </sheet>
-                    <div class="oe_form_sheet_width">
+                    <div class="oe_form_bottom">
                         <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
                     </div>
                 </form>
@@ -619,7 +619,7 @@
             <field name="view_mode">kanban,tree,form,calendar,gantt,graph</field>
             <field eval="False" name="filter"/>
             <field name="view_id" eval="False"/>
-            <field name="context">{"search_default_project": 1}</field>
+            <field name="context">{}</field>
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="help">Tasks allow you to organize your work into a project. Click on button "Create" to create a new task.</field>
         </record>
@@ -740,31 +740,6 @@
         </record>
 
       <!--     User Form-->
-      <record id="view_project_users_form_simple" model="ir.ui.view">
-          <field name="name">res.users.project.form1</field>
-          <field name="model">res.users</field>
-          <field name="type">form</field>
-          <field name="inherit_id" ref="base.view_users_form"/>
-          <field eval="18" name="priority"/>
-          <field name="arch" type="xml">
-              <group name="default_filters" position="inside">
-                   <field name="context_project_id"/>
-              </group>
-          </field>
-     </record>
-
-     <record model="ir.ui.view" id="view_users_form_project_modif_inherited1">
-         <field name="name">view.users.form.project.modif.inherited1</field>
-         <field name="model">res.users</field>
-         <field name="inherit_id" ref="base.view_users_form_simple_modif" />
-         <field name="type">form</field>
-         <field eval="18" name="priority"/>
-         <field name="arch" type="xml">
-            <group name="default_filters" position="inside">
-                <field name="context_project_id" context="{'user_preference':True}" widget="selection" readonly="0"/>
-            </group>
-       </field>
-    </record>
-    <act_window context="{'search_default_user_id': [active_id], 'default_user_id': active_id}" domain="[('state', '&lt;&gt;', 'cancelled'),('state', '&lt;&gt;', 'done')]" id="act_res_users_2_project_task_opened" name="Assigned Tasks" res_model="project.task" src_model="res.users" view_mode="tree,form,gantt,calendar,graph" view_type="form"/>
+        <act_window context="{'search_default_user_id': [active_id], 'default_user_id': active_id}" domain="[('state', '&lt;&gt;', 'cancelled'),('state', '&lt;&gt;', 'done')]" id="act_res_users_2_project_task_opened" name="Assigned Tasks" res_model="project.task" src_model="res.users" view_mode="tree,form,gantt,calendar,graph" view_type="form"/>
     </data>
 </openerp>

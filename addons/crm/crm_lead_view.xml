@@ -155,7 +155,7 @@
                  </page>
                 </notebook>
                 </sheet>
-                <div class="oe_form_sheet_width">
+                <div class="oe_form_bottom">
                     <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
                 </div>
             </form>
@@ -358,7 +358,7 @@
                     context="{'invisible_section': False}">
                     <filter icon="terp-personal+"
                         context="{'invisible_section': False}"
-                        domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
+                        domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                         help="My Sales Team(s)"/>
                     <filter icon="terp-personal+"
                         context="{'invisible_section': False}"
@@ -400,7 +400,7 @@
         <field name="priority">20</field>
         <field name="arch" type="xml">
             <form string="Opportunities" layout="manual">
-                <div class="oe_form_topbar">
+                <div class="oe_form_topbar oe_form_topbar_hifirst">
                     <button name="case_cancel" string="Cancel" states="draft" type="object" icon="gtk-cancel" />
                     <button name="case_mark_lost" string="Mark Lost" states="open,pending" type="object" icon="gtk-cancel" />
                     <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert" />
@@ -411,16 +411,19 @@
                     <div class="oe_right">
                         <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
                     </div>
+                    <div class="oe_clear"/>
                 </div>
                 <sheet layout="auto">
-                <group colspan="4" col="3">
-                    <field name="name" required="1" nolabel="1" class="oe_form_title" width="80%%"/>
-                    <button string="Schedule/Log Call"
-                        name="%(opportunity2phonecall_act)d" icon="terp-call-start"
-                        type="action"/>
-                    <button string="Schedule Meeting" icon="gtk-redo"
-                        name="action_makeMeeting"
-                        type="object"/>
+                <group colspan="4" col="2" width="auto">
+                    <field name="name" required="1" nolabel="1" class="oe_form_title"/>
+                    <div class="oe_text_right">
+                        <button string="Schedule/Log Call"
+                            name="%(opportunity2phonecall_act)d" icon="terp-call-start"
+                            type="action"/>
+                        <button string="Schedule Meeting" icon="gtk-redo"
+                            name="action_makeMeeting"
+                            type="object"/>
+                    </div>
                 </group>
                 <group colspan="4" col="4" class="oe_form_group_label_border" style="margin-top: 20px;">
                     <field name="user_id"/>
@@ -527,7 +530,7 @@
                 </page>
                 </notebook>
                 </sheet>
-                <div class="oe_form_sheet_width">
+                <div class="oe_form_bottom">
                     <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
                 </div>
             </form>
@@ -602,7 +605,7 @@
                     context="{'invisible_section': False}"
                     widget="selection">
                     <filter icon="terp-personal+"
-                        domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
+                        domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                         context="{'invisible_section': False}"
                         help="My Sales Team(s)" />
                     <filter icon="terp-personal+"
