@@ -359,6 +359,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             list_price: 0,
             discount: 0,
             weighted: false,
+            product_type: 'unit',
         },
         initialize: function(attributes) {
             this.pos = attributes.pos;
@@ -367,12 +368,40 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             if(attributes.weight){
                 this.setWeight(attributes.weight);
                 this.set({weighted: true});
+                this.set({product_type: 'weight'});
             }
 
             this.bind('change:quantity', function(unused, qty) {
                 if (qty == 0)
                     this.trigger('killme');
             }, this);
+        },
+
+        // when we add an new orderline we want to merge it with the last line to see reduce the number of items
+        // in the orderline. This returns true if it makes sense to merge the two
+        can_be_merged_with: function(orderline){
+            if( this.get('id') !== orderline.get('id')){    //only orderline of the same product can be merged
+                return false;
+            }else if(this.get('product_type') !== orderline.get('product_type')){
+                return false;
+            }else if(this.get('discount') > 0){             // we don't merge discounted orderlines
+                return false;
+            }else if(this.get('product_type') === 'unit'){ 
+                return true;
+            }else if(this.get('product_type') === 'weight'){
+                return true;
+            }else if(this.get('product_type') === 'price'){
+                return this.get('list_price') === orderline.get('list_price');
+            }else{
+                console.error('point_of_sale/pos_models.js/Orderline.can_be_merged_with() : unknown product type:',this.get('product_type'));
+                return false;
+            }
+        },
+
+        // Modifies this orderline so that it also contains the contents of another orderline.
+        // the two orderlines must be mergable ('can_be_merged_with()' === true) 
+        merge: function(orderline){
+            this.set({quantity : this.get('quantity') + orderline.get('quantity') });
         },
         setWeight: function(weight){
             return this.set({
@@ -506,8 +535,25 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         generateUniqueId: function() {
             return new Date().getTime();
         },
-        addProduct: function(product) {
+        addProduct: function(product){
+            var attr = product.toJSON();
+            attr.pos = this.pos;
+            var line = new module.Orderline(attr);
+            var self = this;
+
+            if( this.last_orderline && this.last_orderline.can_be_merged_with(line) ){
+                this.last_orderline.merge(line);
+            }else{
+                this.get('orderLines').add(line);
+                line.bind('killme', function() { 
+                    this.get('orderLines').remove(line);
+                }, this);
+                this.last_orderline = line;
+            }
+        },
+        addProductOld: function(product) {
             var existing;
+
             existing = (this.get('orderLines')).get(product.id);
             if (existing != null) {
                 this.last_orderline = existing;
@@ -520,6 +566,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 var attr = product.toJSON();
                 attr.pos = this.pos;
                 var line = new module.Orderline(attr);
+                console.log('new Orderline:',line,attr);
                 this.last_orderline = line;
                 this.get('orderLines').add(line);
                 line.bind('killme', function() {
