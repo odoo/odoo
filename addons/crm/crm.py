@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-today OpenERP SA (<http://www.openerp.com>)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -33,6 +33,7 @@ AVAILABLE_STATES = [
     ('open', 'In Progress'),
     ('cancel', 'Cancelled'),
     ('done', 'Closed'),
+    ('pending', 'Pending'),
 ]
 
 AVAILABLE_PRIORITIES = [
@@ -56,8 +57,11 @@ class crm_case_channel(osv.osv):
     }
 
 class crm_case_stage(osv.osv):
-    """ Stage of case """
-
+    """ Model for case stages. This models the main stages of a document
+        management flow. Main CRM objects (leads, opportunities, project 
+        issues, ...) will now use only stages, instead of state and stages.
+        Stages are for example used to display the kanban view of records.
+    """
     _name = "crm.case.stage"
     _description = "Stage of case"
     _rec_name = 'name'
@@ -65,11 +69,12 @@ class crm_case_stage(osv.osv):
 
     _columns = {
         'name': fields.char('Stage Name', size=64, required=True, translate=True),
-        'sequence': fields.integer('Sequence', help="Used to order stages."),
+        'sequence': fields.integer('Sequence', help="Used to order stages. Lower is better."),
         'probability': fields.float('Probability (%)', required=True, help="This percentage depicts the default/average probability of the Case for this stage to be a success"),
         'on_change': fields.boolean('Change Probability Automatically', help="Setting this stage will change the probability automatically on the opportunity."),
         'requirements': fields.text('Requirements'),
-        'section_ids':fields.many2many('crm.case.section', 'section_stage_rel', 'stage_id', 'section_id', 'Sections'),
+        'section_ids':fields.many2many('crm.case.section', 'section_stage_rel', 'stage_id', 'section_id', string='Sections',
+                        help="Link between stages and sales teams. When set, this limitate the current stage to the selected sales teams."),
         'state': fields.selection(AVAILABLE_STATES, 'State', required=True, help="The related state for the stage. The state of your document will automatically change regarding the selected stage. Example, a stage is related to the state 'Close', when your document reach this stage, it will be automatically closed."),
         'case_default': fields.boolean('Common to All Teams', help="If you check this field, this stage will be proposed by default on each sales team. It will not assign this stage to existing teams."),
     }
@@ -81,8 +86,7 @@ class crm_case_stage(osv.osv):
     }
 
 class crm_case_section(osv.osv):
-    """Sales Team"""
-
+    """ Model for sales teams. """
     _name = "crm.case.section"
     _description = "Sales Teams"
     _order = "complete_name"
@@ -108,6 +112,7 @@ class crm_case_section(osv.osv):
         'working_hours': fields.float('Working Hours', digits=(16,2 )),
         'stage_ids': fields.many2many('crm.case.stage', 'section_stage_rel', 'section_id', 'stage_id', 'Stages'),
     }
+    
     def _get_stage_common(self, cr, uid, context):
         ids = self.pool.get('crm.case.stage').search(cr, uid, [('case_default','=',1)], context=context)
         return ids
