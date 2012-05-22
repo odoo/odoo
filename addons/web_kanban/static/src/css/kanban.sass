@@ -1,7 +1,29 @@
 @charset "utf-8"
 
+// Mixins {{{
+@mixin radial-gradient($gradient)
+    background-position: center center
+    background-image: -webkit-radial-gradient(circle, $gradient)
+    background-image: -moz-radial-gradient($gradient)
+    background-image: -ms-radial-gradient($gradient)
+    background-image: radial-gradient($gradient)
+
+@mixin radius($radius: 5px)
+    -moz-border-radius: $radius
+    -webkit-border-radius: $radius
+    border-radius: $radius
+
+@mixin box-shadow($bsval: 0px 1px 4px #777)
+    -moz-box-shadow: $bsval
+    -webkit-box-shadow: $bsval
+    -box-shadow: $bsval
+// }}}
+
 .openerp .oe_kanban_view
     // KanbanView {{{
+    position: absolute
+    top: 111px
+    bottom: 0
     .ui-sortable-placeholder
         border: 1px dotted black
         visibility: visible !important
@@ -15,21 +37,32 @@
     // }}}
     // KanbanGroups {{{
     .oe_kanban_groups
-        width: 100%
+        height: 100%
+    .oe_kanban_group_title
+        margin: 1px 1px 4px
+        padding-left: 2px
+        font-size: 100%
+        font-weight: bold
+        color: #333333
+        text-shadow: 0 1px 0 white
+    .oe_kanban_column, .oe_kanban_group_header
+        vertical-align: top
+        padding: 6px 7px 6px 6px
+        background: #f0eeee
+        border-left: 1px solid #f0f8f8
+        border-right: 1px solid #b9b9b9
+    .oe_kanban_column
+        height: 100%
+    .oe_kanban_aggregates
+        padding: 0
     .oe_kanban_group_header
         position: relative
     .oe_kanban_group_folded
         padding: 0 5px 0 5px
-    .oe_kanban_group_folded
         .oe_kanban_group_title, &.oe_kanban_column > *, .oe_kanban_aggregates
             display: none
         .oe_kanban_group_title_vertical
             display: block
-    .oe_kanban_group_title
-        font-size: 100%
-        font-weight: bold
-        padding-left: 2px
-        color: #333333
     .oe_kanban_group_title_undefined
         color: #666666
     .oe_kanban_group_title_vertical
@@ -80,6 +113,31 @@
         float: right
     // }}}
     // KanbanRecords {{{
+    .oe_kanban_record
+        position: relative
+        display: block
+        min-height: 50px
+        margin: 6px 0
+        display: block
+        @include radius(4px)
+        &:last-child
+            margin-bottom: 0
+        .oe_kanban_title
+            font-weight: bold
+            margin: 2px 4px
+    .oe_kanban_gravatar
+        display: block
+        width: 20px
+        height: 20px
+        @include radius(3px)
+        @include box-shadow(0 1px 2px rgba(0,0,0,0.2))
+    .oe_kanban_avatar_toto
+        height: 40px
+        width: 40px
+        border: 1px solid
+        border-color: #e5e5e5 #dbdbdb #d2d2d2
+        @include radius(3px)
+        @include box-shadow(0 1px 2px rgba(0,0,0,0.2))
     .oe_kanban_box
         background: #FFF
         border: 2px solid #CCC
@@ -123,8 +181,6 @@
         padding: 0
     .oe_kanban_table tr td.oe_kanban_title
         padding: 2px
-    .oe_kanban_gravatar
-        display: block
     .oe_kanban_box_content
         padding: 4px
         font-size: 90%
@@ -170,7 +226,58 @@
         white-space: nowrap
         display: inline-block
         line-height: 1em
-
+    .oe_kanban_card
+        position: relative
+        display: block
+        min-height: 50px
+        background: white
+        border: 1px solid #d8d8d8
+        border-bottom-color: #b9b9b9
+        padding: 6px
+        margin: 6px 0
+        display: block
+        @include radius(4px)
+        &:last-child
+            margin-bottom: 0
+        &:hover
+            @include box-shadow(0 0 3px rgba(0,0,0,0.6))
+            .oe_kanban_menuaction
+                display: block
+        h3
+            margin: 0 16px 0 0
+    .oe_kanban_star
+        float: left
+        position: inline-block
+        margin: 0 4px 0 0
+    a.oe_kanban_menuaction
+        position: absolute
+        right: 4px
+        display: none
+        color: #4c4c4c
+        cursor: pointer
+        &:hover
+            text-decoration: none
+    .oe_kanban_avatar
+        @include radius(4px)
+        @include box-shadow(0 1px 2px rgba(0,0,0,0.2))
+    //.oe_kanban_footer_left
+    //   float: left
+    .oe_kanban_status
+        display: inline-block
+        height: 12px
+        width: 12px
+        margin: 4px auto
+        @include radius(6px)
+        @include box-shadow(0 1px 3px rgba(0,0,0,0.6))
+    .oe_kanban_status_green
+        background: green
+        @include radial-gradient((#55dd55 0%, #44aa44 40%, #339933 100%))
+    .oe_kanban_status_red
+        background: red
+        @include radial-gradient((#ee7777 0%, #cc3333 40%, #bb0808 100%))
+    .oe_kanban_text_red
+        background: red
+        color: #000
     // }}}
     // KanbanColorPicker {{{
     .oe_kanban_color_picker
