@@ -54,18 +54,6 @@
             <field name="arch" type="xml">
                 <search string="Search">
                     <group>
-                        <filter string="Year" icon="terp-go-year" name="year"
-                            domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;=',time.strftime('%%Y-01-01'))]"
-                            help="Helpdesk requests occurred in current year"/>
-                        <separator orientation="vertical" />
-
-                        <filter string="Month" icon="terp-go-month" name="this_month"
-                            domain="[('create_date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
-                            help="Helpdesk requests occurred in current month"/>
-                        <filter icon="terp-go-month" string="Month-1"
-                            domain="[('create_date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
-                            help="Helpdesk requests occurred in last month"/>
-                        <separator orientation="vertical" />
                         <filter string="New" icon="terp-check"
                         domain="[('state','=','draft')]" />
                         <filter string="Open" icon="terp-camera_test"
@@ -97,6 +85,7 @@
                         <field name="priority" string="Priority"/>
                         <field name="categ_id"/>
                         <newline/>
+                        <field name="create_date"/>
                         <field name="date_closed" string="Close Date"/>
                     </group>
                     <newline/>

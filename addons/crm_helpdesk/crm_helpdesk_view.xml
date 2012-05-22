@@ -217,16 +217,6 @@
                         help="All pending Helpdesk Request"
                     />
                     <separator orientation="vertical"/>
-                    <filter icon="terp-go-today" string="Today"
-                        domain="[('date','&gt;=',current_date), ('date','&lt;=',current_date)]"
-                        help="Todays's Helpdesk Requests"
-                        />
-                    <filter icon="terp-go-week"
-                        string="7 Days"
-                        help="Helpdesk requests during last 7 days"
-                        domain="[('date','&lt;',current_date), ('date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
-                        />
-                    <separator orientation="vertical"/>
                     <field name="name" string="Query"/>
                     <field name="partner_id" />
                     <field name="user_id" widget="selection"/>
@@ -236,6 +226,7 @@
                             domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                             help="My Sales Team(s)" />
                     </field>
+                    <field name="date"/>
                     <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Partner" icon="terp-partner"
