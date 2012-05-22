@@ -382,10 +382,10 @@
     <t t-name="PaymentlineWidget">
         <tr class="paymentline">
             <td class="paymentline-type">
-                <t t-esc="name"/>
+                <t t-esc="widget.name"/>
             </td>
             <td class="paymentline-amount pos-right-align">
-                <input type="text" t-att-value="amount.toFixed(2)" />
+                <input type="text" t-att-value="widget.payment_line.get('amount').toFixed(2)" />
                 <a href='javascript:void(0)' class='delete-payment-line'><img src="/point_of_sale/static/src/img/search_reset.gif" /></a>
             </td>
         </tr>

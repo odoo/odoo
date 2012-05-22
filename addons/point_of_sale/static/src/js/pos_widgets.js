@@ -247,8 +247,8 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         template: 'PaymentlineWidget',
         init: function(parent, options) {
             this._super(parent,options);
-            this.model = options.model;
-            this.model.bind('change', this.changedAmount, this);
+            this.payment_line = options.payment_line;
+            this.payment_line.bind('change', this.changedAmount, this);
         },
         on_delete: function() {},
         changeAmount: function(event) {
@@ -256,18 +256,18 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             newAmount = event.currentTarget.value;
             if (newAmount && !isNaN(newAmount)) {
             	this.amount = parseFloat(newAmount);
-                this.model.set({
+                this.payment_line.set({
                     amount: this.amount,
                 });
             }
         },
         changedAmount: function() {
-        	if (this.amount !== this.model.get('amount'))
+        	if (this.amount !== this.payment_line.get('amount'))
         		this.renderElement();
         },
         renderElement: function() {
-        	this.amount = this.model.get('amount');
-            this.name =   this.model.get('journal_id')[1];
+            this.name =   this.payment_line.get('journal_id')[1];
+            this._super();
             $('input', this.$element).keyup(_.bind(this.changeAmount, this));
             $('.delete-payment-line', this.$element).click(this.on_delete);
         },

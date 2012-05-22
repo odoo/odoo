@@ -696,9 +696,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.pos_widget.order_widget.set_numpad_state(null);
             this.pos_widget.payment_screen.set_numpad_state(null);
         },
-        paymentLineList: function() {
-            return this.$element.find('#paymentlines');
-        },
         back: function() {
             this.pos_widget.screen_selector.set_current_screen('products');
         },
@@ -724,6 +721,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.currentOrderLines.bind('all', this.updatePaymentSummary, this);
         },
         change_selected_order: function() {
+            console.log('change_selected_order');
             this.currentPaymentLines.unbind();
             this.bindPaymentLineEvents();
             this.currentOrderLines.unbind();
@@ -731,15 +729,16 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.renderElement();
         },
         addPaymentLine: function(newPaymentLine) {
+            console.log('addPaymentLine:',newPaymentLine);
             var x = new module.PaymentlineWidget(null, {
-                    model: newPaymentLine
+                    payment_line: newPaymentLine
                 });
             x.on_delete.add(_.bind(this.deleteLine, this, x));
-            x.appendTo(this.paymentLineList());
+            x.appendTo(this.$('#paymentlines'));
         },
         renderElement: function() {
             this._super();
-            this.paymentLineList().empty();
+            this.$('#paymentlines').empty();
             this.currentPaymentLines.each(_.bind( function(paymentLine) {
                 this.addPaymentLine(paymentLine);
             }, this));
