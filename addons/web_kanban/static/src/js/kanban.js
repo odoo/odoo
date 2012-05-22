@@ -578,6 +578,11 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
             trigger: 'hover'
         });
 
+        // If no draghandle is found, make the whole card as draghandle
+        if (!this.$element.find('.oe_kanban_draghandle').length) {
+            this.$element.children(':first').addClass('oe_kanban_draghandle');
+        }
+
         this.$element.find('.oe_kanban_action').click(function(ev) {
             ev.preventDefault();
             var $action = $(this),
