@@ -15,8 +15,8 @@
         <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>
     
-    <record id="group_analytic_accounting" model="res.groups" context="{'noadmin':True}">
+    <record id="group_analytic_accounting" model="res.groups">
         <field name="name">Analytic Accounting</field>
-        <field name="category_id" ref="base.module_category_usability"/>
+        <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 </data></openerp>

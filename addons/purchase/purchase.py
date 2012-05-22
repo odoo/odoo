@@ -29,7 +29,7 @@ import pooler
 from tools.translate import _
 import decimal_precision as dp
 from osv.orm import browse_record, browse_null
-from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP
 
 #
 # Model definition
@@ -174,7 +174,7 @@ class purchase_order(osv.osv):
         'validator' : fields.many2one('res.users', 'Validated by', readonly=True),
         'notes': fields.text('Notes'),
         'invoice_ids': fields.many2many('account.invoice', 'purchase_invoice_rel', 'purchase_id', 'invoice_id', 'Invoices', help="Invoices generated for a purchase order"),
-        'picking_ids': fields.one2many('stock.picking', 'purchase_id', 'Picking List', readonly=True, help="This is the list of picking list that have been generated for this purchase"),
+        'picking_ids': fields.one2many('stock.picking.in', 'purchase_id', 'Picking List', readonly=True, help="This is the list of incomming shipments that have been generated for this purchase order."),
         'shipped':fields.boolean('Received', readonly=True, select=True, help="It indicates that a picking has been done"),
         'shipped_rate': fields.function(_shipped_rate, string='Received', type='float'),
         'invoiced': fields.function(_invoiced, string='Invoiced & Paid', type='boolean', help="It indicates that an invoice has been paid"),
@@ -220,9 +220,16 @@ class purchase_order(osv.osv):
         ('name_uniq', 'unique(name, company_id)', 'Order Reference must be unique per Company!'),
     ]
     _name = "purchase.order"
+    _inherit = ['ir.needaction_mixin', 'mail.thread']
     _description = "Purchase Order"
     _order = "name desc"
-
+    
+    def create(self, cr, uid, vals, context=None):
+        order =  super(purchase_order, self).create(cr, uid, vals, context=context)
+        if order:
+            self.create_send_note(cr, uid, [order], context=context)
+        return order
+    
     def unlink(self, cr, uid, ids, context=None):
         purchase_orders = self.read(cr, uid, ids, ['state'], context=context)
         unlink_ids = []
@@ -289,6 +296,7 @@ class purchase_order(osv.osv):
         self.pool.get('purchase.order.line').action_confirm(cr, uid, todo, context)
         for id in ids:
             self.write(cr, uid, [id], {'state' : 'confirmed', 'validator' : uid})
+        self.confirm_send_note(cr, uid, ids, context)
         return True
 
     def _prepare_inv_line(self, cr, uid, account_id, order_line, context=None):
@@ -388,8 +396,15 @@ class purchase_order(osv.osv):
             # Link this new invoice to related purchase order
             order.write({'invoice_ids': [(4, inv_id)]}, context=context)
             res = inv_id
+        if res:
+            self.invoice_send_note(cr, uid, ids, res, context)
         return res
-
+    
+    def invoice_done(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'state':'approved'}, context=context)
+        self.invoice_done_send_note(cr, uid, ids, context=context)
+        return True
+        
     def has_stockable_product(self,cr, uid, ids, *args):
         for order in self.browse(cr, uid, ids):
             for order_line in order.order_line:
@@ -427,9 +442,9 @@ class purchase_order(osv.osv):
             'name': self.pool.get('ir.sequence').get(cr, uid, 'stock.picking.in'),
             'origin': order.name + ((order.origin and (':' + order.origin)) or ''),
             'date': order.date_order,
-            'type': 'in',
             'partner_id': order.dest_address_id.id or order.partner_id.id,
             'invoice_state': '2binvoiced' if order.invoice_method == 'picking' else 'none',
+            'type': 'in',
             'purchase_id': order.id,
             'company_id': order.company_id.id,
             'move_lines' : [],
@@ -502,7 +517,14 @@ class purchase_order(osv.osv):
         # In case of multiple (split) pickings, we should return the ID of the critical one, i.e. the
         # one that should trigger the advancement of the purchase workflow.
         # By default we will consider the first one as most important, but this behavior can be overridden.
+        if picking_ids:
+            self.shipment_send_note(cr, uid, ids, picking_ids[0], context=context)
         return picking_ids[0] if picking_ids else False
+
+    def picking_done(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'shipped':1,'state':'approved'}, context=context)
+        self.shipment_done_send_note(cr, uid, ids, context=context)
+        return True
 
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
@@ -627,6 +649,49 @@ class purchase_order(osv.osv):
                 wf_service.trg_redirect(uid, 'purchase.order', old_id, neworder_id, cr)
                 wf_service.trg_validate(uid, 'purchase.order', old_id, 'purchase_cancel', cr)
         return orders_info
+        
+    # --------------------------------------
+    # OpenChatter methods and notifications
+    # --------------------------------------
+    
+    def get_needaction_user_ids(self, cr, uid, ids, context=None):
+        result = dict.fromkeys(ids, [])
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.state == 'approved':
+                result[obj.id] = [obj.validator.id]
+        return result
+    
+    def create_send_note(self, cr, uid, ids, context=None):
+        return self.message_append_note(cr, uid, ids, body=_("Request for quotation <b>created</b>."), context=context)
+
+    def confirm_send_note(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            self.message_subscribe(cr, uid, [obj.id], [obj.validator.id], context=context)
+            self.message_append_note(cr, uid, [obj.id], body=_("Quotation for <em>%s</em> <b>converted</b> to a Purchase Order of %s %s.") % (obj.partner_id.name, obj.amount_total, obj.pricelist_id.currency_id.symbol), context=context)
+        
+    def shipment_send_note(self, cr, uid, ids, picking_id, context=None):
+        for order in self.browse(cr, uid, ids, context=context):
+            for picking in (pck for pck in order.picking_ids if pck.id == picking_id):
+                # convert datetime field to a datetime, using server format, then
+                # convert it to the user TZ and re-render it with %Z to add the timezone
+                picking_datetime = fields.DT.datetime.strptime(picking.min_date, DEFAULT_SERVER_DATETIME_FORMAT)
+                picking_date_str = fields.datetime.context_timestamp(cr, uid, picking_datetime, context=context).strftime(DATETIME_FORMATS_MAP['%+'] + " (%Z)")
+                self.message_append_note(cr, uid, [order.id], body=_("Shipment <em>%s</em> <b>scheduled</b> for %s.") % (picking.name, picking_date_str), context=context)
+    
+    def invoice_send_note(self, cr, uid, ids, invoice_id, context=None):
+        for order in self.browse(cr, uid, ids, context=context):
+            for invoice in (inv for inv in order.invoice_ids if inv.id == invoice_id):
+                self.message_append_note(cr, uid, [order.id], body=_("Draft Invoice of %s %s is <b>waiting for validation</b>.") % (invoice.amount_total, invoice.currency_id.symbol), context=context)
+    
+    def shipment_done_send_note(self, cr, uid, ids, context=None):
+        self.message_append_note(cr, uid, ids, body=_("""Shipment <b>received</b>."""), context=context)
+     
+    def invoice_done_send_note(self, cr, uid, ids, context=None):
+        self.message_append_note(cr, uid, ids, body=_("Invoice <b>paid</b>."), context=context)
+    
+    def cancel_send_note(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            self.message_append_note(cr, uid, [obj.id], body=_("Purchase Order for <em>%s</em> <b>cancelled</b>.") % (obj.partner_id.name), context=context)
 
 purchase_order()
 
@@ -651,10 +716,10 @@ class purchase_order_line(osv.osv):
 
     _columns = {
         'name': fields.char('Description', size=256, required=True),
-        'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product UoM'), required=True),
+        'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
         'date_planned': fields.date('Scheduled Date', required=True, select=True),
         'taxes_id': fields.many2many('account.tax', 'purchase_order_taxe', 'ord_id', 'tax_id', 'Taxes'),
-        'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
+        'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
         'product_id': fields.many2one('product.product', 'Product', domain=[('purchase_ok','=',True)], change_default=True),
         'move_ids': fields.one2many('stock.move', 'purchase_line_id', 'Reservation', readonly=True, ondelete='set null'),
         'move_dest_id': fields.many2one('stock.move', 'Reservation Destination', ondelete='set null'),
@@ -760,7 +825,7 @@ class purchase_order_line(osv.osv):
             uom_id = product_uom_po_id
 
         if product.uom_id.category_id.id != product_uom.browse(cr, uid, uom_id, context=context).category_id.id:
-            res['warning'] = {'title': _('Warning'), 'message': _('Selected UOM does not belong to the same category as the product UOM')}
+            res['warning'] = {'title': _('Warning'), 'message': _('Selected Unit of Measure does not belong to the same category as the product Unit of Measure')}
             uom_id = product_uom_po_id
 
         res['value'].update({'product_uom': uom_id})

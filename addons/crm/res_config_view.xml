@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_sale_config_settings" model="ir.ui.view">
+            <field name="name">crm settings</field>
+            <field name="model">sale.config.settings</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.view_sale_config_settings"/>
+            <field name="arch" type="xml">
+                <group name="config_fetchmail" position="after">
+                    <field name="fetchmail_lead"/>
+                    <button colspan="2" type="object" name="configure_fetchmail_lead" string="Configure" icon="gtk-execute"/>
+                </group>
+
+                <group name="config_crm" position="after">
+                    <separator string="Import and Synchronize Data from an Other Application" colspan="4"/>
+                    <field name="module_import_sugarcrm"/>
+                    <field name="module_crm_caldav"/>
+                    <field name="module_import_google"/>
+
+                    <separator string="Documents and Wiki" colspan="4"/>
+                    <field name="module_wiki_sale_faq" />
+
+                    <separator string="Customer Form" colspan="4"/>
+                    <field name="module_google_map"/>
+                </group>
+            </field>
+        </record>
+
+        <menuitem id="base.menu_sale_config" name="Sales" parent="base.menu_config"
+            sequence="1" action="base.action_sale_config"/>
+
+    </data>
+</openerp>

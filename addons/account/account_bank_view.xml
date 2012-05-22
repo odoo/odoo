@@ -13,7 +13,7 @@
         <field name="inherit_id" ref="base.view_partner_bank_form"/>
         <field name="arch" type="xml">
             <group name="bank" position="after">
-                <group name="accounting" col="2" colspan="2" attrs="{'invisible': [('company_id','=', False)]}" groups="base.group_extended">
+                <group name="accounting" col="2" colspan="2" attrs="{'invisible': [('company_id','=', False)]}">
                     <separator string="Accounting Information" colspan="2"/>
                     <field name="journal_id"/>
                     <field name="currency_id"/>
@@ -49,14 +49,6 @@
         parent="account.account_account_menu"
         id="menu_action_bank_tree"
         action="action_bank_tree"/>
-
-
-    <record id="account_configuration_bank_todo" model="ir.actions.todo">
-        <field name="action_id" ref="action_bank_tree"/>
-        <field name="category_id" ref="category_accounting_configuration"/>
-        <field name="sequence">4</field>
-    </record>
-
 
 </data>
 </openerp>

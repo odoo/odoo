@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <openerp>
 <data>
+
     <!--
         ALL BUGS
     -->
@@ -44,16 +45,7 @@
         <field name="act_window_id" ref="project_issue_categ_act0"/>
     </record>
 
-    <act_window
-            context="{'search_default_project_id': [active_id], 'default_project_id': active_id}"
-            id="act_project_project_2_project_issue_all"
-            name="Issues"
-            res_model="project.issue"
-            src_model="project.project"
-            view_mode="tree,form,calendar,graph"
-            view_type="form"/>
-
-    <menuitem name="Issues" id="menu_project_issue_track"  parent="base.menu_aftersale"
+    <menuitem name="Issues" id="menu_project_issue_track"  parent="project.menu_project_management"
             action="project_issue_categ_act0" sequence="15"/>
 </data>
 </openerp>

@@ -26,11 +26,12 @@ import tools
 
 class stock_change_product_qty(osv.osv_memory):
     _name = "stock.change.product.qty"
+    _inherit = ['mail.thread']
     _description = "Change Product Quantity"
     _columns = {
         'product_id' : fields.many2one('product.product', 'Product'),
-        'new_quantity': fields.float('Quantity', digits_compute=dp.get_precision('Product UoM'), required=True, help='This quantity is expressed in the Default UoM of the product.'),
-        'prodlot_id': fields.many2one('stock.production.lot', 'Production Lot', domain="[('product_id','=',product_id)]"),
+        'new_quantity': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True, help='This quantity is expressed in the Default Unit of Measure of the product.'),
+        'prodlot_id': fields.many2one('stock.production.lot', 'Serial Number', domain="[('product_id','=',product_id)]"),
         'location_id': fields.many2one('stock.location', 'Location', required=True, domain="[('usage', '=', 'internal')]"),
     }
 
@@ -98,8 +99,23 @@ class stock_change_product_qty(osv.osv_memory):
 
             inventry_obj.action_confirm(cr, uid, [inventory_id], context=context)
             inventry_obj.action_done(cr, uid, [inventory_id], context=context)
-
+            self.change_product_qty_send_note(cr, uid, [data.id], context)
         return {}
+
+    def change_product_qty_send_note (self, cr, uid, ids, context=None):
+        prod_obj = self.pool.get('product.product')
+        location_obj = self.pool.get('stock.location')
+        prod_temp_obj = self.pool.get('product.template')
+        uom_obj = self.pool.get('product.uom')
+
+        for data in self.browse(cr, uid, ids, context=context):
+            for location in location_obj.browse(cr, uid, [data.location_id.id], context=context):
+                location_name = location.name
+            for prod in prod_obj.browse(cr, uid, [data.product_id.id], context=context):
+                for prod_temp in prod_temp_obj.browse(cr, uid, [prod.product_tmpl_id.id], context=context):
+                    for uom in uom_obj.browse(cr, uid, [prod_temp.uom_id.id], context=context):
+                        message = _("<b>Quantity has been changed</b> to <em>%s %s </em> for <em>%s</em> location.") % (data.new_quantity,uom.name,location_name)
+                        prod_obj.message_append_note(cr, uid, [prod.id], body=message, context=context)
 
 stock_change_product_qty()
 

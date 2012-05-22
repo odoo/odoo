@@ -10,7 +10,7 @@
             <field name="arch" type="xml">
                 <tree toolbar="1" colors="red:state=='pending';grey:state in ('cancelled','close');blue:type=='view'" string="Analytic Accounts">
                     <field name="complete_name"/>
-                    <field name="code" groups="base.group_extended"/>
+                    <field name="code"/>
                     <field name="quantity"/>
                     <field name="date"/>
                     <field name="date_start" invisible="1"/>
@@ -60,12 +60,12 @@
             <field name="arch" type="xml">
                 <tree colors="blue:state=='pending';grey:state in ('close','cancelled');blue:type=='view'" string="Analytic account" toolbar="1">
                     <field name="name"/>
-                    <field name="code" groups="base.group_extended"/>
+                    <field name="code"/>
                     <field name="debit"/>
                     <field name="credit"/>
                     <field name="balance"/>
                     <field name="state" invisible="1"/>
-                    <field name="currency_id" groups="base.group_extended"/>
+                    <field name="currency_id"/>
                     <field name="date" invisible="1"/>
                     <field name="user_id" invisible="1"/>
                     <field name="partner_id" invisible="1"/>
@@ -83,8 +83,8 @@
                 <form string="Analytic account">
                     <group colspan="4" col="6">
                         <field name="name" colspan="4"/>
-                        <field name="code" groups="base.group_extended"/>
-                        <field name="parent_id" on_change="on_change_parent(parent_id)" groups="base.group_extended"/>
+                        <field name="code"/>
+                        <field name="parent_id" on_change="on_change_parent(parent_id)"/>
                         <field name="company_id" on_change="on_change_company(company_id)" select="2" widget="selection" groups="base.group_multi_company" attrs="{'required': [('type','&lt;&gt;','view')]}"/>
                         <field name="type" select="2"/>
                     </group>
@@ -172,7 +172,7 @@
                         <field name="unit_amount" colspan="2"/>
                         <field name="product_uom_id" colspan="2" nolabel="1"/>
                     </group>
-                    <group colspan="2" col="2" groups="base.group_extended">
+                    <group colspan="2" col="2">
                         <separator string="General Accounting" colspan="2"/>
                         <field name="general_account_id"/>
                         <field name="move_id" readonly="1"/>
@@ -220,7 +220,7 @@
                     </group>
                     <newline/>
                     <group string="Group By..." expand="0">
-                        <filter string="Account" context="{'group_by':'account_id'}" groups="base.group_extended" icon="terp-folder-green"/>
+                        <filter string="Account" context="{'group_by':'account_id'}" icon="terp-folder-green"/>
                         <filter string="Journal" context="{'group_by':'journal_id'}" icon="terp-folder-orange"/>
                         <filter string="User" context="{'group_by':'user_id'}" icon="terp-personal"/>
                         <separator orientation="vertical"/>
@@ -265,7 +265,7 @@
             <field name="arch" type="xml">
                 <form string="Project line">
                     <field name="name"/>
-                    <field name="account_id" groups="base.group_extended"/>
+                    <field name="account_id"/>
                     <field name="date" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
                     <field name="journal_id"/>
                     <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>

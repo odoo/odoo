@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_hr_config_inherit" model="ir.ui.view">
+            <field name="name">hr settings for payroll</field>
+            <field name="model">hr.config.settings</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="hr.view_human_resources_configuration"/>
+            <field name="arch" type="xml">
+                <field name="module_hr_holidays" position="after">
+                    <field name="module_hr_payroll_account"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</openerp>

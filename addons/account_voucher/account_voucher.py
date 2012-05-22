@@ -46,11 +46,11 @@ class account_voucher(osv.osv):
     def _check_paid(self, cr, uid, ids, name, args, context=None):
         res = {}
         for voucher in self.browse(cr, uid, ids, context=context):
-            ok = True
+            paid = False
             for line in voucher.move_ids:
-                if (line.account_id.type, 'in', ('receivable', 'payable')) and not line.reconcile_id:
-                    ok = False
-            res[voucher.id] = ok
+                if (line.account_id.type, 'in', ('receivable', 'payable')) and line.reconcile_id:
+                    paid = True
+            res[voucher.id] = paid
         return res
 
     def _get_type(self, cr, uid, context=None):
@@ -202,12 +202,19 @@ class account_voucher(osv.osv):
         line_dr_ids = resolve_o2m_operations(cr, uid, line_osv, line_dr_ids, ['amount'], context)
         line_cr_ids = resolve_o2m_operations(cr, uid, line_osv, line_cr_ids, ['amount'], context)
 
-        #loop into the lines to see if there is an amount allocated on a voucher line with a currency different than the voucher currency
+        #compute the field is_multi_currency that is used to hide/display options linked to secondary currency on the voucher
         is_multi_currency = False
-        for voucher_line in line_dr_ids+line_cr_ids:
-            if voucher_line.get('currency_id',False) != voucher_currency:
-                is_multi_currency = True
-                break
+        if voucher_currency:
+            # if the voucher currency is not False, it means it is different than the company currency and we need to display the options
+            is_multi_currency = True
+        else:
+            #loop on the voucher lines to see if one of these has a secondary currency. If yes, we need to define the options
+            for voucher_line in line_dr_ids+line_cr_ids:
+                company_currency = False
+                company_currency = voucher_line.get('move_line_id', False) and self.pool.get('account.move.line').browse(cr, uid, voucher_line.get('move_line_id'), context=context).company_id.currency_id.id
+                if voucher_line.get('currency_id', company_currency) != company_currency:
+                    is_multi_currency = True
+                    break
         return {'value': {'writeoff_amount': self._compute_writeoff_amount(cr, uid, line_dr_ids, line_cr_ids, amount), 'is_multi_currency': is_multi_currency}}
 
     def _get_writeoff_amount(self, cr, uid, ids, name, args, context=None):
@@ -227,17 +234,18 @@ class account_voucher(osv.osv):
     def _paid_amount_in_company_currency(self, cr, uid, ids, name, args, context=None):
         if not ids: return {}
         res = {}
-        voucher_rate = company_currency_rate = 1.0
+        rate = 1.0
         for voucher in self.browse(cr, uid, ids, context=context):
             if voucher.currency_id:
-                ctx = context.copy()
-                ctx.update({'date': voucher.date})
-                voucher_rate = self.browse(cr, uid, voucher.id, context=ctx).currency_id.rate
                 if voucher.company_id.currency_id.id == voucher.payment_rate_currency_id.id:
-                    company_currency_rate =  voucher.payment_rate
+                    rate =  1 / voucher.payment_rate
                 else:
+                    ctx = context.copy()
+                    ctx.update({'date': voucher.date})
+                    voucher_rate = self.browse(cr, uid, voucher.id, context=ctx).currency_id.rate
                     company_currency_rate = voucher.company_id.currency_id.rate
-            res[voucher.id] =  voucher.amount / voucher_rate * company_currency_rate
+                    rate = voucher_rate * company_currency_rate
+            res[voucher.id] =  voucher.amount / rate
         return res
 
     _name = 'account.voucher'
@@ -993,9 +1001,7 @@ class account_voucher(osv.osv):
         res = amount
         if voucher.payment_rate_currency_id.id == voucher.company_id.currency_id.id:
             # the rate specified on the voucher is for the company currency
-            rate_between_voucher_and_base = voucher.currency_id.rate or 1.0
-            rate_between_base_and_company = voucher.payment_rate or 1.0
-            res = currency_obj.round(cr, uid, voucher.company_id.currency_id, (amount / rate_between_voucher_and_base * rate_between_base_and_company))
+            res = currency_obj.round(cr, uid, voucher.company_id.currency_id, (amount * voucher.payment_rate))
         else:
             # the rate specified on the voucher is not relevant, we use all the rates in the system
             res = currency_obj.compute(cr, uid, voucher.currency_id.id, voucher.company_id.currency_id.id, amount, context=context)

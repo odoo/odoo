@@ -24,7 +24,8 @@
         <field name="model">crm.phonecall</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree colors="gray:state in ('cancel','done');blue:state in ('pending',)" string="Phone Calls">
+            <tree fonts="bold:needaction_pending==True" colors="gray:state in ('cancel','done');blue:state in ('pending',)" string="Phone Calls">
+                <field name="needaction_pending" invisible="1"/>
                 <field name="date"/>
                 <field name="name"/>
                 <field name="partner_id"/>
@@ -120,6 +121,7 @@
                         states="cancel" type="object"
                         icon="gtk-convert" />
                 </group>
+                <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
             </form>
         </field>
     </record>
@@ -131,7 +133,8 @@
         <field name="model">crm.phonecall</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Phone Calls" editable="top">
+            <tree string="Phone Calls" fonts="bold:needaction_pending==True" editable="top">
+                <field name="needaction_pending" invisible="1"/>
                 <field name="date"/>
                 <field name="name"/>
                 <field name="partner_id"
@@ -139,7 +142,7 @@
                     string="Partner" />
                 <field name="partner_phone"
                     invisible="1"/>
-                <field name="user_id" groups="base.group_extended"/>
+                <field name="user_id"/>
                 <field name="categ_id" widget="selection"
                     domain="[('object_id.model', '=', 'crm.phonecall')]"
                     invisible="1"/>
@@ -207,7 +210,7 @@
                </field>
                <field name="section_id"
                    widget="selection" string="Sales Team">
-                   <filter icon="terp-personal+" groups="base.group_extended"
+                   <filter icon="terp-personal+"
                        domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                        help="My Sales Team(s)" />
                </field>
@@ -257,7 +260,7 @@
                </field>
                <field name="section_id"
                    widget="selection" string="Sales Team">
-                   <filter icon="terp-personal+" groups="base.group_extended"
+                   <filter icon="terp-personal+"
                        domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                        help="My Sales Team(s)" />
                </field>

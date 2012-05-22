@@ -53,6 +53,7 @@ class project(osv.osv):
     _name = "project.project"
     _description = "Project"
     _inherits = {'account.analytic.account': "analytic_account_id"}
+    _inherit = ['ir.needaction_mixin', 'mail.thread']
 
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
         if user == 1:
@@ -154,6 +155,13 @@ class project(osv.osv):
                 raise osv.except_osv(_('Operation Not Permitted !'), _('You cannot delete a project containing tasks. I suggest you to desactivate it.'))
         return super(project, self).unlink(cr, uid, ids, *args, **kwargs)
 
+    def _task_count(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict.fromkeys(ids, 0)
+        task_ids = self.pool.get('project.task').search(cr, uid, [('project_id', 'in', ids)])
+        for task in self.pool.get('project.task').browse(cr, uid, task_ids, context):
+            res[task.project_id.id] += 1
+        return res
+
     _columns = {
         'complete_name': fields.function(_complete_name, string="Project Name", type='char', size=250),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the project without removing it."),
@@ -164,7 +172,7 @@ class project(osv.osv):
 
         'members': fields.many2many('res.users', 'project_user_rel', 'project_id', 'uid', 'Project Members',
             help="Project's members are users who can have an access to the tasks related to this project.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
-        'tasks': fields.one2many('project.task', 'project_id', "Project tasks"),
+        'tasks': fields.one2many('project.task', 'project_id', "Task Activities"),
         'planned_hours': fields.function(_progress_rate, multi="progress", string='Planned Time', help="Sum of planned hours of all tasks related to this project and its child projects.",
             store = {
                 'project.project': (_get_project_and_parents, ['tasks', 'parent_id', 'child_ids'], 10),
@@ -190,7 +198,15 @@ class project(osv.osv):
         'warn_header': fields.text('Mail Header', help="Header added at the beginning of the email for the warning message sent to the customer when a task is closed.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'warn_footer': fields.text('Mail Footer', help="Footer added at the beginning of the email for the warning message sent to the customer when a task is closed.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'type_ids': fields.many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', 'Tasks Stages', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
+        'use_tasks': fields.boolean('Use Tasks', help="Check this field if this project is aimed at managing tasks"),
+        'task_count': fields.function(_task_count, type='integer', string="Open Tasks"),
+        'color': fields.integer('Color Index'),
+        'company_uom_id': fields.related('company_id', 'project_time_mode_id', type='many2one', relation='product.uom'),
      }
+    
+    def dummy(self, cr, uid, ids, context):
+        return True
+       
     def _get_type_common(self, cr, uid, context):
         ids = self.pool.get('project.task.type').search(cr, uid, [('project_default','=',1)], context=context)
         return ids
@@ -200,7 +216,8 @@ class project(osv.osv):
         'active': True,
         'priority': 1,
         'sequence': 10,
-        'type_ids': _get_type_common
+        'type_ids': _get_type_common,
+        'use_tasks': True,
     }
 
     # TODO: Why not using a SQL contraints ?
@@ -224,9 +241,7 @@ class project(osv.osv):
         task_ids = task_obj.search(cr, uid, [('project_id', 'in', ids), ('state', 'not in', ('cancelled', 'done'))])
         task_obj.write(cr, uid, task_ids, {'state': 'done', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S'), 'remaining_hours': 0.0})
         self.write(cr, uid, ids, {'state':'close'}, context=context)
-        for (id, name) in self.name_get(cr, uid, ids):
-            message = _("The project '%s' has been closed.") % name
-            self.log(cr, uid, id, message)
+        self.set_close_send_note(cr, uid, ids, context=context)
         return True
 
     def set_cancel(self, cr, uid, ids, context=None):
@@ -234,23 +249,24 @@ class project(osv.osv):
         task_ids = task_obj.search(cr, uid, [('project_id', 'in', ids), ('state', '!=', 'done')])
         task_obj.write(cr, uid, task_ids, {'state': 'cancelled', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S'), 'remaining_hours': 0.0})
         self.write(cr, uid, ids, {'state':'cancelled'}, context=context)
+        self.set_cancel_send_note(cr, uid, ids, context=context)
         return True
 
     def set_pending(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'pending'}, context=context)
+        self.set_pending_send_note(cr, uid, ids, context=context)
         return True
 
     def set_open(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'open'}, context=context)
+        self.set_open_send_note(cr, uid, ids, context=context)
         return True
 
     def reset_project(self, cr, uid, ids, context=None):
         res = self.setActive(cr, uid, ids, value=True, context=context)
-        for (id, name) in self.name_get(cr, uid, ids):
-            message = _("The project '%s' has been opened.") % name
-            self.log(cr, uid, id, message)
+        self.set_open_send_note(cr, uid, ids, context=context)
         return res
-    
+
     def map_tasks(self, cr, uid, old_project_id, new_project_id, context=None):
         """ copy and map tasks from old to new project """
         if context is None:
@@ -260,7 +276,7 @@ class project(osv.osv):
         proj = self.browse(cr, uid, old_project_id, context=context)
         for task in proj.tasks:
             map_task_id[task.id] =  task_obj.copy(cr, uid, task.id, {}, context=context)
-        self.write(cr, uid, new_project_id, {'tasks':[(6,0, map_task_id.values())]})
+        self.write(cr, uid, [new_project_id], {'tasks':[(6,0, map_task_id.values())]})
         task_obj.duplicate_task(cr, uid, map_task_id, context=context)
         return True
 
@@ -442,20 +458,58 @@ def Project():
                         'user_id': int(p.booked_resource[0].name[5:]),
                     }, context=context)
         return True
-project()
 
-class users(osv.osv):
-    _inherit = 'res.users'
-    _columns = {
-        'context_project_id': fields.many2one('project.project', 'Project')
-    }
-users()
+    # ------------------------------------------------
+    # OpenChatter methods and notifications
+    # ------------------------------------------------
+    
+    def get_needaction_user_ids(self, cr, uid, ids, context=None):
+        result = dict.fromkeys(ids)
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = []
+            if obj.state == 'draft' and obj.user_id:
+                result[obj.id] = [obj.user_id.id]
+        return result
+
+    def message_get_subscribers(self, cr, uid, ids, context=None):
+        sub_ids = self.message_get_subscribers_ids(cr, uid, ids, context=context);
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.user_id:
+                sub_ids.append(obj.user_id.id)
+        return self.pool.get('res.users').read(cr, uid, sub_ids, context=context)
+
+    def create(self, cr, uid, vals, context=None):
+        obj_id = super(project, self).create(cr, uid, vals, context=context)
+        self.create_send_note(cr, uid, [obj_id], context=context)
+        return obj_id
+
+    def create_send_note(self, cr, uid, ids, context=None):
+        return self.message_append_note(cr, uid, ids, body=_("Project has been <b>created</b>."), context=context)
+
+    def set_open_send_note(self, cr, uid, ids, context=None):
+        message = _("Project has been <b>opened</b>.")
+        return self.message_append_note(cr, uid, ids, body=message, context=context)
+
+    def set_pending_send_note(self, cr, uid, ids, context=None):
+        message = _("Project is now <b>pending</b>.")
+        return self.message_append_note(cr, uid, ids, body=message, context=context)
+
+    def set_cancel_send_note(self, cr, uid, ids, context=None):
+        message = _("Project has been <b>cancelled</b>.")
+        return self.message_append_note(cr, uid, ids, body=message, context=context)
+
+    def set_close_send_note(self, cr, uid, ids, context=None):
+        message = _("Project has been <b>closed</b>.")
+        return self.message_append_note(cr, uid, ids, body=message, context=context)
+    
+project()
 
 class task(osv.osv):
     _name = "project.task"
     _description = "Task"
     _log_create = True
     _date_name = "date_start"
+    _inherit = ['ir.needaction_mixin', 'mail.thread']
 
 
     def _resolve_project_id_from_context(self, cr, uid, context=None):
@@ -844,8 +898,7 @@ class task(osv.osv):
             if not task.date_end:
                 vals.update({ 'date_end':time.strftime('%Y-%m-%d %H:%M:%S')})
             self.write(cr, uid, [task.id],vals, context=context)
-            message = _("The task '%s' is done") % (task.name,)
-            self.log(cr, uid, task.id, message)
+            self.do_close_send_note(cr, uid, [task.id], context)
         return True
 
     def do_reopen(self, cr, uid, ids, context=None):
@@ -865,6 +918,7 @@ class task(osv.osv):
                 }, context=context)
 
             self.write(cr, uid, [task.id], {'state': 'open'}, context=context)
+            self.do_open_send_note(cr, uid, [task.id], context)
         return True
 
     def do_cancel(self, cr, uid, ids, context={}):
@@ -883,9 +937,8 @@ class task(osv.osv):
                     'ref_doc1': 'project.task,%d' % task.id,
                     'ref_doc2': 'project.project,%d' % project.id,
                 }, context=context)
-            message = _("The task '%s' is cancelled.") % (task.name,)
-            self.log(cr, uid, task.id, message)
             self.write(cr, uid, [task.id], {'state': 'cancelled', 'remaining_hours':0.0}, context=context)
+            self.do_cancel_send_note(cr, uid, [task.id], context)
         return True
 
     def do_open(self, cr, uid, ids, context={}):
@@ -896,12 +949,12 @@ class task(osv.osv):
             if not t.date_start:
                 data['date_start'] = time.strftime('%Y-%m-%d %H:%M:%S')
             self.write(cr, uid, [t.id], data, context=context)
-            message = _("The task '%s' is opened.") % (t.name,)
-            self.log(cr, uid, t.id, message)
+            self.do_open_send_note(cr, uid, [t.id], context)
         return True
 
     def do_draft(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state': 'draft'}, context=context)
+        self.do_draft_send_note(cr, uid, ids, context)
         return True
 
 
@@ -912,7 +965,7 @@ class task(osv.osv):
         for attachment_id in attachment_ids:
             new_attachment_ids.append(attachment.copy(cr, uid, attachment_id, default={'res_id': delegated_task_id}, context=context))
         return new_attachment_ids
-        
+
 
     def do_delegate(self, cr, uid, ids, delegate_data={}, context=None):
         """
@@ -940,20 +993,16 @@ class task(osv.osv):
                 'name': newname,
             }, context=context)
             if delegate_data['state'] == 'pending':
-                self.do_pending(cr, uid, task.id, context=context)
+                self.do_pending(cr, uid, [task.id], context=context)
             elif delegate_data['state'] == 'done':
-                self.do_close(cr, uid, task.id, context=context)
-            
-            message = _("The task '%s' has been delegated to %s.") % (delegate_data['name'], delegate_data['user_id'][1])
-            self.log(cr, uid, task.id, message)
+                self.do_close(cr, uid, [task.id], context=context)
+            self.do_delegation_send_note(cr, uid, [task.id], context)
             delegated_tasks[task.id] = delegated_task_id
         return delegated_tasks
 
     def do_pending(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state': 'pending'}, context=context)
-        for (id, name) in self.name_get(cr, uid, ids):
-            message = _("The task '%s' is pending.") % name
-            self.log(cr, uid, id, message)
+        self.do_pending_send_note(cr, uid, ids, context)
         return True
 
     def set_remaining_time(self, cr, uid, ids, remaining_time=1.0, context=None):
@@ -984,7 +1033,7 @@ class task(osv.osv):
     def set_kanban_state_done(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'kanban_state': 'done'}, context=context)
 
-    def _change_type(self, cr, uid, ids, next, *args):
+    def _change_type(self, cr, uid, ids, next, context=None):
         """
             go to the next stage
             if next is False, go to previous stage
@@ -1005,13 +1054,14 @@ class task(osv.osv):
                 elif typeid and typeid in sorted_types and sorted_types.index(typeid) != len(sorted_types)-1:
                     index = sorted_types.index(typeid)
                     self.write(cr, uid, task.id, {'type_id': sorted_types[index+1]})
+                self.state_change_send_note(cr, uid, [task.id], context)
         return True
 
-    def next_type(self, cr, uid, ids, *args):
-        return self._change_type(cr, uid, ids, True, *args)
+    def next_type(self, cr, uid, ids, context=None):
+        return self._change_type(cr, uid, ids, True, context=context)
 
-    def prev_type(self, cr, uid, ids, *args):
-        return self._change_type(cr, uid, ids, False, *args)
+    def prev_type(self, cr, uid, ids, context=None):
+        return self._change_type(cr, uid, ids, False, context=context)
 
     def _store_history(self, cr, uid, ids, context=None):
         for task in self.browse(cr, uid, ids, context=context):
@@ -1028,9 +1078,10 @@ class task(osv.osv):
         return True
 
     def create(self, cr, uid, vals, context=None):
-        result = super(task, self).create(cr, uid, vals, context=context)
-        self._store_history(cr, uid, [result], context=context)
-        return result
+        task_id = super(task, self).create(cr, uid, vals, context=context)
+        self._store_history(cr, uid, [task_id], context=context)
+        self.create_send_note(cr, uid, [task_id], context=context)
+        return task_id
 
     # Overridden to reset the kanban_state to normal whenever
     # the stage (type_id) of the task changes.
@@ -1041,13 +1092,14 @@ class task(osv.osv):
             new_stage = vals.get('type_id')
             vals_reset_kstate = dict(vals, kanban_state='normal')
             for t in self.browse(cr, uid, ids, context=context):
-                write_vals = vals_reset_kstate if t.type_id != new_stage else vals 
+                write_vals = vals_reset_kstate if t.type_id != new_stage else vals
                 super(task,self).write(cr, uid, [t.id], write_vals, context=context)
             result = True
         else:
             result = super(task,self).write(cr, uid, ids, vals, context=context)
         if ('type_id' in vals) or ('remaining_hours' in vals) or ('user_id' in vals) or ('state' in vals) or ('kanban_state' in vals):
             self._store_history(cr, uid, ids, context=context)
+            self.state_change_send_note(cr, uid, ids, context)
         return result
 
     def unlink(self, cr, uid, ids, context=None):
@@ -1083,6 +1135,62 @@ class task(osv.osv):
 
         result += "\n"
         return result
+    
+    # ---------------------------------------------------
+    # OpenChatter methods and notifications
+    # ---------------------------------------------------
+    
+    def get_needaction_user_ids(self, cr, uid, ids, context=None):
+        result = dict.fromkeys(ids, [])
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.state == 'draft' and obj.user_id:
+                result[obj.id] = [obj.user_id.id]
+        return result
+
+    def message_get_subscribers(self, cr, uid, ids, context=None):
+        sub_ids = self.message_get_subscribers_ids(cr, uid, ids, context=context);
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.user_id:
+                sub_ids.append(obj.user_id.id)
+            if obj.manager_id:
+                sub_ids.append(obj.manager_id.id)
+        return self.pool.get('res.users').read(cr, uid, sub_ids, context=context)
+
+    def create_send_note(self, cr, uid, ids, context=None):
+        return self.message_append_note(cr, uid, ids, body=_("Task has been <b>created</b>."), context=context)
+
+    def do_pending_send_note(self, cr, uid, ids, context=None):
+        if not isinstance(ids,list): ids = [ids]
+        msg = _('Task is now <b>pending</b>.')
+        return self.message_append_note(cr, uid, ids, body=msg, context=context)
+
+    def do_open_send_note(self, cr, uid, ids, context=None):
+        msg = _('Task has been <b>opened</b>.')
+        return self.message_append_note(cr, uid, ids, body=msg, context=context)
+
+    def do_cancel_send_note(self, cr, uid, ids, context=None):
+        msg = _('Task has been <b>canceled</b>.')
+        return self.message_append_note(cr, uid, ids, body=msg, context=context)
+
+    def do_close_send_note(self, cr, uid, ids, context=None):
+        msg = _('Task has been <b>closed</b>.')
+        return self.message_append_note(cr, uid, ids, body=msg, context=context)
+
+    def do_draft_send_note(self, cr, uid, ids, context=None):
+        msg = _('Task has been <b>renewed</b>.')
+        return self.message_append_note(cr, uid, ids, body=msg, context=context)
+
+    def do_delegation_send_note(self, cr, uid, ids, context=None):
+        for task in self.browse(cr, uid, ids, context=context):
+            msg = _('Task has been <b>delegated</b> to <em>%s</em>.') % (task.user_id.name)
+            self.message_append_note(cr, uid, [task.id], body=msg, context=context)
+        return True
+
+    def state_change_send_note(self, cr, uid, ids, context=None):
+        for task in self.browse(cr, uid, ids, context=context):
+            msg = _('Stage changed to <b>%s</b>') % (task.type_id.name)
+            self.message_append_note(cr, uid, [task.id], body=msg, context=context)
+        return True
 
 task()
 
@@ -1178,7 +1286,7 @@ class project_task_history(osv.osv):
         for history in self.browse(cr, uid, ids, context=context):
             cr.execute('''select
                     id
-                from 
+                from
                     project_task_history
                 where
                     task_id=%s and
@@ -1227,11 +1335,10 @@ class project_task_history_cumulative(osv.osv):
                     id as history_id,
                     date+generate_series(0, CAST((coalesce(end_date,DATE 'tomorrow')::date - date)AS integer)-1) as date,
                     task_id, type_id, user_id, kanban_state, state,
-                    remaining_hours, planned_hours
+                    greatest(remaining_hours,1) as remaining_hours, greatest(planned_hours,1) as planned_hours
                 FROM
                     project_task_history
             ) as history
         )
         """)
 project_task_history_cumulative()
-

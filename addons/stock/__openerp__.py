@@ -72,8 +72,8 @@ Thanks to the double entry management, the inventory controlling is powerful and
         'wizard/stock_return_picking_view.xml',
         "stock_workflow.xml",
         "stock_incoterms.xml",
-        "stock_view.xml",
         "stock_report.xml",
+        "stock_view.xml",
         "stock_sequence.xml",
         "product_data.xml",
         "product_view.xml",
@@ -81,6 +81,7 @@ Thanks to the double entry management, the inventory controlling is powerful and
         "report/report_stock_move_view.xml",
         "report/report_stock_view.xml",
         "board_warehouse_view.xml",
+        "res_config_view.xml",
     ],
     'test': [
         'test/opening_stock.yml',

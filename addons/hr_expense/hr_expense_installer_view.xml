@@ -10,7 +10,7 @@
                     <field name="name"/>
                     <field name="standard_price"/>
                     <field name="list_price"/>
-                    <field name="uom_id" string="UoM"/>
+                    <field name="uom_id" string="Unit of Measure"/>
                 </tree>
             </field>
         </record> 
@@ -27,10 +27,5 @@
            <field name="help">Define one product for each expense type allowed for an employee (travel by car, hostel, restaurant, etc). If you reimburse the employees at a fixed rate, set a cost and a unit of measure on the product. If you reimburse based on real costs, set the cost at 0.00. The user will set the real price when recording his expense sheet.</field>
        </record>
 
-       <record id="product_normal_form_view_todo" model="ir.actions.todo">
-           <field name="action_id" ref="product_normal_form_view_installer"/>
-           <field name="category_id" ref="hr.category_hr_management_config"/>
-           <field name="sequence">3</field>
-       </record>
     </data>
 </openerp>

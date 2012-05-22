@@ -125,7 +125,7 @@ class crm_lead_forward_to_partner(osv.osv_memory):
                 if email_to not in new_cc:
                     new_cc.append(to)
             update_vals = {'email_cc' : ', '.join(new_cc) }
-            lead.write(cr, uid, case.id, update_vals, context=context)
+            lead.write(cr, uid, [case.id], update_vals, context=context)
         return res
 
     def _get_info_body_text(self, cr, uid, lead, context=None):

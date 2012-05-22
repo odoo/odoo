@@ -3,15 +3,15 @@
     <data>
 
         <!--
-        Analytic Account form 
+        Analytic Account form
 
         Remove information on Account data => because they move on analysis sheet
         create a page with invoicing informations
         -->
         <record id="account_analytic_account_invoice_stat_form" model="ir.ui.view">
-            <field name="name">account.analytic.account.invoice.stat.form.inherit</field> 
-            <field name="model">account.analytic.account</field> 
-            <field name="type">form</field> 
+            <field name="name">account.analytic.account.invoice.stat.form.inherit</field>
+            <field name="model">account.analytic.account</field>
+            <field name="type">form</field>
             <field name="inherit_id" ref="hr_timesheet_invoice.account_analytic_account_form_form"/>
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
@@ -30,15 +30,15 @@
         </record>
 
         <record id="hr_timesheet.account_analytic_account_form_form" model="ir.ui.view">
-            <field name="name">account.analytic.account.invoice.form.inherit</field> 
-            <field name="model">account.analytic.account</field> 
-            <field name="type">form</field> 
+            <field name="name">account.analytic.account.invoice.form.inherit</field>
+            <field name="model">account.analytic.account</field>
+            <field name="type">form</field>
             <field name="inherit_id" ref="account.view_account_analytic_account_form"/>
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
                 <notebook position="inside">
                     <page string="Invoice Analysis">
-                        <separator colspan="4" string="Work done stats"/>
+                        <separator colspan="4" string="Work Done Stats"/>
 
                         <field name="total_cost"/>
                         <field name="remaining_ca"/>
@@ -49,13 +49,13 @@
                         <field name="hours_qtt_invoiced"/>
                         <field name="remaining_hours"/>
                         <newline/>
-                        <separator colspan="4" string="Analysis stats"/>
+                        <separator colspan="4" string="Analysis Stats"/>
 
                         <field name="revenue_per_hour"/>
                         <field name="real_margin"/>
                         <field name="real_margin_rate"/>
                         <field name="theorical_margin"/>
-                        <separator colspan="4" string="Key dates"/>
+                        <separator colspan="4" string="Key Dates"/>
 
                         <field name="last_invoice_date"/>
                         <field name="last_worked_invoiced_date"/>
@@ -69,7 +69,7 @@
                             </tree>
                         </field>
                     </page>
-                    <page string="Stats by user"> 
+                    <page string="Stats by user">
                         <field colspan="4" name="user_ids" nolabel="1">
                             <tree string="Users">
                                 <field name="user"/>
@@ -97,14 +97,14 @@
                 </field>
             </field>
         </record>
-        
-        <record id="view_account_analytic_account_tree_c2c_3" model="ir.ui.view"> 
-            <field name="name">account.analytic.account.tree</field> 
-            <field name="model">account.analytic.account</field> 
+
+        <record id="view_account_analytic_account_tree_c2c_3" model="ir.ui.view">
+            <field name="name">account.analytic.account.tree</field>
+            <field name="model">account.analytic.account</field>
             <field name="inherit_id" ref="account.view_account_analytic_account_list"/>
-            <field name="type">tree</field> 
-            <field name="arch" type="xml"> 
-                <field name="date" position="before"> 
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <field name="date" position="before">
                     <field name="last_invoice_date"/>
                     <field name="ca_to_invoice"/>
                 </field>

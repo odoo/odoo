@@ -194,7 +194,7 @@ class account_analytic_plan_instance(osv.osv):
                     <field name="account%d_ids" string="%s" nolabel="1" colspan="4">
                     <tree string="%s" editable="bottom">
                         <field name="rate"/>
-                        <field name="analytic_account_id" domain="[('parent_id','child_of',[%d])]" groups="base.group_extended"/>
+                        <field name="analytic_account_id" domain="[('parent_id','child_of',[%d])]" groups="analytic.group_analytic_accounting"/>
                     </tree>
                 </field>
                 <newline/>"""%(i,tools.to_xml(line.name),tools.to_xml(line.name),line.root_analytic_id and line.root_analytic_id.id or 0)

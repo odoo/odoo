@@ -93,6 +93,7 @@ class hr_holidays(osv.osv):
     _name = "hr.holidays"
     _description = "Leave"
     _order = "type desc, date_from asc"
+    _inherit = ['ir.needaction_mixin', 'mail.thread']
 
     def _employee_get(self, cr, uid, context=None):
         ids = self.pool.get('hr.employee').search(cr, uid, [('user_id', '=', uid)], context=context)
@@ -150,7 +151,12 @@ class hr_holidays(osv.osv):
         ('date_check2', "CHECK ( (type='add') OR (date_from <= date_to))", "The start date must be before the end date !"),
         ('date_check', "CHECK ( number_of_days_temp >= 0 )", "The number of days must be greater than 0 !"),
     ]
-
+    
+    def create(self, cr, uid, vals, context=None):
+        obj_id = super(hr_holidays, self).create(cr, uid, vals, context=context)
+        self.create_notificate(cr, uid, [obj_id], context=context)
+        return obj_id
+    
     def _create_resource_leave(self, cr, uid, leaves, context=None):
         '''This method will create entry in resource calendar leave object at the time of holidays validated '''
         obj_res_leave = self.pool.get('resource.calendar.leaves')
@@ -250,6 +256,7 @@ class hr_holidays(osv.osv):
         obj_emp = self.pool.get('hr.employee')
         ids2 = obj_emp.search(cr, uid, [('user_id', '=', uid)])
         manager = ids2 and ids2[0] or False
+        self.holidays_validate_notificate(cr, uid, ids, context=context)
         return self.write(cr, uid, ids, {'state':'validate1', 'manager_id': manager})
 
     def holidays_validate2(self, cr, uid, ids, context=None):
@@ -301,11 +308,13 @@ class hr_holidays(osv.osv):
                     wf_service.trg_validate(uid, 'hr.holidays', leave_id, 'validate', cr)
                     wf_service.trg_validate(uid, 'hr.holidays', leave_id, 'second_validate', cr)
         if holiday_ids:
+            self.holidays_valid2_notificate(self, cr, uid, [holiday_ids], context=context)
             self.write(cr, uid, holiday_ids, {'manager_id2': manager})
         return True
 
     def holidays_confirm(self, cr, uid, ids, context=None):
         self.check_holidays(cr, uid, ids, context=context)
+        self.holidays_confirm_notificate(cr, uid, ids, context=context)
         return self.write(cr, uid, ids, {'state':'confirm'})
 
     def holidays_refuse(self, cr, uid, ids, approval, context=None):
@@ -316,6 +325,7 @@ class hr_holidays(osv.osv):
             self.write(cr, uid, ids, {'state': 'refuse', 'manager_id': manager})
         else:
             self.write(cr, uid, ids, {'state': 'refuse', 'manager_id2': manager})
+        self.holidays_refuse_notificate(cr, uid, ids, approval, context=context)
         self.holidays_cancel(cr, uid, ids, context=context)
         return True
 
@@ -341,8 +351,71 @@ class hr_holidays(osv.osv):
                 if record.employee_id and not record.holiday_status_id.limit:
                     leaves_rest = holi_status_obj.get_days( cr, uid, [record.holiday_status_id.id], record.employee_id.id, False)[record.holiday_status_id.id]['remaining_leaves']
                     if leaves_rest < record.number_of_days_temp:
-                        raise osv.except_osv(_('Warning!'),_('You cannot validate leaves for employee %s: too few remaining days (%s).') % (record.employee_id.name, leaves_rest))
+                        raise osv.except_osv(_('Warning!'), _('There are not enough %s allocated for employee %s; please create an allocation request for this leave type.') % (record.holiday_status_id.name, record.employee_id.name))
         return True
+    
+    # -----------------------------
+    # OpenChatter and notifications
+    # -----------------------------
+    
+    def get_needaction_user_ids(self, cr, uid, ids, context=None):
+        result = dict.fromkeys(ids, [])
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.state == 'confirm' and obj.employee_id.parent_id:
+                result[obj.id] = [obj.employee_id.parent_id.user_id.id]
+            elif obj.state == 'validate1':
+                # get group_hr_manager: everyone will be warned of second validation
+                res = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'group_hr_manager') or False
+                obj_id = res and res[1] or False
+                if obj_id:
+                    hr_manager_group = self.pool.get('res.groups').read(cr, uid, [obj_id], ['users'], context=context)[0]
+                    result[obj.id] = hr_manager_group['users']
+        return result
+    
+    def message_get_subscribers(self, cr, uid, ids, context=None):
+        sub_ids = self.message_get_subscribers_ids(cr, uid, ids, context=context);
+        # add the employee and its manager if specified to the subscribed users
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.employee_id.parent_id:
+                sub_ids.append(obj.employee_id.parent_id.user_id.id)
+        return self.pool.get('res.users').read(cr, uid, sub_ids, context=context)
+        
+    def create_notificate(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            self.message_append_note(cr, uid, ids, _('System notification'),
+                        _("The %s request has been <b>created</b> and is waiting confirmation")
+                        % ('leave' if obj.type == 'remove' else 'allocation',), type='notification', context=context)
+        return True
+    
+    def holidays_confirm_notificate(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids):
+            self.message_append_note(cr, uid, [obj.id], _('System notification'), 
+                    _("The %s request has been <b>confirmed</b> and is waiting for validation by the manager.")
+                    % ('leave' if obj.type == 'remove' else 'allocation',), type='notification')
+    
+    def holidays_validate_notificate(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids):
+            if obj.holiday_status_id.double_validation:
+                self.message_append_note(cr, uid, [obj.id], _('System notification'),
+                    _("The %s request has been <b>validated</b>. A second validation is necessary and is now pending.")
+                    % ('leave' if obj.type == 'remove' else 'allocation',), type='notification', context=context)
+            else:
+                self.message_append_note(cr, uid, [obj.id], _('System notification'),
+                    _("The %s request has been <b>validated</b>. The validation process is now over.")
+                    % ('leave' if obj.type == 'remove' else 'allocation',), type='notification', context=context)
+    
+    def holidays_valid2_notificate(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids):
+            self.message_append_note(cr, uid, [obj.id], _('System notification'),
+                    _("The %s request has been <b>double validated</b>. The validation process is now over.")
+                    % ('leave' if obj.type == 'remove' else 'allocation',), type='notification', context=context)
+    
+    def holidays_refuse_notificate(self, cr, uid, ids, approval, context=None):
+        for obj in self.browse(cr, uid, ids):
+            self.message_append_note(cr, uid, [obj.id], _('System notification'),
+                    _("The %s request has been <b>refused</b>. The validation process is now over.")
+                    % ('leave' if obj.type == 'remove' else 'allocation',), type='notification', context=context)
+    
 hr_holidays()
 
 class resource_calendar_leaves(osv.osv):

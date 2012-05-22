@@ -28,7 +28,7 @@ class change_production_qty(osv.osv_memory):
     _description = 'Change Quantity of Products'
     
     _columns = {
-        'product_qty': fields.float('Product Qty', digits_compute=dp.get_precision('Product UoM'), required=True),
+        'product_qty': fields.float('Product Qty', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
     }
 
     def default_get(self, cr, uid, fields, context=None):
@@ -70,7 +70,7 @@ class change_production_qty(osv.osv_memory):
         bom_obj = self.pool.get('mrp.bom')
         for wiz_qty in self.browse(cr, uid, ids, context=context):
             prod = prod_obj.browse(cr, uid, record_id, context=context)
-            prod_obj.write(cr, uid,prod.id, {'product_qty': wiz_qty.product_qty})
+            prod_obj.write(cr, uid, [prod.id], {'product_qty': wiz_qty.product_qty})
             prod_obj.action_compute(cr, uid, [prod.id])
 
             move_lines_obj = self.pool.get('stock.move')

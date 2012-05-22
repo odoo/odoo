@@ -130,7 +130,7 @@
                     <group col="6" colspan="4">
                         <field name="name" select="1" colspan="6"/>
                         <field name="group_id" string="Topic" select="1" on_change="onchange_group_id(group_id, text_area)"/>
-                        <field name="parent_id" groups="base.group_extended" domain="[('group_id','=',group_id)]"/>
+                        <field name="parent_id" domain="[('group_id','=',group_id)]"/>
                         <field name="section"/>                        
                     </group>
                     <notebook colspan="4">
@@ -139,16 +139,16 @@
                         <field name="text_area" nolabel="1" colspan="4" select="1" widget="text_wiki"/>
                         </page>
                     </notebook>
-                    <group col="2" colspan="2">
+                    <group col="2" colspan="2" groups="base.group_no_one">
                         <separator colspan="4" string="Modification Information"/>
-                        <field name="write_date" readonly="1" groups="base.group_no_one"/>
-                        <field name="minor_edit" groups="base.group_extended"/>
-                        <field name="review" select="1" groups="base.group_extended"/>
+                        <field name="write_date" readonly="1"/>
+                        <field name="minor_edit"/>
+                        <field name="review" select="1"/>
                     </group>
                     <group col="2" colspan="2">
                         <separator colspan="4" string="Meta Information"/>
                         <field name="tags" select="1"/>
-                        <field name="toc" groups="base.group_extended"/>
+                        <field name="toc" groups="base.group_no_one"/>
                     </group>
                 </form>
             </field>
@@ -166,7 +166,7 @@
                     <field name="name"/>
                     <field name="group_id"/>
                     <field name="tags"/>
-                    <field name="section" groups="base.group_extended"/>
+                    <field name="section"/>
                     <field name="write_uid"/>
                     <field name="write_date" groups="base.group_no_one"/>
                     <newline/>
@@ -215,7 +215,7 @@
                 <tree string="Wiki History">
                     <field name="create_date"/>
                     <field name="write_uid"/>
-                    <field name="minor_edit" groups="base.group_extended"/>
+                    <field name="minor_edit" groups="base.group_no_one"/>
                     <field name="summary"/>
                 </tree>
             </field>
@@ -232,7 +232,7 @@
                     <field name="summary" select="1" colspan="4"/>
                     <field name="text_area" select="1" colspan="4" nolabel="1" widget="text_wiki"/>
                     <field name="create_date" select="1" readonly="1"/>
-                    <field name="minor_edit" select="1" groups="base.group_extended"/>
+                    <field name="minor_edit" select="1" groups="base.group_no_one"/>
                 </form>
             </field>
         </record>

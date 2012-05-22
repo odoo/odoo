@@ -8,7 +8,7 @@
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
                 <xpath expr="/form/notebook/page/field[@name='active']" position="after">
-                    <field name="opt_out" groups="base.group_extended"/>
+                    <field name="opt_out"/>
                 </xpath>
             </field>
         </record>

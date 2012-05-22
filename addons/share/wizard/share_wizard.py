@@ -165,12 +165,17 @@ class share_wizard(osv.osv_memory):
         'user_type': fields.selection(lambda s, *a, **k: s._user_type_selection(*a, **k),'Sharing method', required=True,
                      help="Select the type of user(s) you would like to share data with."),
         'new_users': fields.text("Emails"),
+        'email_1': fields.char('New user email', size=64),
+        'email_2': fields.char('New user email', size=64),
+        'email_3': fields.char('New user email', size=64),
+        'invite': fields.boolean('Invite users to OpenSocial record'),
         'access_mode': fields.selection([('readonly','Can view'),('readwrite','Can edit')],'Access Mode', required=True,
                                         help="Access rights to be granted on the shared documents."),
         'result_line_ids': fields.one2many('share.wizard.result.line', 'share_wizard_id', 'Summary', readonly=True),
         'share_root_url': fields.function(_share_root_url, string='Share Access URL', type='char', size=512, readonly=True,
                                 help='Main access page for users that are granted shared access'),
         'name': fields.char('Share Title', size=64, required=True, help="Title for the share (displayed to users as menu and shortcut name)"),
+        'record_name': fields.char('Record name', size=128, help="Name of the shared record, if sharing a precise record"),
         'message': fields.text("Personal Message", help="An optional personal message, to be included in the e-mail notification."),
 
         'embed_code': fields.function(_embed_code, type='text'),
@@ -181,9 +186,10 @@ class share_wizard(osv.osv_memory):
     _defaults = {
         'view_type': 'page',
         'user_type' : 'embedded',
+        'invite': False,
         'domain': lambda self, cr, uid, context, *a: context.get('domain', '[]'),
         'action_id': lambda self, cr, uid, context, *a: context.get('action_id'),
-        'access_mode': 'readonly',
+        'access_mode': 'readwrite',
         'embed_option_title': True,
         'embed_option_search': True,
     }
@@ -192,8 +198,8 @@ class share_wizard(osv.osv_memory):
         return bool(self.pool.get('res.users').browse(cr, uid, uid, context=context).user_email)
 
     def go_step_1(self, cr, uid, ids, context=None):
-        user_type = self.browse(cr,uid,ids,context)[0].user_type
-        if user_type == 'emails' and not self.has_email(cr, uid, context=context):
+        wizard_data = self.browse(cr,uid,ids,context)[0]
+        if wizard_data.user_type == 'emails' and not self.has_email(cr, uid, context=context):
             raise osv.except_osv(_('No e-mail address configured'),
                                  _('You must configure your e-mail address in the user preferences before using the Share button.'))
         model, res_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'share', 'action_share_wizard_step1')
@@ -223,12 +229,18 @@ class share_wizard(osv.osv_memory):
         created_ids = []
         existing_ids = []
         if wizard_data.user_type == 'emails':
-            for new_user in (wizard_data.new_users or '').split('\n'):
+            # get new user list from email data
+            new_users = (wizard_data.new_users or '').split('\n')
+            new_users += [wizard_data.email_1 or '', wizard_data.email_2 or '', wizard_data.email_3 or '']
+            for new_user in new_users:
                 # Ignore blank lines
                 new_user = new_user.strip()
                 if not new_user: continue
                 # Ignore the user if it already exists.
-                existing = user_obj.search(cr, UID_ROOT, [('login', '=', new_user)])
+                if not wizard_data.invite:
+                    existing = user_obj.search(cr, UID_ROOT, [('login', '=', new_user)])
+                else:
+                    existing = user_obj.search(cr, UID_ROOT, [('user_email', '=', new_user)])
                 existing_ids.extend(existing)
                 if existing:
                     new_line = { 'user_id': existing[0],
@@ -243,6 +255,7 @@ class share_wizard(osv.osv_memory):
                         'user_email': new_user,
                         'groups_id': [(6,0,[group_id])],
                         'share': True,
+                        'message_email_pref': 'all',
                         'company_id': current_user.company_id.id
                 }, context)
                 new_line = { 'user_id': user_id,
@@ -489,6 +502,8 @@ class share_wizard(osv.osv_memory):
         # Create required rights if allowed by current user rights and not
         # already granted
         for dummy, model in fields_relations:
+            # mail.message is transversal: it should not received directly the access rights
+            if model.model in ['mail.message']: continue
             values = {
                 'name': _('Copied access for sharing'),
                 'group_id': group_id,
@@ -619,6 +634,8 @@ class share_wizard(osv.osv_memory):
             domain = safe_eval(wizard_data.domain)
             if domain:
                 for rel_field, model in fields_relations:
+                    # mail.message is transversal: it should not received directly the access rights
+                    if model.model in ['mail.message']: continue
                     related_domain = []
                     if not rel_field: continue
                     for element in domain:
@@ -643,7 +660,7 @@ class share_wizard(osv.osv_memory):
                      _('You must be a member of the Share/User group to use the share wizard'),
                      context=context)
         if wizard_data.user_type == 'emails':
-            self._assert(wizard_data.new_users,
+            self._assert((wizard_data.new_users or wizard_data.email_1 or wizard_data.email_2 or wizard_data.email_3),
                      _('Please indicate the emails of the persons to share with, one per line'),
                      context=context)
 
@@ -667,21 +684,21 @@ class share_wizard(osv.osv_memory):
         if new_ids:
             # new users need a new shortcut AND a home action
             self._setup_action_and_shortcut(cr, uid, wizard_data, new_ids, make_home=True, context=context)
-        return group_id
+        return group_id, new_ids, existing_ids
 
     def go_step_2(self, cr, uid, ids, context=None):
         wizard_data = self.browse(cr, uid, ids[0], context=context)
         self._check_preconditions(cr, uid, wizard_data, context=context)
 
         # Create shared group and users
-        group_id = self._create_share_users_group(cr, uid, wizard_data, context=context)
+        group_id, new_ids, existing_ids = self._create_share_users_group(cr, uid, wizard_data, context=context)
 
         current_user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
 
         model_obj = self.pool.get('ir.model')
         model_id = model_obj.search(cr, uid, [('model','=', wizard_data.action_id.res_model)])[0]
         model = model_obj.browse(cr, uid, model_id, context=context)
-
+        
         # ACCESS RIGHTS
         # We have several classes of objects that should receive different access rights:
         # Let:
@@ -731,68 +748,141 @@ class share_wizard(osv.osv_memory):
 
         # refresh wizard_data
         wizard_data = self.browse(cr, uid, ids[0], context=context)
+        
+        # EMAILS AND NOTIFICATIONS
+        #  A. Not invite: as before
+        #     -> send emails to destination users
+        #  B. Invite (OpenSocial)
+        #     -> subscribe all users (existing and new) to the record
+        #     -> send a notification with a summary to the current record
+        #     -> send a notification to all users; users allowing to receive
+        #        emails in preferences will receive it
+        #        new users by default receive all notifications by email
+        
+        # A.
+        if not wizard_data.invite:
+            self.send_emails(cr, uid, wizard_data, context=context)
+        # B.
+        else:
+            # Invite (OpenSocial): automatically subscribe users to the record
+            res_id = 0
+            for cond in safe_eval(main_domain):
+                if cond[0] == 'id':
+                    res_id = cond[2]
+            # Record id not found: issue
+            if res_id <= 0:
+                raise osv.except_osv(_('Record id not found'), _('The share engine has not been able to fetch a record_id for your invitation.'))
+            self.pool.get(model.model).message_subscribe(cr, uid, [res_id], new_ids + existing_ids, context=context)
+            self.send_invite_email(cr, uid, wizard_data, context=context)
+            self.send_invite_note(cr, uid, model.model, res_id, wizard_data, context=context)
+        
+        # CLOSE
+        #  A. Not invite: as before
+        #  B. Invite: skip summary screen, get back to the record
+        
+        # A.
+        if not wizard_data.invite:
+            dummy, step2_form_view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'share', 'share_step2_form')
+            return {
+                'name': _('Shared access created!'),
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'share.wizard',
+                'view_id': False,
+                'res_id': ids[0],
+                'views': [(step2_form_view_id, 'form'), (False, 'tree'), (False, 'calendar'), (False, 'graph')],
+                'type': 'ir.actions.act_window',
+                'target': 'new'
+            }
+        # B.
+        else:
+            return {
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': model.model,
+                'view_id': False,
+                'res_id': res_id,
+                'views': [(False, 'form'), (False, 'tree'), (False, 'calendar'), (False, 'graph')],
+                'type': 'ir.actions.act_window',
+            }
+            
 
-        # send the confirmation emails:
-        self.send_emails(cr, uid, wizard_data, context=context)
-
-        dummy, step2_form_view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'share', 'share_step2_form')
-        return {
-            'name': _('Shared access created!'),
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'share.wizard',
-            'view_id': False,
-            'res_id': ids[0],
-            'views': [(step2_form_view_id, 'form'), (False, 'tree'), (False, 'calendar'), (False, 'graph')],
-            'type': 'ir.actions.act_window',
-            'target': 'new'
-        }
-
+    def send_invite_note(self, cr, uid, model_name, res_id, wizard_data, context=None):
+        subject = _('Invitation')
+        body = 'has been <b>shared</b> with'
+        tmp_idx = 0
+        for result_line in wizard_data.result_line_ids:
+            body += ' @%s' % (result_line.user_id.login)
+            if tmp_idx < len(wizard_data.result_line_ids)-2:
+                body += ','
+            elif tmp_idx == len(wizard_data.result_line_ids)-2:
+                body += ' and'
+        body += '.'
+        return self.pool.get(model_name).message_append_note(cr, uid, [res_id], _('System Notification'), body, context=context)
+    
+    def send_invite_email(self, cr, uid, wizard_data, context=None):
+        message_obj = self.pool.get('mail.message')
+        notification_obj = self.pool.get('mail.notification')
+        user = self.pool.get('res.users').browse(cr, UID_ROOT, uid)
+        if not user.user_email:
+            raise osv.except_osv(_('Email required'), _('The current user must have an email address configured in User Preferences to be able to send outgoing emails.'))
+        
+        # TODO: also send an HTML version of this mail
+        for result_line in wizard_data.result_line_ids:
+            email_to = result_line.user_id.user_email
+            if not email_to:
+                continue
+            subject = _('Invitation to collaborate about %s') % (wizard_data.record_name)
+            body = _("Hello,\n\n")
+            body += _("I have shared %s (%s) with you!\n\n") % (wizard_data.record_name, wizard_data.name)
+            if wizard_data.message:
+                body += "%s\n\n" % (wizard_data.message)
+            if result_line.newly_created:
+                body += _("The documents are not attached, you can view them online directly on my OpenERP server at:\n    %s\n\n") % (result_line.share_url)
+                body += _("These are your credentials to access this protected area:\n")
+                body += "%s: %s" % (_("Username"), result_line.user_id.login) + "\n"
+                body += "%s: %s" % (_("Password"), result_line.password) + "\n"
+                body += "%s: %s" % (_("Database"), cr.dbname) + "\n"
+            body += _("The documents have been automatically added to your subscriptions.\n\n")
+            body += '%s\n\n' % ((user.signature or ''))
+            body += "--\n"
+            body += _("OpenERP is a powerful and user-friendly suite of Business Applications (CRM, Sales, HR, etc.)\n"
+                      "It is open source and can be found on http://www.openerp.com.")
+            msg_id = message_obj.schedule_with_attach(cr, uid, user.user_email, [email_to], subject, body, model='', context=context)
+            notification_obj.create(cr, uid, {'user_id': result_line.user_id.id, 'message_id': msg_id}, context=context)
+    
     def send_emails(self, cr, uid, wizard_data, context=None):
         self._logger.info('Sending share notifications by email...')
         mail_message = self.pool.get('mail.message')
         user = self.pool.get('res.users').browse(cr, UID_ROOT, uid)
-
+        if not user.user_email:
+            raise osv.except_osv(_('Email required'), _('The current user must have an email address configured in User Preferences to be able to send outgoing emails.'))
+        
         # TODO: also send an HTML version of this mail
         msg_ids = []
         for result_line in wizard_data.result_line_ids:
             email_to = result_line.user_id.user_email
             if not email_to:
                 continue
-            if not user.user_email:
-                raise osv.except_osv(_('Email required'), _('The current user must have an email address configured in User Preferences to be able to send outgoing emails.'))
             subject = wizard_data.name
-            body = _("Hello,")
-            body += "\n\n"
-            body += _("I've shared %s with you!") % wizard_data.name
-            body += "\n\n"
-            body += _("The documents are not attached, you can view them online directly on my OpenERP server at:")
-            body += "\n    " + result_line.share_url
-            body += "\n\n"
+            body = _("Hello,\n\n")
+            body += _("I've shared %s with you!\n\n") % wizard_data.name
+            body += _("The documents are not attached, you can view them online directly on my OpenERP server at:\n    %s\n\n") % (result_line.share_url)
             if wizard_data.message:
-                body += wizard_data.message
-                body += "\n\n"
+                body += '%s\n\n' % (wizard_data.message)
             if result_line.newly_created:
                 body += _("These are your credentials to access this protected area:\n")
-                body += "%s: %s" % (_("Username"), result_line.user_id.login) + "\n"
-                body += "%s: %s" % (_("Password"), result_line.password) + "\n"
-                body += "%s: %s" % (_("Database"), cr.dbname) + "\n"
+                body += "%s: %s\n" % (_("Username"), result_line.user_id.login)
+                body += "%s: %s\n" % (_("Password"), result_line.password)
+                body += "%s: %s\n" % (_("Database"), cr.dbname)
             else:
                 body += _("The documents have been automatically added to your current OpenERP documents.\n")
                 body += _("You may use your current login (%s) and password to view them.\n") % result_line.user_id.login
-            body += "\n\n"
-            body += (user.signature or '')
-            body += "\n\n"
+            body += "\n\n%s\n\n" % ( (user.signature or '') )
             body += "--\n"
             body += _("OpenERP is a powerful and user-friendly suite of Business Applications (CRM, Sales, HR, etc.)\n"
                       "It is open source and can be found on http://www.openerp.com.")
-            msg_ids.append(mail_message.schedule_with_attach(cr, uid,
-                                                       user.user_email,
-                                                       [email_to],
-                                                       subject,
-                                                       body,
-                                                       model='share.wizard',
-                                                       context=context))
+            msg_ids.append(mail_message.schedule_with_attach(cr, uid, user.user_email, [email_to], subject, body, model='share.wizard', context=context))
         # force direct delivery, as users expect instant notification
         mail_message.send(cr, uid, msg_ids, context=context)
         self._logger.info('%d share notification(s) sent.', len(msg_ids))

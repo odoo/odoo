@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-	<openerp>
-		<data>
-			<record id="view_task_mailgate_form" model="ir.ui.view">
-		            <field name="name">task.mailgate.form</field>
-		            <field name="model">project.task</field>
-		            <field name="type">form</field>
-		            <field name="inherit_id" ref="project.view_task_form2"/>
-		            <field name="arch" type="xml">
-		                <xpath expr="/form/notebook/page[@string='Extra Info']" position="before">
-		                    <page string="History">
-	                        	<field name="message_ids" colspan="4" nolabel="1" mode="tree" readonly="1">
-			                        <tree string="History">
-			                            <field name="display_text" string="History Information"/>
-			                        </tree>
-	                    		</field>
-	                        </page>
-		                </xpath>
-		            </field>
-		       </record>
-	 	</data>
-</openerp> 
+<openerp>
+    <data>
+        <record id="view_task_mailgate_form" model="ir.ui.view">
+            <field name="name">task.mailgate.form</field>
+            <field name="model">project.task</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="project.view_task_form2"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook/page[@string='Extra Info']" position="before">
+                    <page string="History">
+                        <field name="message_ids" colspan="4" nolabel="1" mode="tree" readonly="1">
+                            <tree string="History">
+                                <field name="display_text" string="History Information"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+       </record>
+    </data>
+</openerp>

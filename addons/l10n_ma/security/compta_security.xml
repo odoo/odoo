@@ -2,6 +2,7 @@
 
     <record id="group_expert_comptable" model="res.groups">
         <field name="name">Finance / Expert Comptable </field>
+        <field name="users" eval="[(4, ref('base.user_root'))]"/>
     </record>
 </data>
 </openerp>

@@ -120,7 +120,7 @@
                                 <field name="name"/>
                                 <field name="code"/>
                                 <field name="category_id"/>
-                                <field name="sequence" groups="base.group_extended" invisible="1"/>
+                                <field name="sequence" invisible="1"/>
                                 <field name="register_id"/>
                              </tree>
                           </field>
@@ -167,7 +167,7 @@
                 <tree string="Salary Structure" editable="bottom" colors="blue:total == 0">
                     <field name="category_id"/>
                     <field name="employee_id" invisible="1"/>
-                    <field name="sequence" groups="base.group_extended"/>
+                    <field name="sequence"/>
                     <field name="name"/>
                     <field name="code"/>
                     <field name="quantity"/>
@@ -197,7 +197,7 @@
                         <field name="amount_select"/>
                         <field name="amount_fix"  attrs="{'readonly':[('amount_select','&lt;&gt;','fix')]}"/>
                         <field name="amount_percentage"  attrs="{'readonly':[('amount_select','&lt;&gt;','percentage')]}"/>
-                        <field name="sequence" groups="base.group_extended"/>
+                        <field name="sequence"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Description">
@@ -265,8 +265,8 @@
                         <field name="employee_id" on_change="onchange_employee_id(date_from, date_to, employee_id, contract_id)"/>
                         <field name="number"/>
                         <field name="date_from" on_change="onchange_employee_id(date_from, date_to, employee_id, contract_id)"/>
-                        <field name="contract_id" groups="base.group_extended" domain="[('employee_id','=',employee_id)]" on_change="onchange_contract_id(date_from, date_to, employee_id, contract_id)"/>
-                        <field name="struct_id" groups="base.group_extended" attrs="{'required':[('contract_id','&lt;&gt;',False)]}"/>
+                        <field name="contract_id" domain="[('employee_id','=',employee_id)]" on_change="onchange_contract_id(date_from, date_to, employee_id, contract_id)"/>
+                        <field name="struct_id" attrs="{'required':[('contract_id','&lt;&gt;',False)]}"/>
                         <field name="date_to"/>
                         <field name="name" colspan="4"/>
                         <field name="credit_note"/>
@@ -279,7 +279,7 @@
                                     <field name="code"/>
                                     <field name="number_of_days" sum="Total Working Days"/>
                                     <field name="number_of_hours"/>
-                                    <field name="contract_id" groups="base.group_extended"/>
+                                    <field name="contract_id"/>
                                     <field name="sequence" invisible="True"/>
                                 </tree>
                                 <form string="Worked Day">
@@ -287,10 +287,10 @@
                                         <field name="name" select="1"/>
                                         <field name="code" select="1"/>
                                         <field name="payslip_id"/>
-                                        <field name="sequence" groups="base.group_extended"/>
+                                        <field name="sequence"/>
                                         <field name="number_of_days"/>
                                         <field name="number_of_hours"/>
-                                        <field name="contract_id" groups="base.group_extended"/>
+                                        <field name="contract_id"/>
                                     </group>
                                 </form>
                             </field>
@@ -299,7 +299,7 @@
                                     <field name="name"/>
                                     <field name="code"/>
                                     <field name="amount"/>
-                                    <field name="contract_id" groups="base.group_extended"/>
+                                    <field name="contract_id"/>
                                     <field name="sequence" invisible="True"/>
                                 </tree>
                                 <form string="Payslip Line">
@@ -307,9 +307,9 @@
                                         <field name="name" select="1"/>
                                         <field name="code" select="1"/>
                                         <field name="payslip_id"/>
-                                        <field name="sequence" groups="base.group_extended"/>
+                                        <field name="sequence"/>
                                         <field name="amount"/>
-                                        <field name="contract_id" groups="base.group_extended"/>
+                                        <field name="contract_id"/>
                                     </group>
                                 </form>
                             </field>
@@ -331,12 +331,12 @@
                                         <field name="name" select="1"/>
                                         <field name="code" select="1"/>
                                         <field name="category_id"/>
-                                        <field name="sequence" groups="base.group_extended"/>
+                                        <field name="sequence"/>
                                         <field name="quantity"/>
                                         <field name="rate"/>
                                         <field name="amount"/>
                                         <field name="total"/>
-                                        <field name="salary_rule_id" groups="base.group_extended"/>
+                                        <field name="salary_rule_id"/>
                                     </group>
                                 </form>
                             </field>
@@ -565,7 +565,7 @@
                     <field name="name"/>
                     <field name="code"/>
                     <field name="category_id"/>
-                    <field name="sequence" groups="base.group_extended" invisible="1"/>
+                    <field name="sequence" invisible="1"/>
                     <field name="register_id"/>
                 </tree>
             </field>
@@ -617,13 +617,13 @@
                                     <field name="amount_fix"  attrs="{'invisible':[('amount_select','&lt;&gt;','fix')], 'required':[('amount_select','=','fix')]}"/><newline/>
                                     <field name="amount_percentage" attrs="{'invisible':[('amount_select','&lt;&gt;','percentage')], 'required':[('amount_select','=','percentage')]}"/>
                                     <field colspan="4" name="amount_python_compute" attrs="{'invisible':[('amount_select','&lt;&gt;','code')], 'required':[('amount_select','=','code')]}"/>
-                                    <separator colspan="4" string="Company contribution"/>
+                                    <separator colspan="4" string="Company Contribution"/>
                                     <field name="register_id"/>
                                 </group>
                         </page>
                         <page string="Child Rules">
                            <field name="parent_rule_id"/>
-                           <separator colspan="4" string="Children definition"/>
+                           <separator colspan="4" string="Children Definition"/>
                            <field colspan="4" name="child_ids" nolabel="1"/>
                         </page>
                            <page string="Inputs">

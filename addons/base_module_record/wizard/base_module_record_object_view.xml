@@ -35,8 +35,7 @@
         <menuitem
             parent="base.menu_custom"
             name="Module Creation"
-            id="menu_wizard_base_mod_rec"
-            groups="base.group_extended"/>
+            id="menu_wizard_base_mod_rec"/>
             
         <menuitem
             parent="menu_wizard_base_mod_rec"
@@ -60,7 +59,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Module Recording">
-                    <separator string="Module successfully created !" colspan="4"/>
+                    <separator string="Module successfully created!" colspan="4"/>
                     <field name="module_filename"/>
                     <newline/>
                     <field name="module_file"/>

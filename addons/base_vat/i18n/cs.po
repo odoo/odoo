@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2011-08-07 19:04+0000\n"
-"Last-Translator: Jan B. Krejčí <Unknown>\n"
+"PO-Revision-Date: 2012-04-06 06:22+0000\n"
+"Last-Translator: Jiří Hajda <robie@centrum.cz>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:15+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-04-07 04:55+0000\n"
+"X-Generator: Launchpad (build 15060)\n"
 
 #. module: base_vat
 #: code:addons/base_vat/base_vat.py:141
@@ -23,31 +23,33 @@ msgid ""
 "This VAT number does not seem to be valid.\n"
 "Note: the expected format is %s"
 msgstr ""
+"Toto DIČ nevypadá jako platné.\n"
+"Poznámka: očekávaný formát je %s"
 
 #. module: base_vat
 #: sql_constraint:res.company:0
 msgid "The company name must be unique !"
-msgstr ""
+msgstr "Jméno společnosti musí být jedinečné !"
 
 #. module: base_vat
 #: constraint:res.partner:0
 msgid "Error ! You cannot create recursive associated members."
-msgstr ""
+msgstr "Chyba ! Nemůžete vytvořit rekurzivní přidružené členy."
 
 #. module: base_vat
 #: field:res.company,vat_check_vies:0
 msgid "VIES VAT Check"
-msgstr ""
+msgstr "Kontrola DIČ přes VIES"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Společnosti"
 
 #. module: base_vat
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr ""
+msgstr "Chyba! Nemůžete vytvořit rekurzivní společnosti."
 
 #. module: base_vat
 #: help:res.partner,vat_subjected:0
@@ -55,11 +57,13 @@ msgid ""
 "Check this box if the partner is subjected to the VAT. It will be used for "
 "the VAT legal statement."
 msgstr ""
+"Zaškrtněte toto políčko, pokud partner podléhá DPH. Toto bude použito pro "
+"přiznání k DPH."
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: base_vat
 #: help:res.company,vat_check_vies:0
@@ -67,6 +71,8 @@ msgid ""
 "If checked, Partners VAT numbers will be fully validated against EU's VIES "
 "service rather than via a simple format validation (checksum)."
 msgstr ""
+"Pokud je zaškrtnuto, DIČ partnera bude plně ověřeno proti službě VIES EU "
+"raději než přes jednoduché ověření formátu (kontrolní součet)."
 
 #. module: base_vat
 #: field:res.partner,vat_subjected:0

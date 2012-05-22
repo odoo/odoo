@@ -1,10 +1,10 @@
 -
   I set new limit amount from  Configure Limit Amount for Purchase .
 -
-  !record {model: purchase.double.validation.installer, id: purchase_double_validation_installer_1}:
+  !record {model: purchase.config.settings, id: purchase_double_validation_installer_1}:
     limit_amount: 3000
 -
-  !python {model: purchase.double.validation.installer}: |
+  !python {model: purchase.config.settings}: |
     self.execute(cr, uid, [ref("purchase_double_validation_installer_1")])
 -
   In order to test the flow, I confirmed the purchase order.

@@ -105,16 +105,18 @@
         <menuitem name="Master Bill of Materials"
             id="menu_mrp_property"
             parent="menu_mrp_configuration"
-            groups="base.group_extended"
+            groups="mrp.group_mrp_routings,product.group_mrp_properties"
             sequence="20" />
         <menuitem
             action="mrp_property_action"
             id="menu_mrp_property_action"
-            parent="menu_mrp_property" groups="base.group_no_one"/>
+            groups="product.group_mrp_properties"
+            parent="menu_mrp_property"/>
         <menuitem
             action="mrp_property_group_action"
             parent="menu_mrp_property"
-            id="menu_mrp_property_group_action" groups="base.group_no_one"/>
+            groups="product.group_mrp_properties"
+            id="menu_mrp_property_group_action"/>
 
         <!--
         Work Centers
@@ -191,7 +193,7 @@
                         <field name="resource_type"/>
                    </group>
                    <newline/>
-                   <group expand="0" string="Group By..." groups="base.group_extended">
+                   <group expand="0" string="Group By...">
                         <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'resource_type'}"/>
                         <separator orientation="vertical" groups="base.group_multi_company"/>
                         <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
@@ -248,7 +250,7 @@
                     <group colspan="4" col="6">
                         <field name="name"/>
                         <field name="code"/>
-                        <field name="active" groups="base.group_extended"/>
+                        <field name="active"/>
                         <field name="location_id"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                     </group>
@@ -289,7 +291,7 @@
                     <field name="location_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <newline/>
-                    <group expand="0" string="Group By..." groups="base.group_extended">
+                    <group expand="0" string="Group By...">
                         <filter string="Production Location" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'location_id'}"/>
                     </group>
                 </search>
@@ -304,7 +306,7 @@
             <field name="search_view_id" ref="mrp_routing_search_view"/>
             <field name="help">Routings allow you to create and manage the manufacturing operations that should be followed within your work centers in order to produce a product. They are attached to bills of materials that will define the required raw materials.</field>
         </record>
-        <menuitem action="mrp_routing_action" id="menu_mrp_routing_action" parent="mrp.menu_mrp_bom" groups="base.group_extended" sequence="15"/>
+        <menuitem action="mrp_routing_action" id="menu_mrp_routing_action" parent="mrp.menu_mrp_bom" groups="mrp.group_mrp_routings" sequence="15"/>
 
         <!--
           Bill of Materials
@@ -319,16 +321,16 @@
                     <group colspan="4" col="6">
                         <field name="product_id" on_change="onchange_product_id(product_id, name, context)" select="1"/>
                         <field name="name" select="1"/>
-                        <field name="code" select="1" string="Reference" groups="base.group_extended"/>
+                        <field name="code" select="1" string="Reference"/>
                         <newline/>
                         <field name="product_qty"/>
                         <field name="product_uom"/>
-                        <field name="routing_id"  groups="base.group_extended"/>
+                        <field name="routing_id"  groups="mrp.group_mrp_routings"/>
                         <newline/>
                         <field name="product_uos_qty" groups="product.group_uos" />
                         <field name="product_uos"  groups="product.group_uos"/>
                         <newline/>
-                        <field name="type" groups="base.group_extended"/>
+                        <field name="type"/>
                         <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     </group>
                     <notebook colspan="4" >
@@ -346,19 +348,19 @@
                                     <group colspan="4" col="6">
                                     <field name="product_id" on_change="onchange_product_id(product_id, name)" select="1"/>
                                     <field name="name" select="1"/>
-                                    <field name="code" select="1" string="Reference" groups="base.group_extended"/>
+                                    <field name="code" select="1" string="Reference"/>
                                     <newline/>
                                     <field name="product_qty"/>
                                     <field name="product_uom"/>
-                                    <field name="routing_id"  groups="base.group_extended"/>
+                                    <field name="routing_id"  groups="mrp.group_mrp_routings"/>
                                     <newline/>
                                     <field name="product_uos_qty" groups="product.group_uos" />
                                     <field name="product_uos"  groups="product.group_uos"/>
                                     <newline/>
-                                    <field name="type" groups="base.group_extended"/>
+                                    <field name="type"/>
                                     <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                                 </group>
-                                <group groups="base.group_extended">
+                                <group>
                                 <notebook colspan="4">
                                     <page string="Components">
                                         <field colspan="4" name="bom_lines" nolabel="1" widget="one2many_list">
@@ -372,10 +374,10 @@
                                             </tree>
                                         </field>
                                     </page>
-                                    <page string="Revisions" groups="base.group_extended" attrs="{'invisible': [('bom_id','!=',False)]}">
+                                    <page string="Revisions" attrs="{'invisible': [('bom_id','!=',False)]}">
                                         <field colspan="4" name="revision_ids" nolabel="1" widget="one2many_list"/>
                                     </page>
-                                    <page string="Properties" groups="base.group_extended">
+                                    <page string="Properties" groups="product.group_mrp_properties">
                                         <field name="position"/>
                                         <field name="active"/>
                                         <field name="sequence"/>
@@ -384,18 +386,18 @@
                                         <field name="date_start"/>
                                         <field name="date_stop"/>
                                         <field name="product_rounding"/>
-                                        <field name="product_efficiency" groups="base.group_extended"/>
-                                        <field colspan="4" name="property_ids" nolabel="2" groups="base.group_extended"/>
+                                        <field name="product_efficiency"/>
+                                        <field colspan="4" name="property_ids" nolabel="2"/>
                                     </page>
                                 </notebook>
                                 </group>
                             </form>
                             </field>
                         </page>
-                        <page string="Revisions" groups="base.group_extended" attrs="{'invisible': [('bom_id','!=',False)]}">
+                        <page string="Revisions" attrs="{'invisible': [('bom_id','!=',False)]}">
                             <field colspan="4" name="revision_ids" nolabel="1" widget="one2many_list"/>
                         </page>
-                        <page string="Properties" groups="base.group_extended">
+                        <page string="Properties" groups="product.group_mrp_properties">
                             <field name="position"/>
                             <field name="active"/>
                             <field name="sequence"/>
@@ -404,12 +406,13 @@
                             <field name="date_start"/>
                             <field name="date_stop"/>
                             <field name="product_rounding"/>
-                            <field name="product_efficiency" groups="base.group_extended"/>
+                            <field name="product_efficiency"/>
                             <separator string="Properties" colspan="4"/>
                             <newline/>
-                            <field colspan="4" name="property_ids" nolabel="1" groups="base.group_extended"/>
+                            <field colspan="4" name="property_ids" nolabel="1"/>
                         </page>
                     </notebook>
+                    <newline/>
                 </form>
             </field>
         </record>
@@ -427,9 +430,9 @@
                          <field name="company_id" groups="base.group_multi_company"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By..." groups="base.group_extended">
+                    <group expand="0" string="Group By...">
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
-                        <filter string='Default UOM' icon="terp-mrp" domain="[]" context="{'group_by' : 'product_uom'}" />
+                        <filter string='Default Unit of Measure' icon="terp-mrp" domain="[]" context="{'group_by' : 'product_uom'}" />
                         <separator orientation="vertical"/>
                         <filter string="Routing" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'routing_id'}"/>
                         <filter string='Type' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'type'}" />
@@ -446,7 +449,7 @@
             <field name="type">tree</field>
             <field name="field_parent">child_complete_ids</field>
             <field name="arch" type="xml">
-                <tree string="BoM Structure" colors="blue:method">
+                <tree string="Bill of Materials" colors="blue:method">
                     <field name="sequence" invisible="1"/>
                     <field name="name"/>
                     <field name="code"/>
@@ -454,10 +457,10 @@
                     <field name="product_qty"/>
                     <field name="product_uom"/>
                     <field name="type"/>
-                    <field name="method" groups="base.group_extended"/>
-                    <field name="routing_id" groups="base.group_extended"/>
-                    <field name="date_start" groups="base.group_extended"/>
-                    <field name="date_stop" groups="base.group_extended"/>
+                    <field name="method"/>
+                    <field name="routing_id" groups="mrp.group_mrp_routings"/>
+                    <field name="date_start"/>
+                    <field name="date_stop"/>
                 </tree>
             </field>
         </record>
@@ -476,10 +479,10 @@
                     <field name="product_qty"/>
                     <field name="product_uom"/>
                     <field name="type"/>
-                    <field name="method" groups="base.group_extended"/>
-                    <field name="routing_id" groups="base.group_extended"/>
-                    <field name="date_start" groups="base.group_extended"/>
-                    <field name="date_stop" groups="base.group_extended"/>
+                    <field name="method"/>
+                    <field name="routing_id" groups="mrp.group_mrp_routings"/>
+                    <field name="date_start"/>
+                    <field name="date_stop"/>
                 </tree>
             </field>
         </record>
@@ -512,7 +515,6 @@
         <menuitem
             action="mrp_bom_form_action2"
             id="menu_mrp_bom_form_action2"
-            groups="base.group_extended"
             parent="menu_mrp_bom"
             sequence="20"/>
 
@@ -569,15 +571,16 @@
             <field name="model">mrp.production</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft','confirmed');red:date_planned&lt;current_date and state not in ('done','cancel');black:date_planned&gt;=current_date;gray:state in ('done','cancel') " string="Manufacturing Orders">
+                <tree fonts="bold:needaction_pending==True" colors="blue:state in ('draft','confirmed');red:date_planned&lt;current_date and state not in ('done','cancel');black:date_planned&gt;=current_date;gray:state in ('done','cancel') " string="Manufacturing Orders">
+                    <field name="needaction_pending" invisible="1"/>
                     <field name="name"/>
                     <field name="date_planned"/>
                     <field name="product_id"/>
                     <field name="product_qty" sum="Total Qty"/>
                     <field name="product_uom"/>
-                    <field name="routing_id" groups="base.group_extended"/>
-                    <field name="hour_total" sum="Total Hours" groups="base.group_extended"/>
-                    <field name="cycle_total" sum="Total Cycles" groups="base.group_extended"/>
+                    <field name="routing_id" groups="mrp.group_mrp_routings"/>
+                    <field name="hour_total" sum="Total Hours"/>
+                    <field name="cycle_total" sum="Total Cycles"/>
                     <field name="origin"/>
                     <field name="state"/>
                 </tree>
@@ -644,12 +647,13 @@
                         <label string="" colspan="2"/>
                         <field name="product_uos_qty" groups="product.group_uos"/>
                         <field name="product_uos" groups="product.group_uos"/>
+                        <field name="user_id"/>
                     </group>
 
                     <notebook colspan="4">
                         <page string="Consumed Products">
                             <field name="bom_id" domain="[('product_id','=',product_id),('bom_id','=',False)]" on_change="bom_id_change(bom_id)"/>
-                            <field name="routing_id" groups="base.group_extended" select="1"/>
+                            <field name="routing_id" groups="mrp.group_mrp_routings" select="1"/>
                             <field name="location_src_id" domain="[('usage','=','internal')]" on_change="location_id_change(location_src_id,location_dest_id)"/>
                             <field name="location_dest_id" domain="[('usage','=','internal')]"/>
                             <separator string="" colspan="4"/>
@@ -659,7 +663,7 @@
                                 <tree colors="blue:state == 'draft';black:state in ('picking_except','confirmed','ready','in_production');gray:state in ('cancel','done') " string="Products to Consume">
                                     <field name="product_id" />
                                     <field name="product_qty"  string="Qty"/>
-                                    <field name="product_uom"  string="UOM"/>
+                                    <field name="product_uom"  string="Unit of Measure"/>
                                     <field name="location_id"  string="Source Loc."/>
                                     <field name="state" invisible="1"/>
                                     <button name="%(stock.move_consume)d"
@@ -668,7 +672,7 @@
                                         states="draft,waiting,confirmed,assigned" />
                                     <button
                                            name="%(stock.track_line)d"
-                                           string="Split in production lots"
+                                           string="Split in Serial Numbers"
                                            type="action" icon="gtk-justify-fill"
                                            states="draft,waiting,confirmed,assigned" />
                                     <button name="%(stock.move_scrap)d"
@@ -683,7 +687,7 @@
                                    <tree colors="red:scrapped==True;blue:state == 'draft';black:state in('picking_except','confirmed','ready','in_production');gray:state == 'cancel' " string="Consumed Products" editable="bottom">
                                        <field name="product_id" readonly="1"/>
                                        <field name="product_qty" readonly="1" string="Qty"/>
-                                       <field name="product_uom" readonly="1" string="UOM"/>
+                                       <field name="product_uom" readonly="1" string="Unit of Measure"/>
                                        <field name="prodlot_id" context="{'product_id': product_id}"/>
                                        <field name="state" invisible="1"/>
                                        <field name="scrapped" invisible="1"/>
@@ -712,7 +716,7 @@
                                 <tree string="Products to Finish">
                                     <field name="product_id" />
                                     <field name="product_qty"  string="Qty"/>
-                                    <field name="product_uom"  string="UOM"/>
+                                    <field name="product_uom"  string="Unit of Measure"/>
                                     <field name="state" invisible="1"/>
                                     <button name="%(stock.action_partial_move_server)d"
                                         string="Partial"
@@ -730,20 +734,20 @@
                                    <tree colors="red:scrapped==True;blue:state == 'draft';black:state in('picking_except','confirmed','ready','in_production');gray:state in('cancel','done') " string="Finished Products">
                                        <field name="product_id" readonly="1"/>
                                        <field name="product_qty" readonly="1" string="Qty"/>
-                                       <field name="product_uom" readonly="1" string="UOM"/>
+                                       <field name="product_uom" readonly="1" string="Unit of Measure"/>
                                        <field name="location_dest_id"  readonly="1" string="Destination Loc." widget="selection"/>
                                        <field name="prodlot_id" context="{'product_id': product_id}"/>
                                        <field name="scrapped" invisible="1"/>
                                        <field name="state" invisible="1"/>
                                        <button name="%(stock.track_line)d"
-                                            string="Split in production lots" type="action" icon="gtk-justify-fill" states="done,cancel"/>
+                                            string="Split in Serial Numbers" type="action" icon="gtk-justify-fill" states="done,cancel"/>
                                        <button name="%(stock.move_scrap)d"
                                            string="Scrap Products" type="action" icon="gtk-convert"
                                            states="done,cancel" />
                                    </tree>
                                </field>
                         </page>
-                        <page string="Work Orders" groups="base.group_extended">
+                        <page string="Work Orders">
                             <button name="action_compute" states="draft"
                                 string="Compute Data" type="object"
                                 icon="terp-stock_format-scientific"
@@ -773,16 +777,16 @@
                             <field colspan="4" name="product_lines" nolabel="1" widget="one2many_list"/>
                         </page>
                         <page string="Extra Information">
-                            <field name="user_id"/>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                            <field name="priority" groups="base.group_extended"/>
+                            <field name="priority"/>
                             <newline/>
                             <field name="date_start"/>
                             <field name="date_finished"/>
-                            <field name="picking_id" groups="base.group_extended"/>
-                            <field name="move_prod_id" groups="base.group_extended"/>
+                            <field name="picking_id"/>
+                            <field name="move_prod_id"/>
                         </page>
                     </notebook>
+                    <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
                 </form>
             </field>
         </record>
@@ -810,14 +814,14 @@
                        <separator orientation="vertical"/>
                        <field name="name"/>
                        <field name="product_id"/>
-                       <field name="routing_id" groups="base.group_extended"/>
+                       <field name="routing_id" groups="mrp.group_mrp_routings"/>
                        <field name="origin"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By..." groups="base.group_extended">
+                    <group expand="0" string="Group By...">
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
                         <separator orientation="vertical"/>
-                        <filter string="Routing" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'routing_id'}" groups="base.group_extended"/>
+                        <filter string="Routing" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'routing_id'}"/>
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_planned'}" help="Scheduled Date"/>
@@ -961,12 +965,25 @@
                     <field name="bom_id" domain="[('product_id','=',product_id),('bom_id','=',False)]"/>
                 </xpath>
                 <xpath expr="/form/notebook/page/field[@name='close_move']" position="after">
-                    <group colspan="4"  groups="base.group_extended">
+                    <group colspan="4"  groups="product.group_mrp_properties">
                     <separator colspan="4" string="Properties" />
                     <field colspan="4" name="property_ids" nolabel="1"/>
                      </group>
                 </xpath>
                </data>
+            </field>
+        </record>
+
+        <record id="product_normal_form_view" model="ir.ui.view">
+            <field name="name">product.normal.form.mrp.inherit</field>
+            <field name="model">product.product</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <group name="misc" position="after">
+                    <separator string="Bill of Materials" colspan="4"/>
+                    <field name="bom_ids" nolabel="1" colspan="4" context="{'default_product_id': active_id}"/>
+                </group>
             </field>
         </record>
 
@@ -990,15 +1007,6 @@
             src_model="product.product"
             groups="mrp.group_mrp_user"/>
 
-        <act_window
-            domain="[('bom_id','=',False)]"
-            context="{'search_default_product_id': [active_id],'default_product_id':active_id}"
-            id="act_product_product_2_mrp_bom"
-            name="Bill of Materials"
-            res_model="mrp.bom"
-            src_model="product.product"
-            groups="mrp.group_mrp_user"/>
-
         <!-- Menu for Resource for MRP-->
 
         <record id="mrp_workcenter_action" model="ir.actions.act_window">
@@ -1012,15 +1020,14 @@
         </record>
 
         <menuitem id="menu_pm_resources_config" name="Resources" parent="menu_mrp_configuration"/>
-        <menuitem action="mrp_workcenter_action" id="menu_view_resource_search_mrp" parent="mrp.menu_mrp_bom" sequence="25"/>
+        <menuitem action="mrp_workcenter_action" id="menu_view_resource_search_mrp" groups="mrp.group_mrp_routings" parent="mrp.menu_mrp_bom" sequence="25"/>
         <menuitem action="resource.action_resource_calendar_form" id="menu_view_resource_calendar_search_mrp" parent="menu_pm_resources_config" sequence="1" groups="base.group_no_one"/>
         <menuitem action="resource.action_resource_calendar_leave_tree" id="menu_view_resource_calendar_leaves_search_mrp" parent="menu_pm_resources_config" sequence="1" groups="base.group_no_one"/>
 
         <!-- Planning -->
 
         <menuitem id="menu_mrp_planning" name="Planning"
-                parent="base.menu_mrp_root" sequence="2"
-                groups="base.group_extended"/>
+                parent="base.menu_mrp_root" sequence="2"/>
         <menuitem action="mrp.mrp_production_action_planning"
                 id="menu_mrp_production_order_action" name="Orders Planning"
                 parent="menu_mrp_planning" sequence="1"/>

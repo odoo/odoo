@@ -215,7 +215,7 @@
     <menuitem action="action_account_coda_comm_type_form" id="menu_action_account_coda_comm_type_form" parent="menu_manage_coda"  sequence="5" groups="base.group_no_one"/>
 
     <!-- CODA Processing -->
-    <menuitem name="CODA Processing" parent="account.menu_finance_bank_and_cash" id="menu_account_coda" groups="base.group_extended" sequence="40"/>
+    <menuitem name="CODA Processing" parent="account.menu_finance_bank_and_cash" id="menu_account_coda" sequence="40"/>
     <menuitem name="Import CODA Files" parent="menu_account_coda" id="menu_account_coda_import" action="action_account_coda_import" sequence="41"/>
 
     <!-- CODA Files -->
@@ -415,7 +415,7 @@
         <tree editable="bottom" string="CODA Statement Lines">
           <field name="sequence" readonly="1" invisible="1"/>
           <field name="coda_bank_account_id" readonly="1"/>
-          <field name="date" readonly="1" groups="base.group_extended"/>
+          <field name="date" readonly="1"/>
           <field name="val_date" readonly="1"/>
           <field name="name"/>
           <field name="statement_id" readonly="1"/>

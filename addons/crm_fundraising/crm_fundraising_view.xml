@@ -3,7 +3,7 @@
     <data>
            <!-- Fund Raising Configuration Menu -->
         <menuitem id="menu_config_fundrising" name="Fund Raising"
-            groups="base.group_extended"
+            groups="base.group_no_one"
             parent="base.menu_base_config" sequence="65" />
 
         <!-- Fund Raising Categories Form View -->
@@ -60,7 +60,6 @@
                         states="draft,open" type="object" icon="gtk-media-pause" />
                     <button name="case_escalate" string="Escalate"
                         states="open,draft,pending" type="object"
-                        groups="base.group_extended"
                         icon="gtk-go-up" />
                     <button name="case_close" string="Done"
                         states="open,draft,pending" type="object"
@@ -118,7 +117,6 @@
                                     icon="gtk-media-pause" />
                                 <button name="case_escalate" string="Escalate"
                                     states="open,draft,pending" type="object"
-                                    groups="base.group_extended"
                                     icon="gtk-go-up" />
                                 <button name="case_close" string="Done"
                                     states="open,draft,pending" type="object"
@@ -128,7 +126,7 @@
                                     type="object" icon="gtk-convert" />
                             </group>
                         </page>
-                        <page string="Communication &amp; History" groups="base.group_extended">
+                        <page string="Communication &amp; History">
                             <group colspan="4">
                                 <field colspan="4" name="email_cc" string="Global CC" widget="char"/>
                             </group>
@@ -151,7 +149,7 @@
                                 name="%(mail.action_email_compose_message_wizard)d"
                                 icon="terp-mail-message-new" type="action"/>
                         </page>
-                        <page string="Extra Info" groups="base.group_extended">
+                        <page string="Extra Info">
                             <group col="2" colspan="2">
                                 <separator colspan="4" string="Misc"/>
                                 <field name="active"/>
@@ -235,7 +233,7 @@
                                     help="Unassigned" />
                             </field>
                             <field name="section_id" widget="selection" string="Sales Team">
-                                <filter icon="terp-personal+" groups="base.group_extended"
+                                <filter icon="terp-personal+"
                                     domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                                     help="My Sales Team(s)" />
                             </field>

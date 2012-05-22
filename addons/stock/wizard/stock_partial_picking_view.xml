@@ -9,6 +9,7 @@
             <field name="target">new</field>
         </record>
 
+        <!-- this view of stock.partial.picking wizard is dedicated to internal picking. The fields_view_get is ovveridden in order to change the label of the process button and the separator. -->
         <record id="stock_partial_picking_form" model="ir.ui.view">
             <field name="name">stock.partial.picking.form</field>
             <field name="model">stock.partial.picking</field>
@@ -16,7 +17,7 @@
             <field name="arch" type="xml">
                 <form>
                     <field name="hide_tracking" invisible="1"/>
-                    <separator colspan="4" string="Products"/>
+                    <separator colspan="4" string="Transfer Products" name="product_separator"/>
                     <field name="move_ids" colspan="4" nolabel="1" mode="tree,form" width="550" height="200" context="{'hide_tracking': hide_tracking}">
                         <tree editable="bottom" string="Product Moves">
                             <field name="product_id" />
@@ -34,7 +35,7 @@
                     <label string="" colspan="2"/>
                     <group col="2" colspan="2">
                         <button icon='gtk-cancel' special="cancel" string="_Cancel" />
-                        <button name="do_partial" string="_Validate" colspan="1" type="object" icon="gtk-go-forward" />
+                        <button name="do_partial" string="_Transfer" colspan="1" type="object" icon="gtk-go-forward" />
                     </group>
                 </form>
             </field>
@@ -50,7 +51,7 @@
                     <field name="quantity" />
                     <field name="product_uom" />
                     <field name="tracking" invisible="1"/>
-                    <field name="prodlot_id" domain="[('product_id', '=', product_id)]" attrs="{'required':[('tracking','=',True)]}" groups="base.group_extended" />
+                    <field name="prodlot_id" domain="[('product_id', '=', product_id)]" attrs="{'required':[('tracking','=',True)]}"/>
                     <!-- Removed as this feature is not logic: price must be updated upon reception of invoice -->
                     <field name="update_cost" invisible="1"/>
                     <field name="cost" invisible="1"/>
@@ -70,7 +71,7 @@
                     <field name="location_id" />
                     <field name="location_dest_id" />
                     <field name="tracking" invisible="1"/>
-                    <field name="prodlot_id" domain="[('product_id', '=', product_id)]" attrs="{'required':[('tracking','=',True)]}" groups="base.group_extended" />
+                    <field name="prodlot_id" domain="[('product_id', '=', product_id)]" attrs="{'required':[('tracking','=',True)]}"/>
                     <field name="update_cost" invisible="1"/>
                     <field name="cost" attrs="{'invisible': [('update_cost','=', False)]}"/>
                     <field name="currency" attrs="{'invisible': [('update_cost','=', False)]}"/>

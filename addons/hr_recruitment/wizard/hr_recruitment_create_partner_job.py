@@ -63,7 +63,7 @@ class hr_recruitment_partner_create(osv.osv_memory):
                 'email': case.email_from
             }, context=context)
 
-            case_obj.write(cr, uid, case.id, {
+            case_obj.write(cr, uid, [case.id], {
                 'partner_id': partner_id,
             }, context=context)
         if data['close']:

@@ -118,6 +118,7 @@
                     </group>
                 </page>
                 </notebook>
+                <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
             </form>
         </field>
     </record>
@@ -147,7 +148,7 @@
 	                		<field name="date_planned"/>
 	                	</group>
                 	<newline/>
-                    <group expand="0" string="Group By..." groups="base.group_extended">
+                    <group expand="0" string="Group By...">
                         <filter string="Work Center" icon="terp-go-home" domain="[]" context="{'group_by':'workcenter_id'}"/>
                         <filter string="Production" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'production_id'}"/>
                         <separator orientation="vertical"/>
@@ -260,18 +261,16 @@
     <menuitem name="Work Orders" parent="mrp.menu_mrp_manufacturing"
         id="menu_mrp_production_wc_order"
         action="mrp_production_wc_action_form"
-        groups="base.group_extended" sequence="2"/>
+        sequence="2"/>
     <menuitem name="Work Orders By Resource" parent="mrp.menu_mrp_planning"
         id="menu_mrp_production_wc_action_planning"
         action="mrp_production_wc_action_planning"
         sequence="2"
-        icon="STOCK_INDENT"
-        groups="base.group_extended"/>
+        icon="STOCK_INDENT"/>
    <!-- <menuitem parent="mrp.menu_mrp_planning"
         id="menu_mrp_production_wc_resource_planning"
         action="mrp_production_wc_resource_planning"
-        icon="STOCK_INDENT"
-        groups="base.group_extended"/>-->
+        icon="STOCK_INDENT"/>-->
 
     <!-- Operation codes -->
 

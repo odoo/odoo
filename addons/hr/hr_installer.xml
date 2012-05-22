@@ -1,26 +1,9 @@
 <openerp>
     <data>
 
-
         <record id="category_hr_management_config" model="ir.actions.todo.category">
             <field name="name">HR Management</field>
             <field name="sequence">5</field>
-        </record>
-
-        <!-- employee configure  action -->
-        <record id="action_create_hr_employee_installer" model="ir.actions.act_window">
-            <field name="name">Create your Employees</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">hr.employee</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" eval="False"/>
-            <field name="help">Create employees form and link them to an OpenERP user if you want them to access this instance. Categories can be set on employees to perform massive operations on all the employees of the same category, i.e. allocating holidays.</field>
-        </record>
-
-        <record id="config_wizard_action_create_hr_employee_installer" model="ir.actions.todo">
-            <field name="action_id" ref="action_create_hr_employee_installer"/>
-            <field name="category_id" ref="category_hr_management_config"/>
         </record>
 
         <record model="ir.actions.act_window" id="view_department_form_installer">
@@ -33,11 +16,5 @@
             <field name="help">Your departments structure is used to manage all documents related to employees by departments: expenses and timesheet validation, leaves management, recruitments, etc.</field>
         </record>
 
-        <record id="view_department_form_todo" model="ir.actions.todo">
-            <field name="action_id" ref="view_department_form_installer"/>
-            <field name="category_id" ref="hr.category_hr_management_config"/>
-            <field name="sequence">3</field>
-            <field name="groups_id" eval="[(6, 0, [ref('base.group_extended')])]" />
-        </record>
     </data>
 </openerp>

@@ -47,7 +47,7 @@
                     <filter icon="terp-go-month" string="Month-1"
                             domain="[('date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
                             help="last month"/>
-                    <separator orientation="vertical"/>               	
+                    <separator orientation="vertical"/>
                     <filter icon="terp-go-year" string="  365 Days  "
                             domain="[('day','&lt;=', time.strftime('%%Y-%%m-%%d')),('day','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
                             help="Analytic Entries of last 365 days"/>
@@ -76,7 +76,7 @@
                     <filter string="Journal" icon="terp-folder-orange" context="{'group_by':'journal_id'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>
-                    <filter string="Product UOM" icon="terp-mrp" context="{'group_by':'product_uom_id'}"/>
+                    <filter string="Product Unit of Measure" icon="terp-mrp" context="{'group_by':'product_uom_id'}"/>
                     <separator orientation="vertical" groups="base.group_multi_company"/>
                     <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     <separator orientation="vertical"/>

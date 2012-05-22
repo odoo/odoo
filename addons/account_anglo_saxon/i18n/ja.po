@@ -1,0 +1,133 @@
+# Japanese translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"PO-Revision-Date: 2012-04-28 01:18+0000\n"
+"Last-Translator: Akira Hiyama <Unknown>\n"
+"Language-Team: Japanese <ja@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2012-04-29 04:45+0000\n"
+"X-Generator: Launchpad (build 15149)\n"
+
+#. module: account_anglo_saxon
+#: sql_constraint:purchase.order:0
+msgid "Order Reference must be unique per Company!"
+msgstr "注文参照は、会社内で固有でなければなりません。"
+
+#. module: account_anglo_saxon
+#: view:product.category:0
+msgid " Accounting Property"
+msgstr " 会計の属性"
+
+#. module: account_anglo_saxon
+#: model:ir.model,name:account_anglo_saxon.model_product_category
+msgid "Product Category"
+msgstr "製品分類"
+
+#. module: account_anglo_saxon
+#: sql_constraint:stock.picking:0
+msgid "Reference must be unique per Company!"
+msgstr "参照は会社内ではユニークでなければいけません。"
+
+#. module: account_anglo_saxon
+#: constraint:product.category:0
+msgid "Error ! You cannot create recursive categories."
+msgstr "エラー：カテゴリーを重複して作ることはできません。"
+
+#. module: account_anglo_saxon
+#: constraint:account.invoice:0
+msgid "Invalid BBA Structured Communication !"
+msgstr "無効なBBA構造のコミュニケーション"
+
+#. module: account_anglo_saxon
+#: constraint:product.template:0
+msgid ""
+"Error: The default UOM and the purchase UOM must be in the same category."
+msgstr "エラー：デフォルトの単位と仕入単位は同じ分類でなければいけません。"
+
+#. module: account_anglo_saxon
+#: model:ir.model,name:account_anglo_saxon.model_account_invoice_line
+msgid "Invoice Line"
+msgstr "請求行"
+
+#. module: account_anglo_saxon
+#: model:ir.model,name:account_anglo_saxon.model_purchase_order
+msgid "Purchase Order"
+msgstr "発注オーダー"
+
+#. module: account_anglo_saxon
+#: model:ir.model,name:account_anglo_saxon.model_product_template
+msgid "Product Template"
+msgstr "製品テンプレート"
+
+#. module: account_anglo_saxon
+#: field:product.category,property_account_creditor_price_difference_categ:0
+#: field:product.template,property_account_creditor_price_difference:0
+msgid "Price Difference Account"
+msgstr "価格が異なるアカウント"
+
+#. module: account_anglo_saxon
+#: model:ir.model,name:account_anglo_saxon.model_account_invoice
+msgid "Invoice"
+msgstr "請求書"
+
+#. module: account_anglo_saxon
+#: model:ir.model,name:account_anglo_saxon.model_stock_picking
+msgid "Picking List"
+msgstr "出庫票"
+
+#. module: account_anglo_saxon
+#: sql_constraint:account.invoice:0
+msgid "Invoice Number must be unique per Company!"
+msgstr "請求書番号は会社ごとにユニークでなければいけません。"
+
+#. module: account_anglo_saxon
+#: help:product.category,property_account_creditor_price_difference_categ:0
+#: help:product.template,property_account_creditor_price_difference:0
+msgid ""
+"This account will be used to value price difference between purchase price "
+"and cost price."
+msgstr "このアカウントは仕入価格とコスト価格の価格差の値のために使われます。"
+
+#~ msgid "Order Reference must be unique !"
+#~ msgstr "オーダーリファレンスは固有である必要があります。"
+
+#~ msgid "Stock Accounting for Anglo Saxon countries"
+#~ msgstr "アングロサクソン諸国の株会計"
+
+#~ msgid ""
+#~ "This module will support the Anglo-Saxons accounting methodology by\n"
+#~ "    changing the accounting logic with stock transactions. The difference "
+#~ "between the Anglo-Saxon accounting countries\n"
+#~ "    and the Rhine or also called Continental accounting countries is the "
+#~ "moment of taking the Cost of Goods Sold versus Cost of Sales.\n"
+#~ "    Anglo-Saxons accounting does take the cost when sales invoice is "
+#~ "created, Continental accounting will take the cost at the moment the goods "
+#~ "are shipped.\n"
+#~ "    This module will add this functionality by using a interim account, to "
+#~ "store the value of shipped goods and will contra book this interim account\n"
+#~ "    when the invoice is created to transfer this amount to the debtor or "
+#~ "creditor account.\n"
+#~ "    Secondly, price differences between actual purchase price and fixed "
+#~ "product standard price are booked on a separate account"
+#~ msgstr ""
+#~ "このモジュールは次のようなアングロサクソン会計手法をサポートします：\n"
+#~ "　　株式取引の会計ロジックを変更します。アングロサクソン会計（英米型会計）国と、ラインまたは\n"
+#~ "　　コンチネンタル会計（大陸型会計）国と呼ばれる違いは売上原価の計上タイミングの違いです。\n"
+#~ "　　アングロサクソン会計は販売の請求書が作成された時に原価を計上します。コンチネンタル会計\n"
+#~ "　　では商品が出荷された時に原価を計上します。\n"
+#~ "　　このモジュールは中間勘定を使うことによってこの機能を加えます。借方または貸方アカウントに\n"
+#~ "　　その総額を転送するために請求書が作成された時に、出荷された商品の価値を保存し、そして\n"
+#~ "　　この中間勘定を反対記帳します。\n"
+#~ "　　第２に、実際の仕入価格と固定の製品標準価格の差は分離された勘定に記帳されます。"
+
+#~ msgid "Error ! You can not create recursive categories."
+#~ msgstr "エラーです。再帰的な関係となる分類を作ることはできません。"

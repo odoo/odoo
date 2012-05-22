@@ -50,6 +50,7 @@ You can manage:
         'hr_installer.xml',
         'hr_data.xml',
         'hr_board.xml',
+        'res_config_view.xml',
     ],
     'demo_xml': [
         'hr_demo.xml',

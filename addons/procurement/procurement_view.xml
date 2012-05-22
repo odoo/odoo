@@ -16,7 +16,7 @@
                     <field name="origin"/>
                     <field name="product_id"/>
                     <field name="product_qty"/>
-                    <field name="product_uom" string="UOM"/>
+                    <field name="product_uom" string="Unit of Measure"/>
                     <field name="procure_method"/>
                     <field name="state"/>
                     <field name="message"/>
@@ -35,7 +35,7 @@
                     <field name="origin"/>
                     <field name="product_id"/>
                     <field name="product_qty"/>
-                    <field name="product_uom" string="UOM"/>
+                    <field name="product_uom" string="Unit of Measure"/>
                     <field name="state" invisible = "1"/>
                     <field name="message"/>
                 </tree>
@@ -57,7 +57,7 @@
                         <separator colspan="2" string="Planification"/>
                         <field name="date_planned"/>
                         <field name="procure_method"/>
-                        <field name="priority" groups="base.group_extended"/>
+                        <field name="priority"/>
                     </group>
                     <notebook colspan="4">
                     <page string="Procurement Details">
@@ -67,8 +67,8 @@
                         <field name="product_qty"/>
                         <field name="product_uom"/>
 
-                        <field name="product_uos_qty" groups="product.group_uos,base.group_extended"/>
-                        <field name="product_uos"  groups="product.group_uos,base.group_extended"/>
+                        <field name="product_uos_qty" groups="product.group_uos"/>
+                        <field name="product_uos"  groups="product.group_uos"/>
 
                         <separator colspan="4" string="Status"/>
                         <field colspan="4" name="message" readonly="1"/>
@@ -82,9 +82,9 @@
                     </page>
                     <page string="Extra Information">
                         <separator colspan="4" string="Details"/>
-                        <field name="move_id" groups="base.group_extended"/>
+                        <field name="move_id"/>
                         <field name="date_close"/>
-                        <field name="close_move" groups="base.group_extended"/>
+                        <field name="close_move"/>
                     </page>
                     <page string="Notes">
                         <separator colspan="4" string="Note" />
@@ -115,7 +115,7 @@
                        <field name="state" />
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By" groups="base.group_extended">
+                    <group expand="0" string="Group By">
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
                         <filter string="Reason" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'name'}"/>
                         <filter string="Scheduled Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_planned'}"/>
@@ -165,7 +165,7 @@
                 <tree string="Minimum Stock Rules">
                     <field name="name"/>
                     <field name="warehouse_id"/>
-                    <field name="location_id"/>
+                    <field name="location_id" groups="stock.group_locations"/>
                     <field name="product_id"/>
                     <field name="product_uom"/>
                     <field name="product_min_qty"/>
@@ -183,7 +183,7 @@
                     <group>
                         <field name="name"/>
                         <field name="warehouse_id" widget="selection"/>
-                        <field name="location_id"/>
+                        <field name="location_id" groups="stock.group_locations"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                         <field name="product_id"/>
                     </group>
@@ -211,7 +211,7 @@
                     <group col="2" colspan="2">
                         <separator string="Locations" colspan="2" />
                         <field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)" widget="selection"/>
-                        <field name="location_id"/>
+                        <field name="location_id" groups="stock.group_locations"/>
                         <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     </group>
                     <group col="2" colspan="2">
@@ -220,12 +220,12 @@
                         <field name="product_max_qty"/>
                         <field name="qty_multiple"/>
                     </group>
-                    <group col="2" colspan="2" groups="base.group_extended">
+                    <group col="2" colspan="2">
                         <separator string="Misc" colspan="2" />
                         <field name="procurement_id" readonly="1"/>
                         <field name="active" />
                     </group>
-                    <group col="4" colspan="4" groups="base.group_extended">
+                    <group col="4" colspan="4">
                         <separator string="Procurement Orders to Process" colspan="4" />
                         <field name="procurement_draft_ids" colspan="4" nolabel="1"/>
                     </group>
@@ -251,15 +251,6 @@
         src_model="stock.warehouse"
         groups="stock.group_stock_user"/>
 
-        <!-- add product_uom to context to be the default value when adding new orderpoints -->
-        <act_window
-            context="{'product_uom': locals().has_key('uom_id') and uom_id,'search_default_product_id': [active_id], 'default_product_id': active_id}"
-            id="act_product_product_2_stock_warehouse_orderpoint"
-            name="Minimum Stock Rules"
-            res_model="stock.warehouse.orderpoint"
-            src_model="product.product"
-            groups="stock.group_stock_user"/>
-
         <act_window
             context="{'product_uom': locals().has_key('uom_id') and uom_id, 'default_procurement_id': active_id}"
             id="act_procurement_2_stock_warehouse_orderpoint"
@@ -275,30 +266,20 @@
         <menuitem id="menu_stock_procurement" name="Automatic Procurements" parent="stock.menu_stock_configuration" sequence="5"/>
             <menuitem action="action_orderpoint_form" id="menu_stock_order_points" parent="stock.menu_stock_configuration" sequence="10"/>
 
-
         <record id="product_normal_form_view" model="ir.ui.view">
             <field name="name">product.normal.form.orderpoint.inherit</field>
             <field name="model">product.product</field>
             <field name="type">form</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
-                  <group name="misc" position="after">
-                      <group col="2" colspan="2" attrs="{'invisible':[('type', '=', 'service')]}">
-                          <separator string="Minimum Stock Rules" colspan="2"/>
-                          <field name="orderpoint_ids" context="{'default_product_uom': uom_id}" nolabel="1">
-                              <tree string="Minimum Stock Rule" editable="bottom">
-                                  <field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)" widget="selection"/>
-                                  <field name="location_id" groups="base.group_extended"/>
-                                  <field name="product_min_qty"/>
-                                  <field name="product_max_qty"/>
-                                  <field name="product_uom" groups="base.group_extended"/>
-                              </tree>
-                          </field>
-                      </group>
-                  </group>
+                <group name="misc" position="after">
+                    <group colspan="4" attrs="{'invisible':[('type','=','service')]}" groups="stock.group_stock_manager">
+                        <separator string="Minimum Stock Rules" colspan="4"/>
+                        <field name="orderpoint_ids" nolabel="1" colspan="4" context="{'default_product_id': active_id}"/>
+                    </group>
+                </group>
             </field>
         </record>
-
 
     </data>
 </openerp>

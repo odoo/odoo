@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-	<menuitem id="synch_config" name="Synchronization" parent="base.menu_config" sequence="30"/>
+	<menuitem id="synch_config" name="Synchronization" parent="base.menu_config" sequence="60"/>
         <record id="view_transfer_line_tree" model="ir.ui.view">
             <field name="name">base.synchro.obj.line.tree</field>
             <field name="model">base.synchro.obj.line</field>
@@ -68,7 +68,8 @@
             <field name="res_model">base.synchro.obj.line</field>
             <field name="view_type">form</field>
         </record>
-        <menuitem id="next_id_63" name="History"  groups="base.group_extended" parent="base_synchro.next_id_62"/><menuitem action="action_base_synchro_obj_line_tree" id="menu_action_base_synchro_obj_line_tree" parent="base_synchro.next_id_63"/>
+        <menuitem id="next_id_63" name="History" parent="base_synchro.next_id_62"/>
+        <menuitem action="action_base_synchro_obj_line_tree" id="menu_action_base_synchro_obj_line_tree" parent="base_synchro.next_id_63"/>
 
 <!--view_base_synchro_obj starts-->
 

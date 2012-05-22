@@ -108,16 +108,16 @@
                                                         <button name="do_open" states="pending,draft" string="Start Task" type="object" icon="gtk-execute"/>
                                                         <button name="do_reopen" states="done,cancelled" string="Reactivate" type="object" icon="gtk-convert"/>
                                                         <button name="do_pending" states="open" string="Pending" type="object" icon="gtk-media-pause"/>
-                                                        <button groups="base.group_extended" name="%(project.action_project_task_delegate)d" states="pending,open" string="Delegate" type="action" icon="gtk-sort-descending"/>
+                                                        <button name="%(project.action_project_task_delegate)d" states="pending,open" string="Delegate" type="action" icon="gtk-sort-descending"/>
                                                         <button name="%(mail.action_email_compose_message_wizard)d" states="pending,open" string="Done" type="action" icon="gtk-jump-to"/>
                                                     </group>
                                                  </page>
-                                                <page groups="base.group_extended" string="Extra Info" attrs="{'readonly':[('state','=','done')]}">
+                                                <page string="Extra Info" attrs="{'readonly':[('state','=','done')]}">
                                                     <group colspan="2" col="2">
                                                         <field name="priority"/>
                                                         <field name="sequence"/>
                                                     </group>
-                                                <separator string="Miscelleanous" colspan="4"/>
+                                                <separator string="Miscellaneous" colspan="4"/>
                                                     <field name="type_id"/>
                                                     <field name="active"/>
                                                     <field name="partner_id"/>
@@ -308,7 +308,7 @@
             <field name="arch" type="xml">
                 <notebook position="inside">
                     <page string="Planning" >
-                        <separator string="Planning lines"/>
+                        <separator string="Planning Lines"/>
                         <field name="planning_ids" colspan="4" nolabel="1">
                             <form string="Planning Lines">
                                 <field name="planning_id" select="1"/>

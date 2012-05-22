@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <!-- CATEGORY -->
+        <record model="ir.module.category" id="module_category_social">
+            <field name="name">Social and Sharing Tools</field>
+            <field name="parent_id" ref="base.module_category_tools"/>
+            <field name="sequence">26</field>
+        </record>
+
+        <!-- GROUPS -->
+        <record id="group_mail_manager" model="res.groups">
+            <field name="name">Mail manager</field>
+            <field name="comment"></field>
+            <field name="category_id" ref="module_category_social"/>
+        </record>
+
+        <!-- RULES -->
+        <record id="group_rule_public_and_joined" model="ir.rule">
+            <field name="name">Mail.group: access only public and joined groups</field>
+            <field name="model_id" ref="model_mail_group"/>
+            <field name="domain_force">['|', ('public', '=', True), ('member_ids', 'in', user.id)]</field>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+        <record id="group_rule_delete_mygroup" model="ir.rule">
+            <field name="name">Mail.group: delete my groups only</field>
+            <field name="model_id" ref="model_mail_group"/>
+            <field name="domain_force">[('responsible_id', '=', user.id)]</field>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+        </record>
+        <record id="group_rule_all" model="ir.rule">
+            <field name="name">Mail.group: all groups</field>
+            <field name="model_id" ref="model_mail_group"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('group_mail_manager'))]"/>
+        </record>
+
+    </data>
+</openerp>

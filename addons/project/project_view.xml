@@ -18,7 +18,20 @@
             <field name="model">project.project</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Project">
+                <form string="Project" layout="manual">
+                <div class="oe_form_topbar">
+                    <button name="set_cancel" string="Cancel" type="object" states="open,pending" icon="gtk-cancel"/>
+                    <button name="set_template" string="Set as Template" type="object" states="open" icon="gtk-convert"/>
+                    <button name="set_open" string="Re-open project" type="object" states="pending,cancelled,close" icon="gtk-ok"/>
+                    <button name="set_pending" string="Pending" type="object" states="open" icon="gtk-media-pause"/>
+                    <button name="set_done" string="Done" type="object" states="open,pending" icon="terp-dialog-close"/>
+                    <button name="reset_project" string="Reset as Project" type="object" states="template" icon="gtk-convert"/>
+                    <button string="New Project Based on Template" name="duplicate_template"  type="object" states="template" icon="gtk-new" context="{'parent_id':parent_id}"/>
+                    <div class="oe_right">
+                        <field name="state" nolabel="1" widget="statusbar" statusbar_visible="open,close" statusbar_colors='{"pending":"blue"}' select="1" readonly="1"/>
+                    </div>
+                </div>
+                <sheet string="Project" layout="auto">
                     <group colspan="6" col="6">
                         <field name="name" string="Project Name" select="1"/>
                         <field name="analytic_account_id" invisible="1" required="0"/>
@@ -30,33 +43,23 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Administration">
+                            <group col="2" colspan="2" name="kanban">
+                                <separator colspan="2" string="Project Management"/>
+                                    <field name="use_tasks"/>
+                            </group>
                             <group col="2" colspan="2">
-                                <separator colspan="2" string="Performance"/>
+                                <separator colspan="4" string="Performance"/>
                                 <field name="planned_hours" widget="float_time"/>
                                 <field name="effective_hours" widget="float_time" />
                                 <field name="resource_calendar_id"/>
                             </group>
+                            <newline/>
                             <group col="2" colspan="2" name="misc">
-                                <separator colspan="4" string="Miscelleanous"/>
+                                <separator colspan="4" string="Miscellaneous"/>
                                 <field name="company_id" select="1" groups="base.group_multi_company" widget="selection" required="1"/>
                                 <field name="warn_manager"/>
                                 <field name="priority"/>
                                 <field name="active" attrs="{'invisible':[('state','in',['open', 'pending', 'template'])]}"/>
-                            </group>
-                            <newline/>
-                            <separator colspan="4"/>
-                            <group col="9" colspan="8">
-                                <field name="state" widget="statusbar" statusbar_visible="open,close" statusbar_colors='{"pending":"blue"}' select="1" readonly="1"/>
-                                <button name="set_cancel" string="Cancel" type="object" states="open,pending" icon="gtk-cancel"/>
-                                <button name="set_template" string="Set as Template" type="object" states="open" icon="gtk-convert" groups="base.group_extended"/>
-                                <button name="set_open" string="Re-open project" type="object" states="pending,cancelled,close" icon="gtk-ok"/>
-                                <button name="set_pending" string="Pending" type="object" states="open" icon="gtk-media-pause"/>
-                                <button name="set_done" string="Done" type="object" states="open,pending" icon="terp-dialog-close"/>
-                                <button name="reset_project" string="Reset as Project" type="object" states="template" icon="gtk-convert"/>
-                                <button
-                                    string="New Project Based on Template"
-                                    name="duplicate_template"  type="object"
-                                    states="template" icon="gtk-new" context="{'parent_id':parent_id}"/>
                             </group>
                         </page>
                         <page string="Members">
@@ -72,13 +75,13 @@
                             <field name="warn_customer"/>
                             <field name="currency_id" select="1" groups="base.group_multi_company" required="1"/>
                             <newline/>
-                            <group colspan="4" col="4" groups="base.group_extended">
+                            <group colspan="4" col="4">
                                 <separator colspan="2" string="Mail Header"/>
                                 <separator colspan="2" string="Mail Footer"/>
                                 <field name="warn_header" nolabel="1" colspan="2"/>
                                 <field name="warn_footer" nolabel="1" colspan="2"/>
                             </group>
-                            <group col="3" colspan="4" groups="base.group_extended">
+                            <group col="3" colspan="4">
                                 <separator string="Automatic variables for headers and footer. Use exactly the same notation." colspan="4"/>
                                 <label string="Task: %%(name)s"/>
                                 <label string="User: %%(user_id)s"/>
@@ -88,7 +91,7 @@
                                 <label string="Date Stop: %%(date)s"/>
                             </group>
                         </page>
-                        <page string="Tasks Stages" groups="base.group_extended">
+                        <page string="Tasks Stages">
                            <field nolabel="1" name="type_ids" colspan="4"/>
                         </page>
                         <page string="Notes">
@@ -96,6 +99,10 @@
                         </page>
                     </notebook>
                     <newline/>
+                </sheet>
+                <div class="oe_form_bottom">
+                    <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
+                </div>
                 </form>
             </field>
         </record>
@@ -110,8 +117,7 @@
                        <filter icon="terp-check" string="Open" name="Current" domain="[('state', '=','open')]" help="Open Projects"/>
                        <filter icon="gtk-media-pause" string="Pending" name="Pending" domain="[('state', '=','pending')]" help="Pending Projects"/>
                        <filter icon="gtk-media-pause" string="Template"
-                            name="Template" domain="[('state', '=','template')]" help="Templates of Projects"
-                            groups="base.group_extended"/>
+                            name="Template" domain="[('state', '=','template')]" help="Templates of Projects"/>
                        <separator orientation="vertical"/>
                        <filter icon="terp-personal+" string="Member" domain="['|',('user_id', '=', uid),('members', '=', uid)]" help="Projects in which I am a member."/>
                        <separator orientation="vertical"/>
@@ -122,7 +128,7 @@
                        <field name="partner_id" string="Partner"/>
                    </group>
                    <newline />
-                    <group expand="0" string="Group By..." groups="base.group_extended">
+                    <group expand="0" string="Group By...">
                         <filter string="Manager" name="Manager"  icon="terp-personal" domain = "[]" context="{'group_by':'user_id'}"/>
                         <filter string="Partner" name="Partner" icon="terp-partner" domain = "[]" context="{'group_by':'partner_id'}"/>
                          <separator orientation="vertical"/>
@@ -138,8 +144,9 @@
             <field name="type">tree</field>
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
-                <tree colors="red:date and (date&lt;current_date) and (state == 'open');blue:state in ('draft','pending');grey: state in ('close','cancelled')" string="Projects">
+                <tree fonts="bold:needaction_pending==True" colors="red:date and (date&lt;current_date) and (state == 'open');blue:state in ('draft','pending');grey: state in ('close','cancelled')" string="Projects">
                     <field name="sequence" invisible="1"/>
+                    <field name="needaction_pending" invisible="1"/>
                     <field name="date" invisible="1"/>
                     <field name="name" string="Project Name"/>
                     <field name="user_id" string="Project Manager"/>
@@ -151,6 +158,94 @@
                     <field name="progress_rate" widget="progressbar"/>
                     <field name="state"/>
                 </tree>
+            </field>
+        </record>
+        
+        <act_window
+            context="{'search_default_project_id': [active_id], 'default_project_id': active_id}"
+            id="act_project_project_2_project_task_all"
+            name="Tasks"
+            res_model="project.task"
+            src_model="project.project"
+            view_mode="kanban,tree,form,calendar,graph"
+            view_type="form"/>
+
+        
+        <record model="ir.ui.view" id="view_project_kanban">
+            <field name="name">project.project.kanban</field>
+            <field name="model">project.project</field>
+            <field name="type">kanban</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="effective_hours"/>
+                    <field name="planned_hours"/>
+                    <field name="name"/>
+                    <field name="members"/>
+                    <field name="use_tasks"/>
+                    <field name="user_id"/>
+                    <field name="date"/>
+                    <field name="color"/>
+                    <field name="task_count"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="project_vignettes">
+                                <li t-attf-class="#{kanban_color(record.color.raw_value)} oe_project_kanban_vignette" id="oe_project_kanban_vignette">
+                                    <a href="#" class="oe_project_kanban_action dropdown-toggle"><span class="oe_i">B</span></a>
+                                    <ul class="dropdown-menu">
+                                      <li ><a type="edit" >Edit...</a></li>
+                                      <li ><a type="delete">Delete</a></li>
+                                      <li>
+                                        <ul class="color-chooser">
+                                            <li><a t-att-id="record.id.value" class="bgcolor"><span class="oe_kanban_color_0 square"></span></a></li>
+                                            <li><a t-att-id="record.id.value" class="bgcolor"><span class="oe_kanban_color_1 square"></span></a></li>
+                                            <li><a t-att-id="record.id.value" class="bgcolor"><span class="oe_kanban_color_2 square"></span></a></li>
+                                            <li><a t-att-id="record.id.value" class="bgcolor"><span class="oe_kanban_color_3 square"></span></a></li>
+                                            <li><a t-att-id="record.id.value" class="bgcolor"><span class="oe_kanban_color_4 square"></span></a></li>
+                                            <li><a t-att-id="record.id.value" class="bgcolor"><span class="oe_kanban_color_5 square"></span></a></li>
+                                        </ul>
+                                      </li>
+                                    </ul>
+                                    <h4><t t-esc="record.name.value.substr(0,33)"/><t t-if="record.name.value.length > 33">...</t></h4>
+                                    <div id="list">
+                                        <a t-if="record.use_tasks.raw_value" class="oe_project_buttons"
+                                            id="1" name="%(act_project_project_2_project_task_all)d" type="action">
+                                            Tasks(<field name="task_count"/>)</a>
+                                    </div>
+                                    <br/>
+                                    <button class="click_button" name="dummy" type="object">
+                                        <table class="project_fields">
+                                            <tr id="deadline" t-if="record.date.raw_value">
+                                                <th align="left">Deadline</th>
+                                                <td align="left"><field name="date"/></td>
+                                            </tr>
+                                            <tr>
+                                                <th align="left" width="70px">Progress</th>
+                                                <td align="left">
+                                                    <t t-esc="Math.round(record.effective_hours.raw_value)"/> / <t t-esc="Math.round(record.planned_hours.raw_value)"/> <field name="company_uom_id"/>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <br/>
+                                        <t t-foreach="record.members.raw_value" t-as="member">
+                                            <img t-att-src="kanban_image('res.users', 'avatar', member)" t-att-id="member" class="project_avatar"/>
+                                        </t>
+                                    </button>
+                                </li>
+                            </div>
+                            <script type="text/javascript">
+                                //open dropdwon when click on the icon.
+                                $('.dropdown-toggle').dropdown();
+                                
+                                //show and hide the dropdown icon when mouseover and mouseour.
+                                $('.oe_project_kanban_vignette').mouseover(function() {
+                                    return $(this).find('.oe_project_kanban_action').show();
+                                    }).mouseout(function() {
+                                    return $(this).find('.oe_project_kanban_action').hide();
+                                });
+                            </script>
+                        </t>
+                    </templates>
+                </kanban>
             </field>
         </record>
 
@@ -169,11 +264,14 @@
             <field name="res_model">project.project</field>
             <field name="view_type">form</field>
             <field name="domain">[]</field>
-            <field name="view_mode">tree,form,gantt</field>
-            <field name="view_id" ref="view_project"/>
+            <field name="view_mode">kanban,tree,form,gantt</field>
+            <field name="view_id" ref="view_project_kanban"/>
             <field name="search_view_id" ref="view_project_project_filter"/>
             <field name="context">{}</field>
-            <field name="help">A project contains a set of tasks or issues that will be performed by your resources assigned to it. A project can be hierarchically structured, as a child of a Parent Project. This allows you to design large project structures with different phases spread over the project duration cycle. Each user can set his default project in his own preferences to automatically filter the tasks or issues he usually works on. If you choose to invoice the time spent on a project task, you can find project tasks to be invoiced in the billing section.</field>
+            <field name="help" type="xml"><p>You have no projects.</p>
+<p>Projects are used to organize your activities; plan tasks, track issues, invoice timesheets. You can define internal projects (R&amp;D, Improve Sales Process), private projects (My Todos) or customer ones.</p>
+<p>Click <i>'create'</i> to start a new project.</p>
+	    </field>
         </record>
 
         <record id="open_view_template_project" model="ir.actions.act_window">
@@ -220,14 +318,27 @@
             <field name="type">form</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <form string="Task edition">
+                <form string="Project" layout="manual">
+                    <div class="oe_form_topbar">
+                        <button name="do_cancel" states="draft,open,pending" string="Cancel" type="object" icon="gtk-cancel"/>
+                        <button name="do_draft" states="open" string="Draft" type="object" icon="gtk-indent"/>
+                        <button name="do_open" states="pending,draft" string="Start Task" type="object" icon="gtk-media-play"/>
+                        <button name="%(action_project_task_reevaluate)d" states="done,cancelled" string="Reactivate" type="action" icon="gtk-convert" context="{'button_reactivate':True}" />
+                        <button name="do_pending" states="open" string="Pending" type="object" icon="gtk-media-pause"/>
+                        <button name="%(action_project_task_delegate)d" states="pending,open,draft" string="Delegate" type="action" icon="terp-personal"/>
+                        <button name="action_close" states="pending,open" string="Done" type="object" icon="terp-dialog-close"/>
+                        <div class="oe_right">
+                            <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}' select="1"/>
+                        </div>
+                    </div>
+                    <sheet string="Task edition" layout="auto">
                     <group colspan="6" col="6">
                         <field name="name" select="1"/>
                         <field name="project_id" select="1"  on_change="onchange_project(project_id)"/>
-                        <field name="total_hours" widget="float_time"/>
+                        <field name="total_hours" widget="float_time" groups="project.group_tasks_work_on_tasks"/>
                         <field name="date_deadline" attrs="{'readonly':[('state','in',['done', 'cancelled'])]}"/>
                         <field name="user_id" select="1" attrs="{'readonly':[('state','in',['done', 'cancelled'])]}"/>
-                        <field name="progress" widget="progressbar"/>
+                        <field name="progress" widget="progressbar" groups="project.group_tasks_work_on_tasks"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Information">
@@ -236,18 +347,19 @@
                                     name="planned_hours"
                                     widget="float_time"
                                     attrs="{'readonly':[('state','!=','draft')]}"
+                                    groups="project.group_time_work_estimation_tasks"									
                                     on_change="onchange_planned(planned_hours, effective_hours)"/>
                                 <field
                                     name="effective_hours"
-                                    widget="float_time" invisible="1"/>
+                                    widget="float_time" invisible="1" groups="project.group_tasks_work_on_tasks"/>
                             </group>
                             <group col="3" colspan="2">
-                                <field name="remaining_hours" widget="float_time" attrs="{'readonly':[('state','!=','draft')]}" colspan="2"/>
+                                <field name="remaining_hours" widget="float_time" attrs="{'readonly':[('state','!=','draft')]}" colspan="2" groups="project.group_time_work_estimation_tasks"/>
                                 <button name="%(action_project_task_reevaluate)d" string="Reevaluate" type="action" colspan="1" target="new" states="open,pending" icon="gtk-edit"/>
                             </group>
 
-                            <field colspan="4" name="description" nolabel="1"  attrs="{'readonly':[('state','=','done')]}" widget="text_wiki"/>
-                            <field colspan="4" name="work_ids" nolabel="1" attrs="{'readonly':[('state','in',['done','draft'])]}">
+                            <field colspan="4" name="description" nolabel="1"  attrs="{'readonly':[('state','=','done')]}"/>
+                            <field colspan="4" name="work_ids" nolabel="1" attrs="{'readonly':[('state','in',['done','draft'])]}" groups="project.group_tasks_work_on_tasks">
                                 <tree string="Task Work" editable="top">
                                     <field name="name" />
                                     <field name="hours" widget="float_time" sum="Spent Hours"/>
@@ -255,19 +367,8 @@
                                     <field name="date" />
                                 </tree>
                             </field>
-                            <newline/>
-                            <group col="11" colspan="4">
-                                <field name="state" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}' select="1"/>
-                                <button name="do_cancel" states="draft,open,pending" string="Cancel" type="object" icon="gtk-cancel"/>
-                                <button name="do_draft" states="open" string="Draft" type="object" icon="gtk-indent"/>
-                                <button name="do_open" states="pending,draft" string="Start Task" type="object" icon="gtk-media-play"/>
-                                <button name="%(action_project_task_reevaluate)d" states="done,cancelled" string="Reactivate" type="action" icon="gtk-convert" context="{'button_reactivate':True}" />
-                                <button name="do_pending" states="open" string="Pending" type="object" icon="gtk-media-pause"/>
-                                <button groups="base.group_extended" name="%(action_project_task_delegate)d" states="pending,open,draft" string="Delegate" type="action" icon="terp-personal"/>
-                                <button name="action_close" states="pending,open" string="Done" type="object" icon="terp-dialog-close"/>
-                            </group>
                         </page>
-                        <page groups="base.group_extended" string="Delegations History">
+                        <page string="Delegations History">
                             <separator string="Parent Tasks" colspan="4"/>
                             <field colspan="4" height="150" name="parent_ids" nolabel="1"/>
                             <separator string="Delegated tasks" colspan="4"/>
@@ -284,19 +385,14 @@
                             </field>
                         </page>
 
-                        <page groups="base.group_extended" string="Extra Info" attrs="{'readonly':[('state','=','done')]}">
+                        <page string="Extra Info" attrs="{'readonly':[('state','=','done')]}">
                             <group colspan="2" col="2">
                                 <separator string="Planning" colspan="2"/>
                                 <field name="priority"/>
                                 <field name="sequence"/>
                             </group>
-                            <group colspan="2" col="2" groups="base.group_no_one">
-                                <separator string="Dates" colspan="2"/>
-                                <field name="date_start"/>
-                                <field name="date_end"/>
-                                <field name="create_date"/>
-                            </group>
-                            <separator string="Miscelleanous" colspan="4"/>
+
+                            <separator string="Miscellaneous" colspan="4"/>
                             <field name="partner_id" />
                             <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                             <group col="4" colspan="2">
@@ -308,11 +404,14 @@
                             <field colspan="4" name="notes" nolabel="1"/>
                         </page>
                     </notebook>
+                    </sheet>
+                    <div class="oe_form_bottom">
+                        <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
+                    </div>
                 </form>
             </field>
         </record>
-
-
+        
         <!-- Project Task Kanban View  -->
         <record model="ir.ui.view" id="view_task_kanban">
             <field name="name">project.task.kanban</field>
@@ -329,7 +428,7 @@
                     <field name="sequence"/>
                     <field name="state"/>
                     <field name="kanban_state"/>
-                    <field name="remaining_hours" sum="Remaining Time"/>
+                    <field name="remaining_hours" sum="Remaining Time" groups="project.group_time_work_estimation_tasks"/>
                     <field name="date_deadline"/>
                     <templates>
                         <t t-name="task_details">
@@ -411,31 +510,31 @@
             <field name="type">tree</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <tree colors="grey:state in ('cancelled','done');blue:state == 'pending';red:date_deadline and (date_deadline&lt;current_date) and (state in ('draft','pending','open'))" string="Tasks">
+                <tree fonts="bold:needaction_pending==True" colors="grey:state in ('cancelled','done');blue:state == 'pending';red:date_deadline and (date_deadline&lt;current_date) and (state in ('draft','pending','open'))" string="Tasks">
+                    <field name="needaction_pending" invisible="1"/>
                     <field name="sequence" invisible="not context.get('seq_visible', False)"/>
                     <field name="name"/>
                     <field name="project_id" icon="gtk-indent" invisible="context.get('user_invisible', False)"/>
                     <field name="user_id" invisible="context.get('user_invisible', False)"/>
                     <field name="delegated_user_id" invisible="context.get('show_delegated', True)"/>
                     <field name="total_hours" invisible="1"/>
-                    <field name="planned_hours" invisible="context.get('set_visible',False)"/>
+                    <field name="planned_hours" invisible="context.get('set_visible',False)" groups="project.group_time_work_estimation_tasks"/>
                     <field name="effective_hours" widget="float_time" sum="Spent Hours" invisible="1"/>
-                    <field name="remaining_hours" widget="float_time" sum="Remaining Hours" on_change="onchange_remaining(remaining_hours,planned_hours)" invisible="context.get('set_visible',False)"/>
+                    <field name="remaining_hours" widget="float_time" sum="Remaining Hours" on_change="onchange_remaining(remaining_hours,planned_hours)" invisible="context.get('set_visible',False)" groups="project.group_time_work_estimation_tasks"/>
                     <field name="date_deadline" invisible="context.get('deadline_visible',True)"/>
-                    <field name="type_id" groups="base.group_extended" invisible="context.get('set_visible',False)"/>
+                    <field name="type_id" invisible="context.get('set_visible',False)"/>
                     <button name="next_type" invisible="context.get('set_visible',False)"
                         states="draft,open,pending"
                         string="Change Stage"
                         type="object"
                         icon="gtk-go-forward"
-                        groups="base.group_extended"
                         help="Change Type"/>
                     <field name="date_start" invisible="1" groups="base.group_no_one"/>
                     <field name="date_end" invisible="1" groups="base.group_no_one"/>
                     <field name="progress" widget="progressbar" invisible="context.get('set_visible',False)"/>
                     <field name="state" invisible="context.get('set_visible',False)"/>
                     <button name="do_open" states="pending,draft,done,cancelled" string="Start Task" type="object" icon="gtk-media-play" help="For changing to open state" invisible="context.get('set_visible',False)"/>
-                    <button groups="base.group_extended" name="%(action_project_task_delegate)d" states="pending,open,draft" string="Delegate" type="action" icon="terp-personal" help="For changing to delegate state"/>
+                    <button name="%(action_project_task_delegate)d" states="pending,open,draft" string="Delegate" type="action" icon="terp-personal" help="For changing to delegate state"/>
                     <button name="action_close" states="draft,pending,open" string="Done" type="object" icon="terp-dialog-close" help="For changing to done state"/>
                 </tree>
             </field>
@@ -624,21 +723,12 @@
 
         <menuitem id="menu_tasks_config" name="GTD" parent="project.menu_definitions" sequence="1"/>
 
-        <menuitem id="menu_project_config_project" name="Projects and Stages" parent="menu_definitions" sequence="1"/>
+        <menuitem id="menu_project_config_project" name="Stages" parent="menu_definitions" sequence="1"/>
 
         <menuitem action="open_task_type_form" id="menu_task_types_view" parent="menu_project_config_project" sequence="2" groups="base.group_no_one"/>
-        <menuitem action="open_view_project_all" id="menu_open_view_project_all" parent="menu_project_config_project" sequence="1" groups="base.group_no_one"/>
+        <menuitem action="open_view_project_all" id="menu_projects" name="Projects" parent="menu_project_management" sequence="1"/>
 
         <act_window context="{'search_default_user_id': [active_id], 'default_user_id': active_id}" id="act_res_users_2_project_project" name="User's projects" res_model="project.project" src_model="res.users" view_mode="tree,form" view_type="form"/>
-
-        <act_window
-            context="{'search_default_project_id': [active_id], 'default_project_id': active_id}"
-            id="act_project_project_2_project_task_all"
-            name="Tasks"
-            res_model="project.task"
-            src_model="project.project"
-            view_mode="tree,form,calendar,graph"
-            view_type="form"/>
 
          <record id="task_company" model="ir.ui.view">
             <field name="name">res.company.task.config</field>
@@ -655,31 +745,6 @@
         </record>
 
       <!--     User Form-->
-      <record id="view_project_users_form_simple" model="ir.ui.view">
-          <field name="name">res.users.project.form1</field>
-          <field name="model">res.users</field>
-          <field name="type">form</field>
-          <field name="inherit_id" ref="base.view_users_form"/>
-          <field eval="18" name="priority"/>
-          <field name="arch" type="xml">
-              <group name="default_filters" position="inside">
-                   <field name="context_project_id"/>
-              </group>
-          </field>
-     </record>
-
-     <record model="ir.ui.view" id="view_users_form_project_modif_inherited1">
-         <field name="name">view.users.form.project.modif.inherited1</field>
-         <field name="model">res.users</field>
-         <field name="inherit_id" ref="base.view_users_form_simple_modif" />
-         <field name="type">form</field>
-         <field eval="18" name="priority"/>
-         <field name="arch" type="xml">
-            <group name="default_filters" position="inside">
-                <field name="context_project_id" context="{'user_preference':True}" widget="selection" readonly="0"/>
-            </group>
-       </field>
-    </record>
-    <act_window context="{'search_default_user_id': [active_id], 'default_user_id': active_id}" domain="[('state', '&lt;&gt;', 'cancelled'),('state', '&lt;&gt;', 'done')]" id="act_res_users_2_project_task_opened" name="Assigned Tasks" res_model="project.task" src_model="res.users" view_mode="tree,form,gantt,calendar,graph" view_type="form"/>
+        <act_window context="{'search_default_user_id': [active_id], 'default_user_id': active_id}" domain="[('state', '&lt;&gt;', 'cancelled'),('state', '&lt;&gt;', 'done')]" id="act_res_users_2_project_task_opened" name="Assigned Tasks" res_model="project.task" src_model="res.users" view_mode="tree,form,gantt,calendar,graph" view_type="form"/>
     </data>
 </openerp>

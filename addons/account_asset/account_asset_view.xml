@@ -13,7 +13,7 @@
             <form string="Asset category">
                 <field name="name"/>
                 <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                <separator string="Accounting information" colspan="4"/>
+                <separator string="Accounting Information" colspan="4"/>
                 <field name="journal_id"/>
                 <field name="account_asset_id" on_change="onchange_account_asset(account_asset_id)"/>
                 <field name="account_depreciation_id"/>
@@ -33,7 +33,7 @@
                     <field name="open_asset"/>
                 </group>
             <group col="2" colspan="2" groups="analytic.group_analytic_accounting">
-                <separator string="Analytic information" colspan="4"/>
+                <separator string="Analytic Information" colspan="4"/>
                 <newline/>
                 <field name="account_analytic_id"/>
             </group>
@@ -94,7 +94,7 @@
                     <separator string="Other Information" colspan="4"/>
                     <field name="partner_id"/>
                     <field name="purchase_date"/>
-                    <field name="parent_id" groups="base.group_extended"/>
+                    <field name="parent_id"/>
                     <newline/>
                     <group colspan="2" col="2">
                         <separator string="Depreciation Dates" colspan="2"/>
@@ -290,7 +290,6 @@
 
     <menuitem id="menu_finance_assets" name="Assets" parent="account.menu_finance" sequence="9"/>
     <menuitem parent="menu_finance_assets" id="menu_action_account_asset_asset_tree"
-        groups="base.group_extended"
         sequence="100"
         action="action_account_asset_asset_tree"/>
 
@@ -315,19 +314,6 @@
     </record>
 
     <menuitem parent="menu_finance_config_assets" id="menu_action_account_asset_asset_list_normal" action="action_account_asset_asset_list_normal"/>
-
-    <record model="ir.actions.act_window" id="action_account_asset_asset_form_normal">
-        <field name="name">Review Asset Categories</field>
-        <field name="res_model">account.asset.category</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
-    </record>
-
-    <record id="asset_category_form_view_todo" model="ir.actions.todo">
-        <field name="action_id" ref="action_account_asset_asset_form_normal"/>
-        <field name="category_id" ref="account.category_accounting_configuration"/>
-        <field name="sequence">3</field>
-    </record>
 
 </data>
 </openerp>

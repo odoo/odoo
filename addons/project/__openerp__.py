@@ -29,7 +29,7 @@
     "sequence": 8,
     'complexity': "easy",
     "images": ["images/gantt.png", "images/project_dashboard.jpeg","images/project_task_tree.jpeg","images/project_task.jpeg","images/project.jpeg","images/task_analysis.jpeg"],
-    "depends": ["base_setup", "product", "analytic", "board",  "mail", "resource"],
+    "depends": ["base_setup", "product", "analytic", "board",  "mail", "resource","web_kanban"],
     "description": """
 Project management module tracks multi-level projects, tasks, work done on tasks, eso.
 ======================================================================================
@@ -52,12 +52,12 @@ Dashboard for project members that includes:
         "project_data.xml",
         "project_view.xml",
         "process/task_process.xml",
-        "project_installer.xml",
         "res_partner_view.xml",
         "report/project_report_view.xml",
         "board_project_view.xml",
         'board_project_manager_view.xml',
-        'report/project_cumulative.xml'
+        'report/project_cumulative.xml',
+        'res_config_view.xml',
     ],
     'demo_xml': [
         'project_demo.xml',
@@ -70,6 +70,8 @@ Dashboard for project members that includes:
     'installable': True,
     'auto_install': False,
     'application': True,
+    'css': ['static/src/css/project.css'],
+    'js': ['static/src/js/dropdown.js','static/src/js/project.js'],
     'certificate': '0075116868317',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

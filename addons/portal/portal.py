@@ -39,6 +39,9 @@ class portal(osv.osv):
             help='The group corresponding to this portal'),
         'url': fields.char('URL', size=64,
             help="The url where portal users can connect to the server"),
+        'home_action_id': fields.many2one('ir.actions.actions',
+            string='Home Action',
+            help="if set, replaces the standard home action (first screen after loggin) for the portal's users"),
         'menu_action_id': fields.many2one('ir.actions.act_window', readonly=True,
             # ISSUE: 'ondelete' constraints do not seem effective on this field...
             string='Menu Action',

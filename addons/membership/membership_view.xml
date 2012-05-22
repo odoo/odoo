@@ -20,7 +20,7 @@
                    <field name="name"/>
                    <field name="categ_id" widget="selection" operator="child_of"/>
                    <newline/>
-                   <group  expand='0' string='Group by...' groups="base.group_extended">
+                   <group  expand='0' string='Group by...'>
                        <filter string='Category' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'categ_id'}" />
                        <separator orientation="vertical"/>
                        <filter string='Date From' icon="terp-go-month" domain="[]" context="{'group_by' : 'membership_date_from'}" />
@@ -128,7 +128,7 @@
         <menuitem name="Association" id="base.menu_association" icon="terp-calendar" sequence="9"/>
         <menuitem name="Members" id="menu_membership" sequence="0" parent="base.menu_association"/>
         <menuitem name="Configuration" id="base.menu_marketing_config_association"
-            parent="base.menu_association" sequence="30" groups="base.group_extended"/>
+            parent="base.menu_association" sequence="30"/>
 
 
         <menuitem name="Membership Products"

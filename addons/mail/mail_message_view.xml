@@ -1,6 +1,76 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
+        <!-- mail.message tree: short view !-->
+        <record model="ir.ui.view" id="view_message_tree_short">
+            <field name="name">mail.message.tree.short</field>
+            <field name="model">mail.message</field>
+            <field name="type">tree</field>
+            <field name="priority">20</field>
+            <field name="arch" type="xml">
+                <tree string="Messages">
+                    <field name="date"/>
+                    <field name="subject"/>
+                    <field name="user_id"/>
+                    <field name="model"/>
+                    <field name="res_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- mail.message form: short view !-->
+        <record model="ir.ui.view" id="view_message_form_short">
+            <field name="name">mail.message.form.short</field>
+            <field name="model">mail.message</field>
+            <field name="type">form</field>
+            <field name="priority">20</field>
+            <field name="arch" type="xml">
+                <form string="Message">
+                    <group colspan="2" col="2">
+                        <field name="subject"/>
+                        <field name="date"/>
+                        <field name="type"/>
+                        <field name="body_text"/>
+                    </group>
+                    <group colspan="2" col="2">
+                        <field name="user_id" string="User" readonly="0"/>
+                        <field name="model"/>
+                        <field name="res_id"/>
+                        <field name="parent_id"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <!-- mail.message search: short view !-->
+        <record model="ir.ui.view" id="view_message_search_short">
+            <field name="name">mail.message.search.short</field>
+            <field name="model">mail.message</field>
+            <field name="type">search</field>
+            <field name="priority">20</field>
+            <field name="arch" type="xml">
+                <search string="Messages Search">
+                    <field name="user_id"/>
+                    <field name="model"/>
+                    <field name="date"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- mail.message search: wall view !-->
+        <record model="ir.ui.view" id="view_message_search_wall">
+            <field name="name">mail.message.search.wall</field>
+            <field name="model">mail.message</field>
+            <field name="type">search</field>
+            <field name="priority">25</field>
+            <field name="arch" type="xml">
+                <search string="Messages Search">
+                    <field name="user_id"/>
+                    <field name="body"/>
+                </search>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="view_email_message_form">
             <field name="name">mail.message.form</field>
             <field name="model">mail.message</field>
@@ -8,10 +78,11 @@
             <field name="arch" type="xml">
                 <form string="Email message">
                     <group colspan="4" col="6">
-                       <field name="subject" colspan="4"/>
-                       <field name="date"/>
-                       <field name="user_id" string="User"/>
-                       <field name="partner_id" readonly="1" attrs="{'invisible':[('partner_id', '=', False)]}"/>
+                        <field name="subject" colspan="4"/>
+                        <field name="date"/>
+                        <field name="user_id" string="User"/>
+                        <field name="partner_id" readonly="1" attrs="{'invisible':[('partner_id', '=', False)]}"/>
+                        <field name="type"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Details">
@@ -20,18 +91,17 @@
                                 <field name="email_from"/>
                                 <field name="email_to"/>
                                 <field name="email_cc" attrs="{'invisible':[('email_cc', '=', False)]}"/>
-                                <field name="email_bcc" groups="base.group_extended" attrs="{'invisible':[('email_bcc', '=', False)]}"/>
+                                <field name="email_bcc" attrs="{'invisible':[('email_bcc', '=', False)]}"/>
                                 <field name="reply_to" attrs="{'invisible':[('reply_to', '=', False)]}"/>
                             </group>
                             <group col="4" colspan="2">
                                 <separator string="Message Details" colspan="4"/>
                                 <field name="model"/>
                                 <button name="open_document" string="Open" type="object" icon="gtk-jump-to" colspan="2"/>
-                                <field name="res_id" groups="base.group_extended"/>
-                                <field name="message_id" groups="base.group_extended" colspan="4" attrs="{'invisible':[('message_id', '=', False)]}"/>
-                                <field name="references" colspan="4" widget="char" size="512" groups="base.group_extended" attrs="{'invisible':[('references', '=', False)]}"/>
+                                <field name="res_id"/>
+                                <field name="message_id" colspan="4" attrs="{'invisible':[('message_id', '=', False)]}"/>
+                                <field name="references" colspan="4" widget="char" size="512" attrs="{'invisible':[('references', '=', False)]}"/>
                             </group>
-
                             <notebook colspan="4">
                                 <page string="Body (Rich)" attrs="{'invisible':[('subtype','=','plain')]}">
                                     <field name="body_html" widget="text_html" nolabel="1" colspan="4"/>
@@ -40,11 +110,11 @@
                                     <field name="body_text" colspan="4" widget="text" nolabel="1"/>
                                 </page>
                             </notebook>
-
                             <separator string="" colspan="4"/>
-                            <group col="6" colspan="4">
+                            <group col="6" colspan="6">
                                 <field name="state" colspan="2"/>
-                                <group col="4" colspan="2">
+                                <field name="subtype" attrs="{'invisible':[('subtype', '=', False)]}"/>
+                                <group colspan="2">
                                     <button name="%(action_email_compose_message_wizard)d" string="Reply" type="action" icon="terp-mail-replied"
                                     context="{'mail.compose.message.mode':'reply', 'message_id':active_id}" states='received,sent,exception,cancel'/>
                                 </group>
@@ -54,10 +124,9 @@
                             <separator string="Attachments" colspan="4"/>
                             <field name="attachment_ids" nolabel="1" colspan="4"/>
                         </page>
-                        <page string="Advanced" groups="base.group_extended">
+                        <page string="Advanced" groups="base.group_no_one">
                             <group col="2" colspan="4">
                                 <field name="mail_server_id" attrs="{'invisible':[('mail_server_id', '=', False)]}"/>
-                                <field name="subtype" attrs="{'invisible':[('subtype', '=', False)]}"/>
                                 <field name="auto_delete"/>
                                 <field name="headers" colspan="4" attrs="{'invisible':[('headers', '=', False)]}"/>
                                 <field name="original" colspan="4" attrs="{'invisible':[('original', '=', False)]}"/>
@@ -80,6 +149,8 @@
                     <field name="user_id" string="User"/>
                     <field name="message_id" invisible="1"/>
                     <field name="partner_id" invisible="1"/>
+                    <field name="model" invisible="1"/>
+                    <field name="res_id" invisible="1"/>
                     <field name="state"/>
                     <button name="send" string="Send Now" type="object" icon="gtk-media-play" states='outgoing'/>
                     <button name="mark_outgoing" string="Retry" type="object" icon="gtk-redo" states='exception,cancel'/>
@@ -100,18 +171,25 @@
                     <filter icon="terp-call-start" name="outgoing" string="Outgoing" domain="[('state','=','outgoing')]"/>
                     <filter icon="terp-check" name="sent" string="Sent" domain="[('state','=','sent')]"/>
                     <separator orientation="vertical"/>
-                    <filter icon="terp-gtk-stop" string="Failed" domain="[('state','=','exception')]"/>
+                    <filter icon="terp-gtk-stop" name="exception" string="Failed" domain="[('state','=','exception')]"/>
+                    <separator orientation="vertical"/>
+                    <filter icon="terp-camera_test" name="type_email" string="Email" domain="[('type','=','email')]"/>
+                    <filter icon="terp-camera_test" name="type_comment" string="Comment" domain="[('type','=','comment')]"/>
+                    <filter icon="terp-camera_test" name="type_notification" string="Notification" domain="[('type','=','notification')]"/>
+                    <separator orientation="vertical"/>
                     <field name="email_from"/>
                     <field name="email_to"/>
                     <field name="subject"/>
                     <field name="date"/>
                     <newline/>
-                    <group expand="0" string="Extended Filters..." groups="base.group_extended">
-                    <field name="user_id" string="User"/>
-                    <field name="partner_id" string="Partner Name"/>
+                    <group expand="0" string="Extended Filters...">
+                        <field name="user_id" string="User"/>
+                        <field name="partner_id" string="Partner Name"/>
+                        <field name="model"/>
+                        <field name="res_id"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By..." groups="base.group_extended">
+                    <group expand="0" string="Group By...">
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="User" name="User" icon="terp-personal" context="{'group_by':'user_id'}"/>
@@ -124,12 +202,21 @@
             </field>
         </record>
 
+        <record id="action_view_all_messages_short" model="ir.actions.act_window">
+            <field name="name">Messages</field>
+            <field name="res_model">mail.message</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'tree_view_ref': 'mail.view_message_tree_short', 'form_view_ref': 'mail.view_message_form_short'}</field>
+            <field name="search_view_id" ref="view_message_search_short"/>
+        </record>
+
         <record id="action_view_mail_message" model="ir.actions.act_window">
             <field name="name">Messages</field>
             <field name="res_model">mail.message</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">['|',('state','in',['outgoing','exception']),('email_from', '!=', False)]</field>
+            <field name="context">{'search_default_received': 1, 'search_default_type_email': 1}</field>
             <field name="search_view_id" ref="view_email_message_search"/>
         </record>
 
@@ -140,10 +227,22 @@
             src_model="res.partner"
             view_id="view_email_message_tree"/>
 
-        <menuitem name="Messages"
-            id="menu_email_message"
-            parent="base.menu_email"
-            action="action_view_mail_message" />
+        <!-- Add menu entry in Settings/Email -->
+        <menuitem name="Messages" id="menu_email_message" parent="base.menu_email" action="action_view_mail_message" />
+        
+        <!-- Add menu entry in Settings/Email -->
+        <menuitem name="Feeds" id="menu_email_message_all" parent="base.menu_email" action="action_view_all_messages_short" groups="base.group_no_one"/>
 
+        <record id="action_mail_all_feeds" model="ir.actions.client">
+            <field name="name">News Feed</field>
+            <field name="tag">mail.all_feeds</field>
+            <field name="params" eval="{'search_view_id': ref('view_message_search_wall')}"/>
+        </record>
+
+        <record id="action_mail_my_feeds" model="ir.actions.client">
+            <field name="name">My Feeds</field>
+            <field name="tag">mail.all_feeds</field>
+            <field name="params" eval="{'search_view_id': ref('view_message_search_wall'), 'my_feeds': True}"/>
+        </record>
     </data>
 </openerp>
