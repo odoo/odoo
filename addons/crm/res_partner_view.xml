@@ -71,7 +71,7 @@
                     <field name="opportunity_count"/>
                     <field name="meeting_count"/>
                 </field>
-                 <xpath expr="//div[@class='oe_partner_desc']//h4[@class='oe_partner_heading']" position="after">
+                 <xpath expr="//h4[@class='oe_partner_heading']" position="after">
                         <a name="%(act_res_partner_2_opportunity)d" type="action">
                             <t t-if="record.opportunity_count.value">Opportunities(<t t-esc="record.opportunity_count.value"/>)</t>
                         </a>
