@@ -277,14 +277,8 @@ class marketing_campaign_segment(osv.osv):
         'state': fields.selection([('draft', 'New'),
                                    ('cancelled', 'Cancelled'),
                                    ('running', 'Running'),
-<<<<<<< TREE
                                    ('done', 'Done')],
-                                   'State',),
-=======
-                                   ('done', 'Done'),
-                                   ('cancelled', 'Cancelled')],
                                    'Status',),
->>>>>>> MERGE-SOURCE
         'date_run': fields.datetime('Launch Date', help="Initial start date of this segment."),
         'date_done': fields.datetime('End Date', help="Date this segment was last closed or cancelled."),
         'date_next_sync': fields.function(_get_next_sync, string='Next Synchronization', type='datetime', help="Next time the synchronization job is scheduled to run automatically"),
