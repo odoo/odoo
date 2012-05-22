@@ -205,7 +205,7 @@ class account_invoice(osv.osv):
             ('proforma2','Pro-forma'),
             ('open','Open'),
             ('sent','Sent'),
-            ('paid','Paid')
+            ('paid','Paid'),
             ('cancel','Cancelled'),
             ],'State', select=True, readonly=True,
             help=' * The \'Draft\' state is used when a user is encoding a new and unconfirmed Invoice. \
