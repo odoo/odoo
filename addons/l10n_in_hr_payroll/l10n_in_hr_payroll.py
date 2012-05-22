@@ -74,7 +74,7 @@ class hr_contract_in(osv.osv):
         'leave_avail_dedution': fields.float('leave Avail deduction ', digits_compute=dp.get_precision('Payroll')),
         'No_of_year':fields.function(_compute_year, string='No. of Years of service',type="float",readonly=True),
         'medical_insurance': fields.float('Medical Insurance', digits_compute=dp.get_precision('Payroll')), 
-        'voluntarily_provident_fund': fields.float('Voluntarily Provident Fund', digits_compute=dp.get_precision('Payroll')), 
+        'voluntarily_provident_fund': fields.float('Voluntarily Provident Fund', digits_compute=dp.get_precision('Payroll'),help="it is computed as percentage.(%)"), 
         'company_transport': fields.float('Company provided transport', digits_compute=dp.get_precision('Payroll')), 
     }
 

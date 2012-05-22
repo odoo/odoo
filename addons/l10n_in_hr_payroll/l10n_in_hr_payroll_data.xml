@@ -125,9 +125,8 @@ number of years of service (date of joining – date of retirement/leaving job)
             <field name="code">LTA</field>
             <field name="name">Leave Travel Allowance</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
-            <field name="amount_select">percentage</field>
-            <field name="amount_percentage_base">contract.wage</field>
-            <field name="amount_percentage" eval="0.0833"/>
+            <field name="amount_select">fix</field>
+            <field name="amount_fix">1666</field>
             <field name="sequence" eval="32"/>
             <field name="note">
 As per Income tax rules of India, if transport bills for LTA are not provided,
@@ -175,7 +174,7 @@ is to be limited to minimum of all below:
             <field name="name">Medical Reimbursement</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
             <field name="amount_select">fix</field>
-            <field eval="2500.0" name="amount_fix"/>
+            <field eval="1200.0" name="amount_fix"/>
             <field name="sequence" eval="35"/>
             <field name="note">This component is on-taxable up to 15000 per year (or Rs 1250 per month) on producing medical bills.</field>
         </record>
@@ -209,8 +208,8 @@ In such case, the component would become non-taxable.</field>
             <field name="code">TELR</field>
             <field name="name">Telephone Reimbursement</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
-            <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = 1500 *12</field>
+            <field name="amount_select">fix</field>
+            <field name="amount_fix">1500</field>
             <field name="sequence" eval="38"/>
             <field name="note">
 In some of the cases, companies may provide a component for telephone bills.
@@ -233,8 +232,8 @@ Read more: http://www.pankajbatra.com/finance/income-tax-calculator-2012-2013-20
             <field name="code">CAR</field>
             <field name="name">Car Expenses Reimbursement</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
-            <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = 1800 * 12</field>
+            <field name="amount_select">fix</field>
+            <field name="amount_fix">1800</field>
             <field name="sequence" eval="39"/>
             <field name="note">
 In case company provides component for this and employee use self owned car for official 
@@ -291,10 +290,9 @@ one is liable to pay the tax what ever he received excess of the limit or Rs 50,
             <field name="code">HRI</field>
             <field name="name">House Rent Income</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
-            <field name="amount_select">fix</field>
-            <field eval="0.0" name="amount_fix"/>
-            <field name="condition_select">python</field>
-            <field name="condition_python">result = bool(contract.house_rent_income)</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.house_rent_income</field>
+            <field name="condition_select">none</field>
             <field name="sequence" eval="44"/>
             <field name="note">Income from house property.30% of the rental income can be reduced as a standard deduction</field>
         </record>
@@ -414,7 +412,7 @@ Read more: http://www.pankajbatra.com/finance/income-tax-calculator-2012-2013-20
             <field name="condition_select">python</field>
             <field name="condition_python">result = bool(contract.voluntarily_provident_fund)</field>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = -(contract.voluntarily_provident_fund)</field>
+            <field name="amount_python_compute">result = -(contract.wage + DA) * contract.voluntarily_provident_fund / 100 </field>
             <field name="sequence" eval="130"/>
             <field name="note">
 VPF is a safe option wherein you can contribute more than the PF ceiling of 12% 
@@ -504,7 +502,7 @@ read more: http://www.citehr.com/270132-labour-welfare-fund-deduction-salary.htm
             <field name="name">Employer's PF Contribution</field>
             <field name="category_id" ref="hr_payroll.DED"/>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = (contract.wage + DA) * 0.12</field>
+            <field name="amount_python_compute">result = - (contract.wage + DA) * 0.12</field>
             <field name="sequence" eval="122"/>
         </record>
         
@@ -513,7 +511,7 @@ read more: http://www.citehr.com/270132-labour-welfare-fund-deduction-salary.htm
             <field name="name">Employee's PF Contribution</field>
             <field name="category_id" ref="hr_payroll.DED"/>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = (contract.wage + DA) / 8.33</field>
+            <field name="amount_python_compute">result = - (contract.wage + DA) * 8.33 / 100</field>
             <field name="sequence" eval="123"/>
         </record>
         
@@ -522,7 +520,7 @@ read more: http://www.citehr.com/270132-labour-welfare-fund-deduction-salary.htm
             <field name="name">Employer's NPS Contribution</field>
             <field name="category_id" ref="hr_payroll.DED"/>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = (contract.wage + DA) * 0.10</field>
+            <field name="amount_python_compute">result = - (contract.wage + DA) * 0.10</field>
             <field name="sequence" eval="126"/>
         </record>
         
@@ -531,7 +529,7 @@ read more: http://www.citehr.com/270132-labour-welfare-fund-deduction-salary.htm
             <field name="name">Employee's NPS Contribution</field>
             <field name="category_id" ref="hr_payroll.DED"/>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = (contract.wage + DA) * 0.10</field>
+            <field name="amount_python_compute">result = - (contract.wage + DA) * 0.10</field>
             <field name="sequence" eval="125"/>
         </record>
         
