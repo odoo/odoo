@@ -2,7 +2,8 @@
 import functools
 
 import openerp
-import common
+from openerp import exceptions
+from . import common
 
 class Fixtures(object):
     def __init__(self, *args):
@@ -173,3 +174,67 @@ class TestOwnDefaults(common.TransactionCase):
             dict(name='a', user_id=self.USER, is_default=True, domain='[]', context='{}'),
             dict(name='b', user_id=self.USER, is_default=False, domain='[]', context='{}'),
         ])
+
+class TestGlobalDefaults(common.TransactionCase):
+    USER_ID = 3
+
+    @fixtures(
+        ('ir.filters', dict(name='a', user_id=False, model_id='ir.filters')),
+        ('ir.filters', dict(name='b', user_id=False, model_id='ir.filters')),
+    )
+    def test_new_filter_not_default(self):
+        """
+        When creating a @is_default filter with existing non-default filters,
+        the new filter gets the flag
+        """
+        Filters = self.registry('ir.filters')
+        Filters.create_or_replace(self.cr, self.USER_ID, {
+            'name': 'c',
+            'model_id': 'ir.filters',
+            'user_id': False,
+            'is_default': True,
+        })
+        filters = Filters.get_filters(self.cr, self.USER_ID, 'ir.filters')
+
+        self.assertItemsEqual(map(noid, filters), [
+            dict(name='a', user_id=False, is_default=False, domain='[]', context='{}'),
+            dict(name='b', user_id=False, is_default=False, domain='[]', context='{}'),
+            dict(name='c', user_id=False, is_default=True, domain='[]', context='{}'),
+        ])
+
+    @fixtures(
+        ('ir.filters', dict(name='a', user_id=False, model_id='ir.filters')),
+        ('ir.filters', dict(name='b', is_default=True, user_id=False, model_id='ir.filters')),
+    )
+    def test_new_filter_existing_default(self):
+        """
+        When creating a @is_default filter where an existing filter is already
+        @is_default, an error should be generated
+        """
+        Filters = self.registry('ir.filters')
+        with self.assertRaises(exceptions.Warning):
+            Filters.create_or_replace(self.cr, self.USER_ID, {
+                'name': 'c',
+                'model_id': 'ir.filters',
+                'user_id': False,
+                'is_default': True,
+            })
+
+    @fixtures(
+        ('ir.filters', dict(name='a', user_id=False, model_id='ir.filters')),
+        ('ir.filters', dict(name='b', is_default=True, user_id=False, model_id='ir.filters')),
+    )
+    def test_update_filter_set_default(self):
+        """
+        When updating an existing filter to @is_default, if an other filter
+        already has the flag an error should be generated
+        """
+        Filters = self.registry('ir.filters')
+
+        with self.assertRaises(exceptions.Warning):
+            Filters.create_or_replace(self.cr, self.USER_ID, {
+                'name': 'a',
+                'model_id': 'ir.filters',
+                'user_id': False,
+                'is_default': True,
+            })

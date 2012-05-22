@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from openerp import exceptions
 from osv import osv, fields
 from tools.translate import _
 
@@ -49,6 +50,37 @@ class ir_filters(osv.osv):
         my_acts = self.read(cr, uid, act_ids, ['name', 'is_default', 'domain', 'context', 'user_id'])
         return my_acts
 
+    def _check_global_default(self, cr, uid, vals, matching_filters, context=None):
+        """ _check_global_default(cursor, UID, dict, list(dict), dict) -> None
+
+        Checks if there is a global default for the model_id requested.
+
+        If there is, and the default is different than the record being written
+        (-> we're not updating the current global default), raise an error
+        to avoid users unknowingly overwriting existing global defaults (they
+        have to explicitly remove the current default before setting a new one)
+
+        This method should only be called if ``vals`` is trying to set
+        ``is_default``
+
+        :raises openerp.exceptions.Warning: if there is an existing default and
+                                            we're not updating it
+        """
+        existing_default = self.search(cr, uid, [
+            ('model_id', '=', vals['model_id']),
+            ('user_id', '=', False),
+            ('is_default', '=', True)], context=context)
+
+        if not existing_default: return
+        if matching_filters and \
+           (matching_filters[0]['id'] == existing_default[0]):
+            return
+
+        raise exceptions.Warning(
+            _("There is already a global filter set as default for %(model)s, delete or change it before setting a new default") % {
+                'model': vals['model_id']
+            })
+
     def create_or_replace(self, cr, uid, vals, context=None):
         lower_name = vals['name'].lower()
         matching_filters = [f for f in self.get_filters(cr, uid, vals['model_id'])
@@ -58,17 +90,23 @@ class ir_filters(osv.osv):
                                 # or f.user_id.id == vals.user_id
                                 if (f['user_id'] and f['user_id'][0]) == vals.get('user_id', False)]
 
-        if 'user_id' in vals and vals.get('is_default'):
-            act_ids = self.search(cr, uid, [('model_id', '=', vals['model_id']),
-                                            ('user_id', '=', vals['user_id'])],
-                                  context=context)
-            self.write(cr, uid, act_ids, {'is_default': False}, context=context)
+        if vals.get('is_default'):
+            if vals.get('user_id'):
+                act_ids = self.search(cr, uid, [('model_id', '=', vals['model_id']),
+                                                ('user_id', '=', vals['user_id'])],
+                                      context=context)
+                self.write(cr, uid, act_ids, {'is_default': False}, context=context)
+            else:
+                self._check_global_default(
+                    cr, uid, vals, matching_filters, context=None)
+
 
         # When a filter exists for the same (name, model, user) triple, we simply
         # replace its definition.
         if matching_filters:
             self.write(cr, uid, matching_filters[0]['id'], vals, context)
             return matching_filters[0]['id']
+
         return self.create(cr, uid, vals, context)
 
     _sql_constraints = [
