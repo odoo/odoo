@@ -3,6 +3,7 @@ openerp.hr_attendance = function(instance) {
     _t = instance.web._t;
     
     instance.web.currentform = false;
+    instance.web.currentlist = false;
     instance.web.attendanceslider = false;
     
     instance.hr_attendance.AttendanceSlider = instance.web.Widget.extend({
@@ -31,9 +32,18 @@ openerp.hr_attendance = function(instance) {
                 else
                     self.employee.state = 'present';
                 self.do_slide(self.employee.state);
+                if(instance.web.currentlist){
+                    instance.web.currentlist.reload();
+                }
                 if(instance.web.currentform){
-                    instance.web.currentform.reload();
-                
+                    if (instance.web.currentform.model == 'hr_timesheet_sheet.sheet'){
+                        model = new instance.web.DataSet(self, instance.web.currentform.model);
+                        model.call('date_today', [instance.web.currentform.dataset.ids]).done(function(result){instance.web.currentform.reload();});
+                    }
+                    else{
+                        instance.web.currentform.reload();
+                    }
+                    
                 }
             });
         },
@@ -63,7 +73,7 @@ openerp.hr_attendance = function(instance) {
         {
             this._super(parent, dataset, view_id, options);
             if (this.model == 'hr.employee' || this.model == 'hr.attendance' || this.model == 'hr_timesheet_sheet.sheet')
-                instance.web.currentform = this;
+                instance.web.currentlist = this;
         }
     });
     
