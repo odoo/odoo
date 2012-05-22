@@ -46,7 +46,7 @@ class ir_filters(osv.osv):
         """
         # available filters: private filters (user_id=uid) and public filters (uid=NULL) 
         act_ids = self.search(cr, uid, [('model_id','=',model),('user_id','in',[uid, False])])
-        my_acts = self.read(cr, uid, act_ids, ['name', 'domain', 'context', 'user_id'])
+        my_acts = self.read(cr, uid, act_ids, ['name', 'is_default', 'domain', 'context', 'user_id'])
         return my_acts
 
     def create_or_replace(self, cr, uid, vals, context=None):
@@ -57,6 +57,13 @@ class ir_filters(osv.osv):
                                 # f.user_id is False and vals.user_id is False or missing,
                                 # or f.user_id.id == vals.user_id
                                 if (f['user_id'] and f['user_id'][0]) == vals.get('user_id', False)]
+
+        if 'user_id' in vals and vals.get('is_default'):
+            act_ids = self.search(cr, uid, [('model_id', '=', vals['model_id']),
+                                            ('user_id', '=', vals['user_id'])],
+                                  context=context)
+            self.write(cr, uid, act_ids, {'is_default': False}, context=context)
+
         # When a filter exists for the same (name, model, user) triple, we simply
         # replace its definition.
         if matching_filters:
@@ -87,11 +94,13 @@ class ir_filters(osv.osv):
         'domain': fields.text('Domain', required=True),
         'context': fields.text('Context', required=True),
         'model_id': fields.selection(_list_all_models, 'Model', required=True),
+        'is_default': fields.boolean('Default filter')
     }
     _defaults = {
         'domain': '[]',
         'context':'{}',
         'user_id': lambda self,cr,uid,context=None: uid,
+        'is_default': False
     }
 
 ir_filters()

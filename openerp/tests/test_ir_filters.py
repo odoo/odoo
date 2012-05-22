@@ -42,10 +42,10 @@ class TestGetFilters(common.TransactionCase):
             self.cr, self.USER_ID, 'ir.filters')
 
         self.assertItemsEqual(map(noid, filters), [
-            dict(name='a', user_id=self.USER, domain='[]', context='{}'),
-            dict(name='b', user_id=self.USER, domain='[]', context='{}'),
-            dict(name='c', user_id=self.USER, domain='[]', context='{}'),
-            dict(name='d', user_id=self.USER, domain='[]', context='{}'),
+            dict(name='a', is_default=False, user_id=self.USER, domain='[]', context='{}'),
+            dict(name='b', is_default=False, user_id=self.USER, domain='[]', context='{}'),
+            dict(name='c', is_default=False, user_id=self.USER, domain='[]', context='{}'),
+            dict(name='d', is_default=False, user_id=self.USER, domain='[]', context='{}'),
         ])
 
     @fixtures(
@@ -59,10 +59,10 @@ class TestGetFilters(common.TransactionCase):
             self.cr, self.USER_ID, 'ir.filters')
 
         self.assertItemsEqual(map(noid, filters), [
-            dict(name='a', user_id=False, domain='[]', context='{}'),
-            dict(name='b', user_id=False, domain='[]', context='{}'),
-            dict(name='c', user_id=False, domain='[]', context='{}'),
-            dict(name='d', user_id=False, domain='[]', context='{}'),
+            dict(name='a', is_default=False, user_id=False, domain='[]', context='{}'),
+            dict(name='b', is_default=False, user_id=False, domain='[]', context='{}'),
+            dict(name='c', is_default=False, user_id=False, domain='[]', context='{}'),
+            dict(name='d', is_default=False, user_id=False, domain='[]', context='{}'),
         ])
 
     @fixtures(
@@ -76,7 +76,100 @@ class TestGetFilters(common.TransactionCase):
             self.cr, self.USER_ID, 'ir.filters')
 
         self.assertItemsEqual(map(noid, filters), [
-            dict(name='a', user_id=False, domain='[]', context='{}'),
-            dict(name='c', user_id=self.USER, domain='[]', context='{}'),
+            dict(name='a', is_default=False, user_id=False, domain='[]', context='{}'),
+            dict(name='c', is_default=False, user_id=self.USER, domain='[]', context='{}'),
         ])
 
+class TestOwnDefaults(common.TransactionCase):
+    USER_ID = 3
+    USER = (3, u'Demo User')
+
+    def test_new_no_filter(self):
+        """
+        When creating a @is_default filter with no existing filter, that new
+        filter gets the default flag
+        """
+        Filters = self.registry('ir.filters')
+        Filters.create_or_replace(self.cr, self.USER_ID, {
+            'name': 'a',
+            'model_id': 'ir.filters',
+            'user_id': self.USER_ID,
+            'is_default': True,
+        })
+        filters = Filters.get_filters(self.cr, self.USER_ID, 'ir.filters')
+
+        self.assertItemsEqual(map(noid, filters), [
+            dict(name='a', user_id=self.USER, is_default=True,
+                 domain='[]', context='{}')
+        ])
+
+    @fixtures(
+        ('ir.filters', dict(name='a', user_id=USER_ID, model_id='ir.filters')),
+        ('ir.filters', dict(name='b', user_id=USER_ID, model_id='ir.filters')),
+    )
+    def test_new_filter_not_default(self):
+        """
+        When creating a @is_default filter with existing non-default filters,
+        the new filter gets the flag
+        """
+        Filters = self.registry('ir.filters')
+        Filters.create_or_replace(self.cr, self.USER_ID, {
+            'name': 'c',
+            'model_id': 'ir.filters',
+            'user_id': self.USER_ID,
+            'is_default': True,
+        })
+        filters = Filters.get_filters(self.cr, self.USER_ID, 'ir.filters')
+
+        self.assertItemsEqual(map(noid, filters), [
+            dict(name='a', user_id=self.USER, is_default=False, domain='[]', context='{}'),
+            dict(name='b', user_id=self.USER, is_default=False, domain='[]', context='{}'),
+            dict(name='c', user_id=self.USER, is_default=True, domain='[]', context='{}'),
+        ])
+
+    @fixtures(
+        ('ir.filters', dict(name='a', user_id=USER_ID, model_id='ir.filters')),
+        ('ir.filters', dict(name='b', is_default=True, user_id=USER_ID, model_id='ir.filters')),
+    )
+    def test_new_filter_existing_default(self):
+        """
+        When creating a @is_default filter where an existing filter is already
+        @is_default, the flag should be *moved* from the old to the new filter
+        """
+        Filters = self.registry('ir.filters')
+        Filters.create_or_replace(self.cr, self.USER_ID, {
+            'name': 'c',
+            'model_id': 'ir.filters',
+            'user_id': self.USER_ID,
+            'is_default': True,
+        })
+        filters = Filters.get_filters(self.cr, self.USER_ID, 'ir.filters')
+
+        self.assertItemsEqual(map(noid, filters), [
+            dict(name='a', user_id=self.USER, is_default=False, domain='[]', context='{}'),
+            dict(name='b', user_id=self.USER, is_default=False, domain='[]', context='{}'),
+            dict(name='c', user_id=self.USER, is_default=True, domain='[]', context='{}'),
+        ])
+
+    @fixtures(
+        ('ir.filters', dict(name='a', user_id=USER_ID, model_id='ir.filters')),
+        ('ir.filters', dict(name='b', is_default=True, user_id=USER_ID, model_id='ir.filters')),
+    )
+    def test_update_filter_set_default(self):
+        """
+        When updating an existing filter to @is_default, if an other filter
+        already has the flag the flag should be moved
+        """
+        Filters = self.registry('ir.filters')
+        Filters.create_or_replace(self.cr, self.USER_ID, {
+            'name': 'a',
+            'model_id': 'ir.filters',
+            'user_id': self.USER_ID,
+            'is_default': True,
+        })
+        filters = Filters.get_filters(self.cr, self.USER_ID, 'ir.filters')
+
+        self.assertItemsEqual(map(noid, filters), [
+            dict(name='a', user_id=self.USER, is_default=True, domain='[]', context='{}'),
+            dict(name='b', user_id=self.USER, is_default=False, domain='[]', context='{}'),
+        ])
