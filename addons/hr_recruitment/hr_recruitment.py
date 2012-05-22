@@ -57,8 +57,6 @@ class hr_recruitment_source(osv.osv):
     _columns = {
         'name': fields.char('Source Name', size=64, required=True, translate=True),
     }
-hr_recruitment_source()
-
 
 class hr_recruitment_stage(osv.osv):
     """ Stage of HR Recruitment """
@@ -70,13 +68,14 @@ class hr_recruitment_stage(osv.osv):
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of stages."),
         'department_id':fields.many2one('hr.department', 'Specific to a Department', help="Stages of the recruitment process may be different per department. If this stage is common to all departments, keep tempy this field."),
         'state': fields.selection(AVAILABLE_STATES, 'State', required=True, help="The related state for the stage. The state of your document will automatically change regarding the selected stage. Example, a stage is related to the state 'Close', when your document reach this stage, it will be automatically closed."),
-        'requirements': fields.text('Requirements')
+        'fold': fields.boolean('Hide in views if empty', help="This stage is not visible, for example in status bar or kanban view, when there are no records in that stage to display."),
+        'requirements': fields.text('Requirements'),
     }
     _defaults = {
         'sequence': 1,
         'state': 'draft',
+        'fold': False,
     }
-hr_recruitment_stage()
 
 class hr_recruitment_degree(osv.osv):
     """ Degree of HR Recruitment """
@@ -92,7 +91,6 @@ class hr_recruitment_degree(osv.osv):
     _sql_constraints = [
         ('name_uniq', 'unique (name)', 'The name of the Degree of Recruitment must be unique!')
     ]
-hr_recruitment_degree()
 
 class hr_applicant(crm.crm_case, osv.osv):
     _name = "hr.applicant"
@@ -231,14 +229,19 @@ class hr_applicant(crm.crm_case, osv.osv):
         stage_id = stage_ids and stage_ids[0] or False
         return {'value': {'stage_id': stage_id}}
 
+    def stage_find(self, cr, uid, section_id, domain=[], order='sequence', context=None):
+        domain = list(domain)
+        if section_id:
+            domain.append(('department_id', '=', section_id))
+        stage_ids = self.pool.get('hr.recruitment.stage').search(cr, uid, domain, order=order, context=context)
+        if stage_ids:
+            return stage_ids[0]
+        return False
+
     def stage_previous(self, cr, uid, ids, context=None):
-        """This function computes previous stage for case from its current stage
-             using available stage for that case type
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of case IDs
-        @param context: A standard dictionary for contextual values"""
+        """ This function computes previous stage for case from its current stage
+            using available stage for that case type
+        """
         stage_obj = self.pool.get('hr.recruitment.stage')
         for case in self.browse(cr, uid, ids, context=context):
             department = (case.department_id.id or False)
@@ -531,7 +534,6 @@ class hr_applicant(crm.crm_case, osv.osv):
         message = _("Applicant has been <b>created</b>.")
         return self.message_append_note(cr, uid, ids, body=message, context=context)
 
-hr_applicant()
 
 class hr_job(osv.osv):
     _inherit = "hr.job"
@@ -539,6 +541,6 @@ class hr_job(osv.osv):
     _columns = {
         'survey_id': fields.many2one('survey', 'Interview Form', help="Choose an interview form for this job position and you will be able to print/answer this interview from all applicants who apply for this job"),
     }
-hr_job()
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
