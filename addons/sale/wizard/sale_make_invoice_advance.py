@@ -35,12 +35,10 @@ class sale_advance_payment_inv(osv.osv_memory):
         return product_id
 
     _columns = {
-        'product_id': fields.many2one('product.product', 'Advance Product', required=False,
-            help="Select a product of type service which is called 'Advance Product'. You may have to create it and set it as a default value on this field."),
+        'product_id': fields.many2one('product.product', 'Advance Product', help="Select a product of type service which is called 'Advance Product'. You may have to create it and set it as a default value on this field."),
         'amount': fields.float('Advance Amount', digits=(16, 2), required=True, help="The amount to be invoiced in advance."),
         'qtty': fields.float('Quantity', digits=(16, 2), required=True),
-        'advance_payment_method':fields.selection([('percentage','Percentage'), ('fixed','Fixed Price')], 'Pay Type', required=True),
-        'advance': fields.boolean('Advance'),
+        'advance_payment_method':fields.selection([('percentage','Percentage'), ('fixed','Fixed Price')], 'Type', required=True, help="Use Fixed Price if you want to give specific amound in Advance, Use Percentage if you want to give percentage of Total Invoice Amount."),
     }
 
     _defaults = {
@@ -49,27 +47,15 @@ class sale_advance_payment_inv(osv.osv_memory):
         'product_id': _default_product_id,
     }
 
-    def onchange_advance_payment_method(self, cr, uid, ids, advance_payment_method,product_id, context=None):
-        if not product_id:
-            return {'value': {'amount': 0}}
+    def onchange_advance_payment_method(self, cr, uid, ids, advance_payment_method, product_id, context=None):
         if advance_payment_method == 'percentage':
             return {'value': {'amount':0,'product_id':False }}
-        product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
-        return {'value': {'amount':product.list_price}}
+        else:
+            if not product_id:
+                return {'value': {'amount': 0}}
+            product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+            return {'value': {'amount': product.list_price}}
 
-    def onchange_advance_product(self, cr, uid, ids, product_id, context=None):
-        value = {}
-        value['advance'] = 'False'
-        if not product_id:
-            return {'value': {'amount': 0,'advance': False}}
-        product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
-        value['amount'] = product.list_price
-        try:
-            advance_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'sale', 'advance_product_0')[1]
-            if product.id ==  advance_id:
-                value['advance'] = 'True'
-        finally:
-            return {'value': value}
 
     def create_invoices(self, cr, uid, ids, context=None):
         """
