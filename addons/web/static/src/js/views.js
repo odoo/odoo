@@ -295,7 +295,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             if (view.embedded_view) {
                 controller.set_embedded_view(view.embedded_view);
             }
-            controller.do_switch_view.add_last(this.on_mode_switch);
+            controller.do_switch_view.add_last(_.bind(this.switch_view, this));
             controller.do_prev_view.add_last(this.on_prev_view);
             var container = this.$element.find(".oe_view_manager_view_" + view_type);
             view_promise = controller.appendTo(container);
@@ -341,6 +341,14 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                     self.display_title());
         });
         return view_promise;
+    },
+    /**
+     * Method used internally when a view asks to switch view. This method is meant
+     * to be extended by child classes to change the default behavior, which simply
+     * consist to switch to the asked view.
+     */
+    switch_view: function(view_type, no_store) {
+        return this.on_mode_switch(view_type, no_store);
     },
     /**
      * Returns to the view preceding the caller view in this manager's
@@ -1271,11 +1279,6 @@ instance.web.str_to_xml = function(s) {
     xDoc.loadXML(s);
     return xDoc;
 }
-
-/**
- * Registry for all the client actions key: tag value: widget
- */
-instance.web.client_actions = new instance.web.Registry();
 
 /**
  * Registry for all the main views

@@ -118,7 +118,6 @@ $colour4: #8a89ba
                 border-right: none
     th, td
         padding: 0
-        line-height: 18px
         text-align: left
     th
         font-weight: bold
@@ -156,6 +155,8 @@ $colour4: #8a89ba
     .oe_right
         float: right
         margin-left: 8px
+    .oe_text_right
+        text-align: right
     .oe_clear
         clear: both
     .oe_wait
@@ -434,6 +435,7 @@ $colour4: #8a89ba
         border-right: 1px solid #afafb6
         text-shadow: 0 1px 1px white
         padding-bottom: 16px
+        line-height: 18px
     a.oe_logo
         width: 220px
         display: block
@@ -794,11 +796,6 @@ $colour4: #8a89ba
                     text-shadow: 0 1px 2px rgba(0,0,0,0.4)
         .oe_view_manager_buttons
             white-space: nowrap
-    // }}}
-    // ViewManager.body {{{
-    .oe_view_manager_body
-        h4
-            margin: 8px 0
     // }}}
     // ViewManager.pager {{{
     .oe_view_manager_pager
@@ -1161,11 +1158,12 @@ $colour4: #8a89ba
     .oe_view_nocontent
         > img
             float: left
-            margin-right: 1.5em
+            margin: 1.5em
         > div
             // don't encroach on my arrow
             overflow: hidden
-            padding: 6px
+            padding: 35px 0px 0px 0px
+            max-width: 700px
             font-size: 125%
     .oe_view_topbar
         border-bottom: 1px solid #cacaca
@@ -1203,7 +1201,7 @@ $colour4: #8a89ba
         line-height: 30px 
         button
             font-size: 12px 
-            height: 24px 
+            height: 24px !important
             line-height: 24px 
             vertical-align: top
             padding: 0 10px 
@@ -1269,7 +1267,7 @@ $colour4: #8a89ba
             background: url(/web/static/src/img/form_sheetbg.png)
             padding: 8px 0
             border-bottom: 1px solid #ddd 
-        .oe_form_sheet_width
+        .oe_form_sheet_width, .oe_form_bottom
             min-width: 650px
             max-width: 980px
             margin: 0 auto
@@ -1280,10 +1278,8 @@ $colour4: #8a89ba
             border: 1px solid #afafb6
             @include box-shadow(0 0 10px rgba(0,0,0,0.3))
     // }}}
-    // FormView.autolayout {{{
-    .oe_form_autolayout
-        .oe_button
-            height: 20px
+    // FormView.layout {{{
+    .oe_form
         .oe_form_group_cell
             line-height: 18px
             padding: 2px
@@ -1301,21 +1297,13 @@ $colour4: #8a89ba
         .oe_form_group_cell > div > .oe_datepicker_root,
         .oe_form_group_cell > div > .oe_datepicker_root > input.oe_datepicker_master
             width: 100%
-        .oe_form_button.oe_button
-            color: #4c4c4c
-            span
-                position: relative
-                vertical-align: top
-        .oe_form_group_cell > .oe_form_button.oe_button
-            white-space: nowrap
-            min-width: 100%
-            width: 100%
         .oe_form_group_cell.oe_form_group_nested
             padding: 0
     // }}}
     // FormView.label {{{
     .oe_form
         .oe_form_label_help[for], .oe_form_label[for]
+            font-weight: bold
             white-space: nowrap
             padding-right: 8px
             span
@@ -1367,7 +1355,6 @@ $colour4: #8a89ba
             padding-left: 8px
             @include box-shadow(none)
             @include radius(0px)
-            color: #666
         .oe_form_field_many2one input,
         .oe_form_field_binary input,
         .oe_form_field_binary input,
@@ -1424,10 +1411,8 @@ $colour4: #8a89ba
             input, select, textarea
                 background-color: #F66 !important
                 border: 1px solid #D00 !important
-    // }}}
-    // FormView.buttons {{{
-    .oe_form
         .oe_button.oe_field_button
+            display: block
             -webkit-border-top-left-radius: 0px
             -webkit-border-bottom-left-radius: 0px
             -moz-border-radius-topleft: 0px
@@ -1447,9 +1432,23 @@ $colour4: #8a89ba
             filter: alpha(opacity=50)
             right: 5px
             top: 3px
+    // }}}
+    // FormView.buttons {{{
+    .oe_form
+        .oe_form_button.oe_button
+            height: 22px
+            color: #4c4c4c
+            span
+                position: relative
+                vertical-align: top
         .oe_form_button > img
             vertical-align: -3px
             padding: 0 2px
+        .oe_form_group_cell > .oe_form_button.oe_button
+            display: block
+            white-space: nowrap
+            min-width: 100%
+            width: 100%
     // }}}
     // FormView.binaryfile {{{
     /* http://www.quirksmode.org/dom/inputfile.html
@@ -1476,6 +1475,8 @@ $colour4: #8a89ba
             padding: 0
     // }}}
     // FormView.separator {{{
+    .oe_horizontal_border
+        border-bottom: 1px solid black
     .oe_horizontal_separator
         font-weight: bold
         font-size: 16px
@@ -1587,7 +1588,24 @@ $colour4: #8a89ba
                 min-width: 120px
         .oe_form_group_odd_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell,
         .oe_form_group_label_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell
-            padding: 2px 2px 2px 8px !important
+            padding-left: 8px
+        .oe_form_subtotal_footer
+            float: right
+            > div
+                text-align: right
+                padding: 3px
+            label
+                font-weight: normal !important
+            span
+                display: inline-block
+                min-width: 80px
+                text-align: right
+            .oe_form_subtotal_footer_separator
+                border-top: 1px solid #cacaca
+                font-size: 120%
+                font-weight: bold
+                label
+                    font-weight: bold !important
     // }}}
     // ListView {{{
     .oe-listview-content

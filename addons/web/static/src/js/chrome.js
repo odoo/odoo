@@ -43,11 +43,15 @@ instance.web.Notification =  instance.web.Widget.extend({
     }
 });
 
+/**
+ * The very minimal function everything should call to create a dialog
+ * in OpenERP Web Client.
+ */
 instance.web.dialog = function(element) {
     var result = element.dialog.apply(element, _.rest(_.toArray(arguments)));
     result.dialog("widget").addClass("openerp");
     return result;
-}
+};
 
 instance.web.Dialog = instance.web.Widget.extend({
     dialog_title: "",
@@ -162,7 +166,7 @@ instance.web.CrashManager = instance.web.CallbackEnabled.extend({
         }
     },
     on_managed_error: function(error) {
-    	instance.web.dialog($('<div>' + QWeb.render('CrashManager.warning', {error: error}) + '</div>'), {
+        instance.web.dialog($('<div>' + QWeb.render('CrashManager.warning', {error: error}) + '</div>'), {
             title: "OpenERP " + _.str.capitalize(error.type),
             buttons: [
                 {text: _t("Ok"), click: function() { $(this).dialog("close"); }}
@@ -181,7 +185,7 @@ instance.web.CrashManager = instance.web.CallbackEnabled.extend({
                 // Call the send method from server to send mail with details
                 new instance.web.DataSet(self, 'publisher_warranty.contract').call_and_eval('send', [error.data,explanation,remark,issuename]).then(function(result){
                     if (result === false) {
-                        alert('There was a communication error.')
+                        alert('There was a communication error.');
                     } else {
                         $this.dialog('close');
                     }
@@ -269,12 +273,12 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
     start: function() {
         var self = this;
         var fetch_db = this.rpc("/web/database/get_list", {}).pipe(
-            function(result) { 
-                self.db_list = result.db_list; 
+            function(result) {
+                self.db_list = result.db_list;
             },
-            function (_, ev) { 
+            function (_, ev) {
                 ev.preventDefault();
-                self.db_list = null; 
+                self.db_list = null;
             });
         var fetch_langs = this.rpc("/web/session/get_lang_list", {}).then(function(result) {
             self.lang_list = result.lang_list;
@@ -284,11 +288,15 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
     do_render: function() {
         var self = this;
         self.$element.html(QWeb.render("DatabaseManager", { widget : self }));
-        self.$element.find(".oe_database_manager_menu").tabs();
+        self.$element.find(".oe_database_manager_menu").tabs({
+            show: function(event, ui) {
+                $('*[autofocus]:first', ui.panel).focus();
+            }
+        });
         self.$element.find("form[name=create_db_form]").validate({ submitHandler: self.do_create });
-       	self.$element.find("form[name=drop_db_form]").validate({ submitHandler: self.do_drop });
-       	self.$element.find("form[name=backup_db_form]").validate({ submitHandler: self.do_backup });
-       	self.$element.find("form[name=restore_db_form]").validate({ submitHandler: self.do_restore });
+        self.$element.find("form[name=drop_db_form]").validate({ submitHandler: self.do_drop });
+        self.$element.find("form[name=backup_db_form]").validate({ submitHandler: self.do_backup });
+        self.$element.find("form[name=restore_db_form]").validate({ submitHandler: self.do_restore });
         self.$element.find("form[name=change_pwd_form]").validate({
             messages: {
                 old_pwd: "Please enter your previous password",
@@ -300,7 +308,7 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
             },
             submitHandler: self.do_change_password
         });
-       	self.$element.find("#back_to_login").click(self.do_exit);
+        self.$element.find("#back_to_login").click(self.do_exit);
     },
     destroy: function () {
         this.$element.find('#db-create, #db-drop, #db-backup, #db-restore, #db-change-password, #back-to-login').unbind('click').end().empty();
@@ -409,12 +417,12 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
                     self.display_error({
                         title: 'Access Denied',
                         error: 'Incorrect super-administrator password'
-                    })
+                    });
                 } else {
                     self.display_error({
                         title: 'Restore Database',
                         error: 'Could not restore the database'
-                    })
+                    });
                 }
             },
             complete: function() {
@@ -451,7 +459,7 @@ instance.web.Login =  instance.web.Widget.extend({
         if (this.has_local_storage && this.remember_credentials) {
             this.selected_db = localStorage.getItem('last_db_login_success');
             this.selected_login = localStorage.getItem('last_login_login_success');
-            if (jQuery.deparam(jQuery.param.querystring()).debug != undefined) {
+            if (jQuery.deparam(jQuery.param.querystring()).debug !== undefined) {
                 this.selected_password = localStorage.getItem('last_password_login_success');
             }
         }
@@ -471,7 +479,7 @@ instance.web.Login =  instance.web.Widget.extend({
                 self.$element.find('.oe_login_bottom').show();
                 self.$element.find('.oe_login_pane').show();
                 self.load_db_list();
-            })
+            });
         });
         self.load_db_list();
     },
@@ -486,7 +494,7 @@ instance.web.Login =  instance.web.Widget.extend({
         });
     },
     set_db_list: function (list) {
-        this.$element.find("[name=db]").replaceWith(instance.web.qweb.render('Login.dblist', { db_list: list, selected_db: this.selected_db}))
+        this.$element.find("[name=db]").replaceWith(instance.web.qweb.render('Login.dblist', { db_list: list, selected_db: this.selected_db}));
     },
     on_submit: function(ev) {
         if(ev) {
@@ -525,7 +533,7 @@ instance.web.Login =  instance.web.Widget.extend({
                 if(self.remember_credentials) {
                     localStorage.setItem('last_db_login_success', db);
                     localStorage.setItem('last_login_login_success', login);
-                    if (jQuery.deparam(jQuery.param.querystring()).debug != undefined) {
+                    if (jQuery.deparam(jQuery.param.querystring()).debug !== undefined) {
                         localStorage.setItem('last_password_login_success', password);
                     }
                 } else {
@@ -641,8 +649,9 @@ instance.web.Menu =  instance.web.Widget.extend({
      * @param {Number} id the action_id to match
      */
     open_action: function (id) {
-        var menu_id, $menu = this.$element.add(this.$secondary_menus).find('a[data-action-id=' + id + ']');
-        if (menu_id = $menu.data('menu')) {
+        var $menu = this.$element.add(this.$secondary_menus).find('a[data-action-id=' + id + ']');
+        var menu_id = $menu.data('menu');
+        if (menu_id) {
             this.open_menu(menu_id);
         }
     },
@@ -669,7 +678,7 @@ instance.web.Menu =  instance.web.Widget.extend({
                         action_id = $items.data('action-id');
                         id = $items.data('menu');
                     }
-                } 
+                }
             }
             this.open_menu(id);
             this.current_menu = id;
@@ -709,7 +718,9 @@ instance.web.UserMenu =  instance.web.Widget.extend({
         });
         this.$element.on('click', '.oe_dropdown_options li a[data-menu]', function() {
             var f = self['on_menu_' + $(this).data('menu')];
-            f && f($(this));
+            if (f) {
+                f($(this));
+            }
             self.$element.find('.oe_dropdown_options').hide();
             return false;
         });
@@ -837,7 +848,7 @@ instance.web.WebClient = instance.web.Widget.extend({
     start: function() {
         var self = this;
         this.$element.addClass("openerp openerp-web-client-container");
-        if (jQuery.param != undefined && jQuery.deparam(jQuery.param.querystring()).kitten != undefined) {
+        if (jQuery.param !== undefined && jQuery.deparam(jQuery.param.querystring()).kitten !== undefined) {
             this.$element.addClass("kitten-mode-activated");
             this.$element.delegate('img.oe-record-edit-link-img', 'hover', function(e) {
                 self.$element.toggleClass('clark-gable');
@@ -899,7 +910,7 @@ instance.web.WebClient = instance.web.Widget.extend({
                     message: message,
                     data: {debug: file + ':' + line}
                 });
-            }
+            };
         }
         this.notification = new instance.web.Notification(this);
         this.notification.appendTo(this.$element);
@@ -954,9 +965,18 @@ instance.web.WebClient = instance.web.Widget.extend({
         }
     },
     on_hashchange: function(event) {
+        var self = this;
         var state = event.getState(true);
         if (!_.isEqual(this._current_state, state)) {
-            this.action_manager.do_load_state(state, !!this._current_state);
+            if(state.action_id === undefined && state.menu_id) {
+                self.menu.has_been_loaded.then(function() {
+                    self.menu.do_reload().then(function() {
+                        self.menu.menu_click(state.menu_id)
+                    });
+                });
+            } else {
+                this.action_manager.do_load_state(state, !!this._current_state);
+            }
         }
         this._current_state = state;
     },
@@ -970,7 +990,7 @@ instance.web.WebClient = instance.web.Widget.extend({
     },
     do_action: function(action) {
         var self = this;
-        // TODO replace by client action menuclick 
+        // TODO replace by client action menuclick
         if(action.menu_id) {
             this.do_reload().then(function () {
                 self.menu.menu_click(action.menu_id);
@@ -989,7 +1009,7 @@ instance.web.EmbeddedClient = instance.web.Widget.extend({
     template: 'EmptyComponent',
     init: function(parent, action_id, options) {
         this._super(parent);
-        // TODO take the xmlid of a action instead of its id 
+        // TODO take the xmlid of a action instead of its id
         this.action_id = action_id;
         this.options = options || {};
         this.am = new instance.web.ActionManager(this);
@@ -1030,7 +1050,7 @@ instance.web.embed = function (origin, dbname, login, key, action, options) {
         });
     });
 
-}
+};
 
 };
 
