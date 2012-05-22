@@ -29,9 +29,6 @@
     'auto_install': False,
     'web': True,
     'js': ['static/src/js/gdocs.js'],
-    'qweb' : [
-        "static/src/xml/gdocs.xml",
-    ],
     'update_xml': [
         'res_config_user_view.xml'
     ],
