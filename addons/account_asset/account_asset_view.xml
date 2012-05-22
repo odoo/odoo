@@ -80,9 +80,9 @@
         <field name="arch" type="xml">
            <form layout="manual">
            <div class="oe_form_topbar">
-               <button name="validate" states="draft" string="Confirm Asset" type="object" icon="terp-camera_test"/>
-               <button name="set_to_close" states="open" string="Set to Close" type="object" icon="gtk-close"/>
-               <button name="set_to_draft" states="open" string="Set to Draft" type="object" icon="gtk-convert"/> 
+               <button name="validate" states="draft" string="Confirm Asset" type="object"/>
+               <button name="set_to_close" states="open" string="Set to Close" type="object"/>
+               <button name="set_to_draft" states="open" string="Set to Draft" type="object"/> 
                <div class="oe_right">
                    <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,open"/>
                </div>

@@ -25,8 +25,8 @@
             <field name="arch" type="xml">
                 <form layout="manual">
                 <div class="oe_form_topbar">
-                    <button name="%(action_lunch_order_confirm)d" string="Confirm Order" type="action" icon="gtk-ok" attrs="{'invisible':[('state','=','confirmed')]}"/>
-                    <button name="%(action_lunch_order_cancel)d" string="Cancel Order" type="action" icon="gtk-cancel"/>
+                    <button name="%(action_lunch_order_confirm)d" string="Confirm Order" type="action" attrs="{'invisible':[('state','=','confirmed')]}"/>
+                    <button name="%(action_lunch_order_cancel)d" string="Cancel Order" type="action"/>
                     <div class="oe_right">
                         <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,confirmed"/>
                     </div>

@@ -17,10 +17,10 @@
         <field name="arch" type="xml">
             <form layout="manual">
             <div class="oe_form_topbar">
-                <button name="state_running_set" string="Run" states="draft" icon="gtk-apply"/>
-                <button name="state_done_set" string="Done" states="running" icon="terp-dialog-close"/>
-                <button name="state_draft_set" string="Set to Draft" states="done,cancelled" icon="gtk-convert"/>
-                <button name="state_cancel_set" string="Cancel" states="running" icon="terp-gtk-stop"/>
+                <button name="state_running_set" string="Run" states="draft"/>
+                <button name="state_done_set" string="Done" states="running"/>
+                <button name="state_draft_set" string="Set to Draft" states="done,cancelled"/>
+                <button name="state_cancel_set" string="Cancel" states="running"/>
                 <div class="oe_right">
                     <field name="state" readonly="1" widget="statusbar" nolabel="1" statusbar_visible="draft,running,done"/>
                 </div>
@@ -141,10 +141,10 @@
         <field name="arch" type="xml">
             <form layout="manual">
             <div class="oe_form_topbar">
-                <button name="state_running_set" string="Run" states="draft" icon="gtk-apply"/>
-                <button name="state_done_set" string="Close" states="running" icon="terp-dialog-close"/>
-                <button name="state_draft_set" string="Set to Draft" states="done,cancelled" icon="gtk-convert"/>
-                <button name="state_cancel_set" string="Cancel" states="running" icon="terp-gtk-stop"/>
+                <button name="state_running_set" string="Run" states="draft"/>
+                <button name="state_done_set" string="Close" states="running"/>
+                <button name="state_draft_set" string="Set to Draft" states="done,cancelled"/>
+                <button name="state_cancel_set" string="Cancel" states="running"/>
                 <div class="oe_right">
                     <field name="state" readonly="1" nolabel="1" widget="statusbar" statusbar_visible="draft,running,done"/>
                 </div>
@@ -366,9 +366,9 @@
         <field name="arch" type="xml">
             <form layout="manual">
             <div class="oe_form_topbar">
-                <button string="Process" states="todo" name="process" type="object" icon="terp-gtk-go-back-rtl"/>
-                <button string="Reset" states="exception,cancelled" name="button_draft" type="object" icon="gtk-undo"/>
-                <button string="Cancel" states="todo,exception" name="button_cancel" type="object" icon="terp-gtk-stop"/>
+                <button string="Process" states="todo" name="process" type="object"/>
+                <button string="Reset" states="exception,cancelled" name="button_draft" type="object"/>
+                <button string="Cancel" states="todo,exception" name="button_cancel" type="object"/>
                 <div class="oe_right">
                     <field name="state" readonly="True" nolabel="1" widget="statusbar" statusbar_visible="todo,done" statusbar_colors='{"exception":"red"}'/>
                 </div>

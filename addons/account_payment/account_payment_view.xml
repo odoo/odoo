@@ -102,10 +102,10 @@
             <field name="arch" type="xml">
                 <form layout="manual">
                 <div class="oe_form_topbar">
-                    <button name="open" states="draft" string="Confirm Payments"  icon="gtk-apply"/>
-                    <button name="set_done" states="open" string="Make Payments" type="object" icon="gtk-execute"/>
-                    <button name="set_to_draft" states="cancel" string="Set to draft" type="object" icon="gtk-convert"/>
-                    <button name="cancel" states="draft,open" string="Cancel" icon="gtk-cancel"/>
+                    <button name="open" states="draft" string="Confirm Payments" />
+                    <button name="set_done" states="open" string="Make Payments" type="object"/>
+                    <button name="set_to_draft" states="cancel" string="Set to draft" type="object"/>
+                    <button name="cancel" states="draft,open" string="Cancel"/>
                     <div class="oe_right">
                         <field name="state" select="1" widget="statusbar" nolabel="1" statusbar_visible="draft,open"/>
                     </div>

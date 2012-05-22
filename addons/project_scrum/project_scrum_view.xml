@@ -58,12 +58,12 @@
             <field name="arch" type="xml">
                 <form layout="manual">
                 <div class="oe_form_topbar">
-                    <button type="object" string="Open" name="button_open" states="draft,pending" icon="terp-camera_test"/>
-                    <button type="object" string="Close" name="button_close" states="open,pending" icon="terp-dialog-close"/>
-                    <button type="object" string="Pending" name="button_pending" states="open" icon="gtk-media-pause"/>
-                    <button type="action" string="Convert to Task" name="%(action_scrum_backlog_to_task)d" states="pending" icon="gtk-execute"/>
-                    <button type="object" string="Set to Draft" name="button_draft" states="cancel,done" icon="gtk-convert"/>
-                    <button type="object" string="Cancel" name="button_cancel" states="draft,open,pending" icon="gtk-stop"/>
+                    <button type="object" string="Open" name="button_open" states="draft,pending"/>
+                    <button type="object" string="Close" name="button_close" states="open,pending"/>
+                    <button type="object" string="Pending" name="button_pending" states="open"/>
+                    <button type="action" string="Convert to Task" name="%(action_scrum_backlog_to_task)d" states="pending"/>
+                    <button type="object" string="Set to Draft" name="button_draft" states="cancel,done"/>
+                    <button type="object" string="Cancel" name="button_cancel" states="draft,open,pending"/>
                     <div class="oe_right">
                         <field name="state" select="1" widget="statusbar" nolabel="1" statusbar_visible="draft,open"/>
                     </div>
@@ -239,12 +239,12 @@
             <field name="arch" type="xml">
                 <form layout="manual">
                 <div class="oe_form_topbar">
-                    <button type="object" string="Open" name="button_open" states="draft,pending" icon="terp-camera_test"/>
-                    <button type="object" string="Close" name="button_close" states="open,pending" icon="terp-dialog-close"/>
-                    <button type="object" string="Pending" name="button_pending" states="open" icon="gtk-media-pause"/>
+                    <button type="object" string="Open" name="button_open" states="draft,pending"/>
+                    <button type="object" string="Close" name="button_close" states="open,pending"/>
+                    <button type="object" string="Pending" name="button_pending" states="open"/>
                     <button name="%(project_scrum.report_scrum_sprint_burndown_chart)d"
-                                   string="Burndown Chart" type="action" icon="gtk-print"/>
-                    <button type="object" string="Set to Draft" name="button_draft" states="cancel,done" icon="gtk-convert"/>
+                                   string="Burndown Chart" type="action"/>
+                    <button type="object" string="Set to Draft" name="button_draft" states="cancel,done"/>
                     <div class="oe_right">
                         <field name="state" readonly="1" widget="statusbar" nolabel="1" statusbar_visible="draft,open"/>
                     </div>

@@ -20,9 +20,9 @@
             <field name="arch" type="xml">
                 <form layout="manual">
                 <div class="oe_form_topbar">
-                    <button name="survey_open" string="Open" states="cancel,close" type="object" icon="gtk-go-forward"/>
-                    <button name="survey_close" string="Close" states="open" type="object" icon="gtk-close"/>
-                    <button name="survey_cancel" string="Cancel" states="open" type="object" icon="gtk-cancel"/>
+                    <button name="survey_open" string="Open" states="cancel,close" type="object"/>
+                    <button name="survey_close" string="Close" states="open" type="object"/>
+                    <button name="survey_cancel" string="Cancel" states="open" type="object"/>
                     <div class="oe_right">
                         <field name="state" widget="statusbar" nolabel="1" statusbar_visible="open,close"/>
                     </div>
@@ -1061,10 +1061,10 @@
             <field name="arch" type="xml">
                 <form layout="manual">
                 <div class="oe_form_topbar">
-                    <button name="survey_req_draft" string="Set to Draft" states="cancel,done" type="object" icon="gtk-new"/>
-                    <button name="survey_req_waiting_answer" string="Waiting Answer" states="draft" type="object" icon="gtk-new"/>
-                    <button name="survey_req_done" string="Done" states="waiting_answer" type="object" icon="gtk-ok"/>
-                    <button name="survey_req_cancel" string="Cancel" states="waiting_answer" type="object" icon="gtk-cancel"/>
+                    <button name="survey_req_draft" string="Set to Draft" states="cancel,done" type="object"/>
+                    <button name="survey_req_waiting_answer" string="Waiting Answer" states="draft" type="object"/>
+                    <button name="survey_req_done" string="Done" states="waiting_answer" type="object"/>
+                    <button name="survey_req_cancel" string="Cancel" states="waiting_answer" type="object"/>
                     <div class="oe_right">
                         <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,waiting_answer"/>
                     </div>

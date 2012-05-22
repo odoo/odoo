@@ -48,10 +48,10 @@
         <field name="arch" type="xml">
             <form layout="manual">
             <div class="oe_form_topbar">
-                <button name="tender_in_progress" states="draft" string="Start" type="object" icon="gtk-apply" />
-                <button name="tender_reset" states="done,cancel" string="Reset to Draft" type="object" icon="gtk-convert" />
-                <button name="tender_done" states="in_progress" string="Done" type="object" icon="gtk-jump-to" />
-                <button name="tender_cancel" states="draft,in_progress" string="Cancel" type="object" icon="gtk-cancel" />
+                <button name="tender_in_progress" states="draft" string="Start" type="object" />
+                <button name="tender_reset" states="done,cancel" string="Reset to Draft" type="object" />
+                <button name="tender_done" states="in_progress" string="Done" type="object" />
+                <button name="tender_cancel" states="draft,in_progress" string="Cancel" type="object" />
                 <div class="oe_right">
                     <field name="state" nolabel="1" select="1" readonly ="1" widget="statusbar" statusbar_visible="draft,in_progress,done" statusbar_colors='{"in_progress":"blue"}'/>
                 </div>

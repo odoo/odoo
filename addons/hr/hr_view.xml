@@ -347,9 +347,9 @@
             <field name="arch" type="xml">
                 <form layout="manual">
                 <div class="oe_form_topbar">
-                    <button name="job_recruitement" string="In Recruitement" states="open" type="object" icon="gtk-go-forward"/>
-                    <button name="job_open" string="In Position" states="old,recruit" type="object" icon="terp-camera_test"/>
-                    <button name="job_old" string="Mark as Old" states="open,recruit" type="object" icon="gtk-cancel"/>
+                    <button name="job_recruitement" string="In Recruitement" states="open" type="object"/>
+                    <button name="job_open" string="In Position" states="old,recruit" type="object"/>
+                    <button name="job_old" string="Mark as Old" states="open,recruit" type="object"/>
                     <div class="oe_right">
                         <field name="state" widget="statusbar" nolabel="1" statusbar_visible="recruit,open"/>
                     </div>

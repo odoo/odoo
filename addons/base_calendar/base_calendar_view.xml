@@ -13,19 +13,19 @@
                         <button name="do_tentative"
                             states="needs-action,declined,accepted"
                             string="Uncertain" type="object"
-                            icon="terp-crm" />
+                            />
                         <button name="do_accept" string="Accept"
                             states="needs-action,tentative,declined"
-                            type="object" icon="gtk-apply" />
+                            type="object" />
                         <button
                             name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d"
                             string="Delegate" type="action"
-                            icon="gtk-sort-descending"
+                           
                             states="needs-action,tentative,declined,accepted"
                             context="{'model' : 'calendar.attendee', 'attendee_field' : 'child_ids'}" />
                         <button name="do_decline" string="Decline"
                             states="needs-action,tentative,accepted"
-                            type="object" icon="gtk-cancel" />
+                            type="object" />
                         <div class="oe_right">
                             <field name="state" widget="statusbar" nolabel="1" statusbar_visible="tentative,needs-action,accepted" statusbar_colors='{"proforma":"blue"}'/>
                         </div>
@@ -234,17 +234,17 @@
                         string="Confirm"
                         states="tentative,cancelled"
                         type="object"
-                        icon="gtk-apply" />
+                        />
                     <button name="do_tentative"
                         states="confirmed,cancelled"
                         string="Uncertain"
                         type="object"
-                        icon="terp-crm" />
+                        />
                     <button name="do_cancel"
                         string="Cancel"
                         states="tentative,confirmed"
                         type="object"
-                        icon="gtk-cancel" />
+                        />
                     <div class="oe_right">
                         <field name="state" widget="statusbar" nolabel="1" statusbar_visible="tentative,confirmed" statusbar_colors='{"proforma":"blue"}'/>
                     </div>

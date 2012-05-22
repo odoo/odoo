@@ -28,10 +28,10 @@
             <field name="arch" type="xml">
                 <form layout="manual">
                 <div class="oe_form_topbar">
-                    <button name="action_open" states="draft" string="Open" type="object" icon="gtk-yes" />
-                    <button name="action_done" states="open" string="Done" type="object" icon="gtk-jump-to" />
-                    <button name="action_draft" states="done,cancel" string="Reset to Draft" type="object" icon="gtk-convert" />
-                    <button name="action_cancel" states="draft,open" string="Cancel" type="object" icon="gtk-cancel" />
+                    <button name="action_open" states="draft" string="Open" type="object" />
+                    <button name="action_done" states="open" string="Done" type="object" />
+                    <button name="action_draft" states="done,cancel" string="Reset to Draft" type="object" />
+                    <button name="action_cancel" states="draft,open" string="Cancel" type="object" />
                     <div class="oe_right">
                        <field name="state" select="1" widget="statusbar" nolabel="1" statusbar_visible="draft,open"/>
                     </div>
