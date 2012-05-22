@@ -54,20 +54,6 @@
             <field name="arch" type="xml">
                 <search string="Search">
                   <group>
-                       <filter string="Year" icon="terp-go-year" name="year"
-                               domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;=',time.strftime('%%Y-01-01'))]"
-                               help="Claims created in current year"/>
-                        <separator orientation="vertical" />
-
-                       <filter string="Month" icon="terp-go-month" name="This Month"
-                           domain="[('create_date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
-                           help="Claims created in current month"/>
-
-                       <filter icon="terp-go-month" string="Month-1"
-                            domain="[('create_date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
-                            help="Claims created in last month"/>
-
-                        <separator orientation="vertical" />
                         <filter icon="terp-document-new"
                             string="New"
                             domain="[('state','=','draft')]"/>
@@ -118,6 +104,7 @@
                         <field name="priority" />
                         <field name="type_action" />
                         <newline/>
+                        <field name="create_date" />
                         <field name="date_closed" />
                         <field name="date_deadline" />
                     </group>
