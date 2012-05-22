@@ -47,8 +47,13 @@ class crm_lead(crm_case, osv.osv):
         """
         if context is None:
             context = {}
-        if type(context.get('default_project_id')) in (int, long):
-            return context.get('default_project_id')
+        if type(context.get('section_id')) in (int, long):
+            return context.get('section_id')
+        if isinstance(context.get('section_id'), basestring):
+            section_name = context['section_id']
+            section_ids = self.pool.get('crm.case.section').name_search(cr, uid, name=section_name, context=context)
+            if len(section_ids) == 1:
+                return section_ids[0][0]
         return None
 
     def _read_group_stage_ids(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
