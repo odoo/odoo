@@ -59,6 +59,7 @@ class crm_lead(crm_case, osv.osv):
 
     def _read_group_stage_ids(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
         access_rights_uid = access_rights_uid or uid
+        stage_obj = self.pool.get('crm.case.stage')
         order = stage_obj._order
         # lame hack to allow reverting search, should just work in the trivial case
         if read_group_order == 'stage_id desc':
@@ -70,7 +71,6 @@ class crm_lead(crm_case, osv.osv):
             search_domain += ['|', '&', ('section_ids', '=', section_id), ('fold', '=', True)]
         search_domain += ['|', ('id', 'in', ids), '&', ('case_default', '=', 1), ('fold', '=', False)]
         # perform search
-        stage_obj = self.pool.get('crm.case.stage')
         stage_ids = stage_obj._search(cr, uid, search_domain, order=order, access_rights_uid=access_rights_uid, context=context)
         result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
         # restore order of the search
