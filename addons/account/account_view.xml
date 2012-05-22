@@ -11,8 +11,17 @@
             <field name="model">account.fiscalyear</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Fiscalyear">
-                    <group>
+                <form layout="manual">
+                <div class="oe_form_topbar">
+                    <button name="create_period" states="draft" string="Create Monthly Periods" type="object"/>
+                    <button name="create_period3" states="draft" string="Create 3 Months Periods" type="object"/>
+                    <div class="oe_right">
+                        <field name="state" select="1" widget="statusbar" nolabel="1" />
+                    </div>
+                    <div class="oe_clear"/>
+                </div>
+                <sheet string="Fiscalyear" layout="auto">
+                    <group class="oe_form_header">
                     <field name="name"/>
                     <field name="code"/>
                     <field name="date_start"/>
@@ -30,12 +39,7 @@
                             <field name="special"/>
                         </form>
                     </field>
-                    <separator colspan="4" string="States"/>
-                    <group>
-                        <field name="state" readonly="1"/>
-                        <button name="create_period" states="draft" string="Create Monthly Periods" type="object" icon="terp-document-new"/>
-                        <button name="create_period3" states="draft" string="Create 3 Months Periods" type="object" icon="terp-document-new"/>
-                    </group>
+                </sheet>
                 </form>
             </field>
         </record>
@@ -92,7 +96,16 @@
             <field name="model">account.period</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Period">
+                <form layout="manual">
+                <div class="oe_form_topbar">
+                    <button name="action_draft" states="done" string="Set to Draft" type="object" groups="account.group_account_manager"/>
+                    <div class="oe_right">
+                        <field name="state" widget="statusbar" nolabel="1"/>
+                    </div>
+                    <div class="oe_clear"/>
+                </div>
+                <sheet string="Period" layout="auto">
+                <group class="oe_form_header">
                     <field name="name"/>
                     <field name="code"/>
                     <field name="date_start"/>
@@ -100,9 +113,8 @@
                     <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                     <field name="fiscalyear_id" widget="selection"/>
                     <field name="special"/>
-                    <separator colspan="4" string="States"/>
-                    <field name="state"/>
-                    <button name="action_draft" states="done" string="Set to Draft" type="object" icon="gtk-convert" groups="account.group_account_manager"/>
+                    </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -607,11 +619,29 @@
             <field name="model">account.bank.statement</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
+<<<<<<< TREE
                 <form string="Bank Statement">
                     <group col="7" colspan="4">
                         <field name="name"/>
                         <field name="date" on_change="onchange_date(date, company_id)"/>
                         <field name="journal_id" domain="[('type', '=', 'bank')]" on_change="onchange_journal_id(journal_id)" widget="selection"/>
+=======
+                <form layout="manual">
+                <div class="oe_form_topbar">
+                    <button name="button_confirm_bank" states="draft" string="Confirm" type="object" />
+                    <button name="button_dummy" states="draft" string="Compute" type="object"/>
+                    <button name="button_cancel" states="confirm" string="Cancel" type="object"/>
+                    <div class="oe_right">
+                        <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,confirm"/>
+                    </div>
+                    <div class="oe_clear"/>
+                </div>
+                <sheet string="Bank Statement" layout="auto">
+                    <group col="7" colspan="4" class="oe_form_header">
+                        <field name="name" select="1"/>
+                        <field name="date" select="1" on_change="onchange_date(date, company_id)"/>
+                        <field name="journal_id" domain="[('type', '=', 'bank')]" on_change="onchange_journal_id(journal_id)" select="1" widget="selection"/>
+>>>>>>> MERGE-SOURCE
                         <newline/>
                         <field name="period_id"/>
                         <field name="balance_start"/>
@@ -652,13 +682,7 @@
                             <field colspan="4" name="move_line_ids" nolabel="1"/>
                         </page>
                     </notebook>
-                    <group col="8" colspan="4">
-                        <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
-                        <field name="balance_end"/>
-                        <button name="button_cancel" states="confirm" string="Cancel" type="object" icon="gtk-cancel"/>
-                        <button name="button_dummy" states="draft" string="Compute" type="object" icon="terp-stock_format-scientific"/>
-                        <button name="button_confirm_bank" states="draft" string="Confirm" type="object"  icon="terp-camera_test"/>
-                    </group>
+                </sheet>
                 </form>
             </field>
         </record>
@@ -668,10 +692,27 @@
             <field name="model">account.bank.statement</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
+<<<<<<< TREE
                 <form string="Bank Statement">
                     <group col="7" colspan="4">
                         <field name="name"/>
                         <field name="date" on_change="onchange_date(date, company_id)"/>
+=======
+                <form layout="manual">
+                <div class="oe_form_topbar">
+                    <button name="button_confirm_bank" states="draft" string="Confirm" type="object" />
+                    <button name="button_dummy" states="draft" string="Compute" type="object"/>
+                    <button name="button_cancel" states="confirm" string="Cancel" type="object"/>
+                    <div class="oe_right">
+                        <field name="state"  widget="statusbar" nolabel="1" statusbar_visible="draft,confirm"/>
+                    </div>
+                    <div class="oe_clear"/>
+                </div>
+                <sheet string="Bank Statement" layout="auto">
+                    <group col="7" colspan="4" class="oe_form_header">
+                        <field name="name" select="1"/>
+                        <field name="date" select="1" on_change="onchange_date(date, company_id)"/>
+>>>>>>> MERGE-SOURCE
                         <field name='company_id' widget="selection" groups="base.group_multi_company" />
                         <field name="journal_id" domain="[('type', '=', 'bank')]" on_change="onchange_journal_id(journal_id)" widget="selection"/>
                         <newline/>
@@ -699,12 +740,9 @@
                         </page>
                     </notebook>
                     <group col="8" colspan="4">
-                        <field name="state"/>
                         <field name="balance_end"/>
-                        <button name="button_cancel" states="confirm" string="Cancel" type="object" icon="gtk-cancel"/>
-                        <button name="button_dummy" states="draft" string="Compute" type="object" icon="terp-stock_format-scientific"/>
-                        <button name="button_confirm_bank" states="draft" string="Confirm" type="object"  icon="terp-camera_test"/>
                     </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -1357,8 +1395,17 @@
             <field name="model">account.move</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Journal Entries">
-                    <group colspan="4" col="6">
+                <form layout="manual">
+                <div class="oe_form_topbar">
+                    <button name="button_validate" states="draft" string="Post" type="object"/>
+                    <button name="button_cancel" states="posted" string="Cancel" type="object"/>
+                    <div class="oe_right">
+                        <field name="state" select="1" widget="statusbar" nolabel="1" />
+                    </div>
+                    <div class="oe_clear"/>
+                </div>
+                <sheet string="Journal Entries" layout="auto">
+                    <group colspan="4" col="6" class="oe_form_header">
                         <field name="name" readonly="True"/>
                         <field name="ref"/>
                         <field name="to_check"/>
@@ -1467,13 +1514,9 @@
                             </field>
                             <separator colspan="4" string="Internal Note"/>
                             <field name="narration" colspan="4" nolabel="1" height="50"/>
-                            <group col="4" colspan="4">
-                                <field name="state" select="1"/>
-                                <button name="button_cancel" states="posted" string="Cancel" type="object" icon="gtk-cancel"/>
-                                <button name="button_validate" states="draft" string="Post" type="object" icon="terp-camera_test"/>
-                            </group>
                         </page>
                     </notebook>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -2626,6 +2669,7 @@ action = pool.get('res.config').next(cr, uid, [], context)
             <field name="model">account.bank.statement</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
+<<<<<<< TREE
                 <form string="Statement" layout="manual">
                     <div class="oe_form_topbar">
                         <button name="button_cancel" states="confirm,open" string="Cancel" icon="terp-gtk-stop" type="object"/>
@@ -2634,10 +2678,27 @@ action = pool.get('res.config').next(cr, uid, [], context)
                         <div class="oe_right">
 				<field name="state" widget="statusbar" statusbar_visible="draft,open,confirm" nolabel="1"/>
                         </div>
+=======
+                <form layout="manual">
+                <div class="oe_form_topbar">
+                    <button name="button_confirm_cash" states="open" string="Close CashBox" type="object"/>
+                    <button name="button_open" states="draft" string="Open CashBox" type="object"/>
+                    <button name="button_cancel" states="confirm,open" string="Cancel" type="object" groups="base.group_extended"/>
+                    <div class="oe_right">
+                        <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,confirm"/>
+                    </div>
+                    <div class="oe_clear"/>
+>>>>>>> MERGE-SOURCE
                 </div>
+<<<<<<< TREE
                 <sheet layout="auto">
                     <group col="6" colspan="4">
                         <field name="name"/>
+=======
+                <sheet string="Statement" layout="auto">
+                    <group col="6" colspan="4" class="oe_form_header">
+                        <field name="name" select="1"/>
+>>>>>>> MERGE-SOURCE
                         <field name='company_id' widget="selection" groups="base.group_multi_company" />
                         <field name="journal_id" on_change="onchange_journal_id(journal_id)" select="1" widget="selection" domain="[('type', '=', 'cash')]"/>
                         <field name="user_id" select="1" readonly="1"/>
@@ -2707,6 +2768,7 @@ action = pool.get('res.config').next(cr, uid, [], context)
                         </group>
                         <group col="2" colspan="2">
                             <separator string="Closing Balance" colspan="4"/>
+<<<<<<< TREE
                             <field name="balance_end_real" readonly="1" string="Closing Cash Control"/>
                             <field name="balance_end" string="Theorical Cash Closing"/>
                         </group>
@@ -2714,9 +2776,17 @@ action = pool.get('res.config').next(cr, uid, [], context)
                             <separator string="Dates" colspan="4"/>
                             <field name="date" readonly="1"/>
                             <field name="closing_date" readonly="1"/>
+=======
+                            <field name="balance_end"/>
+                            <field name="balance_end_cash"/>
+>>>>>>> MERGE-SOURCE
                         </group>
                     </group>
+<<<<<<< TREE
                     </sheet>
+=======
+                </sheet>
+>>>>>>> MERGE-SOURCE
                 </form>
             </field>
         </record>
