@@ -180,16 +180,16 @@ class crm_case_resource_type(osv.osv):
 class crm_base(object):
     """ Base utility mixin class for crm objects.
         Object subclassing this should define colums:
-        - date_open
-        - date_closed
-        - user_id
-        - partner_id
+        - date_open (datetime field)
+        - date_closed (datetime field)
+        - user_id (many2one to res.users)
+        - partner_id (many2one to res.partner)
         - state (selection field)
     """
     
     def _get_default_partner_address(self, cr, uid, context=None):
-        """Gives id of default address for current user
-        :param context: if portal in context is false return false anyway
+        """ Gives id of default address for current user
+            :param context: if portal in context is false return false anyway
         """
         if context is None:
             context = {}
@@ -202,8 +202,8 @@ class crm_base(object):
         return False
 
     def _get_default_partner(self, cr, uid, context=None):
-        """Gives id of partner for current user
-        :param context: if portal in context is false return false anyway
+        """ Gives id of partner for current user
+            :param context: if portal in context is false return false anyway
         """
         if context is None:
             context = {}
@@ -215,8 +215,8 @@ class crm_base(object):
         return user.company_id.partner_id.id
 
     def _get_default_email(self, cr, uid, context=None):
-        """Gives default email address for current user
-        :param context: if portal in context is false return false anyway
+        """ Gives default email address for current user
+            :param context: if portal in context is false return false anyway
         """
         if not context.get('portal', False):
             return False
@@ -224,15 +224,12 @@ class crm_base(object):
         return user.user_email
 
     def _get_default_user(self, cr, uid, context=None):
-        """Gives current user id
-       :param context: if portal in context is false return false anyway
+        """ Gives current user id
+        :param context: if portal in context is false return false anyway
         """
         if context and context.get('portal', False):
             return False
         return uid
-
-    def _get_section(self, cr, uid, context=None):
-        return False
 
     def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
         """This function returns value of partner email based on Partner Address
@@ -265,45 +262,48 @@ class crm_base(object):
         """ Opens case """
         cases = self.browse(cr, uid, ids, context=context)
         for case in cases:
-            data = {'state': 'open', 'active': True}
+            values = {'active': True}
             if case.state == 'draft':
-                 data['date_open'] = fields.datetime.now()
+                values['date_open'] = fields.datetime.now()
             if not case.user_id:
-                data['user_id'] = uid
-            self.write(cr, uid, [case.id], data, context=context)
-        self.case_open_send_note(cr, uid, ids, context=context)
-        self._action(cr, uid, cases, 'open', context=context)
-
+                values['user_id'] = uid
+            self.case_set(cr, uid, [case.id], 'done', values, context=context)
+            self.case_open_send_note(cr, uid, [case.id], context=context)
         return True
 
     def case_close(self, cr, uid, ids, context=None):
         """ Closes case """
-        cases = self.browse(cr, uid, ids, context=context)
-        cases[0].state # to fill the browse record cache
-        self.write(cr, uid, ids, {'state': 'done', 'date_closed': fields.datetime.now(), }, context=context)
-        # We use the cache of cases to keep the old case state
+        self.case_set(cr, uid, ids, 'done', {'date_closed': fields.datetime.now()}, context=context)
         self.case_close_send_note(cr, uid, ids, context=context)
-        self._action(cr, uid, cases, 'done', context=context)
         return True
 
     def case_cancel(self, cr, uid, ids, context=None):
         """ Cancels case """
-        cases = self.browse(cr, uid, ids, context=context)
-        cases[0].state # to fill the browse record cache
-        self.write(cr, uid, ids, {'state': 'cancel', 'active': True}, context=context)
-        # We use the cache of cases to keep the old case state
+        self.case_set(cr, uid, ids, 'cancel', {'active': True}, context=context)
         self.case_cancel_send_note(cr, uid, ids, context=context)
-        self._action(cr, uid, cases, 'cancel', context=context)
+        return True
+
+    def case_pending(self, cr, uid, ids, context=None):
+        """ Closes case """
+        self.case_set(cr, uid, ids, 'pending', {'active': True}, context=context)
+        self.case_close_send_note(cr, uid, ids, context=context)
         return True
 
     def case_reset(self, cr, uid, ids, context=None):
         """ Resets case as draft """
-        cases = self.browse(cr, uid, ids, context=context)
-        cases[0].state # to fill the browse record cache
-        self.write(cr, uid, ids, {'state': 'draft', 'active': True}, context=context)
+        self.case_set(cr, uid, ids, 'draft', {'active': True}, context=context)
         self.case_reset_send_note(cr, uid, ids, context=context)
-        self._action(cr, uid, cases, 'draft', context=context)
         return True
+    
+    def case_set(self, cr, uid, ids, state_name, update_values=None, context=None):
+        cases = self.browse(cr, uid, ids, context=context)
+        cases[0].state # fill browse record cache, for _action having old and new values
+        if update_values is None:
+            update_values = {}
+        update_values.update({'state': state_name})
+        self.write(cr, uid, ids, update_values, context=context)
+        self.case_reset_send_note(cr, uid, ids, context=context)
+        self._action(cr, uid, cases, state_name, context=context)
 
     def _action(self, cr, uid, cases, state_to, scrit=None, context=None):
         if context is None:
