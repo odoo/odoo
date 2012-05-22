@@ -96,8 +96,8 @@
                         <field name="date_action"/>
                         <field name="survey" invisible="1"/>
                         <button name="action_makeMeeting" type="object" string="Meeting" icon="gtk-index" help="Create meeting"/>
-                        <button name="action_print_survey" string="Print Interview" type="object" icon="gtk-print" attrs="{'readonly':[('survey','=',False)]}" help="Print interview report"/>
-                        <button name="%(survey.action_view_survey_question_message)d" string="Answer" type="action" icon="gtk-execute" context="{'survey_id': survey, 'response_id': [response], 'response_no':0 ,'active' : response, 'object' : 'hr.applicant'}" attrs="{'readonly':[('survey','=',False)]}" help="Answer related job question"/>
+                        <button name="action_print_survey" string="Print Interview" type="object" icon="gtk-print" attrs="{'invisible':[('survey','=',False)]}" help="Print interview report"/>
+                        <button name="%(survey.action_view_survey_question_message)d" string="Answer" type="action" icon="gtk-execute" context="{'survey_id': survey, 'response_id': [response], 'response_no':0 ,'active' : response, 'object' : 'hr.applicant'}" attrs="{'invisible':[('survey','=',False)]}" help="Answer related job question"/>
                         <field name="response" invisible="1"/>
                 </group>
                 <group colspan="2" col="4">
