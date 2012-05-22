@@ -1,31 +1,29 @@
 <?xml version="1.0"?>
 <openerp>
-<data>
+    <data>
 
-    <!-- Stage Search view -->
-    <record id="crm_lead_stage_search" model="ir.ui.view">
-        <field name="name">Stage - Search</field>
-        <field name="model">crm.case.stage</field>
-        <field name="type">search</field>
-        <field name="arch" type="xml">
-            <search string="Stage Search">
-                <field name="name"/>
-            </search>
-        </field>
-    </record>
+        <!-- Stage Search view -->
+        <record id="crm_lead_stage_search" model="ir.ui.view">
+            <field name="name">Stage - Search</field>
+            <field name="model">crm.case.stage</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Stage Search">
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
 
-    <!--Lead Stage Form view -->
-    <record id="crm_lead_stage_act" model="ir.actions.act_window">
-        <field name="name">Stages</field>
-        <field name="res_model">crm.case.stage</field>
-        <field name="view_type">form</field>
-        <field name="view_id" ref="crm.crm_case_stage_tree"/>
-        <field name="help">Add specific stages to leads and opportunities allowing your sales to better organise their sales pipeline. Stages will allow them to easily track how a specific lead or opportunity is positioned in the sales cycle.</field>
-    </record>
+        <!--Lead Stage Form view -->
+        <record id="crm_lead_stage_act" model="ir.actions.act_window">
+            <field name="name">Stages</field>
+            <field name="res_model">crm.case.stage</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="crm.crm_case_stage_tree"/>
+            <field name="help">Add specific stages to leads and opportunities allowing your sales to better organise their sales pipeline. Stages will allow them to easily track how a specific lead or opportunity is positioned in the sales cycle.</field>
+        </record>
 
-     <menuitem action="crm_lead_stage_act" id="menu_crm_lead_stage_act" name="Stages"
-        sequence="0"
-        parent="base.menu_crm_config_lead" />
+        <menuitem action="crm_lead_stage_act" id="menu_crm_lead_stage_act" name="Stages" sequence="0" parent="base.menu_crm_config_lead" />
 
 
         <!-- Lead/Opportunity Categories Action -->
@@ -142,10 +140,9 @@
                 </div>
             </form>
         </field>
-    </record>
+        </record>
 
     <!-- CRM Lead Tree View -->
-
     <record model="ir.ui.view" id="crm_case_tree_view_leads">
         <field name="name">Leads</field>
         <field name="model">crm.lead</field>
