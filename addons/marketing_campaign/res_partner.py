@@ -29,7 +29,13 @@ class res_partner(osv.osv):
                                         'partner_id', 'Workitems',
                                         readonly=True),
     }
-
+    
+    def copy(self, cr, uid, id, default={}, context=None):
+        default.update({
+            'workitem_ids': [],
+        })
+        return super(res_partner, self).copy(cr, uid, id, default=default, context=context)
+    
 res_partner()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
