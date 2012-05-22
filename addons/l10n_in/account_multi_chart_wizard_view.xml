@@ -10,10 +10,11 @@
             <field name="arch" type="xml">
                 <field name="purchase_tax_rate" position="after">
                     <newline/>
-                    <field name="sales_tax"/>
-                    <field name="service_tax"/>
-                    <field name="vat"/>
-                    <field name="excise_duty"/>
+                    <field name="is_indian_chart" invisible="1"/>
+                    <field name="sales_tax" attrs="{'invisible': [('is_indian_chart','=', False)]}"/>
+                    <field name="service_tax" attrs="{'invisible': [('is_indian_chart','=', False)]}"/>
+                    <field name="vat" attrs="{'invisible': [('is_indian_chart','=', False)]}"/>
+                    <field name="excise_duty" attrs="{'invisible': [('is_indian_chart','=', False)]}"/>
                 </field>
             </field>
         </record>
