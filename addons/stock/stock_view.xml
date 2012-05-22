@@ -854,10 +854,11 @@
                         <filter icon="terp-camera_test" name="confirmed" string="Waiting" domain="[('state','=','confirmed')]" help="Confirmed Internal Moves" />
                         <filter icon="terp-dialog-close" name="done" string="Done" domain="[('state','=','done')]" help="Pickings already processed"/>
                         <separator orientation="vertical"/>
-                        <field name="name"/>
-                        <field name="origin"/>
+                        <field name="name"
+                            domain="[('name','ilike', self),('origin','ilike',self)]"/>
+                        <field name="partner_id"/>
+                        <field name="product_id"/>
                         <field name="stock_journal_id" widget="selection"/>
-                        <field name="company_id" widget="selection"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
@@ -1085,10 +1086,10 @@
                         <separator orientation="vertical"/>
                         <filter string="To Invoice" name="to_invoice" icon="terp-dolar" domain="[('invoice_state', '=', '2binvoiced')]" />
                         <separator orientation="vertical"/>
-                        <field name="name"/>
-                        <field name="origin"/>
+                        <field name="name"
+                            domain="[('name','ilike',self),('origin','ilike',self)]"/>
                         <field name="stock_journal_id" widget="selection"/>
-                        <field name="company_id" widget="selection" groups="base.group_multi_company" />
+                        <field name="product_id"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
@@ -1134,9 +1135,6 @@
             <field name="act_window_id" ref="action_picking_tree4"/>
         </record>
         <menuitem action="action_picking_tree4" id="menu_action_picking_tree4" parent="menu_stock_warehouse_mgmt" sequence="1"/>
-
-
-
 
 <!--
               STOCK MOVES

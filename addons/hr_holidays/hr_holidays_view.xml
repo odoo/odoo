@@ -526,11 +526,13 @@
                 <xpath expr="//templates" position="before">
                     <field name="current_leave_state"/>
                     <field name="last_login"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
                 </xpath>
                 <xpath expr="//div[@class='oe_employee_details']/ul/li" position="before">
                     <li t-if="record.current_leave_id.raw_value || record.last_login.raw_value">
                         <span t-if="record.current_leave_id.raw_value" t-att-class="record.current_leave_state.raw_value=='validate'?'oe_kanban_color_3':'oe_kanban_color_2'">
-                            <span class="oe_kanban_button" style="font-size: 100%%">
+                            <span class="oe_kanban_button" style="font-size: 100%%" t-att-title="record.date_from.raw_value.toString('ddd dS MMM') + ' - ' + record.date_to.raw_value.toString('ddd dS MMM')" >
                                 <field name="current_leave_id"/>
                             </span>
                         </span>

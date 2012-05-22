@@ -193,19 +193,26 @@
         </record>
 
         <record model="ir.actions.act_window.view" id="action_membership_members_view_tree">
-            <field name="sequence" eval="1"/>
+            <field name="sequence" eval="2"/>
             <field name="view_mode">tree</field>
             <field name="view_id" ref="membership_members_tree"/>
             <field name="act_window_id" ref="action_membership_members"/>
         </record>
 
         <record model="ir.actions.act_window.view" id="action_membership_members_view_form">
-            <field name="sequence" eval="2"/>
+            <field name="sequence" eval="3"/>
             <field name="view_mode">form</field>
             <field name="view_id" ref="base.view_partner_form"/>
             <field name="act_window_id" ref="action_membership_members"/>
         </record>
+         <record model="ir.actions.act_window.view" id="action_membership_members_view_kanban">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="base.res_partner_kanban_view"/>
+            <field name="act_window_id" ref="action_membership_members"/>
+        </record>
 
+        <menuitem name="Association" id="base.menu_association" icon="terp-calendar" sequence="9" action="action_membership_members"/>
         <menuitem name="Members" parent="menu_membership" id="menu_members" sequence="2" action="action_membership_members"/>
 
         <!-- PARTNERS -->

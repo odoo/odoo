@@ -82,7 +82,9 @@
             <field name="view_mode">form</field>
             <field name="view_id" ref="board_sales_form"/>
         </record>
-        <menuitem id="menu_board_sales" parent="base.menu_reporting_dashboard" action="open_board_sales" sequence="15" groups="base.group_sale_salesman"/>
+        
+        <menuitem id="menu_dashboard_sales" name="Sales"  sequence="20" parent="base.menu_reporting_dashboard"/>
+        <menuitem action="open_board_sales" icon="terp-graph" groups="base.group_sale_salesman"  id="menu_board_sales" parent="menu_dashboard_sales" sequence="1"/>
 
         <!-- Sale manager dashboard -->
         <record id="board_sales_manager_form" model="ir.ui.view">
@@ -112,7 +114,5 @@
             <field name="view_mode">form</field>
             <field name="view_id" ref="board_sales_manager_form"/>
         </record>
-        <menuitem id="menu_board_sales_manager" parent="base.menu_reporting_dashboard" action="open_board_sales_manager" sequence="16" groups="base.group_sale_manager"/>
-
     </data>
 </openerp>
