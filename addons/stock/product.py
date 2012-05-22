@@ -36,7 +36,7 @@ class product_product(osv.osv):
         ], ['product_id'], ['product_id'])
         for move in moves:
             product_id = move['product_id'][0]
-            res[product_id][reception_count] = move['product_id_count']
+            res[product_id]['reception_count'] = move['product_id_count']
         moves = move_pool.read_group(cr, uid, [
             ('product_id', 'in', ids),
             ('picking_id.type', '=', 'out'),
@@ -44,7 +44,7 @@ class product_product(osv.osv):
         ], ['product_id'], ['product_id'])
         for move in moves:
             product_id = move['product_id'][0]
-            res[product_id][reception_count] = move['product_id_count']
+            res[product_id]['reception_count'] = move['product_id_count']
         return res
 
     def get_product_accounts(self, cr, uid, product_id, context=None):
