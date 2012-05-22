@@ -27,6 +27,7 @@
     "depends": ["project"],
     "author": "OpenERP SA",
     "category": "Project Management",
+    'complexity': "easy",
     "description": """
 This module provides the functionality to send messages within a project.
 =========================================================================
