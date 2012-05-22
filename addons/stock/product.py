@@ -28,6 +28,7 @@ class product_product(osv.osv):
 
     def _stock_move_count(self, cr, uid, ids, field_name, arg, context=None):
         res = dict([(id, {'reception_count': 0, 'delivery_count': 0}) for id in ids])
+        field = False
         move_pool=self.pool.get('stock.move')
         move_ids = move_pool.search(cr, uid, [('product_id', 'in', ids)])
         for move in move_pool.browse(cr, uid, move_ids, context):
