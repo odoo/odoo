@@ -109,7 +109,7 @@ class project_scrum_sprint(osv.osv):
         'progress': fields.function(_compute, group_operator="avg", type='float', multi="progress", string='Progress (0-100)', help="Computed as: Time Spent / Total Time."),
         'effective_hours': fields.function(_compute, multi="effective_hours", string='Effective hours', help="Computed using the sum of the task work done."),
         'expected_hours': fields.function(_compute, multi="expected_hours", string='Planned Hours', help='Estimated time to do the task.'),
-        'state': fields.selection([('draft','Draft'),('open','Open'),('pending','Pending'),('cancel','Cancelled'),('done','Done')], 'State', required=True),
+        'state': fields.selection([('draft','Draft'),('cancel','Cancelled'),('open','Open'),('pending','Pending'),('done','Done')], 'State', required=True),
     }
     _defaults = {
         'state': 'draft',
@@ -256,7 +256,7 @@ class project_scrum_product_backlog(osv.osv):
         'sprint_id': fields.many2one('project.scrum.sprint', 'Sprint'),
         'sequence' : fields.integer('Sequence', help="Gives the sequence order when displaying a list of product backlog."),
         'tasks_id': fields.one2many('project.task', 'product_backlog_id', 'Tasks Details'),
-        'state': fields.selection([('draft','Draft'),('open','Open'),('pending','Pending'),('done','Done'),('cancel','Cancelled')], 'State', required=True),
+        'state': fields.selection([('draft','Draft'),('cancel','Cancelled'),('open','Open'),('pending','Pending'),('done','Done')], 'State', required=True),
         'progress': fields.function(_compute, multi="progress", group_operator="avg", type='float', string='Progress', help="Computed as: Time Spent / Total Time."),
         'effective_hours': fields.function(_compute, multi="effective_hours", string='Spent Hours', help="Computed using the sum of the time spent on every related tasks", store=True),
         'expected_hours': fields.float('Planned Hours', help='Estimated total time to do the Backlog'),

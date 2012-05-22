@@ -16,7 +16,7 @@
                         on_change='on_change_account_id(analytic_account_id)'/>
                 </xpath>
                 <xpath expr="//notebook/page[@string='Extra Info']" position="before">
-                	<page string="Worklogs">
+                    <page string="Worklogs">
                         <field name="timesheet_ids" colspan="4" nolabel="1" context="{'default_user_id' : user_id, 'default_account_id' : analytic_account_id}">
                             <tree editable="top" string="Timesheets">
                                 <field name="name"/>

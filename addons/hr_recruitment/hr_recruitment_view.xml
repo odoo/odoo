@@ -76,11 +76,11 @@
         <field name="arch" type="xml">
             <form layout="manual">
             <div class="oe_form_topbar">
-                <button name="case_cancel" string="Refuse" states="draft,open,pending" type="object" icon="gtk-cancel"/>
-                <button name="case_open" string="In Progress" states="draft,pending" type="object" icon="gtk-go-forward"/>
-                <button name="case_pending" string="Pending" states="open" type="object" icon="gtk-media-pause"/>
-                <button name="%(action_hr_recruitment_hired_employee)d" string="Hire" states="open,pending" type="action" icon="terp-partner"/>
-                <button name="case_reset" string="Reset to New" states="done,cancel" type="object" icon="gtk-convert"/>
+                <button name="%(action_hr_recruitment_hired_employee)d" string="Hire" states="open,pending" type="action"/>
+                <button name="case_open" string="In Progress" states="draft,pending" type="object"/>
+                <button name="case_pending" string="Pending" states="open" type="object"/>
+                <button name="case_reset" string="Reset to New" states="done,cancel" type="object"/>
+                <button name="case_cancel" string="Refuse" states="draft,open,pending" type="object"/>
                 <div class="oe_right">
                     <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
                 </div>
@@ -145,7 +145,7 @@
                  </page>
                 </notebook>
             </sheet>
-            <div class="oe_form_sheet_width">
+            <div class="oe_form_bottom">
                 <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"/>
             </div>
             </form>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+    
+        <record id="res_company_form_l10n_fr_payroll" model="ir.ui.view">
+            <field name="name">res.company.form.l10n.fr.payroll</field>
+            <field name="model">res.company</field>
+            <field name="type">form</field>
+            <field name="priority">20</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+            <data>
+                 <xpath expr="//notebook" position="inside">
+                    <page string="Paie">
+                            <field name="plafond_secu"/>
+                            <field name="nombre_employes"/>
+                            <newline/>
+                            <field name="org_ss"/>
+                            <newline/>
+                            <field name="conv_coll"/>
+                    </page>
+                 </xpath>
+            </data>
+            </field>
+        </record>
+
+        <record id="hr_contract_view_form_l10n_fr_payroll" model="ir.ui.view">
+            <field name="name">hr.contract.view.form.l10n.fr.payroll</field>
+            <field name="model">hr.contract</field>
+            <field name="type">form</field>
+            <field name="priority">20</field>
+            <field name="inherit_id" ref="hr_payroll.hr_contract_form_inherit"/>
+            <field name="arch" type="xml">
+                 <field name="struct_id" position="after">
+                    <field name="qualif"/>
+                    <field name="niveau"/>
+                    <field name="coef"/>
+                 </field>
+            </field>
+        </record>
+
+        <record id="hr_payslip_form_l10n_fr_payroll" model="ir.ui.view">
+            <field name="name">hr.payslip.form.l10n.fr.payroll</field>
+            <field name="model">hr.payslip</field>
+            <field name="type">form</field>
+            <field name="priority">20</field>
+            <field name="inherit_id" ref="hr_payroll.view_hr_payslip_form"/>
+            <field name="arch" type="xml">
+            <data>
+                 <xpath expr="//field[@name='paid']" position="after">
+                     <field name="payment_mode"/>
+                 </xpath>
+            </data>
+            </field>
+        </record>
+
+
+        <report
+            auto="False"
+            header="False"
+            id="fiche_paye"
+            model="hr.payslip"
+            name="fiche.paye"
+            rml="l10n_fr_hr_payroll/report/fiche_paye.rml"
+            string="Fiche de Paie" />
+
+
+    </data>
+</openerp>

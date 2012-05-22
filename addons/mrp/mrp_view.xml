@@ -631,8 +631,22 @@
             <field name="model">mrp.production</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Manufacturing Orders" layout="auto">
-                    <group colspan="6" col="7">
+                <form layout="manual">
+                <div class="oe_form_topbar">
+                    <button name="button_confirm" states="draft" string="Confirm Production"/>
+                    <button name="button_produce" states="ready" string="Start Production"/>
+                    <button name="%(act_mrp_product_produce)d" states="in_production" string="Produce" type="action"/>
+                    <button name="force_production" states="confirmed,picking_except" string="Force Reservation" type="object"/>
+                    <button name="button_recreate" states="picking_except" string="Recreate Picking"/>
+                    <button name="button_cancel" states="draft,ready,in_production,picking_except" string="Cancel"/>
+                    <button name="action_cancel" type="object" states="confirmed" string="Cancel"/>
+                    <div class="oe_right">
+                        <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,ready,in_production,done" statusbar_colors='{"picking_except":"red","confirmed":"blue"}'/>
+                    </div>
+                    <div class="oe_clear"/>
+                </div>
+                <sheet string="Manufacturing Orders" layout="auto">
+                    <group colspan="4" col="7">
                         <field name="name" string="Reference"/>
                         <field name="date_planned"/>
                         <field name="origin"/>
@@ -700,17 +714,6 @@
                                            states="done,cancel"/>
                                    </tree>
                                </field>
-                            <separator colspan="4"/>
-                            <group col="9" colspan="4">
-                                <field name="state" widget="statusbar" statusbar_visible="draft,ready,in_production,done" statusbar_colors='{"picking_except":"red","confirmed":"blue"}'/>
-                                <button name="button_cancel" states="draft,ready,in_production,picking_except" string="Cancel" icon="gtk-stop"/>
-                                <button name="action_cancel" type="object" states="confirmed" string="Cancel" icon="gtk-stop"/>
-                                <button name="button_confirm" states="draft" string="Confirm Production" icon="gtk-apply"/>
-                                <button name="button_produce" states="ready" string="Start Production" icon="terp-gtk-jump-to-ltr"/>
-                                <button name="%(act_mrp_product_produce)d" states="in_production" string="Produce" icon="gtk-ok" type="action"/>
-                                <button name="force_production" states="confirmed,picking_except" string="Force Reservation" type="object" icon="gtk-jump-to"/>
-                                <button name="button_recreate" states="picking_except" string="Recreate Picking" icon="terp-document-new"/>
-                            </group>
                         </page>
                         <page string="Finished Products">
                             <field colspan="2" name="move_created_ids" nolabel="1" widget="one2many_list"
@@ -788,9 +791,10 @@
                             <field name="move_prod_id"/>
                         </page>
                     </notebook>
-                    <div class="oe_form_sheet_width">
+                </sheet>
+                <div class="oe_form_sheet_width">
                     <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"/>
-                    </div>
+                </div>
                 </form>
             </field>
         </record>
