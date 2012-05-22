@@ -34,6 +34,25 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         this.limit = options.limit || 80;
         this.add_group_mutex = new $.Mutex();
     },
+    start: function() {
+        var self = this;
+        this._super.apply(this, arguments);
+        // Bind kanban cards dropdown menus
+        this.$element.on('click', '.oe_kanban_menuaction', function() {
+            var $menu = $(this).next('.oe_kanban_menu');
+            var toggle = $menu.is(':visible');
+            self.$element.find('.oe_kanban_menu').hide();
+            $menu.toggle(!toggle);
+            return false;
+        });
+        $('html').on('click', function() {
+            self.$element.find('.oe_kanban_menu').hide();
+        });
+    },
+    destroy: function() {
+        this._super.apply(this, arguments);
+        $('html').off('click');
+    },
     on_loaded: function(data) {
         this.fields_view = data;
         this.$buttons = $(QWeb.render("KanbanView.buttons", {'widget': this}));
@@ -359,7 +378,7 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
         if (!this.view.state.groups[key]) {
             this.view.state.groups[key] = {
                 folded: false
-            }
+            };
         }
         this.state = this.view.state.groups[key];
         this.$records = null;
@@ -534,8 +553,8 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
         });
     },
     bind_events: function() {
-        var self = this,
-            $show_on_click = self.$element.find('.oe_kanban_box_show_onclick');
+        var self = this;
+        var $show_on_click = self.$element.find('.oe_kanban_box_show_onclick');
         $show_on_click.toggle(this.state.folded);
         this.$element.find('.oe_kanban_box_show_onclick_trigger').click(function() {
             $show_on_click.toggle();
@@ -559,7 +578,8 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
             trigger: 'hover'
         });
 
-        this.$element.find('.oe_kanban_action').click(function() {
+        this.$element.find('.oe_kanban_action').click(function(ev) {
+            ev.preventDefault();
             var $action = $(this),
                 type = $action.data('type') || 'button',
                 method = 'do_action_' + (type === 'action' ? 'object' : type);
@@ -570,7 +590,6 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
             } else {
                 self.do_warn("Kanban: no action for type : " + type);
             }
-            return false;
         });
     },
     do_action_delete: function($action) {
@@ -600,7 +619,7 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
         $cpicker.mouseenter(function() {
             clearTimeout($cpicker.data('timeoutId'));
         }).mouseleave(function(evt) {
-            var timeoutId = setTimeout(function() { $cpicker.remove() }, 500);
+            var timeoutId = setTimeout(function() { $cpicker.remove(); }, 500);
             $cpicker.data('timeoutId', timeoutId);
         });
         $cpicker.find('a').click(function() {
