@@ -44,17 +44,6 @@
         <field name="arch" type="xml">
             <search string="Assets Analysis">
                 <group col="10" colspan="12">
-                    <filter string="Year" icon="terp-go-year" name="year"
-                        domain="[('purchase_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('purchase_date','&gt;=',time.strftime('%%Y-01-01'))]"
-                        help="Assets purchased in current year"/>
-                    <separator orientation="vertical"/>
-                    <filter string="Month" icon="terp-go-month" name="this_month"
-                        domain="[('purchase_date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('purchase_date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
-                        help="Assets purchased in current month"/>
-                    <filter icon="terp-go-month" string="Month-1" separator="1"
-                        domain="[('purchase_date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('purchase_date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
-                        help="Assets purchased in last month"/>
-                    <separator orientation="vertical"/>
                     <filter string="Draft" icon="terp-document-new" domain="[('state','=','draft')]" help="Assets in draft state"/>
                     <filter string="Running" icon="terp-check" domain="[('state','=','open')]" help="Assets in running state"/>
                     <separator orientation="vertical"/>
