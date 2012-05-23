@@ -1968,6 +1968,7 @@ instance.web.DateTimeWidget = instance.web.OldWidget.extend({
         this.$input_picker = this.$element.find('input.oe_datepicker_container');
         this.$input.change(this.on_change);
         this.picker({
+            onClose: this.on_picker_select,
             onSelect: this.on_picker_select,
             changeMonth: true,
             changeYear: true,
