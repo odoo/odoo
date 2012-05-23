@@ -231,9 +231,6 @@ class hr_applicant(crm.crm_case, osv.osv):
 
     def stage_find(self, cr, uid, section_id, domain=[], order='sequence', context=None):
         domain = list(domain)
-        if section_id:
-            pass
-            #domain.append(('department_id', '=', section_id))
         stage_ids = self.pool.get('hr.recruitment.stage').search(cr, uid, domain, order=order, context=context)
         if stage_ids:
             return stage_ids[0]
