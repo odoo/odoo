@@ -26,37 +26,33 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         message : function(name,params,callback){
             var success_callback = function(result){ console.log('PROXY SUCCESS:'+name+': ',result); }
             var error_callback = function(result){ console.log('PROXY ERROR:'+name+': ',result); }
+            console.log('PROXY: '+name);
             this.connection.rpc('/pos/'+name, params || {}, callback || success_callback, error_callback);
         },
         
         //a product has been scanned and recognized with success
         scan_item_success: function(){
             this.message('scan_item_success');
-            console.log('PROXY: scan item success');
         },
 
         //a product has been scanned but not recognized
         scan_item_error_unrecognized: function(){
             this.message('scan_item_error_unrecognized');
-            console.log('PROXY: scan item error');
         },
 
         //the client is asking for help
         help_needed: function(){
             this.message('help_needed');
-            console.log('PROXY: help needed');
         },
 
         //the client does not need help anymore
         help_canceled: function(){
             this.message('help_canceled');
-            console.log('PROXY: help canceled');
         },
 
         //the client is starting to weight
         weighting_start: function(){
             this.message('weighting_start');
-            console.log('PROXY: weighting start');
         },
 
         //returns the weight on the scale. 
@@ -64,15 +60,12 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         // and a weighting_end()
         weighting_read_kg: function(){
             this.message('weighting_read_kg');
-            console.log('PROXY: weighting read');
-            //return Math.random() + 0.1;
             return window.debug_devices.weight;
         },
 
         // the client has finished weighting products
         weighting_end: function(){
             this.message('weighting_end');
-            console.log('PROXY: weighting end');
         },
 
         // the pos asks the client to pay 'price' units
@@ -80,7 +73,6 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         // info:   'extra information to display on the payment terminal' ... ? TBD
         payment_request: function(price, method, info){
             this.message('payment_request',{'price':price,'method':method,'info':info});
-            console.log('PROXY: payment request:',price,method,info);
         },
 
         // is called at regular interval after a payment request to see if the client
@@ -88,7 +80,6 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         // returns 'waiting_for_payment' | 'payment_accepted' | 'payment_rejected'
         is_payment_accepted: function(){
             this.message('is_payment_accepted');
-            console.log('PROXY: is payment accepted ?');
             //return 'waiting_for_payment'; // 'payment_accepted' | 'payment_rejected'
             return window.debug_devices.payment_status;
         },
@@ -96,31 +87,72 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         // the client cancels his payment
         payment_canceled: function(){
             this.message('payment_canceled');
-            console.log('PROXY: payment canceled by client');
         },
 
         // called when the client logs in or starts to scan product
         transaction_start: function(){
             this.message('transaction_start');
-            console.log('PROXY: transaction start');
         },
 
         // called when the clients has finished his interaction with the machine
         transaction_end: function(){
             this.message('transaction_end');
-            console.log('PROXY: transaction end');
         },
 
         // called when the POS turns to cashier mode
         cashier_mode_activated: function(){
             this.message('cashier_mode_activated');
-            console.log('PROXY: cashier mode activated');
         },
 
         // called when the POS turns to client mode
         cashier_mode_deactivated: function(){
             this.message('cashier_mode_deactivated');
-            console.log('PROXY: client mode activated');
+        },
+        
+        // ask for the cashbox (the physical box where you store the cash) to be opened
+        open_cashbox: function(){
+            this.message('open_cashbox');
+        },
+
+        // ask the printer to print a receipt
+        print_receipt: function(receipt){
+            var sample_receipt = {      
+                // TODO This is a sample receipt, 
+                // we need to discuss the exact format based on what really needs
+                // to be printed on the receipt ... 
+                // ... the same for invoices ... 
+                client_name: 'John Smith',
+                cashier_name: 'Mike Doe',
+                date: '28 january 2024, 17h32',
+                currency:{
+                    symbol: '$',
+                    position: 'before',
+                },
+                total_with_taxes: 94.1,
+                total_without_taxes: 90,
+                taxes: 4.1,
+                orderlines:[
+                    {
+                        name: 'Cola',
+                        unit_price_with_taxes: 1,
+                        unit_price_without_taxes: 0.8,
+                        total_price_with_taxes: 10,
+                        total_price_without_taxes: 8,
+                        quantity: '10 Bottles',
+                        discount: '',
+                    },
+                    {
+                        name: 'Pizza',
+                        unit_price_with_taxes: 3,
+                        unit_price_without_taxes: 2,
+                        total_price_with_taxes: 18,
+                        total_price_without_taxes: 12,
+                        quantity: '10',
+                        discount: '40 %',
+                    }
+                ],
+            };
+            this.message('print_receipt',{receipt: receipt || sample_receipt});
         },
     });
 

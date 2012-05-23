@@ -99,3 +99,13 @@ class PointOfSaleController(openerpweb.Controller):
         print 'cashier_mode_deactivated'
         return 
 
+    @openerpweb.jsonrequest
+    def open_cashbox(self, request):
+        print 'open_cashbox'
+        return
+
+    @openerpweb.jsonrequest
+    def print_receipt(self, request, receipt):
+        print 'print_receipt' + str(receipt)
+        return
+
