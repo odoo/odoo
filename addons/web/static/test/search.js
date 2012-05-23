@@ -261,7 +261,7 @@ $(document).ready(function () {
             });
     });
     asyncTest('FilterGroup', 3, function () {
-        var view = {inputs: []};
+        var view = {inputs: [], query: {on: function () {}}};
         var filter_a = new instance.web.search.Filter(
             {attrs: {name: 'a'}}, view);
         var filter_b = new instance.web.search.Filter(
@@ -882,7 +882,7 @@ $(document).ready(function () {
     });
 
     asyncTest('FilterGroup', 6, function () {
-        var view = {inputs: []};
+        var view = {inputs: [], query: {on: function () {}}};
         var filter_a = new instance.web.search.Filter(
             {attrs: {name: 'a', context: 'c1', domain: 'd1'}}, view);
         var filter_b = new instance.web.search.Filter(

@@ -794,41 +794,36 @@ instance.web.FormView = instance.web.View.extend(_.extend({}, instance.web.form.
         var self = this;
         var fields = _.chain(this.fields)
             .map(function (field, name) {
-                var value_ = field.get_value();
+                var value = field.get_value();
                 // ignore fields which are empty, invisible, readonly, o2m
                 // or m2m
-                if (!value_
+                if (!value
                         || field.get('invisible')
                         || field.get("readonly")
                         || field.field.type === 'one2many'
                         || field.field.type === 'many2many') {
                     return false;
                 }
-                var displayed;
-                switch(field.field.type) {
+                var displayed = value;
+                switch (field.field.type) {
                 case 'selection':
                     displayed = _(field.values).find(function (option) {
-                            return option[0] === value_;
+                            return option[0] === value;
                         })[1];
                     break;
-                case 'many2one':
-                    displayed = value_;
-                    break;
-                default:
-                    displayed = value_;
                 }
 
                 return {
                     name: name,
-                    string: field.node_atts.string,
-                    value: value_,
+                    string: field.node.attrs.string || field.field.string,
+                    value: value,
                     displayed: displayed,
                     // convert undefined to false
                     change_default: !!field.field.change_default
                 }
             })
             .compact()
-            .sortBy(function (field) { return field.node_atts.string; })
+            .sortBy(function (field) { return field.string; })
             .value();
         var conditions = _.chain(fields)
             .filter(function (field) { return field.change_default; })
@@ -984,9 +979,6 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
     },
     process: function($tag, layout) {
         var self = this;
-        if ($tag.attr('layout') === 'auto') {
-            $tag.addClass('oe_form_autolayout');
-        }
         layout = $tag.attr('layout') || layout || 'auto';
         $tag.removeAttr('layout');
         var tagname = $tag[0].nodeName.toLowerCase();
@@ -2310,16 +2302,6 @@ instance.web.form.FieldSelection = instance.web.form.AbstractField.extend(_.exte
     });
 })();
 
-instance.web.form.dialog = function(content, options) {
-    options = _.extend({
-        width: '90%',
-        height: 'auto',
-        min_width: '800px'
-    }, options || {});
-    var dialog = new instance.web.Dialog(null, options, content).open();
-    return dialog.$element;
-};
-
 /**
  * A mixin containing some useful methods to handle completion inputs.
  */
@@ -2756,20 +2738,18 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
                     view.view_type = 'form';
                 }
                 view.options.not_interactible_on_create = true;
+            } else if (view.view_type === "kanban") {
+                if (self.get("effective_readonly")) {
+                    view.options.action_buttons = false;
+                    view.options.quick_creatable = false;
+                }
             }
             views.push(view);
         });
         this.views = views;
 
-        this.viewmanager = new instance.web.ViewManager(this, this.dataset, views, {
-            $sidebar: false,
-        });
-        this.viewmanager.template = 'One2Many.viewmanager';
-        this.viewmanager.registry = instance.web.views.extend({
-            list: 'instance.web.form.One2ManyListView',
-            form: 'instance.web.form.One2ManyFormView',
-            kanban: 'instance.web.form.One2ManyKanbanView',
-        });
+        this.viewmanager = new instance.web.form.One2ManyViewManager(this, this.dataset, views, {});
+        this.viewmanager.o2m = self;
         var once = $.Deferred().then(function() {
             self.init_form_last_update.resolve();
         });
@@ -2953,6 +2933,42 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
     },
 });
 
+instance.web.form.One2ManyViewManager = instance.web.ViewManager.extend({
+    template: 'One2Many.viewmanager',
+    init: function(parent, dataset, views, flags) {
+        this._super(parent, dataset, views, _.extend({}, flags, {$sidebar: false}));
+        this.registry = this.registry.extend({
+            list: 'instance.web.form.One2ManyListView',
+            form: 'instance.web.form.One2ManyFormView',
+            kanban: 'instance.web.form.One2ManyKanbanView',
+        });
+    },
+    switch_view: function(mode, unused) {
+        if (mode !== 'form') {
+            return this._super(mode, unused);
+        }
+        var self = this;
+        var id = self.o2m.dataset.index !== null ? self.o2m.dataset.ids[self.o2m.dataset.index] : null;
+        var pop = new instance.web.form.FormOpenPopup(self.o2m.view);
+        pop.show_element(self.o2m.field.relation, id, self.o2m.build_context(), {
+            title: _t("Open: ") + self.name,
+            write_function: function(id, data, options) {
+                return self.o2m.dataset.write(id, data, {}).then(function() {
+                    self.o2m.reload_current_view();
+                });
+            },
+            alternative_form_view: self.o2m.field.views ? self.o2m.field.views["form"] : undefined,
+            parent_view: self.o2m.view,
+            child_name: self.o2m.name,
+            read_function: function() {
+                return self.o2m.dataset.read_ids.apply(self.o2m.dataset, arguments);
+            },
+            form_view_options: {'not_interactible_on_create':true},
+            readonly: self.o2m.get("effective_readonly")
+        });
+    },
+});
+
 instance.web.form.One2ManyDataSet = instance.web.BufferedDataSet.extend({
     get_context: function() {
         this.context = this.o2m.build_context([this.o2m.name]);
@@ -2968,7 +2984,6 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         } else {
             var self = this;
             var pop = new instance.web.form.SelectCreatePopup(this);
-            pop.on_default_get.add(self.dataset.on_default_get);
             pop.select_element(
                 self.o2m.field.relation,
                 {
@@ -3001,7 +3016,11 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         var pop = new instance.web.form.FormOpenPopup(self.o2m.view);
         pop.show_element(self.o2m.field.relation, id, self.o2m.build_context(), {
             title: _t("Open: ") + self.name,
-            auto_write: false,
+            write_function: function(id, data) {
+                return self.o2m.dataset.write(id, data, {}, function(r) {
+                    self.o2m.reload_current_view();
+                });
+            },
             alternative_form_view: self.o2m.field.views ? self.o2m.field.views["form"] : undefined,
             parent_view: self.o2m.view,
             child_name: self.o2m.name,
@@ -3010,11 +3029,6 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
             },
             form_view_options: {'not_interactible_on_create':true},
             readonly: self.o2m.get("effective_readonly")
-        });
-        pop.on_write.add(function(id, data) {
-            self.o2m.dataset.write(id, data, {}, function(r) {
-                self.o2m.reload_current_view();
-            });
         });
     },
     do_button_action: function (name, id, callback) {
@@ -3046,28 +3060,6 @@ var lazy_build_o2m_kanban_view = function() {
 if (! instance.web_kanban || instance.web.form.One2ManyKanbanView)
     return;
 instance.web.form.One2ManyKanbanView = instance.web_kanban.KanbanView.extend({
-    open_record: function(id) {
-        var self = this;
-        var pop = new instance.web.form.FormOpenPopup(self.o2m.view);
-        pop.show_element(self.o2m.field.relation, id, self.o2m.build_context(), {
-            title: _t("Open: ") + self.name,
-            auto_write: false,
-            alternative_form_view: self.o2m.field.views ? self.o2m.field.views["form"] : undefined,
-            parent_view: self.o2m.view,
-            child_name: self.o2m.name,
-            read_function: function() {
-                return self.o2m.dataset.read_ids.apply(self.o2m.dataset, arguments);
-            },
-            form_view_options: {'not_interactible_on_create':true},
-            readonly: self.o2m.get("effective_readonly"),
-        });
-        pop.on_write.add(function(id, data) {
-            self.o2m.dataset.write(id, data, {}, function(r) {
-                self.o2m.reload_current_view();
-            });
-        });
-        
-    },
 });
 }
 
@@ -3347,60 +3339,166 @@ instance.web.form.Many2ManyListView = instance.web.ListView.extend(/** @lends in
 });
 
 /**
- * @class
- * @extends instance.web.OldWidget
+ * Class with everything which is common between FormOpenPopup and SelectCreatePopup.
  */
-instance.web.form.SelectCreatePopup = instance.web.OldWidget.extend(/** @lends instance.web.form.SelectCreatePopup# */{
-    template: "SelectCreatePopup",
+instance.web.form.AbstractFormPopup = instance.web.OldWidget.extend({
+    template: "AbstractFormPopup.render",
+    /**
+     *  options:
+     *  -readonly: only applicable when not in creation mode, default to false
+     * - alternative_form_view
+     * - write_function
+     * - read_function
+     * - create_function
+     * - parent_view
+     * - child_name
+     * - form_view_options
+     */
+    init_popup: function(model, row_id, domain, context, options) {
+        this.row_id = row_id;
+        this.model = model;
+        this.domain = domain || [];
+        this.context = context || {};
+        this.options = options;
+        _.defaults(this.options, {
+        });
+    },
+    init_dataset: function() {
+        var self = this;
+        this.created_elements = [];
+        this.dataset = new instance.web.ProxyDataSet(this, this.model, this.context);
+        this.dataset.read_function = this.options.read_function;
+        this.dataset.create_function = function(data, sup) {
+            var fct = self.options.create_function || sup;
+            return fct.call(this, data).then(function(r) {
+                self.created_elements.push(r.result);
+            });
+        };
+        this.dataset.write_function = function(id, data, options, sup) {
+            var fct = self.options.write_function || sup;
+            return fct.call(this, id, data, options).then(self.on_write_completed);
+        };
+        this.dataset.parent_view = this.options.parent_view;
+        this.dataset.child_name = this.options.child_name;
+    },
+    display_popup: function() {
+        var self = this;
+        this.renderElement();
+        new instance.web.Dialog(this, {
+            width: '90%',
+            min_width: '800px',
+            close: function() {
+                self.check_exit();
+            },
+            title: this.options.title || "",
+        }, this.$element).open();
+        this.start();
+    },
+    on_write_completed: function() {},
+    setup_form_view: function() {
+        var self = this;
+        if (this.row_id) {
+            this.dataset.ids = [this.row_id];
+            this.dataset.index = 0;
+        } else {
+            this.dataset.index = null;
+        }
+        var options = _.clone(self.options.form_view_options) || {};
+        if (this.row_id !== null) {
+            options.initial_mode = this.options.readonly ? "view" : "edit";
+        }
+        this.view_form = new instance.web.FormView(this, this.dataset, false, options);
+        if (this.options.alternative_form_view) {
+            this.view_form.set_embedded_view(this.options.alternative_form_view);
+        }
+        this.view_form.appendTo(this.$element.find(".oe-form-view-popup-form-placeholder"));
+        this.view_form.on_loaded.add_last(function() {
+            var $buttons = self.view_form.$element.find(".oe_form_buttons");
+            var multi_select = self.row_id === null && ! self.options.disable_multiple_selection;
+            $buttons.html(QWeb.render("AbstractFormPopup.buttons", {multi_select: multi_select}));
+            var $snbutton = $buttons.find(".oe_abstractformpopup-form-save-new");
+            $snbutton.click(function() {
+                $.when(self.view_form.do_save()).then(function() {
+                    self.view_form.reload_mutex.exec(function() {
+                        self.view_form.on_button_new();
+                    });
+                });
+            });
+            var $sbutton = $buttons.find(".oe_abstractformpopup-form-save");
+            $sbutton.click(function() {
+                $.when(self.view_form.do_save()).then(function() {
+                    self.view_form.reload_mutex.exec(function() {
+                        self.check_exit();
+                    });
+                });
+            });
+            var $cbutton = $buttons.find(".oe_abstractformpopup-form-close");
+            $cbutton.click(function() {
+                self.check_exit();
+            });
+            if (self.row_id !== null && self.options.readonly) {
+                $snbutton.hide();
+                $sbutton.hide();
+                $cbutton.text(_t("Close"));
+            }
+            self.view_form.do_show();
+        });
+    },
+    on_select_elements: function(element_ids) {
+    },
+    check_exit: function() {
+        if (this.created_elements.length > 0) {
+            this.on_select_elements(this.created_elements);
+        }
+        this.destroy();
+    },
+    destroy: function () {
+        this.$element.dialog('close');
+        this._super();
+    },
+});
+
+/**
+ * Class to display a popup containing a form view.
+ */
+instance.web.form.FormOpenPopup = instance.web.form.AbstractFormPopup.extend({
+    show_element: function(model, row_id, context, options) {
+        this.init_popup(model, row_id, [], context,  options);
+        _.defaults(this.options, {
+        });
+        this.display_popup();
+    },
+    start: function() {
+        this._super();
+        this.init_dataset();
+        this.setup_form_view();
+    },
+});
+
+/**
+ * Class to display a popup to display a list to search a row. It also allows
+ * to switch to a form view to create a new row.
+ */
+instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend({
     /**
      * options:
      * - initial_ids
      * - initial_view: form or search (default search)
      * - disable_multiple_selection
-     * - alternative_form_view
-     * - create_function (defaults to a naive saving behavior)
-     * - parent_view
-     * - child_name
-     * - form_view_options
      * - list_view_options
-     * - read_function
      */
     select_element: function(model, options, domain, context) {
+        this.init_popup(model, null, domain, context, options);
         var self = this;
-        this.model = model;
-        this.domain = domain || [];
-        this.context = context || {};
-        this.options = _.defaults(options || {}, {"initial_view": "search", "create_function": function() {
-            return self.create_row.apply(self, arguments);
-        }, read_function: null});
-        this.initial_ids = this.options.initial_ids;
-        this.created_elements = [];
-        this.renderElement();
-        instance.web.form.dialog(this.$element, {
-            close: function() {
-                self.check_exit();
-            },
-            title: options.title || ""
+        _.defaults(this.options, {
+            initial_view: "search",
         });
-        this.start();
+        this.initial_ids = this.options.initial_ids;
+        this.display_popup();
     },
     start: function() {
-        this._super();
         var self = this;
-        this.dataset = new instance.web.ProxyDataSet(this, this.model,
-            this.context);
-        this.dataset.create_function = function() {
-            return self.options.create_function.apply(null, arguments).then(function(r) {
-                self.created_elements.push(r.result);
-            });
-        };
-        this.dataset.write_function = function() {
-            return self.write_row.apply(self, arguments);
-        };
-        this.dataset.read_function = this.options.read_function;
-        this.dataset.parent_view = this.options.parent_view;
-        this.dataset.child_name = this.options.child_name;
-        this.dataset.on_default_get.add(this.on_default_get);
+        this.init_dataset();
         if (this.options.initial_view == "search") {
             self.rpc('/web/session/eval_domain_and_context', {
                 domains: [],
@@ -3418,10 +3516,6 @@ instance.web.form.SelectCreatePopup = instance.web.OldWidget.extend(/** @lends i
         } else { // "form"
             this.new_object();
         }
-    },
-    stop: function () {
-        this.$element.dialog('close');
-        this._super();
     },
     setup_search_view: function(search_defaults) {
         var self = this;
@@ -3480,22 +3574,6 @@ instance.web.form.SelectCreatePopup = instance.web.OldWidget.extend(/** @lends i
             self.view_list.do_search(results.domain, results.context, results.group_by);
         });
     },
-    create_row: function() {
-        var self = this;
-        var wdataset = new instance.web.DataSetSearch(this, this.model, this.context, this.domain);
-        wdataset.parent_view = this.options.parent_view;
-        wdataset.child_name = this.options.child_name;
-        return wdataset.create.apply(wdataset, arguments);
-    },
-    write_row: function() {
-        var self = this;
-        var wdataset = new instance.web.DataSetSearch(this, this.model, this.context, this.domain);
-        wdataset.parent_view = this.options.parent_view;
-        wdataset.child_name = this.options.child_name;
-        return wdataset.write.apply(wdataset, arguments);
-    },
-    on_select_elements: function(element_ids) {
-    },
     on_click_element: function(ids) {
         this.selected_ids = ids || [];
         if(this.selected_ids.length > 0) {
@@ -3505,52 +3583,14 @@ instance.web.form.SelectCreatePopup = instance.web.OldWidget.extend(/** @lends i
         }
     },
     new_object: function() {
-        var self = this;
         if (this.searchview) {
             this.searchview.hide();
         }
         if (this.view_list) {
             this.view_list.$element.hide();
         }
-        this.dataset.index = null;
-        this.view_form = new instance.web.FormView(this, this.dataset, false, self.options.form_view_options);
-        if (this.options.alternative_form_view) {
-            this.view_form.set_embedded_view(this.options.alternative_form_view);
-        }
-        this.view_form.appendTo(this.$element.find(".oe-select-create-popup-view-form"));
-        this.view_form.on_loaded.add_last(function() {
-            var $buttons = self.view_form.$element.find(".oe_form_buttons");
-            $buttons.html(QWeb.render("SelectCreatePopup.form.buttons", {widget:self}));
-            var $nbutton = $buttons.find(".oe_selectcreatepopup-form-save-new");
-            $nbutton.click(function() {
-                $.when(self.view_form.do_save()).then(function() {
-                    self.view_form.reload_mutex.exec(function() {
-                        self.view_form.on_button_new();
-                    });
-                });
-            });
-            var $nbutton = $buttons.find(".oe_selectcreatepopup-form-save");
-            $nbutton.click(function() {
-                $.when(self.view_form.do_save()).then(function() {
-                    self.view_form.reload_mutex.exec(function() {
-                        self.check_exit();
-                    });
-                });
-            });
-            var $cbutton = $buttons.find(".oe_selectcreatepopup-form-close");
-            $cbutton.click(function() {
-                self.check_exit();
-            });
-        });
-        this.view_form.do_show();
+        this.setup_form_view();
     },
-    check_exit: function() {
-        if (this.created_elements.length > 0) {
-            this.on_select_elements(this.created_elements);
-        }
-        this.destroy();
-    },
-    on_default_get: function(res) {}
 });
 
 instance.web.form.SelectCreateListView = instance.web.ListView.extend({
@@ -3564,101 +3604,6 @@ instance.web.form.SelectCreateListView = instance.web.ListView.extend({
     do_select: function(ids, records) {
         this._super(ids, records);
         this.popup.on_click_element(ids);
-    }
-});
-
-/**
- * @class
- * @extends instance.web.OldWidget
- */
-instance.web.form.FormOpenPopup = instance.web.OldWidget.extend(/** @lends instance.web.form.FormOpenPopup# */{
-    template: "FormOpenPopup",
-    /**
-     * options:
-     * - alternative_form_view
-     * - auto_write (default true)
-     * - read_function
-     * - parent_view
-     * - child_name
-     * - form_view_options
-     * - readonly
-     */
-    show_element: function(model, row_id, context, options) {
-        this.model = model;
-        this.row_id = row_id;
-        this.context = context || {};
-        this.options = _.defaults(options || {}, {"auto_write": true});
-        this.renderElement();
-        instance.web.dialog(this.$element, {
-            title: options.title || '',
-            modal: true,
-            width: 960,
-            height: 600
-        });
-        this.start();
-    },
-    start: function() {
-        this._super();
-        this.dataset = new instance.web.form.FormOpenDataset(this, this.model, this.context);
-        this.dataset.fop = this;
-        this.dataset.ids = [this.row_id];
-        this.dataset.index = 0;
-        this.dataset.parent_view = this.options.parent_view;
-        this.dataset.child_name = this.options.child_name;
-        this.setup_form_view();
-    },
-    on_write: function(id, data) {
-        if (!this.options.auto_write)
-            return;
-        var self = this;
-        var wdataset = new instance.web.DataSetSearch(this, this.model, this.context, this.domain);
-        wdataset.parent_view = this.options.parent_view;
-        wdataset.child_name = this.options.child_name;
-        wdataset.write(id, data, {}, function(r) {
-            self.on_write_completed();
-        });
-    },
-    on_write_completed: function() {},
-    setup_form_view: function() {
-        var self = this;
-        var FormClass = instance.web.views.get_object('form');
-        var options = _.clone(self.options.form_view_options) || {};
-        options.initial_mode = this.options.readonly ? "view" : "edit";
-        this.view_form = new FormClass(this, this.dataset, false, options);
-        if (this.options.alternative_form_view) {
-            this.view_form.set_embedded_view(this.options.alternative_form_view);
-        }
-        this.view_form.appendTo(this.$element.find(".oe-form-open-popup-form-view"));
-        this.view_form.on_loaded.add_last(function() {
-            var $buttons = self.view_form.$element.find(".oe_form_buttons");
-            $buttons.html(QWeb.render("FormOpenPopup.form.buttons"));
-            var $nbutton = $buttons.find(".oe_formopenpopup-form-save");
-            $nbutton.click(function() {
-                self.view_form.do_save().then(function() {
-                    self.destroy();
-                });
-            });
-            var $cbutton = $buttons.find(".oe_formopenpopup-form-close");
-            $cbutton.click(function() {
-                self.destroy();
-            });
-            if (self.options.readonly) {
-                $nbutton.hide();
-                $cbutton.text(_t("Close"));
-            }
-            self.view_form.do_show();
-        });
-        this.dataset.on_write.add(this.on_write);
-    }
-});
-
-instance.web.form.FormOpenDataset = instance.web.ProxyDataSet.extend({
-    read_ids: function() {
-        if (this.fop.options.read_function) {
-            return this.fop.options.read_function.apply(null, arguments);
-        } else {
-            return this._super.apply(this, arguments);
-        }
     }
 });
 

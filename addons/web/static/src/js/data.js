@@ -1079,44 +1079,44 @@ instance.web.ProxyDataSet = instance.web.DataSetSearch.extend({
         this.create_function = null;
         this.write_function = null;
         this.read_function = null;
+        this.default_get_function = null;
+        this.unlink_function = null;
     },
-    read_ids: function () {
+    read_ids: function (ids, fields, options) {
         if (this.read_function) {
-            return this.read_function.apply(null, arguments);
+            return this.read_function(ids, fields, options, this._super);
         } else {
             return this._super.apply(this, arguments);
         }
     },
     default_get: function(fields, options) {
-        return this._super(fields, options).then(this.on_default_get);
+        if (this.default_get_function) {
+            return this.default_get_function(fields, options, this._super);
+        } else {
+            return this._super.apply(this, arguments);
+        }
     },
-    on_default_get: function(result) {},
     create: function(data, callback, error_callback) {
-        this.on_create(data);
         if (this.create_function) {
-            return this.create_function(data, callback, error_callback);
+            return this.create_function(data, this._super).then(callback, error_callback);
         } else {
-            console.warn("trying to create a record using default proxy dataset behavior");
-            return $.async_when({"result": undefined}).then(callback);
+            return this._super.apply(this, arguments);
         }
     },
-    on_create: function(data) {},
-    write: function (id, data, options, callback) {
-        this.on_write(id, data);
+    write: function (id, data, options, callback, error_callback) {
         if (this.write_function) {
-            return this.write_function(id, data, options, callback);
+            return this.write_function(id, data, options, this._super).then(callback, error_callback);
         } else {
-            console.warn("trying to write a record using default proxy dataset behavior");
-            return $.async_when({"result": true}).then(callback);
+            return this._super.apply(this, arguments);
         }
     },
-    on_write: function(id, data) {},
     unlink: function(ids, callback, error_callback) {
-        this.on_unlink(ids);
-        console.warn("trying to unlink a record using default proxy dataset behavior");
-        return $.async_when({"result": true}).then(callback);
+        if (this.unlink_function) {
+            return this.unlink_function(ids, this._super).then(callback, error_callback);
+        } else {
+            return this._super.apply(this, arguments);
+        }
     },
-    on_unlink: function(ids) {}
 });
 
 instance.web.CompoundContext = instance.web.Class.extend({

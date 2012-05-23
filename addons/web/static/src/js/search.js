@@ -2018,7 +2018,7 @@ instance.web.search.ExtendedSearchProposition.Selection = instance.web.search.Ex
     }
 });
 instance.web.search.ExtendedSearchProposition.Boolean = instance.web.search.ExtendedSearchProposition.Field.extend({
-    template: 'SearchView.extended_search.proposition.boolean',
+    template: 'SearchView.extended_search.proposition.empty',
     operators: [
         {value: "=", text: _lt("is true")},
         {value: "!=", text: _lt("is false")}
