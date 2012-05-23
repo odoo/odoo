@@ -238,7 +238,7 @@
 		 <!-- Profit And Loss Account -->
 		 
         <record model="account.account.template" id="3">
-            <field name="name">Profit And Loss Account</field>
+            <field name="name">Profit And Loss</field>
             <field name="code">3</field>
             <field name="type">view</field>
             <field name="user_type" ref="account.data_account_type_view"/>
@@ -277,8 +277,17 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="31"/>
             <field name="note">Amounts earned from providing services to clients, either for cash or on credit. When a service is provided on credit, both this account and Accounts Receivable will increase. When a service is provided for immediate cash, both this account and Cash will increase.</field>
-        </record>		
+        </record>	
 		
+        <record model="account.account.template" id="311">
+            <field name="name">Product Sales</field>
+            <field name="code">311</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_income"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="31"/>
+            <field name="note">Sales of product account</field>
+        </record>			
 		
         <record model="account.account.template" id="80">
             <field name="name">Non-Operating Revenue and Gains</field>
@@ -301,7 +310,7 @@
 		
         <record model="account.account.template" id="910">
             <field name="name">Gain on Sale of Assets</field>
-            <field name="code">910</field>
+            <field name="code">811</field>
             <field name="type">other</field>
             <field name="user_type" ref="account.data_account_type_income"/>
             <field name="reconcile" eval="False"/>
@@ -434,7 +443,7 @@
         <!-- Chart template -->
 		
         <record id="indian_chart_template_private" model="account.chart.template">
-            <field name="name">Partnership/Private Firm Chart of Account</field>
+            <field name="name">India - Chart of Accounts for Partnership/Private Firm</field>
             <field name="account_root_id" ref="root"/>
             <field name="tax_code_root_id" ref="vat_code_tax"/>
             <field name="bank_account_view_id" ref="101"/>

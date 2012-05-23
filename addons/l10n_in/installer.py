@@ -18,17 +18,16 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 from osv import fields, osv
+from os.path import join as opj
 import netsvc
 import tools
-from os.path import join as opj
 
 class l10n_installer(osv.osv_memory):
     _inherit = 'account.installer'
     _columns = {
         'company_type':fields.selection([('partnership_private_company', 'Partnership/Private Firm'),
-                                         ('public_company', 'Public Company')], 'Company Type'),        
+                                         ('public_company', 'Public Firm')], 'Company Type', required=True),        
     }
 
     _defaults = {

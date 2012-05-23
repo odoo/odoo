@@ -3,15 +3,6 @@
 <openerp>
 <data noupdate="1">
 
-    <record model="account.account.template" id="a154000">
-        <field name="name">Sales Tax Receivable</field>
-        <field name="code">154000</field>
-        <field name="type">receivable</field>
-        <field name="user_type" ref="account.data_account_type_receivable"/>
-        <field name="reconcile" eval="False"/>
-        <field name="parent_id" ref="a10000"/>
-    </record>	
-
     <record model="account.account.template" id="a24600">
         <field name="name">Sales Tax Payable</field>
         <field name="code">24600</field>
@@ -24,7 +15,7 @@
 	<record id="sales_tax_public_main" model="account.tax.template">
         <field name="description">Sale Tax - 15%</field>
         <field name="name">Sale Tax - 15% </field>
-        <field name="account_collected_id" ref="a154000"/>
+        <field name="account_collected_id" ref="a24600"/>
         <field name="account_paid_id" ref="a24600"/> 
         <field name="price_include" eval="0"/>
         <field name="amount">0.15</field>
@@ -40,7 +31,7 @@
 	<record id="sales_tax_public" model="account.tax.template">
         <field name="description">Sale Tax - 12%</field>
         <field name="name">Sale Tax - 12%</field>
-        <field name="account_collected_id" ref="a154000"/>
+        <field name="account_collected_id" ref="a24600"/>
         <field name="account_paid_id" ref="a24600"/> 
         <field name="price_include" eval="0"/>
         <field name="amount">0.12</field>

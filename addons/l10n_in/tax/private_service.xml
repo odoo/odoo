@@ -3,15 +3,6 @@
 <openerp>
 <data noupdate="1">
 
-    <record model="account.account.template" id="126">
-        <field name="name">Service Tax Receivable</field>
-        <field name="code">126</field>
-        <field name="type">receivable</field>
-        <field name="user_type" ref="account.data_account_type_receivable"/>
-        <field name="reconcile" eval="True"/>
-        <field name="parent_id" ref="10"/>
-    </record>
-		
     <record model="account.account.template" id="218">
         <field name="name">Service Tax Payable</field>
         <field name="code">218</field>
@@ -28,7 +19,7 @@
         <field name="price_include" eval="1"/>
         <field name="amount">0.12</field>
         <field name="type">percent</field>
-        <field name="account_collected_id" ref="126"/>
+        <field name="account_collected_id" ref="218"/>
         <field name="account_paid_id" ref="218"/> 			
         <field name="base_code_id" ref="vat_code_base_due"/>
         <field name="base_sign">1</field>

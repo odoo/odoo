@@ -8,7 +8,7 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="account.view_wizard_multi_chart"/>
             <field name="arch" type="xml">
-                <field name="purchase_tax_rate" position="after">
+                <field name="seq_journal" position="after">
                     <newline/>
                     <field name="is_indian_chart" invisible="1"/>
                     <field name="sales_tax" attrs="{'invisible': [('is_indian_chart','=', False)]}"/>

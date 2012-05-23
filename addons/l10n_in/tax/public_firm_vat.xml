@@ -3,15 +3,6 @@
 <openerp>
 <data noupdate="1">
 
-    <record model="account.account.template" id="a157000">
-        <field name="name">VAT Receivable</field>
-        <field name="code">157000</field>
-        <field name="type">receivable</field>
-        <field name="user_type" ref="account.data_account_type_receivable"/>
-        <field name="reconcile" eval="False"/>
-        <field name="parent_id" ref="a10000"/>
-    </record>	
-
     <record model="account.account.template" id="a24800">
         <field name="name">VAT Payable</field>
         <field name="code">24800</field>
@@ -24,7 +15,7 @@
 	<record id="vat_public_main" model="account.tax.template">
         <field name="description">VAT - 4%</field>
         <field name="name">VAT - 4%</field>
-        <field name="account_collected_id" ref="a157000"/>
+        <field name="account_collected_id" ref="a24800"/>
         <field name="account_paid_id" ref="a24800"/> 
         <field name="price_include" eval="1"/>
         <field name="amount">0.04</field>
@@ -55,7 +46,7 @@
 	<record id="vat_public_main_tax" model="account.tax.template">
         <field name="description">VAT - 12.5%</field>
         <field name="name">VAT - 12.5%</field>
-        <field name="account_collected_id" ref="a157000"/>
+        <field name="account_collected_id" ref="a24800"/>
         <field name="account_paid_id" ref="a24800"/> 
         <field name="price_include" eval="0"/>
         <field name="amount">0.125</field>
@@ -86,7 +77,7 @@
 	<record id="vat_public_tax" model="account.tax.template">
         <field name="description">VAT - 8%</field>
         <field name="name">VAT - 8%</field>
-        <field name="account_collected_id" ref="a157000"/>
+        <field name="account_collected_id" ref="a24800"/>
         <field name="account_paid_id" ref="a24800"/> 
         <field name="price_include" eval="0"/>
         <field name="amount">0.08</field>

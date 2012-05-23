@@ -3,15 +3,6 @@
 <openerp>
 <data noupdate="1">
 
-    <record model="account.account.template" id="124">
-        <field name="name">VAT Receivable</field>
-        <field name="code">124</field>
-        <field name="type">receivable</field>
-        <field name="user_type" ref="account.data_account_type_receivable"/>
-        <field name="reconcile" eval="True"/>
-        <field name="parent_id" ref="10"/>
-    </record>
-		
     <record model="account.account.template" id="217">
         <field name="name">VAT Payable</field>
         <field name="code">217</field>
@@ -24,12 +15,12 @@
 	<record id="vat_private_main" model="account.tax.template">
 		<field name="sequence">30</field>
         <field name="description">VAT - 4%</field>
-        <field name="name">VAT resellers</field>
+        <field name="name">VAT</field>
         <field name="price_include" eval="1"/>
         <field name="amount">0.04</field>
         <field name="type">percent</field>
         <field name="type_tax_use">all</field>
-        <field name="account_collected_id" ref="124"/>
+        <field name="account_collected_id" ref="217"/>
         <field name="account_paid_id" ref="217"/> 		
         <field name="base_code_id" ref="vat_code_base_due"/>
         <field name="base_sign">1</field>
@@ -60,7 +51,7 @@
         <field name="amount">0.125</field>
         <field name="type">percent</field>
         <field name="type_tax_use">all</field>
-        <field name="account_collected_id" ref="124"/>
+        <field name="account_collected_id" ref="217"/>
         <field name="account_paid_id" ref="217"/> 		
         <field name="base_code_id" ref="vat_code_base_due"/>
         <field name="base_sign">1</field>
@@ -91,7 +82,7 @@
         <field name="amount">0.8</field>
         <field name="type">percent</field>
         <field name="type_tax_use">all</field>
-        <field name="account_collected_id" ref="124"/>
+        <field name="account_collected_id" ref="217"/>
         <field name="account_paid_id" ref="217"/> 		
         <field name="base_code_id" ref="vat_code_base_due"/>
         <field name="base_sign">1</field>

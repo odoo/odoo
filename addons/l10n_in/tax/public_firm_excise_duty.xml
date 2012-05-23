@@ -3,15 +3,6 @@
 <openerp>
 <data noupdate="1">
 
-    <record model="account.account.template" id="a158000">
-        <field name="name">Exice Duty Receivable</field>
-        <field name="code">158000</field>
-        <field name="type">receivable</field>
-        <field name="user_type" ref="account.data_account_type_receivable"/>
-        <field name="reconcile" eval="False"/>
-        <field name="parent_id" ref="a10000"/>
-    </record>	
-
     <record model="account.account.template" id="a24900">
         <field name="name">Exice Duty Payable</field>
         <field name="code">24900</field>
@@ -24,7 +15,7 @@
 	<record id="exice_public_main" model="account.tax.template">
         <field name="description">Excise duty - 10%</field>
         <field name="name">Excise duty</field>
-        <field name="account_collected_id" ref="a158000"/>
+        <field name="account_collected_id" ref="a24900"/>
         <field name="account_paid_id" ref="a24900"/> 
         <field name="price_include" eval="1"/>
         <field name="amount">0.10</field>

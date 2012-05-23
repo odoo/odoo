@@ -18,18 +18,19 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import tools
+from lxml import etree
 from osv import fields, osv
 from os.path import join as opj
-from lxml import etree
+import tools
+
 
 class account_multi_charts_wizard(osv.osv_memory):
     _inherit ='wizard.multi.charts.accounts'
     _columns = {
-        'sales_tax': fields.boolean('Sales tax central', help='If this field is true it allows you use Sales Tax'),     
-        'vat': fields.boolean('VAT resellers',help='If this field is true it allows you use VAT'),
-        'service_tax': fields.boolean('Service tax', help='If this field is true it allows you use Service tax'),
-        'excise_duty': fields.boolean('Excise duty', help='If this field is true it allows you use Excise duty'),
+        'sales_tax': fields.boolean('Sales Tax', help='If this field is true it allows you use Sales Tax'),     
+        'vat': fields.boolean('VAT',help='If this field is true it allows you use VAT'),
+        'service_tax': fields.boolean('Service Tax', help='If this field is true it allows you use Service tax'),
+        'excise_duty': fields.boolean('Excise Duty', help='If this field is true it allows you use Excise duty'),
         'is_indian_chart': fields.boolean('Flag')
     }    
 
@@ -38,51 +39,49 @@ class account_multi_charts_wizard(osv.osv_memory):
         tax_templ_obj = self.pool.get('account.tax.template')
         res['value'] = {'complete_tax_set': False, 'sale_tax': False, 'purchase_tax': False}        
         data = self.pool.get('account.chart.template').browse(cr, uid, chart_template_id, context=context)
-        if data.name in ('Public Firm Chart of Account','Partnership/Private Firm Chart of Account'):
-            res.update({'value': {'is_indian_chart': True}})
-        else: 
-            res.update({'value': {'is_indian_chart': False}})
-        if data.complete_tax_set:
-            sale_tax_ids = tax_templ_obj.search(cr, uid, [("chart_template_id"
-                                          , "=", chart_template_id), ('type_tax_use', 'in', ('sale','all'))], order="sequence, id desc")
-            purchase_tax_ids = tax_templ_obj.search(cr, uid, [("chart_template_id"
-                                          , "=", chart_template_id), ('type_tax_use', 'in', ('purchase','all'))], order="sequence, id desc")
-            res['value'].update({'sale_tax': sale_tax_ids and sale_tax_ids[0] or False, 'purchase_tax': purchase_tax_ids and purchase_tax_ids[0] or False})        
+        if data.name in ('India - Chart of Accounts for Public Firm','India - Chart of Accounts for Partnership/Private Firm'):
+            res['value'].update({'is_indian_chart': True})
+        else:
+            res['value'].update({'is_indian_chart': False}) 
+        if data.name == 'India - Chart of Accounts for Public Firm':
+            res['value'].update({'sales_tax': True,'vat':True, 'service_tax':True, 'excise_duty': True})
+        elif data.name == 'India - Chart of Accounts for Partnership/Private Firm':
+            res['value'].update({'sales_tax': True,'vat':True})
         return res
             
     def execute(self, cr, uid, ids, context=None):
         obj_multi = self.browse(cr, uid, ids[0])
-        if obj_multi.chart_template_id.name == 'Public Firm Chart of Account':
-            if obj_multi.sales_tax == True:
+        if obj_multi.chart_template_id.name == 'India - Chart of Accounts for Public Firm':
+            if obj_multi.sales_tax:
                 path = tools.file_open(opj('l10n_in', 'tax', 'public_firm_sales_tax.xml'))
                 tools.convert_xml_import(cr, 'l10n_in', path, {}, 'init', True, None)
                 path.close()
-            if obj_multi.vat == True:
+            if obj_multi.vat:
                 path = tools.file_open(opj('l10n_in', 'tax', 'public_firm_vat.xml'))
                 tools.convert_xml_import(cr, 'l10n_in', path, {}, 'init', True, None)
                 path.close()   
-            if obj_multi.service_tax == True:
+            if obj_multi.service_tax:
                 path = tools.file_open(opj('l10n_in', 'tax', 'public_firm_service.xml'))
                 tools.convert_xml_import(cr, 'l10n_in', path, {}, 'init', True, None)
                 path.close()  
-            if obj_multi.excise_duty == True:
+            if obj_multi.excise_duty:
                 path = tools.file_open(opj('l10n_in', 'tax', 'public_firm_excise_duty.xml'))
                 tools.convert_xml_import(cr, 'l10n_in', path, {}, 'init', True, None)
                 path.close()  
-        elif obj_multi.chart_template_id.name == 'Partnership/Private Firm Chart of Account':
-            if obj_multi.sales_tax == True:
+        elif obj_multi.chart_template_id.name == 'India - Chart of Accounts for Partnership/Private Firm':
+            if obj_multi.sales_tax:
                 path = tools.file_open(opj('l10n_in', 'tax', 'privete_sale_tax.xml'))
                 tools.convert_xml_import(cr, 'l10n_in', path, {}, 'init', True, None)
                 path.close() 
-            if obj_multi.vat == True:
+            if obj_multi.vat:
                 path = tools.file_open(opj('l10n_in', 'tax', 'private_vat.xml'))
                 tools.convert_xml_import(cr, 'l10n_in', path, {}, 'init', True, None)
                 path.close()             
-            if obj_multi.service_tax == True:
+            if obj_multi.service_tax:
                 path = tools.file_open(opj('l10n_in', 'tax', 'private_service.xml'))
                 tools.convert_xml_import(cr, 'l10n_in', path, {}, 'init', True, None)
                 path.close()  
-            if obj_multi.excise_duty == True:
+            if obj_multi.excise_duty:
                 path = tools.file_open(opj('l10n_in', 'tax', 'private_exice_duty.xml'))
                 tools.convert_xml_import(cr, 'l10n_in', path, {}, 'init', True, None)
                 path.close()   
