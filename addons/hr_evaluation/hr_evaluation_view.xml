@@ -175,7 +175,7 @@
                     </group>
                     <group col="2" colspan="1" attrs="{'invisible':['|', ('state','=','draft'), ('state', '=', 'wait')]}">
                         <separator string="Ending Summary" colspan="2"/>
-                        <field name="rating" attrs="{'readonly':[('state','&lt;&gt;','progress')],'required':[('state','=','progress')]}"/>
+                        <field name="rating" attrs="{'readonly':[('state','&lt;&gt;','progress')]"/>
                         <field name="date_close" readonly="1"/>
                     </group>
                     <notebook colspan="4">
