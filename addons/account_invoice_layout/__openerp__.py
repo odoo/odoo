@@ -24,7 +24,6 @@
     'name': 'Invoice Layouts',
     'version': '1.0',
     "category": 'Accounting & Finance',
-    'complexity': "easy",
     'description': """
 This module provides some features to improve the layout of the invoices.
 =========================================================================

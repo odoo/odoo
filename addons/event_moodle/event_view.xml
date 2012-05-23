@@ -7,7 +7,7 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="event.view_event_registration_form" />
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page[@string='Emails']" position="after">
+                <xpath expr="//page[@string='Emails']" position="after">
                     <page string="Moodle">
                         <field name="moodle_user_password" readonly='1' colspan="2"/>
                         <field name="moodle_uid" readonly="1"/>

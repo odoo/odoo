@@ -42,7 +42,7 @@ class crm_fundraising_report(osv.osv):
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
         'nbr': fields.integer('# of Cases', readonly=True),
-        'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
+        'state': fields.selection(AVAILABLE_STATES, 'Status', size=16, readonly=True),
         'month':fields.selection([('01', 'January'), ('02', 'February'), \
                                   ('03', 'March'), ('04', 'April'),\
                                   ('05', 'May'), ('06', 'June'), \

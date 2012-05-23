@@ -263,20 +263,27 @@
         </record>
 
         <record id="open_view_product_tree1" model="ir.actions.act_window.view">
-            <field name="sequence" eval="1"/>
+            <field name="sequence" eval="2"/>
             <field name="view_mode">tree</field>
            <field name="view_id" ref="product_product_tree_view"/>
             <field name="act_window_id" ref="product_normal_action_sell"/>
         </record>
 
         <record id="open_view_product_form1" model="ir.actions.act_window.view">
-            <field name="sequence" eval="2"/>
+            <field name="sequence" eval="3"/>
             <field name="view_mode">form</field>
             <field name="view_id" ref="product_normal_form_view"/>
             <field name="act_window_id" ref="product_normal_action_sell"/>
         </record>
 
-        <menuitem id="base.menu_product" parent="base.menu_base_partner" name="Products"  sequence="9"/>
+        <record id="open_view_product_kanban1" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">kanban</field>
+           <field name="view_id" ref="product_kanban_view"/>
+            <field name="act_window_id" ref="product_normal_action"/>
+        </record>
+
+        <menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" sequence="9"/>
         <menuitem action="product.product_normal_action_sell" id="product.menu_products" parent="base.menu_product" sequence="1"/>
 
         <record id="product_normal_action_puchased" model="ir.actions.act_window">

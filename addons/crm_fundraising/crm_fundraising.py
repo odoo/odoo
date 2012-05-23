@@ -68,7 +68,7 @@ class crm_fundraising(crm.crm_case, osv.osv):
             'duration': fields.float('Duration'),
             'ref': fields.reference('Reference', selection=crm._links_get, size=128),
             'ref2': fields.reference('Reference 2', selection=crm._links_get, size=128),
-            'state': fields.selection(crm.AVAILABLE_STATES, 'State', size=16, readonly=True,
+            'state': fields.selection(crm.AVAILABLE_STATES, 'Status', size=16, readonly=True,
                                   help='The state is set to \'Draft\', when a case is created.\
                                   \nIf the case is in progress the state is set to \'Open\'.\
                                   \nWhen the case is over, the state is set to \'Done\'.\
