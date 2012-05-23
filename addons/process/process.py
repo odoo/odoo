@@ -118,6 +118,7 @@ class process_process(osv.osv):
             data['active'] = False
             data['gray'] = False
             data['url'] = node.help_url
+            data['model_states'] = node.model_states
 
             # get assosiated workflow
             if data['model']:
@@ -198,6 +199,11 @@ class process_process(osv.osv):
             resource['name'] = refobj.name_get(context)[0][1]
             resource['perm'] = pool.get(ref_model).perm_read(cr, uid, [ref_id], context)[0]
 
+            ref_expr_context = Env(refobj, current_user)
+            try:
+                nodes[nid]['active'] = eval(nodes[nid]['model_states'], ref_expr_context)
+            except:
+                pass 
             for r in relatives:
                 node = nodes[r]
                 if 'res' not in node:
