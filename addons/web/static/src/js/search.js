@@ -1540,6 +1540,7 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
         var self = this;
         this.model = new instance.web.Model('ir.filters');
         this.filters = {};
+        this.$filters = {};
         this.$element.on('submit', 'form', this.proxy('save_current'));
         this.$element.on('click', 'h4', function () {
             self.$element.toggleClass('oe_opened');
@@ -1549,16 +1550,34 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
             model: this.view.model
         }).pipe(this.proxy('set_filters'));
     },
+    /**
+     * Generates a mapping key (in the filters and $filter mappings) for the
+     * filter descriptor object provided (as returned by ``get_filters``).
+     *
+     * The mapping key is guaranteed to be unique for a given (user_id, name)
+     * pair.
+     *
+     * @param {Object} filter
+     * @param {String} filter.name
+     * @param {Number|Pair<Number, String>} [filter.user_id]
+     * @return {String} mapping key corresponding to the filter
+     */
+    key_for: function (filter) {
+        var user_id = filter.user_id;
+        var uid = (user_id instanceof Array) ? user_id[0] : user_id;
+        return _.str.sprintf('(%s)%s', uid, filter.name);
+    },
     append_filter: function (filter) {
         var self = this;
-        var key = _.str.sprintf('(%s)%s', filter.user_id, filter.name);
+        var key = this.key_for(filter);
 
         var $filter;
-        if (key in this.filters) {
-            $filter = this.filters[key];
+        if (key in this.$filters) {
+            $filter = this.$filters[key];
         } else {
             var id = filter.id;
-            $filter = this.filters[key] = $('<li></li>')
+            this.filters[key] = filter;
+            $filter = this.$filters[key] = $('<li></li>')
                 .appendTo(this.$element.find('.oe_searchview_custom_list'))
                 .addClass(filter.user_id ? 'oe_searchview_custom_private'
                                          : 'oe_searchview_custom_public')
@@ -1570,6 +1589,8 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
                     e.stopPropagation();
                     self.model.call('unlink', [id]).then(function () {
                         $filter.remove();
+                        delete self.$filters[key];
+                        delete self.filters[key];
                     });
                 })
                 .appendTo($filter);
