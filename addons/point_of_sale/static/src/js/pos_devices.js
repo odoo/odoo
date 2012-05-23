@@ -24,8 +24,8 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             this.connection.setup(url);
         },
         message : function(name,params,callback){
-            var success_callback = function(result){ console.log('SUCCESS:'+name+': ',result); }
-            var error_callback = function(result){ console.log('ERROR:'+name+': ',result); }
+            var success_callback = function(result){ console.log('PROXY SUCCESS:'+name+': ',result); }
+            var error_callback = function(result){ console.log('PROXY ERROR:'+name+': ',result); }
             this.connection.rpc('/pos/'+name, params || {}, callback || success_callback, error_callback);
         },
         

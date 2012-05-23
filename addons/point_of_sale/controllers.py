@@ -20,7 +20,7 @@ class PointOfSaleController(openerpweb.Controller):
         A product has been scanned with success
         """
         print 'scan_item_success'
-        return False
+        return 
 
     @openerpweb.jsonrequest
     def scan_item_error_unrecognized(self, request):
@@ -49,7 +49,7 @@ class PointOfSaleController(openerpweb.Controller):
     @openerpweb.jsonrequest
     def weighting_start(self, request):
         print "weighting_start"
-        return False
+        return 
 
     @openerpweb.jsonrequest
     def weighting_read_kg(self, request):
@@ -59,42 +59,43 @@ class PointOfSaleController(openerpweb.Controller):
     @openerpweb.jsonrequest
     def weighting_end(self, request):
         print "weighting_end"
-        return False
-
-
+        return 
 
     @openerpweb.jsonrequest
     def payment_request(self, request, price, method, info):
         """
         The PoS will activate the method payment 
         """
-        return False
+        print "payment_request: price:"+str(price)+" method:"+str(method)+" info:"+str(info)
+        return 
 
     #@openerpweb.jsonrequest
     def is_payment_accepted(self, request):
-        return False
+        print "is_payment_accepted"
+        return 
 
     #@openerpweb.jsonrequest
     def payment_cancelled(self, request):
-        return False
+        print "payment_cancelled"
+        return 
 
     @openerpweb.jsonrequest
     def transaction_start(self, request):
         print 'transaction_start'
-        return False
+        return 
 
     @openerpweb.jsonrequest
     def transaction_end(self, request):
         print 'transaction_end'
-        return False
+        return 
 
     @openerpweb.jsonrequest
     def cashier_mode_activated(self, request):
         print 'cashier_mode_activated'
-        return False
+        return 
 
     @openerpweb.jsonrequest
     def cashier_mode_deactivated(self, request):
         print 'cashier_mode_deactivated'
-        return False
+        return 
 
