@@ -28,7 +28,7 @@
 -
   !python {model: crm.lead}: |
     lead = self.browse(cr, uid, ref('crm.crm_case_itisatelesalescampaign0'))
-    assert lead.stage_id.id == ref('crm.stage_lead2'), "Opportunity should be 'New'."
+    assert lead.stage_id.id == ref('crm.stage_lead2'), "Opportunity stage should be 'Qualification'."
     assert lead.state == 'open', "Opportunity should be in 'open' state."
 -
   I escalate the lead to parent team.
@@ -51,5 +51,5 @@
   !python {model: crm.lead}: |
     lead = self.browse(cr, uid, ref('crm_case_itisatelesalescampaign0'))
     assert lead.stage_id.id == ref('crm.stage_lead6'), "Stage should be 'Lost'."
-    assert lead.state == 'done', "Opportunity is not in 'done' state."
+    assert lead.state == 'cancel', "Opportunity is not in 'cancel' state."
     assert lead.probability == 0.0, 'Opportunity probability is wrong and should be 0.0.'
