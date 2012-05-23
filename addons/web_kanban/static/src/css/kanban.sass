@@ -292,6 +292,10 @@
     .oe_kanban_text_red
         background: red
         color: #000
+    .oe_kanban_ellipsis
+        overflow: hidden
+        text-overflow: ellipsis
+        white-space: nowrap
     // }}}
     // KanbanDropDown {{{
     a.oe_kanban_menuaction
@@ -310,7 +314,7 @@
         right: -140px
         padding: 4px
         border: 1px solid #afafb6
-        width: 160px
+        min-width: 160px
         overflow-x: hidden
         z-index: 900
         background: white
@@ -318,13 +322,13 @@
         @include box-shadow(0 1px 4px rgba(0,0,0,0.3))
         p
             margin-left: 12px
-        li a
+        > li > a
             display: block
             padding: 3px 6px
             line-height: 14px
             color: #4c4c4c
             text-decoration: none
-        li a:hover
+        > li > a:hover
             background: #f0f0fa
             background: -moz-linear-gradient(#f0f0fa, #eeeef6)
             background: -webkit-gradient(linear, left top, left bottom, from(#f0f0fa), to(#eeeef6))
@@ -332,214 +336,76 @@
             @include box-shadow(none)
     // }}}
     // KanbanColorPicker {{{
-    .oe_kanban_color_picker
-        position: absolute
-        top: -10px
-        border: 1px solid black
-        -moz-box-shadow: 2px 2px 5px #666
-        -webkit-box-shadow: 2px 2px 5px #666
-        box-shadow: 2px 2px 5px #666
-        z-index: 2
+    .oe_kanban_colorpicker
+        padding: 3px 6px
+    .oe_kanban_colorpicker li
+        float: left
         a
-            display: block
-            width: 30px
-            height: 30px
-            border: 1px solid black
-            text-align: center
-            text-decoration: none
-            &:hover
-                border-color: white
-        span
-            border: none
-            font-size: 120%
-            font-weight: bold
-            color: black
-            line-height: 30px
+            display: inline-block
+            width: 18px
+            height: 18px
+            border: 1px solid white
+        a:hover
+            border: 1px solid gray !important
+    .oe_kanban_colorpicker li:first-child a
+        margin-top: 1px
+        height: 16px
+        border: 1px solid #ccc
+        &:hover
+            margin-top: 0px
+            height: 18px
     // }}}
     // KanbanColors {{{
-    // Custom colors are also present in kanban.js
-    // Custom color#0
     .oe_kanban_color_0
-        .oe_kanban_color_bglight
-            background: #FFFFFF
-        .oe_kanban_color_bgdark
-            background: #EEEEEE
-        .oe_kanban_color_border
-            border-color: #CCCCCC
-        .oe_kanban_button
-            background-color: #EEEEEE
-            border-color: #CCCCCC
-            text-shadow: 0 1px #FFFFFF
-        .oe_kanban_button_active, a.oe_kanban_button:hover, button.oe_kanban_button:hover
-            background-color: #999999
-            color: #fff
-            text-shadow: 0 1px #000
+        color: #FFFFFF
+        text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000
+    .oe_kanban_bgcolor_0
+        background-color: #FFFFFF
 
-    // Custom color#1
     .oe_kanban_color_1
-        .oe_kanban_color_bglight
-            background: #CCCCCC
-        .oe_kanban_color_bgdark
-            background: #999999
-        .oe_kanban_color_border
-            border-color: #666666
-        .oe_kanban_button
-            background-color: #999999
-            border-color: #666666
-            text-shadow: 0 1px #CCCCCC
-        .oe_kanban_button_active, a.oe_kanban_button:hover, button.oe_kanban_button:hover
-            background-color: #666666
-            color: #fff
-            text-shadow: 0 1px #000
+        color: #CCCCCC
+    .oe_kanban_bgcolor_1
+        background-color: #CCCCCC
 
-    // Custom color#2
     .oe_kanban_color_2
-        .oe_kanban_color_bglight
-            background: #FFC7C7
-        .oe_kanban_color_bgdark
-            background: #FF8F8F
-        .oe_kanban_color_border
-            border-color: #D97979
-        .oe_kanban_button
-            background-color: #FF8F8F
-            border-color: #D97979
-            text-shadow: 0 1px #FFC7C7
-        .oe_kanban_button_active, a.oe_kanban_button:hover, button.oe_kanban_button:hover
-            background-color: #CC5C5C
-            color: #fff
-            text-shadow: 0 1px #000
+        color: #FFC7C7
+    .oe_kanban_bgcolor_2
+        background-color: #FFC7C7
 
-    // Custom color#3
     .oe_kanban_color_3
-        .oe_kanban_color_bglight
-            background: #FFF1C7
-        .oe_kanban_color_bgdark
-            background: #FFE38F
-        .oe_kanban_color_border
-            border-color: #D9C179
-        .oe_kanban_button
-            background-color: #FFE38F
-            border-color: #D9C179
-            text-shadow: 0 1px #FFF1C7
-        .oe_kanban_button_active, a.oe_kanban_button:hover, button.oe_kanban_button:hover
-            background-color: #CCB05C
-            color: #fff
-            text-shadow: 0 1px #000
+        color: #FFF1C7
+    .oe_kanban_bgcolor_3
+        background-color: #FFF1C7
 
-    // Custom color#4
     .oe_kanban_color_4
-        .oe_kanban_color_bglight
-            background: #E3FFC7
-        .oe_kanban_color_bgdark
-            background: #C7FF8F
-        .oe_kanban_color_border
-            border-color: #A9D979
-        .oe_kanban_button
-            background-color: #C7FF8F
-            border-color: #A9D979
-            text-shadow: 0 1px #E3FFC7
-        .oe_kanban_button_active, a.oe_kanban_button:hover, button.oe_kanban_button:hover
-            background-color: #94CC5C
-            color: #fff
-            text-shadow: 0 1px #000
+        color: #E3FFC7
+    .oe_kanban_bgcolor_4
+        background-color: #E3FFC7
 
-    // Custom color#5
     .oe_kanban_color_5
-        .oe_kanban_color_bglight
-            background: #C7FFD5
-        .oe_kanban_color_bgdark
-            background: #8FFFAB
-        .oe_kanban_color_border
-            border-color: #79D991
-        .oe_kanban_button
-            background-color: #8FFFAB
-            border-color: #79D991
-            text-shadow: 0 1px #C7FFD5
-        .oe_kanban_button_active, a.oe_kanban_button:hover, button.oe_kanban_button:hover
-            background-color: #5CCC78
-            color: #fff
-            text-shadow: 0 1px #000
+        color: #C7FFD5
+    .oe_kanban_bgcolor_5
+        background-color: #C7FFD5
 
-    // Custom color#6
     .oe_kanban_color_6
-        .oe_kanban_color_bglight
-            background: #C7FFFF
-        .oe_kanban_color_bgdark
-            background: #8FFFFF
-        .oe_kanban_color_border
-            border-color: #79D9D9
-        .oe_kanban_button
-            background-color: #8FFFFF
-            border-color: #79D9D9
-            text-shadow: 0 1px #C7FFFF
-        .oe_kanban_button_active, a.oe_kanban_button:hover, button.oe_kanban_button:hover
-            background-color: #5CCCCC
-            color: #fff
-            text-shadow: 0 1px #000
+        color: #C7FFFF
+    .oe_kanban_bgcolor_6
+        background-color: #C7FFFF
 
-    // Custom color#7
     .oe_kanban_color_7
-        .oe_kanban_color_bglight
-            background: #C7D5FF
-        .oe_kanban_color_bgdark
-            background: #8FABFF
-        .oe_kanban_color_border
-            border-color: #8FABFF
-        .oe_kanban_button
-            background-color: #8FABFF
-            border-color: #7995E9
-            text-shadow: 0 1px #C7D5FF
-        .oe_kanban_button_active, a.oe_kanban_button:hover, button.oe_kanban_button:hover
-            background-color: #5C78CC
-            color: #fff
-            text-shadow: 0 1px #000
+        color: #C7D5FF
+    .oe_kanban_bgcolor_7
+        background-color: #C7D5FF
 
-    // Custom color#8
     .oe_kanban_color_8
-        .oe_kanban_color_bglight
-            background: #E3C7FF
-        .oe_kanban_color_bgdark
-            background: #C78FFF
-        .oe_kanban_color_border
-            border-color: #A979D9
-        .oe_kanban_button
-            background-color: #C78FFF
-            border-color: #A979D9
-            text-shadow: 0 1px #E3C7FF
-        .oe_kanban_button_active, a.oe_kanban_button:hover, button.oe_kanban_button:hover
-            background-color: #945CCC
-            color: #fff
-            text-shadow: 0 1px #000
+        color: #E3C7FF
+    .oe_kanban_bgcolor_8
+        background-color: #E3C7FF
 
-    // Custom color#9
     .oe_kanban_color_9
-        .oe_kanban_color_bglight
-            background: #FFC7F1
-        .oe_kanban_color_bgdark
-            background: #FF8FE3
-        .oe_kanban_color_border
-            border-color: #D979C1
-        .oe_kanban_button
-            background-color: #FF8FE3
-            border-color: #D979C1
-            text-shadow: 0 1px #FFC7F1
-        .oe_kanban_button_active, a.oe_kanban_button:hover, button.oe_kanban_button:hover
-            background-color: #CC5CB0
-            color: #fff
-            text-shadow: 0 1px #000
-
-    // Red border
-    .oe_kanban_color_alert .oe_kanban_color_border, .oe_kanban_color_red .oe_kanban_color_border
-        border-color: #c00 !important
-
-    // Green border
-    .oe_kanban_color_green .oe_kanban_color_border
-        border-color: #0c0 !important
-
-    // Blue border
-    .oe_kanban_color_blue .oe_kanban_color_border
-        border-color: #00c !important
-    // }}}
+        color: #FFC7F1
+    .oe_kanban_bgcolor_9
+        background-color: #FFC7F1
 
 // au BufWritePost,FileWritePost *.sass :!sass --style expanded --line-numbers <afile> > "%:p:r.css"
 // vim:tabstop=4:shiftwidth=4:softtabstop=4:fdm=marker:
