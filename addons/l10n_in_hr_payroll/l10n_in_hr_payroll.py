@@ -80,6 +80,8 @@ class hr_employee(osv.osv):
                 else:
                     year_month = float(total_months)/100 + total_years
                 res[employee.id] = year_month
+            else:
+                res[employee.id] = 0.0
         return res
     
     _columns = {

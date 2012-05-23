@@ -4,6 +4,10 @@
 
         <!-- Contribution Register -->
 
+        <record id="hr_houserent_register" model="hr.contribution.register">
+            <field name="name">House Rent Allowance Register</field>
+        </record>
+
         <record id="hr_provident_fund_register" model="hr.contribution.register">
             <field name="name">Provident Fund Register</field>
         </record>
@@ -12,7 +16,27 @@
             <field name="name">Professional Tax Register</field>
         </record>
 
+       <record id="hr_meal_voucher_register" model="hr.contribution.register">
+            <field name="name">Meal Voucher Register</field>
+        </record>
+
         <!-- Salary Rules -->
+
+        <record id="hr_salary_rule_houserentallowance1" model="hr.salary.rule">
+            <field name="name">House Rent Allowance</field>
+             <field name="amount_select">percentage</field>
+             <field eval="40.0" name="amount_percentage"/>
+             <field name="amount_percentage_base">contract.wage</field>
+             <field name="code">HRA</field>
+             <field name="category_id" ref="hr_payroll.ALW"/>
+             <field name="register_id" ref="hr_houserent_register"/>
+             <field name="note">Rent receipts can be shown for taking tax benefit for living in a rented house.
+Income tax exemption for HRA will be least of following:
+    1. The actual amount of HRA received as a part of salary.
+    2. 50% (if living in metro area) of (basic salary+Dearness allowance (DA)).
+    3. Rent paid minus 10% of (basic salary+DA).
+             </field>
+        </record>
 
         <record id="hr_salary_rule_convanceallowance1" model="hr.salary.rule">
             <field name="amount_select">fix</field>
@@ -31,8 +55,7 @@
             <field name="category_id" ref="hr_payroll.DED"/>
             <field name="register_id" ref="hr_professional_tax_register"/>
             <field name="name">Professional Tax</field>
-            <field name="note">Professional tax deducted from salary by employer should be removed from taxable salary before computation of income tax.
-Read more: http://www.pankajbatra.com/finance/income-tax-calculator-2012-2013-2014/#ixzz1uugbJcaM</field>
+            <field name="note">Professional tax deducted from salary by employer should be removed from taxable salary before computation of income tax.</field>
         </record>
 
         <record id="hr_salary_rule_providentfund1" model="hr.salary.rule">
