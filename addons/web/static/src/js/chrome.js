@@ -450,6 +450,8 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
 instance.web.Login =  instance.web.Widget.extend({
     template: "Login",
     remember_credentials: true,
+    _db_list: null,
+
     init: function(parent) {
         this._super(parent);
         this.has_local_storage = typeof(localStorage) != 'undefined';
@@ -478,23 +480,33 @@ instance.web.Login =  instance.web.Widget.extend({
                 self.databasemanager.destroy();
                 self.$element.find('.oe_login_bottom').show();
                 self.$element.find('.oe_login_pane').show();
-                self.load_db_list();
+                self.load_db_list(true).then(self.proxy('_db_list_loaded'));
             });
         });
-        self.load_db_list();
+        return self.load_db_list().then(self.proxy('_db_list_loaded'));
     },
-    load_db_list: function () {
-        var self = this;
-        self.rpc("/web/database/get_list", {}, function(result) {
-            self.set_db_list(result.db_list);
-        }, function(error, event) {
-            if (error.data.fault_code === 'AccessDenied') {
-                event.preventDefault();
-            }
-        });
+    load_db_list: function (force) {
+        var d = $.when(), self = this;
+        if (_.isNull(this._db_list) || force) {
+            d = self.rpc("/web/database/get_list", {}, function(result) {
+                self._db_list = _.clone(result.db_list);
+            }, function(error, event) {
+                if (error.data.fault_code === 'AccessDenied') {
+                    event.preventDefault();
+                }
+            });
+        }
+        return d;
     },
-    set_db_list: function (list) {
+    _db_list_loaded: function () {
+        var list = this._db_list,
+            dbdiv = this.$element.find('div.oe_login_dbpane');
         this.$element.find("[name=db]").replaceWith(instance.web.qweb.render('Login.dblist', { db_list: list, selected_db: this.selected_db}));
+        if(list && list.length === 1) {
+            dbdiv.hide();
+        } else {
+            dbdiv.show();
+        }
     },
     on_submit: function(ev) {
         if(ev) {
