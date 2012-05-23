@@ -31,6 +31,28 @@ from epsilon.hotfix import require
 
 class hr_contract_in(osv.osv):
     _inherit = 'hr.contract'
+
+    _columns = {
+        'tds': fields.float('TDS', digits_compute=dp.get_precision('Payroll')),
+        'house_rent_income': fields.float('House Rent Income ', digits_compute=dp.get_precision('Payroll'),help="Income from house property."),
+        'saving_bank_account': fields.float('Saving Bank Account Income ', digits_compute=dp.get_precision('Payroll'),help="Saving income for bank account."),
+        'other_income': fields.float('Other Income ', digits_compute=dp.get_precision('Payroll'),help="Other income of employee."),
+        'short_term_gain':fields.float('Short Term Gain from Share Trading/Equity MFs ', digits_compute=dp.get_precision('Payroll'),help="Stocks/equity mutual funds are sold before one year."),
+        'long_term_gain':fields.float('Long Term Gain from Share Trading/Equity MFs', digits_compute=dp.get_precision('Payroll'),help="Stocks/equity mutual funds are kept for more than a year."),
+        'food_coupon_amount': fields.float('Food Coupons ', digits_compute=dp.get_precision('Payroll'),help="Amount of food coupon per day."),
+        'driver_salay': fields.boolean('Driver Salary',help="If checked,driver get fixed salary per month."),
+        'professional_tax': fields.float('Professional Tax ', digits_compute=dp.get_precision('Payroll'),help="Professional tax deducted from salary"),
+        'leave_avail_dedution': fields.float('Leave Availed Deduction ', digits_compute=dp.get_precision('Payroll'),help="Deduction for emergency leave of employee."),
+        'medical_insurance': fields.float('Medical Insurance', digits_compute=dp.get_precision('Payroll'),help="Deduction towards company provided medical insurance."), 
+        'voluntarily_provident_fund': fields.float('Voluntarily Provident Fund', digits_compute=dp.get_precision('Payroll'),help="VPF computed as percentage.(%)"), 
+        'company_transport': fields.float('Company Provided Transport', digits_compute=dp.get_precision('Payroll'),help="Deduction for company provided transport."), 
+    }
+
+hr_contract_in()
+
+
+class hr_employee(osv.osv):
+    _inherit = 'hr.employee'
     
     def _compute_year(self, cr, uid, ids, fields, args, context=None):
         """
@@ -44,9 +66,7 @@ class hr_contract_in(osv.osv):
         c_date = time.strftime('%Y-%m-%d')
         DATETIME_FORMAT = "%Y-%m-%d"
         current_date = datetime.strptime(c_date,DATETIME_FORMAT)
-        employee_pool = self.pool.get('hr.employee')
-        for contract in self.browse(cr, uid, ids, context):
-            employee = employee_pool.browse(cr, uid, contract.employee_id.id, context=context)
+        for employee in self.browse(cr, uid, ids, context):
             if employee.join_date:
                 date_start = datetime.strptime(employee.join_date, DATETIME_FORMAT)
                 diffyears = current_date.year - date_start.year
@@ -57,36 +77,15 @@ class hr_contract_in(osv.osv):
                 total_months = relativedelta(current_date, date_start).months
                 if total_months < 10:
                      year_month= float(total_months)/10 + float(total_years)
-                     res[contract.id] = year_month
+                     res[employee.id] = year_month
                 else:
                     year_months = float(total_months)/100 + float(total_years)
-                    res[contract.id] = year_months
+                    res[employee.id] = year_months
         return res
-
+    
     _columns = {
-        'tds': fields.float('TDS', digits_compute=dp.get_precision('Payroll')),
-        'house_rent_income': fields.float('House Rent Income ', digits_compute=dp.get_precision('Payroll'),help="Income from house property."),
-        'saving_bank_account': fields.float('Saving Bank Account Income ', digits_compute=dp.get_precision('Payroll'),help="saving income for bank account."),
-        'other_income': fields.float('Other Income ', digits_compute=dp.get_precision('Payroll'),help="Other income of employee."),
-        'short_term_gain':fields.float('Short Term Gain from Share Trading/Equity MFs ', digits_compute=dp.get_precision('Payroll'),help="stocks/equity mutual funds are sold before one year."),
-        'long_term_gain':fields.float('Long Term Gain from Share Trading/Equity MFs', digits_compute=dp.get_precision('Payroll'),help="stocks/equity mutual funds are kept for more than a year."),
-        'food_coupon_amount': fields.float('Food Coupons ', digits_compute=dp.get_precision('Payroll'),help="amount of food coupon per day"),
-        'driver_salay': fields.boolean('Driver salary',help="if checked,driver get fixed salary per month."),
-        'professional_tax': fields.float('Professional Tax ', digits_compute=dp.get_precision('Payroll'),help="Professional tax deducted from salary"),
-        'leave_avail_dedution': fields.float('leave availed deduction ', digits_compute=dp.get_precision('Payroll'),help="emergency leave of employee"),
-        'number_of_year':fields.function(_compute_year, string='No. of Years of service',type="float",help="Total number of years and months of employee has work in company",store=True),
-        'medical_insurance': fields.float('Medical Insurance', digits_compute=dp.get_precision('Payroll'),help="Deduction towards company provided medical insurance"), 
-        'voluntarily_provident_fund': fields.float('Voluntarily Provident Fund', digits_compute=dp.get_precision('Payroll'),help="VPF computed as percentage.(%)"), 
-        'company_transport': fields.float('Company provided transport', digits_compute=dp.get_precision('Payroll'),help="Deduction for company provided transport."), 
-    }
-
-hr_contract_in()
-
-
-class hr_employee(osv.osv):
-    _inherit = 'hr.employee'
-    _columns = {
-        'join_date': fields.date('Join date',help="join date of employee in company",required=True)
+        'join_date': fields.date('Join Date',help="joining date of employee "),
+        'number_of_year':fields.function(_compute_year, string='No. of Years of Service',type="float",help="Total years of work experience.",store=True),
                 }
 hr_employee()
 

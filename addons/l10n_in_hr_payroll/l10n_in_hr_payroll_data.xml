@@ -111,7 +111,7 @@ Read more: http://www.pankajbatra.com/finance/income-tax-calculator-2012-2013-20
             <field name="category_id" ref="hr_payroll.ALW"/>
             <field name="condition_select">none</field>
             <field name="amount_select">code</field>
-             <field name="amount_python_compute">result = (contract.wage + DA) * 15 * contract.number_of_year / worked_days.WORK100.number_of_days</field>
+             <field name="amount_python_compute">result = (contract.wage + DA) * 15 * employee.number_of_year / worked_days.WORK100.number_of_days</field>
             <field name="sequence" eval="500"/>
             <field name="note">Covered under the Payment of Gratuity Act, 1971: 
 (Last drawn monthly basic salary + dearness allowance)/26 x 15 days x 
