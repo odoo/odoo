@@ -75,9 +75,9 @@ class crm_case_stage(osv.osv):
         'requirements': fields.text('Requirements'),
         'section_ids':fields.many2many('crm.case.section', 'section_stage_rel', 'stage_id', 'section_id', string='Sections',
                         help="Link between stages and sales teams. When set, this limitate the current stage to the selected sales teams."),
-        'state': fields.selection(AVAILABLE_STATES, 'State', required=True, help="The related state for the stage. The state of your document will automatically change regarding the selected stage. Example, a stage is related to the state 'Close', when your document reach this stage, it will be automatically closed."),
+        'state': fields.selection(AVAILABLE_STATES, 'State', required=True, help="The related state for the stage. The state of your document will automatically change regarding the selected stage. For example, if a stage is related to the state 'Close', when your document reaches this stage, it will be automatically have the 'closed' state."),
         'case_default': fields.boolean('Common to All Teams', help="If you check this field, this stage will be proposed by default on each sales team. It will not assign this stage to existing teams."),
-        'fold': fields.boolean('Hide in views if empty', help="This stage is not visible, for example in status bar or kanban view, when there are no records in that stage to display."),
+        'fold': fields.boolean('Hide in Views when Empty', help="This stage is not visible, for example in status bar or kanban view, when there are no records in that stage to display."),
     }
 
     _defaults = {
@@ -180,13 +180,13 @@ class crm_case_resource_type(osv.osv):
     }
 
 class crm_base(object):
-    """ Base utility mixin class for crm objects.
-        Object subclassing this should define colums:
-        - date_open (datetime field)
-        - date_closed (datetime field)
-        - user_id (many2one to res.users)
-        - partner_id (many2one to res.partner)
-        - state (selection field)
+    """ Base utility mixin class for objects willing to manage their state.
+        Object subclassing this class should define the following colums:
+        - ``date_open`` (datetime field)
+        - ``date_closed`` (datetime field)
+        - ``user_id`` (many2one to res.users)
+        - ``partner_id`` (many2one to res.partner)
+        - ``state`` (selection field)
     """
     
     def _get_default_partner_address(self, cr, uid, context=None):
@@ -227,20 +227,16 @@ class crm_base(object):
 
     def _get_default_user(self, cr, uid, context=None):
         """ Gives current user id
-        :param context: if portal in context is false return false anyway
+            :param context: if portal in context is false return false anyway
         """
         if context and context.get('portal', False):
             return False
         return uid
 
-    def _get_section(self, cr, uid, context=None):
-        return False
-
     def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
-        """This function returns value of partner email based on Partner Address
-        :param ids: List of case IDs
-        :param add: Id of Partner's address
-        :param email: Partner's email ID
+        """ This function returns value of partner email based on Partner Address
+            :param add: Id of Partner's address
+            :param email: Partner's email ID
         """
         data = {'value': {'email_from': False, 'phone':False}}
         if add:
@@ -252,10 +248,9 @@ class crm_base(object):
         return data
 
     def onchange_partner_id(self, cr, uid, ids, part, email=False):
-        """This function returns value of partner address based on partner
-        :param ids: List of case IDs
-        :param part: Partner's id
-        :param email: Partner's email ID
+        """ This function returns value of partner address based on partner
+            :param part: Partner's id
+            :param email: Partner's email ID
         """
         data={}
         if  part:
@@ -272,7 +267,7 @@ class crm_base(object):
                 values['date_open'] = fields.datetime.now()
             if not case.user_id:
                 values['user_id'] = uid
-            self.case_set(cr, uid, [case.id], 'done', values, context=context)
+            self.case_set(cr, uid, [case.id], 'open', values, context=context)
             self.case_open_send_note(cr, uid, [case.id], context=context)
         return True
 
@@ -289,7 +284,7 @@ class crm_base(object):
         return True
 
     def case_pending(self, cr, uid, ids, context=None):
-        """ Set case as pending """
+        """ Sets case as pending """
         self.case_set(cr, uid, ids, 'pending', {'active': True}, context=context)
         self.case_pending_send_note(cr, uid, ids, context=context)
         return True
@@ -316,7 +311,6 @@ class crm_base(object):
             update_values = {}
         update_values.update({'state': state_name})
         self.write(cr, uid, ids, update_values, context=context)
-        self.case_reset_send_note(cr, uid, ids, context=context)
         self._action(cr, uid, cases, state_name, context=context)
 
     def _action(self, cr, uid, cases, state_to, scrit=None, context=None):
@@ -338,57 +332,69 @@ class crm_base(object):
 	
     def case_open_send_note(self, cr, uid, ids, context=None):
         for id in ids:
-            msg = '%s has been <b>opened</b>.' % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
+            msg = _('%s has been <b>opened</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
             self.message_append_note(cr, uid, [id], body=msg, context=context)
         return True
 
     def case_close_send_note(self, cr, uid, ids, context=None):
         for id in ids:
-            msg = '%s has been <b>closed</b>.'% (self.case_get_note_msg_prefix(cr, uid, id, context=context))
+            msg = _('%s has been <b>closed</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
             self.message_append_note(cr, uid, [id], body=msg, context=context)
         return True
 
     def case_cancel_send_note(self, cr, uid, ids, context=None):
         for id in ids:
-            msg = '%s has been <b>canceled</b>.' % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
+            msg = _('%s has been <b>canceled</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
             self.message_append_note(cr, uid, [id], body=msg, context=context)
         return True
 
     def case_pending_send_note(self, cr, uid, ids, context=None):
         for id in ids:
-            msg = '%s is now <b>pending</b>.' % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
+            msg = _('%s is now <b>pending</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
             self.message_append_note(cr, uid, [id], body=msg, context=context)
         return True
 
     def case_reset_send_note(self, cr, uid, ids, context=None):
         for id in ids:
-            msg = '%s has been <b>renewed</b>.' % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
+            msg = _('%s has been <b>renewed</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
             self.message_append_note(cr, uid, [id], body=msg, context=context)
         return True
 
-class crm_case(crm_base):
-    """ A simple python class to be used for common functions
+class crm_case(object):
+    """ Base utility mixin class for objects willing to manage their stages.
         Object that inherit from this class should inherit from mailgate.thread
-        And need a stage_id field
-        And object that inherit (orm inheritance) from a class the overwrite copy
+        to have access to the mail gateway, as well as Chatter. Objects 
+        subclassing this class should define the following colums:
+        - ``date_open`` (datetime field)
+        - ``date_closed`` (datetime field)
+        - ``user_id`` (many2one to res.users)
+        - ``partner_id`` (many2one to res.partner)
+        - ``stage_id`` (many2one to a stage definition model)
+        - ``state`` (selection field, related to the stage_id.state)
     """
-    
+
+    def _get_default_section(self, cr, uid, context=None):
+        """ Gives default section by checking if present in the context """
+        if context is None:
+            context = {}
+        if context.get('portal', False):
+            return False
+        if type(context.get('default_section_id')) in (int, long):
+            return context.get('default_section_id')
+        if isinstance(context.get('default_section_id'), basestring):
+            section_name = context['default_section_id']
+            section_ids = self.pool.get('crm.case.section').name_search(cr, uid, name=section_name, context=context)
+            if len(section_ids) == 1:
+                return section_ids[0][0]
+        return False
+
     def _get_default_stage_id(self, cr, uid, context=None):
         """ Gives default stage_id """
-        return self.stage_find(cr, uid, False, [('state', '=', 'draft')], context=context)
-    
-    def stage_set_with_state_name(self, cr, uid, cases, state_name, context=None):
-        """ TODO
-        """
-        for case in cases:
-            section_id = case.section_id.id if case.section_id else None
-            stage_id = self.stage_find(cr, uid, section_id, [('state', '=', state_name)], context=context)
-            if stage_id:
-                self.stage_set(cr, uid, [case.id], stage_id, context=context)
-        return True
+        section_id = self._get_default_section(cr, uid, context=context)
+        return self.stage_find(cr, uid, section_id, [('state', '=', 'draft')], context=context)
     
     def stage_find(self, cr, uid, section_id, domain=[], order='sequence', context=None):
-        """ find stage, within a sales team, with a domain on the search,
+        """ Find stage, within a sales team, with a domain on the search,
             ordered by the order parameter. If several stages match the 
             search criterions, the first one will be returned, according
             to the requested search order.
@@ -406,6 +412,19 @@ class crm_case(crm_base):
             return stage_ids[0]
         return False
 
+    def stage_set_with_state_name(self, cr, uid, cases, state_name, context=None):
+        """ Set a new stage, with a state_name instead of a stage_id
+            :param cases: browse_record of cases
+        """
+        if isinstance(cases, (int, long)):
+            cases = self.browse(cr, uid, cases, context=context)
+        for case in cases:
+            section_id = case.section_id.id if case.section_id else None
+            stage_id = self.stage_find(cr, uid, section_id, [('state', '=', state_name)], context=context)
+            if stage_id:
+                self.stage_set(cr, uid, [case.id], stage_id, context=context)
+        return True
+
     def stage_set(self, cr, uid, ids, stage_id, context=None):
         value = {}
         if hasattr(self,'onchange_stage_id'):
@@ -414,8 +433,6 @@ class crm_case(crm_base):
         return self.write(cr, uid, ids, value, context=context)
 
     def stage_change(self, cr, uid, ids, op, order, context=None):
-        if context is None:
-            context = {}
         for case in self.browse(cr, uid, ids, context=context):
             seq = 0
             if case.stage_id:
@@ -429,25 +446,24 @@ class crm_case(crm_base):
         return False
 
     def stage_next(self, cr, uid, ids, context=None):
-        """This function computes next stage for case from its current stage
-        using available stage for that case type
+        """ This function computes next stage for case from its current stage
+            using available stage for that case type
         """
         return self.stage_change(cr, uid, ids, '>','sequence', context)
 
     def stage_previous(self, cr, uid, ids, context=None):
-        """This function computes previous stage for case from its current
-        stage using available stage for that case type
+        """ This function computes previous stage for case from its current
+            stage using available stage for that case type
         """
         return self.stage_change(cr, uid, ids, '<', 'sequence desc', context)
 
     def copy(self, cr, uid, id, default=None, context=None):
-        """Overrides orm copy method to avoid copying messages,
-           as well as date_closed and date_open columns if they
-           exist."""
+        """ Overrides orm copy method to avoid copying messages,
+            as well as date_closed and date_open columns if they
+            exist."""
         if default is None:
             default = {}
 
-        default.update({ 'message_ids': [], })
         if hasattr(self, '_columns'):
             if self._columns.get('date_closed'):
                 default.update({ 'date_closed': False, })
@@ -456,7 +472,7 @@ class crm_case(crm_base):
         return super(crm_case, self).copy(cr, uid, id, default, context=context)
 
     def case_escalate(self, cr, uid, ids, context=None):
-        """Escalates case to parent level"""
+        """ Escalates case to parent level """
         cases = self.browse(cr, uid, ids, context=context)
         cases[0].state # fill browse record cache, for _action having old and new values
         for case in cases:
@@ -473,7 +489,7 @@ class crm_case(crm_base):
         cases = self.browse(cr, uid, ids, context=context)
         self._action(cr, uid, cases, 'escalate', context=context)
         return True
-    
+
     def case_open(self, cr, uid, ids, context=None):
         """ Opens case """
         cases = self.browse(cr, uid, ids, context=context)
