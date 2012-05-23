@@ -65,7 +65,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.session = session;                 
             this.categories = {};
             this.barcode_reader = new module.BarcodeReader({'pos': this});  // used to read barcodes
-            this.proxy = new module.ProxyDevice({'pos': this});             // used to communicate to the hardware devices via a local proxy
+            this.proxy = new module.ProxyDevice();             // used to communicate to the hardware devices via a local proxy
 
             // default attributes values. If null, it will be loaded below.
             this.set({

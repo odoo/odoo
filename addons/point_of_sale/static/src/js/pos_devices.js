@@ -16,28 +16,46 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
     // methods are used both to signal an event, and to fetch information. 
 
     module.ProxyDevice  = instance.web.Class.extend({
+        init: function(options){
+            options = options || {};
+            url = options.url || 'http://localhost:8069';
+
+            this.connection = new instance.web.JsonRPC();
+            this.connection.setup(url);
+        },
+        message : function(name,params,callback){
+            var success_callback = function(result){ console.log('SUCCESS:'+name+': ',result); }
+            var error_callback = function(result){ console.log('ERROR:'+name+': ',result); }
+            this.connection.rpc('/pos/'+name, params || {}, callback || success_callback, error_callback);
+        },
+        
         //a product has been scanned and recognized with success
         scan_item_success: function(){
+            this.message('scan_item_success');
             console.log('PROXY: scan item success');
         },
 
         //a product has been scanned but not recognized
         scan_item_error_unrecognized: function(){
+            this.message('scan_item_error_unrecognized');
             console.log('PROXY: scan item error');
         },
 
         //the client is asking for help
         help_needed: function(){
+            this.message('help_needed');
             console.log('PROXY: help needed');
         },
 
         //the client does not need help anymore
         help_canceled: function(){
+            this.message('help_canceled');
             console.log('PROXY: help canceled');
         },
 
         //the client is starting to weight
         weighting_start: function(){
+            this.message('weighting_start');
             console.log('PROXY: weighting start');
         },
 
@@ -45,6 +63,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         // is called at regular interval (up to 10x/sec) between a weighting_start()
         // and a weighting_end()
         weighting_read_kg: function(){
+            this.message('weighting_read_kg');
             console.log('PROXY: weighting read');
             //return Math.random() + 0.1;
             return window.debug_devices.weight;
@@ -52,6 +71,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
 
         // the client has finished weighting products
         weighting_end: function(){
+            this.message('weighting_end');
             console.log('PROXY: weighting end');
         },
 
@@ -59,6 +79,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         // method: 'mastercard' | 'cash' | ... ? TBD
         // info:   'extra information to display on the payment terminal' ... ? TBD
         payment_request: function(price, method, info){
+            this.message('payment_request',{'price':price,'method':method,'info':info});
             console.log('PROXY: payment request:',price,method,info);
         },
 
@@ -66,6 +87,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         // has paid the required money
         // returns 'waiting_for_payment' | 'payment_accepted' | 'payment_rejected'
         is_payment_accepted: function(){
+            this.message('is_payment_accepted');
             console.log('PROXY: is payment accepted ?');
             //return 'waiting_for_payment'; // 'payment_accepted' | 'payment_rejected'
             return window.debug_devices.payment_status;
@@ -73,26 +95,31 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
 
         // the client cancels his payment
         payment_canceled: function(){
+            this.message('payment_canceled');
             console.log('PROXY: payment canceled by client');
         },
 
         // called when the client logs in or starts to scan product
         transaction_start: function(){
+            this.message('transaction_start');
             console.log('PROXY: transaction start');
         },
 
         // called when the clients has finished his interaction with the machine
         transaction_end: function(){
+            this.message('transaction_end');
             console.log('PROXY: transaction end');
         },
 
         // called when the POS turns to cashier mode
         cashier_mode_activated: function(){
+            this.message('cashier_mode_activated');
             console.log('PROXY: cashier mode activated');
         },
 
         // called when the POS turns to client mode
         cashier_mode_deactivated: function(){
+            this.message('cashier_mode_deactivated');
             console.log('PROXY: client mode activated');
         },
     });
