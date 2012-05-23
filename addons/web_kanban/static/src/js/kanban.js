@@ -10,6 +10,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
     display_name: _lt('Kanban'),
     default_nr_columns: 3,
     view_type: "kanban",
+    number_of_color_schemes: 10,
     init: function (parent, dataset, view_id, options) {
         this._super(parent, dataset, view_id, options);
         _.defaults(this.options, {"quick_creatable": true, "creatable": true});
@@ -114,7 +115,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             case 'button':
             case 'a':
                 var type = node.attrs.type || '';
-                if (_.indexOf('action,object,edit,delete,color'.split(','), type) !== -1) {
+                if (_.indexOf('action,object,edit,delete'.split(','), type) !== -1) {
                     _.each(node.attrs, function(v, k) {
                         if (_.indexOf('icon,type,name,args,string,context,states,kanban_states'.split(','), k) != -1) {
                             node.attrs['data-' + k] = v;
@@ -434,7 +435,7 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
         var min_height = 0;
         var els = [];
         _.each(this.records, function(r) {
-            var $e = r.$element.find('.oe_kanban_auto_height').first();
+            var $e = r.$element.find('.oe_kanban_auto_height').first().css('min-height', 0);
             if ($e.length) {
                 els.push($e[0]);
                 min_height = Math.max(min_height, $e.outerHeight());
@@ -559,6 +560,7 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
     },
     bind_events: function() {
         var self = this;
+        this.setup_color_picker();
         var $show_on_click = self.$element.find('.oe_kanban_box_show_onclick');
         $show_on_click.toggle(this.state.folded);
         this.$element.find('.oe_kanban_box_show_onclick_trigger').click(function() {
@@ -602,6 +604,25 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
             }
         });
     },
+    setup_color_picker: function() {
+        var self = this;
+        var $el = this.$element.find('ul.oe_kanban_colorpicker');
+        if ($el.length) {
+            $el.html(QWeb.render('KanbanColorPicker', {
+                widget: this
+            }));
+            $el.on('click', 'a', function(ev) {
+                ev.preventDefault();
+                var color_field = $(this).parents('.oe_kanban_colorpicker').first().data('field') || 'color';
+                var data = {};
+                data[color_field] = $(this).data('color');
+                self.view.dataset.write(self.id, data, {}, function() {
+                    self.record[color_field] = $(this).data('color');
+                    self.do_reload();
+                });
+            });
+        }
+    },
     do_action_delete: function($action) {
         var self = this;
         if (confirm(_t("Are you sure you want to delete this record ?"))) {
@@ -621,28 +642,6 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
             this.view.open_record(this.id);
         }
     },
-    do_action_color: function($action) {
-        var self = this,
-            colors = '#FFFFFF,#CCCCCC,#FFC7C7,#FFF1C7,#E3FFC7,#C7FFD5,#C7FFFF,#C7D5FF,#E3C7FF,#FFC7F1'.split(','),
-            $cpicker = $(QWeb.render('KanbanColorPicker', { colors : colors, columns: 2 }));
-        $action.after($cpicker);
-        $cpicker.mouseenter(function() {
-            clearTimeout($cpicker.data('timeoutId'));
-        }).mouseleave(function(evt) {
-            var timeoutId = setTimeout(function() { $cpicker.remove(); }, 500);
-            $cpicker.data('timeoutId', timeoutId);
-        });
-        $cpicker.find('a').click(function() {
-            var data = {};
-            data[$action.data('name')] = $(this).data('color');
-            self.view.dataset.write(self.id, data, {}, function() {
-                self.record[$action.data('name')] = $(this).data('color');
-                self.do_reload();
-            });
-            $cpicker.remove();
-            return false;
-        });
-    },
     do_action_object: function ($action) {
         var button_attrs = $action.data();
         this.view.do_execute_action(button_attrs, this.view.dataset, this.id, this.do_reload);
@@ -652,19 +651,18 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
         this.view.dataset.read_ids([this.id], this.view.fields_keys.concat(['__last_update'])).then(function(records) {
             if (records.length) {
                 self.set_record(records[0]);
-                self.do_render();
+                var $render = $(self.render());
+                self.$element.replaceWith($render);
+                self.$element = $render;
+                self.bind_events();
+                self.group.compute_cards_auto_height();
             } else {
                 self.destroy();
             }
         });
     },
-    do_render: function() {
-        this.$element.html(this.render());
-        this.bind_events();
-    },
-    kanban_color: function(variable) {
-        var number_of_color_schemes = 10,
-            index = 0;
+    kanban_getcolor: function(variable) {
+        var index = 0;
         switch (typeof(variable)) {
             case 'string':
                 for (var i=0, ii=variable.length; i<ii; i++) {
@@ -677,8 +675,12 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
             default:
                 return '';
         }
-        var color = (index % number_of_color_schemes);
-        return 'oe_kanban_color_' + color;
+        var color = (index % this.view.number_of_color_schemes);
+        return color;
+    },
+    kanban_color: function(variable) {
+        var color = this.kanban_getcolor(variable);
+        return color === '' ? '' : 'oe_kanban_color_' + color;
     },
     kanban_gravatar: function(email, size) {
         size = size || 22;
