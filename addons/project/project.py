@@ -669,31 +669,6 @@ class task(osv.osv):
         for work in self.pool.get('project.task.work').browse(cr, uid, ids, context=context):
             if work.task_id: result[work.task_id.id] = True
         return result.keys()
-    
-    def _get_state(self, cr, uid, ids, name, arg, context=None):
-        res = {}
-        for task in self.browse(cr, uid, ids, context=context):
-            if task.type_id:
-                res[task.id] = task.type_id.state
-        return res
-
-    def _get_stage(self, cr, uid, ids, context=None):
-        task_obj = self.pool.get('project.task')
-        result = {}
-        for stage in self.browse(cr, uid, ids, context=context):
-            if stage.state:
-                task_ids = task_obj.search(cr, uid, [('state', '=', stage.state)], context=context)
-        for task in task_obj.browse(cr, uid, task_ids, context=context):
-            result[task.id] = True
-        return result.keys()
-
-    def _save_state(self, cr, uid, task_id, field_name, field_value, arg, context=None):
-        stage_ids = self.pool.get('project.task.type').search(cr, uid, [('state', '=', field_value)], context=context)
-        if stage_ids:
-            self.write(cr, uid, task_id, {'type_id': stage_ids[0]}, context=context)
-        else:
-            cr.execute("""UPDATE project_task SET state=%s WHERE id=%s""", (field_value, task_id, ))
-        return True
 
     _columns = {
         'active': fields.function(_is_template, store=True, string='Not a Template Task', type='boolean', help="This field is computed automatically and have the same behavior than the boolean 'active' field: if the task is linked to a template or unactivated project, it will be hidden unless specifically asked."),
@@ -702,14 +677,13 @@ class task(osv.osv):
         'priority': fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Important'), ('0','Very important')], 'Priority', select=True),
         'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list of tasks."),
         'type_id': fields.many2one('project.task.type', 'Stage'),
-        'state': fields.function(_get_state, fnct_inv=_save_state, type='selection', selection=_TASK_STATE, string="State", readonly=True,
-            store = {
-                'project.task': (lambda self, cr, uid, ids, c={}: ids, ['type_id'], 10),
-                'project.task.type': (_get_stage, ['state'], 10)
-            }, help='If the task is created the state is \'Draft\'.\
-                    \n If the task is started, the state becomes \'In Progress\'.\
-                    \n If review is needed the task is in \'Pending\' state.\
-                    \n If the task is over, the states is set to \'Done\'.'),
+        'state': fields.related('stage_id', 'state', type="selection", store=True,
+                selection=_TASK_STATE, string="State", readonly=True,
+                help='The state is set to \'Draft\', when a case is created.\
+                      If the case is in progress the state is set to \'Open\'.\
+                      When the case is over, the state is set to \'Done\'.\
+                      If the case needs to be reviewed then the state is \
+                      set to \'Pending\'.'),
         'kanban_state': fields.selection([('normal', 'Normal'),('blocked', 'Blocked'),('done', 'Ready To Pull')], 'Kanban State',
                                          help="A task's kanban state indicates special situations affecting it:\n"
                                               " * Normal is the default situation\n"
