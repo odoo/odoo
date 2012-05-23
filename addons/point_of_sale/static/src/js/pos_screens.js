@@ -74,7 +74,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             return this;
         },
         show_popup: function(name,message){
-            console.log('show_popup:',message);
             if(this.current_popup){
                 this.close_popup();
             }
@@ -132,12 +131,18 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
     });
 
     module.ScreenWidget = module.PosBaseWidget.extend({
+        init: function(parent,options){
+            this._super(parent,options);
+            this.hidden = false;
+        },
         show: function(){
+            this.hidden = false;
             if(this.$element){
                 this.$element.show();
             }
         },
         hide: function(){
+            this.hidden = true;
             if(this.$element){
                 this.$element.hide();
             }
@@ -146,6 +151,18 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             }
             if(this.pos_widget.action_bar){
                 this.pos_widget.action_bar.destroy_buttons();
+            }
+        },
+        // we need this because some screens re-render themselves when they are hidden
+        // (due to some events, or magic, or both...)  we must make sure they remain hidden.
+        // the good solution would probably be to make them not re-render themselves when they
+        // are hidden. 
+        renderElement: function(){
+            this._super();
+            if(this.hidden){
+                if(this.$element){
+                    this.$element.hide();
+                }
             }
         },
     });
@@ -182,11 +199,11 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this._super();
             var self = this;
             this.$element.find('.receipt').off('click').click(function(){
-                console.log('receipt!');     //TODO
+                console.log('TODO receipt');     //TODO
                 self.pos_widget.screen_selector.set_current_screen('scan');
             });
             this.$element.find('.invoice').off('click').click(function(){
-                console.log('invoice!');     //TODO
+                console.log('TODO invoice');     //TODO
                 self.pos_widget.screen_selector.set_current_screen('scan');
             });
         },
@@ -678,7 +695,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         show: function(){
             this._super();
             var self = this;
-            console.log('Payment Screen!');
 
             this.pos_widget.set_numpad_visible(true);
             this.pos_widget.set_leftpane_visible(true);
@@ -721,7 +737,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.currentOrderLines.bind('all', this.updatePaymentSummary, this);
         },
         change_selected_order: function() {
-            console.log('change_selected_order');
             this.currentPaymentLines.unbind();
             this.bindPaymentLineEvents();
             this.currentOrderLines.unbind();
@@ -729,7 +744,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.renderElement();
         },
         addPaymentLine: function(newPaymentLine) {
-            console.log('addPaymentLine:',newPaymentLine);
             var x = new module.PaymentlineWidget(null, {
                     payment_line: newPaymentLine
                 });
