@@ -41,9 +41,18 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         // Bind kanban cards dropdown menus
         this.$element.on('click', '.oe_kanban_menuaction', function() {
             var $menu = $(this).next('.oe_kanban_menu');
-            var toggle = $menu.is(':visible');
+            var show = !$menu.is(':visible');
             self.$element.find('.oe_kanban_menu').hide();
-            $menu.toggle(!toggle);
+            var doc_width = $(document).width();
+            $menu.toggle(show);
+            if (show) {
+                var offset = $menu.offset();
+                var menu_width = $menu.width();
+                var x = doc_width - offset.left - menu_width - 15;
+                if (x < 0) {
+                    $menu.offset({ left: offset.left + x }).width(menu_width);
+                }
+            }
             return false;
         });
         $('html').on('click', function() {
