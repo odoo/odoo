@@ -16,8 +16,8 @@
     assert applicant_ids, "Applicant is not created after getting the mail"
     applicant = self.browse(cr, uid, applicant_ids[0], context=context)
     resume_ids = self.pool.get('ir.attachment').search(cr, uid, [('datas_fname','=','resume.doc'),('res_model','=',self._name),('res_id','=',applicant.id)])
-    assert applicant.name == "Application for the post of Jr.application Programmer.", "Subject does not match"
-    assert applicant.state == "draft"
+    assert applicant.name == "Application for the post of Jr.application Programmer.", "Applicant name does not match."
+    assert applicant.state == "draft", "Applicant state should be 'draft'."
     assert len(resume_ids), "Resume does not attached."
 -
   I refuse applicant for the Recruitment.
@@ -91,7 +91,7 @@
 -
   I check that applicant is "Hired".
 -
-  !assert {model: hr.applicant, id: hr_case_programmer}:
+  !assert {model: hr.applicant, id: hr_case_programmer, string: Applicant state is done}:
     - state == 'done'
 -
   I do not give employment to the hired the applicant.

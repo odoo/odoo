@@ -232,11 +232,22 @@ class hr_applicant(crm.crm_case, osv.osv):
     def stage_find(self, cr, uid, section_id, domain=[], order='sequence', context=None):
         domain = list(domain)
         if section_id:
-            domain.append(('department_id', '=', section_id))
+            pass
+            #domain.append(('department_id', '=', section_id))
         stage_ids = self.pool.get('hr.recruitment.stage').search(cr, uid, domain, order=order, context=context)
         if stage_ids:
             return stage_ids[0]
         return False
+
+    def stage_set_with_state_name(self, cr, uid, cases, state_name, context=None):
+        """ TODO
+        """
+        for case in cases:
+            department_id = case.department_id.id if case.department_id else None
+            stage_id = self.stage_find(cr, uid, department_id, [('state', '=', state_name)], context=context)
+            if stage_id:
+                self.stage_set(cr, uid, [case.id], stage_id, context=context)
+        return True
 
     def stage_previous(self, cr, uid, ids, context=None):
         """ This function computes previous stage for case from its current stage
