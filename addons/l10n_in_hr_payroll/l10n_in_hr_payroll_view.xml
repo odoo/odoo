@@ -12,7 +12,7 @@
             <data>
                  <xpath expr="/form/notebook/page[@name='information']/group[@name='right_column']/field[@name='struct_id']" position="after">
                     <field name="food_coupon_amount"/>
-                    <field name="No_of_year"/>
+                    <field name="number_of_year"/>
                  <group col="2" colspan="2" name="right_column">
                     <separator colspan="2" string="Allowance"/>
                         <field name="short_term_gain"/>
@@ -35,6 +35,18 @@
             </data>
             </field>
         </record>
-
+        <record id="hr_employee_form_inherit" model="ir.ui.view">
+            <field name="name">hr.employee.form.inherit</field>
+            <field name="model">hr.employee</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+            <data>
+                 <xpath expr="//field[@name='job_id']" position="after">
+                    <field name="join_date"/>
+                 </xpath>
+            </data>
+            </field>
+        </record>
     </data>
 </openerp>
