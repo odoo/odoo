@@ -615,6 +615,17 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
             case 'edit':
                 this.do_edit_resource($option.data('model'), $option.data('id'), { name : $option.text() });
                 break;
+            case 'manage_filters':
+                this.do_action({
+                    res_model: 'ir.filters',
+                    views: [[false, 'list'], [false, 'form']],
+                    type: 'ir.actions.act_window',
+                    context: {
+                        search_default_my_filters: true,
+                        search_default_model_id: this.dataset.model
+                    }
+                });
+                break;
             default:
                 if (val) {
                     console.log("No debug handler for ", val);
@@ -689,7 +700,7 @@ instance.web.Sidebar = instance.web.Widget.extend({
         var view = this.getParent();
         this.sections = [
             { 'name' : 'print', 'label' : _t('Print'), },
-            { 'name' : 'files', 'label' : _t('Attachement'), },
+            { 'name' : 'files', 'label' : _t('Attachment'), },
             { 'name' : 'other', 'label' : _t('More'), }
         ];
         this.items = {

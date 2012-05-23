@@ -521,14 +521,7 @@ instance.web.Login =  instance.web.Widget.extend({
     do_login: function (db, login, password) {
         var self = this;
         this.$element.removeClass('oe_login_invalid');
-        this.session.on_session_invalid.add({
-            callback: function () {
-                self.$element.addClass("oe_login_invalid");
-            },
-            unique: true
-        });
         this.session.session_authenticate(db, login, password).then(function() {
-            self.$element.removeClass("oe_login_invalid");
             if (self.has_local_storage) {
                 if(self.remember_credentials) {
                     localStorage.setItem('last_db_login_success', db);
@@ -542,6 +535,10 @@ instance.web.Login =  instance.web.Widget.extend({
                     localStorage.setItem('last_password_login_success', '');
                 }
             }
+            self.$(".oe_login_pane").fadeOut("slow");
+            self.trigger("login");
+        },function () {
+            self.$element.addClass("oe_login_invalid");
         });
     }
 });
@@ -849,47 +846,53 @@ instance.web.WebClient = instance.web.Widget.extend({
         var self = this;
         this.$element.addClass("openerp openerp-web-client-container");
         if (jQuery.param !== undefined && jQuery.deparam(jQuery.param.querystring()).kitten !== undefined) {
-            this.$element.addClass("kitten-mode-activated");
-            this.$element.delegate('img.oe-record-edit-link-img', 'hover', function(e) {
+            self.$element.addClass("kitten-mode-activated");
+            self.$element.delegate('img.oe-record-edit-link-img', 'hover', function(e) {
                 self.$element.toggleClass('clark-gable');
             });
         }
         this.session.session_bind().then(function() {
+            self.destroy_content();
+            self.show_common();
             if (!self.session.session_is_valid()) {
                 self.show_login();
-            }
-        });
-        this.session.on_session_valid.add(function() {
-            self.show_application();
-
-            if(self.action_manager)
-                self.action_manager.destroy();
-            self.action_manager = new instance.web.ActionManager(self);
-            self.action_manager.appendTo(self.$element.find('.oe_application'));
-            self.bind_hashchange();
-            var version_label = _t("OpenERP - Unsupported/Community Version");
-            if (!self.session.openerp_entreprise) {
-                self.$element.find('.oe_footer_powered').append(_.str.sprintf('<span> - <a href="http://www.openerp.com/support-or-publisher-warranty-contract" target="_blank">%s</a></span>', version_label));
-                document.title = version_label;
+            } else {
+                self.show_application();
             }
         });
         this.$element.on('mouseenter', '.oe_systray > div:not([data-tipsy=true])', function() {
             $(this).attr('data-tipsy', 'true').tipsy().trigger('mouseenter');
         });
     },
+    show_common: function() {
+        var self = this;
+        this.crashmanager =  new instance.web.CrashManager();
+        instance.connection.on_rpc_error.add(this.crashmanager.on_rpc_error);
+        window.onerror = function (message, file, line) {
+            self.crashmanager.on_traceback({
+                type: _t("Client Error"),
+                message: message,
+                data: {debug: file + ':' + line}
+            });
+        };
+        self.notification = new instance.web.Notification(this);
+        self.notification.appendTo(self.$element);
+        self.loading = new instance.web.Loading(self);
+        self.loading.appendTo(self.$element);
+        self.login = new instance.web.Login(self);
+        self.login.on("login",self,self.show_application);
+        self.$table = $(QWeb.render("WebClient", {}));
+        self.action_manager = new instance.web.ActionManager(self);
+        self.action_manager.appendTo(self.$table.find('.oe_application'));
+    },
     show_login: function() {
         var self = this;
-        this.destroy_content();
-        this.show_common();
-        self.login = new instance.web.Login(self);
         self.login.appendTo(self.$element);
     },
     show_application: function() {
         var self = this;
-        this.destroy_content();
-        this.show_common();
-        self.$table = $(QWeb.render("WebClient", {}));
         self.$element.append(self.$table);
+        self.login.$element.hide();
         self.menu = new instance.web.Menu(self);
         self.menu.replace(this.$element.find('.oe_menu_placeholder'));
         self.menu.on('menu_click', this, this.on_menu_action);
@@ -898,24 +901,12 @@ instance.web.WebClient = instance.web.Widget.extend({
         self.user_menu.on_menu_logout.add(this.proxy('on_logout'));
         self.user_menu.on_action.add(this.proxy('on_menu_action'));
         self.user_menu.do_update();
-    },
-    show_common: function() {
-        var self = this;
-        if (!this.crashmanager) {
-            this.crashmanager =  new instance.web.CrashManager();
-            instance.connection.on_rpc_error.add(this.crashmanager.on_rpc_error);
-            window.onerror = function (message, file, line) {
-                self.crashmanager.on_traceback({
-                    type: _t("Client Error"),
-                    message: message,
-                    data: {debug: file + ':' + line}
-                });
-            };
+        self.bind_hashchange();
+        var version_label = _t("OpenERP - Unsupported/Community Version");
+        if (!self.session.openerp_entreprise) {
+            self.$element.find('.oe_footer_powered').append(_.str.sprintf('<span> - <a href="http://www.openerp.com/support-or-publisher-warranty-contract" target="_blank">%s</a></span>', version_label));
+            document.title = version_label;
         }
-        this.notification = new instance.web.Notification(this);
-        this.notification.appendTo(this.$element);
-        this.loading = new instance.web.Loading(this);
-        this.loading.appendTo(this.$element);
     },
     destroy_content: function() {
         _.each(_.clone(this.getChildren()), function(el) {
