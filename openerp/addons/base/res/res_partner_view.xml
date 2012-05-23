@@ -491,49 +491,28 @@
                     <field name="state_id"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <t t-set="color" t-value="kanban_color(record.color.raw_value)"/>
-                            <div t-att-class="color + (record.title.raw_value == 1 ? ' oe_kanban_color_alert' : '')">
-                                <div class="oe_module_vignette">
+                            <div class="oe_kanban_vignette">
                                 <a type="edit">
-                                    <img t-att-src="kanban_image('res.partner', 'photo', record.id.value)" width="64" height="64" class="oe_module_icon"/>
+                                    <img t-att-src="kanban_image('res.partner', 'photo', record.id.value)" class="oe_kanban_image"/>
                                 </a>
-                                    <div class="oe_module_desc">
-                                        <div class="oe_kanban_box_content oe_kanban_box_show_onclick_trigger oe_kanban_color_border">
-                                            <table class="oe_kanban_table">
-                                                <tr>
-                                                    <td class="oe_kanban_title1" align="left" valign="middle">
-                                                        <h4 class="oe_partner_heading"><a type="edit"><field name="name"/></a>
-                                                            <div t-if="record.parent_id.raw_value"><field name="parent_id"/></div>
-                                                        </h4>
-                                                            <i><div t-if="record.contact_address.raw_value"><field name="contact_address"/><br/></div>
-                                                            <div t-if="record.email.raw_value">
-                                                            <field name="email"/><br/></div>
-                                                            <div t-if="record.mobile.raw_value">
-                                                            <field name="mobile"/><br/>
-                                                            </div>
-                                                            <div t-if="!record.mobile.raw_value and record.phone.raw_value">
-                                                            <field name="phone"/><br/>
-                                                            </div></i>
-                                                    </td>
-                                                    <td t-if="record.is_company.raw_value" valign="top" align="right">
-                                                        <!--img t-att-src="kanban_image('res.partner', 'photo', record.id.value)" class="oe_kanban_gravatar"/-->
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                                        <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
-                                            <div class="oe_kanban_left">
-                                                <a string="Edit" icon="gtk-edit" type="edit"/>
-                                                <a string="Change Color" icon="color-picker" type="color" name="color"/>
-                                                <a t-if="record.email.raw_value" title="Mail" t-att-href="'mailto:'+record.email.value" style="text-decoration: none;" >
-                                                    <img src="/web/static/src/img/icons/terp-mail-message-new.png" border="0" width="16" height="16"/>
-                                                </a>
-                                            </div>
-                                            <br class="oe_kanban_clear"/>
-                                    </div>
-                                    </div>
+                                <div class="oe_kanban_details">
+                                      <h4 class="oe_partner_heading"><a type="edit"><field name="name"/></a>
+                                      </h4>
+                                      <ul>
+                                          <li t-if="record.parent_id.raw_value and !record.function.raw_value"><field name="parent_id"/></li>
+                                          <li t-if="!record.parent_id.raw_value and record.function.raw_value"><field name="function"/></li>
+                                          <li t-if="record.parent_id.raw_value and record.function.raw_value"><field name="function"/> at <field name="parent_id"/></li>
+                                          <li t-if="record.city.raw_value and !record.country.raw_value"><field name="city"/></li>
+                                          <li t-if="!record.city.raw_value and record.country.raw_value"><field name="country"/></li>
+                                          <li t-if="record.city.raw_value and record.country.raw_value"><field name="city"/>, <field name="country"/></li>
+                                          <li t-if="record.mobile.raw_value"><field name="mobile"/></li>
+                                          <li t-if="record.phone.raw_value">Tel: <field name="phone"/></li>
+                                          <li t-if="record.mobile.raw_value">Mobile: <field name="mobile"/></li>
+                                          <li t-if="record.email.raw_value"><a t-attf-href="mailto:#{record.email.raw_value}"><field name="email"/></a></li>
+                                      </ul>
                                 </div>
                             </div>
+
                         </t>
                     </templates>
                 </kanban>
@@ -717,3 +696,4 @@
 
     </data>
 </openerp>
+
