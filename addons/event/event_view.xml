@@ -163,29 +163,6 @@
                             </form>
                             </field>
                     </page>
-
-                    <page string="Speakers">
-                        <field name="main_speaker_id" domain="[('speaker','=',True)]" context="{'default_speaker':1}"/>
-                        <field name="speaker_confirmed"/>
-                        <separator string="Other Speakers" colspan="4"/>
-                        <field name="speaker_ids" domain="[('speaker','=',True)]" context="{'default_speaker':1}" colspan="4" nolabel="1"/>
-                    </page>
-                    <page string="Extra Info">
-                        <group col="2" colspan="2">
-                            <separator string="Registrations" colspan="2"/>
-                            <field name="register_min"/>
-                            <field name="register_max"/>
-                            <field name="register_prospect"/>
-                            <field name="register_current"/>
-                            <field name="register_attended"/>
-                        </group>
-                        <group col="2" colspan="2">
-                            <separator string="Emails" colspan="2"/>
-                            <field name="reply_to"/>
-                            <field name="email_registration_id" domain="[('model_id.model','=','event.registration')]"/>
-                            <field name="email_confirmation_id" domain="[('model_id.model','=','event.registration')]"/>
-                        </group>
-                    </page>
                     </notebook>
             </sheet>
             </form>
