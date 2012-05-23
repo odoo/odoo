@@ -75,8 +75,8 @@
                         </group>
                         <field name="user_id"/>
                         <field name="version_id" colspan="2" widget="selection"/>
-                        <group colspan="2" col="4" attrs="{'invisible': [('type_id','=', False)]}">
-                            <field name="type_id" string="Stages" />
+                        <group colspan="2" col="4" attrs="{'invisible': [('stage_id','=', False)]}">
+                            <field name="stage_id"/>
                             <button name="prev_type" string="Previous" type="object" icon="gtk-go-back" help="Change to Previous Stage"/>
                             <button name="next_type" string="Next" type="object" icon="gtk-go-forward" help="Change to Next Stage"/>
                         </group>
@@ -138,9 +138,9 @@
                     <field name="partner_id"/>
                     <field name="project_id" />
                     <field name="priority" string="Priority"/>
-                    <field name="type_id" widget="selection" readonly="1" string="Stages" />
-                    <button name="prev_type" string="Previous" type="object" icon="gtk-go-back" help="Change to Previous Stage" attrs="{'invisible': [('type_id','=', False)]}"/>
-                    <button name="next_type" string="Next" type="object" icon="gtk-go-forward" help="Change to Next Stage" attrs="{'invisible': [('type_id','=', False)]}"/>
+                    <field name="stage_id" widget="selection" readonly="1"/>
+                    <button name="prev_type" string="Previous" type="object" icon="gtk-go-back" help="Change to Previous Stage" attrs="{'invisible': [('stage_id','=', False)]}"/>
+                    <button name="next_type" string="Next" type="object" icon="gtk-go-forward" help="Change to Next Stage" attrs="{'invisible': [('stage_id','=', False)]}"/>
                     <field name="version_id" widget="selection"/>
                     <field name="user_id"/>
                     <field name="progress" widget="progressbar" attrs="{'invisible':[('task_id','=',False)]}"/>
@@ -193,7 +193,7 @@
                         <filter string="Priority" icon="terp-rating-rated" domain="[]"
                             context="{'group_by':'priority'}" />
                         <filter string="Stage" icon="terp-stage" domain="[]"
-                            context="{'group_by':'type_id'}" />
+                            context="{'group_by':'stage_id'}" />
                         <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]"
                             context="{'group_by':'state'}" />
                         <separator orientation="vertical" />
@@ -225,7 +225,7 @@
         <field name="model">project.issue</field>
         <field name="type">kanban</field>
         <field name="arch" type="xml">
-            <kanban default_group_by="type_id">
+            <kanban default_group_by="stage_id">
                 <field name="color"/>
                 <field name="state" groups="base.group_no_one"/>
                 <field name="priority"/>
@@ -305,7 +305,7 @@
                     <field name="name" string="Feature description"/>
                     <field name="partner_id"/>
                     <field name="priority" string="Priority"/>
-                    <field name="type_id" widget="selection" readonly="1"/>
+                    <field name="stage_id" widget="selection" readonly="1"/>
                     <button name="prev_type" string="Previous" type="object" icon="gtk-go-back" help="Change to Previous Stage"/>
                     <button name="next_type" string="Next" type="object" icon="gtk-go-forward" help="Change to Next Stage"/>
                     <field name="version_id"/>

@@ -175,7 +175,7 @@ class project_issue(crm.crm_case, osv.osv):
         'partner_id': fields.many2one('res.partner', 'Partner', select=1),
         'company_id': fields.many2one('res.company', 'Company'),
         'description': fields.text('Description'),
-        'state': fields.related('type_id', 'state', type="selection", store=True,
+        'state': fields.related('stage_id', 'state', type="selection", store=True,
                 selection=_ISSUE_STATE, string="State", readonly=True,
                 help='The state is set to \'Draft\', when a case is created.\
                       If the case is in progress the state is set to \'Open\'.\
@@ -192,7 +192,7 @@ class project_issue(crm.crm_case, osv.osv):
         'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('object_id.model', '=', 'crm.project.bug')]"),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
         'version_id': fields.many2one('project.issue.version', 'Version'),
-        'type_id': fields.many2one ('project.task.type', 'Stages', domain="[('project_ids', '=', project_id)]"),
+        'stage_id': fields.many2one ('project.task.type', 'Stages', domain="[('project_ids', '=', project_id)]"),
         'project_id':fields.many2one('project.project', 'Project'),
         'duration': fields.float('Duration'),
         'task_id': fields.many2one('project.task', 'Task', domain="[('project_id','=',project_id)]"),
@@ -316,35 +316,22 @@ class project_issue(crm.crm_case, osv.osv):
     def convert_to_bug(self, cr, uid, ids, context=None):
         return self._convert(cr, uid, ids, 'bug_categ', context=context)
 
-    def next_type(self, cr, uid, ids, context=None):
-        for task in self.browse(cr, uid, ids):
-            typeid = task.type_id.id
-            types = map(lambda x:x.id, task.project_id.type_ids or [])
-            if types:
-                if not typeid:
-                    self.write(cr, uid, [task.id], {'type_id': types[0]})
-                elif typeid and typeid in types and types.index(typeid) != len(types)-1 :
-                    index = types.index(typeid)
-                    self.write(cr, uid, [task.id], {'type_id': types[index+1]})
-        return True
-
-    def prev_type(self, cr, uid, ids, context=None):
-        for task in self.browse(cr, uid, ids):
-            typeid = task.type_id.id
-            types = map(lambda x:x.id, task.project_id and task.project_id.type_ids or [])
-            if types:
-                if typeid and typeid in types:
-                    index = types.index(typeid)
-                    self.write(cr, uid, [task.id], {'type_id': index and types[index-1] or False})
-        return True
-
+    def copy(self, cr, uid, id, default=None, context=None):
+        issue = self.read(cr, uid, id, ['name'], context=context)
+        if not default:
+            default = {}
+        default = default.copy()
+        default['name'] = issue['name'] + _(' (copy)')
+        return super(project_issue, self).copy(cr, uid, id, default=default,
+                context=context)
+    
     def write(self, cr, uid, ids, vals, context=None):
         #Update last action date every time the user change the stage, the state or send a new email
-        logged_fields = ['type_id', 'state', 'message_ids']
+        logged_fields = ['stage_id', 'state', 'message_ids']
         if any([field in vals for field in logged_fields]):
             vals['date_action_last'] = time.strftime('%Y-%m-%d %H:%M:%S')
-        if vals.get('type_id', False):
-            stage = self.pool.get('project.task.type').browse(cr, uid, vals['type_id'], context=context)
+        if vals.get('stage_id', False):
+            stage = self.pool.get('project.task.type').browse(cr, uid, vals['stage_id'], context=context)
             self.message_append_note(cr, uid, ids, body=_("Stage changed to <b>%s</b>.") % stage.name, context=context)
         return super(project_issue, self).write(cr, uid, ids, vals, context)
 
@@ -367,6 +354,32 @@ class project_issue(crm.crm_case, osv.osv):
         self.create_send_note(cr, uid, [obj_id], context=context)
         return obj_id
 
+    # -------------------------------------------------------
+    # Stage management
+    # -------------------------------------------------------
+    
+    def next_type(self, cr, uid, ids, context=None):
+        for task in self.browse(cr, uid, ids):
+            typeid = task.type_id.id
+            types = map(lambda x:x.id, task.project_id.type_ids or [])
+            if types:
+                if not typeid:
+                    self.write(cr, uid, [task.id], {'stage_id': types[0]})
+                elif typeid and typeid in types and types.index(typeid) != len(types)-1 :
+                    index = types.index(typeid)
+                    self.write(cr, uid, [task.id], {'stage_id': types[index+1]})
+        return True
+
+    def prev_type(self, cr, uid, ids, context=None):
+        for task in self.browse(cr, uid, ids):
+            typeid = task.type_id.id
+            types = map(lambda x:x.id, task.project_id and task.project_id.type_ids or [])
+            if types:
+                if typeid and typeid in types:
+                    index = types.index(typeid)
+                    self.write(cr, uid, [task.id], {'stage_id': index and types[index-1] or False})
+        return True
+
     def case_open(self, cr, uid, ids, context=None):
         res = super(project_issue, self).case_open(cr, uid, ids, context)
         self.write(cr, uid, ids, {'date_open': time.strftime('%Y-%m-%d %H:%M:%S'), 'user_id' : uid})
@@ -388,6 +401,10 @@ class project_issue(crm.crm_case, osv.osv):
             self.case_escalate_send_note(cr, uid, [case.id], context)
         return True
 
+    # -------------------------------------------------------
+    # Mail gateway
+    # -------------------------------------------------------
+    
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
         """Automatically called when new email message arrives"""
         if context is None:
@@ -454,15 +471,6 @@ class project_issue(crm.crm_case, osv.osv):
         self.write(cr, uid, ids, {'message_state':'unread'}, context=context)
         self.message_append_dict(cr, uid, ids, msg, context=context)
         return res
-
-    def copy(self, cr, uid, id, default=None, context=None):
-        issue = self.read(cr, uid, id, ['name'], context=context)
-        if not default:
-            default = {}
-        default = default.copy()
-        default['name'] = issue['name'] + _(' (copy)')
-        return super(project_issue, self).copy(cr, uid, id, default=default,
-                context=context)
     
     # -------------------------------------------------------
     # OpenChatter methods and notifications
