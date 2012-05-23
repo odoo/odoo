@@ -840,6 +840,7 @@ instance.web.ViewEditor =   instance.web.OldWidget.extend({
             'string' : {'name':'string', 'string': 'String', 'type': 'char'},
             'required' : {'name':'required', 'string': 'Required', 'type': 'boolean'},
             'readonly' : {'name':'readonly', 'string': 'Readonly', 'type': 'boolean'},
+            'invisible' : {'name':'invisible', 'string': 'Invisible', 'type': 'boolean'},
             'domain' : {'name':'domain', 'string': 'Domain', 'type': 'char'},
             'context' : {'name':'context', 'string': 'Context', 'type': 'char'},
             'limit' : {'name':'limit', 'string': 'Limit', 'type': 'float'},
@@ -1135,12 +1136,12 @@ instance.web.ViewEditor.FieldFloat = instance.web.ViewEditor.FieldChar.extend({
 });
 
 var _PROPERTIES = {
-    'field' : ['name', 'string', 'required', 'readonly', 'domain', 'context', 'nolabel', 'completion',
+    'field' : ['name', 'string', 'required', 'readonly','invisible', 'domain', 'context', 'nolabel', 'completion',
                'colspan', 'widget', 'eval', 'ref', 'on_change', 'attrs', 'groups'],
     'form' : ['string', 'col', 'link'],
     'notebook' : ['colspan', 'position', 'groups'],
     'page' : ['string', 'states', 'attrs', 'groups'],
-    'group' : ['string', 'col', 'colspan', 'states', 'attrs', 'groups'],
+    'group' : ['string', 'col', 'colspan','invisible', 'states', 'attrs', 'groups'],
     'image' : ['filename', 'width', 'height', 'groups'],
     'separator' : ['string', 'colspan', 'groups'],
     'label': ['string', 'align', 'colspan', 'groups'],
