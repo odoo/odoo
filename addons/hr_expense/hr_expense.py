@@ -79,13 +79,14 @@ class hr_expense_expense(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'state': fields.selection([
             ('draft', 'New'),
+            ('cancelled', 'Refused'),
             ('confirm', 'Waiting Approval'),
             ('accepted', 'Approved'),
             ('invoiced', 'Invoiced'),
-            ('paid', 'Reimbursed'),
-            ('cancelled', 'Refused')],
-            'State', readonly=True, help='When the expense request is created the state is \'Draft\'.\n It is confirmed by the user and request is sent to admin, the state is \'Waiting Confirmation\'.\
-            \nIf the admin accepts it, the state is \'Accepted\'.\n If an invoice is made for the expense request, the state is \'Invoiced\'.\n If the expense is paid to user, the state is \'Reimbursed\'.'),
+            ('paid', 'Reimbursed')
+            ],
+            'Status', readonly=True, help='When the expense request is created the status is \'Draft\'.\n It is confirmed by the user and request is sent to admin, the status is \'Waiting Confirmation\'.\
+            \nIf the admin accepts it, the status is \'Accepted\'.\n If an invoice is made for the expense request, the status is \'Invoiced\'.\n If the expense is paid to user, the status is \'Reimbursed\'.'),
     }
     _defaults = {
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'hr.employee', context=c),

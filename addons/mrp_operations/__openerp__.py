@@ -29,7 +29,7 @@
 This module adds state, date_start,date_stop in production order operation lines (in the "Work Centers" tab).
 =============================================================================================================
 
-State: draft, confirm, done, cancel
+Status: draft, confirm, done, cancel
 When finishing/confirming,cancelling production orders set all state lines to the according state
 
 Create menus:
