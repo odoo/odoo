@@ -4,10 +4,6 @@
 
         <!-- Contribution Register -->
 
-        <record id="hr_houserent_register" model="hr.contribution.register">
-            <field name="name">House Rent Allowance Register</field>
-        </record>
-
         <record id="hr_provident_fund_register" model="hr.contribution.register">
             <field name="name">Provident Fund Register</field>
         </record>
@@ -16,45 +12,7 @@
             <field name="name">Professional Tax Register</field>
         </record>
 
-        <record id="hr_food_coupon_register" model="hr.contribution.register">
-            <field name="name">Food coupon Register</field>
-        </record>
-
         <!-- Salary Rules -->
-
-        <record id="hr_salary_rule_houserentallowancemetro" model="hr.salary.rule">
-            <field name="code">HRAM</field>
-            <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = (contract.wage + DA) * 0.50</field>
-            <field name="category_id" ref="hr_payroll.ALW"/>
-            <field name="register_id" ref="hr_houserent_register"/>
-            <field name="name">House Rent Allowance for metro city</field>
-            <field name="sequence" eval="80"/>
-            <field name="note">Rent receipts can be shown for taking tax benefit for living in a rented house.
-Income tax exemption for HRA will be least of following:
-    1. The actual amount of HRA received as a part of salary.
-    2. 40% (if living in non-metro area).
-    3. Rent paid minus 10% of (basic salary+DA).
-    Read more: http://www.pankajbatra.com/finance/income-tax-calculator-2012-2013-2014/#ixzz1upoomH73
-            </field>
-        </record>
-
-        <record id="hr_salary_rule_houserentallowancenonmetro" model="hr.salary.rule">
-            <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = (contract.wage + DA) * 0.40</field>
-            <field name="code">HRANM</field>
-            <field name="category_id" ref="hr_payroll.ALW"/>
-            <field name="register_id" ref="hr_houserent_register"/>
-            <field name="name">House Rent Allowance for non metro city</field>
-            <field name="sequence" eval="79"/>
-            <field name="note">Rent receipts can be shown for taking tax benefit for living in a rented house.
-Income tax exemption for HRA will be least of following:
-    1. The actual amount of HRA received as a part of salary.
-    2. 50% (if living in metro area) of (basic salary+Dearness allowance (DA)).
-    3. Rent paid minus 10% of (basic salary+DA).
-    Read more: http://www.pankajbatra.com/finance/income-tax-calculator-2012-2013-2014/#ixzz1upoomH73
-             </field>
-         </record>
 
         <record id="hr_salary_rule_convanceallowance1" model="hr.salary.rule">
             <field name="amount_select">fix</field>
@@ -96,20 +54,6 @@ Read more: http://www.pankajbatra.com/finance/income-tax-calculator-2012-2013-20
             <field name="name">Conveyance Allowance For Paolino</field>
             <field name="sequence" eval="15"/>
         </record>
-
-        <record id="hr_salary_rule_food_coupon" model="hr.salary.rule">
-            <field name="amount_select">code</field>
-            <field eval="10" name="amount_fix"/>
-            <field name="quantity">worked_days.WORK100.number_of_days</field>
-            <field name="code">FC</field>
-            <field name="category_id" ref="hr_payroll.ALW"/>
-            <field name="register_id" ref="hr_food_coupon_register"/>
-            <field name="condition_select">python</field>
-            <field name="condition_python">result = bool(contract.food_coupon_amount)</field>
-            <field name="name">Food Coupons</field>
-            <field name="amount_python_compute">result = worked_days.WORK100.number_of_days * contract.food_coupon_amount</field>
-            <field name="sequence" eval="16"/>
-         </record>
 
         <record id="hr_salary_rule_sales_commission" model="hr.salary.rule">
             <field name="amount_select">code</field>

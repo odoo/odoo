@@ -1,8 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+        <!-- Contribution Register -->
+
+        <record id="hr_houserent_register" model="hr.contribution.register">
+            <field name="name">House Rent Allowance Register</field>
+        </record>
+
+        <record id="hr_food_coupon_register" model="hr.contribution.register">
+            <field name="name">Food coupon Register</field>
+        </record>
 
         <!-- Hr Salary Rules-->
+
+        <record id="hr_salary_rule_houserentallowancemetro" model="hr.salary.rule">
+            <field name="code">HRAM</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = (contract.wage + DA) * 0.50</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="register_id" ref="hr_houserent_register"/>
+            <field name="name">House Rent Allowance for metro city</field>
+            <field name="sequence" eval="80"/>
+            <field name="note">Rent receipts can be shown for taking tax benefit for living in a rented house.
+Income tax exemption for HRA will be least of following:
+    1. The actual amount of HRA received as a part of salary.
+    2. 40% (if living in non-metro area).
+    3. Rent paid minus 10% of (basic salary+DA).
+    Read more: http://www.pankajbatra.com/finance/income-tax-calculator-2012-2013-2014/#ixzz1upoomH73
+            </field>
+        </record>
+
+        <record id="hr_salary_rule_houserentallowancenonmetro" model="hr.salary.rule">
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = (contract.wage + DA) * 0.40</field>
+            <field name="code">HRANM</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="register_id" ref="hr_houserent_register"/>
+            <field name="name">House Rent Allowance for non metro city</field>
+            <field name="sequence" eval="79"/>
+            <field name="note">Rent receipts can be shown for taking tax benefit for living in a rented house.
+Income tax exemption for HRA will be least of following:
+    1. The actual amount of HRA received as a part of salary.
+    2. 50% (if living in metro area) of (basic salary+Dearness allowance (DA)).
+    3. Rent paid minus 10% of (basic salary+DA).
+    Read more: http://www.pankajbatra.com/finance/income-tax-calculator-2012-2013-2014/#ixzz1upoomH73
+             </field>
+         </record>
+
+        <record id="hr_salary_rule_food_coupon" model="hr.salary.rule">
+            <field name="amount_select">code</field>
+            <field eval="10" name="amount_fix"/>
+            <field name="quantity">worked_days.WORK100.number_of_days</field>
+            <field name="code">FC</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="register_id" ref="hr_food_coupon_register"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = bool(contract.food_coupon_amount)</field>
+            <field name="name">Food Coupons</field>
+            <field name="amount_python_compute">result = worked_days.WORK100.number_of_days * contract.food_coupon_amount</field>
+            <field name="sequence" eval="16"/>
+         </record>
 
         <record id="hr_salary_rule_da" model="hr.salary.rule">
             <field name="code">DA</field>
@@ -451,6 +508,7 @@ read more: http://www.citehr.com/270132-labour-welfare-fund-deduction-salary.htm
             <field name="amount_select">code</field>
             <field name="amount_python_compute">result = - (contract.wage + DA) * 0.12</field>
             <field name="sequence" eval="122"/>
+            <field name="note">Both the employees and employer contribute to the fund at the rate of 12% of the basic wages, dearness allowance and retaining allowance, if any, payable to employees per month.</field>
         </record>
         
         <record id="hr_payslip_rule_empPF" model="hr.salary.rule">
@@ -459,6 +517,7 @@ read more: http://www.citehr.com/270132-labour-welfare-fund-deduction-salary.htm
             <field name="category_id" ref="hr_payroll.DED"/>
             <field name="amount_select">code</field>
             <field name="amount_python_compute">result = - (contract.wage + DA) * 8.33 / 100</field>
+            <field name= "note">Employer contribution does not become part of employee’s income and hence income tax is not payable on this part.</field>
             <field name="sequence" eval="123"/>
         </record>
         
@@ -469,6 +528,7 @@ read more: http://www.citehr.com/270132-labour-welfare-fund-deduction-salary.htm
             <field name="amount_select">code</field>
             <field name="amount_python_compute">result = - (contract.wage + DA) * 0.10</field>
             <field name="sequence" eval="126"/>
+            <field name= "note">Any amount contributed by your employer to your NPS account is treated as part of your salary and is included in your income but you can claim deduction under Section 80C for this too.thus, effectively making it exempt from tax within the limit of 10% of your basic salary. This is very useful and tax efficient for you particularly if you fall in the maximum tax.</field>
         </record>
         
         <record id="hr_payslip_rule_empNPF" model="hr.salary.rule">
@@ -478,8 +538,8 @@ read more: http://www.citehr.com/270132-labour-welfare-fund-deduction-salary.htm
             <field name="amount_select">code</field>
             <field name="amount_python_compute">result = - (contract.wage + DA) * 0.10</field>
             <field name="sequence" eval="125"/>
+            <field name="note">Employee can claim deduction even of employer's contribution to NPS.</field>
         </record>
-        
 
     </data>
 </openerp>
