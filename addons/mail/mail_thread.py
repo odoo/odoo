@@ -293,8 +293,7 @@ class mail_thread(osv.osv):
                     'res_id': thread.id,
                 }
                 to_attach.append(ir_attachment.create(cr, uid, data_attach, context=context))
-
-            partner_id = hasattr(thread, 'partner_id') and (thread.partner_id and thread.partner_id.id or False) or False
+            partner_id = ('partner_id' in thread._columns.keys()) and (thread.partner_id and thread.partner_id.id or False) or False
             if not partner_id and thread._name == 'res.partner':
                 partner_id = thread.id
             data = {
@@ -313,7 +312,6 @@ class mail_thread(osv.osv):
                 'res_id': thread.id,
                 'partner_id': partner_id,
             }
-
             if email_from or type == 'email':
                 for param in (email_to, email_cc, email_bcc):
                     if isinstance(param, list):
