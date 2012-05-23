@@ -104,9 +104,9 @@
                         <button name="ship_corrected" states="shipping_except" string="Ignore Exception"/>
                         <button name="action_quotation_sent" string="Send" type="object" states="draft"/>
                         <button name="manual_invoice" states="manual" string="Create Final Invoice" type="object"/>
-                        <button name="action_cancel_draft" states="sent,cancel" string="Set to Draft" type="object"/>
                         <button name="print_quotation" string="Print Quotation" type="object" states="draft"/>
                         <button name="order_confirm" states="draft,sent" string="Confirm Order" />
+                        <button name="action_cancel_draft" states="sent,cancel" string="Set to Draft" type="object"/>
                         <button name="action_view_invoice" string="Open Invoice" type="object" 
                         attrs="{'invisible': ['|','|',('state', '!=','progress'), ('invoiced', '=', True),('order_policy','=','picking')]}"/>
                         <button name="action_view_delivery" string="Open Delivery Order" type="object" 
