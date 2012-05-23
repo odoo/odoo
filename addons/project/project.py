@@ -172,7 +172,7 @@ class project(osv.osv):
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of Projects."),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', help="Link this project to an analytic account if you need financial management on projects. It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc.", ondelete="cascade", required=True),
         'priority': fields.integer('Sequence', help="Gives the sequence order when displaying the list of projects"),
-        'warn_manager': fields.boolean('Warn Manager', help="If you check this field, the project manager will receive an email each time a task is completed by his team.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
+        'warn_manager': fields.boolean('Notify Manager', help="If you check this field, the project manager will receive an email each time a task is completed by his team.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
 
         'members': fields.many2many('res.users', 'project_user_rel', 'project_id', 'uid', 'Project Members',
             help="Project's members are users who can have an access to the tasks related to this project.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
@@ -1338,7 +1338,7 @@ class project_task_history(osv.osv):
     _columns = {
         'task_id': fields.many2one('project.task', 'Task', ondelete='cascade', required=True, select=True),
         'type_id': fields.many2one('project.task.type', 'Stage'),
-        'state': fields.selection([('draft', 'New'), ('cancelled', 'Cancelled'),('open', 'In Progress'),('pending', 'Pending'), ('done', 'Done')], 'State'),
+        'state': fields.selection([('draft', 'New'), ('cancelled', 'Cancelled'),('open', 'In Progress'),('pending', 'Pending'), ('done', 'Done')], 'Status'),
         'kanban_state': fields.selection([('normal', 'Normal'),('blocked', 'Blocked'),('done', 'Ready To Pull')], 'Kanban State', required=False),
         'date': fields.date('Date', select=True),
         'end_date': fields.function(_get_date, string='End Date', type="date", store={

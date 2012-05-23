@@ -189,8 +189,8 @@ class crm_lead(crm_case, osv.osv):
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
         'date_closed': fields.datetime('Closed', readonly=True),
         'stage_id': fields.many2one('crm.case.stage', 'Stage', domain="[('section_ids', '=', section_id)]"),
-        'user_id': fields.many2one('res.users', 'Salesman'),
-        'referred': fields.char('Referred by', size=64),
+        'user_id': fields.many2one('res.users', 'Salesperson'),
+        'referred': fields.char('Referred By', size=64),
         'date_open': fields.datetime('Opened', readonly=True),
         'day_open': fields.function(_compute_day, string='Days to Open', \
                                 multi='day_open', type="float", store=True),
@@ -207,7 +207,7 @@ class crm_lead(crm_case, osv.osv):
         'subjects': fields.function(_get_email_subject, fnct_search=_history_search, string='Subject of Email', type='char', size=64),
 
         # Only used for type opportunity
-        'probability': fields.float('Probability (%)',group_operator="avg"),
+        'probability': fields.float('Success Rate (%)',group_operator="avg"),
         'planned_revenue': fields.float('Expected Revenue'),
         'ref': fields.reference('Reference', selection=crm._links_get, size=128),
         'ref2': fields.reference('Reference 2', selection=crm._links_get, size=128),

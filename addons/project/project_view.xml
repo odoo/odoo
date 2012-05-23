@@ -171,7 +171,6 @@
             view_mode="kanban,tree,form,calendar,graph"
             view_type="form"/>
 
-
         <record model="ir.ui.view" id="view_project_kanban">
             <field name="name">project.project.kanban</field>
             <field name="model">project.project</field>
@@ -270,9 +269,12 @@
             <field name="search_view_id" ref="view_project_project_filter"/>
             <field name="context">{}</field>
             <field name="help" type="xml"><p>You have no projects.</p>
-<p>Projects are used to organize your activities; plan tasks, track issues, invoice timesheets. You can define internal projects (R&amp;D, Improve Sales Process), private projects (My Todos) or customer ones.</p>
-<p>Click <i>'create'</i> to start a new project.</p>
-	    </field>
+                <p>Projects are used to organize your activities; plan tasks,
+                track issues, invoice timesheets. You can define internal
+                projects (R&amp;D, Improve Sales Process), private projects (My
+                Todos) or customer ones.</p>
+                <p>Click <i>'create'</i> to start a new project.</p>
+            </field>
         </record>
 
         <record id="open_view_template_project" model="ir.actions.act_window">
@@ -595,12 +597,10 @@
                         <filter string="Deadlines" context="{'deadline_visible': False}" domain="[('date_deadline','&lt;&gt;',False)]" help="Show only tasks having a deadline" icon="terp-gnome-cpu-frequency-applet+"/>
                         <separator orientation="vertical"/>
                         <field name="name"/>
-                        <field name="project_id" context="{'project_id':self}">
-                             <filter domain="[('project_id.user_id','=',uid)]" help="My Projects" icon="terp-personal"/>
-                        </field>
+                        <filter name="project" string="Project" domain="[('project_id.user_id','=',uid)]" help="My Projects" icon="terp-check"/>
                         <field name="user_id">
-                            <filter domain="[('user_id','=',uid)]"  help="My Tasks" icon="terp-personal" />
-                            <filter domain="[('user_id','=',False)]"  help="Unassigned Tasks" icon="terp-personal-" />
+                            <filter string="My Tasks" domain="[('user_id','=',uid)]"  help="My Tasks" icon="terp-personal" />
+                            <filter string="Unassigned Tasks" domain="[('user_id','=',False)]"  help="Unassigned Tasks" icon="terp-personal-" />
                         </field>
                     </group>
                     <newline/>
@@ -610,7 +610,7 @@
                         <filter string="Project" name="group_project_id" icon="terp-folder-violet" domain="[]" context="{'group_by':'project_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Stage" name="group_stage_id" icon="terp-stage" domain="[]" context="{'group_by':'type_id'}"/>
-                        <filter string="State" name="group_state" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}" groups="base.group_no_one"/>
+                        <filter string="Status" name="group_state" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Deadline" icon="terp-gnome-cpu-frequency-applet+" domain="[]" context="{'group_by':'date_deadline'}"/>
                         <separator orientation="vertical" groups="base.group_no_one"/>
@@ -630,7 +630,7 @@
             <field name="view_id" eval="False"/>
             <field name="context">{}</field>
             <field name="search_view_id" ref="view_task_search_form"/>
-            <field name="help">A task represents a work that has to be done. Each user works in his own list of tasks where he can record his task work in hours. He can work and close the task itself or delegate it to another user. If you delegate a task to another user, you get a new task in pending state, which will be reopened when you have to review the work achieved. If you install the project_timesheet module, task work can be invoiced based on the project configuration. With the project_mrp module, sales orders can create tasks automatically when they are confirmed.</field>
+            <field name="help">Tasks allow you to organize your work into a project. Click on button "Create" to create a new task.</field>
         </record>
         <record id="open_view_task_list_kanban" model="ir.actions.act_window.view">
             <field name="sequence" eval="0"/>

@@ -26,7 +26,6 @@
     "depends" : ["base","base_setup"],
     "author" : "OpenERP SA",
     'category': 'Hidden/Dependency',
-    'complexity': "easy",
     "description": """
 Installer for knowledge-based Hidden.
 =====================================

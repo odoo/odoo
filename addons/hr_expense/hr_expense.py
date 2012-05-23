@@ -85,8 +85,8 @@ class hr_expense_expense(osv.osv):
             ('invoiced', 'Invoiced'),
             ('paid', 'Reimbursed')
             ],
-            'State', readonly=True, help='When the expense request is created the state is \'Draft\'.\n It is confirmed by the user and request is sent to admin, the state is \'Waiting Confirmation\'.\
-            \nIf the admin accepts it, the state is \'Accepted\'.\n If an invoice is made for the expense request, the state is \'Invoiced\'.\n If the expense is paid to user, the state is \'Reimbursed\'.'),
+            'Status', readonly=True, help='When the expense request is created the status is \'Draft\'.\n It is confirmed by the user and request is sent to admin, the status is \'Waiting Confirmation\'.\
+            \nIf the admin accepts it, the status is \'Accepted\'.\n If an invoice is made for the expense request, the status is \'Invoiced\'.\n If the expense is paid to user, the status is \'Reimbursed\'.'),
     }
     _defaults = {
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'hr.employee', context=c),
