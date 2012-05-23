@@ -111,11 +111,11 @@
                         attrs="{'invisible': ['|','|',('state', '!=','progress'), ('invoiced', '=', True),('order_policy','=','picking')]}"/>
                         <button name="action_view_delivery" string="Open Delivery Order" type="object" 
                         attrs="{'invisible': ['|','|','|',('picking_ids','=',False),('picking_ids','=',[]), ('state', 'not in', ('progress','manual')),('shipped','=',True)]}"/>
+                        <button name="%(action_view_sale_advance_payment_inv)d" string="Advance Invoice" type="action" states="draft,manual"/>
                         <button name="cancel" states="draft,sent" string="Cancel Order"/>
                         <button name="action_cancel" states="manual,progress" string="Cancel Order" type="object"/>
                         <button name="ship_cancel" states="shipping_except" string="Cancel Order"/>
                         <button name="invoice_cancel" states="invoice_except" string="Cancel Order"/>
-                        <button name="%(action_view_sale_advance_payment_inv)d" string="Advance Invoice" type="action" states="draft,manual"/>
                     <div class="oe_right">
                         <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,sent,progress,invoiced,done" statusbar_colors='{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}'/>
                     </div>
