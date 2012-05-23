@@ -7,8 +7,8 @@
         <field name="model">purchase.order</field>
         <field name="inherit_id" ref="purchase.view_purchase_order_filter"/>
         <field name="arch" type="xml">
-            <xpath expr="/search/group/filter[@name='draft']" position="after">
-             <filter icon="terp-gtk-jump-to-ltr" name="to_approve" string="To Approve" domain="[('state','in',('wait','confirmed'))]" help="Purchase orders which are not approved yet."/>
+            <xpath expr="//filter[@name='draft']" position="after">
+                <filter icon="terp-gtk-jump-to-ltr" name="to_approve" string="To Approve" domain="[('state','in',('wait','confirmed'))]" help="Purchase orders which are not approved yet."/>
             </xpath>
         </field>
     </record>
