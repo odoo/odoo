@@ -679,8 +679,8 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
         return color;
     },
     kanban_color: function(variable) {
-        var color = this.kanban_getcolor();
-        return color ? 'oe_kanban_color_' + color : '';
+        var color = this.kanban_getcolor(variable);
+        return color === '' ? '' : 'oe_kanban_color_' + color;
     },
     kanban_gravatar: function(email, size) {
         size = size || 22;

@@ -58,7 +58,7 @@
 </t>
 <t t-name="KanbanColorPicker">
     <li t-foreach="widget.view.number_of_color_schemes" t-as="color">
-        <a href="#" t-att-data-color="color_index" t-attf-class="oe_kanban_bgcolor_#{color}"/>
+        <a href="#" t-att-data-color="color_index" t-attf-class="oe_kanban_color_#{color}"/>
     </li>
 </t>
 <div t-name="KanbanView.quick_create" class="oe_kanban_quick_create">
