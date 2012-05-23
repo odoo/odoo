@@ -251,11 +251,12 @@
                         </ul>
                     </t>
                     <t t-name="kanban-box">
-                        <div class="oe_kanban_card">
+                        <div t-attf-class="oe_kanban_bgcolor_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card">
                             <a class="oe_kanban_menuaction oe_i">B</a>
                             <ul class="oe_kanban_menu">
                                 <li><a type="edit" >Edit...</a></li>
                                 <li><a type="delete">Delete</a></li>
+                                <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                             </ul>
                             <div class="oe_kanban_content">
                                 <h3>

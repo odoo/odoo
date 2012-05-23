@@ -188,27 +188,15 @@
                     <field name="task_count"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_card oe_kanban_project oe_kanban_auto_height">
+                            <div t-attf-class="oe_kanban_bgcolor_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_project oe_kanban_auto_height">
                                 <a class="oe_kanban_menuaction oe_i">B</a>
                                 <ul class="oe_kanban_menu">
                                     <li><a type="edit" >Edit...</a></li>
                                     <li><a type="delete">Delete</a></li>
-                                    <li>
-                                        <ul class="color-chooser">
-                                            <li><a t-att-id="record.id.value" class="bgcolor"><span class="oe_kanban_color_0 square"></span></a></li>
-                                            <li><a t-att-id="record.id.value" class="bgcolor"><span class="oe_kanban_color_1 square"></span></a></li>
-                                            <li><a t-att-id="record.id.value" class="bgcolor"><span class="oe_kanban_color_2 square"></span></a></li>
-                                            <li><a t-att-id="record.id.value" class="bgcolor"><span class="oe_kanban_color_3 square"></span></a></li>
-                                            <li><a t-att-id="record.id.value" class="bgcolor"><span class="oe_kanban_color_4 square"></span></a></li>
-                                            <li><a t-att-id="record.id.value" class="bgcolor"><span class="oe_kanban_color_5 square"></span></a></li>
-                                        </ul>
-                                    </li>
+                                    <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                                 </ul>
                                 <div class="oe_kanban_content">
-                                    <h3>
-                                        <!--<t t-esc="record.name.value.substr(0,33)"/><t t-if="record.name.value.length > 33">...</t>-->
-                                        <field name="name"/>
-                                    </h3>
+                                    <h3 class="oe_kanban_ellipsis"><field name="name"/></h3>
 
                                     <div class="oe_kanban_project_list">
                                         <a t-if="record.use_tasks.raw_value"
