@@ -67,7 +67,7 @@
                 <div class="oe_form_topbar">
                     <button string="Submit to Manager" name="confirm" states="draft" type="workflow"/>
                     <button string="Approve" name="validate" states="confirm" type="workflow" groups="base.group_hr_user"/>
-                    <button string="Approved" name="second_validate" states="validate1" type="workflow" groups="base.group_hr_user"/>
+                    <button string="Validate" name="second_validate" states="validate1" type="workflow" groups="base.group_hr_user"/>
                     <button string="Refuse" name="refuse" states="confirm,validate1" type="workflow" groups="base.group_hr_user,base.group_hr_manager"/>
                     <button string="Reset to New" name="set_to_draft" states="refuse,validate" type="object" groups="base.group_hr_user"/>
                     <div class="oe_right">
