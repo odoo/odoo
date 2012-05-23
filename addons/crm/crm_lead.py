@@ -264,25 +264,6 @@ class crm_lead(crm_case, osv.osv):
             return {'value':{}}
         return {'value':{'probability': stage.probability}}
 
-    def stage_find_percent(self, cr, uid, percent, section_id):
-        """ Return the first stage with a probability == percent
-        """
-        stage_pool = self.pool.get('crm.case.stage')
-        if section_id :
-            ids = stage_pool.search(cr, uid, [("probability", '=', percent), ("section_ids", 'in', [section_id])])
-        else :
-            ids = stage_pool.search(cr, uid, [("probability", '=', percent)])
-
-        if ids:
-            return ids[0]
-        return False
-
-    def stage_find_lost(self, cr, uid, section_id):
-        return self.stage_find_percent(cr, uid, 0.0, section_id)
-
-    def stage_find_won(self, cr, uid, section_id):
-        return self.stage_find_percent(cr, uid, 100.0, section_id)
-
     def case_cancel(self, cr, uid, ids, context=None):
         """Overrides cancel for crm_case for setting probability
         """
@@ -301,7 +282,7 @@ class crm_lead(crm_case, osv.osv):
         """Mark the case as lost: state = done and probability = 0%
         """
         for lead in self.browse(cr, uid, ids):
-            stage_id = self.stage_find_lost(cr, uid, lead.section_id.id or False)
+            stage_id = self.stage_find(cr, uid, lead.section_id.id or False, [('probability', '=', 0.0), ('name', '=', 'Lost')], context=context)
             if stage_id:
                 self.case_set(cr, uid, [lead.id], values_to_update={'probability': 0.0}, new_stage_id=stage_id, context=context)
         self.case_mark_lost_send_note(cr, uid, ids, context=context)
@@ -311,7 +292,7 @@ class crm_lead(crm_case, osv.osv):
         """Mark the case as lost: state = done and probability = 0%
         """
         for lead in self.browse(cr, uid, ids):
-            stage_id = self.stage_find_won(cr, uid, lead.section_id.id or False)
+            stage_id = self.stage_find(cr, uid, lead.section_id.id or False, [('probability', '=', 100.0)], context=context)
             if stage_id:
                 self.case_set(cr, uid, [lead.id], values_to_update={'probability': 100.0}, new_stage_id=stage_id, context=context)
         self.case_mark_won_send_note(cr, uid, ids, context=context)
