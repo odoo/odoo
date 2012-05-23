@@ -231,7 +231,7 @@ class crm_lead(crm_case, osv.osv):
         'email_from': crm_case._get_default_email,
         'type': 'lead',
         'stage_id': crm_case._get_default_stage_id,
-        'section_id': crm_case._get_section,
+        'section_id': crm_case._get_default_section,
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.lead', context=c),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
         'color': 0,

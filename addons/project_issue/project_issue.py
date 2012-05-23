@@ -228,7 +228,7 @@ class project_issue(crm.crm_case, osv.osv):
         'partner_id': crm.crm_case._get_default_partner,
         'email_from': crm.crm_case._get_default_email,
         'state': 'draft',
-        'section_id': crm.crm_case._get_section,
+        'section_id': crm.crm_case._get_default_section,
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c),
         'priority': crm.AVAILABLE_PRIORITIES[2][0],
         'categ_id' : lambda *a: False,

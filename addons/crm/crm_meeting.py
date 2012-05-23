@@ -65,7 +65,6 @@ class crm_meeting(crm_base, osv.Model):
         'state': 'draft',
         'active': 1,
         'user_id': lambda self, cr, uid, ctx: uid,
-        'partner_id': crm_base._get_default_partner,
     }
 
     def create(self, cr, uid, vals, context=None):

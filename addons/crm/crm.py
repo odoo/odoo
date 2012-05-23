@@ -188,75 +188,6 @@ class crm_base(object):
         - ``partner_id`` (many2one to res.partner)
         - ``state`` (selection field)
     """
-    
-    def _get_default_partner_address(self, cr, uid, context=None):
-        """ Gives id of default address for current user
-            :param context: if portal in context is false return false anyway
-        """
-        if context is None:
-            context = {}
-        if not context.get('portal'):
-            return False
-        # was user.address_id.id, but address_id has been removed
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        if hasattr(user, 'partner_address_id') and user.partner_address_id:
-            return user.partner_address_id
-        return False
-
-    def _get_default_partner(self, cr, uid, context=None):
-        """ Gives id of partner for current user
-            :param context: if portal in context is false return false anyway
-        """
-        if context is None:
-            context = {}
-        if not context.get('portal', False):
-            return False
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        if hasattr(user, 'partner_address_id') and user.partner_address_id:
-            return user.partner_address_id
-        return user.company_id.partner_id.id
-
-    def _get_default_email(self, cr, uid, context=None):
-        """ Gives default email address for current user
-            :param context: if portal in context is false return false anyway
-        """
-        if not context.get('portal', False):
-            return False
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        return user.user_email
-
-    def _get_default_user(self, cr, uid, context=None):
-        """ Gives current user id
-            :param context: if portal in context is false return false anyway
-        """
-        if context and context.get('portal', False):
-            return False
-        return uid
-
-    def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
-        """ This function returns value of partner email based on Partner Address
-            :param add: Id of Partner's address
-            :param email: Partner's email ID
-        """
-        data = {'value': {'email_from': False, 'phone':False}}
-        if add:
-            address = self.pool.get('res.partner').browse(cr, uid, add)
-            data['value'] = {'email_from': address and address.email or False ,
-                             'phone':  address and address.phone or False}
-        if 'phone' not in self._columns:
-            del data['value']['phone']
-        return data
-
-    def onchange_partner_id(self, cr, uid, ids, part, email=False):
-        """ This function returns value of partner address based on partner
-            :param part: Partner's id
-            :param email: Partner's email ID
-        """
-        data={}
-        if  part:
-            addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['contact'])
-            data.update(self.onchange_partner_address_id(cr, uid, ids, addr['contact'])['value'])
-        return {'value': data}
 
     def case_open(self, cr, uid, ids, context=None):
         """ Opens case """
@@ -372,6 +303,61 @@ class crm_case(object):
         - ``stage_id`` (many2one to a stage definition model)
         - ``state`` (selection field, related to the stage_id.state)
     """
+
+    def _get_default_partner(self, cr, uid, context=None):
+        """ Gives id of partner for current user
+            :param context: if portal in context is false return false anyway
+        """
+        if context is None:
+            context = {}
+        if not context.get('portal', False):
+            return False
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        if hasattr(user, 'partner_address_id') and user.partner_address_id:
+            return user.partner_address_id
+        return user.company_id.partner_id.id
+
+    def _get_default_email(self, cr, uid, context=None):
+        """ Gives default email address for current user
+            :param context: if portal in context is false return false anyway
+        """
+        if not context.get('portal', False):
+            return False
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        return user.user_email
+
+    def _get_default_user(self, cr, uid, context=None):
+        """ Gives current user id
+            :param context: if portal in context is false return false anyway
+        """
+        if context and context.get('portal', False):
+            return False
+        return uid
+
+    def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
+        """ This function returns value of partner email based on Partner Address
+            :param add: Id of Partner's address
+            :param email: Partner's email ID
+        """
+        data = {'value': {'email_from': False, 'phone':False}}
+        if add:
+            address = self.pool.get('res.partner').browse(cr, uid, add)
+            data['value'] = {'email_from': address and address.email or False ,
+                             'phone':  address and address.phone or False}
+        if 'phone' not in self._columns:
+            del data['value']['phone']
+        return data
+
+    def onchange_partner_id(self, cr, uid, ids, part, email=False):
+        """ This function returns value of partner address based on partner
+            :param part: Partner's id
+            :param email: Partner's email ID
+        """
+        data={}
+        if  part:
+            addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['contact'])
+            data.update(self.onchange_partner_address_id(cr, uid, ids, addr['contact'])['value'])
+        return {'value': data}
 
     def _get_default_section(self, cr, uid, context=None):
         """ Gives default section by checking if present in the context """
