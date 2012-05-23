@@ -19,9 +19,16 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         init: function(options){
             options = options || {};
             url = options.url || 'http://localhost:8069';
+            
+            this.weight = 0;
+            this.weighting = false;
+
+            this.paying = false;
+            this.payment_status = 'waiting_for_payment';
 
             this.connection = new instance.web.JsonRPC();
             this.connection.setup(url);
+            
         },
         message : function(name,params,callback){
             var success_callback = function(result){ console.log('PROXY SUCCESS:'+name+': ',result); }
@@ -52,6 +59,8 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
 
         //the client is starting to weight
         weighting_start: function(){
+            this.weight = 0;
+            this.weighting = true;
             this.message('weighting_start');
         },
 
@@ -59,12 +68,20 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         // is called at regular interval (up to 10x/sec) between a weighting_start()
         // and a weighting_end()
         weighting_read_kg: function(){
-            this.message('weighting_read_kg');
-            return window.debug_devices.weight;
+            var self = this;
+            this.message('weighting_read_kg',{},function(weight){
+                if(self.weighting){
+                    console.log('PROXY SUCCESSFULLY READ WEIGHT:',weight);
+                    self.weight = weight;
+                }
+            });
+            return self.weight;
         },
 
         // the client has finished weighting products
         weighting_end: function(){
+            this.weight = 0;
+            this.weighting = false;
             this.message('weighting_end');
         },
 
@@ -72,6 +89,8 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         // method: 'mastercard' | 'cash' | ... ? TBD
         // info:   'extra information to display on the payment terminal' ... ? TBD
         payment_request: function(price, method, info){
+            this.paying = true;
+            this.payment_status = 'waiting_for_payment';
             this.message('payment_request',{'price':price,'method':method,'info':info});
         },
 
@@ -79,13 +98,19 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         // has paid the required money
         // returns 'waiting_for_payment' | 'payment_accepted' | 'payment_rejected'
         is_payment_accepted: function(){
-            this.message('is_payment_accepted');
-            //return 'waiting_for_payment'; // 'payment_accepted' | 'payment_rejected'
-            return window.debug_devices.payment_status;
+            var self = this;
+            this.message('is_payment_accepted', {}, function(payment_status){
+                if(self.paying){
+                    self.payment_status = payment_status;
+                }
+            });
+            return self.payment_status;
         },
 
         // the client cancels his payment
         payment_canceled: function(){
+            this.paying = false;
+            this.payment_status = 'waiting_for_payment';
             this.message('payment_canceled');
         },
 

@@ -219,6 +219,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
 
         push_order: function(record) {
             var self = this;
+            console.log('push_order',record);
             return this.dao.add_operation(record).pipe(function(){
                     return self.flush();
             });
@@ -236,6 +237,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         // it has been confirmed that they have been received.
         flush: function() {
             //this makes sure only one _int_flush is called at the same time
+            console.log('flush operations');
             return this.flush_mutex.exec(_.bind(function() {
                 return this._int_flush();
             }, this));
@@ -244,6 +246,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             var self = this;
 
             this.dao.get_operations().pipe(function(operations) {
+                console.log('_int_flushing ' + operations.length + ' operations');
                 self.set( {'nbr_pending_operations':operations.length} );
                 if(operations.length === 0){
                     return $.when();
@@ -253,15 +256,18 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                  // we prevent the default error handler and assume errors
                  // are a normal use case, except we stop the current iteration
 
-                 return new instance.web.Model('pos.order').get_func('create_from_ui')([op])
+                 return (new instance.web.Model('pos.order')).get_func('create_from_ui')([op])
                             .fail(function(unused, event){
+                                console.log('failed to flush?');
                                 event.preventDefault();
                             })
                             .pipe(function(){
+                                console.log('success ?');
                                 self.dao.remove_operation(operations[0].id).pipe(function(){
                                     return self._int_flush();
                                 });
                             }, function(){
+                                console.log('retrying');
                                 return $.when();
                             });
             });
