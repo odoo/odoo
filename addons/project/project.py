@@ -45,10 +45,12 @@ class project_task_type(osv.osv):
         'project_default': fields.boolean('Common to All Projects', help="If you check this field, this stage will be proposed by default on each new project. It will not assign this stage to existing projects."),
         'project_ids': fields.many2many('project.project', 'project_task_type_rel', 'type_id', 'project_id', 'Projects'),
         'state': fields.selection(_TASK_STATE, 'State', required=True, help="The related state for the stage. The state of your document will automatically change regarding the selected stage. Example, a stage is related to the state 'Close', when your document reach this stage, it will be automatically closed."),
+        'fold': fields.boolean('Hide in views if empty', help="This stage is not visible, for example in status bar or kanban view, when there are no records in that stage to display."),
     }
     _defaults = {
         'state': 'draft',
-        'sequence': 1
+        'sequence': 1,
+        'fold': False,
     }
     _order = 'sequence'
 project_task_type()
