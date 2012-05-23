@@ -388,9 +388,19 @@ class crm_case(crm_base):
         return True
     
     def stage_find(self, cr, uid, section_id, domain=[], order='sequence', context=None):
+        """ find stage, within a sales team, with a domain on the search,
+            ordered by the order parameter. If several stages match the 
+            search criterions, the first one will be returned, according
+            to the requested search order.
+            :param section_id: if set, the search is limited to stages that
+                               belongs to the given sales team, or that are
+                               global (case_default flag set to True)
+            :param domain: a domain on the search of stages
+            :param order: order of the search
+        """
         domain = list(domain)
         if section_id:
-            domain.append(('section_ids', '=', section_id))
+            domain += ['|', ('section_ids', '=', section_id), ('case_default', '=', True)]
         stage_ids = self.pool.get('crm.case.stage').search(cr, uid, domain, order=order, context=context)
         if stage_ids:
             return stage_ids[0]
@@ -467,17 +477,14 @@ class crm_case(crm_base):
     def case_open(self, cr, uid, ids, context=None):
         """ Opens case """
         cases = self.browse(cr, uid, ids, context=context)
-        cases[0].state # fill browse record cache, for _action having old and new values
-        self.stage_set_with_state_name(cr, uid, cases, 'open', context=context)
-        for case in cases:            
-            data = {'active': True, 'date_open': fields.datetime.now()}
+        for case in cases:
+            data = {'active': True}
             if case.stage_id and case.stage_id.state == 'draft':
                  data['date_open'] = fields.datetime.now()
             if not case.user_id:
                 data['user_id'] = uid
-            self.write(cr, uid, [case.id], data, context=context)
-        self._action(cr, uid, cases, 'open', context=context)
-        self.case_open_send_note(cr, uid, ids, context=context)
+            self.case_set(cr, uid, [case.id], 'open', data, context=context)
+            self.case_open_send_note(cr, uid, [case.id], context=context)
         return True
         
     def case_close(self, cr, uid, ids, context=None):
