@@ -119,7 +119,7 @@
                 <div class="oe_form_topbar">
                     <button string="Submit to Manager" name="confirm" states="draft" type="workflow"/>
                     <button string="Approve" name="validate" states="confirm" type="workflow" groups="base.group_hr_user"/>
-                    <button string="Approved" name="second_validate" states="validate1" type="workflow" groups="base.group_hr_user"/>
+                    <button string="Validate" name="second_validate" states="validate1" type="workflow" groups="base.group_hr_user"/>
                     <button string="Refuse" name="refuse" states="confirm,validate1" type="workflow" groups="base.group_hr_user"/>
                     <button string="Reset to New" name="set_to_draft" states="cancel,validate,refuse" type="object" groups="base.group_hr_user"/>
                     <div class="oe_right">
@@ -178,7 +178,7 @@
                     <!--field name="type"/-->
                     <field name="state"/>
                     <button string="Approve" name="validate" states="confirm" type="workflow" icon="gtk-apply" groups="base.group_hr_user,base.group_hr_manager"/>
-                    <button string="Approved" name="second_validate" states="validate1" type="workflow" icon="gtk-apply" groups="base.group_hr_user,base.group_hr_manager"/>
+                    <button string="Validate" name="second_validate" states="validate1" type="workflow" icon="gtk-apply" groups="base.group_hr_user,base.group_hr_manager"/>
                 </tree>
             </field>
         </record>
@@ -263,7 +263,7 @@
                     <field name="user_id" invisible="1"/>
                     <!--field name="type"/-->
                     <button string="Approve" name="validate" states="confirm" type="workflow" icon="gtk-apply" groups="base.group_hr_user"/>
-                    <button string="Approved" name="second_validate" states="validate1" type="workflow" icon="gtk-apply" groups="base.group_hr_user"/>
+                    <button string="Validate" name="second_validate" states="validate1" type="workflow" icon="gtk-apply" groups="base.group_hr_user"/>
                 </tree>
             </field>
         </record>
