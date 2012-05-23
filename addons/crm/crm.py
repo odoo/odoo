@@ -533,7 +533,17 @@ class crm_case(object):
             new_state_name = stage.state
             self._action(cr, uid, cases, new_state_name, context=context)
         return True
-    
+
+    def _action(self, cr, uid, cases, state_to, scrit=None, context=None):
+        if context is None:
+            context = {}
+        context['state_to'] = state_to
+        rule_obj = self.pool.get('base.action.rule')
+        model_obj = self.pool.get('ir.model')
+        model_ids = model_obj.search(cr, uid, [('model','=',self._name)])
+        rule_ids = rule_obj.search(cr, uid, [('model_id','=',model_ids[0])])
+        return rule_obj._action(cr, uid, rule_ids, cases, scrit=scrit, context=context)
+
     def remind_partner(self, cr, uid, ids, context=None, attach=False):
         return self.remind_user(cr, uid, ids, context, attach,
                 destination=False)
@@ -626,8 +636,38 @@ class crm_case(object):
     # Notifications
     # ******************************
     
-    def case_get_note_msg_prefix(self, cr, uid, id, context=None):
-        return ''
+	def case_get_note_msg_prefix(self, cr, uid, id, context=None):
+		return ''
+	
+    def case_open_send_note(self, cr, uid, ids, context=None):
+        for id in ids:
+            msg = _('%s has been <b>opened</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
+            self.message_append_note(cr, uid, [id], body=msg, context=context)
+        return True
+
+    def case_close_send_note(self, cr, uid, ids, context=None):
+        for id in ids:
+            msg = _('%s has been <b>closed</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
+            self.message_append_note(cr, uid, [id], body=msg, context=context)
+        return True
+
+    def case_cancel_send_note(self, cr, uid, ids, context=None):
+        for id in ids:
+            msg = _('%s has been <b>canceled</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
+            self.message_append_note(cr, uid, [id], body=msg, context=context)
+        return True
+
+    def case_pending_send_note(self, cr, uid, ids, context=None):
+        for id in ids:
+            msg = _('%s is now <b>pending</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
+            self.message_append_note(cr, uid, [id], body=msg, context=context)
+        return True
+
+    def case_reset_send_note(self, cr, uid, ids, context=None):
+        for id in ids:
+            msg = _('%s has been <b>renewed</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
+            self.message_append_note(cr, uid, [id], body=msg, context=context)
+        return True
     
     def case_escalate_send_note(self, cr, uid, ids, new_section=None, context=None):
         for id in ids:
