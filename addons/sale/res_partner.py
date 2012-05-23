@@ -19,24 +19,20 @@
 #
 ##############################################################################
 
+from osv import fields,osv
+from tools.translate import _
 
-{
-    'name': 'Associations Management',
-    'version': '0.1',
-    'category': 'Specific Industry Applications',
-    'description': """
-This module is to configure modules related to an association.
-==============================================================
+class res_partner(osv.osv):
+    _inherit = 'res.partner'
 
-It installs the profile for associations to manage events, registrations, memberships, membership products (schemes), etc.
-    """,
-    'author': 'OpenERP SA',
-    'depends': ['base_setup', 'membership', 'event'],
-    'update_xml': ['security/ir.model.access.csv', 'profile_association.xml'],
-    'demo_xml': [],
-    'installable': True,
-    'auto_install': False,
-    'certificate': '0078696047261',
-    'images': ['images/association1.jpeg'],
-}
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+    def _sale_order_count(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        for partner in self.browse(cr, uid, ids, context):
+            res[partner.id] = len(partner.sale_order_ids)
+        return res
+
+    _columns = {
+        'sale_order_count': fields.function(_sale_order_count, string='# of Sales Order', type='integer'),
+        'sale_order_ids': fields.one2many('sale.order','partner_id','Sales Order')
+    }
+

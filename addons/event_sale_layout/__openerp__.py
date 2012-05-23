@@ -24,7 +24,6 @@
     'name': 'Events Sales layout',
     'version': '0.1',
     'category': 'Tools',
-    'complexity': "easy",
     'description': """
     This module ensures the compatibility of the changes made on the sale.order.line form view in event_sale with the sale_layout module (that is replacing the whole field in the view by another one). Its installation is automatically triggered when both modules are installed.
     """,
