@@ -216,7 +216,7 @@ class mail_message(osv.osv):
                         ('received', 'Received'),
                         ('exception', 'Delivery Failed'),
                         ('cancel', 'Cancelled'),
-                        ], 'State', readonly=True),
+                        ], 'Status', readonly=True),
         'auto_delete': fields.boolean('Auto Delete', help="Permanently delete this email after sending it, to save space"),
         'original': fields.binary('Original', help="Original version of the message, as it was sent on the network", readonly=1),
     }

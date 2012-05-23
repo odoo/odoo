@@ -55,7 +55,7 @@ class hr_evaluation_report(osv.osv):
             ('progress','Final Validation'),
             ('done','Done'),
             ('cancel','Cancelled'),
-        ], 'State',readonly=True),
+        ], 'Status',readonly=True),
     }
     _order = 'create_date desc'
     def init(self, cr):

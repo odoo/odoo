@@ -112,9 +112,9 @@ class hr_holidays(osv.osv):
 
     _columns = {
         'name': fields.char('Description', required=True, size=64),
-        'state': fields.selection([('draft', 'Unconfirmed'), ('cancel', 'Cancelled'),('confirm', 'To Approve'), ('refuse', 'Refused'), ('validate1', 'Second Approval'), ('validate', 'Approved')],
-            'State', readonly=True, help='The state is set to \'Draft\', when a holiday request is created.\
-            \nThe state is \'Waiting Approval\', when holiday request is confirmed by user.\
+        'state': fields.selection([('draft', 'To Submit'), ('cancel', 'Cancelled'),('confirm', 'To Approve'), ('refuse', 'Refused'), ('validate1', 'Second Approval'), ('validate', 'Approved')],
+            'State', readonly=True, help='The state is set to \'To Submit\', when a holiday request is created.\
+            \nThe state is \'To Approve\', when holiday request is confirmed by user.\
             \nThe state is \'Refused\', when holiday request is refused by manager.\
             \nThe state is \'Approved\', when holiday request is approved by manager.'),
         'user_id':fields.related('employee_id', 'user_id', type='many2one', relation='res.users', string='User', store=True),
@@ -201,7 +201,7 @@ class hr_holidays(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         for rec in self.browse(cr, uid, ids, context=context):
             if rec.state<>'draft':
-                raise osv.except_osv(_('Warning!'),_('You cannot delete a leave which is not in draft state !'))
+                raise osv.except_osv(_('Warning!'),_('You cannot delete a leave which is not in draft status !'))
         return super(hr_holidays, self).unlink(cr, uid, ids, context)
 
     def onchange_date_from(self, cr, uid, ids, date_to, date_from):
@@ -483,18 +483,23 @@ class hr_employee(osv.osv):
                 remaining[employee_id] = 0.0
         return remaining
 
-    def _get_leave_status(self, cr, uid, ids, name, args, context=None):
-        holidays_id = self.pool.get('hr.holidays').search(cr, uid, 
-           [('employee_id', 'in', ids), ('date_from','<=',time.strftime('%Y-%m-%d %H:%M:%S')), 
-            ('date_to','>=',time.strftime('%Y-%m-%d %H:%M:%S')),('type','=','remove'),('state','not in',('cancel','refuse'))],
+    def _get_leave_status(self, cr, uid, ids, name, args, context=None):       
+        holidays_obj = self.pool.get('hr.holidays')
+        holidays_id = holidays_obj.search(cr, uid, 
+           [('employee_id', 'in', ids), ('date_from','<=',time.strftime('%Y-%m-%d %H:%M:%S')),
+           ('date_to','>=',time.strftime('%Y-%m-%d 23:59:59')),('type','=','remove'),('state','not in',('cancel','refuse'))],
            context=context)
         result = {}
         for id in ids:
             result[id] = {
                 'current_leave_state': False,
                 'current_leave_id': False,
+                'leave_date_from':False,
+                'leave_date_to':False,
             }
         for holiday in self.pool.get('hr.holidays').browse(cr, uid, holidays_id, context=context):
+            result[holiday.employee_id.id]['leave_date_from'] = holiday.date_from
+            result[holiday.employee_id.id]['leave_date_to'] = holiday.date_to
             result[holiday.employee_id.id]['current_leave_state'] = holiday.state
             result[holiday.employee_id.id]['current_leave_id'] = holiday.holiday_status_id.id
         return result
@@ -505,6 +510,8 @@ class hr_employee(osv.osv):
             selection=[('draft', 'New'), ('confirm', 'Waiting Approval'), ('refuse', 'Refused'),
             ('validate1', 'Waiting Second Approval'), ('validate', 'Approved'), ('cancel', 'Cancelled')]),
         'current_leave_id': fields.function(_get_leave_status, multi="leave_status", string="Current Leave Type",type='many2one', relation='hr.holidays.status'),
+        'leave_date_from': fields.function(_get_leave_status, multi='leave_status', type='date', string='From Date'),
+        'leave_date_to': fields.function(_get_leave_status, multi='leave_status', type='date', string='To Date'),        
         'last_login': fields.related('user_id', 'date', type='datetime', string='Latest Connection', readonly=1)
     }
 

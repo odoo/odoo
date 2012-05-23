@@ -19,17 +19,20 @@
 #
 ##############################################################################
 
-#----------------------------------------------------------
-# Init Sales
-#----------------------------------------------------------
+from osv import fields,osv
+from tools.translate import _
 
-import sale
-import stock
-import res_partner
-import wizard
-import report
-import company
-import edi
-import res_config
+class res_partner(osv.osv):
+    _inherit = 'res.partner'
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+    def _sale_order_count(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        for partner in self.browse(cr, uid, ids, context):
+            res[partner.id] = len(partner.sale_order_ids)
+        return res
+
+    _columns = {
+        'sale_order_count': fields.function(_sale_order_count, string='# of Sales Order', type='integer'),
+        'sale_order_ids': fields.one2many('sale.order','partner_id','Sales Order')
+    }
+

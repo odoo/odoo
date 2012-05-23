@@ -37,7 +37,7 @@
                         <separator orientation="vertical"/>
                         <filter name="group_type" string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'holiday_status_id'}"/>
                         <separator orientation="vertical"/>
-                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     </group>
                 </search>
             </field>
@@ -526,11 +526,13 @@
                 <xpath expr="//templates" position="before">
                     <field name="current_leave_state"/>
                     <field name="last_login"/>
+                    <field name="leave_date_from"/>
+                    <field name="leave_date_to"/>
                 </xpath>
                 <xpath expr="//div[@class='oe_employee_details']/ul/li" position="before">
                     <li t-if="record.current_leave_id.raw_value || record.last_login.raw_value">
                         <span t-if="record.current_leave_id.raw_value" t-att-class="record.current_leave_state.raw_value=='validate'?'oe_kanban_color_3':'oe_kanban_color_2'">
-                            <span class="oe_kanban_button" style="font-size: 100%%">
+                            <span class="oe_kanban_button" style="font-size: 100%%" t-att-title="record.leave_date_from.raw_value.toString('ddd dS MMM') + ' - ' + record.leave_date_to.raw_value.toString('ddd dS MMM')" >
                                 <field name="current_leave_id"/>
                             </span>
                         </span>

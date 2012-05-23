@@ -30,7 +30,7 @@ class report_analytic_account_close(osv.osv):
     _auto = False
     _columns = {
         'name': fields.many2one('account.analytic.account', 'Analytic account', readonly=True),
-        'state': fields.char('State', size=32, readonly=True),
+        'state': fields.char('Status', size=32, readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
         'quantity': fields.float('Quantity', readonly=True),
         'quantity_max': fields.float('Max. Quantity', readonly=True),
