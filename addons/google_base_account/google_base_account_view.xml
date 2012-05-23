@@ -1,20 +1,20 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-		<record id="view_users_gogole_form" model="ir.ui.view">
-        <field name="name">res.users.google.form1</field>
-          <field name="model">res.users</field>
-          <field name="type">form</field>
-          <field name="inherit_id" ref="base.view_users_form"/>
-          <field name="arch" type="xml">
-              <xpath expr="//notebook[last()]" position="inside">
-                     <page string=" Synchronization ">
-                     	<separator string="Google Account" colspan="4" />
-						<field name="gmail_user"/>
-                      <field name="gmail_password" password="True"/>
-					</page>
-              </xpath>
-          </field>
-     </record>
+        <record id="view_users_gogole_form" model="ir.ui.view">
+            <field name="name">res.users.google.form1</field>
+            <field name="model">res.users</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook[last()]" position="inside">
+                    <page string=" Synchronization ">
+                        <separator string="Google Account" colspan="4"/>
+                        <field name="gmail_user"/>
+                        <field name="gmail_password" password="True"/>
+                    </page>
+                </xpath>
+            </field>
+        </record>
     </data>
 </openerp>
