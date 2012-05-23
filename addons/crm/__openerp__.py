@@ -66,7 +66,6 @@ Creates a dashboard for CRM that includes:
     ],
     'init_xml': [
         'crm_data.xml',
-        'crm_meeting_data.xml',
         'crm_lead_data.xml',
         'crm_meeting_data.xml',
         'crm_phonecall_data.xml',

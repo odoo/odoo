@@ -189,6 +189,31 @@ class crm_base(object):
         - ``state`` (selection field)
     """
 
+    def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
+        """ This function returns value of partner email based on Partner Address
+            :param add: Id of Partner's address
+            :param email: Partner's email ID
+        """
+        data = {'value': {'email_from': False, 'phone':False}}
+        if add:
+            address = self.pool.get('res.partner').browse(cr, uid, add)
+            data['value'] = {'email_from': address and address.email or False ,
+                             'phone':  address and address.phone or False}
+        if 'phone' not in self._columns:
+            del data['value']['phone']
+        return data
+
+    def onchange_partner_id(self, cr, uid, ids, part, email=False):
+        """ This function returns value of partner address based on partner
+            :param part: Partner's id
+            :param email: Partner's email ID
+        """
+        data={}
+        if  part:
+            addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['contact'])
+            data.update(self.onchange_partner_address_id(cr, uid, ids, addr['contact'])['value'])
+        return {'value': data}
+
     def case_open(self, cr, uid, ids, context=None):
         """ Opens case """
         cases = self.browse(cr, uid, ids, context=context)
