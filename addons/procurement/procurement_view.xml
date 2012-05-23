@@ -206,7 +206,7 @@
                         <separator string="General Information" colspan="2" />
                         <field name="name" />
                         <field name="product_id" on_change="onchange_product_id(product_id)"/>
-                        <field name="product_uom"/>
+                        <field name="product_uom" on_change="onchange_uom(product_id, product_uom)" />
                     </group>
                     <group col="2" colspan="2">
                         <separator string="Locations" colspan="2" />
