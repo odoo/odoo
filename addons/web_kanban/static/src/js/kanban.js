@@ -34,6 +34,25 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         this.limit = options.limit || 80;
         this.add_group_mutex = new $.Mutex();
     },
+    start: function() {
+        var self = this;
+        this._super.apply(this, arguments);
+        // Bind kanban cards dropdown menus
+        this.$element.on('click', '.oe_kanban_menuaction', function() {
+            var $menu = $(this).next('.oe_kanban_menu');
+            var toggle = $menu.is(':visible');
+            self.$element.find('.oe_kanban_menu').hide();
+            $menu.toggle(!toggle);
+            return false;
+        });
+        $('html').on('click', function() {
+            self.$element.find('.oe_kanban_menu').hide();
+        });
+    },
+    destroy: function() {
+        this._super.apply(this, arguments);
+        $('html').off('click');
+    },
     on_loaded: function(data) {
         this.fields_view = data;
         this.$buttons = $(QWeb.render("KanbanView.buttons", {'widget': this}));
@@ -359,7 +378,7 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
         if (!this.view.state.groups[key]) {
             this.view.state.groups[key] = {
                 folded: false
-            }
+            };
         }
         this.state = this.view.state.groups[key];
         this.$records = null;
@@ -405,18 +424,23 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
         this.$element.data('widget', this);
         this.$records.data('widget', this);
         this.$has_been_started.resolve();
-        this.compute_cards_height();
+        this.compute_cards_auto_height();
         return def;
     },
-    compute_cards_height: function() {
+    compute_cards_auto_height: function() {
+        // oe_kanban_auto_height is an empty class used by the kanban view in order
+        // to normalize height amongst kanban cards. (by group)
         var self = this;
         var min_height = 0;
+        var els = [];
         _.each(this.records, function(r) {
-            min_height = Math.max(min_height, r.$element.outerHeight());
+            var $e = r.$element.find('.oe_kanban_auto_height').first();
+            if ($e.length) {
+                els.push($e[0]);
+                min_height = Math.max(min_height, $e.outerHeight());
+            }
         });
-        _.each(this.records, function(r) {
-            r.$element.css('min-height', min_height);
-        });
+        $(els).css('min-height', min_height);
     },
     destroy: function() {
         this._super();
@@ -534,8 +558,8 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
         });
     },
     bind_events: function() {
-        var self = this,
-            $show_on_click = self.$element.find('.oe_kanban_box_show_onclick');
+        var self = this;
+        var $show_on_click = self.$element.find('.oe_kanban_box_show_onclick');
         $show_on_click.toggle(this.state.folded);
         this.$element.find('.oe_kanban_box_show_onclick_trigger').click(function() {
             $show_on_click.toggle();
@@ -559,7 +583,13 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
             trigger: 'hover'
         });
 
-        this.$element.find('.oe_kanban_action').click(function() {
+        // If no draghandle is found, make the whole card as draghandle
+        if (!this.$element.find('.oe_kanban_draghandle').length) {
+            this.$element.children(':first').addClass('oe_kanban_draghandle');
+        }
+
+        this.$element.find('.oe_kanban_action').click(function(ev) {
+            ev.preventDefault();
             var $action = $(this),
                 type = $action.data('type') || 'button',
                 method = 'do_action_' + (type === 'action' ? 'object' : type);
@@ -570,7 +600,6 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
             } else {
                 self.do_warn("Kanban: no action for type : " + type);
             }
-            return false;
         });
     },
     do_action_delete: function($action) {
@@ -600,7 +629,7 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
         $cpicker.mouseenter(function() {
             clearTimeout($cpicker.data('timeoutId'));
         }).mouseleave(function(evt) {
-            var timeoutId = setTimeout(function() { $cpicker.remove() }, 500);
+            var timeoutId = setTimeout(function() { $cpicker.remove(); }, 500);
             $cpicker.data('timeoutId', timeoutId);
         });
         $cpicker.find('a').click(function() {

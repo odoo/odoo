@@ -18,9 +18,9 @@
     </t>
 </div>
 <t t-name="KanbanView.group_header">
-    <td>
+    <td class="oe_kanban_group_header">
         <t t-if="widget.view.group_by">
-            <div class="oe_kanban_group_header">
+            <div class="oe_kanban_header">
                 <div class="oe_kanban_fold_icon"></div>
                 <t t-if="widget.view._is_quick_create_enabled()">
                     <div class="oe_kanban_add"></div>
