@@ -25,7 +25,6 @@
     "author": "OpenERP SA",
     "category": "Human Resources",
     "sequence": 12,
-    'complexity': "easy",
     "website": "http://www.openerp.com",
     "description": """
 Module for human resource management.

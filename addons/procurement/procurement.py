@@ -112,7 +112,7 @@ class procurement_order(osv.osv):
             ('running','Running'),
             ('ready','Ready'),
             ('done','Done'),
-            ('waiting','Waiting')], 'State', required=True,
+            ('waiting','Waiting')], 'Status', required=True,
             help='When a procurement is created the state is set to \'Draft\'.\n If the procurement is confirmed, the state is set to \'Confirmed\'.\
             \nAfter confirming the state is set to \'Running\'.\n If any exception arises in the order then the state is set to \'Exception\'.\n Once the exception is removed the state becomes \'Ready\'.\n It is in \'Waiting\'. state when the procurement is waiting for another one to finish.'),
         'note': fields.text('Note'),

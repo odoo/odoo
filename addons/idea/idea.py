@@ -189,7 +189,7 @@ class idea_idea(osv.osv):
             ('open', 'Opened'),
             ('cancel', 'Refused'),
             ('close', 'Accepted')],
-            'State', readonly=True,
+            'Status', readonly=True,
             help='When the Idea is created the state is \'Draft\'.\n It is \
             opened by the user, the state is \'Opened\'.\
             \nIf the idea is accepted, the state is \'Accepted\'.'
