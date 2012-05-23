@@ -20,16 +20,17 @@
             <field name="arch" type="xml">
                 <form string="Project" layout="manual">
                 <div class="oe_form_topbar">
-                    <button name="set_cancel" string="Cancel" type="object" states="open,pending" icon="gtk-cancel"/>
-                    <button name="set_template" string="Set as Template" type="object" states="open" icon="gtk-convert"/>
-                    <button name="set_open" string="Re-open project" type="object" states="pending,cancelled,close" icon="gtk-ok"/>
-                    <button name="set_pending" string="Pending" type="object" states="open" icon="gtk-media-pause"/>
-                    <button name="set_done" string="Done" type="object" states="open,pending" icon="terp-dialog-close"/>
-                    <button name="reset_project" string="Reset as Project" type="object" states="template" icon="gtk-convert"/>
-                    <button string="New Project Based on Template" name="duplicate_template"  type="object" states="template" icon="gtk-new" context="{'parent_id':parent_id}"/>
+                    <button name="set_done" string="Done" type="object" states="open,pending"/>
+                    <button name="set_open" string="Re-open project" type="object" states="pending,cancelled,close"/>
+                    <button name="set_pending" string="Pending" type="object" states="open"/>
+                    <button name="set_template" string="Set as Template" type="object" states="open"/>
+                    <button string="New Project Based on Template" name="duplicate_template"  type="object" states="template" context="{'parent_id':parent_id}"/>
+                    <button name="reset_project" string="Reset as Project" type="object" states="template"/>
+                    <button name="set_cancel" string="Cancel" type="object" states="open,pending"/>
                     <div class="oe_right">
                         <field name="state" nolabel="1" widget="statusbar" statusbar_visible="open,close" statusbar_colors='{"pending":"blue"}' select="1" readonly="1"/>
                     </div>
+                    <div class="oe_clear"/>
                 </div>
                 <sheet string="Project" layout="auto">
                     <group colspan="6" col="6">
@@ -100,7 +101,7 @@
                     </notebook>
                     <newline/>
                 </sheet>
-                <div class="oe_form_sheet_width">
+                <div class="oe_form_bottom">
                     <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
                 </div>
                 </form>
@@ -170,7 +171,6 @@
             view_mode="kanban,tree,form,calendar,graph"
             view_type="form"/>
 
-        
         <record model="ir.ui.view" id="view_project_kanban">
             <field name="name">project.project.kanban</field>
             <field name="model">project.project</field>
@@ -320,16 +320,17 @@
             <field name="arch" type="xml">
                 <form string="Project" layout="manual">
                     <div class="oe_form_topbar">
-                        <button name="do_cancel" states="draft,open,pending" string="Cancel" type="object" icon="gtk-cancel"/>
-                        <button name="do_draft" states="open" string="Draft" type="object" icon="gtk-indent"/>
-                        <button name="do_open" states="pending,draft" string="Start Task" type="object" icon="gtk-media-play"/>
-                        <button name="%(action_project_task_reevaluate)d" states="done,cancelled" string="Reactivate" type="action" icon="gtk-convert" context="{'button_reactivate':True}" />
-                        <button name="do_pending" states="open" string="Pending" type="object" icon="gtk-media-pause"/>
-                        <button name="%(action_project_task_delegate)d" states="pending,open,draft" string="Delegate" type="action" icon="terp-personal"/>
-                        <button name="action_close" states="pending,open" string="Done" type="object" icon="terp-dialog-close"/>
+                        <button name="action_close" states="pending,open" string="Done" type="object"/>
+                        <button name="do_open" states="pending,draft" string="Start Task" type="object"/>
+                        <button name="%(action_project_task_reevaluate)d" states="done,cancelled" string="Reactivate" type="action" context="{'button_reactivate':True}" />
+                        <button name="do_pending" states="open" string="Pending" type="object"/>
+                        <button name="do_draft" states="open" string="Draft" type="object"/>
+                        <button name="%(action_project_task_delegate)d" states="pending,open,draft" string="Delegate" type="action"/>
+                        <button name="do_cancel" states="draft,open,pending" string="Cancel" type="object"/>
                         <div class="oe_right">
                             <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}' select="1"/>
                         </div>
+                        <div class="oe_clear"/>
                     </div>
                     <sheet string="Task edition" layout="auto">
                     <group colspan="6" col="6">
@@ -405,7 +406,7 @@
                         </page>
                     </notebook>
                     </sheet>
-                    <div class="oe_form_sheet_width">
+                    <div class="oe_form_bottom">
                         <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
                     </div>
                 </form>
@@ -606,7 +607,7 @@
                         <filter string="Project" name="group_project_id" icon="terp-folder-violet" domain="[]" context="{'group_by':'project_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Stage" name="group_stage_id" icon="terp-stage" domain="[]" context="{'group_by':'type_id'}"/>
-                        <filter string="State" name="group_state" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Status" name="group_state" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Deadline" icon="terp-gnome-cpu-frequency-applet+" domain="[]" context="{'group_by':'date_deadline'}"/>
                         <separator orientation="vertical" groups="base.group_no_one"/>
@@ -624,7 +625,7 @@
             <field name="view_mode">kanban,tree,form,calendar,gantt,graph</field>
             <field eval="False" name="filter"/>
             <field name="view_id" eval="False"/>
-            <field name="context">{"search_default_project_id": project_id}</field>
+            <field name="context">{}</field>
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="help">A task represents a work that has to be done. Each user works in his own list of tasks where he can record his task work in hours. He can work and close the task itself or delegate it to another user. If you delegate a task to another user, you get a new task in pending state, which will be reopened when you have to review the work achieved. If you install the project_timesheet module, task work can be invoiced based on the project configuration. With the project_mrp module, sales orders can create tasks automatically when they are confirmed.</field>
         </record>
@@ -745,31 +746,6 @@
         </record>
 
       <!--     User Form-->
-      <record id="view_project_users_form_simple" model="ir.ui.view">
-          <field name="name">res.users.project.form1</field>
-          <field name="model">res.users</field>
-          <field name="type">form</field>
-          <field name="inherit_id" ref="base.view_users_form"/>
-          <field eval="18" name="priority"/>
-          <field name="arch" type="xml">
-              <group name="default_filters" position="inside">
-                   <field name="context_project_id"/>
-              </group>
-          </field>
-     </record>
-
-     <record model="ir.ui.view" id="view_users_form_project_modif_inherited1">
-         <field name="name">view.users.form.project.modif.inherited1</field>
-         <field name="model">res.users</field>
-         <field name="inherit_id" ref="base.view_users_form_simple_modif" />
-         <field name="type">form</field>
-         <field eval="18" name="priority"/>
-         <field name="arch" type="xml">
-            <group name="default_filters" position="inside">
-                <field name="context_project_id" context="{'user_preference':True}" widget="selection" readonly="0"/>
-            </group>
-       </field>
-    </record>
-    <act_window context="{'search_default_user_id': [active_id], 'default_user_id': active_id}" domain="[('state', '&lt;&gt;', 'cancelled'),('state', '&lt;&gt;', 'done')]" id="act_res_users_2_project_task_opened" name="Assigned Tasks" res_model="project.task" src_model="res.users" view_mode="tree,form,gantt,calendar,graph" view_type="form"/>
+        <act_window context="{'search_default_user_id': [active_id], 'default_user_id': active_id}" domain="[('state', '&lt;&gt;', 'cancelled'),('state', '&lt;&gt;', 'done')]" id="act_res_users_2_project_task_opened" name="Assigned Tasks" res_model="project.task" src_model="res.users" view_mode="tree,form,gantt,calendar,graph" view_type="form"/>
     </data>
 </openerp>

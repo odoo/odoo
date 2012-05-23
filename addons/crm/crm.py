@@ -30,10 +30,10 @@ from tools.translate import _
 MAX_LEVEL = 15
 AVAILABLE_STATES = [
     ('draft', 'New'),
-    ('open', 'In Progress'),
     ('cancel', 'Cancelled'),
-    ('done', 'Closed'),
+    ('open', 'In Progress'),
     ('pending', 'Pending'),
+    ('done', 'Closed')
 ]
 
 AVAILABLE_PRIORITIES = [
@@ -224,10 +224,7 @@ class crm_base(object):
         return uid
 
     def _get_section(self, cr, uid, context=None):
-        """Gives section id for current User
-        """
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        return user.context_section_id.id or False
+        return False
 
     def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
         """This function returns value of partner email based on Partner Address
@@ -604,21 +601,5 @@ def _links_get(self, cr, uid, context=None):
     ids = obj.search(cr, uid, [])
     res = obj.read(cr, uid, ids, ['object', 'name'], context)
     return [(r['object'], r['name']) for r in res]
-
-class users(osv.osv):
-    _inherit = 'res.users'
-    _description = "Users"
-    _columns = {
-        'context_section_id': fields.many2one('crm.case.section', 'Sales Team'),
-    }
-
-    def create(self, cr, uid, vals, context=None):
-        res = super(users, self).create(cr, uid, vals, context=context)
-        section_obj=self.pool.get('crm.case.section')
-        if vals.get('context_section_id'):
-            section_obj.write(cr, uid, [vals['context_section_id']], {'member_ids':[(4, res)]}, context)
-        return res
-
-users()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
