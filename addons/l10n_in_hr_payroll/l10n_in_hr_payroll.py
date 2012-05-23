@@ -19,15 +19,12 @@
 #
 ##############################################################################
 
-from osv import fields, osv
-import decimal_precision as dp
-
 import time
 from datetime import datetime, timedelta, date
 from calendar import isleap
 from dateutil.relativedelta import relativedelta
-from bsddb.dbtables import _columns
-from epsilon.hotfix import require
+from osv import fields, osv
+import decimal_precision as dp
 
 class hr_contract_in(osv.osv):
     _inherit = 'hr.contract'
@@ -77,10 +74,9 @@ class hr_employee(osv.osv):
                 total_months = relativedelta(current_date, date_start).months
                 if total_months < 10:
                      year_month= float(total_months)/10 + float(total_years)
-                     res[employee.id] = year_month
                 else:
-                    year_months = float(total_months)/100 + float(total_years)
-                    res[employee.id] = year_months
+                    year_month = float(total_months)/100 + float(total_years)
+                res[employee.id] = year_month
         return res
     
     _columns = {
