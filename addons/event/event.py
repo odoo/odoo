@@ -218,14 +218,11 @@ class event_event(osv.osv):
         'note': fields.text('Description', readonly=False, states={'done': [('readonly', True)]}),
         'company_id': fields.many2one('res.company', 'Company', required=False, change_default=True, readonly=False, states={'done': [('readonly', True)]}),
         'is_subscribed' : fields.function(_subscribe_fnc, type="boolean", string='Subscribed'),
-        'available_qty': fields.integer('Availabel Quantity'),
-         'sale_end_date': fields.datetime('SalesEnd'),
-      
-     'city': fields.related('address_id', 'city', type='char', string='City'),
-     'street': fields.related('address_id', 'street', type='char', string='Street'),
-     'country_id': fields.related('address_id', 'country_id', relation='res.country', type='many2one', string='Country'),
-     'state_id': fields.related('address_id', 'state_id', relation="res.country.state", type="many2one", string='Fed. State'),
-     'zip': fields.related('address_id','zip', type="char", string="Zip"),      
+         'city': fields.related('address_id', 'city', type='char', string='City'),
+         'street': fields.related('address_id', 'street', type='char', string='Street'),
+         'country_id': fields.related('address_id', 'country_id', relation='res.country', type='many2one', string='Country'),
+         'state_id': fields.related('address_id', 'state_id', relation="res.country.state", type="many2one", string='Fed. State'),
+         'zip': fields.related('address_id','zip', type="char", string="Zip"),      
       
     }
     _defaults = {

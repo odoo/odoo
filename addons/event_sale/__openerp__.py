@@ -35,14 +35,10 @@ It defines a new kind of service products that offers you the possibility to cho
     'author': 'OpenERP SA',
     'depends': ['event','sale','sale_crm'],
     'update_xml': [
-        'security/ir.model.access.csv',
         'event_sale_view.xml',
     ],
     'demo_xml': ['event_demo.xml'],
     'test':['test/confirm.yml'],
-    'css': ['static/src/css/event_page.css'],
-    'js': ['static/src/js/google_map.js'],
-    'qweb': ['static/src/xml/event_address.xml'],
     'installable': True,
     'active': False,
 }
