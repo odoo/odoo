@@ -9,13 +9,15 @@ openerp.project = function(openerp) {
                    we can implement return value of m2m fields like [(1,"Adminstration"),...].
                 */
                 var members_ids = [];
-                this.$element.find('.project_avatar').each(function() {
+                this.$element.find('.oe_kanban_project_avatars img').each(function() {
                     members_ids.push($(this).data('member_id'));
                 });
                 var dataset = new openerp.web.DataSetSearch(this, 'res.users', self.session.context, [['id', 'in', _.uniq(members_ids)]]);
                 dataset.read_slice(['id', 'name']).then(function(result) {
                     _.each(result, function(v, k) {
-                        self.$element.find('.project_avatar[data-member_id=' + v.id + ']').attr('title', v.name).tipsy();
+                        self.$element.find('.oe_kanban_project_avatars img[data-member_id=' + v.id + ']').attr('title', v.name).tipsy({
+                            offset: 10
+                        });
                     });
                 });
             }
