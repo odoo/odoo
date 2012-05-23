@@ -846,7 +846,7 @@ instance.web.WebClient = instance.web.Widget.extend({
         var self = this;
         this.$element.addClass("openerp openerp-web-client-container");
         if (jQuery.param !== undefined && jQuery.deparam(jQuery.param.querystring()).kitten !== undefined) {
-            self.$element.addClass("kitten-mode-activated");
+            $("body").addClass("kitten-mode-activated");
             self.$element.delegate('img.oe-record-edit-link-img', 'hover', function(e) {
                 self.$element.toggleClass('clark-gable');
             });
