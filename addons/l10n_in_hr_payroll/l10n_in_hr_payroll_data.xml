@@ -45,6 +45,17 @@ Maximum for 2 children, so max 2400 per annum becomes non-taxable.</field>
             <field name="sequence" eval="22"/>
         </record>
 
+        <record id="hr_payroll_rule_child2" model="hr.salary.rule">
+             <field name="code">CHEAH</field>
+             <field name="name">Child Hostel Allowance</field>
+             <field name="category_id" ref="hr_payroll.ALW"/>
+             <field name="parent_rule_id" ref="hr_payroll_rule_child_edu"/>
+             <field name="condition_select">python</field>
+             <field name="condition_python">result = bool(employee.children)</field>
+             <field name="amount_select">fix</field>
+             <field name="note">In case the children are in hostel, the exemption available is Rs.300 per month per child for up to 2 children.</field>
+             <field name="sequence" eval="25"/>
+         </record>
 
         <record id="hr_salary_rule_special" model="hr.salary.rule">
             <field name="code">SA</field>

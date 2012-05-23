@@ -59,8 +59,8 @@ class hr_contract_in(osv.osv):
                      year_month= float(total_months)/10 + float(total_years)
                      res[contract.id] = year_month
                 else:
-                         year_months = float(total_months)/100 + float(total_years)
-                         res[contract.id] = year_months
+                    year_months = float(total_months)/100 + float(total_years)
+                    res[contract.id] = year_months
         return res
 
     _columns = {
