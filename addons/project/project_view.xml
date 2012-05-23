@@ -188,7 +188,7 @@
                     <field name="task_count"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_bgcolor_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_project oe_kanban_auto_height">
+                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_project oe_kanban_auto_height">
                                 <a class="oe_kanban_menuaction oe_i">B</a>
                                 <ul class="oe_kanban_menu">
                                     <li><a type="edit" >Edit...</a></li>
