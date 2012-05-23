@@ -37,18 +37,18 @@ class google_login(osv.osv_memory):
     }
 
     def google_login(self, user, password, type='', context=None):
-        if type == 'group': 
+        if type == 'group':
             gd_client = gdata.contacts.client.ContactsClient(source='OpenERP')
-        if type == 'contact' :   
+        if type == 'contact':
             gd_client = gdata.contacts.service.ContactsService()
         if type == 'calendar':
             gd_client = gdata.calendar.service.CalendarService()
         if type =='docs_client':
             gd_client = gdata.docs.client.DocsClient()
         else:
-            gd_client = gdata.contacts.service.ContactsService()     
-        try:    
-            gd_client.ClientLogin(user, password,gd_client.source)
+            gd_client = gdata.contacts.service.ContactsService()
+        try:
+            gd_client.ClientLogin(user, password, gd_client.source)
         except Exception:
             return False
         return gd_client
@@ -62,7 +62,7 @@ class google_login(osv.osv_memory):
         if 'password' in fields:
             res.update({'password': user_obj.gmail_password})
         return res
-    
+
     def login(self, cr, uid, ids, context=None):
         data = self.read(cr, uid, ids)[0]
         user = data['user']
