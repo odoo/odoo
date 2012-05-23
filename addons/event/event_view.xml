@@ -52,19 +52,82 @@
             <field name="model">event.event</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Events">
-                    <group col="6" colspan="4">
-                        <field name="name"/>
-                        <field name="date_begin"/>
-                        <field name="date_end"/>
-                        <field name="type" on_change="onchange_event_type(type,context)"/>
-                        <field name="user_id"/>
-                        <field name="address_id" />
-                    </group>
-                    <notebook colspan="4">
-                    <page string="Event">
-                        <separator string="Description" colspan="4"/>
-                        <field name="note" colspan="4" nolabel="1"/>
+            <form string="Events" layout="manual">
+                <div class="oe_form_topbar">
+                    <button string="Cancel Event" name="button_cancel" states="draft,confirm" type="object" icon="gtk-cancel"/>
+                    <button string="Confirm Event" name="button_confirm" states="draft" type="object" icon="gtk-apply"/>
+                    <button string="Event Done" name="button_done" states="confirm" type="object" icon="gtk-jump-to"/>
+                    <button string="Set To Draft" name="button_draft" states="cancel,done" type="object" icon="gtk-convert"/> 
+                    <div class="oe_right">
+                        <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
+                    </div>
+                </div>
+                <sheet layout="auto">
+                <group colspan="4">
+                  <group col="2" colspan="2" class="oe_form_group_label_border"  >
+                  <field name="name" required="1" nolabel="1" class="oe_form_title" /><br/><br/><br/>
+                    <field name="type" on_change="onchange_event_type(type,context)"/>
+                    <field name="user_id"/>
+                    <field name="address_id" widget ="many2one_Geo_address"/>
+                  </group>
+                  <group colspan="2" col="2">
+                    <div id = "oe_mapbox" class="oe_mapbox">
+                    </div>
+                  </group>  
+                  <group colspan="4">
+                     <group col="4" colspan="2" class="oe_form_group_label_border" >
+                           <field name="register_min"/>
+                           <field name="register_max"/>
+                     </group>
+                     <group colspan="2" col="2">
+	                   <div>
+	                        <table  width="400px" >
+	                         <tr>
+	                           <td  class="oe_td_border">
+	                               Where :
+	                           </td>
+	                           <td width="auto">
+	                            <field name="street" nolabel="1" readonly="1"/><br/>
+	                             <field name="state_id" nolabel="1" readonly="1"/><br/>
+	                              <field name="city" nolabel="1" readonly="1"/><br/>
+	                               <field name="country_id" nolabel="1" readonly="1"/><br/>
+	                               <field name="zip" nolabel="1" readonly="1"/><br/>
+	                           </td>
+	                           <td width="10px" >
+	                               <table width="150px" >
+	                                <tr >
+	                                  <td class="oe_td_date_border">Start: </td><td width="auto"><field name="date_begin" nolabel="1" /></td>
+	                                </tr>
+	                                <tr >
+	                                  <td class="oe_td_date_border">End</td><td width="auto"><field name="date_end" nolabel="1" /></td>
+	                                </tr><newline/>
+	                              </table>
+	                           </td>
+	                         </tr>
+	                       </table>
+	                    </div>
+                     </group>
+                  </group>
+                  </group>
+                <notebook colspan="4">
+                <page string="Event Details">
+                <separator colspan="4" string="Details" nolabel="1"/>
+                <field name="note" colspan="4" nolabel="1"/>    
+                </page>
+                    <page string="Speakers">
+                        <field name="main_speaker_id" domain="[('speaker','=',True)]" context="{'default_speaker':1}"/>
+                        <field name="speaker_confirmed"/>
+                        <separator string="Other Speakers" colspan="4"/>
+                        <field name="speaker_ids" domain="[('speaker','=',True)]" context="{'default_speaker':1}" colspan="4" nolabel="1"/>
+                    </page>
+                    <page string="Event Registration">
+	                     <group col="6" colspan="4" class="oe_form_group_label_border" >
+                            <field name="register_current"/>
+                            <field name="register_prospect"/>
+                            <field name="register_attended"/>
+	                     </group> 
+	                     <br/>
+	                     <br/>                   
                         <field name="registration_ids" colspan="4" nolabel="1" groups="event.group_event_manager,event.group_event_user">
                             <tree string="Registration" editable="top">
                                 <field name="name" />
@@ -98,37 +161,9 @@
                                     </group>
                             </form>
                             </field>
-                        <field name="state" select="1" widget="statusbar" statusbar_visible="draft,confirm,done"/>
-                        <group col="4" colspan="2">
-                           <button string="Cancel Event" name="button_cancel" states="draft,confirm" type="object" icon="gtk-cancel"/>
-                           <button string="Confirm Event" name="button_confirm" states="draft" type="object" icon="gtk-apply"/>
-                           <button string="Event Done" name="button_done" states="confirm" type="object" icon="gtk-jump-to"/>
-                           <button string="Set To Draft" name="button_draft" states="cancel,done" type="object" icon="gtk-convert"/>
-                        </group>
                     </page>
-                    <page string="Speakers">
-                        <field name="main_speaker_id" domain="[('speaker','=',True)]" context="{'default_speaker':1}"/>
-                        <field name="speaker_confirmed"/>
-                        <separator string="Other Speakers" colspan="4"/>
-                        <field name="speaker_ids" domain="[('speaker','=',True)]" context="{'default_speaker':1}" colspan="4" nolabel="1"/>
-                    </page>
-                    <page string="Extra Info">
-                        <group col="2" colspan="2">
-                            <separator string="Registrations" colspan="2"/>
-                            <field name="register_min"/>
-                            <field name="register_max"/>
-                            <field name="register_prospect"/>
-                            <field name="register_current"/>
-                            <field name="register_attended"/>
-                        </group>
-                        <group col="2" colspan="2">
-                            <separator string="Emails" colspan="2"/>
-                            <field name="reply_to"/>
-                            <field name="email_registration_id" domain="[('model_id.model','=','event.registration')]"/>
-                            <field name="email_confirmation_id" domain="[('model_id.model','=','event.registration')]"/>
-                        </group>
-                    </page>
-                    </notebook>
+                </notebook>
+                </sheet>
             </form>
             </field>
         </record>
@@ -211,9 +246,6 @@
                                   <button t-att-id="'btn_sub'+record.id.raw_value" type="object" name="subscribe_to_event" class="subscribe_button oe_event_button_subscribe">
                                   <span >Subscribe</span>
                                   </button>
-                                 <button name="%(action_event_preview)d" type="action">
-                                 <span>Preview</span>
-                                 </button>
                               </t>
                             </t>
                             <t t-if="record.is_subscribed.raw_value">

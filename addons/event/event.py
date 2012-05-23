@@ -221,6 +221,12 @@ class event_event(osv.osv):
         'available_qty': fields.integer('Availabel Quantity'),
          'sale_end_date': fields.datetime('SalesEnd'),
       
+     'city': fields.related('address_id', 'city', type='char', string='City'),
+     'street': fields.related('address_id', 'street', type='char', string='Street'),
+     'country_id': fields.related('address_id', 'country_id', relation='res.country', type='many2one', string='Country'),
+     'state_id': fields.related('address_id', 'state_id', relation="res.country.state", type="many2one", string='Fed. State'),
+     'zip': fields.related('address_id','zip', type="char", string="Zip"),      
+      
     }
     _defaults = {
         'state': 'draft',

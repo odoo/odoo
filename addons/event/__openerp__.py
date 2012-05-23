@@ -46,7 +46,6 @@ Note that:
         'security/event_security.xml',
         'security/ir.model.access.csv',
         'wizard/event_confirm_view.xml',
-         'wizard/event_preview_view.xml',
         'event_view.xml',
         'report/report_event_registration_view.xml',
         'board_association_view.xml',
