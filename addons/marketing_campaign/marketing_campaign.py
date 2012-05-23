@@ -117,7 +117,7 @@ Normal - the campaign runs normally and automatically sends all emails and repor
                                    ('running', 'Running'),
                                    ('cancelled', 'Cancelled'),
                                    ('done', 'Done')],
-                                   'State',),
+                                   'Status',),
         'activity_ids': fields.one2many('marketing.campaign.activity',
                                        'campaign_id', 'Activities'),
         'fixed_cost': fields.float('Fixed Cost', help="Fixed cost for running this campaign. You may also specify variable cost and revenue on each campaign activity. Cost and Revenue statistics are included in Campaign Reporting.", digits_compute=dp.get_precision('Purchase Price')),
@@ -272,7 +272,7 @@ class marketing_campaign_segment(osv.osv):
                                    ('cancelled', 'Cancelled'),
                                    ('running', 'Running'),
                                    ('done', 'Done')],
-                                   'State',),
+                                   'Status',),
         'date_run': fields.datetime('Launch Date', help="Initial start date of this segment."),
         'date_done': fields.datetime('End Date', help="Date this segment was last closed or cancelled."),
         'date_next_sync': fields.function(_get_next_sync, string='Next Synchronization', type='datetime', help="Next time the synchronization job is scheduled to run automatically"),
@@ -652,8 +652,7 @@ class marketing_campaign_workitem(osv.osv):
                                     ('cancelled', 'Cancelled'),
                                     ('exception', 'Exception'),
                                     ('done', 'Done'),
-                                   ], 'State', readonly=True),
-
+                                   ], 'Status', readonly=True),
         'error_msg' : fields.text('Error Message', readonly=True)
     }
     _defaults = {

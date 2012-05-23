@@ -95,7 +95,7 @@ trigger date, like sending a reminder 15 minutes before a meeting."),
         'trg_user_id':  fields.many2one('res.users', 'Responsible'),
         'trg_partner_id': fields.many2one('res.partner', 'Partner'),
         'trg_partner_categ_id': fields.many2one('res.partner.category', 'Partner Category'),
-        'trg_state_from': fields.selection(_state_get, 'State', size=16),
+        'trg_state_from': fields.selection(_state_get, 'Status', size=16),
         'trg_state_to': fields.selection(_state_get, 'Button Pressed', size=16),
 
         'act_method': fields.char('Call Object Method', size=64),

@@ -69,7 +69,7 @@ class crm_meeting(crm_base, osv.osv):
         'state': fields.selection([('open', 'Confirmed'),
                                     ('draft', 'Unconfirmed'),
                                     ('cancel', 'Cancelled'),
-                                    ('done', 'Done')], 'State', \
+                                    ('done', 'Done')], 'Status', \
                                     size=16, readonly=True),
     }
     _defaults = {

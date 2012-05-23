@@ -702,7 +702,7 @@ class survey_request(osv.osv):
         'email': fields.char("E-mail", size=64),
         'survey_id': fields.many2one("survey", "Survey", required=1, ondelete='cascade'),
         'response': fields.many2one('survey.response', 'Answer'),
-        'state': fields.selection([('draft','Draft'),('cancel', 'Cancelled'),('waiting_answer', 'Waiting Answer'),('done', 'Done')], 'State', readonly=1)
+        'state': fields.selection([('draft','Draft'),('cancel', 'Cancelled'),('waiting_answer', 'Waiting Answer'),('done', 'Done')], 'Status', readonly=1)
     }
     _defaults = {
         'state': lambda * a: 'draft',
