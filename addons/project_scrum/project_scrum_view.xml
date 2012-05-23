@@ -43,10 +43,6 @@
                     <field name="expected_hours" sum="Planned hours" widget="float_time" string="Total Planned Hours"/>
                     <field name="effective_hours" sum="Spent hours" widget="float_time" string="Total Spent Hours"/>
                     <field name="state"/>
-                    <button type="object" string="Open" name="button_open" states="draft,pending" icon="terp-camera_test"/>
-                    <button type="object" string="Pending" name="button_pending" states="open" icon="gtk-media-pause"/>
-                    <button type="action" string="Convert to Task" name="%(action_scrum_backlog_to_task)d" states="pending" icon="terp-stock_effects-object-colorize"/>
-                    <button type="object" string="Close" name="button_close" states="open,pending" icon="terp-dialog-close"/>
                 </tree>
             </field>
         </record>
@@ -218,12 +214,6 @@
                     <field name="effective_hours" sum="Effective hours" widget="float_time"/>
                     <field name="expected_hours" sum="Planned hours" widget="float_time"/>
                     <field name="state"/>
-                    <button type="object" string="Open" name="button_open" states="draft,pending" icon="terp-camera_test"/>
-                    <button type="object" string="Pending" name="button_pending" states="open" icon="gtk-media-pause"/>
-                    <button type="object" string="Close" name="button_close" states="open,pending" icon="terp-dialog-close"/>
-                    <button type="object" string="Set to Draft" name="button_draft" states="cancel,done" icon="gtk-convert"/>
-                    <button name="%(project_scrum.report_scrum_sprint_burndown_chart)d" states="open,draft,close,cancel"
-                                    string="Burndown Chart" type="action" icon="gtk-print"/>
                 </tree>
             </field>
         </record>

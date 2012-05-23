@@ -57,16 +57,6 @@
                     <field name="category"/>
                     <field name="price" sum="Total price"/>
                     <field name="state"/>
-                    <button colspan="1"
-                              name="%(action_lunch_order_cancel)d"
-                              string="Cancel Order"
-                              type="action" states="confirmed"
-                              icon="gtk-cancel" />
-                    <button colspan="1"
-                              name="%(action_lunch_order_confirm)d"
-                              string="Confirm Order"
-                              type="action" states="draft"
-                              icon="terp-gtk-go-back-rtl" />
                 </tree>
             </field>
         </record>
@@ -337,7 +327,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Box Amount by User">
-                     <field name="date" invisible="1"/>
+                    <field name="date" invisible="1"/>
                     <field name="year" invisible="1"/>
                     <field name="day" invisible="1"/>
                     <field name="month" invisible="1"/>

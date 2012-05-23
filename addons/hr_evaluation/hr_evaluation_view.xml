@@ -333,10 +333,6 @@
                     <field name="user_id" string="Interviewer"/>
                     <field name="user_to_review_id"/>
                     <field name="response" readonly="1" invisible="True"/>
-                    <button name="%(survey.action_view_survey_question_message)d" string="Interview Question" type="action" states="waiting_answer,done,cancel" icon="gtk-execute" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0, 'active' : response, 'request' : True, 'object' : 'hr.evaluation.interview', 'cur_id' : active_id}" attrs="{'readonly':[('survey_id','=',False)]}"/>
-                    <button name="%(survey.survey_browse_response)d" string="Print Interview" type="action" states="done" icon="gtk-print" context="{'survey_id': survey_id, 'response_id' : [response], 'response_no':0}" attrs="{'readonly':[('response','=',False)]}" />
-                    <button name="action_print_survey" string="Print Survey" type="object" icon="gtk-print" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0}" attrs="{'readonly':[('survey_id','=',False)]}"/>
-                    <button name="%(mail.action_email_compose_message_wizard)d" string="Send Reminder Email" icon="terp-mail-message-new" type="action" colspan="2" states="waiting_answer"/>
                     <field name="state"/>
                 </tree>
             </field>

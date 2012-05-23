@@ -149,10 +149,6 @@
                     <field name="main_speaker_id" groups="base.extended"/>
                     <field name="user_id"/>
                     <field name="state"/>
-                    <button string="Confirm Event" help="Confirm Event" name="button_confirm" states="draft" type="object" icon="gtk-apply"/>
-                    <button string="Event Done" help="Event Done" name="button_done" states="confirm" type="object" icon="gtk-jump-to"/>
-                    <button string="Cancel Event" help="Cancel Event" name="button_cancel" states="draft,confirm" type="object" icon="gtk-cancel"/>
-                    <button string="Set To Draft" help="Set To Draft" name="button_draft" states="cancel,done" type="object" icon="gtk-convert"/>
                 </tree>
             </field>
         </record>
@@ -340,10 +336,6 @@
                     <field name="user_id"/>
                     <field name="origin"/>
                     <field name="state"/>
-                    <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
-                    <button name="registration_open" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
-                    <button name="button_reg_close" string="Attended" states="open" type="object" icon="gtk-apply"/>
-                    <button string="Set To Unconfirmed" name="do_draft" states="cancel,done" type="object" icon="gtk-convert"/>
                 </tree>
             </field>
         </record>

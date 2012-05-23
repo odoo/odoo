@@ -557,8 +557,6 @@
                     <field name="balance_end_real"/>
                     <field name="balance_end" invisible="1"/>
                     <field name="state"/>
-                    <button type="object" string="Cancel" name="button_cancel" states="confirm" icon="gtk-cancel"/>
-                    <button type="object" string="Confirm" name="button_confirm_bank" states="draft" icon="terp-camera_test"/>
                 </tree>
             </field>
         </record>
@@ -1333,7 +1331,6 @@
                     <field name="amount" sum="Total Amount"/>
                     <field name="to_check"/>
                     <field name="state"/>
-                    <button name="button_validate" states="draft" string="Approve" type="object" icon="terp-camera_test"/>
                 </tree>
             </field>
         </record>
@@ -2599,9 +2596,6 @@ action = pool.get('res.config').next(cr, uid, [], context)
                     <field name="balance_end_real"/>
                     <field name="balance_end"/>
                     <field name="state"/>
-                    <button type="object" string="Cancel" name="button_cancel" states="confirm" icon="gtk-cancel"/>
-                    <button type="object" string="Open" name="button_open" states="draft" icon="terp-camera_test"/>
-                    <button type="object" string="Confirm" name="button_confirm_bank" states="open" icon="terp-gtk-go-back-rtl"/>
                 </tree>
             </field>
         </record>

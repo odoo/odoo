@@ -80,21 +80,6 @@
                     <field name="cutype" string="Invitation Type"/>
                     <field name="state" />
                     <field name="rsvp" string="Required to Join"/>
-                    <button name="do_tentative" states="needs-action,declined,accepted"
-                                string="Uncertain" type="object"
-                                icon="terp-crm" />
-                    <button name="do_accept" string="Accept"
-                        states="needs-action,tentative,declined"
-                        type="object" icon="gtk-apply" />
-                    <button name="do_decline" string="Decline"
-                        states="needs-action,tentative,accepted"
-                        type="object" icon="gtk-cancel" />
-                    <button
-                        name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d"
-                        string="Delegate" type="action"
-                        icon="gtk-sort-descending"
-                        states="needs-action,tentative,declined,accepted"
-                        context="{'model' : 'calendar.attendee', 'attendee_field' : 'child_ids'}" />
                 </tree>
             </field>
         </record>

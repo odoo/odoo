@@ -240,15 +240,6 @@
                     <field name="tot_start_survey" string="Started"/>
                     <field name="tot_comp_survey" string="Completed"/>
                     <field name="state" select="1"/>
-                    <button name="%(action_view_survey_question_message)d" states="open,draft,close,cancel"
-                        string="Test Survey" type="action" icon="gtk-new"
-                        context="{'active':True,'survey_id': active_id}"/>
-                    <button name="%(action_view_survey_question_message)d" states="open,draft,close,cancel"
-                        string="Answer Survey" type="action" icon="gtk-execute" context="{'survey_id': active_id}" attrs="{'invisible':[('state','!=','open')]}"/>
-                    <button name="%(action_view_survey_question_message)d" states="open,draft,close,cancel"
-                        string="Edit Survey" type="action" icon="gtk-edit" context="{'active':True,'edit' : True,'survey_id': active_id}"/>
-                    <button name="action_print_survey" states="open,draft,close,cancel"
-                                    string="Print Answer" type="object" icon="gtk-print"/>
                 </tree>
             </field>
         </record>

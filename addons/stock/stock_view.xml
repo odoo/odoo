@@ -457,7 +457,7 @@
                     <field name="location_dest_id" groups="stock.group_locations"/>
                     <field name="create_date" groups="base.group_no_one"/>
                     <field name="date" string="Date" groups="base.group_no_one"/>
-                     <field name="date_expected" string="Date Expected"/>
+                    <field name="date_expected" string="Date Expected"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -692,7 +692,6 @@
                     <field name="invoice_state"/>
                     <field name="stock_journal_id" widget="selection"/>
                     <field name="state"/>
-                    <button name="action_process" states="assigned" groups="stock.group_stock_user" string="Process" type="object" icon="gtk-go-forward"/>
                 </tree>
             </field>
         </record>
@@ -913,7 +912,6 @@
                     <field name="invoice_state"/>
                     <field name="stock_journal_id" widget="selection"/>
                     <field name="state"/>
-                    <button name="action_process" states="assigned" string="Process" type="object" icon="gtk-go-forward"/>
                 </tree>
             </field>
         </record>
@@ -1033,8 +1031,6 @@
                     <field name="invoice_state"/>
                     <field name="stock_journal_id" widget="selection"/>
                     <field name="state"/>
-                    <button name="action_process" states="assigned" string="Process" type="object" icon="gtk-go-forward"/>
-                    <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel" icon="gtk-cancel" confirm="This operation will cancel the shipment. Do you want to continue?" />
                 </tree>
             </field>
         </record>
@@ -1327,29 +1323,10 @@
                     <field name="product_id"/>
                     <field name="product_qty" />
                     <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
-                    <button name="%(stock.move_scrap)d"
-                        string="Scrap Products" type="action"
-                        icon="gtk-convert" context="{'scrap': True}"
-                        states="draft,waiting,confirmed,assigned"/>
                     <field name="prodlot_id" groups="stock.group_production_lot"/>
-                    <button name="%(track_line)d" string="Split in Serial Numbers" type="action"
-                        icon="terp-stock_effects-object-colorize" attrs="{'invisible': [('prodlot_id','&lt;&gt;',False)]}"
-                       states="draft,waiting,confirmed,assigned,done"
-                        groups="stock.group_tracking_lot"/>
                     <field name="tracking_id" groups="stock.group_tracking_lot"/>
-                    <button name="setlast_tracking" string="Put in current pack" type="object"
-                        attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}"
-                        groups="product.group_stock_packaging"
-                        icon="terp-stock_effects-object-colorize"
-                        states="draft,assigned,confirmed,done"/>
-                    <button name="%(split_into)d" string="Put in a new pack" type="action"
-                        groups="product.group_stock_packaging"
-                        icon="terp-stock_effects-object-colorize"
-                        states="draft,assigned,confirmed,done"/>
                     <field name="date" groups="base.group_no_one"/>
                     <field name="state"/>
-                    <button name="action_assign" states="confirmed" string="Set Available" type="object" icon="gtk-yes"/>
-                    <button name="action_done" string="Process" type="object" states="confirmed,assigned" icon="gtk-go-forward"/>
                 </tree>
             </field>
         </record>

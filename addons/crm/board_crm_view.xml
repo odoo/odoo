@@ -11,27 +11,10 @@
                     <field name="name" string="Opportunity"/>
                     <field name="partner_id" string="Customer"/>
                     <field name="stage_id"/>
-                    <button name="stage_previous" string="Previous Stage"
-                        states="open,pending" type="object" icon="gtk-go-back" />
-                    <button name="stage_next" string="Next Stage"
-                        states="open,pending" type="object"
-                        icon="gtk-go-forward" />
                     <field name="planned_revenue" sum="Total of Planned Revenue"/>
                     <field name="probability" widget="progressbar" avg="Avg. of Probability"/>
                     <field name="date_deadline" invisible="1"/>
                     <field name="state"/>
-                    <button name="case_open" string="Open"
-                        states="draft,pending" type="object"
-                        icon="gtk-go-forward" />
-                    <button name="case_pending" string="Pending"
-                        states="open,draft" type="object"
-                        icon="gtk-media-pause" />
-                    <button name="case_mark_lost" string="Lost"
-                        states="open,pending" type="object"
-                        icon="gtk-cancel" />
-                    <button name="case_close" string="Won"
-                        states="open,draft,pending" type="object"
-                        icon="gtk-apply" />
                 </tree>
             </field>
         </record>
