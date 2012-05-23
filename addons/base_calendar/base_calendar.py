@@ -333,11 +333,11 @@ class calendar_attendee(osv.osv):
                     ('opt-participant', 'Optional Participation'), \
                     ('non-participant', 'For information Purpose')], 'Role', \
                     help='Participation role for the calendar user'),
-        'state': fields.selection([('tentative', 'Tentative'),
-                        ('needs-action', 'Needs Action'),
-                        ('accepted', 'Accepted'),
+        'state': fields.selection([('needs-action', 'Needs Action'),
+                        ('tentative', 'Tentative'),
                         ('declined', 'Declined'),
-                        ('delegated', 'Delegated')], 'State', readonly=True, \
+                        ('accepted', 'Accepted'),
+                        ('delegated', 'Delegated')], 'Status', readonly=True, \
                         help="Status of the attendee's participation"),
         'rsvp':  fields.boolean('Required Reply?',
                     help="Indicats whether the favor of a reply is requested"),
@@ -767,7 +767,7 @@ class calendar_alarm(osv.osv):
                     ('run', 'Run'),
                     ('stop', 'Stop'),
                     ('done', 'Done'),
-                ], 'State', select=True, readonly=True),
+                ], 'Status', select=True, readonly=True),
      }
 
     _defaults = {
@@ -1036,8 +1036,9 @@ class calendar_event(osv.osv):
                                                 'Show as', states={'done': [('readonly', True)]}),
         'base_calendar_url': fields.char('Caldav URL', size=264),
         'state': fields.selection([('tentative', 'Tentative'),
+                        ('cancelled', 'Cancelled'),
                         ('confirmed', 'Confirmed'),
-                        ('cancelled', 'Cancelled')], 'State', readonly=True),
+                        ], 'Status', readonly=True),
         'exdate': fields.text('Exception Date/Times', help="This property \
 defines the list of date/time exceptions for a recurring calendar component."),
         'exrule': fields.char('Exception Rule', size=352, help="Defines a \

@@ -42,6 +42,46 @@
                 </field>
         </record>
 
+    <act_window
+        id="crm_meeting_partner"
+        name="Meetings"
+        res_model="crm.meeting"
+        src_model="res.partner"
+        view_mode="calendar,tree,form,gantt"
+        context="{'search_default_partner_id': [active_id],'default_partner_id': active_id}"
+    />
+    <act_window
+        id="act_res_partner_2_opportunity"
+        name="Opportunities"
+        res_model="crm.lead"
+        src_model="res.partner"
+        view_mode="kanban,tree,form,graph,calendar"
+        domain="[('type','=','opportunity')]"
+        context="{'search_default_partner_id': [active_id],'default_partner_id': active_id}"
+        />
+
+<!-- Partner kanban view inherte -->
+        <record model="ir.ui.view" id="crm_lead_partner_kanban_view">
+            <field name="name">res.partner.kanban.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="type">kanban</field>
+            <field name="inherit_id" ref="base.res_partner_kanban_view"/>
+            <field name="arch" type="xml">
+                <field name="mobile" position="after">
+                    <field name="opportunity_count"/>
+                    <field name="meeting_count"/>
+                </field>
+                 <xpath expr="//h4[@class='oe_partner_heading']" position="after">
+                        <a name="%(act_res_partner_2_opportunity)d" type="action">
+                            <t t-if="record.opportunity_count.value">Opportunities(<t t-esc="record.opportunity_count.value"/>)</t>
+                        </a>
+                        <a name="%(crm_meeting_partner)d" type="action">
+                            <t t-if="record.meeting_count.value">Meetings(<t t-esc="record.meeting_count.value"/>)</t>
+                        </a>
+                </xpath>
+            </field>
+        </record>
+
         <!-- Add History tabs to res.partner form -->
         <record id="view_crm_partner_info_form1" model="ir.ui.view">
             <field name="name">res.partner.crm.info.inherit1</field>

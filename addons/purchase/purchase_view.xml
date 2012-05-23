@@ -130,7 +130,23 @@
             <field name="model">purchase.order</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Purchase Order">
+                <form layout="manual">
+                <div class="oe_form_topbar">
+                    <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object"/>
+                    <button name="picking_ok" states="except_picking" string="Manually Corrected"/>
+                    <button name="invoice_ok" states="except_invoice" string="Manually Corrected"/>
+                    <button name="purchase_confirm" states="draft" string="Confirm Purchase"/>
+                    <button name="purchase_appbuyer" states="wait_auth" string="Approve Purchase"/>
+                    <button name="purchase_approve" states="confirmed" string="Approved"/>
+                    <button name="%(report_purchase_order)d" string="Print" states="approved" type="action"/>
+                    <button name="action_cancel" states="approved,except_picking,except_invoice,wait" string="Cancel" type="object"/>
+                    <button name="purchase_cancel" states="draft,confirmed,wait_auth" string="Cancel"/>
+                    <div class="oe_right">
+                        <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,approved,done" statusbar_colors='{"except_picking":"red","except_invoice":"red","confirmed":"blue","wait":"blue"}' readonly="1"/>
+                    </div>
+                    <div class="oe_clear"/>
+                </div>
+                <sheet string="Purchase Order" layout="auto">
                     <group col="6" colspan="4">
                         <field name="name"/>
                         <field name="date_order"/>
@@ -164,18 +180,6 @@
                                 <field name="amount_total" sum="Total amount"/>
                                 <button name="button_dummy" states="draft" string="Compute" type="object" icon="gtk-execute"/>
                             </group>
-                            <group col="11" colspan="4">
-                                <field name="state" widget="statusbar" statusbar_visible="draft,approved,done" statusbar_colors='{"except_picking":"red","except_invoice":"red","confirmed":"blue","wait":"blue"}' readonly="1"/>
-                                <button name="purchase_cancel" states="draft,confirmed,wait_auth" string="Cancel" icon="gtk-cancel"/>
-                                <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" icon="gtk-convert"/>
-                                <button name="action_cancel" states="approved,except_picking,except_invoice,wait" string="Cancel Purchase Order" type="object" icon="gtk-cancel"/>
-                                <button name="picking_ok" states="except_picking" string="Manually Corrected" icon="gtk-convert"/>
-                                <button name="invoice_ok" states="except_invoice" string="Manually Corrected" icon="gtk-convert"/>
-                                <button name="purchase_confirm" states="draft" string="Convert to Purchase Order" icon="gtk-go-forward"/>
-                                <button name="purchase_appbuyer" states="wait_auth" string="Approve Purchase" icon="gtk-ok"/>
-                                <button name="purchase_approve" states="confirmed" string="Approved" icon="gtk-go-forward"/>
-                                <button name="%(report_purchase_order)d" string="Print" states="approved" type="action" icon="gtk-print"/>
-                            </group>
                         </page>
                         <page string="Delivery &amp; Invoicing">
                             <group colspan="2" col="2">
@@ -203,7 +207,10 @@
                             <field colspan="4" name="notes" nolabel="1"/>
                         </page>
                     </notebook>
+                </sheet>
+                <div class="oe_form_sheet_width">
                    <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
+                </div>
                 </form>
             </field>
         </record>
@@ -231,8 +238,8 @@
                   <group expand="0" string="Group By...">
                     <filter string="Supplier" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                      <separator orientation="vertical"/>
-                    <filter string="Origin" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
-                    <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                    <filter string="Source" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
+                    <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                      <separator orientation="vertical"/>
                     <filter string="Order Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_order'}"/>
                     <filter string="Expected Date" icon="terp-go-month" domain="[]" context="{'group_by':'minimum_planned_date'}"/>
@@ -267,8 +274,8 @@
                   <group expand="0" string="Group By...">
                     <filter string="Supplier" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                      <separator orientation="vertical"/>
-                    <filter string="Origin" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
-                    <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                    <filter string="Source" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
+                    <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                      <separator orientation="vertical"/>
                     <filter string="Order Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_order'}"/>
                     <filter string="Expected Date" icon="terp-go-month" domain="[]" context="{'group_by':'minimum_planned_date'}"/>
@@ -311,7 +318,7 @@
         </record>
         <menuitem action="purchase_rfq" id="menu_purchase_rfq"
             parent="menu_procurement_management"
-            sequence="6"/>
+            sequence="0"/>
 
         <record id="purchase_form_action" model="ir.actions.act_window">
             <field name="name">Purchase Orders</field>
@@ -322,7 +329,7 @@
             <field name="search_view_id" ref="view_purchase_order_filter"/>
             <field name="help">Use this menu to search within your purchase orders by references, supplier, products, etc. For each purchase order, you can track the products received, and control the supplier invoices.</field>
         </record>
-        <menuitem action="purchase_form_action" id="menu_purchase_form_action" parent="menu_procurement_management" />
+        <menuitem action="purchase_form_action" id="menu_purchase_form_action" parent="menu_procurement_management" sequence="6"/>
 
 
         <record id="purchase_order_line_form" model="ir.ui.view">
@@ -445,7 +452,7 @@
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by' : 'product_id'}" />
                         <filter icon="terp-gtk-jump-to-rtl" string="Order Reference" domain="[]" context="{'group_by' :'order_id'}"/>
                         <separator orientation="vertical"/>
-                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by' : 'state'}" />
+                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by' : 'state'}" />
                         </group>
                </search>
             </field>
@@ -506,7 +513,7 @@
             <field name="inherit_id" ref="procurement.procurement_form_view"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page/field[@name='close_move']" position="before">
+                <xpath expr="//field[@name='close_move']" position="before">
                     <field name="purchase_id"/>
                 </xpath>
             </field>
