@@ -25,7 +25,23 @@
         <field name="model">crm.meeting</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Meetings">
+            <form string="Meetings" layout="manual">
+                <sheet layout="auto">
+                <div class="oe_form_topbar oe_form_topbar_hifirst">
+                    <button name="case_open" string="Confirm" type="object"
+                            states="draft" icon="gtk-go-forward"/>
+                    <button name="case_close" string="Done" type="object"
+                            states="open" icon="gtk-jump-to"/>
+                    <button name="case_reset" string="Reset to Unconfirmed" type="object"
+                            states="cancel" icon="gtk-convert"/>
+                    <button name="case_cancel" string="Cancel" type="object"
+                            states="draft,open,done" icon="gtk-cancel"/>
+                    <div class="oe_right">
+                        <field name="state" nolabel="1" widget="statusbar"
+                                statusbar_visible="draft,open,done"/>
+                    </div>
+                    <div class="oe_clear"/>
+                </div>
                 <group col="6" colspan="4">
                     <field name="name" select="1" string="Title"
                            required="1" />
@@ -71,19 +87,6 @@
                     </group>
                     <separator string="Description" colspan="4" />
                     <field name="description" nolabel="1" colspan="4" />
-                    <separator colspan="4"/>
-                    <group col="8" colspan="4" groups="base.group_no_one">
-                        <field name="state" />
-                        <button name="case_close" string="Done"
-                            states="open" type="object"
-                            icon="gtk-jump-to" />
-                        <button name="case_reset" string="Reset to Unconfirmed"
-                            states="open,done" type="object"
-                            icon="gtk-convert" />
-                        <button name="case_open" string="Confirm"
-                            states="draft" type="object"
-                            icon="gtk-go-forward" />
-                    </group>
                     </page>
                     <page string="Invitation Detail">
                         <button string="Invite People"
@@ -209,7 +212,10 @@
 
                     </page>
                 </notebook>
-                <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
+                </sheet>
+                <div class="oe_form_bottom">
+                    <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
+                </div>
             </form>
         </field>
     </record>
