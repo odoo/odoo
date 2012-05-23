@@ -22,7 +22,6 @@
     "version" : "1.0",
     "author" : "OpenERP SA",
     "category" : "Specific Industry Applications",
-    'complexity': "easy",
     "depends" : ["stock"],
     "init_xml" : [],
     "demo_xml" : ["product_expiry_demo.xml"],

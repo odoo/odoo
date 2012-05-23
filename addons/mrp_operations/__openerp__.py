@@ -24,7 +24,6 @@
     'name': 'Manufacturing Operations',
     'version': '1.0',
     'category': 'Manufacturing',
-    'complexity': "easy",
     'description': """
 This module adds state, date_start,date_stop in production order operation lines (in the "Work Centers" tab).
 =============================================================================================================

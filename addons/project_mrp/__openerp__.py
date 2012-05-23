@@ -24,7 +24,6 @@
     'name': 'Create Tasks on SO',
     'version': '1.0',
     "category": "Project Management",
-    'complexity': "easy",
     'description': """
 Automatically creates project tasks from procurement lines
 ==========================================================
