@@ -43,6 +43,16 @@ class decimal_precision(osv.osv):
         res = cr.fetchone()
         return res[0] if res else 2
 
+    def create(self, cr, uid, data, context=None):
+        res = super(decimal_precision, self).create(cr, uid, data, context=context)
+        self.precision_get.clear_cache(self)
+        return res
+
+    def unlink(self, cr, uid, ids, context=None):
+        res = super(decimal_precision, self).unlink(cr, uid, ids, context=context)
+        self.precision_get.clear_cache(self)
+        return res
+
     def write(self, cr, uid, ids, data, *args, **argv):
         res = super(decimal_precision, self).write(cr, uid, ids, data, *args, **argv)
         self.precision_get.clear_cache(self)
