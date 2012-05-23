@@ -264,32 +264,6 @@
     </div>
 </t>
 
-<t t-name="WebClient">
-    <table class="oe_webclient">
-        <tr>
-            <td colspan="2" class="oe_topbar">
-                <div class="oe_menu_placeholder"/>
-                <div class="oe_user_menu_placeholder"/>
-                <div class="oe_systray"/>
-            </td>
-        </tr>
-        <tr>
-            <td class="oe_leftbar" valign="top">
-                <t t-js="d">
-                    d.url = '/' + (window.location.search || '');
-                </t>
-                <a t-att-href="url" class="oe_logo"><img t-att-src='_s + "/web/static/src/img/logo.png"'/></a>
-                <div class="oe_secondary_menus_container"/>
-                <div class="oe_footer">
-                    Powered by <a href="http://www.openerp.com"><span>Open</span>ERP</a>
-                </div>
-            </td>
-            <td class="oe_application">
-            </td>
-        </tr>
-    </table>
-</t>
-
 <t t-name="Menu">
     <ul class="oe_menu" t-if="widget.data">
         <li t-foreach="widget.data.data.children" t-as="menu">
@@ -358,7 +332,7 @@
 </t>
 <t t-name="UserMenu.about">
     <div>
-        <a class="oe_activate_debug_mode" href="?debug" style="float:right; font-size: 80%;">Activate the developper mode</a>
+        <a class="oe_activate_debug_mode" href="?debug" style="float:right; font-size: 80%;">Activate the developer mode</a>
         <h1 style="margin:0;">OpenERP</h1>
         <h3 style="margin:15px 0;padding:0;">Version <t t-esc="version_info.version"/></h3>
         <p>
@@ -409,7 +383,10 @@
         </tr>
         <tr>
             <td class="oe_leftbar" valign="top">
-                <a href="#" class="oe_logo"><img t-att-src='_s + "/web/static/src/img/logo.png"'/></a>
+                <t t-js="d">
+                    d.url = '/' + (window.location.search || '');
+                </t>
+                <a t-att-href="url" class="oe_logo"><img t-att-src='_s + "/web/static/src/img/logo.png"'/></a>
                 <div class="oe_secondary_menus_container"/>
                 <div class="oe_footer">
                     Powered by <a href="http://www.openerp.com"><span>Open</span>ERP</a>
@@ -476,6 +453,7 @@
     <option t-if="view_manager.active_view === 'form'" value="toggle_layout_outline">Toggle Form Layout Outline</option>
     <option value="fields">View Fields</option>
     <option value="fvg">Fields View Get</option>
+    <option value="manage_filters">Manage Filters</option>
     <t t-if="view_manager.session.uid === 1">
         <option value="manage_views">Manage Views</option>
         <option value="edit" data-model="ir.ui.view" t-att-data-id="view.fields_view.view_id">Edit <t t-esc="_.str.capitalize(view.fields_view.type)"/>View</option>
@@ -998,11 +976,12 @@
     </div>
 </t>
 <t t-name="web.datetimepicker">
+    <t t-set="placeholder" t-value="widget.getParent().node and widget.getParent().node.attrs.placeholder"/>
     <div class="oe_datepicker_root oe_form_field_datetime">
         <input type="text" class="oe_datepicker_container" disabled="disabled" style="display: none;"/>
         <input type="text"
             t-att-name="widget.name"
-            t-att-placeholder="widget.getParent().node.attrs.placeholder"
+            t-att-placeholder="placeholder"
             t-attf-class="oe_datepicker_master field_#{widget.type_of_date} oe_form_field_#{widget.type_of_date}"
         /><img class="oe_input_icon oe_datepicker_trigger" t-att-src='_s + "/web/static/src/img/ui/field_calendar.png"'
              title="Select date" width="16" height="16" border="0"/>
@@ -1318,7 +1297,31 @@
 </t>
 
 <div t-name="SearchView" class="oe_searchview">
+    <div class="oe_searchview_facets"/>
+    <div class="oe_searchview_clear"/>
+    <div class="oe_searchview_unfold_drawer"/>
+    <div class="oe_searchview_drawer"/>
 </div>
+
+<div t-name="SearchView.InputView"
+     class="oe_searchview_input"
+     contenteditable="true"/>
+<!-- tabindex: makes div focusable -->
+<div t-name="SearchView.FacetView"
+     class="oe_searchview_facet"
+     tabindex="0"
+    ><span class="oe_facet_remove">✖</span
+    ><span class="oe_facet_category oe_i" t-if="widget.model.has('icon')">
+        <t t-esc="widget.model.get('icon')"/>
+    </span
+    ><span class="oe_facet_category" t-if="!widget.model.has('icon')">
+        <t t-esc="widget.model.get('category')"/>
+    </span ><span class="oe_facet_values"
+/></div>
+<span t-name="SearchView.FacetView.Value" class="oe_facet_value">
+    <t t-esc="widget.model.get('label')"/>
+</span>
+
 <t t-name="SearchView.managed-filters">
     <option class="oe-filters-title" value="">Filters</option>
     <optgroup label="-- Filters --">
@@ -1375,8 +1378,9 @@
     <t t-esc="attrs.string"/>
 </button>
 <ul t-name="SearchView.filters">
-    <li t-foreach="widget.filters" t-as="filter">
-        <t t-esc="filter.attrs.string or filter.attrs.name or 'Ω'"/>
+    <li t-foreach="widget.filters" t-as="filter"
+            t-att-title="filter.attrs.string ? filter.attrs.help : undefined">
+        <t t-esc="filter.attrs.string or filter.attrs.help or filter.attrs.name or 'Ω'"/>
     </li>
 </ul>
 <t t-name="SearchView.filters.facet">
@@ -1471,8 +1475,22 @@
         </t>
     </t>
 </t>
+<div t-name="SearchView.Filters" class="oe_searchview_filters">
+
+</div>
+<div t-name="SearchView.CustomFilters" class="oe_searchview_custom">
+    <ul class="oe_searchview_custom_list"/>
+    <h4 class="oe_searchview_custom_title">
+        <label for="oe_searchview_custom_input">Save search</label></h4>
+    <form>
+        <input id="oe_searchview_custom_input"/>
+        <button>Save</button><br/>
+        <label for="oe_searchview_custom_public">Share with all users:</label>
+        <input id="oe_searchview_custom_public" type="checkbox"/>
+    </form>
+</div>
 <div t-name="SearchView.advanced" class="oe_searchview_advanced">
-    <h4>Advanced Search...</h4>
+    <h4>Advanced Search</h4>
     <form>
         <ul>
 
@@ -1494,26 +1512,23 @@
         </select>
         <select class="searchview_extended_prop_op"/>
         <span class="searchview_extended_prop_value"/>
-        <a class="searchview_extended_delete_prop"
-                href="javascript:void(0)"><span> </span></a>
+        <button type="button" class="searchview_extended_delete_prop">Delete</button>
     </li>
 </t>
 <t t-name="SearchView.extended_search.proposition.char">
-    <input t-att-id="widget.element_id" class="field_char"/>
+    <input class="field_char"/>
 </t>
 <t t-name="SearchView.extended_search.proposition.empty">
-    <span t-att-id="widget.element_id"></span>
+    <span/>
 </t>
 <t t-name="SearchView.extended_search.proposition.integer">
-    <input type="number" t-att-id="widget.element_id" class="field_integer" step="1"/>
+    <input type="number" class="field_integer" step="1"/>
 </t>
 <t t-name="SearchView.extended_search.proposition.float">
-    <input type="number" t-att-id="widget.element_id" class="field_float" step="0.01"/>
-</t>
-<t t-name="SearchView.extended_search.proposition.boolean">
+    <input type="number" class="field_float" step="0.01"/>
 </t>
 <t t-name="SearchView.extended_search.proposition.selection">
-    <select t-att-id="widget.element_id">
+    <select>
         <t t-foreach="widget.field.selection" t-as="element">
         <option t-att-value="element[0]"><t t-esc="element[1]"/></option>
         </t>

@@ -284,9 +284,6 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
             }
         }
     },
-    get_url: function (file) {
-        return this.prefix + file;
-    },
     /**
      * Cooperative file download implementation, for ajaxy APIs.
      *

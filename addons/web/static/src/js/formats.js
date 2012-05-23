@@ -111,7 +111,7 @@ instance.web.format_value = function (value, descriptor, value_if_empty) {
             return value_if_empty === undefined ?  '' : value_if_empty;
     }
     var l10n = _t.database.parameters;
-    switch (descriptor.type || (descriptor.field && descriptor.field.type)) {
+    switch (descriptor.widget || descriptor.type || (descriptor.field && descriptor.field.type)) {
         case 'id':
             return value.toString();
         case 'integer':
@@ -171,7 +171,7 @@ instance.web.parse_value = function (value, descriptor, value_if_empty) {
         case "":
             return value_if_empty === undefined ?  false : value_if_empty;
     }
-    switch (descriptor.type || (descriptor.field && descriptor.field.type)) {
+    switch (descriptor.widget || descriptor.type || (descriptor.field && descriptor.field.type)) {
         case 'integer':
             var tmp;
             do {

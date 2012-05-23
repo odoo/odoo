@@ -4,6 +4,7 @@
 $section-title-color: #8786b7
 $facets-border: #afafb6
 $facets-border-selected: #a6a6fe
+$hover-background: #f0f0fa
 $colour4: #8a89ba
 // }}}
 // Mixins {{{
@@ -73,6 +74,18 @@ $colour4: #8a89ba
     -moz-box-sizing: border-box
     -webkit-box-sizing: border-box
     box-sizing: border-box
+
+// Transforms the (readable) text of an inline element into an mmlicons icon,
+// allows for actual readable text in-code (and in readers?) with iconic looks
+@mixin text-to-icon($icon-name, $color: #404040)
+    font-size: 1px
+    letter-spacing: -1px
+    color: transparent
+    &:before
+        font-family: "mnmliconsRegular"
+        content: $icon-name
+        font-size: 20px
+        color: $color
 
 // }}}
 
@@ -906,132 +919,145 @@ $colour4: #8a89ba
     // }}}
     // SearchView xmo {{{
     .oe_searchview
+        cursor: text
         position: relative
         float: right
-        .VS-search
-            .VS-search-box
-                min-height: 0
-                padding: 0
-                width: 480px
-                border: 1px solid #ababab
-                @include radius(13px)
-                @include box-shadow(0 1px 2px rgba(0,0,0,0.2) inset)
-                //padding: 4px 19px
-                //font-size: 13px
-                //background: url('../img/search.png') no-repeat 5px
-                //background-color: white
-            .VS-icon
-                top: 6px
+        padding-right: 20px
+        width: 410px
+        border: 1px solid #ababab
+        background: white
+        @include radius(1em)
+        @include box-shadow(0 1px 2px rgba(0,0,0,0.2) inset)
 
-            .VS-icon-search
-                left: 2px
-                top: 3px
-                height: 18px
-                width: 18px
+        &.oe_focused
+            border-color: $facets-border-selected
+            @include box-shadow(0 1px 2px $facets-border-selected inset)
 
-            .VS-search-inner
-                margin: 0 40px 0 17px
-                padding: 1px 0
-                font-size: 13px
+        .oe_searchview_clear
+            cursor: pointer
+            position: absolute
+            top: 0
+            right: 22px
+            width: 15px
+            height: 100%
+            background: url(../img/attachments-close.png) center center no-repeat
 
-                input
-                    font-size: inherit
-                    line-height: inherit
-                    height: auto
-                    padding: 0
+        .oe_searchview_unfold_drawer
+            position: absolute
+            top: 0
+            right: 0
+            height: 100%
+            line-height: 2.5em
+            padding: 0 7px 0 4px
+            color: #ccc
+            cursor: pointer
+            &:hover
+                color: #999
+            &:before
+                content: "◀"
 
-                .VS-input-width-tester
-                    font-size: inherit
-                    padding: 0
+        .oe_searchview_facets
+            &:before
+                color: #ccc
+                font-family: "mnmliconsRegular"
+                content: "r"
+                font-size: 150%
+                padding: 0 1px 0 3px
+                display: inline
 
-                .search_input
-                    margin-left: 0
-                    height: 22px
-                    input, .VS-input-width-tester
-                        height: inherit
-                        margin: 0
+            *
+                vertical-align: top
+                display: inline-block
+                line-height: 26px
 
-                .search_facet
-                    padding: 0
-                    margin: 1px 0
-                    border: 1px solid $facets-border
-                    @include radius(3px)
-                    background: #f0f0fa
-                    height: 18px
+            .oe_searchview_input, .oe_searchview_facet
+                height: 26px
+                &:focus
+                    outline: none
 
-                    &.is_selected
-                        border-color: $facets-border-selected
-                        @include box-shadow(0 0 3px 1px $facets-border-selected)
+            .oe_searchview_input
+                padding: 0 3px
 
-                        .category
-                            margin-left: 0
-                        .VS-icon-cancel
-                            // don't change the icon on selection
-                            @include opacity(1.0)
-                            background-position: center 0
-
-                    .category
-                        padding: 0 4px 0 14px
-                        color: white
-                        background: #8786b7
-                        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4)
-                        font-weight: normal
-                        text-transform: none
-                        height: 18px
-                        line-height: 18px
-                        font-size: inherit
-
-                    .search_facet_input_container
-                        border-left: 1px solid $facets-border
-                        height: 18px
-                        line-height: 18px
-                        padding: 0 4px
-                        cursor: pointer
-
-                    .search_facet_remove
-                        left: 1px
-                        top: 3px
-
-            .VS-icon-cancel
-                right: 24px
-
-            .oe_vs_unfold_drawer
-                position: absolute
-                top: 0
-                right: 0
-                height: 100%
-                line-height: 23px
-                padding: 0 7px 0 4px
-                color: #4c4c4c
+            .oe_searchview_facet
+                position: relative
                 cursor: pointer
-                &:before
+                border: 1px solid $facets-border
+                @include radius(3px)
+                background: #8786b7
+                -webkit-font-smoothing: auto
+                padding-left: 1.1em
+                // spacing for opera, FF
+                margin: 1px 0
+
+                &:focus
+                    border-color: $facets-border-selected
+                    @include box-shadow(0 0 3px 1px $facets-border-selected)
+
+                .oe_facet_values
+                    background: #f0f0fa
+                    @include radius(0 3px 3px 0)
+
+                .oe_facet_category, .oe_facet_value
+                    height: 24px
+                    padding: 1px 0.1em
+
+                .oe_facet_category
+                    color: white
+                    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4)
+
+                .oe_facet_value
+                    border-left: 1px solid $facets-border
+
+                .oe_facet_remove
                     position: absolute
-                    top: 9px
-                    right: 8px
-                    width: 0
-                    height: 0
-                    display: inline-block
-                    content: ""
-                    vertical-align: top
-                    border-top: 5px solid #4c4c4c
-                    border-left: 5px solid transparent
-                    border-right: 5px solid transparent
-                    @include opacity(0.5)
+                    top: 0
+                    left: 2px
+                    color: white
+
+                    &:hover
+                        color: #ccc
 
         &.oe_searchview_open_drawer
             .oe_searchview_drawer
                 display: block
+            .oe_searchview_unfold_drawer:before
+                content: "▼"
 
         .oe_searchview_drawer
             position: absolute
             z-index: 1
+            // detach drawer from field slightly
+            margin-top: 3px
             top: 100%
             right: 0
             background-color: white
-            width: 480px
+            min-width: 100%
             display: none
             border: 1px solid #ccc
             text-align: left
+            padding-bottom: 0.5em
+            @include radius(1em)
+
+            > div
+                border-top: 1px solid #ccc
+                margin: 3px 0
+            > div:first-child
+                border-top: none
+                margin: 0
+
+            h4, h4 *
+                margin: 0
+                cursor: pointer
+
+            h4:before
+                content: "▸ "
+
+            button, .button
+                border: none
+                background: transparent
+                padding: 0 2px
+                @include box-shadow(none)
+                @include radius(0)
 
             .oe_searchview_filters
                 display: table
@@ -1053,24 +1079,44 @@ $colour4: #8a89ba
 
                 li
                     list-style: none
-                    padding: 3px 6px
-                    height: 14px
+                    padding: 3px 6px 3px 18px
+                    line-height: 14px
                     color: inherit
                     cursor: pointer
 
+                    &.oe_selected
+                        background: url(/web/static/src/img/icons/gtk-apply.png) left 2px no-repeat
+                    // after oe_selected so background color is not overridden
                     &:hover
-                        background-color: #f0f0fa
+                        background-color: $hover-background
+
+
+            .oe_searchview_custom
+                form
+                    display: none
+
+                    button
+                        @include text-to-icon("S")
+                li
+                    cursor: pointer
+                    position: relative
+                    line-height: 1.2em
+                    padding: 2px 20px 2px 25px
+
+                    &.oe_searchview_custom_private
+                        background: url(/web/static/src/img/icons/terp-locked.png) 5px center no-repeat
+
+                    &:hover
+                        background-color: $hover-background
+
+                    button
+                        position: absolute
+                        top: 0
+                        right: 5px
+
 
             .oe_searchview_advanced
-                h4
-                    border-top: 1px solid #ccc
-                    margin: 5px 0 3px
-                    cursor: pointer
-
-                h4:before
-                    content: "▸ "
-
-                div
+                form
                     display: none
 
                 button.oe_add_condition:before
@@ -1084,12 +1130,17 @@ $colour4: #8a89ba
                 li
                     list-style: none
                     margin: 0
+                    white-space: nowrap
 
-                &.oe_opened
-                    h4:before
-                        content: "▾ "
-                    div
-                        display: block
+            .oe_opened
+                h4:before
+                    content: "▾ "
+                form
+                    display: block
+
+            // delete buttons
+            .oe_searchview_custom_delete, .searchview_extended_delete_prop
+                @include text-to-icon("d")
     // }}}
     // Views Common {{{
     .oe_view_nocontent
