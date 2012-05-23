@@ -398,7 +398,8 @@
                     <button name="case_cancel" string="Cancel" type="object"
                             states="draft" icon="gtk-cancel"/>
                     <div class="oe_right">
-                        <field name="stage_id" nolabel="1" widget="statusbar"/>
+                        <field name="stage_id" nolabel="1" widget="statusbar"
+                            on_change="onchange_stage_id(stage_id)"/>
 <!--
                                 statusbar_visible="New,Qualification,Proposition,Won"
                                 statusbar_colors='{"Negotiation":"blue"}'/>

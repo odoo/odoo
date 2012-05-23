@@ -282,7 +282,7 @@ class crm_lead(crm_case, osv.osv):
         """Mark the case as lost: state = done and probability = 0%
         """
         for lead in self.browse(cr, uid, ids):
-            stage_id = self.stage_find(cr, uid, lead.section_id.id or False, [('probability', '=', 0.0), ('name', '=', 'Lost')], context=context)
+            stage_id = self.stage_find(cr, uid, lead.section_id.id or False, [('probability', '=', 0.0)], context=context)
             if stage_id:
                 self.case_set(cr, uid, [lead.id], values_to_update={'probability': 0.0}, new_stage_id=stage_id, context=context)
         self.case_mark_lost_send_note(cr, uid, ids, context=context)
