@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2012-05-10 17:21+0000\n"
-"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
+"PO-Revision-Date: 2012-05-24 06:38+0000\n"
+"Last-Translator: Akira Hiyama <Unknown>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-05-11 05:13+0000\n"
-"X-Generator: Launchpad (build 15225)\n"
+"X-Launchpad-Export-Date: 2012-05-24 11:09+0000\n"
+"X-Generator: Launchpad (build 15288)\n"
 
 #. module: caldav
 #: view:basic.calendar:0
@@ -57,6 +57,29 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"事前要求事項\n"
+"----------\n"
+"CalDAVとのカレンダー同期を行う組み込みの方法はありません。\n"
+"サードパーティのソフトウェアのインストールが必要です：Calendar（CalDAV）が現在唯一です。\n"
+"\n"
+"設定\n"
+"-------------\n"
+"\n"
+"1. Calendar Syncを開きます。\n"
+"    ２つのタブのインタフェースが現れます。\n"
+"    最初のタブに留まります。\n"
+"\n"
+"2. CaDAV Calendar URL：そのURL にアクセスします（即ち "
+"http://host.com:8069/webdav/db/calendars/users/demo/c/Meetings）。\n"
+"\n"
+"3. OpenERPのユーザ名とパスワードを入力します。\n"
+"\n"
+"4. サーバがSSLを使わない場合は警告を受けます。\"Yes\"を応答します。\n"
+"\n"
+"5. すると、手動で同期、または x分毎に同期を設定するカスタマイズが可能です。\n"
+"\n"
+"    "
 
 #. module: caldav
 #: field:basic.calendar.alias,name:0
@@ -104,6 +127,9 @@ msgid ""
 "to synchronize Meeting with Calendars client.You can access Calendars using "
 "CalDAV clients, like sunbird, Calendar Evaluation, Mobile."
 msgstr ""
+"カレンダーはOpenERPモデルの全てとともにカレンダーイベントとToDo属性のカスタマイズが可能です。カレンダーはiCalのインポート / "
+"エクスポートを提供します。WebDAVサーバはカレンダーへのリモートアクセスを提供します。カレンダークライアントとともにミーティングの同期を手伝います。S"
+"unbird、Calendar Evaluation、MobileのようにCalDAVクライアントを使ってカレンダーにアクセスできます。"
 
 #. module: caldav
 #: code:addons/caldav/calendar.py:789
@@ -176,6 +202,26 @@ msgid ""
 "side.\n"
 "     "
 msgstr ""
+"\n"
+"    1. カレンダービューへ行く\n"
+"\n"
+"    2. ファイル -> 新規 -> カレンダー\n"
+"\n"
+"    3. フォームを埋める\n"
+"        ・ タイプ：CalDav\n"
+"        ・ 名前：好みの名前（例：会議）\n"
+"        ・ "
+"URL：http://HOST:PORT/webdav/DB_NAME/calendars/users/USER/c/Meetings （例： "
+"http://localhost:8069/webdav/db_1/calendars/users/demo/c/Meetings）このウィンドウに与えら"
+"れたもの\n"
+"        ・ \"SSL使用\"のチェックを外す\n"
+"        ・ ユーザ名：あなたのユーザ名（例：demo）\n"
+"        ・ リフレッシュ：サーバとデータの同期を行う好みの時間間隔\n"
+"\n"
+"    4. OKをクリックし、OpenERPのパスワードを入力\n"
+"\n"
+"    5. 名付けをした新しいカレンダーが左側に表示\n"
+"     "
 
 #. module: caldav
 #: code:addons/caldav/calendar.py:879
@@ -218,7 +264,7 @@ msgstr "ICS をエクスポートする"
 #. module: caldav
 #: selection:basic.calendar.fields,fn:0
 msgid "Use the field"
-msgstr ""
+msgstr "この項目を使用"
 
 #. module: caldav
 #: code:addons/caldav/calendar.py:789
@@ -475,6 +521,25 @@ msgid ""
 "created\n"
 "     "
 msgstr ""
+"\n"
+"  ・ WebDAVサーバはカレンダーにリモートアクセスを提供\n"
+"  ・ WebDAVを使ってカレンダーの同期\n"
+"  ・ 全てのOpenERPモデルとともにカレンダーイベントとToDo属性をカスタマイズ\n"
+"  ・ iCalのインポート / エクスポート機能を提供\n"
+"\n"
+"    CalDAVクライアントを使ってカレンダーにアクセスする先：\n"
+"        "
+"http://HOSTNAME:PORT/webdav/DATABASE_NAME/calendars/users/USERNAME/c\n"
+"\n"
+"    WebCalを使ってOpenERPカレンダーにアクセスするためのリモートサイトのURL：\n"
+"        "
+"http://HOSTNAME:PORT/webdav/DATABASE_NAME/Calendars/CALENDAR_NAME.ics\n"
+"\n"
+"      場所\n"
+"        HOSTNAME：稼動中のOpenERPサーバ（WebDAVとともに）ホスト名\n"
+"        PORT：稼動中のOpenERPサーバのポート（デフォルト：8069）\n"
+"        DATABASE_NAME：作成されたOpenERPカレンダーのデータベース名\n"
+"     "
 
 #. module: caldav
 #: sql_constraint:document.directory:0
@@ -560,6 +625,30 @@ msgid ""
 "\n"
 "7. Then Finish, your meetings should appear now in your calendar view\n"
 msgstr ""
+"\n"
+"事前要求事項\n"
+"----------\n"
+"Thunderbirdを使っている場合、最初にlightningモジュールをインストールする必要があります。\n"
+"http://www.mozilla.org/projects/calendar/lightning/\n"
+"\n"
+"設定\n"
+"-------------\n"
+"1. カレンダービューへ行く\n"
+"\n"
+"2. ファイル -> 新規カレンダー\n"
+"\n"
+"3. \"ネットワークで\"を選択\n"
+"\n"
+"4. フォーマットとしてCalDAVを選択\n"
+"   "
+"場所としてURLを指定（例：http://host.com:8069/webdav/db/calendars/users/demo/c/Meetings）"
+"\n"
+"\n"
+"5. カレンダーの名前と色を選択。警報のチェックを外すのが望ましい\n"
+"\n"
+"6. OpenERPのログイン名とパスワードを入力（パスワード入力を１回だけとする場合はパスワードを記憶するをチェック）\n"
+"\n"
+"7. 完了すると、その時にはカレンダービューにミーティングが現れる\n"
 
 #. module: caldav
 #: view:caldav.browse:0
@@ -596,7 +685,7 @@ msgstr "私のカレンダー"
 msgid ""
 "Also export a <name>.ics entry next to the calendar folder, with WebCal "
 "content."
-msgstr ""
+msgstr "また、<name>.ics エントリーを隣のカレンダーフォルダにWebCalコンテンツとともにインポートします。"
 
 #. module: caldav
 #: field:basic.calendar.fields,fn:0
@@ -619,7 +708,7 @@ msgstr "詳細"
 #. module: caldav
 #: help:basic.calendar.alias,cal_line_id:0
 msgid "The calendar/line this mapping applies to"
-msgstr ""
+msgstr "このマッピングのカレンダー / 行の適用先"
 
 #. module: caldav
 #: field:basic.calendar.fields,mapping:0
@@ -660,7 +749,7 @@ msgstr "遠隔カレンダを継読する。"
 #. module: caldav
 #: help:basic.calendar,calendar_color:0
 msgid "For supporting clients, the color of the calendar entries"
-msgstr ""
+msgstr "サポートするクライアントのカレンダーエントリーの色"
 
 #. module: caldav
 #: field:basic.calendar,name:0
@@ -817,7 +906,7 @@ msgstr "basic.calendar.todo"
 #. module: caldav
 #: help:basic.calendar,calendar_order:0
 msgid "For supporting clients, the order of this folder among the calendars"
-msgstr ""
+msgstr "サポートするクライアントのカレンダー中のフォルダ並び順"
 
 #~ msgid "Provide path for Remote Calendar"
 #~ msgstr "遠隔カレンダーへの経路を指定して下さい。"
