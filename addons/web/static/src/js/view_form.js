@@ -3400,7 +3400,7 @@ instance.web.form.FieldMany2ManyKanban = instance.web.form.AbstractField.extend(
             self.initial_is_loaded.resolve();
             loaded.resolve();
         });
-        this.kanban_view.do_switch_view.add_last(_.bind(this.add_new_record, this));
+        this.kanban_view.do_switch_view.add_last(_.bind(this.open_popup, this));
         $.async_when().then(function () {
             self.kanban_view.appendTo(self.$element);
         });
@@ -3415,28 +3415,45 @@ instance.web.form.FieldMany2ManyKanban = instance.web.form.AbstractField.extend(
     dataset_changed: function() {
         this.set({'value': [commands.replace_with(this.dataset.ids)]});
     },
-    add_new_record: function(type) {
+    open_popup: function(type, unused) {
         if (type !== "form")
             return;
-        var pop = new instance.web.form.SelectCreatePopup(this);
-        pop.select_element(
-            this.field.relation,
-            {
-                title: _t("Add: ") + this.name
-            },
-            new instance.web.CompoundDomain(this.build_domain(), ["!", ["id", "in", this.dataset.ids]]),
-            this.build_context()
-        );
         var self = this;
-        pop.on_select_elements.add(function(element_ids) {
-            _.each(element_ids, function(one_id) {
-                if(! _.detect(self.dataset.ids, function(x) {return x == one_id;})) {
-                    self.dataset.set_ids([].concat(self.dataset.ids, [one_id]));
-                    self.dataset_changed();
-                    self.reload_content();
-                }
+        if (this.dataset.index === null) {
+            var pop = new instance.web.form.SelectCreatePopup(this);
+            pop.select_element(
+                this.field.relation,
+                {
+                    title: _t("Add: ") + this.name
+                },
+                new instance.web.CompoundDomain(this.build_domain(), ["!", ["id", "in", this.dataset.ids]]),
+                this.build_context()
+            );
+            pop.on_select_elements.add(function(element_ids) {
+                _.each(element_ids, function(one_id) {
+                    if(! _.detect(self.dataset.ids, function(x) {return x == one_id;})) {
+                        self.dataset.set_ids([].concat(self.dataset.ids, [one_id]));
+                        self.dataset_changed();
+                        self.reload_content();
+                    }
+                });
             });
-        });
+        } else {
+            var id = self.dataset.ids[self.dataset.index];
+            var pop = new instance.web.form.FormOpenPopup(self.view);
+            pop.show_element(self.field.relation, id, self.build_context(), {
+                title: _t("Open: ") + self.name,
+                write_function: function(id, data, options) {
+                    return self.dataset.write(id, data, {}).then(function() {
+                        self.reload_content();
+                    });
+                },
+                alternative_form_view: self.field.views ? self.field.views["form"] : undefined,
+                parent_view: self.view,
+                child_name: self.name,
+                readonly: self.get("effective_readonly")
+            });
+        }
     },
 });
 
