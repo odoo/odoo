@@ -677,7 +677,7 @@ class task(osv.osv):
         'priority': fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Important'), ('0','Very important')], 'Priority', select=True),
         'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list of tasks."),
         'type_id': fields.many2one('project.task.type', 'Stage'),
-        'state': fields.related('stage_id', 'state', type="selection", store=True,
+        'state': fields.related('type_id', 'state', type="selection", store=True,
                 selection=_TASK_STATE, string="State", readonly=True,
                 help='The state is set to \'Draft\', when a case is created.\
                       If the case is in progress the state is set to \'Open\'.\
