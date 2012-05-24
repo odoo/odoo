@@ -66,7 +66,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         renderElement: function() {
             var self = this;
             this._super();
-            console.log('PaypadButtonWidget:',this);
 
             this.$element.click(function(){
                 if (self.pos.get('selectedOrder').get('screen') === 'receipt'){  //TODO Why ?

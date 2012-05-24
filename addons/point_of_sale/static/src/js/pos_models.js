@@ -147,8 +147,31 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                             ).then(function(result){
                                 self.set({'bank_statements':result});
                             });
+                        
 
-                        session_data_def = $.when(pos_config_def,bank_def);
+                        var journal_def = fetch(
+                            'account.journal',
+                            undefined,
+                            [['user_id','=',pos_session.user_id[0]]]
+                            ).then(function(result){
+                                self.set({'journals':result});
+                            });
+
+                        // associate the bank statements with their journals. 
+                        var bank_process_def = $.when(bank_def, journal_def)
+                            .then(function(){
+                                var bank_statements = self.get('bank_statements');
+                                var journals = self.get('journals');
+                                for(var i = 0, ilen = bank_statements.length; i < ilen; i++){
+                                    for(var j = 0, jlen = journals.length; j < jlen; j++){
+                                        if(bank_statements[i].journal_id[0] === journals[j].id){
+                                            bank_statements[i].journal = journals[j];
+                                        }
+                                    }
+                                }
+                            });
+
+                        session_data_def = $.when(pos_config_def,bank_def,journal_def,bank_process_def);
 
                     }else{
                         session_data_def.reject();
@@ -173,6 +196,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             console.log('PosModel: categories:',this.get('categories'));
             console.log('PosModel: product_list:',this.get('product_list'));
             console.log('PosModel: bank_statements:',this.get('bank_statements'));
+            console.log('PosModel: journals:',this.get('journals'));
             console.log('PosModel: taxes:',this.get('taxes'));
             console.log('PosModel: pos_session:',this.get('pos_session'));
             console.log('PosModel: pos_config:',this.get('pos_config'));
@@ -246,7 +270,11 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             var self = this;
 
             this.dao.get_operations().pipe(function(operations) {
-                console.log('_int_flushing ' + operations.length + ' operations');
+                // operations are really Orders that are converted to json.
+                // they are saved to disk and then we attempt to send them to the backend so that they can
+                // be applied. 
+                // since the network is not reliable we potentially have many 'pending operations' that have not been sent.
+
                 self.set( {'nbr_pending_operations':operations.length} );
                 if(operations.length === 0){
                     return $.when();
@@ -258,16 +286,16 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
 
                  return (new instance.web.Model('pos.order')).get_func('create_from_ui')([op])
                             .fail(function(unused, event){
-                                console.log('failed to flush?');
+                                // wtf ask niv
                                 event.preventDefault();
                             })
                             .pipe(function(){
-                                console.log('success ?');
+                                // success: remove the successfully sent operation, and try to send the next one 
                                 self.dao.remove_operation(operations[0].id).pipe(function(){
                                     return self._int_flush();
                                 });
                             }, function(){
-                                console.log('retrying');
+                                // in case of error we just sit there and do nothing. wtf ask niv
                                 return $.when();
                             });
             });
