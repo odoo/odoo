@@ -26,7 +26,6 @@
     "depends" : ["base", "base_setup"],
     "author" : "OpenERP SA",
     "category": 'Hidden/Dependency',
-    'complexity': "expert",
     "description": """
 Menu for Marketing.
 ===================
