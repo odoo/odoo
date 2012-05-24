@@ -120,11 +120,10 @@
                             <field name="name"/>
                             <field name="date_order"/>
                             <field name="shop_id" on_change="onchange_shop_id(shop_id)" widget="selection" groups="stock.group_locations"/>
-                            <field name="client_order_ref"/>
                         </group>
                         <group col="2" colspan="2">
-                            <field name="invoiced"/>
-                            <field name="shipped"/>
+                            <field name="invoiced" invisible="True"/>
+                            <field name="shipped" invisible="True"/>
                         </group>
                     </group>
                     <notebook colspan="5">
@@ -148,7 +147,7 @@
 
                                             <field
                                                 context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'shop':parent.shop_id, 'uom':product_uom}"
-                                                name="product_uom_qty"
+                                                name="product_uom_qty" string="Quantity"
                                                 on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, False, parent.date_order, product_packaging, parent.fiscal_position, True, context)"/>
                                             <group colspan="1">
                                                 <field name="product_uom" nolabel="1" groups="product.group_uom"
@@ -196,7 +195,7 @@
                                 </form>
                                 <tree string="Sales Order Lines">
                                     <field colspan="4" name="name"/>
-                                    <field name="product_uom_qty" string="Qty(Unit of Measure)"/>
+                                    <field name="product_uom_qty" string="Quantity"/>
                                     <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
                                     <field groups="product.group_uos" name="product_uos_qty" string="Qty(UoS)"/>
                                     <field groups="product.group_uos" name="product_uos" string="UoS"/>
@@ -234,6 +233,7 @@
                                 <separator string="References" colspan="2"/>
                                 <field name="user_id"/>
                                 <field groups="base.group_no_one" name="origin"/>
+                                <field name="client_order_ref"/>
                             </group>
                             <group name="sale_pay" colspan="2" col="2">
                                 <separator string="Conditions" colspan="2"/>
