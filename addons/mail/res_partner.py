@@ -38,9 +38,15 @@ class res_partner(osv.osv):
         """
         msg_obj = self.pool.get('mail.message')
         msg_ids = []
+        partner_ids=[]
         for partner in self.browse(cr, uid, ids, context=context):
-            msg_ids += msg_obj.search(cr, uid, ['|',('partner_id', '=', partner.id), '&', ('res_id', '=', partner.id), ('model', '=', self._name)] + domain,
+            msg_ids += msg_obj.search(cr, uid, [ ('res_id', '=', partner.id), ('model', '=' ,self._name)] + domain,
             limit=limit, offset=offset, context=context)
+        if self._name=='res.partner':
+            partner_ids=msg_obj.search(cr, uid, [ ('partner_id', 'in', ids)] + domain,
+                            limit=limit, offset=offset, context=context)
+        if partner_ids  :
+           msg_ids+= partner_ids            
         if (ascent): msg_ids = self._message_add_ancestor_ids(cr, uid, ids, msg_ids, root_ids, context=context)
         return msg_ids
 
