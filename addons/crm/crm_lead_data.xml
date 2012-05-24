@@ -11,49 +11,76 @@
             <field eval="1" name="case_default"/>
             <field name="state">draft</field>
             <field eval="'10'" name="probability"/>
-            <field eval="'11'" name="sequence"/>
+            <field eval="'10'" name="sequence"/>
+            <field name="type">both</field>
         </record>
         <record model="crm.case.stage" id="stage_lead2">
+            <field name="name">Opportunity</field>
+            <field eval="1" name="case_default"/>
+            <field name="state">open</field>
+            <field eval="'20'" name="probability"/>
+            <field eval="'11'" name="sequence"/>
+            <field name="type">lead</field>
+        </record>
+        <record model="crm.case.stage" id="stage_lead3">
             <field name="name">Qualification</field>
             <field eval="1" name="case_default"/>
             <field name="state">open</field>
             <field eval="'20'" name="probability"/>
             <field eval="'12'" name="sequence"/>
+            <field name="type">opportunity</field>
         </record>
-        <record model="crm.case.stage" id="stage_lead3">
+        <record model="crm.case.stage" id="stage_lead4">
             <field name="name">Proposition</field>
             <field eval="1" name="case_default"/>
             <field name="state">open</field>
             <field eval="'40'" name="probability"/>
             <field eval="'13'" name="sequence"/>
+            <field name="type">opportunity</field>
         </record>
-        <record model="crm.case.stage" id="stage_lead4">
+        <record model="crm.case.stage" id="stage_lead5">
             <field name="name">Negotiation</field>
             <field eval="1" name="case_default"/>
             <field name="state">open</field>
             <field eval="'60'" name="probability"/>
             <field eval="'14'" name="sequence"/>
+            <field name="type">opportunity</field>
         </record>
-        <record model="crm.case.stage" id="stage_lead5">
+        <record model="crm.case.stage" id="stage_lead6">
             <field name="name">Won</field>
             <field eval="1" name="case_default"/>
             <field name="state">done</field>
             <field eval="'100'" name="probability"/>
             <field eval="'15'" name="sequence"/>
             <field eval="1" name="on_change"/>
+            <field name="type">opportunity</field>
         </record>
-        <record model="crm.case.stage" id="stage_lead6">
+        <record model="crm.case.stage" id="stage_lead7">
+            <field name="name">Dead</field>
+            <field eval="1" name="case_default"/>
+            <field eval="True" name="fold"/>
+            <field name="state">cancel</field>
+            <field eval="'0'" name="probability"/>
+            <field eval="'16'" name="sequence"/>
+            <field name="type">lead</field>
+        </record>
+        <record model="crm.case.stage" id="stage_lead8">
             <field name="name">Lost</field>
             <field eval="1" name="case_default"/>
             <field eval="True" name="fold"/>
             <field name="state">cancel</field>
             <field eval="'0'" name="probability"/>
             <field eval="'17'" name="sequence"/>
+            <field name="type">opportunity</field>
         </record>
+        
         <record model="crm.case.section" id="section_sales_department">
             <field name="name">Sales Department</field>
             <field name="code">Sales</field>
-            <field name="stage_ids" eval="[(4, ref('stage_lead1')), (4, ref('stage_lead2')), (4, ref('stage_lead3')), (4, ref('stage_lead4')), (4, ref('stage_lead5')), (4, ref('stage_lead6'))]"/>
+            <field name="stage_ids" eval="[ (4, ref('stage_lead1')), (4, ref('stage_lead2')),
+                                            (4, ref('stage_lead3')), (4, ref('stage_lead4')),
+                                            (4, ref('stage_lead5')), (4, ref('stage_lead6')),
+                                            (4, ref('stage_lead7')), (4, ref('stage_lead8'))]"/>
         </record>
 
         <!-- Crm campain -->

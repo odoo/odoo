@@ -78,6 +78,11 @@ class crm_case_stage(osv.osv):
         'state': fields.selection(AVAILABLE_STATES, 'State', required=True, help="The related state for the stage. The state of your document will automatically change regarding the selected stage. For example, if a stage is related to the state 'Close', when your document reaches this stage, it will be automatically have the 'closed' state."),
         'case_default': fields.boolean('Common to All Teams', help="If you check this field, this stage will be proposed by default on each sales team. It will not assign this stage to existing teams."),
         'fold': fields.boolean('Hide in Views when Empty', help="This stage is not visible, for example in status bar or kanban view, when there are no records in that stage to display."),
+        'type': fields.selection([  ('lead','Lead'),
+                                    ('opportunity', 'Opportunity'),
+                                    ('both', 'Both')],
+                                    string='Type', size=16, required=True,
+                                    help="This field is used to distinguish stages related to Leads from stages related to Opportunities, or to specify stages available for both types."),
     }
 
     _defaults = {
@@ -85,6 +90,7 @@ class crm_case_stage(osv.osv):
         'probability': lambda *args: 0.0,
         'state': 'draft',
         'fold': False,
+        'type': 'both',
     }
 
 class crm_case_section(osv.osv):
