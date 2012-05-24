@@ -642,8 +642,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         start: function() {
             this.pos.bind('change:selectedOrder', this.change_selected_order, this);
             this.change_selected_order();
-            $('button#pos-finish-order', this.$element).click(_.bind(this.finishOrder, this));
-            $('button#print-the-ticket', this.$element).click(_.bind(this.print, this));
         },
         show: function(){
             this._super();
@@ -657,6 +655,18 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.pos_widget.action_bar.set_logout_visible(true, function(){ 
                 self.pos_widget.screen_selector.set_user_mode('client');
             });
+
+            this.pos_widget.action_bar.add_new_button({
+                    label: 'Print',
+                    icon: '/point_of_sale/static/src/img/icons/png48/printer.png',
+                    click: function(){ self.print(); },
+                });
+
+            this.pos_widget.action_bar.add_new_button({
+                    label: 'Next Order',
+                    icon: '/point_of_sale/static/src/img/icons/png48/go-next.png',
+                    click: function() { self.finishOrder(); },
+                });
         },
         print: function() {
             window.print();
