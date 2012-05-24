@@ -26,7 +26,6 @@
     "author" : "OpenERP,OpenLabs",
     "website" : "http://openerp.com",
     "category" : "Marketing",
-    'complexity': "expert",
     "depends" : ['mail'],
     "description": """
 Email Templating (simplified version of the original Power Email by Openlabs)

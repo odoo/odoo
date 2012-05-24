@@ -185,10 +185,10 @@ class event_event(osv.osv):
         'date_end': fields.datetime('End Date', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'state': fields.selection([
             ('draft', 'Unconfirmed'),
+            ('cancel', 'Cancelled'),
             ('confirm', 'Confirmed'),
-            ('done', 'Done'),
-            ('cancel', 'Cancelled')],
-            'State', readonly=True, required=True,
+            ('done', 'Done')],
+            'Status', readonly=True, required=True,
             help='If event is created, the state is \'Draft\'.If event is confirmed for the particular dates the state is set to \'Confirmed\'. If the event is over, the state is set to \'Done\'.If event is cancelled the state is set to \'Cancelled\'.'),
         'email_registration_id' : fields.many2one('email.template','Registration Confirmation Email', help='This field contains the template of the mail that will be automatically sent each time a registration for this event is confirmed.'),
         'email_confirmation_id' : fields.many2one('email.template','Event Confirmation Email', help="If you set an email template, each participant will receive this email announcing the confirmation of the event."),
@@ -257,7 +257,7 @@ class event_registration(osv.osv):
     _inherit = ['mail.thread','res.partner']
     _columns = {
         'id': fields.integer('ID'),
-        'origin': fields.char('Origin', size=124,readonly=True,help="Name of the sale order which create the registration"),
+        'origin': fields.char('Source', size=124,readonly=True,help="Name of the sale order which create the registration"),
         'nb_register': fields.integer('Number of Participants', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'event_id': fields.many2one('event.event', 'Event', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'partner_id': fields.many2one('res.partner', 'Partner', states={'done': [('readonly', True)]}),
@@ -271,9 +271,9 @@ class event_registration(osv.osv):
         'user_id': fields.many2one('res.users', 'Attendee', states={'done': [('readonly', True)]}),
         'company_id': fields.related('event_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True, states={'draft':[('readonly',False)]}),
         'state': fields.selection([('draft', 'Unconfirmed'),
-                                    ('open', 'Confirmed'),
                                     ('cancel', 'Cancelled'),
-                                    ('done', 'Attended')], 'State',
+                                    ('open', 'Confirmed'),
+                                    ('done', 'Attended')], 'Status',
                                     size=16, readonly=True),
     }
 

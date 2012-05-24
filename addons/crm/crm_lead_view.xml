@@ -53,15 +53,16 @@
         <field name="arch" type="xml">
             <form string="Leads Form" layout="manual">
                 <div class="oe_form_topbar">
-                    <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" icon="gtk-cancel" />
-                    <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward" />
-                    <button name="case_mark_lost" string="Close" states="open,pending" type="object" icon="gtk-close" />
-                    <button name="case_pending" string="Pending" states="open" type="object" icon="gtk-media-pause" />
-                    <button name="case_escalate" string="Escalate" states="open,pending" type="object" icon="gtk-go-up" />
-                    <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert" />
+                    <button name="case_open" string="Open" states="draft,pending" type="object" />
+                    <button name="case_mark_lost" string="Close" states="open,pending" type="object" />
+                    <button name="case_pending" string="Pending" states="open" type="object" />
+                    <button name="case_escalate" string="Escalate" states="open,pending" type="object" />
+                    <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" />
+                    <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" />
                     <div class="oe_right">
                         <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
                     </div>
+                    <div class="oe_clear"/>
                 </div>
                 <sheet layout="auto">
                 <group colspan="4" col="7">
@@ -251,65 +252,63 @@
                         </ul>
                     </t>
                     <t t-name="kanban-box">
-                        <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())" t-set="border">oe_kanban_color_red</t>
-                        <div t-attf-class="#{kanban_color(record.color.raw_value)} #{border || ''}">
-                            <div class="oe_kanban_box oe_kanban_color_border">
-                                <table class="oe_kanban_table oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
-                                <tr>
-                                    <td align="left" valign="middle" width="16">
-                                        <a t-if="record.priority.raw_value == 1" icon="star-on" type="object" name="set_normal_priority"/>
-                                        <a t-if="record.priority.raw_value != 1" icon="star-off" type="object" name="set_high_priority" style="opacity:0.6; filter:alpha(opacity=60);"/>
-                                    </td>
-                                    <td align="left" valign="middle" class="oe_kanban_title" tooltip="lead_details">
-                                        <field name="partner_id"/>
-                                        <t t-if="record.planned_revenue.raw_value">
-                                            - <t t-esc="Math.round(record.planned_revenue.value)"/>
-                                            <field name="company_currency"/>
-                                        </t>
-                                    </td>
-                                    <td valign="top" width="22">
-                                        <img t-att-src="kanban_image('res.users', 'avatar', record.user_id.raw_value[0])"  t-att-title="record.user_id.value"
-                                        width="22" height="22" class="oe_kanban_gravatar"/>
-                                    </td>
-                                </tr>
-                                </table>
-
-                                <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger">
-                                    <div>
-                                        <b>
-                                            <a t-if="record.partner_address_email.raw_value" t-attf-href="mailto:#{record.partner_address_email.raw_value}">
-                                                <field name="partner_address_name"/>
-                                            </a>
-                                            <field t-if="!record.partner_address_email.raw_value" name="partner_address_name"/>
-                                        </b>
-                                    </div>
-                                    <div>
-                                        <field name="name"/>
-                                    </div>
-                                    <div style="padding-left: 0.5em">
-                                        <i><field name="date_action"/><t t-if="record.date_action.raw_value"> : </t><field name="title_action"/></i>
-                                    </div>
+                        <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card">
+                            <a class="oe_kanban_menuaction oe_i">B</a>
+                            <ul class="oe_kanban_menu">
+                                <li><a type="edit" >Edit...</a></li>
+                                <li><a type="delete">Delete</a></li>
+                                <li><a name="%(mail.action_email_compose_message_wizard)d" type="action">Send New Email</a></li>
+                                <li><a name="%(opportunity2phonecall_act)d" type="action">Log Call</a></li>
+                                <li><a name="action_makeMeeting" type="object">Schedule Meeting</a></li>
+                                <li><a name="%(crm.action_crm_add_note)d" context="{'model': 'crm.lead' }" type="action">Add Internal Note</a></li>
+                                <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                            </ul>
+                            <div class="oe_kanban_content">
+                                <a type="edit"><h3>
+                                    <field name="partner_id"/>
+                                    <t t-if="record.planned_revenue.raw_value">
+                                        - <t t-esc="Math.round(record.planned_revenue.value)"/>
+                                        <field name="company_currency"/>
+                                    </t>
+                                </h3></a>
+                                <div>
+                                    <b> <field name="partner_address_name"/> </b>
                                 </div>
-
-                                <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
-                                    <div class="oe_kanban_left">
-                                        <a string="Edit" icon="gtk-edit" type="edit"/>
-                                        <a string="Change Color" icon="color-picker" type="color" name="color"/>
-                                        <a string="Send New Email" name="%(mail.action_email_compose_message_wizard)d" icon="terp-mail-message-new" type="action"/>
-                                        <a string="Log Call" name="%(opportunity2phonecall_act)d" icon="terp-call-start" type="action"/>
-                                        <a string="Schedule Meeting" name="action_makeMeeting" type="object" icon="stock_calendar"/>
-                                        <a string="Add Internal Note" name="%(crm.action_crm_add_note)d" context="{'model': 'crm.lead' }" icon="terp-document-new" type="action"/>
-                                    </div>
-                                    <div class="oe_kanban_right">
-                                        <a name="case_mark_lost" string="Mark Lost" states="open,pending" type="object" icon="kanban-stop" />
-                                        <a name="case_pending" string="Pending" states="draft,open" type="object" icon="kanban-pause" />
-                                        <a name="case_open" string="Open" states="pending" type="object" icon="gtk-media-play" />
-                                        <a name="case_mark_won" string="Mark Won" states="open,pending" type="object" icon="kanban-apply" />
-                                    </div>
-                                    <br class="oe_kanban_clear"/>
+                                <div>
+                                    <field name="name"/>
+                                </div>
+                                <div style="padding-left: 0.5em">
+                                    <i>
+                                        <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())" t-set="red">oe_kanban_text_red</t>
+                                        <span t-attf-class="#{red || ''}">
+                                            <field name="date_action"/>
+                                        </span>
+                                        <t t-if="record.date_action.raw_value"> : </t>
+                                        <field name="title_action"/>
+                                    </i>
+                                </div>
+                                <div class="oe_right">
+                                    <a t-if="record.priority.raw_value == 1" icon="star-on" type="object" name="set_normal_priority"/>
+                                    <a t-if="record.priority.raw_value != 1" icon="star-off" type="object" name="set_high_priority" style="opacity:0.7; filter:alpha(opacity=70);"/>
+                                    <!--
+                                    <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())" t-set="red">oe_kaban_status_red</t>
+                                    <span t-attf-class="oe_kanban_status #{red}"> </span>
+                                    -->
+                                    <img t-att-src="kanban_image('res.users', 'avatar', record.user_id.raw_value[0])" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
+                                </div>
+                                <div class="oe_kanban_footer_left">
                                 </div>
                             </div>
+                            <div class="oe_clear"></div>
                         </div>
+                        <!--
+                            <div class="oe_kanban_right">
+                                <a name="case_mark_lost" string="Mark Lost" states="open,pending" type="object" icon="kanban-stop" />
+                                <a name="case_pending" string="Pending" states="draft,open" type="object" icon="kanban-pause" />
+                                <a name="case_open" string="Open" states="pending" type="object" icon="gtk-media-play" />
+                                <a name="case_mark_won" string="Mark Won" states="open,pending" type="object" icon="kanban-apply" />
+                            </div>
+                        -->
                     </t>
                 </templates>
             </kanban>
@@ -371,7 +370,7 @@
                 </field>
                 <newline/>
                 <group expand="0" string="Group By...">
-                    <filter string="Salesman" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
+                    <filter string="Salesperson" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                     <filter string="Team" icon="terp-personal+" domain="[]" context="{'group_by':'section_id'}"/>
                     <filter string="Referrer" icon="terp-personal" domain="[]" context="{'group_by':'referred'}"/>
                     <separator orientation="vertical"/>
@@ -382,7 +381,7 @@
                         domain="[]" context="{'group_by':'channel_id'}" />
                     <separator orientation="vertical"/>
                     <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
-                    <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                    <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     <separator orientation="vertical" groups="base.group_no_one"/>
                     <filter string="Creation" help="Create date" icon="terp-go-month"
                         domain="[]" context="{'group_by':'create_date'}" groups="base.group_no_one"/>
@@ -401,13 +400,13 @@
         <field name="arch" type="xml">
             <form string="Opportunities" layout="manual">
                 <div class="oe_form_topbar oe_form_topbar_hifirst">
-                    <button name="case_cancel" string="Cancel" states="draft" type="object" icon="gtk-cancel" />
-                    <button name="case_mark_lost" string="Mark Lost" states="open,pending" type="object" icon="gtk-cancel" />
-                    <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert" />
-                    <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward" />
-                    <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause" />
-                    <button name="case_escalate" string="Escalate" states="open,pending" type="object" icon="gtk-go-up" />
-                    <button name="case_mark_won" string="Mark Won" states="open,pending" type="object" icon="gtk-apply" />
+                    <button name="case_mark_won" string="Mark Won" states="open,pending" type="object" />
+                    <button name="case_open" string="Open" states="draft,pending" type="object" />
+                    <button name="case_pending" string="Pending" states="draft,open" type="object" />
+                    <button name="case_escalate" string="Escalate" states="open,pending" type="object" />
+                    <button name="case_mark_lost" string="Mark Lost" states="open,pending" type="object" />
+                    <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" />
+                    <button name="case_cancel" string="Cancel" states="draft" type="object" />
                     <div class="oe_right">
                         <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
                     </div>
@@ -448,9 +447,7 @@
                                 icon="terp-partner" type="action"
                                 string="Create"
                                 attrs="{'invisible':[('partner_id','!=',False)]}"/>
-
                             <field name="phone" colspan="3"/>
-
                             <field width="80%%" name="email_from" string="Email"/>
                             <button string="Mail"
                                 name="%(mail.action_email_compose_message_wizard)d"
@@ -459,7 +456,7 @@
                         </group>
                     </group>
                     <group col="2" colspan="2" class="oe_form_group_label_border">
-                        <separator colspan="2" string="Categorization"/>
+                        <separator colspan="2" string="Category"/>
                         <field name="section_id" colspan="1" widget="selection"/>
                         <field name="categ_id" select="1"
                             string="Category" widget="selection"
@@ -613,10 +610,9 @@
                         domain="[]"
                         help="Show Sales Team"/>
                 </field>
-
                 <newline/>
                 <group expand="0" string="Group By..." colspan="16">
-                    <filter string="Salesman" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}" />
+                    <filter string="Salesperson" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}" />
                     <filter string="Team" help="Sales Team" icon="terp-personal+" domain="[]" context="{'group_by':'section_id'}"/>
                     <filter string="Customer" help="Partner" icon="terp-personal+" domain="[]" context="{'group_by':'partner_id'}"/>
                     <separator orientation="vertical" />
@@ -625,7 +621,7 @@
                     <filter string="Category" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'categ_id'}" />
                     <filter string="Campaign" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'type_id'}"/>
                     <filter string="Channel" icon="terp-call-start" domain="[]" context="{'group_by':'channel_id'}" />
-                    <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                    <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     <separator orientation="vertical" />
                     <filter string="Creation" icon="terp-go-month" domain="[]" context="{'group_by':'create_date'}" groups="base.group_no_one"/>
                     <filter string="Exp.Closing" icon="terp-go-month" help="Expected Closing" domain="[]" context="{'group_by':'date_deadline'}" />
