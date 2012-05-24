@@ -352,7 +352,7 @@ class crm_case(object):
         """ Gives default email address for current user
             :param context: if portal in context is false return false anyway
         """
-        if not context.get('portal', False):
+        if context and context.get('portal'):
             return False
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         return user.user_email
@@ -361,7 +361,7 @@ class crm_case(object):
         """ Gives current user id
             :param context: if portal in context is false return false anyway
         """
-        if context and context.get('portal', False):
+        if context and context.get('portal'):
             return False
         return uid
 
@@ -390,43 +390,31 @@ class crm_case(object):
             data.update(self.onchange_partner_address_id(cr, uid, ids, addr['contact'])['value'])
         return {'value': data}
 
-    def _get_default_section(self, cr, uid, context=None):
-        """ Gives default section by checking if present in the context """
-        if context is None:
-            context = {}
-        if context.get('portal', False):
-            return False
-        if type(context.get('default_section_id')) in (int, long):
-            return context.get('default_section_id')
-        if isinstance(context.get('default_section_id'), basestring):
-            section_name = context['default_section_id']
-            section_ids = self.pool.get('crm.case.section').name_search(cr, uid, name=section_name, context=context)
-            if len(section_ids) == 1:
-                return section_ids[0][0]
+    def _get_default_section_id(self, cr, uid, context=None):
+        """ Gives default section """
         return False
 
     def _get_default_stage_id(self, cr, uid, context=None):
         """ Gives default stage_id """
-        section_id = self._get_default_section(cr, uid, context=context)
-        return self.stage_find(cr, uid, section_id, [('state', '=', 'draft')], context=context)
+        return self.stage_find(cr, uid, [], None, [('state', '=', 'draft')], context=context)
     
-    def stage_find(self, cr, uid, section_id, domain=[], order='sequence', context=None):
-        """ Find stage, within a sales team, with a domain on the search,
+    def stage_find(self, cr, uid, cases, section_id, domain=[], order='sequence', context=None):
+        """ Find stage, with a given (optional) domain on the search,
             ordered by the order parameter. If several stages match the 
             search criterions, the first one will be returned, according
             to the requested search order.
-            :param section_id: if set, the search is limited to stages that
-                               belongs to the given sales team, or that are
-                               global (case_default flag set to True)
+            This method is meant to be overriden by subclasses. That way
+            specific behaviors can be achieved for every class inheriting
+            from crm_case.
+            
+            :param cases: browse_record of cases
+            :param section_id: section limitating the search, given for
+                               a generic search (for example default search).
+                               A section models concepts such as Sales team
+                               (for CRM), ou departments (for HR).
             :param domain: a domain on the search of stages
             :param order: order of the search
         """
-        domain = list(domain)
-        if section_id:
-            domain += ['|', ('section_ids', '=', section_id), ('case_default', '=', True)]
-        stage_ids = self.pool.get('crm.case.stage').search(cr, uid, domain, order=order, context=context)
-        if stage_ids:
-            return stage_ids[0]
         return False
 
     def stage_set_with_state_name(self, cr, uid, cases, state_name, context=None):
@@ -436,8 +424,7 @@ class crm_case(object):
         if isinstance(cases, (int, long)):
             cases = self.browse(cr, uid, cases, context=context)
         for case in cases:
-            section_id = case.section_id.id if case.section_id else None
-            stage_id = self.stage_find(cr, uid, section_id, [('state', '=', state_name)], context=context)
+            stage_id = self.stage_find(cr, uid, [case], None, [('state', '=', state_name)], context=context)
             if stage_id:
                 self.stage_set(cr, uid, [case.id], stage_id, context=context)
         return True
@@ -457,7 +444,7 @@ class crm_case(object):
             section_id = None
             if case.section_id:
                 section_id = case.section_id.id
-            next_stage_id = self.stage_find(cr, uid, section_id, [('sequence',op,seq)],order)
+            next_stage_id = self.stage_find(cr, uid, [case], None, [('sequence',op,seq)],order)
             if next_stage_id:
                 return self.stage_set(cr, uid, [case.id], next_stage_id, context=context)
         return False

@@ -42,20 +42,25 @@ class crm_lead(crm_case, osv.osv):
     _order = "priority,date_action,id desc"
     _inherit = ['ir.needaction_mixin', 'mail.thread','res.partner']
 
+    def _get_default_section_id(self, cr, uid, context=None):
+        """ Gives default section by checking if present in the context """
+        return self._resolve_section_id_from_context(cr, uid, context=context)
+
     def _resolve_section_id_from_context(self, cr, uid, context=None):
         """ Returns ID of section based on the value of 'section_id'
-            context key, or None if it cannot be resolved to a single project
+            context key, or None if it cannot be resolved to a single
+            Sales Team.
         """
         if context is None:
             context = {}
-        if type(context.get('section_id')) in (int, long):
-            return context.get('section_id')
-        if isinstance(context.get('section_id'), basestring):
-            section_name = context['section_id']
+        if type(context.get('default_section_id')) in (int, long):
+            return context.get('default_section_id')
+        if isinstance(context.get('default_section_id'), basestring):
+            section_name = context['default_section_id']
             section_ids = self.pool.get('crm.case.section').name_search(cr, uid, name=section_name, context=context)
             if len(section_ids) == 1:
-                return section_ids[0][0]
-        return None
+                return int(section_ids[0][0])
+        return False
 
     def _read_group_stage_ids(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
         access_rights_uid = access_rights_uid or uid
@@ -175,7 +180,6 @@ class crm_lead(crm_case, osv.osv):
         'email_cc': fields.text('Global CC', size=252 , help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
         'description': fields.text('Notes'),
         'write_date': fields.datetime('Update Date' , readonly=True),
-
         'categ_id': fields.many2one('crm.case.categ', 'Category', \
             domain="['|',('section_id','=',section_id),('section_id','=',False), ('object_id.model', '=', 'crm.lead')]"),
         'type_id': fields.many2one('crm.case.resource.type', 'Campaign', \
@@ -188,7 +192,7 @@ class crm_lead(crm_case, osv.osv):
         'type':fields.selection([ ('lead','Lead'), ('opportunity','Opportunity'), ],'Type', help="Type is used to separate Leads and Opportunities"),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
         'date_closed': fields.datetime('Closed', readonly=True),
-        'stage_id': fields.many2one('crm.case.stage', 'Stage', domain="[('section_ids', '=', section_id)]"),
+        'stage_id': fields.many2one('crm.case.stage', 'Stage', domain="['&', ('section_ids', '=', section_id), ('type', '=', type)]"),
         'user_id': fields.many2one('res.users', 'Salesperson'),
         'referred': fields.char('Referred By', size=64),
         'date_open': fields.datetime('Opened', readonly=True),
@@ -227,11 +231,11 @@ class crm_lead(crm_case, osv.osv):
 
     _defaults = {
         'active': 1,
-        'user_id': crm_case._get_default_user,
-        'email_from': crm_case._get_default_email,
+        'user_id': lambda s, cr, uid, c: s._get_default_user(cr, uid, c),
+        'email_from': lambda s, cr, uid, c: s._get_default_email(cr, uid, c),
         'type': 'lead',
-        'stage_id': crm_case._get_default_stage_id,
-        'section_id': crm_case._get_default_section,
+        'stage_id': lambda s, cr, uid, c: s._get_default_stage_id(cr, uid, c),
+        'section_id': lambda s, cr, uid, c: s._get_default_section_id(cr, uid, c),
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.lead', context=c),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
         'color': 0,
@@ -263,6 +267,35 @@ class crm_lead(crm_case, osv.osv):
         if not stage.on_change:
             return {'value':{}}
         return {'value':{'probability': stage.probability}}
+
+    def _get_default_stage_id(self, cr, uid, context=None):
+        """ Gives default stage_id """
+        section_id = self._get_default_section_id(cr, uid, context=context)
+        return self.stage_find(cr, uid, [], section_id, [('state', '=', 'draft'), ('type', '=', 'both')], context=context)
+
+    def stage_find(self, cr, uid, cases, section_id, domain=[], order='sequence', context=None):
+        """ Override of the base.stage method
+            Parameter of the stage search taken from the lead:
+            - type: stage type must be the same or 'both'
+            - section_id: if set, stages must belong to this section or
+              be a default case
+        """
+        if isinstance(cases, (int, long)):
+            cases = self.browse(cr, uid, cases, context=context)
+        domain = list(domain)
+        if section_id:
+                domain += ['|', ('section_ids', '=', section_id), ('case_default', '=', True)]
+        for lead in cases:
+            lead_section_id = lead.section_id.id if lead.section_id else None
+            domain += ['|', ('type', '=', lead.type), ('type', '=', 'both')]
+            if lead_section_id:
+                domain += ['|', ('section_ids', '=', lead_section_id), ('case_default', '=', True)]
+        stage_ids = self.pool.get('crm.case.stage').search(cr, uid, domain, order=order, context=context)
+        print domain
+        print stage_ids
+        if stage_ids:
+            return stage_ids[0]
+        return False
 
     def case_cancel(self, cr, uid, ids, context=None):
         """Overrides cancel for crm_case for setting probability

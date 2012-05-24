@@ -87,7 +87,7 @@ class crm_helpdesk(crm.crm_case, osv.osv):
         'email_from': crm.crm_case._get_default_email,
         'state': lambda *a: 'draft',
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
-        'section_id': crm.crm_case._get_default_section,
+        'section_id': crm.crm_case._get_default_section_id,
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
     }
