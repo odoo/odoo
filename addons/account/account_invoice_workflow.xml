@@ -34,7 +34,7 @@ invoice_validate()</field>
         <record id="act_sent" model="workflow.activity">
             <field name="wkf_id" ref="wkf"/>
             <field name="name">sent</field>
-            <field name="action">write({'state':'sent'})</field>
+            <field name="action">write({'state':'sent', 'sent':True})</field>
             <field name="kind">function</field>
         </record>
 

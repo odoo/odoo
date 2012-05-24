@@ -213,6 +213,7 @@ class account_invoice(osv.osv):
             \n* The \'Open\' state is used when user create invoice,a invoice number is generated.Its in open state till user does not pay invoice. \
             \n* The \'Paid\' state is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled. \
             \n* The \'Cancelled\' state is used when user cancel invoice.'),
+        'sent': fields.boolean('Sent', readonly=True, help="It indicates that the invoice has been sent."),
         'date_invoice': fields.date('Invoice Date', readonly=True, states={'draft':[('readonly',False)]}, select=True, help="Keep empty to use the current date"),
         'date_due': fields.date('Due Date', states={'paid':[('readonly',True)], 'open':[('readonly',True)], 'close':[('readonly',True)]}, select=True,
             help="If you use payment terms, the due date will be computed automatically at the generation "\
@@ -287,6 +288,7 @@ class account_invoice(osv.osv):
         'check_total': 0.0,
         'internal_number': False,
         'user_id': lambda s, cr, u, c: u,
+        'sent': False,
     }
     _sql_constraints = [
         ('number_uniq', 'unique(number, company_id, journal_id, type)', 'Invoice Number must be unique per Company!'),
@@ -641,6 +643,7 @@ class account_invoice(osv.osv):
             'move_name':False,
             'internal_number': False,
             'period_id': False,
+            'sent': False,
         })
         if 'date_invoice' not in default:
             default.update({
