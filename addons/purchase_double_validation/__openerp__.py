@@ -23,7 +23,6 @@
     "name" : "Double Validation on Purchases",
     "version" : "1.1",
     'category': 'Purchase Management',
-    'complexity': "easy",
     "images" : ["images/purchase_validation.jpeg"],
     "depends" : ["base","purchase"],
     "author" : 'OpenERP SA',

@@ -12,17 +12,23 @@
             <field name="model">stock.period</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Stock Periods">
-                    <field name="name" colspan="2"/>
-                    <newline/>
-                    <field name="date_start"/>
-                    <field name="date_stop"/>
-                    <separator string="State" colspan="4"/>
-                    <group col="4" colspan="4">
-                        <field name="state" select="1" readonly="1"/>
-                        <button name="button_open" string="Open" icon="gtk-ok" states="draft" type="object"/>
-                        <button name="button_close" string="Close" icon="gtk-stop" states="open" type="object"/>
+                <form layout="manual">
+                <div class="oe_form_topbar">
+                    <button name="button_open" string="Open" states="draft" type="object"/>
+                    <button name="button_close" string="Close" states="open" type="object"/>
+                    <div class="oe_right">
+                        <field name="state" select="1" widget="statusbar" nolabel="1" statusbar_visible="draft,open"/>
+                    </div>
+                    <div class="oe_clear"/>
+                </div>
+                <sheet string="Stock Periods" layout="auto">
+                    <group class="oe_form_header">
+                        <field name="name" colspan="2"/>
+                        <newline/>
+                        <field name="date_start"/>
+                        <field name="date_stop"/>
                     </group>
+                </sheet>
                 </form>
             </field>
         </record>
@@ -78,8 +84,16 @@
             <field name="model">stock.sale.forecast</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Stock and Sales Forecast">
-                    <group colspan = "4" col = "4">
+                <form layout="manual">
+                <div class="oe_form_topbar">
+                    <button name="action_validate" string="Approve" states="draft" type="object" />
+                    <div class="oe_right">
+                        <field name="state" widget="statusbar" nolabel="1"/>
+                    </div>
+                    <div class="oe_clear"/>
+                </div>
+                <sheet string="Stock and Sales Forecast" layout="auto">
+                    <group colspan = "4" col = "4" class="oe_form_header">
                         <group colspan = "2" col="2" >
                             <field name="company_id" select="1"
                                         groups="base.group_multi_company"
@@ -99,10 +113,6 @@
                             <field name="user_id"/>
                             <field name="product_amt" on_change="product_amt_change(product_amt, product_uom, product_id)" />
                             <field name="product_qty"  />
-                            <field name="state"/>
-                            <label string = ""/>
-                            <button name="action_validate" icon="gtk-apply" string="Approve" states="draft" type="object" colspan = "1"/>
-
                         </group>
                     </group>
                     <separator colspan ="4" string="Sales History"/>
@@ -147,6 +157,7 @@
                         <button name="calculate_sales_history" icon="gtk-execute"
                                 string="Calculate Sales History" type="object" colspan = "1" states="draft" />
                     </group>
+                    </sheet>
                 </form>
             </field>
         </record>
