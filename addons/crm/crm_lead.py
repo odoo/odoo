@@ -192,7 +192,9 @@ class crm_lead(crm_case, osv.osv):
         'type':fields.selection([ ('lead','Lead'), ('opportunity','Opportunity'), ],'Type', help="Type is used to separate Leads and Opportunities"),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
         'date_closed': fields.datetime('Closed', readonly=True),
-        'stage_id': fields.many2one('crm.case.stage', 'Stage', domain="['&', ('section_ids', '=', section_id), ('type', '=', type)]"),
+        'stage_id': fields.many2one('crm.case.stage', 'Stage',
+                        domain="['&', '|', ('section_ids', '=', section_id), ('case_default', '=', True),\
+                                      '|', ('type', '=', type), ('type', '=', 'both')]"),
         'user_id': fields.many2one('res.users', 'Salesperson'),
         'referred': fields.char('Referred By', size=64),
         'date_open': fields.datetime('Opened', readonly=True),
@@ -219,7 +221,6 @@ class crm_lead(crm_case, osv.osv):
         'date_deadline': fields.date('Expected Closing'),
         'date_action': fields.date('Next Action Date', select=True),
         'title_action': fields.char('Next Action', size=64),
-        'stage_id': fields.many2one('crm.case.stage', 'Stage', domain="[('section_ids', '=', section_id)]"),
         'color': fields.integer('Color Index'),
         'partner_address_name': fields.related('partner_id', 'name', type='char', string='Partner Contact Name', readonly=True),
         'partner_address_email': fields.related('partner_id', 'email', type='char', string='Partner Contact Email', readonly=True),
@@ -291,8 +292,6 @@ class crm_lead(crm_case, osv.osv):
             if lead_section_id:
                 domain += ['|', ('section_ids', '=', lead_section_id), ('case_default', '=', True)]
         stage_ids = self.pool.get('crm.case.stage').search(cr, uid, domain, order=order, context=context)
-        print domain
-        print stage_ids
         if stage_ids:
             return stage_ids[0]
         return False
