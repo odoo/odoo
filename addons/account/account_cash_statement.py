@@ -127,6 +127,47 @@ class account_cash_statement(osv.osv):
 
         return result
 
+    def _compute_last_closing_balance(self, cr, uid, ids, fieldnames, args, context=None):
+        result = dict.fromkeys(ids, 0.0)
+
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.state == 'draft':
+                self.search(cr, uid,
+                    [('journal_id', '=', journal_id),('state', '=', 'closed')],
+                    order='create_date desc',
+                    limit=1,
+                    context=context
+                )
+
+                if not statement_ids:
+                    return result
+
+                st = self.browse(cr, uid, statement_ids[0], context=context)
+                result[obj.id] = st.balance_end_real
+
+        return result
+
+    def onchange_journal_id(self, cr, uid, ids, journal_id, context=None):
+        result = super(account_cash_statement, self).on_change_journal_id(cr, uid, ids, journal_id)
+
+        if not journal_id:
+            return result
+
+        statement_ids = self.search(cr, uid,
+                [('journal_id', '=', journal_id),('state', '=', 'closed')],
+                order='create_date desc',
+                limit=1,
+                context=context
+        )
+
+        if not statement_ids:
+            return result
+
+        st = self.browse(cr, uid, statement_ids[0], context=context)
+        result.setdefault('value', {}).update({'last_closing_balance' : st.balance_end_real})
+
+        return result
+
     _columns = {
         'total_entry_encoding': fields.function(_get_sum_entry_encoding, string="Total Cash Transactions",
             store = {
@@ -139,6 +180,7 @@ class account_cash_statement(osv.osv):
         'closing_details_ids' : fields.one2many('account.cashbox.line', 'bank_statement_id', string='Closing Cashbox Lines'),
         'user_id': fields.many2one('res.users', 'Responsible', required=False),
         'difference' : fields.function(_compute_difference, method=True, string="Difference", type="float"),
+        'last_closing_balance' : fields.function(_compute_last_closing_balance, method=True, string='Last Closing Balance', type='float', store=True),
     }
     _defaults = {
         'state': 'draft',

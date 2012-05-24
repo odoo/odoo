@@ -2732,12 +2732,12 @@ action = pool.get('res.config').next(cr, uid, [], context)
                         <group col="2" colspan="2">
                             <separator string="Opening Balance" colspan="4"/>
                             <field name="balance_start" readonly="1" string="Opening Cash Control"/>
+                            <field name="last_closing_balance" readonly="1" string="Last Closing Balance" />
                             <field name="total_entry_encoding" />
                         </group>
                         <group col="2" colspan="2">
                             <separator string="Closing Balance" colspan="4"/>
                             <field name="balance_end"/>
-                            <field name="balance_end_cash"/>
                         </group>
                     </group>
                 </sheet>
