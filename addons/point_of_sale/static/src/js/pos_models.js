@@ -94,7 +94,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             
             // We fetch the backend data on the server asynchronously
 
-            var cat_def = fetch('pos.category', ['name', 'parent_id', 'child_id'])
+            var cat_def = fetch('pos.category', ['id','name', 'parent_id', 'child_id', 'to_weight'])
                 .pipe(function(result){
                     return self.set({'categories': result});
                 });
@@ -105,6 +105,24 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 [['pos_categ_id','!=', false]] 
                 ).then(function(result){
                     self.set({'product_list': result});
+                });
+
+            // associate the products with their categories
+            var prod_process_def = $.when(cat_def, prod_def)
+                .pipe(function(){
+                    var product_list = self.get('product_list');
+                    var categories = self.get('categories');
+                    var cat_by_id = {};
+                    for(var i = 0; i < categories.length; i++){
+                        cat_by_id[categories[i].id] = categories[i];
+                    }
+                    //set the parent in the category
+                    for(var i = 0; i < categories.length; i++){
+                        categories[i].parent_category = cat_by_id[categories[i].parent_id[0]];
+                    }
+                    for(var i = 0; i < product_list.length; i++){
+                        product_list[i].pos_category = cat_by_id[product_list[i].pos_categ_id[0]];
+                    }
                 });
 
 
@@ -180,7 +198,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 });
 
             // when all the data has loaded, we compute some stuff, and declare the Pos ready to be used. 
-            $.when(cat_def, prod_def, session_def, tax_def, this.get_app_data(), this.flush())
+            $.when(cat_def, prod_def, session_def, tax_def, prod_process_def, this.get_app_data(), this.flush())
                 .then(function(){ 
                     self.build_tree();
                     self.set({'cashRegisters' : new module.CashRegisterCollection(self.get('bank_statements'))});

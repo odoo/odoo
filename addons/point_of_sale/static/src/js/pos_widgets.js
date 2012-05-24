@@ -496,6 +496,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.pos.get('products').bind('reset', this.renderElement, this);
             this.product_list = [];
             this.weight = options.weight;
+            this.only_weightable = options.only_weightable || false;
             this.next_screen = options.next_screen || false;
         },
         set_weight: function(weight){
@@ -512,17 +513,21 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             var self = this;
             this._super();
             this.product_list = []; 
-            this.pos.get('products').chain().map(function(product) {
-                var product = new module.ProductWidget(this, {
-                        model: product,
-                        pos: self.pos,
-                        weight: self.weight,
-                        pos_widget: self.pos_widget,    //FIXME ARGH
+            this.pos.get('products')
+                .chain()
+                .filter(function(product){
+                    // if only weightable, only keeps those with a to_weight category, keep all otherwise
+                    return !self.only_weightable || (product.get('pos_category') && product.get('pos_category').to_weight);
                 })
-                self.product_list.push(product);
-                return product;
-            }).invoke('appendTo', this.$element);
-            return this;
+                .map(function(product) {
+                    var product = new module.ProductWidget(this, {
+                            model: product,
+                            weight: self.weight,
+                    })
+                    self.product_list.push(product);
+                    return product;
+                })
+                .invoke('appendTo', this.$element);
         },
     });
 
