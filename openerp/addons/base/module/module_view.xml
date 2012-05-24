@@ -76,9 +76,9 @@
                   <field name="complexity"/>
                   <templates>
                     <t t-name="kanban-box">
-                      <div class="oe_module_vignette">
+                      <div class="oe_module_vignette oe_kanban_auto_height">
                         <t t-set="installed" t-value="record.state.raw_value == 'installed'"/>
-                        <a type="edit"> 
+                        <a type="edit">
                           <img t-attf-src="#{record.icon.value}" class="oe_module_icon"/>
                         </a>
                         <div class="oe_module_desc">
@@ -86,7 +86,7 @@
                           <p class="oe_module_name">
                              <field name="name"/><br/>
                              <span t-if="record.complexity.raw_value == 'Expert'" class="oe_label oe_warning">Complex</span>
-                           </p>
+                          </p>
                           <button type="object" name="button_immediate_install" states="uninstalled" class="oe_button">Install</button>
                           <button t-if="installed" class="oe_button" disabled="disabled">Installed</button>
                         </div>

@@ -112,7 +112,7 @@
                         <t t-set="color" t-value="kanban_color(record.color.raw_value || record.name.raw_value)"/>
                         <div t-att-class="color + (record.color.raw_value == 1 ? ' oe_kanban_color_alert' : '')">
                             <div class="oe_kanban_box oe_kanban_color_border">
-                                <div class="oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
+                                <div class="oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_auto_height">
                                     <table class="oe_kanban_table">
                                         <tr>
                                             <td class="oe_kanban_title1" align="left" valign="middle">
