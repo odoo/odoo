@@ -13,7 +13,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
     number_of_color_schemes: 10,
     init: function (parent, dataset, view_id, options) {
         this._super(parent, dataset, view_id, options);
-        _.defaults(this.options, {"quick_creatable": true, "creatable": true});
+        _.defaults(this.options, {"quick_creatable": true, "creatable": true, "create_text": undefined});
         this.fields_view = {};
         this.fields_keys = [];
         this.group_by = null;

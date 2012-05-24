@@ -3338,6 +3338,116 @@ instance.web.form.Many2ManyListView = instance.web.ListView.extend(/** @lends in
     }
 });
 
+instance.web.form.FieldMany2ManyKanban = instance.web.form.AbstractField.extend({
+    disable_utility_classes: true,
+    init: function(field_manager, node) {
+        this._super(field_manager, node);
+        m2m_kanban_lazy_init();
+        this.is_loaded = $.Deferred();
+        this.initial_is_loaded = this.is_loaded;
+        this.is_setted = $.Deferred();
+    },
+    start: function() {
+        this._super.apply(this, arguments);
+
+        var self = this;
+
+        this.dataset = new instance.web.form.Many2ManyDataSet(this, this.field.relation);
+        this.dataset.m2m = this;
+        this.dataset.on_unlink.add_last(function(ids) {
+            self.dataset_changed();
+        });
+        
+        this.is_setted.then(function() {
+            self.load_view();
+        });
+        this.is_loaded.then(function() {
+            self.on("change:effective_readonly", self, function() {
+                self.is_loaded = self.is_loaded.pipe(function() {
+                    self.kanban_view.destroy();
+                    return $.when(self.load_view()).then(function() {
+                        self.reload_content();
+                    });
+                });
+            });
+        })
+    },
+    set_value: function(value_) {
+        value_ = value_ || [];
+        if (value_.length >= 1 && value_[0] instanceof Array) {
+            value_ = value_[0][2];
+        }
+        this._super(value_);
+        this.dataset.set_ids(value_);
+        var self = this;
+        self.reload_content();
+        this.is_setted.resolve();
+    },
+    load_view: function() {
+        var self = this;
+        this.kanban_view = new instance.web.form.Many2ManyKanbanView(this, this.dataset, false, {
+                    'create_text': _t("Add"),
+                    'creatable': self.get("effective_readonly") ? false : true,
+                    'quick_creatable': self.get("effective_readonly") ? false : true,
+            });
+        var embedded = (this.field.views || {}).kanban;
+        if (embedded) {
+            this.kanban_view.set_embedded_view(embedded);
+        }
+        this.kanban_view.m2m_field = this;
+        var loaded = $.Deferred();
+        this.kanban_view.on_loaded.add_last(function() {
+            self.initial_is_loaded.resolve();
+            loaded.resolve();
+        });
+        this.kanban_view.do_switch_view.add_last(_.bind(this.add_new_record, this));
+        $.async_when().then(function () {
+            self.kanban_view.appendTo(self.$element);
+        });
+        return loaded;
+    },
+    reload_content: function() {
+        var self = this;
+        this.is_loaded = this.is_loaded.pipe(function() {
+            return self.kanban_view.do_search(self.build_domain(), self.dataset.get_context(), []);
+        });
+    },
+    dataset_changed: function() {
+        this.set({'value': [commands.replace_with(this.dataset.ids)]});
+    },
+    add_new_record: function(type) {
+        if (type !== "form")
+            return;
+        var pop = new instance.web.form.SelectCreatePopup(this);
+        pop.select_element(
+            this.field.relation,
+            {
+                title: _t("Add: ") + this.name
+            },
+            new instance.web.CompoundDomain(this.build_domain(), ["!", ["id", "in", this.dataset.ids]]),
+            this.build_context()
+        );
+        var self = this;
+        pop.on_select_elements.add(function(element_ids) {
+            _.each(element_ids, function(one_id) {
+                if(! _.detect(self.dataset.ids, function(x) {return x == one_id;})) {
+                    self.dataset.set_ids([].concat(self.dataset.ids, [one_id]));
+                    self.dataset_changed();
+                    self.reload_content();
+                }
+            });
+        });
+    },
+});
+
+function m2m_kanban_lazy_init() {
+if (instance.web.form.Many2ManyKanbanView)
+    return;
+instance.web.form.Many2ManyKanbanView = instance.web_kanban.KanbanView.extend({
+    
+});
+}
+
 /**
  * Class with everything which is common between FormOpenPopup and SelectCreatePopup.
  */
@@ -3951,6 +4061,7 @@ instance.web.form.widgets = new instance.web.Registry({
     'many2one' : 'instance.web.form.FieldMany2One',
     'many2many' : 'instance.web.form.FieldMany2Many',
     'many2manytags' : 'instance.web.form.FieldMany2ManyTags',
+    'many2manykanban' : 'instance.web.form.FieldMany2ManyKanban',
     'one2many' : 'instance.web.form.FieldOne2Many',
     'one2many_list' : 'instance.web.form.FieldOne2Many',
     'reference' : 'instance.web.form.FieldReference',
