@@ -129,9 +129,9 @@
                     <field name="use_phases"/>
                     <field name="phase_count"/>
                 </field>
-                <xpath expr="//div[@id='list']" position="inside">
-                    <a t-if="record.use_phases.raw_value" class="oe_project_buttons"
-                        id="4" name="%(act_project_phases)d" type="action">Phases(<field name="phase_count"/>)</a>
+                <xpath expr="//div[contains(@class, 'oe_kanban_project_list')]" position="inside">
+                    <a t-if="record.use_phases.raw_value"
+                        name="%(act_project_phases)d" type="action">Phases(<field name="phase_count"/>)</a>
                 </xpath>
             </field>
         </record>
