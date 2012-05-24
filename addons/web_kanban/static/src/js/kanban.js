@@ -612,6 +612,13 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
                 self.do_warn("Kanban: no action for type : " + type);
             }
         });
+
+        this.$element.on('click', function(ev) {
+            var tag = ev.target.tagName.toLowerCase();
+            if (!$(ev.target).data('events')) {
+                console.log(tag);
+            }
+        });
     },
     setup_color_picker: function() {
         var self = this;
@@ -663,6 +670,7 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
                 var $render = $(self.render());
                 self.$element.replaceWith($render);
                 self.$element = $render;
+                self.$element.data('widget', self);
                 self.bind_events();
                 self.group.compute_cards_auto_height();
             } else {
