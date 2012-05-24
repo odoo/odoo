@@ -23,8 +23,8 @@
   !python {model: crm.lead}: |
     lead = self.browse(cr, uid, ref('crm.crm_case_abcfuelcounits0'))
     assert lead.partner_assigned_id.id == ref('base.res_partner_ericdubois0') , "Opportuniy is not assigned nearest partner"
-    assert lead.partner_latitude == 50.8495239 , "Latitude is wrong"
-    assert lead.partner_longitude == 4.3667002 , "Longitude is wrong"
+    assert lead.partner_latitude == 50.849873 , "Latitude is wrong"
+    assert lead.partner_longitude == 4.3663151 , "Longitude is wrong"
 -
   I forward this opportunity to its nearest partner.
 -
