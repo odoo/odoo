@@ -11,20 +11,20 @@
             <field name="arch" type="xml">
             <data>
                  <xpath expr="/form/notebook/page[@name='information']/group[@name='right_column']/field[@name='struct_id']" position="after">
-                    <field name="food_coupon_amount"/>
                  <group col="2" colspan="2" name="right_column">
                     <separator colspan="2" string="Allowance"/>
+                        <field name="food_coupon_amount"/>
+                        <field name="house_rent_income"/>
+                        <field name="saving_bank_account"/>
+                        <field name="other_income"/>
                         <field name="short_term_gain"/>
                         <field name="long_term_gain"/>
-                        <field name="saving_bank_account"/>
-                        <field name="house_rent_income"/>
-                        <field name="other_income"/>
                         <field name="driver_salay"/>
                  </group>
                  <group col="2" colspan="2" name="left_column">
                     <separator colspan="2" string="Deduction"/>
-                        <field name="professional_tax"/>
                         <field name="tds"/>
+                        <field name="professional_tax"/>
                         <field name="voluntary_provident_fund"/>
                         <field name="company_transport"/>
                         <field name="leave_avail_dedution"/>

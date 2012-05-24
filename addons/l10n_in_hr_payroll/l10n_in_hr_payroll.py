@@ -20,7 +20,7 @@
 ##############################################################################
 
 import time
-from datetime import datetime, timedelta
+from datetime import datetime
 from calendar import isleap
 from dateutil.relativedelta import relativedelta
 
@@ -58,13 +58,13 @@ class hr_employee(osv.osv):
         """
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
-        @param ids: List of Openday’s IDs
+        @param ids: List of employee’s IDs
         @return: No. of years of experience.
         @param context: A standard dictionary for contextual values
         """
         res = {}
-        c_date = time.strftime('%Y-%m-%d')
         DATETIME_FORMAT = "%Y-%m-%d"
+        c_date = time.strftime(DATETIME_FORMAT)
         current_date = datetime.strptime(c_date,DATETIME_FORMAT)
         for employee in self.browse(cr, uid, ids, context=context):
             if employee.join_date:
@@ -86,7 +86,7 @@ class hr_employee(osv.osv):
     
     _columns = {
         'join_date': fields.date('Join Date', help="joining date of employee "),
-        'number_of_year':fields.function(_compute_year, string='No. of Years of Service', type="float", help="Total years of work experience."),
+        'number_of_year':fields.function(_compute_year, string='No. of Years of Service', type="float", store=True, help="Total years of work experience."),
                 }
 hr_employee()
 

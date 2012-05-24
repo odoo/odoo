@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <!-- Hr Salary Rules-->
+        <!-- Hr Salary Rules for allowance-->
 
         <record id="hr_salary_rule_houserentallowancemetro" model="hr.salary.rule">
             <field name="code">HRAM</field>
@@ -9,7 +9,7 @@
             <field name="amount_python_compute">result = (contract.wage + DA) * 0.50</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
             <field name="name">House Rent Allowance for metro city</field>
-            <field name="sequence" eval="80"/>
+            <field name="sequence" eval="51"/>
             <field name="note">Rent receipts can be shown for taking tax benefit for living in a rented house.
 Income tax exemption for HRA will be least of following:
     1. The actual amount of HRA received as a part of salary.
@@ -24,7 +24,7 @@ Income tax exemption for HRA will be least of following:
             <field name="code">HRANM</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
             <field name="name">House Rent Allowance for non metro city</field>
-            <field name="sequence" eval="79"/>
+            <field name="sequence" eval="52"/>
             <field name="note">Rent receipts can be shown for taking tax benefit for living in a rented house.
 Income tax exemption for HRA will be least of following:
     1. The actual amount of HRA received as a part of salary.
@@ -35,16 +35,13 @@ Income tax exemption for HRA will be least of following:
 
 
         <record id="hr_salary_rule_food_coupon" model="hr.salary.rule">
-            <field name="amount_select">code</field>
-            <field eval="10" name="amount_fix"/>
-            <field name="quantity">worked_days.WORK100.number_of_days</field>
             <field name="code">FC</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
-            <field name="condition_select">python</field>
-            <field name="condition_python">result = bool(contract.food_coupon_amount)</field>
+            <field name="condition_select">none</field>
             <field name="name">Food Coupons Allowance</field>
+            <field name="amount_select">code</field>
             <field name="amount_python_compute">result = worked_days.WORK100.number_of_days * contract.food_coupon_amount</field>
-            <field name="sequence" eval="16"/>
+            <field name="sequence" eval="33"/>
          </record>
 
         <record id="hr_salary_rule_da" model="hr.salary.rule">
@@ -54,42 +51,30 @@ Income tax exemption for HRA will be least of following:
             <field name="amount_select">percentage</field>
             <field name="amount_percentage_base">contract.wage</field>
             <field name="amount_percentage" eval="50"/>
-            <field name="sequence" eval="20"/>
+            <field name="sequence" eval="13"/>
              <field name="note">DA is calculated in %</field>
-        </record>
-
-        <record id="hr_payroll_rule_child_edu" model="hr.salary.rule">
-            <field name="code">CEA</field>
-            <field name="name">Child Education Allowance</field>
-            <field name="category_id" ref="hr_payroll.ALW"/>
-            <field name="amount_select">fix</field>
-            <field name="condition_select">none</field>
-            <field name="sequence" eval="21"/>
-            <field name="note">Per school going child 1200 per annum is non-taxable. 
-Maximum for 2 children, so max 2400 per annum becomes non-taxable.</field>
         </record>
 
         <record id="hr_payroll_rule_child1" model="hr.salary.rule">
             <field name="code">CHEA</field>
-            <field name="name">Education Allowance</field>
+            <field name="name">Child Education Allowance</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
-            <field name="parent_rule_id" ref="hr_payroll_rule_child_edu"/>
             <field name="condition_select">python</field>
             <field name="condition_python">result = bool(employee.children)</field>
             <field name="amount_select">fix</field>
-            <field name="sequence" eval="22"/>
+            <field name="sequence" eval="18"/>
+            <field name="note">Per school going child 1200 per annum is non-taxable.Maximum for 2 children, so max 2400 per annum becomes non-taxable.</field>
         </record>
 
         <record id="hr_payroll_rule_child2" model="hr.salary.rule">
              <field name="code">CHEAH</field>
              <field name="name">Child Hostel Allowance</field>
              <field name="category_id" ref="hr_payroll.ALW"/>
-             <field name="parent_rule_id" ref="hr_payroll_rule_child_edu"/>
              <field name="condition_select">python</field>
              <field name="condition_python">result = bool(employee.children)</field>
              <field name="amount_select">fix</field>
-             <field name="note">In case the children are in hostel, the exemption available is Rs.300 per month per child for up to 2 children.</field>
-             <field name="sequence" eval="25"/>
+             <field name="note">In case the children are in hostel, the exemption available for child.</field>
+             <field name="sequence" eval="19"/>
          </record>
 
         <record id="hr_salary_rule_special" model="hr.salary.rule">
@@ -98,7 +83,7 @@ Maximum for 2 children, so max 2400 per annum becomes non-taxable.</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
             <field name="amount_select">fix</field>
             <field eval="0.0" name="amount_fix"/>
-            <field name="sequence" eval="28"/>
+            <field name="sequence" eval="20"/>
             <field name="note">This allowance is normally given as an additional benefit to employees and is fully taxable.</field>
         </record>
 
@@ -107,7 +92,7 @@ Maximum for 2 children, so max 2400 per annum becomes non-taxable.</field>
             <field name="name">City Compensatory Allowance</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
             <field name="condition_select">none</field>
-            <field name="sequence" eval="50"/>
+            <field name="sequence" eval="21"/>
             <field name="amount_select">code</field>
             <field name="amount_python_compute">result = (contract.wage + DA) * 0.10</field>
         </record>
@@ -118,7 +103,7 @@ Maximum for 2 children, so max 2400 per annum becomes non-taxable.</field>
             <field name="name">City Allowance for Metro city</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
             <field name="condition_select">none</field>
-            <field name="sequence" eval="51"/>
+            <field name="sequence" eval="22"/>
             <field name="amount_select">fix</field>
             <field name="amount_fix">850.0</field>
         </record>
@@ -128,7 +113,7 @@ Maximum for 2 children, so max 2400 per annum becomes non-taxable.</field>
             <field name="name">City Allowance for Non Metro city</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
             <field name="condition_select">none</field>
-            <field name="sequence" eval="52"/>
+            <field name="sequence" eval="25"/>
             <field name="amount_select">fix</field>
             <field name="amount_fix">800.0</field>
         </record>
@@ -139,7 +124,7 @@ Maximum for 2 children, so max 2400 per annum becomes non-taxable.</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
             <field name="amount_select">fix</field>
             <field eval="0.0" name="amount_fix"/>
-            <field name="sequence" eval="30"/>
+            <field name="sequence" eval="28"/>
             <field name="note">Generally arrears are fully taxable, but employee may claim exemption u/s 89(1). 
 One would need to compute income tax on the arrears if it would have been received in actual year.
 Now difference of income tax between payment year and actual year would be allowed for deduction.</field>
@@ -164,7 +149,7 @@ number of years of service (date of joining – date of retirement/leaving job)<
             <field name="category_id" ref="hr_payroll.ALW"/>
             <field name="amount_select">fix</field>
             <field name="amount_fix">1666</field>
-            <field name="sequence" eval="32"/>
+            <field name="sequence" eval="29"/>
             <field name="note">As per Income tax rules of India, if transport bills for LTA are not provided,the amount will be taxed. E.g. If an employee has LTA allowance as Rs 50,000 in his CTC(cost to company),and he provides proofs of Rs 40,000 (boarding pass,air tickets, taxi vouchers) then income tax will be deducted for rest of the Rs 10,000. Does not matter whats the amount of LTA in an employee’s package, income tax laws only permits domestic air tickets only for LTA claim.</field>
         </record>
 
@@ -175,7 +160,7 @@ number of years of service (date of joining – date of retirement/leaving job)<
             <field name="condition_select">none</field>
             <field name="amount_select">fix</field>
             <field name="amount_fix">0.0</field>
-            <field name="sequence" eval="33"/>
+            <field name="sequence" eval="30"/>
             <field name="note">Payment by way of leave encashment received by Central and State Govt.employees at the time of retirement in respect of the period of earned leave at credit is fully exempt. In case of other employees, the exemption is to be limited to minimum of all below:
     1.The actual amount received
     2.The cash equivalent of leave balance (max 30 days per year of service)
@@ -189,7 +174,7 @@ number of years of service (date of joining – date of retirement/leaving job)<
             <field name="category_id" ref="hr_payroll.ALW"/>
             <field name="amount_select">fix</field>
             <field eval="0.0" name="amount_fix"/>
-            <field name="sequence" eval="34"/>
+            <field name="sequence" eval="31"/>
             <field name="note">This would be fully taxable based on incentive.</field>
         </record>
 
@@ -199,7 +184,7 @@ number of years of service (date of joining – date of retirement/leaving job)<
             <field name="category_id" ref="hr_payroll.ALW"/>
             <field name="amount_select">fix</field>
             <field eval="1200.0" name="amount_fix"/>
-            <field name="sequence" eval="35"/>
+            <field name="sequence" eval="32"/>
             <field name="note">This component is on-taxable up to 15000 per year (or Rs 1250 per month) on producing medical bills.</field>
         </record>
 
@@ -209,7 +194,7 @@ number of years of service (date of joining – date of retirement/leaving job)<
             <field name="category_id" ref="hr_payroll.ALW"/>
             <field name="amount_select">fix</field>
             <field eval="0.0" name="amount_fix"/>
-            <field name="sequence" eval="36"/>
+            <field name="sequence" eval="34"/>
             <field name="note">Some employers may provide component for buying magazines, journals and books as a part of knowledge enhancement for business growth.This part would become non taxable on providing original bills.</field>
         </record>
 
@@ -219,7 +204,7 @@ number of years of service (date of joining – date of retirement/leaving job)<
             <field name="category_id" ref="hr_payroll.ALW"/>
             <field name="amount_select">fix</field>
             <field eval="0.0" name="amount_fix"/>
-            <field name="sequence" eval="37"/>
+            <field name="sequence" eval="35"/>
             <field name="note">Some sections of employees mat get allowance for purchase of office dress/uniform.In such case, the component would become non-taxable.</field>
         </record>
 
@@ -229,7 +214,7 @@ number of years of service (date of joining – date of retirement/leaving job)<
             <field name="category_id" ref="hr_payroll.ALW"/>
             <field name="amount_select">fix</field>
             <field name="amount_fix">1500</field>
-            <field name="sequence" eval="38"/>
+            <field name="sequence" eval="36"/>
             <field name="note">In some of the cases, companies may provide a component for telephone bills.Employees may provide actual phone usage bills to reimburse this component and make it non-taxable.
             </field>
         </record>
@@ -240,7 +225,7 @@ number of years of service (date of joining – date of retirement/leaving job)<
             <field name="category_id" ref="hr_payroll.ALW"/>
             <field name="amount_select">fix</field>
             <field eval="0.0" name="amount_fix"/>
-            <field name="sequence" eval="49"/>
+            <field name="sequence" eval="37"/>
         </record>
 
         <record id="hr_payroll_rule_car" model="hr.salary.rule">
@@ -249,7 +234,7 @@ number of years of service (date of joining – date of retirement/leaving job)<
             <field name="category_id" ref="hr_payroll.ALW"/>
             <field name="amount_select">fix</field>
             <field name="amount_fix">1800</field>
-            <field name="sequence" eval="39"/>
+            <field name="sequence" eval="38"/>
             <field name="note">In case company provides component for this and employee use self owned car for official and personal purposes, Rs 1800 per month would be non-taxable on showing bills for fuel or can maintenance. This amount would be Rs 2400 in case car is more capacity than 1600cc.</field>
         </record>
 
@@ -259,7 +244,7 @@ number of years of service (date of joining – date of retirement/leaving job)<
             <field name="category_id" ref="hr_payroll.ALW"/>
             <field name="amount_select">fix</field>
             <field eval="0.0" name="amount_fix"/>
-            <field name="sequence" eval="40"/>
+            <field name="sequence" eval="39"/>
             <field name="note">Employer may also provide reimbursement of internet expenses and thus this would become non taxable.</field>
         </record>
 
@@ -271,7 +256,7 @@ number of years of service (date of joining – date of retirement/leaving job)<
             <field name="condition_python">result = bool(contract.driver_salay)</field>
             <field name="amount_select">fix</field>
             <field eval="900.0" name="amount_fix"/>
-            <field name="sequence" eval="41"/>
+            <field name="sequence" eval="40"/>
              <field name="note">Rs. 900 per month (non taxable)</field>
         </record>
 
@@ -281,7 +266,7 @@ number of years of service (date of joining – date of retirement/leaving job)<
             <field name="category_id" ref="hr_payroll.ALW"/>
             <field name="amount_select">fix</field>
             <field eval="0.0" name="amount_fix"/>
-            <field name="sequence" eval="42"/>
+            <field name="sequence" eval="41"/>
             <field name="note">Gift is from non relatives person worth more than Rs.50000, 
 one is liable to pay the tax what ever he received excess of the limit or Rs 50,000.</field>
         </record>
@@ -292,7 +277,7 @@ one is liable to pay the tax what ever he received excess of the limit or Rs 50,
             <field name="category_id" ref="hr_payroll.ALW"/>
             <field name="amount_select">fix</field>
             <field eval="0.0" name="amount_fix"/>
-            <field name="sequence" eval="43"/>
+            <field name="sequence" eval="42"/>
             <field name="note"> gift is from relaives whould be non taxable with no limits.</field>
         </record>
 
@@ -303,7 +288,7 @@ one is liable to pay the tax what ever he received excess of the limit or Rs 50,
             <field name="amount_select">code</field>
             <field name="amount_python_compute">result = contract.house_rent_income</field>
             <field name="condition_select">none</field>
-            <field name="sequence" eval="44"/>
+            <field name="sequence" eval="45"/>
             <field name="note">Income from house property.30% of the rental income can be reduced as a standard deduction.</field>
         </record>
 
@@ -315,7 +300,7 @@ one is liable to pay the tax what ever he received excess of the limit or Rs 50,
             <field name="amount_python_compute">result = contract.saving_bank_account</field>
             <field name="condition_select">python</field>
             <field name="condition_python">result = bool(contract.saving_bank_account)</field>
-            <field name="sequence" eval="31"/>
+            <field name="sequence" eval="46"/>
         </record>
 
         <record id="hr_salary_trans_allownce" model="hr.salary.rule">
@@ -324,7 +309,7 @@ one is liable to pay the tax what ever he received excess of the limit or Rs 50,
             <field name="category_id" ref="hr_payroll.ALW"/>
             <field name="amount_select">fix</field>
             <field eval="800.0" name="amount_fix"/>
-            <field name="sequence" eval="48"/>
+            <field name="sequence" eval="14"/>
         </record>
 
         <record id="hr_salary_rule_Other" model="hr.salary.rule">
@@ -336,7 +321,7 @@ one is liable to pay the tax what ever he received excess of the limit or Rs 50,
             <field name="amount_select">code</field>
             <field name="amount_python_compute">result = contract.other_income</field>
             <field name="note">Bank account/NSC/Post Office/SCSS interest</field>
-            <field name="sequence" eval="45"/>
+            <field name="sequence" eval="47"/>
         </record>
 
         <record id="hr_salary_rule_agricultural" model="hr.salary.rule">
@@ -345,7 +330,7 @@ one is liable to pay the tax what ever he received excess of the limit or Rs 50,
             <field name="category_id" ref="hr_payroll.ALW"/>
             <field name="amount_select">fix</field>
             <field eval="0.0" name="amount_fix"/>
-            <field name="sequence" eval="23"/>
+            <field name="sequence" eval="44"/>
         </record>
 
         <record id="hr_salary_rule_st_gains" model="hr.salary.rule">
@@ -356,7 +341,7 @@ one is liable to pay the tax what ever he received excess of the limit or Rs 50,
             <field name="amount_python_compute">result = contract.short_term_gain</field>
             <field name="condition_select">python</field>
             <field name="condition_python">result = bool(contract.short_term_gain)</field>
-            <field name="sequence" eval="46"/>
+            <field name="sequence" eval="48"/>
             <field name="note">If stocks/equity mutual funds are sold before one year, 15% tax would be payable on such gains. STT should have been on transaction.</field>
         </record>
 
@@ -368,11 +353,11 @@ one is liable to pay the tax what ever he received excess of the limit or Rs 50,
             <field name="amount_python_compute">result = contract.long_term_gain</field>
             <field name="condition_select">python</field>
             <field name="condition_python">result = bool(contract.long_term_gain)</field>
-            <field name="sequence" eval="47"/>
+            <field name="sequence" eval="49"/>
             <field name="note">If stocks/equity mutual funds are kept for more than a year before sale,it would be long term gains and such gains would be fully exempt from income tax. Securities transaction tax (STT) must have been paid on transactions for availing this exemption.</field>
         </record>
 
-        <!--Deductions -->
+        <!--hr salary rules for Deductions -->
         <record id="hr_payslip_line_professional_tax" model="hr.salary.rule">
             <field name="code">PTD</field>
             <field name="name">Professional Tax</field>
@@ -381,7 +366,7 @@ one is liable to pay the tax what ever he received excess of the limit or Rs 50,
             <field name="condition_python">result = bool(contract.professional_tax)</field>
             <field name="amount_select">code</field>
             <field name="amount_python_compute">result = -(contract.professional_tax)</field>
-            <field eval="120" name="sequence"/>
+            <field eval="145" name="sequence"/>
             <field eval="False" name="appears_on_payslip"/>
             <field name="note">Professional tax for company should be paid on or before 30th sept,The amount is Rs.2000 per year.There is no payment form to be filled.</field>
         </record>
@@ -403,10 +388,10 @@ one is liable to pay the tax what ever he received excess of the limit or Rs 50,
             <field name="name">Voluntarily Provident Fund Contribution</field>
             <field name="category_id" ref="hr_payroll.DED"/>
             <field name="condition_select">python</field>
-            <field name="condition_python">result = bool(contract.voluntarily_provident_fund)</field>
+            <field name="condition_python">result = bool(contract.voluntary_provident_fund)</field>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = -(contract.wage + DA) * contract.voluntarily_provident_fund / 100 </field>
-            <field name="sequence" eval="130"/>
+            <field name="amount_python_compute">result = -(contract.wage + DA) * contract.voluntary_provident_fund / 100 </field>
+            <field name="sequence" eval="153"/>
             <field name="note">VPF is a safe option wherein you can contribute more than the PF ceiling of 12% that has been mandated by the government.This additional amount enjoys all the benefits of PF except that the employer is not liable to contribute any extra amount apart from 12%.An added advantage is that the interest rate is equal to the interest rate of PF and he withdrawal is tax free. Please note that the maximum contribution towards VPF is 100% of your Basic.The highest rate of interest (close to 9%) makes it a very attractive saving scheme. Because of these advantages many employees chose not to close their PF account even after getting employment else where other than India.Employees also get a major tax break on their entire contribution to the fund up to a ceiling of Rs. 70,000/-</field>
         </record>
 
@@ -489,7 +474,7 @@ one is liable to pay the tax what ever he received excess of the limit or Rs 50,
             <field name="amount_select">code</field>
             <field name="amount_python_compute">result = - (contract.wage + DA) * 8.33 / 100</field>
             <field name= "note">Employer contribution does not become part of employee’s income and hence income tax is not payable on this part.</field>
-            <field name="sequence" eval="123"/>
+            <field name="sequence" eval="185"/>
         </record>
         
         <record id="hr_payslip_rule_enpf" model="hr.salary.rule">
@@ -498,7 +483,7 @@ one is liable to pay the tax what ever he received excess of the limit or Rs 50,
             <field name="category_id" ref="hr_payroll.DED"/>
             <field name="amount_select">code</field>
             <field name="amount_python_compute">result = - (contract.wage + DA) * 0.10</field>
-            <field name="sequence" eval="126"/>
+            <field name="sequence" eval="180"/>
             <field name= "note">Any amount contributed by your employer to your NPS account is treated as part of your salary and is included in your income but you can claim deduction under Section 80C for this too.thus, effectively making it exempt from tax within the limit of 10% of your basic salary. This is very useful and tax efficient for you particularly if you fall in the maximum tax.</field>
         </record>
         
@@ -508,7 +493,7 @@ one is liable to pay the tax what ever he received excess of the limit or Rs 50,
             <field name="category_id" ref="hr_payroll.DED"/>
             <field name="amount_select">code</field>
             <field name="amount_python_compute">result = - (contract.wage + DA) * 0.10</field>
-            <field name="sequence" eval="125"/>
+            <field name="sequence" eval="149"/>
             <field name="note">Employee can claim deduction even of employer's contribution to NPS.</field>
         </record>
 
