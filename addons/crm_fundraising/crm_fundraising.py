@@ -78,6 +78,39 @@ class crm_fundraising(crm.crm_case, osv.osv):
             'message_ids': fields.one2many('mail.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
         }
 
+    _defaults = {
+            'active': 1,
+            'user_id':  lambda s, cr, uid, c: s._get_default_user(cr, uid, c)
+            'partner_id':  lambda s, cr, uid, c: s._get_default_partner(cr, uid, c)
+            'email_from': lambda s, cr, uid, c: s._get_default_email(cr, uid, c)
+            'section_id': lambda s, cr, uid, c: s._get_default_section_id(cr, uid, c)
+            'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.case', context=c),
+            'priority': crm.AVAILABLE_PRIORITIES[2][0],
+            'probability': 0.0,
+            'planned_cost': 0.0,
+            'planned_revenue': 0.0,
+    }
+
+    def stage_find(self, cr, uid, cases, section_id, domain=[], order='sequence', context=None):
+        """ Override of the base.stage method
+            Parameter of the stage search taken from the lead:
+            - type: stage type must be the same or 'both'
+            - section_id: if set, stages must belong to this section or
+              be a default case
+        """
+        if isinstance(cases, (int, long)):
+            cases = self.browse(cr, uid, cases, context=context)
+        domain = list(domain)
+        if section_id:
+                domain += ['|', ('section_ids', '=', section_id), ('case_default', '=', True)]
+        for lead in cases:
+            lead_section_id = lead.section_id.id if lead.section_id else None
+            if lead_section_id:
+                domain += ['|', ('section_ids', '=', lead_section_id), ('case_default', '=', True)]
+        stage_ids = self.pool.get('crm.case.stage').search(cr, uid, domain, order=order, context=context)
+        if stage_ids:
+            return stage_ids[0]
+        return False
 
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
         """Automatically called when new email message arrives"""
@@ -94,21 +127,6 @@ class crm_fundraising(crm.crm_case, osv.osv):
         vals.update(self.message_partner_by_email(cr, uid, msg.get('from')))
         self.write(cr, uid, [res_id], vals, context=context)
         return res_id
-
-
-    _defaults = {
-            'active': 1,
-            'user_id': crm.crm_case._get_default_user,
-            'partner_id': crm.crm_case._get_default_partner,
-            'email_from': crm.crm_case._get_default_email,
-            'section_id': crm.crm_case._get_default_section_id,
-            'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.case', context=c),
-            'priority': crm.AVAILABLE_PRIORITIES[2][0],
-            'probability': 0.0,
-            'planned_cost': 0.0,
-            'planned_revenue': 0.0,
-    }
-
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

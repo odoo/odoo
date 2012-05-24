@@ -72,7 +72,7 @@ class crm_claim(crm.crm_case, osv.osv):
         'email_cc': fields.text('Watchers Emails', size=252, help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
         'email_from': fields.char('Email', size=128, help="These people will receive email."),
         'partner_phone': fields.char('Phone', size=32),
-        'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_ids','=',section_id)]"), 
+        'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_ids', '=', section_id)]"), 
         'cause': fields.text('Root Cause'),
         'state': fields.related('stage_id', 'state', type="selection", store=True,
                 selection=crm.AVAILABLE_STATES, string="State", readonly=True,
@@ -85,15 +85,36 @@ class crm_claim(crm.crm_case, osv.osv):
     }
 
     _defaults = {
-        'user_id': crm.crm_case._get_default_user,
-        'partner_id': crm.crm_case._get_default_partner,
-        'email_from':crm.crm_case._get_default_email,
-        'section_id':crm.crm_case._get_default_section_id,
-        'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
+        'user_id':  lambda s, cr, uid, c: s._get_default_user(cr, uid, c)
+        'partner_id':  lambda s, cr, uid, c: s._get_default_partner(cr, uid, c)
+        'email_from': lambda s, cr, uid, c: s._get_default_email(cr, uid, c)
+        'section_id': lambda s, cr, uid, c: s._get_default_section_id(cr, uid, c)
+        'date': fields.datetime.now,
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.case', context=c),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
         'active': lambda *a: 1
     }
+
+    def stage_find(self, cr, uid, cases, section_id, domain=[], order='sequence', context=None):
+        """ Override of the base.stage method
+            Parameter of the stage search taken from the lead:
+            - type: stage type must be the same or 'both'
+            - section_id: if set, stages must belong to this section or
+              be a default case
+        """
+        if isinstance(cases, (int, long)):
+            cases = self.browse(cr, uid, cases, context=context)
+        domain = list(domain)
+        if section_id:
+                domain += ['|', ('section_ids', '=', section_id), ('case_default', '=', True)]
+        for lead in cases:
+            lead_section_id = lead.section_id.id if lead.section_id else None
+            if lead_section_id:
+                domain += ['|', ('section_ids', '=', lead_section_id), ('case_default', '=', True)]
+        stage_ids = self.pool.get('crm.case.stage').search(cr, uid, domain, order=order, context=context)
+        if stage_ids:
+            return stage_ids[0]
+        return False
 
     def case_get_note_msg_prefix(self, cr, uid, id, context=None):
         return 'Claim'
