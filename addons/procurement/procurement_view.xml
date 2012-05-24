@@ -16,7 +16,7 @@
                     <field name="origin"/>
                     <field name="product_id"/>
                     <field name="product_qty"/>
-                    <field name="product_uom" string="UOM"/>
+                    <field name="product_uom" string="Unit of Measure"/>
                     <field name="procure_method"/>
                     <field name="state"/>
                     <field name="message"/>
@@ -35,7 +35,7 @@
                     <field name="origin"/>
                     <field name="product_id"/>
                     <field name="product_qty"/>
-                    <field name="product_uom" string="UOM"/>
+                    <field name="product_uom" string="Unit of Measure"/>
                     <field name="state" invisible = "1"/>
                     <field name="message"/>
                 </tree>
@@ -46,8 +46,19 @@
             <field name="model">procurement.order</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Procurement">
-                    <group col="2" colspan="2">
+                <form layout="manual">
+                    <div class="oe_form_topbar">
+                        <button name="button_confirm" states="draft" string="Confirm"/>
+                        <button name="button_check" states="confirmed" string="Run Procurement"/>
+                        <button name="button_restart" states="exception" string="Retry"/>
+                        <button name="button_cancel" states="draft,exception,waiting" string="Cancel"/>
+                        <div class="oe_right">
+                            <field name="state" readonly="1" widget="statusbar" nolabel="1" statusbar_visible="draft,confirmed" />
+                        </div>
+                        <div class="oe_clear"/>
+                    </div>
+                <sheet string="Procurement" layout="auto">
+                    <group col="2" colspan="2" class="oe_form_header">
                         <separator colspan="2" string="References"/>
                         <field name="name" string="Procurement Reason"/>
                         <field name="origin"/>
@@ -72,13 +83,6 @@
 
                         <separator colspan="4" string="Status"/>
                         <field colspan="4" name="message" readonly="1"/>
-                        <field name="state" readonly="1"/>
-                        <group col="7" colspan="2">
-                            <button name="button_cancel" states="draft,exception,waiting" string="Cancel" icon="gtk-cancel"/>
-                            <button name="button_confirm" states="draft" string="Confirm" icon="gtk-apply"/>
-                            <button name="button_restart" states="exception" string="Retry" icon="gtk-convert"/>
-                            <button name="button_check" states="confirmed" string="Run Procurement" icon="gtk-media-play"/>
-                        </group>
                     </page>
                     <page string="Extra Information">
                         <separator colspan="4" string="Details"/>
@@ -91,6 +95,7 @@
                         <field name="note" colspan="4" nolabel="1"/>
                     </page>
                     </notebook>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -119,7 +124,7 @@
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
                         <filter string="Reason" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'name'}"/>
                         <filter string="Scheduled Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_planned'}"/>
-                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     </group>
                 </search>
             </field>
@@ -162,10 +167,10 @@
             <field name="model">stock.warehouse.orderpoint</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Minimum Stock Rules">
+                <tree string="Reordering Rules">
                     <field name="name"/>
                     <field name="warehouse_id"/>
-                    <field name="location_id"/>
+                    <field name="location_id" groups="stock.group_locations"/>
                     <field name="product_id"/>
                     <field name="product_uom"/>
                     <field name="product_min_qty"/>
@@ -179,11 +184,11 @@
             <field name="model">stock.warehouse.orderpoint</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <search string="Minimum Stock Rules Search">
+                <search string="Reordering Rules Search">
                     <group>
                         <field name="name"/>
                         <field name="warehouse_id" widget="selection"/>
-                        <field name="location_id"/>
+                        <field name="location_id" groups="stock.group_locations"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                         <field name="product_id"/>
                     </group>
@@ -201,7 +206,7 @@
             <field name="model">stock.warehouse.orderpoint</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Minimum Stock Rules">
+                <form string="Reordering Rules">
                     <group col="2" colspan="2">
                         <separator string="General Information" colspan="2" />
                         <field name="name" />
@@ -211,7 +216,7 @@
                     <group col="2" colspan="2">
                         <separator string="Locations" colspan="2" />
                         <field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)" widget="selection"/>
-                        <field name="location_id"/>
+                        <field name="location_id" groups="stock.group_locations"/>
                         <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     </group>
                     <group col="2" colspan="2">
@@ -234,7 +239,7 @@
         </record>
 
         <record id="action_orderpoint_form" model="ir.actions.act_window">
-            <field name="name">Minimum Stock Rules</field>
+            <field name="name">Reordering Rules</field>
             <field name="res_model">stock.warehouse.orderpoint</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
@@ -246,7 +251,7 @@
         <act_window
         context="{'search_default_warehouse_id': active_id, 'default_warehouse_id': active_id}"
         id="act_stock_warehouse_2_stock_warehouse_orderpoint"
-        name="Minimum Stock Rules"
+        name="Reordering Rules"
         res_model="stock.warehouse.orderpoint"
         src_model="stock.warehouse"
         groups="stock.group_stock_user"/>
@@ -254,7 +259,7 @@
         <act_window
             context="{'product_uom': locals().has_key('uom_id') and uom_id, 'default_procurement_id': active_id}"
             id="act_procurement_2_stock_warehouse_orderpoint"
-            name="Minimum Stock Rules"
+            name="Reordering Rules"
             res_model="stock.warehouse.orderpoint"
             src_model="procurement.order"
             groups="stock.group_stock_user"/>
@@ -273,8 +278,10 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <group name="misc" position="after">
-                    <separator string="Minimum Stock Rules" colspan="4"/>
-                    <field name="orderpoint_ids" nolabel="1" colspan="4" context="{'default_product_id': active_id}"/>
+                    <group colspan="4" attrs="{'invisible':[('type','=','service')]}" groups="stock.group_stock_manager">
+                        <separator string="Minimum Stock Rules" colspan="4"/>
+                        <field name="orderpoint_ids" nolabel="1" colspan="4" context="{'default_product_id': active_id}"/>
+                    </group>
                 </group>
             </field>
         </record>

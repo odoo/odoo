@@ -24,7 +24,6 @@
     'name': 'Document Management System',
     'version': '2.1',
     'category': 'Knowledge Management',
-    'complexity': "normal",
     'description': """
 This is a complete document management system.
 ==============================================

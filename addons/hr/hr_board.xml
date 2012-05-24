@@ -24,7 +24,6 @@
         <field name="view_id" ref="board_hr_form"/>
     </record>
 
-    <menuitem id="menu_hr_root" icon="terp-hr" name="Human Resources" sequence="15" action="open_board_hr"/>
     <menuitem id="menu_hr_reporting" parent="base.menu_reporting" name="Human Resources" sequence="40" />
     <menuitem id="menu_hr_dashboard" parent="base.menu_reporting_dashboard"  name="Human Resources" sequence="35"/>
     <menuitem id="menu_hr_dashboard_user" parent="menu_hr_dashboard" action="open_board_hr" icon="terp-graph" sequence="4"/>
@@ -51,8 +50,6 @@
         <field name="usage">menu</field>
         <field name="view_id" ref="board_hr_manager_form"/>
     </record>
-
-    <menuitem id="menu_hr_dashboard_manager" parent="menu_hr_dashboard" icon="terp-graph" action="open_board_hr_manager" groups="base.group_hr_manager" sequence="5"/>
 
 </data>
 </openerp>

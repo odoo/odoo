@@ -50,7 +50,20 @@
             <field name="model">project.issue</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Issue Tracker Form">
+                <form layout="manual">
+                <div class="oe_form_topbar">
+                    <button name="case_open" string="Open" states="draft,pending" type="object"/>
+                    <button name="case_close" string="Done" states="open,draft,pending" type="object"/>
+                    <button name="case_pending" string="Pending" states="draft,open" type="object"/>
+                    <button name="case_reset" string="Reset to New" states="done,cancel" type="object"/>
+                    <button name="case_escalate" string="Escalate" states="open,draft,pending" type="object"/>
+                    <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object"/>
+                    <div class="oe_right">
+                        <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
+                    </div>
+                    <div class="oe_clear"/>
+                </div>
+                <sheet string="Issue Tracker Form" layout="auto">
                     <group colspan="4" col="6">
                         <field name="name"/>
                         <field name="project_id" required="True" on_change="on_change_project(project_id)"/>
@@ -86,15 +99,6 @@
                             <separator string= "Description" colspan="4"/>
                             <field name="description" nolabel="1" colspan="4"/>
                             <separator colspan="4"/>
-                            <group col="8" colspan="4">
-                            <field name="state" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
-                            <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" icon="gtk-cancel"/>
-                            <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward"/>
-                            <button name="case_close" string="Done" states="open,draft,pending" type="object" icon="terp-dialog-close"/>
-                            <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause"/>
-                            <button name="case_escalate" string="Escalate" states="open,draft,pending" type="object" icon="gtk-go-up"/>
-                            <button name="case_reset" string="Reset to New" states="done,cancel" type="object" icon="gtk-convert"/>
-                            </group>
                         </page>
                         <page string="Extra Info">
                             <group col="4" colspan="4">
@@ -113,7 +117,10 @@
                             </group>
                         </page>
                     </notebook>
+                </sheet>
+                <div class="oe_form_sheet_width">
                     <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
+                </div>
                 </form>
             </field>
         </record>
@@ -186,7 +193,7 @@
                             context="{'group_by':'priority'}" />
                         <filter string="Stage" icon="terp-stage" domain="[]"
                             context="{'group_by':'type_id'}" />
-                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]"
+                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]"
                             context="{'group_by':'state'}" />
                         <separator orientation="vertical" />
                         <filter string="Month" icon="terp-go-month"
@@ -373,9 +380,9 @@
                     <field name="use_issues"/>
                     <field name="issue_count" invisible="1"/>
                 </field>
-                <xpath expr="//div[@id='list']" position="inside">
-                    <a t-if="record.use_issues.raw_value" class="oe_project_buttons"
-                        id="2" name="%(act_project_project_2_project_issue_all)d" type="action">
+                <xpath expr="//div[contains(@class, 'oe_kanban_project_list')]" position="inside">
+                    <a t-if="record.use_issues.raw_value"
+                        name="%(act_project_project_2_project_issue_all)d" type="action">
                         Issues(<field name="issue_count"/>)</a>
                 </xpath>
             </field>

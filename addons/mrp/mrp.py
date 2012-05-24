@@ -206,8 +206,8 @@ class mrp_bom(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'product_uos_qty': fields.float('Product UOS Qty'),
         'product_uos': fields.many2one('product.uom', 'Product UOS', help="Product UOS (Unit of Sale) is the unit of measurement for the invoicing and promotion of stock."),
-        'product_qty': fields.float('Product Qty', required=True, digits_compute=dp.get_precision('Product UoM')),
-        'product_uom': fields.many2one('product.uom', 'Product UOM', required=True, help="UoM (Unit of Measure) is the unit of measurement for the inventory control"),
+        'product_qty': fields.float('Product Qty', required=True, digits_compute=dp.get_precision('Product Unit of Measure')),
+        'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True, help="Unit of Measure (Unit of Measure) is the unit of measurement for the inventory control"),
         'product_rounding': fields.float('Product Rounding', help="Rounding applied on the product quantity."),
         'product_efficiency': fields.float('Manufacturing Efficiency', required=True, help="A factor of 0.9 means a loss of 10% within the production process."),
         'bom_lines': fields.one2many('mrp.bom', 'bom_id', 'BoM Lines'),
@@ -454,8 +454,8 @@ class mrp_production(osv.osv):
         'priority': fields.selection([('0','Not urgent'),('1','Normal'),('2','Urgent'),('3','Very Urgent')], 'Priority', select=True),
 
         'product_id': fields.many2one('product.product', 'Product', required=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'product_qty': fields.float('Product Qty', digits_compute=dp.get_precision('Product UoM'), required=True, states={'draft':[('readonly',False)]}, readonly=True),
-        'product_uom': fields.many2one('product.uom', 'Product UOM', required=True, states={'draft':[('readonly',False)]}, readonly=True),
+        'product_qty': fields.float('Product Qty', digits_compute=dp.get_precision('Product Unit of Measure'), required=True, states={'draft':[('readonly',False)]}, readonly=True),
+        'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True, states={'draft':[('readonly',False)]}, readonly=True),
         'product_uos_qty': fields.float('Product UoS Qty', states={'draft':[('readonly',False)]}, readonly=True),
         'product_uos': fields.many2one('product.uom', 'Product UoS', states={'draft':[('readonly',False)]}, readonly=True),
 
@@ -481,7 +481,7 @@ class mrp_production(osv.osv):
         'move_created_ids2': fields.one2many('stock.move', 'production_id', 'Produced Products', domain=[('state','in', ('done', 'cancel'))]),
         'product_lines': fields.one2many('mrp.production.product.line', 'production_id', 'Scheduled goods'),
         'workcenter_lines': fields.one2many('mrp.production.workcenter.line', 'production_id', 'Work Centers Utilisation'),
-        'state': fields.selection([('draft','New'),('picking_except', 'Picking Exception'),('confirmed','Waiting Goods'),('ready','Ready to Produce'),('in_production','Production Started'),('cancel','Cancelled'),('done','Done')],'State', readonly=True,
+        'state': fields.selection([('draft','New'),('cancel','Cancelled'),('picking_except', 'Picking Exception'),('confirmed','Waiting Goods'),('ready','Ready to Produce'),('in_production','Production Started'),('done','Done')],'Status', readonly=True,
                                     help='When the production order is created the state is set to \'Draft\'.\n If the order is confirmed the state is set to \'Waiting Goods\'.\n If any exceptions are there, the state is set to \'Picking Exception\'.\
                                     \nIf the stock is available then the state is set to \'Ready to Produce\'.\n When the production gets started then the state is set to \'In Production\'.\n When the production is over, the state is set to \'Done\'.'),
         'hour_total': fields.function(_production_calc, type='float', string='Total Hours', multi='workorder', store=True),
@@ -1112,8 +1112,8 @@ class mrp_production_product_line(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'product_id': fields.many2one('product.product', 'Product', required=True),
-        'product_qty': fields.float('Product Qty', digits_compute=dp.get_precision('Product UoM'), required=True),
-        'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
+        'product_qty': fields.float('Product Qty', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
+        'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
         'product_uos_qty': fields.float('Product UOS Qty'),
         'product_uos': fields.many2one('product.uom', 'Product UOS'),
         'production_id': fields.many2one('mrp.production', 'Production Order', select=True),

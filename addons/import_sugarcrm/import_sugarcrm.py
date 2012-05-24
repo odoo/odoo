@@ -898,7 +898,6 @@ class sugar_import(import_framework):
                 'context_lang' : 'context_lang',
                 'password' : 'password',
                 '.id' : '.id',
-                'context_department_id/id': self.get_users_department,
                 'user_email' : 'email1',
             }
         }

@@ -51,7 +51,7 @@ class timesheet_report(osv.osv):
             ('new', 'New'),
             ('draft','Draft'),
             ('confirm','Confirmed'),
-            ('done','Done')], 'State', readonly=True),
+            ('done','Done')], 'Status', readonly=True),
         'quantity': fields.float('#Quantity',readonly=True),
         'cost': fields.float('#Cost',readonly=True),
         }

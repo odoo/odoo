@@ -35,7 +35,7 @@ class project_configuration(osv.osv_memory):
             help="""Lets the company customize which Pad installation should be used to link to new pads
                 (by default, http://ietherpad.com/).
                 This installs the module pad."""),
-        'module_project_timesheet': fields.boolean("Timesheets and Invoices",
+        'module_project_timesheet': fields.boolean("Timesheets per Task",
             help="""This allows you to transfer the entries under tasks defined for Project Management to
                 the timesheet line entries for particular date and user, with the effect of creating,
                 editing and deleting either ways.
@@ -49,6 +49,12 @@ class project_configuration(osv.osv_memory):
         'module_project_issue_sheet': fields.boolean("Track and Invoice Issues Working Time",
             help="""Provides timesheet support for the issues/bugs management in project.
                 This installs the module project_issue_sheet."""),
+        'group_tasks_work_on_tasks': fields.boolean("Task's Work on Tasks",
+            implied_group='project.group_tasks_work_on_tasks',
+            help="Allows you to compute work on tasks."),
+        'group_time_work_estimation_tasks': fields.boolean("Time Estimation on Tasks",
+            implied_group='project.group_time_work_estimation_tasks',
+            help="Allows you to compute Time Estimation on tasks."),                                
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

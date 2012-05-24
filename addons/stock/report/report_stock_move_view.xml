@@ -117,13 +117,13 @@
                     <filter name="group_categ_id" string="Product Category" icon="terp-stock_symbol-selection" context="{'group_by':'categ_id'}"/>
                     <filter name="group_product" string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>
                     <separator orientation="vertical"/>
-                    <filter name="group_picking" string="Packing" icon="terp-accessories-archiver" context="{'group_by':'picking_id'}"/>
+                    <filter name="group_picking" string="Shipment" icon="terp-accessories-archiver" context="{'group_by':'picking_id'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Source Location" name="src_location" icon="terp-gtk-jump-to-rtl" context="{'group_by':'location_id'}"/>
                     <filter string="Dest. Location" name="dest_location" icon="terp-gtk-jump-to-ltr"  context="{'group_by':'location_dest_id'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Type" name="group_type" icon="terp-stock_symbol-selection" context="{'group_by':'type'}" help="Shipping type specify, goods coming in or going out"/>
-                    <filter string="State" name="group_state" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
+                    <filter string="Status" name="group_state" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
                     <filter string="Stock journal" name="group_stock_journal" icon="terp-folder-orange" context="{'group_by':'stock_journal'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Company" name="group_state" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
@@ -245,7 +245,7 @@
                     <filter name="group_location" string="Location" icon="terp-go-home" context="{'group_by':'location_id'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Date" icon="terp-go-month" context="{'group_by':'date'}"/>
-                    <filter string="State" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
+                    <filter string="Status" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
                 </group>
             </search>
         </field>

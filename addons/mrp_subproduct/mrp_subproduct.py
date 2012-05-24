@@ -25,11 +25,11 @@ import decimal_precision as dp
 
 class mrp_subproduct(osv.osv):
     _name = 'mrp.subproduct'
-    _description = 'Sub Product'
+    _description = 'Byproduct'
     _columns={
         'product_id': fields.many2one('product.product', 'Product', required=True),
-        'product_qty': fields.float('Product Qty', digits_compute=dp.get_precision('Product UoM'), required=True),
-        'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
+        'product_qty': fields.float('Product Qty', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
+        'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
         'subproduct_type': fields.selection([('fixed','Fixed'),('variable','Variable')], 'Quantity Type', required=True, help="Define how the quantity of subproducts will be set on the production orders using this BoM.\
   'Fixed' depicts a situation where the quantity of created subproduct is always equal to the quantity set on the BoM, regardless of how many are created in the production order.\
   By opposition, 'Variable' means that the quantity will be computed as\

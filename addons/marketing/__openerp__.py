@@ -26,7 +26,6 @@
     "depends" : ["base", "base_setup"],
     "author" : "OpenERP SA",
     "category": 'Hidden/Dependency',
-    'complexity': "expert",
     "description": """
 Menu for Marketing.
 ===================
@@ -38,7 +37,8 @@ Contains the installer for marketing-related modules.
     'update_xml': [
         'security/marketing_security.xml',
         'security/ir.model.access.csv',
-        'marketing_view.xml'
+        'marketing_view.xml',
+        'res_config_view.xml',
     ],
     'demo_xml': ['marketing_demo.xml'],
     'installable': True,
