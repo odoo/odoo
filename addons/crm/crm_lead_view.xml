@@ -234,65 +234,63 @@
                         </ul>
                     </t>
                     <t t-name="kanban-box">
-                        <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())" t-set="border">oe_kanban_color_red</t>
-                        <div t-attf-class="#{kanban_color(record.color.raw_value)} #{border || ''}">
-                            <div class="oe_kanban_box oe_kanban_color_border">
-                                <table class="oe_kanban_table oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
-                                <tr>
-                                    <td align="left" valign="middle" width="16">
-                                        <a t-if="record.priority.raw_value == 1" icon="star-on" type="object" name="set_normal_priority"/>
-                                        <a t-if="record.priority.raw_value != 1" icon="star-off" type="object" name="set_high_priority" style="opacity:0.6; filter:alpha(opacity=60);"/>
-                                    </td>
-                                    <td align="left" valign="middle" class="oe_kanban_title" tooltip="lead_details">
-                                        <field name="partner_id"/>
-                                        <t t-if="record.planned_revenue.raw_value">
-                                            - <t t-esc="Math.round(record.planned_revenue.value)"/>
-                                            <field name="company_currency"/>
-                                        </t>
-                                    </td>
-                                    <td valign="top" width="22">
-                                        <img t-att-src="kanban_image('res.users', 'avatar', record.user_id.raw_value[0])"  t-att-title="record.user_id.value"
-                                        width="22" height="22" class="oe_kanban_gravatar"/>
-                                    </td>
-                                </tr>
-                                </table>
-
-                                <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger">
-                                    <div>
-                                        <b>
-                                            <a t-if="record.partner_address_email.raw_value" t-attf-href="mailto:#{record.partner_address_email.raw_value}">
-                                                <field name="partner_address_name"/>
-                                            </a>
-                                            <field t-if="!record.partner_address_email.raw_value" name="partner_address_name"/>
-                                        </b>
-                                    </div>
-                                    <div>
-                                        <field name="name"/>
-                                    </div>
-                                    <div style="padding-left: 0.5em">
-                                        <i><field name="date_action"/><t t-if="record.date_action.raw_value"> : </t><field name="title_action"/></i>
-                                    </div>
+                        <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card">
+                            <a class="oe_kanban_menuaction oe_i">B</a>
+                            <ul class="oe_kanban_menu">
+                                <li><a type="edit" >Edit...</a></li>
+                                <li><a type="delete">Delete</a></li>
+                                <li><a name="%(mail.action_email_compose_message_wizard)d" type="action">Send New Email</a></li>
+                                <li><a name="%(opportunity2phonecall_act)d" type="action">Log Call</a></li>
+                                <li><a name="action_makeMeeting" type="object">Schedule Meeting</a></li>
+                                <li><a name="%(crm.action_crm_add_note)d" context="{'model': 'crm.lead' }" type="action">Add Internal Note</a></li>
+                                <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                            </ul>
+                            <div class="oe_kanban_content">
+                                <a type="edit"><h3>
+                                    <field name="partner_id"/>
+                                    <t t-if="record.planned_revenue.raw_value">
+                                        - <t t-esc="Math.round(record.planned_revenue.value)"/>
+                                        <field name="company_currency"/>
+                                    </t>
+                                </h3></a>
+                                <div>
+                                    <b> <field name="partner_address_name"/> </b>
                                 </div>
-
-                                <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
-                                    <div class="oe_kanban_left">
-                                        <a string="Edit" icon="gtk-edit" type="edit"/>
-                                        <a string="Change Color" icon="color-picker" type="color" name="color"/>
-                                        <a string="Send New Email" name="%(mail.action_email_compose_message_wizard)d" icon="terp-mail-message-new" type="action"/>
-                                        <a string="Log Call" name="%(opportunity2phonecall_act)d" icon="terp-call-start" type="action"/>
-                                        <a string="Schedule Meeting" name="action_makeMeeting" type="object" icon="stock_calendar"/>
-                                        <a string="Add Internal Note" name="%(crm.action_crm_add_note)d" context="{'model': 'crm.lead' }" icon="terp-document-new" type="action"/>
-                                    </div>
-                                    <div class="oe_kanban_right">
-                                        <a name="case_mark_lost" string="Mark Lost" states="open,pending" type="object" icon="kanban-stop" />
-                                        <a name="case_pending" string="Pending" states="draft,open" type="object" icon="kanban-pause" />
-                                        <a name="case_open" string="Open" states="pending" type="object" icon="gtk-media-play" />
-                                        <a name="case_mark_won" string="Mark Won" states="open,pending" type="object" icon="kanban-apply" />
-                                    </div>
-                                    <br class="oe_kanban_clear"/>
+                                <div>
+                                    <field name="name"/>
+                                </div>
+                                <div style="padding-left: 0.5em">
+                                    <i>
+                                        <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())" t-set="red">oe_kanban_text_red</t>
+                                        <span t-attf-class="#{red || ''}">
+                                            <field name="date_action"/>
+                                        </span>
+                                        <t t-if="record.date_action.raw_value"> : </t>
+                                        <field name="title_action"/>
+                                    </i>
+                                </div>
+                                <div class="oe_right">
+                                    <a t-if="record.priority.raw_value == 1" icon="star-on" type="object" name="set_normal_priority"/>
+                                    <a t-if="record.priority.raw_value != 1" icon="star-off" type="object" name="set_high_priority" style="opacity:0.7; filter:alpha(opacity=70);"/>
+                                    <!--
+                                    <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())" t-set="red">oe_kaban_status_red</t>
+                                    <span t-attf-class="oe_kanban_status #{red}"> </span>
+                                    -->
+                                    <img t-att-src="kanban_image('res.users', 'avatar', record.user_id.raw_value[0])" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
+                                </div>
+                                <div class="oe_kanban_footer_left">
                                 </div>
                             </div>
+                            <div class="oe_clear"></div>
                         </div>
+                        <!--
+                            <div class="oe_kanban_right">
+                                <a name="case_mark_lost" string="Mark Lost" states="open,pending" type="object" icon="kanban-stop" />
+                                <a name="case_pending" string="Pending" states="draft,open" type="object" icon="kanban-pause" />
+                                <a name="case_open" string="Open" states="pending" type="object" icon="gtk-media-play" />
+                                <a name="case_mark_won" string="Mark Won" states="open,pending" type="object" icon="kanban-apply" />
+                            </div>
+                        -->
                     </t>
                 </templates>
             </kanban>
