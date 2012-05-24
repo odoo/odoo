@@ -340,7 +340,7 @@ class hr_timesheet_sheet(osv.osv):
             ('new', 'New'),
             ('draft','Open'),
             ('confirm','Waiting Approval'),
-            ('done','Approved')], 'State', select=True, required=True, readonly=True,
+            ('done','Approved')], 'Status', select=True, required=True, readonly=True,
             help=' * The \'Draft\' state is used when a user is encoding a new and unconfirmed timesheet. \
                 \n* The \'Confirmed\' state is used for to confirm the timesheet by user. \
                 \n* The \'Done\' state is used when users timesheet is accepted by his/her senior.'),

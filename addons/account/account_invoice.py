@@ -201,12 +201,12 @@ class account_invoice(osv.osv):
 
         'state': fields.selection([
             ('draft','Draft'),
+            ('cancel','Cancelled'),
             ('proforma','Pro-forma'),
             ('proforma2','Pro-forma'),
             ('open','Open'),
-            ('paid','Paid'),
-            ('cancel','Cancelled')
-            ],'State', select=True, readonly=True,
+            ('paid','Paid')
+            ],'Status', select=True, readonly=True,
             help=' * The \'Draft\' state is used when a user is encoding a new and unconfirmed Invoice. \
             \n* The \'Pro-forma\' when invoice is in Pro-forma state,invoice does not have an invoice number. \
             \n* The \'Open\' state is used when user create invoice,a invoice number is generated.Its in open state till user does not pay invoice. \
@@ -273,7 +273,7 @@ class account_invoice(osv.osv):
             help="Remaining amount due."),
         'payment_ids': fields.function(_compute_lines, relation='account.move.line', type="many2many", string='Payments'),
         'move_name': fields.char('Journal Entry', size=64, readonly=True, states={'draft':[('readonly',False)]}),
-        'user_id': fields.many2one('res.users', 'Salesman', readonly=True, states={'draft':[('readonly',False)]}),
+        'user_id': fields.many2one('res.users', 'Salesperson', readonly=True, states={'draft':[('readonly',False)]}),
         'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position', readonly=True, states={'draft':[('readonly',False)]})
     }
     _defaults = {
@@ -1307,7 +1307,7 @@ class account_invoice_line(osv.osv):
     _description = "Invoice Line"
     _columns = {
         'name': fields.char('Description', size=256, required=True),
-        'origin': fields.char('Origin', size=256, help="Reference of the document that produced this invoice."),
+        'origin': fields.char('Source', size=256, help="Reference of the document that produced this invoice."),
         'invoice_id': fields.many2one('account.invoice', 'Invoice Reference', ondelete='cascade', select=True),
         'uos_id': fields.many2one('product.uom', 'Unit of Measure', ondelete='set null'),
         'product_id': fields.many2one('product.product', 'Product', ondelete='set null'),
