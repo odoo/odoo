@@ -98,6 +98,16 @@
 .openerp li {
   list-style-type: none;
 }
+.openerp input, .openerp textarea {
+  height: 14px;
+  padding: 3px;
+  font-size: 11px;
+  line-height: 18px;
+  border: 1px solid #cccccc;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+}
 .openerp .oe_i {
   font-family: "mnmliconsRegular" !important;
   font-size: 21px;
@@ -1163,13 +1173,14 @@
   cursor: text;
   position: relative;
   float: right;
-  padding-right: 20px;
-  width: 410px;
+  padding: 1px 0;
+  line-height: 18px;
+  width: 480px;
   border: 1px solid #ababab;
   background: white;
-  -moz-border-radius: 1em;
-  -webkit-border-radius: 1em;
-  border-radius: 1em;
+  -moz-border-radius: 13px;
+  -webkit-border-radius: 13px;
+  border-radius: 13px;
   -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) inset;
   -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) inset;
   -box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) inset;
@@ -1184,17 +1195,16 @@
   cursor: pointer;
   position: absolute;
   top: 0;
-  right: 22px;
+  right: 18px;
   width: 15px;
   height: 100%;
-  background: url(../img/attachments-close.png) center center no-repeat;
+  background: url(../img/search_reset.gif) center center no-repeat;
 }
 .openerp .oe_searchview .oe_searchview_unfold_drawer {
   position: absolute;
   top: 0;
   right: 0;
   height: 100%;
-  line-height: 2.5em;
   padding: 0 7px 0 4px;
   color: #cccccc;
   cursor: pointer;
@@ -1203,23 +1213,44 @@
   color: #999999;
 }
 .openerp .oe_searchview .oe_searchview_unfold_drawer:before {
-  content: "◀";
+  position: absolute;
+  top: 10px;
+  right: 7px;
+  width: 0;
+  height: 0;
+  display: inline-block;
+  content: "";
+  vertical-align: top;
+  border-top: 5px solid #4c4c4c;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  filter: alpha(opacity=50);
+  opacity: 0.5;
+}
+.openerp .oe_searchview .oe_searchview_facets {
+  min-height: 22px;
 }
 .openerp .oe_searchview .oe_searchview_facets:before {
   color: #cccccc;
   font-family: "mnmliconsRegular";
   content: "r";
-  font-size: 150%;
-  padding: 0 1px 0 3px;
+  font-size: 130%;
   display: inline;
+  position: relative;
+  left: 6px;
+  top: 2px;
+  color: #a3a3a3;
+  padding-right: 4px;
 }
 .openerp .oe_searchview .oe_searchview_facets * {
   vertical-align: top;
   display: inline-block;
-  line-height: 26px;
+  line-height: 17px;
 }
 .openerp .oe_searchview .oe_searchview_facets .oe_searchview_input, .openerp .oe_searchview .oe_searchview_facets .oe_searchview_facet {
-  height: 26px;
+  height: 18px;
+  margin: 1px 0;
+  font-size: 11px;
 }
 .openerp .oe_searchview .oe_searchview_facets .oe_searchview_input:focus, .openerp .oe_searchview .oe_searchview_facets .oe_searchview_facet:focus {
   outline: none;
@@ -1236,8 +1267,6 @@
   border-radius: 3px;
   background: #8786b7;
   -webkit-font-smoothing: auto;
-  padding-left: 1.1em;
-  margin: 1px 0;
 }
 .openerp .oe_searchview .oe_searchview_facets .oe_searchview_facet:focus {
   border-color: #a6a6fe;
@@ -1252,50 +1281,69 @@
   border-radius: 0 3px 3px 0;
 }
 .openerp .oe_searchview .oe_searchview_facets .oe_searchview_facet .oe_facet_category, .openerp .oe_searchview .oe_searchview_facets .oe_searchview_facet .oe_facet_value {
-  height: 24px;
-  padding: 1px 0.1em;
+  height: 18px;
+  padding: 0 4px;
 }
 .openerp .oe_searchview .oe_searchview_facets .oe_searchview_facet .oe_facet_category {
   color: white;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
 }
+.openerp .oe_searchview .oe_searchview_facets .oe_searchview_facet .oe_facet_category.oe_i {
+  font-size: 16px;
+}
 .openerp .oe_searchview .oe_searchview_facets .oe_searchview_facet .oe_facet_value {
   border-left: 1px solid #afafb6;
+  text-shadow: 0 1px 1px white;
+}
+.openerp .oe_searchview .oe_searchview_facets .oe_searchview_facet .oe_facet_value:last-child {
+  padding-right: 16px;
 }
 .openerp .oe_searchview .oe_searchview_facets .oe_searchview_facet .oe_facet_remove {
   position: absolute;
-  top: 0;
-  left: 2px;
-  color: white;
+  top: 3px;
+  right: 3px;
+  color: #8786b7;
+  line-height: 8px;
+  width: 12px;
+  height: 12px;
+  text-align: center;
+  font-weight: bold;
+  cursor: pointer;
+  text-shadow: 0 1px 1px white;
 }
 .openerp .oe_searchview .oe_searchview_facets .oe_searchview_facet .oe_facet_remove:hover {
-  color: #cccccc;
+  color: white;
+  background: #8786b7;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
+  -moz-border-radius: 2px;
+  -webkit-border-radius: 2px;
+  border-radius: 2px;
 }
 .openerp .oe_searchview.oe_searchview_open_drawer .oe_searchview_drawer {
   display: block;
 }
-.openerp .oe_searchview.oe_searchview_open_drawer .oe_searchview_unfold_drawer:before {
-  content: "▼";
-}
 .openerp .oe_searchview .oe_searchview_drawer {
   position: absolute;
   z-index: 1;
-  margin-top: 3px;
+  margin-top: 4px;
   top: 100%;
-  right: 0;
+  right: -1px;
   background-color: white;
   min-width: 100%;
   display: none;
-  border: 1px solid #cccccc;
+  border: 1px solid #afafb6;
   text-align: left;
-  padding-bottom: 0.5em;
-  -moz-border-radius: 1em;
-  -webkit-border-radius: 1em;
-  border-radius: 1em;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  -box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
 }
 .openerp .oe_searchview .oe_searchview_drawer > div {
   border-top: 1px solid #cccccc;
-  margin: 3px 0;
+  margin: 0;
+  padding: 8px;
 }
 .openerp .oe_searchview .oe_searchview_drawer > div:first-child {
   border-top: none;
@@ -1304,11 +1352,20 @@
 .openerp .oe_searchview .oe_searchview_drawer h4, .openerp .oe_searchview .oe_searchview_drawer h4 * {
   margin: 0;
   cursor: pointer;
+  font-weight: normal;
+  display: inline-block;
+}
+.openerp .oe_searchview .oe_searchview_drawer h4:hover, .openerp .oe_searchview .oe_searchview_drawer h4 *:hover {
+  background-color: #f0f0fa;
 }
 .openerp .oe_searchview .oe_searchview_drawer h4:before {
   content: "▸ ";
+  color: #a3a3a3;
 }
-.openerp .oe_searchview .oe_searchview_drawer button, .openerp .oe_searchview .oe_searchview_drawer .button {
+.openerp .oe_searchview .oe_searchview_drawer button {
+  margin: 4px 0;
+}
+.openerp .oe_searchview .oe_searchview_drawer .button {
   border: none;
   background: transparent;
   padding: 0 2px;
@@ -1331,40 +1388,38 @@
   width: 50%;
 }
 .openerp .oe_searchview .oe_searchview_drawer .oe_searchview_filters h3 {
-  margin: 2px 4px 2px 8px;
+  margin: 8px 4px 4px 12px;
   color: #8786b7;
+  font-size: 13px;
 }
 .openerp .oe_searchview .oe_searchview_drawer .oe_searchview_filters ul {
-  margin: 0 12px 3px;
+  margin: 0 8px 8px;
   padding: 0;
   list-style: none;
 }
 .openerp .oe_searchview .oe_searchview_drawer .oe_searchview_filters li {
   list-style: none;
-  padding: 3px 6px 3px 18px;
+  padding: 2px 4px 2px 20px;
   line-height: 14px;
   color: inherit;
   cursor: pointer;
+  position: relative;
 }
-.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_filters li.oe_selected {
-  background: url(/web/static/src/img/icons/gtk-apply.png) left 2px no-repeat;
+.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_filters li.oe_selected:before {
+  content: "W";
+  font-family: "entypoRegular" !important;
+  font-size: 24px;
+  font-weight: 300 !important;
+  color: #a3a3a3;
+  position: absolute;
+  left: 4px;
+  top: -2px;
 }
 .openerp .oe_searchview .oe_searchview_drawer .oe_searchview_filters li:hover {
   background-color: #f0f0fa;
 }
 .openerp .oe_searchview .oe_searchview_drawer .oe_searchview_custom form {
   display: none;
-}
-.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_custom form button {
-  font-size: 1px;
-  letter-spacing: -1px;
-  color: transparent;
-}
-.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_custom form button:before {
-  font-family: "mnmliconsRegular";
-  content: "S";
-  font-size: 20px;
-  color: #404040;
 }
 .openerp .oe_searchview .oe_searchview_drawer .oe_searchview_custom li {
   cursor: pointer;
@@ -1387,10 +1442,11 @@
   display: none;
 }
 .openerp .oe_searchview .oe_searchview_drawer .oe_searchview_advanced button.oe_add_condition:before {
-  content: "⊞ ";
-}
-.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_advanced button.oe_apply:before {
-  content: "⚡ ";
+  content: "Z";
+  font-family: "entypoRegular" !important;
+  font-size: 24px;
+  font-weight: 300 !important;
+  margin-right: 4px;
 }
 .openerp .oe_searchview .oe_searchview_drawer .oe_searchview_advanced ul {
   list-style: none;
@@ -1403,6 +1459,8 @@
 }
 .openerp .oe_searchview .oe_searchview_drawer .oe_opened h4:before {
   content: "▾ ";
+  position: relative;
+  top: -1px;
 }
 .openerp .oe_searchview .oe_searchview_drawer .oe_opened form {
   display: block;
