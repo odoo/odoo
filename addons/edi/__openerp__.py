@@ -22,7 +22,6 @@
     'name': 'Electronic Data Interchange (EDI)',
     'version': '1.0',
     'category': 'Tools',
-    'complexity': "easy",
     'description': """
 Provides a common EDI platform that other Applications can use
 ==============================================================
