@@ -38,7 +38,7 @@
             <field eval="'(392) 895-7917'" name="mobile"/>
             <field eval="1" name="active"/>
             <field name="categ_id" ref="crm.categ_oppor2"/>
-            <field name="stage_id" ref="crm.stage_lead2"/>
+            <field name="stage_id" ref="crm.stage_lead1"/>
             <field eval="'Interest in Your New Product'" name="name"/>
             <field eval="'(956) 293-2595'" name="phone"/>
         </record>
@@ -55,7 +55,7 @@
             <field eval="'(820) 167-3208'" name="mobile"/>
             <field eval="1" name="active"/>
             <field name="categ_id" ref="crm.categ_oppor4"/>
-            <field name="stage_id" ref="crm.stage_lead2"/>
+            <field name="stage_id" ref="crm.stage_lead1"/>
             <field eval="'Need Info about Web Design'" name="name"/>
             <field eval="'(079) 681-2139'" name="phone"/>
             <field eval="'contact@thkompany.com'" name="email_from"/>
@@ -91,7 +91,7 @@
             <field eval="'(333) 715-1450'" name="mobile"/>
             <field eval="1" name="active"/>
             <field name="categ_id" ref="crm.categ_oppor1"/>
-            <field name="stage_id" ref="crm.stage_lead2"/>
+            <field name="stage_id" ref="crm.stage_lead1"/>
             <field eval="'Need a Quotation for PC1'" name="name"/>
             <field eval="'(855) 924-4364'" name="phone"/>
             <field eval="'helle@stonageit.be'" name="email_from"/>
@@ -112,7 +112,7 @@
             <field name="section_id" ref="crm.section_sales_department"/>
             <field eval="'(468) 017-2684'" name="mobile"/>
             <field name="categ_id" ref="crm.categ_oppor8"/>
-            <field name="stage_id" ref="crm.stage_lead6"/>
+            <field name="stage_id" ref="crm.stage_lead1"/>
             <field eval="'Need Info about your Services'" name="name"/>
             <field eval="'(373) 907-1009'" name="phone"/>
             <field eval="'info@opensides.be'" name="email_from"/>
@@ -131,7 +131,7 @@
             <field name="section_id" ref="crm.section_sales_department"/>
             <field eval="'(463) 014-1208'" name="mobile"/>
             <field name="categ_id" ref="crm.categ_oppor4"/>
-            <field name="stage_id" ref="crm.stage_lead2"/>
+            <field name="stage_id" ref="crm.stage_lead1"/>
             <field eval="'Info about Your Company ?'" name="name"/>
             <field eval="'(282) 603-7489'" name="phone"/>
         </record>
@@ -178,7 +178,7 @@
             <field name="type">lead</field>
             <field eval="'Info'" name="name"/>
             <field name="section_id" ref="crm.section_sales_department"/>
-            <field name="stage_id" ref="crm.stage_lead2"/>
+            <field name="stage_id" ref="crm.stage_lead1"/>
             <field eval="'Business Group'" name="partner_name"/>
         </record>
         <record id="crm_case_employee0" model="crm.lead">
@@ -190,7 +190,7 @@
             <field eval="'Need Info about Onsite Intervention'" name="name"/>
             <field name="section_id" ref="crm.section_sales_department"/>
             <field name="categ_id" ref="crm.categ_oppor3"/>
-            <field name="stage_id" ref="crm.stage_lead2"/>
+            <field name="stage_id" ref="crm.stage_lead1"/>
             <field eval="'Agrolait'" name="partner_name"/>
             <field eval="'Sylvie Lelitre'" name="contact_name"/>
         </record>
@@ -207,21 +207,9 @@
             <field eval="'Centrale d\'achats 1'" name="partner_name"/>
        </record>
 
-        <!--        Call Function to Open the leads-->
-        <function model="crm.lead" name="case_open"
-            eval="[ref('crm_case_electonicgoodsdealer0'), ref('crm_case_company_partnership0'), ref('crm_case_webvisitor0'), ref('crm_case_business_card0'), ref('crm.crm_case_employee0')], {'install_mode': True}"
-        />
-        <!--        Call Function to Reset the Lead-->
-        <function model="crm.lead" name="case_reset"
-            eval="[ref('crm_case_itdeveloper0')], {'install_mode': True}"
-        />
-        <!--        Call Function to Close the leads-->
+        <!--        Call Function to Cancel the leads (set as Dead) -->
         <function model="crm.lead" name="case_close"
-            eval="[ref('crm_case_vpoperations0'), ref('crm_case_developingwebapplications0'), ref('crm_case_webvisitor0')], {'install_mode': True}"
-        />
-        <!--        Call Function to Cancel the leads-->
-        <function model="crm.lead" name="case_cancel"
-            eval="[ref('crm_case_mgroperations0'), ref('crm_case_imported_contact0')], {'install_mode': True}"
+            eval="[ref('crm_case_electonicgoodsdealer0'), ref('crm_case_company_partnership0'), ref('crm_case_vpoperations0'), ref('crm_case_developingwebapplications0'), ref('crm_case_webvisitor0')], {'install_mode': True}"
         />
 
         <!-- Demo Opportunities -->
