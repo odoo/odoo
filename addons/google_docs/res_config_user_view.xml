@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- add google docs config field in user form -->
+
+        <record model="ir.ui.view" id="view_google_docs_config_tree">
+            <field name="name">google_docs.config.tree</field>
+            <field name="model">google.docs.config</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <group name="default_filters" position="inside">
+                    <field name="model_id"/>
+                </group>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_google_docs_config_form">
+            <field name="name">google_docs.config.form</field>
+            <field name="model">google.docs.config</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+            <group colspan='4'>
+                <field name="model_id"/>
+                <field name='gdocs_resource_id'/>
+                <field name='name_template'/>
+            </group>
+            </field>
+        </record>
+
+        <record model='ir.actions.act_window' id='action_google_docs_users_config'>
+            <field name='name'>Models configuration</field>
+            <field name='res_model'>google.docs.config</field>
+            <field name='type'>ir.actions.act_window</field>
+            <field name='view_type'>form</field>
+            <field name='view_id' ref='view_google_docs_config_tree'/>
+        </record>
+        <menuitem name='Google Docs configuration' id='menu_gdocs_config' parent='base.menu_administration'/>
+        <menuitem name='Models configuration' id='menu_gdocs_model_config' parent='menu_gdocs_config' action='action_google_docs_users_config'/>
+    </data>
+</openerp>

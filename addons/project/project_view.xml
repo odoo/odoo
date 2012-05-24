@@ -188,61 +188,39 @@
                     <field name="task_count"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div class="project_vignettes">
-                                <li t-attf-class="#{kanban_color(record.color.raw_value)} oe_project_kanban_vignette" id="oe_project_kanban_vignette">
-                                    <a href="#" class="oe_project_kanban_action dropdown-toggle"><span class="oe_i">B</span></a>
-                                    <ul class="dropdown-menu">
-                                      <li ><a type="edit" >Edit...</a></li>
-                                      <li ><a type="delete">Delete</a></li>
-                                      <li>
-                                        <ul class="color-chooser">
-                                            <li><a t-att-id="record.id.value" class="bgcolor"><span class="oe_kanban_color_0 square"></span></a></li>
-                                            <li><a t-att-id="record.id.value" class="bgcolor"><span class="oe_kanban_color_1 square"></span></a></li>
-                                            <li><a t-att-id="record.id.value" class="bgcolor"><span class="oe_kanban_color_2 square"></span></a></li>
-                                            <li><a t-att-id="record.id.value" class="bgcolor"><span class="oe_kanban_color_3 square"></span></a></li>
-                                            <li><a t-att-id="record.id.value" class="bgcolor"><span class="oe_kanban_color_4 square"></span></a></li>
-                                            <li><a t-att-id="record.id.value" class="bgcolor"><span class="oe_kanban_color_5 square"></span></a></li>
-                                        </ul>
-                                      </li>
-                                    </ul>
-                                    <h4><t t-esc="record.name.value.substr(0,33)"/><t t-if="record.name.value.length > 33">...</t></h4>
-                                    <div id="list">
-                                        <a t-if="record.use_tasks.raw_value" class="oe_project_buttons"
-                                            id="1" name="%(act_project_project_2_project_task_all)d" type="action">
+                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_project oe_kanban_auto_height">
+                                <a class="oe_kanban_menuaction oe_i">B</a>
+                                <ul class="oe_kanban_menu">
+                                    <li><a type="edit">Edit...</a></li>
+                                    <li><a type="delete">Delete</a></li>
+                                    <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                                </ul>
+                                <div class="oe_kanban_content">
+                                    <a type="edit"><h3 class="oe_kanban_ellipsis"><field name="name"/></h3></a>
+
+                                    <div class="oe_kanban_project_list">
+                                        <a t-if="record.use_tasks.raw_value"
+                                            name="%(act_project_project_2_project_task_all)d" type="action">
                                             Tasks(<field name="task_count"/>)</a>
                                     </div>
-                                    <br/>
-                                    <button class="click_button" name="dummy" type="object">
-                                        <table class="project_fields">
-                                            <tr id="deadline" t-if="record.date.raw_value">
-                                                <th align="left">Deadline</th>
-                                                <td align="left"><field name="date"/></td>
-                                            </tr>
-                                            <tr>
-                                                <th align="left" width="70px">Progress</th>
-                                                <td align="left">
-                                                    <t t-esc="Math.round(record.effective_hours.raw_value)"/> / <t t-esc="Math.round(record.planned_hours.raw_value)"/> <field name="company_uom_id"/>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                        <br/>
+
+                                    <div class="oe_kanban_project_fields oe_kanban_project_deadline" t-if="record.date.raw_value">
+                                        <div>Deadline</div>
+                                        <div><field name="date"/></div>
+                                    </div>
+
+                                    <div class="oe_kanban_project_fields oe_kanban_project_progress">
+                                        <div>Progress</div>
+                                        <div><t t-esc="Math.round(record.effective_hours.raw_value)"/> / <t t-esc="Math.round(record.planned_hours.raw_value)"/> <field name="company_uom_id"/></div>
+                                    </div>
+
+                                    <div class="oe_kanban_project_avatars">
                                         <t t-foreach="record.members.raw_value" t-as="member">
-                                            <img t-att-src="kanban_image('res.users', 'avatar', member)" t-att-id="member" class="project_avatar"/>
+                                            <img t-att-src="kanban_image('res.users', 'avatar', member)" t-att-data-member_id="member"/>
                                         </t>
-                                    </button>
-                                </li>
+                                    </div>
+                                </div>
                             </div>
-                            <script type="text/javascript">
-                                //open dropdwon when click on the icon.
-                                $('.dropdown-toggle').dropdown();
-                                
-                                //show and hide the dropdown icon when mouseover and mouseour.
-                                $('.oe_project_kanban_vignette').mouseover(function() {
-                                    return $(this).find('.oe_project_kanban_action').show();
-                                    }).mouseout(function() {
-                                    return $(this).find('.oe_project_kanban_action').hide();
-                                });
-                            </script>
                         </t>
                     </templates>
                 </kanban>
@@ -268,10 +246,17 @@
             <field name="view_id" ref="view_project_kanban"/>
             <field name="search_view_id" ref="view_project_project_filter"/>
             <field name="context">{}</field>
-            <field name="help" type="xml"><p>You have no projects.</p>
-<p>Projects are used to organize your activities; plan tasks, track issues, invoice timesheets. You can define internal projects (R&amp;D, Improve Sales Process), private projects (My Todos) or customer ones.</p>
-<p>Click <i>'create'</i> to start a new project.</p>
-	    </field>
+            <field name="help" type="xml">
+                <p>Click <i>'Create'</i> to <b>start a new project</b>.</p>
+                <p>Projects are used to organize your activities; plan tasks,
+                track issues, invoice timesheets. You can define internal
+                projects (R&amp;D, Improve Sales Process), private projects (My
+                Todos) or customer ones.</p>
+                <p>
+                    You will be able collaborate with internal users on
+                    projects or invite customers to share your activities.
+                </p>
+            </field>
         </record>
 
         <record id="open_view_template_project" model="ir.actions.act_window">
@@ -592,12 +577,10 @@
                         <filter string="Deadlines" context="{'deadline_visible': False}" domain="[('date_deadline','&lt;&gt;',False)]" help="Show only tasks having a deadline" icon="terp-gnome-cpu-frequency-applet+"/>
                         <separator orientation="vertical"/>
                         <field name="name"/>
-                        <field name="project_id" context="{'project_id':self}">
-                             <filter domain="[('project_id.user_id','=',uid)]" help="My Projects" icon="terp-personal"/>
-                        </field>
+                        <filter name="project" string="Project" domain="[('project_id.user_id','=',uid)]" help="My Projects" icon="terp-check"/>
                         <field name="user_id">
-                            <filter domain="[('user_id','=',uid)]"  help="My Tasks" icon="terp-personal" />
-                            <filter domain="[('user_id','=',False)]"  help="Unassigned Tasks" icon="terp-personal-" />
+                            <filter string="My Tasks" domain="[('user_id','=',uid)]"  help="My Tasks" icon="terp-personal" />
+                            <filter string="Unassigned Tasks" domain="[('user_id','=',False)]"  help="Unassigned Tasks" icon="terp-personal-" />
                         </field>
                     </group>
                     <newline/>
@@ -627,7 +610,7 @@
             <field name="view_id" eval="False"/>
             <field name="context">{}</field>
             <field name="search_view_id" ref="view_task_search_form"/>
-            <field name="help">A task represents a work that has to be done. Each user works in his own list of tasks where he can record his task work in hours. He can work and close the task itself or delegate it to another user. If you delegate a task to another user, you get a new task in pending state, which will be reopened when you have to review the work achieved. If you install the project_timesheet module, task work can be invoiced based on the project configuration. With the project_mrp module, sales orders can create tasks automatically when they are confirmed.</field>
+            <field name="help">Tasks allow you to organize your work into a project. Click on button "Create" to create a new task.</field>
         </record>
         <record id="open_view_task_list_kanban" model="ir.actions.act_window.view">
             <field name="sequence" eval="0"/>
