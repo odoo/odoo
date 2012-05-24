@@ -10,7 +10,6 @@
         <menuitem id="menu_hr_configuration" name="Configuration" parent="hr.menu_hr_root" groups="base.group_hr_manager" sequence="50"/>
         <menuitem id="menu_hr_management" name="Human Resources" parent="hr.menu_hr_configuration" sequence="25" groups="base.group_no_one"/>
         <menuitem id="menu_view_employee_category_configuration_form" parent="hr.menu_hr_management" name="Employees" sequence="1" />
-        <menuitem id="base.menu_hr_reports" parent="hr.menu_hr_root" sequence="40" name="Reporting"/>
 
         <!--
         ==========
@@ -311,7 +310,7 @@
         </record>
 
         <menuitem action="open_view_categ_form" id="menu_view_employee_category_form"
-            parent="hr.menu_hr_configuration" sequence="1"/>
+            parent="hr.menu_hr_configuration" sequence="1" groups="base.group_no_one"/>
 
         <record id="open_view_categ_tree" model="ir.actions.act_window">
             <field name="name">Categories Structure</field>
@@ -436,7 +435,7 @@
         </record>
 
         <menuitem name="Recruitment" id="base.menu_crm_case_job_req_main" parent="menu_hr_root" groups="base.group_hr_user"/>
-        <menuitem parent="hr.menu_hr_management" id="menu_hr_job" action="action_hr_job" sequence="6"/>
+        <menuitem parent="hr.menu_hr_management" id="base.menu_hr_job" action="action_hr_job" sequence="6"/>
 
     </data>
 </openerp>
