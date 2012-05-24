@@ -450,6 +450,8 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
 instance.web.Login =  instance.web.Widget.extend({
     template: "Login",
     remember_credentials: true,
+    _db_list: null,
+
     init: function(parent) {
         this._super(parent);
         this.has_local_storage = typeof(localStorage) != 'undefined';
@@ -478,23 +480,33 @@ instance.web.Login =  instance.web.Widget.extend({
                 self.databasemanager.destroy();
                 self.$element.find('.oe_login_bottom').show();
                 self.$element.find('.oe_login_pane').show();
-                self.load_db_list();
+                self.load_db_list(true).then(self.proxy('_db_list_loaded'));
             });
         });
-        self.load_db_list();
+        return self.load_db_list().then(self.proxy('_db_list_loaded'));
     },
-    load_db_list: function () {
-        var self = this;
-        self.rpc("/web/database/get_list", {}, function(result) {
-            self.set_db_list(result.db_list);
-        }, function(error, event) {
-            if (error.data.fault_code === 'AccessDenied') {
-                event.preventDefault();
-            }
-        });
+    load_db_list: function (force) {
+        var d = $.when(), self = this;
+        if (_.isNull(this._db_list) || force) {
+            d = self.rpc("/web/database/get_list", {}, function(result) {
+                self._db_list = _.clone(result.db_list);
+            }, function(error, event) {
+                if (error.data.fault_code === 'AccessDenied') {
+                    event.preventDefault();
+                }
+            });
+        }
+        return d;
     },
-    set_db_list: function (list) {
+    _db_list_loaded: function () {
+        var list = this._db_list,
+            dbdiv = this.$element.find('div.oe_login_dbpane');
         this.$element.find("[name=db]").replaceWith(instance.web.qweb.render('Login.dblist', { db_list: list, selected_db: this.selected_db}));
+        if(list && list.length === 1) {
+            dbdiv.hide();
+        } else {
+            dbdiv.show();
+        }
     },
     on_submit: function(ev) {
         if(ev) {
@@ -521,14 +533,7 @@ instance.web.Login =  instance.web.Widget.extend({
     do_login: function (db, login, password) {
         var self = this;
         this.$element.removeClass('oe_login_invalid');
-        this.session.on_session_invalid.add({
-            callback: function () {
-                self.$element.addClass("oe_login_invalid");
-            },
-            unique: true
-        });
-        this.session.session_authenticate(db, login, password).then(function() {
-            self.$element.removeClass("oe_login_invalid");
+        return this.session.session_authenticate(db, login, password).pipe(function() {
             if (self.has_local_storage) {
                 if(self.remember_credentials) {
                     localStorage.setItem('last_db_login_success', db);
@@ -542,6 +547,10 @@ instance.web.Login =  instance.web.Widget.extend({
                     localStorage.setItem('last_password_login_success', '');
                 }
             }
+            self.$(".oe_login_pane").fadeOut("slow");
+            self.trigger("login");
+        },function () {
+            self.$element.addClass("oe_login_invalid");
         });
     }
 });
@@ -849,47 +858,53 @@ instance.web.WebClient = instance.web.Widget.extend({
         var self = this;
         this.$element.addClass("openerp openerp-web-client-container");
         if (jQuery.param !== undefined && jQuery.deparam(jQuery.param.querystring()).kitten !== undefined) {
-            this.$element.addClass("kitten-mode-activated");
-            this.$element.delegate('img.oe-record-edit-link-img', 'hover', function(e) {
+            $("body").addClass("kitten-mode-activated");
+            self.$element.delegate('img.oe-record-edit-link-img', 'hover', function(e) {
                 self.$element.toggleClass('clark-gable');
             });
         }
         this.session.session_bind().then(function() {
+            self.destroy_content();
+            self.show_common();
             if (!self.session.session_is_valid()) {
                 self.show_login();
-            }
-        });
-        this.session.on_session_valid.add(function() {
-            self.show_application();
-
-            if(self.action_manager)
-                self.action_manager.destroy();
-            self.action_manager = new instance.web.ActionManager(self);
-            self.action_manager.appendTo(self.$element.find('.oe_application'));
-            self.bind_hashchange();
-            var version_label = _t("OpenERP - Unsupported/Community Version");
-            if (!self.session.openerp_entreprise) {
-                self.$element.find('.oe_footer_powered').append(_.str.sprintf('<span> - <a href="http://www.openerp.com/support-or-publisher-warranty-contract" target="_blank">%s</a></span>', version_label));
-                document.title = version_label;
+            } else {
+                self.show_application();
             }
         });
         this.$element.on('mouseenter', '.oe_systray > div:not([data-tipsy=true])', function() {
             $(this).attr('data-tipsy', 'true').tipsy().trigger('mouseenter');
         });
     },
+    show_common: function() {
+        var self = this;
+        this.crashmanager =  new instance.web.CrashManager();
+        instance.connection.on_rpc_error.add(this.crashmanager.on_rpc_error);
+        window.onerror = function (message, file, line) {
+            self.crashmanager.on_traceback({
+                type: _t("Client Error"),
+                message: message,
+                data: {debug: file + ':' + line}
+            });
+        };
+        self.notification = new instance.web.Notification(this);
+        self.notification.appendTo(self.$element);
+        self.loading = new instance.web.Loading(self);
+        self.loading.appendTo(self.$element);
+        self.login = new instance.web.Login(self);
+        self.login.on("login",self,self.show_application);
+        self.$table = $(QWeb.render("WebClient", {}));
+        self.action_manager = new instance.web.ActionManager(self);
+        self.action_manager.appendTo(self.$table.find('.oe_application'));
+    },
     show_login: function() {
         var self = this;
-        this.destroy_content();
-        this.show_common();
-        self.login = new instance.web.Login(self);
         self.login.appendTo(self.$element);
     },
     show_application: function() {
         var self = this;
-        this.destroy_content();
-        this.show_common();
-        self.$table = $(QWeb.render("WebClient", {}));
         self.$element.append(self.$table);
+        self.login.$element.hide();
         self.menu = new instance.web.Menu(self);
         self.menu.replace(this.$element.find('.oe_menu_placeholder'));
         self.menu.on('menu_click', this, this.on_menu_action);
@@ -898,24 +913,12 @@ instance.web.WebClient = instance.web.Widget.extend({
         self.user_menu.on_menu_logout.add(this.proxy('on_logout'));
         self.user_menu.on_action.add(this.proxy('on_menu_action'));
         self.user_menu.do_update();
-    },
-    show_common: function() {
-        var self = this;
-        if (!this.crashmanager) {
-            this.crashmanager =  new instance.web.CrashManager();
-            instance.connection.on_rpc_error.add(this.crashmanager.on_rpc_error);
-            window.onerror = function (message, file, line) {
-                self.crashmanager.on_traceback({
-                    type: _t("Client Error"),
-                    message: message,
-                    data: {debug: file + ':' + line}
-                });
-            };
+        self.bind_hashchange();
+        var version_label = _t("OpenERP - Unsupported/Community Version");
+        if (!self.session.openerp_entreprise) {
+            self.$element.find('.oe_footer_powered').append(_.str.sprintf('<span> - <a href="http://www.openerp.com/support-or-publisher-warranty-contract" target="_blank">%s</a></span>', version_label));
+            document.title = version_label;
         }
-        this.notification = new instance.web.Notification(this);
-        this.notification.appendTo(this.$element);
-        this.loading = new instance.web.Loading(this);
-        this.loading.appendTo(this.$element);
     },
     destroy_content: function() {
         _.each(_.clone(this.getChildren()), function(el) {

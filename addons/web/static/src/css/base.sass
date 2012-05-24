@@ -4,6 +4,7 @@
 $section-title-color: #8786b7
 $facets-border: #afafb6
 $facets-border-selected: #a6a6fe
+$hover-background: #f0f0fa
 $colour4: #8a89ba
 // }}}
 // Mixins {{{
@@ -74,6 +75,18 @@ $colour4: #8a89ba
     -webkit-box-sizing: border-box
     box-sizing: border-box
 
+// Transforms the (readable) text of an inline element into an mmlicons icon,
+// allows for actual readable text in-code (and in readers?) with iconic looks
+@mixin text-to-icon($icon-name, $color: #404040)
+    font-size: 1px
+    letter-spacing: -1px
+    color: transparent
+    &:before
+        font-family: "mnmliconsRegular"
+        content: $icon-name
+        font-size: 20px
+        color: $color
+
 // }}}
 
 .openerp.openerp-web-client-container
@@ -105,7 +118,6 @@ $colour4: #8a89ba
                 border-right: none
     th, td
         padding: 0
-        line-height: 18px
         text-align: left
     th
         font-weight: bold
@@ -423,6 +435,7 @@ $colour4: #8a89ba
         border-right: 1px solid #afafb6
         text-shadow: 0 1px 1px white
         padding-bottom: 16px
+        line-height: 18px
     a.oe_logo
         width: 220px
         display: block
@@ -784,11 +797,6 @@ $colour4: #8a89ba
         .oe_view_manager_buttons
             white-space: nowrap
     // }}}
-    // ViewManager.body {{{
-    .oe_view_manager_body
-        h4
-            margin: 8px 0
-    // }}}
     // ViewManager.pager {{{
     .oe_view_manager_pager
         line-height: 26px
@@ -855,18 +863,6 @@ $colour4: #8a89ba
             content: "k"
         .oe_vm_switch_diagram:after
             content: "f"
-        //.oe_vm_switch_list:after, .oe_vm_switch_tree:after
-            //content: "ö"
-        //.oe_vm_switch_graph:after
-            //content: "ó"
-        //.oe_vm_switch_gantt:after
-            //content: "y"
-        //.oe_vm_switch_calendar:after
-            //content: "b"
-        //.oe_vm_switch_kanban:after
-            //content: "ó"
-        //.oe_vm_switch_diagram:after
-            //content: "}"
     // }}}
     // ViewManager.sidebar {{{
     .oe_form_dropdown_section
@@ -923,132 +919,145 @@ $colour4: #8a89ba
     // }}}
     // SearchView xmo {{{
     .oe_searchview
+        cursor: text
         position: relative
         float: right
-        .VS-search
-            .VS-search-box
-                min-height: 0
-                padding: 0
-                width: 480px
-                border: 1px solid #ababab
-                @include radius(13px)
-                @include box-shadow(0 1px 2px rgba(0,0,0,0.2) inset)
-                //padding: 4px 19px
-                //font-size: 13px
-                //background: url('../img/search.png') no-repeat 5px
-                //background-color: white
-            .VS-icon
-                top: 6px
+        padding-right: 20px
+        width: 410px
+        border: 1px solid #ababab
+        background: white
+        @include radius(1em)
+        @include box-shadow(0 1px 2px rgba(0,0,0,0.2) inset)
 
-            .VS-icon-search
-                left: 2px
-                top: 3px
-                height: 18px
-                width: 18px
+        &.oe_focused
+            border-color: $facets-border-selected
+            @include box-shadow(0 1px 2px $facets-border-selected inset)
 
-            .VS-search-inner
-                margin: 0 40px 0 17px
-                padding: 1px 0
-                font-size: 13px
+        .oe_searchview_clear
+            cursor: pointer
+            position: absolute
+            top: 0
+            right: 22px
+            width: 15px
+            height: 100%
+            background: url(../img/attachments-close.png) center center no-repeat
 
-                input
-                    font-size: inherit
-                    line-height: inherit
-                    height: auto
-                    padding: 0
+        .oe_searchview_unfold_drawer
+            position: absolute
+            top: 0
+            right: 0
+            height: 100%
+            line-height: 2.5em
+            padding: 0 7px 0 4px
+            color: #ccc
+            cursor: pointer
+            &:hover
+                color: #999
+            &:before
+                content: "◀"
 
-                .VS-input-width-tester
-                    font-size: inherit
-                    padding: 0
+        .oe_searchview_facets
+            &:before
+                color: #ccc
+                font-family: "mnmliconsRegular"
+                content: "r"
+                font-size: 150%
+                padding: 0 1px 0 3px
+                display: inline
 
-                .search_input
-                    margin-left: 0
-                    height: 22px
-                    input, .VS-input-width-tester
-                        height: inherit
-                        margin: 0
+            *
+                vertical-align: top
+                display: inline-block
+                line-height: 26px
 
-                .search_facet
-                    padding: 0
-                    margin: 1px 0
-                    border: 1px solid $facets-border
-                    @include radius(3px)
-                    background: #f0f0fa
-                    height: 18px
+            .oe_searchview_input, .oe_searchview_facet
+                height: 26px
+                &:focus
+                    outline: none
 
-                    &.is_selected
-                        border-color: $facets-border-selected
-                        @include box-shadow(0 0 3px 1px $facets-border-selected)
+            .oe_searchview_input
+                padding: 0 3px
 
-                        .category
-                            margin-left: 0
-                        .VS-icon-cancel
-                            // don't change the icon on selection
-                            @include opacity(1.0)
-                            background-position: center 0
-
-                    .category
-                        padding: 0 4px 0 14px
-                        color: white
-                        background: #8786b7
-                        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4)
-                        font-weight: normal
-                        text-transform: none
-                        height: 18px
-                        line-height: 18px
-                        font-size: inherit
-
-                    .search_facet_input_container
-                        border-left: 1px solid $facets-border
-                        height: 18px
-                        line-height: 18px
-                        padding: 0 4px
-                        cursor: pointer
-
-                    .search_facet_remove
-                        left: 1px
-                        top: 3px
-
-            .VS-icon-cancel
-                right: 24px
-
-            .oe_vs_unfold_drawer
-                position: absolute
-                top: 0
-                right: 0
-                height: 100%
-                line-height: 23px
-                padding: 0 7px 0 4px
-                color: #4c4c4c
+            .oe_searchview_facet
+                position: relative
                 cursor: pointer
-                &:before
+                border: 1px solid $facets-border
+                @include radius(3px)
+                background: #8786b7
+                -webkit-font-smoothing: auto
+                padding-left: 1.1em
+                // spacing for opera, FF
+                margin: 1px 0
+
+                &:focus
+                    border-color: $facets-border-selected
+                    @include box-shadow(0 0 3px 1px $facets-border-selected)
+
+                .oe_facet_values
+                    background: #f0f0fa
+                    @include radius(0 3px 3px 0)
+
+                .oe_facet_category, .oe_facet_value
+                    height: 24px
+                    padding: 1px 0.1em
+
+                .oe_facet_category
+                    color: white
+                    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4)
+
+                .oe_facet_value
+                    border-left: 1px solid $facets-border
+
+                .oe_facet_remove
                     position: absolute
-                    top: 9px
-                    right: 8px
-                    width: 0
-                    height: 0
-                    display: inline-block
-                    content: ""
-                    vertical-align: top
-                    border-top: 5px solid #4c4c4c
-                    border-left: 5px solid transparent
-                    border-right: 5px solid transparent
-                    @include opacity(0.5)
+                    top: 0
+                    left: 2px
+                    color: white
+
+                    &:hover
+                        color: #ccc
 
         &.oe_searchview_open_drawer
             .oe_searchview_drawer
                 display: block
+            .oe_searchview_unfold_drawer:before
+                content: "▼"
 
         .oe_searchview_drawer
             position: absolute
             z-index: 1
+            // detach drawer from field slightly
+            margin-top: 3px
             top: 100%
             right: 0
             background-color: white
-            width: 480px
+            min-width: 100%
             display: none
             border: 1px solid #ccc
             text-align: left
+            padding-bottom: 0.5em
+            @include radius(1em)
+
+            > div
+                border-top: 1px solid #ccc
+                margin: 3px 0
+            > div:first-child
+                border-top: none
+                margin: 0
+
+            h4, h4 *
+                margin: 0
+                cursor: pointer
+
+            h4:before
+                content: "▸ "
+
+            button, .button
+                border: none
+                background: transparent
+                padding: 0 2px
+                @include box-shadow(none)
+                @include radius(0)
 
             .oe_searchview_filters
                 display: table
@@ -1070,24 +1079,44 @@ $colour4: #8a89ba
 
                 li
                     list-style: none
-                    padding: 3px 6px
-                    height: 14px
+                    padding: 3px 6px 3px 18px
+                    line-height: 14px
                     color: inherit
                     cursor: pointer
 
+                    &.oe_selected
+                        background: url(/web/static/src/img/icons/gtk-apply.png) left 2px no-repeat
+                    // after oe_selected so background color is not overridden
                     &:hover
-                        background-color: #f0f0fa
+                        background-color: $hover-background
+
+
+            .oe_searchview_custom
+                form
+                    display: none
+
+                    button
+                        @include text-to-icon("S")
+                li
+                    cursor: pointer
+                    position: relative
+                    line-height: 1.2em
+                    padding: 2px 20px 2px 25px
+
+                    &.oe_searchview_custom_private
+                        background: url(/web/static/src/img/icons/terp-locked.png) 5px center no-repeat
+
+                    &:hover
+                        background-color: $hover-background
+
+                    button
+                        position: absolute
+                        top: 0
+                        right: 5px
+
 
             .oe_searchview_advanced
-                h4
-                    border-top: 1px solid #ccc
-                    margin: 5px 0 3px
-                    cursor: pointer
-
-                h4:before
-                    content: "▸ "
-
-                div
+                form
                     display: none
 
                 button.oe_add_condition:before
@@ -1101,22 +1130,28 @@ $colour4: #8a89ba
                 li
                     list-style: none
                     margin: 0
+                    white-space: nowrap
 
-                &.oe_opened
-                    h4:before
-                        content: "▾ "
-                    div
-                        display: block
+            .oe_opened
+                h4:before
+                    content: "▾ "
+                form
+                    display: block
+
+            // delete buttons
+            .oe_searchview_custom_delete, .searchview_extended_delete_prop
+                @include text-to-icon("d")
     // }}}
     // Views Common {{{
     .oe_view_nocontent
         > img
             float: left
-            margin-right: 1.5em
+            margin: 1.5em
         > div
             // don't encroach on my arrow
             overflow: hidden
-            padding: 6px
+            padding: 35px 0px 0px 0px
+            max-width: 700px
             font-size: 125%
     .oe_view_topbar
         border-bottom: 1px solid #cacaca
@@ -1220,7 +1255,7 @@ $colour4: #8a89ba
             background: url(/web/static/src/img/form_sheetbg.png)
             padding: 8px 0
             border-bottom: 1px solid #ddd 
-        .oe_form_sheet_width
+        .oe_form_sheet_width, .oe_form_bottom
             min-width: 650px
             max-width: 980px
             margin: 0 auto
@@ -1308,7 +1343,6 @@ $colour4: #8a89ba
             padding-left: 8px
             @include box-shadow(none)
             @include radius(0px)
-            color: #666
         .oe_form_field_many2one input,
         .oe_form_field_binary input,
         .oe_form_field_binary input,
@@ -1636,44 +1670,6 @@ $colour4: #8a89ba
             input
                 text-align: right
     // }}}
-    // KanbanView {{{
-    .oe_kanban_group_title
-        margin: 1px 1px 4px
-        font-size: 15px
-        font-weight: bold
-        text-shadow: 0 1px 0 white
-    .oe_kanban_column, .oe_kanban_group_header
-        width: 240px
-        vertical-align: top
-        padding: 6px 7px 6px 6px
-        background: #f0eeee
-        border-left: 1px solid #f0f8f8
-        border-right: 1px solid #b9b9b9
-    .oe_kanban_record
-        position: relative
-        display: block
-        min-height: 50px
-        margin: 6px 0
-        display: block
-        @include radius(4px)
-        &:last-child
-            margin-bottom: 0
-        .oe_kanban_title
-            font-weight: bold
-            margin: 2px 4px
-    .oe_kanban_gravatar
-        width: 20px
-        height: 20px
-        @include radius(3px)
-        @include box-shadow(0 1px 2px rgba(0,0,0,0.2))
-    .oe_kanban_avatar_toto
-        height: 40px
-        width: 40px
-        border: 1px solid
-        border-color: #e5e5e5 #dbdbdb #d2d2d2
-        @include radius(3px)
-        @include box-shadow(0 1px 2px rgba(0,0,0,0.2))
-    // }}}
     // Translation {{{
     .oe_trad_field.touched
         border: 1px solid green !important
@@ -1730,6 +1726,13 @@ $colour4: #8a89ba
         float: right
         color: #333
     // }}}
+
+.kitten-mode-activated
+    background-image: url(http://placekitten.com/g/1365/769)
+    background-size: cover
+    background-attachment: fixed
+    >*
+        opacity: 0.70
 
 // Transitional overrides for old styles {{{
 .openerp

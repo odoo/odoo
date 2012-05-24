@@ -794,41 +794,36 @@ instance.web.FormView = instance.web.View.extend(_.extend({}, instance.web.form.
         var self = this;
         var fields = _.chain(this.fields)
             .map(function (field, name) {
-                var value_ = field.get_value();
+                var value = field.get_value();
                 // ignore fields which are empty, invisible, readonly, o2m
                 // or m2m
-                if (!value_
+                if (!value
                         || field.get('invisible')
                         || field.get("readonly")
                         || field.field.type === 'one2many'
                         || field.field.type === 'many2many') {
                     return false;
                 }
-                var displayed;
-                switch(field.field.type) {
+                var displayed = value;
+                switch (field.field.type) {
                 case 'selection':
                     displayed = _(field.values).find(function (option) {
-                            return option[0] === value_;
+                            return option[0] === value;
                         })[1];
                     break;
-                case 'many2one':
-                    displayed = value_;
-                    break;
-                default:
-                    displayed = value_;
                 }
 
                 return {
                     name: name,
-                    string: field.node_atts.string,
-                    value: value_,
+                    string: field.node.attrs.string || field.field.string,
+                    value: value,
                     displayed: displayed,
                     // convert undefined to false
                     change_default: !!field.field.change_default
                 }
             })
             .compact()
-            .sortBy(function (field) { return field.node_atts.string; })
+            .sortBy(function (field) { return field.string; })
             .value();
         var conditions = _.chain(fields)
             .filter(function (field) { return field.change_default; })

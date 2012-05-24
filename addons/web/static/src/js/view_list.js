@@ -69,8 +69,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             this.groups.datagroup = new instance.web.DataGroup(
                 this, this.model,
                 dataset.get_domain(),
-                dataset.get_context(),
-                {});
+                dataset.get_context());
             this.groups.datagroup.sort = this.dataset._sort;
         }
 
