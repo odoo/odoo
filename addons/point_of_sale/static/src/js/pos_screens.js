@@ -706,6 +706,22 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             });
 
             this.set_numpad_state(this.pos_widget.numpad.state);
+            
+            this.back_button = this.pos_widget.action_bar.add_new_button({
+                    label: 'Back',
+                    icon: '/point_of_sale/static/src/img/icons/png48/go-previous.png',
+                    click: function(){  
+                        self.pos_widget.screen_selector.set_current_screen('products');
+                    },
+                });
+            
+            this.validate_button = this.pos_widget.action_bar.add_new_button({
+                    label: 'Validate',
+                    icon: '/point_of_sale/static/src/img/icons/png48/validate.png',
+                    click: function(){
+                        self.validateCurrentOrder();
+                    },
+                });
         },
         hide: function(){
             this._super();
@@ -719,12 +735,13 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             var self = this;
             var currentOrder = this.pos.get('selectedOrder');
 
-            $('button#validate-order', this.$element).attr('disabled', 'disabled');
+            this.validate_button.$element.attr('disabled','disabled');  //FIXME is the css actually using this attr ? 
 
-            this.pos.push_order(currentOrder.exportAsJSON()).then(function() {
-                $('button#validate-order', self.$element).removeAttr('disabled');
-                self.pos_widget.screen_selector.set_current_screen('receipt');
-            });
+            this.pos.push_order(currentOrder.exportAsJSON()) 
+                .then(function() {
+                    self.validate_button.$element.removeAttr('disabled');
+                    self.pos_widget.screen_selector.set_current_screen('receipt');
+                });
         },
         bindPaymentLineEvents: function() {
             this.currentPaymentLines = (this.pos.get('selectedOrder')).get('paymentLines');
@@ -757,8 +774,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 this.addPaymentLine(paymentLine);
             }, this));
             this.updatePaymentSummary();
-            $('button#validate-order', this.$element).click(_.bind(this.validateCurrentOrder, this));
-            $('.oe-back-to-products', this.$element).click(_.bind(this.back, this));
         },
         deleteLine: function(lineWidget) {
         	this.currentPaymentLines.remove([lineWidget.model]);
