@@ -51,7 +51,6 @@
 -
   !python {model: crm.lead}: |
     self.action_makeMeeting(cr, uid, [ref('crm_case_qrecorp0')])
-
 -
   After communicated  with customer, I put some notes with contract details.
 -
@@ -60,12 +59,12 @@
     note_id = self.create(cr, uid, {'body': "ces détails envoyés par le client sur ​​le FAX pour la qualité"})
     self.action_add(cr, uid, [note_id], context=context)
 -
-  Finally, I won this opportunity, so I close this opportunity.
+  I win this opportunity
 -
   !python {model: crm.lead}: |
     self.case_mark_won(cr, uid, [ref("crm_case_qrecorp0")])
 -
-  I check details of the opportunity after won the opportunity.
+  I check details of the opportunity after having won the opportunity.
 -
   !python {model: crm.lead}: |
     lead = self.browse(cr, uid, ref('crm_case_qrecorp0'))
@@ -96,6 +95,19 @@
     assert opp.name == "Interest in Your New Product", "Opportunity name not correct"
     assert opp.type == 'opportunity', 'Lead is not converted to opportunity!'
     assert opp.stage_id.id == ref("stage_lead1"), 'Stage of probability is incorrect!'
+-
+  I loose the second opportunity
+-
+  !python {model: crm.lead}: |
+    self.case_mark_won(cr, uid, [ref("crm_case_electonicgoodsdealer0")])
+-
+  I check details of the opportunity after the loose
+-
+  !python {model: crm.lead}: |
+    lead = self.browse(cr, uid, ref('crm_case_qrecorp0'))
+    assert lead.stage_id.id == ref('crm.stage_lead8'), "Opportunity stage should be 'Lost'."
+    assert lead.state == 'cancel', "Lost opportunity is not in 'cancel' state!"
+    assert lead.probability == 100.0, "Revenue probability should be 100.0!"
 -
   I confirm review needs meeting.
 -

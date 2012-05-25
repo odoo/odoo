@@ -6,8 +6,11 @@
 -
   I check cancelled lead.
 -
-  !assert {model: crm.lead, id: crm.crm_case_itisatelesalescampaign0, string: Lead is in cancel state}:
-    - state == "cancel"
+  !python {model: crm.lead}: |
+    lead = self.browse(cr, uid, ref('crm_case_itisatelesalescampaign0'))
+    assert lead.stage_id.id == ref('crm.stage_lead7'), "Stage should be 'Dead' and is %s." % (lead.stage_id.name)
+    assert lead.state == 'cancel', "Opportunity is not in 'cancel' state."
+    assert lead.probability == 0.0, 'Opportunity probability is wrong and should be 0.0.'
 -
   I reset cancelled lead into unqualified lead.
 -
@@ -19,12 +22,12 @@
   !assert {model: crm.lead, id: crm.crm_case_itisatelesalescampaign0, string: Lead is in draft state}:
     - state == "draft"
 -
-  I re-open the opportunity
+  I re-open the lead
 -
   !python {model: crm.lead}: |
     self.case_open(cr, uid, [ref("crm_case_itisatelesalescampaign0")])
 -
- I check stage and state of the re-opened opportunity
+ I check stage and state of the re-opened lead
 -
   !python {model: crm.lead}: |
     lead = self.browse(cr, uid, ref('crm.crm_case_itisatelesalescampaign0'))
@@ -36,20 +39,7 @@
   !python {model: crm.lead}: |
     self.case_escalate(cr, uid, [ref("crm_case_itisatelesalescampaign0")])
 -
-  I check lead escalate to parent team.
+  I check the lead is correctly escalated to the parent team.
 -
   !assert {model: crm.lead, id: crm.crm_case_itisatelesalescampaign0, string: Escalate lead to parent team}:
     - section_id.name == "Sales Department"
--
-  I mark as lost the opportunity.
--
-  !python {model: crm.lead}: |
-    self.case_mark_lost(cr, uid, [ref("crm_case_itisatelesalescampaign0")])
--
-  I check opportunity after lost.
--
-  !python {model: crm.lead}: |
-    lead = self.browse(cr, uid, ref('crm_case_itisatelesalescampaign0'))
-    assert lead.stage_id.id == ref('crm.stage_lead8'), "Stage should be 'Lost'."
-    assert lead.state == 'cancel', "Opportunity is not in 'cancel' state."
-    assert lead.probability == 0.0, 'Opportunity probability is wrong and should be 0.0.'
