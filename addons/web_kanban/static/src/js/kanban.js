@@ -10,10 +10,11 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
     display_name: _lt('Kanban'),
     default_nr_columns: 3,
     view_type: "kanban",
+    quick_create_class: "instance.web_kanban.QuickCreate",
     number_of_color_schemes: 10,
     init: function (parent, dataset, view_id, options) {
         this._super(parent, dataset, view_id, options);
-        _.defaults(this.options, {"quick_creatable": true, "creatable": true});
+        _.defaults(this.options, {"quick_creatable": true, "creatable": true, "create_text": undefined});
         this.fields_view = {};
         this.fields_keys = [];
         this.group_by = null;
@@ -338,6 +339,10 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
     }
 });
 
+function get_class(name) {
+    return new instance.web.Registry({'tmp' : name}).get_object("tmp");
+}
+
 instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
     template: 'KanbanView.group_header',
     init: function (parent, records, group, dataset) {
@@ -391,7 +396,7 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
             def = this._super();
         if (! self.view.group_by) {
             self.$element.addClass("oe_kanban_no_group");
-            self.quick = new instance.web_kanban.QuickCreate(this, self.dataset, {}, false)
+            self.quick = new (get_class(self.view.quick_create_class))(this, self.dataset, {}, false)
                 .on('added', self, self.proxy('quick_created'));
             self.quick.replace($(".oe_kanban_no_group_qc_placeholder"));
         }
@@ -406,13 +411,13 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
             if (self.quick) { return; }
             var ctx = {};
             ctx['default_' + self.view.group_by] = self.value;
-            self.quick = new instance.web_kanban.QuickCreate(this, self.dataset, ctx, true)
+            self.quick = new (get_class(self.view.quick_create_class))(this, self.dataset, ctx, true)
                 .on('added', self, self.proxy('quick_created'))
                 .on('close', self, function() {
                     this.quick.destroy();
                     delete this.quick;
                 });
-            self.quick.appendTo(self.$element.find('.oe_kanban_group_header'));
+            self.quick.appendTo(self.$element.find('.oe_kanban_header'));
             self.quick.focus();
         });
         this.$records.find('.oe_kanban_show_more').click(this.do_show_more);
@@ -493,7 +498,7 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
      * @param {(Id, String)} record name_get format for the newly created record
      */
     quick_created: function (record) {
-        var id = record[0], self = this;
+        var id = record, self = this;
         this.dataset.read_ids([id], this.view.fields_keys)
             .then(function (records) {
                 self.view.dataset.ids.push(id);
@@ -783,7 +788,7 @@ instance.web_kanban.QuickCreate = instance.web.Widget.extend({
                     this._dataset.get_context(), this._context)])
             .pipe(function(record) {
                 self.$input.val("");
-                self.trigger('added', record);
+                self.trigger('added', record[0]);
             }, function(error, event) {
                 event.preventDefault();
                 return self.slow_create();
@@ -804,7 +809,7 @@ instance.web_kanban.QuickCreate = instance.web.Widget.extend({
         );
         pop.on_select_elements.add(function(element_ids) {
             self.$input.val("");
-            self.trigger('added', element_ids);
+            self.trigger('added', element_ids[0]);
         });
     }
 });
