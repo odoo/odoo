@@ -568,9 +568,11 @@ class crm_case(object):
             context = {}
         context['state_to'] = state_to
         rule_obj = self.pool.get('base.action.rule')
+        if not rule_obj:
+            return True
         model_obj = self.pool.get('ir.model')
-        model_ids = model_obj.search(cr, uid, [('model','=',self._name)])
-        rule_ids = rule_obj.search(cr, uid, [('model_id','=',model_ids[0])])
+        model_ids = model_obj.search(cr, uid, [('model','=',self._name)], context=context)
+        rule_ids = rule_obj.search(cr, uid, [('model_id','=',model_ids[0])], context=context)
         return rule_obj._action(cr, uid, rule_ids, cases, scrit=scrit, context=context)
 
     def remind_partner(self, cr, uid, ids, context=None, attach=False):

@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from crm import crm_case
+from crm import crm
 from datetime import datetime, date
 from lxml import etree
 from osv import fields, osv
@@ -506,7 +506,7 @@ def Project():
         return self.message_append_note(cr, uid, ids, body=message, context=context)
 
 
-class task(crm_case, osv.osv):
+class task(crm.crm_case, osv.osv):
     _name = "project.task"
     _description = "Task"
     _log_create = True
@@ -529,24 +529,29 @@ class task(crm_case, osv.osv):
                 return project_ids[0][0]
         return None
 
-    def _read_group_type_id(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
+    def _read_group_stage_ids(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
         stage_obj = self.pool.get('project.task.type')
-        project_id = self._resolve_project_id_from_context(cr, uid, context=context)
         order = stage_obj._order
         access_rights_uid = access_rights_uid or uid
-        if read_group_order == 'type_id desc':
-            # lame way to allow reverting search, should just work in the trivial case
+        # lame way to allow reverting search, should just work in the trivial case
+        if read_group_order == 'stage_id desc':
             order = '%s desc' % order
+        # retrieve section_id from the context and write the domain
+        search_domain = []
+        project_id = self._resolve_project_id_from_context(cr, uid, context=context)
         if project_id:
-            domain = ['|', ('id','in',ids), ('project_ids','in',project_id)]
+            search_domain += ['|', '&', ('project_ids', '=', project_id), ('fold', '=', True)]
         else:
             domain = ['|', ('id','in',ids), ('case_default','=',1)]
+        search_domain += ['|', ('id', 'in', ids), '&', ('case_default', '=', 1), ('fold', '=', False)]
+        print search_domain
         stage_ids = stage_obj._search(cr, uid, domain, order=order, access_rights_uid=access_rights_uid, context=context)
+        print stage_ids
         result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
         # restore order of the search
         result.sort(lambda x,y: cmp(stage_ids.index(x[0]), stage_ids.index(y[0])))
         return result
-
+    
     def _read_group_user_id(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
         res_users = self.pool.get('res.users')
         project_id = self._resolve_project_id_from_context(cr, uid, context=context)
@@ -565,7 +570,7 @@ class task(crm_case, osv.osv):
         return result
 
     _group_by_full = {
-        'type_id': _read_group_type_id,
+        'stage_id': _read_group_stage_ids,
         'user_id': _read_group_user_id
     }
 
@@ -641,7 +646,7 @@ class task(crm_case, osv.osv):
         if not default.get('remaining_hours', False):
             default['remaining_hours'] = float(self.read(cr, uid, id, ['planned_hours'])['planned_hours'])
         default['active'] = True
-        default['type_id'] = False
+        default['stage_id'] = False
         if not default.get('name', False):
             default['name'] = self.browse(cr, uid, id, context=context).name or ''
             if not context.get('copy',False):
@@ -671,7 +676,8 @@ class task(crm_case, osv.osv):
         'description': fields.text('Description'),
         'priority': fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Important'), ('0','Very important')], 'Priority', select=True),
         'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list of tasks."),
-        'stage_id': fields.many2one('project.task.type', 'Stage'),
+        'stage_id': fields.many2one('project.task.type', 'Stage',
+                        domain="['&', '|', ('project_ids', '=', project_id), ('case_default', '=', True)]"),
         'state': fields.related('stage_id', 'state', type="selection", store=True,
                 selection=_TASK_STATE, string="State", readonly=True,
                 help='The state is set to \'Draft\', when a case is created.\
@@ -849,14 +855,13 @@ class task(crm_case, osv.osv):
             cases = self.browse(cr, uid, cases, context=context)
         domain = list(domain)
         if section_id:
-                domain += ['|', ('section_ids', '=', section_id)]
+                domain += ['|', ('project_ids', '=', section_id)]
         domain.append(('case_default', '=', True))
-        for lead in cases:
-            domain += ['|', ('type', '=', lead.type), ('type', '=', 'both')]
-            lead_section_id = lead.section_id.id if lead.section_id else None
-            if lead_section_id:
-                domain += ['|', ('section_ids', '=', lead_section_id), ('case_default', '=', True)]
-        stage_ids = self.pool.get('crm.case.stage').search(cr, uid, domain, order=order, context=context)
+        for task in cases:
+            task_project_id = task.project_id.id if task.project_id else None
+            if task_project_id:
+                domain += ['|', ('project_ids', '=', task_project_id), ('case_default', '=', True)]
+        stage_ids = self.pool.get('project.task.type').search(cr, uid, domain, order=order, context=context)
         if stage_ids:
             return stage_ids[0]
         return False
@@ -930,9 +935,9 @@ class task(crm_case, osv.osv):
             # close task
             vals['remaining_hours'] = 0.0
             if not task.date_end:
-                vals['date_end']: fields.datetime.now()
+                vals['date_end'] = fields.datetime.now()
             self.case_set(cr, uid, [task.id], 'done', vals, context=context)
-            self.case_close_send_note(cr, uid, ids, context=context)
+            #self.case_close_send_note(cr, uid, [task.id], context=context)
         return True
 
     def do_reopen(self, cr, uid, ids, context=None):
@@ -952,7 +957,7 @@ class task(crm_case, osv.osv):
                 }, context=context)
 
             self.write(cr, uid, [task.id], {'state': 'open'}, context=context)
-            self.do_open_send_note(cr, uid, [task.id], context)
+            #self.do_open_send_note(cr, uid, [task.id], context)
         return True
 
     def do_cancel(self, cr, uid, ids, context=None):
@@ -1083,7 +1088,7 @@ class task(crm_case, osv.osv):
         """
         for task in self.browse(cr, uid, ids):
             if  task.project_id.type_ids:
-                typeid = task.type_id.id
+                typeid = task.stage_id.id
                 types_seq={}
                 for type in task.project_id.type_ids :
                     types_seq[type.id] = type.sequence
@@ -1093,10 +1098,10 @@ class task(crm_case, osv.osv):
                     types = sorted(types_seq.items(), lambda x, y: cmp(y[1], x[1]))
                 sorted_types = [x[0] for x in types]
                 if not typeid:
-                    self.write(cr, uid, task.id, {'type_id': sorted_types[0]})
+                    self.write(cr, uid, task.id, {'stage_id': sorted_types[0]})
                 elif typeid and typeid in sorted_types and sorted_types.index(typeid) != len(sorted_types)-1:
                     index = sorted_types.index(typeid)
-                    self.write(cr, uid, task.id, {'type_id': sorted_types[index+1]})
+                    self.write(cr, uid, task.id, {'stage_id': sorted_types[index+1]})
                 self.state_change_send_note(cr, uid, [task.id], context)
         return True
 
@@ -1113,7 +1118,7 @@ class task(crm_case, osv.osv):
                 'remaining_hours': task.remaining_hours,
                 'planned_hours': task.planned_hours,
                 'kanban_state': task.kanban_state,
-                'type_id': task.type_id.id,
+                'type_id': task.stage_id.id,
                 'state': task.state,
                 'user_id': task.user_id.id
 
@@ -1127,24 +1132,24 @@ class task(crm_case, osv.osv):
         return task_id
 
     # Overridden to reset the kanban_state to normal whenever
-    # the stage (type_id) of the task changes.
+    # the stage (stage_id) of the task changes.
     def write(self, cr, uid, ids, vals, context=None):
         if isinstance(ids, (int, long)):
             ids = [ids]
-        if vals and not 'kanban_state' in vals and 'type_id' in vals:
-            new_stage = vals.get('type_id')
+        if vals and not 'kanban_state' in vals and 'stage_id' in vals:
+            new_stage = vals.get('stage_id')
             vals_reset_kstate = dict(vals, kanban_state='normal')
             for t in self.browse(cr, uid, ids, context=context):
                 #TO FIX:Kanban view doesn't raise warning 
 #                stages = [stage.id for stage in t.project_id.type_ids]
 #                if new_stage not in stages:
 #                    raise osv.except_osv(_('Warning !'), _('Stage is not defined in the project.'))
-                write_vals = vals_reset_kstate if t.type_id != new_stage else vals
+                write_vals = vals_reset_kstate if t.stage_id != new_stage else vals
                 super(task,self).write(cr, uid, [t.id], write_vals, context=context)
             result = True
         else:
             result = super(task,self).write(cr, uid, ids, vals, context=context)
-        if ('type_id' in vals) or ('remaining_hours' in vals) or ('user_id' in vals) or ('state' in vals) or ('kanban_state' in vals):
+        if ('stage_id' in vals) or ('remaining_hours' in vals) or ('user_id' in vals) or ('state' in vals) or ('kanban_state' in vals):
             self._store_history(cr, uid, ids, context=context)
             self.state_change_send_note(cr, uid, ids, context)
         return result
@@ -1186,7 +1191,10 @@ class task(crm_case, osv.osv):
     # ---------------------------------------------------
     # OpenChatter methods and notifications
     # ---------------------------------------------------
-    
+
+	def case_get_note_msg_prefix(self, cr, uid, id, context=None):
+		return 'Task'
+
     def get_needaction_user_ids(self, cr, uid, ids, context=None):
         result = dict.fromkeys(ids, [])
         for obj in self.browse(cr, uid, ids, context=context):
@@ -1210,6 +1218,36 @@ class task(crm_case, osv.osv):
         msg = _('Task has been set as <b>draft</b>.')
         return self.message_append_note(cr, uid, ids, body=msg, context=context)
 
+    def case_open_send_note(self, cr, uid, ids, context=None):
+        #for id in ids:
+            #msg = _('%s has been <b>opened</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
+            #self.message_append_note(cr, uid, [id], body=msg, context=context)
+        return True
+
+    def case_close_send_note(self, cr, uid, ids, context=None):
+        #for id in ids:
+            #msg = _('%s has been <b>closed</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
+            #self.message_append_note(cr, uid, [id], body=msg, context=context)
+        return True
+
+    def case_cancel_send_note(self, cr, uid, ids, context=None):
+        #for id in ids:
+            #msg = _('%s has been <b>canceled</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
+            #self.message_append_note(cr, uid, [id], body=msg, context=context)
+        return True
+
+    def case_pending_send_note(self, cr, uid, ids, context=None):
+        #for id in ids:
+            #msg = _('%s is now <b>pending</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
+            #self.message_append_note(cr, uid, [id], body=msg, context=context)
+        return True
+
+    def case_reset_send_note(self, cr, uid, ids, context=None):
+        #for id in ids:
+            #msg = _('%s has been <b>renewed</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
+            #self.message_append_note(cr, uid, [id], body=msg, context=context)
+        return True
+
     def do_delegation_send_note(self, cr, uid, ids, context=None):
         for task in self.browse(cr, uid, ids, context=context):
             msg = _('Task has been <b>delegated</b> to <em>%s</em>.') % (task.user_id.name)
@@ -1218,7 +1256,7 @@ class task(crm_case, osv.osv):
 
     def state_change_send_note(self, cr, uid, ids, context=None):
         for task in self.browse(cr, uid, ids, context=context):
-            msg = _('Stage changed to <b>%s</b>') % (task.type_id.name)
+            msg = _('Stage changed to <b>%s</b>') % (task.stage_id.name)
             self.message_append_note(cr, uid, [task.id], body=msg, context=context)
         return True
 
