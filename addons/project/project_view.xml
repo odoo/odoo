@@ -313,7 +313,7 @@
                         <button name="%(action_project_task_delegate)d" states="pending,open,draft" string="Delegate" type="action"/>
                         <button name="do_cancel" states="draft,open,pending" string="Cancel" type="object"/>
                         <div class="oe_right">
-                            <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}' select="1" groups="base.group_no_one"/>
+                            <field name="type_id" nolabel="1" widget="statusbar"/>
                         </div>
                         <div class="oe_clear"/>
                     </div>
@@ -377,6 +377,7 @@
                                 <separator string="Planning" colspan="2"/>
                                 <field name="priority"/>
                                 <field name="sequence"/>
+                                <field name="state" groups="base.group_no_one"/>
                             </group>
 
                             <separator string="Miscellaneous" colspan="4"/>
