@@ -21,6 +21,7 @@
                 </form>
             </field>
         </record>
+
         <!-- wizard thanks message (shows after submitting the form) -->
         <record id="wizard_contact_form_view_thanks" model="ir.ui.view">
             <field name="name">Wizard thanks message</field>
@@ -40,16 +41,17 @@
                 </form>
             </field>
         </record>
+
         <!-- wizard action -->
         <record id="action_wizard_contact_us" model="ir.actions.act_window">
             <field name="name">Contact Us</field>
             <field name="res_model">portal_crm.crm_contact_us</field>
             <field name="view_mode">form</field>
         </record>
+
         <!-- attach it to the portal menu -->
         <menuitem name="Contact Us" id="portal_company_contact" 
             parent="portal.portal_company" action="action_wizard_contact_us"/>
-
 
     </data>
 </openerp>

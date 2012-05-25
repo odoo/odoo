@@ -66,39 +66,9 @@ the portal's users.
             </field>
         </record>
 
-        <record id="product.product_kanban_view" model="ir.ui.view">
-            <field name="name">Product Kanban</field>
-            <field name="model">product.product</field>
-            <field name="type">kanban</field>
-            <field name="arch" type="xml">
-                <kanban>
-                    <field name="color"/>
-                    <field name="type"/>
-                    <field name="product_image"/>
-                    <field name="list_price"/>
-                    <templates>
-                        <t t-name="kanban-box">
-                            <div class="oe_product_vignette">
-                                <div class="oe_product_img">
-                                <a type="edit"><img t-att-src="kanban_image('product.product', 'product_image', record.id.value)" class="oe_product_photo"/></a>
-                                </div>
-                                <div class="oe_product_desc">
-                                    <h4><a type="edit"><field name="name"></field></a></h4>
-                                    <ul>
-                                        <li t-if="record.type.raw_value != 'service'">Stock on hand: <field name="qty_available"/> <field name="uom_id"/></li>
-                                        <li t-if="record.type.raw_value != 'service'">Stock available: <field name="virtual_available"/> <field name="uom_id"/></li>
-                                        <li>Price: <field name="lst_price"></field></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <script>
-                                $('.oe_product_photo').load(function() { if($(this).width() > $(this).height()) { $(this).addClass('oe_product_photo_wide') } });
-                            </script>
-                            <div></div>
-                        </t>
-                    </templates>
-                </kanban>
-            </field>
+        <record id="action_news" model="ir.actions.client">
+            <field name="name">News</field>
+            <field name="tag">mail.all_feeds</field>
         </record>
 
         <record id="action_about" model="ir.actions.act_window">
@@ -112,7 +82,6 @@ the portal's users.
         </record>
 
 
-
         <!-- module's menu -->
         <!-- menu Administration/Portals -->
         <menuitem name="Portals Settings" id="portal_menu_settings" parent="base.menu_administration"
@@ -122,17 +91,24 @@ the portal's users.
 
             <!-- root menu for portal members (chrooted in this menu) -->
             <menuitem name="Portal Members Root Menu" id="portal_members_root_menu" parent="portal_menu_settings"/>
-                <menuitem name="Portal Member's Menu" id="menu_portal" parent="portal_members_root_menu" action="open_portal"/>
-
-                  <menuitem name="Track Orders" id="portal_track_orders" parent="menu_portal"/>
-                  <menuitem name="Invoice and Payments" id="portal_invoice_payements" parent="menu_portal"/>
-                  <menuitem name="Services" id="portal_services" parent="menu_portal"/>
-                  <menuitem name="After Sale Services" id="portal_after_sales" parent="menu_portal"/>
-                  <menuitem name="Our company" id="portal_company" parent="menu_portal"/>
-                      <menuitem name="News" id="portal_company_news" parent="portal_company"/>
-                      <menuitem name="Jobs" id="portal_company_jobs" parent="portal_company"/>
-                      <menuitem name="Address Book" id="portal_company_address_book" parent="portal_company" action="base.action_partner_form"/>
-                      <menuitem name="About" id="portal_company_about" parent="portal_company" action="action_about"/>
+                <menuitem name="Portal Member's Menu" id="menu_portal" parent="portal_members_root_menu"/>
+                <menuitem name="Our company" id="portal_company" parent="menu_portal"/>
+                    <!-- 
+                    right now it's not possible to directly call a client action 
+                    from a menuitem, so we can't use this shortcut element and 
+                    use an explicit record element instead
+                    -->
+                    <record id="portal_company_news" model="ir.ui.menu">
+                        <field name="name">News</field>
+                        <field name="action" ref="action_news"/>
+                        <field name="parent_id" ref="portal_company"/>
+                    </record>
+                    <menuitem name="Jobs" id="portal_company_jobs" parent="portal_company"/>
+                    <menuitem name="About" id="portal_company_about" parent="portal_company" action="action_about"/>
+                <menuitem name="Orders" id="portal_track_orders" parent="menu_portal"/>
+                <menuitem name="Invoice and Payments" id="portal_invoice_payements" parent="menu_portal"/>
+                <menuitem name="Services" id="portal_services" parent="menu_portal"/>
+                <menuitem name="After Sale Services" id="portal_after_sales" parent="menu_portal"/>
 
     </data>
 </openerp>

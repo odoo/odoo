@@ -39,7 +39,6 @@ module 'share'.
     'data': [
         'security/portal_security.xml',
         'security/ir.model.access.csv',
-        'board_portal_view.xml',
         'portal_view.xml',
         'portal_data.xml',
         'res_user_view.xml',
