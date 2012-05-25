@@ -3456,6 +3456,9 @@ instance.web.form.FieldMany2ManyKanban = instance.web.form.AbstractField.extend(
             });
         }
     },
+    add_id: function(id) {
+        this.quick_create.add_id(id);
+    },
 }));
 
 function m2m_kanban_lazy_init() {
@@ -3477,6 +3480,7 @@ instance.web.form.Many2ManyQuickCreate = instance.web.Widget.extend({
     init: function(parent, dataset, context, buttons) {
         this._super(parent);
         this.m2m = this.getParent().view.m2m;
+        this.m2m.quick_create = this;
         this._dataset = dataset;
         this._buttons = buttons || false;
         this._context = context || {};
@@ -3526,11 +3530,11 @@ instance.web.form.Many2ManyQuickCreate = instance.web.Widget.extend({
         });
     },
     focus: function() {
-        this.$element.find('input').focus();
+        this.$text.focus();
     },
     add_id: function(id) {
-        self.$input.val("");
-        debugger;
+        var self = this;
+        self.$text.val("");
         self.trigger('added', id);
     },
 });

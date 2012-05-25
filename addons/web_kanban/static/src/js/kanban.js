@@ -510,7 +510,7 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
      * @param {(Id, String)} record name_get format for the newly created record
      */
     quick_created: function (record) {
-        var id = record[0], self = this;
+        var id = record, self = this;
         this.dataset.read_ids([id], this.view.fields_keys)
             .then(function (records) {
                 self.view.dataset.ids.push(id);
@@ -774,7 +774,7 @@ instance.web_kanban.QuickCreate = instance.web.Widget.extend({
                     this._dataset.get_context(), this._context)])
             .pipe(function(record) {
                 self.$input.val("");
-                self.trigger('added', record);
+                self.trigger('added', record[0]);
             }, function(error, event) {
                 event.preventDefault();
                 return self.slow_create();
@@ -795,7 +795,7 @@ instance.web_kanban.QuickCreate = instance.web.Widget.extend({
         );
         pop.on_select_elements.add(function(element_ids) {
             self.$input.val("");
-            self.trigger('added', element_ids);
+            self.trigger('added', element_ids[0]);
         });
     }
 });
