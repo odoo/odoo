@@ -460,7 +460,6 @@ class project_issue(crm.crm_case, osv.osv):
     def case_cancel(self, cr, uid, ids, context=None):
         """ Cancels case """
         self.case_set(cr, uid, ids, 'cancelled', {'active': True}, context=context)
-        for truc in self.browse(cr, uid, ids, context=context):
         self.case_cancel_send_note(cr, uid, ids, context=context)
         return True
 
