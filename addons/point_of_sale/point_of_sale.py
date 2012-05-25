@@ -376,45 +376,34 @@ class pos_session(osv.osv):
 
         return True
 
-    def get_current_session(self, cr, uid, context=None):
-        current_user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        domain = [
-            ('state', '=', 'open'),
-            ('start_at', '>=', time.strftime('%Y-%m-%d 00:00:00')),
-            ('user_id', '=', uid),
-        ]
-        session_ids = self.search(cr, uid, domain, context=context, limit=1, order='start_at desc')
-        session_id = session_ids[0] if session_ids else False
+    # def get_current_session(self, cr, uid, context=None):
+    #     # TODO: Remove this code and use a wizard in the front-end
+    #     current_user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+    #     domain = [
+    #         ('state', '=', 'open'),
+    #         ('start_at', '>=', time.strftime('%Y-%m-%d 00:00:00')),
+    #         ('user_id', '=', uid),
+    #     ]
+    #     session_ids = self.search(cr, uid, domain, context=context, limit=1, order='start_at desc')
+    #     session_id = session_ids[0] if session_ids else False
 
-        if not session_id:
-            pos_config_proxy = self.pool.get('pos.config')
-            domain = [
-                ('user_id', '=', uid),
-                ('state', '=', 'active'),
-            ]
-            pos_config_ids = pos_config_proxy.search(cr, uid, domain,
-                                                     limit=1,
-                                                     order='create_date desc',
-                                                     context=context)
+    #     if not session_id:
+    #         if not current_user.pos_config:
+    #             raise osv.except_osv(_('Error !'),
+    #                                  _('There is no active Point of Sale Config for this User %s') % current_user.name)
 
-            if not pos_config_ids:
-                raise osv.except_osv(_('Error !'),
-                                     _('There is no active Point of Sale Config for this User %s') % current_user.name)
+    #         values = {
+    #             'state' : 'opening_control',
+    #             'start_at' : time.strftime('%Y-%m-%d %H:%M:%S'),
+    #             'config_id' : current_user.pos_config.id,
+    #             'journal_id' : current_user.pos_config.journal_id.id,
+    #             'user_id': current_user.id,
+    #         }
 
-            config = pos_config_proxy.browse(cr, uid, pos_config_ids[0], context=context)
-
-            values = {
-                'state' : 'new',
-                'start_at' : time.strftime('%Y-%m-%d %H:%M:%S'),
-                'config_id' : config.id,
-                'journal_id' : config.journal_id.id,
-                'user_id': current_user.id,
-            }
-
-            session_id = self.create(cr, uid, values, context=context)
-            wkf_service = netsvc.LocalService('workflow')
-            wkf_service.trg_validate(uid, 'pos.session', session_id, 'opening_control', cr)
-        return session_id
+    #         session_id = self.create(cr, uid, values, context=context)
+    #         wkf_service = netsvc.LocalService('workflow')
+    #         wkf_service.trg_validate(uid, 'pos.session', session_id, 'opening_control', cr)
+    #     return session_id
 
 pos_session()
 
@@ -847,13 +836,16 @@ class pos_order(osv.osv):
                 tax_amount = 0
                 taxes = [t for t in line.product_id.taxes_id]
                 computed = account_tax_obj.compute_all(cr, uid, taxes, line.price_unit * (100.0-line.discount) / 100.0, line.qty)
+                print "#### TAX: %r" % (taxes,)
+                print "#### TAX2: %r" % (computed,)
                 computed_taxes = computed['taxes']
 
                 for tax in computed_taxes:
                     tax_amount += round(tax['amount'], 2)
                     group_key = (tax['tax_code_id'],
                                 tax['base_code_id'],
-                                tax['account_collected_id'])
+                                tax['account_collected_id'],
+                                tax['id'])
 
                     if group_key in group_tax:
                         group_tax[group_key] += round(tax['amount'], 2)
@@ -917,7 +909,7 @@ class pos_order(osv.osv):
                         continue
 
                     account_move_line_obj.create(cr, uid, {
-                        'name': _("Tax") + line.name +  " (%s)" % (tax.name),
+                        'name': _('Tax'),
                         'date': order.date_order[:10],
                         'ref': order.name,
                         'product_id':line.product_id.id,
@@ -935,10 +927,11 @@ class pos_order(osv.osv):
 
 
             # Create a move for each tax group
-            (tax_code_pos, base_code_pos, account_pos)= (0, 1, 2)
+            (tax_code_pos, base_code_pos, account_pos, tax_id)= (0, 1, 2, 3)
             for key, amount in group_tax.items():
+                tax = self.pool.get('account.tax').browse(cr, uid, key[tax_id], context=context)
                 account_move_line_obj.create(cr, uid, {
-                    'name': 'Tax',
+                    'name': _('Tax') + ' ' + tax.name,
                     'date': order.date_order[:10],
                     'ref': order.name,
                     'move_id': move_id,

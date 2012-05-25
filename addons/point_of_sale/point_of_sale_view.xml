@@ -871,10 +871,9 @@
 
                     <group colspan="4" col="4">
                         <field name="config_id"/>
-			<group colspan="2" col="3">
+			<group colspan="2" col="2">
 				<button name="%(action_pos_box_in)d" string="Put Money In" type="action" states="opened"/>
 				<button name="%(action_pos_box_out)d" string="Take Money Out" type="action" states="opened"/>
-				<button name="%(act_pos_session_orders)d" string="Orders" type="action"/>
 			</group>
                         <newline/>
                         <field name="user_id" />
@@ -988,7 +987,14 @@
             parent="menu_point_rep"
             action="action_pos_session"
             id="menu_pos_session"
-	    sequence="0"
+            sequence="0"
+            groups="group_pos_manager"/>
+
+        <menuitem
+            parent="menu_point_of_sale"
+            action="action_pos_session"
+            id="menu_pos_session_all"
+            sequence="0"
             groups="group_pos_manager"/>
 
         <record id="view_pos_order_filter" model="ir.ui.view">
@@ -1021,7 +1027,7 @@
             </field>
         </record>
 
-        <menuitem action="action_pos_session_opening" parent="menu_point_of_sale" id="menu_pos_session_opening" />
+        <menuitem action="action_pos_session_opening" parent="menu_point_of_sale" id="menu_pos_session_opening" sequence="0" />
 
     </data>
 </openerp>
