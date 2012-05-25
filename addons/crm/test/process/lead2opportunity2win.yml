@@ -104,7 +104,7 @@
   I check details of the opportunity after the loose
 -
   !python {model: crm.lead}: |
-    lead = self.browse(cr, uid, ref('crm_case_qrecorp0'))
+    lead = self.browse(cr, uid, ref('crm_case_electonicgoodsdealer0'))
     assert lead.stage_id.id == ref('crm.stage_lead8'), "Opportunity stage should be 'Lost'."
     assert lead.state == 'cancel', "Lost opportunity is not in 'cancel' state!"
     assert lead.probability == 100.0, "Revenue probability should be 100.0!"
