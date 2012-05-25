@@ -61,15 +61,15 @@
                     </div>
                     <div class="oe_clear"/>
                 </div>
-                <sheet layout="auto">
+                <sheet layout="manual">
+
 
                 <field name="name" required="1" nolabel="1" class="oe_form_title" colspan="4"/>
                 <group colspan="4" col="5">
                     <group col="2" colspan="2" class="oe_form_group_label_border" style="margin-top: 20px;">
                         <field name="type" on_change="onchange_event_type(type,context)"/>
                         <field name="user_id"/>
-                        <field name="address_id" widget ="many2one_address_google_map" widget_option="{'placeholder':'.oe_form_google_map'}"/>
-                        <field name="address"/>
+                        <field name="address_id" widget="many2one_address_google_map" widget_option="{'placeholder':'.oe_form_google_map'}"/>
                     </group>
                     <group col="2" colspan="2" class="oe_form_group_label_border" style="margin-top: 20px;">
                         <field name="date_begin"/>
@@ -77,8 +77,9 @@
                         <field name="register_min"/>
                         <field name="register_max"/>
                     </group>
-                    <div class="oe_form_google_map"></div>
                 </group>
+
+                <div class="oe_form_google_map" style="height: 200px"></div>
 
                 <notebook colspan="4">
                     <page string="Event Description">
