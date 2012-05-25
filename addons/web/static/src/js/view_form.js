@@ -3149,7 +3149,7 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(_.
             });
         }).bind('hideDropdown', function() {
             self._drop_shown = false;
-        }).bind('hideDropdown', function() {
+        }).bind('showDropdown', function() {
             self._drop_shown = true;
         });
         self.tags = self.$text.textext()[0].tags();
@@ -3342,6 +3342,7 @@ instance.web.form.FieldMany2ManyKanban = instance.web.form.AbstractField.extend(
     disable_utility_classes: true,
     init: function(field_manager, node) {
         this._super(field_manager, node);
+        instance.web.form.CompletionFieldMixin.init.call(this);
         m2m_kanban_lazy_init();
         this.is_loaded = $.Deferred();
         this.initial_is_loaded = this.is_loaded;
@@ -3394,7 +3395,7 @@ instance.web.form.FieldMany2ManyKanban = instance.web.form.AbstractField.extend(
         if (embedded) {
             this.kanban_view.set_embedded_view(embedded);
         }
-        this.kanban_view.m2m_field = this;
+        this.kanban_view.m2m = this;
         var loaded = $.Deferred();
         this.kanban_view.on_loaded.add_last(function() {
             self.initial_is_loaded.resolve();
@@ -3461,6 +3462,7 @@ function m2m_kanban_lazy_init() {
 if (instance.web.form.Many2ManyKanbanView)
     return;
 instance.web.form.Many2ManyKanbanView = instance.web_kanban.KanbanView.extend({
+    quick_create_class: 'instance.web.form.Many2ManyQuickCreate',
     _is_quick_create_enabled: function() {
         return this._super() && ! this.group_by;
     },
@@ -3474,7 +3476,6 @@ instance.web.form.Many2ManyQuickCreate = instance.web.Widget.extend({
      */
     init: function(parent, dataset, context, buttons) {
         this._super(parent);
-        instance.web.form.CompletionFieldMixin.init.call(this);
         this.m2m = this.getParent().view.m2m;
         this._dataset = dataset;
         this._buttons = buttons || false;
@@ -3482,10 +3483,55 @@ instance.web.form.Many2ManyQuickCreate = instance.web.Widget.extend({
     },
     start: function () {
         var self = this;
-        self.$input = this.$element.find('input');
+        self.$text = this.$element.find('input').css("width", "200px");
+        self.$text.textext({
+            plugins : 'arrow autocomplete',
+            autocomplete: {
+                render: function(suggestion) {
+                    return $('<span class="text-label"/>').
+                             data('index', suggestion['index']).html(suggestion['label']);
+                }
+            },
+            ext: {
+                autocomplete: {
+                    selectFromDropdown: function() {
+                        $(this).trigger('hideDropdown');
+                        var index = Number(this.selectedSuggestionElement().children().children().data('index'));
+                        var data = self.search_result[index];
+                        if (data.id) {
+                            self.add_id(data.id);
+                        } else {
+                            data.action();
+                        }
+                    },
+                },
+                itemManager: {
+                    itemToString: function(item) {
+                        return item.name;
+                    },
+                },
+            },
+        }).bind('getSuggestions', function(e, data) {
+            var _this = this;
+            var str = !!data ? data.query || '' : '';
+            self.m2m.get_search_result(str).then(function(result) {
+                self.search_result = result;
+                $(_this).trigger('setSuggestions', {result : _.map(result, function(el, i) {
+                    return _.extend(el, {index:i});
+                })});
+            });
+        });
+        self.$text.focusout(function() {
+            self.$text.val("");
+        });
     },
     focus: function() {
         this.$element.find('input').focus();
+    },
+    add_id: function(id) {
+        self.$input.val("");
+        debugger;
+        self.trigger('added', id);
     },
 });
 }
