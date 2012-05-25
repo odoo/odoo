@@ -111,41 +111,6 @@ the portal's users.
             <field name="view_id" ref="base.view_company_form" />
         </record>
 
-        <!-- 
-        <record id="action_contact_us" model="ir.actions.act_window">
-            <field name="name">Contact Us</field>
-            <field name="model"></field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-        </record>
-         -->
-
-        <!-- contact wizard form view -->
-        <!-- 
-        <record id="wizard_form_view" model="ir.ui.view">
-            <field name="name">Contact wizard form view</field>
-            <field name="model"></field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Subscribe Attendees">
-                    <field name="session_ids" colspan="4"/>
-                    <field name="attendee_ids" colspan="4">
-                        <tree editable="bottom">
-                            <field name="name"/>
-                            <field name="partner_id"/>
-                        </tree>
-                    </field>
-                    <group colspan="4">
-                        <button string="Cancel" icon="gtk-cancel"
-                            special="cancel"/>
-                        <button string="Subscribe" icon="gtk-ok"
-                            name="action_subscribe" type="object"/>
-                    </group>
-                </form>
-            </field>
-        </record>
-        -->
-
 
 
         <!-- module's menu -->
@@ -167,7 +132,6 @@ the portal's users.
                       <menuitem name="News" id="portal_company_news" parent="portal_company"/>
                       <menuitem name="Jobs" id="portal_company_jobs" parent="portal_company"/>
                       <menuitem name="Address Book" id="portal_company_address_book" parent="portal_company" action="base.action_partner_form"/>
-                      <!-- <menuitem name="Contact Us" id="portal_company_contact" parent="portal_company" action="action_contact_us"/> -->
                       <menuitem name="About" id="portal_company_about" parent="portal_company" action="action_about"/>
 
     </data>
