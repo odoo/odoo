@@ -132,11 +132,12 @@
             <field name="arch" type="xml">
                 <form layout="manual">
                 <div class="oe_form_topbar">
-                	<button name="wkf_send_rfq" states="draft" string="Send" type="object"/>
+                    <button name="purchase_confirm" states="draft,send" string="Confirm Order"/>
+                    <button name="wkf_send_rfq" states="draft" string="Send RFQ" type="object" context="{'send_rfq':True}"/>
+                    <button name="wkf_send_rfq" states="confirmed" string="Resend Purchase Order" type="object"/>
                     <button name="action_cancel" states="except_picking,except_invoice,wait" string="Cancel" type="object" />
                     <button name="picking_ok" states="except_picking" string="Manually Corrected"/>
                     <button name="invoice_ok" states="except_invoice" string="Manually Corrected"/>
-                    <button name="purchase_confirm" states="draft,send" string="Confirm Order"/>
                     <button name="purchase_appbuyer" states="wait_auth" string="Approve Purchase"/>
                     <button name="purchase_approve" states="confirmed" string="Approve Order"/>
                     <button name="view_invoice" string="Receive Invoice" type="object" attrs="{'invisible': ['|', ('invoice_method','=','picking'), '|', ('state','!=', 'approved'), ('invoiced','=',True) ]}"/>
