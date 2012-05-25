@@ -133,6 +133,10 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
             switch (field.type) {
             case 'many2many':
             case 'many2one':
+                // push a copy for the bare many2one field, to allow importing
+                // using name_search too - even if we default to exporting the XML ID
+                var many2one_field = _.extend({}, f)
+                parent.fields.push(many2one_field);
                 f.name += '/id';
                 break;
             case 'one2many':
