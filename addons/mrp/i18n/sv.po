@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:49+0000\n"
-"PO-Revision-Date: 2012-02-17 09:10+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"PO-Revision-Date: 2012-05-23 14:37+0000\n"
+"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-05-17 05:50+0000\n"
-"X-Generator: Launchpad (build 15259)\n"
+"X-Launchpad-Export-Date: 2012-05-24 21:35+0000\n"
+"X-Generator: Launchpad (build 15288)\n"
 
 #. module: mrp
 #: view:mrp.routing.workcenter:0
@@ -221,6 +221,8 @@ msgid ""
 "Create a product form for everything you buy or sell. Specify a supplier if "
 "the product can be purchased."
 msgstr ""
+"Skapa ett produktformulär för allt du köper eller säljer. Ange en leverantör "
+"om produkten kan köpas."
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.next_id_77
@@ -367,6 +369,8 @@ msgid ""
 "The system creates an order (production or purchased) depending on the sold "
 "quantity and the products parameters."
 msgstr ""
+"Systemet skapar en beställning (produktion eller inköp) beroende på den "
+"sålda mängden och produktparametrarna."
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_stockproduction0
@@ -1138,7 +1142,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.product_form_config_action
 msgid "Create or Import Products"
-msgstr ""
+msgstr "Skapa eller importera produkter"
 
 #. module: mrp
 #: field:report.workcenter.load,hour:0
@@ -1198,6 +1202,9 @@ msgid ""
 "maxi quantity. It's available in the Inventory management menu and "
 "configured by product."
 msgstr ""
+"Lägstlagerregeln är en automatisk anskaffningsregel baserad på en mini- och "
+"maxi kvantitet. Det är tillgängligt i lagerhanteringsmenyn och konfigureras "
+"av produkt."
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:187
@@ -1283,7 +1290,7 @@ msgstr "Make to Stock"
 #. module: mrp
 #: constraint:mrp.production:0
 msgid "Order quantity cannot be negative or zero!"
-msgstr ""
+msgstr "Orderkvantitet kan inte vara negativt eller noll!"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_bom_form_action
@@ -1413,7 +1420,7 @@ msgstr "Extra information"
 #. module: mrp
 #: model:ir.model,name:mrp.model_change_production_qty
 msgid "Change Quantity of Products"
-msgstr ""
+msgstr "Ändra antal för produkter"
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_productionorder0
@@ -1624,6 +1631,11 @@ msgid ""
 "the quantity selected and it will finish the production order when total "
 "ordered quantities are produced."
 msgstr ""
+"\"Förbruka enbart\"-läget kommer bara att förbruka produkterna med markerad "
+"mängd.\n"
+"\"Förbruka och producera\"-läget kommer att förbruka samt tillverka "
+"produkter med den mängd vald och kommer att avsluta produktionsordern när "
+"totalt beställd kvantitet producerats."
 
 #. module: mrp
 #: view:mrp.production:0
@@ -1872,7 +1884,7 @@ msgstr "Anskaffningsorders"
 #. module: mrp
 #: help:mrp.bom,product_rounding:0
 msgid "Rounding applied on the product quantity."
-msgstr ""
+msgstr "Avrundning på produktantalet"
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_stock0
@@ -2018,7 +2030,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.product.produce,product_qty:0
 msgid "Select Quantity"
-msgstr ""
+msgstr "Välj kvantitet"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_product_product_2_mrp_bom
@@ -2105,7 +2117,7 @@ msgstr ""
 #. module: mrp
 #: view:change.production.qty:0
 msgid "Change Quantity"
-msgstr ""
+msgstr "Ändra kvantitet"
 
 #. module: mrp
 #: view:change.production.qty:0
@@ -2203,6 +2215,8 @@ msgid ""
 "Specify quantity of products to produce or buy. Report of Cost structure "
 "will be displayed base on this quantity."
 msgstr ""
+"Ange antal produkter för att producera eller köpa in. Rapporten med "
+"kostnadsstruktur baseras på denna kvantitet."
 
 #. module: mrp
 #: selection:mrp.bom,method:0

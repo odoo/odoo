@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-02-17 09:10+0000\n"
-"Last-Translator: Daniel Stenlöv (XCLUDE) <Unknown>\n"
+"PO-Revision-Date: 2012-05-23 14:05+0000\n"
+"Last-Translator: Mikael Akerberg <mikael.akerberg@dermanord.se>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-05-17 06:04+0000\n"
-"X-Generator: Launchpad (build 15259)\n"
+"X-Launchpad-Export-Date: 2012-05-24 21:36+0000\n"
+"X-Generator: Launchpad (build 15288)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -577,7 +577,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_inventory_control
 msgid "Inventory Control"
-msgstr ""
+msgstr "Lagerstyrning"
 
 #. module: stock
 #: view:stock.location:0 field:stock.location,comment:0
@@ -694,7 +694,7 @@ msgstr "Du försöker tilldela ett parti som inte är från samma produkt."
 #. module: stock
 #: view:res.partner:0
 msgid "Sales & Purchases"
-msgstr "Försäljning & Inköp"
+msgstr "Kundorder och inköp"
 
 #. module: stock
 #: selection:report.stock.inventory,month:0
@@ -946,7 +946,7 @@ msgstr ""
 #. module: stock
 #: view:res.partner:0
 msgid "Inventory Properties"
-msgstr ""
+msgstr "Lageregenskaper"
 
 #. module: stock
 #: field:report.stock.move,day_diff:0
@@ -1079,6 +1079,29 @@ msgid ""
 "location consumes the raw material and produces finished products\n"
 "                      "
 msgstr ""
+"* Leverantörsplats: virtuella platsen representerar lokalen för produkter "
+"som kommer från dina leverantörer\n"
+"                       \n"
+"* Rubriker: virtuella platser används för att skapa en hierarkisk struktur "
+"för ditt lager, samlar sina lagerställen under rubriker, kan inte lagerhålla "
+"några produkter\n"
+"                       \n"
+"* Intern plats: Fysiska platser i egna lager,\n"
+"                       \n"
+"* Kundplats: virtuella platser representerar destinationen för produkter som "
+"skickas till dina kunder\n"
+"                       \n"
+"* Inventering: virtuella platser fungerar som ett komplement till "
+"lagerverksamheten används för att korrigera lagernivåerna (Fysiska "
+"inventeringar)\n"
+"                       \n"
+"* Upphandling: virtuella platsen fungerar som tillfällig motprestation för "
+"upphandlingar när källan (leverantör eller produktion) är inte känt ännu. "
+"Denna plats bör vara tom när upphandlingen schemaläggaren har körts.\n"
+"                       \n"
+"* Produktion: Virtuell motsvarighet plats för produktion: den här platsen "
+"förbrukar råvaror och producerar färdiga produkter\n"
+"                      "
 
 #. module: stock
 #: field:stock.production.lot.revision,author_id:0
@@ -1330,7 +1353,7 @@ msgstr ""
 #. module: stock
 #: view:stock.picking:0 field:stock.picking,invoice_state:0
 msgid "Invoice Control"
-msgstr "Invoice Control"
+msgstr "Fakturakontroll"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_production_lot_revision
@@ -1425,7 +1448,7 @@ msgstr "Packing"
 #: field:res.partner,property_stock_customer:0
 #: selection:stock.location,usage:0
 msgid "Customer Location"
-msgstr "Customer Location"
+msgstr "Kundplats"
 
 #. module: stock
 #: code:addons/stock/stock.py:2312
@@ -1973,7 +1996,7 @@ msgstr ""
 #. module: stock
 #: view:stock.location:0
 msgid "Customer Locations"
-msgstr ""
+msgstr "Kundplatser"
 
 #. module: stock
 #: view:stock.change.product.qty:0 view:stock.change.standard.price:0
@@ -2565,6 +2588,7 @@ msgstr "Fill Inventory"
 msgid ""
 "Error: The default UOM and the purchase UOM must be in the same category."
 msgstr ""
+"Fel: Standardmåttenheten och inköpsmåttenheten måste tillhöra samma kategori."
 
 #. module: stock
 #: model:stock.location,name:stock.location_delivery_counter
@@ -2749,7 +2773,7 @@ msgstr "Virtual Locations"
 #. module: stock
 #: selection:stock.picking,invoice_state:0
 msgid "To Be Invoiced"
-msgstr "To Be Invoiced"
+msgstr "Som ska faktureras"
 
 #. module: stock
 #: field:stock.inventory,date_done:0
@@ -3921,7 +3945,7 @@ msgstr ""
 #. module: stock
 #: field:stock.invoice.onshipping,invoice_date:0
 msgid "Invoiced date"
-msgstr ""
+msgstr "Fakturerad datum"
 
 #. module: stock
 #: code:addons/stock/stock.py:738

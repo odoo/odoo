@@ -8,19 +8,19 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2012-02-17 09:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2012-05-21 15:01+0000\n"
+"Last-Translator: Fekete Mihai <mihai@erpsystems.ro>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-05-17 05:31+0000\n"
-"X-Generator: Launchpad (build 15259)\n"
+"X-Launchpad-Export-Date: 2012-05-24 21:35+0000\n"
+"X-Generator: Launchpad (build 15288)\n"
 
 #. module: anonymization
 #: model:ir.model,name:anonymization.model_ir_model_fields_anonymize_wizard
 msgid "ir.model.fields.anonymize.wizard"
-msgstr "ir.model.fields.anonymize.wizard (ir.model.campuri.anonimat.wizard)"
+msgstr "ir.wizard.anonimizare.campuri.model"
 
 #. module: anonymization
 #: field:ir.model.fields.anonymization,field_name:0
@@ -30,7 +30,7 @@ msgstr "Nume camp"
 #. module: anonymization
 #: field:ir.model.fields.anonymization,field_id:0
 msgid "Field"
-msgstr "Câmp"
+msgstr "Camp"
 
 #. module: anonymization
 #: field:ir.model.fields.anonymization.history,state:0
@@ -41,17 +41,17 @@ msgstr "Stare"
 #. module: anonymization
 #: field:ir.model.fields.anonymize.wizard,file_import:0
 msgid "Import"
-msgstr "Importă"
+msgstr "Importa"
 
 #. module: anonymization
 #: model:ir.model,name:anonymization.model_ir_model_fields_anonymization
 msgid "ir.model.fields.anonymization"
-msgstr "ir.model.fileds.anonymization (ir.model.campuri.anonimizare)"
+msgstr "ir.anonimizare.campuri.model"
 
 #. module: anonymization
 #: field:ir.model.fields.anonymization.history,direction:0
 msgid "Direction"
-msgstr "Direcţie"
+msgstr "Directie"
 
 #. module: anonymization
 #: model:ir.actions.act_window,name:anonymization.action_ir_model_fields_anonymization_tree
@@ -79,7 +79,7 @@ msgstr "Anonimizat"
 #. module: anonymization
 #: field:ir.model.fields.anonymization,state:0
 msgid "unknown"
-msgstr "necunoscut(ă)"
+msgstr "necunoscut(a)"
 
 #. module: anonymization
 #: field:ir.model.fields.anonymization,model_id:0
@@ -89,17 +89,17 @@ msgstr "Obiect"
 #. module: anonymization
 #: field:ir.model.fields.anonymization.history,filepath:0
 msgid "File path"
-msgstr "Cale fișier"
+msgstr "Cale Fiser"
 
 #. module: anonymization
 #: field:ir.model.fields.anonymization.history,date:0
 msgid "Date"
-msgstr "Dată"
+msgstr "Data"
 
 #. module: anonymization
 #: field:ir.model.fields.anonymize.wizard,file_export:0
 msgid "Export"
-msgstr "Export"
+msgstr "Exporta"
 
 #. module: anonymization
 #: view:ir.model.fields.anonymize.wizard:0
@@ -120,13 +120,13 @@ msgstr "Anonimizare baza de date"
 #: view:ir.model.fields.anonymization.history:0
 #: field:ir.model.fields.anonymization.history,field_ids:0
 msgid "Fields"
-msgstr "Câmpuri"
+msgstr "Campuri"
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization,state:0
 #: selection:ir.model.fields.anonymize.wizard,state:0
 msgid "Clear"
-msgstr "Şterge"
+msgstr "Stergeti"
 
 #. module: anonymization
 #: view:ir.model.fields.anonymize.wizard:0
@@ -147,7 +147,7 @@ msgstr "Instabil"
 #. module: anonymization
 #: selection:ir.model.fields.anonymization.history,state:0
 msgid "Exception occured"
-msgstr "A avut loc o excepţie"
+msgstr "A avut loc o exceptie"
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization,state:0
@@ -170,8 +170,7 @@ msgstr "Istoric Anonimizare"
 #. module: anonymization
 #: model:ir.model,name:anonymization.model_ir_model_fields_anonymization_history
 msgid "ir.model.fields.anonymization.history"
-msgstr ""
-"ir.model.fields.anonymization.history (ir.model.campuri.anonimizare.istoric)"
+msgstr "ir.istoric.anonimizare.campuri.model"
 
 #. module: anonymization
 #: model:ir.actions.act_window,name:anonymization.action_ir_model_fields_anonymize_wizard
@@ -182,7 +181,7 @@ msgstr "Anonimizare baza de date"
 #. module: anonymization
 #: field:ir.model.fields.anonymize.wizard,name:0
 msgid "File Name"
-msgstr "Nume fișier"
+msgstr "Nume fisier"
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization.history,direction:0
@@ -192,7 +191,7 @@ msgstr "anonimizat -> sterge"
 #. module: anonymization
 #: selection:ir.model.fields.anonymization.history,state:0
 msgid "Started"
-msgstr "Pornit"
+msgstr "Inceput"
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization.history,state:0
@@ -211,4 +210,4 @@ msgstr "Mesaj"
 #: sql_constraint:ir.model.fields.anonymization:0
 #, python-format
 msgid "You cannot have two fields with the same name on the same object!"
-msgstr ""
+msgstr "Nu puteti avea doua campuri cu acelasi nume la acelasi obiect!"

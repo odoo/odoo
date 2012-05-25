@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2012-02-17 09:10+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2012-05-23 08:21+0000\n"
+"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-05-17 05:42+0000\n"
-"X-Generator: Launchpad (build 15259)\n"
+"X-Launchpad-Export-Date: 2012-05-24 21:35+0000\n"
+"X-Generator: Launchpad (build 15288)\n"
 
 #. module: fetchmail
 #: selection:fetchmail.server,state:0
@@ -56,6 +56,9 @@ msgid ""
 "attached to each processed message. This will usually double the size of "
 "your message database."
 msgstr ""
+"Om en fullständig original kopia av varje e-postmeddelande bör hållas som "
+"referens och biläggs varje bearbetad meddelande. Detta kommer vanligtvis "
+"göra din meddelandedatabas dubbelt så stor."
 
 #. module: fetchmail
 #: field:fetchmail.server,priority:0
@@ -65,7 +68,7 @@ msgstr ""
 #. module: fetchmail
 #: field:fetchmail.server,state:0
 msgid "State"
-msgstr ""
+msgstr "Status"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
@@ -81,7 +84,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:fetchmail.action_email_server_tree
 #: model:ir.ui.menu,name:fetchmail.menu_action_fetchmail_server_tree
 msgid "Incoming Mail Servers"
-msgstr ""
+msgstr "E-post-server för inkommande e-post"
 
 #. module: fetchmail
 #: field:fetchmail.server,port:0
@@ -101,7 +104,7 @@ msgstr ""
 #. module: fetchmail
 #: field:fetchmail.server,user:0
 msgid "Username"
-msgstr ""
+msgstr "Användarnamn"
 
 #. module: fetchmail
 #: model:ir.model,name:fetchmail.model_fetchmail_server
@@ -121,7 +124,7 @@ msgstr ""
 #. module: fetchmail
 #: model:ir.model,name:fetchmail.model_mail_message
 msgid "Email Message"
-msgstr ""
+msgstr "E-post-meddelande"
 
 #. module: fetchmail
 #: field:fetchmail.server,date:0
@@ -134,11 +137,13 @@ msgid ""
 "Optional custom server action to trigger for each incoming mail, on the "
 "record that was created or updated by this mail"
 msgstr ""
+"Option för anpassade serveråtgärder som utförs för varje inkommande e-post, "
+"på den post som skapades eller uppdaterades av detta meddelande"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "# of emails"
-msgstr ""
+msgstr "# e-post"
 
 #. module: fetchmail
 #: field:fetchmail.server,original:0
@@ -162,7 +167,7 @@ msgstr ""
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "Incoming Mail Server"
-msgstr ""
+msgstr "Inkommande e-postserver"
 
 #. module: fetchmail
 #: code:addons/fetchmail/fetchmail.py:155
@@ -173,7 +178,7 @@ msgstr ""
 #. module: fetchmail
 #: help:fetchmail.server,server:0
 msgid "Hostname or IP of the mail server"
-msgstr ""
+msgstr "Hostnamn eller IP för e-postservern"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
@@ -203,7 +208,7 @@ msgstr ""
 #. module: fetchmail
 #: field:mail.message,fetchmail_server_id:0
 msgid "Inbound Mail Server"
-msgstr ""
+msgstr "Server för inkommande e-post"
 
 #. module: fetchmail
 #: field:fetchmail.server,message_ids:0
@@ -214,7 +219,7 @@ msgstr ""
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "Search Incoming Mail Servers"
-msgstr ""
+msgstr "Sök inkommande e-postservrar"
 
 #. module: fetchmail
 #: field:fetchmail.server,active:0
@@ -227,6 +232,8 @@ msgid ""
 "Whether attachments should be downloaded. If not enabled, incoming emails "
 "will be stripped of any attachments before being processed"
 msgstr ""
+"Om bilagor skall laddas ned. Om ej aktiverad, hämtas endast texten och "
+"bilagorna lämnas kvar."
 
 #. module: fetchmail
 #: view:fetchmail.server:0
@@ -256,7 +263,7 @@ msgstr "Lösenord"
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "Actions to Perform on Incoming Mails"
-msgstr ""
+msgstr "Åtgärder att utföra på inkommande e-post"
 
 #. module: fetchmail
 #: field:fetchmail.server,type:0
@@ -314,4 +321,4 @@ msgstr "POP server"
 #. module: fetchmail
 #: view:mail.message:0
 msgid "Mail Server"
-msgstr ""
+msgstr "E-postserver"

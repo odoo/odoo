@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2012-02-17 09:10+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2012-05-23 14:51+0000\n"
+"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-05-17 05:40+0000\n"
-"X-Generator: Launchpad (build 15259)\n"
+"X-Launchpad-Export-Date: 2012-05-24 21:35+0000\n"
+"X-Generator: Launchpad (build 15288)\n"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -24,7 +24,7 @@ msgstr "Order Ref."
 #. module: delivery
 #: model:product.template,name:delivery.delivery_product_product_template
 msgid "Delivery by Poste"
-msgstr ""
+msgstr "Leverans per post"
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -68,7 +68,7 @@ msgstr "Matrisrad"
 #. module: delivery
 #: help:delivery.carrier,partner_id:0
 msgid "The partner that is doing the delivery service."
-msgstr ""
+msgstr "Företaget gör själva leveransservicen."
 
 #. module: delivery
 #: model:ir.actions.report.xml,name:delivery.report_shipping
@@ -83,17 +83,17 @@ msgstr "Leveransuppgifter"
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_picking_tree4
 msgid "Picking to be invoiced"
-msgstr ""
+msgstr "Plockning att fakturera"
 
 #. module: delivery
 #: field:delivery.carrier,pricelist_ids:0
 msgid "Advanced Pricing"
-msgstr ""
+msgstr "Avancerad prissättning"
 
 #. module: delivery
 #: help:delivery.grid,sequence:0
 msgid "Gives the sequence order when displaying a list of delivery grid."
-msgstr ""
+msgstr "Ger ordningsföljden när leveransen listas i rutnätet."
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -120,11 +120,15 @@ msgid ""
 "can define several price lists for one delivery method, per country or a "
 "zone in a specific country defined by a postal code range."
 msgstr ""
+"Med leveransprislistan kan du beräkna kostnaden och försäljningspris "
+"leverans enligt vikten av produkter och andra kriterier. Du kan definiera "
+"flera prislistor för ett leveranssätt per land eller ett område i ett visst "
+"land som definieras av ett postnummerområde."
 
 #. module: delivery
 #: field:delivery.carrier,amount:0
 msgid "Amount"
-msgstr ""
+msgstr "Mängd"
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -146,7 +150,7 @@ msgstr "Leveransmetod"
 #: code:addons/delivery/delivery.py:213
 #, python-format
 msgid "No price available!"
-msgstr ""
+msgstr "Inget pris tillgängligt"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_move
@@ -177,12 +181,12 @@ msgstr "Matrisdefinition"
 #. module: delivery
 #: view:delivery.sale.order:0
 msgid "_Cancel"
-msgstr ""
+msgstr "_Avbryt"
 
 #. module: delivery
 #: field:delivery.grid.line,operator:0
 msgid "Operator"
-msgstr ""
+msgstr "Operatör"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_partner
@@ -192,7 +196,7 @@ msgstr "Företag"
 #. module: delivery
 #: model:ir.model,name:delivery.model_sale_order
 msgid "Sales Order"
-msgstr ""
+msgstr "Kundorder"
 
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form1
@@ -209,7 +213,7 @@ msgstr ""
 #. module: delivery
 #: field:delivery.carrier,partner_id:0
 msgid "Transport Company"
-msgstr ""
+msgstr "Transportföretag"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid
@@ -296,7 +300,7 @@ msgstr ""
 #. module: delivery
 #: field:delivery.carrier,normal_price:0
 msgid "Normal Price"
-msgstr ""
+msgstr "Normalpris"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -311,7 +315,7 @@ msgstr "Matrisnamn"
 #. module: delivery
 #: view:stock.move:0
 msgid "Weights"
-msgstr ""
+msgstr "Vikter"
 
 #. module: delivery
 #: field:stock.picking,number_of_packages:0
@@ -402,7 +406,7 @@ msgstr "Kostpris"
 #. module: delivery
 #: field:delivery.define.delivery.steps.wizard,picking_policy:0
 msgid "Picking Policy"
-msgstr ""
+msgstr "Plockpolicy"
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
