@@ -208,7 +208,7 @@ class sale_order(osv.osv):
             ('cancel', 'Cancelled'),
             ('waiting_date', 'Waiting Schedule'),
             ('manual', 'Sale to Invoice'),
-            ('progress', 'Sale in Progress'),
+            ('progress', 'Sale Order'),
             ('shipping_except', 'Shipping Exception'),
             ('invoice_except', 'Invoice Exception'),
             ('done', 'Done'),
