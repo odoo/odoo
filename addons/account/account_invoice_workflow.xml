@@ -30,14 +30,6 @@ action_number()
 invoice_validate()</field>
             <field name="kind">function</field>
         </record>
-
-        <record id="act_sent" model="workflow.activity">
-            <field name="wkf_id" ref="wkf"/>
-            <field name="name">sent</field>
-            <field name="action">write({'state':'sent', 'sent':True})</field>
-            <field name="kind">function</field>
-        </record>
-
         <record model="workflow.activity" id="act_open_test">
             <field name="wkf_id" ref="wkf"/>
             <field name="name">re-open</field>
@@ -66,29 +58,12 @@ write({'state':'cancel'})</field>
             <field name="act_to" ref="act_open"/>
             <field name="signal">invoice_open</field>
         </record>
-        <record id="open_to_sent" model="workflow.transition">
-            <field name="act_from" ref="act_open"/>
-            <field name="act_to" ref="act_sent"/>
-            <field name="signal">invoice_sent</field>
-        </record>
-        <record id="open_to_paid" model="workflow.transition">
-            <field name="act_from" ref="act_open"/>
-            <field name="act_to" ref="act_paid"/>
-            <field name="trigger_model">account.move.line</field>
-            <field name="trigger_expr_id">move_line_id_payment_get()</field>
-            <field name="condition">test_paid()</field>
-        </record>
         <record id="t8" model="workflow.transition">
-            <field name="act_from" ref="act_sent"/>
+            <field name="act_from" ref="act_open"/>
             <field name="act_to" ref="act_paid"/>
             <field name="trigger_model">account.move.line</field>
             <field name="trigger_expr_id">move_line_id_payment_get()</field>
             <field name="condition">test_paid()</field>
-        </record>
-        <record id="sent_to_cancel" model="workflow.transition">
-            <field name="act_from" ref="act_sent"/>
-            <field name="act_to" ref="act_cancel"/>
-            <field name="signal">invoice_cancel</field>
         </record>
         <record id="t9" model="workflow.transition">
             <field name="act_from" ref="act_draft"/>
@@ -111,11 +86,6 @@ write({'state':'cancel'})</field>
             <field name="signal">invoice_cancel</field>
         </record>
 
-        <record id="open_test_to_sent" model="workflow.transition">
-            <field name="act_from" ref="act_open_test"/>
-            <field name="act_to" ref="act_sent"/>
-            <field name="signal">invoice_sent</field>
-        </record>
         <record id="open_test_to_paid" model="workflow.transition">
             <field name="act_from" ref="act_open_test"/>
             <field name="act_to" ref="act_paid"/>

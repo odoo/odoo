@@ -204,7 +204,6 @@ class account_invoice(osv.osv):
             ('proforma','Pro-forma'),
             ('proforma2','Pro-forma'),
             ('open','Open'),
-            ('sent','Sent'),
             ('paid','Paid'),
             ('cancel','Cancelled'),
             ],'State', select=True, readonly=True,
@@ -370,13 +369,15 @@ class account_invoice(osv.osv):
                 raise orm.except_orm(_('Unknown Error'), str(e))
 
     def invoice_print(self, cr, uid, ids, context=None):
-        wf_service = netsvc.LocalService('workflow')
-        for id in ids:
-            wf_service.trg_validate(uid, 'account.invoice', id, 'invoice_sent', cr)
+        '''
+        This function prints the invoice and mark it as sent, so that we can see more easily the next step of the workflow
+        '''
+        assert len(ids) == 1, 'This option should only be used for a single id at a time'
+        self.write(cr, uid, ids, {'sent': True}, context=context)
         datas = {
              'ids': ids,
              'model': 'account.invoice',
-             'form': self.read(cr, uid, ids, context=context)[0]
+             'form': self.read(cr, uid, ids[0], context=context)
         }
         return {
             'type': 'ir.actions.report.xml',
@@ -386,6 +387,9 @@ class account_invoice(osv.osv):
         }
 
     def action_invoice_sent(self, cr, uid, ids, context=None):
+        '''
+        This function opens a window to compose an email, with the edi invoice template message loaded by default
+        '''
         mod_obj = self.pool.get('ir.model.data')
         template = mod_obj.get_object_reference(cr, uid, 'account', 'email_template_edi_invoice')
         template_id = template and template[1] or False
@@ -1715,8 +1719,7 @@ class mail_message(osv.osv):
 
     def _postprocess_sent_message(self, cr, uid, message, context=None):
         if message.model == 'account.invoice':
-            wf_service = netsvc.LocalService("workflow")
-            wf_service.trg_validate(uid, 'account.invoice', message.res_id, 'invoice_sent', cr)
+            self.pool.get('account.invoice').write(cr, uid, message.ids, {'sent':True}, context=context)
         return super(mail_message, self)._postprocess_sent_message(cr, uid, message=message, context=context)
 
 mail_message()

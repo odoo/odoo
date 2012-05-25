@@ -279,8 +279,12 @@ class purchase_order(osv.osv):
         return {'value':{'pricelist_id': pricelist, 'fiscal_position': fiscal_position}}
 
     def view_invoice(self, cr, uid, ids, context=None):
+        '''
+        This function returns an action that display existing invoices of given sale order ids. It can either be a in a list or in a form view, if there is only one invoice to show.
+        '''
         mod_obj = self.pool.get('ir.model.data')
         wizard_obj = self.pool.get('purchase.order.line_invoice')
+        #compute the number of invoices to display
         inv_ids = []
         for po in self.browse(cr, uid, ids, context=context):
             if po.invoice_method == 'manual':
@@ -307,6 +311,9 @@ class purchase_order(osv.osv):
         }
 
     def view_picking(self, cr, uid, ids, context=None):
+        '''
+        This function returns an action that display existing pîcking orders of given purchase order ids.
+        '''
         mod_obj = self.pool.get('ir.model.data')
         pick_ids = []
         for po in self.browse(cr, uid, ids, context=context):
@@ -333,6 +340,9 @@ class purchase_order(osv.osv):
         return True
 
     def wkf_send_rfq(self, cr, uid, ids, context=None):
+        '''
+        This function opens a window to compose an email, with the edi purchase template message loaded by default
+        '''
         mod_obj = self.pool.get('ir.model.data')
         template = mod_obj.get_object_reference(cr, uid, 'purchase', 'email_template_edi_purchase')
         template_id = template and template[1] or False
