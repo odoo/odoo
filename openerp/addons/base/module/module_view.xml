@@ -69,24 +69,22 @@
             <field name="type">kanban</field>
             <field name="arch" type="xml">
 
-              <kanban>
+              <kanban create="false">
                   <field name="icon"/>
                   <field name="name"/>
                   <field name="state"/>
-                  <field name="complexity"/>
                   <templates>
                     <t t-name="kanban-box">
-                      <div class="oe_module_vignette">
+                      <div class="oe_module_vignette oe_kanban_auto_height">
                         <t t-set="installed" t-value="record.state.raw_value == 'installed'"/>
-                        <a type="edit"> 
+                        <a type="edit">
                           <img t-attf-src="#{record.icon.value}" class="oe_module_icon"/>
                         </a>
                         <div class="oe_module_desc">
                           <h4><a type="edit"><field name="shortdesc"/></a></h4>
                           <p class="oe_module_name">
                              <field name="name"/><br/>
-                             <span t-if="record.complexity.raw_value == 'Expert'" class="oe_label oe_warning">Complex</span>
-                           </p>
+                          </p>
                           <button type="object" name="button_immediate_install" states="uninstalled" class="oe_button">Install</button>
                           <button t-if="installed" class="oe_button" disabled="disabled">Installed</button>
                         </div>
@@ -120,48 +118,39 @@
             <field name="model">ir.module.module</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Module">
-                    <group colspan="4" col="6">
-                        <field name="name"/>
-                        <field name="shortdesc"/>
-                        <field name="certificate" />
-                        <field name="category_id"/>
-                        <field name="complexity"/>
-                        <field name="demo"/>
-                        <field name="application"/>
-                    </group>
-                    <notebook colspan="4">
-                        <page string="Module">
-                            <group colspan="4" col="4">
-                                <group colspan="2" col="2">
-                                    <separator string="Author" colspan="2"/>
-                                    <field name="author" select="2"/>
-                                    <field name="license"/>
-                                    <field name="website" select="2" widget="url" string="Author Website"/>
-                                </group>
-                                <group colspan="2" col="2">
-                                    <separator string="Version" colspan="2"/>
-                                    <field name="installed_version"/>
-                                    <field name="latest_version"/>
-                                    <field name="published_version"/>
-                                </group>
-                            </group>
-                            <separator string="Description" colspan="4"/>
-                            <field colspan="4" name="description" select="2" nolabel="1"/>
-                            <newline/>
-                            <field name="state"/>
-                            <group col="6" colspan="2">
-                                <button name="button_install" states="uninstalled" string="Install" icon="terp-gtk-jump-to-ltr" type="object"/>
-                                <button name="button_install_cancel" states="to install" string="Cancel Install" icon="gtk-cancel" type="object"/>
-                                <button name="button_uninstall" states="installed" string="Uninstall (beta)"
+                <form layout="manual">
+                <div class="oe_form_topbar">
+                    <button name="button_install" states="uninstalled" string="Install" icon="terp-gtk-jump-to-ltr" type="object" class="oe_form_button_hi"/>
+                    <button name="button_upgrade" states="installed" string="Upgrade" icon="terp-gtk-go-back-rtl" type="object" class="oe_form_button_hi"/>
+                    <button name="button_uninstall" states="installed" string="Uninstall (beta)"
                                         icon="terp-dialog-close" type="object"
                                         confirm="Do you confirm the uninstallation of this module? This will permanently erase all data currently stored by the module!"/>
-                                <button name="button_uninstall_cancel" states="to remove" string="Cancel Uninstall" icon="gtk-cancel" type="object"/>
-                                <button name="button_upgrade" states="installed" string="Upgrade" icon="terp-gtk-go-back-rtl" type="object"/>
-                                <button name="button_upgrade_cancel" states="to upgrade" string="Cancel Upgrade" icon="gtk-cancel" type="object"/>
-                            </group>
+                    <button name="button_uninstall_cancel" states="to remove" string="Cancel Uninstall" icon="gtk-cancel" type="object"/>
+                    <button name="button_upgrade_cancel" states="to upgrade" string="Cancel Upgrade" icon="gtk-cancel" type="object"/>
+                    <button name="button_install_cancel" states="to install" string="Cancel Install" icon="gtk-cancel" type="object"/>
+                    <div class="oe_right">
+                        <field name="state" widget="statusbar" nolabel="1" statusbar_visible="uninstalled"/>
+                    </div>
+                </div>
+                <sheet string="Module" layout="auto">
+                    <field name="icon" widget='image' nolabel="1" rowspan="6" colspan="1"/>
+                    <group colspan="2" col="2" class="oe_form_group_label_border">
+                        <field name="shortdesc" string="Application Name"/>
+                        <field name="category_id"/>
+                        <field name="author" select="2"/>
+                        <field name="license"/>
+                        <field name="website" select="2" widget="url" string="Author Website"/>
+                        <field name="installed_version"/>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="Description">
+                            <field colspan="4" name="description" select="2" nolabel="1" rowspan="6"/>
                         </page>
-                        <page string="Dependencies">
+                        <page string="Technical Data">
+                            <field name="name"/>
+                            <field name="certificate" />
+                            <field name="demo"/>
+                            <field name="application"/>
                             <field colspan="4" name="dependencies_id" nolabel="1">
                                 <tree string="Dependencies">
                                     <field name="name"/>
@@ -178,6 +167,7 @@
                             <field colspan="2" name="reports_by_module" nolabel="1"/>
                         </page>
                     </notebook>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -187,15 +177,11 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree colors="blue:state=='to upgrade' or state=='to install';red:state=='uninstalled';grey:state=='uninstallable';black:state=='installed'" string="Modules">
-                    <field name="name"/>
-                    <field name="category_id"/>
                     <field name="shortdesc"/>
-                    <field name="complexity"/>
+                    <field name="name" groups="base.group_no_one"/>
                     <field name="author"/>
                     <field name="installed_version"/>
-                    <field name="latest_version"/>
                     <field name="state"/>
-                    <button name="button_install" states="uninstalled" string="Install" icon="terp-gtk-jump-to-ltr" type="object"/>
                 </tree>
             </field>
         </record>

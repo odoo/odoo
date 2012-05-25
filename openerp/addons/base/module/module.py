@@ -161,9 +161,9 @@ class module(osv.osv):
         return res
 
     _columns = {
-        'name': fields.char("Name", size=128, readonly=True, required=True, select=True),
+        'name': fields.char("Technical Name", size=128, readonly=True, required=True, select=True),
         'category_id': fields.many2one('ir.module.category', 'Category', readonly=True, select=True),
-        'shortdesc': fields.char('Short Description', size=256, readonly=True, translate=True),
+        'shortdesc': fields.char('Name', size=256, readonly=True, translate=True),
         'description': fields.text("Description", readonly=True, translate=True),
         'author': fields.char("Author", size=128, readonly=True),
         'maintainer': fields.char('Maintainer', size=128, readonly=True),
@@ -211,9 +211,6 @@ class module(osv.osv):
         'certificate' : fields.char('Quality Certificate', size=64, readonly=True),
         'application': fields.boolean('Application', readonly=True),
         'icon': fields.char('Icon URL', size=128),
-        'complexity': fields.selection([('easy','Easy'), ('normal','Normal'), ('expert','Expert')],
-            string='Complexity', readonly=True,
-            help='Level of difficulty of module. Easy: intuitive and easy to use for everyone. Normal: easy to use for business experts. Expert: requires technical skills.'),
     }
 
     _defaults = {
@@ -221,7 +218,6 @@ class module(osv.osv):
         'sequence': 100,
         'demo': False,
         'license': 'AGPL-3',
-        'complexity': 'normal',
     }
     _order = 'sequence,name'
 
@@ -464,7 +460,6 @@ class module(osv.osv):
             'website': terp.get('website', ''),
             'license': terp.get('license', 'AGPL-3'),
             'certificate': terp.get('certificate') or False,
-            'complexity': terp.get('complexity', ''),
             'sequence': terp.get('sequence', 100),
             'application': terp.get('application', False),
             'auto_install': terp.get('auto_install', False),
