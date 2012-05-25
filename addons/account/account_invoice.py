@@ -1719,7 +1719,7 @@ class mail_message(osv.osv):
 
     def _postprocess_sent_message(self, cr, uid, message, context=None):
         if message.model == 'account.invoice':
-            self.pool.get('account.invoice').write(cr, uid, message.ids, {'sent':True}, context=context)
+            self.pool.get('account.invoice').write(cr, uid, [message.res_id], {'sent':True}, context=context)
         return super(mail_message, self)._postprocess_sent_message(cr, uid, message=message, context=context)
 
 mail_message()
