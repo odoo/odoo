@@ -243,13 +243,13 @@
                                 <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                             </ul>
                             <div class="oe_kanban_content">
-                                <a type="edit"><h3>
+                                <h3>
                                     <field name="partner_id"/>
                                     <t t-if="record.planned_revenue.raw_value">
                                         - <t t-esc="Math.round(record.planned_revenue.value)"/>
                                         <field name="company_currency"/>
                                     </t>
-                                </h3></a>
+                                </h3>
                                 <div>
                                     <b> <field name="partner_address_name"/> </b>
                                 </div>
