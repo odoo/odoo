@@ -507,6 +507,7 @@ $colour4: #8a89ba
                 display: block
                 background-color: none
                 a
+                    white-space: nowrap
                     display: block
                     padding: 4px 15px
                     clear: both
@@ -1115,8 +1116,6 @@ $colour4: #8a89ba
                         position: absolute
                         left: 4px
                         top: -2px
-
-                        //background: url(/web/static/src/img/icons/gtk-apply.png) no-repeat
                     // after oe_selected so background color is not overridden
                     &:hover
                         background-color: $hover-background
@@ -1443,6 +1442,9 @@ $colour4: #8a89ba
             filter: alpha(opacity=50)
             right: 5px
             top: 3px
+        .oe_form_group_cell .oe_kanban_view
+            // Hack due to absolute positioning of kanban view messing with o2m
+            position: static
     // }}}
     // FormView.buttons {{{
     .oe_form
@@ -1749,6 +1751,13 @@ $colour4: #8a89ba
         float: right
         color: #333
     // }}}
+
+.kitten-mode-activated
+    background-image: url(http://placekitten.com/g/1365/769)
+    background-size: cover
+    background-attachment: fixed
+    >*
+        opacity: 0.70
 
 // Transitional overrides for old styles {{{
 .openerp

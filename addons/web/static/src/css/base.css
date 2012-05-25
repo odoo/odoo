@@ -1,4 +1,4 @@
-@charset "UTF-8";
+@charset "utf-8";
 @font-face {
   font-family: "mnmliconsRegular";
   src: url("/web/static/src/font/mnmliconsv21-webfont.eot") format("eot");
@@ -605,6 +605,7 @@
   background-color: none;
 }
 .openerp .oe_user_menu .oe_dropdown_options li a {
+  white-space: nowrap;
   display: block;
   padding: 4px 15px;
   clear: both;
@@ -1802,6 +1803,9 @@
   right: 5px;
   top: 3px;
 }
+.openerp .oe_form .oe_form_group_cell .oe_kanban_view {
+  position: static;
+}
 .openerp .oe_form .oe_form_button.oe_button {
   height: 22px;
   color: #4c4c4c;
@@ -2152,6 +2156,15 @@
   width: 49%;
   float: right;
   color: #333333;
+}
+
+.kitten-mode-activated {
+  background-image: url(http://placekitten.com/g/1365/769);
+  background-size: cover;
+  background-attachment: fixed;
+}
+.kitten-mode-activated > * {
+  opacity: 0.7;
 }
 
 .openerp .oe_form_field_many2one td:first-child {

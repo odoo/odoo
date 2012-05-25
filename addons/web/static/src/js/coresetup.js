@@ -121,6 +121,10 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
         var base_location = document.location.protocol + '//' + document.location.host;
         var params = { db: db, login: login, password: password, base_location: base_location };
         return this.rpc("/web/session/authenticate", params).pipe(function(result) {
+            if (!result.uid) {
+                return $.Deferred().reject();
+            }
+
             _.extend(self, {
                 session_id: result.session_id,
                 db: result.db,
