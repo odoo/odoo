@@ -457,6 +457,13 @@ class project_issue(crm.crm_case, osv.osv):
         self.write(cr, uid, ids, {'date_open': time.strftime('%Y-%m-%d %H:%M:%S'), 'user_id' : uid})
         return res
 
+    def case_cancel(self, cr, uid, ids, context=None):
+        """ Cancels case """
+        self.case_set(cr, uid, ids, 'cancelled', {'active': True}, context=context)
+        for truc in self.browse(cr, uid, ids, context=context):
+        self.case_cancel_send_note(cr, uid, ids, context=context)
+        return True
+
     def case_escalate(self, cr, uid, ids, context=None):
         cases = self.browse(cr, uid, ids)
         for case in cases:

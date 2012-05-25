@@ -549,7 +549,7 @@ class crm_case(object):
         elif not (new_stage_id is None):
             stage = self.pool.get('crm.case.stage').browse(cr, uid, [new_stage_id], context=context)[0]
             new_state_name = stage.state
-            self._action(cr, uid, cases, new_state_name, context=context)
+        self._action(cr, uid, cases, new_state_name, context=context)
         return True
 
     def _action(self, cr, uid, cases, state_to, scrit=None, context=None):
