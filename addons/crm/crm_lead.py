@@ -46,6 +46,11 @@ class crm_lead(crm_case, osv.osv):
         """ Gives default section by checking if present in the context """
         return self._resolve_section_id_from_context(cr, uid, context=context)
 
+    def _get_default_stage_id(self, cr, uid, context=None):
+        """ Gives default stage_id """
+        section_id = self._get_default_section_id(cr, uid, context=context)
+        return self.stage_find(cr, uid, [], section_id, [('state', '=', 'draft'), ('type', '=', 'both')], context=context)
+
     def _resolve_section_id_from_context(self, cr, uid, context=None):
         """ Returns ID of section based on the value of 'section_id'
             context key, or None if it cannot be resolved to a single
@@ -267,11 +272,6 @@ class crm_lead(crm_case, osv.osv):
         if not stage.on_change:
             return {'value':{}}
         return {'value':{'probability': stage.probability}}
-
-    def _get_default_stage_id(self, cr, uid, context=None):
-        """ Gives default stage_id """
-        section_id = self._get_default_section_id(cr, uid, context=context)
-        return self.stage_find(cr, uid, [], section_id, [('state', '=', 'draft'), ('type', '=', 'both')], context=context)
 
     def stage_find(self, cr, uid, cases, section_id, domain=[], order='sequence', context=None):
         """ Override of the base.stage method
