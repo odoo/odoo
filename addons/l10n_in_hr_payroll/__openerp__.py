@@ -30,12 +30,13 @@
 Indian Payroll Rules.
 =======================
 
-    * Employee Details
+    -Configuration of hr_payroll for India localization
+    -All main contributions rules for India payslip.
+    * New payslip report
     * Employee Contracts
-    * Passport based Contract
-    * Allowances / Deductions
     * Allow to configure Basic / Grows / Net Salary
     * Employee PaySlip
+    * Allowance / Deduction
     * Monthly Payroll Register
     * Integrated with Holiday Management
     * Medical Allowance, Travel Allowance, Child Allowance, ...
