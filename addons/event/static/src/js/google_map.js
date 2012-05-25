@@ -1,4 +1,4 @@
-openerp.event = function(instance){
+openerp.event = function(instance) {
     instance.web.form.widgets.add('many2one_Geo_address', 'instance.event.Many2OneAddress');
     
     instance.web.GoogleMapConnector = instance.web.Class.extend({
@@ -48,8 +48,14 @@ openerp.event = function(instance){
             }
             (value instanceof Array)?value = parseInt(value[0]):false;
             var data = new instance.web.DataSet(this,this.field.relation, this.build_context());
-            data.read_ids(value,["street","city","country_id"]).done(function(value){
-                var address = _.str.sprintf(' %(street)s, %(city)s, %(country_id[1])s', value);
+            data.read_ids(value,["street","city","zip","country_id"]).done(function(value){
+                var address;
+                if value['country_id'] {
+                    address = _.str.sprintf('%(street)s, %(zip)s %(city)s, %(country_id[1])s', value);
+                } else {
+                    address = _.str.sprintf('%(street)s, %(zip)s %(city)s', value);
+                }
+
                 self.map.googleMapsLoaded.done(function(){
                     self.map.render_map(address,document.getElementById("oe_mapbox"));
                 })

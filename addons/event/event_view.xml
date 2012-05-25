@@ -64,16 +64,17 @@
                 <sheet layout="auto">
 
                 <field name="name" required="1" nolabel="1" class="oe_form_title" colspan="4"/>
-                <group colspan="4" col="3">
-                    <group colspan="2" class="oe_form_group_label_border" style="margin-top: 20px;">
+                <group colspan="4" col="5">
+                    <group col="2" colspan="2" class="oe_form_group_label_border" style="margin-top: 20px;">
                         <field name="type" on_change="onchange_event_type(type,context)"/>
-                        <field name="date_begin"/>
                         <field name="user_id"/>
-                        <field name="date_end"/>
                         <field name="address_id" widget ="many2one_Geo_address"/>
+                        <field name="address"/>
+                    </group>
+                    <group col="2" colspan="2" class="oe_form_group_label_border" style="margin-top: 20px;">
+                        <field name="date_begin"/>
+                        <field name="date_end"/>
                         <field name="register_min"/>
-                        <label string=""/>
-                        <field name="street" nolabel="1"/>
                         <field name="register_max"/>
                     </group>
                     <div id="oe_mapbox" class="oe_mapbox"></div>
