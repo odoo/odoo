@@ -1564,15 +1564,14 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
                                          : 'oe_searchview_custom_public')
                 .text(filter.name);
 
-            $('<button type="button" class="oe_searchview_custom_delete">')
-                .text(_t("Delete"))
+            $('<a class="oe_searchview_custom_delete">x</a>')
                 .click(function (e) {
                     e.stopPropagation();
                     self.model.call('unlink', [id]).then(function () {
                         $filter.remove();
                     });
                 })
-                .appendTo($filter);
+                .prependTo($filter);
         }
 
         $filter.unbind('click').click(function () {
@@ -1643,7 +1642,7 @@ instance.web.search.Filters = instance.web.search.Input.extend({
         var col1 = [], col2 = _(this.view.controls).map(function (inputs, group) {
             var filters = _(inputs).filter(is_group);
             return {
-                name: group === 'null' ? _t("Filters") : group,
+                name: group === 'null' ? _t("<span class='oe_i'>q</span> Filters") : "<span class='oe_i'>w</span> " + group,
                 filters: filters,
                 length: _(filters).chain().map(function (i) {
                     return i.filters.length; }).sum().value()
@@ -1666,7 +1665,7 @@ instance.web.search.Filters = instance.web.search.Input.extend({
     },
     render_column: function (column, $el) {
         return $.when.apply(null, _(column).map(function (group) {
-            $('<h3>').text(group.name).appendTo($el);
+            $('<h3>').html(group.name).appendTo($el);
             return $.when.apply(null,
                 _(group.filters).invoke('appendTo', $el));
         }));

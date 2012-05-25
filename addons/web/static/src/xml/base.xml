@@ -1475,19 +1475,23 @@
         </t>
     </t>
 </t>
-<div t-name="SearchView.Filters" class="oe_searchview_filters">
+<div t-name="SearchView.Filters" class="oe_searchview_section">
 
 </div>
-<div t-name="SearchView.CustomFilters" class="oe_searchview_custom">
-    <ul class="oe_searchview_custom_list"/>
-    <h4 class="oe_searchview_custom_title">
-        <label for="oe_searchview_custom_input">Save search</label></h4>
-    <form>
-        <input id="oe_searchview_custom_input" placeholder="Search name"/>
-        <label for="oe_searchview_custom_public">Share with all users:</label>
-        <input id="oe_searchview_custom_public" type="checkbox"/><br/>
-        <button>Save</button><br/>
-    </form>
+<div t-name="SearchView.CustomFilters" class="oe_searchview_section">
+    <div>
+        <h3><span class="oe_i">M</span> Custom Filters</h3>
+        <ul class="oe_searchview_custom_list"/>
+    </div>
+    <div>
+        <h3>Save current search</h3>
+        <form>
+          <p><input id="oe_searchview_custom_input" placeholder="Search name"/></p>
+          <p><input id="oe_searchview_custom_public" type="checkbox"/>
+            <label for="oe_searchview_custom_public">Share with all users</label></p>
+          <button>Save</button>
+        </form>
+    </div>
 </div>
 <div t-name="SearchView.advanced" class="oe_searchview_advanced">
     <h4>Advanced Search</h4>
@@ -1512,7 +1516,7 @@
         </select>
         <select class="searchview_extended_prop_op"/>
         <span class="searchview_extended_prop_value"/>
-        <button type="button" class="searchview_extended_delete_prop button">Delete</button>
+        <a class="searchview_extended_delete_prop button">x</a>
     </li>
 </t>
 <t t-name="SearchView.extended_search.proposition.char">

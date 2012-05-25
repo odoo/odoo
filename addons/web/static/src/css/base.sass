@@ -1067,6 +1067,10 @@ $colour4: #8a89ba
             > div:first-child
                 border-top: none
                 margin: 0
+            h3
+                margin: 8px 4px 4px 12px
+                color: $section-title-color
+                font-size: 13px
             h4, h4 *
                 margin: 0
                 cursor: pointer
@@ -1085,17 +1089,13 @@ $colour4: #8a89ba
                 padding: 0 2px
                 @include box-shadow(none)
                 @include radius(0)
-            .oe_searchview_filters
+            .oe_searchview_section
                 display: table
                 width: 100%
                 > div
                     @include unscrew-box
                     display: table-cell
                     width: 50%
-                h3
-                    margin: 8px 4px 4px 12px
-                    color: $section-title-color
-                    font-size: 13px
                 ul
                     margin: 0 8px 8px
                     padding: 0
@@ -1119,16 +1119,21 @@ $colour4: #8a89ba
                     // after oe_selected so background color is not overridden
                     &:hover
                         background-color: $hover-background
+                form
+                    margin-left: 12px
+                    p
+                        margin: 4px 0
+                        line-height: 18px
+                    button
+                        margin: 0 0 8px 0
             .oe_searchview_custom
                 form
                     display: none
                 li
                     cursor: pointer
                     position: relative
-                    line-height: 1.2em
-                    padding: 2px 20px 2px 25px
-                    &.oe_searchview_custom_private
-                        background: url(/web/static/src/img/icons/terp-locked.png) 5px center no-repeat
+                    line-height: 14px
+                    padding: 2px 4px 2px 20px
                     &:hover
                         background-color: $hover-background
                     button
@@ -1138,6 +1143,7 @@ $colour4: #8a89ba
             .oe_searchview_advanced
                 form
                     display: none
+                    margin-top: 8px
 
                 button.oe_add_condition:before
                     content: "Z"
@@ -1149,6 +1155,7 @@ $colour4: #8a89ba
                     list-style: none
                     padding: 0
                 li
+                    position: relative
                     list-style: none
                     margin: 0
                     white-space: nowrap
@@ -1161,8 +1168,24 @@ $colour4: #8a89ba
                     display: block
 
             // delete buttons
+            .oe_searchview_custom_delete
+                position: absolute
+                left: 4px
+                top: 3px
             .oe_searchview_custom_delete, .searchview_extended_delete_prop
-                @include text-to-icon("d")
+                width: 12px
+                height: 12px
+                color: #8786b7
+                line-height: 8px
+                text-align: center
+                font-weight: bold
+                text-shadow: 0 1px 1px white
+                &:hover
+                    text-decoration: none
+                    color: white
+                    background: #8786b7
+                    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4)
+                    @include radius(2px)
     // }}}
     // Views Common {{{
     .oe_view_nocontent
