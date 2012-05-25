@@ -7,9 +7,8 @@
             <field name="name">Contact Us</field>
             <field name="res_model">portal_crm.crm_contact_us</field>
             <field name="view_mode">form</field>
-            <field name="target">inline</field>
         </record>
-        
+
         <!-- attach it to the portal menu -->
         <menuitem name="Contact Us" id="portal_company_contact" 
             parent="portal.portal_company" action="action_wizard_contact_us"/>
@@ -22,8 +21,21 @@
             <field name="arch" type="xml">
                 <form string="Contact Us wizard view">
                     <group col="2">
-                        <field name="name"/>
+                        <field name="contact_name" string="Name"/>
+                        <field name="name" string="Company"/>
+                        <field name="function" string="Job title"/>
+                        <!-- 
+                        copy the value of the field "name" in "partner_name"
+                        <field name="partner_name"/>
+                         -->
                         <field name="email_from"/>
+                        <field name="phone"/>
+                        <field name="city"/>
+                        <field name="zip" string="Zip code"/>
+                        <field name="state_id"/>
+                        <field name="country_id"/>
+
+                        <field name="description" string="Comment"/>
                         <group colspan="2">
                             <button string="Submit" icon="gtk-ok" name="submit" type="object"/>
                         </group>
@@ -47,7 +59,7 @@
                         records and this will result in a permission denied error
                     -->
                     <field name="name" invisible="1"/>
-                    <label string="Thank you"/>
+                    <label string="Thank you for your interest, we'll respond to your request shortly."/>
                 </form>
             </field>
         </record>
