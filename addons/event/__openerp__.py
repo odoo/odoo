@@ -1,3 +1,4 @@
+
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
@@ -52,6 +53,7 @@ Note that:
     ],
     'demo_xml': ['event_demo.xml'],
     'test': ['test/process/event_draft2done.yml'],
+    'js': ['static/src/js/google_map.js'],
     'css': ['static/src/css/event.css'],
     'installable': True,
     'application': True,
