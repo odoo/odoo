@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
+<!--
     <data noupdate="1">
+-->
+<data>
 
         <!-- Requests Links -->
         <record id="req_link_project" model="res.request.link">
@@ -39,11 +42,23 @@
             <field name="state">open</field>
             <field name="project_default" eval="1"/>
         </record>
-        <record id="project_tt_merge" model="project.task.type">
+        <record id="project_tt_pending" model="project.task.type">
             <field name="sequence">4</field>
+            <field name="name">Pending</field>
+            <field name="state">pending</field>
+            <field name="project_default" eval="1"/>
+        </record>
+        <record id="project_tt_merge" model="project.task.type">
+            <field name="sequence">5</field>
             <field name="name">Deployment</field>
             <field name="state">done</field>
             <field name="project_default" eval="1"/>
+        </record>
+        <record id="project_tt_cancel" model="project.task.type">
+            <field name="sequence">6</field>
+            <field name="name">Cancelled</field>
+            <field name="state">cancelled</field>
+            <field name="project_default" eval="0"/>
         </record>
     </data>
 </openerp>

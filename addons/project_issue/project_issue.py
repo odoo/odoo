@@ -50,6 +50,51 @@ class project_issue(crm.crm_case, osv.osv):
     _order = "priority, create_date desc"
     _inherit = ['ir.needaction_mixin', 'mail.thread']
 
+    def _get_default_project_id(self, cr, uid, context=None):
+        """ Gives default project by checking if present in the context """
+        return self._resolve_project_id_from_context(cr, uid, context=context)
+
+    def _get_default_stage_id(self, cr, uid, context=None):
+        """ Gives default stage_id """
+        project_id = self._get_default_project_id(cr, uid, context=context)
+        return self.stage_find(cr, uid, [], project_id, [('state', '=', 'draft')], context=context)
+
+    def _resolve_project_id_from_context(self, cr, uid, context=None):
+        """ Returns ID of project based on the value of 'default_project_id'
+            context key, or None if it cannot be resolved to a single
+            project.
+        """
+        if context is None:
+            context = {}
+        if type(context.get('default_project_id')) in (int, long):
+            return context.get('default_project_id')
+        if isinstance(context.get('default_project_id'), basestring):
+            project_name = context['default_project_id']
+            project_ids = self.pool.get('project.project').name_search(cr, uid, name=project_name, context=context)
+            if len(project_ids) == 1:
+                return int(project_ids[0][0])
+        return None
+
+    def _read_group_stage_ids(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
+        access_rights_uid = access_rights_uid or uid
+        stage_obj = self.pool.get('project.task.type')
+        order = stage_obj._order
+        # lame hack to allow reverting search, should just work in the trivial case
+        if read_group_order == 'stage_id desc':
+            order = "%s desc" % order
+        # retrieve section_id from the context and write the domain
+        search_domain = []
+        project_id = self._resolve_project_id_from_context(cr, uid, context=context)
+        if project_id:
+            search_domain += ['|', '&', ('project_ids', '=', project_id), ('fold', '=', True)]
+        search_domain += ['|', ('id', 'in', ids), '&', ('project_default', '=', 1), ('fold', '=', False)]
+        # perform search
+        stage_ids = stage_obj._search(cr, uid, search_domain, order=order, access_rights_uid=access_rights_uid, context=context)
+        result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
+        # restore order of the search
+        result.sort(lambda x,y: cmp(stage_ids.index(x[0]), stage_ids.index(y[0])))
+        return result
+
     def _compute_day(self, cr, uid, ids, fields, args, context=None):
         """
         @param cr: the current row, from the database cursor,
@@ -192,7 +237,8 @@ class project_issue(crm.crm_case, osv.osv):
         'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('object_id.model', '=', 'crm.project.bug')]"),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
         'version_id': fields.many2one('project.issue.version', 'Version'),
-        'stage_id': fields.many2one ('project.task.type', 'Stages', domain="[('project_ids', '=', project_id)]"),
+        'stage_id': fields.many2one ('project.task.type', 'Stages',
+                        domain="['|', ('project_ids', '=', project_id), ('project_default', '=', True)]"),
         'project_id':fields.many2one('project.project', 'Project'),
         'duration': fields.float('Duration'),
         'task_id': fields.many2one('project.task', 'Task', domain="[('project_id','=',project_id)]"),
@@ -228,11 +274,16 @@ class project_issue(crm.crm_case, osv.osv):
         'partner_id': crm.crm_case._get_default_partner,
         'email_from': crm.crm_case._get_default_email,
         'state': 'draft',
-        'section_id': crm.crm_case._get_default_section_id,
+        'stage_id': lambda s, cr, uid, c: s._get_default_stage_id(cr, uid, c),
+        'section_id': lambda s, cr, uid, c: s._get_default_section_id(cr, uid, c),
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c),
         'priority': crm.AVAILABLE_PRIORITIES[2][0],
         'categ_id' : lambda *a: False,
          }
+
+    _group_by_full = {
+        'stage_id': _read_group_stage_ids
+    }
 
     def set_priority(self, cr, uid, ids, priority):
         """Set lead priority
@@ -357,7 +408,28 @@ class project_issue(crm.crm_case, osv.osv):
     # -------------------------------------------------------
     # Stage management
     # -------------------------------------------------------
-    
+
+    def stage_find(self, cr, uid, cases, section_id, domain=[], order='sequence', context=None):
+        """ Override of the base.stage method
+            Parameter of the stage search taken from the issue:
+            - type: stage type must be the same or 'both'
+            - section_id: if set, stages must belong to this section or
+              be a default case
+        """
+        if isinstance(cases, (int, long)):
+            cases = self.browse(cr, uid, cases, context=context)
+        domain = list(domain)
+        if section_id:
+                domain += ['|', ('project_ids', '=', section_id), ('project_default', '=', True)]
+        for issue in cases:
+            issue_project_id = issue.project_id.id if issue.project_id else None
+            if issue_project_id:
+                domain += ['|', ('project_ids', '=', issue_project_id), ('project_default', '=', True)]
+        stage_ids = self.pool.get('project.task.type').search(cr, uid, domain, order=order, context=context)
+        if stage_ids:
+            return stage_ids[0]
+        return False
+
     def next_type(self, cr, uid, ids, context=None):
         for task in self.browse(cr, uid, ids):
             typeid = task.type_id.id

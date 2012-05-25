@@ -52,14 +52,25 @@
             <field name="arch" type="xml">
                 <form layout="manual">
                 <div class="oe_form_topbar">
-                    <button name="case_open" string="Open" states="draft,pending" type="object"/>
-                    <button name="case_close" string="Done" states="open,draft,pending" type="object"/>
-                    <button name="case_pending" string="Pending" states="draft,open" type="object"/>
-                    <button name="case_reset" string="Reset to New" states="done,cancel" type="object"/>
-                    <button name="case_escalate" string="Escalate" states="open,draft,pending" type="object"/>
-                    <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object"/>
+                    <button name="stage_previous" string="Previous" type="object"
+                            states="open" icon="gtk-go-back" context="{'stage_type': 'opportunity'}"/>
+                    <button name="stage_next" string="Next" type="object"
+                            states="open" icon="gtk-go-forward" context="{'stage_type': 'opportunity'}"/>
+                    <button name="case_open" string="Open" type="object"
+                            states="draft,pending" icon="gtk-go-forward"/>
+                    <button name="case_pending" string="Pending" type="object"
+                            states="draft,open" icon="gtk-convert"/>
+                    <button name="case_close" string="Done" type="object"
+                            states="draft,open,pending" icon="gtk-go-forward"/>
+                    <button name="case_escalate" string="Escalate" type="object"
+                            states="draft,open,pending" icon="gtk-go-up"/>
+                    <button name="case_reset" string="Reset to New" type="object"
+                            states="cancel,done" icon="gtk-apply"/>
+                    <button name="case_cancel" string="Cancel" type="object"
+                            states="draft,open,pending" icon="gtk-cancel"/>
                     <div class="oe_right">
-                        <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
+                        <field name="stage_id" nolabel="1" widget="statusbar"
+                            on_change="onchange_stage_id(stage_id)"/>
                     </div>
                     <div class="oe_clear"/>
                 </div>
@@ -75,11 +86,7 @@
                         </group>
                         <field name="user_id"/>
                         <field name="version_id" colspan="2" widget="selection"/>
-                        <group colspan="2" col="4" attrs="{'invisible': [('stage_id','=', False)]}">
-                            <field name="stage_id"/>
-                            <button name="prev_type" string="Previous" type="object" icon="gtk-go-back" help="Change to Previous Stage"/>
-                            <button name="next_type" string="Next" type="object" icon="gtk-go-forward" help="Change to Next Stage"/>
-                        </group>
+                        <field name="state" groups="base.group_no_one"/>
                     </group>
                     <notebook colspan="4">
                         <page string="General">

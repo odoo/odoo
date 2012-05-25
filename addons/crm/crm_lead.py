@@ -231,7 +231,6 @@ class crm_lead(crm_case, osv.osv):
         'company_currency': fields.related('company_id', 'currency_id', 'symbol', type='char', string='Company Currency', readonly=True),
         'user_email': fields.related('user_id', 'user_email', type='char', string='User Email', readonly=True),
         'user_login': fields.related('user_id', 'login', type='char', string='User Login', readonly=True),
-
     }
 
     _defaults = {
