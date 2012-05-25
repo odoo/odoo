@@ -92,11 +92,55 @@ class hr_recruitment_degree(osv.osv):
         ('name_uniq', 'unique (name)', 'The name of the Degree of Recruitment must be unique!')
     ]
 
-class hr_applicant(crm.crm_case, osv.osv):
+class hr_applicant(crm.crm_case, osv.Model):
     _name = "hr.applicant"
     _description = "Applicant"
     _order = "id desc"
     _inherit = ['ir.needaction_mixin', 'mail.thread']
+
+    def _get_default_department_id(self, cr, uid, context=None):
+        """ Gives default department by checking if present in the context """
+        return self._resolve_department_id_from_context(cr, uid, context=context)
+
+    def _get_default_stage_id(self, cr, uid, context=None):
+        """ Gives default stage_id """
+        department_id = self._get_default_department_id(cr, uid, context=context)
+        return self.stage_find(cr, uid, [], department_id, [('state', '=', 'draft')], context=context)
+
+    def _resolve_department_id_from_context(self, cr, uid, context=None):
+        """ Returns ID of department based on the value of 'default_department_id'
+            context key, or None if it cannot be resolved to a single
+            department.
+        """
+        if context is None:
+            context = {}
+        if type(context.get('default_department_id')) in (int, long):
+            return context.get('default_department_id')
+        if isinstance(context.get('default_department_id'), basestring):
+            department_name = context['default_department_id']
+            department_ids = self.pool.get('hr.department').name_search(cr, uid, name=department_name, context=context)
+            if len(department_ids) == 1:
+                return int(department_ids[0][0])
+        return None
+
+    def _read_group_stage_ids(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
+        access_rights_uid = access_rights_uid or uid
+        stage_obj = self.pool.get('hr.recruitment.stage')
+        order = stage_obj._order
+        # lame hack to allow reverting search, should just work in the trivial case
+        if read_group_order == 'stage_id desc':
+            order = "%s desc" % order
+        # get department_id from context
+        department_id = self._resolve_department_id_from_context(cr, uid, context=context)
+        search_domain = []
+        if department_id:
+            search_domain += ['|', '&', ('department_id', '=', department_id), ('fold', '=', False)]
+        search_domain += ['|', ('id', 'in', ids), '&', ('department_id', '=', False), ('fold', '=', False)]
+        stage_ids = stage_obj._search(cr, uid, search_domain, order=order, access_rights_uid=access_rights_uid, context=context)
+        result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
+        # restore order of the search
+        result.sort(lambda x,y: cmp(stage_ids.index(x[0]), stage_ids.index(y[0])))
+        return result
 
     def _compute_day(self, cr, uid, ids, fields, args, context=None):
         """
@@ -143,7 +187,8 @@ class hr_applicant(crm.crm_case, osv.osv):
         'partner_id': fields.many2one('res.partner', 'Partner'),
         'create_date': fields.datetime('Creation Date', readonly=True, select=True),
         'write_date': fields.datetime('Update Date', readonly=True),
-        'stage_id': fields.many2one ('hr.recruitment.stage', 'Stage'),
+        'stage_id': fields.many2one ('hr.recruitment.stage', 'Stage',
+                        domain="['|', ('department_id', '=', department_id), ('department_id', '=', False)]"),
         'state': fields.related('stage_id', 'state', type="selection", store=True,
                 selection=AVAILABLE_STATES, string="State", readonly=True,
                 help='The state is set to \'Draft\', when a case is created.\
@@ -186,27 +231,14 @@ class hr_applicant(crm.crm_case, osv.osv):
 
     _defaults = {
         'active': lambda *a: 1,
-        'user_id':  lambda self, cr, uid, context: uid,
-        'email_from': crm.crm_case. _get_default_email,
-        'state': 'draft',
+        'user_id':  lambda s, cr, uid, c: uid,
+        'email_from': lambda s, cr, uid, c: s._get_default_email(cr, uid, c),
+        'stage_id': lambda s, cr, uid, c: s._get_default_stage_id(cr, uid, c),
+        'department_id': lambda s, cr, uid, c: s._get_default_department_id(cr, uid, c),
         'priority': lambda *a: '',
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c),
         'color': 0,
     }
-
-    def _read_group_stage_ids(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
-        access_rights_uid = access_rights_uid or uid
-        stage_obj = self.pool.get('hr.recruitment.stage')
-        order = stage_obj._order
-        if read_group_order == 'stage_id desc':
-            # lame hack to allow reverting search, should just work in the trivial case
-            order = "%s desc" % order
-        stage_ids = stage_obj._search(cr, uid, ['|',('id','in',ids),('department_id','=',False)], order=order,
-                                      access_rights_uid=access_rights_uid, context=context)
-        result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
-        # restore order of the search
-        result.sort(lambda x,y: cmp(stage_ids.index(x[0]), stage_ids.index(y[0])))
-        return result
 
     _group_by_full = {
         'stage_id': _read_group_stage_ids
@@ -229,22 +261,25 @@ class hr_applicant(crm.crm_case, osv.osv):
         stage_id = stage_ids and stage_ids[0] or False
         return {'value': {'stage_id': stage_id}}
 
-    def stage_find(self, cr, uid, section_id, domain=[], order='sequence', context=None):
+    def stage_find(self, cr, uid, cases, section_id, domain=[], order='sequence', context=None):
+        """ Override of the base.stage method
+            Parameter of the stage search taken from the lead:
+            - department_id: if set, stages must belong to this section or
+              be a default case
+        """
+        if isinstance(cases, (int, long)):
+            cases = self.browse(cr, uid, cases, context=context)
         domain = list(domain)
+        if section_id:
+                domain += ['|', ('department_id', '=', section_id), ('department_id', '=', False)]
+        for case in cases:
+            case_section_id = case.department_id.id if case.department_id else None
+            if case_section_id:
+                domain += ['|', ('department_id', '=', case_section_id), ('department_id', '=', False)]
         stage_ids = self.pool.get('hr.recruitment.stage').search(cr, uid, domain, order=order, context=context)
         if stage_ids:
             return stage_ids[0]
         return False
-
-    def stage_set_with_state_name(self, cr, uid, cases, state_name, context=None):
-        """ TODO
-        """
-        for case in cases:
-            department_id = case.department_id.id if case.department_id else None
-            stage_id = self.stage_find(cr, uid, department_id, [('state', '=', state_name)], context=context)
-            if stage_id:
-                self.stage_set(cr, uid, [case.id], stage_id, context=context)
-        return True
 
     def stage_previous(self, cr, uid, ids, context=None):
         """ This function computes previous stage for case from its current stage
@@ -264,11 +299,7 @@ class hr_applicant(crm.crm_case, osv.osv):
     def stage_next(self, cr, uid, ids, context=None):
         """This function computes next stage for case from its current stage
              using available stage for that case type
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of case IDs
-        @param context: A standard dictionary for contextual values"""
+        """
         stage_obj = self.pool.get('hr.recruitment.stage')
         for case in self.browse(cr, uid, ids, context=context):
             department = (case.department_id.id or False)
