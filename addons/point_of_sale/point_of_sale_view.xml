@@ -863,6 +863,7 @@
                         <button name="cashbox_control" type="workflow" string="End of Session" states="opened" /> 
                         <button name="close" type="workflow" string="Validate &amp; Close" states="closing_control" />
 
+
                         <div class="oe_right">
                             <field name="state" widget="statusbar" statusbar_visible="opening_control,opened,closing_control,closed" nolabel="1"/>
                         </div>
@@ -871,10 +872,11 @@
 
                     <group colspan="4" col="4">
                         <field name="config_id"/>
-			<group colspan="2" col="2">
-				<button name="%(action_pos_box_in)d" string="Put Money In" type="action" states="opened"/>
-				<button name="%(action_pos_box_out)d" string="Take Money Out" type="action" states="opened"/>
-			</group>
+            			<group colspan="2" col="2">
+            				<button name="%(action_pos_box_in)d" string="Put Money In" type="action" states="opened"/>
+            				<button name="%(action_pos_box_out)d" string="Take Money Out" type="action" states="opened"/>
+                            <button name="open_frontend_cb" type="object" string="Open Point Of Sale" states="opened" />
+            			</group>
                         <newline/>
                         <field name="user_id" />
                         <field name="name" />

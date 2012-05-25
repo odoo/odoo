@@ -376,6 +376,21 @@ class pos_session(osv.osv):
 
         return True
 
+    def open_frontend_cb(self, cr, uid, ids, context=None):
+        if not context:
+            context = {}
+
+        if not ids:
+            return {}
+
+        context.update({'session_id' : ids[0]})
+        return {
+            'type' : 'ir.actions.client',
+            'name' : 'Start Point Of Sale',
+            'tag' : 'pos.ui',
+            'context' : context,
+        }
+
     # def get_current_session(self, cr, uid, context=None):
     #     # TODO: Remove this code and use a wizard in the front-end
     #     current_user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
