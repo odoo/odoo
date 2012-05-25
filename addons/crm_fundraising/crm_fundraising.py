@@ -80,10 +80,10 @@ class crm_fundraising(crm.crm_case, osv.osv):
 
     _defaults = {
             'active': 1,
-            'user_id':  lambda s, cr, uid, c: s._get_default_user(cr, uid, c)
-            'partner_id':  lambda s, cr, uid, c: s._get_default_partner(cr, uid, c)
-            'email_from': lambda s, cr, uid, c: s._get_default_email(cr, uid, c)
-            'section_id': lambda s, cr, uid, c: s._get_default_section_id(cr, uid, c)
+            'user_id':  lambda s, cr, uid, c: s._get_default_user(cr, uid, c),
+            'partner_id':  lambda s, cr, uid, c: s._get_default_partner(cr, uid, c),
+            'email_from': lambda s, cr, uid, c: s._get_default_email(cr, uid, c),
+            'section_id': lambda s, cr, uid, c: s._get_default_section_id(cr, uid, c),
             'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.case', context=c),
             'priority': crm.AVAILABLE_PRIORITIES[2][0],
             'probability': 0.0,

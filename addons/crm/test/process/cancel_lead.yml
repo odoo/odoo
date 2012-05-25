@@ -50,6 +50,6 @@
 -
   !python {model: crm.lead}: |
     lead = self.browse(cr, uid, ref('crm_case_itisatelesalescampaign0'))
-    assert lead.stage_id.id == ref('crm.stage_lead6'), "Stage should be 'Lost'."
+    assert lead.stage_id.id == ref('crm.stage_lead8'), "Stage should be 'Lost'."
     assert lead.state == 'cancel', "Opportunity is not in 'cancel' state."
     assert lead.probability == 0.0, 'Opportunity probability is wrong and should be 0.0.'
