@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-today OpenERP SA (<http://www.openerp.com>)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,15 +19,15 @@
 #
 ##############################################################################
 
-from osv import fields, osv
-from datetime import datetime
-import crm
-import time
-from tools.translate import _
-from crm import crm_case
 import binascii
-import tools
+import crm
+from crm import crm_case
+from datetime import datetime
 from mail.mail_message import to_email
+from osv import fields, osv
+import time
+import tools
+from tools.translate import _
 
 CRM_LEAD_PENDING_STATES = (
     crm.AVAILABLE_STATES[2][0], # Cancelled
@@ -44,7 +44,7 @@ class crm_lead(crm_case, osv.osv):
 
     def _get_default_section_id(self, cr, uid, context=None):
         """ Gives default section by checking if present in the context """
-        return self._resolve_section_id_from_context(cr, uid, context=context)
+        return (self._resolve_section_id_from_context(cr, uid, context=context) or False)
 
     def _get_default_stage_id(self, cr, uid, context=None):
         """ Gives default stage_id """
@@ -65,7 +65,15 @@ class crm_lead(crm_case, osv.osv):
             section_ids = self.pool.get('crm.case.section').name_search(cr, uid, name=section_name, context=context)
             if len(section_ids) == 1:
                 return int(section_ids[0][0])
-        return False
+        return None
+
+    def _resolve_type_from_context(self, cr, uid, context=None):
+        """ Returns the type (lead or opportunity) from the type context
+            key. Returns None if it cannot be resolved.
+        """
+        if context is None:
+            context = {}
+        return context.get('default_type')
 
     def _read_group_stage_ids(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
         access_rights_uid = access_rights_uid or uid
@@ -74,11 +82,15 @@ class crm_lead(crm_case, osv.osv):
         # lame hack to allow reverting search, should just work in the trivial case
         if read_group_order == 'stage_id desc':
             order = "%s desc" % order
+        # retrieve type from the context (if set: choose 'type' or 'both')
+        type = self._resolve_type_from_context(cr, uid, context=context)
         # retrieve section_id from the context and write the domain
         search_domain = []
         section_id = self._resolve_section_id_from_context(cr, uid, context=context)
         if section_id:
             search_domain += ['|', '&', ('section_ids', '=', section_id), ('fold', '=', True)]
+        if type:
+            search_domain += ['|', ('type', '=', type), ('type', '=', 'both')]
         search_domain += ['|', ('id', 'in', ids), '&', ('case_default', '=', 1), ('fold', '=', False)]
         # perform search
         stage_ids = stage_obj._search(cr, uid, search_domain, order=order, access_rights_uid=access_rights_uid, context=context)
@@ -235,9 +247,9 @@ class crm_lead(crm_case, osv.osv):
 
     _defaults = {
         'active': 1,
+        'type': 'lead',
         'user_id': lambda s, cr, uid, c: s._get_default_user(cr, uid, c),
         'email_from': lambda s, cr, uid, c: s._get_default_email(cr, uid, c),
-        'type': 'lead',
         'stage_id': lambda s, cr, uid, c: s._get_default_stage_id(cr, uid, c),
         'section_id': lambda s, cr, uid, c: s._get_default_section_id(cr, uid, c),
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.lead', context=c),
@@ -277,16 +289,18 @@ class crm_lead(crm_case, osv.osv):
             Parameter of the stage search taken from the lead:
             - type: stage type must be the same or 'both'
             - section_id: if set, stages must belong to this section or
-              be a default case
+              be a default stage; if not set, stages must be default
+              stages
         """
         if isinstance(cases, (int, long)):
             cases = self.browse(cr, uid, cases, context=context)
         domain = list(domain)
         if section_id:
-                domain += ['|', ('section_ids', '=', section_id), ('case_default', '=', True)]
+                domain += ['|', ('section_ids', '=', section_id)]
+        domain.append(('case_default', '=', True))
         for lead in cases:
-            lead_section_id = lead.section_id.id if lead.section_id else None
             domain += ['|', ('type', '=', lead.type), ('type', '=', 'both')]
+            lead_section_id = lead.section_id.id if lead.section_id else None
             if lead_section_id:
                 domain += ['|', ('section_ids', '=', lead_section_id), ('case_default', '=', True)]
         stage_ids = self.pool.get('crm.case.stage').search(cr, uid, domain, order=order, context=context)
