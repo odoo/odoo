@@ -1816,5 +1816,12 @@
         <pre><t t-esc="error.preview"/></pre>
     </t>
 </t>
+<div t-name="Many2ManyKanban.quick_create" class="oe_kanban_quick_create">
+    <input t-att-placeholder="_t('Type name to create')"/>
+    <t t-if="widget._buttons">
+        <button class="oe-kanban-quick_create_add">Add</button>
+        <button class="oe-kanban-quick_create_close">Close</button>
+    </t>
+</div>
 
 </templates>

@@ -3338,7 +3338,7 @@ instance.web.form.Many2ManyListView = instance.web.ListView.extend(/** @lends in
     }
 });
 
-instance.web.form.FieldMany2ManyKanban = instance.web.form.AbstractField.extend({
+instance.web.form.FieldMany2ManyKanban = instance.web.form.AbstractField.extend(_.extend({}, instance.web.form.CompletionFieldMixin, {
     disable_utility_classes: true,
     init: function(field_manager, node) {
         this._super(field_manager, node);
@@ -3455,13 +3455,38 @@ instance.web.form.FieldMany2ManyKanban = instance.web.form.AbstractField.extend(
             });
         }
     },
-});
+}));
 
 function m2m_kanban_lazy_init() {
 if (instance.web.form.Many2ManyKanbanView)
     return;
 instance.web.form.Many2ManyKanbanView = instance.web_kanban.KanbanView.extend({
+    _is_quick_create_enabled: function() {
+        return this._super() && ! this.group_by;
+    },
+});
+instance.web.form.Many2ManyQuickCreate = instance.web.Widget.extend({
+    template: 'Many2ManyKanban.quick_create',
     
+    /**
+     * close_btn: If true, the widget will display a "Close" button able to trigger
+     * a "close" event.
+     */
+    init: function(parent, dataset, context, buttons) {
+        this._super(parent);
+        instance.web.form.CompletionFieldMixin.init.call(this);
+        this.m2m = this.getParent().view.m2m;
+        this._dataset = dataset;
+        this._buttons = buttons || false;
+        this._context = context || {};
+    },
+    start: function () {
+        var self = this;
+        self.$input = this.$element.find('input');
+    },
+    focus: function() {
+        this.$element.find('input').focus();
+    },
 });
 }
 
