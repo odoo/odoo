@@ -38,31 +38,19 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
     },
     start: function() {
         var self = this;
-        this._super.apply(this, arguments);
+        var def = this._super.apply(this, arguments);
         // Bind kanban cards dropdown menus
-        this.$element.on('click', '.oe_kanban_menuaction', function() {
-            var $menu = $(this).next('.oe_kanban_menu');
-            var show = !$menu.is(':visible');
-            self.$element.find('.oe_kanban_menu').hide();
-            var doc_width = $(document).width();
-            $menu.toggle(show);
-            if (show) {
-                var offset = $menu.offset();
-                var menu_width = $menu.width();
-                var x = doc_width - offset.left - menu_width - 15;
-                if (x < 0) {
-                    $menu.offset({ left: offset.left + x }).width(menu_width);
-                }
-            }
-            return false;
+        $('html').on('click.kanban', function() {
+            self.trigger('hide_menus');
         });
-        $('html').on('click', function() {
+        this.on('hide_menus', this, function() {
             self.$element.find('.oe_kanban_menu').hide();
         });
+        return def;
     },
     destroy: function() {
         this._super.apply(this, arguments);
-        $('html').off('click');
+        $('html').off('click.kanban');
     },
     on_loaded: function(data) {
         this.fields_view = data;
@@ -604,8 +592,8 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
             this.$element.children(':first').addClass('oe_kanban_draghandle');
         }
 
-        this.$element.find('.oe_kanban_action').click(function(ev) {
-            ev.preventDefault();
+        this.$element.find('.oe_kanban_action').click(function() {
+            self.view.trigger('hide_menus');
             var $action = $(this),
                 type = $action.data('type') || 'button',
                 method = 'do_action_' + (type === 'action' ? 'object' : type);
@@ -616,7 +604,31 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
             } else {
                 self.do_warn("Kanban: no action for type : " + type);
             }
+            return false;
         });
+
+        this.$element.on('click', '.oe_kanban_menuaction', function() {
+            var $menu = $(this).next('.oe_kanban_menu');
+            var show = !$menu.is(':visible');
+            self.view.trigger('hide_menus');
+            var doc_width = $(document).width();
+            $menu.toggle(show);
+            if (show) {
+                var offset = $menu.offset();
+                var menu_width = $menu.width();
+                var x = doc_width - offset.left - menu_width - 15;
+                if (x < 0) {
+                    $menu.offset({ left: offset.left + x }).width(menu_width);
+                }
+            }
+            return false;
+        });
+
+        this.$element.on('click', this.on_card_clicked);
+    },
+    on_card_clicked: function() {
+        this.view.trigger('hide_menus');
+        this.view.open_record(this.id);
     },
     setup_color_picker: function() {
         var self = this;
@@ -625,8 +637,8 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
             $el.html(QWeb.render('KanbanColorPicker', {
                 widget: this
             }));
-            $el.on('click', 'a', function(ev) {
-                ev.preventDefault();
+            $el.on('click', 'a', function() {
+                self.view.trigger('hide_menus');
                 var color_field = $(this).parents('.oe_kanban_colorpicker').first().data('field') || 'color';
                 var data = {};
                 data[color_field] = $(this).data('color');
@@ -634,6 +646,7 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
                     self.record[color_field] = $(this).data('color');
                     self.do_reload();
                 });
+                return false;
             });
         }
     },
@@ -668,6 +681,7 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
                 var $render = $(self.render());
                 self.$element.replaceWith($render);
                 self.$element = $render;
+                self.$element.data('widget', self);
                 self.bind_events();
                 self.group.compute_cards_auto_height();
             } else {

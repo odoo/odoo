@@ -331,6 +331,9 @@ instance.web.EventDispatcherMixin = _.extend({}, instance.web.ParentedMixin, {
     },
     on: function(events, dest, func) {
         var self = this;
+        if (!(func instanceof Function)) {
+            throw new Error("Event handler must be a function.");
+        }
         events = events.split(/\s+/);
         _.each(events, function(eventName) {
             self.__edispatcherEvents.on(eventName, func, dest);

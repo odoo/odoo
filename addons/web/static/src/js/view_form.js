@@ -2952,6 +2952,12 @@ instance.web.form.One2ManyViewManager = instance.web.ViewManager.extend({
         var pop = new instance.web.form.FormOpenPopup(self.o2m.view);
         pop.show_element(self.o2m.field.relation, id, self.o2m.build_context(), {
             title: _t("Open: ") + self.name,
+            create_function: function(data) {
+                return self.o2m.dataset.create(data).then(function(r) {
+                    self.o2m.dataset.set_ids(self.o2m.dataset.ids.concat([r.result]));
+                    self.o2m.dataset.on_change();
+                });
+            },
             write_function: function(id, data, options) {
                 return self.o2m.dataset.write(id, data, {}).then(function() {
                     self.o2m.reload_current_view();
@@ -2965,6 +2971,9 @@ instance.web.form.One2ManyViewManager = instance.web.ViewManager.extend({
             },
             form_view_options: {'not_interactible_on_create':true},
             readonly: self.o2m.get("effective_readonly")
+        });
+        pop.on_select_elements.add_last(function() {
+            self.o2m.reload_current_view();
         });
     },
 });
