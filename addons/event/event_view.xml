@@ -206,14 +206,14 @@
                             </p>
                             <t t-if="record.register_avail.raw_value != 0">
                               <t t-if="!record.is_subscribed.raw_value">
-                                  <input t-att-id="record.id.raw_value" type="text" name="subscribe" class="no_of_seats" value="1"   onchange="document.getElementById('btn_sub' +this.id).setAttribute('data-context',JSON.stringify({'ticket':this.value}))"/>
-                                  <button t-att-id="'btn_sub'+record.id.raw_value" type="object" name="subscribe_to_event" class="subscribe_button oe_event_button_subscribe">
+                                  <input t-att-id="record.id.raw_value" type="text" name="subscribe" class="no_of_seats" value="1" onchange="document.getElementById('btn_sub' +this.id).setAttribute('data-context',JSON.stringify({'ticket':this.value}))"/>
+                                  <button t-att-id="'btn_sub'+record.id.raw_value" type="object" name="subscribe_to_event" class="oe_mail_button_follow">
                                   <span >Subscribe</span>
                                   </button>
                               </t>
                             </t>
                             <t t-if="record.is_subscribed.raw_value">
-                              <button type="object" name="unsubscribe_to_event" class="unsubscribe_button oe_event_button_unsubscribe">
+                              <button type="object" name="unsubscribe_to_event" class="oe_mail_button_unfollow">
                                 <span>Subscribed</span>
                                 <span class="unsubscribe">Unsubscribe</span>
                               </button>
