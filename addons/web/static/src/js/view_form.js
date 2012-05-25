@@ -3942,21 +3942,12 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
     },
     /** Filters this.selection, according to values coming from the statusbar_visible
      *  attribute of the field. For example: statusbar_visible="draft,open"
-     *  There is however two main possibilities :
-     *  - the value is the identifier, for a selection (new for [new, "New"])
-     *    -> in this case, the options values refer to list[x][0]
-     *  - the value is the name or displayed value, for a many2one
-     *    (Draft for [0, "Draft"])
-     *    -> in this case, the options values refer to list[x][0]
+     *  Currently, the key of (key, label) pairs has to be used in the
+     *  selection of visible items. This feature is not meant to be used
+     *  with many2one fields.
      */
     filter_selection: function() {
         var self = this;
-        if (this.field.type == "many2one") {
-            var index = 1;
-        }
-        else {
-            var index = 0;
-        }
         var shown = _.map(((this.node.attrs || {}).statusbar_visible || "").split(","),
             function(x) { return _.str.trim(x); });
         shown = _.select(shown, function(x) { return x.length > 0; });
@@ -3965,7 +3956,7 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
             this.to_show = this.selection;
         } else {
             this.to_show = _.select(this.selection, function(x) {
-                return _.indexOf(shown, x[index]) !== -1 || x[0] === self.selected_value;
+                return _.indexOf(shown, x[0]) !== -1 || x[0] === self.selected_value;
             });
         }
     },
