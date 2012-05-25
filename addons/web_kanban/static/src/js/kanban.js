@@ -37,7 +37,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
     },
     start: function() {
         var self = this;
-        this._super.apply(this, arguments);
+        var def = this._super.apply(this, arguments);
         // Bind kanban cards dropdown menus
         $('html').on('click.kanban', function() {
             self.trigger('hide_menus');
@@ -45,6 +45,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         this.on('hide_menus', this, function() {
             self.$element.find('.oe_kanban_menu').hide();
         });
+        return def;
     },
     destroy: function() {
         this._super.apply(this, arguments);
