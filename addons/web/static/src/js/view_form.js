@@ -937,7 +937,7 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
             }
             var obj = self.fields_registry.get_any([$elem.attr('widget'), self.fvg.fields[name].type]);
             if (!obj) {
-                throw new Error("Widget type '"+ key + "' is not implemented");
+                throw new Error("Widget type '"+ $elem.attr('widget') + "' is not implemented");
             }
             var w = new (obj)(self.view, instance.web.xml_to_json($elem[0]));
             var $label = self.labels[$elem.attr("name")];
