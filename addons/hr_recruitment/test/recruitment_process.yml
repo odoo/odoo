@@ -17,27 +17,34 @@
     applicant = self.browse(cr, uid, applicant_ids[0], context=context)
     resume_ids = self.pool.get('ir.attachment').search(cr, uid, [('datas_fname','=','resume.doc'),('res_model','=',self._name),('res_id','=',applicant.id)])
     assert applicant.name == "Application for the post of Jr.application Programmer.", "Applicant name does not match."
+    assert applicant.stage_id.id == ref('hr_recruitment.stage_job1'), "Stage should be 'Initial qualification' and is '%s'." % (applicant.stage_id.name)
     assert applicant.state == "draft", "Applicant state should be 'draft'."
-    assert len(resume_ids), "Resume does not attached."
+    assert len(resume_ids), "Resume is not attached."
 -
-  I refuse the applicant.
+  I refuse the applicant (hr_case_programmer)
 -
   !python {model: hr.applicant}: |
-    self.case_close(cr, uid, [ref("hr_case_programmer")])
+    self.case_cancel(cr, uid, [ref("hr_case_programmer")])
 -
   I check the details of the refused applicant.
 -
-  !python {model: crm.lead}: |
-    applicant_ids = self.search(cr, uid, [('email_from','=', 'Mr. Richard Anderson <Richard_Anderson@yahoo.com>')])
-    applicant = self.browse(cr, uid, applicant_ids[0], context=context)
+  !python {model: hr.applicant}: |
+    applicant = self.browse(cr, uid, ref("hr_case_programmer"), context=context)
     assert applicant.stage_id.id == ref('hr_recruitment.stage_job6'), "Stage should be 'Refused' and is %s." % (applicant.stage_id.name)
     assert applicant.state == 'cancel', "Applicant is not in 'cancel' state."
 -
-  I reset and open the previously refused applicant.
+  I reset and re-open the previously refused applicant.
 -
   !python {model: hr.applicant}: |
     self.case_reset(cr, uid, [ref("hr_case_programmer")])
     self.case_open(cr, uid, [ref("hr_case_programmer")])
+-
+  I check the details of the re-opened applicant.
+-
+  !python {model: hr.applicant}: |
+    applicant = self.browse(cr, uid, ref("hr_case_programmer"), context=context)
+    assert applicant.stage_id.id == ref('hr_recruitment.stage_job2'), "Stage should be 'First interview' and is '%s'." % (applicant.stage_id.name)
+    assert applicant.state == "open", "Applicant state should be 'open'."
 -
   I assign the Job position to the applicant
 -
