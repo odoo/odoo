@@ -1485,7 +1485,6 @@ instance.web.form.FormWidget = instance.web.Widget.extend(_.extend({}, instance.
         if (! v_context) {
             v_context = (this.field || {}).context || {};
         }
-        
         if (v_context.__ref || true) { //TODO: remove true
             var fields_values = this._build_eval_context(blacklist);
             v_context = new instance.web.CompoundContext(v_context).set_eval_context(fields_values);
@@ -3874,9 +3873,14 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
         this._super();
         this.selected_value = null;
 
-        //this.render_list();
+        /** preview before set_value only for selection fields, because of
+         *  the dynamic behavior of many2one fields. */
+        if (this.field.type == 'selection') {
+            this.render_list();
+        }
     },
     set_value: function(value_) {
+        var self = this;
         this._super(value_);
         /** find selected value: ex:
          * - many2one: [2, "New"] -> 2
@@ -3887,51 +3891,57 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
         else {
             this.selected_value = value_;
         }
-        this.render_list();
+        // trick to be sure all values are loaded in the form, therefore
+        // enabling the evaluation of dynamic domains
+        $.async_when().then(function() {
+            return self.render_list();
+        });
     },
+
     /** Get the status list and render them
      *  to_show: [[identifier, value_to_displaty]] where
      *   - identifier = db value for a selection, id for a many2one
-     *   - display_val = value that will be displayed
-     *   - ex: [[0, "New"]] (selection) or [["new", "new"]] (many2one)
+     *   - display_val = label that will be displayed
+     *   - ex: [[0, "New"]] (many2one) or [["new", "In Progress"]] (selection)
      */
     render_list: function() {
         var self = this;
-        // get selection values
-        var selection_done = this.get_selection();
-        // search in the external relation for all possible values, then render them
-        var rendering_done = $.when(selection_done).pipe(function () {
-            self.filter_selection();
-        }).pipe(self.proxy('render_elements'));
-        return rendering_done;
+        // get selection values, filter them and render them
+        return this.get_selection().pipe(self.proxy('filter_selection')).pipe(self.proxy('render_elements'));
     },
+
+    /** Get the selection list to be displayed in the statusbar widget.
+     *  For selection fields: this is directly given by this.field.selection
+     *  For many2one fields :
+     *  - perform a search on the relation of the many2one field (given by
+     *    field.relation )
+     *  - get the field domain for the search
+     *    - self.build_domain() gives the domain given by the view or by
+     *      the field
+     *    - if the optional statusbar_fold attribute is set to true, make
+     *      an AND with build_domain to hide all 'fold=true' columns
+     *    - make an OR with current value, to be sure it is displayed,
+     *      with the correct order, even if it is folded
+     */
     get_selection: function() {
         var self = this;
         if (this.field.type == "many2one") {
             this.selection = [];
-            // get a DataSet on the current model (ex: crm.lead)
-            var model = new instance.web.DataSet(this, this.field_manager.dataset.model);
+            // get fold information from widget
+            var fold = ((this.node.attrs || {}).statusbar_fold || true);
+            // build final domain: if fold option required, add the 
+            if (fold == true)
+                var domain = new instance.web.CompoundDomain(['|'], ['&'], self.build_domain(), [['fold', '=', false]], [['id', '=', self.selected_value]])
+            else {
+                var domain = new instance.web.CompoundDomain(['|'], self.build_domain(), [['id', '=', self.selected_value]])
+            }
             // get a DataSetSearch on the current field relation (ex: crm.lead.stage_id -> crm.case.stage)
-            console.log('this');
-            console.log(this);
-            var context = self.build_context();
-            console.log('context');
-            console.log(context);
-            var domain = self.build_domain();
-            console.log('domain');
-            console.log(domain);
-            //var new_domain = new instance.web.CompoundDomain(['|'], domain, [['case_default', '=', 'True']]);
-            //console.log(new_domain);
-            var model_ext = new instance.web.DataSetSearch(this, this.field.relation, context);
+            var model_ext = new instance.web.DataSetSearch(this, this.field.relation, self.build_context(), domain);
             // fetch selection
-            //var read_defer = model_ext.read_slice(['name'], {'domain': domain, 'context': context}).pipe( function (records) {
-            var read_defer = model_ext.read_slice(['name'], {'domain': []}).pipe( function (records) {
-                self.to_show = [];
+            var read_defer = model_ext.read_slice(['name'], {}).pipe( function (records) {
                 _(records).each(function (record) {
                     self.selection.push([record.id, record.name]);
                 });
-                console.log('to_show');
-                console.log(self.to_show);
             });
         }
         else {
@@ -3940,6 +3950,7 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
         }
         return read_defer;
     },
+
     /** Filters this.selection, according to values coming from the statusbar_visible
      *  attribute of the field. For example: statusbar_visible="draft,open"
      *  Currently, the key of (key, label) pairs has to be used in the
@@ -3960,6 +3971,10 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
             });
         }
     },
+
+    /** Renders the widget. This function also check for statusbar_colors='{"pending": "blue"}'
+     *  attribute in the widget. This allows to set a given color to a given
+     *  state (given by the key of (key, label)). */
     render_elements: function () {
         var content = instance.web.qweb.render("FieldStatus.content", {widget: this, _:_});
         this.$element.html(content);
