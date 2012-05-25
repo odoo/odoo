@@ -3907,7 +3907,8 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
     render_list: function() {
         var self = this;
         // get selection values, filter them and render them
-        return this.get_selection().pipe(self.proxy('filter_selection')).pipe(self.proxy('render_elements'));
+        var selection_done = this.get_selection();
+        return $.when(selection_done).pipe(self.proxy('filter_selection')).pipe(self.proxy('render_elements'));
     },
 
     /** Get the selection list to be displayed in the statusbar widget.
