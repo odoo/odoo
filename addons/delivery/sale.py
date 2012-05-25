@@ -18,8 +18,10 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from osv import fields,osv
+
 import time
+from osv import fields,osv
+from tools.translate import _
 
 # Overloaded sale_order to manage carriers :
 class sale_order(osv.osv):
