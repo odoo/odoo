@@ -76,8 +76,10 @@ class crm_case_stage(osv.osv):
         'section_ids':fields.many2many('crm.case.section', 'section_stage_rel', 'stage_id', 'section_id', string='Sections',
                         help="Link between stages and sales teams. When set, this limitate the current stage to the selected sales teams."),
         'state': fields.selection(AVAILABLE_STATES, 'State', required=True, help="The related state for the stage. The state of your document will automatically change regarding the selected stage. For example, if a stage is related to the state 'Close', when your document reaches this stage, it will be automatically have the 'closed' state."),
-        'case_default': fields.boolean('Common to All Teams', help="If you check this field, this stage will be proposed by default on each sales team. It will not assign this stage to existing teams."),
-        'fold': fields.boolean('Hide in Views when Empty', help="This stage is not visible, for example in status bar or kanban view, when there are no records in that stage to display."),
+        'case_default': fields.boolean('Common to All Teams',
+                        help="If you check this field, this stage will be proposed by default on each sales team. It will not assign this stage to existing teams."),
+        'fold': fields.boolean('Hide in Views when Empty',
+                        help="This stage is not visible, for example in status bar or kanban view, when there are no records in that stage to display."),
         'type': fields.selection([  ('lead','Lead'),
                                     ('opportunity', 'Opportunity'),
                                     ('both', 'Both')],
@@ -254,7 +256,7 @@ class crm_base(object):
     def case_reset(self, cr, uid, ids, context=None):
         """ Resets case as draft """
         self.case_set(cr, uid, ids, 'draft', {'active': True}, context=context)
-        self.case_close_send_note(cr, uid, ids, context=context)
+        self.case_reset_send_note(cr, uid, ids, context=context)
         return True
     
     def case_set(self, cr, uid, ids, state_name, update_values=None, context=None):
@@ -397,7 +399,7 @@ class crm_case(object):
     def _get_default_stage_id(self, cr, uid, context=None):
         """ Gives default stage_id """
         return self.stage_find(cr, uid, [], None, [('state', '=', 'draft')], context=context)
-    
+
     def stage_find(self, cr, uid, cases, section_id, domain=[], order='sequence', context=None):
         """ Find stage, with a given (optional) domain on the search,
             ordered by the order parameter. If several stages match the 
@@ -430,21 +432,31 @@ class crm_case(object):
         return True
 
     def stage_set(self, cr, uid, ids, stage_id, context=None):
+        """ Set the new stage. This methods is the right method to call
+            when changing states. It also checks whether an onchange is
+            defined, and execute it.
+        """
         value = {}
-        if hasattr(self,'onchange_stage_id'):
-            value = self.onchange_stage_id(cr, uid, ids, stage_id)['value']
+        if hasattr(self, 'onchange_stage_id'):
+            value = self.onchange_stage_id(cr, uid, ids, stage_id, context=context)['value']
         value['stage_id'] = stage_id
         return self.write(cr, uid, ids, value, context=context)
 
     def stage_change(self, cr, uid, ids, op, order, context=None):
+        """ Change the stage and take the next one, based on a condition
+            writen for the 'sequence' field and an operator. This methods
+            checks whether the case has a current stage, and takes its
+            sequence. Otherwise, a default 0 sequence is chosen and this
+            method will therefore choose the first available stage.
+            For example if op is '>' and current stage has a sequence of
+            10, this will call stage_find, with [('sequence', '>', '10')].
+        """
         for case in self.browse(cr, uid, ids, context=context):
             seq = 0
             if case.stage_id:
-                seq = case.stage_id.sequence
+                seq = case.stage_id.sequence or 0
             section_id = None
-            if case.section_id:
-                section_id = case.section_id.id
-            next_stage_id = self.stage_find(cr, uid, [case], None, [('sequence',op,seq)],order)
+            next_stage_id = self.stage_find(cr, uid, [case], None, [('sequence', op, seq)],order, context=context)
             if next_stage_id:
                 return self.stage_set(cr, uid, [case.id], next_stage_id, context=context)
         return False
@@ -488,7 +500,7 @@ class crm_case(object):
                         data['user_id'] = case.section_id.parent_id.user_id.id
             else:
                 raise osv.except_osv(_('Error !'), _('You can not escalate, you are already at the top level regarding your sales-team category.'))
-            self.write(cr, uid, [case.id], data)
+            self.write(cr, uid, [case.id], data, context=context)
             case.case_escalate_send_note(case.section_id.parent_id, context=context)
         cases = self.browse(cr, uid, ids, context=context)
         self._action(cr, uid, cases, 'escalate', context=context)
@@ -500,7 +512,7 @@ class crm_case(object):
         for case in cases:
             data = {'active': True}
             if case.stage_id and case.stage_id.state == 'draft':
-                 data['date_open'] = fields.datetime.now()
+                data['date_open'] = fields.datetime.now()
             if not case.user_id:
                 data['user_id'] = uid
             self.case_set(cr, uid, [case.id], 'open', data, context=context)
@@ -547,8 +559,7 @@ class crm_case(object):
         if new_state_name:
             self._action(cr, uid, cases, new_state_name, context=context)
         elif not (new_stage_id is None):
-            stage = self.pool.get('crm.case.stage').browse(cr, uid, [new_stage_id], context=context)[0]
-            new_state_name = stage.state
+            new_state_name = self.read(cr, uid, ids, ['state'], context=context)[0]['state']
         self._action(cr, uid, cases, new_state_name, context=context)
         return True
 
