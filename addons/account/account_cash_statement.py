@@ -133,7 +133,7 @@ class account_cash_statement(osv.osv):
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.state == 'draft':
                 self.search(cr, uid,
-                    [('journal_id', '=', journal_id),('state', '=', 'closed')],
+                    [('journal_id', '=', journal_id),('state', '=', 'confirm')],
                     order='create_date desc',
                     limit=1,
                     context=context
@@ -148,13 +148,13 @@ class account_cash_statement(osv.osv):
         return result
 
     def onchange_journal_id(self, cr, uid, ids, journal_id, context=None):
-        result = super(account_cash_statement, self).on_change_journal_id(cr, uid, ids, journal_id)
+        result = super(account_cash_statement, self).onchange_journal_id(cr, uid, ids, journal_id)
 
         if not journal_id:
             return result
 
         statement_ids = self.search(cr, uid,
-                [('journal_id', '=', journal_id),('state', '=', 'closed')],
+                [('journal_id', '=', journal_id),('state', '=', 'confirm')],
                 order='create_date desc',
                 limit=1,
                 context=context
@@ -180,7 +180,7 @@ class account_cash_statement(osv.osv):
         'closing_details_ids' : fields.one2many('account.cashbox.line', 'bank_statement_id', string='Closing Cashbox Lines'),
         'user_id': fields.many2one('res.users', 'Responsible', required=False),
         'difference' : fields.function(_compute_difference, method=True, string="Difference", type="float"),
-        'last_closing_balance' : fields.function(_compute_last_closing_balance, method=True, string='Last Closing Balance', type='float', store=True),
+        'last_closing_balance' : fields.function(_compute_last_closing_balance, method=True, string='Last Closing Balance', type='float'),
     }
     _defaults = {
         'state': 'draft',
