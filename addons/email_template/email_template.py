@@ -56,8 +56,6 @@ class email_template(osv.osv):
            :param str model: model name of the document record this mail is related to.
            :param int res_id: id of the document record this mail is related to.
         """
-        if context is None:
-            context = {}
         if not template: return u""
         if context is None:
             context = {}
@@ -149,7 +147,7 @@ class email_template(osv.osv):
                                           help="Optional preferred server for outgoing mails. If not set, the highest "
                                                "priority one will be used."),
         'body_text': fields.text('Text Contents', translate=True, help="Plaintext version of the message (placeholders may be used here)"),
-        'body_html': fields.text('Rich-Text Contents', translate=True, help="Rich-Text/HTML version of the message (placeholders may be used here)"),
+        'body_html': fields.text('Rich-text Contents', translate=True, help="Rich-text/HTML version of the message (placeholders may be used here)"),
         'message_id': fields.char('Message-Id', size=256, help="Message-ID SMTP header to use in outgoing messages based on this template. "
                                                                "Please note that this overrides the 'Resource Tracking' option, "
                                                                "so if you simply need to track replies to outgoing emails, enable "

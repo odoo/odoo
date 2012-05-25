@@ -60,19 +60,20 @@ SALE_ORDER_EDI_STRUCT = {
     'payment_term': True,
     'order_policy': True,
     'user_id': True,
+    'state': True,
 }
 
 class sale_order(osv.osv, EDIMixin):
     _inherit = 'sale.order'
 
-    def action_quotation_sent(self, cr, uid, ids, context=None):
+    def action_quotation_send(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
         sale_objs = self.browse(cr, uid, ids, context=context) 
         edi_token = self.pool.get('edi.document').export_edi(cr, uid, sale_objs, context = context)[0]
         web_root_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
         ctx = dict(context, edi_web_url_view=edi.EDI_VIEW_WEB_URL % (web_root_url, cr.dbname, edi_token))
-        return super(sale_order, self).action_quotation_sent(cr, uid, ids, context=ctx)
+        return super(sale_order, self).action_quotation_send(cr, uid, ids, context=ctx)
 
     def edi_export(self, cr, uid, records, edi_struct=None, context=None):
         """Exports a Sale order"""

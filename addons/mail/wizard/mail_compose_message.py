@@ -260,6 +260,7 @@ class mail_compose_message(osv.osv_memory):
                         subtype=mail.subtype, headers=headers, context=context)]
                 # in normal mode, we send the email immediately, as the user expects us to (delay should be sufficiently small)
                 mail_message.send(cr, uid, msg_ids, context=context)
+
         return {'type': 'ir.actions.act_window_close'}
 
     def render_template(self, cr, uid, template, model, res_id, context=None):

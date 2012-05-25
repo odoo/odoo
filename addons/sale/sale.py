@@ -207,8 +207,8 @@ class sale_order(osv.osv):
             ('sent', 'Quotation Sent'),
             ('cancel', 'Cancelled'),
             ('waiting_date', 'Waiting Schedule'),
-            ('manual', 'Sale to Invoice'),
             ('progress', 'Sale Order'),
+            ('manual', 'Sale to Invoice'),
             ('shipping_except', 'Shipping Exception'),
             ('invoice_except', 'Invoice Exception'),
             ('done', 'Done'),
@@ -469,13 +469,13 @@ class sale_order(osv.osv):
         return inv_id
 
     def print_quotation(self, cr, uid, ids, context=None):
+        assert len(ids) == 1, 'This option should only be used for a single id at a time'
         wf_service = netsvc.LocalService("workflow")
-        for id in ids:
-            wf_service.trg_validate(uid, 'sale.order', id, 'quotation_sent', cr)
+        wf_service.trg_validate(uid, 'sale.order', ids[0], 'quotation_sent', cr)
         datas = {
                  'model': 'sale.order',
                  'ids': ids,
-                 'form': self.read(cr, uid, ids, context=context)[0],
+                 'form': self.read(cr, uid, ids[0], context=context),
         }
         return {'type': 'ir.actions.report.xml', 'report_name': 'sale.order', 'datas': datas, 'nodestroy': True}
     
@@ -511,66 +511,72 @@ class sale_order(osv.osv):
         }
 
     def action_view_invoice(self, cr, uid, ids, context=None):
+        '''
+        This function returns an action that display existing invoices of given sale order ids. It can either be a in a list or in a form view, if there is only one invoice to show.
+        '''
         mod_obj = self.pool.get('ir.model.data')
+        result = {
+            'name': _('Cutomer Invoice'),
+            'view_type': 'form',
+            'res_model': 'account.invoice',
+            'context': "{'type':'out_invoice', 'journal_type': 'sale'}",
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'current',
+        }
+        #compute the number of invoices to display
         inv_ids = []
-        result = {}
         for so in self.browse(cr, uid, ids, context=context):
-            inv_ids+= [invoice.id for invoice in so.invoice_ids]
+            inv_ids += [invoice.id for invoice in so.invoice_ids]
+        #choose the view_mode accordingly
         if len(inv_ids)>1:
             res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_tree')
             result.update({
-                           'view_mode': 'tree,form',
-                           'res_id': inv_ids or False
+                'view_mode': 'tree,form',
+                'res_id': inv_ids or False
             })
         else:
             res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')
             result.update({
-                           'view_mode': 'form',
-                           'res_id': inv_ids and inv_ids[0] or False,
+                'view_mode': 'form',
+                'res_id': inv_ids and inv_ids[0] or False,
             })
-        res_id = res and res[1] or False,
-        result.update({
-                    'name': _('Cutomer Invoice'),
-                    'view_type': 'form',
-                    'view_id': [res_id],
-                    'res_model': 'account.invoice',
-                    'context': "{'type':'out_invoice', 'journal_type': 'sale'}",
-                    'type': 'ir.actions.act_window',
-                    'nodestroy': True,
-                    'target': 'current',
-        })
+        result.update(view_id = res and res[1] or False)
         return result
 
     
     def action_view_delivery(self, cr, uid, ids, context=None):
+        '''
+        This function returns an action that display existing delivery orders of given sale order ids. It can either be a in a list or in a form view, if there is only one delivery order to show.
+        '''
         mod_obj = self.pool.get('ir.model.data')
+        result = {
+            'name': _('Delivery Order'),
+            'view_type': 'form',
+            'res_model': 'stock.picking',
+            'context': "{'type':'out'}",
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'current',
+        }
+        #compute the number of delivery orders to display
         pick_ids = []
-        result = {}
         for so in self.browse(cr, uid, ids, context=context):
             pick_ids += [picking.id for picking in so.picking_ids]
+        #choose the view_mode accordingly
         if len(pick_ids) > 1:
             res = mod_obj.get_object_reference(cr, uid, 'stock', 'view_picking_out_tree')
             result.update({
-                           'view_mode': 'tree,form',
-                           'res_id': pick_ids or False
+                'view_mode': 'tree,form',
+                'res_id': pick_ids or False
             })
         else:
             res = mod_obj.get_object_reference(cr, uid, 'stock', 'view_picking_out_form')
             result.update({
-                           'view_mode': 'form',
-                           'res_id': pick_ids and pick_ids[0] or False,
+                'view_mode': 'form',
+                'res_id': pick_ids and pick_ids[0] or False,
             })
-        res_id = res and res[1] or False,
-        result.update({
-                    'name': _('Delivery Order'),
-                    'view_type': 'form',
-                    'view_id': res_id,
-                    'res_model': 'stock.picking',
-                    'context': "{'type':'out'}",
-                    'type': 'ir.actions.act_window',
-                    'nodestroy': True,
-                    'target': 'current',
-        })
+        result.update(view_id = res and res[1] or False)
         return result
 
     def action_invoice_create(self, cr, uid, ids, grouped=False, states=['confirmed', 'done', 'exception'], date_inv = False, context=None):
@@ -730,7 +736,11 @@ class sale_order(osv.osv):
             self.confirm_send_note(cr, uid, ids, context)
         return True
 
-    def action_quotation_sent(self, cr, uid, ids, context=None):
+    def action_quotation_send(self, cr, uid, ids, context=None):
+        '''
+        This function opens a window to compose an email, with the edi sale template message loaded by default
+        '''
+        assert len(ids) == 1, 'This option should only be used for a single id at a time'
         mod_obj = self.pool.get('ir.model.data')
         template = mod_obj.get_object_reference(cr, uid, 'sale', 'email_template_edi_sale')
         template_id = template and template[1] or False
@@ -1476,7 +1486,6 @@ class sale_order_line(osv.osv):
 sale_order_line()
 
 class mail_message(osv.osv):
-    _name = 'mail.message'
     _inherit = 'mail.message'
     
     def _postprocess_sent_message(self, cr, uid, message, context=None):
