@@ -18,12 +18,13 @@ openerp.hr_attendance = function(instance) {
         },
         renderElement: function(){
             this.$element = $(QWeb.render(this.template,this.titles));            
-            this.parent_element.prepend(this.$element);            
+            this.parent_element.prepend(this.$element);
             this.$oe_attendance_slider = this.$element.find(".oe_attendance_slider");
             this.$oe_attendance_slider.click(this.do_update_attendance);
         },
         do_update_attendance: function() {
             var self = this;
+            if(!self.employee)return;
             hr_employee = new instance.web.DataSet(self, 'hr.employee');
             hr_employee.call('attendance_action_change', [[self.employee.id]]).done(function(result){
                 if (!result) return;
@@ -36,6 +37,7 @@ openerp.hr_attendance = function(instance) {
                     instance.web.currentlist.reload();
                 }
                 if(instance.web.currentform){
+                    //tofix: it should be in hr_timesheet_sheet module
                     if (instance.web.currentform.model == 'hr_timesheet_sheet.sheet'){
                         model = new instance.web.DataSet(self, instance.web.currentform.model);
                         model.call('date_today', [instance.web.currentform.dataset.ids]).done(function(result){instance.web.currentform.reload();});
@@ -59,9 +61,12 @@ openerp.hr_attendance = function(instance) {
         },
         check_attendance: function(){
             var self = this;
+            self.employee = false;
+            this.$element.find(".oe_attendance_status").hide();
             var employee = new instance.web.DataSetSearch(self, 'hr.employee', self.session.user_context, [['user_id','=', self.session.uid]]);
             return employee.read_slice(['id','name','state']).pipe(function(res) {
                 if(_.isEmpty(res)) return;
+                self.$element.find(".oe_attendance_status").show();
                 self.employee = res[0];
                 self.do_slide(self.employee.state);
             });
