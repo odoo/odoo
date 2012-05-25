@@ -23,7 +23,6 @@
     "version" : "1.1",
     "author" : "OpenERP SA",
     "category": 'Accounting & Finance',
-    'complexity': "easy",
     "description": """
 Accounting and Financial Management.
 ====================================

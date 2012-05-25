@@ -72,7 +72,7 @@ class crm_helpdesk(crm.crm_case, osv.osv):
                             domain="['|',('section_id','=',False),('section_id','=',section_id),\
                             ('object_id.model', '=', 'crm.helpdesk')]"), 
             'duration': fields.float('Duration', states={'done': [('readonly', True)]}), 
-            'state': fields.selection(crm.AVAILABLE_STATES, 'State', size=16, readonly=True, 
+            'state': fields.selection(crm.AVAILABLE_STATES, 'Status', size=16, readonly=True, 
                                   help='The state is set to \'Draft\', when a case is created.\
                                   \nIf the case is in progress the state is set to \'Open\'.\
                                   \nWhen the case is over, the state is set to \'Done\'.\
