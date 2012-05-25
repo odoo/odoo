@@ -3874,7 +3874,7 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
         this._super();
         this.selected_value = null;
 
-        this.render_list();
+        //this.render_list();
     },
     set_value: function(value_) {
         this._super(value_);
@@ -3911,25 +3911,34 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
             this.selection = [];
             // get a DataSet on the current model (ex: crm.lead)
             var model = new instance.web.DataSet(this, this.field_manager.dataset.model);
-            // get the domain of the current field (ex: crm.lead.stage_id -> section_ids = section_id)
-            var fields_get_defer = model.call('fields_get', [[this.name]]).pipe( function (record) {
-                var field_domain = record.domain;
-            });
             // get a DataSetSearch on the current field relation (ex: crm.lead.stage_id -> crm.case.stage)
-            var model_ext = new instance.web.DataSetSearch(this, this.field.relation);
+            console.log('this');
+            console.log(this);
+            var context = self.build_context();
+            console.log('context');
+            console.log(context);
+            var domain = self.build_domain();
+            console.log('domain');
+            console.log(domain);
+            //var new_domain = new instance.web.CompoundDomain(['|'], domain, [['case_default', '=', 'True']]);
+            //console.log(new_domain);
+            var model_ext = new instance.web.DataSetSearch(this, this.field.relation, context);
             // fetch selection
-            var read_defer = model_ext.read_slice(['name'], {'domain': self.field_domain}).pipe( function (records) {
+            //var read_defer = model_ext.read_slice(['name'], {'domain': domain, 'context': context}).pipe( function (records) {
+            var read_defer = model_ext.read_slice(['name'], {'domain': []}).pipe( function (records) {
                 self.to_show = [];
                 _(records).each(function (record) {
                     self.selection.push([record.id, record.name]);
                 });
+                console.log('to_show');
+                console.log(self.to_show);
             });
-            return read_defer;
         }
         else {
             this.selection = this.field.selection;
+            var read_defer = true;
         }
-        return true;
+        return read_defer;
     },
     /** Filters this.selection, according to values coming from the statusbar_visible
      *  attribute of the field. For example: statusbar_visible="draft,open"
