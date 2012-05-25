@@ -39,7 +39,7 @@ Note that:
         Association / Configuration / Types of Events
 """,
     'author': 'OpenERP SA',
-    'depends': ['email_template'],
+    'depends': ['email_template','google_map'],
     'init_xml': [],
     'update_xml': [
         'security/event_security.xml',
@@ -53,7 +53,6 @@ Note that:
     ],
     'demo_xml': ['event_demo.xml'],
     'test': ['test/process/event_draft2done.yml'],
-    'js': ['static/src/js/google_map.js'],
     'css': ['static/src/css/event.css'],
     'installable': True,
     'application': True,

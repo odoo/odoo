@@ -68,7 +68,7 @@
                     <group col="2" colspan="2" class="oe_form_group_label_border" style="margin-top: 20px;">
                         <field name="type" on_change="onchange_event_type(type,context)"/>
                         <field name="user_id"/>
-                        <field name="address_id" widget ="many2one_Geo_address"/>
+                        <field name="address_id" widget ="many2one_address_google_map" widget_option="{'placeholder':'.oe_form_google_map'}"/>
                         <field name="address"/>
                     </group>
                     <group col="2" colspan="2" class="oe_form_group_label_border" style="margin-top: 20px;">
@@ -77,7 +77,7 @@
                         <field name="register_min"/>
                         <field name="register_max"/>
                     </group>
-                    <div id="oe_mapbox" class="oe_mapbox"></div>
+                    <div class="oe_form_google_map"></div>
                 </group>
 
                 <notebook colspan="4">

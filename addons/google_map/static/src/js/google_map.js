@@ -1,7 +1,7 @@
-openerp.event = function(instance) {
-    instance.web.form.widgets.add('many2one_Geo_address', 'instance.event.Many2OneAddress');
-    
-    instance.web.GoogleMapConnector = instance.web.Class.extend({
+openerp.event = function(instance, mod) {
+    instance.web.form.widgets.add('many2one_address_google_map', 'instance.event.Many2OneAddress');
+
+    instance.google_map.GoogleMapConnector = instance.web.Class.extend({
         init: function(){
             this.googleMapsLoaded = $.Deferred();
             this.map_load();
@@ -36,10 +36,10 @@ openerp.event = function(instance) {
             });
         },
     });
-    instance.event.Many2OneAddress = instance.web.form.FieldMany2One.extend({
+    instance.google_map.Many2OneAddress = instance.web.form.FieldMany2One.extend({
         init: function(field_manager, node){
           this._super(field_manager, node);
-          this.map = new instance.web.GoogleMapConnector(); 
+          this.map = new instance.google_map.GoogleMapConnector(); 
         },
         get_address:function(value){
             var self = this;
@@ -55,9 +55,8 @@ openerp.event = function(instance) {
                 } else {
                     address = _.str.sprintf('%(street)s, %(zip)s %(city)s', value);
                 }
-
                 self.map.googleMapsLoaded.done(function(){
-                    self.map.render_map(address,document.getElementById("oe_mapbox"));
+                    self.map.render_map(address,self.$(self.options.selector)[0]);
                 })
             });
         },
@@ -65,7 +64,6 @@ openerp.event = function(instance) {
             this._super(value);
             this.get_address(value);
         },
-
         render_value:function(no_recurse){
             this.get_address(this.get("value"));
             this._super(no_recurse);
