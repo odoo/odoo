@@ -424,7 +424,7 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
                     this.quick.destroy();
                     delete this.quick;
                 });
-            self.quick.appendTo(self.$element.find('.oe_kanban_group_header'));
+            self.quick.appendTo(self.$element.find('.oe_kanban_header'));
             self.quick.focus();
         });
         this.$records.find('.oe_kanban_show_more').click(this.do_show_more);
