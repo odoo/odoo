@@ -2,17 +2,6 @@
 <openerp>
     <data>
 
-        <!-- wizard action -->
-        <record id="action_wizard_contact_us" model="ir.actions.act_window">
-            <field name="name">Contact Us</field>
-            <field name="res_model">portal_crm.crm_contact_us</field>
-            <field name="view_mode">form</field>
-        </record>
-
-        <!-- attach it to the portal menu -->
-        <menuitem name="Contact Us" id="portal_company_contact" 
-            parent="portal.portal_company" action="action_wizard_contact_us"/>
-
         <!-- wizard form view -->
         <record id="wizard_contact_form_view" model="ir.ui.view">
             <field name="name">Wizard form view</field>
@@ -23,27 +12,15 @@
                     <group col="2">
                         <field name="contact_name" string="Name"/>
                         <field name="name" string="Company"/>
-                        <field name="function" string="Job title"/>
-                        <!-- 
-                        copy the value of the field "name" in "partner_name"
-                        <field name="partner_name"/>
-                         -->
                         <field name="email_from"/>
                         <field name="phone"/>
-                        <field name="city"/>
-                        <field name="zip" string="Zip code"/>
-                        <field name="state_id"/>
-                        <field name="country_id"/>
-
-                        <field name="description" string="Comment"/>
-                        <group colspan="2">
-                            <button string="Submit" icon="gtk-ok" name="submit" type="object"/>
-                        </group>
+                        <field name="description" string="Your question"/>
+                        <label string=""/>
+                        <button string="Submit" name="submit" type="object"/>
                     </group>
                 </form>
             </field>
         </record>
-
         <!-- wizard thanks message (shows after submitting the form) -->
         <record id="wizard_contact_form_view_thanks" model="ir.ui.view">
             <field name="name">Wizard thanks message</field>
@@ -63,6 +40,16 @@
                 </form>
             </field>
         </record>
+        <!-- wizard action -->
+        <record id="action_wizard_contact_us" model="ir.actions.act_window">
+            <field name="name">Contact Us</field>
+            <field name="res_model">portal_crm.crm_contact_us</field>
+            <field name="view_mode">form</field>
+        </record>
+        <!-- attach it to the portal menu -->
+        <menuitem name="Contact Us" id="portal_company_contact" 
+            parent="portal.portal_company" action="action_wizard_contact_us"/>
+
 
     </data>
 </openerp>
