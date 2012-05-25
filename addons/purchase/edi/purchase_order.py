@@ -57,6 +57,7 @@ PURCHASE_ORDER_EDI_STRUCT = {
     'amount_total': True,
     'amount_untaxed': True,
     'amount_tax': True,
+    'state':True,
 }
 
 class purchase_order(osv.osv, EDIMixin):

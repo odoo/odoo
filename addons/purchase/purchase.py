@@ -144,7 +144,7 @@ class purchase_order(osv.osv):
     STATE_SELECTION = [
         ('draft', 'Draft PO'),
         ('wait', 'Waiting'),
-        ('send', 'RFQ Sent'),
+        ('sent', 'RFQ Sent'),
         ('confirmed', 'Waiting Approval'),
         ('approved', 'Purchase Order'),
         ('except_picking', 'Shipping Exception'),
@@ -334,10 +334,7 @@ class purchase_order(osv.osv):
 
     def wkf_send_rfq(self, cr, uid, ids, context=None):
         mod_obj = self.pool.get('ir.model.data')
-        if context.get('send_rfq', False):
-            template = mod_obj.get_object_reference(cr, uid, 'purchase', 'email_template_edi_purchase_quatation')
-        else:
-            template = mod_obj.get_object_reference(cr, uid, 'purchase', 'email_template_edi_purchase')
+        template = mod_obj.get_object_reference(cr, uid, 'purchase', 'email_template_edi_purchase')
         template_id = template and template[1] or False
         res = mod_obj.get_object_reference(cr, uid, 'mail', 'email_compose_message_wizard_form')
         res_id = res and res[1] or False

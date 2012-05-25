@@ -33,8 +33,11 @@
        </div>
    </div>
 
-   <t t-if="(doc.state == 'draft' or doc.state == 'sent')">
+   <t t-if="(doc.state == 'draft' or doc.state == 'sent') and doc.__model == 'sale.order'">
        <h1 class="oe_edi_doc_title">Quotation <t t-esc="doc.name"/>: <t t-esc="_.str.sprintf('%.2f',doc.amount_total)"/> <t t-esc="doc.currency.code"/></h1>
+   </t>
+   <t t-if="(doc.state == 'draft' or doc.state == 'sent') and doc.__model == 'purchase.order'">
+       <h1 class="oe_edi_doc_title">Request for Quotation <t t-esc="doc.name"/>: <t t-esc="_.str.sprintf('%.2f',doc.amount_total)"/> <t t-esc="doc.currency.code"/></h1>
    </t>
    <t t-if="(doc.state != 'draft' and doc.state != 'sent')">
        <h1 class="oe_edi_doc_title">Order <t t-esc="doc.name"/>: <t t-esc="_.str.sprintf('%.2f',doc.amount_total)"/> <t t-esc="doc.currency.code"/></h1>

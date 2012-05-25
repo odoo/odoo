@@ -48,7 +48,7 @@
 
     <p>Hello${object.partner_id.name and ' ' or ''}${object.partner_id.name or ''},</p>
     
-    <p>Here is a purchase order confirmation from ${object.company_id.name}: </p>
+    <p>Here is a ${object.state in ('draft', 'sent') and 'request for quotation' or 'purchase order confirmation'} from ${object.company_id.name}: </p>
     
     <p style="border-left: 1px solid #8e0000; margin-left: 30px;">
        &nbsp;&nbsp;<strong>REFERENCES</strong><br />
@@ -65,7 +65,7 @@
     </p>
 
     <p>
-    You can view the order confirmation document and download it using the following link:
+    You can view the ${object.state in ('draft', 'sent') and 'request for quotation' or 'order confirmation'} document and download it using the following link:
     </p>
             <a style="display:block; width: 150px; height:20px; margin-left: 120px; color: #FFF; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;" 
                href="${ctx.get('edi_web_url_view') or ''}">View Order</a>
@@ -111,7 +111,7 @@
             <field name="body_text"><![CDATA[
 Hello${object.partner_id.name and ' ' or ''}${object.partner_id.name or ''},
 
-Here is a purchase order confirmation from ${object.company_id.name}:
+Here is a ${object.state in ('draft', 'sent') and 'request for quotation' or 'purchase order confirmation'} from ${object.company_id.name}:
        | Order number: *${object.name}*
        | Order total: *${object.amount_total} ${object.pricelist_id.currency_id.name}*
        | Order date: ${object.date_order}
@@ -123,126 +123,7 @@ Here is a purchase order confirmation from ${object.company_id.name}:
        % endif
        | Your contact: ${object.validator.name} ${object.validator.user_email and '<%s>'%(object.validator.user_email) or ''}
 
-You can view the order confirmation and download it using the following link:
-    ${ctx.get('edi_web_url_view') or 'n/a'}
-
-If you have any question, do not hesitate to contact us.
-
-Thank you!
-
-
---
-${object.validator.name} ${object.validator.user_email and '<%s>'%(object.validator.user_email) or ''}
-${object.company_id.name}
-% if object.company_id.street:
-${object.company_id.street or ''}
-% endif
-% if object.company_id.street2:
-${object.company_id.street2}
-% endif
-% if object.company_id.city or object.company_id.zip:
-${object.company_id.zip or ''} ${object.company_id.city or ''}
-% endif
-% if object.company_id.country_id:
-${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}
-% endif
-% if object.company_id.phone:
-Phone: ${object.company_id.phone}
-% endif
-% if object.company_id.website:
-${object.company_id.website or ''}
-% endif
-            ]]></field>
-        </record>
-
-        <record id="email_template_edi_purchase_quatation" model="email.template">
-            <field name="name">Automated Quataion Request Notification Mail</field>
-            <field name="email_from">${object.validator.user_email or ''}</field>
-            <field name="subject">${object.company_id.name} Order (Ref ${object.name or 'n/a' })</field>
-            <field name="email_to">${object.partner_id.email}</field>
-            <field name="model_id" ref="purchase.model_purchase_order"/>
-            <field name="auto_delete" eval="True"/>
-            <field name="body_html"><![CDATA[
-<div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); ">
-
-    <p>Hello${object.partner_id.name and ' ' or ''}${object.partner_id.name or ''},</p>
-    
-    <p>Here is a request for quotation from ${object.company_id.name}: </p>
-    
-    <p style="border-left: 1px solid #8e0000; margin-left: 30px;">
-       &nbsp;&nbsp;<strong>REFERENCES</strong><br />
-       &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />
-       &nbsp;&nbsp;Order total: <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong><br />
-       &nbsp;&nbsp;Order date: ${object.date_order}<br />
-       % if object.origin:
-       &nbsp;&nbsp;Order reference: ${object.origin}<br />
-       % endif
-       % if object.partner_ref:
-       &nbsp;&nbsp;Your reference: ${object.partner_ref}<br />
-       % endif
-       &nbsp;&nbsp;Your contact: <a href="mailto:${object.validator.user_email or ''}?subject=Order%20${object.name}">${object.validator.name}</a>
-    </p>
-
-    <p>
-    You can view the request for quotation and download it using the following link:
-    </p>
-            <a style="display:block; width: 150px; height:20px; margin-left: 120px; color: #FFF; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;" 
-               href="${ctx.get('edi_web_url_view') or ''}">View Order</a>
-
-    <br/>
-    <p>If you have any question, do not hesitate to contact us.</p>
-    <p>Thank you!</p>
-    <br/>
-    <br/>
-    <div style="width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;">
-        <h3 style="margin: 0px; padding: 2px 14px; font-size: 12px; color: #FFF;">
-            <strong style="text-transform:uppercase;">${object.company_id.name}</strong></h3>
-    </div>
-    <div style="width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;">
-        <span style="color: #222; margin-bottom: 5px; display: block; ">
-        % if object.company_id.street:
-            ${object.company_id.street}<br/>
-        % endif
-        % if object.company_id.street2:
-            ${object.company_id.street2}<br/>
-        % endif
-        % if object.company_id.city or object.company_id.zip:
-            ${object.company_id.zip} ${object.company_id.city}<br/>
-        % endif
-        % if object.company_id.country_id:
-            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>
-        % endif
-        </span>
-        % if object.company_id.phone:
-            <div style="margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; ">
-                Phone:&nbsp; ${object.company_id.phone}
-            </div>
-        % endif
-        % if object.company_id.website:
-            <div>
-                Web :&nbsp;<a href="${object.company_id.website}">${object.company_id.website}</a>
-            </div>
-        %endif
-        <p></p>
-    </div>
-</div>
-            ]]></field>
-            <field name="body_text"><![CDATA[
-Hello${object.partner_id.name and ' ' or ''}${object.partner_id.name or ''},
-
-Here is a request for quotation from ${object.company_id.name}:
-       | Order number: *${object.name}*
-       | Order total: *${object.amount_total} ${object.pricelist_id.currency_id.name}*
-       | Order date: ${object.date_order}
-       % if object.origin:
-       | Order reference: ${object.origin}
-       % endif
-       % if object.partner_ref:
-       | Your reference: ${object.partner_ref}<br />
-       % endif
-       | Your contact: ${object.validator.name} ${object.validator.user_email and '<%s>'%(object.validator.user_email) or ''}
-
-You can view the quotation and download it using the following link:
+You can view the ${object.state in ('draft', 'sent') and 'request for quotation' or 'order confirmation'} and download it using the following link:
     ${ctx.get('edi_web_url_view') or 'n/a'}
 
 If you have any question, do not hesitate to contact us.
