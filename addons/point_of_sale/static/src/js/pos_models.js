@@ -205,6 +205,10 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     console.log('cashRegisters:',self.get('cashRegisters'));
                     self.ready.resolve();
                     self.log_loaded_data();
+                },function(){
+                    //we failed to load some backend data, or the backend was badly configured.
+                    //the error messages will be displayed in PosWidget
+                    self.ready.reject();
                 });
         },
 
@@ -318,6 +322,11 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                             });
             });
         },
+        /*
+        build_category_tree : function() {
+            var categories = this.get('categories');
+            for(var i = 0; i < 
+        }*/
         // I guess this builds a tree of categories ? TODO ask Niv for more info.
         build_tree: function() {
             var c, id, _i, _len, _ref, _ref2;

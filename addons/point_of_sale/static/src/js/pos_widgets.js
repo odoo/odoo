@@ -760,35 +760,35 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
       
         start: function() {
             var self = this;
-            return self.pos.ready.then(_.bind(function() {
-                this.build_currency_template();
-                this.renderElement();
-                this.synch_notification = new module.SynchNotificationWidget(this);
-                this.synch_notification.replace($('.placeholder-SynchNotificationWidget', this.$element));
-                this.synch_notification.on_synch.add(_.bind(self.pos.flush, self.pos));
+            return self.pos.ready.then(function() {
+                self.build_currency_template();
+                self.renderElement();
+                self.synch_notification = new module.SynchNotificationWidget(this);
+                self.synch_notification.replace($('.placeholder-SynchNotificationWidget', self.$element));
+                self.synch_notification.on_synch.add(_.bind(self.pos.flush, self.pos));
                 
-                self.pos.bind('change:nbr_pending_operations', this.changed_pending_operations, this);
-                this.changed_pending_operations();
+                self.pos.bind('change:nbr_pending_operations', self.changed_pending_operations, self);
+                self.changed_pending_operations();
                 
-                this.$element.find("#loggedas button").click(function() {
+                self.$element.find("#loggedas button").click(function() {
                     self.try_close();
                 });
                 
-                $('button#neworder-button', this.$element).click(_.bind(this.create_new_order, this));
+                self.$('button#neworder-button').click(_.bind(self.create_new_order, self));
                 
                 //when a new order is created, add an order button widget
-                this.pos.get('orders').bind('add', function(new_order){
+                self.pos.get('orders').bind('add', function(new_order){
                     var new_order_button = new module.OrderButtonWidget(null, {
                         order: new_order,
-                        pos: this.pos
+                        pos: self.pos
                     });
                     new_order_button.appendTo($('#orders'));
                     new_order_button.selectOrder();
-                }, this);
+                }, self);
 
-                this.pos.get('orders').add(new module.Order({ pos: this.pos }));
+                self.pos.get('orders').add(new module.Order({ pos: self.pos }));
 
-                this.build_widgets();
+                self.build_widgets();
 
                 instance.webclient.set_content_full_screen(true);
 
@@ -806,7 +806,17 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 $('.loader').animate({opacity:0},3000,'swing',function(){$('.loader').hide();});
                 $('.loader img').hide();
 
-            }, this));
+            },function(){   // error when loading models data from the backend
+                $('.loader img').hide();
+                return new instance.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_pos_session_opening']], ['res_id'])
+                    .pipe( _.bind(function(res){
+                        return instance.connection.rpc('/web/action/load', {'action_id': res[0]['res_id']})
+                            .pipe(_.bind(function(result){
+                                var action = result.result;
+                                this.do_action(action);
+                            }, this));
+                    }, self));
+            });
         },
 
         build_widgets: function() {
