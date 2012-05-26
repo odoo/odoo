@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:44+0000\n"
-"PO-Revision-Date: 2012-05-03 08:45+0000\n"
+"PO-Revision-Date: 2012-05-24 12:33+0000\n"
 "Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
 "Language-Team: <>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-05-04 05:19+0000\n"
-"X-Generator: Launchpad (build 15195)\n"
+"X-Launchpad-Export-Date: 2012-05-24 21:34+0000\n"
+"X-Generator: Launchpad (build 15288)\n"
 
 #. module: base
 #: model:res.country,name:base.sh
@@ -34,7 +34,7 @@ msgstr "Datum/Tid"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_mailgate
 msgid "Tasks-Mail Integration"
-msgstr ""
+msgstr "Uppgifts-epostintegration"
 
 #. module: base
 #: code:addons/fields.py:582
@@ -71,6 +71,20 @@ msgid ""
 "    * Graph of My Remaining Hours by Project\n"
 "    "
 msgstr ""
+"\n"
+"Projekt-modulen följer projekt i flera nivåer, aktiviteter, arbete som görs "
+"på uppdrag, etc.\n"
+"=======================================================================\n"
+"\n"
+"Göra planering, beställa uppgifter och aktiviteter, etc.\n"
+"\n"
+"Infopanel för projektmedlemmar som innehåller:\n"
+"--------------------------------------------\n"
+"     * Lista av mina öppna uppgifter\n"
+"     * Lista av mina delegerade uppgifter\n"
+"     * Diagram över mina projekt: planerade tid jämfört med upparbetad\n"
+"     * Diagram över återstående timmar för projektet\n"
+"    "
 
 #. module: base
 #: field:base.language.import,code:0
@@ -90,7 +104,7 @@ msgstr "Arbetsflöde"
 #. module: base
 #: selection:ir.sequence,implementation:0
 msgid "No gap"
-msgstr ""
+msgstr "Inget slack"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -146,6 +160,11 @@ msgid ""
 "\n"
 "This module allows you to create retro planning for managing your events.\n"
 msgstr ""
+"\n"
+"Organisation och ledning av evenemang.\n"
+"================================\n"
+"\n"
+"Den här modulen kan du skapa retroplanering för att hantera dina händelser.\n"
 
 #. module: base
 #: help:ir.model.fields,domain:0
@@ -237,7 +256,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_subproduct
 msgid "MRP Subproducts"
-msgstr ""
+msgstr "MRP underprodukt"
 
 #. module: base
 #: code:addons/base/module/module.py:390
@@ -315,7 +334,7 @@ msgstr "Största storlek"
 #: model:ir.ui.menu,name:base.next_id_73
 #: model:ir.ui.menu,name:base.reporting_menu
 msgid "Reporting"
-msgstr "Rapportering"
+msgstr "Rapporter"
 
 #. module: base
 #: view:res.partner:0
@@ -367,7 +386,7 @@ msgstr "Guidenamn"
 #. module: base
 #: model:res.groups,name:base.group_partner_manager
 msgid "Partner Manager"
-msgstr ""
+msgstr "Företagsansvarig"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_customer_relationship_management
@@ -423,7 +442,7 @@ msgstr "Källobjekt"
 #. module: base
 #: model:res.partner.bank.type,format_layout:base.bank_normal
 msgid "%(bank_name)s: %(acc_number)s"
-msgstr ""
+msgstr "%(bank_name): %(acc_number)s"
 
 #. module: base
 #: view:ir.actions.todo:0
@@ -507,7 +526,7 @@ msgstr "Datumformat"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_report_designer
 msgid "OpenOffice Report Designer"
-msgstr ""
+msgstr "OpenOffice rapportdesigner"
 
 #. module: base
 #: field:res.bank,email:0
@@ -613,6 +632,29 @@ msgid ""
 "    Accounting/Reporting/Generic Reporting/Partners/Follow-ups Sent\n"
 "\n"
 msgstr ""
+"\n"
+"Modul för att automatisera utskick av brev för obetalda fakturor, med flera "
+"nivåer av påminnelser.\n"
+"============================================================================"
+"\n"
+"\n"
+"Du kan definiera dina flera nivåer av påminnelser via menyn:\n"
+"     Redovisning / Konfiguration / Övrigt / uppföljningar\n"
+"\n"
+"När det är definierat, kan du skriva ut automatiskt påminnelser varje dag "
+"genom att klicka på menyn:\n"
+"     Redovisning / Tidskrift Processing / Fakturering / Skicka "
+"Uppföljningar\n"
+"\n"
+"Det kommer att generera en PDF med alla brev i enlighet med gällande\n"
+"olika nivåer av definierade påminnelser. Du kan definiera olika strategier\n"
+"för olika företag. Du kan också skicka e-post till kunden.\n"
+"\n"
+"Observera att om du vill kontrollera uppföljning nivån för ett visst företag "
+"/-konto post, kan du göra från i menyn:\n"
+"     Redovisning / rapportering / Generic Rapportering / Partners / "
+"Uppföljning Skickat\n"
+"\n"
 
 #. module: base
 #: field:res.country,name:0
@@ -701,7 +743,7 @@ msgstr "Export genomförd"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_plugin_outlook
 msgid "Outlook Plug-In"
-msgstr ""
+msgstr "Outlook Plug-In"
 
 #. module: base
 #: view:ir.model:0
@@ -802,6 +844,9 @@ msgid ""
 "Launch Manually Once: after hacing been launched manually, it sets "
 "automatically to Done."
 msgstr ""
+"Manuell: Starta manuellt.\n"
+"Automatiskt: Körs alltid vid uppgradering av moduler.\n"
+"Starta manuellt en gång: Efter en manuell genomgång sätts denna till klar."
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -900,7 +945,7 @@ msgstr ""
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_4
 msgid "Basic Partner"
-msgstr "Baspartner"
+msgstr "Basföretag"
 
 #. module: base
 #: report:ir.module.reference.graph:0
@@ -910,7 +955,7 @@ msgstr ","
 #. module: base
 #: view:res.partner:0
 msgid "My Partners"
-msgstr "Mina partners"
+msgstr "Mina företag"
 
 #. module: base
 #: view:ir.actions.report.xml:0
@@ -973,7 +1018,7 @@ msgstr "Niue"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_membership
 msgid "Membership Management"
-msgstr ""
+msgstr "Medlemsadministration"
 
 #. module: base
 #: selection:ir.module.module,license:0
@@ -1410,6 +1455,25 @@ msgid ""
 "database,\n"
 "      but in the servers rootpad like /server/bin/filestore.\n"
 msgstr ""
+"\n"
+"Detta är en komplett dokumenthanteringssystem.\n"
+"========================================\n"
+"\n"
+"     * Användarautentisering\n"
+"     * Dokument indexeringen: -.. PPTX och docx-filer stöds inte i Windows-"
+"plattformen.\n"
+"     * Dashboard för dokument som innehåller:\n"
+"         * Nya filer (lista)\n"
+"         * Filer med resurstyp (graf)\n"
+"         * Filer med företag (graf)\n"
+"         * Filer storlek efter månad (graf)\n"
+"\n"
+"OBS:\n"
+"     - När du installerar den här modulen i en aktiv databas som redan har "
+"PDF-filer, kommer du att förlora dem alla.\n"
+"     - Efter att ha installerat denna modul lagras inte PDF-filer i "
+"databasen längre,\n"
+"       utan i filsystemet, med rooten  / server / bin / FileStore.\n"
 
 #. module: base
 #: view:res.lang:0
@@ -1667,6 +1731,24 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Denna modul tillför generiska delningsverktyg för all information i din "
+"OpenERP-instans.\n"
+"================================================== ===================\n"
+"\n"
+"Modulen gör att du får en speciell delningsknapp i webbklienten som gör att "
+"du kan dela alla typer\n"
+"av OpenERP-data med kollegor, kunder, vänner etc.\n"
+"\n"
+"Systemet kommer att arbeta genom att skapa nya användare och grupper i "
+"farten, och\n"
+"kombinera lämpliga åtkomsträttigheter och ir.rules för att säkerställa att\n"
+"delade användare har endast tillgång till de data som har delats med dem.\n"
+"\n"
+"Detta är mycket användbart för gemensamt arbete, kunskapsdelning,\n"
+"synkronisering med andra företag, mm\n"
+"\n"
+"    "
 
 #. module: base
 #: field:res.currency,accuracy:0
@@ -1811,6 +1893,18 @@ msgid ""
 "The managers can obtain an easy view of best ideas from all the users.\n"
 "Once installed, check the menu 'Ideas' in the 'Tools' main menu."
 msgstr ""
+"\n"
+"Denna modul gör att din användare att enkelt och effektivt delta i "
+"företagets kreativa processer.\n"
+"================================================== "
+"==========================\n"
+"\n"
+"Det låter alla att uttrycka idéer om olika ämnen.\n"
+"Sedan kan andra användare kommentera dessa idéer och rösta för särskilda "
+"idéer.\n"
+"Varje idé har en poäng baserad på de olika rösterna.\n"
+"Cheferna kan få en enkel bild av bästa idéer från alla användare.\n"
+"En gång installerat, kontrollera menyn \"Idéer\" i 'Verktyg'."
 
 #. module: base
 #: model:ir.model,name:base.model_ir_rule
@@ -2267,7 +2361,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_setup
 msgid "Initial Setup Tools"
-msgstr ""
+msgstr "Initiala konfigurationsverktyg"
 
 #. module: base
 #: field:ir.actions.act_window,groups_id:0
@@ -2397,6 +2491,18 @@ msgid ""
 "and categorize your interventions with a channel and a priority level.\n"
 "    "
 msgstr ""
+"\n"
+"Kundtjänst.\n"
+"=========\n"
+"\n"
+"Liksom ärenden och hantering av garantieroch klagomål, är kundtjänst och "
+"support ett bra verktyg \n"
+"för att spåra dina insatser. Denna meny är mer anpassat till muntlig "
+"kommunikation,\n"
+"som inte nödvändigtvis är relaterat till ett garantiärende eller klagomål. "
+"Välj en kund, lägga till anteckningar\n"
+"och kategorisera dina insatser med en kanal och en prioritetsnivå.\n"
+"    "
 
 #. module: base
 #: sql_constraint:ir.ui.view_sc:0
@@ -2568,7 +2674,7 @@ msgstr "Import / Export"
 #. module: base
 #: model:ir.actions.todo.category,name:base.category_tools_customization_config
 msgid "Tools / Customization"
-msgstr ""
+msgstr "Verktyg / konfiguration"
 
 #. module: base
 #: field:ir.model.data,res_id:0
@@ -2626,6 +2732,31 @@ msgid ""
 "performing those tasks.\n"
 "    "
 msgstr ""
+"\n"
+"Denna modul implementerar alla begrepp som definieras av metoden Getting "
+"Things Done (GTD).\n"
+"================================================== "
+"==========================\n"
+"\n"
+"Denna modul implementeras enkla personliga att-göra-listor baserade på "
+"tilldelade uppgifter. Den\n"
+"tillför projektmodulen enkla editerbara uppgiftslistor med ett minimum av "
+"obligatoriska fält att\n"
+"fylla i.\n"
+"\n"
+"Att göra-listan är baserad på GTD metoden. Denna världsomspännande metod som "
+"\n"
+"används för att effektivisera det personliga tidsutnyttjandet.\n"
+"\n"
+"Få saker gjorda (allmänt förkortat GTD) är en managementmetod\n"
+"som skapades av David Allen, och beskrivs i en bok med samma namn.\n"
+"\n"
+"GTD vilar på principen att en person behöver för att flytta arbetsuppgifter "
+"ut ur sinnet genom\n"
+"dokumentera dem externt. På så sätt är hjärnan befriad från jobbet\n"
+"komma ihåg allt som behöver göras, och kan koncentrera sig på att faktiskt\n"
+"utför dessa uppgifter.\n"
+"    "
 
 #. module: base
 #: model:res.country,name:base.tt
@@ -2708,6 +2839,8 @@ msgid ""
 "Lets you install various tools to simplify and enhance OpenERP's report "
 "creation."
 msgstr ""
+"Låter dig installera diverse verktyg för att göra det enklare att göra "
+"bättre OpenERP rapporter."
 
 #. module: base
 #: view:res.lang:0
@@ -2853,7 +2986,7 @@ msgstr ""
 #: field:ir.module.module,application:0
 #: field:res.groups,category_id:0
 msgid "Application"
-msgstr ""
+msgstr "Tillämpning"
 
 #. module: base
 #: selection:publisher_warranty.contract,state:0
@@ -3949,8 +4082,8 @@ msgid ""
 "import a language pack from here. Other OpenERP languages than the official "
 "ones can be found on launchpad."
 msgstr ""
-"Om du behöver ett annat språk än de officiella sp kan du importera "
-"språkpaket här. Andra OpenERP språk än de officiella finns på launchpad."
+"Om du behöver ett annat språk än de officiella språken kan du importera nya "
+"språkpaket här. Andra OpenERP-språk än de officiella finns på launchpad."
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_accountant
@@ -4554,7 +4687,7 @@ msgstr "FYROM"
 #. module: base
 #: view:ir.actions.todo:0
 msgid "Set as Todo"
-msgstr ""
+msgstr "Ange som 'att göra'"
 
 #. module: base
 #: view:res.lang:0
@@ -4832,7 +4965,7 @@ msgstr "Det kontraktet har redan registrerats i systemet."
 #: model:ir.actions.act_window,name:base.action_res_partner_bank_type_form
 #: model:ir.ui.menu,name:base.menu_action_res_partner_bank_typeform
 msgid "Bank Account Types"
-msgstr ""
+msgstr "Bankkontotyper"
 
 #. module: base
 #: help:ir.sequence,suffix:0
@@ -4897,7 +5030,7 @@ msgstr ""
 #. module: base
 #: field:res.company,rml_footer2:0
 msgid "Bank Accounts Footer"
-msgstr ""
+msgstr "Bankkontofot"
 
 #. module: base
 #: model:res.country,name:base.mu
@@ -5104,7 +5237,7 @@ msgstr "Överliggande meny"
 #. module: base
 #: field:res.partner.bank,owner_name:0
 msgid "Account Owner Name"
-msgstr ""
+msgstr "Namn på kontoägare"
 
 #. module: base
 #: field:ir.rule,perm_unlink:0
@@ -5280,7 +5413,7 @@ msgstr "Zambia"
 #. module: base
 #: view:ir.actions.todo:0
 msgid "Launch Configuration Wizard"
-msgstr ""
+msgstr "Starta konfigureringsguiden"
 
 #. module: base
 #: help:res.partner,user_id:0
@@ -5877,7 +6010,7 @@ msgstr "res.partner.title"
 #. module: base
 #: view:res.partner.bank:0
 msgid "Bank Account Owner"
-msgstr "Bankkonto ägare"
+msgstr "Bankkontoägare"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_uncategorized
@@ -5947,7 +6080,7 @@ msgstr ""
 #. module: base
 #: view:res.partner.bank:0
 msgid "My Banks"
-msgstr ""
+msgstr "Mina banker"
 
 #. module: base
 #: help:multi_company.default,object_id:0
@@ -5967,7 +6100,7 @@ msgstr "Menynamn"
 #. module: base
 #: view:ir.module.module:0
 msgid "Author Website"
-msgstr "Författare hemsida"
+msgstr "Upphovsmannens webbplats"
 
 #. module: base
 #: model:ir.module.module,description:base.module_board
@@ -6034,7 +6167,7 @@ msgstr ""
 #. module: base
 #: selection:ir.actions.todo,type:0
 msgid "Launch Automatically"
-msgstr ""
+msgstr "Starta automatiskt"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mail
@@ -6325,7 +6458,7 @@ msgstr "Menyer"
 #. module: base
 #: selection:ir.actions.todo,type:0
 msgid "Launch Manually Once"
-msgstr ""
+msgstr "Starta manuellt en gång"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden
@@ -6932,7 +7065,7 @@ msgstr "Bokföring"
 #: view:ir.module.module:0
 #, python-format
 msgid "Upgrade"
-msgstr ""
+msgstr "Uppgradera"
 
 #. module: base
 #: field:res.partner,address:0
@@ -7145,7 +7278,7 @@ msgstr "Burundi"
 #: view:publisher_warranty.contract.wizard:0
 #: view:res.request:0
 msgid "Close"
-msgstr "Stäng"
+msgstr "Avbryt"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -7512,7 +7645,7 @@ msgstr "11. %U or %W       ==> 48 (49:onde veckan)"
 #. module: base
 #: model:ir.model,name:base.model_res_partner_bank_type_field
 msgid "Bank type fields"
-msgstr "Banktyp fält"
+msgstr "Banktypfält"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -7696,7 +7829,7 @@ msgstr ""
 #. module: base
 #: model:res.partner.bank.type,name:base.bank_normal
 msgid "Normal Bank Account"
-msgstr ""
+msgstr "Vanligt bankkonto"
 
 #. module: base
 #: view:ir.actions.wizard:0
@@ -7840,7 +7973,7 @@ msgstr ""
 #. module: base
 #: view:res.partner.bank:0
 msgid "Bank accounts belonging to one of your companies"
-msgstr ""
+msgstr "Bankkonton som tillhör något av dina bolag"
 
 #. module: base
 #: help:res.users,action_id:0
@@ -7854,7 +7987,7 @@ msgstr ""
 #. module: base
 #: selection:ir.module.module,complexity:0
 msgid "Easy"
-msgstr ""
+msgstr "Enkel"
 
 #. module: base
 #: view:ir.values:0
@@ -8026,7 +8159,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_iban
 msgid "IBAN Bank Accounts"
-msgstr ""
+msgstr "IBAN-bankkonton"
 
 #. module: base
 #: field:res.company,user_ids:0
@@ -8391,6 +8524,28 @@ msgid ""
 "depending on the product's configuration.\n"
 "    "
 msgstr ""
+"\n"
+"Detta är modulen för att beräkna anskaffning.\n"
+"====================================\n"
+"\n"
+"I MRP-processen, är anskaffningsorder startskotten för att starta "
+"tillverkningsorder,\n"
+"inköpsorder, lagerallokering  etc. Anskaffningsorder\n"
+"genereras automatiskt av systemet och om inte det finns ett problem, så sker "
+"detta\n"
+"utan att användaren meddelas. Vid problem, kommer systemet istället att "
+"utlösa \n"
+"anskaffningsundantag för att på det viset påvisa blockeringar som behöver "
+"lösas upp\n"
+"manuellt (som saknade BoM-strukturer eller saknad leverantör).\n"
+"\n"
+"Anskaffningsordern kommer schemalägga ett förslag för automatisk "
+"anskaffning\n"
+"för den produkt som behöver påfyllning. Anskaffningen kommer att starta ett\n"
+"uppgift, antingen en inköpsorder form för leverantören eller en "
+"produktionsorder\n"
+"beroende på produktionskonfigurationen.\n"
+"    "
 
 #. module: base
 #: model:res.country,name:base.mx
@@ -8584,6 +8739,27 @@ msgid ""
 "created\n"
 "        CALENDAR_NAME: Name of calendar to access\n"
 msgstr ""
+"\n"
+"Denna modul innehåller grundläggande funktionalitet för ett CalDAV-system.\n"
+"=============================================================\n"
+"\n"
+"   - WebDAV-server som ger fjärråtkomst till kalendern\n"
+"   - Synkronisering av kalender med WebDAV\n"
+"   - Anpassa kalenderhändelse och todo attribut med någon av OpenERP modell\n"
+"   - Ger iCal Import / Export funktioner\n"
+"\n"
+"För att komma åt kalendrar med CalDAV kunder, peka dem till:\n"
+"     http://HOSTNAME:PORT/webdav/DATABASE_NAME/calendars/users/USERNAME/c\n"
+"\n"
+"För att komma OpenERP Kalender med WebCal att avlägsen plats använda "
+"webbadressen som:\n"
+"     http://HOSTNAME:PORT/webdav/DATABASE_NAME/Calendars/CALENDAR_NAME.ics\n"
+"\n"
+"     där,\n"
+"         HOSTNAME: värd som OpenERP server (med WebDAV) körs\n"
+"         PORT: Port som OpenERP server kör (som standard: 8069)\n"
+"         Databasnamn: Namn på databas som OpenERP Calendar skapas\n"
+"         CALENDAR_NAME: Namn på kalendern för att få tillgång till\n"
 
 #. module: base
 #: field:ir.model.fields,selectable:0
@@ -8654,7 +8830,7 @@ msgstr ""
 #. module: base
 #: field:ir.module.module,complexity:0
 msgid "Complexity"
-msgstr ""
+msgstr "Svårighetsgrad"
 
 #. module: base
 #: selection:ir.actions.act_window,target:0
@@ -9353,7 +9529,7 @@ msgstr ""
 #. module: base
 #: selection:ir.actions.todo,type:0
 msgid "Launch Manually"
-msgstr ""
+msgstr "Starta manuellt"
 
 #. module: base
 #: model:res.country,name:base.be
@@ -9831,6 +10007,9 @@ msgid ""
 "Todo list for CRM leads and opportunities.\n"
 "    "
 msgstr ""
+"\n"
+"Att göra-lista för CRM kundämnen och affärsmöjligheter\n"
+"    "
 
 #. module: base
 #: field:ir.actions.act_window.view,view_id:0
@@ -10261,6 +10440,38 @@ msgid ""
 "            "
 "fields_to_search.update(view_root.xpath(\"//field[@select=1]/@name"
 msgstr ""
+"Insufficient fields to generate a Calendar View for %s, missing a date_stop "
+"or a date_delay\" % (self._name)))\n"
+"\n"
+"        return view\n"
+"\n"
+"    def _get_default_search_view(self, cr, uid, context=None):\n"
+"        \"\n"
+"        :param cr: database cursor\n"
+"        :param int user: user id\n"
+"        :param dict context: connection context\n"
+"        :returns: an lxml document of the view\n"
+"        :rtype: etree._Element\n"
+"        \"\n"
+"        form_view = self.fields_view_get(cr, uid, False, 'form', "
+"context=context)\n"
+"        tree_view = self.fields_view_get(cr, uid, False, 'tree', "
+"context=context)\n"
+"\n"
+"        # TODO it seems _all_columns could be used instead of fields_get (no "
+"need for translated fields info)\n"
+"        fields = self.fields_get(cr, uid, context=context)\n"
+"        fields_to_search = set(\n"
+"            field for field, descriptor in fields.iteritems()\n"
+"            if descriptor.get('select'))\n"
+"\n"
+"        for view in (form_view, tree_view):\n"
+"            view_root = etree.fromstring(view['arch'])\n"
+"            # Only care about select=1 in xpath below, because select=2 is "
+"covered\n"
+"            # by the custom advanced search in clients\n"
+"            "
+"fields_to_search.update(view_root.xpath(\"//field[@select=1]/@name"
 
 #. module: base
 #: constraint:res.users:0
@@ -10407,7 +10618,7 @@ msgstr ""
 #. module: base
 #: help:res.company,bank_ids:0
 msgid "Bank accounts related to this company"
-msgstr ""
+msgstr "Bankkonton tillhörande detta bolag"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_base_partner
@@ -10896,6 +11107,14 @@ msgid ""
 "The wizard to launch the report has several options to help you get the data "
 "you need.\n"
 msgstr ""
+"\n"
+"Lägger till en rapportmeny i produkter som beräknar försäljning, inköp, "
+"marginaler och andra intressanta indikatorer som bygger på fakturor.\n"
+"============================================================================="
+"=================================\n"
+"\n"
+"Guiden för att starta rapporten har flera alternativ för att hjälpa dig att "
+"få den information du behöver.\n"
 
 #. module: base
 #: model:res.country,name:base.al
@@ -10908,6 +11127,9 @@ msgid ""
 "Level of difficulty of module. Easy: intuitive and easy to use for everyone. "
 "Normal: easy to use for business experts. Expert: requires technical skills."
 msgstr ""
+"Svårighetsgrad av konfigurering/använding av modul. Enkel: intuitiv och "
+"enkel att använda för alla. Normal: lätt att använda för företagsexperter. "
+"Expert: kräver tekniska kunskaper."
 
 #. module: base
 #: code:addons/base/res/res_lang.py:191
@@ -11030,7 +11252,7 @@ msgstr "Vill ni rensa Ids ? "
 #. module: base
 #: view:res.partner.bank:0
 msgid "Information About the Bank"
-msgstr ""
+msgstr "Bankinformation"
 
 #. module: base
 #: help:ir.actions.server,condition:0
@@ -11519,6 +11741,13 @@ msgid ""
 "the invoicing wizard if the delivery is to be invoiced.\n"
 "    "
 msgstr ""
+"\n"
+"Fakturaguide för leverans.\n"
+"=====================\n"
+"\n"
+"Denna modul startar fakturering automatiskt när du skickar eller leverera "
+"varor, då leveransen skall faktureras.\n"
+"    "
 
 #. module: base
 #: code:addons/orm.py:1388
@@ -11650,7 +11879,7 @@ msgstr "Tunisien"
 #. module: base
 #: view:ir.actions.todo:0
 msgid "Wizards to be Launched"
-msgstr ""
+msgstr "Guider som kommer startas"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_manufacturing
@@ -11860,7 +12089,7 @@ msgstr "Schemaläggare"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_tools
 msgid "Base Tools"
-msgstr ""
+msgstr "Basverktyg"
 
 #. module: base
 #: help:res.country,address_format:0
@@ -12619,9 +12848,9 @@ msgid ""
 "OpenERP. They are launched during the installation of new modules, but you "
 "can choose to restart some wizards manually from this menu."
 msgstr ""
-"Konfigurationsguiderna hjälper dig att konfigurera en ny OpenEREP-instans. "
-"De startas under modulinstallationer, men du kan återstarta vissa guider "
-"från denna meny."
+"Konfigurationsguiderna hjälper dig att konfigurera en ny OpenERP-instans. De "
+"startas under modulinstallationer, men du kan återstarta vissa guider från "
+"denna meny."
 
 #. module: base
 #: view:res.company:0
@@ -12637,7 +12866,7 @@ msgstr "Antal anrop"
 #: code:addons/base/res/res_bank.py:189
 #, python-format
 msgid "BANK"
-msgstr ""
+msgstr "BANK"
 
 #. module: base
 #: view:base.module.upgrade:0
@@ -13024,7 +13253,7 @@ msgstr "Konsumenter"
 #. module: base
 #: view:res.company:0
 msgid "Set Bank Accounts"
-msgstr ""
+msgstr "Ställ in bankkonton"
 
 #. module: base
 #: field:ir.actions.client,tag:0
@@ -13319,7 +13548,7 @@ msgstr ""
 #. module: base
 #: field:res.partner.bank,bank_name:0
 msgid "Bank Name"
-msgstr ""
+msgstr "Bankens namn"
 
 #. module: base
 #: model:res.country,name:base.ki
@@ -13683,7 +13912,7 @@ msgstr ""
 #: field:res.bank,bic:0
 #: field:res.partner.bank,bank_bic:0
 msgid "Bank Identifier Code"
-msgstr "Bank identifieringskod"
+msgstr "Bankidentifieringskod"
 
 #. module: base
 #: model:res.country,name:base.tm
@@ -14329,7 +14558,7 @@ msgstr "workflow.workitem"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_profile_tools
 msgid "Miscellaneous Tools"
-msgstr ""
+msgstr "Övriga verktyg"
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_tools
@@ -14337,6 +14566,8 @@ msgid ""
 "Lets you install various interesting but non-essential tools like Survey, "
 "Lunch and Ideas box."
 msgstr ""
+"Låter dig installera intressant men inte nödvändiga verktyg som Survey, "
+"Lunch och Idélådan."
 
 #. module: base
 #: selection:ir.module.module,state:0
@@ -14408,7 +14639,7 @@ msgstr ""
 #: view:base.module.upgrade:0
 #: model:ir.ui.menu,name:base.menu_view_base_module_upgrade
 msgid "Apply Scheduled Upgrades"
-msgstr "Inför uppgraderingar"
+msgstr "Inför planerade uppgraderingar"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_journal
@@ -14721,7 +14952,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_tools
 msgid "Extra Tools"
-msgstr ""
+msgstr "Extraverktyg"
 
 #. module: base
 #: model:res.country,name:base.vg
@@ -15049,6 +15280,33 @@ msgid ""
 "Leads.\n"
 "    "
 msgstr ""
+"\n"
+"Denna modul genererar kundämnen automatisk genom olika "
+"marknadsföringskampanjer (kampanjer kan i själva verket definieras på "
+"godtycklig resurs, inte bara CRM-kundämnen).\n"
+"============================================================================="
+"==============================================================\n"
+"\n"
+"Kampanjerna är dynamiska och multi-kanaler. Processen är som följer:\n"
+"     * Utforma marknadsföringskampanjer som arbetsflöden, inklusive e-mallar "
+"för att skicka och rapporter att skriva ut och skicka via e-post, anpassade "
+"åtgärder, etc.\n"
+"     * Definiera ingående segment som kommer att välja objekt som ska in i "
+"kampanjen (t.ex. kundämnen från vissa länder, etc.)\n"
+"     * Kör du kampanj i simuleringsläge att testa det i realtid eller "
+"accelererad, och finjustera den\n"
+"     * Du kan även starta den verkliga kampanjen i manuellt läge, där varje "
+"åtgärd kräver manuell validering\n"
+"     * Slutligen lanserar du din kampanj och kan följa kampanjen genom att "
+"titta på hur den utvecklas via statistiken.\n"
+"\n"
+"Medan kampanjen pågår kan du naturligtvis fortsätta att finjustera "
+"parametrarna, segmentera, arbetsflöden etc.\n"
+"\n"
+"Obs: Om du behöver demodata, kan du installera marketing_campaign_crm_demo "
+"modulen, men det kommer också att installera CRM programmet eftersom den är "
+"beroende av CRM-kundämnen.\n"
+"    "
 
 #. module: base
 #: selection:ir.actions.act_window.view,view_mode:0
@@ -15324,7 +15582,7 @@ msgstr "Partners "
 #. module: base
 #: field:res.partner.bank,name:0
 msgid "Bank Account"
-msgstr ""
+msgstr "Bankkonto"
 
 #. module: base
 #: model:res.country,name:base.kp
