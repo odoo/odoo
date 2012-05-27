@@ -34,14 +34,6 @@
 -
    !python {model: event.registration}: |
      event_pool = self.pool.get("event.event")
-     for register in self.browse(cr, uid, [ref("event_registration1")], context):
-         nb_register = register.nb_register
-         event_id = register.event_id.id
-         available_seats = event_pool.check_available_seats(cr, uid, [event_id], context=context)
-         if available_seats and nb_register > available_seats:
-             assert available_seats, "seats available."
-         elif available_seats == 0:
-             assert available_seats, "No Tickets Available."
      self.registration_open(cr, uid, [ref("event_registration1")],context=context)
 -
    I check that registration is "confirmed"
