@@ -70,9 +70,6 @@ class project(osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         if context is None:
             context = {}
-        groups_pool = self.pool.get('res.groups')
-        group_id = groups_pool.search(cr, uid, [('name', '=', 'Followers')], context=context)
-        groups_users = groups_pool.browse(cr, uid, group_id, context)[0].users
         for project_id in self.browse(cr, uid, ids, context):
            if vals.get('members'):
                members = self.pool.get('res.users').browse(cr, uid, vals.get('members')[0][-1], context)
