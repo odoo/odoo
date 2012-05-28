@@ -33,7 +33,7 @@
             <field name="name">account.analytic.account.invoice.form.inherit</field>
             <field name="model">account.analytic.account</field>
             <field name="type">form</field>
-            <field name="inherit_id" ref="account.view_account_analytic_account_form"/>
+            <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
             	<xpath expr='//field[@name="parent_id"]' position='after'>
