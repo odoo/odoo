@@ -37,6 +37,7 @@ that have no counterpart in the general financial accounts.
     "init_xml" : [],
     "update_xml": ['security/analytic_security.xml',
                    "security/ir.model.access.csv",
+                   "analytic_sequence.xml",
     ],
     'demo_xml': [
     ],

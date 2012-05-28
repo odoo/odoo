@@ -381,7 +381,23 @@ class account_analytic_account(osv.osv):
             digits_compute=dp.get_precision('Account')),
         'month_ids': fields.function(_analysis_all, multi='analytic_analysis', type='many2many', relation='account_analytic_analysis.summary.month', string='Month'),
         'user_ids': fields.function(_analysis_all, multi='analytic_analysis', type="many2many", relation='account_analytic_analysis.summary.user', string='User'),
+        'template_id':fields.many2one('account.analytic.account', 'Template Of Contract'),
     }
+    def on_change_template(self, cr, uid, id, template_id):
+        if not template_id:
+            return {}
+        res = {'value':{}}
+        template = self.browse(cr, uid, template_id)
+        if template.date_start:
+            res['value']['date_start'] = str(template.date_start)
+        if template.date:
+            res['value']['date'] = str(template.date)
+        res['value']['quantity_max'] = template.quantity_max
+        res['value']['remaining_hours'] = template.remaining_hours
+        res['value']['to_invoice'] = template.to_invoice.id
+        res['value']['pricelist_id'] = template.pricelist_id.id
+        res['value']['description'] = template.description
+        return res
 
 account_analytic_account()
 

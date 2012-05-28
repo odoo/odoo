@@ -36,6 +36,9 @@
             <field name="inherit_id" ref="account.view_account_analytic_account_form"/>
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
+            	<xpath expr='//field[@name="parent_id"]' position='after'>
+            	    <field name="template_id" on_change="on_change_template(template_id)"  domain="[('type','=','template')]" attrs="{'invisible': [('type','in',['view', 'normal','template'])]}" context="{'default_type' : 'template'}"/>
+            	</xpath>
                 <notebook position="inside">
                     <page string="Invoice Analysis">
                         <separator colspan="4" string="Work Done Stats"/>
@@ -110,6 +113,18 @@
                 </field>
             </field>
         </record>
+        
+        <record id="template_of_contract_action" model="ir.actions.act_window">
+            <field name="name">Template Of contract</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.analytic.account</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('type','=','template')]</field>
+            <field name="context">{'search_default_type':'template','default_type' : 'template'}</field>
+        </record>
+        <menuitem action="template_of_contract_action" id="menu_template_of_contract_action" parent="base.menu_base_config" />
+
 
     </data>
 </openerp>
