@@ -14,11 +14,6 @@
         <field name="users" eval="[(4, ref('base.user_root'))]"/>
     </record>
 
-    <record id="group_project_followers" model="res.groups">
-        <field name="name">Followers</field>
-        <field name="category_id" ref="base.module_category_project_management"/>
-    </record>
-
     <record model="ir.ui.menu" id="menu_definitions">
         <field name="groups_id" eval="[(6,0,[ref('group_project_manager')])]"/>
     </record>
