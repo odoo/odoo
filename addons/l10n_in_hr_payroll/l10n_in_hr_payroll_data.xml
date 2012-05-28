@@ -3,6 +3,17 @@
     <data>
         <!-- Hr Salary Rules for allowance-->
 
+        <record id="hr_salary_rule_da" model="hr.salary.rule">
+            <field name="code">DA</field>
+            <field name="name">Dearness Allowance</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="amount_select">percentage</field>
+            <field name="amount_percentage_base">contract.wage</field>
+            <field name="amount_percentage" eval="50"/>
+            <field name="sequence" eval="13"/>
+             <field name="note">DA is calculated in %</field>
+        </record>
+
         <record id="hr_salary_rule_houserentallowancemetro" model="hr.salary.rule">
             <field name="code">HRAM</field>
             <field name="amount_select">code</field>
@@ -33,26 +44,23 @@ Income tax exemption for HRA will be least of following:
              </field>
          </record>
 
-
-        <record id="hr_salary_rule_food_coupon" model="hr.salary.rule">
-            <field name="code">FC</field>
+        <record id="hr_salary_trans_allownce" model="hr.salary.rule">
+            <field name="code">TCA</field>
+            <field name="name">Transport/Conveyance Allownace</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
-            <field name="condition_select">none</field>
-            <field name="name">Food Coupons Allowance</field>
-            <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = worked_days.WORK100.number_of_days * contract.food_coupon_amount</field>
-            <field name="sequence" eval="33"/>
-         </record>
+            <field name="amount_select">fix</field>
+            <field eval="800.0" name="amount_fix"/>
+            <field name="sequence" eval="14"/>
+        </record>
 
-        <record id="hr_salary_rule_da" model="hr.salary.rule">
-            <field name="code">DA</field>
-            <field name="name">Dearness Allowance</field>
+        <record id="hr_salary_rule_special" model="hr.salary.rule">
+            <field name="code">SA</field>
+            <field name="name">Grade/Special/Management/Supplementary Allowance</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
-            <field name="amount_select">percentage</field>
-            <field name="amount_percentage_base">contract.wage</field>
-            <field name="amount_percentage" eval="50"/>
-            <field name="sequence" eval="13"/>
-             <field name="note">DA is calculated in %</field>
+            <field name="amount_select">fix</field>
+            <field eval="0.0" name="amount_fix"/>
+            <field name="sequence" eval="20"/>
+            <field name="note">This allowance is normally given as an additional benefit to employees and is fully taxable.</field>
         </record>
 
         <record id="hr_payroll_rule_child1" model="hr.salary.rule">
@@ -77,16 +85,6 @@ Income tax exemption for HRA will be least of following:
              <field name="sequence" eval="19"/>
          </record>
 
-        <record id="hr_salary_rule_special" model="hr.salary.rule">
-            <field name="code">SA</field>
-            <field name="name">Grade/Special/Management/Supplementary Allowance</field>
-            <field name="category_id" ref="hr_payroll.ALW"/>
-            <field name="amount_select">fix</field>
-            <field eval="0.0" name="amount_fix"/>
-            <field name="sequence" eval="20"/>
-            <field name="note">This allowance is normally given as an additional benefit to employees and is fully taxable.</field>
-        </record>
-
         <record id="hr_payroll_rule_city1" model="hr.salary.rule">
             <field name="code">CBDA</field>
             <field name="name">City Compensatory Allowance</field>
@@ -97,7 +95,6 @@ Income tax exemption for HRA will be least of following:
             <field name="amount_python_compute">result = (contract.wage + DA) * 0.10</field>
         </record>
 
-        
         <record id="hr_payroll_rule_metrocity" model="hr.salary.rule">
             <field name="code">CMETRO</field>
             <field name="name">City Allowance for Metro city</field>
@@ -187,6 +184,16 @@ number of years of service (date of joining – date of retirement/leaving job)<
             <field name="sequence" eval="32"/>
             <field name="note">This component is on-taxable up to 15000 per year (or Rs 1250 per month) on producing medical bills.</field>
         </record>
+
+        <record id="hr_salary_rule_food_coupon" model="hr.salary.rule">
+            <field name="code">FC</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="condition_select">none</field>
+            <field name="name">Food Coupons Allowance</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = worked_days.WORK100.number_of_days * contract.food_coupon_amount</field>
+            <field name="sequence" eval="33"/>
+         </record>
 
         <record id="hr_salary_rule_journals" model="hr.salary.rule">
             <field name="code">PERJ</field>
@@ -281,6 +288,15 @@ one is liable to pay the tax what ever he received excess of the limit or Rs 50,
             <field name="note"> gift is from relaives whould be non taxable with no limits.</field>
         </record>
 
+        <record id="hr_salary_rule_agricultural" model="hr.salary.rule">
+            <field name="code">AI</field>
+            <field name="name">Agricultural Income</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="amount_select">fix</field>
+            <field eval="0.0" name="amount_fix"/>
+            <field name="sequence" eval="44"/>
+        </record>
+
         <record id="hr_salary_rule_hri" model="hr.salary.rule">
             <field name="code">HRI</field>
             <field name="name">House Rent Income</field>
@@ -303,15 +319,6 @@ one is liable to pay the tax what ever he received excess of the limit or Rs 50,
             <field name="sequence" eval="46"/>
         </record>
 
-        <record id="hr_salary_trans_allownce" model="hr.salary.rule">
-            <field name="code">TCA</field>
-            <field name="name">Transport/Conveyance Allownace</field>
-            <field name="category_id" ref="hr_payroll.ALW"/>
-            <field name="amount_select">fix</field>
-            <field eval="800.0" name="amount_fix"/>
-            <field name="sequence" eval="14"/>
-        </record>
-
         <record id="hr_salary_rule_Other" model="hr.salary.rule">
             <field name="code">OTI</field>
             <field name="name">Other Income</field>
@@ -322,15 +329,6 @@ one is liable to pay the tax what ever he received excess of the limit or Rs 50,
             <field name="amount_python_compute">result = contract.other_income</field>
             <field name="note">Bank account/NSC/Post Office/SCSS interest</field>
             <field name="sequence" eval="47"/>
-        </record>
-
-        <record id="hr_salary_rule_agricultural" model="hr.salary.rule">
-            <field name="code">AI</field>
-            <field name="name">Agricultural Income</field>
-            <field name="category_id" ref="hr_payroll.ALW"/>
-            <field name="amount_select">fix</field>
-            <field eval="0.0" name="amount_fix"/>
-            <field name="sequence" eval="44"/>
         </record>
 
         <record id="hr_salary_rule_st_gains" model="hr.salary.rule">
@@ -358,18 +356,6 @@ one is liable to pay the tax what ever he received excess of the limit or Rs 50,
         </record>
 
         <!--hr salary rules for Deductions -->
-        <record id="hr_payslip_line_professional_tax" model="hr.salary.rule">
-            <field name="code">PTD</field>
-            <field name="name">Professional Tax</field>
-            <field name="category_id" ref="hr_payroll.DED"/>
-            <field name="condition_select">python</field>
-            <field name="condition_python">result = bool(contract.professional_tax)</field>
-            <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = -(contract.professional_tax)</field>
-            <field eval="145" name="sequence"/>
-            <field eval="False" name="appears_on_payslip"/>
-            <field name="note">Professional tax for company should be paid on or before 30th sept,The amount is Rs.2000 per year.There is no payment form to be filled.</field>
-        </record>
 
         <record id="hr_payslip_rule_tds" model="hr.salary.rule">
             <field name="code">TDS</field>
@@ -383,6 +369,39 @@ one is liable to pay the tax what ever he received excess of the limit or Rs 50,
             <field name="note">As per income tax rules, all payment which are taxable in nature should be done after deduction of taxes at the source itself. Hence employer compute income tax on salary payment and deduct it every month. This TDS is based on employee’s saving/investment declaration at the start of year. If investments for tax saving is not done, large amount may be deducted in last few months.</field>
         </record>
 
+        <record id="hr_payslip_line_professional_tax" model="hr.salary.rule">
+            <field name="code">PTD</field>
+            <field name="name">Professional Tax</field>
+            <field name="category_id" ref="hr_payroll.DED"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = bool(contract.professional_tax)</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = -(contract.professional_tax)</field>
+            <field eval="145" name="sequence"/>
+            <field eval="False" name="appears_on_payslip"/>
+            <field name="note">Professional tax for company should be paid on or before 30th sept,The amount is Rs.2000 per year.There is no payment form to be filled.</field>
+        </record>
+
+        <record id="hr_payslip_rule_epf" model="hr.salary.rule">
+            <field name="code">EPMF</field>
+            <field name="name">Employee's PF Contribution</field>
+            <field name="category_id" ref="hr_payroll.DED"/>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = - (contract.wage + DA) * 8.33 / 100</field>
+            <field name= "note">Employer contribution does not become part of employee’s income and hence income tax is not payable on this part.</field>
+            <field name="sequence" eval="150"/>
+        </record>
+
+        <record id="hr_payslip_rule_enps" model="hr.salary.rule">
+            <field name="code">ENPFC</field>
+            <field name="name">Employee's NPS Contribution</field>
+            <field name="category_id" ref="hr_payroll.DED"/>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = - (contract.wage + DA) * 0.10</field>
+            <field name="sequence" eval="155"/>
+            <field name="note">Employee can claim deduction even of employer's contribution to NPS.</field>
+        </record>
+
         <record id="hr_payslip_rule_vpf" model="hr.salary.rule">
             <field name="code">VPF</field>
             <field name="name">Voluntarily Provident Fund Contribution</field>
@@ -391,7 +410,7 @@ one is liable to pay the tax what ever he received excess of the limit or Rs 50,
             <field name="condition_python">result = bool(contract.voluntary_provident_fund)</field>
             <field name="amount_select">code</field>
             <field name="amount_python_compute">result = -(contract.wage + DA) * contract.voluntary_provident_fund / 100 </field>
-            <field name="sequence" eval="153"/>
+            <field name="sequence" eval="160"/>
             <field name="note">VPF is a safe option wherein you can contribute more than the PF ceiling of 12% that has been mandated by the government.This additional amount enjoys all the benefits of PF except that the employer is not liable to contribute any extra amount apart from 12%.An added advantage is that the interest rate is equal to the interest rate of PF and he withdrawal is tax free. Please note that the maximum contribution towards VPF is 100% of your Basic.The highest rate of interest (close to 9%) makes it a very attractive saving scheme. Because of these advantages many employees chose not to close their PF account even after getting employment else where other than India.Employees also get a major tax break on their entire contribution to the fund up to a ceiling of Rs. 70,000/-</field>
         </record>
 
@@ -403,7 +422,7 @@ one is liable to pay the tax what ever he received excess of the limit or Rs 50,
             <field name="condition_python">result = bool(contract.company_transport)</field>
             <field name="amount_select">code</field>
             <field name="amount_python_compute">result = -(contract.company_transport)</field>
-            <field name="sequence" eval="155"/>
+            <field name="sequence" eval="165"/>
         </record>
 
         <record id="hr_payslip_rule_lwf" model="hr.salary.rule">
@@ -412,7 +431,7 @@ one is liable to pay the tax what ever he received excess of the limit or Rs 50,
             <field name="category_id" ref="hr_payroll.DED"/>
             <field name="amount_select">fix</field>
             <field eval="0.0" name="amount_fix"/>
-            <field name="sequence" eval="160"/>
+            <field name="sequence" eval="170"/>
             <field name="note">The LWF is applicable to all the members of the organisation except the Management staff (Staffs having authority to sign on the cheque/official documents on behalf of the organisation). for e.x. Employee Contribution is Rs. 3.00 and Employer contribution Rs. 6.00 Total Rs 9.00 and deposited to the LWF office.It is half yearly contribution (June and December).</field>
         </record>
 
@@ -422,7 +441,7 @@ one is liable to pay the tax what ever he received excess of the limit or Rs 50,
             <field name="category_id" ref="hr_payroll.DED"/>
             <field name="amount_select">fix</field>
             <field eval="0.0" name="amount_fix"/>
-            <field name="sequence" eval="167"/>
+            <field name="sequence" eval="175"/>
         </record>
 
         <record id="hr_payslip_rule_dla" model="hr.salary.rule">
@@ -433,7 +452,7 @@ one is liable to pay the tax what ever he received excess of the limit or Rs 50,
             <field name="condition_python">result = bool(contract.leave_avail_dedution)</field>
             <field name="amount_select">code</field>
             <field name="amount_python_compute">result = -(contract.leave_avail_dedution)</field>
-            <field name="sequence" eval="170"/>
+            <field name="sequence" eval="180"/>
         </record>
 
         <record id="hr_payslip_rule_cmt" model="hr.salary.rule">
@@ -445,7 +464,7 @@ one is liable to pay the tax what ever he received excess of the limit or Rs 50,
             <field name="amount_select">code</field>
             <field name="amount_python_compute">result = - (contract.medical_insurance)</field>
             <field eval="-50.0" name="amount_fix"/>
-            <field name="sequence" eval="172"/>
+            <field name="sequence" eval="185"/>
         </record>
 
         <record id="hr_payslip_rule_ode" model="hr.salary.rule">
@@ -454,47 +473,27 @@ one is liable to pay the tax what ever he received excess of the limit or Rs 50,
             <field name="category_id" ref="hr_payroll.DED"/>
             <field name="amount_select">fix</field>
             <field eval="-200.0" name="amount_fix"/>
-            <field name="sequence" eval="175"/>
+            <field name="sequence" eval="187"/>
         </record>
 
-        <record id="hr_payslip_rule_epc" model="hr.salary.rule">
-            <field name="code">EPF</field>
-            <field name="name">Employer's PF Contribution</field>
-            <field name="category_id" ref="hr_payroll.DED"/>
-            <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = - (contract.wage + DA) * 0.12</field>
-            <field name="sequence" eval="122"/>
-            <field name="note">Both the employees and employer contribute to the fund at the rate of 12% of the basic wages, dearness allowance and retaining allowance, if any, payable to employees per month.</field>
-        </record>
-        
-        <record id="hr_payslip_rule_empPF" model="hr.salary.rule">
-            <field name="code">EPMF</field>
-            <field name="name">Employee's PF Contribution</field>
-            <field name="category_id" ref="hr_payroll.DED"/>
-            <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = - (contract.wage + DA) * 8.33 / 100</field>
-            <field name= "note">Employer contribution does not become part of employee’s income and hence income tax is not payable on this part.</field>
-            <field name="sequence" eval="185"/>
-        </record>
-        
-        <record id="hr_payslip_rule_enpf" model="hr.salary.rule">
+        <record id="hr_payslip_rule_ernps" model="hr.salary.rule">
             <field name="code">ENPC</field>
             <field name="name">Employer's NPS Contribution</field>
             <field name="category_id" ref="hr_payroll.DED"/>
             <field name="amount_select">code</field>
             <field name="amount_python_compute">result = - (contract.wage + DA) * 0.10</field>
-            <field name="sequence" eval="180"/>
+            <field name="sequence" eval="190"/>
             <field name= "note">Any amount contributed by your employer to your NPS account is treated as part of your salary and is included in your income but you can claim deduction under Section 80C for this too.thus, effectively making it exempt from tax within the limit of 10% of your basic salary. This is very useful and tax efficient for you particularly if you fall in the maximum tax.</field>
         </record>
-        
-        <record id="hr_payslip_rule_empNPF" model="hr.salary.rule">
-            <field name="code">ENPFC</field>
-            <field name="name">Employee's NPS Contribution</field>
+
+        <record id="hr_payslip_rule_erpf" model="hr.salary.rule">
+            <field name="code">EPF</field>
+            <field name="name">Employer's PF Contribution</field>
             <field name="category_id" ref="hr_payroll.DED"/>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = - (contract.wage + DA) * 0.10</field>
-            <field name="sequence" eval="149"/>
-            <field name="note">Employee can claim deduction even of employer's contribution to NPS.</field>
+            <field name="amount_python_compute">result = - (contract.wage + DA) * 0.12</field>
+            <field name="sequence" eval="195"/>
+            <field name="note">Both the employees and employer contribute to the fund at the rate of 12% of the basic wages, dearness allowance and retaining allowance, if any, payable to employees per month.</field>
         </record>
 
     </data>
