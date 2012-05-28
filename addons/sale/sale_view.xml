@@ -147,8 +147,8 @@
                                                 context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'shop':parent.shop_id, 'uom':product_uom}"
                                                 name="product_id"
                                                 on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, True, parent.date_order, product_packaging, parent.fiscal_position, False, context)"/>
-                                            <field name="name"/>
-
+                                            <field name="name" placeholder="Porduct/Service characteristics"/>
+ 
                                             <field
                                                 context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'shop':parent.shop_id, 'uom':product_uom}"
                                                 name="product_uom_qty"
@@ -168,7 +168,7 @@
                                                 colspan="3"/>
                                             <field name="discount" groups="sale.group_discount_per_so_line"/>
                                             <separator colspan="5" string="Notes" groups="base.group_sale_notes_subtotal"/>
-                                            <field colspan="5" name="notes" nolabel="1" groups="base.group_sale_notes_subtotal"/>
+                                            <field colspan="5" name="notes" nolabel="1" groups="base.group_sale_notes_subtotal" placeholder="Our quotation is valid for 30 days..."/>
                                             <separator colspan="5" string="Taxes"/>
                                             <field colspan="5" name="tax_id" nolabel="1" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
                                             <group colspan="5" col="5">
