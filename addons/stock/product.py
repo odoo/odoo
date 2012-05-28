@@ -26,6 +26,27 @@ import decimal_precision as dp
 class product_product(osv.osv):
     _inherit = "product.product"
 
+    def _stock_move_count(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict([(id, {'reception_count': 0, 'delivery_count': 0}) for id in ids])
+        move_pool=self.pool.get('stock.move')
+        moves = move_pool.read_group(cr, uid, [
+            ('product_id', 'in', ids),
+            ('picking_id.type', '=', 'in'),
+            ('state','in',('draft','confirmed','assigned','pending'))
+        ], ['product_id'], ['product_id'])
+        for move in moves:
+            product_id = move['product_id'][0]
+            res[product_id]['reception_count'] = move['product_id_count']
+        moves = move_pool.read_group(cr, uid, [
+            ('product_id', 'in', ids),
+            ('picking_id.type', '=', 'out'),
+            ('state','in',('draft','confirmed','assigned','pending'))
+        ], ['product_id'], ['product_id'])
+        for move in moves:
+            product_id = move['product_id'][0]
+            res[product_id]['reception_count'] = move['product_id_count']
+        return res
+
     def get_product_accounts(self, cr, uid, product_id, context=None):
         """ To get the stock input account, stock output account and stock journal related to product.
         @param product_id: product id
@@ -331,6 +352,8 @@ class product_product(osv.osv):
         return res
 
     _columns = {
+        'reception_count': fields.function(_stock_move_count, string="Reception", type='integer', multi='pickings'),
+        'delivery_count': fields.function(_stock_move_count, string="Delivery", type='integer', multi='pickings'),
         'qty_available': fields.function(_product_available, multi='qty_available',
             type='float',  digits_compute=dp.get_precision('Product Unit of Measure'),
             string='Quantity On Hand',

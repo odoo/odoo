@@ -35,10 +35,10 @@ wizard.mail_compose_message.SUPPORTED_MODELS.append('hr.applicant')
 
 AVAILABLE_STATES = [
     ('draft', 'New'),
-    ('open', 'In Progress'),
     ('cancel', 'Refused'),
-    ('done', 'Hired'),
-    ('pending', 'Pending')
+    ('open', 'In Progress'),
+    ('pending', 'Pending'),
+    ('done', 'Hired')
 ]
 
 AVAILABLE_PRIORITIES = [
@@ -144,7 +144,7 @@ class hr_applicant(crm.crm_case, osv.osv):
         'create_date': fields.datetime('Creation Date', readonly=True, select=True),
         'write_date': fields.datetime('Update Date', readonly=True),
         'stage_id': fields.many2one ('hr.recruitment.stage', 'Stage'),
-        'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True,
+        'state': fields.selection(AVAILABLE_STATES, 'Status', size=16, readonly=True,
                                   help='The state is set to \'Draft\', when a case is created.\
                                   \nIf the case is in progress the state is set to \'Open\'.\
                                   \nWhen the case is over, the state is set to \'Done\'.\
@@ -169,7 +169,7 @@ class hr_applicant(crm.crm_case, osv.osv):
         'partner_mobile': fields.char('Mobile', size=32),
         'type_id': fields.many2one('hr.recruitment.degree', 'Degree'),
         'department_id': fields.many2one('hr.department', 'Department'),
-        'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
+        'state': fields.selection(AVAILABLE_STATES, 'Status', size=16, readonly=True),
         'survey': fields.related('job_id', 'survey_id', type='many2one', relation='survey', string='Survey'),
         'response': fields.integer("Response"),
         'reference': fields.char('Refered By', size=128),

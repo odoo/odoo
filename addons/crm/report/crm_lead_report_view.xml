@@ -108,7 +108,7 @@
                                 domain="[('section_id.user_id','=',uid)]"
                                 help="My Sales Team(s)" />
                         </field>
-                        <field name="user_id" string="Salesman">
+                        <field name="user_id" string="Salesperson">
                             <filter icon="terp-personal" string="My Case(s)" help="My Case(s)" domain="[('user_id','=',uid)]" />
                         </field>
                     </group>
@@ -129,7 +129,7 @@
                     </group>
                     <newline/>
                     <group expand="1" string="Group By...">
-                        <filter string="Salesman" name="user" icon="terp-personal"
+                        <filter string="Salesperson" name="user" icon="terp-personal"
                             domain="[]" context="{'group_by':'user_id'}" />
                         <filter string="Sales Team" icon="terp-personal+"
                             domain="[]"
@@ -150,7 +150,7 @@
                         <filter string="Channel" icon="terp-call-start"
                             domain="[]" context="{'group_by':'channel_id'}" />
                         <separator orientation="vertical" />
-                        <filter string="State" icon="terp-stock_effects-object-colorize"
+                        <filter string="Status" icon="terp-stock_effects-object-colorize"
                             domain="[]" context="{'group_by':'state'}" />
                         <separator orientation="vertical" />
                         <filter string="Year" icon="terp-go-year"

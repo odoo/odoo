@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+       <!-- Partner kanban view inherte -->
+        <record model="ir.ui.view" id="crm_lead_partner_kanban_view">
+            <field name="name">res.partner.kanban.saleorder.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="type">kanban</field>
+            <field name="inherit_id" ref="base.res_partner_kanban_view"/>
+            <field name="arch" type="xml">
+                <field name="mobile" position="after">
+                    <field name="sale_order_count"/>
+                </field>
+                <xpath expr="//h4[@class='oe_partner_heading']" position="after">
+                    <a name="%(sale.act_res_partner_2_sale_order)d" type="action">
+                        <t t-if="record.sale_order_count.value">Sales(<t t-esc="record.sale_order_count.value" />)</t>
+                    </a>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>
+
