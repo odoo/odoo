@@ -5,10 +5,10 @@
             <field name="name">account.analytic.account.invoice.form</field>
             <field name="model">account.analytic.account</field>
             <field name="type">form</field>
-            <field name="inherit_id" ref="account.view_account_analytic_account_form"/>
+            <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
             <field name="arch" type="xml">
                 <field name="partner_id" position="replace">
-                    <field name="partner_id" on_change="on_change_partner_id(partner_id, context)" required="True"/>
+                    <field name="partner_id" on_change="on_change_partner_id(partner_id)" required="True"/>
                 </field>
                 <group name="contract" position="after">
                     <group colspan="2" col="2" name="invoice_data">
