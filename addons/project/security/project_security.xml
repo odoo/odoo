@@ -36,6 +36,20 @@
         <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>
 
+    <record model="ir.rule" id="project_public_rule">
+        <field name="name">Public_projects</field>
+        <field name="model_id" ref="model_project_project"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|',('privacy_visility','=','public'),('privacy_visility','=', False)]</field>
+    </record>
+
+    <record model="ir.rule" id="project_private_members_rule">
+        <field name="name">private Members</field>
+        <field name="model_id" ref="model_project_project"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('privacy_visility','=','follower'),('members','in',[user.id])]</field>
+    </record>
+
     <record model="ir.rule" id="task_comp_rule">
         <field name="name" >Task multi-company</field>
         <field name="model_id" ref="model_project_task"/>
