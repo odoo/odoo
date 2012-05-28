@@ -166,7 +166,7 @@ class account_analytic_account(osv.osv):
         'credit': fields.function(_debit_credit_bal_qtty, type='float', string='Credit', multi='debit_credit_bal_qtty', digits_compute=dp.get_precision('Account')),
         'quantity': fields.function(_debit_credit_bal_qtty, type='float', string='Quantity', multi='debit_credit_bal_qtty'),
         'quantity_max': fields.float('Maximum Time', help='Sets the higher limit of time to work on the contract.'),
-        'partner_id': fields.many2one('res.partner', 'Partner'),
+        'partner_id': fields.many2one('res.partner', 'Customer'),
         'user_id': fields.many2one('res.users', 'Account Manager'),
         'date_start': fields.date('Date Start'),
         'date': fields.date('Date End', select=True),
@@ -183,6 +183,15 @@ class account_analytic_account(osv.osv):
                 'res.company': (_get_analytic_account, ['currency_id'], 10),
             }, string='Currency', type='many2one', relation='res.currency'),
     }
+    
+    def on_change_partner_id(self, cr, uid, id, partner_id, context={}):
+        res={}
+        if partner_id:
+            part = self.pool.get('res.partner').browse(cr, uid, partner_id,context=context)
+            res['name'] = part.name
+            if part.user_id:
+                res['user_id'] = part.user_id.id
+        return {'value': res}
 
     def _default_company(self, cr, uid, context=None):
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
