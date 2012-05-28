@@ -1,7 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-    	
-		
         <record id="view_wizard_multi_chart_india" model="ir.ui.view">
             <field name="name">Generate Chart of Accounts from a Chart Template</field>
             <field name="model">wizard.multi.charts.accounts</field>
@@ -9,12 +8,13 @@
             <field name="inherit_id" ref="account.view_wizard_multi_chart"/>
             <field name="arch" type="xml">
                 <field name="seq_journal" position="after">
-                    <newline/>
                     <field name="is_indian_chart" invisible="1"/>
-                    <field name="sales_tax" attrs="{'invisible': [('is_indian_chart','=', False)]}"/>
-                    <field name="service_tax" attrs="{'invisible': [('is_indian_chart','=', False)]}"/>
-                    <field name="vat" attrs="{'invisible': [('is_indian_chart','=', False)]}"/>
-                    <field name="excise_duty" attrs="{'invisible': [('is_indian_chart','=', False)]}"/>
+                    <group colspan="4">
+	                    <field name="sales_tax" attrs="{'invisible': [('is_indian_chart','=', False)]}"/>
+	                    <field name="service_tax" attrs="{'invisible': [('is_indian_chart','=', False)]}"/>
+	                    <field name="vat" attrs="{'invisible': [('is_indian_chart','=', False)]}"/>
+	                    <field name="excise_duty" attrs="{'invisible': [('is_indian_chart','=', False)]}"/>
+                    </group>
                 </field>
             </field>
         </record>
