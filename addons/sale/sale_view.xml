@@ -347,7 +347,13 @@
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="context">{"search_default_draft":1}</field>
             <field name="search_view_id" ref="view_sales_order_filter"/>
-            <field name="help">Create a quotation and send it to your customer. Once confirmed, it is converted to a sale order. From that point on, you can control how the sale order is invoiced, and how products are delivered.</field>
+            <field name="help">
+                Click here to create a new quotation.
+                &lt;p&gt;
+                The Quotation is the first step of the sale flow. Manage your sales from the quotation to the invoice.
+                &lt;p&gt;
+                You will be able to sale product (manage deliveries) as well as service (create projects).
+            </field>
         </record>
 
         <menuitem id="menu_sale_quotations"
