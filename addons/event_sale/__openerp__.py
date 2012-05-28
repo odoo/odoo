@@ -24,7 +24,6 @@
     'name': 'Events Sales',
     'version': '0.1',
     'category': 'Tools',
-    'complexity': "easy",
     'description': """
 Creating registration with sale orders.
 =======================================

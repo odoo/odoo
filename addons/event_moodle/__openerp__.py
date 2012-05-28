@@ -24,7 +24,6 @@
     'name': 'Event Moodle',
     'version': '0.1',
     'category': 'Tools',
-    'complexity': "easy",
     'description': """
     Configure your moodle server 
 

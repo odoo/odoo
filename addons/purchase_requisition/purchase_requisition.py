@@ -33,7 +33,7 @@ class purchase_requisition(osv.osv):
     _description="Purchase Requisition"
     _columns = {
         'name': fields.char('Requisition Reference', size=32,required=True),
-        'origin': fields.char('Origin', size=32),
+        'origin': fields.char('Source', size=32),
         'date_start': fields.datetime('Requisition Date'),
         'date_end': fields.datetime('Requisition Deadline'),
         'user_id': fields.many2one('res.users', 'Responsible'),
@@ -43,7 +43,7 @@ class purchase_requisition(osv.osv):
         'purchase_ids' : fields.one2many('purchase.order','requisition_id','Purchase Orders',states={'done': [('readonly', True)]}),
         'line_ids' : fields.one2many('purchase.requisition.line','requisition_id','Products to Purchase',states={'done': [('readonly', True)]}),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse'),        
-        'state': fields.selection([('draft','New'),('in_progress','In Progress'),('cancel','Cancelled'),('done','Done')], 'State', required=True)
+        'state': fields.selection([('draft','New'),('in_progress','In Progress'),('cancel','Cancelled'),('done','Done')], 'Status', required=True)
     }
     _defaults = {
         'date_start': time.strftime('%Y-%m-%d %H:%M:%S'),

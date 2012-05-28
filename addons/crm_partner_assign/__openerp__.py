@@ -24,7 +24,6 @@
     'name': 'Partners Geo-Localization',
     'version': '1.0',
     'category': 'Customer Relationship Management',
-    'complexity': "normal",
     'description': """
 This is the module used by OpenERP SA to redirect customers to its partners, based on geolocalization.
 ======================================================================================================

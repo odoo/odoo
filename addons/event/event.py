@@ -103,6 +103,14 @@ class event_event(osv.osv):
             if total_confirmed < self.event.register_min or total_confirmed > self.event.register_max and self.event.register_max!=0:
                 raise osv.except_osv(_('Error!'),_("The total of confirmed registration for the event '%s' does not meet the expected minimum/maximum. You should maybe reconsider those limits before going further") % (self.event.name))
 
+    def check_registration_limits_before(self, cr, uid, ids, no_of_registration, context=None):
+        for event in self.browse(cr, uid, ids, context=context):
+            available_seats = event.register_avail
+            if available_seats and no_of_registration > available_seats:
+                 raise osv.except_osv(_('Warning!'),_("Only %d Seats are Available!") % (available_seats))
+            elif available_seats == 0:
+                raise osv.except_osv(_('Warning!'),_("No Tickets Available!"))
+
     def confirm_event(self, cr, uid, ids, context=None):
         register_pool = self.pool.get('event.registration')
         if self.event.email_confirmation_id:
@@ -179,23 +187,22 @@ class event_event(osv.osv):
         'register_current': fields.function(_get_register, string='Confirmed Registrations', multi='register_numbers'),
         'register_avail': fields.function(_get_register, string='Available Registrations', multi='register_numbers',type='integer'),
         'register_prospect': fields.function(_get_register, string='Unconfirmed Registrations', multi='register_numbers'),
-        'register_attended': fields.function(_get_register, string='Attended Registrations', multi='register_numbers'), 
+        'register_attended': fields.function(_get_register, string='# of Participations', multi='register_numbers'), 
         'registration_ids': fields.one2many('event.registration', 'event_id', 'Registrations', readonly=False, states={'done': [('readonly', True)]}),
         'date_begin': fields.datetime('Start Date', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'date_end': fields.datetime('End Date', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'state': fields.selection([
             ('draft', 'Unconfirmed'),
+            ('cancel', 'Cancelled'),
             ('confirm', 'Confirmed'),
-            ('done', 'Done'),
-            ('cancel', 'Cancelled')],
-            'State', readonly=True, required=True,
+            ('done', 'Done')],
+            'Status', readonly=True, required=True,
             help='If event is created, the state is \'Draft\'.If event is confirmed for the particular dates the state is set to \'Confirmed\'. If the event is over, the state is set to \'Done\'.If event is cancelled the state is set to \'Cancelled\'.'),
         'email_registration_id' : fields.many2one('email.template','Registration Confirmation Email', help='This field contains the template of the mail that will be automatically sent each time a registration for this event is confirmed.'),
         'email_confirmation_id' : fields.many2one('email.template','Event Confirmation Email', help="If you set an email template, each participant will receive this email announcing the confirmation of the event."),
         'full_name' : fields.function(_name_get_fnc, type="char", string='Name'),
         'reply_to': fields.char('Reply-To Email', size=64, readonly=False, states={'done': [('readonly', True)]}, help="The email address of the organizer is likely to be put here, with the effect to be in the 'Reply-To' of the mails sent automatically at event or registrations confirmation. You can also put the email address of your mail gateway if you use one."),
         'main_speaker_id': fields.many2one('res.partner','Main Speaker', readonly=False, states={'done': [('readonly', True)]}, help="Speaker who will be giving speech at the event."),
-        'speaker_ids': fields.many2many('res.partner', 'event_speaker_rel', 'speaker_id', 'partner_id', 'Other Speakers', readonly=False, states={'done': [('readonly', True)]}),
         'address_id': fields.many2one('res.partner','Location Address', readonly=False, states={'done': [('readonly', True)]}),
         'speaker_confirmed': fields.boolean('Speaker Confirmed', readonly=False, states={'done': [('readonly', True)]}),
         'country_id': fields.related('address_id', 'country_id',
@@ -204,21 +211,23 @@ class event_event(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', required=False, change_default=True, readonly=False, states={'done': [('readonly', True)]}),
         'is_subscribed' : fields.function(_subscribe_fnc, type="boolean", string='Subscribed'),
     }
-
     _defaults = {
         'state': 'draft',
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'event.event', context=c),
         'user_id': lambda obj, cr, uid, context: uid,
     }
-
     def subscribe_to_event(self, cr, uid, ids, context=None):
         register_pool = self.pool.get('event.registration')
         user_pool = self.pool.get('res.users')
+        num_of_seats = int(context.get('ticket', 1))
+        self.check_registration_limits_before(cr, uid, ids, num_of_seats, context=context)
         user = user_pool.browse(cr, uid, uid, context=context)
         curr_reg_ids = register_pool.search(cr, uid, [('user_id', '=', user.id), ('event_id', '=' , ids[0])])
         #the subscription is done with UID = 1 because in case we share the kanban view, we want anyone to be able to subscribe
         if not curr_reg_ids:
-            curr_reg_ids = [register_pool.create(cr, 1, {'event_id': ids[0] ,'email': user.user_email, 'name':user.name, 'user_id': user.id,})]
+            curr_reg_ids = [register_pool.create(cr, 1, {'event_id': ids[0] ,'email': user.user_email, 'name':user.name, 'user_id': user.id, 'nb_register': num_of_seats})]
+        else:
+            register_pool.write(cr, uid, curr_reg_ids, {'nb_register': num_of_seats}, context=context)
         return register_pool.confirm_registration(cr, 1, curr_reg_ids, context=context)
 
     def unsubscribe_to_event(self, cr, uid, ids, context=None):
@@ -236,7 +245,6 @@ class event_event(osv.osv):
     _constraints = [
         (_check_closing_date, 'Error ! Closing Date cannot be set before Beginning Date.', ['date_end']),
     ]
-
     def onchange_event_type(self, cr, uid, ids, type_event, context=None):
         if type_event:
             type_info =  self.pool.get('event.type').browse(cr,uid,type_event,context)
@@ -257,7 +265,7 @@ class event_registration(osv.osv):
     _inherit = ['mail.thread','res.partner']
     _columns = {
         'id': fields.integer('ID'),
-        'origin': fields.char('Origin', size=124,readonly=True,help="Name of the sale order which create the registration"),
+        'origin': fields.char('Source', size=124,readonly=True,help="Name of the sale order which create the registration"),
         'nb_register': fields.integer('Number of Participants', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'event_id': fields.many2one('event.event', 'Event', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'partner_id': fields.many2one('res.partner', 'Partner', states={'done': [('readonly', True)]}),
@@ -271,9 +279,9 @@ class event_registration(osv.osv):
         'user_id': fields.many2one('res.users', 'Attendee', states={'done': [('readonly', True)]}),
         'company_id': fields.related('event_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True, states={'draft':[('readonly',False)]}),
         'state': fields.selection([('draft', 'Unconfirmed'),
-                                    ('open', 'Confirmed'),
                                     ('cancel', 'Cancelled'),
-                                    ('done', 'Attended')], 'State',
+                                    ('open', 'Confirmed'),
+                                    ('done', 'Attended')], 'Status',
                                     size=16, readonly=True),
     }
 
@@ -295,6 +303,11 @@ class event_registration(osv.osv):
     def registration_open(self, cr, uid, ids, context=None):
         """ Open Registration
         """
+        event_obj = self.pool.get('event.event')
+        for register in  self.browse(cr, uid, ids, context=context):
+            event_id = register.event_id.id
+            no_of_registration = register.nb_register
+            event_obj.check_registration_limits_before(cr, uid, [event_id], no_of_registration, context=context)
         res = self.confirm_registration(cr, uid, ids, context=context)
         self.mail_user(cr, uid, ids, context=context)
         return res
@@ -383,6 +396,5 @@ class event_registration(osv.osv):
         return {'value': data}
 
 event_registration()
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
