@@ -24,7 +24,6 @@
     'name': 'Resources Planing',
     'version': '1.0',
     "category": "Project Management",
-    'complexity': "expert",
     'description': """Keep track of your planning
 This module helps you to manage your plannings.
 ===============================================
