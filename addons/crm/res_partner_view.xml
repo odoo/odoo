@@ -39,6 +39,9 @@
                     <field name="category_id" position="after">
                         <field name="section_id" completion="1" widget="selection"/>
                     </field>
+                    <xpath expr="//filter[@string='Company']" position="after">
+                        <filter string="Country" icon="terp-go-home" help="Country" domain="[]" context="{'group_by':'country_id'}"/>
+                    </xpath>
                 </field>
         </record>
 
