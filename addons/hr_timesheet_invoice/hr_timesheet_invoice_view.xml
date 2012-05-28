@@ -10,12 +10,6 @@
                 <field name="partner_id" position="replace">
                     <field name="partner_id" string="Customer" on_change="on_change_partner_id(partner_id, context)" required="True"/>
                 </field>
-                <xpath expr='//group[@name="contract"]' position='after'>
-			    <group colspan="2" col="2" name="project" class="oe_form_group_label_border">
-					<separator colspan="2" string="Project" name="project_sep"/>
-					<field name="use_timesheets" />
-			    </group>
-                </xpath>
                 <!-- <group name="contract" position="after">
                     <group colspan="2" col="2" name="invoice_data">
                         <separator colspan="2" string="Invoicing Data"/>
