@@ -53,18 +53,6 @@
             <field name="arch" type="xml">
                 <search string="Search">
                   <group>
-                        <filter string="Year" icon="terp-go-year" help="Current Year"
-                        name="year"
-                        domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;=',time.strftime('%%Y-01-01'))]"
-                        />
-                        <separator orientation="vertical" />
-                       <filter string="Month" icon="terp-go-month" name="This Month"
-                        domain="[('create_date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
-                        />
-                       <filter icon="terp-go-week" string="Month-1"  help="Previous Month"
-                            domain="[('create_date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
-                        />
-                        <separator orientation="vertical" />
                         <filter  icon="terp-camera_test"
                             string="New"
                             domain="[('state','=','draft')]"/>
@@ -84,6 +72,7 @@
                           <field name="user_id"  select="1" widget="selection" filter_domain="[('user_id','ilike',self)]"/>
                           <field name="partner_id"/>
                           <field name="version_id" widget="selection" />
+                          <field name="create_date"/>
                    </group>
                    <newline/>
                    <group  expand="1" string="Group By...">
