@@ -172,11 +172,11 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Jobs">
-               <filter icon="terp-document-new" string="New" name="filter_new" 
+               <filter icon="terp-document-new" string="New" 
                    domain="[('state','=','draft')]"
                    help="All Initial Jobs"
                />
-               <filter icon="terp-camera_test" string="In Progress" name="filter_inprogress"
+               <filter icon="terp-camera_test" string="In Progress" 
                    domain="[('state','=','open')]"
                    help="Open Jobs"
                />
