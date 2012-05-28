@@ -149,11 +149,11 @@
                         <field name="project_id"/>
                         <field name="sprint_id" domain="[('state','in',('draft','open'))]">
                             <filter icon="terp-check"
-                                string="Sprints"
+                                string="Backlogs Assigned To Current Sprints"
                                 domain="[('sprint_id.state','=','open')]"
                                 help="Backlogs Assigned To Current Sprints"/>
                             <filter icon="terp-personal-"
-                                string="Sprints"
+                                string="Backlogs Not Assigned To Sprints"
                                 domain="[('sprint_id','=',False)]"
                                 help="Backlogs Not Assigned To Sprints."/>
                         </field>
@@ -440,7 +440,7 @@
                         <filter name="scrum_daily" icon="terp-go-today" string="Daily" domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]" help="Daily Meetings"/>
                         <separator orientation="vertical"/>
                         <field name="sprint_id">
-                            <filter icon="terp-check" domain="[('sprint_id.state','in',('draft','open'))]" help="Current Sprints"/>
+                            <filter string="Current Sprints" icon="terp-check" domain="[('sprint_id.state','in',('draft','open'))]" help="Current Sprints"/>
                         </field>
                         <field name="date"/>
                     </group>
@@ -580,8 +580,8 @@
             <field name="arch" type="xml">
                 <field name="project_id" position="after">
                     <field name="sprint_id" context="{'sprint_invisible':False}">
-                        <filter icon="terp-check" context="{'sprint_invisible':False}" domain="[('sprint_id.state','in',('draft','open'))]" help="Current Sprints"/>
-                        <filter icon="gtk-find" context="{'sprint_invisible':False}" domain="[]" help="View Sprints"/>
+                        <filter string="Current Sprints" icon="terp-check" context="{'sprint_invisible':False}" domain="[('sprint_id.state','in',('draft','open'))]" help="Current Sprints"/>
+                        <filter string="View Sprints" icon="gtk-find" context="{'sprint_invisible':False}" domain="[]" help="View Sprints"/>
                     </field>
                 </field>
             </field>
