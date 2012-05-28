@@ -7,7 +7,7 @@
 
         Remove information on Account data => because they move on analysis sheet
         create a page with invoicing informations
-        -->
+       
         <record id="account_analytic_account_invoice_stat_form" model="ir.ui.view">
             <field name="name">account.analytic.account.invoice.stat.form.inherit</field>
             <field name="model">account.analytic.account</field>
@@ -27,7 +27,7 @@
                         icon="gtk-go-forward"/>
                 </group>
             </field>
-        </record>
+        </record> -->
 
         <record id="hr_timesheet.account_analytic_account_form_form" model="ir.ui.view">
             <field name="name">account.analytic.account.invoice.form.inherit</field>
@@ -39,7 +39,18 @@
             	<xpath expr='//field[@name="parent_id"]' position='after'>
             	    <field name="template_id" on_change="on_change_template(template_id)"  domain="[('type','=','template')]" attrs="{'invisible': [('type','in',['view', 'normal','template'])]}" context="{'default_type' : 'template'}"/>
             	</xpath>
-                <notebook position="inside">
+            	<xpath expr='//page[@name="contract_page"]' position='inside'>
+	            	<group colspan="4" class="oe_form_group_label_border"> 
+	                        <field name="pricelist_id" />
+	                        <field name="to_invoice" widget="selection" />
+			    	</group>
+                </xpath>
+                <xpath expr='//group[@name="contract"]' position="after">
+                    <group col="6" colspan="3" class="oe_form_group_label_border">
+                        <field name="quantity_max"/><field name="company_uom_id" nolabel="1" readonly="True"/> <label string="/"/> <label string="Remaining"/> <field name="remaining_hours" nolabel="1"/>
+                    </group>
+                </xpath>
+                <!-- <notebook position="inside">
                     <page string="Invoice Analysis">
                         <separator colspan="4" string="Work Done Stats"/>
 
@@ -80,7 +91,7 @@
                             </tree>
                         </field>
                     </page>
-                </notebook>
+                </notebook> -->
 
             </field>
         </record>

@@ -600,6 +600,22 @@
                 </search>
             </field>
         </record>
+        
+        <record id="analytic_account_inherited_form" model="ir.ui.view">
+            <field name="name">account.analytic.account.form.inherit</field>
+            <field name="model">account.analytic.account</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
+            <field eval="18" name="priority"/>
+            <field name="arch" type="xml">
+                <xpath expr='//separator[@name="project_sep"]' position='replace'>
+                    <separator colspan="2" string="Project" name="project_sep"/>
+                </xpath>
+            	<xpath expr='//group[@name="project"]' position='inside'>
+                    <field name="use_tasks" />
+                </xpath>
+            </field>
+        </record>
 
         <record id="action_view_task" model="ir.actions.act_window">
             <field name="name">Tasks</field>

@@ -512,12 +512,7 @@ class project(osv.osv):
     _columns = {
         'project_escalation_id' : fields.many2one('project.project','Project Escalation', help='If any issue is escalated from the current Project, it will be listed under the project selected here.', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'reply_to' : fields.char('Reply-To Email Address', size=256),
-        'use_issues' : fields.boolean('Use Issues', help="Check this field if this project manages issues"),
         'issue_count': fields.function(_issue_count, type='integer'),
-    }
-
-    _defaults = {
-        'use_issues': True,
     }
 
     def _check_escalation(self, cr, uid, ids, context=None):
@@ -531,5 +526,27 @@ class project(osv.osv):
         (_check_escalation, 'Error! You cannot assign escalation to the same project!', ['project_escalation_id'])
     ]
 project()
+
+class account_analytic_account(osv.osv):
+
+    _inherit = 'account.analytic.account'
+    _description = 'Analytic Account'
+    
+    _columns = {
+        'use_issues' : fields.boolean('Issue Tracking:', help="Check this field if this project manages issues"),
+    }
+#    _defaults = {
+#        'use_issues': True,
+#    }
+    
+    def create(self, cr, uid, vals, context=None):
+        if context is None:
+            context = {}
+        obj_id = super(account_analytic_account, self).create(cr, uid, vals, context=context)
+        if vals.get('use_issues', False):
+            self.project_create(cr, uid, obj_id, vals, context)
+        return obj_id
+
+account_analytic_account()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
