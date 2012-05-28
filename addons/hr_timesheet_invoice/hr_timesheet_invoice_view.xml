@@ -8,9 +8,15 @@
             <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
             <field name="arch" type="xml">
                 <field name="partner_id" position="replace">
-                    <field name="partner_id" on_change="on_change_partner_id(partner_id)" required="True"/>
+                    <field name="partner_id" string="Customer" on_change="on_change_partner_id(partner_id, context)" required="True"/>
                 </field>
-                <group name="contract" position="after">
+                <xpath expr='//group[@name="contract"]' position='after'>
+			    <group colspan="2" col="2" name="project" class="oe_form_group_label_border">
+					<separator colspan="2" string="Project" name="project_sep"/>
+					<field name="use_timesheets" />
+			    </group>
+                </xpath>
+                <!-- <group name="contract" position="after">
                     <group colspan="2" col="2" name="invoice_data">
                         <separator colspan="2" string="Invoicing Data"/>
                         <field name="to_invoice" widget="selection"/>
@@ -21,7 +27,7 @@
                         <separator colspan="4" string="Invoicing Statistics"/>
                         <field name="amount_invoiced"/>
                     </group>
-                </group>
+                </group> -->
                 <xpath expr="/form/sheet" position='before'>
                     <div class="oe_form_topbar">
                         <button name="set_pending" string="Pending" type="object" states="open"/>
@@ -58,7 +64,7 @@
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_form"/>
             <field name="arch" type="xml">
                 <field name="account_id" position="replace">
-                    <field domain="[('type','=','normal'),('state', '&lt;&gt;', 'close')]" name="account_id" on_change="on_change_account_id(account_id)" select="1"/>
+                    <field domain="[('type','=','normal'),('state', '&lt;&gt;', 'close')]" name="account_id" on_change="on_change_account_id(account_id)" select="1" context="{'search_default_use_timesheets': 1, 'default_use_timesheets': 1}"/>
                 </field>
             </field>
         </record>
@@ -83,7 +89,7 @@
             <field name="arch" type="xml">
 
                 <field name="account_id" position="replace">
-                    <field domain="[('type','=','normal'),('state', '&lt;&gt;', 'close')]" name="account_id" on_change="on_change_account_id(account_id)"/>
+                    <field domain="[('type','=','normal'),('state', '&lt;&gt;', 'close')]" name="account_id" on_change="on_change_account_id(account_id)" context="{'search_default_use_timesheets': 1, 'default_use_timesheets': 1}"/>
                 </field>
             </field>
         </record>
@@ -109,7 +115,8 @@
             <field name="type">tree</field>
             <field name="inherit_id" ref="account.view_account_analytic_line_tree"/>
             <field name="arch" type="xml">
-                <field name="account_id" position="after">
+                <field name="account_id" position="replace">
+                	<field name="account_id" context="{'search_default_use_timesheets': 1, 'default_use_timesheets': 1}"/>
                     <field name="to_invoice"/>
                 </field>
             </field>

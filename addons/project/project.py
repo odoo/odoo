@@ -198,10 +198,8 @@ class project(osv.osv):
         'warn_header': fields.text('Mail Header', help="Header added at the beginning of the email for the warning message sent to the customer when a task is closed.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'warn_footer': fields.text('Mail Footer', help="Footer added at the beginning of the email for the warning message sent to the customer when a task is closed.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'type_ids': fields.many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', 'Tasks Stages', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
-        'use_tasks': fields.boolean('Use Tasks', help="Check this field if this project is aimed at managing tasks"),
         'task_count': fields.function(_task_count, type='integer', string="Open Tasks"),
         'color': fields.integer('Color Index'),
-        'company_uom_id': fields.related('company_id', 'project_time_mode_id', type='many2one', relation='product.uom'),
      }
     
     def dummy(self, cr, uid, ids, context):
@@ -217,7 +215,6 @@ class project(osv.osv):
         'priority': 1,
         'sequence': 10,
         'type_ids': _get_type_common,
-        'use_tasks': True,
     }
 
     # TODO: Why not using a SQL contraints ?
@@ -1234,16 +1231,35 @@ class project_work(osv.osv):
 project_work()
 
 class account_analytic_account(osv.osv):
-
     _inherit = 'account.analytic.account'
     _description = 'Analytic Account'
+    _columns = {
+        'use_tasks': fields.boolean('Tasks Management'),
+        'company_uom_id': fields.related('company_id', 'project_time_mode_id', type='many2one', relation='product.uom'),
+    }
+#    _defaults = {
+#        'use_tasks': True,
+#    }
+    
+    def project_create(self,cr,uid,analytic_account_id,vals,context=None):
+        res = {}
+        project_pool = self.pool.get('project.project')
+        project_id = project_pool.name_search(cr, uid, name=vals.get('name'))
+        if not project_id:
+            res['name'] = vals.get('name')
+            res['analytic_account_id'] = analytic_account_id
+            project_pool.create(cr, uid, res, context=context)
+        return True
 
     def create(self, cr, uid, vals, context=None):
         if context is None:
             context = {}
         if vals.get('child_ids', False) and context.get('analytic_project_copy', False):
             vals['child_ids'] = []
-        return super(account_analytic_account, self).create(cr, uid, vals, context=context)
+        analytic_account_id = super(account_analytic_account, self).create(cr, uid, vals, context=context)
+        if vals.get('use_tasks', False):
+            self.project_create(cr, uid, analytic_account_id, vals, context)
+        return analytic_account_id
 
     def unlink(self, cr, uid, ids, *args, **kwargs):
         project_obj = self.pool.get('project.project')

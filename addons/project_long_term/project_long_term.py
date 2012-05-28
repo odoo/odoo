@@ -225,13 +225,9 @@ class project(osv.osv):
 
     _columns = {
         'phase_ids': fields.one2many('project.phase', 'project_id', "Project Phases"),
-        'use_phases': fields.boolean('Use Phases', help="Check this field if project manages phases"),
         'phase_count': fields.function(_phase_count, type='integer', string="Open Phases"),
     }
-    _defaults = {
-        'use_phases': True,
-    }
-
+    
     def schedule_phases(self, cr, uid, ids, context=None):
         context = context or {}
         if type(ids) in (long, int,):
@@ -272,6 +268,24 @@ class project(osv.osv):
                 }, context=context)
         return True
 project()
+
+class account_analytic_account(osv.osv):
+    _inherit = 'account.analytic.account'
+    _description = 'Analytic Account'
+    _columns = {
+        'use_phases': fields.boolean('Phases Planing', help="Check this field if project manages phases"),
+    }
+#    _defaults = {
+#        'use_phases': True,
+#    }
+    def create(self, cr, uid, vals, context=None):
+        if context is None:
+            context = {}
+        obj_id = super(account_analytic_account, self).create(cr, uid, vals, context=context)
+        if vals.get('use_phases', False):
+            self.project_create(cr, uid, obj_id, vals, context)
+        return obj_id
+account_analytic_account()
 
 class project_task(osv.osv):
     _inherit = "project.task"
