@@ -26,7 +26,6 @@
     "category" : "Manufacturing",
     "images": ["images/master_procurement_schedule.jpeg","images/sales_forecast.jpeg","images/stock_planning_line.jpeg","images/stock_sales_period.jpeg"],
     "depends": ["crm", "stock","sale"],
-    "complexity": "expert",
     "description": """
 MPS allows to create a manual procurement plan apart of the normal MRP scheduling, which works automatically based on minimum stock rules
 =========================================================================================================================================
