@@ -26,29 +26,10 @@
           <field name="type">search</field>
           <field name="arch" type="xml">
               <search string="Point of Sale Cash Register Analysis">
-                  <group>
-                      <filter icon="terp-go-year" string="Year" name="year"
-                          domain="[('year','=',time.strftime('%%Y'))]"
-                          help="Cash Analysis created during this year"/>
-                      <separator orientation="vertical"/>
-
-                      <filter icon="terp-go-month" string="Month" name="This Month"
-                          domain="[('date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
-                          help="Cash Analysis created in current month"/>
-                      <filter icon="terp-go-month"
-                           string="Month -1"
-                           domain="[('date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
-                           help="Cash Analysis created in last month"/>
-                      <separator orientation="vertical"/>
-                      <filter icon="terp-go-today"
-                             string="    Today    "
-                             name="today"
-                             domain="[('date','=', time.strftime('%%Y-%%m-%%d'))]"
-                             help="Cash Analysis created by today"/>
-                      <separator orientation="vertical"/>
-                        <filter icon="terp-document-new"
-                            string="Draft"
-                            domain="[('state','=',('draft'))]"/>
+                <group>
+                    <filter icon="terp-document-new"
+                        string="Draft"
+                        domain="[('state','=',('draft'))]"/>
                       <filter icon="terp-camera_test"
                           string="Confirm"
                           domain="[('state','=',('confirm'))]"/>
@@ -59,6 +40,7 @@
                             help="My Sales"
                             domain="[('user_id','=',uid)]"/>
                         </field>
+                        <field name="date">
                     </group>
                     <newline/>
                   <group expand="1" string="Group By...">
