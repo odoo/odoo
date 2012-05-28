@@ -184,13 +184,12 @@ class account_analytic_account(osv.osv):
             }, string='Currency', type='many2one', relation='res.currency'),
     }
     
-    def on_change_partner_id(self, cr, uid, id, partner_id, context={}):
+    def on_change_partner_id(self, cr, uid, ids,partner_id, context={}):
         res={}
         if partner_id:
             part = self.pool.get('res.partner').browse(cr, uid, partner_id,context=context)
             res['name'] = part.name
-            if part.user_id:
-                res['user_id'] = part.user_id.id
+            if part.user_id:res['user_id'] = part.user_id.id
         return {'value': res}
 
     def _default_company(self, cr, uid, context=None):
