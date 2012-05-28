@@ -3,102 +3,85 @@
     <data noupdate="1">
         <record id="analytic_root" model="account.analytic.account">
             <field name="name" model="res.company" use="name" search="[]"/>
-            <field name="code">0</field>
         </record>
         <record id="analytic_absences" model="account.analytic.account">
             <field name="name">Leaves</field>
-            <field name="code">1</field>
             <field name="type">view</field>
             <field name="parent_id" ref="analytic_root"/>
         </record>
         <record id="analytic_internal" model="account.analytic.account">
             <field name="name">Internal</field>
-            <field name="code">2</field>
             <field name="type">view</field>
             <field name="parent_id" ref="analytic_root"/>
         </record>
         <record id="analytic_our_super_product" model="account.analytic.account">
             <field name="name">Our Super Product</field>
-            <field name="code">100</field>
             <field name="state">open</field>
             <field name="type">view</field>
             <field name="parent_id" ref="analytic_root"/>
         </record>
         <record id="analytic_project_1" model="account.analytic.account">
             <field name="name">Project 1</field>
-            <field name="code">101</field>
             <field name="type">view</field>
             <field name="parent_id" ref="analytic_root"/>
         </record>
         <record id="analytic_project_2" model="account.analytic.account">
             <field name="name">Project 2</field>
-            <field name="code">102</field>
             <field name="type">view</field>
             <field name="parent_id" ref="analytic_root"/>
         </record>
         <record id="analytic_journal_trainings" model="account.analytic.account">
             <field name="name">Training</field>
-            <field name="code">4</field>
             <field name="type">view</field>
             <field name="parent_id" ref="analytic_internal"/>
         </record>
         <record id="analytic_in_house" model="account.analytic.account">
             <field name="name">In House</field>
-            <field name="code">1</field>
             <field name="type">normal</field>
             <field name="parent_id" ref="analytic_journal_trainings"/>
         </record>
         <record id="analytic_online" model="account.analytic.account">
             <field name="name">Online</field>
-            <field name="code">2</field>
             <field name="type">normal</field>
             <field name="parent_id" ref="analytic_journal_trainings"/>
         </record>
         <record id="analytic_support" model="account.analytic.account">
             <field name="name">Support</field>
-            <field name="code">support</field>
             <field name="type">view</field>
             <field name="parent_id" ref="analytic_our_super_product"/>
         </record>
         <record id="analytic_partners" model="account.analytic.account">
             <field name="name">Partners</field>
-            <field name="code">partners</field>
             <field name="type">view</field>
             <field name="parent_id" ref="analytic_support"/>
         </record>
         <record id="analytic_customers" model="account.analytic.account">
             <field name="name">Customers</field>
-            <field name="code">customers</field>
             <field name="type">view</field>
             <field name="parent_id" ref="analytic_support"/>
         </record>
         <record id="analytic_support_internal" model="account.analytic.account">
             <field name="name">Internal</field>
-            <field name="code">3</field>
             <field name="type">normal</field>
             <field name="parent_id" ref="analytic_support"/>
         </record>
         <record id="analytic_integration" model="account.analytic.account">
             <field name="name">Integration</field>
-            <field name="code">integration</field>
             <field name="type">view</field>
             <field name="parent_id" ref="analytic_our_super_product"/>
         </record>
         <record id="analytic_consultancy" model="account.analytic.account">
             <field name="name">Consultancy</field>
-            <field name="code">4</field>
             <field name="type">normal</field>
             <field name="parent_id" ref="analytic_our_super_product"/>
         </record>
         <record id="analytic_super_product_trainings" model="account.analytic.account">
             <field name="name">Training</field>
-            <field name="code">5</field>
             <field name="type">normal</field>
             <field name="parent_id" ref="analytic_our_super_product"/>
         </record>
         <record id="analytic_seagate_p1" model="account.analytic.account">
             <field name="name">Seagate P1</field>
-            <field name="code">1</field>
             <field name="parent_id" ref="analytic_integration"/>
             <field name="type">normal</field>
             <field name="state">open</field>
@@ -106,7 +89,6 @@
         </record>
         <record id="analytic_seagate_p2" model="account.analytic.account">
             <field name="name">Seagate P2</field>
-            <field name="code">2</field>
             <field name="type">normal</field>
             <field name="parent_id" ref="analytic_integration"/>
             <field name="state">open</field>
@@ -114,14 +96,12 @@
         </record>
         <record id="analytic_magasin_bml_1" model="account.analytic.account">
             <field name="name">Magasin BML 1</field>
-            <field name="code">3</field>
             <field name="parent_id" ref="analytic_integration"/>
             <field name="type">normal</field>
             <field name="partner_id" ref="base.res_partner_15"/>
         </record>
         <record id="analytic_integration_c2c" model="account.analytic.account">
             <field name="name">CampToCamp</field>
-            <field name="code">7</field>
             <field name="type">normal</field>
             <field eval="str(time.localtime()[0] - 1) + '-08-07'" name="date_start"/>
             <field eval="time.strftime('%Y-12-31')" name="date"/>
@@ -131,28 +111,24 @@
         </record>
         <record id="analytic_agrolait" model="account.analytic.account">
             <field name="name">Agrolait</field>
-            <field name="code">3</field>
             <field name="parent_id" ref="analytic_customers"/>
             <field name="type">normal</field>
             <field name="partner_id" ref="base.res_partner_agrolait"/>
         </record>
         <record id="analytic_asustek" model="account.analytic.account">
             <field name="name">Asustek</field>
-            <field name="code">4</field>
             <field name="type">normal</field>
             <field name="parent_id" ref="analytic_customers"/>
             <field name="partner_id" ref="base.res_partner_asus"/>
         </record>
         <record id="analytic_distripc" model="account.analytic.account">
             <field name="name">DistriPC</field>
-            <field name="code">7</field>
             <field name="parent_id" ref="analytic_customers"/>
             <field name="type">normal</field>
             <field name="partner_id" ref="base.res_partner_4"/>
         </record>
         <record id="analytic_sednacom" model="account.analytic.account">
             <field name="name">Sednacom</field>
-            <field name="code">2</field>
             <field eval="str(time.localtime()[0] - 1) + '-05-09'" name="date_start"/>
             <field eval="time.strftime('%Y-05-08')" name="date"/>
             <field name="parent_id" ref="analytic_partners"/>
@@ -162,7 +138,6 @@
         </record>
         <record id="analytic_thymbra" model="account.analytic.account">
             <field name="name">Thymbra</field>
-            <field name="code">3</field>
             <field eval="time.strftime('%Y-02-01')" name="date_start"/>
             <field eval="time.strftime('%Y-07-01')" name="date"/>
             <field name="type">normal</field>
@@ -172,7 +147,6 @@
         </record>
         <record id="analytic_leclerc" model="account.analytic.account">
             <field name="name">Leclerc</field>
-            <field name="code">10</field>
             <field eval="time.strftime('%Y-04-24')" name="date_start"/>
             <field eval="str(time.localtime()[0] + 1) + '-04-24'" name="date"/>
             <field name="type">normal</field>
@@ -181,7 +155,6 @@
         </record>
         <record id="analytic_desertic_hispafuentes" model="account.analytic.account">
             <field name="name">Desertic - Hispafuentes</field>
-            <field name="code">12</field>
             <field eval="time.strftime('%Y-02-01')" name="date_start"/>
             <field eval="str(time.localtime()[0] + 1) + '-02-01'" name="date"/>
             <field name="type">normal</field>
@@ -190,14 +163,12 @@
         </record>
         <record id="analytic_tiny_at_work" model="account.analytic.account">
             <field name="name">OpenERP SA AT Work</field>
-            <field name="code">15</field>
             <field name="type">normal</field>
             <field name="parent_id" ref="analytic_partners"/>
             <field name="partner_id" ref="base.res_partner_tinyatwork"/>
         </record>
         <record id="analytic_partners_camp_to_camp" model="account.analytic.account">
             <field name="name">Camp to Camp</field>
-            <field name="code">21</field>
             <field eval="time.strftime('%Y-%m-%d', time.localtime(time.time() - 365 * 86400))" name="date_start"/>
             <field eval="time.strftime('%Y-%m-%d')" name="date"/>
             <field name="type">normal</field>
@@ -207,67 +178,56 @@
         </record>
         <record id="analytic_project_2_support" model="account.analytic.account">
             <field name="name">Support</field>
-            <field name="code">1</field>
             <field name="type">normal</field>
             <field name="parent_id" ref="analytic_project_2"/>
         </record>
         <record id="analytic_project_2_development" model="account.analytic.account">
             <field name="name">Development</field>
-            <field name="code">2</field>
             <field name="type">normal</field>
             <field name="parent_id" ref="analytic_project_2"/>
         </record>
         <record id="analytic_project_1_trainings" model="account.analytic.account">
             <field name="name">Training</field>
-            <field name="code">1</field>
             <field name="type">normal</field>
             <field name="parent_id" ref="analytic_project_1"/>
         </record>
         <record id="analytic_project_1_development" model="account.analytic.account">
             <field name="name">Development</field>
-            <field name="code">2</field>
             <field name="type">normal</field>
             <field name="parent_id" ref="analytic_project_1"/>
         </record>
         <record id="analytic_administratif" model="account.analytic.account">
             <field name="name">Administrative</field>
-            <field name="code">1</field>
             <field name="type">normal</field>
             <field name="parent_id" ref="analytic_internal"/>
         </record>
         <record id="analytic_commercial_marketing" model="account.analytic.account">
             <field name="name">Commercial &amp; Marketing</field>
-            <field name="code">2</field>
             <field name="type">normal</field>
             <field name="parent_id" ref="analytic_internal"/>
         </record>
         <record id="analytic_our_super_product_development" model="account.analytic.account">
             <field name="name">Our Super Product Development</field>
-            <field name="code">3</field>
             <field name="type">view</field>
             <field name="parent_id" ref="analytic_internal"/>
         </record>
         <record id="analytic_stable" model="account.analytic.account">
             <field name="name">Stable</field>
-            <field name="code">1</field>
             <field name="type">normal</field>
             <field name="parent_id" ref="analytic_our_super_product_development"/>
         </record>
         <record id="analytic_trunk" model="account.analytic.account">
             <field name="name">Trunk</field>
-            <field name="code">2</field>
             <field name="type">normal</field>
             <field name="parent_id" ref="analytic_our_super_product_development"/>
         </record>
         <record id="analytic_paid" model="account.analytic.account">
             <field name="name">Paid</field>
-            <field name="code">1</field>
             <field name="type">normal</field>
             <field name="parent_id" ref="analytic_absences"/>
         </record>
         <record id="analytic_unpaid" model="account.analytic.account">
             <field name="name">Unpaid</field>
-            <field name="code">2</field>
             <field name="type">normal</field>
             <field name="parent_id" ref="analytic_absences"/>
         </record>
