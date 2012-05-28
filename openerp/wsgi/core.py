@@ -500,7 +500,7 @@ def pre_request(worker, req):
     resource.setrlimit(resource.RLIMIT_CPU, (cpu_time + config['cpu_time_limit'], hard))
 
 # Reset the worker if it consumes too much memory (e.g. caused by a memory leak).
-def post_request(worker, req, environ):
+def post_request(worker, req):
     import os
     import psutil
     rss, vms = psutil.Process(os.getpid()).get_memory_info()
