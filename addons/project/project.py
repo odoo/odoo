@@ -70,31 +70,22 @@ class project(osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         if context is None:
             context = {}
-        list = []
-        project_ids = self.browse(cr, uid, ids)
-        groups = self.pool.get('res.groups')
-        group_id = groups.search(cr, uid, [('name', '=', 'Followers')], context=context)
-        groups_users = groups.browse(cr, uid, group_id)[0].users
-        for project_id in project_ids:
+        groups_pool = self.pool.get('res.groups')
+        group_id = groups_pool.search(cr, uid, [('name', '=', 'Followers')], context=context)
+        groups_users = groups_pool.browse(cr, uid, group_id, context)[0].users
+        for project_id in self.browse(cr, uid, ids, context):
+           if vals.get('members'):
+               members = self.pool.get('res.users').browse(cr, uid, vals.get('members')[0][-1], context)
+           else:
+               members = project_id.members or False
            select = vals.get('privacy_visility') or project_id.privacy_visility or False
-           members = vals.get('members') or project_id.members or False
-           if select=='follower':
-             if members:
-               for member in members:
-                   list.append(member.id)
-               followers = self.find_followers(cr, uid, ids, context)
-               for member_id in list:
+           if select=='follower' and members:
+               member_list = [member.id for member in members]
+               followers = self.message_get_subscribers_ids(cr, uid, ids, context=context)
+               for member_id in member_list:
                    if not member_id in followers:
                       self.message_subscribe(cr, uid, ids, [member_id], context=context)
         return super(project, self).write(cr, uid, ids, vals, context=context)
-
-    def find_followers(self, cr, uid, ids, context=None):
-    	user=[]
-        sub_obj = self.pool.get('mail.subscription')
-        sub_id = sub_obj.search(cr, uid, [('res_model','=','project.project'),('res_id','in',ids)], context=context)
-        for follower_id in sub_obj.browse(cr, uid, sub_id):
-            user.append(follower_id.user_id.id)
-        return user
 
     def _complete_name(self, cr, uid, ids, name, args, context=None):
         res = {}
