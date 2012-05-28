@@ -67,7 +67,7 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
     list_fields: function () {
         var fs = [this.abscissa];
         fs.push.apply(fs, _(this.columns).pluck('name'));
-        if (this.group_field) {
+        if (this.group_field && this.group_field != this.abscissa) {
             fs.push(this.group_field);
         }
         return fs;
