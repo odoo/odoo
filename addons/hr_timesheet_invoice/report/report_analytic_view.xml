@@ -136,7 +136,7 @@
 
         <act_window
         domain="[('invoice_id','=',False),('to_invoice','&lt;&gt;',False)]"
-        context="{'search_default_account_id': [active_id], 'default_account_id': active_id}"
+        context="{'search_default_account_id': [active_id], 'default_account_id': active_id,'search_default_to_invoice': 1}"
         id="act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice"
         name="Lines to Invoice"
         res_model="account.analytic.line"

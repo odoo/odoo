@@ -250,7 +250,7 @@ class account_analytic_account(osv.osv):
         res = {}
         for account in self.browse(cr, uid, ids, context=context):
             if account.quantity_max != 0:
-                res[account.id] = account.quantity_max - account.hours_quantity
+                res[account.id] = account.quantity_max - account.hours_qtt_invoiced
             else:
                 res[account.id] = 0.0
         for id in ids:

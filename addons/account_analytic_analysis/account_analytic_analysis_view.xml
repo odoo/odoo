@@ -28,6 +28,12 @@
                 </group>
             </field>
         </record> -->
+        <act_window
+            id="action_sales_order_line"
+            name="Sales Order Lines"
+            res_model="sale.order.line"
+            src_model="account.analytic.account"
+            />
 
         <record id="hr_timesheet.account_analytic_account_form_form" model="ir.ui.view">
             <field name="name">account.analytic.account.invoice.form.inherit</field>
@@ -59,31 +65,31 @@
                             <tr>
                                 <th><div class="oe_field_label">Fix price Invoices</div></th>
                                 <td><div><field name="so_visible" nolabel="1"/></div></td>
-                                <td><div class="oe_float_field_view"><field name="fix_exp_max" nolabel="1" attrs="{'invisible': [('so_visible','=',0)]}"/></div></td>
+                                <td><div class="oe_float_field_view"><field name="amount_max" nolabel="1" attrs="{'invisible': [('so_visible','=',0)]}"/></div></td>
                                 <td><div class="oe_field_view"><field name="ca_invoiced" nolabel="1" attrs="{'invisible': [('so_visible','=',0)]}"/></div></td>
-                                <td><div class="oe_field_view"></div></td>
+                                <td><div class="oe_field_view"><field name="remaining_ca" nolabel="1" attrs="{'invisible': [('so_visible','=',0)]}"/></div></td>
                                 <td><div class="oe_float_field_view"><field name="ca_to_invoice" nolabel="1" attrs="{'invisible': [('so_visible','=',0)]}"/></div></td>
-                                <td><button class="oe_title_button_right" name="%(sale.action_order_form)d" string="Sales" type="action" context="{'default_project_id': active_id,'search_default_project_id': active_id}" attrs="{'invisible': [('so_visible','=',0)]}"/></td>
+                                <td><button class="oe_title_button_right" name="%(action_sales_order_line)d" string="Sales" type="action" context="{'default_project_id': active_id,'search_default_project_id': active_id}" attrs="{'invisible': [('so_visible','=',0)]}"/></td>
                                 <td><button class="oe_title_button_left" name="%(sale.action_order_line_tree2)d" string="Lines To Invoice" type="action" context="{'default_project_id': active_id,'search_default_project_id': active_id}" attrs="{'invisible': [('so_visible','=',0)]}"/></td>
 			    			</tr>
                             <tr>
                                <th><div class="oe_field_label">Invoice on timesheet</div></th>
                                <td><div><field name="timsheet_visible" nolabel="1"/></div></td>
-                               <td><div class="oe_float_field_view" ><field name="timesheet_max" nolabel="1" attrs="{'invisible': [('timsheet_visible','=',0)]}"/></div></td>
+                               <td><div class="oe_float_field_view" ><field name="quantity_max" nolabel="1" attrs="{'invisible': [('timsheet_visible','=',0)]}"/></div></td>
                                <td><div class="oe_field_view" ><field name="hours_qtt_invoiced" nolabel="1" attrs="{'invisible': [('timsheet_visible','=',0)]}"/></div></td>
-                               <td><div class="oe_field_view" ></div></td>
+                               <td><div class="oe_field_view" ><field name="remaining_hours" nolabel="1" attrs="{'invisible': [('timsheet_visible','=',0)]}"/></div></td>
                                <td><div class="oe_float_field_view" ><field name="hours_qtt_non_invoiced" nolabel="1" attrs="{'invisible': [('timsheet_visible','=',0)]}"/></div></td>
-                               <td><button class="oe_title_button_right" name="%(hr_timesheet_invoice.act_account_analytic_account_2_report_timehsheet_account)d" string="Timesheets" type="action" attrs="{'invisible': [('timsheet_visible','=',0)]}"/></td>
+                               <td><button class="oe_title_button_right" name="%(account.action_account_tree1)d" string="Timesheets" type="action" attrs="{'invisible': [('timsheet_visible','=',0)]}"/></td>
                                <td><button class="oe_title_button_left" name="%(hr_timesheet_invoice.act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice)d" string="Invoice Timesheets" type="action" attrs="{'invisible': [('timsheet_visible','=',0)]}"/></td>
                            </tr>
-                            <tr>
+                            <!-- <tr>
                                 <th><div class="oe_field_label" >Charge Expenses</div></th>
                                 <td><div><field name="expense_visible" nolabel="1"/></div></td>
                                 <td><div class="oe_float_field_view" ><field name="expense_max" nolabel="1" attrs="{'invisible': [('expense_visible','=',0)]}"/></div></td>
                                 <td><div class="oe_field_view" ></div></td>
                                 <td><div class="oe_field_view" ></div></td>
                                 <td><div class="oe_float_field_view"></div></td>
-                            </tr>
+                            </tr> -->
                             <tr name="total">
                                 <th><div class="oe_field_label" >Total</div></th>
                                 <td><div></div></td>
