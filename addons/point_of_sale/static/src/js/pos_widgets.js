@@ -396,143 +396,131 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
     });
 
     module.ProductCategoriesWidget = module.PosBaseWidget.extend({
+        template: 'ProductCategoriesWidget',
         init: function(parent, options){
-            this._super(parent,options);
-            this.on_change_category.add_last(_.bind(this.search_and_categories, this));
-            this.search_and_categories(); 
-        },
-        start: function() {
-            this.search_and_categories(); 
-        },
-        template:'ProductCategoriesWidget',
-        renderElement: function() {
             var self = this;
-            var c;
-            this.$element.empty();
-            this.$element.html(QWeb.render(this.template, {
-                breadcrumb: (function() {
-                    var _i, _len, _results;
-                    _results = [];
-                    for (_i = 0, _len = self.ancestors.length; _i < _len; _i++) {
-                        c = self.ancestors[_i];
-                        _results.push(self.pos.categories[c]);
-                    }
-                    return _results;
-                })(),
-                categories: (function() {
-                    var _i, _len, _results;
-                    _results = [];
-                    for (_i = 0, _len = self.children.length; _i < _len; _i++) {
-                        c = self.children[_i];
-                        _results.push(self.pos.categories[c]);
-                    }
-                    return _results;
-                })()
-            }));
-            this.$element.find(".oe-pos-categories-list a").click(_.bind(this.change_category, this));
-        },
-        reset_category: function(){
-            this.on_change_category(0);
-        },
-        change_category: function(a) {
-            var id = $(a.target).data("category-id");
-            this.on_change_category(id);
-        },
-        search_and_categories: function(id){
-            var self = this,
-                c,
-                product_list,
-                allProducts,
-                allPackages;
-
-            id = id || 0;
-
-            c = this.pos.categories[id];
-            this.ancestors = c.ancestors;
-            this.children = c.children;
-            this.renderElement();
-
-            allProducts = this.pos.get('product_list');
-
-            allPackages = this.pos.get('product.packaging');
-
-            product_list = this.pos.get('product_list').filter( function(p){
-                var _ref = p.pos_categ_id[0];
-                return _.indexOf(c.subtree, _ref) >= 0;
-            });
-
-            this.pos.get('products').reset(product_list);
-
-            this.$element.find('.searchbox input').keyup(function(){
-                var results, search_str;
-                search_str = $(this).val().toLowerCase();
-                if(search_str){
-                    results = product_list.filter( function(p){
-                        return p.name.toLowerCase().indexOf(search_str) != -1;
-                    });
-                    self.$element.find('.search-clear').fadeIn();
-                }else{
-                    results = product_list;
-                    self.$element.find('.search-clear').fadeOut();
-                }
-                self.pos.get('products').reset(results);
-            });
-
-            this.$element.find('.search-clear').click(function(){
-                self.pos.get('products').reset(product_list);
-                self.$element.find('.searchbox input').val('').focus();
-                self.$element.find('.search-clear').fadeOut();
-            });
-        },
-        on_change_category: function(id) {},
-    });
-
-    module.ProductCategoriesWidget2 = module.PosBaseWidget.extend({
-        template: 'ProductCategoriesWidget2',
-        init: function(parent, options){
             this._super(parent,options);
-            this.onlyWeightable = false;
+            this.onlyWeightable = options.onlyWeightable || false;
             this.category = this.pos.root_category;
             this.breadcrumb = [];
             this.subcategories = [];
             this.set_category();
         },
+
+        start: function(){
+            this.search_and_categories();
+        },
+
+        // changes the category. if undefined, sets to root category
         set_category : function(category){
             if(!category){
                 this.category = this.pos.root_category;
             }else{
                 this.category = category;
             }
+            this.breadcrumb = [];
             for(var i = 1; i < this.category.ancestors.length; i++){
-                this.breadcrumb.push(this.category.ancestor[i]);
+                this.breadcrumb.push(this.category.ancestors[i]);
             }
-            this.subcategories = this.category.childrens || [];
+            if(this.category !== this.pos.root_category){
+                this.breadcrumb.push(this.category);
+            }
+            if(this.onlyWeightable){
+                this.subcategories = [];
+                for(var i = 0; i < this.category.childrens.length; i++){
+                    if(this.category.childrens[i].weightable_product_list.length > 0){
+                        this.subcategories.push( this.category.childrens[i]);
+                    }
+                }
+            }else{
+                this.subcategories = this.category.childrens || [];
+            }
         },
+
         renderElement: function(){
             var self = this;
             this._super();
-            this.$element.empty();
+            this.$element.find(".oe-pos-categories-list a").click(function(event){
+                var id = $(event.target).data("category-id");
+                var category = self.pos.categories_by_id[id];
+                self.set_category(category);
+                self.renderElement();
+                self.search_and_categories(category);
+            });
         },
+
+        // resets the current category to the root category
         reset_category: function(){
             this.set_category();
+            this.renderElement();
+            this.search_and_categories();
         },
-        on_change_category: function(id){},
-        search_and_categories: function(id){},
-        change_category: function(a){
+
+        // filters the products, and sets up the search callbacks
+        search_and_categories: function(category){
+            var self = this;
+            
+            var all_products = this.pos.get('product_list');
+            var all_packages = this.pos.get('product.packaging');
+
+            // find all products belonging to the current category
+            var products = [];
+            if(this.onlyWeightable){
+                products = all_products.filter( function(product){
+                    return self.category.weightable_product_set[product.id];
+                });
+            }else{
+                products = all_products.filter( function(product){
+                    return self.category.product_set[product.id];
+                });
+            }
+
+            // product lists watch for reset events on 'products' to re-render. 
+            // FIXME that means all productlist widget re-render... even the hidden ones ! 
+            this.pos.get('products').reset(products);
+            
+            // find all the products whose name match the query in the searchbox
+            this.$('.searchbox input').keyup(function(){
+                var results, search_str;
+                search_str = $(this).val().toLowerCase();
+                if(search_str){
+                    results = products.filter( function(p){
+                        return p.name.toLowerCase().indexOf(search_str) != -1 || 
+                               (p.ean13 && p.ean13.indexOf(search_str) != -1);
+                    });
+                    self.$element.find('.search-clear').fadeIn();
+                }else{
+                    results = products;
+                    self.$element.find('.search-clear').fadeOut();
+                }
+                self.pos.get('products').reset(results);
+            });
+            this.$('.searchbox input').click(function(){
+            });
+
+            //reset the search when clicking on reset
+            this.$('.search-clear').click(function(){
+                self.pos.get('products').reset(products);
+                self.$('.searchbox input').val('').focus();
+                self.$('.search-clear').fadeOut();
+            });
         },
     });
 
     module.ProductListWidget = module.ScreenWidget.extend({
         template:'ProductListWidget',
         init: function(parent, options) {
+            var self = this;
             this._super(parent,options);
-            console.log('ProductListWidget:',this);
             this.model = options.model;
-            this.pos.get('products').bind('reset', this.renderElement, this);
             this.product_list = [];
-            this.weight = options.weight;
-            this.only_weightable = options.only_weightable || false;
+            this.weight = options.weight || 0;
+            this.show_scale = options.show_scale || false;
             this.next_screen = options.next_screen || false;
+
+            this.pos.get('products').bind('reset', function(){
+                self.renderElement();
+            });
         },
         set_weight: function(weight){
             for(var i = 0; i < this.product_list.length; i++){
@@ -550,10 +538,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.product_list = []; 
             this.pos.get('products')
                 .chain()
-                .filter(function(product){
-                    // if only weightable, only keeps those with a to_weight category, keep all otherwise
-                    return !self.only_weightable || (product.get('pos_category') && product.get('pos_category').to_weight);
-                })
                 .map(function(product) {
                     var product = new module.ProductWidget(self, {
                             model: product,
@@ -604,6 +588,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
         
         connect : function(){
+            var self = this;
             $(this.input_selector).focus(function(){self.show();});
         },
 
@@ -913,10 +898,10 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.order_widget = new module.OrderWidget(this, {});
             this.order_widget.replace($('#placeholder-OrderWidget'));
 
-            this.onscreen_keyboard = new module.OnscreenKeyboardWidget(this, {
+            /*this.onscreen_keyboard = new module.OnscreenKeyboardWidget(this, {
                 'keyboard_model': 'simple'
             });
-            this.onscreen_keyboard.appendTo($(".point-of-sale #content"));
+            this.onscreen_keyboard.appendTo($(".point-of-sale #content")); */
             
             // --------  Screen Selector ---------
 

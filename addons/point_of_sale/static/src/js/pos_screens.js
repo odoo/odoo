@@ -307,8 +307,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.product_categories_widget.replace($('.placeholder-ProductCategoriesWidget'));
 
             this.product_list_widget = new module.ProductListWidget(this,{
-                only_weightable: true,
-                weight: this.pos.proxy.weighting_read_kg(),
+                show_scale: true,
             });
             this.product_list_widget.replace($('.placeholder-ProductListWidget'));
         },
@@ -322,7 +321,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 this.pos_widget.action_bar.set_total_visible(true);
                 this.pos_widget.action_bar.set_help_visible(true,function(){self.pos_widget.screen_selector.show_popup('help');});
                 this.pos_widget.action_bar.set_logout_visible(false);
-                this.pos_widget.onscreen_keyboard.connect();
+                //this.pos_widget.onscreen_keyboard.connect();
 
                 this.product_categories_widget.reset_category();
 
@@ -357,7 +356,9 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 this.pos_widget.set_cashier_controls_visible(true);
                 this.pos_widget.action_bar.set_total_visible(true);
                 this.pos_widget.action_bar.set_help_visible(false);
-                this.pos_widget.onscreen_keyboard.connect();
+                //this.pos_widget.onscreen_keyboard.connect();
+
+                this.product_categories_widget.reset_category();
                 
                 this.pos_widget.order_widget.set_numpad_state(this.pos_widget.numpad.state);
                 this.pos_widget.action_bar.add_new_button(
@@ -564,7 +565,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
     module.SearchProductScreenWidget = module.ScreenWidget.extend({
         template:'SearchProductScreenWidget',
         start: function(){
-            this.product_categories_widget = new module.ProductCategoriesWidget2(this,{});
+            this.product_categories_widget = new module.ProductCategoriesWidget(this,{});
             this.product_categories_widget.replace($('.placeholder-ProductCategoriesWidget'));
 
             this.product_list_widget = new module.ProductListWidget(this,{});
@@ -583,7 +584,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 self.pos_widget.screen_selector.set_user_mode('client');
             });
             this.product_categories_widget.reset_category();
-            this.pos_widget.onscreen_keyboard.connect();
+            //this.pos_widget.onscreen_keyboard.connect();
 
             this.pos_widget.order_widget.set_numpad_state(this.pos_widget.numpad.state);
             this.pos_widget.action_bar.add_new_button(

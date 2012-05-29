@@ -132,41 +132,6 @@
                         <img src="/point_of_sale/static/src/img/home.png" class="homeimg" />
                     </a>
                 </li>
-                <t t-foreach="breadcrumb" t-as="category">
-                    <li class="oe-pos-categories-list">
-                        <img src="/point_of_sale/static/src/img/bc-arrow.png" class="bc-arrow" />
-                        <a href="javascript:void(0)" t-att-data-category-id="category.id">
-                            <t t-esc="category.name"/>
-                        </a>
-                    </li>
-                </t>
-            </ol>
-            <div class="searchbox">
-                <input placeholder="Search Products" />
-                <img class="search-clear" src="/point_of_sale/static/src/img/search_reset.gif" />
-            </div>
-        </header>
-        <div id="categories">
-            <ol>
-                <t t-foreach="categories" t-as="category">
-                    <li class="oe-pos-categories-list">
-                        <a href="javascript:void(0)" t-att-data-category-id="category.id" class="button">
-                            <t t-esc="category.name"/>
-                        </a>
-                    </li>
-                </t>
-            </ol>
-        </div>
-    </t>
-
-    <t t-name="ProductCategoriesWidget2">
-        <header>
-            <ol class="breadcrumb">
-                <li class="oe-pos-categories-list">
-                    <a href="javascript:void(0)">
-                        <img src="/point_of_sale/static/src/img/home.png" class="homeimg" />
-                    </a>
-                </li>
                 <t t-foreach="widget.breadcrumb" t-as="category">
                     <li class="oe-pos-categories-list">
                         <img src="/point_of_sale/static/src/img/bc-arrow.png" class="bc-arrow" />

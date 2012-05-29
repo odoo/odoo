@@ -61,7 +61,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.dao = new module.LocalStorageDAO();            // used to store the order's data on the Hard Drive
             this.ready = $.Deferred();                          // used to notify the GUI that the PosModel has loaded all resources
             this.flush_mutex = new $.Mutex();                   // used to make sure the orders are sent to the server once at time
-            this.build_tree = _.bind(this.build_tree, this);    // ???
+            //this.build_tree = _.bind(this.build_tree, this);    // ???
             this.session = session;                 
             this.categories = {};
             this.root_category = null;
@@ -212,7 +212,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             // when all the data has loaded, we compute some stuff, and declare the Pos ready to be used. 
             $.when(cat_def, prod_def, session_def, tax_def, prod_process_def, this.get_app_data(), this.flush())
                 .then(function(){ 
-                    self.build_tree();
+                    //self.build_tree();
                     self.build_categories(); 
                     self.set({'cashRegisters' : new module.CashRegisterCollection(self.get('bank_statements'))});
                     console.log('cashRegisters:',self.get('cashRegisters'));
@@ -335,6 +335,10 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                             });
             });
         },
+
+        // this adds several properties to the categories in order to make it easier to diplay them
+        // fields added include the list of product relevant to each category, list of child categories,
+        // list of ancestors, etc.
         build_categories : function(){
             var categories = this.get('categories');
             var products   = this.get('product_list');
@@ -356,6 +360,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             for(var i = 0; i < categories.length; i++){
                 categories_by_id[categories[i].id] = categories[i];
             }
+            this.categories_by_id = categories_by_id;
 
             var root_category = {
                 name      : 'Root',
@@ -390,9 +395,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 cat.product_set = {};   // [product.id] === true if product is in category
                 cat.weightable_product_list = [];
                 cat.weightable_product_set = {};
-                cat.regular_product_list = []; //not weightable
-                cat.regular_product_set = {};
-                cat.progeny = [];
             }
 
             this.root_category = root_category;
@@ -409,9 +411,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     if(product.weightable){
                         cat.weightable_product_list.push(product);
                         cat.weightable_product_set[product.id] = true;
-                    }else{
-                        cat.regular_product_list.push(product);
-                        cat.regular_product_set[product.id] = true;
                     }
                 }
             }
@@ -426,15 +425,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 }
             }
             
-            // add progeny field to categories, contains all subcategories of a category
-            function make_progeny(cat){
-                for(var i = 0; i < cat.childrens.length; i++){
-                    make_progeny(cat.childrens[i]);
-                    cat.progeny.push(cat.childrens[i]);
-                    append(cat.progeny,cat.childrens[i].progeny);
-                }
-            }
-
             //add the products of the subcategories to the parent categories
             function make_products(cat){
                 for(var i = 0; i < cat.childrens.length; i++){
@@ -442,83 +432,15 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
 
                     append(cat.product_list, cat.childrens[i].product_list);
                     append(cat.weightable_product_list, cat.childrens[i].weightable_product_list);
-                    append(cat.regular_product_list, cat.childrens[i].regular_product_list);
 
                     appendSet(cat.product_set, cat.childrens[i].product_set);
                     appendSet(cat.weightable_product_set, cat.childrens[i].weightable_product_set);
-                    appendSet(cat.regular_product_set, cat.childrens[i].regular_product_set);
                 }
             }
 
             make_ancestors(root_category,[]);
-            make_progeny(root_category);
             make_products(root_category);
         },
-
-        build_tree: function() {
-            var c, id, _i, _len, _ref, _ref2;
-            _ref = this.get('categories');
-            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-                c = _ref[_i];
-                this.categories[c.id] = {
-                    id: c.id,
-                    name: c.name,
-                    children: c.child_id,
-                    parent: c.parent_id[0],
-                    ancestors: [c.id],
-                    subtree: [c.id]
-                };
-            }
-            _ref2 = this.categories;
-            for (id in _ref2) {
-                c = _ref2[id];
-                this.current_category = c;
-                this.build_ancestors(c.parent);
-                this.build_subtree(c);
-            }
-            this.categories[0] = {
-                ancestors: [],
-                children: (function() {
-                    var _j, _len2, _ref3, _results;
-                    _ref3 = this.get('categories');
-                    _results = [];
-                    for (_j = 0, _len2 = _ref3.length; _j < _len2; _j++) {
-                        c = _ref3[_j];
-                        if (!(c.parent_id[0] != null)) {
-                            _results.push(c.id);
-                        }
-                    }
-                    return _results;
-                }).call(this),
-                subtree: (function() {
-                    var _j, _len2, _ref3, _results;
-                    _ref3 = this.get('categories');
-                    _results = [];
-                    for (_j = 0, _len2 = _ref3.length; _j < _len2; _j++) {
-                        c = _ref3[_j];
-                        _results.push(c.id);
-                    }
-                    return _results;
-                }).call(this)
-            };
-        },
-        build_ancestors: function(parent) {
-            if (parent != null) {
-                this.current_category.ancestors.unshift(parent);
-                return this.build_ancestors(this.categories[parent].parent);
-            }
-        },
-        build_subtree: function(category) {
-            var c, _i, _len, _ref, _results;
-            _ref = category.children;
-            _results = [];
-            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-                c = _ref[_i];
-                this.current_category.subtree.push(c);
-                _results.push(this.build_subtree(this.categories[c]));
-            }
-            return _results;
-        }
     });
 
     module.CashRegister = Backbone.Model.extend({
