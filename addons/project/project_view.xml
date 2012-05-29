@@ -310,7 +310,7 @@
                         <button name="%(action_project_task_reevaluate)d" states="done,cancelled" string="Reactivate" type="action" context="{'button_reactivate':True}" />
                         <button name="do_pending" states="open" string="Pending" type="object"/>
                         <button name="do_draft" states="open" string="Draft" type="object"/>
-                        <button name="%(action_project_task_delegate)d" states="pending,open,draft" string="Delegate" type="action"/>
+                        <button name="%(action_project_task_delegate)d" states="pending,open,draft" string="Delegate" type="action" groups="project.group_delegate_task"/>
                         <button name="do_cancel" states="draft,open,pending" string="Cancel" type="object"/>
                         <div class="oe_right">
                             <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}' select="1"/>
@@ -354,7 +354,7 @@
                                 </tree>
                             </field>
                         </page>
-                        <page string="Delegations History">
+                        <page string="Delegations History" groups="project.group_delegate_task">
                             <separator string="Parent Tasks" colspan="4"/>
                             <field colspan="4" height="150" name="parent_ids" nolabel="1"/>
                             <separator string="Delegated tasks" colspan="4"/>
