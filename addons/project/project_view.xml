@@ -383,11 +383,7 @@
                             <separator string="Miscellaneous" colspan="4"/>
                             <field name="partner_id" />
                             <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
-                            <group col="4" colspan="2" attrs="{'invisible': ['|', ('project_id','=', False), ('stage_id','=', False)]}">
-                                <field name="stage_id" widget="selection" readonly="1"/>
-                                <button name="prev_type" string="Previous" type="object" icon="gtk-go-back" help="Change to Previous Stage"/>
-                                <button name="next_type" string="Next" type="object" icon="gtk-go-forward" help="Change to Next Stage"/>
-                            </group>
+                            <field name="state" groups="base.group_no_one"/>
                             <separator colspan="4" string="Notes"/>
                             <field colspan="4" name="notes" nolabel="1"/>
                         </page>
