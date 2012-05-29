@@ -331,6 +331,9 @@ instance.web.EventDispatcherMixin = _.extend({}, instance.web.ParentedMixin, {
     },
     on: function(events, dest, func) {
         var self = this;
+        if (!(func instanceof Function)) {
+            throw new Error("Event handler must be a function.");
+        }
         events = events.split(/\s+/);
         _.each(events, function(eventName) {
             self.__edispatcherEvents.on(eventName, func, dest);
@@ -708,6 +711,12 @@ instance.web.Widget = instance.web.Class.extend(instance.web.WidgetMixin, {
             this.$element.replaceWith(elem);
             this.$element = elem;
         }
+    },
+    /**
+     * Shortcut for $element.find() like backbone
+     */
+    "$": function() {
+        return this.$element.find.apply(this.$element,arguments);
     },
     /**
      * Informs the action manager to do an action. This supposes that
@@ -1340,6 +1349,9 @@ instance.web.JsonRPC = instance.web.CallbackEnabled.extend({
     on_rpc_response: function() {
     },
     on_rpc_error: function(error) {
+    },
+    get_url: function (file) {
+        return this.prefix + file;
     },
 });
 

@@ -1,7 +1,7 @@
 <template>
 <t t-name="KanbanView">
-    <div class="oe_kanban_buttons"/>
     <div class="oe_kanban_view">
+        <div class="oe_kanban_buttons"/>
         <table class="oe_kanban_groups">
         <tr class="oe_kanban_groups_headers">
         </tr>
@@ -12,15 +12,21 @@
 </t>
 <div t-name="KanbanView.buttons" class="oe_kanban_buttons">
     <t t-if="widget.options.action_buttons !== false">
-        <button type="button" class="oe_button oe_kanban_button_new">Create</button>
+        <t t-if="widget._is_create_enabled()">
+            <button type="button" class="oe_button oe_kanban_button_new oe_form_button_hi">
+                <t t-esc="widget.options.create_text || _t('Create')"/>
+            </button>
+        </t>
     </t>
 </div>
 <t t-name="KanbanView.group_header">
-    <td>
+    <td class="oe_kanban_group_header">
         <t t-if="widget.view.group_by">
-            <div class="oe_kanban_group_header">
+            <div class="oe_kanban_header">
                 <div class="oe_kanban_fold_icon"></div>
-                <div class="oe_kanban_add"></div>
+                <t t-if="widget.view._is_quick_create_enabled()">
+                    <div class="oe_kanban_add"></div>
+                </t>
                 <div class="oe_fold_column">
                     <div t-attf-class="oe_kanban_group_title #{widget.undefined_title ? 'oe_kanban_group_title_undefined' : ''}">
                         <t t-esc="widget.title"/>
@@ -34,6 +40,9 @@
                 </div>
                 <p t-if="widget.title" class="oe_kanban_group_title_vertical"><t t-esc="widget.title"/></p>
             </div>
+        </t>
+        <t t-if="! widget.view.group_by &amp;&amp; widget.view._is_quick_create_enabled()">
+            <span class="oe_kanban_no_group_qc_placeholder"/>
         </t>
     </td>
 </t>
@@ -50,21 +59,15 @@
     </div>
 </t>
 <t t-name="KanbanColorPicker">
-    <table cellspacing="0" cellpadding="0" border="0" class="oe_kanban_color_picker">
-    <tr>
-        <t t-foreach="colors" t-as="color">
-            <td t-att-bgcolor="color">
-                <a href="#" t-att-data-color="color_index">
-                    <span t-if="__debug__"><t t-esc="color_index"/></span>
-                </a>
-            </td>
-            <t t-if="((color_index + 1) % Math.round(colors.length / columns)) == 0">&lt;/tr&gt;&lt;tr&gt;</t>
-        </t>
-    </tr>
-    </table>
+    <li t-foreach="widget.view.number_of_color_schemes" t-as="color">
+        <a href="#" t-att-data-color="color_index" t-attf-class="oe_kanban_color_#{color}"/>
+    </li>
 </t>
-<form t-name="KanbanView.quick_create" class="oe_kanban_quick_create">
-    <input/>
-    <button type="submit">Add</button>
-</form>
+<div t-name="KanbanView.quick_create" class="oe_kanban_quick_create">
+    <input t-att-placeholder="_t('Type name to create')"/>
+    <t t-if="widget._buttons">
+        <button class="oe-kanban-quick_create_add">Add</button>
+        <button class="oe-kanban-quick_create_close">Close</button>
+    </t>
+</div>
 </template>

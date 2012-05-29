@@ -10,7 +10,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         // records can be selected one by one
         'selectable': true,
         // list rows can be deleted
-        'deletable': true,
+        'deletable': false,
         // whether the column headers should be displayed
         'header': true,
         // display addition button, with that label
@@ -20,8 +20,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         'sortable': true,
         // whether the view rows can be reordered (via vertical drag & drop)
         'reorderable': true,
-        // display an edit icon linking to form view
-        'isClarkGable': true
+        'action_buttons': true,
     },
     /**
      * Core class for list-type displays.
@@ -70,8 +69,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             this.groups.datagroup = new instance.web.DataGroup(
                 this, this.model,
                 dataset.get_domain(),
-                dataset.get_context(),
-                {});
+                dataset.get_context());
             this.groups.datagroup.sort = this.dataset._sort;
         }
 
@@ -256,16 +254,17 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             e.stopPropagation();
             var $this = $(this);
             self.dataset.sort($this.data('id'));
-            if ($this.find('span').length) {
-                $this.find('span').toggleClass( 'ui-icon-triangle-1-s ui-icon-triangle-1-n');
+            if($this.hasClass("sortdown") || $this.hasClass("sortup"))  {
+                $this.toggleClass("sortdown").toggleClass("sortup");
             } else {
-                $this.append('<span class="ui-icon ui-icon-triangle-1-n">') .siblings('.oe-sortable').find('span').remove();
+                $this.toggleClass("sortdown");
             }
+            $this.siblings('.oe-sortable').removeClass("sortup sortdown");
 
             self.reload_content();
         });
 
-        // Add and delete
+        // Add button and Import link
         if (!this.$buttons) {
             this.$buttons = $(QWeb.render("ListView.buttons", {'widget':self}));
             if (this.options.$buttons) {
@@ -275,11 +274,11 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             }
             this.$buttons.find('.oe_list_add')
                     .click(this.proxy('do_add_record'))
-                    .prop('disabled', grouped && this.options.editable)
-                .end()
-                .find('.oe_list_delete')
-                    .click(this.proxy('do_delete_selected'))
-                    .prop('disabled', true);
+                    .prop('disabled', grouped && this.options.editable);
+            this.$buttons.on('click', '.oe_list_button_import', function() {
+                self.on_sidebar_import();
+                return false;
+            });
         }
 
         // Pager
@@ -339,6 +338,9 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         if (!this.sidebar && this.options.$sidebar) {
             this.sidebar = new instance.web.Sidebar(this);
             this.sidebar.appendTo(this.options.$sidebar);
+            this.sidebar.add_items('other', [
+                { label: _t('Delete'), callback: this.do_delete_selected },
+            ]);
             this.sidebar.add_toolbar(this.fields_view.toolbar);
         }
     },
@@ -356,11 +358,18 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             this.dataset._length = dataset._length;
         }
 
-        var page = this.page + 1,
-           total = Math.floor(dataset.size() / this.limit()) + 1;
+        var total = dataset.size();
+        var spager = '-';
+        if (total) {
+            var range_start = this.page * this.limit() + 1;
+            var range_stop = range_start - 1 + this.limit();
+            if (range_stop > total) {
+                range_stop = total;
+            }
+            spager = _.str.sprintf('%d-%d of %d', range_start, range_stop, total);
+        }
 
-        this.$pager.find('.oe-pager-state').text(isNaN(total)
-                ? '-' : _.str.sprintf('%d / %d', page, total));
+        this.$pager.find('.oe-pager-state').text(spager);
     },
     /**
      * Sets up the listview's columns: merges view and fields data, move
@@ -598,7 +607,6 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
      * @param {Array} records selected record values
      */
     do_select: function (ids, records) {
-        this.$buttons.find('.oe_list_delete').attr('disabled', !ids.length);
         if (!ids.length) {
             this.dataset.index = 0;
             if (this.sidebar) {
@@ -669,7 +677,12 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
      * Handles deletion of all selected lines
      */
     do_delete_selected: function () {
-        this.do_delete(this.groups.get_selection().ids);
+        var ids = this.groups.get_selection().ids;
+        if (ids.length) {
+            this.do_delete(this.groups.get_selection().ids);
+        } else {
+            this.do_warn(_t("Warning"), _t("You must select at least one record."));
+        }
     },
     /**
      * Computes the aggregates for the current list view, either on the
@@ -807,15 +820,18 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         }
     },
     no_result: function () {
+        this.$element.find('.oe_view_nocontent').remove();
         if (this.groups.group_by
             || !this.options.action
             || !this.options.action.help) {
             return;
         }
-        this.$element.children('table').replaceWith(
-            $('<div class="oe_listview_nocontent">')
-                .append($('<img>', { src: '/web/static/src/img/list_empty_arrow.png' }))
-                .append($('<div>').html(this.options.action.help)));
+        this.$element.find('table:first').hide();
+        this.$element.prepend(
+            $('<div class="oe_view_nocontent">')
+                .append($('<img>', { src: '/web/static/src/img/view_empty_arrow.png' }))
+                .append($('<div>').html(this.options.action.help))
+        );
     }
 });
 instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.ListView.List# */{
@@ -931,11 +947,7 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
                     if (!self.dataset.select_id(row_id)) {
                         throw "Could not find id in dataset"
                     }
-                    var view;
-                    if ($(e.target).is('.oe-record-edit-link-img')) {
-                        view = 'form';
-                    }
-                    self.row_clicked(e, view);
+                    self.row_clicked(e);
                 }
             });
     },
@@ -1009,9 +1021,6 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
         var cells = [];
         if (this.options.selectable) {
             cells.push('<th class="oe-record-selector"></td>');
-        }
-        if (this.options.isClarkGable) {
-            cells.push('<th class="oe-record-edit-link"></td>');
         }
         _(this.columns).each(function(column) {
             if (column.invisible === '1') {
@@ -1319,9 +1328,6 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
             $('<td>').text(group.length).appendTo($row);
 
             if (self.options.selectable) {
-                $row.append('<td>');
-            }
-            if (self.options.isClarkGable) {
                 $row.append('<td>');
             }
             _(self.columns).chain()

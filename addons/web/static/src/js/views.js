@@ -237,7 +237,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         var self = this;
         this.$element.find('.oe_view_manager_switch a').click(function() {
             self.on_mode_switch($(this).data('view-type'));
-        });
+        }).tipsy();
         var views_ids = {};
         _.each(this.views_src, function(view) {
             self.views[view.view_type] = $.extend({}, view, {
@@ -295,7 +295,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             if (view.embedded_view) {
                 controller.set_embedded_view(view.embedded_view);
             }
-            controller.do_switch_view.add_last(this.on_mode_switch);
+            controller.do_switch_view.add_last(_.bind(this.switch_view, this));
             controller.do_prev_view.add_last(this.on_prev_view);
             var container = this.$element.find(".oe_view_manager_view_" + view_type);
             view_promise = controller.appendTo(container);
@@ -341,6 +341,14 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                     self.display_title());
         });
         return view_promise;
+    },
+    /**
+     * Method used internally when a view asks to switch view. This method is meant
+     * to be extended by child classes to change the default behavior, which simply
+     * consist to switch to the asked view.
+     */
+    switch_view: function(view_type, no_store) {
+        return this.on_mode_switch(view_type, no_store);
     },
     /**
      * Returns to the view preceding the caller view in this manager's
@@ -607,6 +615,17 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
             case 'edit':
                 this.do_edit_resource($option.data('model'), $option.data('id'), { name : $option.text() });
                 break;
+            case 'manage_filters':
+                this.do_action({
+                    res_model: 'ir.filters',
+                    views: [[false, 'list'], [false, 'form']],
+                    type: 'ir.actions.act_window',
+                    context: {
+                        search_default_my_filters: true,
+                        search_default_model_id: this.dataset.model
+                    }
+                });
+                break;
             default:
                 if (val) {
                     console.log("No debug handler for ", val);
@@ -636,8 +655,6 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
         var self = this;
 
         return $.when(this._super(view_type, no_store)).then(function () {
-            self.shortcut_check(self.views[view_type]);
-
             var controller = self.views[self.active_view].controller,
                 fvg = controller.fields_view,
                 view_id = (fvg && fvg.view_id) || '--';
@@ -649,15 +666,6 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
                 self.$element.find('.oe_view_title_text').text(fvg.arch.attrs.string || fvg.name);
             }
 
-            var $title = self.$element.find('.oe_view_title_text'),
-                $search_prefix = $title.find('span.oe_searchable_view');
-            if (controller.searchable !== false && self.flags.search_view !== false) {
-                if (!$search_prefix.length) {
-                    $title.prepend('<span class="oe_searchable_view">' + _t("Search: ") + '</span>');
-                }
-            } else {
-                $search_prefix.remove();
-            }
         });
     },
     do_push_state: function(state) {
@@ -681,44 +689,6 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
             self.views[self.active_view].controller.do_load_state(state, warm);
         });
     },
-    shortcut_check : function(view) {
-        var self = this;
-        var grandparent = this.getParent() && this.getParent().getParent();
-        // display shortcuts if on the first view for the action
-        var $shortcut_toggle = this.$element.find('.oe-shortcut-toggle');
-        if (!this.action.name ||
-            !(view.view_type === this.views_src[0].view_type
-                && view.view_id === this.views_src[0].view_id)) {
-            $shortcut_toggle.hide();
-            return;
-        }
-        $shortcut_toggle.removeClass('oe-shortcut-remove').show();
-        if (_(this.session.shortcuts).detect(function (shortcut) {
-                    return shortcut.res_id === self.session.active_id; })) {
-            $shortcut_toggle.addClass("oe-shortcut-remove");
-        }
-        this.shortcut_add_remove();
-    },
-    shortcut_add_remove: function() {
-        var self = this;
-        var $shortcut_toggle = this.$element.find('.oe-shortcut-toggle');
-        $shortcut_toggle
-            .unbind("click")
-            .click(function() {
-                if ($shortcut_toggle.hasClass("oe-shortcut-remove")) {
-                    $(self.session.shortcuts.binding).trigger('remove-current');
-                    $shortcut_toggle.removeClass("oe-shortcut-remove");
-                } else {
-                    $(self.session.shortcuts.binding).trigger('add', {
-                        'user_id': self.session.uid,
-                        'res_id': self.session.active_id,
-                        'resource': 'ir.ui.menu',
-                        'name': self.action.name
-                    });
-                    $shortcut_toggle.addClass("oe-shortcut-remove");
-                }
-            });
-    },
     display_title: function () {
         return this.action.name;
     }
@@ -730,7 +700,7 @@ instance.web.Sidebar = instance.web.Widget.extend({
         var view = this.getParent();
         this.sections = [
             { 'name' : 'print', 'label' : _t('Print'), },
-            { 'name' : 'files', 'label' : _t('Attachement'), },
+            { 'name' : 'files', 'label' : _t('Attachment'), },
             { 'name' : 'other', 'label' : _t('More'), }
         ];
         this.items = {
@@ -777,25 +747,6 @@ instance.web.Sidebar = instance.web.Widget.extend({
         self.$element.html(QWeb.render('Sidebar', {widget: self}));
         this.$element.find('ul').hide();
     },
-    add_section: function() {
-        var self = this;
-    },
-    add_toolbar: function(toolbar) {
-        var self = this;
-        _.each(['print','action','relate'], function(type) {
-            var items = toolbar[type];
-            if (items) {
-                for (var i = 0; i < items.length; i++) {
-                    items[i] = {
-                        label: items[i]['name'],
-                        action: items[i],
-                        classname: 'oe_sidebar_' + type
-                    }
-                }
-                self.add_items(type=='print' ? 'print' : 'other', items);
-            }
-        });
-    },
     /**
      * For each item added to the section:
      *
@@ -827,6 +778,22 @@ instance.web.Sidebar = instance.web.Widget.extend({
             this.items[section_code].push.apply(this.items[section_code],items);
             this.redraw();
         }
+    },
+    add_toolbar: function(toolbar) {
+        var self = this;
+        _.each(['print','action','relate'], function(type) {
+            var items = toolbar[type];
+            if (items) {
+                for (var i = 0; i < items.length; i++) {
+                    items[i] = {
+                        label: items[i]['name'],
+                        action: items[i],
+                        classname: 'oe_sidebar_' + type
+                    }
+                }
+                self.add_items(type=='print' ? 'print' : 'other', items);
+            }
+        });
     },
     on_item_action_clicked: function(item) {
         var self = this;
@@ -1312,11 +1279,6 @@ instance.web.str_to_xml = function(s) {
     xDoc.loadXML(s);
     return xDoc;
 }
-
-/**
- * Registry for all the client actions key: tag value: widget
- */
-instance.web.client_actions = new instance.web.Registry();
 
 /**
  * Registry for all the main views

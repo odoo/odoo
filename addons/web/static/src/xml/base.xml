@@ -125,7 +125,7 @@
                 <li><a href="#db_change_password">Password</a></li>
                 <li><a id="back_to_login" href="#">Back to Login</a></li>
             </ul>
-            <form id="db_create" name="create_db_form" class="oe_forms" method="POST">
+            <form id="db_create" name="create_db_form" method="POST">
                 <table align="center" class="db_option_table">
                     <tr>
                         <th colspan="2" class="option_string"> CREATE DATABASE </th>
@@ -136,7 +136,7 @@
                     </tr>
                     <tr>
                         <td><label for="db_name">New database name:</label></td>
-                        <td><input type="text" name="db_name" class="required" matches="^[a-zA-Z][a-zA-Z0-9_]+$"/></td>
+                        <td><input type="text" name="db_name" class="required" matches="^[a-zA-Z][a-zA-Z0-9_]+$" autofocus="true"/></td>
                     </tr>
                     <tr>
                         <td><label for="demo_data">Load Demonstration data:</label></td>
@@ -165,7 +165,7 @@
                     </tr>
                 </table>
             </form>
-            <form id="db_drop" name="drop_db_form" class="oe_forms" method="POST">
+            <form id="db_drop" name="drop_db_form" method="POST">
                 <table align="center" class="db_option_table">
                     <tr>
                         <th colspan="2" class="option_string"> DROP DATABASE </th>
@@ -190,7 +190,7 @@
                     </tr>
                 </table>
             </form>
-            <form id="db_backup" name="backup_db_form" class="oe_forms" method="POST" target="backup-target" action="/web/database/backup">
+            <form id="db_backup" name="backup_db_form" method="POST" target="backup-target" action="/web/database/backup">
                 <input type="hidden" name="token"/>
                 <table align="center" class="db_option_table">
                     <tr>
@@ -216,7 +216,7 @@
                     </tr>
                 </table>
             </form>
-            <form id="db_restore" name="restore_db_form" class="oe_forms" method="POST">
+            <form id="db_restore" name="restore_db_form" method="POST">
                 <table align="center" class="db_option_table">
                     <tr>
                         <th colspan="2" class="option_string"> RESTORE DATABASE </th>
@@ -238,7 +238,7 @@
                     </tr>
                 </table>
             </form>
-            <form id="db_change_password" name="change_pwd_form" class="oe_forms" method="POST">
+            <form id="db_change_password" name="change_pwd_form" method="POST">
                 <table align="center" class="db_option_table">
                     <tr>
                         <th colspan="2" class="option_string"> CHANGE MASTER PASSWORD </th>
@@ -262,32 +262,6 @@
             </form>
         </div>
     </div>
-</t>
-
-<t t-name="WebClient">
-    <table class="oe_webclient">
-        <tr>
-            <td colspan="2" class="oe_topbar">
-                <div class="oe_menu_placeholder"/>
-                <div class="oe_user_menu_placeholder"/>
-                <div class="oe_systray"/>
-            </td>
-        </tr>
-        <tr>
-            <td class="oe_leftbar" valign="top">
-                <t t-js="d">
-                    d.url = '/' + (window.location.search || '');
-                </t>
-                <a t-att-href="url" class="oe_logo"><img t-att-src='_s + "/web/static/src/img/logo.png"'/></a>
-                <div class="oe_secondary_menus_container"/>
-                <div class="oe_footer">
-                    Powered by <a href="http://www.openerp.com"><span>Open</span>ERP</a>
-                </div>
-            </td>
-            <td class="oe_application">
-            </td>
-        </tr>
-    </table>
 </t>
 
 <t t-name="Menu">
@@ -333,7 +307,7 @@
         t-att-data-action-model="menu.action ? menu.action.split(',')[0] : ''"
         t-att-data-action-id="menu.action ? menu.action.split(',')[1] : ''">
         <t t-esc="menu.name"/>
-        <t t-if="menu.needaction_enabled">
+        <t t-if="menu.needaction_enabled and menu.needaction_counter">
             <div class="oe_menu_counter">
                 <t t-esc="menu.needaction_counter"/>
             </div>
@@ -349,26 +323,16 @@
                 <span class="oe_topbar_name"/>
             </a>
             <ul class="oe_dropdown_options">
-                <!--<li><a href="#" data-menu="profile">Profile</a></li>-->
-                <li><a href="#" data-menu="settings">Settings</a></li>
-                <li><a href="#" data-menu="logout">Log out</a></li>
-                <li><hr/></li>
                 <li><a href="#" data-menu="about">About OpenERP</a></li>
-                <li><hr/></li>
+                <li><a href="#" data-menu="settings">Preferences</a></li>
+                <li><a href="#" data-menu="logout">Log out</a></li>
             </ul>
         </li>
     </ul>
 </t>
-<t t-name="UserMenu.shortcut">
-    <li t-foreach="shortcuts" t-as="shortcut">
-        <a href="#" data-menu="shortcut" t-att-data-id="shortcut.res_id" t-att-data-shortcut-id="shortcut.id">
-            <t t-esc="shortcut.name"/>
-        </a>
-    </li>
-</t>
-<t t-name="About-Page">
+<t t-name="UserMenu.about">
     <div>
-        <a class="oe_activate_debug_mode" href="?debug" style="float:right; font-size: 80%;">Activate the developper mode</a>
+        <a class="oe_activate_debug_mode" href="?debug" style="float:right; font-size: 80%;">Activate the developer mode</a>
         <h1 style="margin:0;">OpenERP</h1>
         <h3 style="margin:15px 0;padding:0;">Version <t t-esc="version_info.version"/></h3>
         <p>
@@ -383,8 +347,8 @@
         </p>
     </div>
 </t>
-<t t-name="Change_Pwd">
-    <form name="change_password_form" class="oe_forms" method="POST">
+<t t-name="UserMenu.password">
+    <form name="change_password_form" method="POST">
         <table align="center">
             <tr>
                 <td><label for="old_pwd">Old Password:</label></td>
@@ -408,27 +372,59 @@
     </form>
 </t>
 
+<t t-name="WebClient">
+    <table class="oe_webclient">
+        <tr>
+            <td colspan="2" class="oe_topbar">
+                <div class="oe_menu_placeholder"/>
+                <div class="oe_user_menu_placeholder"/>
+                <div class="oe_systray"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="oe_leftbar" valign="top">
+                <t t-js="d">
+                    d.url = '/' + (window.location.search || '');
+                </t>
+                <a t-att-href="url" class="oe_logo"><img t-att-src='_s + "/web/static/src/img/logo.png"'/></a>
+                <div class="oe_secondary_menus_container"/>
+                <div class="oe_footer">
+                    Powered by <a href="http://www.openerp.com"><span>Open</span>ERP</a>
+                </div>
+            </td>
+            <td class="oe_application">
+            </td>
+        </tr>
+    </table>
+</t>
+
 <t t-name="ViewManager">
     <div class="oe_view_manager">
-        <table class="oe_view_manager_header2">
+        <table class="oe_view_manager_header">
             <col width="33%"/>
             <col width="33%"/>
             <col width="34%"/>
-            <tr>
+            <tr class="oe_header_row">
                 <td colspan="2">
-                    <h2 class="oe_view_title" t-if="widget.flags.display_title !== false">
-                        <span class="oe_view_title_text"><t t-esc="widget.display_title()"/></span>
-                    </h2>
+                        <h2 class="oe_view_title" t-if="widget.flags.display_title !== false">
+                            <span class="oe_view_title_text"><t t-esc="widget.display_title()"/></span>
+                        </h2>
                 </td>
-                <td> <div class="oe_view_manager_view_search" t-opentag="true"/> </td>
+                <td>
+                        <div class="oe_view_manager_view_search" t-opentag="true"/>
+                </td>
             </tr>
-            <tr>
-                <td> <div class="oe_view_manager_buttons"/> </td>
-                <td> <div class="oe_view_manager_sidebar"/> </td>
+            <tr class="oe_header_row">
+                <td>
+                        <div class="oe_view_manager_buttons"/>
+                </td>
+                <td>
+                        <div class="oe_view_manager_sidebar"/>
+                </td>
                 <td>
                     <ul class="oe_view_manager_switch oe_button_group oe_right">
-                        <t t-if="widget.views_src.length != 1" t-foreach="widget.views_src" t-as="view">
-                          <li><a t-attf-class="oe_vm_switch_#{view.view_type} oe_i" t-att-data-view-type="view.view_type" t-att-title="view.label || view.view_type">
+                        <t t-if="widget.views_src.length > 2" t-foreach="widget.views_src" t-as="view">
+                          <li t-if="view.view_type != 'form'" class="oe_e"><a t-attf-class="oe_vm_switch_#{view.view_type}" t-att-data-view-type="view.view_type" t-att-title="view.label || view.view_type">
                             </a></li>
                         </t>
                     </ul>
@@ -436,6 +432,8 @@
                 </td>
             </tr>
         </table>
+
+
         <div class="oe_view_manager_body">
             <t t-foreach="widget.views_src" t-as="view">
                 <div t-attf-class="oe_view_manager_view_#{view.view_type}"/>
@@ -443,12 +441,9 @@
         </div>
     </div>
 </t>
+
 <t t-name="ViewManagerAction" t-extend="ViewManager">
-    <t t-jquery="h2.oe_view_title" t-operation="prepend">
-        <a t-if="widget.flags.display_title !== false" class="oe-shortcut-toggle" title="Add / Remove Shortcut..."
-            href="javascript: void(0)"> </a>
-    </t>
-    <t t-jquery="h2.oe_view_title" t-operation="after">
+    <t t-jquery="h2.oe_view_title" t-operation="before">
         <select t-if="widget.session.debug" class="oe_debug_view"/>
     </t>
 </t>
@@ -458,6 +453,7 @@
     <option t-if="view_manager.active_view === 'form'" value="toggle_layout_outline">Toggle Form Layout Outline</option>
     <option value="fields">View Fields</option>
     <option value="fvg">Fields View Get</option>
+    <option value="manage_filters">Manage Filters</option>
     <t t-if="view_manager.session.uid === 1">
         <option value="manage_views">Manage Views</option>
         <option value="edit" data-model="ir.ui.view" t-att-data-id="view.fields_view.view_id">Edit <t t-esc="_.str.capitalize(view.fields_view.type)"/>View</option>
@@ -608,9 +604,9 @@
 </tr>
 
 <table t-name="ListView" class="oe-listview-content">
-    <t t-set="columns_count" t-value="visible_columns.length + (options.selectable ? 1 : 0) + (options.deletable ? 1 : 0) + (options.isClarkGable ? 1 : 0)"/>
+    <t t-set="columns_count" t-value="visible_columns.length + (options.selectable ? 1 : 0) + (options.deletable ? 1 : 0)"/>
     <thead>
-        <tr t-if="options.action_buttons !== false or options.pager !== false">
+        <tr t-if="(!!options.action_buttons and !options.$buttons) or (!!options.pager and !options.$pager)">
             <th t-att-colspan="columns_count">
                 <div class="oe_list_buttons"/>
                 <div class="oe_list_sidebar"/>
@@ -626,7 +622,6 @@
             <th t-if="options.selectable" width="1"  >
                 <input type="checkbox" class="all-record-selector"/>
             </th>
-            <th t-if="options.isClarkGable" width="1"></th>
             <t t-foreach="columns" t-as="column">
                 <th t-if="!column.meta and column.invisible !== '1'" t-att-data-id="column.id"
                     t-att-class="((options.sortable and column.tag !== 'button') ? 'oe-sortable' : null)">
@@ -639,7 +634,6 @@
     <tfoot>
         <tr>
             <td t-if="options.selectable"/>
-            <td t-if="options.isClarkGable"/>
             <td t-foreach="aggregate_columns" t-as="column" class="oe-list-footer oe-number"
                 t-att-data-field="column.id" t-att-title="column.label">
             </td>
@@ -649,12 +643,10 @@
 </table>
 <div t-name="ListView.buttons" class="oe_list_buttons">
     <t t-if="!widget.no_leaf and widget.options.action_buttons !== false">
-        <button type="button" class="oe_button oe_list_add" t-if="widget.options.addable">
+        <button type="button" class="oe_button oe_list_add oe_form_button_hi" t-if="widget.options.addable">
             <t t-esc="widget.options.addable"/>
         </button>
-        <button type="button" class="oe_button oe_list_delete" t-if="widget.options.selectable and widget.options.deletable">
-            Delete
-        </button>
+        <span class="oe_fade">or</span> <a href="#" class="oe_bold oe_list_button_import">Import</a>
     </t>
 </div>
 <t t-name="ListView.pager">
@@ -684,9 +676,6 @@
         <input t-if="options.radio" type="radio" name="radiogroup" t-att-checked="checked"/>
         <input t-if="!options.radio" type="checkbox" name="radiogroup" t-att-checked="checked"/>
     </th>
-    <th t-if="options.isClarkGable" class="oe-record-edit-link" width="1">
-        <img src="/web/static/src/img/pencil.gif" width="12" height="12" class="oe-record-edit-link-img"/>
-    </th>
     <t t-foreach="columns" t-as="column">
         <t t-set="align" t-value="column.type === 'integer' or column.type == 'float'"/>
         <td t-if="!column.meta and column.invisible !== '1'" t-att-title="column.help"
@@ -714,12 +703,9 @@
         <span class="oe_form_buttons_view">
             <button type="button" class="oe_button oe_form_button_edit">Edit</button>
             <button type="button" class="oe_button oe_form_button_create">Create</button>
-            <button type="button" class="oe_button oe_form_button_duplicate">Duplicate</button>
-            <button type="button" class="oe_button oe_form_button_delete">Delete</button>
         </span>
         <span class="oe_form_buttons_edit">
-            <button type="button" class="oe_button oe_form_button_save">Save</button> or
-            <a href="#" class="oe_form_button_cancel">Discard</a>
+            <button type="button" class="oe_button oe_form_button_save">Save</button> <span class="oe_fade">or</span> <a href="#" class="oe_bold oe_form_button_cancel">Discard</a>
         </span>
     </t>
 </div>
@@ -730,7 +716,7 @@
         </t>
     </div>
 </t>
-<form t-name="FormView.set_default" class="oe_forms oe_frame">
+<form t-name="FormView.set_default">
     <t t-set="args" t-value="widget.dialog_options.args"/>
     <table style="width: 100%">
         <tr>
@@ -839,7 +825,6 @@
             t-att-title="help"
             t-attf-class="#{classnames} oe_form_label#{help ? '_help' : ''} oe_align_#{align}">
         <t t-esc="string"/>
-        <span t-if="help">?</span>
     </label>
 </t>
 
@@ -991,11 +976,12 @@
     </div>
 </t>
 <t t-name="web.datetimepicker">
+    <t t-set="placeholder" t-value="widget.getParent().node and widget.getParent().node.attrs.placeholder"/>
     <div class="oe_datepicker_root oe_form_field_datetime">
         <input type="text" class="oe_datepicker_container" disabled="disabled" style="display: none;"/>
         <input type="text"
             t-att-name="widget.name"
-            t-att-placeholder="widget.getParent().node.attrs.placeholder"
+            t-att-placeholder="placeholder"
             t-attf-class="oe_datepicker_master field_#{widget.type_of_date} oe_form_field_#{widget.type_of_date}"
         /><img class="oe_input_icon oe_datepicker_trigger" t-att-src='_s + "/web/static/src/img/ui/field_calendar.png"'
              title="Select date" width="16" height="16" border="0"/>
@@ -1034,8 +1020,8 @@
                     <img t-att-src='_s + "/web/static/src/img/down-arrow.png"' /></span>
             </td>
             <td width="16">
-                <button class="oe_button oe_field_button oe-m2o-cm-button">
-                    <img t-att-src='_s + "/web/static/src/img/icons/gtk-go-forward.png"'/>
+                <button class="oe_button oe_field_button oe-m2o-cm-button" title="Open Resource">
+                    <img t-att-src='_s + "/web/static/src/img/icons/terp-folder-yellow.png"'/>
                 </button>
             </td>
         </tr>
@@ -1064,7 +1050,7 @@
     </t>
 </t>
 <t t-name="FieldReference">
-    <table class="oe_form_field_reference oe_frame oe_forms" border="0" cellpadding="0" cellspacing="0">
+    <table class="oe_form_field_reference oe_form" border="0" cellpadding="0" cellspacing="0">
     <tr>
         <td t-attf-class="oe_form_frame_cell oe_form_selection oe_form_view_reference_selection">
         </td>
@@ -1311,7 +1297,31 @@
 </t>
 
 <div t-name="SearchView" class="oe_searchview">
+    <div class="oe_searchview_facets"/>
+    <div class="oe_searchview_clear"/>
+    <div class="oe_searchview_unfold_drawer"/>
+    <div class="oe_searchview_drawer"/>
 </div>
+
+<div t-name="SearchView.InputView"
+     class="oe_searchview_input"
+     contenteditable="true"/>
+<!-- tabindex: makes div focusable -->
+<div t-name="SearchView.FacetView"
+     class="oe_searchview_facet"
+     tabindex="0"
+    ><span class="oe_facet_remove">✖</span
+    ><span class="oe_facet_category oe_i" t-if="widget.model.has('icon')">
+        <t t-esc="widget.model.get('icon')"/>
+    </span
+    ><span class="oe_facet_category" t-if="!widget.model.has('icon')">
+        <t t-esc="widget.model.get('category')"/>
+    </span ><span class="oe_facet_values"
+/></div>
+<span t-name="SearchView.FacetView.Value" class="oe_facet_value">
+    <t t-esc="widget.model.get('label')"/>
+</span>
+
 <t t-name="SearchView.managed-filters">
     <option class="oe-filters-title" value="">Filters</option>
     <optgroup label="-- Filters --">
@@ -1338,7 +1348,7 @@
     </div>
 </t>
 <t t-name="SearchView.add_to_dashboard">
-    <div class="oe_forms">
+    <div class="oe_form">
         <p><b>Select Dashboard to add this filter to:</b></p>
         <select style="width: 100%; margin-right: 1em;">
             <option t-foreach="dashboards" t-as="menu" t-att-value="menu.id" t-att-selected="(menu.id == selected_menu_id) || undefined"><t t-esc="menu.name"/></option>
@@ -1368,8 +1378,9 @@
     <t t-esc="attrs.string"/>
 </button>
 <ul t-name="SearchView.filters">
-    <li t-foreach="widget.filters" t-as="filter">
-        <t t-esc="filter.attrs.string or filter.attrs.name or 'Ω'"/>
+    <li t-foreach="widget.filters" t-as="filter"
+            t-att-title="filter.attrs.string ? filter.attrs.help : undefined">
+        <t t-esc="filter.attrs.string or filter.attrs.help or filter.attrs.name or 'Ω'"/>
     </li>
 </ul>
 <t t-name="SearchView.filters.facet">
@@ -1464,8 +1475,22 @@
         </t>
     </t>
 </t>
+<div t-name="SearchView.Filters" class="oe_searchview_filters">
+
+</div>
+<div t-name="SearchView.CustomFilters" class="oe_searchview_custom">
+    <ul class="oe_searchview_custom_list"/>
+    <h4 class="oe_searchview_custom_title">
+        <label for="oe_searchview_custom_input">Save search</label></h4>
+    <form>
+        <input id="oe_searchview_custom_input"/>
+        <button>Save</button><br/>
+        <label for="oe_searchview_custom_public">Share with all users:</label>
+        <input id="oe_searchview_custom_public" type="checkbox"/>
+    </form>
+</div>
 <div t-name="SearchView.advanced" class="oe_searchview_advanced">
-    <h4>Advanced Search...</h4>
+    <h4>Advanced Search</h4>
     <form>
         <ul>
 
@@ -1487,32 +1512,29 @@
         </select>
         <select class="searchview_extended_prop_op"/>
         <span class="searchview_extended_prop_value"/>
-        <a class="searchview_extended_delete_prop"
-                href="javascript:void(0)"><span> </span></a>
+        <button type="button" class="searchview_extended_delete_prop">Delete</button>
     </li>
 </t>
 <t t-name="SearchView.extended_search.proposition.char">
-    <input t-att-id="widget.element_id" class="field_char"/>
+    <input class="field_char"/>
 </t>
 <t t-name="SearchView.extended_search.proposition.empty">
-    <span t-att-id="widget.element_id"></span>
+    <span/>
 </t>
 <t t-name="SearchView.extended_search.proposition.integer">
-    <input type="number" t-att-id="widget.element_id" class="field_integer" step="1"/>
+    <input type="number" class="field_integer" step="1"/>
 </t>
 <t t-name="SearchView.extended_search.proposition.float">
-    <input type="number" t-att-id="widget.element_id" class="field_float" step="0.01"/>
-</t>
-<t t-name="SearchView.extended_search.proposition.boolean">
+    <input type="number" class="field_float" step="0.01"/>
 </t>
 <t t-name="SearchView.extended_search.proposition.selection">
-    <select t-att-id="widget.element_id">
+    <select>
         <t t-foreach="widget.field.selection" t-as="element">
         <option t-att-value="element[0]"><t t-esc="element[1]"/></option>
         </t>
     </select>
 </t>
-<t t-name="SelectCreatePopup">
+<t t-name="AbstractFormPopup.render">
     <div>
         <table style="width:100%">
             <tr style="width:100%">
@@ -1526,31 +1548,22 @@
                 </td>
             </tr>
         </table>
-        <div class="oe-select-create-popup-view-form" style="width:100%"></div>
+        <div class="oe-form-view-popup-form-placeholder oe-select-create-popup-view-form" style="width:100%"></div>
     </div>
 </t>
 <t t-name="SelectCreatePopup.search.buttons">
     <button type="button" class="oe_button oe_selectcreatepopup-search-select" disabled="disabled">Select</button>
     <button type="button" class="oe_button oe_selectcreatepopup-search-close">Cancel</button>
 </t>
-<t t-name="SelectCreatePopup.form.buttons">
-    <t t-if="widget.options.disable_multiple_selection">
-        <button type="button" class="oe_button oe_selectcreatepopup-form-save">Save</button>
+<t t-name="AbstractFormPopup.buttons">
+    <t t-if="! multi_select">
+        <button type="button" class="oe_button oe_abstractformpopup-form-save">Save</button>
     </t>
-    <t t-if="! widget.options.disable_multiple_selection">
-        <button type="button" class="oe_button oe_selectcreatepopup-form-save-new">Save &amp; New</button>
-        <button type="button" class="oe_button oe_selectcreatepopup-form-save">Save &amp; Close</button>
+    <t t-if="multi_select">
+        <button type="button" class="oe_button oe_abstractformpopup-form-save-new">Save &amp; New</button>
+        <button type="button" class="oe_button oe_abstractformpopup-form-save">Save &amp; Close</button>
     </t>
-    <button type="button" class="oe_button oe_selectcreatepopup-form-close">Cancel</button>
-</t>
-<t t-name="FormOpenPopup">
-    <div>
-        <div class="oe-form-open-popup-form-view" style="width:100%"></div>
-    </div>
-</t>
-<t t-name="FormOpenPopup.form.buttons">
-    <button type="button" class="oe_button oe_formopenpopup-form-save">Save</button>
-    <button type="button" class="oe_button oe_formopenpopup-form-close">Cancel</button>
+    <button type="button" class="oe_button oe_abstractformpopup-form-close">Cancel</button>
 </t>
 <t t-extend="ListView.row">
     <!-- adds back padding to row being rendered after edition, if necessary
@@ -1803,5 +1816,8 @@
         <pre><t t-esc="error.preview"/></pre>
     </t>
 </t>
+<div t-name="Many2ManyKanban.quick_create" class="oe_kanban_quick_create">
+    <input t-att-placeholder="_t('Type name to search')"/>
+</div>
 
 </templates>

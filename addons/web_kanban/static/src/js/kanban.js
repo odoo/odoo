@@ -10,11 +10,11 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
     display_name: _lt('Kanban'),
     default_nr_columns: 3,
     view_type: "kanban",
+    quick_create_class: "instance.web_kanban.QuickCreate",
+    number_of_color_schemes: 10,
     init: function (parent, dataset, view_id, options) {
-        this._super(parent);
-        this.set_default_options(options);
-        this.dataset = dataset;
-        this.view_id = view_id;
+        this._super(parent, dataset, view_id, options);
+        _.defaults(this.options, {"quick_creatable": true, "creatable": true, "create_text": undefined});
         this.fields_view = {};
         this.fields_keys = [];
         this.group_by = null;
@@ -36,7 +36,24 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         this.limit = options.limit || 80;
         this.add_group_mutex = new $.Mutex();
     },
+    start: function() {
+        var self = this;
+        var def = this._super.apply(this, arguments);
+        // Bind kanban cards dropdown menus
+        $('html').on('click.kanban', function() {
+            self.trigger('hide_menus');
+        });
+        this.on('hide_menus', this, function() {
+            self.$element.find('.oe_kanban_menu').hide();
+        });
+        return def;
+    },
+    destroy: function() {
+        this._super.apply(this, arguments);
+        $('html').off('click.kanban');
+    },
     on_loaded: function(data) {
+        this.fields_view = data;
         this.$buttons = $(QWeb.render("KanbanView.buttons", {'widget': this}));
         if (this.options.$buttons) {
             this.$buttons.appendTo(this.options.$buttons);
@@ -46,11 +63,24 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         this.$buttons
             .on('click','button.oe_kanban_button_new', this.do_add_record);
         this.$groups = this.$element.find('.oe_kanban_groups tr');
-        this.fields_view = data;
         this.fields_keys = _.keys(this.fields_view.fields);
         this.add_qweb_template();
         this.has_been_loaded.resolve();
         return $.when();
+    },
+    _is_quick_create_enabled: function() {
+        if (! this.options.quick_creatable)
+            return false;
+        if (this.fields_view.arch.attrs.quick_create !== undefined)
+            return JSON.parse(this.fields_view.arch.attrs.quick_create);
+        return !! this.group_by;
+    },
+    _is_create_enabled: function() {
+        if (! this.options.creatable)
+            return false;
+        if (this.fields_view.arch.attrs.create !== undefined)
+            return JSON.parse(this.fields_view.arch.attrs.create);
+        return true;
     },
     add_qweb_template: function() {
         for (var i=0, ii=this.fields_view.arch.children.length; i < ii; i++) {
@@ -83,7 +113,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             case 'button':
             case 'a':
                 var type = node.attrs.type || '';
-                if (_.indexOf('action,object,edit,delete,color'.split(','), type) !== -1) {
+                if (_.indexOf('action,object,edit,delete'.split(','), type) !== -1) {
                     _.each(node.attrs, function(v, k) {
                         if (_.indexOf('icon,type,name,args,string,context,states,kanban_states'.split(','), k) != -1) {
                             node.attrs['data-' + k] = v;
@@ -136,6 +166,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
     },
     do_search: function(domain, context, group_by) {
         var self = this;
+        this.$element.find('.oe_view_nocontent').remove();
         this.search_domain = domain;
         this.search_context = context;
         this.search_group_by = group_by;
@@ -172,10 +203,15 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             var def = $.Deferred();
             self.do_clear_groups();
             self.dataset.read_slice(self.fields_keys.concat(['__last_update']), { 'limit': self.limit }).then(function(records) {
-                var kgroup = new instance.web_kanban.KanbanGroup(self, records, null, self.dataset);
-                self.do_add_groups([kgroup]).then(function() {
-                    def.resolve();
-                });
+                if (_.isEmpty(records)) {
+                    self.no_result();
+                    def.reject();
+                } else {
+                    var kgroup = new instance.web_kanban.KanbanGroup(self, records, null, self.dataset);
+                    self.do_add_groups([kgroup]).then(function() {
+                        def.resolve();
+                    });
+                }
             }).then(null, function() {
                 def.reject();
             });
@@ -288,7 +324,24 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             this.do_warn("Kanban: could not find id#" + id);
         }
     },
+    no_result: function() {
+        if (this.groups.group_by
+            || !this.options.action
+            || !this.options.action.help) {
+            return;
+        }
+        this.$element.find('.oe_view_nocontent').remove();
+        this.$element.prepend(
+            $('<div class="oe_view_nocontent">')
+                .append($('<img>', { src: '/web/static/src/img/view_empty_arrow.png' }))
+                .append($('<div>').html(this.options.action.help))
+        );
+    }
 });
+
+function get_class(name) {
+    return new instance.web.Registry({'tmp' : name}).get_object("tmp");
+}
 
 instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
     template: 'KanbanView.group_header',
@@ -328,7 +381,7 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
         if (!this.view.state.groups[key]) {
             this.view.state.groups[key] = {
                 folded: false
-            }
+            };
         }
         this.state = this.view.state.groups[key];
         this.$records = null;
@@ -341,6 +394,12 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
     start: function() {
         var self = this,
             def = this._super();
+        if (! self.view.group_by) {
+            self.$element.addClass("oe_kanban_no_group");
+            self.quick = new (get_class(self.view.quick_create_class))(this, self.dataset, {}, false)
+                .on('added', self, self.proxy('quick_created'));
+            self.quick.replace($(".oe_kanban_no_group_qc_placeholder"));
+        }
         this.$records = $(QWeb.render('KanbanView.group_records_container', { widget : this}));
         this.$records.appendTo(this.view.$element.find('.oe_kanban_groups_records'));
         this.$element.find(".oe_kanban_fold_icon").click(function() {
@@ -350,9 +409,16 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
         });
         this.$element.find('.oe_kanban_add').click(function () {
             if (self.quick) { return; }
-            self.quick = new instance.web_kanban.QuickCreate(this)
-                .on('added', self, self.proxy('quick_add'));
-            self.quick.appendTo(self.$element.find('.oe_kanban_group_header'));
+            var ctx = {};
+            ctx['default_' + self.view.group_by] = self.value;
+            self.quick = new (get_class(self.view.quick_create_class))(this, self.dataset, ctx, true)
+                .on('added', self, self.proxy('quick_created'))
+                .on('close', self, function() {
+                    this.quick.destroy();
+                    delete this.quick;
+                });
+            self.quick.appendTo(self.$element.find('.oe_kanban_header'));
+            self.quick.focus();
         });
         this.$records.find('.oe_kanban_show_more').click(this.do_show_more);
         if (this.state.folded) {
@@ -361,7 +427,23 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
         this.$element.data('widget', this);
         this.$records.data('widget', this);
         this.$has_been_started.resolve();
+        this.compute_cards_auto_height();
         return def;
+    },
+    compute_cards_auto_height: function() {
+        // oe_kanban_auto_height is an empty class used by the kanban view in order
+        // to normalize height amongst kanban cards. (by group)
+        var self = this;
+        var min_height = 0;
+        var els = [];
+        _.each(this.records, function(r) {
+            var $e = r.$element.find('.oe_kanban_auto_height').first().css('min-height', 0);
+            if ($e.length) {
+                els.push($e[0]);
+                min_height = Math.max(min_height, $e.outerHeight());
+            }
+        });
+        $(els).css('min-height', min_height);
     },
     destroy: function() {
         this._super();
@@ -411,30 +493,13 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
         }
     },
     /**
-     * Handles user event from nested quick creation view
-     *
-     * @param {String} name name to give to the new record
-     */
-    quick_add: function (name) {
-        var context = {};
-        context['default_' + this.view.group_by] = this.value;
-        // FIXME: what if name_create fails?
-        new instance.web.Model(this.dataset.model).call(
-            'name_create', [name], {context: new instance.web.CompoundContext(
-                    this.dataset.get_context(), context)})
-            .then(this.proxy('quick_created'))
-    },
-    /**
      * Handles a non-erroneous response from name_create
      *
      * @param {(Id, String)} record name_get format for the newly created record
      */
     quick_created: function (record) {
-        var id = record[0], self = this;
-        this.quick.destroy();
-        delete this.quick;
-        new instance.web.Model(this.dataset.model).call(
-                'read', [[id], this.view.fields_keys], {})
+        var id = record, self = this;
+        this.dataset.read_ids([id], this.view.fields_keys)
             .then(function (records) {
                 self.view.dataset.ids.push(id);
                 self.do_add_records(records, 'prepend');
@@ -496,8 +561,9 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
         });
     },
     bind_events: function() {
-        var self = this,
-            $show_on_click = self.$element.find('.oe_kanban_box_show_onclick');
+        var self = this;
+        this.setup_color_picker();
+        var $show_on_click = self.$element.find('.oe_kanban_box_show_onclick');
         $show_on_click.toggle(this.state.folded);
         this.$element.find('.oe_kanban_box_show_onclick_trigger').click(function() {
             $show_on_click.toggle();
@@ -521,7 +587,13 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
             trigger: 'hover'
         });
 
+        // If no draghandle is found, make the whole card as draghandle
+        if (!this.$element.find('.oe_kanban_draghandle').length) {
+            this.$element.children(':first').addClass('oe_kanban_draghandle');
+        }
+
         this.$element.find('.oe_kanban_action').click(function() {
+            self.view.trigger('hide_menus');
             var $action = $(this),
                 type = $action.data('type') || 'button',
                 method = 'do_action_' + (type === 'action' ? 'object' : type);
@@ -534,6 +606,49 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
             }
             return false;
         });
+
+        this.$element.on('click', '.oe_kanban_menuaction', function() {
+            var $menu = $(this).next('.oe_kanban_menu');
+            var show = !$menu.is(':visible');
+            self.view.trigger('hide_menus');
+            var doc_width = $(document).width();
+            $menu.toggle(show);
+            if (show) {
+                var offset = $menu.offset();
+                var menu_width = $menu.width();
+                var x = doc_width - offset.left - menu_width - 15;
+                if (x < 0) {
+                    $menu.offset({ left: offset.left + x }).width(menu_width);
+                }
+            }
+            return false;
+        });
+
+        this.$element.on('click', this.on_card_clicked);
+    },
+    on_card_clicked: function() {
+        this.view.trigger('hide_menus');
+        this.view.open_record(this.id);
+    },
+    setup_color_picker: function() {
+        var self = this;
+        var $el = this.$element.find('ul.oe_kanban_colorpicker');
+        if ($el.length) {
+            $el.html(QWeb.render('KanbanColorPicker', {
+                widget: this
+            }));
+            $el.on('click', 'a', function() {
+                self.view.trigger('hide_menus');
+                var color_field = $(this).parents('.oe_kanban_colorpicker').first().data('field') || 'color';
+                var data = {};
+                data[color_field] = $(this).data('color');
+                self.view.dataset.write(self.id, data, {}, function() {
+                    self.record[color_field] = $(this).data('color');
+                    self.do_reload();
+                });
+                return false;
+            });
+        }
     },
     do_action_delete: function($action) {
         var self = this;
@@ -554,28 +669,6 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
             this.view.open_record(this.id);
         }
     },
-    do_action_color: function($action) {
-        var self = this,
-            colors = '#FFFFFF,#CCCCCC,#FFC7C7,#FFF1C7,#E3FFC7,#C7FFD5,#C7FFFF,#C7D5FF,#E3C7FF,#FFC7F1'.split(','),
-            $cpicker = $(QWeb.render('KanbanColorPicker', { colors : colors, columns: 2 }));
-        $action.after($cpicker);
-        $cpicker.mouseenter(function() {
-            clearTimeout($cpicker.data('timeoutId'));
-        }).mouseleave(function(evt) {
-            var timeoutId = setTimeout(function() { $cpicker.remove() }, 500);
-            $cpicker.data('timeoutId', timeoutId);
-        });
-        $cpicker.find('a').click(function() {
-            var data = {};
-            data[$action.data('name')] = $(this).data('color');
-            self.view.dataset.write(self.id, data, {}, function() {
-                self.record[$action.data('name')] = $(this).data('color');
-                self.do_reload();
-            });
-            $cpicker.remove();
-            return false;
-        });
-    },
     do_action_object: function ($action) {
         var button_attrs = $action.data();
         this.view.do_execute_action(button_attrs, this.view.dataset, this.id, this.do_reload);
@@ -585,19 +678,19 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
         this.view.dataset.read_ids([this.id], this.view.fields_keys.concat(['__last_update'])).then(function(records) {
             if (records.length) {
                 self.set_record(records[0]);
-                self.do_render();
+                var $render = $(self.render());
+                self.$element.replaceWith($render);
+                self.$element = $render;
+                self.$element.data('widget', self);
+                self.bind_events();
+                self.group.compute_cards_auto_height();
             } else {
                 self.destroy();
             }
         });
     },
-    do_render: function() {
-        this.$element.html(this.render());
-        this.bind_events();
-    },
-    kanban_color: function(variable) {
-        var number_of_color_schemes = 10,
-            index = 0;
+    kanban_getcolor: function(variable) {
+        var index = 0;
         switch (typeof(variable)) {
             case 'string':
                 for (var i=0, ii=variable.length; i<ii; i++) {
@@ -610,8 +703,12 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
             default:
                 return '';
         }
-        var color = (index % number_of_color_schemes);
-        return 'oe_kanban_color_' + color;
+        var color = (index % this.view.number_of_color_schemes);
+        return color;
+    },
+    kanban_color: function(variable) {
+        var color = this.kanban_getcolor(variable);
+        return color === '' ? '' : 'oe_kanban_color_' + color;
     },
     kanban_gravatar: function(email, size) {
         size = size || 22;
@@ -656,16 +753,68 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
  */
 instance.web_kanban.QuickCreate = instance.web.Widget.extend({
     template: 'KanbanView.quick_create',
-
+    
+    /**
+     * close_btn: If true, the widget will display a "Close" button able to trigger
+     * a "close" event.
+     */
+    init: function(parent, dataset, context, buttons) {
+        this._super(parent);
+        this._dataset = dataset;
+        this._buttons = buttons || false;
+        this._context = context || {};
+    },
     start: function () {
         var self = this;
-        var $input = this.$element.find('input');
-        $input.focus();
-        this.$element.on('submit', function () {
-            self.trigger('added', $input.val());
-            return false;
+        self.$input = this.$element.find('input');
+        self.$input.keyup(function(event){
+            if(event.keyCode == 13){
+                self.quick_add();
+            }
         });
-        return this._super();
+        $(".oe-kanban-quick_create_add", this.$element).click(function () {
+            self.quick_add();
+        });
+        $(".oe-kanban-quick_create_close", this.$element).click(function () {
+            self.trigger('close');
+        });
+    },
+    focus: function() {
+        this.$element.find('input').focus();
+    },
+    /**
+     * Handles user event from nested quick creation view
+     */
+    quick_add: function () {
+        var self = this;
+        this._dataset.call(
+            'name_create', [self.$input.val(), new instance.web.CompoundContext(
+                    this._dataset.get_context(), this._context)])
+            .pipe(function(record) {
+                self.$input.val("");
+                self.trigger('added', record[0]);
+            }, function(error, event) {
+                event.preventDefault();
+                return self.slow_create();
+            });
+    },
+    slow_create: function() {
+        var self = this;
+        var pop = new instance.web.form.SelectCreatePopup(this);
+        pop.select_element(
+            self._dataset.model,
+            {
+                title: _t("Create: ") + (this.string || this.name),
+                initial_view: "form",
+                disable_multiple_selection: true
+            },
+            [],
+            {"default_name": self.$input.val()}
+        );
+        pop.on_select_elements.add(function(element_ids) {
+            self.$input.val("");
+            self.trigger('added', element_ids[0]);
+        });
     }
 });
 };

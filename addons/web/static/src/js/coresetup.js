@@ -69,7 +69,6 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
             self.module_loaded[mod] = true;
         });
         this.context = {};
-        this.shortcuts = [];
         this.active_id = null;
         return this.session_init();
     },
@@ -122,6 +121,10 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
         var base_location = document.location.protocol + '//' + document.location.host;
         var params = { db: db, login: login, password: password, base_location: base_location };
         return this.rpc("/web/session/authenticate", params).pipe(function(result) {
+            if (!result.uid) {
+                return $.Deferred().reject();
+            }
+
             _.extend(self, {
                 session_id: result.session_id,
                 db: result.db,
@@ -284,9 +287,6 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
                 this.module_loaded[mod] = true;
             }
         }
-    },
-    get_url: function (file) {
-        return this.prefix + file;
     },
     /**
      * Cooperative file download implementation, for ajaxy APIs.
@@ -579,6 +579,33 @@ $.async_when = function() {
 	else
 		return old_async_when.apply(this, arguments);
 };
+
+/**
+ * Registry for all the client actions key: tag value: widget
+ */
+instance.web.client_actions = new instance.web.Registry();
+
+/**
+ * Client action to reload the whole interface.
+ * If params has an entry 'menu_id', it opens the given menu entry.
+ */
+instance.web.client_actions.add("reload", "instance.web.Reload");
+
+instance.web.Reload = instance.web.Widget.extend({
+    init: function(parent, params) {
+        this._super(parent);
+        this.menu_id = (params && params.menu_id) || false;
+    },
+    start: function() {
+        if (this.menu_id) {
+            // open the given menu id
+            var url_without_fragment = window.location.toString().split("#", 1)[0];
+            window.location = url_without_fragment + "#menu_id=" + this.menu_id;
+        } else {
+            window.location.reload();
+        }
+    }
+});
 
 };
 
