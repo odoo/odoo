@@ -73,11 +73,9 @@ class account_analytic_account(osv.osv):
             help="Fill this field if you plan to automatically generate invoices based " \
             "on the costs in this analytic account: timesheets, expenses, ..." \
             "You can configure an automatic invoice rate on analytic accounts."),
-        'use_timesheets': fields.boolean('Timesheets:', help="Check this field if this project manages timesheets"),
     }
     _defaults = {
         'pricelist_id': lambda self, cr, uid, ctx: ctx.get('pricelist_id', False),
-        'use_timesheets' : True,
     }
     def on_change_partner_id(self, cr, uid, ids,partner_id, context={}):
         res = super(account_analytic_account,self).on_change_partner_id(cr, uid, ids,partner_id, context=context)
