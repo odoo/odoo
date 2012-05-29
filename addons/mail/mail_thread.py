@@ -413,7 +413,9 @@ class mail_thread(osv.osv):
         """ OpenChatter feature: return thread messages
         """
         msg_ids = self.message_load_ids(cr, uid, ids, limit, offset, domain, ascent, root_ids, context=context)
-        return self.pool.get('mail.message').read(cr, uid, msg_ids, context=context)
+        msgs=self.pool.get('mail.message').read(cr, uid, msg_ids, context=context)
+        msgs= sorted(msgs, key=lambda d: (-d['id']))
+        return msgs
 
     def get_pushed_messages(self, cr, uid, ids, limit=100, offset=0, msg_search_domain=[], ascent=False, root_ids=[], context=None):
         """ OpenChatter: wall: get messages to display (=pushed notifications)
