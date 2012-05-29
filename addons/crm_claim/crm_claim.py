@@ -102,6 +102,13 @@ class crm_claim(crm.crm_case, osv.osv):
         self.create_send_note(cr, uid, [obj_id], context=context)
         return obj_id
 
+    def write(self, cr, uid, ids, vals, context=None):
+        if vals.get('stage_id'):
+            stage = self.pool.get('crm.case.stage').browse(cr, uid, vals['stage_id'], context=context)
+            message = _("Stage changed to <b>%s</b>.") % (stage.name)
+            self.message_append_note(cr, uid, ids, body=message, context=context)
+        return super(crm_claim,self).write(cr, uid, ids, vals, context)
+
     def create_send_note(self, cr, uid, ids, context=None):
         msg = '%s has been <b>created</b>.' % (self.case_get_note_msg_prefix(cr, uid, ids, context=context))
         self.message_append_note(cr, uid, ids, body=msg, context=context)
