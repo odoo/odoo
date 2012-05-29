@@ -306,8 +306,19 @@ account_cash_statement()
 class account_journal(osv.osv):
     _inherit = 'account.journal'
 
+    def _default_cashbox_line_ids(self, cr, uid, context=None):
+        # Return a list of coins in Euros.
+        result = [
+            dict(pieces=value) for value in [0.01, 0.02, 0.05, 0.1, 0.2, 0.5, 1, 2, 5, 10, 20, 50, 100, 200, 500]
+        ]
+        return result
+
     _columns = {
         'cashbox_line_ids' : fields.one2many('account.journal.cashbox.line', 'journal_id', 'CashBox'),
+    }
+
+    _defaults = {
+        'cashbox_line_ids' : _default_cashbox_line_ids,
     }
 
 account_journal()
