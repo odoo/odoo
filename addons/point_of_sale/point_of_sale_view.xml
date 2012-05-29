@@ -626,13 +626,13 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
-                  <group name="misc" position="after">
-              <group name="pos" colspan="2" col="2">
-                      <separator string="Point of Sale" colspan="2"/>
-                  <field name="income_pdt"/>
-                  <field name="expense_pdt"/>
-              </group>
-          </group>
+                <group name="misc" position="after">
+                    <group name="pos" colspan="2" col="2">
+                        <separator string="Point of Sale" colspan="2"/>
+                        <field name="income_pdt"/>
+                        <field name="expense_pdt"/>
+                    </group>
+                </group>
             </field>
         </record>
 
