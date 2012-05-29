@@ -92,30 +92,23 @@ class crm_phonecall(base_state, osv.osv):
         return obj_id
 
     def case_close(self, cr, uid, ids, context=None):
-        """Overrides close for crm_case for setting close date """
+        """ Overrides close for crm_case for setting duration """
         res = True
-        for phone in self.browse(cr, uid, ids):
+        for phone in self.browse(cr, uid, ids, context=context):
             phone_id = phone.id
-            data = {'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')}
+            data = {}
             if phone.duration <=0:
-                duration = datetime.now() - datetime.strptime(phone.date, '%Y-%m-%d %H:%M:%S')
-                data.update({'duration': duration.seconds/float(60)})
-            res = super(crm_phonecall, self).case_close(cr, uid, [phone_id], context)
-            self.write(cr, uid, [phone_id], data)
+                duration = datetime.now() - datetime.strptime(phone.date, DEFAULT_SERVER_DATETIME_FORMAT)
+                data['duration'] = duration.seconds/float(60)})
+            res = super(crm_phonecall, self).case_close(cr, uid, [phone_id], context=context)
+            self.write(cr, uid, [phone_id], data, context=context)
         return res
 
     def case_reset(self, cr, uid, ids, context=None):
         """Resets case as Todo
         """
         res = super(crm_phonecall, self).case_reset(cr, uid, ids, context)
-        self.write(cr, uid, ids, {'duration': 0.0, 'state':'open'})
-        return res
-
-    def case_open(self, cr, uid, ids, context=None):
-        """Overrides cancel for crm_case for setting Open Date
-        """
-        res = super(crm_phonecall, self).case_open(cr, uid, ids, context)
-        self.write(cr, uid, ids, {'date_open': time.strftime('%Y-%m-%d %H:%M:%S')})
+        self.write(cr, uid, ids, {'duration': 0.0, 'state':'open'}, context=context)
         return res
 
     def schedule_another_phonecall(self, cr, uid, ids, schedule_time, call_summary, \
