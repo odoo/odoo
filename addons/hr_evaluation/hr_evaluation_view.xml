@@ -162,7 +162,7 @@
                     <button name="button_draft" string="Reset to Draft" states="cancel" type="object"/>
                     <button name="button_cancel" string="Cancel" states="draft,wait,progress" type="object"/>
                     <div class="oe_right">
-                        <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,wait,done" statusbar_colors='{"progress":"blue"}'/>
+                        <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,progress,wait,done" statusbar_colors='{"progress":"blue"}'/>
                     </div>
                     <div class="oe_clear"/>
                 </div>
@@ -172,21 +172,20 @@
                         <field name="employee_id" on_change="onchange_employee_id(employee_id)"/>
                         <field name="plan_id"/>
                         <field name="date"/>
-                        <field name="progress" widget="progressbar"/>
                     </group>
-                    <group col="2" colspan="1">
+                    <group col="2" colspan="1" attrs="{'invisible':['|', ('state','=','draft'), ('state', '=', 'wait')]}">
                         <separator string="Ending Summary" colspan="2"/>
-                        <field name="rating" attrs="{'readonly':[('state','&lt;&gt;','progress')],'required':[('state','=','progress')]}"/>
+                        <field name="rating" attrs="{'readonly':[('state','&lt;&gt;','progress')]}"/>
                         <field name="date_close" readonly="1"/>
                     </group>
                     <notebook colspan="4">
-                        <page string="Appraisal">
+                        <page string="Appraisal" attrs="{'invisible':[('state','=','draft')]}">
                             <field name="survey_request_ids" nolabel="1" colspan="4" widget="one2many">
                                 <form string="Interview Appraisal">
                                     <group col="4" colspan="4">
                                         <field name="survey_id"/>
                                         <group col="2" colspan="2">
-                                            <button name="%(survey.action_view_survey_question_message)d" string="Interview Question" type="action" states="waiting_answer,done,cancel" icon="gtk-execute" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0, 'active' : response,'request' : True, 'object' : 'hr.evaluation.interview', 'cur_id' : active_id}" attrs="{'readonly':[('survey_id','=',False)]}"/>
+                                            <button name="%(survey.action_view_survey_question_message)d" string="Answer Survey" type="action" states="waiting_answer,done,cancel" icon="gtk-execute" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0, 'active' : response,'request' : True, 'object' : 'hr.evaluation.interview', 'cur_id' : active_id}" attrs="{'readonly':[('survey_id','=',False)]}"/>
                                             <button name="%(survey.survey_browse_response)d" string="Print Interview" type="action" states="done" icon="gtk-print" context="{'survey_id': survey_id, 'response_id' : [response], 'response_no':0,}" attrs="{'readonly':[('response','=',False)]}" />
                                         </group>
                                         <field name="date_deadline"/>
@@ -198,15 +197,16 @@
                                     <separator string="Status" colspan="4"/>
                                     <group colspan="4" col="6">
                                          <field name="state"/>
+                                         <button string="Done" name="survey_req_done" states="waiting_answer" type="object" icon="gtk-jump-to" />
                                     </group>
                                 </form>
                             </field>
                         </page>
-                        <page string="Internal Notes">
+                        <page string="Internal Notes" attrs="{'invisible':[('state','=','draft')]}">
                             <field name="note_action" colspan="4" nolabel="1"
                                 groups="base.group_hr_manager"/>
                         </page>
-                        <page string="Public Notes">
+                        <page string="Public Notes" attrs="{'invisible':[('state','=','draft')]}">
                             <field name="note_summary" colspan="4" nolabel="1"/>
                         </page>
                     </notebook>
@@ -258,6 +258,9 @@
                     <separator orientation="vertical"/>
                     <filter icon="terp-gnome-cpu-frequency-applet+" string="Late"
                         help="Appraisal that overpassed the deadline" domain="[('date','&lt;=',(datetime.date.today()).strftime('%%Y-%%m-%%d'))]" />
+                    <filter icon="terp-go-month" name="next_month" string=" Month+1" 
+                         domain="[('date','&lt;=', (datetime.date.today() + relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today() + relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d')),('state','=','draft')]"
+                         help="Appraisal during next month"/>
                     <separator orientation="vertical"/>
                     <field name="employee_id" />
                     <field name="plan_id" widget="selection" />
@@ -281,6 +284,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
             <field name="search_view_id" ref="hr_evaluation.evaluation_search"/>
+             <field name="context">{"search_default_next_month":1}</field>
             <field name="help">Each employee may be assigned an Appraisal Plan. Such a plan defines the frequency and the way you manage your periodic personnel evaluation. You will be able to define steps and attach interviews to each step. OpenERP manages all kind of evaluations: bottom-up, top-down, self-evaluation and final evaluation by the manager.</field>
         </record>
 
@@ -294,28 +298,27 @@
             <field name="arch" type="xml">
                 <form string="Interview Appraisal">
                     <group col="4" colspan="4">
-                        <field name="survey_id"/>
-                        <field name="evaluation_id"/>
-                        <group col="2" colspan="2">
-                            <button name="%(survey.action_view_survey_question_message)d" string="Interview Question" type="action" states="waiting_answer,done,cancel" icon="gtk-execute" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0, 'active' : response,'request' : True, 'object' : 'hr.evaluation.interview', 'cur_id' : active_id}" attrs="{'readonly':[('survey_id','=',False)]}"/>
-                            <button name="%(survey.survey_browse_response)d" string="Print Interview" type="action" states="done" icon="gtk-print" context="{'survey_id': survey_id, 'response_id' : [response], 'response_no':0,}" attrs="{'readonly':[('response','=',False)]}" />
-                        </group>
-                        <field name="date_deadline"/>
-                        <field name="response" readonly="1"/>
-                        <field name="user_to_review_id"/>
-                        <field name="user_id" string="Interviewer"/>
-                        <group col="2" colspan="2">
-                            <button string="Send Reminder Email"
-                            name="%(mail.action_email_compose_message_wizard)d"
-                            icon="terp-mail-message-new" type="action"
-                            states="waiting_answer"/>
-                            <button name="action_print_survey" string="Print Survey" type="object" icon="gtk-print" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0}" attrs="{'readonly':[('survey_id','=',False)]}"/>
+                         <field name="user_to_review_id"/>
+                         <field name="user_id" string="Interviewer"/>
+                         <field name="date_deadline"/>
+                          <group col="4" colspan="4">
+                                <field name="survey_id"/>
+                                <button name="action_print_survey" string="Print Survey" type="object" icon="gtk-print" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0}" attrs="{'readonly':[('survey_id','=',False)]}"/>
+                                <newline/>
+                                <field name="evaluation_id"/>
+                                <button string="Send Reminder Email" name="%(mail.action_email_compose_message_wizard)d" icon="terp-mail-message-new" type="action" states="waiting_answer"/>
+                                <newline/>
+                                <field name="response" readonly="1"/>
+                                <button name="%(survey.action_view_survey_question_message)d" string="Answer Survey" type="action" states="waiting_answer,done,cancel" icon="gtk-execute" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0, 'active' : response,'request' : True, 'object' : 'hr.evaluation.interview', 'cur_id' : active_id}" attrs="{'readonly':[('survey_id','=',False)]}"/>
                         </group>
                     </group>
                     <newline/>
                     <separator string="Status" colspan="4"/>
                     <group colspan="4" col="6">
-                         <field name="state"/>
+                         <field name="state" widget="statusbar" statusbar_visible="waiting_answer,done"/>
+                                <button string="Send Request" name="survey_req_waiting_answer" states="draft" type="object" icon="gtk-yes" />
+                                <button string="Done" name="survey_req_done" states="waiting_answer" type="object" icon="gtk-jump-to" />
+                                <button string="Cancel" name="survey_req_cancel" states="draft,waiting_answer" type="object" icon="gtk-cancel"/>
                     </group>
                 </form>
             </field>
@@ -332,11 +335,12 @@
                     <field name="user_id" string="Interviewer"/>
                     <field name="user_to_review_id"/>
                     <field name="response" readonly="1" invisible="True"/>
-                    <button name="%(survey.action_view_survey_question_message)d" string="Interview Question" type="action" states="waiting_answer,done,cancel" icon="gtk-execute" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0, 'active' : response, 'request' : True, 'object' : 'hr.evaluation.interview', 'cur_id' : active_id}" attrs="{'readonly':[('survey_id','=',False)]}"/>
-                    <button name="%(survey.survey_browse_response)d" string="Print Interview" type="action" states="done" icon="gtk-print" context="{'survey_id': survey_id, 'response_id' : [response], 'response_no':0}" attrs="{'readonly':[('response','=',False)]}" />
+                    <button name="%(survey.action_view_survey_question_message)d" string="Answer Survey" type="action" states="waiting_answer,done,cancel" icon="gtk-execute" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0, 'active' : response, 'request' : True, 'object' : 'hr.evaluation.interview', 'cur_id' : active_id}" attrs="{'readonly':[('survey_id','=',False)]}"/>
                     <button name="action_print_survey" string="Print Survey" type="object" icon="gtk-print" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0}" attrs="{'readonly':[('survey_id','=',False)]}"/>
                     <button name="%(mail.action_email_compose_message_wizard)d" string="Send Reminder Email" icon="terp-mail-message-new" type="action" colspan="2" states="waiting_answer"/>
                     <field name="state"/>
+                    <button string="Send Request" name="survey_req_waiting_answer" states="draft" type="object" icon="gtk-yes" />
+                    <button string="Done" name="survey_req_done" states="waiting_answer" type="object" icon="gtk-jump-to" />
                 </tree>
             </field>
         </record>
