@@ -786,10 +786,8 @@
 <t t-name="FormRenderingSheet" t-extend="FormRenderingForm">
 </t>
 <t t-name="FormRenderingGroup">
-    <t t-if="string">
-        <separator t-attf="#{string}"/>
-    </t>
-    <table border="0" cellpadding="0" cellspacing="0" width="100%" t-att-class="classnames"/>
+    <t t-call="FormRenderingSeparator"/>
+    <table border="0" cellpadding="0" cellspacing="0" width="100%" t-attf-class="oe_form_group classnames"/>
 </t>
 <t t-name="FormRenderingNotebook">
     <div>
@@ -1065,20 +1063,6 @@
     <div class="oe_form_field_progressbar" t-opentag="true">
         <span></span>
     </div>
-</t>
-<t t-name="FieldStatus.content">
-    <div class="oe_right">
-
-        <ul class="oe-arrow-list">
-            <t t-set="size" t-value="widget.to_show.length"/>
-            <t t-foreach="_.range(size)" t-as="i">
-                <li t-att-class="widget.to_show[i][0] === widget.selected_value ? 'oe-arrow-list-selected' : ''">
-                    <span class="oe-arrow-list-before" t-if="i &gt; 0"></span><span><t t-esc="widget.to_show[i][1]"/></span><span class="oe-arrow-list-after" t-if="i &lt; size - 1"></span>
-                </li>
-            </t>
-        </ul>
-    </div>
-    <div class="oe_clear"/>
 </t>
 <t t-name="FieldStatus.content">
     <div class="oe_right">

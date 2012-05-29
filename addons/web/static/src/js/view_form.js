@@ -1061,33 +1061,30 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
         return $label;
     },
     process_field: function($field, layout) {
-        // Note FP: No implicit labels for normal fields, only for <group> children
-        // var $label = this.preprocess_field($field);
-        // if ($label)
-        //     this.process($label, layout);
+        if ($field.parent().is('group')) {
+            // No implicit labels for normal fields, only for <group> direct children
+            var $label = this.preprocess_field($field);
+            if ($label) {
+                this.process($label, layout);
+            }
+        }
         this.fields_to_init.push($field);
         return $field;
     },
     process_group: function($group, layout) {
         var self = this;
-	// Note FP: not clean to do such a hack, commenting it
-        // if ($group.parent().is('.oe_form_group_cell')) {
-        //     $group.parent().addClass('oe_form_group_nested');
-        // }
-
         $group.children('field').each(function() {
             self.preprocess_field($(this));
         });
-        var $new_group = this.render_element('FormRenderingGroup', layout, $group.getAttributes()),
-            $table;
-        if ($new_group.is('table')) {
+        var $new_group = this.render_element('FormRenderingGroup', layout, $group.getAttributes());
+        var $table;
+        if ($new_group.first().is('table.oe_form_group')) {
             $table = $new_group;
+        } else if ($new_group.filter('table.oe_form_group').length) {
+            $table = $new_group.filter('table.oe_form_group').first();
         } else {
-            $table = $new_group.find('table:first');
+            $table = $new_group.find('table.oe_form_group').first();
         }
-
-	// Note FP: why don't we put that in the QWeb template ?
-        $table.addClass('oe_form_group');
 
         var $tr, $td,
             cols = parseInt($group.attr('col') || 4, 10),
@@ -1101,7 +1098,7 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
             var $td = $('<td/>').addClass('oe_form_group_cell').attr('colspan', colspan);
             var newline = tagName === 'newline';
 
-            // Note FP: looks like a hack to avoid
+            // Note FME: those classes are used in layout debug mode
             if ($tr && row_cols > 0 && (newline || row_cols < colspan)) {
                 $tr.addClass('oe_form_group_row_incomplete');
                 if (newline) {
@@ -1131,59 +1128,57 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
         }
         $group.before($new_group).remove();
 
-        // Now compute width of cells
-	// Note FP: It would be better to remove this, using width="50%" rather than colspan="2"
-        // $table.find('> tbody > tr').each(function() {
-        //     var to_compute = [],
-        //         row_cols = cols,
-        //         total = 100;
-        //     $(this).children().each(function() {
-        //         var $td = $(this),
-        //             $child = $td.children(':first');
-        //         switch ($child[0].tagName.toLowerCase()) {
-        //             case 'separator':
-        //                 if ($child.attr('orientation') === 'vertical') {
-        //                     $td.addClass('oe_vertical_separator').attr('width', '1');
-        //                     $td.empty();
-        //                     row_cols--;
-        //                 }
-        //                 break;
-        //             case 'label':
-        //                 if ($child.attr('for')) {
-        //                     $td.attr('width', '1%').addClass('oe_form_group_cell_label');
-        //                     row_cols--;
-        //                     total--;
-        //                 }
-        //                 break;
-        //             default:
-        //                 var width = _.str.trim($child.attr('width') || ''),
-        //                     iwidth = parseInt(width, 10);
-        //                 if (iwidth) {
-        //                     if (width.substr(-1) === '%') {
-        //                         total -= iwidth;
-        //                         width = iwidth + '%';
-        //                     } else {
-        //                         // Absolute width
-        //                         $td.css('min-width', width + 'px');
-        //                     }
-        //                     $td.attr('width', width);
-        //                     $child.removeAttr('width');
-        //                     row_cols--;
-        //                 } else {
-        //                     to_compute.push($td);
-        //                 }
+        $table.find('> tbody > tr').each(function() {
+            var to_compute = [],
+                row_cols = cols,
+                total = 100;
+            $(this).children().each(function() {
+                var $td = $(this),
+                    $child = $td.children(':first');
+                switch ($child[0].tagName.toLowerCase()) {
+                    case 'separator':
+                        if ($child.attr('orientation') === 'vertical') {
+                            $td.addClass('oe_vertical_separator').attr('width', '1');
+                            $td.empty();
+                            row_cols--;
+                        }
+                        break;
+                    case 'label':
+                        if ($child.attr('for')) {
+                            $td.attr('width', '1%').addClass('oe_form_group_cell_label');
+                            row_cols--;
+                            total--;
+                        }
+                        break;
+                    default:
+                        var width = _.str.trim($child.attr('width') || ''),
+                            iwidth = parseInt(width, 10);
+                        if (iwidth) {
+                            if (width.substr(-1) === '%') {
+                                total -= iwidth;
+                                width = iwidth + '%';
+                            } else {
+                                // Absolute width
+                                $td.css('min-width', width + 'px');
+                            }
+                            $td.attr('width', width);
+                            $child.removeAttr('width');
+                            row_cols--;
+                        } else {
+                            to_compute.push($td);
+                        }
 
-        //         }
-        //     });
-        //     var unit = Math.floor(total / row_cols);
-        //     if (!$(this).is('.oe_form_group_row_incomplete')) {
-        //         _.each(to_compute, function($td, i) {
-        //             var width = parseInt($td.attr('colspan'), 10) * unit;
-        //             $td.attr('width', ((i == to_compute.length - 1) ? total : width) + '%');
-        //             total -= width;
-        //         });
-        //     }
-        // });
+                }
+            });
+            var unit = Math.floor(total / row_cols);
+            if (!$(this).is('.oe_form_group_row_incomplete')) {
+                _.each(to_compute, function($td, i) {
+                    var width = parseInt($td.attr('colspan'), 10) * unit;
+                    $td.attr('width', ((i == to_compute.length - 1) ? total : width) + '%');
+                    total -= width;
+                });
+            }
+        });
         _.each(children, function(el) {
             self.process($(el));
         });
