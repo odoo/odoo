@@ -242,7 +242,8 @@ class project(osv.osv):
     def set_done(self, cr, uid, ids, context=None):
         task_obj = self.pool.get('project.task')
         task_ids = task_obj.search(cr, uid, [('project_id', 'in', ids), ('state', 'not in', ('cancelled', 'done'))])
-        task_obj.write(cr, uid, task_ids, {'state': 'done', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S'), 'remaining_hours': 0.0})
+        task_obj.case_close(cr, uid, task_ids, context=context)
+        #task_obj.write(cr, uid, task_ids, {'state': 'done', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S'), 'remaining_hours': 0.0})
         self.write(cr, uid, ids, {'state':'close'}, context=context)
         self.set_close_send_note(cr, uid, ids, context=context)
         return True
@@ -250,7 +251,8 @@ class project(osv.osv):
     def set_cancel(self, cr, uid, ids, context=None):
         task_obj = self.pool.get('project.task')
         task_ids = task_obj.search(cr, uid, [('project_id', 'in', ids), ('state', '!=', 'done')])
-        task_obj.write(cr, uid, task_ids, {'state': 'cancelled', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S'), 'remaining_hours': 0.0})
+        task_obj.case_cancel(cr, uid, task_ids, context=context)
+        #task_obj.write(cr, uid, task_ids, {'state': 'cancelled', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S'), 'remaining_hours': 0.0})
         self.write(cr, uid, ids, {'state':'cancelled'}, context=context)
         self.set_cancel_send_note(cr, uid, ids, context=context)
         return True
