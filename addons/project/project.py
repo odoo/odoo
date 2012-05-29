@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from crm import crm
+from crm.crm import crm_case
 from datetime import datetime, date
 from lxml import etree
 from osv import fields, osv
@@ -506,7 +506,7 @@ def Project():
         return self.message_append_note(cr, uid, ids, body=message, context=context)
 
 
-class task(crm.crm_case, osv.osv):
+class task(crm_case, osv.osv):
     _name = "project.task"
     _description = "Task"
     _log_create = True
@@ -677,7 +677,7 @@ class task(crm.crm_case, osv.osv):
         'priority': fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Important'), ('0','Very important')], 'Priority', select=True),
         'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list of tasks."),
         'stage_id': fields.many2one('project.task.type', 'Stage',
-                        domain="['&', '|', ('project_ids', '=', project_id), ('case_default', '=', True)]"),
+                        domain="['|', ('project_ids', '=', project_id), ('case_default', '=', True)]"),
         'state': fields.related('stage_id', 'state', type="selection", store=True,
                 selection=_TASK_STATE, string="State", readonly=True,
                 help='The state is set to \'Draft\', when a case is created.\
@@ -964,7 +964,7 @@ class task(crm.crm_case, osv.osv):
         """ Compatibility when changing to case_cancel. """
         return self.case_cancel(cr, uid, ids, context=context)
     
-    def case_cancel(cr, uid, ids, context=None):
+    def case_cancel(self, cr, uid, ids, context=None):
         request = self.pool.get('res.request')
         tasks = self.browse(cr, uid, ids, context=context)
         self._check_child_task(cr, uid, ids, context=context)
@@ -999,7 +999,7 @@ class task(crm.crm_case, osv.osv):
         """ Compatibility when changing to case_draft. """
         return self.case_draft(cr, uid, ids, context=context)
     
-    def case_draft(cr, uid, ids, context=None):
+    def case_draft(self, cr, uid, ids, context=None):
         self.case_set(cr, uid, ids, 'draft', {}, context=context)
         self.case_draft_send_note(cr, uid, ids, context=context)
         return True
@@ -1260,7 +1260,6 @@ class task(crm.crm_case, osv.osv):
             self.message_append_note(cr, uid, [task.id], body=msg, context=context)
         return True
 
-task()
 
 class project_work(osv.osv):
     _name = "project.task.work"
@@ -1299,7 +1298,7 @@ class project_work(osv.osv):
         for work in self.browse(cr, uid, ids):
             cr.execute('update project_task set remaining_hours=remaining_hours + %s where id=%s', (work.hours, work.task_id.id))
         return super(project_work,self).unlink(cr, uid, ids,*args, **kwargs)
-project_work()
+
 
 class account_analytic_account(osv.osv):
 
@@ -1320,7 +1319,6 @@ class account_analytic_account(osv.osv):
             raise osv.except_osv(_('Warning !'), _('Please delete the project linked with this account first.'))
         return super(account_analytic_account, self).unlink(cr, uid, ids, *args, **kwargs)
 
-account_analytic_account()
 
 #
 # Tasks History, used for cumulative flow charts (Lean/Agile)
@@ -1381,7 +1379,7 @@ class project_task_history(osv.osv):
     _defaults = {
         'date': fields.date.context_today,
     }
-project_task_history()
+
 
 class project_task_history_cumulative(osv.osv):
     _name = 'project.task.history.cumulative'
@@ -1409,4 +1407,4 @@ class project_task_history_cumulative(osv.osv):
             ) as history
         )
         """)
-project_task_history_cumulative()
+
