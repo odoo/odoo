@@ -644,9 +644,9 @@ class sale_order(osv.osv):
         return True
     
     def action_button_confirm(self, cr, uid, ids, context=None):
+        assert len(ids) == 1, 'This option should only be used for a single id at a time'
         wf_service = netsvc.LocalService('workflow')
-        for id in ids:
-            wf_service.trg_validate(uid, 'sale.order', id, 'order_confirm', cr)
+        wf_service.trg_validate(uid, 'sale.order', ids[0], 'order_confirm', cr)
 
         result = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'sale', 'view_order_form')
         view_id = result and result[1] or False,
