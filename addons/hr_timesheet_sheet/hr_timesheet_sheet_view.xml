@@ -109,7 +109,7 @@
                             <field colspan="4" context="{'date':date_current,'user_id':user_id}" domain="[('name','=',date_current)]" name="timesheet_ids" nolabel="1">
                                 <tree editable="top" string="Timesheet Lines">
                                     <field invisible="1" name="date"/>
-                                    <field domain="[('type','=','normal'), ('state', '&lt;&gt;', 'close')]" name="account_id" on_change="on_change_account_id(account_id)"/>
+                                    <field domain="[('type','=','normal'), ('state', '&lt;&gt;', 'close'),('use_timesheets','=',1)]" name="account_id" on_change="on_change_account_id(account_id)" context="{'default_use_timesheets': 1}"/>
                                     <field name="name"/>
                                     <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" widget="float_time"/>
                                     <field name="to_invoice" widget="selection"/>
