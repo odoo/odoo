@@ -306,9 +306,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             });
             this.product_categories_widget.replace($('.placeholder-ProductCategoriesWidget'));
 
-            this.product_list_widget = new module.ProductListWidget(null,{
-                pos:this.pos,
-                pos_widget:this.pos_widget,
+            this.product_list_widget = new module.ProductListWidget(this,{
                 only_weightable: true,
                 weight: this.pos.proxy.weighting_read_kg(),
             });

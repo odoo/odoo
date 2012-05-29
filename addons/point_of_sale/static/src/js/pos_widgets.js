@@ -487,12 +487,40 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         on_change_category: function(id) {},
     });
 
+    /*
+    module.ProductCategoriesWidget2 = module.PosBaseWidget.extend({
+        template: 'ProductCategoriesWidget',
+        init: function(parent, options){
+            this._super(parent,options);
+            this.onlyWeightable = false;
+            this.current_category = this.pos.;
+            this.child_categories = [];
+            this.breadcrumb = [];
+        },
+        set_category : function(category){
+            this.current_category = category;
+
+            var child_list = [];
+            if(!category){
+                this.pos.root_categories;
+                this.breadcrumb = [];
+            }else{
+                this.categories = category.childrens
+                this.breadcrumb 
+        }
+        renderElement: function(){
+            var self = this;
+            this.$element.empty();
+        },
+    });
+    */
+
     module.ProductListWidget = module.ScreenWidget.extend({
         template:'ProductListWidget',
         init: function(parent, options) {
-            this._super(parent);
+            this._super(parent,options);
+            console.log('ProductListWidget:',this);
             this.model = options.model;
-            this.pos = options.pos;
             this.pos.get('products').bind('reset', this.renderElement, this);
             this.product_list = [];
             this.weight = options.weight;
@@ -520,7 +548,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                     return !self.only_weightable || (product.get('pos_category') && product.get('pos_category').to_weight);
                 })
                 .map(function(product) {
-                    var product = new module.ProductWidget(this, {
+                    var product = new module.ProductWidget(self, {
                             model: product,
                             weight: self.weight,
                     })
@@ -906,7 +934,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 },
                 default_client_screen: 'welcome',
                 default_cashier_screen: 'products',
-                default_mode: this.pos.get('pos_config').iface_self_checkout ?  'client' : 'cashier',
+                default_mode: this.pos.use_selfcheckout ?  'client' : 'cashier',
             });
 
             window.screen_selector = this.screen_selector; //DEBUG

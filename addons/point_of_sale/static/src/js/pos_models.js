@@ -64,8 +64,16 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.build_tree = _.bind(this.build_tree, this);    // ???
             this.session = session;                 
             this.categories = {};
+            this.root_category = null;
             this.barcode_reader = new module.BarcodeReader({'pos': this});  // used to read barcodes
             this.proxy = new module.ProxyDevice();             // used to communicate to the hardware devices via a local proxy
+
+            // pos settings
+            this.use_scale              = false;
+            this.use_proxy_printer      = false;
+            this.use_virtual_keyboard   = false;
+            this.use_websql             = false;
+            this.use_barcode_scanner    = false;
 
             // default attributes values. If null, it will be loaded below.
             this.set({
@@ -125,7 +133,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     }
                 });
 
-
             var tax_def = fetch('account.tax', ['amount','price_include','type'])
                 .then(function(result){
                     self.set({'taxes': result});
@@ -156,6 +163,12 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                                 [['id','=', pos_session.config_id[0]]]
                             ).then(function(result){
                                 self.set({'pos_config': result[0]});
+                                this.use_scale              = result[0].iface_electronic_scale  || false;
+                                this.use_proxy_printer      = result[0].iface_print_via_proxy   || false;
+                                this.use_virtual_keyboard   = result[0].iface_vkeyboard         || false;
+                                this.use_websql             = result[0].iface_websql            || false;
+                                this.use_barcode_scanner    = result[0].iface_barscan           || false;
+                                this.use_selfcheckout       = result[0].iface_self_checkout     || false;
                             });
 
                         var bank_def = fetch(
@@ -165,7 +178,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                             ).then(function(result){
                                 self.set({'bank_statements':result});
                             });
-                        
 
                         var journal_def = fetch(
                             'account.journal',
@@ -201,6 +213,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             $.when(cat_def, prod_def, session_def, tax_def, prod_process_def, this.get_app_data(), this.flush())
                 .then(function(){ 
                     self.build_tree();
+                    self.build_categories(); 
                     self.set({'cashRegisters' : new module.CashRegisterCollection(self.get('bank_statements'))});
                     console.log('cashRegisters:',self.get('cashRegisters'));
                     self.ready.resolve();
@@ -322,12 +335,126 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                             });
             });
         },
-        /*
-        build_category_tree : function() {
+        build_categories : function(){
             var categories = this.get('categories');
-            for(var i = 0; i < 
-        }*/
-        // I guess this builds a tree of categories ? TODO ask Niv for more info.
+            var products   = this.get('product_list');
+
+            //append the content of array2 into array1
+            function append(array1, array2){
+                for(var i = 0, len = array2.length; i < len; i++){
+                    array1.push(array2[i]);
+                }
+            }
+
+            function appendSet(set1, set2){
+                for(key in set2){
+                    set1[key] = set2[key];
+                }
+            }
+
+            var categories_by_id = {};
+            for(var i = 0; i < categories.length; i++){
+                categories_by_id[categories[i].id] = categories[i];
+            }
+
+            var root_category = {
+                name      : 'Root',
+                id        : 0,
+                parent    : null,
+                childrens : [],
+            };
+
+            // add parent and childrens field to categories, find root_categories
+            for(var i = 0; i < categories.length; i++){
+                var cat = categories[i];
+                
+                cat.parent = categories_by_id[cat.parent_id[0]];
+                if(!cat.parent){
+                    root_category.childrens.push(cat);
+                    cat.parent = root_category;
+                }
+                
+                cat.childrens = [];
+                for(var j = 0; j < cat.child_id.length; j++){
+                    cat.childrens.push(categories_by_id[ cat.child_id[j] ]);
+                }
+            }
+
+            categories.push(root_category);
+
+            // set some default fields for next steps
+            for(var i = 0; i < categories.length; i++){
+                var cat = categories[i];
+
+                cat.product_list = [];  //list of all products in the category
+                cat.product_set = {};   // [product.id] === true if product is in category
+                cat.weightable_product_list = [];
+                cat.weightable_product_set = {};
+                cat.regular_product_list = []; //not weightable
+                cat.regular_product_set = {};
+                cat.progeny = [];
+            }
+
+            this.root_category = root_category;
+            
+            console.log('categories:',categories);
+
+            //we add the products to the categories. 
+            for(var i = 0, len = products.length; i < len; i++){
+                var product = products[i];
+                var cat = categories_by_id[product.pos_categ_id[0]];
+                if(cat){
+                    cat.product_list.push(product);
+                    cat.product_set[product.id] = true;
+                    if(product.weightable){
+                        cat.weightable_product_list.push(product);
+                        cat.weightable_product_set[product.id] = true;
+                    }else{
+                        cat.regular_product_list.push(product);
+                        cat.regular_product_set[product.id] = true;
+                    }
+                }
+            }
+            
+            // add ancestor field to categories, contains the list of parents of parents, from root to parent
+            function make_ancestors(cat, ancestors){
+                cat.ancestors = ancestors.slice(0);
+                ancestors.push(cat);
+
+                for(var i = 0; i < cat.childrens.length; i++){
+                    make_ancestors(cat.childrens[i], ancestors.slice(0));
+                }
+            }
+            
+            // add progeny field to categories, contains all subcategories of a category
+            function make_progeny(cat){
+                for(var i = 0; i < cat.childrens.length; i++){
+                    make_progeny(cat.childrens[i]);
+                    cat.progeny.push(cat.childrens[i]);
+                    append(cat.progeny,cat.childrens[i].progeny);
+                }
+            }
+
+            //add the products of the subcategories to the parent categories
+            function make_products(cat){
+                for(var i = 0; i < cat.childrens.length; i++){
+                    make_products(cat.childrens[i]);
+
+                    append(cat.product_list, cat.childrens[i].product_list);
+                    append(cat.weightable_product_list, cat.childrens[i].weightable_product_list);
+                    append(cat.regular_product_list, cat.childrens[i].regular_product_list);
+
+                    appendSet(cat.product_set, cat.childrens[i].product_set);
+                    appendSet(cat.weightable_product_set, cat.childrens[i].weightable_product_set);
+                    appendSet(cat.regular_product_set, cat.childrens[i].regular_product_set);
+                }
+            }
+
+            make_ancestors(root_category,[]);
+            make_progeny(root_category);
+            make_products(root_category);
+        },
+
         build_tree: function() {
             var c, id, _i, _len, _ref, _ref2;
             _ref = this.get('categories');
