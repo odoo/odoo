@@ -325,22 +325,19 @@ class crm_lead(base_stage, osv.osv):
         return False
 
     def case_cancel(self, cr, uid, ids, context=None):
-        """Overrides cancel for base_stage for setting probability
-        """
+        """ Overrides case_cancel from base_stage to set probability """
         res = super(crm_lead, self).case_cancel(cr, uid, ids, context=context)
         self.write(cr, uid, ids, {'probability' : 0.0}, context=context)
         return res
 
     def case_reset(self, cr, uid, ids, context=None):
-        """Overrides reset as draft in order to set the stage field as empty
-        """
+        """ Overrides case_reset from base_stage to set probability """
         res = super(crm_lead, self).case_reset(cr, uid, ids, context=context)
         self.write(cr, uid, ids, {'probability': 0.0}, context=context)
         return res
 
     def case_mark_lost(self, cr, uid, ids, context=None):
-        """Mark the case as lost: state = done and probability = 0%
-        """
+        """ Mark the case as lost: state=cancel and probability=0 """
         for lead in self.browse(cr, uid, ids):
             stage_id = self.stage_find(cr, uid, [lead], lead.section_id.id or False, [('probability', '=', 0.0)], context=context)
             if stage_id:
@@ -349,8 +346,7 @@ class crm_lead(base_stage, osv.osv):
         return True
 
     def case_mark_won(self, cr, uid, ids, context=None):
-        """Mark the case as lost: state = done and probability = 0%
-        """
+        """ Mark the case as lost: state=done and probability=100 """
         for lead in self.browse(cr, uid, ids):
             stage_id = self.stage_find(cr, uid, [lead], lead.section_id.id or False, [('probability', '=', 100.0)], context=context)
             if stage_id:
