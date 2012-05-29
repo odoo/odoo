@@ -39,7 +39,7 @@
             	<xpath expr='//field[@name="parent_id"]' position='after'>
             	    <field name="template_id" on_change="on_change_template(template_id)"  domain="[('type','=','template')]" attrs="{'invisible': [('type','in',['view', 'normal','template'])]}" context="{'default_type' : 'template'}"/>
             	</xpath>
-            	<xpath expr='//page[@name="contract_page"]' position='inside'>
+            	<xpath expr='//separator[@name="description"]' position='before'>
 	            <group colspan="4" class="oe_form_group_label_border"> 
 	                <field name="pricelist_id" />
 	                <field name="to_invoice" widget="selection" />
