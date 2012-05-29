@@ -379,9 +379,15 @@ class account_analytic_account(osv.osv):
         'real_margin_rate': fields.function(_real_margin_rate_calc, type='float', string='Real Margin Rate (%)',
             help="Computes using the formula: (Real Margin / Total Costs) * 100.",
             digits_compute=dp.get_precision('Account')),
+        'so_visible' : fields.boolean('sale order line visible'),
+        'timsheet_visible' : fields.boolean("On timesheet"),
+        'expense_visible' : fields.boolean('expense line visible'),
         'month_ids': fields.function(_analysis_all, multi='analytic_analysis', type='many2many', relation='account_analytic_analysis.summary.month', string='Month'),
         'user_ids': fields.function(_analysis_all, multi='analytic_analysis', type="many2many", relation='account_analytic_analysis.summary.user', string='User'),
         'template_id':fields.many2one('account.analytic.account', 'Template Of Contract'),
+        'fix_exp_max' : fields.float('Max. amt'),
+        'timesheet_max': fields.float('max_timesheet'),
+        'expense_max': fields.float('expenses'),
     }
     def on_change_template(self, cr, uid, id, template_id):
         if not template_id:
