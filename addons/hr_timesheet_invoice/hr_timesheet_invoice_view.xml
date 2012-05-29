@@ -43,7 +43,7 @@
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_form"/>
             <field name="arch" type="xml">
                 <field name="account_id" position="replace">
-                    <field domain="[('type','=','normal'),('state', '&lt;&gt;', 'close')]" name="account_id" on_change="on_change_account_id(account_id)" select="1" context="{'search_default_use_timesheets': 1, 'default_use_timesheets': 1}"/>
+                    <field domain="[('type','=','normal'),('state', '&lt;&gt;', 'close'),('use_timesheets','=',1)]" name="account_id" on_change="on_change_account_id(account_id)" select="1" context="{'default_use_timesheets': 1}"/>
                 </field>
             </field>
         </record>
@@ -66,9 +66,8 @@
             <field name="type">tree</field>
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
             <field name="arch" type="xml">
-
                 <field name="account_id" position="replace">
-                    <field domain="[('type','=','normal'),('state', '&lt;&gt;', 'close')]" name="account_id" on_change="on_change_account_id(account_id)" context="{'search_default_use_timesheets': 1, 'default_use_timesheets': 1}"/>
+                    <field domain="[('type','=','normal'),('state', '&lt;&gt;', 'close'),('use_timesheets','=',1)]" name="account_id" on_change="on_change_account_id(account_id)" select="1" context="{'default_use_timesheets': 1}"/>
                 </field>
             </field>
         </record>
