@@ -7,7 +7,7 @@
  'website': 'http://www.openerp.com',
  'installable': True,
  'data': [
-    'anonymous.yml',
+    'anonymous.xml',
  ],
  'js': [
     'static/src/js/anonymous.js',
