@@ -1140,10 +1140,6 @@ class pos_category(osv.osv):
         'parent_id': fields.many2one('pos.category','Parent Category', select=True),
         'child_id': fields.one2many('pos.category', 'parent_id', string='Children Categories'),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of product categories."),
-        'to_weight' : fields.boolean('To Weight', help="This category contains products that should be weighted, mainly used for the self-checkout interface"),
-    }
-    _defaults = {
-        'to_weight' : False,
     }
 pos_category()
 
@@ -1174,8 +1170,13 @@ class product_product(osv.osv):
         'product_image_small': fields.function(_get_small_image, string='Small Image', type="binary",
             store = {
                 'product.product': (lambda self, cr, uid, ids, c={}: ids, ['product_image'], 10),
-            })
+            }),
+        'to_weight' : fields.boolean('To Weight', help="This category contains products that should be weighted, mainly used for the self-checkout interface"),
     }
+    _defaults = {
+        'to_weight' : False,
+    }
+
 product_product()
 
 
