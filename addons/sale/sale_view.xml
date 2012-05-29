@@ -290,7 +290,7 @@
                         filter_domain="['|', ('name','ilike',self),('client_order_ref','ilike',self)]"/>
                     <field name="partner_id"/>
                     <field name="user_id">
-                        <filter domain="[('user_id','=',uid)]" help="My Sale Orders" icon="terp-personal"/>
+                        <filter string="My Sale Orders" domain="[('user_id','=',uid)]" help="My Sale Orders" icon="terp-personal"/>
                     </field>
                     <newline/>
                     <group expand="0" string="Group By...">
@@ -444,7 +444,7 @@
                     <field name="order_partner_id"/>
                     <field name="product_id"/>
                     <field name="salesman_id">
-                        <filter icon="terp-personnal" domain="[('salesman_id','=',uid)]" help="Sales Order Lines related to a Sales Order of mine"/>
+                        <filter string="My Sales Order Lines" icon="terp-personnal" domain="[('salesman_id','=',uid)]" help="Sales Order Lines related to a Sales Order of mine"/>
                     </field>
                     <newline/>
                     <group expand="0" string="Group By...">
@@ -473,7 +473,7 @@
                     <field name="order_partner_id"/>
                     <field name="product_id"/>
                     <field name="salesman_id">
-                        <filter icon="terp-personal" domain="[('salesman_id','=',uid)]" help="My Sales Order Lines"/>
+                        <filter string="My Sales Order Lines" icon="terp-personal" domain="[('salesman_id','=',uid)]" help="My Sales Order Lines"/>
                     </field>
                     <newline/>
                     <group expand="0" string="Group By...">
