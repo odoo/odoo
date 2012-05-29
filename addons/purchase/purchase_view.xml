@@ -132,15 +132,18 @@
             <field name="arch" type="xml">
                 <form layout="manual">
                 <div class="oe_form_topbar">
-                    <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object"/>
+                    <button name="purchase_confirm" states="draft,sent" string="Confirm Order" class="oe_form_button_hi"/>
+                    <button name="wkf_send_rfq" states="draft" string="Send RFQ" type="object" context="{'send_rfq':True}"/>
+                    <button name="wkf_send_rfq" states="confirmed" string="Resend Purchase Order" type="object"/>
+                    <button name="action_cancel" states="except_picking,except_invoice,wait" string="Cancel" type="object" />
                     <button name="picking_ok" states="except_picking" string="Manually Corrected"/>
                     <button name="invoice_ok" states="except_invoice" string="Manually Corrected"/>
-                    <button name="purchase_confirm" states="draft" string="Confirm Purchase"/>
-                    <button name="purchase_appbuyer" states="wait_auth" string="Approve Purchase"/>
-                    <button name="purchase_approve" states="confirmed" string="Approved"/>
-                    <button name="%(report_purchase_order)d" string="Print" states="approved" type="action"/>
-                    <button name="action_cancel" states="approved,except_picking,except_invoice,wait" string="Cancel" type="object"/>
-                    <button name="purchase_cancel" states="draft,confirmed,wait_auth" string="Cancel"/>
+                    <button name="purchase_appbuyer" states="wait_auth" string="Approve Purchase" class="oe_form_button_hi"/>
+                    <button name="purchase_approve" states="confirmed" string="Approve Order" class="oe_form_button_hi"/>
+                    <button name="view_invoice" string="Receive Invoice" type="object" attrs="{'invisible': ['|', ('invoice_method','=','picking'), '|', ('state','!=', 'approved'), ('invoiced','=',True) ]}"/>
+                    <button name="view_picking" string="Receive Products" type="object" attrs="{'invisible': ['|', ('shipped','=',True), ('state','!=', 'approved')]}"/>
+                    <button name="action_cancel_draft" states="cancel,sent,confirmed" string="Set to Draft" type="object"/>
+                    <button name="purchase_cancel" states="draft,confirmed,wait_auth,sent" string="Cancel"/>
                     <div class="oe_right">
                         <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,approved,done" statusbar_colors='{"except_picking":"red","except_invoice":"red","confirmed":"blue","wait":"blue"}' readonly="1"/>
                     </div>
@@ -225,9 +228,8 @@
                     <filter icon="terp-document-new" name="draft" string="Quotations" domain="[('state','=','draft')]"  help="Purchase order which are in draft state"/>
                     <filter icon="terp-check" name="approved" string="Approved" domain="[('state','in',('approved','done'))]"  help="Approved purchase order"/>
                     <separator orientation="vertical"/>
-                    <filter icon="terp-emblem-important" name="exception" string="Exception" domain="[('state','in',('except_invoice','except_picking'))]"  help="Purchase order which are in the exception state"/>
-                    <separator orientation="vertical"/>
                     <filter icon="terp-gtk-go-back-rtl" name="not_invoiced" string="Not Invoiced" domain="[('invoice_ids','=', False)]"  help="Purchase orders that include lines not invoiced."/>
+                    <filter icon="terp-emblem-important" name="exception" string="Exception" domain="[('state','in',('except_invoice','except_picking'))]"  help="Purchase order which are in the exception state"/>
                     <separator orientation="vertical"/>
                     <field name="name" string="Reference"/>
                     <field name="partner_id"/>
@@ -257,13 +259,10 @@
                 <search string="Search Purchase Order">
                  <group>
                     <filter icon="terp-document-new" name="draft" string="Quotations" domain="[('state','=','draft')]"  help="Purchase orders which are in draft state"/>
-                    <filter icon="terp-gtk-jump-to-ltr" name="to_approve" string="To Approve" domain="[('state','in',('draft','wait','confirmed'))]" help="Purchase orders which are not approved yet."/>
-                    <filter icon="terp-check" name="approved" string="Approved" domain="[('state','=','approved')]"  help="Approved purchase orders"/>
-                    <filter icon="terp-accessories-archiver+" string="Done" domain="[('state','=','done')]" help="Purchase orders which are in done state."/>
-                    <separator orientation="vertical"/>
-                    <filter icon="terp-emblem-important" name="exception" string="Exception" domain="[('state','in',('except_invoice','except_picking'))]" help="Purchase orders which are in exception state"/>
+                    <filter icon="terp-check" name="approved" string="Purchase Orders" domain="[('state','not in',('draft','cancel'))]"  help="Approved purchase orders"/>
                     <separator orientation="vertical"/>
                     <filter icon="terp-gtk-go-back-rtl" name="not_invoiced" string="Not Invoiced" domain="[('invoice_ids','=', False)]"  help="Purchase orders that include lines not invoiced."/>
+                    <filter icon="terp-emblem-important" name="exception" string="Exception" domain="[('state','in',('except_invoice','except_picking'))]" help="Purchase orders which are in exception state"/>
                     <separator orientation="vertical"/>
                     <field name="name" string="Reference"/>
                     <field name="partner_id"/>
@@ -313,7 +312,7 @@
             <field name="res_model">purchase.order</field>
             <field name="context">{'search_default_draft': 1}</field>
             <field name="view_mode">tree,form,graph,calendar</field>
-            <field name="search_view_id" ref="view_request_for_quotation_filter"/>
+            <field name="search_view_id" ref="view_purchase_order_filter"/>
             <field name="help">Here you can create purchase orders. They allow you to manage receptions, and control your supplier invoices.</field>
         </record>
         <menuitem action="purchase_rfq" id="menu_purchase_rfq"
