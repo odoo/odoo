@@ -99,7 +99,7 @@ class crm_phonecall(base_state, osv.osv):
             data = {}
             if phone.duration <=0:
                 duration = datetime.now() - datetime.strptime(phone.date, DEFAULT_SERVER_DATETIME_FORMAT)
-                data['duration'] = duration.seconds/float(60)})
+                data['duration'] = duration.seconds/float(60)
             res = super(crm_phonecall, self).case_close(cr, uid, [phone_id], context=context)
             self.write(cr, uid, [phone_id], data, context=context)
         return res
