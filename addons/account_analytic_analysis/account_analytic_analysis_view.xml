@@ -45,8 +45,35 @@
                     </group>
                 </xpath>
                 <xpath expr='//separator[@name="description"]' position='before'>
-                    <separator colspan="4" string="Invoicing" name="invoicing"/>
-                    <group colspan="4" name="contract_lines" class="oe_form_group_label_border">
+		    <separator colspan="4" string="Invoicing" name="invoicing"/>
+		    <group colspan="4">
+			<group col="2" colspan="1" class="oe_form_group_label_border">
+			    <label string=" "/><label string=" "/>
+			    <field name="fix_price_invoices"/>
+			    <field name="invoice_on_timesheets"/>
+			    <field name="charge_expenses"/>
+			</group>
+			<group col="2" colspan="1">
+			    <label string="Est.Tot"/>
+			    <label string="Invoiced"/>
+			    <field name="amount_max" nolabel="1" attrs="{'invisible': [('fix_price_invoices','=',0)]}"/>
+			</group>
+			<group col="2" colspan="1" class="oe_form_group_odd_border">
+			    <label string="Remaining"/>
+			    <label string="Ready To Invoice"/>
+			    <label string="TODO" attrs="{'invisible': [('fix_price_invoices','=',0)]}"/>
+			    <label string="TODO" attrs="{'invisible': [('fix_price_invoices','=',0)]}"/>
+			</group>
+			<group col="2" colspan="1">
+			    <label string=" "/><label string=" "/>
+			    <button name="%(sale.action_order_form)d" string="Sales" type="action" context="{'default_project_id': active_id,'search_default_project_id': active_id}" attrs="{'invisible': [('fix_price_invoices','=',0)]}"/>
+			    <button name="%(sale.action_order_line_tree2)d" string="Lines To Invoice" type="action" context="{'default_project_id': active_id,'search_default_project_id': active_id}" attrs="{'invisible': [('fix_price_invoices','=',0)]}"/>
+			</group>
+		    </group>
+		    
+		    
+		    
+                    <!--<group colspan="4" name="contract_lines" class="oe_form_group_label_border">
                         <table name="contract_data">
                             <tr name="title" >
                                 <th ><div class="oe_field_label" ></div></th>
@@ -93,7 +120,7 @@
                                 <td><div class="oe_totals" ></div></td>
                             </tr>
                         </table>
-                    </group>
+                    </group>-->
 	            	<group colspan="4" class="oe_form_group_label_border"> 
 		                <field name="pricelist_id" />
 		                <field name="to_invoice" widget="selection" />
