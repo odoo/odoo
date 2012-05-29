@@ -786,18 +786,10 @@
 <t t-name="FormRenderingSheet" t-extend="FormRenderingForm">
 </t>
 <t t-name="FormRenderingGroup">
-    <t t-set="table">
-        <table border="0" cellpadding="0" cellspacing="0" width="100%" t-att-class="classnames"/>
-    </t>
     <t t-if="string">
-        <fieldset class="oe_group_box">
-            <legend><t t-esc="string"/></legend>
-            <t t-raw="table"/>
-        </fieldset>
+        <separator t-attf="#{string}"/>
     </t>
-    <t t-if="!string">
-        <t t-raw="table"/>
-    </t>
+    <table border="0" cellpadding="0" cellspacing="0" width="100%" t-att-class="classnames"/>
 </t>
 <t t-name="FormRenderingNotebook">
     <div>
@@ -1075,70 +1067,61 @@
     </div>
 </t>
 <t t-name="FieldStatus.content">
-    <ul class="oe-arrow-list">
-        <t t-set="size" t-value="widget.to_show.length"/>
-        <t t-foreach="_.range(size)" t-as="i">
-            <li t-att-class="widget.to_show[i][0] === widget.selected_value ? 'oe-arrow-list-selected' : ''">
-                <span class="oe-arrow-list-before" t-if="i &gt; 0"></span><span><t t-esc="widget.to_show[i][1]"/></span><span class="oe-arrow-list-after" t-if="i &lt; size - 1"></span>
-            </li>
-        </t>
-    </ul>
+    <div class="oe_right">
+
+        <ul class="oe-arrow-list">
+            <t t-set="size" t-value="widget.to_show.length"/>
+            <t t-foreach="_.range(size)" t-as="i">
+                <li t-att-class="widget.to_show[i][0] === widget.selected_value ? 'oe-arrow-list-selected' : ''">
+                    <span class="oe-arrow-list-before" t-if="i &gt; 0"></span><span><t t-esc="widget.to_show[i][1]"/></span><span class="oe-arrow-list-after" t-if="i &lt; size - 1"></span>
+                </li>
+            </t>
+        </ul>
+    </div>
+    <div class="oe_clear"/>
 </t>
 <t t-name="FieldStatus.content">
-    <ul class="oe_form_steps">
-        <t t-set="size" t-value="widget.to_show.length"/>
-        <t t-foreach="_.range(size)" t-as="i">
-            <li t-att-class="widget.to_show[i][0] === widget.selected_value ? 'oe_form_steps_active' : ''">
-                <t t-esc="widget.to_show[i][1]"/>
-                <img t-att-src='_s + "/web/static/src/img/form_steps.png"' class="oe_form_steps_arrow" t-if="i &lt; size - 1"/>
-            </li>
-        </t>
-    </ul>
+    <div class="oe_right">
+        <ul class="oe_form_steps">
+            <t t-set="size" t-value="widget.to_show.length"/>
+            <t t-foreach="_.range(size)" t-as="i">
+                <li t-att-class="widget.to_show[i][0] === widget.selected_value ? 'oe_form_steps_active' : ''">
+                    <t t-esc="widget.to_show[i][1]"/>
+                    <img t-att-src='_s + "/web/static/src/img/form_steps.png"' class="oe_form_steps_arrow" t-if="i &lt; size - 1"/>
+                </li>
+            </t>
+        </ul>
+    </div>
+    <div class="oe_clear"/>
 </t>
 <t t-name="FieldBinaryImage">
-    <table cellpadding="0" cellspacing="0" border="0" width="100%">
-    <tr>
-        <td class="oe_form_field-binary-image-placeholder" align="center">
-
-        </td>
-    </tr>
-    <tr>
-        <td align="center" valign="bottom" height="25">
-            <div class="oe-binary">
-                <table cellspacing="0" cellpadding="0" border="0">
-                <tr>
-                    <td>
-                        <div class="oe-binary-file-set">
-                            <form class="oe-binary-form" t-att-target="widget.iframe"
-                                method="post" enctype="multipart/form-data" action="/web/binary/upload">
-                                <input type="hidden" name="session_id" value=""/>
-                                <input type="hidden" name="callback" t-att-value="widget.iframe"/>
-                                <button class="oe_button" type="button" title="Set Image">
-                                    <img t-att-src='_s + "/web/static/src/img/icons/STOCK_DIRECTORY.png"'/>
-                                </button>
-                                <input type="file" class="oe-binary-file" name="ufile"
-                                    t-att-tabindex="widget.node.attrs.tabindex"
-                                    t-att-autofocus="widget.node.attrs.autofocus"
-                                />
-                            </form>
-                        </div>
-                    </td>
-                    <td>
-                        <button class="oe_button oe-binary-file-clear" type="button" title="Clear">
-                            <img t-att-src='_s + "/web/static/src/img/icons/STOCK_MISSING_IMAGE.png"'/>
-                        </button>
-                    </td>
-                </tr>
-                </table>
+    <div class="oe_binary_image">
+        <div class="oe_form_field-binary-image-placeholder"></div>
+        <div class="oe-binary">
+            <div class="oe-binary-file-set">
+                <form class="oe-binary-form" t-att-target="widget.iframe"
+                    method="post" enctype="multipart/form-data" action="/web/binary/upload">
+                    <input type="hidden" name="session_id" value=""/>
+                    <input type="hidden" name="callback" t-att-value="widget.iframe"/>
+                    <button class="oe_button" type="button" title="Set Image">
+                        <img t-att-src='_s + "/web/static/src/img/icons/STOCK_DIRECTORY.png"'/>
+                    </button>
+                    <input type="file" class="oe-binary-file" name="ufile"
+                        t-att-tabindex="widget.node.attrs.tabindex"
+                        t-att-autofocus="widget.node.attrs.autofocus"
+                    />
+                </form>
             </div>
-            <div class="oe-binary-progress" style="display: none">
-                <img t-att-src='_s + "/web/static/src/img/throbber.gif"' width="16" height="16"/>
-                <b>Uploading ...</b>
-            </div>
-            <iframe t-att-id="widget.iframe" t-att-name="widget.iframe" style="display: none"/>
-        </td>
-    </tr>
-    </table>
+            <button class="oe_button oe-binary-file-clear" type="button" title="Clear">
+                <img t-att-src='_s + "/web/static/src/img/icons/STOCK_MISSING_IMAGE.png"'/>
+            </button>
+        </div>
+        <div class="oe-binary-progress" style="display: none">
+            <img t-att-src='_s + "/web/static/src/img/throbber.gif"' width="16" height="16"/>
+            <b>Uploading ...</b>
+        </div>
+        <iframe t-att-id="widget.iframe" t-att-name="widget.iframe" style="display: none"/>
+    </div>
 </t>
 <t t-name="FieldBinaryImage-img">
     <img t-att-src='url' class="oe-binary-image field_image"

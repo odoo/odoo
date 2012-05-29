@@ -1305,6 +1305,10 @@ $colour4: #8a89ba
     // }}}
     // FormView.fields {{{
     .oe_form
+        h2 input
+            font-size: 20px
+            font-weight: bold
+            height: 30px
         textarea
             resize: vertical
         input[type="text"],
@@ -1448,6 +1452,7 @@ $colour4: #8a89ba
         .oe-binary-file-set
             overflow: hidden
             position: relative
+            display: inline-block
             width: 45px
             height: 30px
         input.oe-binary-file
@@ -1567,10 +1572,6 @@ $colour4: #8a89ba
     // }}}
     // FormView.classes for openerp views {{{
     .oe_form
-        .oe_form_title, .oe_form_title input
-            font-size: 20px
-            font-weight: bold
-            height: 30px
         .oe_form_group_odd_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell:nth-child(odd),
         .oe_form_group_label_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell_label
             border-right: 1px solid #ddd
