@@ -87,7 +87,7 @@ class project_issue(crm.crm_case, osv.osv):
         project_id = self._resolve_project_id_from_context(cr, uid, context=context)
         if project_id:
             search_domain += ['|', '&', ('project_ids', '=', project_id), ('fold', '=', True)]
-        search_domain += ['|', ('id', 'in', ids), '&', ('project_default', '=', 1), ('fold', '=', False)]
+        search_domain += ['|', ('id', 'in', ids), '&', ('case_default', '=', 1), ('fold', '=', False)]
         # perform search
         stage_ids = stage_obj._search(cr, uid, search_domain, order=order, access_rights_uid=access_rights_uid, context=context)
         result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
@@ -238,7 +238,7 @@ class project_issue(crm.crm_case, osv.osv):
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
         'version_id': fields.many2one('project.issue.version', 'Version'),
         'stage_id': fields.many2one ('project.task.type', 'Stages',
-                        domain="['|', ('project_ids', '=', project_id), ('project_default', '=', True)]"),
+                        domain="['|', ('project_ids', '=', project_id), ('case_default', '=', True)]"),
         'project_id':fields.many2one('project.project', 'Project'),
         'duration': fields.float('Duration'),
         'task_id': fields.many2one('project.task', 'Task', domain="[('project_id','=',project_id)]"),
@@ -420,11 +420,11 @@ class project_issue(crm.crm_case, osv.osv):
             cases = self.browse(cr, uid, cases, context=context)
         domain = list(domain)
         if section_id:
-                domain += ['|', ('project_ids', '=', section_id), ('project_default', '=', True)]
+                domain += ['|', ('project_ids', '=', section_id), ('case_default', '=', True)]
         for issue in cases:
             issue_project_id = issue.project_id.id if issue.project_id else None
             if issue_project_id:
-                domain += ['|', ('project_ids', '=', issue_project_id), ('project_default', '=', True)]
+                domain += ['|', ('project_ids', '=', issue_project_id), ('case_default', '=', True)]
         stage_ids = self.pool.get('project.task.type').search(cr, uid, domain, order=order, context=context)
         if stage_ids:
             return stage_ids[0]
