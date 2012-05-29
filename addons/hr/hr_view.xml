@@ -41,8 +41,6 @@
                         <page string="Personal Information">
                             <group col="2" colspan="2" groups="base.group_hr_user">
                                 <separator colspan="2" string="Social IDs"/>
-                                <field name="ssnid"/>
-                                <field name="sinid"/>
                                 <field name="identification_id"/>
                                 <field name="passport_id"/>
                                 <field name="otherid"/>
@@ -65,12 +63,12 @@
                             </group>
                             <group col="2" colspan="2">
                                 <separator string="Job Information" colspan="2"/>
-                                <field name="job_id" domain="[('state','!=','old')]"/>
+                                <field name="job_id" domain="[('state','!=','old')]" context="{'form_view_ref':'hr.view_hr_job_employee_form'}"/>
                                 <field name="coach_id" />
                             </group>
                         </page>
                         <page string="Categories" groups="base.group_hr_user">
-                            <field name="category_ids" nolabel="1"/>
+                            <field name="category_ids" colspan="4" nolabel="1" widget="many2many_tags"/>
                         </page>
                         <page string="Notes" groups="base.group_hr_user">
                             <field colspan="4" nolabel="1" name="notes"/>
@@ -130,6 +128,7 @@
         <field name="type">kanban</field>
         <field name="arch" type="xml">
             <kanban>
+                <field name="last_login"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_employee_vignette">
@@ -139,6 +138,11 @@
                             <div class="oe_employee_details">
                                 <h4><a type="edit"><field name="name"/> (<field name="login"/>)</a></h4>
                                 <ul>
+                                    <li t-if="record.last_login.raw_value">
+                                        <span t-if="record.last_login.raw_value &amp;&amp; record.last_login.raw_value.is().today()" class="oe_kanban_button" style="font-size: 100%%">
+                                              <t t-esc="record.last_login.raw_value.toString('HH:mm')"/>
+                                        </span>
+                                    </li>
                                     <li t-if="record.job_id.raw_value"><field name="job_id"/></li>
                                     <li t-if="record.work_location.raw_value"><field name="work_location"/></li>
                                     <li t-if="record.work_phone.raw_value">Tel: <field name="work_phone"/></li>
@@ -424,7 +428,27 @@
                 </search>
              </field>
          </record>
-
+        
+        <record id="view_hr_job_employee_form" model="ir.ui.view">
+            <field name="name">hr.job.employee.form</field>
+            <field name="model">hr.job</field>
+            <field name="type">form</field>
+           <field name="priority">20</field>
+            <field name="arch" type="xml">
+                <form string="Job">
+                    <field name="name" />
+                    <field name="department_id" />
+                    <newline/>
+                    <notebook colspan="4">
+                        <page string="Description">
+                            <separator colspan="4" string="Job Description"/>
+                            <field name="description" colspan="4" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+        
         <record model="ir.actions.act_window" id="action_hr_job">
             <field name="name">Job Positions</field>
             <field name="res_model">hr.job</field>

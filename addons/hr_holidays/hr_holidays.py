@@ -513,7 +513,6 @@ class hr_employee(osv.osv):
         'current_leave_id': fields.function(_get_leave_status, multi="leave_status", string="Current Leave Type",type='many2one', relation='hr.holidays.status'),
         'leave_date_from': fields.function(_get_leave_status, multi='leave_status', type='date', string='From Date'),
         'leave_date_to': fields.function(_get_leave_status, multi='leave_status', type='date', string='To Date'),        
-        'last_login': fields.related('user_id', 'date', type='datetime', string='Latest Connection', readonly=1)
     }
 
 hr_employee()

@@ -303,7 +303,7 @@
             <field name="act_window_id" ref="open_ask_holidays"/>
         </record>
 
-        <menuitem name="Leave Requests" parent="menu_open_ask_holidays" id="menu_open_ask_holidays_new" action="open_ask_holidays"/>
+        <menuitem name="My Leave Requests" parent="menu_open_ask_holidays" id="menu_open_ask_holidays_new" action="open_ask_holidays"/>
 
         <record model="ir.actions.act_window" id="request_approve_holidays">
             <field name="name">Requests Approve</field>
@@ -512,8 +512,8 @@
             <field name="arch" type="xml">
                 <field name="coach_id" position="after">
                     <field name="remaining_leaves"/>
-                    <field name="current_leave_id"/>
-                    <field name="current_leave_state" attrs="{'invisible':[('current_leave_id','=',False)]}"/>
+                    <field name="current_leave_id" invisible="1"/>
+                    <field name="current_leave_state" invisible="1"/>
                 </field>
             </field>
         </record>
@@ -525,19 +525,15 @@
             <field name="arch" type="xml">
                 <xpath expr="//templates" position="before">
                     <field name="current_leave_state"/>
-                    <field name="last_login"/>
                     <field name="leave_date_from"/>
                     <field name="leave_date_to"/>
                 </xpath>
                 <xpath expr="//div[@class='oe_employee_details']/ul/li" position="before">
-                    <li t-if="record.current_leave_id.raw_value || record.last_login.raw_value">
+                    <li t-if="record.current_leave_id.raw_value">
                         <span t-if="record.current_leave_id.raw_value" t-att-class="record.current_leave_state.raw_value=='validate'?'oe_kanban_color_3':'oe_kanban_color_2'">
                             <span class="oe_kanban_button" style="font-size: 100%%" t-att-title="record.leave_date_from.raw_value.toString('ddd dS MMM') + ' - ' + record.leave_date_to.raw_value.toString('ddd dS MMM')" >
                                 <field name="current_leave_id"/>
                             </span>
-                        </span>
-                        <span t-if="record.last_login.raw_value &amp;&amp; record.last_login.raw_value.is().today()" class="oe_kanban_button" style="font-size: 100%%">
-                            <t t-esc="record.last_login.raw_value.toString('HH:mm')"/>
                         </span>
                     </li>
                 </xpath>
