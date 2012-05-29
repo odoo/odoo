@@ -92,7 +92,8 @@ the portal's users.
             <!-- root menu for portal members (chrooted in this menu) -->
             <menuitem name="Portal Members Root Menu" id="portal_members_root_menu" parent="portal_menu_settings"/>
                 <menuitem name="Portal Member's Menu" id="menu_portal" parent="portal_members_root_menu"/>
-                <menuitem name="Our company" id="portal_company" parent="menu_portal"/>
+                <menuitem name="Our company" id="portal_company" 
+                    parent="menu_portal" sequence="10"/>
                     <!-- 
                     right now it's not possible to directly call a client action 
                     from a menuitem, so we can't use this shortcut element and 
@@ -102,13 +103,20 @@ the portal's users.
                         <field name="name">News</field>
                         <field name="action" ref="action_news"/>
                         <field name="parent_id" ref="portal_company"/>
+                        <field name="sequence">10</field>
                     </record>
-                    <menuitem name="Jobs" id="portal_company_jobs" parent="portal_company"/>
-                    <menuitem name="About" id="portal_company_about" parent="portal_company" action="action_about"/>
-                <menuitem name="Orders" id="portal_track_orders" parent="menu_portal"/>
-                <menuitem name="Invoice and Payments" id="portal_invoice_payements" parent="menu_portal"/>
-                <menuitem name="Services" id="portal_services" parent="menu_portal"/>
-                <menuitem name="After Sale Services" id="portal_after_sales" parent="menu_portal"/>
+                    <menuitem name="Jobs" id="portal_company_jobs" 
+                        parent="portal_company" action="action_about" sequence="20"/>
+                    <menuitem name="About" id="portal_company_about" 
+                        parent="portal_company" action="action_about" sequence="50"/>
+                <menuitem name="Orders" id="portal_orders" 
+                    parent="menu_portal" sequence="20"/>
+                <menuitem name="Invoices and Payments" id="portal_invoices_payements" 
+                    parent="menu_portal" sequence="30"/>
+                <menuitem name="Projects" id="portal_projects"
+                    parent="menu_portal" sequence="40"/>
+                <menuitem name="After Sale Services" id="portal_after_sales" 
+                    parent="menu_portal" sequence="50"/>
 
     </data>
 </openerp>
