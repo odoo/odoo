@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from base_status.base_stage import base_stage
 from crm import crm
 from datetime import datetime
 from osv import fields,osv
@@ -44,7 +45,7 @@ project_issue_version()
 
 _ISSUE_STATE= [('draft', 'New'), ('open', 'In Progress'), ('cancel', 'Cancelled'), ('done', 'Done'),('pending', 'Pending')]
 
-class project_issue(crm.crm_case, osv.osv):
+class project_issue(base_stage, osv.osv):
     _name = "project.issue"
     _description = "Project Issue"
     _order = "priority, create_date desc"
@@ -271,8 +272,8 @@ class project_issue(crm.crm_case, osv.osv):
 
     _defaults = {
         'active': 1,
-        'partner_id': crm.crm_case._get_default_partner,
-        'email_from': crm.crm_case._get_default_email,
+        'partner_id': lambda s, cr, uid, c: s._get_default_partner(cr, uid, c),
+        'email_from': lambda s, cr, uid, c: s._get_default_email(cr, uid, c),
         'state': 'draft',
         'stage_id': lambda s, cr, uid, c: s._get_default_stage_id(cr, uid, c),
         'section_id': lambda s, cr, uid, c: s._get_default_section_id(cr, uid, c),

@@ -19,15 +19,15 @@
 #
 ##############################################################################
 
+from base_status.base_state import base_state
 import crm
-from crm import crm_base
 from datetime import datetime
 from osv import fields, osv
 import time
 from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP
 from tools.translate import _
 
-class crm_phonecall(crm_base, osv.osv):
+class crm_phonecall(base_state, osv.osv):
     """ Model for CRM phonecalls """
     _name = "crm.phonecall"
     _description = "Phonecall"

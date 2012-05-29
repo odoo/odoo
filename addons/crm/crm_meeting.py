@@ -20,17 +20,18 @@
 ##############################################################################
 
 from base_calendar import base_calendar
-from crm import crm_base, crm_case
+from base_status.base_state import base_state
+from base_status.base_stage import base_stage
 import logging
 from osv import fields, osv
 import tools
 from tools.translate import _
 
-class crm_lead(crm_case, osv.osv):
+class crm_lead(base_stage, osv.osv):
         """ CRM Leads """
         _name = 'crm.lead'
 
-class crm_meeting(crm_base, osv.Model):
+class crm_meeting(base_state, osv.Model):
     """ Model for CRM meetings """
     _name = 'crm.meeting'
     _description = "Meeting"

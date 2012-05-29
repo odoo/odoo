@@ -21,7 +21,7 @@
 
 import binascii
 import crm
-from crm import crm_case
+from base_status.base_stage import base_stage
 from datetime import datetime
 from mail.mail_message import to_email
 from osv import fields, osv
@@ -35,7 +35,7 @@ CRM_LEAD_PENDING_STATES = (
     crm.AVAILABLE_STATES[4][0], # Pending
 )
 
-class crm_lead(crm_case, osv.osv):
+class crm_lead(base_stage, osv.osv):
     """ CRM Lead Case """
     _name = "crm.lead"
     _description = "Lead/Opportunity"
@@ -284,6 +284,22 @@ class crm_lead(crm_case, osv.osv):
             return {'value':{}}
         return {'value':{'probability': stage.probability}}
 
+    def _check(self, cr, uid, ids=False, context=None):
+        """ Override of the base.stage method.
+            Function called by the scheduler to process cases for date actions
+            Only works on not done and cancelled cases
+        """
+        cr.execute('select * from crm_case \
+                where (date_action_last<%s or date_action_last is null) \
+                and (date_action_next<=%s or date_action_next is null) \
+                and state not in (\'cancel\',\'done\')',
+                (time.strftime("%Y-%m-%d %H:%M:%S"),
+                    time.strftime('%Y-%m-%d %H:%M:%S')))
+
+        ids2 = map(lambda x: x[0], cr.fetchall() or [])
+        cases = self.browse(cr, uid, ids2, context=context)
+        return self._action(cr, uid, cases, False, context=context)
+
     def stage_find(self, cr, uid, cases, section_id, domain=[], order='sequence', context=None):
         """ Override of the base.stage method
             Parameter of the stage search taken from the lead:
@@ -309,7 +325,7 @@ class crm_lead(crm_case, osv.osv):
         return False
 
     def case_cancel(self, cr, uid, ids, context=None):
-        """Overrides cancel for crm_case for setting probability
+        """Overrides cancel for base_stage for setting probability
         """
         res = super(crm_lead, self).case_cancel(cr, uid, ids, context=context)
         self.write(cr, uid, ids, {'probability' : 0.0}, context=context)

@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from crm.crm import crm_case
+from base_status.base_stage import base_stage
 from datetime import datetime, date
 from lxml import etree
 from osv import fields, osv
@@ -508,7 +508,7 @@ def Project():
         return self.message_append_note(cr, uid, ids, body=message, context=context)
 
 
-class task(crm_case, osv.osv):
+class task(base_stage, osv.osv):
     _name = "project.task"
     _description = "Task"
     _log_create = True

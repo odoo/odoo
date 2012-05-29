@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from base_status.base_stage import base_stage
 import time
 from datetime import datetime, timedelta
 
@@ -92,7 +93,7 @@ class hr_recruitment_degree(osv.osv):
         ('name_uniq', 'unique (name)', 'The name of the Degree of Recruitment must be unique!')
     ]
 
-class hr_applicant(crm.crm_case, osv.Model):
+class hr_applicant(base_stage, osv.Model):
     _name = "hr.applicant"
     _description = "Applicant"
     _order = "id desc"

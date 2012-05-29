@@ -57,6 +57,7 @@ Creates a dashboard for CRM that includes:
     'depends': [
         'base_action_rule',
         'base_setup',
+        'base_status',
         'process',
         'mail',
         'base_calendar',
