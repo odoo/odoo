@@ -98,8 +98,8 @@
             <field name="arch" type="xml">
                 <form layout="manual">
                 <div class="oe_form_topbar">
-                    <button name="action_button_confirm" states="draft" string="Confirm Order" class="oe_form_button_hi" type="object"/>
-                    <button name="manual_invoice" states="manual" string="Create Final Invoice" type="object" class="oe_form_button_hi"/>
+                    <button name="action_button_confirm" states="draft" string="Confirm Order" type="object"/>
+                    <button name="manual_invoice" states="manual" string="Create Final Invoice" type="object"/>
                     <button name="invoice_recreate" states="invoice_except" string="Recreate Invoice"/>
                     <button name="invoice_corrected" states="invoice_except" string="Ignore Exception"/>
                     <button name="ship_recreate" states="shipping_except" string="Recreate Packing"/>
@@ -108,7 +108,7 @@
                     <button name="ship_cancel" states="shipping_except" string="Cancel Order"/>
                     <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object"/>
                     <button name="invoice_cancel" states="invoice_except" string="Cancel Order"/>
-                    <button name="%(report_sale_order)d" string="Print Quotation" type="action" states="draft" class="oe_form_button_hi"/>
+                    <button name="%(report_sale_order)d" string="Print Quotation" type="action" states="draft"/>
                     <button name="%(action_view_sale_advance_payment_inv)d" string="Advance Invoice" type="action" states="draft,manual"/>
                     <button name="action_cancel" states="manual,progress" string="Cancel Order" type="object"/>
                     <button name="cancel" states="draft" string="Cancel Order"/>
