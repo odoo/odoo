@@ -277,7 +277,7 @@ class procurement_order(osv.osv):
             if not res:
                 return False
         return True
-
+    
     def check_buy(self, cr, uid, ids):
         """ Checks product type.
         @return: True or Product Id.
@@ -288,27 +288,35 @@ class procurement_order(osv.osv):
             if procurement.product_id.product_tmpl_id.supply_method <> 'buy':
                 return False
             if not procurement.product_id.seller_ids:
-                cr.execute('update procurement_order set message=%s where id=%s',
-                        (_('No supplier defined for this product !'), procurement.id))
+                message = _('No supplier defined for this product !')
+                self.procurement_message(cr, uid, [procurement.id], message)
+                cr.execute('update procurement_order set message=%s where id=%s', (message, procurement.id))
                 return False
             partner = procurement.product_id.seller_id #Taken Main Supplier of Product of Procurement.
 
             if not partner:
-                cr.execute('update procurement_order set message=%s where id=%s',
-                           (_('No default supplier defined for this product'), procurement.id))
+                message = _('No default supplier defined for this product')
+                self.procurement_message(cr, uid, [procurement.id], message)
+                cr.execute('update procurement_order set message=%s where id=%s', (message, procurement.id))
                 return False
-
             if user.company_id and user.company_id.partner_id:
                 if partner.id == user.company_id.partner_id.id:
                     return False
 
             address_id = partner_obj.address_get(cr, uid, [partner.id], ['delivery'])['delivery']
             if not address_id:
-                cr.execute('update procurement_order set message=%s where id=%s',
-                        (_('No address defined for the supplier'), procurement.id))
+                message = _('No address defined for the supplier')
+                self.procurement_message(cr, uid, [procurement.id], message)
+                cr.execute('update procurement_order set message=%s where id=%s', (message, procurement.id))
                 return False
         return True
-
+    def procurement_message(self,cr,uid,ids,message,context=None):
+        for proc in self.browse(cr,uid,ids):
+            message_ids=False
+            message_ids= self.pool.get('mail.message').search(cr,uid,[('res_id','=',proc.id),('model','=',self._name),('body_html','=',message)])
+            if not message_ids:
+                self.message_append_note(cr, uid, [proc.id], body=message)
+        return True
     def test_cancel(self, cr, uid, ids):
         """ Tests whether state of move is cancelled or not.
         @return: True or False
@@ -387,8 +395,8 @@ class procurement_order(osv.osv):
 
                 if message:
                     message = _("Procurement '%s' is in exception: ") % (procurement.name) + message
-                    self.message_append_note(cr, uid, [procurement.id], body=message, context=context)
                     cr.execute('update procurement_order set message=%s where id=%s', (message, procurement.id))
+                    self.procurement_message(cr, uid, [procurement.id], message, context=context)   
         return ok
 
     def action_produce_assign_service(self, cr, uid, ids, context=None):

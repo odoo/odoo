@@ -938,7 +938,6 @@ class account_invoice(osv.osv):
     
     def invoice_validate(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'open'}, context=context)
-        self.invoice_validate_send_note(cr, uid, ids, context=context)
         return True
 
     def line_get_convert(self, cr, uid, x, part, date, context=None):
@@ -1256,10 +1255,6 @@ class account_invoice(osv.osv):
         for obj in self.browse(cr, uid, ids, context=context):
             self.message_append_note(cr, uid, [obj.id],body=_("%s <b>created</b>.") % (self._get_document_type(obj.type)), context=context)
             
-    def invoice_validate_send_note(self, cr, uid, ids, context=None):
-         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_append_note(cr, uid, [obj.id], body=_("%s <b>validated</b>.") % (self._get_document_type(obj.type)), context=context)
-    
     def confirm_paid_send_note(self, cr, uid, ids, context=None):
          for obj in self.browse(cr, uid, ids, context=context):
             self.message_append_note(cr, uid, [obj.id], body=_("%s <b>paid</b>.") % (self._get_document_type(obj.type)), context=context)
