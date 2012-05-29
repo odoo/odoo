@@ -173,8 +173,8 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
 
                         var bank_def = fetch(
                             'account.bank.statement',
-                            ['account_id','currency','journal_id','state','name','user_id'],
-                            [['state','=','open'],['user_id', '=', pos_session.user_id[0]]]
+                            ['account_id','currency','journal_id','state','name','user_id','pos_session_id'],
+                            [['state','=','open'],['pos_session_id', '=', pos_session.id]]
                             ).then(function(result){
                                 self.set({'bank_statements':result});
                             });

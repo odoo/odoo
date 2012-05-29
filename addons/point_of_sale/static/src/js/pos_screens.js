@@ -301,7 +301,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
     module.ScaleProductScreenWidget = module.ScreenWidget.extend({
         template:'ScaleProductSelectionScreenWidget',
         start: function(){
-            this.product_categories_widget = new module.ProductCategoriesWidget(null,{
+            this.product_categories_widget = new module.ProductCategoriesWidget(this,{
                 pos:this.pos,
             });
             this.product_categories_widget.replace($('.placeholder-ProductCategoriesWidget'));
@@ -564,15 +564,10 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
     module.SearchProductScreenWidget = module.ScreenWidget.extend({
         template:'SearchProductScreenWidget',
         start: function(){
-            this.product_categories_widget = new module.ProductCategoriesWidget(null,{
-                pos:this.pos,
-            });
+            this.product_categories_widget = new module.ProductCategoriesWidget2(this,{});
             this.product_categories_widget.replace($('.placeholder-ProductCategoriesWidget'));
 
-            this.product_list_widget = new module.ProductListWidget(null,{
-                pos:this.pos,
-                pos_widget:this.pos_widget,
-            });
+            this.product_list_widget = new module.ProductListWidget(this,{});
             this.product_list_widget.replace($('.placeholder-ProductListWidget'));
         },
         show: function(){

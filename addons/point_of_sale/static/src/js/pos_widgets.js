@@ -487,33 +487,40 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         on_change_category: function(id) {},
     });
 
-    /*
     module.ProductCategoriesWidget2 = module.PosBaseWidget.extend({
-        template: 'ProductCategoriesWidget',
+        template: 'ProductCategoriesWidget2',
         init: function(parent, options){
             this._super(parent,options);
             this.onlyWeightable = false;
-            this.current_category = this.pos.;
-            this.child_categories = [];
+            this.category = this.pos.root_category;
             this.breadcrumb = [];
+            this.subcategories = [];
+            this.set_category();
         },
         set_category : function(category){
-            this.current_category = category;
-
-            var child_list = [];
             if(!category){
-                this.pos.root_categories;
-                this.breadcrumb = [];
+                this.category = this.pos.root_category;
             }else{
-                this.categories = category.childrens
-                this.breadcrumb 
-        }
+                this.category = category;
+            }
+            for(var i = 1; i < this.category.ancestors.length; i++){
+                this.breadcrumb.push(this.category.ancestor[i]);
+            }
+            this.subcategories = this.category.childrens || [];
+        },
         renderElement: function(){
             var self = this;
+            this._super();
             this.$element.empty();
         },
+        reset_category: function(){
+            this.set_category();
+        },
+        on_change_category: function(id){},
+        search_and_categories: function(id){},
+        change_category: function(a){
+        },
     });
-    */
 
     module.ProductListWidget = module.ScreenWidget.extend({
         template:'ProductListWidget',
