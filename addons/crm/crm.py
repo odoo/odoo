@@ -19,12 +19,11 @@
 #
 ##############################################################################
 
-import time
 import base64
-import tools
-
+import time
 from osv import fields
 from osv import osv
+import tools
 from tools.translate import _
 
 MAX_LEVEL = 15
