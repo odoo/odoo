@@ -28,37 +28,37 @@
             <field name="sequence">1</field>
             <field name="name">Design</field>
             <field name="state">draft</field>
-            <field name="project_default" eval="1"/>
+            <field name="case_default" eval="1"/>
         </record>
         <record id="project_tt_development" model="project.task.type">
             <field name="sequence">2</field>
             <field name="name">Development</field>
             <field name="state">open</field>
-            <field name="project_default" eval="1"/>
+            <field name="case_default" eval="1"/>
         </record>
         <record id="project_tt_testing" model="project.task.type">
             <field name="sequence">3</field>
             <field name="name">Testing</field>
             <field name="state">open</field>
-            <field name="project_default" eval="1"/>
+            <field name="case_default" eval="1"/>
         </record>
         <record id="project_tt_pending" model="project.task.type">
             <field name="sequence">4</field>
             <field name="name">Pending</field>
             <field name="state">pending</field>
-            <field name="project_default" eval="1"/>
+            <field name="case_default" eval="1"/>
         </record>
         <record id="project_tt_merge" model="project.task.type">
             <field name="sequence">5</field>
             <field name="name">Deployment</field>
             <field name="state">done</field>
-            <field name="project_default" eval="1"/>
+            <field name="case_default" eval="1"/>
         </record>
         <record id="project_tt_cancel" model="project.task.type">
             <field name="sequence">6</field>
             <field name="name">Cancelled</field>
-            <field name="state">cancel</field>
-            <field name="project_default" eval="1"/>
+            <field name="state">cancelled</field>
+            <field name="case_default" eval="1"/>
             <field name="fold" eval="True"/>
         </record>
     </data>

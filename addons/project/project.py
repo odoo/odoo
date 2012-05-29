@@ -27,7 +27,7 @@ from openerp.addons.resource.faces import task as Task
 import time
 from tools.translate import _
 
-_TASK_STATE = [('draft', 'New'),('open', 'In Progress'),('pending', 'Pending'), ('done', 'Done'), ('cancel', 'Cancelled')]
+_TASK_STATE = [('draft', 'New'),('open', 'In Progress'),('pending', 'Pending'), ('done', 'Done'), ('cancelled', 'Cancelled')]
 
 class project_task_type(osv.osv):
     _name = 'project.task.type'
@@ -981,7 +981,7 @@ class task(crm_case, osv.osv):
                     'ref_doc2': 'project.project,%d' % project.id,
                 }, context=context)
             # cancel task
-            self.case_set(cr, uid, [task.id], 'cancel', {'remaining_hours': 0.0}, context=context)
+            self.case_set(cr, uid, [task.id], 'cancelled', {'remaining_hours': 0.0}, context=context)
             self.case_cancel_send_note(cr, uid, [task.id], context=context)
         return True
 
