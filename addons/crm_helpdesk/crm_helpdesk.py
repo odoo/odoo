@@ -19,10 +19,10 @@
 #
 ##############################################################################
 
+from base_status.base_stage import base_stage
 from crm import crm
-from osv import fields, osv
-import time
 from crm import wizard
+from osv import fields, osv
 import tools
 from tools.translate import _
 
@@ -34,7 +34,7 @@ CRM_HELPDESK_STATES = (
 
 wizard.mail_compose_message.SUPPORTED_MODELS.append('crm.helpdesk')
 
-class crm_helpdesk(crm.crm_case, osv.osv):
+class crm_helpdesk(base_stage, osv.osv):
     """ Helpdesk Cases """
 
     _name = "crm.helpdesk"
@@ -82,12 +82,12 @@ class crm_helpdesk(crm.crm_case, osv.osv):
 
     _defaults = {
         'active': lambda *a: 1,
-        'user_id': crm.crm_case._get_default_user,
-        'partner_id': crm.crm_case._get_default_partner,
-        'email_from': crm.crm_case._get_default_email,
+        'user_id': lambda s, cr, uid, c: s._get_default_user(cr, uid, c),
+        'partner_id': lambda s, cr, uid, c: s._get_default_partner(cr, uid, c),
+        'email_from': lambda s, cr, uid, c: s._get_default_email(cr, uid, c),
         'state': lambda *a: 'draft',
-        'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
-        'section_id': crm.crm_case._get_default_section_id,
+        'date': lambda *a: fields.datetime.now(),
+        'section_id': lambda s, cr, uid, c: s._get_default_section_id(cr, uid, c),
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
     }

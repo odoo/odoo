@@ -20,8 +20,8 @@
 ##############################################################################
 
 import binascii
-import crm
 from base_status.base_stage import base_stage
+import crm
 from datetime import datetime
 from mail.mail_message import to_email
 from osv import fields, osv

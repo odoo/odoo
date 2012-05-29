@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from base_status.base_stage import base_stage
 from osv import fields, osv
 from crm import crm
 import time
@@ -35,7 +36,7 @@ CRM_CLAIM_PENDING_STATES = (
 )
 
 
-class crm_claim(crm.crm_case, osv.osv):
+class crm_claim(base_stage, osv.osv):
     """ Crm claim
     """
     _name = "crm.claim"
