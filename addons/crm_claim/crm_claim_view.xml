@@ -68,13 +68,19 @@
             <field name="arch" type="xml">
                 <form layout="manual">
                 <div class="oe_form_topbar">
-                    <button name="case_close" string="Done" states="open,pending" type="object" />
-                    <button name="case_open" string="Open" states="draft,pending" type="object" />
-                    <button name="case_pending" string="Pending" states="draft,open" type="object" />
-                    <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" />
-                    <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" />
+                    <button name="case_open" string="Open" type="object"
+                            states="draft,pending"/>
+                    <button name="case_pending" string="Pending" type="object"
+                            states="draft,open"/>
+                    <button name="case_close" string="Done" type="object"
+                            states="open,pending"/>
+                    <button name="case_reset" string="Reset to Draft" type="object"
+                            states="cancel"/>
+                    <button name="case_cancel" string="Cancel" type="object"
+                            states="draft,open,pending"/>
                     <div class="oe_right">
-                        <field name="state" select="1" nolabel="1" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
+                        <field name="stage_id" nolabel="1" widget="statusbar"
+                            on_change="onchange_stage_id(stage_id)"/>
                     </div>
                     <div class="oe_clear"/>
                 </div>
@@ -86,11 +92,7 @@
                     <group colspan="4" col="6">
                         <field name="user_id"/>
                         <field name="section_id" widget="selection" />
-                        <group colspan="2" col="4">
-                            <field name="stage_id" domain="[('section_ids','=',section_id)]"/>
-                            <button name="stage_previous" string="" type="object" icon="gtk-go-back" />
-                            <button name="stage_next" string="" type="object" icon="gtk-go-forward" />
-                        </group>
+                        <field name="state" groups="base.group_no_one"/>
                         <newline />
                         <field name="priority"/>
                         <field name="date_deadline"/>
