@@ -886,7 +886,7 @@ class task(crm_case, osv.osv):
         if not task_id: return False
         task = self.browse(cr, uid, task_id, context=context)
         project = task.project_id
-        res = self.case_close(cr, uid, [task_id], context=context)
+        res = self.do_close(cr, uid, [task_id], context=context)
         if project.warn_manager or project.warn_customer:
             return {
                 'name': _('Send Email after close task'),
@@ -955,8 +955,7 @@ class task(crm_case, osv.osv):
                     'ref_doc1': 'project.task,%d' % task.id,
                     'ref_doc2': 'project.project,%d' % project.id,
                 }, context=context)
-
-            self.write(cr, uid, [task.id], {'state': 'open'}, context=context)
+            self.case_set(cr, uid, [task.id], 'open', {}, context=context)
             #self.do_open_send_note(cr, uid, [task.id], context)
         return True
 
