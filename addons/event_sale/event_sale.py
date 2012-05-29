@@ -70,7 +70,6 @@ class sale_order_line(osv.osv):
     def button_confirm(self, cr, uid, ids, context=None):
         '''
         create registration with sale order
-
         '''
         registration_obj = self.pool.get('event.registration')
         sale_obj = self.pool.get('sale.order')
@@ -92,4 +91,3 @@ class sale_order_line(osv.osv):
                 message = _("The registration %s has been created from the Sale Order %s.") % (registration_id, order_line.order_id.name)
                 registration_obj.log(cr, uid, registration_id, message)
         return super(sale_order_line, self).button_confirm(cr, uid, ids, context=context)
-
