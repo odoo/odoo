@@ -131,21 +131,21 @@ class process_process(osv.osv):
             if node.menu_id:
                 data['menu'] = {'name': node.menu_id.complete_name, 'id': node.menu_id.id}
 
-            if node.model_id and node.model_id.model == res_model:
-                try:
-                    data['active'] = eval(node.model_states, expr_context)
-                except Exception:
-                    pass
+            try:
+                gray = True
+                for cond in node.condition_ids:
+                    if cond.model_id and cond.model_id.model == res_model:
+                        gray = gray and eval(cond.model_states, expr_context)
+                data['gray'] = not gray
+            except:
+                pass
 
-            if not data['active']:
-                try:
-                    gray = True
-                    for cond in node.condition_ids:
-                        if cond.model_id and cond.model_id.model == res_model:
-                            gray = gray and eval(cond.model_states, expr_context)
-                    data['gray'] = not gray
-                except:
-                    pass
+            if not data['gray']:
+                if node.model_id and node.model_id.model == res_model:
+                    try:
+                        data['active'] = eval(node.model_states, expr_context)
+                    except Exception:
+                        pass
 
             nodes[node.id] = data
             if node.flow_start:
