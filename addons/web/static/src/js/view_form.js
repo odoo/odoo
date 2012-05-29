@@ -673,7 +673,7 @@ instance.web.FormView = instance.web.View.extend(_.extend({}, instance.web.form.
         var msg = "<ul>";
         _.each(this.fields, function(f) {
             if (!f.is_valid()) {
-                msg += "<li>" + f.node.attrs.string + "</li>";
+                msg += "<li>" + (f.node.attrs.string || f.field.string) + "</li>";
             }
         });
         msg += "</ul>";
