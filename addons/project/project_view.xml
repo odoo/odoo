@@ -11,6 +11,15 @@
 
         <menuitem id="menu_project_management" name="Project" parent="base.menu_main_pm" sequence="1"/>
         <menuitem id="menu_definitions" name="Configuration" parent="base.menu_main_pm" sequence="60"/>
+        
+        <act_window
+            context="{'search_default_project_id': [active_id], 'default_project_id': active_id}"
+            id="act_project_project_2_project_task_all"
+            name="Tasks"
+            res_model="project.task"
+            src_model="project.project"
+            view_mode="kanban,tree,form,calendar,graph"
+            view_type="form"/>
 
         <!-- Project -->
         <record id="edit_project" model="ir.ui.view">
@@ -170,15 +179,6 @@
             </field>
         </record>
         
-        <act_window
-            context="{'search_default_project_id': [active_id], 'default_project_id': active_id}"
-            id="act_project_project_2_project_task_all"
-            name="Tasks"
-            res_model="project.task"
-            src_model="project.project"
-            view_mode="kanban,tree,form,calendar,graph"
-            view_type="form"/>
-
         <record model="ir.ui.view" id="view_project_kanban">
             <field name="name">project.project.kanban</field>
             <field name="model">project.project</field>
