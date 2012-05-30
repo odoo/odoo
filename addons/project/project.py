@@ -170,8 +170,8 @@ class project(osv.osv):
         'priority': fields.integer('Sequence', help="Gives the sequence order when displaying the list of projects"),
         'warn_manager': fields.boolean('Notify Manager', help="If you check this field, the project manager will receive an email each time a task is completed by his team.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
 
-        'members': fields.many2many('res.users', 'project_user_rel', 'project_id', 'uid', 'Project Members',
-            help="Project's members are users who can have an access to the tasks related to this project.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
+        #'members': fields.many2many('res.users', 'project_user_rel', 'project_id', 'uid', 'Project Members',
+        #    help="Project's members are users who can have an access to the tasks related to this project.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'tasks': fields.one2many('project.task', 'project_id', "Task Activities"),
         'planned_hours': fields.function(_progress_rate, multi="progress", string='Planned Time', help="Sum of planned hours of all tasks related to this project and its child projects.",
             store = {
@@ -1236,6 +1236,8 @@ class account_analytic_account(osv.osv):
     _columns = {
         'use_tasks': fields.boolean('Tasks Management'),
         'company_uom_id': fields.related('company_id', 'project_time_mode_id', type='many2one', relation='product.uom'),
+        'members': fields.many2many('res.users', 'project_user_rel', 'project_id', 'uid', 'Project Members',
+            states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
     }
 #    _defaults = {
 #        'use_tasks': True,
