@@ -50,10 +50,10 @@
             <field name="model">event.event</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form layout="manual">
+            <form string="Events" layout="manual">
                 <div class="oe_form_topbar">
                     <button string="Confirm Event" name="button_confirm" states="draft" type="object"/>
-                    <button string="Mark Done" name="button_done" states="confirm" type="object"/>
+                    <button string="Event Ended" name="button_done" states="confirm" type="object"/>
                     <button string="Set To Draft" name="button_draft" states="cancel,done" type="object"/>
                     <button string="Cancel Event" name="button_cancel" states="draft,confirm" type="object"/>
                     <div class="oe_right">
@@ -61,19 +61,40 @@
                     </div>
                     <div class="oe_clear"/>
                 </div>
-                <sheet string="Events" layout="auto">
-                    <group col="6" colspan="4" class="oe_form_header">
-                        <field name="name"/>
-                        <field name="date_begin"/>
-                        <field name="date_end"/>
+                <sheet layout="manual">
+
+
+                <field name="name" required="1" nolabel="1" class="oe_form_title" colspan="4"/>
+                <group colspan="4" col="5">
+                    <group col="2" colspan="2" class="oe_form_group_label_border" style="margin-top: 20px;">
                         <field name="type" on_change="onchange_event_type(type,context)"/>
                         <field name="user_id"/>
-                        <field name="address_id" />
+                        <field name="address_id" widget="many2one_address_google_map" widget_option="{'placeholder':'.oe_form_google_map'}"/>
                     </group>
-                    <notebook colspan="4">
-                    <page string="Event">
-                        <separator string="Description" colspan="4"/>
+                    <group col="2" colspan="2" class="oe_form_group_label_border" style="margin-top: 20px;">
+                        <field name="date_begin"/>
+                        <field name="date_end"/>
+                        <field name="register_min"/>
+                        <field name="register_max"/>
+                    </group>
+                </group>
+
+                <div class="oe_form_google_map" style="height: 200px"></div>
+
+                <notebook colspan="4">
+                    <page string="Event Description">
                         <field name="note" colspan="4" nolabel="1"/>
+                    </page>
+                    <page string="Internal Data">
+                         <group class="oe_form_group_label_border" colspan="2" col="2">
+                            <field name="register_current"/>
+                            <field name="register_prospect"/>
+                            <field name="register_attended"/>
+                         </group> 
+                         <group class="oe_form_group_label_border" colspan="2" col="2">
+                            <field name="main_speaker_id" domain="[('speaker','=',True)]" context="{'default_speaker':1}"/>
+                            <field name="speaker_confirmed"/>
+                        </group>
                         <field name="registration_ids" colspan="4" nolabel="1" groups="event.group_event_manager,event.group_event_user">
                             <tree string="Registration" editable="top">
                                 <field name="name" />
@@ -108,30 +129,8 @@
                             </form>
                             </field>
                     </page>
-                    <page string="Speakers">
-                        <field name="main_speaker_id" domain="[('speaker','=',True)]" context="{'default_speaker':1}"/>
-                        <field name="speaker_confirmed"/>
-                        <separator string="Other Speakers" colspan="4"/>
-                        <field name="speaker_ids" domain="[('speaker','=',True)]" context="{'default_speaker':1}" colspan="4" nolabel="1"/>
-                    </page>
-                    <page string="Extra Info">
-                        <group col="2" colspan="2">
-                            <separator string="Registrations" colspan="2"/>
-                            <field name="register_min"/>
-                            <field name="register_max"/>
-                            <field name="register_prospect"/>
-                            <field name="register_current"/>
-                            <field name="register_attended"/>
-                        </group>
-                        <group col="2" colspan="2">
-                            <separator string="Emails" colspan="2"/>
-                            <field name="reply_to"/>
-                            <field name="email_registration_id" domain="[('model_id.model','=','event.registration')]"/>
-                            <field name="email_confirmation_id" domain="[('model_id.model','=','event.registration')]"/>
-                        </group>
-                    </page>
                     </notebook>
-            </sheet>
+                </sheet>
             </form>
             </field>
         </record>
@@ -158,9 +157,10 @@
             </field>
         </record>
 
+
         <!-- Event Kanban View -->
 
-	<record model="ir.ui.view" id="view_event_kanban">
+    <record model="ir.ui.view" id="view_event_kanban">
             <field name="name">event.event.kanban</field>
             <field name="model">event.event</field>
             <field name="type">kanban</field>
@@ -204,13 +204,14 @@
                             </p>
                             <t t-if="record.register_avail.raw_value != 0">
                               <t t-if="!record.is_subscribed.raw_value">
-                                  <button type="object" name="subscribe_to_event" class="subscribe_button oe_event_button_subscribe">
+                                  <input t-att-id="record.id.raw_value" type="text" name="subscribe" class="no_of_seats" value="1" onchange="document.getElementById('btn_sub' +this.id).setAttribute('data-context',JSON.stringify({'ticket':this.value}))"/>
+                                  <button t-att-id="'btn_sub'+record.id.raw_value" type="object" name="subscribe_to_event" class="oe_mail_button_follow">
                                   <span >Subscribe</span>
                                   </button>
                               </t>
                             </t>
                             <t t-if="record.is_subscribed.raw_value">
-                              <button type="object" name="unsubscribe_to_event" class="unsubscribe_button oe_event_button_unsubscribe">
+                              <button type="object" name="unsubscribe_to_event" class="oe_mail_button_unfollow">
                                 <span>Subscribed</span>
                                 <span class="unsubscribe">Unsubscribe</span>
                               </button>
@@ -480,7 +481,7 @@
           <field name="view_mode">tree,form,calendar,graph</field>
           <field name="context">{}</field>
           <field name="search_view_id" ref="view_registration_search"/>
-        </record>
+        </record>view_
 
         <menuitem
             name="Registrations"
