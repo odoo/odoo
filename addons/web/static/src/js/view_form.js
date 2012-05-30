@@ -2049,7 +2049,7 @@ instance.web.DateWidget = instance.web.DateTimeWidget.extend({
 });
 
 instance.web.form.FieldDatetime = instance.web.form.AbstractField.extend(_.extend({}, instance.web.form.ReinitializeFieldMixin, {
-    template: "EmptyComponent",
+    tagName: "span",
     build_widget: function() {
         return new instance.web.DateTimeWidget(this);
     },
@@ -4089,7 +4089,7 @@ instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
 });
 
 instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
-    template: "EmptyComponent",
+    tagName: "span",
     start: function() {
         this._super();
         this.selected_value = null;

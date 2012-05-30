@@ -1466,6 +1466,7 @@
   background: #ed6f6a;
 }
 .openerp .oe_form_topbar {
+  position: relative;
   border-bottom: 1px solid #cacaca;
   background-color: #fcfcfc;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#fcfcfc), to(#dedede));
@@ -1514,6 +1515,11 @@
 }
 .openerp .oe_form_topbar ul li a:hover {
   color: black;
+}
+.openerp .oe_form_topbar .oe_form_steps {
+  display: inline-block;
+  position: absolute;
+  right: 0;
 }
 .openerp .oe_form_topbar .oe_form_steps img {
   margin: 0 8px;
@@ -1587,8 +1593,9 @@
 .openerp .oe_form .oe_form_group_cell > .oe_form_field_url input,
 .openerp .oe_form .oe_form_group_cell > .oe_form_field_float input,
 .openerp .oe_form .oe_form_group_cell > .oe_form_field_selection select,
-.openerp .oe_form .oe_form_group_cell > div > .oe_datepicker_root,
-.openerp .oe_form .oe_form_group_cell > div > .oe_datepicker_root > input.oe_datepicker_master {
+.openerp .oe_form .oe_form_group_cell > .oe_form_field_progressbar,
+.openerp .oe_form .oe_form_group_cell > span > .oe_datepicker_root,
+.openerp .oe_form .oe_form_group_cell > span > .oe_datepicker_root > input.oe_datepicker_master {
   width: 100%;
 }
 .openerp .oe_form .oe_form_label_help[for], .openerp .oe_form .oe_form_label[for] {
@@ -1721,17 +1728,6 @@
   background-color: #ff6666 !important;
   border: 1px solid #dd0000 !important;
 }
-.openerp .oe_form .oe_button.oe_field_button {
-  display: block;
-  -webkit-border-top-left-radius: 0px;
-  -webkit-border-bottom-left-radius: 0px;
-  -moz-border-radius-topleft: 0px;
-  -moz-border-radius-bottomleft: 0px;
-  border-top-left-radius: 0px;
-  border-bottom-left-radius: 0px;
-  margin-right: -1px;
-  height: 22px;
-}
 .openerp .oe_form .oe_input_icon {
   cursor: pointer;
   margin: 3px 0 0 -21px;
@@ -1744,6 +1740,31 @@
   filter: alpha(opacity=50);
   right: 5px;
   top: 3px;
+}
+.openerp .oe_form .oe_form_group_cell .oe_kanban_view {
+  position: static;
+}
+.openerp .oe_form .oe_form_field_with_button {
+  display: inline-block;
+}
+.openerp .oe_form .oe_form_field_with_button > .oe_button {
+  float: right;
+  -webkit-border-top-left-radius: 0px;
+  -webkit-border-bottom-left-radius: 0px;
+  -moz-border-radius-topleft: 0px;
+  -moz-border-radius-bottomleft: 0px;
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+  margin-right: -1px;
+  height: 22px;
+}
+.openerp .oe_form .oe_form_field_with_button > div {
+  position: relative;
+  overflow: hidden;
+}
+.openerp .oe_form .oe_form_field_with_button > div > input {
+  line-height: 23px;
+  margin-right: 0;
 }
 .openerp .oe_form .oe_form_group_cell .oe_kanban_view {
   position: static;
@@ -1785,6 +1806,9 @@
   -ms-filter: "alpha(opacity=0)";
   margin: 0;
   padding: 0;
+}
+.openerp .oe_form .oe_binary_image {
+  display: inline-block;
 }
 .openerp .oe_horizontal_border {
   border-bottom: 1px solid black;
@@ -1857,6 +1881,10 @@
 }
 .openerp .ui-tabs-hide {
   display: none;
+}
+.openerp .oe_form .oe_form_field_progressbar {
+  display: inline-block;
+  min-width: 70px;
 }
 .openerp .oe_form .oe_form_field_progressbar.ui-progressbar {
   height: 22px;
@@ -1999,7 +2027,7 @@
 .openerp .oe-listview-content > tbody > tr > td.oe_list_checkbox:first-child:after, .openerp .oe-listview-content > tbody > tr th.oe_list_checkbox:first-child:after {
   border-width: 0;
 }
-.openerp .oe-listview-content > tbody > tr > td.oe-number {
+.openerp .oe-listview-content > tbody > tr > td.oe_number {
   text-align: right !important;
 }
 .openerp .oe-listview-content > tbody > tr:nth-child(odd) {
