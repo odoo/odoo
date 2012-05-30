@@ -578,7 +578,7 @@
             <field name="type">search</field>
             <field name="inherit_id" ref="project.view_task_search_form"/>
             <field name="arch" type="xml">
-                <field name="project_id" position="after">
+                <field name="user_id" position="before">
                     <field name="sprint_id" context="{'sprint_invisible':False}">
                         <filter icon="terp-check" context="{'sprint_invisible':False}" domain="[('sprint_id.state','in',('draft','open'))]" help="Current Sprints"/>
                         <filter icon="gtk-find" context="{'sprint_invisible':False}" domain="[]" help="View Sprints"/>
