@@ -19,13 +19,14 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+from base_status.base_stage import base_stage
 from crm import crm
 from crm import wizard
+from osv import fields, osv
 
 wizard.mail_compose_message.SUPPORTED_MODELS.append('crm.fundraising')
 
-class crm_fundraising(crm.crm_case, osv.osv):
+class crm_fundraising(base_stage, osv.osv):
     """ Fund Raising Cases """
 
     _name = "crm.fundraising"
