@@ -9,11 +9,8 @@
             <field name="arch" type="xml">
                 <xpath expr='//tr[@name="use_tasks_row"]' position='after'>
                     <tr name="use_timesheets_row">
-                        <td>
-                            <group class="oe_form_group_label_border">
-                                <field name="use_timesheets"/>
-                            </group>
-                        </td>
+                        <th style="border-right:1px solid #DDD;" width="140px">Timesheets</th>
+                        <td><field name="use_timesheets" nolabel="1"/></td>
                         <td style="text-align:right;"><button class="oe_btn_width" name="open_timesheets" string="Timesheets" type="object" attrs="{'invisible':[('use_timesheets','=', 0)]}"/></td>
                     </tr>
                 </xpath>
