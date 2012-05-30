@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from base_status.base_stage import base_stage
+from base_status.base_state import base_state
 from crm import crm
 from crm import wizard
 from osv import fields, osv
@@ -34,7 +34,7 @@ CRM_HELPDESK_STATES = (
 
 wizard.mail_compose_message.SUPPORTED_MODELS.append('crm.helpdesk')
 
-class crm_helpdesk(base_stage, osv.osv):
+class crm_helpdesk(base_state, osv.osv):
     """ Helpdesk Cases """
 
     _name = "crm.helpdesk"
