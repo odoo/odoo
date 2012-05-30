@@ -362,8 +362,10 @@ class procurement_order(osv.osv):
         """ Changes procurement state to Running and writes message.
         @return: True
         """
+        message = _('from stock: products assigned.')
         self.write(cr, uid, ids, {'state': 'running',
-                'message': _('from stock: products assigned.')})
+                'message': message})
+        self.procurement_message(cr, uid, ids, message, context=context)                  
         self.running_send_note(cr, uid, ids, context=None)
         return True
 
