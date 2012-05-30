@@ -393,12 +393,12 @@
                             states="draft,open"/>
                     <button name="case_reset" string="Reset to Draft" type="object"
                             states="cancel"/>
-                    <button name="stage_next" string="Next" type="object"
-                            states="open" context="{'stage_type': 'opportunity'}"/>
-                    <button name="stage_previous" string="Previous" type="object"
-                            states="open" context="{'stage_type': 'opportunity'}"/>
                     <button name="case_escalate" string="Escalate" type="object"
                             states="open"/>
+                    <button name="stage_previous" string="Previous" type="object"
+                            states="open" icon="gtk-go-back" context="{'stage_type': 'opportunity'}"/>
+                    <button name="stage_next" string="Next" type="object"  
+                            states="open" icon="gtk-go-forward" context="{'stage_type': 'opportunity'}"/>
                     <div class="oe_right">
                         <field name="stage_id" nolabel="1" widget="statusbar"
                             on_change="onchange_stage_id(stage_id)"/>
