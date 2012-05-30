@@ -375,7 +375,7 @@ class base_stage(object):
     # Notifications
     # ******************************
     
-	def case_get_note_msg_prefix(self, cr, uid, id, context=None):
+    def case_get_note_msg_prefix(self, cr, uid, id, context=None):
         """ Default prefix for notifications. For example: "%s has been 
             <b>closed</b>.". As several models will inherit from base_stage,
             this method returns a void string. Class using base_stage
