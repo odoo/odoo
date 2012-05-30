@@ -305,13 +305,24 @@
             <field name="arch" type="xml">
                 <form string="Project" layout="manual">
                     <div class="oe_form_topbar">
-                        <button name="action_close" states="pending,open" string="Done" type="object"/>
-                        <button name="do_open" states="pending,draft" string="Start Task" type="object"/>
-                        <button name="%(action_project_task_reevaluate)d" states="done,cancelled" string="Reactivate" type="action" context="{'button_reactivate':True}" />
-                        <button name="do_pending" states="open" string="Pending" type="object"/>
-                        <button name="do_draft" states="open" string="Draft" type="object"/>
-                        <button name="%(action_project_task_delegate)d" states="pending,open,draft" string="Delegate" type="action"/>
-                        <button name="do_cancel" states="draft,open,pending" string="Cancel" type="object"/>
+                        <button name="do_open" string="Start Task" type="object"
+                                states="pending,draft"/>
+                        <button name="%(action_project_task_reevaluate)d" string="Reactivate" type="action" context="{'button_reactivate':True}"
+                                states="done,cancelled"/>
+                        <button name="do_pending" string="Pending" type="object"
+                                states="open"/>
+                        <button name="action_close" string="Done" type="object"
+                                states="draft,open,pending"/>
+                        <button name="do_draft" string="Draft" type="object"
+                                states="cancel,done"/>
+                        <button name="%(action_project_task_delegate)d" string="Delegate" type="action"
+                                states="pending,open,draft"/>
+                        <button name="do_cancel" string="Cancel" type="object"
+                                states="draft,open,pending" />
+                        <button name="stage_previous" string="Previous" type="object"
+                                states="open" icon="gtk-go-back"/>
+                        <button name="stage_next" string="Next" type="object"
+                                states="open" icon="gtk-go-forward"/>
                         <div class="oe_right">
                             <field name="stage_id" nolabel="1" widget="statusbar"/>
                         </div>
