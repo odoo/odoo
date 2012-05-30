@@ -4084,9 +4084,9 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
         this._super();
         this.selected_value = null;
 
-        /** preview before set_value only for selection fields, because of
+        /** preview in start only for selection fields, because of
          *  the dynamic behavior of many2one fields. */
-        if (this.field.type == 'selection') {
+        if (this.field.type in ['selection']) {
             this.render_list();
         }
     },
@@ -4110,8 +4110,8 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
     },
 
     /** Get the status list and render them
-     *  to_show: [[identifier, value_to_displaty]] where
-     *   - identifier = db value for a selection, id for a many2one
+     *  to_show: [[identifier, value_to_display]] where
+     *   - identifier = key for a selection, id for a many2one
      *   - display_val = label that will be displayed
      *   - ex: [[0, "New"]] (many2one) or [["new", "In Progress"]] (selection)
      */
@@ -4184,7 +4184,7 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
         }
     },
 
-    /** Renders the widget. This function also check for statusbar_colors='{"pending": "blue"}'
+    /** Renders the widget. This function also checks for statusbar_colors='{"pending": "blue"}'
      *  attribute in the widget. This allows to set a given color to a given
      *  state (given by the key of (key, label)). */
     render_elements: function () {
