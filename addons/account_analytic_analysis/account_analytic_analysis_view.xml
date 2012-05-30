@@ -59,56 +59,58 @@
                 <xpath expr='//separator[@name="description"]' position='before'>
 		    <separator colspan="4" string="Invoicing" name="invoicing"/>
 		    <group col="1" colspan="4">
-			<table border="1">
+			<table border="0">
 			    <tr>
-				<th height="20px"></th>
-				<th></th>
-				<th>Est.Tot</th>
-				<th>Invoiced</th>
-				<th>Remaining</th>
-				<th>Ready To Invoice</th>
-				<th></th>
-				<th></th>
+				<th class="oe_th_150px" height="20px"></th>
+				<th width="10px"></th>
+				<th class="oe_th_110px">Est.Tot</th>
+				<th class="oe_th_110px">Invoiced</th>
+				<th class="oe_th_110px">Remaining</th>
+				<th class="oe_th_110px">Ready To Invoice</th>
+				<th width="10px"></th>
+				<th class="oe_th_150px"></th>
+				<th class="oe_th_150px"></th>
 			    </tr>
 			    <tr>
-				<th>Fix Price Invoices</th>
+				<th class="oe_border_right">Fix Price Invoices</th>
 				<td><field name="fix_price_invoices" nolabel="1"/></td>
-				<td><field name="amount_max" nolabel="1" attrs="{'invisible': [('fix_price_invoices','=',0)]}"/></td>
-				<td><field name="ca_invoiced" nolabel="1" attrs="{'invisible': [('fix_price_invoices','=',0)]}"/></td>
-				<td><field name="remaining_ca" nolabel="1" attrs="{'invisible': [('fix_price_invoices','=',0)]}"/></td>
-				<td><field name="ca_to_invoice" nolabel="1" attrs="{'invisible': [('fix_price_invoices','=',0)]}"/></td>
-				<td><button name="%(action_sales_order_line)d" string="Sales" type="action" context="{'default_project_id': active_id,'search_default_project_id': active_id}" attrs="{'invisible': [('fix_price_invoices','=',0)]}"/></td>
-				<td><button name="%(sale.action_order_line_tree2)d" string="Lines To Invoice" type="action" context="{'default_project_id': active_id,'search_default_project_id': active_id}" attrs="{'invisible': [('fix_price_invoices','=',0)]}"/></td>
+				<td class="oe_amount_center oe_th_110px"><field name="amount_max" nolabel="1" attrs="{'invisible': [('fix_price_invoices','=',0)]}"/></td>
+				<td class="oe_amount_center oe_th_110px"><field name="ca_invoiced" nolabel="1" attrs="{'invisible': [('fix_price_invoices','=',0)]}"/></td>
+				<td class="oe_amount_center oe_th_110px oe_border_right"><field name="remaining_ca" nolabel="1" attrs="{'invisible': [('fix_price_invoices','=',0)]}"/></td>
+				<td class="oe_amount_center oe_th_110px"><field name="ca_to_invoice" nolabel="1" attrs="{'invisible': [('fix_price_invoices','=',0)]}"/></td>
+				<td width="10px"></td>
+				<td class="oe_th_150px"><button class= "oe_btn_width" name="%(action_sales_order_line)d" string="Sales" type="action" context="{'default_project_id': active_id,'search_default_project_id': active_id}" attrs="{'invisible': [('fix_price_invoices','=',0)]}"/></td>
+				<td class="oe_th_150px"><button class= "oe_btn_width" name="%(sale.action_order_line_tree2)d" string="Lines To Invoice" type="action" context="{'default_project_id': active_id,'search_default_project_id': active_id}" attrs="{'invisible': [('fix_price_invoices','=',0)]}"/></td>
 			    </tr>
 			    <tr>
-				<th>Invoice On Timesheets</th>
+				<th class="oe_border_right">Invoice On Timesheets</th>
 				<td><field name="invoice_on_timesheets" nolabel="1"/></td>
-				<td><field name="quantity_max" nolabel="1" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
-				<td><field name="hours_qtt_invoiced" nolabel="1" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
-				<td><field name="remaining_hours" nolabel="1" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
-				<td><field name="hours_qtt_non_invoiced" nolabel="1" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
-				<td><button name="%(action_timesheet_lines_tree)d" string="Timesheets" type="action" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
-				<td><button name="%(hr_timesheet_invoice.act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice)d" string="Invoice Timesheets" type="action" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
+				<td class="oe_amount_center oe_th_110px"><field name="quantity_max" nolabel="1" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
+				<td class="oe_amount_center oe_th_110px"><field name="hours_qtt_invoiced" nolabel="1" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
+				<td class="oe_amount_center oe_th_110px oe_border_right"><field name="remaining_hours" nolabel="1" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
+				<td class="oe_amount_center oe_th_110px"><field name="hours_qtt_non_invoiced" nolabel="1" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
+				<td width="10px"></td>
+				<td class="oe_th_150px"><button class= "oe_btn_width" name="%(action_timesheet_lines_tree)d" string="Timesheets" type="action" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
+				<td class="oe_th_150px"><button class= "oe_btn_width" name="%(hr_timesheet_invoice.act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice)d" string="Invoice Timesheets" type="action" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
 			    </tr>
 			    <tr>
-				<th>Charge Expenses</th>
+				<th class="oe_border_right">Charge Expenses</th>
 				<td><field name="charge_expenses" nolabel="1"/></td>
-				<td>todo</td>
-				<td>todo</td>
-				<td>todo</td>
-				<td>todo</td>
-				<td>todo</td>
-				<td>todo</td>
+				<td class="oe_amount_center oe_th_110px">todo</td>
+				<td class="oe_amount_center oe_th_110px">todo</td>
+				<td class="oe_amount_center oe_th_110px oe_border_right">todo</td>
+				<td class="oe_amount_center oe_th_110px">todo</td>
+				<td width="10px"></td>
+				<td class="oe_th_150px">todo</td>
+				<td class="oe_th_150px">todo</td>
 			    </tr>
 			    <tr>
-				<th>Total</th>
-				<td></td>
-				<td>todo</td>
-				<td>todo</td>
-				<td>todo</td>
-				<td>todo</td>
-				<td></td>
-				<td></td>
+				<th class="oe_border_right">Total</th>
+				<td width="10px"></td>
+				<td class="oe_amount_center oe_th_110px oe_border_top">todo</td>
+				<td class="oe_amount_center oe_th_110px oe_border_top">todo</td>
+				<td class="oe_amount_center oe_th_110px oe_border_right oe_border_top">todo</td>
+				<td class="oe_amount_center oe_th_110px oe_border_top">todo</td>
 			    </tr>
 			</table>
 		    </group>
