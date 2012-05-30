@@ -1236,6 +1236,8 @@ class account_analytic_account(osv.osv):
     _columns = {
         'use_tasks': fields.boolean('Tasks Management'),
         'company_uom_id': fields.related('company_id', 'project_time_mode_id', type='many2one', relation='product.uom'),
+        'members': fields.many2many('res.users', 'project_user_rel', 'project_id', 'uid', 'Project Members',
+            states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
     }
 #    _defaults = {
 #        'use_tasks': True,

@@ -170,8 +170,6 @@ class account_analytic_account(osv.osv):
         'user_id': fields.many2one('res.users', 'Account Manager'),
         'date_start': fields.date('Date Start'),
         'date': fields.date('Date End', select=True),
-        'members': fields.many2many('res.users', 'project_user_rel', 'project_id', 'uid', 'Project Members',
-            states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'company_id': fields.many2one('res.company', 'Company', required=False), #not required because we want to allow different companies to use the same chart of account, except for leaf accounts.
         'state': fields.selection([('template', 'Template'),('draft','New'),('open','Open'), ('cancelled', 'Cancelled'),('pending','Pending'),('close','Closed')], 'Status', required=True,
                                   help='* When an account is created its in \'Draft\' state.\
