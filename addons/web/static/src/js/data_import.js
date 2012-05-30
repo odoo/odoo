@@ -55,7 +55,8 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
                 .filter(function (field) {
                     return field.required &&
                            !_.include(self.fields_with_defaults, field.id); })
-                .pluck('name')
+                .pluck('id')
+                .uniq()
                 .value();
             convert_fields(self);
             self.all_fields.sort();
@@ -360,9 +361,24 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
     check_required: function() {
         if (!this.required_fields.length) { return true; }
 
+        // get real field name (stripping the trailing "/id" for many2one field).
+        // For many2one fields, user can use any of the two fields:
+        // - base field name for name_search() import
+        // - with the "/id" for direct referencing
+        // In both case we must check if field is required only based on his
+        // real name.
+        var get_field_real_id = _.bind(function(field_name) {
+            var f = _.detect(this.fields, function(field) {
+                return field.name === field_name
+            });
+            if (!f) { return field_name };
+            return f.id;
+        }, this);
+
         var selected_fields = _(this.$element.find('.sel_fields').get()).chain()
             .pluck('value')
             .compact()
+            .map(get_field_real_id)
             .value();
 
         var missing_fields = _.difference(this.required_fields, selected_fields);
