@@ -145,8 +145,8 @@ class crm_helpdesk(base_state, osv.osv):
     # OpenChatter
     # ******************************
     
-	def case_get_note_msg_prefix(self, cr, uid, id, context=None):
-		return 'Helpdesk'
+    def case_get_note_msg_prefix(self, cr, uid, id, context=None):
+        return 'Helpdesk'
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
