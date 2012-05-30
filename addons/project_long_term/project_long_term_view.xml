@@ -97,27 +97,29 @@
     # ------------------------------------------------------
     # Project Phase
     # ------------------------------------------------------
-
-        <record id="project_phase_form" model="ir.ui.view">
-            <field name="name">Inherit project form : Phase</field>
-            <field name="model">project.project</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="project.edit_project"/>
-            <field name="arch" type="xml">
-                <field name="use_tasks" position="after">
-                    <field name="use_phases"/>
-                </field>
-            </field>
-        </record>
-
         <act_window id="act_project_phases"
             name="Phases"
             src_model="project.project"
             res_model="project.phase"
             view_type="form"
             view_mode="tree,form"
-            context="{'search_default_project_id': [active_id], 'default_project_id': active_id}"
-        />
+            context="{'search_default_project_id': [active_id], 'default_project_id': active_id}"/>
+        
+        <record id="project_phase_form" model="ir.ui.view">
+            <field name="name">Inherit project form : Phase</field>
+            <field name="model">project.project</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="project.edit_project"/>
+            <field name="arch" type="xml">
+                <xpath expr='//tr[@name="use_tasks_row"]' position='after'>
+                    <tr name="use_phases_row">
+                        <th style="border-right:1px solid #DDD;" width="140px">Phases Planing</th>
+                        <td><field name="use_phases" nolabel="1"/></td>
+                        <td style="text-align:right;"><button class="oe_btn_width" name="%(act_project_phases)d" string="Phases" type="action" attrs="{'invisible':[('use_phases','=', 0)]}"/></td>
+                    </tr>
+                </xpath>
+            </field>
+        </record>
 
         <record id="view_project_kanban_phase" model="ir.ui.view">
             <field name="name">project.project.kanban.inherited</field>
@@ -330,7 +332,7 @@
             <field name="type">search</field>
             <field name="inherit_id" ref="project.view_task_search_form"/>
             <field name="arch" type="xml">
-                <field name="project_id" position="after">
+                <field name="name" position="after">
                     <field name="phase_id" select="1"/>
                 </field>
             </field>

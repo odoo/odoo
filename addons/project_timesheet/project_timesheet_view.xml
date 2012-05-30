@@ -7,11 +7,13 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
-                <field name="use_tasks" position='after'>
-                    <field name="use_timesheets"/>
-                    <field name="amount_to_invoice" invisible="True"/>
-                    <field name="time_to_invoice" invisible="True"/>
-                </field>
+                <xpath expr='//tr[@name="use_tasks_row"]' position='after'>
+                    <tr name="use_timesheets_row">
+                        <th style="border-right:1px solid #DDD;" width="140px">Timesheets</th>
+                        <td><field name="use_timesheets" nolabel="1"/></td>
+                        <td style="text-align:right;"><button class="oe_btn_width" name="open_timesheets" string="Timesheets" type="object" attrs="{'invisible':[('use_timesheets','=', 0)]}"/></td>
+                    </tr>
+                </xpath>
                 <field name="warn_customer" position="after">
                     <group colspan="4" col="4">
                         <separator colspan="4" string="Invoicing Data"/>
@@ -19,6 +21,8 @@
                         <field name="to_invoice" widget="selection" string="Invoice Task Work"/>
                         <field name="amount_max"/>
                         <field name="amount_invoiced"/>
+                        <field name="amount_to_invoice" invisible="True"/>
+                        <field name="time_to_invoice" invisible="True"/>
                     </group>
                 </field>
             </field>
@@ -58,7 +62,7 @@
             <field name="inherit_id" ref="project_invoice_form"/>
             <field name="arch" type="xml">
                 <field name="partner_id" position="replace">
-                    <field colspan="4" name="partner_id" on_change="onchange_partner_id(partner_id)" select="1" string="Customer"  attrs="{'required':[('to_invoice','!=',False)]}"/>
+                    <field name="partner_id" on_change="onchange_partner_id(partner_id)" select="1" string="Customer"  attrs="{'required':[('to_invoice','!=',False)]}"/>
                 </field>
             </field>
         </record>
