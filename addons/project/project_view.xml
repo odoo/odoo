@@ -39,7 +39,7 @@
                             <field name="partner_id" on_change="onchange_partner_id(partner_id)" select="1"/>
                             <field name="user_id" string="Project Manager" select="1" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>
                             <field name="analytic_account_id" invisible="1" required="0"/>
-                            <!--<field name="parent_id" string="Parent" domain="[('id','!=',analytic_account_id)]" context="{'current_model': 'project.project'}"/>-->
+                            <field name="parent_id" invisible="1" string="Parent" domain="[('id','!=',analytic_account_id)]" context="{'current_model': 'project.project'}"/>
                             <!--<field name="date_start" string="Start Date" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>-->
                             <!--<field name="date" string="End Date" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>-->
                             <!--<field name="progress_rate" widget="progressbar"/>-->
@@ -49,7 +49,7 @@
                                 <tr name="use_tasks">
                                     <th width="140px">Tasks Management</th>
                                     <td><field name="use_tasks" nolabel="1"/></td>
-                                    <td><button class="oe_btn_width" name="%(act_project_project_2_project_task_all)d" string="Tasks" type="action" attrs="{'invisible':[('use_tasks','=', 0)]}"/></td>
+                                    <td style="text-align:right;" width="110px"><button class="oe_btn_width" name="%(act_project_project_2_project_task_all)d" string="Tasks" type="action" attrs="{'invisible':[('use_tasks','=', 0)]}"/></td>
                                 </tr>
                             </table>
                         </group>
