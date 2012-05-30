@@ -275,10 +275,10 @@ class account_voucher(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'state':fields.selection(
             [('draft','Draft'),
+             ('cancel','Cancelled'),
              ('proforma','Pro-forma'),
-             ('posted','Posted'),
-             ('cancel','Cancelled')
-            ], 'State', readonly=True, size=32,
+             ('posted','Posted')
+            ], 'Status', readonly=True, size=32,
             help=' * The \'Draft\' state is used when a user is encoding a new and unconfirmed Voucher. \
                         \n* The \'Pro-forma\' when voucher is in Pro-forma state,voucher does not have an voucher number. \
                         \n* The \'Posted\' state is used when user create voucher,a voucher number is generated and voucher entries are created in account \
@@ -780,7 +780,7 @@ class account_voucher(osv.osv):
 
     def proforma_voucher(self, cr, uid, ids, context=None):
         self.action_move_line_create(cr, uid, ids, context=context)
-        return True
+        return {'type': 'ir.actions.act_window_close'}
 
     def action_cancel_draft(self, cr, uid, ids, context=None):
         wf_service = netsvc.LocalService("workflow")

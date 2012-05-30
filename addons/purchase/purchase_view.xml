@@ -130,7 +130,26 @@
             <field name="model">purchase.order</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Purchase Order">
+                <form layout="manual">
+                <div class="oe_form_topbar">
+                    <button name="purchase_confirm" states="draft,sent" string="Confirm Order" class="oe_form_button_hi"/>
+                    <button name="wkf_send_rfq" states="draft" string="Send RFQ" type="object" context="{'send_rfq':True}"/>
+                    <button name="wkf_send_rfq" states="confirmed" string="Resend Purchase Order" type="object"/>
+                    <button name="action_cancel" states="except_picking,except_invoice,wait" string="Cancel" type="object" />
+                    <button name="picking_ok" states="except_picking" string="Manually Corrected"/>
+                    <button name="invoice_ok" states="except_invoice" string="Manually Corrected"/>
+                    <button name="purchase_appbuyer" states="wait_auth" string="Approve Purchase" class="oe_form_button_hi"/>
+                    <button name="purchase_approve" states="confirmed" string="Approve Order" class="oe_form_button_hi"/>
+                    <button name="view_invoice" string="Receive Invoice" type="object" attrs="{'invisible': ['|', ('invoice_method','=','picking'), '|', ('state','!=', 'approved'), ('invoiced','=',True) ]}"/>
+                    <button name="view_picking" string="Receive Products" type="object" attrs="{'invisible': ['|', ('shipped','=',True), ('state','!=', 'approved')]}"/>
+                    <button name="action_cancel_draft" states="cancel,sent,confirmed" string="Set to Draft" type="object"/>
+                    <button name="purchase_cancel" states="draft,confirmed,wait_auth,sent" string="Cancel"/>
+                    <div class="oe_right">
+                        <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,approved,done" statusbar_colors='{"except_picking":"red","except_invoice":"red","confirmed":"blue","wait":"blue"}' readonly="1"/>
+                    </div>
+                    <div class="oe_clear"/>
+                </div>
+                <sheet string="Purchase Order" layout="auto">
                     <group col="6" colspan="4">
                         <field name="name"/>
                         <field name="date_order"/>
@@ -164,18 +183,6 @@
                                 <field name="amount_total" sum="Total amount"/>
                                 <button name="button_dummy" states="draft" string="Compute" type="object" icon="gtk-execute"/>
                             </group>
-                            <group col="11" colspan="4">
-                                <field name="state" widget="statusbar" statusbar_visible="draft,approved,done" statusbar_colors='{"except_picking":"red","except_invoice":"red","confirmed":"blue","wait":"blue"}' readonly="1"/>
-                                <button name="purchase_cancel" states="draft,confirmed,wait_auth" string="Cancel" icon="gtk-cancel"/>
-                                <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" icon="gtk-convert"/>
-                                <button name="action_cancel" states="approved,except_picking,except_invoice,wait" string="Cancel Purchase Order" type="object" icon="gtk-cancel"/>
-                                <button name="picking_ok" states="except_picking" string="Manually Corrected" icon="gtk-convert"/>
-                                <button name="invoice_ok" states="except_invoice" string="Manually Corrected" icon="gtk-convert"/>
-                                <button name="purchase_confirm" states="draft" string="Convert to Purchase Order" icon="gtk-go-forward"/>
-                                <button name="purchase_appbuyer" states="wait_auth" string="Approve Purchase" icon="gtk-ok"/>
-                                <button name="purchase_approve" states="confirmed" string="Approved" icon="gtk-go-forward"/>
-                                <button name="%(report_purchase_order)d" string="Print" states="approved" type="action" icon="gtk-print"/>
-                            </group>
                         </page>
                         <page string="Delivery &amp; Invoicing">
                             <group colspan="2" col="2">
@@ -203,7 +210,10 @@
                             <field colspan="4" name="notes" nolabel="1"/>
                         </page>
                     </notebook>
+                </sheet>
+                <div class="oe_form_sheet_width">
                    <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
+                </div>
                 </form>
             </field>
         </record>
@@ -218,9 +228,8 @@
                     <filter icon="terp-document-new" name="draft" string="Quotations" domain="[('state','=','draft')]"  help="Purchase order which are in draft state"/>
                     <filter icon="terp-check" name="approved" string="Approved" domain="[('state','in',('approved','done'))]"  help="Approved purchase order"/>
                     <separator orientation="vertical"/>
-                    <filter icon="terp-emblem-important" name="exception" string="Exception" domain="[('state','in',('except_invoice','except_picking'))]"  help="Purchase order which are in the exception state"/>
-                    <separator orientation="vertical"/>
                     <filter icon="terp-gtk-go-back-rtl" name="not_invoiced" string="Not Invoiced" domain="[('invoice_ids','=', False)]"  help="Purchase orders that include lines not invoiced."/>
+                    <filter icon="terp-emblem-important" name="exception" string="Exception" domain="[('state','in',('except_invoice','except_picking'))]"  help="Purchase order which are in the exception state"/>
                     <separator orientation="vertical"/>
                     <field name="name" string="Reference"/>
                     <field name="partner_id"/>
@@ -231,8 +240,8 @@
                   <group expand="0" string="Group By...">
                     <filter string="Supplier" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                      <separator orientation="vertical"/>
-                    <filter string="Origin" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
-                    <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                    <filter string="Source" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
+                    <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                      <separator orientation="vertical"/>
                     <filter string="Order Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_order'}"/>
                     <filter string="Expected Date" icon="terp-go-month" domain="[]" context="{'group_by':'minimum_planned_date'}"/>
@@ -250,13 +259,10 @@
                 <search string="Search Purchase Order">
                  <group>
                     <filter icon="terp-document-new" name="draft" string="Quotations" domain="[('state','=','draft')]"  help="Purchase orders which are in draft state"/>
-                    <filter icon="terp-gtk-jump-to-ltr" name="to_approve" string="To Approve" domain="[('state','in',('draft','wait','confirmed'))]" help="Purchase orders which are not approved yet."/>
-                    <filter icon="terp-check" name="approved" string="Approved" domain="[('state','=','approved')]"  help="Approved purchase orders"/>
-                    <filter icon="terp-accessories-archiver+" string="Done" domain="[('state','=','done')]" help="Purchase orders which are in done state."/>
-                    <separator orientation="vertical"/>
-                    <filter icon="terp-emblem-important" name="exception" string="Exception" domain="[('state','in',('except_invoice','except_picking'))]" help="Purchase orders which are in exception state"/>
+                    <filter icon="terp-check" name="approved" string="Purchase Orders" domain="[('state','not in',('draft','cancel'))]"  help="Approved purchase orders"/>
                     <separator orientation="vertical"/>
                     <filter icon="terp-gtk-go-back-rtl" name="not_invoiced" string="Not Invoiced" domain="[('invoice_ids','=', False)]"  help="Purchase orders that include lines not invoiced."/>
+                    <filter icon="terp-emblem-important" name="exception" string="Exception" domain="[('state','in',('except_invoice','except_picking'))]" help="Purchase orders which are in exception state"/>
                     <separator orientation="vertical"/>
                     <field name="name" string="Reference"/>
                     <field name="partner_id"/>
@@ -267,8 +273,8 @@
                   <group expand="0" string="Group By...">
                     <filter string="Supplier" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                      <separator orientation="vertical"/>
-                    <filter string="Origin" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
-                    <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                    <filter string="Source" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
+                    <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                      <separator orientation="vertical"/>
                     <filter string="Order Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_order'}"/>
                     <filter string="Expected Date" icon="terp-go-month" domain="[]" context="{'group_by':'minimum_planned_date'}"/>
@@ -301,17 +307,17 @@
         </record>
 
         <record id="purchase_rfq" model="ir.actions.act_window">
-            <field name="name">Requests for Quotation</field>
+            <field name="name">Quotations</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order</field>
             <field name="context">{'search_default_draft': 1}</field>
             <field name="view_mode">tree,form,graph,calendar</field>
-            <field name="search_view_id" ref="view_request_for_quotation_filter"/>
+            <field name="search_view_id" ref="view_purchase_order_filter"/>
             <field name="help">You can create a request for quotation when you want to buy products to a supplier but the purchase is not confirmed yet. Use also this menu to review requests for quotation created automatically based on your logistic rules (minimum stock, MTO, etc). You can convert the request for quotation into a purchase order once the order is confirmed. If you use the extended interface (from user's preferences), you can select the way to control your supplier invoices: based on the order, based on the receptions or manual encoding.</field>
         </record>
         <menuitem action="purchase_rfq" id="menu_purchase_rfq"
             parent="menu_procurement_management"
-            sequence="6"/>
+            sequence="0"/>
 
         <record id="purchase_form_action" model="ir.actions.act_window">
             <field name="name">Purchase Orders</field>
@@ -322,7 +328,7 @@
             <field name="search_view_id" ref="view_purchase_order_filter"/>
             <field name="help">Use this menu to search within your purchase orders by references, supplier, products, etc. For each purchase order, you can track the products received, and control the supplier invoices.</field>
         </record>
-        <menuitem action="purchase_form_action" id="menu_purchase_form_action" parent="menu_procurement_management" />
+        <menuitem action="purchase_form_action" id="menu_purchase_form_action" parent="menu_procurement_management" sequence="6"/>
 
 
         <record id="purchase_order_line_form" model="ir.ui.view">
@@ -445,7 +451,7 @@
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by' : 'product_id'}" />
                         <filter icon="terp-gtk-jump-to-rtl" string="Order Reference" domain="[]" context="{'group_by' :'order_id'}"/>
                         <separator orientation="vertical"/>
-                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by' : 'state'}" />
+                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by' : 'state'}" />
                         </group>
                </search>
             </field>
@@ -506,7 +512,7 @@
             <field name="inherit_id" ref="procurement.procurement_form_view"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page/field[@name='close_move']" position="before">
+                <xpath expr="//field[@name='close_move']" position="before">
                     <field name="purchase_id"/>
                 </xpath>
             </field>

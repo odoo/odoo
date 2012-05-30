@@ -125,6 +125,32 @@
                 </group>
             </field>
         </record>
+        
+        <record id="action_receive_move" model="ir.actions.act_window">
+            <field name="name">Receive Products</field>
+            <field name="res_model">stock.move</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('product_id','=',active_id),('picking_id.type','=','in')]</field>
+            <field name="view_id" ref="view_move_tree_reception_picking"/>
+            <field name="context" eval="'{\'search_default_product_id\': [active_id]}'"/>
+            <field name="search_view_id" ref="view_move_search_reception_incoming_picking"/>
+            <field name="help">Here you can receive individual products, no matter what purchase order or picking order they come from. You will find the list of all products you are waiting for. Once you receive an order, you can filter based on the name of the supplier or the purchase order reference. Then you can confirm all products received using the buttons on the right of each line.</field>
+        </record>
+       
+        <record id="action_deliver_move" model="ir.actions.act_window">
+            <field name="name">Receive Products</field>
+            <field name="res_model">stock.move</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('product_id','=',active_id),('picking_id.type','=','out')]</field>
+            <field name="view_id" ref="view_move_tree_reception_picking"/>
+            <field name="context" eval="'{\'search_default_product_id\': [active_id]}'"/>
+            <field name="search_view_id" ref="view_move_search_reception_outcoming_picking"/>
+            <field name="help">You will find in this list all products you have to deliver to your customers. You can process the deliveries directly from this list using the buttons on the right of each line. You can filter the products to deliver by customer, products or sale order (using the Origin field).</field>
+        </record>
 
         <record model="ir.ui.view" id="product.product_kanban_view">
             <field name="name">Product Kanban</field>
@@ -136,6 +162,8 @@
                     <field name="type"/>
                     <field name="product_image"/>
                     <field name="list_price"/>
+                    <field name="reception_count"/>
+                    <field name="delivery_count"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_product_vignette">
@@ -151,6 +179,12 @@
                                         <li>Price: <field name="lst_price"></field></li>
                                         <li>Cost: <field name="standard_price"></field></li>
                                     </ul>
+                                    <a name="%(action_receive_move)d" type="action">
+                                        <t t-if="record.reception_count.value">Receptions(<t t-esc="record.reception_count.value"/>)</t>
+                                    </a>
+                                    <a name="%(action_deliver_move)d" type="action">
+                                        <t t-if="record.delivery_count.value">Deliveries(<t t-esc="record.delivery_count.value"/>)</t>
+                                    </a>
                                 </div>
                             </div>
                             <script>
