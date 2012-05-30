@@ -17,7 +17,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Add Portal Access">
-                    <field name="portal_id" widget="selection"/>
+                    <field name="portal_id" widget="selection" on_change="onchange_portal_id(portal_id,context)"/>
                     <newline/>
                     <notebook colspan="4">
                         <page string="Users">
@@ -30,7 +30,7 @@
                     </notebook>
                     <label colspan="2"/>
                     <button string="Cancel" special="cancel" icon="gtk-cancel"/>
-                    <button string="Send Invitations"
+                    <button string="Apply and Send Invitations"
                         name="action_create" type="object" icon="gtk-ok"/>
                 </form>
             </field>
@@ -48,6 +48,7 @@
                     <field name="name"/>
                     <field name="user_email"/>
                     <field name="partner_id"/>
+                    <field name="has_portal_user"/>
                 </tree>
             </field>
         </record>
