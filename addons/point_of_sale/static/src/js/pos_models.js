@@ -109,7 +109,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             
             var prod_def = fetch( 
                 'product.product', 
-                ['name', 'list_price', 'pos_categ_id', 'taxes_id','product_image_small', 'ean13'],
+                undefined, //['name', 'list_price', 'pos_categ_id', 'taxes_id','product_image_small', 'ean13'],
                 [['pos_categ_id','!=', false]] 
                 ).then(function(result){
                     self.set({'product_list': result});
