@@ -52,8 +52,8 @@
 
         <!-- Claim Stages -->
         <menuitem id="menu_definitions" name="Configuration" parent="base.menu_main_pm" sequence="60"/>
-        <menuitem id="project.menu_project_config_project" name="Stages" parent="project.menu_definitions" sequence="1"/>
-        <menuitem id="menu_claim_stage_view" name="Claim Stages" action="crm_claim_stage_act" parent="project.menu_project_config_project" sequence="20"/>
+        <menuitem id="menu_project_config_project" name="Stages" parent="menu_definitions" sequence="1"/>
+        <menuitem id="menu_claim_stage_view" name="Claim Stages" action="crm_claim_stage_act" parent="menu_project_config_project" sequence="20"/>
 
     </data>
 </openerp>
