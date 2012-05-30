@@ -142,6 +142,7 @@ class base_stage(object):
         if hasattr(self, 'onchange_stage_id'):
             value = self.onchange_stage_id(cr, uid, ids, stage_id, context=context)['value']
         value['stage_id'] = stage_id
+        self.stage_set_send_note(cr, uid, ids, stage_id, context=context)
         return self.write(cr, uid, ids, value, context=context)
 
     def stage_change(self, cr, uid, ids, op, order, context=None):
@@ -363,6 +364,14 @@ class base_stage(object):
 	def case_get_note_msg_prefix(self, cr, uid, id, context=None):
 		return ''
 	
+    def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
+        """ Send a notification when the stage changes. This method has
+            to be overriden, because each document will have its particular
+            behavior and/or stage model (such as project.task.type or
+            crm.case.stage).
+        """
+        return True
+    
     def case_open_send_note(self, cr, uid, ids, context=None):
         for id in ids:
             msg = _('%s has been <b>opened</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))

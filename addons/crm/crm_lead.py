@@ -88,10 +88,10 @@ class crm_lead(base_stage, osv.osv):
         search_domain = []
         section_id = self._resolve_section_id_from_context(cr, uid, context=context)
         if section_id:
-            search_domain += ['|', '&', ('section_ids', '=', section_id), ('fold', '=', True)]
+            search_domain += ['|', '&', ('section_ids', '=', section_id), ('fold', '=', False)]
+        search_domain += ['|', ('id', 'in', ids), '&', ('case_default', '=', 1), ('fold', '=', False)]
         if type:
             search_domain += ['|', ('type', '=', type), ('type', '=', 'both')]
-        search_domain += ['|', ('id', 'in', ids), '&', ('case_default', '=', 1), ('fold', '=', False)]
         # perform search
         stage_ids = stage_obj._search(cr, uid, search_domain, order=order, access_rights_uid=access_rights_uid, context=context)
         result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
@@ -355,20 +355,19 @@ class crm_lead(base_stage, osv.osv):
         return True
 
     def set_priority(self, cr, uid, ids, priority):
-        """Set lead priority
+        """ Set lead priority
         """
         return self.write(cr, uid, ids, {'priority' : priority})
 
     def set_high_priority(self, cr, uid, ids, context=None):
-        """Set lead priority to high
+        """ Set lead priority to high
         """
         return self.set_priority(cr, uid, ids, '1')
 
     def set_normal_priority(self, cr, uid, ids, context=None):
-        """Set lead priority to normal
+        """ Set lead priority to normal
         """
         return self.set_priority(cr, uid, ids, '3')
-
 
     def _merge_data(self, cr, uid, ids, oldest, fields, context=None):
         # prepare opportunity data into dictionary for merging
@@ -847,22 +846,12 @@ class crm_lead(base_stage, osv.osv):
                       "You should better cancel it, instead of deleting it.") % lead.name)
         return super(crm_lead, self).unlink(cr, uid, ids, context)
 
-
     def write(self, cr, uid, ids, vals, context=None):
-        if not context:
-            context = {}
-
-        if 'date_closed' in vals:
-            return super(crm_lead,self).write(cr, uid, ids, vals, context=context)
-
-        if vals.get('stage_id'):
-            stage = self.pool.get('crm.case.stage').browse(cr, uid, vals['stage_id'], context=context)
+        if vals.get('stage_id') and not vals.get('probability'):
             # change probability of lead(s) if required by stage
-            if not vals.get('probability') and stage.on_change:
+            stage = self.pool.get('crm.case.stage').browse(cr, uid, vals['stage_id'], context=context)
+            if stage.on_change:
                 vals['probability'] = stage.probability
-            for case in self.browse(cr, uid, ids, context=context):
-                message = _("Stage changed to <b>%s</b>.") % (stage.name)
-                case.message_append_note(body=message)
         return super(crm_lead,self).write(cr, uid, ids, vals, context)
     
     # ----------------------------------------
@@ -877,6 +866,11 @@ class crm_lead(base_stage, osv.osv):
                 sub_ids.append(obj.user_id.id)
         return self.pool.get('res.users').read(cr, uid, sub_ids, context=context)
     
+    def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
+        """ Override of the (void) default notification method. """
+        stage_name = self.pool.get('crm.case.stage').name_get(cr, uid, [stage_id], context=context)[0][1]
+        return self.message_append_note(cr, uid, ids, body= _("Stage changed to <b>%s</b>.") % (stage_name), context=context)
+        
     def case_get_note_msg_prefix(self, cr, uid, lead, context=None):
         if isinstance(lead, (int, long)):
             lead = self.browse(cr, uid, [lead], context=context)[0]
