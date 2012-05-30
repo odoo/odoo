@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-server\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:44+0000\n"
-"PO-Revision-Date: 2012-05-23 21:17+0000\n"
-"Last-Translator: Masaki Yamaya <Unknown>\n"
+"PO-Revision-Date: 2012-05-28 23:36+0000\n"
+"Last-Translator: Akira Hiyama <Unknown>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-05-24 11:08+0000\n"
-"X-Generator: Launchpad (build 15288)\n"
+"X-Launchpad-Export-Date: 2012-05-30 05:20+0000\n"
+"X-Generator: Launchpad (build 15316)\n"
 
 #. module: base
 #: model:res.country,name:base.sh
@@ -1017,7 +1017,7 @@ msgstr "ニウエ"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_membership
 msgid "Membership Management"
-msgstr "メンバーシップ管理"
+msgstr "会員管理"
 
 #. module: base
 #: selection:ir.module.module,license:0
@@ -1659,7 +1659,7 @@ msgstr ""
 "\n"
 "ノート:\n"
 "    ・ 新しいイベントタイプを定義することができます。\n"
-"        アソシエーション / コンフィギュレーション / イベントのタイプ\n"
+"        関係 / 設定 / イベントのタイプ\n"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_tools
@@ -4826,7 +4826,7 @@ msgstr "経費管理"
 #: view:workflow.activity:0
 #: field:workflow.activity,in_transitions:0
 msgid "Incoming Transitions"
-msgstr "入ってくるトランジション"
+msgstr "内向き遷移"
 
 #. module: base
 #: field:ir.values,value_unpickle:0
@@ -5500,7 +5500,7 @@ msgstr "次の番号"
 #. module: base
 #: help:workflow.transition,condition:0
 msgid "Expression to be satisfied if we want the transition done."
-msgstr "そのトランジションがなされることを、満足させるための式"
+msgstr "外向き遷移"
 
 #. module: base
 #: model:ir.model,name:base.model_publisher_warranty_contract_wizard
@@ -6626,8 +6626,8 @@ msgid ""
 "form, signal tests the name of the pressed button. If signal is NULL, no "
 "button is necessary to validate this transition."
 msgstr ""
-"トランジションの操作が顧客フォームの中のボタンが押されたことで発生するなら、シグナルは押された名前のボタンをテストします。シグナルがNULLであれば、この"
-"トランジションを有効にするためにはどのボタンも必要ではありません。"
+"遷移の操作が顧客フォームの中のボタンが押されたことで発生するなら、シグナルは押された名前のボタンをテストします。シグナルがNULLであれば、この遷移を有効"
+"にするためにはどのボタンも必要ではありません。"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_diagram
@@ -7847,7 +7847,7 @@ msgstr ""
 #. module: base
 #: view:workflow.transition:0
 msgid "Transition"
-msgstr "変遷"
+msgstr "遷移"
 
 #. module: base
 #: field:ir.cron,active:0
@@ -8023,7 +8023,7 @@ msgstr "読み込み"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_association
 msgid "Associations Management"
-msgstr "アソシエーション管理"
+msgstr "関連管理"
 
 #. module: base
 #: help:ir.model,modules:0
@@ -8707,16 +8707,16 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"このモジュールはメンバーシップの管理のために、全ての管理操作を許可します。\n"
+"このモジュールは会員管理のために、全ての管理操作を許可します。\n"
 "=========================================================================\n"
 "\n"
 "以下の異なった種類の会員をサポートします：\n"
 "・ 無料会員\n"
-"・ 関連会員（例：全ての子会社のメンバーシップのためのグループ加入）\n"
+"・ 関連会員（例：全ての子会社の会員のためのグループ加入）\n"
 "・ 有料会員\n"
 "・ 特別な会員価格など\n"
 "\n"
-"メンバーシップ更新のための請求書を作り、条件書を送付するために、これは受注と会計と統合されます。\n"
+"会員更新のための請求書を作り、条件書を送付するために、これは受注と会計と統合されます。\n"
 "    "
 
 #. module: base
@@ -8875,7 +8875,7 @@ msgstr ""
 #. module: base
 #: field:workflow.transition,act_to:0
 msgid "Destination Activity"
-msgstr "目的地のアクティビティ"
+msgstr "行先のアクティビティ"
 
 #. module: base
 #: help:res.currency,position:0
@@ -9334,10 +9334,10 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"このモジュールは協会に関係するモジュールを構成します。\n"
+"このモジュールは関連に関係するモジュールを設定します。\n"
 "==============================================================\n"
 "\n"
-"イベント、登録、メンバーシップ、メンバーシップ製品（計画）などを管理するために協会のためのプロファイルをインストールします。\n"
+"イベント、登録、会員、会員製品（計画）などを管理するために関連のためのプロファイルをインストールします。\n"
 "    "
 
 #. module: base
@@ -12420,7 +12420,7 @@ msgstr "インストールされていません。"
 #: view:workflow.activity:0
 #: field:workflow.activity,out_transitions:0
 msgid "Outgoing Transitions"
-msgstr "出て行くトランジション"
+msgstr "外向き遷移"
 
 #. module: base
 #: field:ir.ui.menu,icon:0
@@ -15868,7 +15868,7 @@ msgstr "DBパスワードの暗号化"
 #. module: base
 #: help:workflow.transition,act_to:0
 msgid "The destination activity."
-msgstr "行き先のアクティビティ"
+msgstr "行先のアクティビティ"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_check_writing
@@ -16922,7 +16922,7 @@ msgstr "制限"
 #: help:workflow.transition,group_id:0
 msgid ""
 "The group that a user must have to be authorized to validate this transition."
-msgstr "ユーザがこのトランジションを有効にするために許可されなければならないグループ"
+msgstr "ユーザがこの遷移を有効にするために許可されなければならないグループ"
 
 #. module: base
 #: code:addons/orm.py:791
