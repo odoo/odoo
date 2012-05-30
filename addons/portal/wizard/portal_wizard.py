@@ -93,10 +93,11 @@ class wizard(osv.osv_memory):
         def create_user_from_address(address):
             has_portal=False
             portal_id = context.get('portal_id',False)
-            portal_users = self.pool.get('res.portal').browse(cr,uid,portal_id).group_id.users
-            active_user = [u.login for u in portal_users]
-            if address.email in active_user:
-                has_portal = True
+            if portal_id:
+                portal_users = self.pool.get('res.portal').browse(cr,uid,portal_id).group_id.users
+                active_user = [u.login for u in portal_users]
+                if address.email in active_user:
+                    has_portal = True
 
             return  {    # a user config based on a contact (address)
                 'name': address.name,
@@ -120,6 +121,10 @@ class wizard(osv.osv_memory):
                     user_ids.append({'lang': p.lang or 'en_US', 'parent_id': p.id})
         
         return user_ids
+
+    _defaults = {
+        'user_ids': _default_user_ids
+    }
 
     def onchange_portal_id(self, cr, uid, ids, portal_id=False, context=None):
         if not portal_id:
