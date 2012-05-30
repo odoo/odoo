@@ -527,7 +527,13 @@
             <field name="view_mode">kanban,tree,form</field>
             <field name="context">{"search_default_customer":1}</field>
             <field name="search_view_id" ref="view_res_partner_filter"/>
-            <field name="help">A customer is an entity you do business with, like a company or an organization. A customer can have several contacts or addresses which are the people working for this company. You can use the history tab, to follow all transactions related to a customer: sales order, emails, opportunities, claims, etc. If you use the email gateway, the Outlook or the Thunderbird plugin, don't forget to register emails to each contact so that the gateway will automatically attach incoming emails to the right partner.</field>
+            <field name="help">
+                Click on "Create" to add a new contact in your address book.
+                &lt;p&gt;
+                A contact is either a person or a company; a person can be linked to a company as a contact of that company.
+                &lt;p&gt;
+                You will be able to follow documents and history of your contacts (invoices, meetings, projects, etc.)
+            </field>
         </record>
         <record id="action_partner_form_view1" model="ir.actions.act_window.view">
             <field eval="0" name="sequence"/>
