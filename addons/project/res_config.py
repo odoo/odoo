@@ -56,7 +56,8 @@ class project_configuration(osv.osv_memory):
             implied_group='project.group_time_work_estimation_tasks',
             help="Allows you to compute Time Estimation on tasks."),
         'group_manage_delegation_task': fields.boolean("Manage Delagation Task",
-            implied_group='project.group_delegate_task'),                                
+            implied_group='project.group_delegate_task',
+            help="allows you to make all delagation information visible."),                                
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
