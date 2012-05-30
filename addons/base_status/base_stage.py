@@ -37,7 +37,7 @@ class base_stage(object):
 
     def _get_default_partner(self, cr, uid, context=None):
         """ Gives id of partner for current user
-            :param context: if portal in context is false return false anyway
+            :param context: if portal not in context returns False
         """
         if context is None:
             context = {}
@@ -50,7 +50,7 @@ class base_stage(object):
 
     def _get_default_email(self, cr, uid, context=None):
         """ Gives default email address for current user
-            :param context: if portal in context is false return false anyway
+            :param context: if portal not in context returns False
         """
         if context is None:
             context = {}
@@ -61,7 +61,7 @@ class base_stage(object):
 
     def _get_default_user(self, cr, uid, context=None):
         """ Gives current user id
-            :param context: if portal in context is false return false anyway
+            :param context: if portal not in context returns False
         """
         if context is None:
             context = {}
@@ -247,7 +247,21 @@ class base_stage(object):
         return True
 
     def case_set(self, cr, uid, ids, new_state_name=None, values_to_update=None, new_stage_id=None, context=None):
-        """ TODO """
+        """ Generic method for setting case. This methods wraps the update
+            of the record, as well as call to _action and browse_record
+            case setting to fill the cache.
+            
+            :params new_state_name: the new state of the record; this method
+                                    will call ``stage_set_with_state_name``
+                                    that will find the stage matching the
+                                    new state, using the ``stage_find`` method.
+            :params new_stage_id: alternatively, you may directly give the
+                                  new stage of the record
+            :params state_name: the new value of the state, such as 
+                     'draft' or 'close'.
+            :params update_values: values that will be added with the state
+                     update when writing values to the record.
+        """
         cases = self.browse(cr, uid, ids, context=context)
         cases[0].state # fill browse record cache, for _action having old and new values
         # 1. update the stage
@@ -362,6 +376,12 @@ class base_stage(object):
     # ******************************
     
 	def case_get_note_msg_prefix(self, cr, uid, id, context=None):
+        """ Default prefix for notifications. For example: "%s has been 
+            <b>closed</b>.". As several models will inherit from base_stage,
+            this method returns a void string. Class using base_stage
+            will have to override this method to define the prefix they
+            want to display.
+        """
 		return ''
 	
     def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):

@@ -34,7 +34,7 @@ class base_state(object):
 
     def _get_default_partner(self, cr, uid, context=None):
         """ Gives id of partner for current user
-            :param context: if portal in context is false return false anyway
+            :param context: if portal not in context returns False
         """
         if context is None:
             context = {}
@@ -47,7 +47,7 @@ class base_state(object):
 
     def _get_default_email(self, cr, uid, context=None):
         """ Gives default email address for current user
-            :param context: if portal in context is false return false anyway
+            :param context: if portal not in context returns False
         """
         if context is None:
             context = {}
@@ -58,7 +58,7 @@ class base_state(object):
 
     def _get_default_user(self, cr, uid, context=None):
         """ Gives current user id
-            :param context: if portal in context is false return false anyway
+            :param context: if portal not in context returns False
         """
         if context is None:
             context = {}
@@ -130,8 +130,8 @@ class base_state(object):
     
     def case_set(self, cr, uid, ids, state_name, update_values=None, context=None):
         """ Generic method for setting case. This methods wraps the update
-            of the record, as well as call to _action and browse record
-            case setting.
+            of the record, as well as call to _action and browse_record
+            case setting to fill the cache.
             
             :params: state_name: the new value of the state, such as 
                      'draft' or 'close'.
@@ -142,7 +142,7 @@ class base_state(object):
         cases[0].state # fill browse record cache, for _action having old and new values
         if update_values is None:
             update_values = {}
-        update_values.update({'state': state_name})
+        update_values['state'] = state_name
         self.write(cr, uid, ids, update_values, context=context)
         self._action(cr, uid, cases, state_name, context=context)
 
