@@ -41,7 +41,7 @@ class base_stage(object):
         """
         if context is None:
             context = {}
-        if not context.get('portal', False):
+        if not context or not context.get('portal'):
             return False
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         if hasattr(user, 'partner_address_id') and user.partner_address_id:
@@ -52,7 +52,9 @@ class base_stage(object):
         """ Gives default email address for current user
             :param context: if portal in context is false return false anyway
         """
-        if context and context.get('portal'):
+        if context is None:
+            context = {}
+        if not context or not context.get('portal'):
             return False
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         return user.user_email
@@ -61,7 +63,9 @@ class base_stage(object):
         """ Gives current user id
             :param context: if portal in context is false return false anyway
         """
-        if context and context.get('portal'):
+        if context is None:
+            context = {}
+        if not context or not context.get('portal'):
             return False
         return uid
 

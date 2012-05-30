@@ -32,6 +32,40 @@ class base_state(object):
         - ``state`` (selection field)
     """
 
+    def _get_default_partner(self, cr, uid, context=None):
+        """ Gives id of partner for current user
+            :param context: if portal in context is false return false anyway
+        """
+        if context is None:
+            context = {}
+        if not context or not context.get('portal'):
+            return False
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        if hasattr(user, 'partner_address_id') and user.partner_address_id:
+            return user.partner_address_id
+        return user.company_id.partner_id.id
+
+    def _get_default_email(self, cr, uid, context=None):
+        """ Gives default email address for current user
+            :param context: if portal in context is false return false anyway
+        """
+        if context is None:
+            context = {}
+        if not context or not context.get('portal'):
+            return False
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        return user.user_email
+
+    def _get_default_user(self, cr, uid, context=None):
+        """ Gives current user id
+            :param context: if portal in context is false return false anyway
+        """
+        if context is None:
+            context = {}
+        if not context or not context.get('portal'):
+            return False
+        return uid
+
     def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
         """ This function returns value of partner email based on Partner Address
             :param add: Id of Partner's address
