@@ -155,6 +155,30 @@ class pos_session(osv.osv):
                     break
         return result
 
+    def _compute_controls(self, cr, uid, ids, fieldnames, args, context=None):
+        result = {}
+
+        for record in self.browse(cr, uid, ids, context=context):
+            has_opening_control = False
+            has_closing_control = False
+
+            for journal in record.config_id.journal_ids:
+                if journal.opening_control == True:
+                    has_opening_control = True
+                if journal.closing_control == True:
+                    has_closing_control = True
+
+                if has_opening_control and has_closing_control:
+                    break
+
+            values = {
+                'has_opening_control': has_opening_control,
+                'has_closing_control': has_closing_control,
+            }
+            result[record.id] = values
+
+        return result
+
     _columns = {
         'config_id' : fields.many2one('pos.config', 'Point of Sale',
                                       help="The physical point of sale you will use.",
@@ -229,6 +253,8 @@ class pos_session(osv.osv):
         'order_ids' : fields.one2many('pos.order', 'session_id', 'Orders'),
 
         'statement_ids' : fields.one2many('account.bank.statement', 'pos_session_id', 'Bank Statement', readonly=True),
+        'has_opening_control' : fields.function(_compute_controls, string='Has Opening Control', multi='control', type='boolean'),
+        'has_closing_control' : fields.function(_compute_controls, string='Has Closing Control', multi='control', type='boolean'),
     }
 
     _defaults = {
@@ -310,6 +336,9 @@ class pos_session(osv.osv):
                 st.button_open(context=context)
         return True
 
+    def wkf_action_opening_control(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state' : 'opening_control'}, context=context)
+
     def wkf_action_closing_control(self, cr, uid, ids, context=None):
         for session in self.browse(cr, uid, ids, context=context):
             for statement in session.statement_ids:
@@ -350,17 +379,6 @@ class pos_session(osv.osv):
                 getattr(st, 'button_confirm_%s' % st.journal_id.type)(context=context)
         self._confirm_orders(cr, uid, ids, context=context)
         return self.write(cr, uid, ids, {'state' : 'closed'}, context=context)
-
-    def has_opening_control(self, cr, uid, ids, context=None):
-        return any(journal.opening_control == True
-                    for session in self.browse(cr, uid, ids, context=context)
-                    for journal in session.config_id.journal_ids)
-
-    def has_closing_control(self, cr, uid, ids, context=None):
-        result = any(journal.closing_control == True
-                   for session in self.browse(cr, uid, ids, context=context)
-                   for journal in session.config_id.journal_ids)
-        return result
 
     def _confirm_orders(self, cr, uid, ids, context=None):
         wf_service = netsvc.LocalService("workflow")
@@ -851,8 +869,6 @@ class pos_order(osv.osv):
                 tax_amount = 0
                 taxes = [t for t in line.product_id.taxes_id]
                 computed = account_tax_obj.compute_all(cr, uid, taxes, line.price_unit * (100.0-line.discount) / 100.0, line.qty)
-                print "#### TAX: %r" % (taxes,)
-                print "#### TAX2: %r" % (computed,)
                 computed_taxes = computed['taxes']
 
                 for tax in computed_taxes:
