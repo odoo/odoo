@@ -1,6 +1,8 @@
 <openerp>
     <data>
-        <menuitem icon="terp-partner" id="base.menu_base_partner" name="Sales" sequence="1" groups="base.group_sale_salesman"/>
+        <menuitem icon="terp-partner" id="base.menu_base_partner" name="Sales" sequence="1" groups="base.group_sale_salesman,base.group_sale_manager"/>
+        <menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" sequence="9"/>
+
 
         <record id="view_shop_form" model="ir.ui.view">
             <field name="name">sale.shop</field>
@@ -95,24 +97,31 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form layout="manual">
-                <div class="oe_form_topbar">
-                    <button name="invoice_recreate" states="invoice_except" string="Recreate Invoice" icon="gtk-go-forward"/>
-                    <button name="invoice_corrected" states="invoice_except" string="Ignore Exception" icon="gtk-apply"/>
-                    <button name="ship_recreate" states="shipping_except" string="Recreate Packing" icon="gtk-ok"/>
-                    <button name="ship_corrected" states="shipping_except" string="Ignore Exception" icon="gtk-apply"/>
-                    <button name="action_cancel" states="manual,progress" string="Cancel Order" type="object" icon="gtk-cancel"/>
-                    <button name="%(report_sale_order)d" string="Print Order" type="action" icon="gtk-print" states="waiting_date,manual,progress,done,shipping_except,invoice_except"/>
-                    <button name="manual_invoice" states="manual" string="Create Final Invoice" icon="gtk-go-forward" type="object"/>
-                    <button name="ship_cancel" states="shipping_except" string="Cancel Order" icon="gtk-cancel"/>
-                    <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" icon="gtk-convert"/>
-                    <button name="cancel" states="draft" string="Cancel Order" icon="gtk-cancel"/>
-                    <button name="invoice_cancel" states="invoice_except" string="Cancel Order" icon="gtk-cancel"/>
-                    <button name="%(report_sale_order)d" string="Print Quotation" type="action" icon="gtk-print" states="draft"/>
-                    <button name="order_confirm" states="draft" string="Confirm Order" icon="gtk-apply"/>
-                    <button name="%(action_view_sale_advance_payment_inv)d" string="Advance Invoice" type="action" icon="gtk-execute" states="draft,manual"/>
+                    <div class="oe_form_topbar">
+                        <button name="invoice_recreate" states="invoice_except" string="Recreate Invoice"/>
+                        <button name="invoice_corrected" states="invoice_except" string="Ignore Exception"/>
+                        <button name="ship_recreate" states="shipping_except" string="Recreate Delivery Order"/>
+                        <button name="ship_corrected" states="shipping_except" string="Ignore Exception"/>
+                        <button name="action_quotation_send" string="Send by Mail" type="object" states="draft" class="oe_form_button_hi"/>
+                        <button name="action_quotation_send" string="Send by Mail" type="object" states="sent"/>
+                        <button name="manual_invoice" states="manual" string="Create Final Invoice" type="object"/>
+                        <button name="print_quotation" string="Send by Post" type="object" states="draft" class="oe_form_button_hi"/>
+                        <button name="print_quotation" string="Send by Post" type="object" states="sent"/>
+                        <button name="order_confirm" states="draft" string="Confirm"/>
+                        <button name="order_confirm" states="sent" string="Confirm" class="oe_form_button_hi"/>
+                        <button name="action_view_invoice" string="Open Invoice" type="object" 
+                        attrs="{'invisible': ['|','|',('state', '!=','progress'), ('invoiced', '=', True),('order_policy','=','picking')]}"/>
+                        <button name="action_view_delivery" string="Open Delivery Order" type="object" 
+                        attrs="{'invisible': ['|','|','|',('picking_ids','=',False),('picking_ids','=',[]), ('state', 'not in', ('progress','manual')),('shipped','=',True)]}"/>
+                        <button name="%(action_view_sale_advance_payment_inv)d" string="Advance Invoice" type="action" states="manual"/>
+                        <button name="cancel" states="draft,sent" string="Cancel"/>
+                        <button name="action_cancel" states="manual,progress" string="Cancel" type="object"/>
+                        <button name="ship_cancel" states="shipping_except" string="Cancel"/>
+                        <button name="invoice_cancel" states="invoice_except" string="Cancel"/>
                     <div class="oe_right">
-                        <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,progress,done" statusbar_colors='{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}'/>
+                        <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,sent,progress,invoiced,done" statusbar_colors='{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}'/>
                     </div>
+                    <div class="oe_clear"/>
                 </div>
                 <sheet string="Sales Order" layout="auto">
                     <group col="6" colspan="4" class="oe_form_header">
@@ -129,7 +138,7 @@
                     </group>
                     <notebook colspan="5">
                         <page string="Sales Order">
-                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" domain="[('customer','=',True)]" context="{'search_default_customer':1}" required="1"/>
+                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" domain="[('customer','=',True)]" context="{'search_default_customer':1}" />
                             <field domain="[('parent_id','=',partner_id)]" name="partner_invoice_id" groups="sale.group_delivery_invoice_address" options='{"quick_create": false}'/>
                             <field domain="[('parent_id','=',partner_id)]" name="partner_shipping_id" groups="sale.group_delivery_invoice_address" options='{"quick_create": false}'/>
                             <field domain="[('type','=','sale')]" name="pricelist_id" groups="product.group_sale_pricelist" on_change="onchange_pricelist_id(pricelist_id,order_line)"/>
@@ -196,17 +205,18 @@
                                 </form>
                                 <tree string="Sales Order Lines">
                                     <field colspan="4" name="name"/>
-                                    <field name="product_uom_qty" string="Qty(Unit of Measure)"/>
+                                    <field name="product_uom_qty" string="Quantity"/>
                                     <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
-                                    <field groups="product.group_uos" name="product_uos_qty" string="Qty(UoS)"/>
+                                    <field groups="product.group_uos" name="product_uos_qty" string="Quantity (UoS)"/>
                                     <field groups="product.group_uos" name="product_uos" string="UoS"/>
                                     <field name="discount" groups="sale.group_discount_per_so_line"/>
                                     <field name="price_unit"/>
                                     <field name="price_subtotal" groups="base.group_sale_notes_subtotal"/>
                                 </tree>
                             </field>
-
-                            <div class="oe_form_subtotal_footer" colspan="4">
+                            <group colspan="2" col="4" name="bellow_the_lines_hook">
+                            </group>
+                            <div class="oe_form_subtotal_footer" colspan="2">
                                 <div>
                                     <field name="amount_untaxed" sum="Untaxed amount"/>
                                 </div>
@@ -265,7 +275,7 @@
                         </page>
                     </notebook>
                 </sheet>
-                <div class="oe_form_sheet_width">
+                <div class="oe_form_bottom">
                     <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
                 </div>
                 </form>
@@ -278,7 +288,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Sales Order">
-                    <filter icon="terp-document-new" string="Quotations" name="draft" domain="[('state','=','draft')]" help="Sales Order that haven't yet been confirmed"/>
+                    <filter icon="terp-document-new" string="Quotations" name="draft" domain="[('state','in',('draft','sent'))]" help="Sales Order that haven't yet been confirmed"/>
                     <filter icon="terp-check" string="Sales" name="sales" domain="[('state','in',('manual','progress'))]"/>
                     <separator orientation="vertical"/>
                     <filter icon="terp-dolar_ok!" string="To Invoice" domain="[('state','=','manual')]" help="Sales Order ready to be invoiced"/>
@@ -292,9 +302,9 @@
                     <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Customer" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <filter string="Salesman" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Salesperson" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <separator orientation="vertical"/>
-                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Order Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_order'}"/>
                     </group>
@@ -447,8 +457,8 @@
                     <group expand="0" string="Group By...">
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
                         <filter string="Order" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'order_id'}"/>
-                        <filter string="Salesman" icon="terp-personal" domain="[]" context="{'group_by':'salesman_id'}"/>
-                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Salesperson" icon="terp-personal" domain="[]" context="{'group_by':'salesman_id'}"/>
+                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     </group>
                 </search>
             </field>
@@ -477,7 +487,7 @@
                         <filter string="Order" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'order_id'}" help="Order reference"/>
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
                         <separator orientation="vertical"/>
-                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     </group>
                 </search>
             </field>

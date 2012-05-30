@@ -161,19 +161,6 @@
             </field>
         </record>
 
-        <record id="view_order_withcarrier_form" model="ir.ui.view">
-            <field name="name">delivery.sale.order_withcarrier.form.view</field>
-            <field name="type">form</field>
-            <field name="model">sale.order</field>
-            <field name="inherit_id" ref="sale.view_order_form"/>
-            <field name="arch" type="xml">
-                <group name="logistics" position="inside">
-                    <field name="id" invisible="True"/>
-                    <field name="carrier_id" context="{'order_id':active_id or False}"/>
-                </group>
-            </field>
-        </record>
-
         <record id="view_picking_withcarrier_out_form" model="ir.ui.view">
             <field name="name">delivery.stock.picking_withcarrier.out.form.view</field>
             <field name="type">form</field>
@@ -258,14 +245,18 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="edit_project_multicompany">
-            <field name="name">sale.order.multicompany</field>
+        <record id="view_order_withcarrier_form" model="ir.ui.view">
+            <field name="name">delivery.sale.order_withcarrier.form.view</field>
+            <field name="type">form</field>
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
-                    <xpath expr="//button[@name='order_confirm']" position="after">
-                         <button name="%(action_delivery_cost)d" states="draft" string="Delivery Costs" type="action" icon="gtk-add" context="{'order_id':active_id}"/>
-                    </xpath>
+                <xpath expr="//group[@name='bellow_the_lines_hook']" position="inside">
+                    <separator string="Delivery Costs" colspan="4"/>
+                    <field name="carrier_id" context="{'order_id':active_id or False}" colspan="2"/>
+                    <button name="delivery_set" states="draft" string="Add Now on the Sale Order" type="object" icon="gtk-add" colspan="2"/>
+                    <label string="if you don't click on 'Add Now', the delivery cost won't be added on the Sale Order, but will be added on the Delivery Order only" colspan="4"/>
+                </xpath>
             </field>
         </record>
 
