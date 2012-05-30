@@ -624,7 +624,8 @@ class configmanager(object):
 
     def __setitem__(self, key, value):
         self.options[key] = value
-        if isinstance(self.options[key], basestring) and self.casts[key].type in optparse.Option.TYPE_CHECKER:
+        if key in self.options and isinstance(self.options[key], basestring) and \
+                key in self.casts and self.casts[key].type in optparse.Option.TYPE_CHECKER:
             self.options[key] = optparse.Option.TYPE_CHECKER[self.casts[key].type](self.casts[key], key, self.options[key])
 
     def __getitem__(self, key):
