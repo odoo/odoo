@@ -7,17 +7,16 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
-                <xpath expr='//tr[@name="use_tasks"]' position='after'>
-                    <tr name="use_timesheets">
-                        <th>Timesheets</th>
-                        <td><field name="use_timesheets" nolabel="1"/></td>
+                <xpath expr='//tr[@name="use_tasks_row"]' position='after'>
+                    <tr name="use_timesheets_row">
+                        <td>
+                            <group class="oe_form_group_label_border">
+                                <field name="use_timesheets"/>
+                            </group>
+                        </td>
                         <td style="text-align:right;"><button class="oe_btn_width" name="open_timesheets" string="Timesheets" type="object" attrs="{'invisible':[('use_timesheets','=', 0)]}"/></td>
                     </tr>
                 </xpath>
-                <field name="use_tasks" position='after'>
-                    <field name="amount_to_invoice" invisible="True"/>
-                    <field name="time_to_invoice" invisible="True"/>
-                </field>
                 <field name="warn_customer" position="after">
                     <group colspan="4" col="4">
                         <separator colspan="4" string="Invoicing Data"/>
@@ -25,6 +24,8 @@
                         <field name="to_invoice" widget="selection" string="Invoice Task Work"/>
                         <field name="amount_max"/>
                         <field name="amount_invoiced"/>
+                        <field name="amount_to_invoice" invisible="True"/>
+                        <field name="time_to_invoice" invisible="True"/>
                     </group>
                 </field>
             </field>

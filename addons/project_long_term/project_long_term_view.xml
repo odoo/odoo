@@ -104,10 +104,13 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
-                <xpath expr='//tr[@name="use_tasks"]' position='after'>
-                    <tr name="use_phases">
-                        <th>Phases Planing</th>
-                        <td><field name="use_phases" nolabel="1"/></td>
+                <xpath expr='//tr[@name="use_tasks_row"]' position='after'>
+                    <tr name="use_phases_row">
+                        <td>
+                            <group class="oe_form_group_label_border">
+                                <field name="use_phases"/>
+                            </group>
+                        </td>
                         <td style="text-align:right;"><button class="oe_btn_width" name="%(act_project_phases)d" string="Phases" type="action" attrs="{'invisible':[('use_phases','=', 0)]}"/></td>
                     </tr>
                 </xpath>
