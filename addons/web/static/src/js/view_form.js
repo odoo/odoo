@@ -953,7 +953,7 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
             var obj = self.tags_registry.get_object(tag_name);
             var w = new (obj)(self.view, instance.web.xml_to_json($elem[0]));
             w.replace($elem);
-        })
+        });
         // TODO: return a deferred
     },
     render_element: function(template, layout/* dictionaries */) {
@@ -1006,7 +1006,7 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
         var $new_sheet = this.render_element('FormRenderingSheet', layout, $sheet.getAttributes());
         this.handle_common_properties($new_sheet, $sheet);
         var $dst = (layout === 'auto') ? $new_sheet.find('group:first') : $new_sheet.find('.oe_form_sheet');
-        $sheet.children().appendTo($dst);
+        $sheet.contents().appendTo($dst);
         $sheet.before($new_sheet).remove();
         this.process($new_sheet, layout);
     },
@@ -1014,7 +1014,7 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
         var $new_form = this.render_element('FormRenderingForm', layout, $form.getAttributes());
         this.handle_common_properties($new_form, $form);
         var $dst = (layout === 'auto') ? $new_form.find('group:first') : $new_form;
-        $form.children().appendTo($dst);
+        $form.contents().appendTo($dst);
         if ($form[0] === this.$form[0]) {
             // If root element, replace it
             this.$form = $new_form;
@@ -1195,12 +1195,12 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
             pages.push(page_attrs);
             var $new_page = self.render_element('FormRenderingNotebookPage', layout, page_attrs);
             var $dst = (layout === 'auto') ? $new_page.find('group:first') : $new_page;
-            $page.children().appendTo($dst);
+            $page.contents().appendTo($dst);
             $page.before($new_page).remove();
             self.handle_common_properties($new_page, $page);
         });
         var $new_notebook = this.render_element('FormRenderingNotebook', layout, { pages : pages });
-        $notebook.children().appendTo($new_notebook);
+        $notebook.contents().appendTo($new_notebook);
         $notebook.before($new_notebook).remove();
         $new_notebook.children().each(function() {
             self.process($(this));
