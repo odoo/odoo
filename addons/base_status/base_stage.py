@@ -382,7 +382,7 @@ class base_stage(object):
             will have to override this method to define the prefix they
             want to display.
         """
-		return ''
+        return ''
 	
     def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
         """ Send a notification when the stage changes. This method has
