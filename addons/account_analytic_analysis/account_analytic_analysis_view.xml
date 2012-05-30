@@ -58,38 +58,92 @@
                 </xpath>
                 <xpath expr='//separator[@name="description"]' position='before'>
 		    <separator colspan="4" string="Invoicing" name="invoicing"/>
-		    <group colspan="4">
-			<group col="2" colspan="1" class="oe_form_group_label_border">
-			    <label string=" "/><label string=" "/>
-			    <field name="fix_price_invoices"/>
-			    <field name="invoice_on_timesheets"/>
-			    <field name="charge_expenses"/>
-			</group>
-			<group col="2" colspan="1">
-			    <label string="Est.Tot"/>
-			    <label string="Invoiced"/>
-			    <field name="amount_max" nolabel="1" attrs="{'invisible': [('fix_price_invoices','=',0)]}"/>
-			    <field name="ca_invoiced" nolabel="1" attrs="{'invisible': [('fix_price_invoices','=',0)]}"/>
-			    <field name="quantity_max" nolabel="1" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/>
-			    <field name="hours_qtt_invoiced" nolabel="1" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/>
-			</group>
-			<group col="2" colspan="1" class="oe_form_group_odd_border">
-			    <label string="Remaining"/>
-			    <label string="To Invoice"/>
-			    <field name="remaining_ca" nolabel="1" attrs="{'invisible': [('fix_price_invoices','=',0)]}"/>
-			    <field name="ca_to_invoice" nolabel="1" attrs="{'invisible': [('fix_price_invoices','=',0)]}"/>
-			    <field name="remaining_hours" nolabel="1" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/>
-			    <field name="hours_qtt_non_invoiced" nolabel="1" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/>
-			</group>
-			<group col="2" colspan="1">
-			    <label string=" "/><label string=" "/>
-			    <button name="%(action_sales_order_line)d" string="Sales" type="action" context="{'default_project_id': active_id,'search_default_project_id': active_id}" attrs="{'invisible': [('fix_price_invoices','=',0)]}"/>
-			    <button name="%(sale.action_order_line_tree2)d" string="Lines To Invoice" type="action" context="{'default_project_id': active_id,'search_default_project_id': active_id}" attrs="{'invisible': [('fix_price_invoices','=',0)]}"/>
-			    <button name="%(action_timesheet_lines_tree)d" string="Timesheets" type="action" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/>
-                <button name="%(hr_timesheet_invoice.act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice)d" string="Invoice Timesheets" type="action" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/>
-
-			</group>
+		    <group col="1" colspan="4">
+			<table border="1">
+			    <tr>
+				<th height="20px"></th>
+				<th></th>
+				<th>Est.Tot</th>
+				<th>Invoiced</th>
+				<th>Remaining</th>
+				<th>Ready To Invoice</th>
+				<th></th>
+				<th></th>
+			    </tr>
+			    <tr>
+				<th>Fix Price Invoices</th>
+				<td><field name="fix_price_invoices" nolabel="1"/></td>
+				<td><field name="amount_max" nolabel="1" attrs="{'invisible': [('fix_price_invoices','=',0)]}"/></td>
+				<td><field name="ca_invoiced" nolabel="1" attrs="{'invisible': [('fix_price_invoices','=',0)]}"/></td>
+				<td><field name="remaining_ca" nolabel="1" attrs="{'invisible': [('fix_price_invoices','=',0)]}"/></td>
+				<td><field name="ca_to_invoice" nolabel="1" attrs="{'invisible': [('fix_price_invoices','=',0)]}"/></td>
+				<td><button name="%(action_sales_order_line)d" string="Sales" type="action" context="{'default_project_id': active_id,'search_default_project_id': active_id}" attrs="{'invisible': [('fix_price_invoices','=',0)]}"/></td>
+				<td><button name="%(sale.action_order_line_tree2)d" string="Lines To Invoice" type="action" context="{'default_project_id': active_id,'search_default_project_id': active_id}" attrs="{'invisible': [('fix_price_invoices','=',0)]}"/></td>
+			    </tr>
+			    <tr>
+				<th>Invoice On Timesheets</th>
+				<td><field name="invoice_on_timesheets" nolabel="1"/></td>
+				<td><field name="quantity_max" nolabel="1" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
+				<td><field name="hours_qtt_invoiced" nolabel="1" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
+				<td><field name="remaining_hours" nolabel="1" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
+				<td><field name="hours_qtt_non_invoiced" nolabel="1" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
+				<td><button name="%(action_timesheet_lines_tree)d" string="Timesheets" type="action" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
+				<td><button name="%(hr_timesheet_invoice.act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice)d" string="Invoice Timesheets" type="action" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
+			    </tr>
+			    <tr>
+				<th>Charge Expenses</th>
+				<td><field name="charge_expenses" nolabel="1"/></td>
+				<td>todo</td>
+				<td>todo</td>
+				<td>todo</td>
+				<td>todo</td>
+				<td>todo</td>
+				<td>todo</td>
+			    </tr>
+			    <tr>
+				<th>Total</th>
+				<td></td>
+				<td>todo</td>
+				<td>todo</td>
+				<td>todo</td>
+				<td>todo</td>
+				<td></td>
+				<td></td>
+			    </tr>
+			</table>
 		    </group>
+<!--		    <group colspan="4">-->
+<!--			<group col="2" colspan="1" class="oe_form_group_label_border">-->
+<!--			    <label string=" "/><label string=" "/>-->
+<!--			    <field name="fix_price_invoices"/>-->
+<!--			    <field name="invoice_on_timesheets"/>-->
+<!--			    <field name="charge_expenses"/>-->
+<!--			</group>-->
+<!--			<group col="2" colspan="1">-->
+<!--			    <label string="Est.Tot"/>-->
+<!--			    <label string="Invoiced"/>-->
+<!--			    <field name="amount_max" nolabel="1" attrs="{'invisible': [('fix_price_invoices','=',0)]}"/>-->
+<!--			    <field name="ca_invoiced" nolabel="1" attrs="{'invisible': [('fix_price_invoices','=',0)]}"/>-->
+<!--			    <field name="quantity_max" nolabel="1" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/>-->
+<!--			    <field name="hours_qtt_invoiced" nolabel="1" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/>-->
+<!--			</group>-->
+<!--			<group col="2" colspan="1" class="oe_form_group_odd_border">-->
+<!--			    <label string="Remaining"/>-->
+<!--			    <label string="To Invoice"/>-->
+<!--			    <field name="remaining_ca" nolabel="1" attrs="{'invisible': [('fix_price_invoices','=',0)]}"/>-->
+<!--			    <field name="ca_to_invoice" nolabel="1" attrs="{'invisible': [('fix_price_invoices','=',0)]}"/>-->
+<!--			    <field name="remaining_hours" nolabel="1" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/>-->
+<!--			    <field name="hours_qtt_non_invoiced" nolabel="1" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/>-->
+<!--			</group>-->
+<!--			<group col="2" colspan="1">-->
+<!--			    <label string=" "/><label string=" "/>-->
+<!--			    <button name="%(action_sales_order_line)d" string="Sales" type="action" context="{'default_project_id': active_id,'search_default_project_id': active_id}" attrs="{'invisible': [('fix_price_invoices','=',0)]}"/>-->
+<!--			    <button name="%(sale.action_order_line_tree2)d" string="Lines To Invoice" type="action" context="{'default_project_id': active_id,'search_default_project_id': active_id}" attrs="{'invisible': [('fix_price_invoices','=',0)]}"/>-->
+<!--			    <button name="%(action_timesheet_lines_tree)d" string="Timesheets" type="action" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/>-->
+<!--                <button name="%(hr_timesheet_invoice.act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice)d" string="Invoice Timesheets" type="action" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/>-->
+<!---->
+<!--			</group>-->
+<!--		    </group>-->
 		    
 		    
 		    
