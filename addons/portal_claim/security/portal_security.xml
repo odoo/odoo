@@ -5,7 +5,7 @@
         <record id="portal_stock_picking_user_rule" model="ir.rule">
             <field name="name">Personal Claims</field>
             <field ref="crm_claim.model_crm_claim" name="model_id"/>
-            <field name="domain_force">[('partner_id.email','=',user.login)]</field>
+            <field name="domain_force">[('partner_id','child_of',user.partner_id.id)]</field>
             <field name="groups" eval="[(4, ref('portal.group_portal_member'))]"/>
         </record>
 

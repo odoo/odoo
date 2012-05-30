@@ -5,14 +5,14 @@
         <record id="portal_issue_rule" model="ir.rule">
             <field name="name">Personal Issues</field>
             <field ref="project_issue.model_project_issue" name="model_id"/>
-            <field name="domain_force">[('partner_id.email','=',user.login)]</field>
+            <field name="domain_force">[('partner_id','child_of',user.partner_id.id)]</field>
             <field name="groups" eval="[(4, ref('portal.group_portal_member'))]"/>
         </record>
 
         <record id="portal_task_rule" model="ir.rule">
             <field name="name">Personal Task</field>
             <field ref="project.model_project_task" name="model_id"/>
-            <field name="domain_force">[('partner_id.email','=',user.login)]</field>
+            <field name="domain_force">[('partner_id','child_of',user.partner_id.id)]</field>
             <field name="groups" eval="[(4, ref('portal.group_portal_member'))]"/>
         </record>
 
