@@ -86,10 +86,19 @@
                 </div>
             </div>
             <sheet string="Jobs - Recruitment Form" layout="auto">
-                <field name="name" string="Subject"/>
-                <field name="partner_name"/>
-                <field name="job_id" on_change="onchange_job(job_id)"/>
-                <field name="department_id" widget="selection" on_change="onchange_department_id(department_id)"/>
+                <group col="7" colspan="4">
+                    <field name="name" string="Subject"/>
+                    <field name="partner_name"/>
+                    <field name="priority" string="Appreciation"/>
+                    <newline/>
+                    <group col="4" colspan="2">
+                        <field name="stage_id" domain="['|',('department_id','=',department_id),('department_id','=',False)]"/>
+                        <button name="stage_previous" string="" type="object" icon="gtk-go-back"/>
+                        <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
+                    </group>
+                    <field name="job_id" on_change="onchange_job(job_id)"/>
+                    <field name="department_id" widget="selection" on_change="onchange_department_id(department_id)"/>
+                </group>
                 <group col="11" colspan="4">
                         <field name="user_id"/>
                         <field name="title_action"/>
@@ -100,11 +109,6 @@
                         <button name="%(survey.action_view_survey_question_message)d" string="Answer" type="action" icon="gtk-execute" context="{'survey_id': survey, 'response_id': [response], 'response_no':0 ,'active' : response, 'object' : 'hr.applicant'}" attrs="{'invisible':[('survey','=',False)]}" help="Answer related job question"/>
                         <field name="response" invisible="1"/>
                 </group>
-                <group colspan="2" col="4">
-                        <field name="stage_id" domain="['|',('department_id','=',department_id),('department_id','=',False)]"/>
-                        <button name="stage_previous" string="" type="object" icon="gtk-go-back"/>
-                        <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
-                    </group>
                 <notebook colspan="4">
                     <page string="Job Info">
                         <group col="3" colspan="2">
@@ -129,7 +133,6 @@
                         <group col="2" colspan="2">
                             <separator colspan="2" string="Qualification"/>
                             <field name="type_id"/>
-                            <field name="priority" string="Appreciation"/>
                             <field name="source_id"/>
                             <field name="reference"/>
                         </group>
