@@ -101,7 +101,7 @@ class hr_applicant(base_stage, osv.Model):
 
     def _get_default_department_id(self, cr, uid, context=None):
         """ Gives default department by checking if present in the context """
-        return self._resolve_department_id_from_context(cr, uid, context=context)
+        return (self._resolve_department_id_from_context(cr, uid, context=context) or False)
 
     def _get_default_stage_id(self, cr, uid, context=None):
         """ Gives default stage_id """
@@ -298,7 +298,7 @@ class hr_applicant(base_stage, osv.Model):
         return True
 
     def stage_next(self, cr, uid, ids, context=None):
-        """This function computes next stage for case from its current stage
+        """ This function computes next stage for case from its current stage
              using available stage for that case type
         """
         stage_obj = self.pool.get('hr.recruitment.stage')

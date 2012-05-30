@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-today OpenERP SA (<http://www.openerp.com>)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -20,15 +20,16 @@
 ##############################################################################
 
 from base_status.base_stage import base_stage
-from osv import fields, osv
-from crm import crm
-import time
-from crm import wizard
 import binascii
+from crm import crm
+from crm import wizard
+from osv import fields, osv
+import time
 import tools
 from tools.translate import _
 
 wizard.mail_compose_message.SUPPORTED_MODELS.append('crm.claim')
+
 CRM_CLAIM_PENDING_STATES = (
     crm.AVAILABLE_STATES[2][0], # Cancelled
     crm.AVAILABLE_STATES[3][0], # Done
@@ -73,7 +74,8 @@ class crm_claim(base_stage, osv.osv):
         'email_cc': fields.text('Watchers Emails', size=252, help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
         'email_from': fields.char('Email', size=128, help="These people will receive email."),
         'partner_phone': fields.char('Phone', size=32),
-        'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_ids', '=', section_id)]"), 
+        'stage_id': fields.many2one ('crm.case.stage', 'Stage',
+                        domain="['|', ('section_ids', '=', section_id), ('case_default', '=', True)]"), 
         'cause': fields.text('Root Cause'),
         'state': fields.related('stage_id', 'state', type="selection", store=True,
                 selection=crm.AVAILABLE_STATES, string="State", readonly=True,
