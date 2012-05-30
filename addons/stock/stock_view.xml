@@ -1485,7 +1485,7 @@
             <field name="arch" type="xml">
                 <search string="Stock Moves">
                     <group>
-                        <filter icon="terp-gtk-go-back-rtl" name="receive" string=" Waiting" domain="[('state','in',('confirmed','assigned'))]" help="Stock to be delivered (Available or not)"/>
+                        <filter icon="terp-gtk-go-back-rtl" name="receive" string="Waiting" domain="[('state','in',('confirmed','assigned'))]" help="Stock to be delivered (Available or not)"/>
                         <filter icon="terp-check" name="available" string="Available" domain="[('state','in',('assigned',))]" help="Stock available to be delivered"/>
                         <filter icon="terp-dialog-close" name="received" string="Done" domain="[('state','=','done')]"/>
                         <separator orientation="vertical"/>
