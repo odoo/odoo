@@ -33,7 +33,7 @@
                     <button name="case_open" string="Open" type="object"
                             states="draft,pending"/>
                     <button name="case_close" string="Close" type="object"
-                            states="open,pending"/>
+                            states="open,draft,pending"/>
                     <button name="case_pending" string="Pending" type="object"
                             states="draft,open"/>
                     <button name="case_reset" string="Reset to Draft" type="object"
@@ -156,23 +156,18 @@
                     <field name="section_id"/>
                     <field name="priority"/>
                     <field name="state"/>
-                    <button name="case_cancel" string="Cancel"
-                        states="draft,open,pending" type="object"
-                        icon="gtk-cancel" />
-                    <button name="case_open" string="Open"
-                        states="draft,pending" type="object"
-                        icon="gtk-go-forward" />
-                    <button name="case_pending" string="Pending"
-                        states="draft,open" type="object"
-                        icon="gtk-media-pause" />
-                    <button name="case_escalate" string="Escalate"
-                        states="open,draft,pending" type="object"
-                        icon="gtk-go-up" />
-                    <button name="case_close" string="Done"
-                        states="open,draft,pending" type="object"
-                        icon="gtk-close" />
-                    <button name="case_reset" string="Reset to Draft"
-                        states="done,cancel" type="object" icon="gtk-convert" />
+                    <button name="case_open" string="Open" type="object"
+                        states="draft,pending" icon="gtk-go-forward"/>
+                    <button name="case_close" string="Done" type="object"
+                        states="open,draft,pending" icon="gtk-close"/>
+                    <button name="case_pending" string="Pending" type="object"
+                        states="draft,open" icon="gtk-media-pause"/>
+                    <button name="case_escalate" string="Escalate" type="object"
+                        states="open,draft,pending" icon="gtk-go-up"/>
+                    <button name="case_cancel" string="Cancel" type="object"
+                        states="draft,open,pending" icon="gtk-cancel"/>
+                    <button name="case_reset" string="Reset to Draft" type="object"
+                        states="cancel,done" icon="gtk-convert" />
                 </tree>
             </field>
         </record>
