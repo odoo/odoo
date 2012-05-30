@@ -14,7 +14,7 @@
                     <field name="date_value"/>
                     <field name="name"/>
                     <field name="ref"/>
-                    <field domain="[('type','=','normal'), ('parent_id','!=',False)]" name="analytic_account" groups="analytic.group_analytic_accounting"/>
+                    <field domain="[('type','in',['normal','contract']), ('parent_id','!=',False)]" name="analytic_account" groups="analytic.group_analytic_accounting"/>
                     <field name="unit_amount"/>
                     <field name="unit_quantity"/>
                     <field name="total_amount" sum="Total"/>
@@ -102,7 +102,7 @@
                                     </group>
                                     <group colspan="2" col="2" groups="analytic.group_analytic_accounting">
                                         <separator string="Customer Project" colspan="2"/>
-                                        <field domain="[('type','=','normal')]" name="analytic_account"/>
+                                        <field domain="[('type','in',['normal','contract'])]" name="analytic_account"/>
                                     </group>
                                     <group colspan="2" col="2">
                                         <separator string="References" colspan="2"/>

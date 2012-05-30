@@ -98,7 +98,7 @@ class account_analytic_account(osv.osv):
                             WHERE account_analytic_account.id IN %s \
                                 AND account_analytic_line.invoice_id IS NULL \
                                 AND account_analytic_line.to_invoice IS NOT NULL \
-                                AND account_analytic_journal.type IN ('purchase','general') \
+                                AND account_analytic_journal.type = 'sale' \
                             GROUP BY account_analytic_account.id;""", (parent_ids,))
                     for account_id, sum in cr.fetchall():
                         if account_id not in res:
@@ -224,7 +224,45 @@ class account_analytic_account(osv.osv):
                 res[account_id] = round(sum,2)
         res_final = res
         return res_final
+    
+    def _expense_invoiced_calc(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        res_final = {}
+        child_ids = tuple(ids) #We don't want consolidation for each of these fields because those complex computation is resource-greedy.
+        for i in child_ids:
+            res[i] =  0.0
+        if not child_ids:
+            return res
 
+        if child_ids:
+            cr.execute("select hel.analytic_account,SUM(hel.unit_amount*hel.unit_quantity) from hr_expense_line as hel\
+                        LEFT JOIN hr_expense_expense as he ON he.id = hel.expense_id\
+                        where he.state = 'paid' and hel.analytic_account IN %s \
+                        GROUP BY hel.analytic_account",(child_ids,))
+            for account_id, sum in cr.fetchall():
+                res[account_id] = sum
+        res_final = res
+        return res_final
+    
+    def _expense_to_invoice_calc(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        res_final = {}
+        child_ids = tuple(ids) #We don't want consolidation for each of these fields because those complex computation is resource-greedy.
+        for i in child_ids:
+            res[i] =  0.0
+        if not child_ids:
+            return res
+
+        if child_ids:
+            cr.execute("select hel.analytic_account, SUM(hel.unit_amount*hel.unit_quantity) from hr_expense_line as hel\
+                        LEFT JOIN hr_expense_expense as he ON he.id = hel.expense_id\
+                        where he.state = 'invoiced' and hel.analytic_account IN %s \
+                        GROUP BY hel.analytic_account",(child_ids,))
+            for account_id, sum in cr.fetchall():
+                res[account_id] = sum
+        res_final = res
+        return res_final
+    
     def _total_cost_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}
         res_final = {}
@@ -296,6 +334,17 @@ class account_analytic_account(osv.osv):
         for account in self.browse(cr, uid, ids, context=context):
             if account.amount_max != 0:
                 res[account.id] = account.amount_max - account.ca_invoiced
+            else:
+                res[account.id]=0.0
+        for id in ids:
+            res[id] = round(res.get(id, 0.0),2)
+        return res
+    
+    def _remaining_expnse_calc(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        for account in self.browse(cr, uid, ids, context=context):
+            if account.expense_max != 0:
+                res[account.id] = account.expense_max - account.expense_invoiced
             else:
                 res[account.id]=0.0
         for id in ids:
@@ -385,9 +434,12 @@ class account_analytic_account(osv.osv):
         'month_ids': fields.function(_analysis_all, multi='analytic_analysis', type='many2many', relation='account_analytic_analysis.summary.month', string='Month'),
         'user_ids': fields.function(_analysis_all, multi='analytic_analysis', type="many2many", relation='account_analytic_analysis.summary.user', string='User'),
         'template_id':fields.many2one('account.analytic.account', 'Template Of Contract'),
+        'expense_invoiced' : fields.function(_expense_invoiced_calc, type="float"),
+        'expense_to_invoice' : fields.function(_expense_to_invoice_calc, type='float'),
+        'remaining_expense' : fields.function(_remaining_expnse_calc, type="float"), 
         #'fix_exp_max' : fields.float('Max. amt'),
         #'timesheet_max': fields.float('max_timesheet'),
-        #'expense_max': fields.float('expenses'),
+        'expense_max': fields.float('expenses'),
     }
     def on_change_template(self, cr, uid, id, template_id):
         if not template_id:
