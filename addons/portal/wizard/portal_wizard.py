@@ -91,11 +91,20 @@ class wizard(osv.osv_memory):
     def _default_user_ids(self, cr, uid, context):
         """ determine default user_ids from the active records """
         def create_user_from_address(address):
-            return {    # a user config based on a contact (address)
+            has_portal=False
+            portal_id = context.get('portal_id',False)
+            portal_users = self.pool.get('res.portal').browse(cr,uid,portal_id).group_id.users
+            active_user = [u.login for u in portal_users]
+            if address.email in active_user:
+                has_portal = True
+
+            return  {    # a user config based on a contact (address)
                 'name': address.name,
                 'user_email': extract_email(address.email),
                 'lang': address.parent_id and address.parent_id.lang or 'en_US',
                 'partner_id': address.parent_id and address.parent_id.id,
+                'has_portal_user':has_portal,
+                'portal_id': context.get('portal_id', False)
             }
         
         user_ids = []
@@ -112,9 +121,13 @@ class wizard(osv.osv_memory):
         
         return user_ids
 
-    _defaults = {
-        'user_ids': _default_user_ids
-    }
+    def onchange_portal_id(self, cr, uid, ids, portal_id=False, context=None):
+        if not portal_id:
+            return {'value': {}}
+        user_obj = self.pool.get('res.users')
+        context.update({'portal_id':portal_id})
+        user_list = self._default_user_ids(cr, uid, context=context)
+        return {'value': {'user_ids': user_list}}
 
     def action_create(self, cr, uid, ids, context=None):
         """ create new users in portal(s), and notify them by email """
@@ -133,25 +146,33 @@ class wizard(osv.osv_memory):
         portal_obj = self.pool.get('res.portal')
         for wiz in self.browse(cr, uid, ids, context):
             # determine existing users
-            login_cond = [('login', 'in', [u.user_email for u in wiz.user_ids])]
-            existing_uids = user_obj.search(cr, ROOT_UID, login_cond)
-            existing_users = user_obj.browse(cr, ROOT_UID, existing_uids)
-            existing_logins = [u.login for u in existing_users]
-            
-            # create new users in portal (skip existing logins)
-            new_users_data = [ {
-                    'name': u.name,
-                    'login': u.user_email,
-                    'password': random_password(),
-                    'user_email': u.user_email,
-                    'context_lang': u.lang,
-                    'share': True,
-                    'action_id': wiz.portal_id.home_action_id and wiz.portal_id.home_action_id.id or False,
-                    'partner_id': u.partner_id and u.partner_id.id,
-                } for u in wiz.user_ids if u.user_email not in existing_logins ]
-            portal_obj.write(cr, ROOT_UID, [wiz.portal_id.id],
-                {'users': [(0, 0, data) for data in new_users_data]}, context0)
-            
+         
+            for u in wiz.user_ids:
+                login_cond = [('login', 'in', [u.user_email])]
+                existing_uids = user_obj.search(cr, ROOT_UID, login_cond)
+                existing_users = user_obj.browse(cr, ROOT_UID, existing_uids)
+                existing_logins = [user.login for user in existing_users]
+                new_users_data = []
+                if u.has_portal_user==False:
+                    new_users_data = []
+                    if u.user_email in existing_logins:
+                        portal_uids = user_obj.search(cr, ROOT_UID, [('login','=',u.user_email),('partner_id', '=', u.partner_id.id)])
+                        user_obj.unlink(cr,uid,portal_uids)
+                else:
+                    if u.user_email not in existing_logins:
+                        new_users_data.append({
+                                'name': u.name,
+                                'login': u.user_email,
+                                'password': random_password(),
+                                'user_email': u.user_email,
+                                'context_lang': u.lang,
+                                'share': True,
+                                'action_id': wiz.portal_id.home_action_id and wiz.portal_id.home_action_id.id or False,
+                                'partner_id': u.partner_id and u.partner_id.id,
+                            } )
+                    portal_obj.write(cr, ROOT_UID, [wiz.portal_id.id],
+                        {'users': [(0, 0, data) for data in new_users_data]}, context0)
+
             # send email to all users (translated in their language)
             data = {
                 'company': user.company_id.name,
@@ -205,6 +226,7 @@ class wizard_user(osv.osv_memory):
             help="The language for the user's user interface"),
         'partner_id': fields.many2one('res.partner',
             string='Partner'),
+        'has_portal_user':fields.boolean('Has portal access')
     }
 
     def _check_email(self, cr, uid, ids):
