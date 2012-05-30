@@ -45,7 +45,7 @@
         -->
         
         <record model="crm.claim.stage" id="stage_claim1">
-            <field name="name">Draft</field>
+            <field name="name">Draft claim</field>
             <field name="state">draft</field>
             <field name="sequence">26</field>
             <field name="case_default" eval="True"/>
@@ -67,6 +67,7 @@
             <field name="state">done</field>
             <field name="sequence">29</field>
             <field name="case_default" eval="True"/>
+            <field name="case_refused" eval="True"/>
             <field name="fold" eval="True"/>
         </record>
         <record model="crm.claim.stage" id="stage_claim3">

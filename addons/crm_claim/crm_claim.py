@@ -53,6 +53,8 @@ class crm_claim_stage(osv.osv):
         'section_ids':fields.many2many('crm.case.section', 'section_claim_stage_rel', 'stage_id', 'section_id', string='Sections',
                         help="Link between stages and sales teams. When set, this limitate the current stage to the selected sales teams."),
         'state': fields.selection(crm.AVAILABLE_STATES, 'State', required=True, help="The related state for the stage. The state of your document will automatically change regarding the selected stage. For example, if a stage is related to the state 'Close', when your document reaches this stage, it will be automatically have the 'closed' state."),
+        'case_refused': fields.boolean('Refused stage',
+                        help='Refused stages are specific stages for done.'),
         'case_default': fields.boolean('Common to All Teams',
                         help="If you check this field, this stage will be proposed by default on each sales team. It will not assign this stage to existing teams."),
         'fold': fields.boolean('Hide in Views when Empty',
@@ -63,6 +65,7 @@ class crm_claim_stage(osv.osv):
         'sequence': lambda *args: 1,
         'state': 'draft',
         'fold': False,
+        'case_refused': False,
     }
 
 class crm_claim(base_stage, osv.osv):
@@ -150,6 +153,20 @@ class crm_claim(base_stage, osv.osv):
     def case_get_note_msg_prefix(self, cr, uid, id, context=None):
         return 'Claim'
 
+    def case_refuse_send_note(self, cr, uid, ids, context=None):
+        for id in ids:
+            msg = _('%s has been <b>refused</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
+            self.message_append_note(cr, uid, [id], body=msg, context=context)
+        return True
+
+    def case_refuse(self, cr, uid, ids, context=None):
+        """ Mark the case as refused: state=done and case_refused=True """
+        for lead in self.browse(cr, uid, ids):
+            stage_id = self.stage_find(cr, uid, [lead], lead.section_id.id or False, ['&', ('state', '=', 'done'), ('case_refused', '=', True)], context=context)
+            if stage_id:
+                self.case_set(cr, uid, [lead.id], values_to_update={}, new_stage_id=stage_id, context=context)
+        return self.case_refuse_send_note(cr, uid, ids, context=context)
+    
     def onchange_partner_id(self, cr, uid, ids, part, email=False):
         """This function returns value of partner address based on partner
            :param part: Partner's id

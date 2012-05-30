@@ -23,14 +23,46 @@
 
         <!-- Claim Stages -->
 
+        <record id="crm_claim_stage_tree" model="ir.ui.view">
+            <field name="name">crm.claim.stage.tree</field>
+            <field name="model">crm.claim.stage</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Claim Stages">
+                    <field name="sequence"/>
+                    <field name="name"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="crm_claim_stage_form" model="ir.ui.view">
+            <field name="name">crm.claim.stage.form</field>
+            <field name="model">crm.claim.stage</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Claim Stage">
+                    <field name="name"/>
+                    <field name="case_default"/>
+                    <field name="sequence"/>
+                    <field name="state"/>
+                    <field name="case_refused"/>
+                    <field name="fold"/>
+                </form>
+            </field>
+        </record>
+
         <record id="crm_claim_stage_act" model="ir.actions.act_window">
             <field name="name">Claim Stages</field>
-            <field name="res_model">crm.case.stage</field>
+            <field name="res_model">crm.claim.stage</field>
             <field name="view_type">form</field>
-            <field name="view_id" ref="crm.crm_case_stage_tree"/>
-            <field name="context">{'search_default_claim':1}</field>
+            <field name="view_id" ref="crm_claim_stage_tree"/>
             <field name="help">You can create claim stages to categorize the status of every claim entered in the system. The stages define all the steps required for the resolution of a claim.</field>
         </record>
+
+        <menuitem id="menu_definitions" name="Configuration" parent="base.menu_main_pm" sequence="60"/>
+        <menuitem id="menu_project_config_project" name="Stages" parent="menu_definitions" sequence="1"/>
+        <menuitem id="menu_claim_stage_view" name="Claim Stages" action="crm_claim_stage_act" parent="menu_project_config_project" sequence="20"/>
 
         <!-- Claims    -->
 
@@ -44,19 +76,22 @@
                     <field name="partner_id"/>
                     <field name="user_id" />
                     <field name="date"/>
+                    <field name="stage_id"/>
                     <field name="date_action_next"/>
                     <field name="action_next"/>
                     <field name="categ_id" string="Type" select="1"/>
-                    <field name="stage_id" invisible="1"/>
                     <field name="date_deadline" invisible="1"/>
                     <field name="date_closed" invisible="1"/>
-                    <field name="stage_id"/>
+                    <field name="state" groups="base.group_no_one"/>
                     <button name="case_open" string="Open"
                         states="draft,pending" type="object"
                         icon="gtk-go-forward" groups="base.group_no_one"/>
-                    <button name="case_close" string="Close"
+                    <button name="case_close" string="Done"
                         states="open,draft,pending" type="object"
                         icon="gtk-close" groups="base.group_no_one"/>
+                    <button name="case_refuse" string="Refuse"
+                        states="open,draft,pending" type="object"
+                        icon="gtk-cancel" groups="base.group_no_one"/>
                 </tree>
             </field>
         </record>
@@ -71,6 +106,8 @@
                     <button name="case_open" string="Open" type="object"
                             states="draft,pending"/>
                     <button name="case_close" string="Done" type="object"
+                            states="open,pending"/>
+                    <button name="case_refuse" string="Refuse" type="object"
                             states="open,pending"/>
                     <button name="case_reset" string="Reset to Draft" type="object"
                             states="cancel,done"/>
