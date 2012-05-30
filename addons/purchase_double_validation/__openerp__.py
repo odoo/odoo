@@ -38,6 +38,7 @@ that exceeds minimum amount set by configuration wizard.
     'update_xml': [
         'purchase_double_validation_workflow.xml',
         'purchase_double_validation_installer.xml',
+        'purchase_double_validation_view.xml',
         'board_purchase_view.xml'
     ],
     'test': [
