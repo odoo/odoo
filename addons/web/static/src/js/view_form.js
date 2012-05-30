@@ -673,7 +673,7 @@ instance.web.FormView = instance.web.View.extend(_.extend({}, instance.web.form.
         var msg = "<ul>";
         _.each(this.fields, function(f) {
             if (!f.is_valid()) {
-                msg += "<li>" + f.node.attrs.string + "</li>";
+                msg += "<li>" + (f.node.attrs.string || f.field.string) + "</li>";
             }
         });
         msg += "</ul>";
@@ -937,7 +937,7 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
             }
             var obj = self.fields_registry.get_any([$elem.attr('widget'), self.fvg.fields[name].type]);
             if (!obj) {
-                throw new Error("Widget type '"+ key + "' is not implemented");
+                throw new Error("Widget type '"+ $elem.attr('widget') + "' is not implemented");
             }
             var w = new (obj)(self.view, instance.web.xml_to_json($elem[0]));
             var $label = self.labels[$elem.attr("name")];
@@ -2951,6 +2951,12 @@ instance.web.form.One2ManyViewManager = instance.web.ViewManager.extend({
         var pop = new instance.web.form.FormOpenPopup(self.o2m.view);
         pop.show_element(self.o2m.field.relation, id, self.o2m.build_context(), {
             title: _t("Open: ") + self.name,
+            create_function: function(data) {
+                return self.o2m.dataset.create(data).then(function(r) {
+                    self.o2m.dataset.set_ids(self.o2m.dataset.ids.concat([r.result]));
+                    self.o2m.dataset.on_change();
+                });
+            },
             write_function: function(id, data, options) {
                 return self.o2m.dataset.write(id, data, {}).then(function() {
                     self.o2m.reload_current_view();
@@ -2964,6 +2970,9 @@ instance.web.form.One2ManyViewManager = instance.web.ViewManager.extend({
             },
             form_view_options: {'not_interactible_on_create':true},
             readonly: self.o2m.get("effective_readonly")
+        });
+        pop.on_select_elements.add_last(function() {
+            self.o2m.reload_current_view();
         });
     },
 });
@@ -3148,7 +3157,7 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(_.
             });
         }).bind('hideDropdown', function() {
             self._drop_shown = false;
-        }).bind('hideDropdown', function() {
+        }).bind('showDropdown', function() {
             self._drop_shown = true;
         });
         self.tags = self.$text.textext()[0].tags();
@@ -3336,6 +3345,208 @@ instance.web.form.Many2ManyListView = instance.web.ListView.extend(/** @lends in
         });
     }
 });
+
+instance.web.form.FieldMany2ManyKanban = instance.web.form.AbstractField.extend(_.extend({}, instance.web.form.CompletionFieldMixin, {
+    disable_utility_classes: true,
+    init: function(field_manager, node) {
+        this._super(field_manager, node);
+        instance.web.form.CompletionFieldMixin.init.call(this);
+        m2m_kanban_lazy_init();
+        this.is_loaded = $.Deferred();
+        this.initial_is_loaded = this.is_loaded;
+        this.is_setted = $.Deferred();
+    },
+    start: function() {
+        this._super.apply(this, arguments);
+
+        var self = this;
+
+        this.dataset = new instance.web.form.Many2ManyDataSet(this, this.field.relation);
+        this.dataset.m2m = this;
+        this.dataset.on_unlink.add_last(function(ids) {
+            self.dataset_changed();
+        });
+        
+        this.is_setted.then(function() {
+            self.load_view();
+        });
+        this.is_loaded.then(function() {
+            self.on("change:effective_readonly", self, function() {
+                self.is_loaded = self.is_loaded.pipe(function() {
+                    self.kanban_view.destroy();
+                    return $.when(self.load_view()).then(function() {
+                        self.reload_content();
+                    });
+                });
+            });
+        })
+    },
+    set_value: function(value_) {
+        value_ = value_ || [];
+        if (value_.length >= 1 && value_[0] instanceof Array) {
+            value_ = value_[0][2];
+        }
+        this._super(value_);
+        this.dataset.set_ids(value_);
+        var self = this;
+        self.reload_content();
+        this.is_setted.resolve();
+    },
+    load_view: function() {
+        var self = this;
+        this.kanban_view = new instance.web.form.Many2ManyKanbanView(this, this.dataset, false, {
+                    'create_text': _t("Add"),
+                    'creatable': self.get("effective_readonly") ? false : true,
+                    'quick_creatable': self.get("effective_readonly") ? false : true,
+            });
+        var embedded = (this.field.views || {}).kanban;
+        if (embedded) {
+            this.kanban_view.set_embedded_view(embedded);
+        }
+        this.kanban_view.m2m = this;
+        var loaded = $.Deferred();
+        this.kanban_view.on_loaded.add_last(function() {
+            self.initial_is_loaded.resolve();
+            loaded.resolve();
+        });
+        this.kanban_view.do_switch_view.add_last(_.bind(this.open_popup, this));
+        $.async_when().then(function () {
+            self.kanban_view.appendTo(self.$element);
+        });
+        return loaded;
+    },
+    reload_content: function() {
+        var self = this;
+        this.is_loaded = this.is_loaded.pipe(function() {
+            return self.kanban_view.do_search(self.build_domain(), self.dataset.get_context(), []);
+        });
+    },
+    dataset_changed: function() {
+        this.set({'value': [commands.replace_with(this.dataset.ids)]});
+    },
+    open_popup: function(type, unused) {
+        if (type !== "form")
+            return;
+        var self = this;
+        if (this.dataset.index === null) {
+            var pop = new instance.web.form.SelectCreatePopup(this);
+            pop.select_element(
+                this.field.relation,
+                {
+                    title: _t("Add: ") + this.name
+                },
+                new instance.web.CompoundDomain(this.build_domain(), ["!", ["id", "in", this.dataset.ids]]),
+                this.build_context()
+            );
+            pop.on_select_elements.add(function(element_ids) {
+                _.each(element_ids, function(one_id) {
+                    if(! _.detect(self.dataset.ids, function(x) {return x == one_id;})) {
+                        self.dataset.set_ids([].concat(self.dataset.ids, [one_id]));
+                        self.dataset_changed();
+                        self.reload_content();
+                    }
+                });
+            });
+        } else {
+            var id = self.dataset.ids[self.dataset.index];
+            var pop = new instance.web.form.FormOpenPopup(self.view);
+            pop.show_element(self.field.relation, id, self.build_context(), {
+                title: _t("Open: ") + self.name,
+                write_function: function(id, data, options) {
+                    return self.dataset.write(id, data, {}).then(function() {
+                        self.reload_content();
+                    });
+                },
+                alternative_form_view: self.field.views ? self.field.views["form"] : undefined,
+                parent_view: self.view,
+                child_name: self.name,
+                readonly: self.get("effective_readonly")
+            });
+        }
+    },
+    add_id: function(id) {
+        this.quick_create.add_id(id);
+    },
+}));
+
+function m2m_kanban_lazy_init() {
+if (instance.web.form.Many2ManyKanbanView)
+    return;
+instance.web.form.Many2ManyKanbanView = instance.web_kanban.KanbanView.extend({
+    quick_create_class: 'instance.web.form.Many2ManyQuickCreate',
+    _is_quick_create_enabled: function() {
+        return this._super() && ! this.group_by;
+    },
+});
+instance.web.form.Many2ManyQuickCreate = instance.web.Widget.extend({
+    template: 'Many2ManyKanban.quick_create',
+    
+    /**
+     * close_btn: If true, the widget will display a "Close" button able to trigger
+     * a "close" event.
+     */
+    init: function(parent, dataset, context, buttons) {
+        this._super(parent);
+        this.m2m = this.getParent().view.m2m;
+        this.m2m.quick_create = this;
+        this._dataset = dataset;
+        this._buttons = buttons || false;
+        this._context = context || {};
+    },
+    start: function () {
+        var self = this;
+        self.$text = this.$element.find('input').css("width", "200px");
+        self.$text.textext({
+            plugins : 'arrow autocomplete',
+            autocomplete: {
+                render: function(suggestion) {
+                    return $('<span class="text-label"/>').
+                             data('index', suggestion['index']).html(suggestion['label']);
+                }
+            },
+            ext: {
+                autocomplete: {
+                    selectFromDropdown: function() {
+                        $(this).trigger('hideDropdown');
+                        var index = Number(this.selectedSuggestionElement().children().children().data('index'));
+                        var data = self.search_result[index];
+                        if (data.id) {
+                            self.add_id(data.id);
+                        } else {
+                            data.action();
+                        }
+                    },
+                },
+                itemManager: {
+                    itemToString: function(item) {
+                        return item.name;
+                    },
+                },
+            },
+        }).bind('getSuggestions', function(e, data) {
+            var _this = this;
+            var str = !!data ? data.query || '' : '';
+            self.m2m.get_search_result(str).then(function(result) {
+                self.search_result = result;
+                $(_this).trigger('setSuggestions', {result : _.map(result, function(el, i) {
+                    return _.extend(el, {index:i});
+                })});
+            });
+        });
+        self.$text.focusout(function() {
+            self.$text.val("");
+        });
+    },
+    focus: function() {
+        this.$text.focus();
+    },
+    add_id: function(id) {
+        var self = this;
+        self.$text.val("");
+        self.trigger('added', id);
+    },
+});
+}
 
 /**
  * Class with everything which is common between FormOpenPopup and SelectCreatePopup.
@@ -4006,7 +4217,8 @@ instance.web.form.widgets = new instance.web.Registry({
     'selection' : 'instance.web.form.FieldSelection',
     'many2one' : 'instance.web.form.FieldMany2One',
     'many2many' : 'instance.web.form.FieldMany2Many',
-    'many2manytags' : 'instance.web.form.FieldMany2ManyTags',
+    'many2many_tags' : 'instance.web.form.FieldMany2ManyTags',
+    'many2many_kanban' : 'instance.web.form.FieldMany2ManyKanban',
     'one2many' : 'instance.web.form.FieldOne2Many',
     'one2many_list' : 'instance.web.form.FieldOne2Many',
     'reference' : 'instance.web.form.FieldReference',
