@@ -500,9 +500,9 @@ class res_config_settings(osv.osv_memory):
         # overridden to make fields of installed modules readonly
         res = super(res_config_settings, self).fields_get(cr, uid, allfields, context, write_access)
         classified = self._get_classified_fields(cr, uid, context)
-        for name, module in classified['module']:
-            if name in res and module.state in ('installed', 'to install', 'to upgrade'):
-                res[name]['readonly'] = False
+        #for name, module in classified['module']:
+        #   if name in res and module.state in ('installed', 'to install', 'to upgrade'):
+        #       res[name]['readonly'] = False
         return res
 
     def execute(self, cr, uid, ids, context=None):
@@ -533,6 +533,7 @@ class res_config_settings(osv.osv_memory):
 
         # module fields: install immediately the selected modules
         to_install_ids = []
+        to_uninstall_ids = []
         for name, module in classified['module']:
             if config[name]:
                 if module.state == 'uninstalled': to_install_ids.append(module.id)
