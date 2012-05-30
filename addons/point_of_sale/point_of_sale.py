@@ -869,8 +869,6 @@ class pos_order(osv.osv):
                 tax_amount = 0
                 taxes = [t for t in line.product_id.taxes_id]
                 computed = account_tax_obj.compute_all(cr, uid, taxes, line.price_unit * (100.0-line.discount) / 100.0, line.qty)
-                print "#### TAX: %r" % (taxes,)
-                print "#### TAX2: %r" % (computed,)
                 computed_taxes = computed['taxes']
 
                 for tax in computed_taxes:
