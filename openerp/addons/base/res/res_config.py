@@ -502,7 +502,7 @@ class res_config_settings(osv.osv_memory):
         classified = self._get_classified_fields(cr, uid, context)
         for name, module in classified['module']:
             if name in res and module.state in ('installed', 'to install', 'to upgrade'):
-                res[name]['readonly'] = True
+                res[name]['readonly'] = False
         return res
 
     def execute(self, cr, uid, ids, context=None):
@@ -534,10 +534,14 @@ class res_config_settings(osv.osv_memory):
         # module fields: install immediately the selected modules
         to_install_ids = []
         for name, module in classified['module']:
-            if config[name] and module.state == 'uninstalled':
-                to_install_ids.append(module.id)
+            if config[name]:
+                if module.state == 'uninstalled': to_install_ids.append(module.id)
+            else:
+                if module.state in ['installed','upgrade']: to_uninstall_ids.append(module.id)
         if to_install_ids:
             ir_module.button_immediate_install(cr, uid, to_install_ids, context)
+        if to_uninstall_ids:
+            ir_module.module_uninstall(cr, uid, to_uninstall_ids, context)
 
         # force client-side reload (update user menu and current view)
         return {
