@@ -267,8 +267,13 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
         f = _(fields).detect(function (field) {
             // TODO: levenshtein between header and field.string
             return field.name === name
-                || field.string.toLowerCase() === name.toLowerCase();
         });
+        if (!f) {
+            f = _(fields).detect(function (field) {
+                // TODO: levenshtein between header and field.string
+               return field.string.toLowerCase() === name.toLowerCase();
+            });
+        }
         if (f) { return f.name; }
 
         // if ``name`` is a path (o2m), we need to recurse through its .fields
@@ -279,8 +284,13 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
         f = _(fields).detect(function (field) {
             // field.name for o2m is $foo/id, so we want to match on id
             return field.id === column_name
-                || field.string.toLowerCase() === column_name.toLowerCase()
         });
+        if (!f) {
+            f = _(fields).detect(function (field) {
+            // field.name for o2m is $foo/id, so we want to match on id
+            return field.string.toLowerCase() === column_name.toLowerCase()
+            });
+        }
         if (!f) { return undefined; }
 
         // if we found a matching field for the first path section, recurse in
