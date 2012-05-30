@@ -87,7 +87,6 @@ class crm_helpdesk(base_state, osv.osv):
         'email_from': lambda s, cr, uid, c: s._get_default_email(cr, uid, c),
         'state': lambda *a: 'draft',
         'date': lambda *a: fields.datetime.now(),
-        'section_id': lambda s, cr, uid, c: s._get_default_section_id(cr, uid, c),
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
     }
@@ -141,6 +140,13 @@ class crm_helpdesk(base_state, osv.osv):
                 values.update(state=crm.AVAILABLE_STATES[1][0]) #re-open
             res = self.write(cr, uid, [case.id], values, context=context)
         return res
+
+    # ******************************
+    # OpenChatter
+    # ******************************
+    
+	def case_get_note_msg_prefix(self, cr, uid, id, context=None):
+		return 'Helpdesk'
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
