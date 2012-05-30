@@ -533,7 +533,7 @@ class account_analytic_account(osv.osv):
     _description = 'Analytic Account'
     
     _columns = {
-        'use_issues' : fields.boolean('Issue Tracking:', help="Check this field if this project manages issues"),
+        'use_issues' : fields.boolean('Issues Tracking', help="Check this field if this project manages issues"),
     }
 #    _defaults = {
 #        'use_issues': True,

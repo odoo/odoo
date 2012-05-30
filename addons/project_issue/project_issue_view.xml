@@ -360,9 +360,13 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
-            	<field name="use_tasks" position="after">
-                    <field name="use_issues"/>
-                </field>
+            	<xpath expr='//tr[@name="use_tasks"]' position='after'>
+                    <tr name="use_issues">
+                        <th>Issues Tracking</th>
+                        <td><field name="use_issues" nolabel="1"/></td>
+                        <td><button class="oe_btn_width" name="%(act_project_project_2_project_issue_all)d" string="Issues" type="action" attrs="{'invisible':[('use_issues','=', 0)]}"/></td>
+                    </tr>
+                </xpath>
                 <field name="priority" position="before">
                     <field name="project_escalation_id"/>
                     <field name="reply_to"/>

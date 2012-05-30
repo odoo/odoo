@@ -7,8 +7,14 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
+                <xpath expr='//tr[@name="use_tasks"]' position='after'>
+                    <tr name="use_timesheets">
+                        <th>Timesheets</th>
+                        <td><field name="use_timesheets" nolabel="1"/></td>
+                        <td><button class="oe_btn_width" name="open_timesheets" string="Timesheets" type="object" attrs="{'invisible':[('use_timesheets','=', 0)]}"/></td>
+                    </tr>
+                </xpath>
                 <field name="use_tasks" position='after'>
-                    <field name="use_timesheets"/>
                     <field name="amount_to_invoice" invisible="True"/>
                     <field name="time_to_invoice" invisible="True"/>
                 </field>
@@ -58,7 +64,7 @@
             <field name="inherit_id" ref="project_invoice_form"/>
             <field name="arch" type="xml">
                 <field name="partner_id" position="replace">
-                    <field colspan="4" name="partner_id" on_change="onchange_partner_id(partner_id)" select="1" string="Customer"  attrs="{'required':[('to_invoice','!=',False)]}"/>
+                    <field name="partner_id" on_change="onchange_partner_id(partner_id)" select="1" string="Customer"  attrs="{'required':[('to_invoice','!=',False)]}"/>
                 </field>
             </field>
         </record>
