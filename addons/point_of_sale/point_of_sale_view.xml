@@ -861,8 +861,7 @@
                     <div class="oe_form_topbar">
                         <button name="open" type="workflow" string="Validate &amp; Open Session" states="opening_control" /> 
                         <button name="cashbox_control" type="workflow" string="End of Session" states="opened" /> 
-                        <button name="close" type="workflow" string="Validate &amp; Close" states="closing_control" />
-
+                        <button name="close" type="workflow" string="Validate &amp; Close" states="closing_control,opened" />
 
                         <div class="oe_right">
                             <field name="state" widget="statusbar" statusbar_visible="opening_control,opened,closing_control,closed" nolabel="1"/>
@@ -872,6 +871,8 @@
 
                     <group colspan="4" col="4">
                         <field name="config_id"/>
+                        <field name="has_opening_control" invisible="1" />
+                        <field name="has_closing_control" invisible="1" />
             			<group colspan="2" col="2">
             				<button name="%(action_pos_box_in)d" string="Put Money In" type="action" states="opened"/>
             				<button name="%(action_pos_box_out)d" string="Take Money Out" type="action" states="opened"/>
