@@ -70,10 +70,10 @@ class stock_config_settings(osv.osv_memory):
             implied_group='stock.group_locations',
             help="""This allows to configure and use multiple stock locations and warehouses,
                 instead of having a single default one."""),
-        'group_product_variant': fields.boolean("Product Variant",
+        'group_product_variant': fields.boolean("Support Multiple Variants per Product",
             implied_group='product.group_product_variant',
-            help="""This allows to configure and use Product Variant."""),                
-        'decimal_precision': fields.integer('Decimal Precision on Weight'),
+            help="""Allow to manage several variants per product. As an example, if you  sell T-Shirts, for the same "Linux T-Shirt", you may have variants on  sizes or colors; S, M, L, XL, XXL."""),                
+        'decimal_precision': fields.integer('Decimal Precision on Weights', help="As an example, a decimal precision of 2 will allow prices   like: 9.99 EUR, whereas a decimal precision of 4 will allow prices  like:  0.0231 EUR per unit."),
     }
 
     def get_default_dp(self, cr, uid, fields, context=None):

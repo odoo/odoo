@@ -28,13 +28,10 @@ class base_config_settings(osv.osv_memory):
         'module_multi_company': fields.boolean('Multi Company',
             help="""Work in multi-company environments, with appropriate security access between companies.
                 This installs the module multi_company."""),
-        'module_portal': fields.boolean('Portal',
-            help="""Define a portal for your customers or suppliers.  The portal is a group of
-                external users that has specific access rights and rules.
-                This installs the module portal."""),
-        'module_share': fields.boolean('Share',
-            help="""Share OpenERP documents (records) with external users.
-                This installs the module share."""),
+        'module_portal': fields.boolean('Activate Customer Portal',
+            help="""The portal will give access to a series of documents for your  customers; his quotations, his invoices, his projects, etc."""),
+        'module_share': fields.boolean('Allow Sharing Resources to External Users',
+            help="""As an example, you will be able to share a project or some tasks to  your customers, or quotes/sales to several persons at your customer  company, or your agenda availabilities to your contacts."""),
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

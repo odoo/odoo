@@ -56,7 +56,7 @@
                             <separator string="Accounting Configuration" colspan="4"/>
                             <field name ="complete_tax_set" invisible="1"/>
                             <newline/>
-                            <group colspan="2" col="2">
+                            <group colspan="" col="2">
                                 <field name="default_sale_tax" domain="[('type_tax_use','=','sale'), ('company_id','=',company_id)]" attrs="{'invisible': [('has_chart_of_accounts','=',False)]}"/>
                                 <field name="module_account_accountant"/>
                                 <field name="module_account_asset"/>

@@ -37,14 +37,14 @@ class account_config_settings(osv.osv_memory):
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'has_default_company': fields.boolean('Has default company', readonly=True),
         'expects_chart_of_accounts': fields.related('company_id', 'expects_chart_of_accounts', type='boolean',
-            string='Chart of Accounts for this Company',
+            string='This Company Has it\'s Own Chart of Accounts',
             help="""Check this box if this company is a legal entity."""),
         'currency_id': fields.related('company_id', 'currency_id', type='many2one', relation='res.currency', required=True,
             string='Default Company Currency', help="Main currency of the company."),
         'paypal_account': fields.related('company_id', 'paypal_account', type='char', size=128,
-            string='Paypal Account', help="Paypal account (email) for receiving online payments (credit card, etc.)"),
+            string='Paypal Account', help="Paypal account (email) for receiving online payments (credit card, etc.) If you set a paypal account, the customer  will be able to pay your invoices or quotations with a button \"Pay with  Paypal\" in automated emails or through the OpenERP portal."),
         'company_footer': fields.related('company_id', 'rml_footer2', type='char', size=250, readonly=True,
-            string='Bank Accounts on Reports', help="Bank accounts as printed on footer of reports."),
+            string='Bank Accounts on Reports', help="Bank accounts as printed in the footer of each customer  document. This is for information purpose only, you should configure  these bank accounts through the above button \"Configure Bank Accounts\"."),
 
         'has_chart_of_accounts': fields.boolean('Company has a chart of accounts'),
         'chart_template_id': fields.many2one('account.chart.template', 'Chart Template', domain="[('visible','=', True)]"),
@@ -62,23 +62,23 @@ class account_config_settings(osv.osv_memory):
         'period': fields.selection([('month', 'Monthly'), ('3months','3 Monthly')], 'Periods', required=True),
 
         'sale_journal_id': fields.many2one('account.journal', 'Sale Journal'),
-        'sale_sequence_prefix': fields.related('sale_journal_id', 'sequence_id', 'prefix', type='char', string='Invoice Sequence'),
+        'sale_sequence_prefix': fields.related('sale_journal_id', 'sequence_id', 'prefix', type='char', string='Next Invoice Number'),
         'sale_sequence_next': fields.related('sale_journal_id', 'sequence_id', 'number_next', type='integer', string='Next Invoice Number'),
         'sale_refund_journal_id': fields.many2one('account.journal', 'Sale Refund Journal'),
-        'sale_refund_sequence_prefix': fields.related('sale_refund_journal_id', 'sequence_id', 'prefix', type='char', string='Credit Note Sequence'),
+        'sale_refund_sequence_prefix': fields.related('sale_refund_journal_id', 'sequence_id', 'prefix', type='char', string=' Next Credit Note Number'),
         'sale_refund_sequence_next': fields.related('sale_refund_journal_id', 'sequence_id', 'number_next', type='integer', string='Next Credit Note Number'),
         'purchase_journal_id': fields.many2one('account.journal', 'Purchase Journal'),
-        'purchase_sequence_prefix': fields.related('purchase_journal_id', 'sequence_id', 'prefix', type='char', string='Supplier Invoice Sequence'),
+        'purchase_sequence_prefix': fields.related('purchase_journal_id', 'sequence_id', 'prefix', type='char', string='Next Supplier Invoice Number'),
         'purchase_sequence_next': fields.related('purchase_journal_id', 'sequence_id', 'number_next', type='integer', string='Next Supplier Invoice Number'),
         'purchase_refund_journal_id': fields.many2one('account.journal', 'Purchase Refund Journal'),
-        'purchase_refund_sequence_prefix': fields.related('purchase_refund_journal_id', 'sequence_id', 'prefix', type='char', string='Supplier Credit Note Sequence'),
+        'purchase_refund_sequence_prefix': fields.related('purchase_refund_journal_id', 'sequence_id', 'prefix', type='char', string='Next Supplier Credit Note Number'),
         'purchase_refund_sequence_next': fields.related('purchase_refund_journal_id', 'sequence_id', 'number_next', type='integer', string='Next Supplier Credit Note Number'),
 
         'module_account_check_writing': fields.boolean('Check Writing',
             help="""This allows you to check writing and printing.
                 This installs the module account_check_writing."""),
         'module_account_accountant': fields.boolean('Accountant Features',
-            help="""If you do not check this box, you will be able to do Invoicing & Payments, but not accounting (Journal Items, Chart of  Accounts, ...)."""),
+            help="""If you do not check this box, you will be able to do invoicing & payments, but not accounting (Journal Items, Chart of  Accounts, ...)."""),
         'module_account_asset': fields.boolean('Assets Management',
             help="""This allows you to manage the assets owned by a company or a person.
                 It keeps track of the depreciation occurred on those assets, and creates account move for those depreciation lines.
@@ -113,8 +113,8 @@ class account_config_settings(osv.osv_memory):
             help="Allows you to put invoices in pro-forma state."),
         'default_sale_tax': fields.many2one('account.tax', 'Default Sale Tax'),
         'default_purchase_tax': fields.many2one('account.tax', 'Default Purchase Tax'),
-        'decimal_precision': fields.integer('Decimal Precision',
-            help="""Set the decimal precision for rounding results in accounting."""),
+        'decimal_precision': fields.integer('Decimal Precision on Journal Entries',
+            help="""As an example, a decimal precision of 2 will allow journal entries  like: 9.99 EUR, whereas a decimal precision of 4 will allow journal  entries like: 0.0231 EUR."""),
     }
 
     def _default_company(self, cr, uid, context=None):
