@@ -515,6 +515,15 @@ class task(base_stage, osv.osv):
     _date_name = "date_start"
     _inherit = ['ir.needaction_mixin', 'mail.thread']
 
+    def _get_default_project_id(self, cr, uid, context=None):
+        """ Gives default section by checking if present in the context """
+        return (self._resolve_project_id_from_context(cr, uid, context=context) or False)
+
+    def _get_default_stage_id(self, cr, uid, context=None):
+        """ Gives default stage_id """
+        project_id = self._get_default_project_id(cr, uid, context=context)
+        return self.stage_find(cr, uid, [], False, [('state', '=', 'draft')], context=context)
+
     def _resolve_project_id_from_context(self, cr, uid, context=None):
         """ Returns ID of project based on the value of 'default_project_id'
             context key, or None if it cannot be resolved to a single
@@ -735,6 +744,8 @@ class task(base_stage, osv.osv):
     }
 
     _defaults = {
+        'stage_id': _get_default_stage_id,
+        'project_id': _get_default_project_id,
         'state': 'draft',
         'kanban_state': 'normal',
         'priority': '2',
