@@ -49,6 +49,13 @@ import tools
 
 _logger = logging.getLogger(__name__)
 
+# Scheduling wake-ups (see below) can be disabled when the polling process
+# workers are used instead of the managed thread workers. (I.e. wake-ups are
+# not used since polling is used. And polling is used when the cron are
+# handled by running special processes, e.g. openerp-cron-worker, instead
+# of the general openerp-server script.)
+enable_schedule_wakeup = True
+
 # Heapq of database wake-ups. Note that 'database wake-up' meaning is in
 # the context of the cron management. This is not originally about loading
 # a database, although having the database name in the queue will
@@ -135,7 +142,6 @@ def cancel_all():
         _wakeups = []
         _wakeup_by_db = {}
 
-
 def schedule_wakeup(timestamp, db_name):
     """ Schedule a new wake-up for a database.
 
@@ -147,6 +153,9 @@ def schedule_wakeup(timestamp, db_name):
     :param timestamp: when the wake-up is scheduled.
 
     """
+    global enable_schedule_wakeup
+    if not enable_schedule_wakeup:
+        return
     if not timestamp:
         return
     with _wakeups_lock:

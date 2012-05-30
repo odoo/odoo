@@ -506,7 +506,7 @@ def post_request(worker, req):
     rss, vms = psutil.Process(os.getpid()).get_memory_info()
     if vms > config['virtual_memory_reset']:
         _logger.info('Virtual memory consumption '
-            'too high, rebooting the worker.')
+            'too high, killing the worker.')
         worker.alive = False # Commit suicide after the request.
 
 # SIGXCPU (exceeded CPU time) signal handler will raise an exception.

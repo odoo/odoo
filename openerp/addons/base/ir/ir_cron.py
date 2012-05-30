@@ -39,6 +39,14 @@ from tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
+# This variable can be set by a signal handler to stop the infinite loop in
+# ir_cron._run()
+quit_signal_received = False
+
+# This variable can be checked to know if ir_cron._run() is processing a job or
+# sleeping.
+job_in_progress = True
+
 def str2tuple(s):
     return eval('tuple(%s)' % (s or ''))
 
@@ -265,6 +273,153 @@ class ir_cron(osv.osv):
         finally:
             cr.commit()
             cr.close()
+
+    def _process_job(self, cr, job):
+        """ Run a given job taking care of the repetition.
+
+        The cursor has a lock on the job (aquired by _acquire_job()).
+
+        :param job: job to be run (as a dictionary).
+        """
+        try:
+            now = datetime.now() 
+            nextcall = datetime.strptime(job['nextcall'], DEFAULT_SERVER_DATETIME_FORMAT)
+            numbercall = job['numbercall']
+
+            ok = False
+            while nextcall < now and numbercall:
+                if numbercall > 0:
+                    numbercall -= 1
+                if not ok or job['doall']:
+                    self._callback(cr, job['user_id'], job['model'], job['function'], job['args'], job['id'])
+                if numbercall:
+                    nextcall += _intervalTypes[job['interval_type']](job['interval_number'])
+                ok = True
+            addsql = ''
+            if not numbercall:
+                addsql = ', active=False'
+            cr.execute("UPDATE ir_cron SET nextcall=%s, numbercall=%s"+addsql+" WHERE id=%s",
+                       (nextcall.strftime(DEFAULT_SERVER_DATETIME_FORMAT), numbercall, job['id']))
+
+        finally:
+            cr.commit()
+            cr.close()
+
+    @classmethod
+    def _acquire_job(cls, db_name):
+        # TODO remove 'check' argument from addons/base_action_rule/base_action_rule.py
+        """ Try to process one cron job.
+
+        This selects in database all the jobs that should be processed. It then
+        tries to lock each of them and, if it succeeds, run the cron job (if it
+        doesn't succeed, it means the job was already locked to be taken care
+        of by another thread) and return.
+
+        If a job was processed, returns True, otherwise returns False.
+        """
+        db = openerp.sql_db.db_connect(db_name)
+        cr = db.cursor()
+        try:
+            # Careful to compare timestamps with 'UTC' - everything is UTC as of v6.1.
+            cr.execute("""SELECT * FROM ir_cron
+                          WHERE numbercall != 0
+                              AND active AND nextcall <= (now() at time zone 'UTC')
+                          ORDER BY priority""")
+            for job in cr.dictfetchall():
+                task_cr = db.cursor()
+                try:
+                    # Try to grab an exclusive lock on the job row from within the task transaction
+                    acquired_lock = False
+                    task_cr.execute("""SELECT *
+                                       FROM ir_cron
+                                       WHERE id=%s
+                                       FOR UPDATE NOWAIT""",
+                                   (job['id'],), log_exceptions=False)
+                    acquired_lock = True
+                except psycopg2.OperationalError, e:
+                    if e.pgcode == '55P03':
+                        # Class 55: Object not in prerequisite state; 55P03: lock_not_available
+                        _logger.debug('Another process/thread is already busy executing job `%s`, skipping it.', job['name'])
+                        continue
+                    else:
+                        # Unexpected OperationalError
+                        raise
+                finally:
+                    if not acquired_lock:
+                        # we're exiting due to an exception while acquiring the lot
+                        task_cr.close()
+
+                # Got the lock on the job row, run its code
+                _logger.debug('Starting job `%s`.', job['name'])
+                openerp.modules.registry.RegistryManager.check_registry_signaling(db_name)
+                registry = openerp.pooler.get_pool(db_name)
+                registry[cls._name]._process_job(task_cr, job)
+                openerp.modules.registry.RegistryManager.signal_caches_change(db_name)
+                return True
+
+        except psycopg2.ProgrammingError, e:
+            if e.pgcode == '42P01':
+                # Class 42 — Syntax Error or Access Rule Violation; 42P01: undefined_table
+                # The table ir_cron does not exist; this is probably not an OpenERP database.
+                _logger.warning('Tried to poll an undefined table on database %s.', db_name)
+            else:
+                raise
+        except Exception, ex:
+            _logger.warning('Exception in cron:', exc_info=True)
+
+        finally:
+            cr.commit()
+            cr.close()
+
+        return False
+
+    @classmethod
+    def _run(cls, db_names):
+        """
+        Class method intended to be run in a dedicated process to handle jobs.
+        This polls the database for jobs that can be run every 60 seconds.
+
+        :param db_names: list of database names to poll or callable to
+            generate such a list.
+        """
+        global quit_signal_received
+        while not quit_signal_received:
+            if callable(db_names):
+                names = db_names()
+            else:
+                names = db_names
+            for x in xrange(5):
+                if quit_signal_received:
+                    return
+                t1 = time.time()
+                for db_name in names:
+                    while True:
+                        # Small hack to re-use the openerp-server config:
+                        # If the cpu_time_limit has not its default value, we
+                        # truly want to establish limits.
+                        if openerp.tools.config['cpu_time_limit'] != 60:
+                            openerp.wsgi.core.pre_request('dummy', 'dummy')
+                        acquired = cls._acquire_job(db_name)
+                        if openerp.tools.config['cpu_time_limit'] != 60:
+                            class W(object):
+                                alive = True
+                            worker = W()
+                            openerp.wsgi.core.post_request(worker, 'dummy', 'dummy')
+                            if not worker.alive:
+                                return
+                        if not acquired:
+                            break
+                        if quit_signal_received:
+                            return
+                t2 = time.time()
+                t = t2 - t1
+                global job_in_progress
+                if t > 60:
+                    _logger.warning('Cron worker: processing all jobs took more than 1 minute to complete (%ss.).', int(t))
+                else:
+                    job_in_progress = False
+                    time.sleep(60 - t)
+                    job_in_progress = True
 
     def update_running_cron(self, cr):
         """ Schedule as soon as possible a wake-up for this database. """

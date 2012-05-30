@@ -1,0 +1,111 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+"""
+OpenERP cron jobs worker
+
+This script executes OpenERP cron jobs. Normally, cron jobs are handled by the
+OpenERP server but depending on deployment needs, independent worker processes
+can be used. This is especially the case when the server is run via Gunicorn.
+
+OpenERP cron jobs worker re-uses openerp-server command-line options but does
+not honor all of them.
+
+Meaningful options include:
+
+  -d, --database  comma-separated list of databases to monitor for cron jobs
+                  processing. If left empty, the worker monitors all databases
+                  (given by `psql -ls`).
+
+  --addons-path   as ususal.
+
+  --cpu-time-limit
+  --virtual-memory-limit
+  --virtual-memory-reset  Those three options have the same meaning the for
+                          the server with Gunicorn. The only catch is: To
+                          not enable rlimits by default, those options are
+                          honored only when --cpu-time-limte is different than
+                          60 (its default value).
+"""
+
+import logging
+import os
+import signal
+import sys
+
+import openerp
+
+# Also use the `openerp` logger for the main script.
+_logger = logging.getLogger('openerp')
+
+# Variable keeping track of the number of calls to the signal handler defined
+# below. This variable is monitored by ``quit_on_signals()``.
+quit_signals_received = 0
+
+# TODO copy/pasted from openerp-server
+def signal_handler(sig, frame):
+    """ Signal handler: exit ungracefully on the second handled signal.
+
+    :param sig: the signal number
+    :param frame: the interrupted stack frame or None
+    """
+    global quit_signals_received
+    quit_signals_received += 1
+    import openerp.addons.base
+    openerp.addons.base.ir.ir_cron.quit_signal_received = True
+    if quit_signals_received == 1 and openerp.addons.base.ir.ir_cron.job_in_progress:
+        _logger.info("Waiting for the current job to complete.")
+        print "Waiting for the current job to complete."
+        print "Hit Ctrl-C again to force shutdown."
+    if quit_signals_received > 1:
+        # logging.shutdown was already called at this point.
+        sys.stderr.write("Forced shutdown.\n")
+        os._exit(0)
+
+# TODO copy/pasted from openerp-server
+def setup_signal_handlers():
+    """ Register the signal handler defined above. """
+    SIGNALS = map(lambda x: getattr(signal, "SIG%s" % x), "INT TERM".split())
+    if os.name == 'posix':
+        map(lambda sig: signal.signal(sig, signal_handler), SIGNALS)
+    elif os.name == 'nt':
+        import win32api
+        win32api.SetConsoleCtrlHandler(lambda sig: signal_handler(sig, None), 1)
+
+def list_databases():
+    import subprocess
+    p1 = subprocess.Popen(["psql", "-lAt"], stdout=subprocess.PIPE)
+    p2 = subprocess.Popen(["cut", "-f", "1", "-d", "|"], stdin=p1.stdout, stdout=subprocess.PIPE)
+    p1.stdout.close()  # Allow p1 to receive a SIGPIPE if p2 exits.
+    output = p2.communicate()[0]
+    databases = output.splitlines()
+    # TODO filter out non-OpenERP databases
+    databases = [d for d in databases if d not in ['template0', 'template1', 'postgres']]
+    databases = [d for d in databases if not d.startswith('postgres')]
+    return databases
+
+if __name__ == '__main__':
+    os.environ['TZ'] = 'UTC'
+    openerp.tools.config.parse_config(sys.argv[1:])
+    config = openerp.tools.config
+    if config['log_handler'] == [':INFO']:
+        # Replace the default value, which is suitable for openerp-server.
+        config['log_handler'].append('openerp.addons.base.ir.ir_cron:DEBUG')
+    setup_signal_handlers()
+    openerp.modules.module.initialize_sys_path()
+    openerp.modules.loading.open_openerp_namespace()
+    openerp.netsvc.init_logger()
+    openerp.cron.enable_schedule_wakeup = False
+    openerp.multi_process = True # enable multi-process signaling
+    import openerp.addons.base
+    print "OpenERP cron jobs worker. Hit Ctrl-C to exit."
+    print "Documentation is available at the top of the `opener-cron-worker` file."
+    if config['db_name']:
+        db_names = config['db_name'].split(',')
+        print "Monitoring %s databases." % len(db_names)
+    else:
+        db_names = list_databases
+        print "Monitored databases are auto-discovered."
+    openerp.addons.base.ir.ir_cron.ir_cron._run(db_names)
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -27,6 +27,7 @@ SUPERUSER_ID = 1
 
 import addons
 import conf
+import cron
 import loglevels
 import modules
 import netsvc
