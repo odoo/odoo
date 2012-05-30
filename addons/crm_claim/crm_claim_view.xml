@@ -87,10 +87,10 @@
                         states="draft,pending" type="object"
                         icon="gtk-go-forward" groups="base.group_no_one"/>
                     <button name="case_close" string="Done"
-                        states="open,draft,pending" type="object"
+                        states="draft,open,pending" type="object"
                         icon="gtk-close" groups="base.group_no_one"/>
                     <button name="case_refuse" string="Refuse"
-                        states="open,draft,pending" type="object"
+                        states="draft,open,pending" type="object"
                         icon="gtk-cancel" groups="base.group_no_one"/>
                 </tree>
             </field>
@@ -108,7 +108,7 @@
                     <button name="case_close" string="Done" type="object"
                             states="open,pending"/>
                     <button name="case_refuse" string="Refuse" type="object"
-                            states="open,pending"/>
+                            states="draft,open,pending"/>
                     <button name="case_reset" string="Reset to Draft" type="object"
                             states="cancel,done"/>
                     <button name="case_cancel" string="Cancel" type="object"
