@@ -97,7 +97,14 @@
     # ------------------------------------------------------
     # Project Phase
     # ------------------------------------------------------
-
+        <act_window id="act_project_phases"
+            name="Phases"
+            src_model="project.project"
+            res_model="project.phase"
+            view_type="form"
+            view_mode="tree,form"
+            context="{'search_default_project_id': [active_id], 'default_project_id': active_id}"/>
+        
         <record id="project_phase_form" model="ir.ui.view">
             <field name="name">Inherit project form : Phase</field>
             <field name="model">project.project</field>
@@ -113,15 +120,6 @@
                 </xpath>
             </field>
         </record>
-
-        <act_window id="act_project_phases"
-            name="Phases"
-            src_model="project.project"
-            res_model="project.phase"
-            view_type="form"
-            view_mode="tree,form"
-            context="{'search_default_project_id': [active_id], 'default_project_id': active_id}"
-        />
 
         <record id="view_project_kanban_phase" model="ir.ui.view">
             <field name="name">project.project.kanban.inherited</field>
