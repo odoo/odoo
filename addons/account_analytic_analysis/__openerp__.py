@@ -35,7 +35,7 @@ user-wise as well as month wise.
     "author": "Camptocamp",
     "website": "http://www.camptocamp.com/",
     "images": ["images/bill_tasks_works.jpeg","images/overpassed_accounts.jpeg"],
-    "depends": ["hr_timesheet_invoice", "sale","project"], #although sale is technically not required to install this module, all menuitems are located under 'Sales' application
+    "depends": ["hr_expense","hr_timesheet_invoice", "sale","project"], #although sale is technically not required to install this module, all menuitems are located under 'Sales' application
     "init_xml": [],
     "update_xml": [
                     "security/ir.model.access.csv",

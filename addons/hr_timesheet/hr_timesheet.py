@@ -196,7 +196,7 @@ class account_analytic_account(osv.osv):
     _description = 'Analytic Account'
     
     _columns = {
-        'use_timesheets': fields.boolean('Timesheets:', help="Check this field if this project manages timesheets"),
+        'use_timesheets': fields.boolean('Timesheets', help="Check this field if this project manages timesheets"),
     }
 
 account_analytic_account()

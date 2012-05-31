@@ -98,7 +98,7 @@ class account_analytic_account(osv.osv):
                             WHERE account_analytic_account.id IN %s \
                                 AND account_analytic_line.invoice_id IS NULL \
                                 AND account_analytic_line.to_invoice IS NOT NULL \
-                                AND account_analytic_journal.type IN ('purchase','general') \
+                                AND account_analytic_journal.type = 'sale' \
                             GROUP BY account_analytic_account.id;""", (parent_ids,))
                     for account_id, sum in cr.fetchall():
                         if account_id not in res:
@@ -224,7 +224,45 @@ class account_analytic_account(osv.osv):
                 res[account_id] = round(sum,2)
         res_final = res
         return res_final
+    
+    def _expense_invoiced_calc(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        res_final = {}
+        child_ids = tuple(ids) #We don't want consolidation for each of these fields because those complex computation is resource-greedy.
+        for i in child_ids:
+            res[i] =  0.0
+        if not child_ids:
+            return res
 
+        if child_ids:
+            cr.execute("select hel.analytic_account,SUM(hel.unit_amount*hel.unit_quantity) from hr_expense_line as hel\
+                        LEFT JOIN hr_expense_expense as he ON he.id = hel.expense_id\
+                        where he.state = 'paid' and hel.analytic_account IN %s \
+                        GROUP BY hel.analytic_account",(child_ids,))
+            for account_id, sum in cr.fetchall():
+                res[account_id] = sum
+        res_final = res
+        return res_final
+    
+    def _expense_to_invoice_calc(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        res_final = {}
+        child_ids = tuple(ids) #We don't want consolidation for each of these fields because those complex computation is resource-greedy.
+        for i in child_ids:
+            res[i] =  0.0
+        if not child_ids:
+            return res
+
+        if child_ids:
+            cr.execute("select hel.analytic_account, SUM(hel.unit_amount*hel.unit_quantity) from hr_expense_line as hel\
+                        LEFT JOIN hr_expense_expense as he ON he.id = hel.expense_id\
+                        where he.state = 'invoiced' and hel.analytic_account IN %s \
+                        GROUP BY hel.analytic_account",(child_ids,))
+            for account_id, sum in cr.fetchall():
+                res[account_id] = sum
+        res_final = res
+        return res_final
+    
     def _total_cost_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}
         res_final = {}
@@ -301,6 +339,17 @@ class account_analytic_account(osv.osv):
         for id in ids:
             res[id] = round(res.get(id, 0.0),2)
         return res
+    
+    def _remaining_expnse_calc(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        for account in self.browse(cr, uid, ids, context=context):
+            if account.expense_max != 0:
+                res[account.id] = account.expense_max - account.expense_invoiced
+            else:
+                res[account.id]=0.0
+        for id in ids:
+            res[id] = round(res.get(id, 0.0),2)
+        return res
 
     def _real_margin_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}
@@ -332,6 +381,34 @@ class account_analytic_account(osv.osv):
         for line in self.pool.get('account.analytic.line').browse(cr, uid, ids, context=context):
             result.add(line.account_id.id)
         return list(result)
+    
+    def _sum_of_fields(self, cr, uid, ids, name, arg, context=None):
+         res = dict([(i, {}) for i in ids])
+         total_max = 0.0
+         total_invoiced = 0.0
+         total_toinvoice = 0.0
+         total_remaining = 0.0
+         for account in self.browse(cr, uid, ids, context=context):
+            if account.fix_price_invoices:
+                total_max += account.amount_max 
+                total_invoiced += account.ca_invoiced
+                total_remaining += account.remaining_ca
+                total_toinvoice += account.ca_to_invoice
+            if account.invoice_on_timesheets:
+                total_max += account.quantity_max 
+                total_invoiced += account.hours_qtt_invoiced
+                total_remaining += account.remaining_hours
+                total_toinvoice += account.hours_qtt_non_invoiced
+            if account.charge_expenses:
+                total_max += account.expense_max 
+                total_invoiced += account.expense_invoiced
+                total_remaining += account.remaining_expense
+                total_toinvoice += account.expense_to_invoice
+            res[account.id]['est_total'] = total_max or 0.0
+            res[account.id]['invoiced_total'] =  total_invoiced or 0.0
+            res[account.id]['remaining_total'] = total_remaining or 0.0
+            res[account.id]['toinvoice_total'] =  total_toinvoice or 0.0
+         return res
 
     _columns = {
         'is_overdue_quantity' : fields.function(_is_overdue_quantity, method=True, type='boolean', string='Overdue Quantity',
@@ -385,9 +462,16 @@ class account_analytic_account(osv.osv):
         'month_ids': fields.function(_analysis_all, multi='analytic_analysis', type='many2many', relation='account_analytic_analysis.summary.month', string='Month'),
         'user_ids': fields.function(_analysis_all, multi='analytic_analysis', type="many2many", relation='account_analytic_analysis.summary.user', string='User'),
         'template_id':fields.many2one('account.analytic.account', 'Template Of Contract'),
+        'expense_invoiced' : fields.function(_expense_invoiced_calc, type="float"),
+        'expense_to_invoice' : fields.function(_expense_to_invoice_calc, type='float'),
+        'remaining_expense' : fields.function(_remaining_expnse_calc, type="float"), 
         #'fix_exp_max' : fields.float('Max. amt'),
         #'timesheet_max': fields.float('max_timesheet'),
-        #'expense_max': fields.float('expenses'),
+        'expense_max': fields.float('expenses'),
+        'est_total' : fields.function(_sum_of_fields, type="float",multi="sum_of_all"),
+        'invoiced_total' : fields.function(_sum_of_fields, type="float",multi="sum_of_all"),
+        'remaining_total' : fields.function(_sum_of_fields, type="float",multi="sum_of_all"),
+        'toinvoice_total' : fields.function(_sum_of_fields, type="float",multi="sum_of_all"),
     }
     def on_change_template(self, cr, uid, id, template_id):
         if not template_id:
@@ -404,6 +488,39 @@ class account_analytic_account(osv.osv):
         res['value']['pricelist_id'] = template.pricelist_id.id
         res['value']['description'] = template.description
         return res
+    
+    def open_hr_expense(self, cr, uid, ids, context=None):
+        account = self.browse(cr, uid, ids[0], context)
+        data_obj = self.pool.get('ir.model.data')
+        try:
+            journal_id = data_obj.get_object(cr, uid, 'hr_timesheet', 'analytic_journal').id
+        except ValueError:
+            journal_id = False
+        line_ids = self.pool.get('hr.expense.line').search(cr,uid,[('analytic_account','=',account.id)])
+        id2 = data_obj._get_id(cr, uid, 'hr_expense', 'view_expenses_form')
+        id3 = data_obj._get_id(cr, uid, 'hr_expense', 'view_expenses_tree')
+        if id2:
+            id2 = data_obj.browse(cr, uid, id2, context=context).res_id
+        if id3:
+            id3 = data_obj.browse(cr, uid, id3, context=context).res_id
+        domain = [('line_ids','in',line_ids)]
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Expenses'),
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'views': [(id3,'tree'),(id2,'form')],
+            'domain' : domain,
+            'res_model': 'hr.expense.expense',
+            'nodestroy': True,
+        }
+    
+    def hr_to_invoiced_expense(self, cr, uid, ids, context=None):
+         res = self.open_hr_expense(cr,uid,ids,context)
+         account = self.browse(cr, uid, ids[0], context)
+         line_ids = self.pool.get('hr.expense.line').search(cr,uid,[('analytic_account','=',account.id)])
+         res['domain'] = [('line_ids','in',line_ids),('state','=','invoiced')]
+         return res
 
 account_analytic_account()
 
