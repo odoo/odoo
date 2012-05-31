@@ -417,7 +417,7 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
                     this.quick.destroy();
                     delete this.quick;
                 });
-            self.quick.appendTo(self.$element.find('.oe_kanban_header'));
+            self.quick.appendTo($(".oe_kanban_group_list_header", self.$records));
             self.quick.focus();
         });
         this.$records.find('.oe_kanban_show_more').click(this.do_show_more);
@@ -466,7 +466,7 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
                 rec.insertBefore(self.$records.find('.oe_kanban_show_more'));
                 self.records.push(rec);
             } else {
-                rec.prependTo(self.$records);
+                rec.insertAfter($(".oe_kanban_group_list_header", self.$records));
                 self.records.unshift(rec);
             }
         });
@@ -502,7 +502,7 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
         this.dataset.read_ids([id], this.view.fields_keys)
             .then(function (records) {
                 self.view.dataset.ids.push(id);
-                self.do_add_records(records, 'prepend');
+                self.do_add_records(records, true);
             });
     }
 });
