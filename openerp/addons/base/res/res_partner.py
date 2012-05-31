@@ -132,7 +132,7 @@ class res_partner(osv.osv):
         'name': fields.char('Name', size=128, required=True, select=True),
         'date': fields.date('Date', select=1),
         'title': fields.many2one('res.partner.title','Title'),
-        'parent_id': fields.many2one('res.partner','Parent Partner'),
+        'parent_id': fields.many2one('res.partner','Company'),
         'child_ids': fields.one2many('res.partner', 'parent_id', 'Contacts'),
         'ref': fields.char('Reference', size=64, select=1),
         'lang': fields.selection(_lang_get, 'Language', help="If the selected language is loaded in the system, all documents related to this partner will be printed in this language. If not, it will be english."),
