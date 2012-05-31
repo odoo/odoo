@@ -33,5 +33,22 @@ class base_config_settings(osv.osv_memory):
         'module_share': fields.boolean('Allow Sharing Resources to External Users',
             help="""As an example, you will be able to share a project or some tasks to  your customers, or quotes/sales to several persons at your customer  company, or your agenda availabilities to your contacts."""),
     }
-
+    
+    def open_company(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+            
+        company_obj = self.pool.get('res.company')        
+        company_id = company_obj.browse(cr, uid, uid, context=context).id
+                            
+        return {
+            'name': 'Your Company',
+            'view_type': 'form',
+            'view_mode': 'form,tree',
+            'res_model': 'res.company',
+            'res_id': company_id,
+            'view_id': False,
+            'type': 'ir.actions.act_window',
+         }
+         
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
