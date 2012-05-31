@@ -2744,6 +2744,23 @@ class BaseModel(object):
                 _schema.debug("Table '%s': column '%s': dropped NOT NULL constraint",
                               self._table, column['attname'])
 
+    def _save_constraint(self, cr, constraint_name, type):
+        assert type in ('f', 'u')
+        cr.execute("""
+            SELECT 1 FROM ir_model_constraint, ir_module_module
+            WHERE ir_model_constraint.module=ir_module_module.id
+                AND ir_model_constraint.name=%s
+                AND ir_module_module.name=%s
+            """, (constraint_name, self._module))
+        if not cr.rowcount:
+            cr.execute("""
+                INSERT INTO ir_model_constraint
+                    (name, date_init, date_update, module, model, type)
+                VALUES (%s, now() AT TIME ZONE 'UTC', now() AT TIME ZONE 'UTC',
+                    (SELECT id FROM ir_module_module WHERE name=%s),
+                    (SELECT id FROM ir_model WHERE model=%s), %s)""",
+                    (constraint_name, self._module, self._name, type))
+
     # quick creation of ir.model.data entry to make uninstall of schema elements easier
     def _make_ext_id(self, cr, ext_id):
         cr.execute('SELECT 1 FROM ir_model_data WHERE name=%s AND module=%s', (ext_id, self._module))
@@ -3092,6 +3109,7 @@ class BaseModel(object):
         for t, k, r, d in self._foreign_keys:
             cr.execute('ALTER TABLE "%s" ADD FOREIGN KEY ("%s") REFERENCES "%s" ON DELETE %s' % (t, k, r, d))
             self._make_ext_id(cr,  "%s%s_%s_fkey" % (EXT_ID_PREFIX_FK, t, k))
+            self._save_constraint(cr, "%s_%s_fkey" % (t, k), 'f')
         cr.commit()
         del self._foreign_keys
 
