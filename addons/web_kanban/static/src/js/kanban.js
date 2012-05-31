@@ -774,6 +774,11 @@ instance.web_kanban.QuickCreate = instance.web.Widget.extend({
         $(".oe-kanban-quick_create_close", this.$element).click(function () {
             self.trigger('close');
         });
+        self.$input.keyup(function(e) {
+            if (e.keyCode == 27 && self._buttons) {
+                self.trigger('close');
+            }
+        });
     },
     focus: function() {
         this.$element.find('input').focus();
