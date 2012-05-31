@@ -858,7 +858,6 @@ class task(base_stage, osv.osv):
     def stage_find(self, cr, uid, cases, section_id, domain=[], order='sequence', context=None):
         """ Override of the base.stage method
             Parameter of the stage search taken from the lead:
-            - type: stage type must be the same or 'both'
             - section_id: if set, stages must belong to this section or
               be a default stage; if not set, stages must be default
               stages
@@ -872,12 +871,13 @@ class task(base_stage, osv.osv):
         for task in cases:
             if task.project_id:
                 section_ids.append(task.project_id.id)
-        # OR all section_ids
+        # OR all section_ids and OR with case_default
         search_domain = []
         if section_ids:
-            search_domain += [('|')] * (len(section_ids) - 1)
+            search_domain += [('|')] * len(section_ids)
             for section_id in section_ids:
-                search_domain += [('|'), ('project_ids', '=', section_id), ('case_default', '=', True)]
+                search_domain.append(('project_ids', '=', section_id))
+        search_domain.append(('case_default', '=', True))
         # AND with the domain in parameter
         search_domain += list(domain)
         # perform search, return the first found

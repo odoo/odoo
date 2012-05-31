@@ -273,14 +273,22 @@ class hr_applicant(base_stage, osv.Model):
         """
         if isinstance(cases, (int, long)):
             cases = self.browse(cr, uid, cases, context=context)
-        domain = list(domain)
+        # collect all section_ids
+        department_ids = []
         if section_id:
-                domain += ['|', ('department_id', '=', section_id), ('department_id', '=', False)]
+            department_ids.append(section_id)
         for case in cases:
-            case_section_id = case.department_id.id if case.department_id else None
-            if case_section_id:
-                domain += ['|', ('department_id', '=', case_section_id), ('department_id', '=', False)]
-        stage_ids = self.pool.get('hr.recruitment.stage').search(cr, uid, domain, order=order, context=context)
+            if case.department_id:
+                department_ids.append(case.department_id.id)
+        # OR all section_ids and OR with case_default
+        search_domain = []
+        if department_ids:
+            search_domain += ['|', ('department_id', 'in', department_ids)]
+        search_domain.append(('department_id', '=', False))
+        # AND with the domain in parameter
+        search_domain += list(domain)
+        # perform search, return the first found
+        stage_ids = self.pool.get('hr.recruitment.stage').search(cr, uid, search_domain, order=order, context=context)
         if stage_ids:
             return stage_ids[0]
         return False

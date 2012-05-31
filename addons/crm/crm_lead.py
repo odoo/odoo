@@ -313,16 +313,29 @@ class crm_lead(base_stage, osv.osv):
         """
         if isinstance(cases, (int, long)):
             cases = self.browse(cr, uid, cases, context=context)
-        domain = list(domain)
+        # collect all section_ids
+        section_ids = []
+        types = ['both']
         if section_id:
-                domain += ['|', ('section_ids', '=', section_id)]
-        domain.append(('case_default', '=', True))
+            section_ids.append(section_id)
         for lead in cases:
-            domain += ['|', ('type', '=', lead.type), ('type', '=', 'both')]
-            lead_section_id = lead.section_id.id if lead.section_id else None
-            if lead_section_id:
-                domain += ['|', ('section_ids', '=', lead_section_id), ('case_default', '=', True)]
-        stage_ids = self.pool.get('crm.case.stage').search(cr, uid, domain, order=order, context=context)
+            if lead.section_id:
+                section_ids.append(lead.section_id.id)
+            if lead.type not in types:
+                types.append(lead.type)
+        # OR all section_ids and OR with case_default
+        search_domain = []
+        if section_ids:
+            search_domain += [('|')] * len(section_ids)
+            for section_id in section_ids:
+                search_domain.append(('section_ids', '=', section_id))
+        search_domain.append(('case_default', '=', True))
+        # AND with cases types
+        search_domain.append(('type', 'in', types))
+        # AND with the domain in parameter
+        search_domain += list(domain)
+        # perform search, return the first found
+        stage_ids = self.pool.get('crm.case.stage').search(cr, uid, search_domain, order=order, context=context)
         if stage_ids:
             return stage_ids[0]
         return False
