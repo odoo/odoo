@@ -40,7 +40,7 @@
             res_model="account.analytic.line"
             src_model="account.analytic.account"
             />
-
+            
         <record id="hr_timesheet.account_analytic_account_form_form" model="ir.ui.view">
             <field name="name">account.analytic.account.invoice.form.inherit</field>
             <field name="model">account.analytic.account</field>
@@ -96,21 +96,21 @@
 			    <tr>
 				<th class="oe_border_right">Charge Expenses</th>
 				<td><field name="charge_expenses" nolabel="1"/></td>
-				<td class="oe_amount_center oe_th_110px">todo</td>
-				<td class="oe_amount_center oe_th_110px">todo</td>
-				<td class="oe_amount_center oe_th_110px oe_border_right">todo</td>
-				<td class="oe_amount_center oe_th_110px">todo</td>
+				<td class="oe_amount_center oe_th_110px"><field name="expense_max" nolabel="1" attrs="{'invisible': [('charge_expenses','=',0)]}"/></td>
+				<td class="oe_amount_center oe_th_110px"><field name="expense_invoiced" nolabel="1" attrs="{'invisible': [('charge_expenses','=',0)]}"/></td>
+				<td class="oe_amount_center oe_th_110px oe_border_right"><field name="remaining_expense" nolabel="1" attrs="{'invisible': [('charge_expenses','=',0)]}"/></td>
+				<td class="oe_amount_center oe_th_110px"><field name="expense_to_invoice" nolabel="1" attrs="{'invisible': [('charge_expenses','=',0)]}"/></td>
 				<td width="10px"></td>
-				<td class="oe_th_150px">todo</td>
-				<td class="oe_th_150px">todo</td>
+				<td class="oe_th_150px"><button class= "oe_btn_width" name="open_hr_expense" string="Expenses" type="object" attrs="{'invisible': [('charge_expenses','=',0)]}"/></td>
+				<td class="oe_th_150px"><button class= "oe_btn_width" name="hr_to_invoiced_expense" string="Invoice Expenses" type="object" attrs="{'invisible': [('charge_expenses','=',0)]}"/></td>
 			    </tr>
 			    <tr>
 				<th class="oe_border_right">Total</th>
 				<td width="10px"></td>
-				<td class="oe_amount_center oe_th_110px oe_border_top">todo</td>
-				<td class="oe_amount_center oe_th_110px oe_border_top">todo</td>
-				<td class="oe_amount_center oe_th_110px oe_border_right oe_border_top">todo</td>
-				<td class="oe_amount_center oe_th_110px oe_border_top">todo</td>
+				<td class="oe_amount_center oe_th_110px oe_border_top"><field name="est_total" nolabel="1"/></td>
+				<td class="oe_amount_center oe_th_110px oe_border_top"><field name="invoiced_total" nolabel="1"/></td>
+				<td class="oe_amount_center oe_th_110px oe_border_right oe_border_top"><field name="remaining_total" nolabel="1"/></td>
+				<td class="oe_amount_center oe_th_110px oe_border_top"><field name="toinvoice_total" nolabel="1"/></td>
 			    </tr>
 			</table>
 		    </group>
