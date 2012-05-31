@@ -125,7 +125,7 @@ class procurement_order(osv.osv):
 
         Exceptions:\n""") % (start_date, end_date, report_total, report_except, report_later)
                         summary += '\n'.join(report)
-                        self.message_append_note(cr, uid, [proc.id], body=message)
+                        self.message_append_note(cr, uid, [proc.id], body=summary)
                 if use_new_cursor:
                     cr.commit()
                 offset += len(ids)
