@@ -114,6 +114,7 @@ class procurement_order(osv.osv):
                         report_except += 1
                     if uid:
                         request = self.pool.get('res.request')
+                        end_date = time.strftime('%Y-%m-%d, %Hh %Mm %Ss')
                         summary = _("""Here is the procurement scheduling report.
 
         Start Time: %s 
@@ -129,7 +130,6 @@ class procurement_order(osv.osv):
                     cr.commit()
                 offset += len(ids)
                 if not ids: break
-            end_date = time.strftime('%Y-%m-%d, %Hh %Mm %Ss')
            
 
             if use_new_cursor:
