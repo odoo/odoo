@@ -3168,7 +3168,7 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(_.
         });
         self.tags = self.$text.textext()[0].tags();
         $("textarea", this.$element).focusout(function() {
-            $("textarea", this.$element).val("");
+            self.$text.trigger("setInputData", "");
         }).keydown(function(e) {
             if (event.keyCode === 9 && self._drop_shown) {
                 self.$text.textext()[0].autocomplete().selectFromDropdown();
