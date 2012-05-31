@@ -548,16 +548,15 @@ class task(base_stage, osv.osv):
         if read_group_order == 'stage_id desc':
             order = '%s desc' % order
         # retrieve section_id from the context and write the domain
+        # - ('id', 'in', 'ids'): add columns that should be present
+        # - OR ('case_default', '=', True), ('fold', '=', False): add default columns that are not folded
+        # - OR ('project_ids', 'in', project_id), ('fold', '=', False) if project_id: add project columns that are not folded
         search_domain = []
         project_id = self._resolve_project_id_from_context(cr, uid, context=context)
         if project_id:
-            search_domain += ['|', '&', ('project_ids', '=', project_id), ('fold', '=', True)]
-        else:
-            domain = ['|', ('id','in',ids), ('case_default','=',1)]
-        search_domain += ['|', ('id', 'in', ids), '&', ('case_default', '=', 1), ('fold', '=', False)]
-        print search_domain
-        stage_ids = stage_obj._search(cr, uid, domain, order=order, access_rights_uid=access_rights_uid, context=context)
-        print stage_ids
+            search_domain += ['|', '&', ('project_ids', '=', project_id), ('fold', '=', False)]
+        search_domain += ['|', ('id', 'in', ids), '&', ('case_default', '=', True), ('fold', '=', False)]
+        stage_ids = stage_obj._search(cr, uid, search_domain, order=order, access_rights_uid=access_rights_uid, context=context)
         result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
         # restore order of the search
         result.sort(lambda x,y: cmp(stage_ids.index(x[0]), stage_ids.index(y[0])))
@@ -866,15 +865,23 @@ class task(base_stage, osv.osv):
         """
         if isinstance(cases, (int, long)):
             cases = self.browse(cr, uid, cases, context=context)
-        domain = list(domain)
+        # collect all section_ids
+        section_ids = []
         if section_id:
-                domain += ['|', ('project_ids', '=', section_id)]
-        domain.append(('case_default', '=', True))
+            section_ids.append(section_id)
         for task in cases:
-            task_project_id = task.project_id.id if task.project_id else None
-            if task_project_id:
-                domain += ['|', ('project_ids', '=', task_project_id), ('case_default', '=', True)]
-        stage_ids = self.pool.get('project.task.type').search(cr, uid, domain, order=order, context=context)
+            if task.project_id:
+                section_ids.append(task.project_id.id)
+        # OR all section_ids
+        search_domain = []
+        if section_ids:
+            search_domain += [('|')] * (len(section_ids) - 1)
+            for section_id in section_ids:
+                search_domain += [('|'), ('project_ids', '=', section_id), ('case_default', '=', True)]
+        # AND with the domain in parameter
+        search_domain += list(domain)
+        # perform search, return the first found
+        stage_ids = self.pool.get('project.task.type').search(cr, uid, search_domain, order=order, context=context)
         if stage_ids:
             return stage_ids[0]
         return False

@@ -683,11 +683,14 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Task Stage">
-                    <group colspan="4" col="6">
-                    <field name="name"/>
-                    <field name="case_default"/>
-                    <field name="sequence"/>
-                    <field name="state"/>
+                    <group colspan="2" col="2">
+                        <field name="name"/>
+                        <field name="state"/>
+                    </group>
+                    <group colspan="2" col="4">
+                        <field name="case_default"/>
+                        <field name="sequence"/>
+                        <field name="fold"/>
                     </group>
                     <separator string="Description" colspan="4"/>
                     <field colspan="4" name="description" nolabel="1"/>
