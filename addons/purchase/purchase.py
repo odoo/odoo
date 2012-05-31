@@ -142,14 +142,15 @@ class purchase_order(osv.osv):
         return res
 
     STATE_SELECTION = [
-        ('draft', 'Request for Quotation'),
-        ('cancel', 'Cancelled'),
+        ('draft', 'Draft PO'),
         ('wait', 'Waiting'),
+        ('sent', 'RFQ Sent'),
         ('confirmed', 'Waiting Approval'),
-        ('approved', 'Approved'),
+        ('approved', 'Purchase Order'),
         ('except_picking', 'Shipping Exception'),
         ('except_invoice', 'Invoice Exception'),
         ('done', 'Done'),
+        ('cancel', 'Cancelled')
     ]
 
     _columns = {
@@ -177,7 +178,7 @@ class purchase_order(osv.osv):
         'picking_ids': fields.one2many('stock.picking.in', 'purchase_id', 'Picking List', readonly=True, help="This is the list of incomming shipments that have been generated for this purchase order."),
         'shipped':fields.boolean('Received', readonly=True, select=True, help="It indicates that a picking has been done"),
         'shipped_rate': fields.function(_shipped_rate, string='Received', type='float'),
-        'invoiced': fields.function(_invoiced, string='Invoiced & Paid', type='boolean', help="It indicates that an invoice has been paid"),
+        'invoiced': fields.function(_invoiced, string='Invoice Received', type='boolean', help="It indicates that an invoice has been paid"),
         'invoiced_rate': fields.function(_invoiced_rate, string='Invoiced', type='float'),
         'invoice_method': fields.selection([('manual','Based on Purchase Order lines'),('order','Based on generated draft invoice'),('picking','Bases on incoming shipments')], 'Invoicing Control', required=True,
             help="Based on Purchase Order lines: place individual lines in 'Invoice Control > Based on P.O. lines' from where you can selectively create an invoice.\n" \
@@ -277,9 +278,89 @@ class purchase_order(osv.osv):
         fiscal_position = supplier.property_account_position and supplier.property_account_position.id or False
         return {'value':{'pricelist_id': pricelist, 'fiscal_position': fiscal_position}}
 
+    def view_invoice(self, cr, uid, ids, context=None):
+        '''
+        This function returns an action that display existing invoices of given sale order ids. It can either be a in a list or in a form view, if there is only one invoice to show.
+        '''
+        mod_obj = self.pool.get('ir.model.data')
+        wizard_obj = self.pool.get('purchase.order.line_invoice')
+        #compute the number of invoices to display
+        inv_ids = []
+        for po in self.browse(cr, uid, ids, context=context):
+            if po.invoice_method == 'manual':
+                if not po.invoice_ids:
+                    context.update({'active_ids' :  [line.id for line in po.order_line]})
+                    wizard_obj.makeInvoices(cr, uid, [], context=context)
+            
+        for po in self.browse(cr, uid, ids, context=context):
+            inv_ids+= [invoice.id for invoice in po.invoice_ids]
+        res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_supplier_form')
+        res_id = res and res[1] or False
+
+        return {
+            'name': _('Supplier Invoices'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': [res_id],
+            'res_model': 'account.invoice',
+            'context': "{'type':'in_invoice', 'journal_type': 'purchase'}",
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'current',
+            'res_id': inv_ids and inv_ids[0] or False,
+        }
+
+    def view_picking(self, cr, uid, ids, context=None):
+        '''
+        This function returns an action that display existing pîcking orders of given purchase order ids.
+        '''
+        mod_obj = self.pool.get('ir.model.data')
+        pick_ids = []
+        for po in self.browse(cr, uid, ids, context=context):
+            pick_ids += [picking.id for picking in po.picking_ids]
+
+        res = mod_obj.get_object_reference(cr, uid, 'stock', 'view_picking_in_form')
+        res_id = res and res[1] or False
+
+        return {
+            'name': _('Receptions'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': [res_id],
+            'res_model': 'stock.picking',
+            'context': "{'contact_display': 'partner'}",
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'current',
+            'res_id': pick_ids and pick_ids[0] or False,
+        }
+
     def wkf_approve_order(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'approved', 'date_approve': fields.date.context_today(self,cr,uid,context=context)})
         return True
+
+    def wkf_send_rfq(self, cr, uid, ids, context=None):
+        '''
+        This function opens a window to compose an email, with the edi purchase template message loaded by default
+        '''
+        mod_obj = self.pool.get('ir.model.data')
+        template = mod_obj.get_object_reference(cr, uid, 'purchase', 'email_template_edi_purchase')
+        template_id = template and template[1] or False
+        res = mod_obj.get_object_reference(cr, uid, 'mail', 'email_compose_message_wizard_form')
+        res_id = res and res[1] or False
+        ctx = dict(context, active_model='purchase.order', active_id=ids[0])
+        ctx.update({'mail.compose.template_id': template_id})
+        return {
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'mail.compose.message',
+            'views': [(res_id,'form')],
+            'view_id': res_id,
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': ctx,
+            'nodestroy': True,
+        }
 
     #TODO: implement messages system
     def wkf_confirm_order(self, cr, uid, ids, context=None):
@@ -445,6 +526,8 @@ class purchase_order(osv.osv):
             'partner_id': order.dest_address_id.id or order.partner_id.id,
             'invoice_state': '2binvoiced' if order.invoice_method == 'picking' else 'none',
             'type': 'in',
+            'partner_id': order.dest_address_id.id or order.partner_id.id,
+            'invoice_state': '2binvoiced' if order.invoice_method == 'picking' else 'none',
             'purchase_id': order.id,
             'company_id': order.company_id.id,
             'move_lines' : [],
@@ -996,4 +1079,16 @@ class procurement_order(osv.osv):
         return res
 
 procurement_order()
+
+class mail_message(osv.osv):
+    _name = 'mail.message'
+    _inherit = 'mail.message'
+    
+    def _postprocess_sent_message(self, cr, uid, message, context=None):
+        if message.model == 'purchase.order':
+            wf_service = netsvc.LocalService("workflow")
+            wf_service.trg_validate(uid, 'purchase.order', message.res_id, 'send_rfq', cr)
+        return super(mail_message, self)._postprocess_sent_message(cr, uid, message=message, context=context)
+
+mail_message()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

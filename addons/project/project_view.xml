@@ -81,7 +81,7 @@
                             </group>
                         </page>
                         <page string="Team">
-                            <field colspan="4" name="members" nolabel="1">
+                            <field colspan="4" name="members" nolabel="1" help="Project's members are users who can have an access to the tasks related to this project.">
                                 <tree string="Members">
                                     <field name="name"/>
                                     <field name="user_email"/>
@@ -585,6 +585,7 @@
                         <filter string="Deadlines" context="{'deadline_visible': False}" domain="[('date_deadline','&lt;&gt;',False)]" help="Show only tasks having a deadline" icon="terp-gnome-cpu-frequency-applet+"/>
                         <separator orientation="vertical"/>
                         <field name="name"/>
+                        <field name="project_id" invisible="1"/>
                         <filter name="project" string="Project" domain="[('project_id.user_id','=',uid)]" help="My Projects" icon="terp-check"/>
                         <field name="user_id">
                             <filter string="My Tasks" domain="[('user_id','=',uid)]"  help="My Tasks" icon="terp-personal" />
@@ -618,6 +619,10 @@
             <field name="arch" type="xml">
                 <xpath expr='//separator[@name="project_sep"]' position='replace'>
                     <separator colspan="2" string="Project" name="project_sep"/>
+                </xpath>
+                <xpath expr='//separator[@name="description"]' position='before'>
+                    <separator colspan="4" string="Team"/>
+                    <field name="members" colspan="4" nolabel="1"/>
                 </xpath>
             	<xpath expr='//group[@name="project"]' position='inside'>
                     <field name="use_tasks" />

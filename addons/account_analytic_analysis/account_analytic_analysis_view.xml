@@ -61,7 +61,7 @@
 		    <group col="1" colspan="4">
 			<table border="0">
 			    <tr>
-				<th class="oe_th_150px" height="20px"></th>
+				<th class="oe_th_137px" height="20px"></th>
 				<th width="10px"></th>
 				<th class="oe_th_110px">Est.Tot</th>
 				<th class="oe_th_110px">Invoiced</th>
@@ -83,7 +83,7 @@
 				<td class="oe_th_150px"><button class= "oe_btn_width" name="%(sale.action_order_line_tree2)d" string="Lines To Invoice" type="action" context="{'default_project_id': active_id,'search_default_project_id': active_id}" attrs="{'invisible': [('fix_price_invoices','=',0)]}"/></td>
 			    </tr>
 			    <tr>
-				<th class="oe_border_right">Invoice On Timesheets</th>
+				<th class="oe_border_right">Inv. On Timesheets</th>
 				<td><field name="invoice_on_timesheets" nolabel="1"/></td>
 				<td class="oe_amount_center oe_th_110px"><field name="quantity_max" nolabel="1" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
 				<td class="oe_amount_center oe_th_110px"><field name="hours_qtt_invoiced" nolabel="1" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
@@ -114,54 +114,11 @@
 			    </tr>
 			</table>
 		    </group>
-        	<group colspan="4" class="oe_form_group_label_border"> 
-                <field name="pricelist_id" />
-                <field name="to_invoice" widget="selection" />
-	    	</group>
+		    <group colspan="4" class="oe_form_group_label_border">
+			<field name="pricelist_id" />
+			<field name="to_invoice" widget="selection" />
+		    </group>
                 </xpath>
-                <!-- <notebook position="inside">
-                    <page string="Invoice Analysis">
-                        <separator colspan="4" string="Work Done Stats"/>
-
-                        <field name="total_cost"/>
-                        <field name="remaining_ca"/>
-                        <field name="ca_invoiced"/>
-                        <field name="ca_theorical"/>
-                        <newline/>
-                        <field name="hours_quantity"/>
-                        <field name="hours_qtt_invoiced"/>
-                        <field name="remaining_hours"/>
-                        <newline/>
-                        <separator colspan="4" string="Analysis Stats"/>
-
-                        <field name="revenue_per_hour"/>
-                        <field name="real_margin"/>
-                        <field name="real_margin_rate"/>
-                        <field name="theorical_margin"/>
-                        <separator colspan="4" string="Key Dates"/>
-
-                        <field name="last_invoice_date"/>
-                        <field name="last_worked_invoiced_date"/>
-                        <field name="last_worked_date"/>
-                    </page>
-                    <page string="Stats by month">
-                        <field colspan="4" name="month_ids" nolabel="1">
-                            <tree string="Month">
-                                <field name="month"/>
-                                <field name="unit_amount" widget="float_time"/>
-                            </tree>
-                        </field>
-                    </page>
-                    <page string="Stats by user">
-                        <field colspan="4" name="user_ids" nolabel="1">
-                            <tree string="Users">
-                                <field name="user"/>
-                                <field name="unit_amount" widget="float_time"/>
-                            </tree>
-                        </field>
-                    </page>
-                </notebook> -->
-
             </field>
         </record>
 
