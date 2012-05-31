@@ -444,33 +444,6 @@ class project_issue(base_stage, osv.osv):
             return stage_ids[0]
         return False
 
-    def next_type(self, cr, uid, ids, context=None):
-        for task in self.browse(cr, uid, ids):
-            typeid = task.type_id.id
-            types = map(lambda x:x.id, task.project_id.type_ids or [])
-            if types:
-                if not typeid:
-                    self.write(cr, uid, [task.id], {'stage_id': types[0]})
-                elif typeid and typeid in types and types.index(typeid) != len(types)-1 :
-                    index = types.index(typeid)
-                    self.write(cr, uid, [task.id], {'stage_id': types[index+1]})
-        return True
-
-    def prev_type(self, cr, uid, ids, context=None):
-        for task in self.browse(cr, uid, ids):
-            typeid = task.type_id.id
-            types = map(lambda x:x.id, task.project_id and task.project_id.type_ids or [])
-            if types:
-                if typeid and typeid in types:
-                    index = types.index(typeid)
-                    self.write(cr, uid, [task.id], {'stage_id': index and types[index-1] or False})
-        return True
-
-    def case_open(self, cr, uid, ids, context=None):
-        res = super(project_issue, self).case_open(cr, uid, ids, context)
-        self.write(cr, uid, ids, {'date_open': time.strftime('%Y-%m-%d %H:%M:%S'), 'user_id' : uid})
-        return res
-
     def case_cancel(self, cr, uid, ids, context=None):
         """ Cancels case """
         self.case_set(cr, uid, ids, 'cancelled', {'active': True}, context=context)

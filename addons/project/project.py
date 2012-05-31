@@ -1100,36 +1100,6 @@ class task(base_stage, osv.osv):
     def set_kanban_state_done(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'kanban_state': 'done'}, context=context)
 
-    def _change_type(self, cr, uid, ids, next, context=None):
-        """
-            go to the next stage
-            if next is False, go to previous stage
-        """
-        for task in self.browse(cr, uid, ids):
-            if  task.project_id.type_ids:
-                typeid = task.stage_id.id
-                types_seq={}
-                for type in task.project_id.type_ids :
-                    types_seq[type.id] = type.sequence
-                if next:
-                    types = sorted(types_seq.items(), lambda x, y: cmp(x[1], y[1]))
-                else:
-                    types = sorted(types_seq.items(), lambda x, y: cmp(y[1], x[1]))
-                sorted_types = [x[0] for x in types]
-                if not typeid:
-                    self.write(cr, uid, task.id, {'stage_id': sorted_types[0]})
-                elif typeid and typeid in sorted_types and sorted_types.index(typeid) != len(sorted_types)-1:
-                    index = sorted_types.index(typeid)
-                    self.write(cr, uid, task.id, {'stage_id': sorted_types[index+1]})
-                self.state_change_send_note(cr, uid, [task.id], context)
-        return True
-
-    def next_type(self, cr, uid, ids, context=None):
-        return self._change_type(cr, uid, ids, True, context=context)
-
-    def prev_type(self, cr, uid, ids, context=None):
-        return self._change_type(cr, uid, ids, False, context=context)
-
     def _store_history(self, cr, uid, ids, context=None):
         for task in self.browse(cr, uid, ids, context=context):
             self.pool.get('project.task.history').create(cr, uid, {
