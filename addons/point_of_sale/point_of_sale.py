@@ -409,35 +409,6 @@ class pos_session(osv.osv):
             'context' : context,
         }
 
-    # def get_current_session(self, cr, uid, context=None):
-    #     # TODO: Remove this code and use a wizard in the front-end
-    #     current_user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-    #     domain = [
-    #         ('state', '=', 'open'),
-    #         ('start_at', '>=', time.strftime('%Y-%m-%d 00:00:00')),
-    #         ('user_id', '=', uid),
-    #     ]
-    #     session_ids = self.search(cr, uid, domain, context=context, limit=1, order='start_at desc')
-    #     session_id = session_ids[0] if session_ids else False
-
-    #     if not session_id:
-    #         if not current_user.pos_config:
-    #             raise osv.except_osv(_('Error !'),
-    #                                  _('There is no active Point of Sale Config for this User %s') % current_user.name)
-
-    #         values = {
-    #             'state' : 'opening_control',
-    #             'start_at' : time.strftime('%Y-%m-%d %H:%M:%S'),
-    #             'config_id' : current_user.pos_config.id,
-    #             'journal_id' : current_user.pos_config.journal_id.id,
-    #             'user_id': current_user.id,
-    #         }
-
-    #         session_id = self.create(cr, uid, values, context=context)
-    #         wkf_service = netsvc.LocalService('workflow')
-    #         wkf_service.trg_validate(uid, 'pos.session', session_id, 'opening_control', cr)
-    #     return session_id
-
 pos_session()
 
 class pos_order(osv.osv):
@@ -448,10 +419,8 @@ class pos_order(osv.osv):
     def create_from_ui(self, cr, uid, orders, context=None):
         #_logger.info("orders: %r", orders)
         list = []
-        session_id = self.pool.get('pos.session').get_current_session(cr, uid, context=context)
         for order in orders:
             # order :: {'name': 'Order 1329148448062', 'amount_paid': 9.42, 'lines': [[0, 0, {'discount': 0, 'price_unit': 1.46, 'product_id': 124, 'qty': 5}], [0, 0, {'discount': 0, 'price_unit': 0.53, 'product_id': 62, 'qty': 4}]], 'statement_ids': [[0, 0, {'journal_id': 7, 'amount': 9.42, 'name': '2012-02-13 15:54:12', 'account_id': 12, 'statement_id': 21}]], 'amount_tax': 0, 'amount_return': 0, 'amount_total': 9.42}
-            order['session_id'] = session_id
             order_obj = self.pool.get('pos.order')
             # get statements out of order because they will be generated with add_payment to ensure
             # the module behavior is the same when using the front-end or the back-end
