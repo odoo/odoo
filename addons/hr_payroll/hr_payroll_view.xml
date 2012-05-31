@@ -3,7 +3,7 @@
     <data>
         <!-- Root Menus -->
 
-        <menuitem id="payroll_configure" parent="hr.menu_hr_configuration" name="Payroll" groups="base.group_no_one" sequence="45"/>
+        <menuitem id="payroll_configure" parent="hr.menu_hr_configuration" name="Payroll" groups="base.group_hr_manager" sequence="45"/>
         <menuitem id="menu_hr_root_payroll" parent="hr.menu_hr_root" name="Payroll" sequence="30"/>
         <menuitem id="menu_hr_payroll_reporting" parent="hr.menu_hr_reporting" name="Payroll" groups="base.group_hr_manager"/>
 
@@ -486,6 +486,7 @@
             action="action_hr_salary_rule_category"
             parent="payroll_configure"
             sequence="11"
+            groups="base.group_no_one"
         />
         <record id="action_hr_salary_rule_category_tree_view" model="ir.actions.act_window">
             <field name="name">Salary Rule Categories Hierarchy</field>
@@ -500,6 +501,7 @@
             parent="payroll_configure"
             sequence="12"
             icon="STOCK_INDENT"
+            groups="base.group_no_one"
         />
 
         <!--
@@ -675,7 +677,7 @@
             <field name="search_view_id" ref="view_hr_rule_filter"/>
         </record>
 
-        <menuitem id="menu_action_hr_salary_rule_form" action="action_salary_rule_form" parent="payroll_configure" sequence="12" groups="base.group_no_one"/>
+        <menuitem id="menu_action_hr_salary_rule_form" action="action_salary_rule_form" parent="payroll_configure" sequence="12"/>
 
 
         <act_window name="All Children Rules"
