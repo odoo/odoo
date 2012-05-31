@@ -132,20 +132,29 @@ class crm_claim(base_stage, osv.osv):
     def stage_find(self, cr, uid, cases, section_id, domain=[], order='sequence', context=None):
         """ Override of the base.stage method
             Parameter of the stage search taken from the lead:
-            - type: stage type must be the same or 'both'
             - section_id: if set, stages must belong to this section or
               be a default case
         """
         if isinstance(cases, (int, long)):
             cases = self.browse(cr, uid, cases, context=context)
-        domain = list(domain)
+        # collect all section_ids
+        section_ids = []
         if section_id:
-                domain += ['|', ('section_ids', '=', section_id), ('case_default', '=', True)]
-        for lead in cases:
-            lead_section_id = lead.section_id.id if lead.section_id else None
-            if lead_section_id:
-                domain += ['|', ('section_ids', '=', lead_section_id), ('case_default', '=', True)]
-        stage_ids = self.pool.get('crm.claim.stage').search(cr, uid, domain, order=order, context=context)
+            section_ids.append(section_id)
+        for claim in cases:
+            if claim.section_id:
+                section_ids.append(claim.section_id.id)
+        # OR all section_ids and OR with case_default
+        search_domain = []
+        if section_ids:
+            search_domain += [('|')] * len(section_ids)
+            for section_id in section_ids:
+                search_domain.append(('section_ids', '=', section_id))
+        search_domain.append(('case_default', '=', True))
+        # AND with the domain in parameter
+        search_domain += list(domain)
+        # perform search, return the first found
+        stage_ids = self.pool.get('crm.claim.stage').search(cr, uid, search_domain, order=order, context=context)
         if stage_ids:
             return stage_ids[0]
         return False
