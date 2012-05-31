@@ -4149,10 +4149,11 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
             // get fold information from widget
             var fold = ((this.node.attrs || {}).statusbar_fold || true);
             // build final domain: if fold option required, add the 
-            if (fold == true)
-                var domain = new instance.web.CompoundDomain(['|'], ['&'], self.build_domain(), [['fold', '=', false]], [['id', '=', self.selected_value]])
+            if (fold == true) {
+                var domain = new instance.web.CompoundDomain(['|'], ['&'], self.build_domain(), [['fold', '=', false]], [['id', '=', self.selected_value]]);
+            }
             else {
-                var domain = new instance.web.CompoundDomain(['|'], self.build_domain(), [['id', '=', self.selected_value]])
+                var domain = new instance.web.CompoundDomain(['|'], self.build_domain(), [['id', '=', self.selected_value]]);
             }
             // get a DataSetSearch on the current field relation (ex: crm.lead.stage_id -> crm.case.stage)
             var model_ext = new instance.web.DataSetSearch(this, this.field.relation, self.build_context(), domain);
