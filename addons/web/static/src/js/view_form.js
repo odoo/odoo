@@ -673,7 +673,7 @@ instance.web.FormView = instance.web.View.extend(_.extend({}, instance.web.form.
         var msg = "<ul>";
         _.each(this.fields, function(f) {
             if (!f.is_valid()) {
-                msg += "<li>" + f.node.attrs.string + "</li>";
+                msg += "<li>" + (f.node.attrs.string || f.field.string) + "</li>";
             }
         });
         msg += "</ul>";
@@ -2317,9 +2317,11 @@ instance.web.form.CompletionFieldMixin = {
         var self = this;
 
         var dataset = new instance.web.DataSet(this, this.field.relation, self.build_context());
+        var blacklist = this.get_search_blacklist();
 
         return this.orderer.add(dataset.name_search(
-                search_val, self.build_domain(), 'ilike', this.limit + 1)).pipe(function(data) {
+                search_val, new instance.web.CompoundDomain(self.build_domain(), [["id", "not in", blacklist]]),
+                'ilike', this.limit + 1)).pipe(function(data) {
             self.last_search = data;
             // possible selections for the m2o
             var values = _.map(data, function(x) {
@@ -2356,6 +2358,9 @@ instance.web.form.CompletionFieldMixin = {
 
             return values;
         });
+    },
+    get_search_blacklist: function() {
+        return [];
     },
     _quick_create: function(name) {
         var self = this;
@@ -3180,6 +3185,9 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(_.
     get_value: function() {
         var tmp = [commands.replace_with(this.get("value"))];
         return tmp;
+    },
+    get_search_blacklist: function() {
+        return this.get("value");
     },
     render_value: function() {
         var self = this;
