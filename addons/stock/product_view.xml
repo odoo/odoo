@@ -177,7 +177,8 @@
                                         <li t-if="record.type.raw_value != 'service'">Stock on hand: <field name="qty_available"/> <field name="uom_id"/></li>
                                         <li t-if="record.type.raw_value != 'service'">Stock available: <field name="virtual_available"/> <field name="uom_id"/></li>
                                         <li>Price: <field name="lst_price"></field></li>
-                                        <li>Cost: <field name="standard_price"></field></li>
+                                        <!-- TODO the 'groups' attribute doesn't work in kanban views -->
+                                        <li groups="base.group_user">Cost: <field name="standard_price"></field></li>
                                     </ul>
                                     <a name="%(action_receive_move)d" type="action">
                                         <t t-if="record.reception_count.value">Receptions(<t t-esc="record.reception_count.value"/>)</t>

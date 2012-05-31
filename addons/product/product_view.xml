@@ -221,7 +221,8 @@
                                         <t t-if="record.type.raw_value != 'service'">
                                             <div>Stock: <field name="qty_available"/> on hand, <field name="virtual_available"/> available</div>
                                             <div t-if="record.list_price.raw_value != 0">Public Price: <field name="lst_price"/></div>
-                                            <div>Cost : <field name="standard_price"/></div>
+                                            <!-- TODO would deserve to be hidden at the field level -->
+                                            <div groups="base.group_user">Cost : <field name="standard_price"/></div>
                                         </t>
                                         <div class="oe_kanban_clear"/>
                                     </div>
