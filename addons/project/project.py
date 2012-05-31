@@ -866,24 +866,11 @@ class task(osv.osv):
         """
         Close Task
         """
-        request = self.pool.get('res.request')
+       
         if not isinstance(ids,list): ids = [ids]
         for task in self.browse(cr, uid, ids, context=context):
             vals = {}
             project = task.project_id
-            if project:
-                # Send request to project manager
-                if project.warn_manager and project.user_id and (project.user_id.id != uid):
-                    request.create(cr, uid, {
-                        'name': _("Task '%s' closed") % task.name,
-                        'state': 'waiting',
-                        'act_from': uid,
-                        'act_to': project.user_id.id,
-                        'ref_partner_id': task.partner_id.id,
-                        'ref_doc1': 'project.task,%d'% (task.id,),
-                        'ref_doc2': 'project.project,%d'% (project.id,),
-                    }, context=context)
-
             for parent_id in task.parent_ids:
                 if parent_id.state in ('pending','draft'):
                     reopen = True
@@ -901,41 +888,17 @@ class task(osv.osv):
         return True
 
     def do_reopen(self, cr, uid, ids, context=None):
-        request = self.pool.get('res.request')
 
         for task in self.browse(cr, uid, ids, context=context):
             project = task.project_id
-            if project and project.warn_manager and project.user_id.id and (project.user_id.id != uid):
-                request.create(cr, uid, {
-                    'name': _("Task '%s' set in progress") % task.name,
-                    'state': 'waiting',
-                    'act_from': uid,
-                    'act_to': project.user_id.id,
-                    'ref_partner_id': task.partner_id.id,
-                    'ref_doc1': 'project.task,%d' % task.id,
-                    'ref_doc2': 'project.project,%d' % project.id,
-                }, context=context)
-
             self.write(cr, uid, [task.id], {'state': 'open'}, context=context)
             self.do_open_send_note(cr, uid, [task.id], context)
         return True
 
     def do_cancel(self, cr, uid, ids, context={}):
-        request = self.pool.get('res.request')
         tasks = self.browse(cr, uid, ids, context=context)
         self._check_child_task(cr, uid, ids, context=context)
         for task in tasks:
-            project = task.project_id
-            if project.warn_manager and project.user_id and (project.user_id.id != uid):
-                request.create(cr, uid, {
-                    'name': _("Task '%s' cancelled") % task.name,
-                    'state': 'waiting',
-                    'act_from': uid,
-                    'act_to': project.user_id.id,
-                    'ref_partner_id': task.partner_id.id,
-                    'ref_doc1': 'project.task,%d' % task.id,
-                    'ref_doc2': 'project.project,%d' % project.id,
-                }, context=context)
             self.write(cr, uid, [task.id], {'state': 'cancelled', 'remaining_hours':0.0}, context=context)
             self.do_cancel_send_note(cr, uid, [task.id], context)
         return True
