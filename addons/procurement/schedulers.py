@@ -112,15 +112,9 @@ class procurement_order(osv.osv):
                                 (proc.id, proc.product_qty, proc.product_uom.name,
                                     proc.product_id.name,))
                         report_except += 1
-
-                if use_new_cursor:
-                    cr.commit()
-                offset += len(ids)
-                if not ids: break
-            end_date = time.strftime('%Y-%m-%d, %Hh %Mm %Ss')
-            if uid:
-                request = self.pool.get('res.request')
-                summary = _("""Here is the procurement scheduling report.
+                    if uid:
+                        request = self.pool.get('res.request')
+                        summary = _("""Here is the procurement scheduling report.
 
         Start Time: %s 
         End Time: %s 
@@ -129,13 +123,14 @@ class procurement_order(osv.osv):
         Skipped Procurements (scheduled date outside of scheduler range) %d 
 
         Exceptions:\n""") % (start_date, end_date, report_total, report_except, report_later)
-                summary += '\n'.join(report)
-                request.create(cr, uid,
-                    {'name': "Procurement Processing Report.",
-                        'act_from': uid,
-                        'act_to': uid,
-                        'body': summary,
-                    })
+                        summary += '\n'.join(report)
+                        self.message_append_note(cr, uid, [proc.id], body=message)
+                if use_new_cursor:
+                    cr.commit()
+                offset += len(ids)
+                if not ids: break
+            end_date = time.strftime('%Y-%m-%d, %Hh %Mm %Ss')
+           
 
             if use_new_cursor:
                 cr.commit()
