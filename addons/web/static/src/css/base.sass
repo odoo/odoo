@@ -1592,14 +1592,12 @@ $colour4: #8a89ba
     // }}}
     // FormView.classes for openerp views {{{
     .oe_form
-        .oe_form_group_odd_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell:nth-child(odd),
-        .oe_form_group_label_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell_label
+        td.oe_form_group_cell_label
             border-right: 1px solid #ddd
             label
                 display: block
                 min-width: 120px
-        .oe_form_group_odd_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell,
-        .oe_form_group_label_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell
+        td.oe_form_group_cell_label + .oe_form_group_cell
             padding-left: 8px
         .oe_form_subtotal_footer
             float: right
