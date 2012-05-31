@@ -919,9 +919,6 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
         //       but one day, we will have to get rid of xml2json
         var xml = instance.web.json_node_to_xml(this.fvg.arch);
         this.$form = $('<div class="oe_form">' + xml + '</div>');
-        if (this.fvg.arch.attrs && this.fvg.arch.attrs['layout'] !== 'manual') {
-            this.$form.attr('layout', 'auto');
-        }
 
         this.fields_to_init = [];
         this.tags_to_init = [];
@@ -956,13 +953,10 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
         });
         // TODO: return a deferred
     },
-    render_element: function(template, layout/* dictionaries */) {
-        var dicts = [].slice.call(arguments).slice(2);
-        dicts.unshift({ 'layout' : layout });
+    render_element: function(template /* dictionaries */) {
+        var dicts = [].slice.call(arguments).slice(1);
         var dict = _.extend.apply(_, dicts);
         dict['classnames'] = dict['class'] || ''; // class is a reserved word and might caused problem to Safari when used from QWeb
-        var alt_template = template + '.' + layout;
-        template = QWeb.has_template(alt_template) ? alt_template : template;
         return $(QWeb.render(template, dict));
     },
     alter_field: function(field) {
@@ -977,10 +971,8 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
         }
         this.$target.toggleClass('oe_layout_debugging');
     },
-    process: function($tag, layout) {
+    process: function($tag) {
         var self = this;
-        layout = $tag.attr('layout') || layout || 'auto';
-        $tag.removeAttr('layout');
         var tagname = $tag[0].nodeName.toLowerCase();
         if (this.tags_registry.contains(tagname)) {
             this.tags_to_init.push($tag);
@@ -990,38 +982,36 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
         if (fn) {
             var args = [].slice.call(arguments);
             args[0] = $tag;
-            args[1] = layout;
             return fn.apply(self, args);
         } else {
             // generic tag handling, just process children
             $tag.children().each(function() {
-                self.process($(this), layout);
+                self.process($(this));
             });
             self.handle_common_properties($tag, $tag);
             $tag.removeAttr("modifiers");
             return $tag;
         }
     },
-    process_sheet: function($sheet, layout) {
-        var $new_sheet = this.render_element('FormRenderingSheet', layout, $sheet.getAttributes());
+    process_sheet: function($sheet) {
+        var $new_sheet = this.render_element('FormRenderingSheet', $sheet.getAttributes());
         this.handle_common_properties($new_sheet, $sheet);
-        var $dst = (layout === 'auto') ? $new_sheet.find('group:first') : $new_sheet.find('.oe_form_sheet');
+        var $dst = $new_sheet.find('.oe_form_sheet');
         $sheet.contents().appendTo($dst);
         $sheet.before($new_sheet).remove();
-        this.process($new_sheet, layout);
+        this.process($new_sheet);
     },
-    process_form: function($form, layout) {
-        var $new_form = this.render_element('FormRenderingForm', layout, $form.getAttributes());
+    process_form: function($form) {
+        var $new_form = this.render_element('FormRenderingForm', $form.getAttributes());
         this.handle_common_properties($new_form, $form);
-        var $dst = (layout === 'auto') ? $new_form.find('group:first') : $new_form;
-        $form.contents().appendTo($dst);
+        $form.contents().appendTo($new_form);
         if ($form[0] === this.$form[0]) {
             // If root element, replace it
             this.$form = $new_form;
         } else {
             $form.before($new_form).remove();
         }
-        this.process($new_form, layout);
+        this.process($new_form);
     },
     /*
      * Used by direct <field> children of a <group> tag only
@@ -1060,23 +1050,23 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
         }
         return $label;
     },
-    process_field: function($field, layout) {
+    process_field: function($field) {
         if ($field.parent().is('group')) {
             // No implicit labels for normal fields, only for <group> direct children
             var $label = this.preprocess_field($field);
             if ($label) {
-                this.process($label, layout);
+                this.process($label);
             }
         }
         this.fields_to_init.push($field);
         return $field;
     },
-    process_group: function($group, layout) {
+    process_group: function($group) {
         var self = this;
         $group.children('field').each(function() {
             self.preprocess_field($(this));
         });
-        var $new_group = this.render_element('FormRenderingGroup', layout, $group.getAttributes());
+        var $new_group = this.render_element('FormRenderingGroup', $group.getAttributes());
         var $table;
         if ($new_group.first().is('table.oe_form_group')) {
             $table = $new_group;
@@ -1185,7 +1175,7 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
         this.handle_common_properties($new_group, $group);
         return $new_group;
     },
-    process_notebook: function($notebook, layout) {
+    process_notebook: function($notebook) {
         var self = this;
         var pages = [];
         $notebook.find('> page').each(function() {
@@ -1193,13 +1183,12 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
             var page_attrs = $page.getAttributes();
             page_attrs.id = _.uniqueId('notebook_page_');
             pages.push(page_attrs);
-            var $new_page = self.render_element('FormRenderingNotebookPage', layout, page_attrs);
-            var $dst = (layout === 'auto') ? $new_page.find('group:first') : $new_page;
-            $page.contents().appendTo($dst);
+            var $new_page = self.render_element('FormRenderingNotebookPage', page_attrs);
+            $page.contents().appendTo($new_page);
             $page.before($new_page).remove();
             self.handle_common_properties($new_page, $page);
         });
-        var $new_notebook = this.render_element('FormRenderingNotebook', layout, { pages : pages });
+        var $new_notebook = this.render_element('FormRenderingNotebook', { pages : pages });
         $notebook.contents().appendTo($new_notebook);
         $notebook.before($new_notebook).remove();
         $new_notebook.children().each(function() {
@@ -1209,13 +1198,13 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
         this.handle_common_properties($new_notebook, $notebook);
         return $new_notebook;
     },
-    process_separator: function($separator, layout) {
-        var $new_separator = this.render_element('FormRenderingSeparator', layout, $separator.getAttributes());
+    process_separator: function($separator) {
+        var $new_separator = this.render_element('FormRenderingSeparator', $separator.getAttributes());
         $separator.before($new_separator).remove();
         this.handle_common_properties($new_separator, $separator);
         return $new_separator;
     },
-    process_label: function($label, layout) {
+    process_label: function($label) {
         var name = $label.attr("for"),
             field_orm = this.fvg.fields[name];
         var dict = {
@@ -1232,7 +1221,7 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
             align = 'center';
         }
         dict.align = align;
-        var $new_label = this.render_element('FormRenderingLabel', layout, dict);
+        var $new_label = this.render_element('FormRenderingLabel', dict);
         $label.before($new_label).remove();
         this.handle_common_properties($new_label, $label);
         if (name) {

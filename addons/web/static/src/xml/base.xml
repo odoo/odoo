@@ -773,17 +773,15 @@
     </table>
 </form>
 
-<t t-name="FormRenderingForm.manual">
-    <div class="oe_form_manual_layout"/>
-</t>
 <t t-name="FormRenderingForm">
-    <div class="oe_form_sheetbg">
-        <div t-attf-class="oe_form_sheet oe_form_sheet_width #{classnames}">
-            <group t-if="layout === 'auto'" col="4"/>
-        </div>
+    <div t-attf-class="#{classnames}">
     </div>
 </t>
-<t t-name="FormRenderingSheet" t-extend="FormRenderingForm">
+<t t-name="FormRenderingSheet">
+    <div class="oe_form_sheetbg">
+        <div t-attf-class="oe_form_sheet oe_form_sheet_width #{classnames}">
+        </div>
+    </div>
 </t>
 <t t-name="FormRenderingGroup">
     <t t-if="string" t-call="FormRenderingSeparator"/>
@@ -802,7 +800,6 @@
 </t>
 <t t-name="FormRenderingNotebookPage">
     <div t-attf-class="oe_form_notebook_page #{classnames}" t-att-id="id">
-        <group t-if="layout === 'auto'" col="4"/>
     </div>
 </t>
 <t t-name="FormRenderingSeparator">
