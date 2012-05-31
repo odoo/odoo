@@ -518,6 +518,7 @@
   opacity: 0.5;
 }
 .openerp .oe_leftbar {
+  display: none;
   width: 220px;
   background: #f0eeee;
   border-right: 1px solid #afafb6;
@@ -1721,7 +1722,7 @@
   -webkit-border-radius: 3px;
   border-radius: 3px;
   background: white;
-  min-width: 90px;
+  min-width: 70px;
   color: #1f1f1f;
 }
 .openerp .oe_form input[readonly],
@@ -1760,8 +1761,6 @@
 .openerp .oe_form .oe_form_field_url button img {
   vertical-align: top;
 }
-.openerp .oe_form .oe_form_field_translatable,
-.openerp .oe_form .oe_form_field_many2one,
 .openerp .oe_form .oe_form_field_date,
 .openerp .oe_form .oe_form_field_datetime {
   white-space: nowrap;
@@ -1878,8 +1877,9 @@
 }
 .openerp .oe_horizontal_separator {
   font-weight: bold;
-  font-size: 16px;
-  margin: 4px 0;
+  font-size: 20px;
+  margin: 20px 0px 10px 0px;
+  color: #aaaabb;
 }
 .openerp .oe_horizontal_separator:empty {
   height: 5px;
@@ -1956,7 +1956,7 @@
   -webkit-border-radius: 3px;
   border-radius: 3px;
   background: white;
-  min-width: 90px;
+  min-width: 50px;
 }
 .openerp .oe_form .oe_form_field_progressbar.ui-progressbar span {
   position: absolute;
@@ -2070,8 +2070,10 @@
 .openerp .oe-listview-content > tbody > tr {
   border-top: 1px solid #dddddd;
 }
-.openerp .oe-listview-content > tbody > tr > td, .openerp .oe-listview-content > tbody > tr > th {
+.openerp .oe-listview-content > tbody > tr > td.oe-field-cell {
   padding: 3px 6px;
+}
+.openerp .oe-listview-content > tbody > tr > td, .openerp .oe-listview-content > tbody > tr > th {
   line-height: 18px;
 }
 .openerp .oe-listview-content > tbody > tr > td > button, .openerp .oe-listview-content > tbody > tr > th > button {
