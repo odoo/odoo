@@ -1183,7 +1183,7 @@ $colour4: #8a89ba
             background: #ED6F6A
     // }}}
     // FormView.customdivs {{{
-    .oe_form_topbar
+    header
         position: relative
         border-bottom: 1px solid #cacaca
         @include vertical-gradient(#fcfcfc, #dedede)
@@ -1238,7 +1238,7 @@ $colour4: #8a89ba
         .oe_form_steps_active
             font-weight: bold 
             color: #b33630
-    .oe_form_topbar.oe_form_topbar_hifirst button:first-child, button.oe_form_button_hi
+    header.oe_form_topbar_hifirst button:first-child, button.oe_form_button_hi
         color: white
         background: #DC5F59
         background: -moz-linear-gradient(#DC5F59, #B33630)
@@ -1247,7 +1247,7 @@ $colour4: #8a89ba
         -moz-box-shadow: none
         -webkit-box-shadow: none
         -box-shadow: none
-    .oe_form_topbar.oe_form_topbar_hifirst button:first-child:hover, button.oe_form_button_hi:hover
+    header.oe_form_topbar_hifirst button:first-child:hover, button.oe_form_button_hi:hover
         background: #DF6B66
         background: -moz-linear-gradient( #DF6B66, #BF3A33)
         background: -webkit-gradient(linear, left top, left bottom, from( #DF6B66), to( #BF3A33))
@@ -1260,7 +1260,7 @@ $colour4: #8a89ba
             background: url(/web/static/src/img/form_sheetbg.png)
             padding: 8px 0
             border-bottom: 1px solid #ddd 
-        .oe_form_sheet_width, .oe_form_bottom
+        .oe_form_sheet_width, footer
             min-width: 650px
             max-width: 980px
             margin: 0 auto
@@ -1272,6 +1272,10 @@ $colour4: #8a89ba
             @include box-shadow(0 0 10px rgba(0,0,0,0.3))
     // }}}
     // FormView.layout {{{
+    .oe_form_editable .oe_form_editable_hidden
+        display: none
+    .oe_form_readonly .oe_form_readonly_hidden
+        display: none
     .oe_form
         .oe_form_group_cell
             line-height: 18px
@@ -1291,6 +1295,12 @@ $colour4: #8a89ba
         .oe_form_group_cell > span > .oe_datepicker_root,
         .oe_form_group_cell > span > .oe_datepicker_root > input.oe_datepicker_master
             width: 100%
+        h1, h2, h3, h4, h5, h6
+            margin: 0 0 4px 0
+            input
+                height: inherit !important
+                font-size: inherit
+
     // }}}
     // FormView.label {{{
     .oe_form

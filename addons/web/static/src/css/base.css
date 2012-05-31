@@ -1465,7 +1465,7 @@
 .openerp .oe_form_button_save_dirty:hover {
   background: #ed6f6a;
 }
-.openerp .oe_form_topbar {
+.openerp header {
   position: relative;
   border-bottom: 1px solid #cacaca;
   background-color: #fcfcfc;
@@ -1478,7 +1478,7 @@
   padding: 0 8px;
   line-height: 30px;
 }
-.openerp .oe_form_topbar button {
+.openerp header button {
   font-size: 12px;
   height: 24px !important;
   line-height: 24px;
@@ -1486,11 +1486,11 @@
   padding: 0 10px;
   margin: 3px 4px 3px 0;
 }
-.openerp .oe_form_topbar button span.i {
+.openerp header button span.i {
   line-height: 20px;
   height: 24px;
 }
-.openerp .oe_form_topbar ul {
+.openerp header ul {
   height: 30px;
   padding: 0;
   margin: 0;
@@ -1498,7 +1498,7 @@
   border-left: 1px solid #cacaca;
   border-right: 1px solid #cacaca;
 }
-.openerp .oe_form_topbar ul li {
+.openerp header ul li {
   padding: 0;
   margin: 0;
   float: left;
@@ -1507,40 +1507,40 @@
   height: 30px;
   padding: 0 12px;
 }
-.openerp .oe_form_topbar ul li:first-child {
+.openerp header ul li:first-child {
   border-left: 1px solid #cacaca;
 }
-.openerp .oe_form_topbar ul li a {
+.openerp header ul li a {
   color: #4c4c4c;
 }
-.openerp .oe_form_topbar ul li a:hover {
+.openerp header ul li a:hover {
   color: black;
 }
-.openerp .oe_form_topbar .oe_form_steps {
+.openerp header .oe_form_steps {
   display: inline-block;
   position: absolute;
   right: 0;
 }
-.openerp .oe_form_topbar .oe_form_steps img {
+.openerp header .oe_form_steps img {
   margin: 0 8px;
   vertical-align: top;
 }
-.openerp .oe_form_topbar .oe_form_steps li {
+.openerp header .oe_form_steps li {
   border-right: none;
   padding: 0;
 }
-.openerp .oe_form_topbar .oe_form_steps li:first-child {
+.openerp header .oe_form_steps li:first-child {
   margin-left: 12px;
   border-left: none;
 }
-.openerp .oe_form_topbar .oe_form_steps li:last-child {
+.openerp header .oe_form_steps li:last-child {
   margin-right: 12px;
 }
-.openerp .oe_form_topbar .oe_form_steps_active {
+.openerp header .oe_form_steps_active {
   font-weight: bold;
   color: #b33630;
 }
-.openerp .oe_form_topbar.oe_form_topbar_hifirst button:first-child, .openerp button.oe_form_button_hi {
+.openerp header.oe_form_topbar_hifirst button:first-child, .openerp button.oe_form_button_hi {
   color: white;
   background: #dc5f59;
   background: -moz-linear-gradient(#dc5f59, #b33630);
@@ -1550,7 +1550,7 @@
   -webkit-box-shadow: none;
   -box-shadow: none;
 }
-.openerp .oe_form_topbar.oe_form_topbar_hifirst button:first-child:hover, .openerp button.oe_form_button_hi:hover {
+.openerp header.oe_form_topbar_hifirst button:first-child:hover, .openerp button.oe_form_button_hi:hover {
   background: #df6b66;
   background: -moz-linear-gradient(#df6b66, #bf3a33);
   background: -webkit-gradient(linear, left top, left bottom, from(#df6b66), to(#bf3a33));
@@ -1564,7 +1564,7 @@
   padding: 8px 0;
   border-bottom: 1px solid #dddddd;
 }
-.openerp .oe_application .oe_form_sheet_width, .openerp .oe_application .oe_form_bottom {
+.openerp .oe_application .oe_form_sheet_width, .openerp .oe_application footer {
   min-width: 650px;
   max-width: 980px;
   margin: 0 auto;
@@ -1577,6 +1577,12 @@
   -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   -box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+.openerp .oe_form_editable .oe_form_editable_hidden {
+  display: none;
+}
+.openerp .oe_form_readonly .oe_form_readonly_hidden {
+  display: none;
 }
 .openerp .oe_form .oe_form_group_cell {
   line-height: 18px;
@@ -1597,6 +1603,13 @@
 .openerp .oe_form .oe_form_group_cell > span > .oe_datepicker_root,
 .openerp .oe_form .oe_form_group_cell > span > .oe_datepicker_root > input.oe_datepicker_master {
   width: 100%;
+}
+.openerp .oe_form h1, .openerp .oe_form h2, .openerp .oe_form h3, .openerp .oe_form h4, .openerp .oe_form h5, .openerp .oe_form h6 {
+  margin: 0 0 4px 0;
+}
+.openerp .oe_form h1 input, .openerp .oe_form h2 input, .openerp .oe_form h3 input, .openerp .oe_form h4 input, .openerp .oe_form h5 input, .openerp .oe_form h6 input {
+  height: inherit !important;
+  font-size: inherit;
 }
 .openerp .oe_form .oe_form_label_help[for], .openerp .oe_form .oe_form_label[for] {
   font-weight: bold;

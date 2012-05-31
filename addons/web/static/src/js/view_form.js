@@ -521,6 +521,7 @@ instance.web.FormView = instance.web.View.extend(_.extend({}, instance.web.form.
     switch_mode: function() {
         var self = this;
         if(this.get("mode") == "view") {
+            self.$element.removeClass('oe_form_editable').addClass('oe_form_readonly');
             self.$buttons.find('.oe_form_buttons_edit').hide();
             self.$buttons.find('.oe_form_buttons_view').show();
             self.$sidebar.show();
@@ -528,6 +529,7 @@ instance.web.FormView = instance.web.View.extend(_.extend({}, instance.web.form.
                 field.set({"force_readonly": true});
             });
         } else {
+            self.$element.removeClass('oe_form_readonly').addClass('oe_form_editable');
             self.$buttons.find('.oe_form_buttons_edit').show();
             self.$buttons.find('.oe_form_buttons_view').hide();
             self.$sidebar.hide();
