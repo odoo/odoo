@@ -31,6 +31,7 @@ import decimal_precision as dp
 class purchase_requisition(osv.osv):
     _name = "purchase.requisition"
     _description="Purchase Requisition"
+    _inherit = "mail.thread"
     _columns = {
         'name': fields.char('Requisition Reference', size=32,required=True),
         'origin': fields.char('Source', size=32),

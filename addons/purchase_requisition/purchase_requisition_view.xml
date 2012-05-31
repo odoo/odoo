@@ -68,8 +68,9 @@
                                 <field name="product_uom_id" />
                                 <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             </form>
-
                         </field>
+                        <button name="%(action_purchase_requisition_partner)d" string="Request a Quotation" type="action" icon="gtk-execute"
+                           attrs="{'invisible': [('state', 'in', ('done','draft','cancel')),('line_ids','=',0)]}" />
                     </page>
                     <page string="Quotations">
                         <field colspan="4" name="purchase_ids" nolabel="1" mode="tree,form">
@@ -90,14 +91,15 @@
                         <separator colspan="4" string=""/>
                          <group col="8" colspan="4">
                           <label colspan="6"  string=""/>
-                        <button name="%(action_purchase_requisition_partner)d" string="Request a Quotation" type="action" icon="gtk-execute"
-                           attrs="{'readonly': [('state', '=', 'done')]}" />
                         </group>
                    </page>
                     <page string="Notes">
                         <field name="description" colspan="4" nolabel="1"/>
                     </page>
                 </notebook>
+                <div class="oe_form_bottom">
+                    <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
+                </div>
             </sheet>
             </form>
         </field>
