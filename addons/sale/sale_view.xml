@@ -153,8 +153,8 @@
                                                 context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'shop':parent.shop_id, 'uom':product_uom}"
                                                 name="product_id"
                                                 on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, True, parent.date_order, product_packaging, parent.fiscal_position, False, context)"/>
-                                            <field name="name"/>
-
+                                            <field name="name" placeholder="Porduct/Service characteristics"/>
+ 
                                             <field
                                                 context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'shop':parent.shop_id, 'uom':product_uom}"
                                                 name="product_uom_qty"
@@ -230,7 +230,7 @@
                             <div class="oe_clear"/>
 
                             <separator colspan="4" string="Notes"/>
-                            <field colspan="4" name="note" nolabel="1"/>
+                            <field colspan="4" name="note" nolabel="1" placeholder="Our quotation is valid for 30 days..."/>
                         </page>
                         <page string="Other Information">
                             <group colspan="2" col="2" name="logistics">
