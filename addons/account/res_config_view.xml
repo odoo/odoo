@@ -71,13 +71,13 @@
                         <group colspan="2" col="2">
                             <separator string="Customer Invoices" colspan="2"/>
                             <field name="sale_journal_id" invisible="1"/>
-                            <label string="Invoice Sequence" for="sale_sequence_prefix"/>
+                            <label string="Next Invoice Number" for="sale_sequence_prefix"/>
                             <group colspan="1" col="2">
                                 <field name="sale_sequence_prefix" nolabel="1"/>
                                 <field name="sale_sequence_next" nolabel="1" attrs="{'readonly': [('sale_journal_id','=',False)]}"/>
                             </group>
                             <field name="sale_refund_journal_id" invisible="1"/>
-                            <label string="Credit Note Sequence" for="sale_refund_sequence_prefix"/>
+                            <label string="Next Credit Note Number" for="sale_refund_sequence_prefix"/>
                             <group colspan="1" col="2">
                                 <field name="sale_refund_sequence_prefix" nolabel="1"/>
                                 <field name="sale_refund_sequence_next" nolabel="1" attrs="{'readonly': [('sale_refund_journal_id','=',False)]}"/>
@@ -90,13 +90,13 @@
                         <group colspan="2" col="2">
                             <separator string="Supplier Invoices" colspan="2"/>
                             <field name="purchase_journal_id" invisible="1"/>
-                            <label string="Supplier Invoice Sequence" for="purchase_sequence_prefix"/>
+                            <label string="Next Supplier Invoice Number" for="purchase_sequence_prefix"/>
                             <group colspan="1" col="2">
                                 <field name="purchase_sequence_prefix" nolabel="1"/>
                                 <field name="purchase_sequence_next" nolabel="1" attrs="{'readonly': [('purchase_journal_id','=',False)]}"/>
                             </group>
                             <field name="purchase_refund_journal_id" invisible="1"/>
-                            <label string="Supplier Credit Note Sequence" for="purchase_refund_sequence_prefix"/>
+                            <label string="Next Supplier Credit Note Number" help="&#x25;" for="purchase_refund_sequence_prefix"/>
                             <group colspan="1" col="2">
                                 <field name="purchase_refund_sequence_prefix" nolabel="1"/>
                                 <field name="purchase_refund_sequence_next" nolabel="1" attrs="{'readonly': [('purchase_refund_journal_id','=',False)]}"/>
