@@ -80,7 +80,7 @@
                                 <field name="active" attrs="{'invisible':[('state','in',['open', 'pending', 'template'])]}"/>
                             </group>
                         </page>
-                        <page string="Team">
+                        <page name="team" string="Team">
                             <field colspan="4" name="members" nolabel="1" help="Project's members are users who can have an access to the tasks related to this project.">
                                 <tree string="Members">
                                     <field name="name"/>

@@ -248,6 +248,92 @@
             </field>
         </record>
 
+        <record id="project_account_analytic_account_form" model="ir.ui.view">
+            <field name="name">project.account.analytic.account.form.inherit</field>
+            <field name="model">project.project</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="project.edit_project"/>
+            <field eval="18" name="priority"/>
+            <field name="arch" type="xml">
+            	<xpath expr='//page[@name="team"]' position='after'>
+            	    <page string="Contract Data" name="contract_page">
+                        <group colspan="2" col= "2" name="contract" class="oe_form_group_label_border">
+                            <separator colspan="2" string="Validity"/>
+                            <field name="date_start"/>
+                            <field name="date"/>
+                            <group col="6" colspan="3" class="oe_form_group_label_border">
+                                <field name="quantity_max"/><field name="company_uom_id" nolabel="1"/><field name="remaining_hours" string="/ Remaining"/>
+                            </group>
+                        </group>
+                        <group colspan="2" col= "2" name="invoice_rate" class="oe_form_group_label_border">
+                            <separator colspan="2" string="Invoice Rate"/>
+                            <field name="pricelist_id" />
+			                <field name="to_invoice" widget="selection" />
+                        </group>                     
+		                <separator colspan="4" string="Invoicing" name="invoicing"/>
+		                <group col="1" colspan="4">
+			              <table border="0">
+			                <tr>
+				            <th class="oe_th_150px" height="20px"></th>
+				            <th width="10px"></th>
+				            <th class="oe_th_110px">Est.Tot</th>
+				            <th class="oe_th_110px">Invoiced</th>
+				            <th class="oe_th_110px">Remaining</th>
+				            <th class="oe_th_110px">Ready To Invoice</th>
+				            <th width="10px"></th>
+				            <th class="oe_th_150px"></th>
+				            <th class="oe_th_150px"></th>
+			                </tr>
+			                <tr>
+				            <th class="oe_border_right">Fix Price Invoices</th>
+				            <td><field name="fix_price_invoices" nolabel="1"/></td>
+				            <td class="oe_amount_center oe_th_110px"><field name="amount_max" nolabel="1" attrs="{'invisible': [('fix_price_invoices','=',0)]}"/></td>
+				            <td class="oe_amount_center oe_th_110px"><field name="ca_invoiced" nolabel="1" attrs="{'invisible': [('fix_price_invoices','=',0)]}"/></td>
+				            <td class="oe_amount_center oe_th_110px oe_border_right"><field name="remaining_ca" nolabel="1" attrs="{'invisible': [('fix_price_invoices','=',0)]}"/></td>
+				            <td class="oe_amount_center oe_th_110px"><field name="ca_to_invoice" nolabel="1" attrs="{'invisible': [('fix_price_invoices','=',0)]}"/></td>
+				            <td width="10px"></td>
+				            <td class="oe_th_150px"><button class= "oe_btn_width" name="%(action_sales_order_line)d" string="Sales" type="action" context="{'default_project_id': active_id,'search_default_project_id': active_id}" attrs="{'invisible': [('fix_price_invoices','=',0)]}"/></td>
+				            <td class="oe_th_150px"><button class= "oe_btn_width" name="%(sale.action_order_line_tree2)d" string="Lines To Invoice" type="action" context="{'default_project_id': active_id,'search_default_project_id': active_id}" attrs="{'invisible': [('fix_price_invoices','=',0)]}"/></td>
+			                </tr>
+			                <tr>
+				            <th class="oe_border_right">Invoice On Timesheets</th>
+				            <td><field name="invoice_on_timesheets" nolabel="1"/></td>
+				            <td class="oe_amount_center oe_th_110px"><field name="quantity_max" nolabel="1" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
+				            <td class="oe_amount_center oe_th_110px"><field name="hours_qtt_invoiced" nolabel="1" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
+				            <td class="oe_amount_center oe_th_110px oe_border_right"><field name="remaining_hours" nolabel="1" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
+				            <td class="oe_amount_center oe_th_110px"><field name="hours_qtt_non_invoiced" nolabel="1" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
+				            <td width="10px"></td>
+				            <td class="oe_th_150px"><button class= "oe_btn_width" name="%(action_timesheet_lines_tree)d" string="Timesheets" type="action" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
+				            <td class="oe_th_150px"><button class= "oe_btn_width" name="%(hr_timesheet_invoice.act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice)d" string="Invoice Timesheets" type="action" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
+			                </tr>
+			                <tr>
+				            <th class="oe_border_right">Charge Expenses</th>
+				            <td><field name="charge_expenses" nolabel="1"/></td>
+				            <td class="oe_amount_center oe_th_110px">todo</td>
+				            <td class="oe_amount_center oe_th_110px">todo</td>
+				            <td class="oe_amount_center oe_th_110px oe_border_right">todo</td>
+				            <td class="oe_amount_center oe_th_110px">todo</td>
+				            <td width="10px"></td>
+				            <td class="oe_th_150px">todo</td>
+				            <td class="oe_th_150px">todo</td>
+			                </tr>
+			                <tr>
+				            <th class="oe_border_right">Total</th>
+				            <td width="10px"></td>
+				            <td class="oe_amount_center oe_th_110px oe_border_top">todo</td>
+				            <td class="oe_amount_center oe_th_110px oe_border_top">todo</td>
+				            <td class="oe_amount_center oe_th_110px oe_border_right oe_border_top">todo</td>
+				            <td class="oe_amount_center oe_th_110px oe_border_top">todo</td>
+			                </tr>
+			              </table>
+		                </group>
+		                <separator string="Terms and Condition" colspan="4" name="description"/>
+                        <field colspan="4" name="description" nolabel="1"/>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
         <!-- Add information on Account analytic list for the project management -->
         <record id="view_account_analytic_account_tree_c2c_2" model="ir.ui.view">
             <field name="name">account.analytic.account.tree</field>
