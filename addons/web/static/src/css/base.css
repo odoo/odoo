@@ -1485,14 +1485,12 @@
 .openerp .oe_searchview .oe_searchview_drawer .oe_opened form {
   display: block;
 }
-.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_custom_delete {
-  position: absolute;
-  left: 4px;
-  top: 3px;
-}
 .openerp .oe_searchview .oe_searchview_drawer .oe_searchview_custom_delete, .openerp .oe_searchview .oe_searchview_drawer .searchview_extended_delete_prop {
+  display: inline-block;
   width: 12px;
   height: 12px;
+  line-height: 12px;
+  padding: 1px;
   color: #8786b7;
   line-height: 8px;
   text-align: center;
@@ -1507,6 +1505,23 @@
   -moz-border-radius: 2px;
   -webkit-border-radius: 2px;
   border-radius: 2px;
+}
+.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_custom_delete {
+  display: none;
+  position: absolute;
+  bottom: 1px;
+  right: 4px;
+}
+.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_custom_private:hover .oe_searchview_custom_delete, .openerp .oe_searchview .oe_searchview_drawer .oe_searchview_custom_public:hover .oe_searchview_custom_delete {
+  display: inline-block;
+}
+.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_custom_public:after {
+  content: ",";
+  font-family: "entypoRegular" !important;
+  font-size: 22px;
+  font-weight: 300 !important;
+  margin: 0 0 0 4px;
+  padding: 0;
 }
 .openerp .oe_view_nocontent > img {
   float: left;
