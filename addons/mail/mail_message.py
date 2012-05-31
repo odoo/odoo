@@ -520,10 +520,6 @@ class mail_message(osv.osv):
         :param browse_record message: the message that was just sent
         :return: True
         """
-        if context is None:
-            context = {}
-        if context.get('active_ids', False) and context.get('active_model', False):
-            self.pool.get(context['active_model']).write(cr, uid, context['active_ids'], {'message_state':'read'}, context=context)
         if message.auto_delete:
             self.pool.get('ir.attachment').unlink(cr, uid,
                                                   [x.id for x in message.attachment_ids \
