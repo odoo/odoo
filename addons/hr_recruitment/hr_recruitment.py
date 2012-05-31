@@ -131,7 +131,10 @@ class hr_applicant(base_stage, osv.Model):
         # lame hack to allow reverting search, should just work in the trivial case
         if read_group_order == 'stage_id desc':
             order = "%s desc" % order
-        # get department_id from context
+        # retrieve section_id from the context and write the domain
+        # - ('id', 'in', 'ids'): add columns that should be present
+        # - OR ('department_id', '=', False), ('fold', '=', False): add default columns that are not folded
+        # - OR ('department_id', 'in', department_id), ('fold', '=', False) if department_id: add department columns that are not folded
         department_id = self._resolve_department_id_from_context(cr, uid, context=context)
         search_domain = []
         if department_id:

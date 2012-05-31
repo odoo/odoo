@@ -82,14 +82,17 @@ class crm_lead(base_stage, osv.osv):
         # lame hack to allow reverting search, should just work in the trivial case
         if read_group_order == 'stage_id desc':
             order = "%s desc" % order
-        # retrieve type from the context (if set: choose 'type' or 'both')
-        type = self._resolve_type_from_context(cr, uid, context=context)
         # retrieve section_id from the context and write the domain
+        # - ('id', 'in', 'ids'): add columns that should be present
+        # - OR ('case_default', '=', True), ('fold', '=', False): add default columns that are not folded
+        # - OR ('section_ids', '=', section_id), ('fold', '=', False) if section_id: add section columns that are not folded
         search_domain = []
         section_id = self._resolve_section_id_from_context(cr, uid, context=context)
         if section_id:
             search_domain += ['|', '&', ('section_ids', '=', section_id), ('fold', '=', False)]
-        search_domain += ['|', ('id', 'in', ids), '&', ('case_default', '=', 1), ('fold', '=', False)]
+        search_domain += ['|', ('id', 'in', ids), '&', ('case_default', '=', True), ('fold', '=', False)]
+        # retrieve type from the context (if set: choose 'type' or 'both')
+        type = self._resolve_type_from_context(cr, uid, context=context)
         if type:
             search_domain += ['|', ('type', '=', type), ('type', '=', 'both')]
         # perform search

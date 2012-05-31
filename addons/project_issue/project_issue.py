@@ -84,11 +84,14 @@ class project_issue(base_stage, osv.osv):
         if read_group_order == 'stage_id desc':
             order = "%s desc" % order
         # retrieve section_id from the context and write the domain
+        # - ('id', 'in', 'ids'): add columns that should be present
+        # - OR ('case_default', '=', True), ('fold', '=', False): add default columns that are not folded
+        # - OR ('project_ids', 'in', project_id), ('fold', '=', False) if project_id: add project columns that are not folded
         search_domain = []
         project_id = self._resolve_project_id_from_context(cr, uid, context=context)
         if project_id:
-            search_domain += ['|', '&', ('project_ids', '=', project_id), ('fold', '=', True)]
-        search_domain += ['|', ('id', 'in', ids), '&', ('case_default', '=', 1), ('fold', '=', False)]
+            search_domain += ['|', '&', ('project_ids', '=', project_id), ('fold', '=', False)]
+        search_domain += ['|', ('id', 'in', ids), '&', ('case_default', '=', True), ('fold', '=', False)]
         # perform search
         stage_ids = stage_obj._search(cr, uid, search_domain, order=order, access_rights_uid=access_rights_uid, context=context)
         result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
