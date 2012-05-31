@@ -140,10 +140,6 @@ $colour4: #8a89ba
     li
         list-style-type: none
     input, textarea
-        height: 14px
-        padding: 3px
-        font-size: 11px
-        line-height: 18px
         border: 1px solid #ccc
         @include radius(3px)
 
@@ -938,6 +934,13 @@ $colour4: #8a89ba
         background: white
         @include radius(13px)
         @include box-shadow(0 1px 2px rgba(0,0,0,0.2) inset)
+        input, textarea
+            padding: 3px
+            height: 14px
+            font-size: 11px
+            line-height: 18px
+            border: 1px solid #ccc
+            @include radius(3px)
         &.oe_focused
             border-color: $facets-border-selected
             @include box-shadow(0 1px 2px $facets-border-selected inset)

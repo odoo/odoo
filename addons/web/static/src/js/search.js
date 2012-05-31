@@ -1642,7 +1642,7 @@ instance.web.search.Filters = instance.web.search.Input.extend({
         var col1 = [], col2 = _(this.view.controls).map(function (inputs, group) {
             var filters = _(inputs).filter(is_group);
             return {
-                name: group === 'null' ? _t("<span class='oe_i'>q</span> Filters") : "<span class='oe_i'>w</span> " + group,
+                name: group === 'null' ? "<span class='oe_i'>q</span> " + _t("Filters") : "<span class='oe_i'>w</span> " + group,
                 filters: filters,
                 length: _(filters).chain().map(function (i) {
                     return i.filters.length; }).sum().value()
