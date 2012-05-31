@@ -4092,64 +4092,117 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
     start: function() {
         this._super();
         this.selected_value = null;
-
-        this.render_list();
+        // preview in start only for selection fields, because of the dynamic behavior of many2one fields.
+        if (this.field.type in ['selection']) {
+            this.render_list();
+        }
     },
     set_value: function(value_) {
+        var self = this;
         this._super(value_);
-        this.selected_value = value_;
-
-        this.render_list();
+        // find selected value:
+        // - many2one: [2, "New"] -> 2
+        // - selection: new -> new
+        if (this.field.type == "many2one") {
+            this.selected_value = value_[0];
+        } else {
+            this.selected_value = value_;
+        }
+        // trick to be sure all values are loaded in the form, therefore
+        // enabling the evaluation of dynamic domains
+        $.async_when().then(function() {
+            return self.render_list();
+        });
     },
+
+    /** Get the status list and render them
+     *  to_show: [[identifier, value_to_display]] where
+     *   - identifier = key for a selection, id for a many2one
+     *   - display_val = label that will be displayed
+     *   - ex: [[0, "New"]] (many2one) or [["new", "In Progress"]] (selection)
+     */
     render_list: function() {
+        var self = this;
+        // get selection values, filter them and render them
+        var selection_done = this.get_selection().pipe(self.proxy('filter_selection')).pipe(self.proxy('render_elements'));
+    },
+
+    /** Get the selection list to be displayed in the statusbar widget.
+     *  For selection fields: this is directly given by this.field.selection
+     *  For many2one fields :
+     *  - perform a search on the relation of the many2one field (given by
+     *    field.relation )
+     *  - get the field domain for the search
+     *    - self.build_domain() gives the domain given by the view or by
+     *      the field
+     *    - if the optional statusbar_fold attribute is set to true, make
+     *      an AND with build_domain to hide all 'fold=true' columns
+     *    - make an OR with current value, to be sure it is displayed,
+     *      with the correct order, even if it is folded
+     */
+    get_selection: function() {
+        var self = this;
+        if (this.field.type == "many2one") {
+            this.selection = [];
+            // get fold information from widget
+            var fold = ((this.node.attrs || {}).statusbar_fold || true);
+            // build final domain: if fold option required, add the 
+            if (fold == true) {
+                var domain = new instance.web.CompoundDomain(['|'], ['&'], self.build_domain(), [['fold', '=', false]], [['id', '=', self.selected_value]]);
+            } else {
+                var domain = new instance.web.CompoundDomain(['|'], self.build_domain(), [['id', '=', self.selected_value]]);
+            }
+            // get a DataSetSearch on the current field relation (ex: crm.lead.stage_id -> crm.case.stage)
+            var model_ext = new instance.web.DataSetSearch(this, this.field.relation, self.build_context(), domain);
+            // fetch selection
+            var read_defer = model_ext.read_slice(['name'], {}).pipe( function (records) {
+                _(records).each(function (record) {
+                    self.selection.push([record.id, record.name]);
+                });
+            });
+        } else {
+            this.selection = this.field.selection;
+            var read_defer = new $.Deferred().resolve();
+        }
+        return read_defer;
+    },
+
+    /** Filters this.selection, according to values coming from the statusbar_visible
+     *  attribute of the field. For example: statusbar_visible="draft,open"
+     *  Currently, the key of (key, label) pairs has to be used in the
+     *  selection of visible items. This feature is not meant to be used
+     *  with many2one fields.
+     */
+    filter_selection: function() {
         var self = this;
         var shown = _.map(((this.node.attrs || {}).statusbar_visible || "").split(","),
             function(x) { return _.str.trim(x); });
         shown = _.select(shown, function(x) { return x.length > 0; });
-
+        
         if (shown.length == 0) {
-            this.to_show = this.field.selection;
+            this.to_show = this.selection;
         } else {
-            this.to_show = _.select(this.field.selection, function(x) {
+            this.to_show = _.select(this.selection, function(x) {
                 return _.indexOf(shown, x[0]) !== -1 || x[0] === self.selected_value;
             });
         }
+    },
 
+    /** Renders the widget. This function also checks for statusbar_colors='{"pending": "blue"}'
+     *  attribute in the widget. This allows to set a given color to a given
+     *  state (given by the key of (key, label)).
+     */
+    render_elements: function () {
         var content = instance.web.qweb.render("FieldStatus.content", {widget: this, _:_});
         this.$element.html(content);
 
         var colors = JSON.parse((this.node.attrs || {}).statusbar_colors || "{}");
         var color = colors[this.selected_value];
         if (color) {
-            var elem = this.$element.find("li.oe-arrow-list-selected span");
-            elem.css("border-color", color);
-            if (this.check_white(color))
-                elem.css("color", "white");
-            elem = this.$element.find("li.oe-arrow-list-selected .oe-arrow-list-before");
-            elem.css("border-left-color", "rgba(0,0,0,0)");
-            elem = this.$element.find("li.oe-arrow-list-selected .oe-arrow-list-after");
-            elem.css("border-color", "rgba(0,0,0,0)");
-            elem.css("border-left-color", color);
+            var elem = this.$element.find("li.oe_form_steps_active span");
+            elem.css("color", color);
         }
     },
-    check_white: function(color) {
-        var div = $("<div></div>");
-        div.css("display", "none");
-        div.css("color", color);
-        div.appendTo($("body"));
-        var ncolor = div.css("color");
-        div.remove();
-        var res = /^\s*rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*$/.exec(ncolor);
-        if (!res) {
-            return false;
-        }
-        var comps = [parseInt(res[1]), parseInt(res[2]), parseInt(res[3])];
-        var lum = comps[0] * 0.3 + comps[1] * 0.59 + comps[1] * 0.11;
-        if (lum < 128) {
-            return true;
-        }
-        return false;
-    }
 });
 
 /**
