@@ -24,7 +24,7 @@ class crm_contact_us(osv.TransientModel):
         Therefore, user #1 will perform the creation until a better workaround 
         is figured out.
         """
-        crm_lead.create(cr, 1, dict(values,user_id=uid), context)
+        crm_lead.create(cr, 1, dict(values,user_id=False), context)
 
         """ Create an empty record in the portal_crm.crm_contact_us table """
         return super(crm_contact_us, self).create(cr, uid, {})
