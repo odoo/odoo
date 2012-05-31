@@ -146,11 +146,11 @@
             <field name="arch" type="xml">
                 <form layout="manual">
                 <div class="oe_form_topbar">
-                    <button name="invoice_open" states="draft,proforma2" string="Approve"/>
-                    <button name="%(action_account_invoice_refund)d" type='action' string='Refund' states='open,paid'/>
-                    <button name='%(action_account_state_open)d' type='action' string='Re-Open' groups="account.group_account_invoice" attrs="{'invisible':['|', ('state','&lt;&gt;','paid'), ('reconciled', '=', True)]}" help="This button only appears when the state of the invoice is 'paid' (showing that it has been fully reconciled) and auto-computed boolean 'reconciled' is False (depicting that it's not the case anymore). In other words, the invoice has been dereconciled and it does not fit anymore the 'paid' state. You should press this button to re-open it and let it continue its normal process after having resolved the eventual exceptions it may have created."/>
+                    <button name="invoice_open" states="draft,proforma2" string="Validate"/>
+                    <button name="%(action_account_invoice_refund)d" type='action' string='Ask Refund' states='open,paid'/>
                     <button name="invoice_cancel" states="draft,proforma2,sale,open" string="Cancel" groups="base.group_no_one"/>
                     <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object"/>
+                    <button name='%(action_account_state_open)d' type='action' string='Re-Open' groups="account.group_account_invoice" attrs="{'invisible':['|', ('state','&lt;&gt;','paid'), ('reconciled', '=', True)]}" help="This button only appears when the state of the invoice is 'paid' (showing that it has been fully reconciled) and auto-computed boolean 'reconciled' is False (depicting that it's not the case anymore). In other words, the invoice has been dereconciled and it does not fit anymore the 'paid' state. You should press this button to re-open it and let it continue its normal process after having resolved the eventual exceptions it may have created."/>
                     <div class="oe_right">
                         <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,open,paid" statusbar_colors='{"proforma":"blue","proforma2":"blue"}'/>
                     </div>
@@ -262,13 +262,15 @@
             <field name="arch" type="xml">
                 <form layout="manual">
                 <div class="oe_form_topbar">
-                    <button name="invoice_proforma2" states="draft" string="PRO-FORMA" groups="account.group_proforma_invoices"/>
+                	<button name="action_invoice_sent" type="object" string="Send by Email" states="open" attrs="{'invisible':['|',('sent','=',True), ('state', '=', 'draft')]}"/>
+                	<button name="invoice_print" string="Print Invoice" type="object" states="open" attrs="{'invisible':['|',('sent','=',True), ('state', '=', 'draft')]}"/>
                     <button name="invoice_open" states="draft,proforma2" string="Validate"/>
-                    <button name='%(action_account_state_open)d' type='action' string='Re-Open' groups="account.group_account_invoice" attrs="{'invisible':['|', ('state','&lt;&gt;','paid'), ('reconciled', '=', True)]}" help="This button only appears when the state of the invoice is 'paid' (showing that it has been fully reconciled) and auto-computed boolean 'reconciled' is False (depicting that it's not the case anymore). In other words, the invoice has been dereconciled and it does not fit anymore the 'paid' state. You should press this button to re-open it and let it continue its normal process after having resolved the eventual exceptions it may have created."/>
-                    <button name="%(account_invoices)d" string="Print Invoice" type="action" states="open,paid,proforma,sale,proforma2"/>
-                    <button name="%(action_account_invoice_refund)d" type='action' string='Refund' states='open,paid'/>
-                    <button name="action_cancel_draft" states="cancel" string="Reset to Draft" type="object"/>
+                    <button name="invoice_proforma2" states="draft" string="PRO-FORMA" groups="account.group_proforma_invoices"/>
+                    <button name="%(action_account_invoice_refund)d" type='action' string='Refund Invoice' states='paid'/>
                     <button name="invoice_cancel" states="draft,proforma2,sale,open" string="Cancel" groups="base.group_no_one"/>
+                    <button name="action_cancel_draft" states="cancel" string="Reset to Draft" type="object"/>
+                    <button name='%(action_account_state_open)d' type='action' string='Re-Open' groups="account.group_account_invoice" attrs="{'invisible':['|', ('state','&lt;&gt;','paid'), ('reconciled', '=', True)]}" help="This button only appears when the state of the invoice is 'paid' (showing that it has been fully reconciled) and auto-computed boolean 'reconciled' is False (depicting that it's not the case anymore). In other words, the invoice has been dereconciled and it does not fit anymore the 'paid' state. You should press this button to re-open it and let it continue its normal process after having resolved the eventual exceptions it may have created."/>
+                    <!--button name="%(account_invoices)d" string="Print Invoice" type="action" states="open,paid,proforma,sale,proforma2"/-->
                     <div class="oe_right">
                         <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,open,paid" statusbar_colors='{"proforma":"blue","proforma2":"blue"}'/>
                     </div>
@@ -291,6 +293,7 @@
                     <newline/>
                     <field domain="[('company_id', '=', company_id),('type','=', 'receivable')]" name="account_id" groups="account.group_account_user"/>
                     <field name="name" placeholder="Project XYZ"/>
+                    <field name="sent"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Invoice">

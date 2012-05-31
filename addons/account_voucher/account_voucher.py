@@ -780,7 +780,7 @@ class account_voucher(osv.osv):
 
     def proforma_voucher(self, cr, uid, ids, context=None):
         self.action_move_line_create(cr, uid, ids, context=context)
-        return True
+        return {'type': 'ir.actions.act_window_close'}
 
     def action_cancel_draft(self, cr, uid, ids, context=None):
         wf_service = netsvc.LocalService("workflow")

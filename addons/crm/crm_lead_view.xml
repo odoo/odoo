@@ -414,7 +414,7 @@
                 </div>
                 <sheet layout="auto">
                 <group colspan="4" col="2" width="auto">
-                    <field name="name" required="1" nolabel="1" class="oe_form_title"/>
+                    <field name="name" required="1" nolabel="1" class="oe_form_title" placeholder="Need new website design"/>
                     <div class="oe_text_right">
                         <button string="Schedule/Log Call"
                             name="%(opportunity2phonecall_act)d" icon="terp-call-start"
@@ -431,7 +431,7 @@
                     <field name="date_action"/>
                     <field name="date_deadline"/>
 
-                    <field name="title_action"/>
+                    <field name="title_action" placeholder="Call to analyse needs"/>
                     <field name="probability"/>
 
                     <field name="type" invisible="1"/>
@@ -447,7 +447,7 @@
                                 icon="terp-partner" type="action"
                                 string="Create"
                                 attrs="{'invisible':[('partner_id','!=',False)]}"/>
-                            <field name="phone" colspan="3"/>
+                            <field name="phone" colspan="3" placeholder="+32.81.81.37.00"/>
                             <field width="80%%" name="email_from" string="Email"/>
                             <button string="Mail"
                                 name="%(mail.action_email_compose_message_wizard)d"
@@ -487,14 +487,14 @@
                     </group>
                     <group colspan="2" col="2" class="oe_form_group_label_border">
                         <field domain="[('domain', '=', 'contact')]" name="title" widget="selection"/>
-                        <field name="fax"/>
+                        <field name="fax" placeholder="+32.81.81.37.00"/>
                         <field name="street"/>
                         <field name="zip"/>
                         <field name="country_id"/>
                     </group>
                     <group colspan="2" col="2" class="oe_form_group_label_border">
                         <field name="function" />
-                        <field name="mobile"/>
+                        <field name="mobile" placeholder="+32.81.81.37.00"/>
                         <field name="street2"/>
                         <field name="city"/>
                         <field name="state_id"/>
@@ -502,8 +502,8 @@
 
                     <group colspan="2" col="2" class="oe_form_group_label_border">
                         <separator string="Categorization" colspan="2"/>
-                        <field name="type_id" widget="selection"/>
-                        <field name="channel_id" widget="selection"/>
+                        <field name="type_id" widget="selection" placeholder="Mailing june"/>
+                        <field name="channel_id" widget="selection" placeholder="E-mail"/>
                     </group>
                     <group colspan="2" col="2" class="oe_form_group_label_border">
                         <separator string="Mailings" colspan="2"/>
@@ -517,7 +517,7 @@
                         <field name="active"/>
                         <field name="day_open" groups="base.group_no_one"/>
                         <field name="day_close" groups="base.group_no_one"/>
-                        <field name="referred"/>
+                        <field name="referred" placeholder="tom@reseller.com"/>
                     </group>
                     <group col="2" colspan="2" class="oe_form_group_label_border">
                         <separator colspan="4" string="References"/>

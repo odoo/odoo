@@ -121,7 +121,7 @@
                 </div>
                 <sheet string="Physical Inventory" layout="auto">
                 <group class="oe_form_header">
-                    <field name="name"/>
+                    <field name="name" placeholder="Annual invetory 2013"/>
                     <field name="date"/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     <notebook colspan="4">
@@ -726,7 +726,7 @@
                     <group colspan="4" col="6">
                         <group colspan="4" col="4">
                             <field name="name" readonly="1"/>
-                            <field name="origin"/>
+                            <field name="origin" placeholder="PO0032"/>
                             <field name="partner_id" on_change="onchange_partner_in(partner_id)" colspan="4"/>
                             <field name="invoice_state" string="Invoice Control"/>
                             <field name="backorder_id" readonly="1"/>
@@ -835,7 +835,7 @@
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                         </page>
                         <page string="Notes">
-                            <field colspan="4" name="note" nolabel="1"/>
+                            <field colspan="4" name="note" nolabel="1" placeholder="Quality test ok..."/>
                         </page>
                     </notebook>
                 </sheet>
@@ -912,14 +912,13 @@
             <field name="arch" type="xml">
                 <tree colors="blue:state == 'draft';grey:state == 'cancel';red:state not in ('cancel', 'done') and min_date &lt; current_date" string="Delivery Orders">
                     <field name="name"/>
+                    <field name="partner_id"/>
                     <field name="origin"/>
-                    <field name="date"/>
                     <field name="min_date"/>
                     <field name="backorder_id"/>
+                    <field name="stock_journal_id"/>
                     <field name="invoice_state"/>
-                    <field name="stock_journal_id" widget="selection"/>
                     <field name="state"/>
-                    <button name="action_process" states="assigned" string="Process" type="object" icon="gtk-go-forward"/>
                 </tree>
             </field>
         </record>
@@ -1032,6 +1031,7 @@
             <field name="arch" type="xml">
                 <tree colors="blue:state == 'draft';grey:state == 'done';red:state not in ('cancel', 'done') and date &lt; current_date" string="Picking list">
                     <field name="name"/>
+                    <field name="partner_id"/>
                     <field name="backorder_id"/>
                     <field name="origin"/>
                     <field name="date"/>
