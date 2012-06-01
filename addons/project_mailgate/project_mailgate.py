@@ -63,7 +63,7 @@ class project_tasks(osv.osv):
 
         self.write(cr, uid, ids, data, context=context)
         getattr(self,act)(cr, uid, ids, context=context)
-        self.message_append_note(cr, uid, [res_id], msg, context=context)
+        self.message_append_note(cr, uid, [res_id], body=msg, context=context)
         return True
 
     def message_thread_followers(self, cr, uid, ids, context=None):
