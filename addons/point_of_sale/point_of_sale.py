@@ -384,6 +384,11 @@ class pos_session(osv.osv):
         wf_service = netsvc.LocalService("workflow")
 
         for session in self.browse(cr, uid, ids, context=context):
+            order_ids = [order.id for order in session.order_ids if order.state != 'paid']
+
+            move_id = self.pool.get('account.move').create(cr, uid, {'ref' : session.name, 'journal_id' : session.config_id.journal_id.id, }, context=context)
+            self.pool.get('pos.order')._create_account_move_line(cr, uid, order_ids, move_id, context=context)
+
             for order in session.order_ids:
                 if order.state != 'paid':
                     raise osv.except_osv(
@@ -805,6 +810,10 @@ class pos_order(osv.osv):
         }
 
     def create_account_move(self, cr, uid, ids, context=None):
+        return self._create_account_move_line(cr, uid, ids, None, context=context)
+
+    def _create_account_move_line(self, cr, uid, ids, move_id=None, context=None):
+        # Tricky, via the workflow, we only have one id in the ids variable
         """Create a account move line of order grouped by products or not."""
         account_move_obj = self.pool.get('account.move')
         account_move_line_obj = self.pool.get('account.move.line')
@@ -815,6 +824,8 @@ class pos_order(osv.osv):
         property_obj=self.pool.get('ir.property')
 
         for order in self.browse(cr, uid, ids, context=context):
+            if order.account_move:
+                continue
             if order.state != 'paid':
                 continue
 
@@ -827,11 +838,12 @@ class pos_order(osv.osv):
 
             order_account = order.partner_id and order.partner_id.property_account_receivable and order.partner_id.property_account_receivable.id or account_def or curr_c.account_receivable.id
 
-            # Create an entry for the sale
-            move_id = account_move_obj.create(cr, uid, {
-                'ref' : order.name,
-                'journal_id': order.sale_journal.id,
-            }, context=context)
+            if move_id is None:
+                # Create an entry for the sale
+                move_id = account_move_obj.create(cr, uid, {
+                    'ref' : order.name,
+                    'journal_id': order.sale_journal.id,
+                }, context=context)
 
             # Create an move for each order line
             for line in order.lines:
