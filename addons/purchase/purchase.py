@@ -249,6 +249,10 @@ class purchase_order(osv.osv):
         wf_service = netsvc.LocalService("workflow")
         for id in unlink_ids:
             wf_service.trg_validate(uid, 'purchase.order', id, 'purchase_cancel', cr)
+        # force removal on concurrency-check field from context because
+        # system will raise an error if record was modified by workflow
+        if context and unlink_ids:
+            context.pop(self.CONCURRENCY_CHECK_FIELD, None)
 
         return super(purchase_order, self).unlink(cr, uid, unlink_ids, context=context)
 
