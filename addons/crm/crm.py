@@ -186,6 +186,7 @@ class crm_case_resource_type(osv.osv):
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
     }
 
+
 def _links_get(self, cr, uid, context=None):
     """Gets links value for reference field"""
     obj = self.pool.get('res.request.link')
