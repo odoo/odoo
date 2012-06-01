@@ -542,7 +542,7 @@ class res_config_settings(osv.osv_memory):
         if to_install_ids:
             ir_module.button_immediate_install(cr, uid, to_install_ids, context)
         if to_uninstall_ids:
-            ir_module.module_uninstall(cr, uid, to_uninstall_ids, context)
+            ir_module.button_uninstall(cr, uid, to_uninstall_ids, context)
 
         # force client-side reload (update user menu and current view)
         return {
