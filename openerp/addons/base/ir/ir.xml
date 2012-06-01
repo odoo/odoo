@@ -1128,6 +1128,36 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="view_model_constraint_form">
+            <field name="name">ir.model.constraint.form</field>
+            <field name="model">ir.model.constraint</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Model Constraints">
+                    <field name="type"/>
+                    <field name="name"/>
+                    <field name="module"/>
+                    <field name="model"/>
+                    <newline/>
+                    <field name="date_update" />
+                    <field name="date_init" />
+                </form>
+            </field>
+        </record>
+
+        <record id="view_model_constraint_list" model="ir.ui.view">
+            <field name="name">ir.model.constraint.list</field>
+            <field name="model">ir.model.constraint</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Model Constraints">
+                    <field name="type"/>
+                    <field name="name"/>
+                    <field name="module"/>
+                    <field name="model"/>
+                </tree>
+            </field>
+        </record>
 
         <record id="action_model_model" model="ir.actions.act_window">
             <field name="name">Models</field>
@@ -1155,6 +1185,15 @@
             <field name="view_id" ref="view_model_data_list"/>
         </record>
         <menuitem action="action_model_data" id="ir_model_data_menu" parent="base.next_id_5"
+                  groups="base.group_no_one"/>
+
+        <record id="action_model_constraint" model="ir.actions.act_window">
+            <field name="name">Model Constraints</field>
+            <field name="res_model">ir.model.constraint</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_model_constraint_list"/>
+        </record>
+        <menuitem action="action_model_constraint" id="ir_model_constraint_menu" parent="base.next_id_5"
                   groups="base.group_no_one"/>
 
         <!-- Translations -->
