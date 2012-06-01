@@ -154,7 +154,7 @@ class crm_helpdesk(base_state, osv.osv):
         return 'Case'
 
     def create_send_note(self, cr, uid, ids, context=None):
-        msg = '%s has been <b>created</b>.' % (self.case_get_note_msg_prefix(cr, uid, ids, context=context))
+        msg = _('Case has been <b>created</b>.')
         self.message_append_note(cr, uid, ids, body=msg, context=context)
         return True
 

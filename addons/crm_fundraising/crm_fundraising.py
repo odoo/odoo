@@ -23,6 +23,7 @@ from base_status.base_stage import base_stage
 from crm import crm
 from crm import wizard
 from osv import fields, osv
+from tools.translate import _
 
 wizard.mail_compose_message.SUPPORTED_MODELS.append('crm.fundraising')
 
@@ -151,7 +152,7 @@ class crm_fundraising(base_stage, osv.osv):
         return 'Fundraising'
 
     def create_send_note(self, cr, uid, ids, context=None):
-        msg = '%s has been <b>created</b>.' % (self.case_get_note_msg_prefix(cr, uid, ids, context=context))
+        msg = _('Fundraising has been <b>created</b>.')
         self.message_append_note(cr, uid, ids, body=msg, context=context)
         return True
 

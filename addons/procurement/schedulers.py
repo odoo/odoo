@@ -112,10 +112,16 @@ class procurement_order(osv.osv):
                                 (proc.id, proc.product_qty, proc.product_uom.name,
                                     proc.product_id.name,))
                         report_except += 1
-                    if uid:
-                        # Chatter: old res.request is now a chatter on res.users, id=uid
-                        end_date = fields.datetime.now()
-                        summary = _("""Here is the procurement scheduling report.
+
+
+                if use_new_cursor:
+                    cr.commit()
+                offset += len(ids)
+                if not ids: break
+            end_date = fields.datetime.now()
+            if uid:
+                # Chatter: old res.request is now a chatter on res.users, id=uid
+                summary = _("""Here is the procurement scheduling report.
 
         Start Time: %s 
         End Time: %s 
@@ -124,13 +130,8 @@ class procurement_order(osv.osv):
         Skipped Procurements (scheduled date outside of scheduler range) %d 
 
         Exceptions:\n""") % (start_date, end_date, report_total, report_except, report_later)
-                        summary += '\n'.join(report)
-                        self.pool.get('res.users').message_append_note(cr, uid, [uid], body=summary, context=context)
-                if use_new_cursor:
-                    cr.commit()
-                offset += len(ids)
-                if not ids: break
-           
+                summary += '\n'.join(report)
+                self.pool.get('res.users').message_append_note(cr, uid, [uid], body=summary, context=context)
 
             if use_new_cursor:
                 cr.commit()

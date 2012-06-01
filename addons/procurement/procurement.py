@@ -289,14 +289,14 @@ class procurement_order(osv.osv):
                 return False
             if not procurement.product_id.seller_ids:
                 message = _('No supplier defined for this product !')
-                self.procurement_message(cr, uid, [procurement.id], message)
+                self.message_append_note(cr, uid, [procurement.id], body=message, context=context)
                 cr.execute('update procurement_order set message=%s where id=%s', (message, procurement.id))
                 return False
             partner = procurement.product_id.seller_id #Taken Main Supplier of Product of Procurement.
 
             if not partner:
                 message = _('No default supplier defined for this product')
-                self.procurement_message(cr, uid, [procurement.id], message)
+                self.message_append_note(cr, uid, [procurement.id], body=message, context=context)
                 cr.execute('update procurement_order set message=%s where id=%s', (message, procurement.id))
                 return False
             if user.company_id and user.company_id.partner_id:
@@ -306,17 +306,11 @@ class procurement_order(osv.osv):
             address_id = partner_obj.address_get(cr, uid, [partner.id], ['delivery'])['delivery']
             if not address_id:
                 message = _('No address defined for the supplier')
-                self.procurement_message(cr, uid, [procurement.id], message)
+                self.message_append_note(cr, uid, [procurement.id], body=message, context=context)
                 cr.execute('update procurement_order set message=%s where id=%s', (message, procurement.id))
                 return False
         return True
-    def procurement_message(self,cr,uid,ids,message,context=None):
-        for proc in self.browse(cr,uid,ids):
-            message_ids=False
-            message_ids= self.pool.get('mail.message').search(cr,uid,[('res_id','=',proc.id),('model','=',self._name),('body_html','=',message)])
-            if not message_ids:
-                self.message_append_note(cr, uid, [proc.id], body=message)
-        return True
+
     def test_cancel(self, cr, uid, ids):
         """ Tests whether state of move is cancelled or not.
         @return: True or False
@@ -362,11 +356,11 @@ class procurement_order(osv.osv):
         """ Changes procurement state to Running and writes message.
         @return: True
         """
-        message = _('from stock: products assigned.')
+        message = _('From stock: products assigned.')
         self.write(cr, uid, ids, {'state': 'running',
-                'message': message})
-        self.procurement_message(cr, uid, ids, message, context=context)                  
-        self.running_send_note(cr, uid, ids, context=None)
+                'message': message}, context=context)
+        self.message_append_note(cr, uid, ids, body=message, context=context)                  
+        self.running_send_note(cr, uid, ids, context=context)
         return True
 
     def _check_make_to_stock_service(self, cr, uid, procurement, context=None):
@@ -398,7 +392,7 @@ class procurement_order(osv.osv):
                 if message:
                     message = _("Procurement '%s' is in exception: ") % (procurement.name) + message
                     cr.execute('update procurement_order set message=%s where id=%s', (message, procurement.id))
-                    self.procurement_message(cr, uid, [procurement.id], message, context=context)   
+                    self.message_append_note(cr, uid, [procurement.id], body=message, context=context)   
         return ok
 
     def action_produce_assign_service(self, cr, uid, ids, context=None):

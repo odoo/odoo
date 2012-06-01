@@ -246,15 +246,12 @@ class crm_claim(base_stage, osv.osv):
         return 'Claim'
 
     def create_send_note(self, cr, uid, ids, context=None):
-        msg = '%s has been <b>created</b>.' % (self.case_get_note_msg_prefix(cr, uid, ids, context=context))
-        self.message_append_note(cr, uid, ids, body=msg, context=context)
-        return True
+        msg = _('Claim has been <b>created</b>.')
+        return self.message_append_note(cr, uid, ids, body=msg, context=context)
 
     def case_refuse_send_note(self, cr, uid, ids, context=None):
-        for id in ids:
-            msg = _('%s has been <b>refused</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
-            self.message_append_note(cr, uid, [id], body=msg, context=context)
-        return True
+        msg = _('Claim has been <b>refused</b>.')
+        return self.message_append_note(cr, uid, ids, body=msg, context=context)
 
     def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
         """ Override of the (void) default notification method. """
