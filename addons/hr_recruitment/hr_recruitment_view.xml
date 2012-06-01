@@ -50,8 +50,6 @@
                 <field name="partner_phone"/>
                 <field name="job_id"/>
                 <field name="stage_id"/>
-                <button name="stage_previous" string="Previous" states="open,pending" type="object" icon="gtk-go-back"/>
-                <button name="stage_next" string="Next" states="open,pending" type="object" icon="gtk-go-forward"/>
                 <field name="title_action" invisible="context.get('invisible_next_action', True)"/>
                 <field name="date_action" invisible="context.get('invisible_next_date', True)"/>
                 <field name="source_id" invisible="1"/>
@@ -63,8 +61,6 @@
                 <field name="department_id" invisible="context.get('invisible_department', True)"/>
                 <field name="user_id"/>
                 <field name="state"/>
-                <button name="case_open" string="In Progress" states="draft,pending" type="object" icon="gtk-go-forward"/>
-                <button name="case_pending" string="Pending" states="open" type="object" icon="gtk-media-pause"/>
             </tree>
         </field>
     </record>

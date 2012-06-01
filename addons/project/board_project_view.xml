@@ -18,10 +18,6 @@
                     <field name="effective_hours" widget="float_time"/>
                     <field name="progress" widget="progressbar"/>
                     <field name="state" invisible="context.get('set_visible',False)"/>
-                    <button name="do_cancel" states="draft,open,pending" string="Cancel" type="object" icon="gtk-cancel" help="For cancelling the task"/>
-                    <button name="do_open" states="pending,draft,done,cancel" string="Start Task" type="object" icon="gtk-execute" help="For changing to open state" invisible="context.get('set_visible',False)"/>
-                    <button name="%(action_project_task_delegate)d" states="pending,open,draft" string="Delegate" type="action" icon="gtk-sort-descending" help="For changing to delegate state"/>
-                    <button name="action_close" states="draft,pending,open" string="Done" type="object" icon="terp-dialog-close" help="For changing to done state"/>
                 </tree>
             </field>
         </record>
@@ -40,9 +36,6 @@
                     <field name="total_hours" widget="float_time"/>
                     <field name="progress" widget="progressbar"/>
                     <field name="state" invisible="context.get('set_visible',False)"/>
-                    <button name="do_cancel" states="draft,open,pending" string="Cancel" type="object" icon="gtk-cancel" help="For cancelling the task"/>
-                    <button name="do_open" states="pending,draft,done,cancel" string="Start Task" type="object" icon="gtk-execute" help="For changing to open state" invisible="context.get('set_visible',False)"/>
-                    <button name="action_close" states="draft,pending,open" string="Done" type="object" icon="gtk-apply" help="For changing to done state"/>
                 </tree>
             </field>
         </record>

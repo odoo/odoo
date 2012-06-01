@@ -335,12 +335,7 @@
                     <field name="user_id" string="Interviewer"/>
                     <field name="user_to_review_id"/>
                     <field name="response" readonly="1" invisible="True"/>
-                    <button name="%(survey.action_view_survey_question_message)d" string="Answer Survey" type="action" states="waiting_answer,done,cancel" icon="gtk-execute" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0, 'active' : response, 'request' : True, 'object' : 'hr.evaluation.interview', 'cur_id' : active_id}" attrs="{'readonly':[('survey_id','=',False)]}"/>
-                    <button name="action_print_survey" string="Print Survey" type="object" icon="gtk-print" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0}" attrs="{'readonly':[('survey_id','=',False)]}"/>
-                    <button name="%(mail.action_email_compose_message_wizard)d" string="Send Reminder Email" icon="terp-mail-message-new" type="action" colspan="2" states="waiting_answer"/>
                     <field name="state"/>
-                    <button string="Send Request" name="survey_req_waiting_answer" states="draft" type="object" icon="gtk-yes" />
-                    <button string="Done" name="survey_req_done" states="waiting_answer" type="object" icon="gtk-jump-to" />
                 </tree>
             </field>
         </record>
