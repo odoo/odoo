@@ -51,7 +51,7 @@
                     <field name="date_start"/>
                     <field name="date_end"/>
                     <field name="origin"/>
-                    <field name="warehouse_id" widget="selection"/>
+                    <field name="warehouse_id" widget="selection" groups="stock.group_locations"/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                 </group>
                 <notebook colspan="4">
@@ -60,12 +60,12 @@
                             <tree string="Products" editable="bottom">
                                 <field name="product_id" on_change="onchange_product_id(product_id,product_uom_id)"/>
                                 <field name="product_qty"/>
-                                <field name="product_uom_id"/>
+                                <field name="product_uom_id" groups="product.group_uom"/>
                             </tree>
                             <form string="Products">
                                 <field name="product_id" />
                                 <field name="product_qty"/>
-                                <field name="product_uom_id" />
+                                <field name="product_uom_id" groups="product.group_uom"/>
                                 <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             </form>
                         </field>
