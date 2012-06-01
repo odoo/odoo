@@ -73,7 +73,7 @@ class pos_config(osv.osv):
             help="This sequence is automatically created by OpenERP but you can change it "\
                 "to customize the reference numbers of your orders."),
         'session_ids': fields.one2many('pos.session', 'config_id', 'Sessions'),
-
+        'group_by' : fields.boolean('Group By', help="Check this if you want to group the Journal Items by Product while a Session"),
     }
 
     def name_get(self, cr, uid, ids, context=None):
@@ -104,7 +104,8 @@ class pos_config(osv.osv):
     _defaults = {
         'state' : POS_CONFIG_STATE[0][0],
         'shop_id': _default_shop,
-        'journal_id': _default_sale_journal
+        'journal_id': _default_sale_journal,
+        'group_by' : True,
     }
 
     def set_active(self, cr, uid, ids, context=None):
@@ -387,7 +388,7 @@ class pos_session(osv.osv):
             order_ids = [order.id for order in session.order_ids if order.state != 'paid']
 
             move_id = self.pool.get('account.move').create(cr, uid, {'ref' : session.name, 'journal_id' : session.config_id.journal_id.id, }, context=context)
-            self.pool.get('pos.order')._create_account_move_line(cr, uid, order_ids, move_id, context=context)
+            self.pool.get('pos.order')._create_account_move_line(cr, uid, order_ids, session, move_id, context=context)
 
             for order in session.order_ids:
                 if order.state != 'paid':
@@ -556,7 +557,9 @@ class pos_order(osv.osv):
     }
 
     def create(self, cr, uid, values, context=None):
+        print "#CREATE: %r" % (values,)
         values['name'] = self.pool.get('ir.sequence').get(cr, uid, 'pos.order')
+        #values['session_id'] = 40
         return super(pos_order, self).create(cr, uid, values, context=context)
 
     def test_paid(self, cr, uid, ids, context=None):
@@ -810,18 +813,42 @@ class pos_order(osv.osv):
         }
 
     def create_account_move(self, cr, uid, ids, context=None):
-        return self._create_account_move_line(cr, uid, ids, None, context=context)
+        return self._create_account_move_line(cr, uid, ids, None, None, context=context)
 
-    def _create_account_move_line(self, cr, uid, ids, move_id=None, context=None):
+    def _create_account_move_line(self, cr, uid, ids, session=None, move_id=None, context=None):
         # Tricky, via the workflow, we only have one id in the ids variable
         """Create a account move line of order grouped by products or not."""
         account_move_obj = self.pool.get('account.move')
         account_move_line_obj = self.pool.get('account.move.line')
         account_period_obj = self.pool.get('account.period')
-        period = account_period_obj.find(cr, uid, context=context)[0]
         account_tax_obj = self.pool.get('account.tax')
-        res_obj=self.pool.get('res.users')
-        property_obj=self.pool.get('ir.property')
+        user_proxy = self.pool.get('res.users')
+        property_obj = self.pool.get('ir.property')
+
+        products = None
+        period = account_period_obj.find(cr, uid, context=context)[0]
+
+        session_ids = set(order.session_id for order in self.browse(cr, uid, ids, context=context))
+        # import pdb
+        # pdb.set_trace()
+
+        if session and not all(session.id == order.session_id.id for order in self.browse(cr, uid, ids, context=context)):
+            raise osv.except_osv(_('Error!'), _('The selected orders do not have the same session !'))
+
+        current_company = user_proxy.browse(cr, uid, uid, context=context).company_id
+
+        grouped_data = {}
+        have_to_group_by = session and session.config_id.group_by or False
+
+        def compute_tax(amount, tax, line):
+            if amount > 0:
+                tax_code_id = tax['base_code_id']
+                tax_amount = line.price_subtotal * tax['base_sign']
+            else:
+                tax_code_id = tax['ref_base_code_id']
+                tax_amount = line.price_subtotal * tax['ref_base_sign']
+
+            return (tax_code_id, tax_amount,)
 
         for order in self.browse(cr, uid, ids, context=context):
             if order.account_move:
@@ -829,14 +856,14 @@ class pos_order(osv.osv):
             if order.state != 'paid':
                 continue
 
-            curr_c = res_obj.browse(cr, uid, uid).company_id
-            comp_id = res_obj.browse(cr, order.user_id.id, order.user_id.id).company_id
-            comp_id = comp_id and comp_id.id or False
-            to_reconcile = []
+            user_company = user_proxy.browse(cr, order.user_id.id, order.user_id.id).company_id
+
             group_tax = {}
             account_def = property_obj.get(cr, uid, 'property_account_receivable', 'res.partner', context=context).id
 
-            order_account = order.partner_id and order.partner_id.property_account_receivable and order.partner_id.property_account_receivable.id or account_def or curr_c.account_receivable.id
+            order_account = order.partner_id and \
+                            order.partner_id.property_account_receivable and \
+                            order.partner_id.property_account_receivable.id or account_def or current_company.account_receivable.id
 
             if move_id is None:
                 # Create an entry for the sale
@@ -845,24 +872,59 @@ class pos_order(osv.osv):
                     'journal_id': order.sale_journal.id,
                 }, context=context)
 
+            def insert_data(data_type, values):
+                # if have_to_group_by:
+
+                if have_to_group_by:
+                    sale_journal_id = session.config_id.journal_id.id
+                else:
+                    sale_journal_id = order.sale_journal.id
+
+                # 'quantity': line.qty,
+                # 'product_id': line.product_id.id,
+                values.update({
+                    'date': order.date_order[:10],
+                    'ref': order.name,
+                    'journal_id' : sale_journal_id,
+                    'period_id' : period,
+                    'move_id' : move_id,
+                    'company_id': user_company and user_company.id or False,
+                })
+
+                if data_type == 'product':
+                    key = ('product', values['product_id'],)
+                elif data_type == 'tax':
+                    key = ('tax', values['tax_code_id'],)
+                elif data_type == 'counter_part':
+                    key = ('counter_part',)
+                else:
+                    return
+
+                grouped_data.setdefault(key, [values])
+
+                if have_to_group_by:
+                    current_value = grouped_data[key][0]
+                    current_value['quantity'] += values.get('quantity', 0)
+                    current_value['credit'] += values.get('credit', 0.0)
+                    current_value['debit'] += values.get('debit', 0.0)
+                    current_value['tax_amount'] += values.get('tax_amount', 0.0)
+                else:
+                    grouped_data[key].append(values)
+
             # Create an move for each order line
+
             for line in order.lines:
                 tax_amount = 0
                 taxes = [t for t in line.product_id.taxes_id]
-                computed = account_tax_obj.compute_all(cr, uid, taxes, line.price_unit * (100.0-line.discount) / 100.0, line.qty)
-                computed_taxes = computed['taxes']
+                computed_taxes = account_tax_obj.compute_all(cr, uid, taxes, line.price_unit * (100.0-line.discount) / 100.0, line.qty)['taxes']
 
                 for tax in computed_taxes:
                     tax_amount += round(tax['amount'], 2)
-                    group_key = (tax['tax_code_id'],
-                                tax['base_code_id'],
-                                tax['account_collected_id'],
-                                tax['id'])
+                    group_key = (tax['tax_code_id'], tax['base_code_id'], tax['account_collected_id'], tax['id'])
 
-                    if group_key in group_tax:
-                        group_tax[group_key] += round(tax['amount'], 2)
-                    else:
-                        group_tax[group_key] = round(tax['amount'], 2)
+                    group_tax.setdefault(group_key, 0)
+                    group_tax[group_key] += round(tax['amount'], 2)
+
                 amount = line.price_subtotal
 
                 # Search for the income account
@@ -880,103 +942,76 @@ class pos_order(osv.osv):
                 tax_amount = 0
                 while computed_taxes:
                     tax = computed_taxes.pop(0)
-                    if amount > 0:
-                        tax_code_id = tax['base_code_id']
-                        tax_amount = line.price_subtotal * tax['base_sign']
-                    else:
-                        tax_code_id = tax['ref_base_code_id']
-                        tax_amount = line.price_subtotal * tax['ref_base_sign']
+                    tax_code_id, tax_amount = compute_tax(amount, tax, line)
+
                     # If there is one we stop
                     if tax_code_id:
                         break
 
                 # Create a move for the line
-                account_move_line_obj.create(cr, uid, {
+                insert_data('product', {
                     'name': line.product_id.name,
-                    'date': order.date_order[:10],
-                    'ref': order.name,
                     'quantity': line.qty,
                     'product_id': line.product_id.id,
-                    'move_id': move_id,
                     'account_id': income_account,
-                    'company_id': comp_id,
                     'credit': ((amount>0) and amount) or 0.0,
                     'debit': ((amount<0) and -amount) or 0.0,
-                    'journal_id': order.sale_journal.id,
-                    'period_id': period,
                     'tax_code_id': tax_code_id,
                     'tax_amount': tax_amount,
                     'partner_id': order.partner_id and order.partner_id.id or False
-                }, context=context)
+                })
 
                 # For each remaining tax with a code, whe create a move line
                 for tax in computed_taxes:
-                    if amount > 0:
-                        tax_code_id = tax['base_code_id']
-                        tax_amount = line.price_subtotal * tax['base_sign']
-                    else:
-                        tax_code_id = tax['ref_base_code_id']
-                        tax_amount = line.price_subtotal * tax['ref_base_sign']
+                    tax_code_id, tax_amount = compute_tax(amount, tax, line)
                     if not tax_code_id:
                         continue
 
-                    account_move_line_obj.create(cr, uid, {
+                    insert_data('tax', {
                         'name': _('Tax'),
-                        'date': order.date_order[:10],
-                        'ref': order.name,
                         'product_id':line.product_id.id,
                         'quantity': line.qty,
-                        'move_id': move_id,
                         'account_id': income_account,
-                        'company_id': comp_id,
                         'credit': 0.0,
                         'debit': 0.0,
-                        'journal_id': order.sale_journal.id,
-                        'period_id': period,
                         'tax_code_id': tax_code_id,
                         'tax_amount': tax_amount,
-                    }, context=context)
-
+                    })
 
             # Create a move for each tax group
             (tax_code_pos, base_code_pos, account_pos, tax_id)= (0, 1, 2, 3)
-            for key, amount in group_tax.items():
+
+            for key, tax_amount in group_tax.items():
                 tax = self.pool.get('account.tax').browse(cr, uid, key[tax_id], context=context)
-                account_move_line_obj.create(cr, uid, {
+                insert_data('tax', {
                     'name': _('Tax') + ' ' + tax.name,
-                    'date': order.date_order[:10],
-                    'ref': order.name,
-                    'move_id': move_id,
-                    'company_id': comp_id,
                     'quantity': line.qty,
                     'product_id': line.product_id.id,
                     'account_id': key[account_pos],
-                    'credit': ((amount>0) and amount) or 0.0,
-                    'debit': ((amount<0) and -amount) or 0.0,
-                    'journal_id': order.sale_journal.id,
-                    'period_id': period,
+                    'credit': ((tax_amount>0) and tax_amount) or 0.0,
+                    'debit': ((tax_amount<0) and -tax_amount) or 0.0,
                     'tax_code_id': key[tax_code_pos],
-                    'tax_amount': amount,
-                }, context=context)
+                    'tax_amount': tax_amount,
+                })
 
             # counterpart
-            to_reconcile.append(account_move_line_obj.create(cr, uid, {
+            insert_data('counter_part', {
                 'name': _("Trade Receivables"), #order.name,
-                'date': order.date_order[:10],
-                'ref': order.name,
-                'move_id': move_id,
-                'company_id': comp_id,
                 'account_id': order_account,
-                'credit': ((order.amount_total < 0) and -order.amount_total)\
-                    or 0.0,
-                'debit': ((order.amount_total > 0) and order.amount_total)\
-                    or 0.0,
-                'journal_id': order.sale_journal.id,
-                'period_id': period,
+                'credit': ((order.amount_total < 0) and -order.amount_total) or 0.0,
+                'debit': ((order.amount_total > 0) and order.amount_total) or 0.0,
                 'partner_id': order.partner_id and order.partner_id.id or False
-            }, context=context))
+            })
 
-            self.write(cr, uid, order.id, {'state':'done', 'account_move': move_id}, context=context)
+            order.write({'state':'done', 'account_move': move_id})
+
+
+        print "grouped_data: %r" % (grouped_data,)
+        for group_key, group_data in grouped_data.iteritems():
+            for value in group_data:
+                print "value: %r" % (value,)
+                account_move_line_obj.create(cr, uid, value, context=context)
+
         return True
 
     def action_payment(self, cr, uid, ids, context=None):
