@@ -31,6 +31,7 @@ import decimal_precision as dp
 class purchase_requisition(osv.osv):
     _name = "purchase.requisition"
     _description="Purchase Requisition"
+    _inherit = "mail.thread"
     _columns = {
         'name': fields.char('Requisition Reference', size=32,required=True),
         'origin': fields.char('Source', size=32),
@@ -203,6 +204,28 @@ class purchase_order(osv.osv):
     _columns = {
         'requisition_id' : fields.many2one('purchase.requisition','Purchase Requisition')
     }
+    def default_get(self, cr, uid, fields, context=None):
+        if not context:
+            context = {}
+        product_obj = self.pool.get('product.product')
+        pur_req_line_obj = self.pool.get('purchase.requisition.line')
+        purchase_order_line_obj = self.pool.get('purchase.order.line')
+        res = super(purchase_order, self).default_get(cr, uid, fields, context=context)
+        product_ids = context.get('product_ids', False)
+        val_list = []
+        if product_ids:
+            for id in product_ids:
+                if  id[0] == 4:
+                    product_data = pur_req_line_obj.browse(cr, uid, id[1], context=context)
+                    line_vals={'product_id': product_data.product_id.id, 'product_qty': product_data.product_qty, 'name': product_data.product_id.name}
+                elif id[0] == 0:
+                   product_data = id[2] 
+                   name = product_obj.browse(cr, uid, product_data.get('product_id'), context=context).name
+                   line_vals = {'product_id': product_data.get('product_id'), 'product_qty': product_data.get('product_qty'), 'name': name}
+                val_list.append((0,0,line_vals))   
+        res.update({'order_line': val_list})
+        return res
+        
     def wkf_confirm_order(self, cr, uid, ids, context=None):
         res = super(purchase_order, self).wkf_confirm_order(cr, uid, ids, context=context)
         proc_obj = self.pool.get('procurement.order')
