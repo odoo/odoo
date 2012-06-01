@@ -95,20 +95,29 @@ class crm_fundraising(base_stage, osv.osv):
     def stage_find(self, cr, uid, cases, section_id, domain=[], order='sequence', context=None):
         """ Override of the base.stage method
             Parameter of the stage search taken from the lead:
-            - type: stage type must be the same or 'both'
             - section_id: if set, stages must belong to this section or
               be a default case
         """
         if isinstance(cases, (int, long)):
             cases = self.browse(cr, uid, cases, context=context)
-        domain = list(domain)
+        # collect all section_ids
+        section_ids = []
         if section_id:
-                domain += ['|', ('section_ids', '=', section_id), ('case_default', '=', True)]
-        for lead in cases:
-            lead_section_id = lead.section_id.id if lead.section_id else None
-            if lead_section_id:
-                domain += ['|', ('section_ids', '=', lead_section_id), ('case_default', '=', True)]
-        stage_ids = self.pool.get('crm.case.stage').search(cr, uid, domain, order=order, context=context)
+            section_ids.append(section_id)
+        for case in cases:
+            if case.section_id:
+                section_ids.append(case.section_id.id)
+        # OR all section_ids and OR with case_default
+        search_domain = []
+        if section_ids:
+            search_domain += [('|')] * len(section_ids)
+            for section_id in section_ids:
+                search_domain.append(('section_ids', '=', section_id))
+        search_domain.append(('case_default', '=', True))
+        # AND with the domain in parameter
+        search_domain += list(domain)
+        # perform search, return the first found
+        stage_ids = self.pool.get('crm.case.stage').search(cr, uid, search_domain, order=order, context=context)
         if stage_ids:
             return stage_ids[0]
         return False
@@ -128,6 +137,19 @@ class crm_fundraising(base_stage, osv.osv):
         vals.update(self.message_partner_by_email(cr, uid, msg.get('from')))
         self.write(cr, uid, [res_id], vals, context=context)
         return res_id
+
+    # ---------------------------------------------------
+    # OpenChatter methods and notifications
+    # ---------------------------------------------------
+
+    def case_get_note_msg_prefix(self, cr, uid, id, context=None):
+        """ Override of default prefix for notifications. """
+        return 'Fundraising'
+
+    def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
+        """ Override of the (void) default notification method. """
+        stage_name = self.pool.get('crm.case.stage').name_get(cr, uid, [stage_id], context=context)[0][1]
+        return self.message_append_note(cr, uid, ids, body= _("Stage changed to <b>%s</b>.") % (stage_name), context=context)
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
