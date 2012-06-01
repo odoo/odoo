@@ -71,9 +71,7 @@ _schema = logging.getLogger(__name__ + '.schema')
 from openerp.tools import SKIPPED_ELEMENT_TYPES
 
 # Prefixes for external IDs of schema elements
-EXT_ID_PREFIX_FK = "_foreign_key_"
 EXT_ID_PREFIX_M2M_TABLE = "_m2m_rel_table_"
-EXT_ID_PREFIX_CONSTRAINT = "_constraint_"
 
 regex_order = re.compile('^(([a-z0-9_]+|"[a-z0-9_]+")( *desc| *asc)?( *, *|))+$', re.I)
 regex_object_name = re.compile(r'^[a-z0-9_.]+$')
@@ -3108,7 +3106,6 @@ class BaseModel(object):
         """ Create the foreign keys recorded by _auto_init. """
         for t, k, r, d in self._foreign_keys:
             cr.execute('ALTER TABLE "%s" ADD FOREIGN KEY ("%s") REFERENCES "%s" ON DELETE %s' % (t, k, r, d))
-            self._make_ext_id(cr,  "%s%s_%s_fkey" % (EXT_ID_PREFIX_FK, t, k))
             self._save_constraint(cr, "%s_%s_fkey" % (t, k), 'f')
         cr.commit()
         del self._foreign_keys
@@ -3234,7 +3231,7 @@ class BaseModel(object):
         for (key, con, _) in self._sql_constraints:
             conname = '%s_%s' % (self._table, key)
 
-            self._make_ext_id(cr, EXT_ID_PREFIX_CONSTRAINT + conname)
+            self._save_constraint(cr, conname, 'u')
             cr.execute("SELECT conname, pg_catalog.pg_get_constraintdef(oid, true) as condef FROM pg_constraint where conname=%s", (conname,))
             existing_constraints = cr.dictfetchall()
             sql_actions = {

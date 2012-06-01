@@ -29,8 +29,7 @@ from openerp import netsvc, pooler, tools
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools import config
 from openerp.tools.translate import _
-from openerp.osv.orm import except_orm, browse_record, EXT_ID_PREFIX_FK, \
-                            EXT_ID_PREFIX_M2M_TABLE, EXT_ID_PREFIX_CONSTRAINT
+from openerp.osv.orm import except_orm, browse_record, EXT_ID_PREFIX_M2M_TABLE
 
 _logger = logging.getLogger(__name__)
 
@@ -857,8 +856,7 @@ class ir_model_data(osv.osv):
             model_obj = self.pool.get(model)
             name = tools.ustr(data.name)
 
-            if name.startswith(EXT_ID_PREFIX_FK) or name.startswith(EXT_ID_PREFIX_M2M_TABLE)\
-                 or name.startswith(EXT_ID_PREFIX_CONSTRAINT):
+            if name.startswith(EXT_ID_PREFIX_M2M_TABLE):
                 # double-check we are really going to delete all the owners of this schema element
                 cr.execute("""SELECT id from ir_model_data where name = %s and res_id IS NULL""", (data.name,))
                 external_ids = [x[0] for x in cr.fetchall()]
@@ -866,31 +864,11 @@ class ir_model_data(osv.osv):
                     # as installed modules have defined this element we must not delete it!
                     continue
 
-            if name.startswith(EXT_ID_PREFIX_FK):
-                name = name[len(EXT_ID_PREFIX_FK):]
-                # test if FK exists on this table (it could be on a related m2m table, in which case we ignore it)
-                cr.execute("""SELECT 1 from pg_constraint cs JOIN pg_class cl ON (cs.conrelid = cl.oid)
-                              WHERE cs.contype=%s and cs.conname=%s and cl.relname=%s""", ('f', name, model_obj._table))
-                if cr.fetchone():
-                    cr.execute('ALTER TABLE "%s" DROP CONSTRAINT "%s"' % (model_obj._table, name),)
-                    _logger.info('Dropped FK CONSTRAINT %s@%s', name, model)
-                continue
-
             if name.startswith(EXT_ID_PREFIX_M2M_TABLE):
                 name = name[len(EXT_ID_PREFIX_M2M_TABLE):]
                 cr.execute("SELECT 1 FROM information_schema.tables WHERE table_name=%s", (name,))
                 if cr.fetchone() and not name in to_drop_table:
                     to_drop_table.append(name)
-                continue
-
-            if name.startswith(EXT_ID_PREFIX_CONSTRAINT):
-                name = name[len(EXT_ID_PREFIX_CONSTRAINT):]
-                # test if constraint exists
-                cr.execute("""SELECT 1 from pg_constraint cs JOIN pg_class cl ON (cs.conrelid = cl.oid)
-                              WHERE cs.contype=%s and cs.conname=%s and cl.relname=%s""", ('u', name, model_obj._table))
-                if cr.fetchone():
-                    cr.execute('ALTER TABLE "%s" DROP CONSTRAINT "%s"' % (model_obj._table, name),)
-                    _logger.info('Dropped CONSTRAINT %s@%s', name, model)
                 continue
 
             pair_to_unlink = (model, res_id)
