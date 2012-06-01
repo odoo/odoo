@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from base_status.base_stage import base_stage
 import time
 from datetime import datetime, timedelta
 
@@ -57,8 +58,6 @@ class hr_recruitment_source(osv.osv):
     _columns = {
         'name': fields.char('Source Name', size=64, required=True, translate=True),
     }
-hr_recruitment_source()
-
 
 class hr_recruitment_stage(osv.osv):
     """ Stage of HR Recruitment """
@@ -69,12 +68,15 @@ class hr_recruitment_stage(osv.osv):
         'name': fields.char('Name', size=64, required=True, translate=True),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of stages."),
         'department_id':fields.many2one('hr.department', 'Specific to a Department', help="Stages of the recruitment process may be different per department. If this stage is common to all departments, keep tempy this field."),
-        'requirements': fields.text('Requirements')
+        'state': fields.selection(AVAILABLE_STATES, 'State', required=True, help="The related state for the stage. The state of your document will automatically change regarding the selected stage. Example, a stage is related to the state 'Close', when your document reach this stage, it will be automatically closed."),
+        'fold': fields.boolean('Hide in views if empty', help="This stage is not visible, for example in status bar or kanban view, when there are no records in that stage to display."),
+        'requirements': fields.text('Requirements'),
     }
     _defaults = {
         'sequence': 1,
+        'state': 'draft',
+        'fold': False,
     }
-hr_recruitment_stage()
 
 class hr_recruitment_degree(osv.osv):
     """ Degree of HR Recruitment """
@@ -90,13 +92,59 @@ class hr_recruitment_degree(osv.osv):
     _sql_constraints = [
         ('name_uniq', 'unique (name)', 'The name of the Degree of Recruitment must be unique!')
     ]
-hr_recruitment_degree()
 
-class hr_applicant(crm.crm_case, osv.osv):
+class hr_applicant(base_stage, osv.Model):
     _name = "hr.applicant"
     _description = "Applicant"
     _order = "id desc"
     _inherit = ['ir.needaction_mixin', 'mail.thread']
+
+    def _get_default_department_id(self, cr, uid, context=None):
+        """ Gives default department by checking if present in the context """
+        return (self._resolve_department_id_from_context(cr, uid, context=context) or False)
+
+    def _get_default_stage_id(self, cr, uid, context=None):
+        """ Gives default stage_id """
+        department_id = self._get_default_department_id(cr, uid, context=context)
+        return self.stage_find(cr, uid, [], department_id, [('state', '=', 'draft')], context=context)
+
+    def _resolve_department_id_from_context(self, cr, uid, context=None):
+        """ Returns ID of department based on the value of 'default_department_id'
+            context key, or None if it cannot be resolved to a single
+            department.
+        """
+        if context is None:
+            context = {}
+        if type(context.get('default_department_id')) in (int, long):
+            return context.get('default_department_id')
+        if isinstance(context.get('default_department_id'), basestring):
+            department_name = context['default_department_id']
+            department_ids = self.pool.get('hr.department').name_search(cr, uid, name=department_name, context=context)
+            if len(department_ids) == 1:
+                return int(department_ids[0][0])
+        return None
+
+    def _read_group_stage_ids(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
+        access_rights_uid = access_rights_uid or uid
+        stage_obj = self.pool.get('hr.recruitment.stage')
+        order = stage_obj._order
+        # lame hack to allow reverting search, should just work in the trivial case
+        if read_group_order == 'stage_id desc':
+            order = "%s desc" % order
+        # retrieve section_id from the context and write the domain
+        # - ('id', 'in', 'ids'): add columns that should be present
+        # - OR ('department_id', '=', False), ('fold', '=', False): add default columns that are not folded
+        # - OR ('department_id', 'in', department_id), ('fold', '=', False) if department_id: add department columns that are not folded
+        department_id = self._resolve_department_id_from_context(cr, uid, context=context)
+        search_domain = []
+        if department_id:
+            search_domain += ['|', '&', ('department_id', '=', department_id), ('fold', '=', False)]
+        search_domain += ['|', ('id', 'in', ids), '&', ('department_id', '=', False), ('fold', '=', False)]
+        stage_ids = stage_obj._search(cr, uid, search_domain, order=order, access_rights_uid=access_rights_uid, context=context)
+        result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
+        # restore order of the search
+        result.sort(lambda x,y: cmp(stage_ids.index(x[0]), stage_ids.index(y[0])))
+        return result
 
     def _compute_day(self, cr, uid, ids, fields, args, context=None):
         """
@@ -143,12 +191,15 @@ class hr_applicant(crm.crm_case, osv.osv):
         'partner_id': fields.many2one('res.partner', 'Partner'),
         'create_date': fields.datetime('Creation Date', readonly=True, select=True),
         'write_date': fields.datetime('Update Date', readonly=True),
-        'stage_id': fields.many2one ('hr.recruitment.stage', 'Stage'),
-        'state': fields.selection(AVAILABLE_STATES, 'Status', size=16, readonly=True,
-                                  help='The state is set to \'Draft\', when a case is created.\
-                                  \nIf the case is in progress the state is set to \'Open\'.\
-                                  \nWhen the case is over, the state is set to \'Done\'.\
-                                  \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
+        'stage_id': fields.many2one ('hr.recruitment.stage', 'Stage',
+                        domain="['|', ('department_id', '=', department_id), ('department_id', '=', False)]"),
+        'state': fields.related('stage_id', 'state', type="selection", store=True,
+                selection=AVAILABLE_STATES, string="State", readonly=True,
+                help='The state is set to \'Draft\', when a case is created.\
+                      If the case is in progress the state is set to \'Open\'.\
+                      When the case is over, the state is set to \'Done\'.\
+                      If the case needs to be reviewed then the state is \
+                      set to \'Pending\'.'),
         'company_id': fields.many2one('res.company', 'Company'),
         'user_id': fields.many2one('res.users', 'Responsible'),
         # Applicant Columns
@@ -169,7 +220,6 @@ class hr_applicant(crm.crm_case, osv.osv):
         'partner_mobile': fields.char('Mobile', size=32),
         'type_id': fields.many2one('hr.recruitment.degree', 'Degree'),
         'department_id': fields.many2one('hr.department', 'Department'),
-        'state': fields.selection(AVAILABLE_STATES, 'Status', size=16, readonly=True),
         'survey': fields.related('job_id', 'survey_id', type='many2one', relation='survey', string='Survey'),
         'response': fields.integer("Response"),
         'reference': fields.char('Refered By', size=128),
@@ -185,32 +235,18 @@ class hr_applicant(crm.crm_case, osv.osv):
 
     _defaults = {
         'active': lambda *a: 1,
-        'user_id':  lambda self, cr, uid, context: uid,
-        'email_from': crm.crm_case. _get_default_email,
-        'state': lambda *a: 'draft',
+        'user_id':  lambda s, cr, uid, c: uid,
+        'email_from': lambda s, cr, uid, c: s._get_default_email(cr, uid, c),
+        'stage_id': lambda s, cr, uid, c: s._get_default_stage_id(cr, uid, c),
+        'department_id': lambda s, cr, uid, c: s._get_default_department_id(cr, uid, c),
         'priority': lambda *a: '',
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c),
         'color': 0,
     }
 
-    def _read_group_stage_ids(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
-        access_rights_uid = access_rights_uid or uid
-        stage_obj = self.pool.get('hr.recruitment.stage')
-        order = stage_obj._order
-        if read_group_order == 'stage_id desc':
-            # lame hack to allow reverting search, should just work in the trivial case
-            order = "%s desc" % order
-        stage_ids = stage_obj._search(cr, uid, ['|',('id','in',ids),('department_id','=',False)], order=order,
-                                      access_rights_uid=access_rights_uid, context=context)
-        result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
-        # restore order of the search
-        result.sort(lambda x,y: cmp(stage_ids.index(x[0]), stage_ids.index(y[0])))
-        return result
-
     _group_by_full = {
         'stage_id': _read_group_stage_ids
     }
-
 
     def onchange_job(self,cr, uid, ids, job, context=None):
         result = {}
@@ -229,47 +265,33 @@ class hr_applicant(crm.crm_case, osv.osv):
         stage_id = stage_ids and stage_ids[0] or False
         return {'value': {'stage_id': stage_id}}
 
-    def stage_previous(self, cr, uid, ids, context=None):
-        """This function computes previous stage for case from its current stage
-             using available stage for that case type
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of case IDs
-        @param context: A standard dictionary for contextual values"""
-        stage_obj = self.pool.get('hr.recruitment.stage')
-        for case in self.browse(cr, uid, ids, context=context):
-            department = (case.department_id.id or False)
-            st = case.stage_id.id  or False
-            stage_ids = stage_obj.search(cr, uid, ['|',('department_id','=',department),('department_id','=',False)], context=context)
-            if st and stage_ids.index(st):
-                self.write(cr, uid, [case.id], {'stage_id': stage_ids[stage_ids.index(st)-1]}, context=context)
-            else:
-                self.write(cr, uid, [case.id], {'stage_id': False}, context=context)
-        return True
-
-    def stage_next(self, cr, uid, ids, context=None):
-        """This function computes next stage for case from its current stage
-             using available stage for that case type
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of case IDs
-        @param context: A standard dictionary for contextual values"""
-        stage_obj = self.pool.get('hr.recruitment.stage')
-        for case in self.browse(cr, uid, ids, context=context):
-            department = (case.department_id.id or False)
-            st = case.stage_id.id  or False
-            stage_ids = stage_obj.search(cr, uid, ['|',('department_id','=',department),('department_id','=',False)], context=context)
-            val = False
-            if st and len(stage_ids) != stage_ids.index(st)+1:
-                val = stage_ids[stage_ids.index(st)+1]
-            elif (not st) and stage_ids:
-                val = stage_ids[0]
-            else:
-                val = False
-            self.write(cr, uid, [case.id], {'stage_id': val}, context=context)
-        return True
+    def stage_find(self, cr, uid, cases, section_id, domain=[], order='sequence', context=None):
+        """ Override of the base.stage method
+            Parameter of the stage search taken from the lead:
+            - department_id: if set, stages must belong to this section or
+              be a default case
+        """
+        if isinstance(cases, (int, long)):
+            cases = self.browse(cr, uid, cases, context=context)
+        # collect all section_ids
+        department_ids = []
+        if section_id:
+            department_ids.append(section_id)
+        for case in cases:
+            if case.department_id:
+                department_ids.append(case.department_id.id)
+        # OR all section_ids and OR with case_default
+        search_domain = []
+        if department_ids:
+            search_domain += ['|', ('department_id', 'in', department_ids)]
+        search_domain.append(('department_id', '=', False))
+        # AND with the domain in parameter
+        search_domain += list(domain)
+        # perform search, return the first found
+        stage_ids = self.pool.get('hr.recruitment.stage').search(cr, uid, search_domain, order=order, context=context)
+        if stage_ids:
+            return stage_ids[0]
+        return False
 
     def action_makeMeeting(self, cr, uid, ids, context=None):
         """
@@ -474,12 +496,6 @@ class hr_applicant(crm.crm_case, osv.osv):
         """
         return self.set_priority(cr, uid, ids, '3')
 
-    def write(self, cr, uid, ids, vals, context=None):
-        if 'stage_id' in vals and vals['stage_id']:
-            stage = self.pool.get('hr.recruitment.stage').browse(cr, uid, vals['stage_id'], context=context)
-            self.message_append_note(cr, uid, ids, body=_("Stage changed to <b>%s</b>.") % stage.name, context=context)
-        return super(hr_applicant,self).write(cr, uid, ids, vals, context=context)
-
     # -------------------------------------------------------
     # OpenChatter methods and notifications
     # -------------------------------------------------------
@@ -497,7 +513,13 @@ class hr_applicant(crm.crm_case, osv.osv):
             if obj.state == 'draft' and obj.user_id:
                 result[obj.id] = [obj.user_id.id]
         return result
-    
+
+    def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
+        """ Override of the (void) default notification method. """
+        if not stage_id: return True
+        stage_name = self.pool.get('hr.recruitment.stage').name_get(cr, uid, [stage_id], context=context)[0][1]
+        return self.message_append_note(cr, uid, ids, body= _("Stage changed to <b>%s</b>.") % (stage_name), context=context)
+
     def case_get_note_msg_prefix(self, cr, uid, id, context=None):
 		return 'Applicant'
 
@@ -529,7 +551,6 @@ class hr_applicant(crm.crm_case, osv.osv):
         message = _("Applicant has been <b>created</b>.")
         return self.message_append_note(cr, uid, ids, body=message, context=context)
 
-hr_applicant()
 
 class hr_job(osv.osv):
     _inherit = "hr.job"
@@ -537,6 +558,6 @@ class hr_job(osv.osv):
     _columns = {
         'survey_id': fields.many2one('survey', 'Interview Form', help="Choose an interview form for this job position and you will be able to print/answer this interview from all applicants who apply for this job"),
     }
-hr_job()
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

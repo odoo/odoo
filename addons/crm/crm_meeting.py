@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-today OpenERP SA (<http://www.openerp.com>)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -20,43 +20,35 @@
 ##############################################################################
 
 from base_calendar import base_calendar
-from crm import crm_base, crm_case
+from base_status.base_state import base_state
+from base_status.base_stage import base_stage
+import logging
 from osv import fields, osv
 import tools
 from tools.translate import _
-import logging
 
-class crm_lead(crm_case, osv.osv):
-    """ CRM Leads """
-    _name = 'crm.lead'
-crm_lead()
+class crm_lead(base_stage, osv.osv):
+        """ CRM Leads """
+        _name = 'crm.lead'
 
-class crm_phonecall(crm_case, osv.osv):
-    """ CRM Phonecall """
-    _name = 'crm.phonecall'
-crm_phonecall()
-
-
-class crm_meeting(crm_base, osv.osv):
-    """ CRM Meeting Cases """
-
+class crm_meeting(base_state, osv.Model):
+    """ Model for CRM meetings """
     _name = 'crm.meeting'
     _description = "Meeting"
     _order = "id desc"
     _inherit = ["calendar.event", 'ir.needaction_mixin', "mail.thread"]
     _columns = {
-        # From crm.case
-        'name': fields.char('Summary', size=124, required=True, states={'done': [('readonly', True)]}),
+        # base_state required fields
         'partner_id': fields.many2one('res.partner', 'Partner', states={'done': [('readonly', True)]}),
         'section_id': fields.many2one('crm.case.section', 'Sales Team', states={'done': [('readonly', True)]}, \
                         select=True, help='Sales team to which Case belongs to.'),
         'email_from': fields.char('Email', size=128, states={'done': [('readonly', True)]}, help="These people will receive email."),
-        'id': fields.integer('ID', readonly=True),
         'create_date': fields.datetime('Creation Date' , readonly=True),
         'write_date': fields.datetime('Write Date' , readonly=True),
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
         # Meeting fields
+        'name': fields.char('Summary', size=124, required=True, states={'done': [('readonly', True)]}),
         'categ_id': fields.many2one('crm.case.categ', 'Meeting Type', \
                         domain="[('object_id.model', '=', 'crm.meeting')]", \
             ),
@@ -67,11 +59,11 @@ class crm_meeting(crm_base, osv.osv):
         'date_closed': fields.datetime('Closed', readonly=True),
         'date_deadline': fields.datetime('Deadline', states={'done': [('readonly', True)]}),
         'message_ids': fields.one2many('mail.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
-        'state': fields.selection([('open', 'Confirmed'),
-                                    ('draft', 'Unconfirmed'),
+        'state': fields.selection([ ('draft', 'Unconfirmed'),
+                                    ('open', 'Confirmed'),
                                     ('cancel', 'Cancelled'),
-                                    ('done', 'Done')], 'Status', \
-                                    size=16, readonly=True),
+                                    ('done', 'Done')],
+                                    string='Status', size=16, readonly=True),
     }
     _defaults = {
         'state': 'draft',
@@ -90,6 +82,17 @@ class crm_meeting(crm_base, osv.osv):
             if (obj.state == 'draft' and obj.user_id):
                 result[obj.id] = [obj.user_id.id]
         return result
+
+    def case_open(self, cr, uid, ids, context=None):
+        """ Confirms meeting """
+        res = super(crm_meeting, self).case_open(cr, uid, ids, context)
+        for (id, name) in self.name_get(cr, uid, ids):
+            id=base_calendar.base_calendar_id2real_id(id)
+        return res
+    
+    # ----------------------------------------
+    # OpenChatter
+    # ----------------------------------------
 
     def case_get_note_msg_prefix(self, cr, uid, id, context=None):
         return 'Meeting'
@@ -119,32 +122,12 @@ class crm_meeting(crm_base, osv.osv):
                 meeting.message_append_note(body=parent_message)
         return True
 
-    def case_close_send_note(self, cr, uid, ids, context=None):
-        message = _("Meeting has been <b>done</b>.")
-        return self.message_append_note(cr, uid, ids, body=message, context=context)
-
     def case_open_send_note(self, cr, uid, ids, context=None):
-        for meeting in self.browse(cr, uid, ids, context=context):
-            if meeting.state != 'draft':
-                return False
-            message = _("Meeting has been <b>confirmed</b>.")
-            meeting.message_append_note(body=message)
-        return True
+        return self.message_append_note(cr, uid, ids, body=_("Meeting has been <b>confirmed</b>."), context=context)
 
-    def case_open(self, cr, uid, ids, context=None):
-        """Confirms meeting
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Meeting Ids
-        @param *args: Tuple Value for additional Params
-        """
-        res = super(crm_meeting, self).case_open(cr, uid, ids, context)
-        for (id, name) in self.name_get(cr, uid, ids):
-            id=base_calendar.base_calendar_id2real_id(id)
-        return res
+    def case_close_send_note(self, cr, uid, ids, context=None):
+        return self.message_append_note(cr, uid, ids, body=_("Meeting has been <b>done</b>."), context=context)
 
-crm_meeting()
 
 class calendar_attendee(osv.osv):
     """ Calendar Attendee """
