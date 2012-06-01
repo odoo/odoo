@@ -397,12 +397,17 @@
                             type="object"/>
                     </div>
 
-                    <label for="name" class="oe_form_readonly_hidden"/>
-                    <h1><field name="name" class="oe_form_width_100"/></h1>
+                    <div class="oe_form_title">
+                        <label for="name" class="oe_form_readonly_hidden"/>
+                        <h1><field name="name"/></h1>
 
-                    <label for="planned_revenue" class="oe_form_readonly_hidden"/>
-                    <h2><field name="planned_revenue" class="oe_form_inline"/> <field name="company_currency" readonly="1"/> at <field name="probability" class="oe_form_inline"/> %% success rate</h2>
-
+                        <label for="planned_revenue" class="oe_form_readonly_hidden"/>
+                        <h2>
+                            <field name="planned_revenue" class="oe_form_inline"/>
+                            <field name="company_currency" class="oe_form_readonly_hidden oe_form_inline"/> at 
+                            <field name="probability" class="oe_form_inline"/> %% success rate
+                        </h2>
+                    </div>
                     <group>
                         <group>
                             <field name="partner_id"
@@ -416,8 +421,8 @@
                         <group>
                             <label for="title_action"/>
                             <div>
-                                <field name="date_action"/> -
-                                <field name="title_action" style="width: 63%%" class="oe_form_inline"/>
+                                <field name="date_action" nolabel="1"/> -
+                                <field name="title_action" class="oe_form_inline" nolabel="1" placeholder="Call for proposal"/>
                             </div>
                             <field name="date_deadline"/>
                             <field name="priority"/>
@@ -450,14 +455,14 @@
                                 <field name="partner_name"/>
                                 <label for="street" string="Address"/>
                                 <div>
-                                    <field name="street"/>
-                                    <field name="street2"/>
+                                    <field name="street" placeholder="Street..."/>
+                                    <field name="street2" placeholder="...Street"/>
                                     <div>
-                                        <field name="zip" class="oe_form_inline"/>&amp;nbsp;
-                                        <field name="city" class="oe_form_inline"/>
+                                        <field name="zip" class="oe_form_inline" placeholder="ZIP"/>&amp;nbsp;
+                                        <field name="city" class="oe_form_inline" placeholder="City"/>
                                     </div>
-                                    <field name="state_id"/>
-                                    <field name="country_id"/>
+                                    <field name="state_id" placeholder="State"/>
+                                    <field name="country_id" placeholder="Country"/>
                                 </div>
                             </group>
 
