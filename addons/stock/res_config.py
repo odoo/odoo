@@ -73,7 +73,7 @@ class stock_config_settings(osv.osv_memory):
         'group_product_variant': fields.boolean("Support Multiple Variants per Product",
             implied_group='product.group_product_variant',
             help="""Allow to manage several variants per product. As an example, if you  sell T-Shirts, for the same "Linux T-Shirt", you may have variants on  sizes or colors; S, M, L, XL, XXL."""),                
-        'decimal_precision': fields.integer('Decimal Precision on Weights', help="As an example, a decimal precision of 2 will allow prices   like: 9.99 EUR, whereas a decimal precision of 4 will allow prices  like:  0.0231 EUR per unit."),
+        'decimal_precision': fields.integer('Decimal Precision on Weights', help="As an example, a decimal precision of 2 will allow weights like: 9.99 kg, whereas a decimal precision of 4 will allow weights like:  0.0231 kg."),
     }
 
     def get_default_dp(self, cr, uid, fields, context=None):
