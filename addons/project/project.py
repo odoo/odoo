@@ -200,6 +200,7 @@ class project(osv.osv):
         'type_ids': fields.many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', 'Tasks Stages', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'task_count': fields.function(_task_count, type='integer', string="Open Tasks"),
         'color': fields.integer('Color Index'),
+        'use_attachment':  fields.boolean('Tasks Management'),
      }
     
     def dummy(self, cr, uid, ids, context):
@@ -455,6 +456,19 @@ def Project():
                         'user_id': int(p.booked_resource[0].name[5:]),
                     }, context=context)
         return True
+
+    def open_attachment(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+
+        return {
+            'name': 'Attachments',
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'ir.attachment',
+            'domain': [('res_id','=',ids[0])],
+            'type': 'ir.actions.act_window',
+         }
 
     # ------------------------------------------------
     # OpenChatter methods and notifications
