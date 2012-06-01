@@ -385,9 +385,6 @@ class project_issue(base_stage, osv.osv):
         logged_fields = ['stage_id', 'state', 'message_ids']
         if any([field in vals for field in logged_fields]):
             vals['date_action_last'] = time.strftime('%Y-%m-%d %H:%M:%S')
-        if vals.get('stage_id', False):
-            stage = self.pool.get('project.task.type').browse(cr, uid, vals['stage_id'], context=context)
-            self.message_append_note(cr, uid, ids, body=_("Stage changed to <b>%s</b>.") % stage.name, context=context)
         return super(project_issue, self).write(cr, uid, ids, vals, context)
 
     def onchange_task_id(self, cr, uid, ids, task_id, context=None):
@@ -453,7 +450,7 @@ class project_issue(base_stage, osv.osv):
     def case_escalate(self, cr, uid, ids, context=None):
         cases = self.browse(cr, uid, ids)
         for case in cases:
-            data = {'state' : 'draft'}
+            data = {}
             if case.project_id.project_escalation_id:
                 data['project_id'] = case.project_id.project_escalation_id.id
                 if case.project_id.project_escalation_id.user_id:
@@ -462,8 +459,8 @@ class project_issue(base_stage, osv.osv):
                     self.pool.get('project.task').write(cr, uid, [case.task_id.id], {'project_id': data['project_id'], 'user_id': False})
             else:
                 raise osv.except_osv(_('Warning !'), _('You cannot escalate this issue.\nThe relevant Project has not configured the Escalation Project!'))
-            self.write(cr, uid, [case.id], data)
-            self.case_escalate_send_note(cr, uid, [case.id], context)
+            self.case_set(cr, uid, ids, 'draft', data, context=context)
+            self.case_escalate_send_note(cr, uid, [case.id], context=context)
         return True
 
     # -------------------------------------------------------
@@ -520,7 +517,7 @@ class project_issue(base_stage, osv.osv):
         # Reassign the 'open' state to the case if this one is in pending or done
         for record in self.browse(cr, uid, ids, context=context):
             if record.state in ('pending', 'done'):
-                record.write({'state' : 'open'})
+                self.case_set(cr, uid, ids, 'open', {}, context=context)
 
         vls = { }
         for line in msg['body_text'].split('\n'):
@@ -552,9 +549,15 @@ class project_issue(base_stage, osv.osv):
             if obj.user_id:
                 sub_ids.append(obj.user_id.id)
         return self.pool.get('res.users').read(cr, uid, sub_ids, context=context)
-    
+
+    def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
+        """ Override of the (void) default notification method. """
+        stage_name = self.pool.get('project.task.type').name_get(cr, uid, [stage_id], context=context)[0][1]
+        return self.message_append_note(cr, uid, ids, body= _("Stage changed to <b>%s</b>.") % (stage_name), context=context)
+
     def case_get_note_msg_prefix(self, cr, uid, id, context=None):
-        return 'Project issue '
+        """ Override of default prefix for notifications. """
+        return 'Project issue'
 
     def convert_to_task_send_note(self, cr, uid, ids, context=None):
         message = _("Project issue has been <b>converted</b> in to task.")
