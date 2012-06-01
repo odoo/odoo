@@ -67,6 +67,23 @@ class project(osv.osv):
         return super(project, self).search(cr, user, args, offset=offset, limit=limit, order=order,
             context=context, count=count)
 
+    def write(self, cr, uid, ids, vals, context=None):
+        if context is None:
+            context = {}
+        for project_id in self.browse(cr, uid, ids, context):
+           if vals.get('members'):
+               members = self.pool.get('res.users').browse(cr, uid, vals.get('members')[0][-1], context)
+           else:
+               members = project_id.members or False
+           select = vals.get('privacy_visility') or project_id.privacy_visility or False
+           if select=='follower' and members:
+               member_list = [member.id for member in members]
+               followers = self.message_get_subscribers_ids(cr, uid, ids, context=context)
+               for member_id in member_list:
+                   if not member_id in followers:
+                      self.message_subscribe(cr, uid, ids, [member_id], context=context)
+        return super(project, self).write(cr, uid, ids, vals, context=context)
+
     def _complete_name(self, cr, uid, ids, name, args, context=None):
         res = {}
         for m in self.browse(cr, uid, ids, context=context):
@@ -200,11 +217,20 @@ class project(osv.osv):
         'type_ids': fields.many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', 'Tasks Stages', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'task_count': fields.function(_task_count, type='integer', string="Open Tasks"),
         'color': fields.integer('Color Index'),
+        'privacy_visility': fields.selection([('public','Public'), ('follower','Followers Only')], 'Privacy / Visility', select=True),
      }
     
     def dummy(self, cr, uid, ids, context):
         return True
-       
+
+    def message_thread_followers(self, cr, uid, ids, context=None):
+        followers = super(project,self).message_thread_followers(cr, uid, ids, context=context)
+        for project in self.browse(cr, uid, followers.keys(), context=context):
+            project_followers = set(followers[project.id])
+            project_followers.add(project.user_id.user_email)
+            followers[project.id] = filter(None, project_followers)
+        return followers
+
     def _get_type_common(self, cr, uid, context):
         ids = self.pool.get('project.task.type').search(cr, uid, [('project_default','=',1)], context=context)
         return ids
