@@ -145,11 +145,11 @@
                         <field name="project_id"/>
                         <field name="sprint_id" domain="[('state','in',('draft','open'))]">
                             <filter icon="terp-check"
-                                string="Backlogs Assigned To Current Sprints"
+                                string="Backlogs Assigned"
                                 domain="[('sprint_id.state','=','open')]"
                                 help="Backlogs Assigned To Current Sprints"/>
                             <filter icon="terp-personal-"
-                                string="Backlogs Not Assigned To Sprints"
+                                string="Backlogs Not Assigned"
                                 domain="[('sprint_id','=',False)]"
                                 help="Backlogs Not Assigned To Sprints."/>
                         </field>
