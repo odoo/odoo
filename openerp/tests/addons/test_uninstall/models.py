@@ -4,6 +4,10 @@ from openerp.osv import fields
 from openerp.osv.orm import Model
 
 class test_uninstall_model(Model):
+    """
+    This model uses different types of columns to make it possible to test
+    the uninstall feature of OpenERP.
+    """
     _name = 'test_uninstall.model'
 
     _columns = {

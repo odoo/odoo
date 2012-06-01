@@ -2740,7 +2740,11 @@ class BaseModel(object):
                               self._table, column['attname'])
 
     def _save_constraint(self, cr, constraint_name, type):
-        """ TODO """
+        """
+        Record the creation of a constraint for this model, to make it possible
+        to delete it later when the module is uninstalled. Type can be either
+        'f' or 'u' depending on the constraing being a foreign key or not.
+        """
         assert type in ('f', 'u')
         cr.execute("""
             SELECT 1 FROM ir_model_constraint, ir_module_module
@@ -2758,7 +2762,10 @@ class BaseModel(object):
                     (constraint_name, self._module, self._name, type))
 
     def _save_relation_table(self, cr, relation_table):
-        """ TODO """
+        """
+        Record the creation of a many2many for this model, to make it possible
+        to delete it later when the module is uninstalled.
+        """
         cr.execute("""
             SELECT 1 FROM ir_model_relation, ir_module_module
             WHERE ir_model_relation.module=ir_module_module.id
