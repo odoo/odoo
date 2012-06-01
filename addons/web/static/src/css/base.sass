@@ -1327,34 +1327,29 @@ $colour4: #8a89ba
     .oe_form
         .oe_form_field_text
             width: 100%
-        .oe_form_inline
-            width: auto
         .oe_form_group_cell
             line-height: 18px
             padding: 2px
             height: 20px
-        .oe_form_group_cell > .oe_form_field_many2one,
-        .oe_form_group_cell > .oe_form_field_many2one input,
-        .oe_form_group_cell > .oe_form_field_char input,
-        .oe_form_group_cell > .oe_form_field_text textarea,
-        .oe_form_group_cell > .oe_form_field_email,
-        .oe_form_group_cell > .oe_form_field_email input,
-        .oe_form_group_cell > .oe_form_field_url,
-        .oe_form_group_cell > .oe_form_field_url input,
-        .oe_form_group_cell > .oe_form_field_float input,
-        .oe_form_group_cell > .oe_form_field_selection select,
-        .oe_form_group_cell > .oe_form_field_progressbar,
-        .oe_form_group_cell > span > .oe_datepicker_root,
-        .oe_form_group_cell > span > .oe_datepicker_root > input.oe_datepicker_master
+
+        .oe_form_field_char input,
+        .oe_form_field_text textarea,
+        .oe_form_field_email input,
+        .oe_form_field_url input,
+        .oe_form_field_selection select
+            width: inherit
+
+        .oe_form_field_many2one input
             width: 100%
+
+        .oe_form_field_float input
+            width: 100px
+
         h1, h2, h3, h4, h5, h6
             margin: 0 0 4px 0
-            width: 55%
             input
                 height: inherit !important
                 font-size: inherit
-        h1 input
-            width: 100%
 
     // }}}
     // FormView.label {{{
@@ -1373,9 +1368,23 @@ $colour4: #8a89ba
     // }}}
     // FormView.fields {{{
     .oe_form
-        textarea
+        .oe_form_field_text textarea
             resize: vertical
+        .oe_form_field_many2one,
+        .oe_form_field_char,
+        .oe_form_field_text,
+        .oe_form_field_email,
+        .oe_form_field_url,
+        .oe_form_field_selection,
+        .oe_form_field_reference
             width: 100%
+            display: inline-block
+
+        .oe_form_field_float
+            width: 180px
+        .oe_form_inline
+            width: auto
+
         input[type="text"],
         input[type="password"],
         input[type="file"],
@@ -1502,6 +1511,8 @@ $colour4: #8a89ba
                     line-height: 23px
                     margin-right: 0
 
+        .oe_form_title
+            width: 65%
         .oe_form_button_box
             width: 200px
             text-align: center

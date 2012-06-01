@@ -1673,43 +1673,33 @@
 .openerp .oe_form_readonly .oe_form_readonly_hidden {
   display: none;
 }
-.openerp .oe_form .oe_form_field_text,
-.openerp .oe_form .oe_form_field_char {
+.openerp .oe_form .oe_form_field_text {
   width: 100%;
-}
-.openerp .oe_form .oe_form_inline {
-  width: auto;
 }
 .openerp .oe_form .oe_form_group_cell {
   line-height: 18px;
   padding: 2px;
   height: 20px;
 }
-.openerp .oe_form .oe_form_group_cell > .oe_form_field_many2one,
-.openerp .oe_form .oe_form_group_cell > .oe_form_field_many2one input,
-.openerp .oe_form .oe_form_group_cell > .oe_form_field_char input,
-.openerp .oe_form .oe_form_group_cell > .oe_form_field_text textarea,
-.openerp .oe_form .oe_form_group_cell > .oe_form_field_email,
-.openerp .oe_form .oe_form_group_cell > .oe_form_field_email input,
-.openerp .oe_form .oe_form_group_cell > .oe_form_field_url,
-.openerp .oe_form .oe_form_group_cell > .oe_form_field_url input,
-.openerp .oe_form .oe_form_group_cell > .oe_form_field_float input,
-.openerp .oe_form .oe_form_group_cell > .oe_form_field_selection select,
-.openerp .oe_form .oe_form_group_cell > .oe_form_field_progressbar,
-.openerp .oe_form .oe_form_group_cell > span > .oe_datepicker_root,
-.openerp .oe_form .oe_form_group_cell > span > .oe_datepicker_root > input.oe_datepicker_master {
+.openerp .oe_form .oe_form_field_char input,
+.openerp .oe_form .oe_form_field_text textarea,
+.openerp .oe_form .oe_form_field_email input,
+.openerp .oe_form .oe_form_field_url input,
+.openerp .oe_form .oe_form_field_selection select {
+  width: inherit;
+}
+.openerp .oe_form .oe_form_field_many2one input {
   width: 100%;
+}
+.openerp .oe_form .oe_form_field_float input {
+  width: 100px;
 }
 .openerp .oe_form h1, .openerp .oe_form h2, .openerp .oe_form h3, .openerp .oe_form h4, .openerp .oe_form h5, .openerp .oe_form h6 {
   margin: 0 0 4px 0;
-  width: 55%;
 }
 .openerp .oe_form h1 input, .openerp .oe_form h2 input, .openerp .oe_form h3 input, .openerp .oe_form h4 input, .openerp .oe_form h5 input, .openerp .oe_form h6 input {
   height: inherit !important;
   font-size: inherit;
-}
-.openerp .oe_form h1 input {
-  width: 100%;
 }
 .openerp .oe_form .oe_form_label_help[for], .openerp .oe_form .oe_form_label[for] {
   font-weight: bold;
@@ -1724,9 +1714,24 @@
   top: -4px;
   padding: 0 2px;
 }
-.openerp .oe_form textarea {
+.openerp .oe_form .oe_form_field_text textarea {
   resize: vertical;
+}
+.openerp .oe_form .oe_form_field_many2one,
+.openerp .oe_form .oe_form_field_char,
+.openerp .oe_form .oe_form_field_text,
+.openerp .oe_form .oe_form_field_email,
+.openerp .oe_form .oe_form_field_url,
+.openerp .oe_form .oe_form_field_selection,
+.openerp .oe_form .oe_form_field_reference {
   width: 100%;
+  display: inline-block;
+}
+.openerp .oe_form .oe_form_field_float {
+  width: 180px;
+}
+.openerp .oe_form .oe_form_inline {
+  width: auto;
 }
 .openerp .oe_form input[type="text"],
 .openerp .oe_form input[type="password"],
@@ -1877,6 +1882,9 @@
 .openerp .oe_form .oe_form_field_with_button > div > input {
   line-height: 23px;
   margin-right: 0;
+}
+.openerp .oe_form .oe_form_title {
+  width: 65%;
 }
 .openerp .oe_form .oe_form_button_box {
   width: 200px;

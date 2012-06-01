@@ -1832,6 +1832,7 @@ instance.web.form.ReinitializeFieldMixin =  {
 
 instance.web.form.FieldChar = instance.web.form.AbstractField.extend(_.extend({}, instance.web.form.ReinitializeFieldMixin, {
     template: 'FieldChar',
+    widget_class: 'oe_form_field_char',
     init: function (field_manager, node) {
         this._super(field_manager, node);
         this.password = this.node.attrs.password === 'True' || this.node.attrs.password === '1';
@@ -1936,6 +1937,7 @@ instance.web.form.FieldUrl = instance.web.form.FieldChar.extend({
 
 instance.web.form.FieldFloat = instance.web.form.FieldChar.extend({
     is_field_number: true,
+    widget_class: 'oe_form_field_float',
     init: function (field_manager, node) {
         this._super(field_manager, node);
         this.set({'value': 0});

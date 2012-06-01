@@ -882,13 +882,12 @@
     </ul>
 </t>
 <t t-name="FieldChar">
-    <span class="oe_form_field_char">
+    <span t-att-class="widget.widget_class">
         <t  t-if="!widget.get('effective_readonly')">
             <input t-att-type="widget.password ? 'password' : 'text'"
                 t-att-id="widget.id_for_label"
                 t-att-tabindex="widget.node.attrs.tabindex"
                 t-att-autofocus="widget.node.attrs.autofocus"
-                class="field_char"
                 t-att-placeholder="widget.node.attrs.placeholder"
             /><img class="oe_field_translate oe_input_icon" t-if="widget.field.translate" t-att-src='_s + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"/>
         </t>
@@ -1012,9 +1011,11 @@
 <t t-name="FieldReference">
     <table class="oe_form_field_reference oe_form" border="0" cellpadding="0" cellspacing="0">
     <tr>
-        <td t-attf-class="oe_form_frame_cell oe_form_selection oe_form_view_reference_selection">
+        <td t-attf-class="oe_form_frame_cell oe_form_selection">
+            <span t-attf-class="oe_form_view_reference_selection"/>
         </td>
-        <td t-attf-class="oe_form_frame_cell oe_form_many2one oe_form_view_reference_m2o" nowrap="true" style="display: none">
+        <td t-attf-class="oe_form_frame_cell oe_form_many2one" nowrap="true">
+            <span t-attf-class="oe_form_view_reference_m2o"/>
         </td>
     </tr>
     </table>
