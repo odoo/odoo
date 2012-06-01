@@ -62,10 +62,12 @@
                             states="draft,open,pending"/>
                     <button name="case_reset" string="Reset to New" type="object"
                             states="cancelled,done"/>
-                    <button name="stage_previous" string="Previous" type="object"
-                            states="open" icon="gtk-go-back"/>
-                    <button name="stage_next" string="Next" type="object"
-                            states="open" icon="gtk-go-forward"/>
+                    <button name="stage_previous" string="Previous Stage" type="object"
+                            states="open,pending" icon="gtk-go-back"
+                            attrs="{'invisible': [('stage_id','=', False)]}"/>
+                    <button name="stage_next" string="Next Stage" type="object"
+                            states="open,pending" icon="gtk-go-forward"
+                            attrs="{'invisible': [('stage_id','=', False)]}"/>
                     <button name="case_cancel" string="Cancel" type="object"
                             states="draft,open,pending"/>
                     <div class="oe_right">
@@ -158,7 +160,7 @@
                     <button name="case_open" string="Open" type="object"
                             icon="gtk-go-forward"  states="draft,pending"/>
                     <button name="case_close" string="Done" type="object"
-                            icon="gtk-jump-to" states="draft,open,pending"/>
+                            icon="gtk-close" states="draft,open,pending"/>
                     <button name="case_cancel" string="Cancel" type="object"
                             icon="gtk-cancel" states="draft,open,pending"/>
                     <field name="categ_id" invisible="1"/>
@@ -280,9 +282,8 @@
                                         <a string="Convert To Task" name="convert_issue_task" icon="gtk-index" type="object"/>
                                     </div>
                                     <div class="oe_kanban_right">
-                                        <a name="case_open" string="Open" states="draft,pending" type="object" icon="kanban-apply" groups="base.group_no_one"/>
-                                        <a name="case_pending" string="Pending" states="draft,open" type="object" icon="kanban-pause" groups="base.group_no_one"/>
-                                        <a name="case_close" string="Close" states="open,draft,pending" type="object" icon="kanban-stop" groups="base.group_no_one"/>
+                                        <a name="case_open" string="Open" states="draft,pending" type="object" icon="kanban-apply"/>
+                                        <a name="case_close" string="Close" states="open,draft,pending" type="object" icon="kanban-stop"/>
                                     </div>
                                     <div class="oe_kanban_clear"/>
                                 </div>
@@ -325,11 +326,11 @@
                             attrs="{'invisible': [('stage_id','=', False)]}"/>
                     <field name="state" groups="base.group_no_one"/>
                     <button name="case_open" string="Open" type="object"
-                            icon="gtk-go-forward"  states="draft,pending"/>
+                            states="draft,pending" icon="gtk-go-forward"/>
                     <button name="case_close" string="Done" type="object"
-                            icon="gtk-jump-to" states="draft,open,pending"/>
+                            states="draft,open,pending" icon="gtk-close"/>
                     <button name="case_cancel" string="Cancel" type="object"
-                            icon="gtk-cancel" states="draft,open,pending"/>
+                            states="draft,open,pending" icon="gtk-cancel"/>
                 </tree>
             </field>
         </record>
