@@ -1177,8 +1177,9 @@ class task(base_stage, osv.osv):
     # OpenChatter methods and notifications
     # ---------------------------------------------------
 
-	def case_get_note_msg_prefix(self, cr, uid, id, context=None):
-		return 'Task'
+    def case_get_note_msg_prefix(self, cr, uid, id, context=None):
+        """ Override of default prefix for notifications. """
+        return 'Task'
 
     def get_needaction_user_ids(self, cr, uid, ids, context=None):
         result = dict.fromkeys(ids, [])
