@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from base_status.base_stage import base_stage
 from crm import crm
 from datetime import datetime
 from osv import fields,osv
@@ -42,11 +43,61 @@ class project_issue_version(osv.osv):
     }
 project_issue_version()
 
-class project_issue(crm.crm_case, osv.osv):
+_ISSUE_STATE= [('draft', 'New'), ('open', 'In Progress'), ('cancel', 'Cancelled'), ('done', 'Done'),('pending', 'Pending')]
+
+class project_issue(base_stage, osv.osv):
     _name = "project.issue"
     _description = "Project Issue"
     _order = "priority, create_date desc"
     _inherit = ['ir.needaction_mixin', 'mail.thread']
+
+    def _get_default_project_id(self, cr, uid, context=None):
+        """ Gives default project by checking if present in the context """
+        return self._resolve_project_id_from_context(cr, uid, context=context)
+
+    def _get_default_stage_id(self, cr, uid, context=None):
+        """ Gives default stage_id """
+        project_id = self._get_default_project_id(cr, uid, context=context)
+        return self.stage_find(cr, uid, [], project_id, [('state', '=', 'draft')], context=context)
+
+    def _resolve_project_id_from_context(self, cr, uid, context=None):
+        """ Returns ID of project based on the value of 'default_project_id'
+            context key, or None if it cannot be resolved to a single
+            project.
+        """
+        if context is None:
+            context = {}
+        if type(context.get('default_project_id')) in (int, long):
+            return context.get('default_project_id')
+        if isinstance(context.get('default_project_id'), basestring):
+            project_name = context['default_project_id']
+            project_ids = self.pool.get('project.project').name_search(cr, uid, name=project_name, context=context)
+            if len(project_ids) == 1:
+                return int(project_ids[0][0])
+        return None
+
+    def _read_group_stage_ids(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
+        access_rights_uid = access_rights_uid or uid
+        stage_obj = self.pool.get('project.task.type')
+        order = stage_obj._order
+        # lame hack to allow reverting search, should just work in the trivial case
+        if read_group_order == 'stage_id desc':
+            order = "%s desc" % order
+        # retrieve section_id from the context and write the domain
+        # - ('id', 'in', 'ids'): add columns that should be present
+        # - OR ('case_default', '=', True), ('fold', '=', False): add default columns that are not folded
+        # - OR ('project_ids', 'in', project_id), ('fold', '=', False) if project_id: add project columns that are not folded
+        search_domain = []
+        project_id = self._resolve_project_id_from_context(cr, uid, context=context)
+        if project_id:
+            search_domain += ['|', '&', ('project_ids', '=', project_id), ('fold', '=', False)]
+        search_domain += ['|', ('id', 'in', ids), '&', ('case_default', '=', True), ('fold', '=', False)]
+        # perform search
+        stage_ids = stage_obj._search(cr, uid, search_domain, order=order, access_rights_uid=access_rights_uid, context=context)
+        result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
+        # restore order of the search
+        result.sort(lambda x,y: cmp(stage_ids.index(x[0]), stage_ids.index(y[0])))
+        return result
 
     def _compute_day(self, cr, uid, ids, fields, args, context=None):
         """
@@ -173,11 +224,13 @@ class project_issue(crm.crm_case, osv.osv):
         'partner_id': fields.many2one('res.partner', 'Partner', select=1),
         'company_id': fields.many2one('res.company', 'Company'),
         'description': fields.text('Description'),
-        'state': fields.selection([('draft', 'New'), ('cancel', 'Cancelled'), ('open', 'In Progress'),('pending', 'Pending'),('done', 'Done') ], 'Status', size=16, readonly=True,
-                                  help='The state is set to \'Draft\', when a case is created.\
-                                  \nIf the case is in progress the state is set to \'Open\'.\
-                                  \nWhen the case is over, the state is set to \'Done\'.\
-                                  \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
+        'state': fields.related('stage_id', 'state', type="selection", store=True,
+                selection=_ISSUE_STATE, string="State", readonly=True,
+                help='The state is set to \'Draft\', when a case is created.\
+                      If the case is in progress the state is set to \'Open\'.\
+                      When the case is over, the state is set to \'Done\'.\
+                      If the case needs to be reviewed then the state is \
+                      set to \'Pending\'.'),
         'email_from': fields.char('Email', size=128, help="These people will receive email.", select=1),
         'email_cc': fields.char('Watchers Emails', size=256, help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
         'date_open': fields.datetime('Opened', readonly=True,select=True),
@@ -188,7 +241,8 @@ class project_issue(crm.crm_case, osv.osv):
         'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('object_id.model', '=', 'crm.project.bug')]"),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
         'version_id': fields.many2one('project.issue.version', 'Version'),
-        'type_id': fields.many2one ('project.task.type', 'Stages', domain="[('project_ids', '=', project_id)]"),
+        'stage_id': fields.many2one ('project.task.type', 'Stages',
+                        domain="['|', ('project_ids', '=', project_id), ('case_default', '=', True)]"),
         'project_id':fields.many2one('project.project', 'Project'),
         'duration': fields.float('Duration'),
         'task_id': fields.many2one('project.task', 'Task', domain="[('project_id','=',project_id)]"),
@@ -220,14 +274,19 @@ class project_issue(crm.crm_case, osv.osv):
 
     _defaults = {
         'active': 1,
-        'partner_id': crm.crm_case._get_default_partner,
-        'email_from': crm.crm_case._get_default_email,
+        'partner_id': lambda s, cr, uid, c: s._get_default_partner(cr, uid, c),
+        'email_from': lambda s, cr, uid, c: s._get_default_email(cr, uid, c),
         'state': 'draft',
-        'section_id': crm.crm_case._get_section,
+        'stage_id': lambda s, cr, uid, c: s._get_default_stage_id(cr, uid, c),
+        'section_id': lambda s, cr, uid, c: s._get_default_section_id(cr, uid, c),
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c),
         'priority': crm.AVAILABLE_PRIORITIES[2][0],
         'categ_id' : lambda *a: False,
          }
+
+    _group_by_full = {
+        'stage_id': _read_group_stage_ids
+    }
 
     def set_priority(self, cr, uid, ids, priority):
         """Set lead priority
@@ -311,36 +370,20 @@ class project_issue(crm.crm_case, osv.osv):
     def convert_to_bug(self, cr, uid, ids, context=None):
         return self._convert(cr, uid, ids, 'bug_categ', context=context)
 
-    def next_type(self, cr, uid, ids, context=None):
-        for task in self.browse(cr, uid, ids):
-            typeid = task.type_id.id
-            types = map(lambda x:x.id, task.project_id.type_ids or [])
-            if types:
-                if not typeid:
-                    self.write(cr, uid, [task.id], {'type_id': types[0]})
-                elif typeid and typeid in types and types.index(typeid) != len(types)-1 :
-                    index = types.index(typeid)
-                    self.write(cr, uid, [task.id], {'type_id': types[index+1]})
-        return True
-
-    def prev_type(self, cr, uid, ids, context=None):
-        for task in self.browse(cr, uid, ids):
-            typeid = task.type_id.id
-            types = map(lambda x:x.id, task.project_id and task.project_id.type_ids or [])
-            if types:
-                if typeid and typeid in types:
-                    index = types.index(typeid)
-                    self.write(cr, uid, [task.id], {'type_id': index and types[index-1] or False})
-        return True
-
+    def copy(self, cr, uid, id, default=None, context=None):
+        issue = self.read(cr, uid, id, ['name'], context=context)
+        if not default:
+            default = {}
+        default = default.copy()
+        default['name'] = issue['name'] + _(' (copy)')
+        return super(project_issue, self).copy(cr, uid, id, default=default,
+                context=context)
+    
     def write(self, cr, uid, ids, vals, context=None):
         #Update last action date every time the user change the stage, the state or send a new email
-        logged_fields = ['type_id', 'state', 'message_ids']
+        logged_fields = ['stage_id', 'state', 'message_ids']
         if any([field in vals for field in logged_fields]):
             vals['date_action_last'] = time.strftime('%Y-%m-%d %H:%M:%S')
-        if vals.get('type_id', False):
-            stage = self.pool.get('project.task.type').browse(cr, uid, vals['type_id'], context=context)
-            self.message_append_note(cr, uid, ids, body=_("Stage changed to <b>%s</b>.") % stage.name, context=context)
         return super(project_issue, self).write(cr, uid, ids, vals, context)
 
     def onchange_task_id(self, cr, uid, ids, task_id, context=None):
@@ -362,15 +405,51 @@ class project_issue(crm.crm_case, osv.osv):
         self.create_send_note(cr, uid, [obj_id], context=context)
         return obj_id
 
-    def case_open(self, cr, uid, ids, context=None):
-        res = super(project_issue, self).case_open(cr, uid, ids, context)
-        self.write(cr, uid, ids, {'date_open': time.strftime('%Y-%m-%d %H:%M:%S'), 'user_id' : uid})
-        return res
+    # -------------------------------------------------------
+    # Stage management
+    # -------------------------------------------------------
+
+    def stage_find(self, cr, uid, cases, section_id, domain=[], order='sequence', context=None):
+        """ Override of the base.stage method
+            Parameter of the stage search taken from the issue:
+            - type: stage type must be the same or 'both'
+            - section_id: if set, stages must belong to this section or
+              be a default case
+        """
+        if isinstance(cases, (int, long)):
+            cases = self.browse(cr, uid, cases, context=context)
+        # collect all section_ids
+        section_ids = []
+        if section_id:
+            section_ids.append(section_id)
+        for task in cases:
+            if task.project_id:
+                section_ids.append(task.project_id.id)
+        # OR all section_ids and OR with case_default
+        search_domain = []
+        if section_ids:
+            search_domain += [('|')] * len(section_ids)
+            for section_id in section_ids:
+                search_domain.append(('project_ids', '=', section_id))
+        search_domain.append(('case_default', '=', True))
+        # AND with the domain in parameter
+        search_domain += list(domain)
+        # perform search, return the first found
+        stage_ids = self.pool.get('project.task.type').search(cr, uid, search_domain, order=order, context=context)
+        if stage_ids:
+            return stage_ids[0]
+        return False
+
+    def case_cancel(self, cr, uid, ids, context=None):
+        """ Cancels case """
+        self.case_set(cr, uid, ids, 'cancelled', {'active': True}, context=context)
+        self.case_cancel_send_note(cr, uid, ids, context=context)
+        return True
 
     def case_escalate(self, cr, uid, ids, context=None):
         cases = self.browse(cr, uid, ids)
         for case in cases:
-            data = {'state' : 'draft'}
+            data = {}
             if case.project_id.project_escalation_id:
                 data['project_id'] = case.project_id.project_escalation_id.id
                 if case.project_id.project_escalation_id.user_id:
@@ -379,10 +458,14 @@ class project_issue(crm.crm_case, osv.osv):
                     self.pool.get('project.task').write(cr, uid, [case.task_id.id], {'project_id': data['project_id'], 'user_id': False})
             else:
                 raise osv.except_osv(_('Warning !'), _('You cannot escalate this issue.\nThe relevant Project has not configured the Escalation Project!'))
-            self.write(cr, uid, [case.id], data)
-            self.case_escalate_send_note(cr, uid, [case.id], context)
+            self.case_set(cr, uid, ids, 'draft', data, context=context)
+            self.case_escalate_send_note(cr, uid, [case.id], context=context)
         return True
 
+    # -------------------------------------------------------
+    # Mail gateway
+    # -------------------------------------------------------
+    
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
         """Automatically called when new email message arrives"""
         if context is None:
@@ -433,7 +516,7 @@ class project_issue(crm.crm_case, osv.osv):
         # Reassign the 'open' state to the case if this one is in pending or done
         for record in self.browse(cr, uid, ids, context=context):
             if record.state in ('pending', 'done'):
-                record.write({'state' : 'open'})
+                self.case_set(cr, uid, ids, 'open', {}, context=context)
 
         vls = { }
         for line in msg['body_text'].split('\n'):
@@ -447,15 +530,6 @@ class project_issue(crm.crm_case, osv.osv):
         res = self.write(cr, uid, ids, vals)
         self.message_append_dict(cr, uid, ids, msg, context=context)
         return res
-
-    def copy(self, cr, uid, id, default=None, context=None):
-        issue = self.read(cr, uid, id, ['name'], context=context)
-        if not default:
-            default = {}
-        default = default.copy()
-        default['name'] = issue['name'] + _(' (copy)')
-        return super(project_issue, self).copy(cr, uid, id, default=default,
-                context=context)
     
     # -------------------------------------------------------
     # OpenChatter methods and notifications
@@ -474,9 +548,15 @@ class project_issue(crm.crm_case, osv.osv):
             if obj.user_id:
                 sub_ids.append(obj.user_id.id)
         return self.pool.get('res.users').read(cr, uid, sub_ids, context=context)
-    
+
+    def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
+        """ Override of the (void) default notification method. """
+        stage_name = self.pool.get('project.task.type').name_get(cr, uid, [stage_id], context=context)[0][1]
+        return self.message_append_note(cr, uid, ids, body= _("Stage changed to <b>%s</b>.") % (stage_name), context=context)
+
     def case_get_note_msg_prefix(self, cr, uid, id, context=None):
-        return 'Project issue '
+        """ Override of default prefix for notifications. """
+        return 'Project issue'
 
     def convert_to_task_send_note(self, cr, uid, ids, context=None):
         message = _("Project issue has been <b>converted</b> in to task.")
