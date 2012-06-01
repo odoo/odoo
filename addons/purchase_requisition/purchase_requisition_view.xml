@@ -44,15 +44,15 @@
                 <div class="oe_clear"/>
             </div>
             <sheet string="Purchase Requisition" layout="auto">
-                <group colspan="4" col="6">
-                    <field name="name"/>
-                    <field name="user_id"/>
-                    <field name="exclusive"/>
-                    <field name="date_start"/>
-                    <field name="date_end"/>
-                    <field name="origin"/>
-                    <field name="warehouse_id" widget="selection" groups="stock.group_locations"/>
-                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+            <group colspan="4" col="4" class="oe_form_group_label_border">
+               <field name="name"/>
+               <field name="exclusive"/>
+               <field name="user_id"/>
+               <field name="date_start"/>
+               <field name="warehouse_id" widget="selection" groups="stock.group_locations"/>
+               <field name="date_end"/>
+               <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+               <field name="origin"/>
                 </group>
                 <notebook colspan="4">
                     <page string="Products">
@@ -69,13 +69,15 @@
                                 <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             </form>
                         </field>
-                        <group colspan="2">
-                           <label colspan="2"  string=""/>
-                           <button name="%(action_purchase_requisition_partner)d" string="Request a Quotation" type="action" icon="gtk-execute"
-                              attrs="{'readonly': [('state', '=', 'done')]}"/>
+                         <group colspan="4" col="4">
+                            <button name="%(action_purchase_requisition_partner)d" string="Request a Quotation" type="action" icon="gtk-execute"
+                            attrs="{'invisible': [('line_ids','=',False),('state', 'not in', ('in_progress'))]}"/>
+                            <group cosplan="4" col="4">
+                                <label   string="" />
+                            </group>
                         </group>                            
                         <separator colspan="4" string="Quotations"/>
-                        <field colspan="4" name="purchase_ids" nolabel="1" mode="tree,form">
+                        <field colspan="4" name="purchase_ids" nolabel="1" mode="tree,form" context="{'product_ids': line_ids}" >
                             <tree string="Purchase Order">
                                 <field name="name" string="Reference"/>
                                 <field name="date_order" string="Order Date"/>
@@ -91,11 +93,13 @@
                             </tree>
                          </field>
                     </page>
-                    
                     <page string="Notes">
                         <field name="description" colspan="4" nolabel="1"/>
                     </page>
                 </notebook>
+                <div class="oe_form_bottom">
+                    <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
+                </div>
             </sheet>
             </form>
         </field>

@@ -211,7 +211,6 @@ class purchase_order(osv.osv):
     _columns = {
         'requisition_id' : fields.many2one('purchase.requisition','Purchase Requisition')
     }
-    
     def wkf_confirm_order(self, cr, uid, ids, context=None):
         res = super(purchase_order, self).wkf_confirm_order(cr, uid, ids, context=context)
         proc_obj = self.pool.get('procurement.order')
