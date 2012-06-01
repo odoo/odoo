@@ -98,7 +98,7 @@ class account_analytic_account(osv.osv):
                             WHERE account_analytic_account.id IN %s \
                                 AND account_analytic_line.invoice_id IS NULL \
                                 AND account_analytic_line.to_invoice IS NOT NULL \
-                                AND account_analytic_journal.type = 'sale' \
+                                AND account_analytic_journal.type IN ('purchase', 'general') \
                             GROUP BY account_analytic_account.id;""", (parent_ids,))
                     for account_id, sum in cr.fetchall():
                         if account_id not in res:
