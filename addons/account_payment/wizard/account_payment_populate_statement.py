@@ -95,8 +95,8 @@ class account_payment_populate_statement(osv.osv_memory):
                 }
                 voucher_id = voucher_obj.create(cr, uid, voucher_res, context=context)
                 voucher_line_dict =  False
-                if result['value']['line_ids']:
-                    for line_dict in result['value']['line_ids']:
+                if result['value']['line_dr_ids']:
+                    for line_dict in result['value']['line_dr_ids']:
                         move_line = move_line_obj.browse(cr, uid, line_dict['move_line_id'], context)
                         if line.move_line_id.move_id.id == move_line.move_id.id:
                             voucher_line_dict = line_dict
