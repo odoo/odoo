@@ -159,15 +159,6 @@ class crm_claim(base_stage, osv.osv):
             return stage_ids[0]
         return False
 
-    def case_get_note_msg_prefix(self, cr, uid, id, context=None):
-        return 'Claim'
-
-    def case_refuse_send_note(self, cr, uid, ids, context=None):
-        for id in ids:
-            msg = _('%s has been <b>refused</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
-            self.message_append_note(cr, uid, [id], body=msg, context=context)
-        return True
-
     def case_refuse(self, cr, uid, ids, context=None):
         """ Mark the case as refused: state=done and case_refused=True """
         for lead in self.browse(cr, uid, ids):
@@ -241,6 +232,26 @@ class crm_claim(base_stage, osv.osv):
                 values.update(state=crm.AVAILABLE_STATES[1][0]) #re-open
             res = self.write(cr, uid, [case.id], values, context=context)
         return res
+
+    # ---------------------------------------------------
+    # OpenChatter methods and notifications
+    # ---------------------------------------------------
+
+    def case_get_note_msg_prefix(self, cr, uid, id, context=None):
+        """ Override of default prefix for notifications. """
+        return 'Claim'
+
+    def case_refuse_send_note(self, cr, uid, ids, context=None):
+        for id in ids:
+            msg = _('%s has been <b>refused</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
+            self.message_append_note(cr, uid, [id], body=msg, context=context)
+        return True
+
+    def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
+        """ Override of the (void) default notification method. """
+        stage_name = self.pool.get('crm.claim.stage').name_get(cr, uid, [stage_id], context=context)[0][1]
+        return self.message_append_note(cr, uid, ids, body= _("Stage changed to <b>%s</b>.") % (stage_name), context=context)
+
 
 class res_partner(osv.osv):
     _inherit = 'res.partner'
