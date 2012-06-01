@@ -31,6 +31,7 @@ import decimal_precision as dp
 class purchase_requisition(osv.osv):
     _name = "purchase.requisition"
     _description="Purchase Requisition"
+    _inherit = ['ir.needaction_mixin']
     _columns = {
         'name': fields.char('Requisition Reference', size=32,required=True),
         'origin': fields.char('Source', size=32),
@@ -53,7 +54,7 @@ class purchase_requisition(osv.osv):
         'user_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).id ,
         'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'purchase.order.requisition'),
     }
-
+    
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
@@ -164,6 +165,13 @@ class purchase_requisition(osv.osv):
                 }, context=context)
                 
         return res
+    
+    def get_needaction_user_ids(self, cr, uid, ids, context=None):
+        result = dict.fromkeys(ids, [])
+        for obj in self.browse(cr, uid, ids, context=context):
+            if (obj.state == 'draft'):
+                result[obj.id] = [obj.user_id.id]
+        return result
 
 purchase_requisition()
 
@@ -203,6 +211,7 @@ class purchase_order(osv.osv):
     _columns = {
         'requisition_id' : fields.many2one('purchase.requisition','Purchase Requisition')
     }
+    
     def wkf_confirm_order(self, cr, uid, ids, context=None):
         res = super(purchase_order, self).wkf_confirm_order(cr, uid, ids, context=context)
         proc_obj = self.pool.get('procurement.order')
