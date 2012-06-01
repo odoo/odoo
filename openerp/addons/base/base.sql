@@ -347,9 +347,8 @@ CREATE TABLE ir_model_data (
     res_id integer, primary key(id)
 );
 
--- Records foreign keys and constraints
--- installed by a module (so they can be removed them when the module is
--- uninstalled).:
+-- Records foreign keys and constraints installed by a module (so they can be
+-- removed them when the module is uninstalled):
 --   - for a foreign key: type 'f',
 --   - for a constraint: type 'u'.
 CREATE TABLE ir_model_constraint (
@@ -363,6 +362,21 @@ CREATE TABLE ir_model_constraint (
     module integer NOT NULL references ir_module_module on delete restrict,
     model integer NOT NULL references ir_model on delete restrict,
     type character varying(1) NOT NULL,
+    name character varying(128) NOT NULL
+);
+
+-- Records relation tables (i.e. implementing many2many) installed by a module
+-- (so they can be removed them when the module is uninstalled).
+CREATE TABLE ir_model_relation (
+    id serial NOT NULL,
+    create_uid integer,
+    create_date timestamp without time zone,
+    write_date timestamp without time zone,
+    write_uid integer,
+    date_init timestamp without time zone,
+    date_update timestamp without time zone,
+    module integer NOT NULL references ir_module_module on delete restrict,
+    model integer NOT NULL references ir_model on delete restrict,
     name character varying(128) NOT NULL
 );
 

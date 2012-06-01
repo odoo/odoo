@@ -70,9 +70,6 @@ _schema = logging.getLogger(__name__ + '.schema')
 # List of etree._Element subclasses that we choose to ignore when parsing XML.
 from openerp.tools import SKIPPED_ELEMENT_TYPES
 
-# Prefixes for external IDs of schema elements
-EXT_ID_PREFIX_M2M_TABLE = "_m2m_rel_table_"
-
 regex_order = re.compile('^(([a-z0-9_]+|"[a-z0-9_]+")( *desc| *asc)?( *, *|))+$', re.I)
 regex_object_name = re.compile(r'^[a-z0-9_.]+$')
 
@@ -2743,6 +2740,7 @@ class BaseModel(object):
                               self._table, column['attname'])
 
     def _save_constraint(self, cr, constraint_name, type):
+        """ TODO """
         assert type in ('f', 'u')
         cr.execute("""
             SELECT 1 FROM ir_model_constraint, ir_module_module
@@ -2759,13 +2757,20 @@ class BaseModel(object):
                     (SELECT id FROM ir_model WHERE model=%s), %s)""",
                     (constraint_name, self._module, self._name, type))
 
-    # quick creation of ir.model.data entry to make uninstall of schema elements easier
-    def _make_ext_id(self, cr, ext_id):
-        cr.execute('SELECT 1 FROM ir_model_data WHERE name=%s AND module=%s', (ext_id, self._module))
+    def _save_relation_table(self, cr, relation_table):
+        """ TODO """
+        cr.execute("""
+            SELECT 1 FROM ir_model_relation, ir_module_module
+            WHERE ir_model_relation.module=ir_module_module.id
+                AND ir_model_relation.name=%s
+                AND ir_module_module.name=%s
+            """, (relation_table, self._module))
         if not cr.rowcount:
-            cr.execute("""INSERT INTO ir_model_data (name,date_init,date_update,module,model)
-                                 VALUES (%s, now() AT TIME ZONE 'UTC', now() AT TIME ZONE 'UTC', %s, %s)""",
-                       (ext_id, self._module, self._name))
+            cr.execute("""INSERT INTO ir_model_relation (name, date_init, date_update, module, model)
+                                 VALUES (%s, now() AT TIME ZONE 'UTC', now() AT TIME ZONE 'UTC',
+                    (SELECT id FROM ir_module_module WHERE name=%s),
+                    (SELECT id FROM ir_model WHERE model=%s))""",
+                       (relation_table, self._module, self._name))
 
     # checked version: for direct m2o starting from `self`
     def _m2o_add_foreign_key_checked(self, source_field, dest_model, ondelete):
@@ -3195,7 +3200,7 @@ class BaseModel(object):
 
     def _m2m_raise_or_create_relation(self, cr, f):
         m2m_tbl, col1, col2 = f._sql_names(self)
-        self._make_ext_id(cr,  EXT_ID_PREFIX_M2M_TABLE + m2m_tbl)
+        self._save_relation_table(cr, m2m_tbl)
         cr.execute("SELECT relname FROM pg_class WHERE relkind IN ('r','v') AND relname=%s", (m2m_tbl,))
         if not cr.dictfetchall():
             if not self.pool.get(f._obj):

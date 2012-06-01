@@ -29,7 +29,7 @@ from openerp import netsvc, pooler, tools
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools import config
 from openerp.tools.translate import _
-from openerp.osv.orm import except_orm, browse_record, EXT_ID_PREFIX_M2M_TABLE
+from openerp.osv.orm import except_orm, browse_record
 
 _logger = logging.getLogger(__name__)
 
@@ -847,7 +847,6 @@ class ir_model_data(osv.osv):
         ids_set = set(ids)
         wkf_todo = []
         to_unlink = []
-        to_drop_table = []
         ids.sort()
         ids.reverse()
         for data in self.browse(cr, uid, ids, context):
@@ -855,21 +854,6 @@ class ir_model_data(osv.osv):
             res_id = data.res_id
             model_obj = self.pool.get(model)
             name = tools.ustr(data.name)
-
-            if name.startswith(EXT_ID_PREFIX_M2M_TABLE):
-                # double-check we are really going to delete all the owners of this schema element
-                cr.execute("""SELECT id from ir_model_data where name = %s and res_id IS NULL""", (data.name,))
-                external_ids = [x[0] for x in cr.fetchall()]
-                if (set(external_ids)-ids_set):
-                    # as installed modules have defined this element we must not delete it!
-                    continue
-
-            if name.startswith(EXT_ID_PREFIX_M2M_TABLE):
-                name = name[len(EXT_ID_PREFIX_M2M_TABLE):]
-                cr.execute("SELECT 1 FROM information_schema.tables WHERE table_name=%s", (name,))
-                if cr.fetchone() and not name in to_drop_table:
-                    to_drop_table.append(name)
-                continue
 
             pair_to_unlink = (model, res_id)
             if pair_to_unlink not in to_unlink:
@@ -889,11 +873,6 @@ class ir_model_data(osv.osv):
                 wf_service.trg_write(uid, model, res_id, cr)
             except:
                 _logger.info('Unable to force processing of workflow for item %s@%s in order to leave activity to be deleted', res_id, model)
-
-        # drop m2m relation tables
-        for table in to_drop_table:
-            cr.execute('DROP TABLE %s CASCADE'% (table),)
-            _logger.info('Dropped table %s', table)
 
         def unlink_if_refcount(to_unlink):
             for model, res_id in to_unlink:

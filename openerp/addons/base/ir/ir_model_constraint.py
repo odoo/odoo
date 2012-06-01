@@ -64,7 +64,6 @@ class ir_model_constraint(Model):
                 cr.execute("""SELECT 1 from pg_constraint cs JOIN pg_class cl ON (cs.conrelid = cl.oid)
                               WHERE cs.contype=%s and cs.conname=%s and cl.relname=%s""", ('f', name, model_obj._table))
                 if cr.fetchone():
-                    print '>>> ALTER TABLE "%s" DROP CONSTRAINT "%s"' % (model_obj._table, name)
                     cr.execute('ALTER TABLE "%s" DROP CONSTRAINT "%s"' % (model_obj._table, name),)
                     _logger.info('Dropped FK CONSTRAINT %s@%s', name, model)
 
@@ -73,7 +72,6 @@ class ir_model_constraint(Model):
                 cr.execute("""SELECT 1 from pg_constraint cs JOIN pg_class cl ON (cs.conrelid = cl.oid)
                               WHERE cs.contype=%s and cs.conname=%s and cl.relname=%s""", ('u', name, model_obj._table))
                 if cr.fetchone():
-                    print '>>> ALTER TABLE "%s" DROP CONSTRAINT "%s"' % (model_obj._table, name)
                     cr.execute('ALTER TABLE "%s" DROP CONSTRAINT "%s"' % (model_obj._table, name),)
                     _logger.info('Dropped CONSTRAINT %s@%s', name, model)
 
