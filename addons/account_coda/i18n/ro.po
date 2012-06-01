@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2012-05-29 18:37+0000\n"
+"PO-Revision-Date: 2012-05-30 20:14+0000\n"
 "Last-Translator: Fekete Mihai <mihai@erpsystems.ro>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-05-30 05:47+0000\n"
-"X-Generator: Launchpad (build 15316)\n"
+"X-Launchpad-Export-Date: 2012-05-31 05:30+0000\n"
+"X-Generator: Launchpad (build 15322)\n"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_09_21
@@ -90,7 +90,7 @@ msgstr ""
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_47_05
 msgid "Bill claimed back"
-msgstr "Factura solicitata inapoi"
+msgstr "Polita rechemata inapoi"
 
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_016
@@ -185,7 +185,7 @@ msgstr "Rambursare cheltuieli"
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_07_56
 msgid "Remittance of supplier's bill with guarantee"
-msgstr "Expedierea facturii furnizorului cu confirmare de primire"
+msgstr "Expedierea facturii furnizorului cu garantie"
 
 #. module: account_coda
 #: model:account.coda.comm.type,description:account_coda.acct_002
@@ -239,7 +239,7 @@ msgstr "Avertizare !"
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_07_39
 msgid "Return of an irregular bill of exchange"
-msgstr "Intoarcerea la o factura de schimb neregulata"
+msgstr "Returnarea unei polite inegale"
 
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_011
@@ -273,7 +273,7 @@ msgstr "Referinta"
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_07_58
 msgid "Remittance of supplier's bill without guarantee"
-msgstr "Expedierea facturii furnizorului fara confirmare"
+msgstr "Expedierea facturii furnizorului fara garantie"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_07_03
@@ -385,7 +385,7 @@ msgstr "Pentru publicatii ale institutiei financiare"
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_47_01
 msgid "Payment of foreign bill"
-msgstr "Plata facturii straine"
+msgstr "Plata politei straine"
 
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_024
@@ -400,7 +400,7 @@ msgstr "Codul tranzactiei"
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_47_13
 msgid "Discount foreign supplier's bills"
-msgstr "Facturi de reducere ale furnizorului strain"
+msgstr "Reducere la plata facturilor furnizorului strain"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcf_05
@@ -410,7 +410,7 @@ msgstr "Debit direct"
 #. module: account_coda
 #: model:account.coda.trans.code,comment:account_coda.actcc_47_11
 msgid "Bills of lading"
-msgstr "Conosamente"
+msgstr "Foi de expeditie"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcf_00
@@ -478,7 +478,7 @@ msgstr "Reducere in strainatate"
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_47_62
 msgid "Remittance of documents abroad - credit after collection"
-msgstr "Expedierea documentelor in strainatate - credit dupa recuperare"
+msgstr "Expedierea documentelor in strainatate - credit dupa incasare"
 
 #. module: account_coda
 #: field:coda.bank.statement.line,name:0
@@ -503,6 +503,13 @@ msgid ""
 "otherwise change the corresponding entry manually in the generated Bank "
 "Statement."
 msgstr ""
+"\n"
+"    Linia '%s' a Extrasului de Cont '%s':\n"
+"        Nicio inregistrare a partenerului alocata: Exista mai multi "
+"parteneri cu acelasi Numar de Cont Bancar '%s'!\n"
+"        Va rugam sa corectati configurarea si sa efectuati din nou importul "
+"sau sa schimbati manual inregistrarea corespunzatoare in Extrasul de cont "
+"generat."
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_30_33
@@ -578,7 +585,7 @@ msgstr "Echivalent in euro"
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_47_50
 msgid "Remittance of foreign bill credit after collection"
-msgstr "Expediere factura credit straina dupa recuperare"
+msgstr "Expediere polite straine, credit dupa incasare"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_03_03
@@ -596,7 +603,7 @@ msgid ""
 msgstr ""
 "Suma este calculata de catre client; de ex. un fisier de regrupare a "
 "salariilor sau a platilor facute furnizorilor sau un fisier de regrupare a "
-"recuperarilor pentru care clientul este debitat sau creditat cu o singura "
+"incasarilor pentru care clientul este debitat sau creditat cu o singura "
 "suma. Ca o chestiune de principiu, acest tip este folosit de asemenea atunci "
 "cand nu exista date detaliate (tipul 5)."
 
@@ -630,7 +637,7 @@ msgstr "Obiect pentru stocarea Fisierelor CODA de date"
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_029
 msgid "Protest charges"
-msgstr ""
+msgstr "Taxe de protest"
 
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_053
@@ -646,7 +653,7 @@ msgstr "Comision credit"
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_43_58
 msgid "Remittance of foreign cheque credit after collection"
-msgstr "Expedierea unui cec de credit extern dupa recuperare"
+msgstr "Expedierea unui cec de credit extern dupa incasare"
 
 #. module: account_coda
 #: model:account.coda.trans.type,description:account_coda.actt_8
@@ -871,7 +878,7 @@ msgstr "Plata de catre o persoana terta"
 #: model:account.coda.trans.code,description:account_coda.actcc_47_60
 msgid "Remittance of documents abroad - credit under usual reserve"
 msgstr ""
-"Expedierea documentelor in strainatate - credit sub rezerva obisnuita"
+"Expedierea documentelor in strainatate - credit aflat sub rezerva obisnuita"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_04_52
@@ -1036,7 +1043,7 @@ msgstr "Achizitie de cupoane de benzina"
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_47_52
 msgid "Remittance of foreign bill credit under usual reserve"
-msgstr "Transmitere factura externa creditul sub rezerva obisnuita"
+msgstr "Expediere polita straina, credit sub rezerva obisnuita"
 
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_061
@@ -1072,7 +1079,7 @@ msgstr "Diverse tranzactii"
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_406
 msgid "Collection charges"
-msgstr "Taxe recuperare"
+msgstr "Taxe incasare"
 
 #. module: account_coda
 #: view:coda.bank.statement:0
@@ -1087,7 +1094,7 @@ msgstr "Plata cu numerar"
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_80_27
 msgid "Subscription fee"
-msgstr "Taxa abonament"
+msgstr "Taxa de abonament"
 
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_036
@@ -1216,7 +1223,7 @@ msgstr "Titluri de credit solicitate inapoi"
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_411
 msgid "Fixed collection charge"
-msgstr "Taxa fixa recuperare"
+msgstr "Taxa fixa incasare"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_09_64
@@ -1242,7 +1249,7 @@ msgstr "Plata taxe card"
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_07_54
 msgid "Remittance of commercial paper for discount"
-msgstr "Transmiterea de titluri de credit pentru reducere"
+msgstr "Expediere titluri de valoare pentru reducere"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_05_01
@@ -1273,7 +1280,7 @@ msgstr ""
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_03_58
 msgid "Remittance of cheques, vouchers, etc. credit after collection"
-msgstr "Transmiterea de cecuri, vouchere, etc. credit dupa recuperare"
+msgstr "Expediere cecuri, vouchere, etc. credit dupa incasare"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_09_19
@@ -1417,7 +1424,7 @@ msgstr "Niciunul"
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_405
 msgid "Bill guarantee commission"
-msgstr "Comision garantie"
+msgstr "Comision garantie polita"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_47_06
@@ -1475,7 +1482,7 @@ msgstr "Costuri de expediere"
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_47_07
 msgid "Unpaid foreign bill"
-msgstr "Factura externa neplatita"
+msgstr "Polita straina neplatita"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_04_07
@@ -1493,7 +1500,7 @@ msgstr "Obisnuit"
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_05_50
 msgid "Credit after collection"
-msgstr "Credit dupa recuperare"
+msgstr "Credit dupa incasare"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcf_80
@@ -1679,7 +1686,7 @@ msgstr "Titlu de credit intern"
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_034
 msgid "Reinvestment fee"
-msgstr "Taxa reinvestire"
+msgstr "Taxa de reinvestire"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_80_12
@@ -1933,7 +1940,7 @@ msgstr ""
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_035
 msgid "Charges foreign documentary bill"
-msgstr "Taxe factura documentar extern"
+msgstr "Taxe documentar polita straina"
 
 #. module: account_coda
 #: model:account.coda.trans.code,comment:account_coda.actcc_80_39
@@ -2171,7 +2178,7 @@ msgstr "Cont"
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_47_37
 msgid "Costs relating to the payment of a foreign bill"
-msgstr "Costuri legate de plata unei facturi straine"
+msgstr "Costuri legate de plata unei polite straine"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_03_13
@@ -2278,7 +2285,7 @@ msgstr ""
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_07_50
 msgid "Remittance of commercial paper - credit after collection"
-msgstr "Expedierea titlurilor de credit - credit dupa recuperare"
+msgstr "Expedierea titlurilor de valoare - credit dupa incasare"
 
 #. module: account_coda
 #: view:coda.bank.statement:0
@@ -2381,7 +2388,7 @@ msgstr "Titluri de valoare"
 #. module: account_coda
 #: selection:coda.bank.statement.line,type:0
 msgid "Free Communication"
-msgstr ""
+msgstr "Comunicare gratuita"
 
 #. module: account_coda
 #: model:account.coda.trans.type,description:account_coda.actt_2
@@ -2390,26 +2397,29 @@ msgid ""
 "credit transfers with a structured communication As a matter of principle, "
 "this type will also be used when no detailed data (type 6 or 7) is following."
 msgstr ""
+"Bilantul bancii; de ex. suma totala a unei serii de transferuri cu o "
+"comunicare structurata. Ca o chestiune de principiu, acest tip va fi de "
+"asemenea folosit atunci cand nu urmeaza alte date detaliate (tipul 6 sau 7)."
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_03_37
 msgid "Cheque-related costs"
-msgstr ""
+msgstr "Cheltuieli legate de cecuri"
 
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_033
 msgid "Charges for a foreign bill"
-msgstr ""
+msgstr "Taxe pentru o polita straina"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_09_13
 msgid "Cash withdrawal by your branch or agents"
-msgstr ""
+msgstr "Retragere de numerar de sucursala sau agentii d-voastra"
 
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_049
 msgid "Fiscal stamps/stamp duty"
-msgstr ""
+msgstr "Timbre fiscale/taxa de timbru"
 
 #. module: account_coda
 #: model:account.coda.trans.code,comment:account_coda.actcc_03_58
@@ -2417,26 +2427,28 @@ msgid ""
 "Also for vouchers, postal orders, anything but bills of exchange, "
 "acquittances, promissory notes, etc."
 msgstr ""
+"Valabil pentru vouchere, mandate postale, orice in afara de polite, "
+"recipise, obligatiuni, etc."
 
 #. module: account_coda
 #: view:account.coda.import:0
 msgid "Select your file :"
-msgstr ""
+msgstr "Selectati fisierul :"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_80_06
 msgid "Damage relating to bills and cheques"
-msgstr ""
+msgstr "Daune legate de polite si cecuri"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_03_09
 msgid "Unpaid voucher"
-msgstr ""
+msgstr "Voucher neplatit"
 
 #. module: account_coda
 #: model:account.coda.trans.code,comment:account_coda.actcc_11_13
 msgid "Unissued part (see 64)"
-msgstr ""
+msgstr "Neemis (vedeti 64)"
 
 #. module: account_coda
 #: view:account.coda.import:0
@@ -2445,39 +2457,39 @@ msgstr ""
 #: model:ir.actions.act_window,name:account_coda.wizard_account_coda_import_2
 #: model:ir.model,name:account_coda.model_account_coda_import
 msgid "Import CODA File"
-msgstr ""
+msgstr "Importati Fisierul CODA"
 
 #. module: account_coda
 #: code:addons/account_coda/wizard/account_coda_import.py:289
 #: code:addons/account_coda/wizard/account_coda_import.py:481
 #, python-format
 msgid "Transaction Code unknown, please consult your bank."
-msgstr ""
+msgstr "Cod Tranzactie necunoscut, va rugam sa consultati banca."
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_13_55
 msgid "Fixed advance – interest only"
-msgstr ""
+msgstr "Avans fix - numai dobanda"
 
 #. module: account_coda
 #: view:account.coda.trans.type:0
 msgid "CODA Transaction Type"
-msgstr ""
+msgstr "Tip Tranzactie CODA"
 
 #. module: account_coda
 #: field:coda.bank.statement.line,globalisation_level:0
 msgid "Globalisation Level"
-msgstr ""
+msgstr "Nivelul de globalizare"
 
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_020
 msgid "Costs of physical delivery"
-msgstr ""
+msgstr "Costurile de livrare fizica"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_09_60
 msgid "Sale of foreign bank notes"
-msgstr ""
+msgstr "Vanzare de bancnote straine"
 
 #. module: account_coda
 #: field:account.coda.import,note:0
@@ -2487,12 +2499,12 @@ msgstr "Jurnal"
 #. module: account_coda
 #: view:account.coda:0
 msgid "Search CODA Files"
-msgstr ""
+msgstr "Cautati Fisierele CODA"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_07_52
 msgid "Remittance of commercial paper - credit under usual reserve"
-msgstr "Expedierea titlurilor de credit - credit sub rezerva obisnuita"
+msgstr "Expedierea titlurilor de valoare - credit sub rezerva obisnuita"
 
 #. module: account_coda
 #: help:coda.bank.account,active:0
@@ -2500,16 +2512,18 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the Bank "
 "Account without removing it."
 msgstr ""
+"Daca campul activ este setat pe Fals, va va permite sa ascundeti Contul "
+"Bancar fara sa il stergeti."
 
 #. module: account_coda
 #: model:account.coda.trans.code,comment:account_coda.actcc_07_54
 msgid "Among other things advances or promissory notes"
-msgstr ""
+msgstr "Printre alte lucruri, avansuri sau obligatiuni"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_80_10
 msgid "Purchase of Smartcard"
-msgstr ""
+msgstr "Achizitia de Smartcard"
 
 #. module: account_coda
 #: code:addons/account_coda/wizard/account_coda_import.py:664
@@ -2522,21 +2536,28 @@ msgid ""
 "Structured Communication Type: %s - %s\n"
 "Communication: %s"
 msgstr ""
+"Tip Tranzactie: %s - %s\n"
+"Grup Tranzactie: %s - %s\n"
+"Cod Tranzactie: %s - %s\n"
+"Categorie Tranzactie: %s - %s\n"
+"Tip Comunicare Structurata: %s - %s\n"
+"Comunicare: %s"
 
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_208
 msgid "Commitment fee deferred payment"
-msgstr ""
+msgstr "Amanarea platii taxei de remitere"
 
 #. module: account_coda
 #: model:account.coda.comm.type,description:account_coda.acct_005
 msgid "Data concerning the correspondent"
-msgstr ""
+msgstr "Date referitoare la corespondent"
 
 #. module: account_coda
 #: model:account.coda.trans.code,comment:account_coda.actcc_11_66
 msgid "For professionals such as insurances and stockbrokers"
 msgstr ""
+"In atentia profesionistilor precum agentii de asigurari si agentii de bursa"
 
 #. module: account_coda
 #: model:account.coda.trans.code,comment:account_coda.actcc_80_19
@@ -2551,6 +2572,8 @@ msgid ""
 "Used in case of payments accepted under reserve of count, result of "
 "overcrediting"
 msgstr ""
+"Utilizat in cazul platilor acceptate sub rezerva numararii, ca rezultat al "
+"supra creditarii"
 
 #. module: account_coda
 #: code:addons/account_coda/wizard/account_coda_import.py:630
@@ -2560,21 +2583,24 @@ msgid ""
 "Configuration Error in journal %s!\n"
 "Please verify the Default Debit and Credit Account settings."
 msgstr ""
+"\n"
+"Eroare de Configurare in jurnalul %s!\n"
+"Va rugam sa verificati Debitul Implicit si setarile Contului de credit."
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_07_09
 msgid "Agio on supplier's bill"
-msgstr ""
+msgstr "Comision pentru schimbul valutar pe factura furnizorului"
 
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_213
 msgid "Financing fee"
-msgstr ""
+msgstr "Taxa de finantare"
 
 #. module: account_coda
 #: field:account.bank.statement.line.global,coda_statement_line_ids:0
 msgid "CODA Bank Statement Lines"
-msgstr ""
+msgstr "Linii Extrase bancare CODA"
 
 #. module: account_coda
 #: code:addons/account_coda/wizard/account_coda_import.py:170
@@ -2583,11 +2609,13 @@ msgid ""
 "\n"
 "Unsupported bank account structure !"
 msgstr ""
+"\n"
+"Structura contului bancar nu este acceptata!"
 
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_037
 msgid "Commission for handling charges"
-msgstr ""
+msgstr "Comision pentru taxele de gestiune"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_11_03
@@ -2597,7 +2625,7 @@ msgstr "Abonament la titluri de valoare"
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_425
 msgid "Foreign broker's commission"
-msgstr ""
+msgstr "Comision broker strain"
 
 #. module: account_coda
 #: model:account.coda.trans.type,description:account_coda.actt_7
@@ -2605,13 +2633,15 @@ msgid ""
 "Detail of 2. Simple account with detailed data The records in a separate "
 "application keep type 7."
 msgstr ""
+"Detaliu 2. Cont simplu cu date detaliate. Inregistrarile intr-o aplicatie "
+"separata pastreaza tipul 7."
 
 #. module: account_coda
 #: model:account.coda.comm.type,description:account_coda.acct_125
 #: model:account.coda.trans.code,description:account_coda.actcf_13
 #: view:coda.bank.statement.line:0
 msgid "Credit"
-msgstr ""
+msgstr "Credit"
 
 #. module: account_coda
 #: code:addons/account_coda/wizard/account_coda_import.py:155
@@ -2620,16 +2650,18 @@ msgid ""
 "\n"
 "Foreign bank accounts with BBAN structure are not supported !"
 msgstr ""
+"\n"
+"Conturile bancare straine cu structura BBAN nu sunt acceptate !"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcf_09
 msgid "Counter transactions"
-msgstr ""
+msgstr "Tranzactii la ghiseu"
 
 #. module: account_coda
 #: model:ir.model,name:account_coda.model_coda_bank_statement_line
 msgid "CODA Bank Statement Line"
-msgstr ""
+msgstr "Linia Extrasului bancar CODA"
 
 #. module: account_coda
 #: model:account.coda.trans.code,comment:account_coda.actcc_01_17
@@ -2638,31 +2670,34 @@ msgid ""
 "In case of centralisation by the bank, type 2 will be allotted to this "
 "transaction. This total can be followed by the detailed movement."
 msgstr ""
+"In cazul centralizarii de catre banca, tipul 2 va fi alocat acestei "
+"tranzactii. Acest total poate fi urmat de o miscare detaliata."
 
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_057
 msgid "Interest subsidy"
-msgstr ""
+msgstr "Subsidiu dobanda"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcf_41
 msgid "International credit transfers - non-SEPA credit transfers"
 msgstr ""
+"Transferuri internationale de credit - transferuri de credit non-SEPA"
 
 #. module: account_coda
 #: model:account.coda.trans.code,comment:account_coda.actcc_03_87
 msgid "Overall amount, VAT included"
-msgstr ""
+msgstr "Cuantumul total, TVA inclus"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_43_01
 msgid "Payment of a foreign cheque"
-msgstr ""
+msgstr "Plata unui cec strain"
 
 #. module: account_coda
 #: selection:coda.bank.statement.line,type:0
 msgid "General"
-msgstr ""
+msgstr "General"
 
 #. module: account_coda
 #: code:addons/account_coda/wizard/account_coda_import.py:856
@@ -2671,11 +2706,13 @@ msgid ""
 "\n"
 "Incorrect ending Balance in CODA Statement %s for Bank Account %s!"
 msgstr ""
+"\n"
+"Sold final incorect in Extrasul CODA %s pentru Contul Bancar %s!"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_11_04
 msgid "Issues"
-msgstr ""
+msgstr "Probleme"
 
 #. module: account_coda
 #: model:account.coda.trans.code,comment:account_coda.actcc_07_37
@@ -2683,78 +2720,81 @@ msgid ""
 "If any, detail in the category (e.g. costs for presentation for acceptance, "
 "etc.)"
 msgstr ""
+"Daca este cazul, detalii in categoria (de ex. costurile pentru prezentarea "
+"de acceptare, etc.)"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_09_17
 msgid "Purchase of fiscal stamps"
-msgstr ""
+msgstr "Cumparare timbruri fiscale"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_41_01
 #: model:account.coda.trans.code,description:account_coda.actcc_41_50
 msgid "Transfer"
-msgstr ""
+msgstr "Transfer"
 
 #. module: account_coda
 #: view:account.coda.import:0
 msgid "View Bank Statement(s)"
-msgstr ""
+msgstr "Vizualizati Extrasul Bancar(s)"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_80_20
 msgid "Drawing up a certificate"
-msgstr ""
+msgstr "Intocmirea unui certificat"
 
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_013
 msgid "Payment commission"
-msgstr ""
+msgstr "Plata comision"
 
 #. module: account_coda
 #: model:account.coda.trans.code,comment:account_coda.actcc_07_01
 msgid ""
 "Bills of exchange, acquittances, promissory notes; debit of the drawee"
 msgstr ""
+"Polite, recipise, obligatiuni, debitul persoanei care achita o polita"
 
 #. module: account_coda
 #: view:account.coda.import:0
 msgid "View CODA Bank Statement(s)"
-msgstr ""
+msgstr "Vizualizati Extrasul Bancar CODA(s)"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_03_15
 msgid "Your purchase bank cheque"
-msgstr ""
+msgstr "Cumparare cec bancar"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_03_05
 msgid "Payment of voucher"
-msgstr ""
+msgstr "Plata voucherului"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_13_68
 msgid "Documentary export credits"
-msgstr ""
+msgstr "Credite export documentar"
 
 #. module: account_coda
 #: field:coda.bank.account,find_bbacom:0
 msgid "Lookup Invoice"
-msgstr ""
+msgstr "Cautati Factura"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcf_03
 msgid "Cheques"
-msgstr ""
+msgstr "Cecuri"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_05_56
 msgid "Unexecutable reimbursement"
-msgstr ""
+msgstr "Nu se poate efectua rambursarea"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_05_03
 msgid "Unpaid debt"
-msgstr ""
+msgstr "Datorie neplatita"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_03_52
@@ -2762,6 +2802,8 @@ msgid ""
 "First credit of cheques, vouchers, luncheon vouchers, postal orders, credit "
 "under usual reserve"
 msgstr ""
+"Primul credit pentru cecuri, vouchere, tichete de masa, mandate postale, "
+"credit aflat sub rezerva obisnuita"
 
 #. module: account_coda
 #: model:account.coda.trans.code,comment:account_coda.actcc_07_05
@@ -2769,6 +2811,8 @@ msgid ""
 "Bill claimed back at the drawer's request (bill claimed back before maturity "
 "date)"
 msgstr ""
+"Polita rechemata inapoi la solicitarea persoanei care trage o polita asupra "
+"sa (polita rechemata inainte de data scadenta)"
 
 #. module: account_coda
 #: model:account.coda.trans.code,comment:account_coda.actcc_80_11
@@ -2776,6 +2820,8 @@ msgid ""
 "Costs chargeable to clients who ask to have their correspondence kept at "
 "their disposal at the bank's counter"
 msgstr ""
+"Costuri suportate de clientii care solicita sa isi aiba corespondenta "
+"pastrata la dispozitia lor la ghiseul bancii"
 
 #. module: account_coda
 #: model:account.coda.trans.code,comment:account_coda.actcc_11_64
@@ -2784,21 +2830,24 @@ msgid ""
 "underwriting or not); also used for the payment in full of partly-paid "
 "shares, see transaction 05"
 msgstr ""
+"Suma platita emitentului de catre banca responsabila cu plasarea (subscriere "
+"ferma sau nu); folosit de asemenea pentru plata integrala a actiunilor "
+"platite partial, vedeti tranzactia 05"
 
 #. module: account_coda
 #: model:account.coda.trans.code,comment:account_coda.actcc_03_15
 msgid "Cheque drawn by the bank on itself, usually with charges."
-msgstr ""
+msgstr "Cec elaborat de banca, de obicei cu taxe."
 
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_072
 msgid "Countervalue of commission to third party"
-msgstr ""
+msgstr "Contravaloarea comisionului catre partea terta"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_01_01
 msgid "Individual transfer order"
-msgstr ""
+msgstr "Ordin individual de transfer"
 
 #. module: account_coda
 #: code:addons/account_coda/wizard/account_coda_import.py:436
@@ -2807,11 +2856,13 @@ msgid ""
 "\n"
 "Movement data records of type 2.%s are not supported !"
 msgstr ""
+"\n"
+"Mutarea inregistrarii datelor de dipul 2.%s nu este acceptata !"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_04_02
 msgid "Payment by means of a payment card within the Eurozone"
-msgstr ""
+msgstr "Plata prin intermediul unui card de plati in cadrul Zonei Euro"
 
 #. module: account_coda
 #: model:account.coda.trans.code,comment:account_coda.actcc_01_01
@@ -2832,17 +2883,17 @@ msgstr "Lichidare (reglementari periodice pentru dobanda, cheltuieli,...)"
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_04_51
 msgid "Unloading Proton"
-msgstr ""
+msgstr "Descarcare Proton"
 
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_019
 msgid "Tax on physical delivery"
-msgstr ""
+msgstr "Taxa pe livrarea fizica"
 
 #. module: account_coda
 #: field:coda.bank.statement,statement_id:0
 msgid "Associated Bank Statement"
-msgstr ""
+msgstr "Extras de cont asociat"
 
 #. module: account_coda
 #: model:account.coda.trans.code,comment:account_coda.actcc_07_08
@@ -2850,38 +2901,40 @@ msgid ""
 "Debit of the remitter when the drawee pays in advance directly to the "
 "remitter (regards bank acceptances)"
 msgstr ""
+"Debitul remitentului atunci cand persoana care achita polita ii plateste in "
+"avans direct remitentului (priveste acceptul bancii)"
 
 #. module: account_coda
 #: model:account.coda.comm.type,description:account_coda.acct_103
 msgid "number (e.g. of the cheque, of the card, etc.)"
-msgstr ""
+msgstr "numar (de ex. al cecului, al cardului, etc.)"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_80_24
 msgid "Participation in and management of interest refund system"
-msgstr ""
+msgstr "Participare la si gestiunea sistemului de restituire a dobanzii"
 
 #. module: account_coda
 #: view:coda.bank.statement:0
 #: view:coda.bank.statement.line:0
 msgid "Glob. Amount"
-msgstr ""
+msgstr "Suma Glob."
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_09_58
 msgid "Payment by your branch/agents"
-msgstr ""
+msgstr "Plata de catre sucursala/agentii d-voastra"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_09_25
 #: model:account.coda.trans.code,description:account_coda.actcc_43_70
 msgid "Purchase of traveller’s cheque"
-msgstr ""
+msgstr "Cumparare de cecuri de calatorie"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_01_39
 msgid "Your issue circular cheque"
-msgstr ""
+msgstr "Emitere cec circular"
 
 #. module: account_coda
 #: model:account.coda.trans.code,comment:account_coda.actcc_11_09
@@ -2889,6 +2942,8 @@ msgid ""
 "For professionals (stockbrokers) only, whoever the issuer may be (Belgian or "
 "foreigner)"
 msgstr ""
+"Doar pentru profesionisti (agenti de bursa), indiferent cine este emitatorul "
+"(Belgian sau strain)"
 
 #. module: account_coda
 #: model:account.coda.trans.code,comment:account_coda.actcc_80_33
@@ -2897,27 +2952,30 @@ msgid ""
 "collecting, ordering funds). VAT excluded = type 0 VAT included = type 3 (at "
 "least 3 articles)"
 msgstr ""
+"Costuri nespecificate, adesea cu o comunicare manuala (de ex. pentru "
+"incasare, ordonare fonduri). TVA exclus = tipul 0 TVA inclus = tipul 3 (cel "
+"putin 3 articole)"
 
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_023
 msgid "Exercising fee"
-msgstr ""
+msgstr "Exercitare taxa"
 
 #. module: account_coda
 #: code:addons/account_coda/wizard/account_coda_import.py:934
 #, python-format
 msgid "Import CODA File result"
-msgstr ""
+msgstr "Importati rezultatul Fisierului CODA"
 
 #. module: account_coda
 #: model:account.coda.comm.type,description:account_coda.acct_111
 msgid "POS credit – Globalisation"
-msgstr ""
+msgstr "Credit PdV - Globalizare"
 
 #. module: account_coda
 #: view:coda.bank.statement.line:0
 msgid "Search Bank Transactions"
-msgstr ""
+msgstr "Cautati Tranzactiile Bancare"
 
 #. module: account_coda
 #: code:addons/account_coda/wizard/account_coda_import.py:577
@@ -2926,6 +2984,8 @@ msgid ""
 "\n"
 "Application Error : "
 msgstr ""
+"\n"
+"Eroare de aplicatie : "
 
 #. module: account_coda
 #: help:coda.bank.account,description1:0
@@ -2934,69 +2994,71 @@ msgid ""
 "The Primary or Secondary Account Description should match the corresponding "
 "Account Description in the CODA file."
 msgstr ""
+"Descrierea Contului Primar sau Secundar trebuie sa se potriveasca cu "
+"Descrierea corespunzatoare a Contului in fisierul Coda."
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_11_17
 msgid "Management fee"
-msgstr ""
+msgstr "Taxa gestionare"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_09_03
 msgid "Cash withdrawal by card (ATM)"
-msgstr ""
+msgstr "Retragere numerar de pe card (Bancomat)"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_80_16
 msgid "Bank confirmation to revisor or accountant"
-msgstr ""
+msgstr "Confirmarea bancii catre revizor sau contabil"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcf_04
 msgid "Cards"
-msgstr ""
+msgstr "Carduri"
 
 #. module: account_coda
 #: view:coda.bank.statement.line:0
 msgid "Statement"
-msgstr ""
+msgstr "Extras de cont"
 
 #. module: account_coda
 #: view:account.coda.trans.type:0
 #: model:ir.actions.act_window,name:account_coda.action_account_coda_trans_type_form
 #: model:ir.ui.menu,name:account_coda.menu_action_account_coda_trans_type_form
 msgid "CODA Transaction Types"
-msgstr ""
+msgstr "Tipuri de Tranzactii CODA"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_04_50
 msgid "Credit after a payment at a terminal"
-msgstr ""
+msgstr "Credit dupa o plata la un terminal"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_13_02
 msgid "Long-term loan"
-msgstr ""
+msgstr "Imprumut pe termen lung"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_30_05
 #: model:account.coda.trans.code,description:account_coda.actcc_30_54
 msgid "Capital and/or interest term investment"
-msgstr ""
+msgstr "Investitia la termen a capitalului si/sau a dobanzii"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_03_68
 msgid "Credit of a payment via electronic purse"
-msgstr ""
+msgstr "Plata unui credit prin intermediul electronic"
 
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_028
 msgid "Fidelity premium"
-msgstr ""
+msgstr "Prima de fidelitate"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_03_39
 msgid "Provisionally unpaid due to other reason than manual presentation"
-msgstr ""
+msgstr "Neplatit temporar din alte motive decat prezentarea manuala"
 
 #. module: account_coda
 #: constraint:coda.bank.account:0
@@ -3006,6 +3068,10 @@ msgid ""
 "Configuration Error! \n"
 "The Bank Account Currency should match the Journal Currency !"
 msgstr ""
+"\n"
+"\n"
+"Eroare de configurare! \n"
+"Moneda Contului Bancar trebuie sa se potriveasca cu Moneda Jurnalului !"
 
 #. module: account_coda
 #: model:account.coda.trans.code,comment:account_coda.actcc_80_35
@@ -3013,31 +3079,33 @@ msgid ""
 "Costs charged for calculating the amount of the tax to be paid (e.g. "
 "Fiscomat)."
 msgstr ""
+"Costuri percepute pentru calcularea cuantumului taxei care va fi platita (de "
+"ex. Fiscomat)."
 
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_014
 msgid "Collection commission"
-msgstr ""
+msgstr "Incasare comision"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_43_52
 msgid "Remittance of foreign cheque credit under usual reserve"
-msgstr ""
+msgstr "Expedierea cecului strain, credit aflat sub rezerva obisnuita"
 
 #. module: account_coda
 #: field:coda.bank.statement.line,counterparty_number:0
 msgid "Counterparty Number"
-msgstr ""
+msgstr "Numar Echivalent"
 
 #. module: account_coda
 #: view:account.coda.import:0
 msgid "_Import"
-msgstr ""
+msgstr "_Importati"
 
 #. module: account_coda
 #: model:account.coda.trans.code,comment:account_coda.actcc_04_03
 msgid "See annexe III : communication 124"
-msgstr ""
+msgstr "Vedeti aneca III : comunicat 124"
 
 #. module: account_coda
 #: code:addons/account_coda/wizard/account_coda_import.py:420
@@ -3050,31 +3118,37 @@ msgid ""
 "otherwise change the corresponding entry manually in the generated Bank "
 "Statement."
 msgstr ""
+"\n"
+"    Linia '%s' a Extrasului bancar '%s':\n"
+"        Contul bancar '%s' nu este definit pentru partenerul '%s;!\n"
+"        Va rugam sa corectati configurarea si sa efectuati din nou importul "
+"sau sa schimbati manual inregistrarea corespunzatoare in Extrasul Bancar "
+"generat."
 
 #. module: account_coda
 #: model:account.coda.comm.type,description:account_coda.acct_113
 msgid "ATM/POS debit"
-msgstr ""
+msgstr "Debit ATP/PDV"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_30_03
 msgid "Forward purchase of foreign exchange"
-msgstr ""
+msgstr "Dati curs cumpararii de valuta straina"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_03_50
 msgid "Credit of a payment via terminal"
-msgstr ""
+msgstr "Plata unui credit prin terminal"
 
 #. module: account_coda
 #: model:account.coda.trans.code,comment:account_coda.actcc_04_52
 msgid "Credit provider"
-msgstr ""
+msgstr "Credit furnizor"
 
 #. module: account_coda
 #: selection:account.coda.trans.code,type:0
 msgid "Transaction Family"
-msgstr ""
+msgstr "Tranzactie Familie"
 
 #. module: account_coda
 #: model:account.coda.trans.code,comment:account_coda.actcc_11_68
@@ -3091,13 +3165,14 @@ msgstr ""
 #: code:addons/account_coda/wizard/account_coda_import.py:524
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Eroare!"
 
 #. module: account_coda
 #: help:coda.bank.statement,type:0
 msgid ""
 "No Bank Statements are associated with CODA Bank Statements of type 'Info'."
 msgstr ""
+"Nu exista Extrase Bancare asociate cu Extrasele Bancare CODA de tipul 'Info'."
 
 #. module: account_coda
 #: model:account.coda.trans.code,comment:account_coda.actcc_09_58
@@ -3105,36 +3180,38 @@ msgid ""
 "Takes priority over transaction 52 (hence a payment made by an agent in a "
 "night safe = 58 and not 52)"
 msgstr ""
+"Are prioritate asupra tranzactiei 52 (prin urmare o plata efectuata de un "
+"agent intr-un seif = 58, nu 52)"
 
 #. module: account_coda
 #: model:account.coda.comm.type,description:account_coda.acct_121
 msgid "Commercial bills"
-msgstr ""
+msgstr "Cambii comerciale"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_80_11
 msgid "Costs for the safe custody of correspondence"
-msgstr ""
+msgstr "Costuri cu pastrarea in siguranta a corespondentei"
 
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_041
 msgid "Credit card costs"
-msgstr ""
+msgstr "Costuri card de credit"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_13_56
 msgid "Subsidy"
-msgstr ""
+msgstr "Subsidiu"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_04_06
 msgid "Payment with tank card"
-msgstr ""
+msgstr "Plata cu cardul de rezerva"
 
 #. module: account_coda
 #: model:account.coda.comm.type,description:account_coda.acct_107
 msgid "Direct debit – DOM’80"
-msgstr ""
+msgstr "Debit direct – DOM’80"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_03_60
@@ -3144,28 +3221,28 @@ msgstr "Revocare voucher"
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_00_87
 msgid "Costs refunded"
-msgstr ""
+msgstr "Costuri rambursate"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_41_17
 msgid "Financial centralisation (debit)"
-msgstr ""
+msgstr "Centralizare financiara (debit)"
 
 #. module: account_coda
 #: model:account.coda.trans.code,comment:account_coda.actcc_11_02
 msgid "Payment to the bank on maturity date"
-msgstr ""
+msgstr "Plata catre banca la data scadentei"
 
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_025
 msgid "Individual entry for exchange charges"
-msgstr ""
+msgstr "Inregistrare individuala pentru taxele de schimb valutar"
 
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_004
 #: model:account.coda.trans.code,description:account_coda.actcc_80_09
 msgid "Postage"
-msgstr ""
+msgstr "Tarif postal"
 
 #. module: account_coda
 #: model:account.coda.trans.code,comment:account_coda.actcc_09_50
@@ -3174,6 +3251,10 @@ msgid ""
 "also for mixed payments (cash + cheques) - not to be communicated to the "
 "clients; for payments made by a third person: see family 01"
 msgstr ""
+"Pentru contul propriu - observatiile pentru client sunt date in comunicat; "
+"de asemenea pentru platile mixte (numerar + cecuri) - a nu se comunica "
+"clientilor; pentru platile efectuate de carte o persoana terta: vedeti "
+"familia 01"
 
 #. module: account_coda
 #: model:account.coda.trans.code,comment:account_coda.actcc_09_68
@@ -3181,6 +3262,8 @@ msgid ""
 "In case of payment accepted under reserve of count; result of undercrediting "
 "- see also transaction 19"
 msgstr ""
+"In cazul platii acceptate sub rezerva numararii; rezultatul subcreditarii - "
+"vedeti de asemenea tranzactia 19"
 
 #. module: account_coda
 #: help:coda.bank.account,bank_id:0
@@ -3189,11 +3272,14 @@ msgid ""
 "The CODA import function will find its CODA processing parameters on this "
 "number."
 msgstr ""
+"Numarul Contului Bancar.\n"
+"Functia importului CODA va gasi parametrii de procesare CODA pe baza acestui "
+"numar."
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_01_05
 msgid "Payment of wages, etc."
-msgstr ""
+msgstr "Plata salariilor, etc."
 
 #. module: account_coda
 #: sql_constraint:coda.bank.account:0
@@ -3201,48 +3287,50 @@ msgid ""
 "The combination of Bank Account, Account Description and Currency must be "
 "unique !"
 msgstr ""
+"Combinatia dintre Contul Bancar, Descrierea Contului si Moneda trebuie sa "
+"fie unica !"
 
 #. module: account_coda
 #: view:coda.bank.statement.line:0
 msgid "Debit"
-msgstr ""
+msgstr "Debit"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_07_10
 msgid "Renewal of agreed maturity date"
-msgstr ""
+msgstr "Reinnoirea datei scadente stabilite"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_04_55
 msgid "Income from payments by GSM"
-msgstr ""
+msgstr "Venitul din plati prin GSM"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_11_19
 msgid "Regularisation costs"
-msgstr ""
+msgstr "Costuri de regularizare"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_01_13
 #: model:account.coda.trans.code,description:account_coda.actcc_41_13
 msgid "Transfer from your account"
-msgstr ""
+msgstr "Transfer din contul dumneavoastra"
 
 #. module: account_coda
 #: sql_constraint:account.bank.statement.line.global:0
 msgid "The code must be unique !"
-msgstr ""
+msgstr "Codul trebuie sa fie unic !"
 
 #. module: account_coda
 #: help:coda.bank.account,currency:0
 #: help:coda.bank.statement,currency:0
 msgid "The currency of the CODA Bank Statement"
-msgstr ""
+msgstr "Moneda Extrasului Bancar CODA"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_41_07
 msgid "Collective transfers"
-msgstr ""
+msgstr "Transferuri colective"
 
 #. module: account_coda
 #: code:addons/account_coda/wizard/account_coda_import.py:116
@@ -3251,36 +3339,38 @@ msgid ""
 "\n"
 "CODA V%s statements are not supported, please contact your bank!"
 msgstr ""
+"\n"
+"Extrasele CODA V%s nu sunt acceptate, va rugam sa contactati banca!"
 
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_427
 msgid "Belgian Stock Exchange tax"
-msgstr ""
+msgstr "Taxa Bursa de Valori belgiana"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_07_12
 msgid "Safe custody"
-msgstr ""
+msgstr "Custodie"
 
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_001
 msgid "Interest received"
-msgstr ""
+msgstr "Dobanda primita"
 
 #. module: account_coda
 #: model:ir.ui.menu,name:account_coda.menu_account_coda_import
 msgid "Import CODA Files"
-msgstr ""
+msgstr "Importati Fisiere CODA"
 
 #. module: account_coda
 #: model:account.coda.comm.type,description:account_coda.acct_105
 msgid "original amount of the transaction"
-msgstr ""
+msgstr "valoarea originala a tranzactiei"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_01_09
 msgid "Your semi-standing order"
-msgstr ""
+msgstr "Ordin de plata fixa la intervale regulate"
 
 #. module: account_coda
 #: code:addons/account_coda/wizard/account_coda_import.py:508
@@ -3290,6 +3380,9 @@ msgid ""
 "CODA parsing error on information data record 3.2, seq nr %s!\n"
 "Please report this issue via your OpenERP support channel."
 msgstr ""
+"\n"
+"Eroare de analiza CODA cu privire la inregistrarea datelor 3.2,secv nr %s!\n"
+"Va rugam sa raportati aceasta problema prin canalul de asistenta OpenERP."
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_11_09
@@ -3300,22 +3393,22 @@ msgstr "Reglementare titluri"
 #. module: account_coda
 #: model:account.coda.trans.code,comment:account_coda.actcc_04_01
 msgid "Debit customer who is loading"
-msgstr ""
+msgstr "Debit client care se incarca"
 
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_047
 msgid "Charges extension bill"
-msgstr ""
+msgstr "Taxe de prelungire a politei"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_80_18
 msgid "Trade information"
-msgstr ""
+msgstr "Informatii schimb"
 
 #. module: account_coda
 #: field:account.coda.trans.code,comment:0
 msgid "Comment"
-msgstr ""
+msgstr "Observatie"
 
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_203
@@ -3323,31 +3416,35 @@ msgid ""
 "Confirmation fee | Additional confirmation fee | Commitment fee | Flat fee | "
 "Confirmation reservation commission | Additional reservation commission"
 msgstr ""
+"Taxa de confirmare | Taxa de confirmare suplimentara | Taxa de consemnare | "
+"Taxa fixa | Comision de confirmare a rezervarii | Comision de rezervare "
+"suplimentara"
 
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_027
 msgid "Charges for unpaid bills"
-msgstr ""
+msgstr "Taxe pentru politele neplatite"
 
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_204
 msgid "Amendment fee"
-msgstr ""
+msgstr "Taxa de rectificare"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_01_11
 msgid "Your semi-standing order – payment to employees"
 msgstr ""
+"Ordinul d-voastra de plata fixa la intervale regulate - plata catre angajati"
 
 #. module: account_coda
 #: model:ir.ui.menu,name:account_coda.menu_account_coda
 msgid "CODA Processing"
-msgstr ""
+msgstr "Procesare CODA"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_13_11
 msgid "Your repayment mortgage loan"
-msgstr ""
+msgstr "Rambursarea imprumutului ipotecar"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_00_37
@@ -3360,17 +3457,17 @@ msgstr ""
 #: model:account.coda.trans.code,description:account_coda.actcc_35_37
 #: model:account.coda.trans.code,description:account_coda.actcc_80_35
 msgid "Costs"
-msgstr ""
+msgstr "Costuri"
 
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_050
 msgid "Capital term investment"
-msgstr ""
+msgstr "Investitie capital la termen"
 
 #. module: account_coda
 #: model:account.coda.trans.code,comment:account_coda.actcc_03_05
 msgid "Payment of holiday pay, etc."
-msgstr ""
+msgstr "Plata primei de vacanta, etc."
 
 #. module: account_coda
 #: model:account.coda.trans.code,comment:account_coda.actcc_80_25
@@ -3378,12 +3475,13 @@ msgid ""
 "Commission for the renting of boxes put at the disposal for the "
 "correspondence"
 msgstr ""
+"Comision pentru inchirierea casutelor puse la dispozitie pentru corespondenta"
 
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_008
 #: model:account.coda.trans.code,description:account_coda.actcc_80_29
 msgid "Information charges"
-msgstr ""
+msgstr "Informatii taxe"
 
 #. module: account_coda
 #: model:account.coda.trans.code,comment:account_coda.actcc_01_03
@@ -3391,6 +3489,8 @@ msgid ""
 "Credit transfer for which the order has been given once and which is carried "
 "out again at regular intervals without any change."
 msgstr ""
+"Transfer de fonduri pentru care s-a emis o data un ordin de transfer si care "
+"este efectuat din nou la intervale regulate fara nicio modificare."
 
 #. module: account_coda
 #: model:account.coda.trans.type,description:account_coda.actt_0
@@ -3398,74 +3498,76 @@ msgid ""
 "Simple amount without detailed data; e.g. : an individual credit transfer "
 "(free of charges)."
 msgstr ""
+"Suma simpla, fara date detaliate; de ex. un credit individual de transfer "
+"(fara taxe)."
 
 #. module: account_coda
 #: help:coda.bank.account,find_partner:0
 msgid "Partner lookup via Bank Account Number."
-msgstr ""
+msgstr "Cautare partener prin Numarul Contului Bancar."
 
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_403
 msgid "Minimum discount rate"
-msgstr ""
+msgstr "Rata minima de reducere"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_47_56
 msgid "Remittance of guaranteed foreign supplier's bill"
-msgstr ""
+msgstr "Expedierea politei furnizorului strain cu garantie"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_11_02
 msgid "Tenders"
-msgstr ""
+msgstr "Oferte"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_43_07
 msgid "Unpaid foreign cheque"
-msgstr ""
+msgstr "Cec strain neplatit"
 
 #. module: account_coda
 #: model:account.coda.trans.code,comment:account_coda.actcc_11_03
 msgid ""
 "Bonds, shares, tap issues of CDs, with or without payment of interest, etc."
-msgstr ""
+msgstr "Obligatiuni, actiuni, imprumuturi, cu sau fara plata dobanzii, etc."
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_09_66
 msgid "Repurchase of petrol coupons"
-msgstr ""
+msgstr "Rascumparare tichete de benzina"
 
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_058
 msgid "Capital premium"
-msgstr ""
+msgstr "Prime capital"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_11_15
 #: model:account.coda.trans.code,description:account_coda.actcc_11_62
 msgid "Interim interest on subscription"
-msgstr ""
+msgstr "Dobanda provizorie la abonare"
 
 #. module: account_coda
 #: field:coda.bank.statement.line,counterparty_currency:0
 msgid "Counterparty Currency"
-msgstr ""
+msgstr "Moneda echivalenta"
 
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_202
 msgid "Advising commission | Additional advising commission"
-msgstr ""
+msgstr "Comision de consultanta | Comision de consultanta suplimentara"
 
 #. module: account_coda
 #: field:coda.bank.account,find_partner:0
 msgid "Lookup Partner"
-msgstr ""
+msgstr "Cautati Partenerul"
 
 #. module: account_coda
 #: view:coda.bank.statement:0
 #: view:coda.bank.statement.line:0
 msgid "Glob. Id"
-msgstr ""
+msgstr "Id Glob."
 
 #. module: account_coda
 #: view:coda.bank.statement:0
@@ -3473,12 +3575,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:account_coda.action_coda_bank_statement_line
 #: model:ir.ui.menu,name:account_coda.coda_bank_statement_line
 msgid "CODA Statement Lines"
-msgstr ""
+msgstr "Linii Extras CODA"
 
 #. module: account_coda
 #: field:coda.bank.statement.line,globalisation_amount:0
 msgid "Globalisation Amount"
-msgstr ""
+msgstr "Cuantum globalizare"
 
 #. module: account_coda
 #: model:account.coda.trans.code,comment:account_coda.actcc_01_13
@@ -3486,6 +3588,8 @@ msgid ""
 "Transfer from one account to another account of the same customer at the "
 "bank's or the customer's initiative (intracompany)."
 msgstr ""
+"Transfer dintr-un cont in alt cont al aceluiasi client la initiativa bancii "
+"sau a clientului (intracompanie)."
 
 #. module: account_coda
 #: code:addons/account_coda/wizard/account_coda_import.py:890
@@ -3494,6 +3598,8 @@ msgid ""
 "\n"
 "Error ! "
 msgstr ""
+"\n"
+"Eroare! "
 
 #. module: account_coda
 #: view:account.coda:0
@@ -3504,12 +3610,12 @@ msgstr "Utilizator"
 #. module: account_coda
 #: model:ir.model,name:account_coda.model_account_coda_trans_code
 msgid "CODA transaction code"
-msgstr ""
+msgstr "Cod tranzactie CODA"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_05_52
 msgid "Credit under usual reserve"
-msgstr ""
+msgstr "Credit sub rezerva obisnuita"
 
 #. module: account_coda
 #: code:addons/account_coda/wizard/account_coda_import.py:125
@@ -3519,28 +3625,32 @@ msgid ""
 "The CODA creation date doesn't fall within a defined Accounting Period!\n"
 "Please create the Accounting Period for date %s."
 msgstr ""
+"\n"
+"Data crearii fisierului CODA nu se incadreaza intr-o Perioada Contabila "
+"definita!\n"
+"Va rugam sa creati Perioada Contabila pentru data %s."
 
 #. module: account_coda
 #: model:account.coda.trans.code,comment:account_coda.actcc_04_50
 msgid "Except Proton"
-msgstr ""
+msgstr "Cu exceptia Proton"
 
 #. module: account_coda
 #: model:account.coda.comm.type,description:account_coda.acct_011
 msgid "Information pertaining to coupons"
-msgstr ""
+msgstr "Informatii referitoare la cupoane"
 
 #. module: account_coda
 #: model:account.coda.comm.type,description:account_coda.acct_122
 msgid "Bills - calculation of interest"
-msgstr ""
+msgstr "Polite - calcularea dobanzii"
 
 #. module: account_coda
 #: view:account.coda.trans.code:0
 #: model:ir.actions.act_window,name:account_coda.action_account_coda_trans_code_form
 #: model:ir.ui.menu,name:account_coda.menu_action_account_coda_trans_code_form
 msgid "CODA Transaction Codes"
-msgstr ""
+msgstr "Coduri Tranzactie CODA"
 
 #. module: account_coda
 #: help:coda.bank.account,state:0
@@ -3548,16 +3658,18 @@ msgid ""
 "No Bank Statements will be generated for CODA Bank Statements from Bank "
 "Accounts of type 'Info'."
 msgstr ""
+"Nici un Extras Bancar nu va fi generat pentru Extrasele Bancare CODA din "
+"Conturile Bancare de tipul 'Info'."
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_49_03
 msgid "ATM withdrawal"
-msgstr ""
+msgstr "Retragere de la bancomat"
 
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_012
 msgid "Exchange commission"
-msgstr ""
+msgstr "Comision de schimb"
 
 #. module: account_coda
 #: view:coda.bank.account:0
@@ -3565,12 +3677,12 @@ msgstr ""
 #: model:ir.model,name:account_coda.model_coda_bank_account
 #: model:ir.ui.menu,name:account_coda.menu_action_coda_bank_account_form
 msgid "CODA Bank Account Configuration"
-msgstr ""
+msgstr "Configurare Cont Bancar CODA"
 
 #. module: account_coda
 #: field:coda.bank.account,active:0
 msgid "Active"
-msgstr ""
+msgstr "Activ(a)"
 
 #. module: account_coda
 #: code:addons/account_coda/wizard/account_coda_import.py:724
@@ -3585,66 +3697,76 @@ msgid ""
 "Structured Communication Type: %s - %s\n"
 "Communication: %s"
 msgstr ""
+"Nume partener: %s \n"
+"Numar de cont partener: %s\n"
+"Tip Tranzactie: %s - %s\n"
+"Tranzactie Familie: %s - %s\n"
+"Cod Tranzactie: %s - %s\n"
+"Categorie Tranzactie: %s- %s\n"
+"Tip Comunicare Structurata: %s - %s\n"
+"Comunicare: %s"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_04_04
 msgid "Cash withdrawal from an ATM"
-msgstr ""
+msgstr "Retragere de numerar de la un bancomat"
 
 #. module: account_coda
 #: field:coda.bank.statement,balance_end:0
 msgid "Balance"
-msgstr ""
+msgstr "Sold"
 
 #. module: account_coda
 #: field:account.bank.statement,coda_statement_id:0
 msgid "Associated CODA Bank Statement"
-msgstr ""
+msgstr "Extras de cont asociat CODA"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_13_37
 msgid "Credit-related costs"
-msgstr ""
+msgstr "Costuri legate de credit"
 
 #. module: account_coda
 #: model:ir.ui.menu,name:account_coda.menu_manage_coda
 msgid "CODA Configuration"
-msgstr ""
+msgstr "Configurare CODA"
 
 #. module: account_coda
 #: model:account.coda.trans.code,comment:account_coda.actcc_07_39
 msgid "Debit of the drawer after credit under usual reserve or discount"
 msgstr ""
+"Debitul emitatorului politei dupa creditul aflat sub rezerva obisnuita sau "
+"reducere"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_41_66
 msgid "Financial centralisation (credit)"
-msgstr ""
+msgstr "Centralizare financiara (credit)"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_07_08
 msgid "Payment in advance"
-msgstr ""
+msgstr "Plata in avans"
 
 #. module: account_coda
 #: view:account.coda.import:0
 msgid "Close"
-msgstr "Închide"
+msgstr "Inchideti"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_80_19
 msgid "Special charge for safe custody"
-msgstr ""
+msgstr "Taxa speciala pentru custodie"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_03_01
 msgid "Payment of your cheque"
-msgstr ""
+msgstr "Plata cecului dumneavoastra"
 
 #. module: account_coda
 #: model:account.coda.trans.code,comment:account_coda.actcc_43_07
 msgid "Foreign cheque remitted for collection that returns unpaid"
-msgstr ""
+msgstr "Cec strain expediat pentru incasare se intoarce neplatit"
 
 #. module: account_coda
 #: model:account.coda.trans.code,comment:account_coda.actcc_80_07
@@ -3652,6 +3774,8 @@ msgid ""
 "- insurance costs of account holders against fatal accidents - passing-on of "
 "several insurance costs"
 msgstr ""
+"- costurile de asigurare ale titularilor de cont impotriva accidentelor "
+"mortale - transmiterea mai multor costuri de asigurare"
 
 #. module: account_coda
 #: help:coda.bank.account,awaiting_account:0
@@ -3659,33 +3783,36 @@ msgid ""
 "Set here the default account that will be used if the partner cannot be "
 "unambiguously identified."
 msgstr ""
+"Aici configurati contul implicit care va fi folosit daca partenerul nu poate "
+"fi identificat fara echivoc."
 
 #. module: account_coda
 #: code:addons/account_coda/account_coda.py:280
 #, python-format
 msgid "No CODA Bank Statement found for this Bank Statement!"
 msgstr ""
+"Nu a fost gasit niciun Extras Bancar CODA pentru acest Extras Bancar!"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_03_07
 msgid "Definitely unpaid cheque"
-msgstr ""
+msgstr "Cec cu siguranta neincasat"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_04_08
 msgid "Payment by means of a payment card outside the Eurozone"
-msgstr ""
+msgstr "Plata prin intermediul unui card de plati din afara Zonei Euro"
 
 #. module: account_coda
 #: model:account.coda.comm.type,description:account_coda.acct_106
 msgid ""
 "Method of calculation (VAT, withholding tax on income, commission, etc.)"
-msgstr ""
+msgstr "Metoda de calcul (TVA, taxa retinuta pe venit, comision, etc.)"
 
 #. module: account_coda
 #: model:ir.model,name:account_coda.model_account_coda_comm_type
 msgid "CODA structured communication type"
-msgstr ""
+msgstr "Tip de comunicare structurata CODA"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_03_64
@@ -3708,6 +3835,9 @@ msgid ""
 "ask for detailed data to be included into his file after the overall record "
 "(type 1)."
 msgstr ""
+"Detaliul 1. Procedura standard nu este detaliata. Totusi, clientul poate "
+"cere ca datele sa ii fie incluse in dosar dupa inregistrarea generala (tip "
+"1)."
 
 #. module: account_coda
 #: field:account.coda.comm.type,description:0
@@ -3715,58 +3845,59 @@ msgstr ""
 #: field:account.coda.trans.code,description:0
 #: field:account.coda.trans.type,description:0
 msgid "Description"
-msgstr ""
+msgstr "Descriere"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_07_01
 msgid "Payment commercial paper"
-msgstr "Plata titluri de credit"
+msgstr "Plata titluri de valoare"
 
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_419
 msgid "Bank service fee"
-msgstr ""
+msgstr "Taxa serviciu bancar"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_41_37
 msgid "Costs relating to outgoing foreign transfers and non-SEPA transfers"
 msgstr ""
+"Costuri legate de tansferurile de iesire straine si transferurile non-SEPA"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_03_17
 msgid "Your certified cheque"
-msgstr ""
+msgstr "Cecul d-voastra certificat"
 
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_400
 msgid "Acceptance fee"
-msgstr ""
+msgstr "Taxa de acceptare"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_11_68
 msgid "Compensation for missing coupon"
-msgstr ""
+msgstr "Compensatie pentru cuponul lipsa"
 
 #. module: account_coda
 #: view:coda.bank.statement.line:0
 msgid "Debit Transactions."
-msgstr ""
+msgstr "Tranzactii de debit."
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_80_33
 msgid "Miscellaneous fees and commissions"
-msgstr ""
+msgstr "Taxe si comisioane diverse"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_01_03
 #: model:account.coda.trans.code,description:account_coda.actcc_41_03
 msgid "Standing order"
-msgstr ""
+msgstr "Comanda permanenta"
 
 #. module: account_coda
 #: selection:coda.bank.statement.line,type:0
 msgid "Customer"
-msgstr ""
+msgstr "Client"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_01_49
@@ -3798,7 +3929,7 @@ msgstr ""
 #: model:account.coda.trans.code,description:account_coda.actcc_80_49
 #: model:account.coda.trans.code,description:account_coda.actcc_80_99
 msgid "Cancellation or correction"
-msgstr ""
+msgstr "Anulare sau corectare"
 
 #. module: account_coda
 #: view:coda.bank.account:0
@@ -3807,54 +3938,54 @@ msgstr ""
 #: view:coda.bank.statement.line:0
 #: field:coda.bank.statement.line,coda_bank_account_id:0
 msgid "Bank Account"
-msgstr ""
+msgstr "Cont bancar"
 
 #. module: account_coda
 #: model:account.coda.trans.code,comment:account_coda.actcc_13_56
 msgid "Interest or capital subsidy"
-msgstr ""
+msgstr "Dobanda sau subsidiu capital"
 
 #. module: account_coda
 #: view:coda.bank.statement.line:0
 msgid "Fin.Account"
-msgstr ""
+msgstr "Cont Fin."
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_01_62
 msgid "Unpaid postal order"
-msgstr ""
+msgstr "Mandat postal neplatit"
 
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_428
 msgid "Interest accrued"
-msgstr ""
+msgstr "Dobanzi acumulate"
 
 #. module: account_coda
 #: field:account.coda.comm.type,code:0
 msgid "Structured Communication Type"
-msgstr ""
+msgstr "Tip Comunicare Structurata"
 
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_401
 msgid "Visa charges"
-msgstr ""
+msgstr "Taxe viza"
 
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_210
 msgid "Commitment fee"
-msgstr ""
+msgstr "Taxa de consemnare"
 
 #. module: account_coda
 #: view:account.coda.trans.category:0
 #: model:ir.actions.act_window,name:account_coda.action_account_coda_trans_category_form
 #: model:ir.ui.menu,name:account_coda.menu_action_account_coda_trans_category_form
 msgid "CODA Transaction Categories"
-msgstr ""
+msgstr "Categorii Tranzactii CODA"
 
 #. module: account_coda
 #: field:coda.bank.statement.line,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Secventa"
 
 #. module: account_coda
 #: view:account.coda.import:0
@@ -3865,29 +3996,29 @@ msgstr "Rezultate :"
 #: field:coda.bank.statement,coda_id:0
 #: model:ir.actions.act_window,name:account_coda.act_coda_bank_statement_goto_account_coda
 msgid "CODA Data File"
-msgstr ""
+msgstr "Fisier de date CODA"
 
 #. module: account_coda
 #: view:coda.bank.statement.line:0
 msgid "CODA Statement Line"
-msgstr ""
+msgstr "Linie Extras CODA"
 
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_073
 msgid "Costs of ATM abroad"
-msgstr ""
+msgstr "Costuri bancomat in strainatate"
 
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_018
 msgid "Tental guarantee charges"
-msgstr ""
+msgstr "Taxe de garantie"
 
 #. module: account_coda
 #: model:account.coda.trans.category,description:account_coda.actrca_430
 msgid "Recovery of foreign tax"
-msgstr ""
+msgstr "Recuperarea taxei straine"
 
 #. module: account_coda
 #: model:account.coda.trans.code,description:account_coda.actcc_80_01
 msgid "Guarantee card charges"
-msgstr ""
+msgstr "Taxe de garantie card"

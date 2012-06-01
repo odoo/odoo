@@ -7,50 +7,50 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-02-17 09:10+0000\n"
-"Last-Translator: Olivier Dony (OpenERP) <Unknown>\n"
+"PO-Revision-Date: 2012-05-31 13:21+0000\n"
+"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-05-17 05:26+0000\n"
-"X-Generator: Launchpad (build 15259)\n"
+"X-Launchpad-Export-Date: 2012-06-01 05:50+0000\n"
+"X-Generator: Launchpad (build 15342)\n"
 
 #. module: account_asset
 #: view:account.asset.asset:0
 msgid "Assets in draft and open states"
-msgstr ""
+msgstr "Tillgångar i preleminär eller öppen status"
 
 #. module: account_asset
 #: field:account.asset.category,method_end:0
 #: field:account.asset.history,method_end:0 field:asset.modify,method_end:0
 msgid "Ending date"
-msgstr ""
+msgstr "Slutdatum"
 
 #. module: account_asset
 #: field:account.asset.asset,value_residual:0
 msgid "Residual Value"
-msgstr ""
+msgstr "Värdedatum"
 
 #. module: account_asset
 #: field:account.asset.category,account_expense_depreciation_id:0
 msgid "Depr. Expense Account"
-msgstr ""
+msgstr "Utgiftskategorikonto"
 
 #. module: account_asset
 #: view:asset.depreciation.confirmation.wizard:0
 msgid "Compute Asset"
-msgstr ""
+msgstr "Beräkna anskaffningar"
 
 #. module: account_asset
 #: view:asset.asset.report:0
 msgid "Group By..."
-msgstr ""
+msgstr "Gruppera efter..."
 
 #. module: account_asset
 #: field:asset.asset.report,gross_value:0
 msgid "Gross Amount"
-msgstr ""
+msgstr "Bruttobelopp"
 
 #. module: account_asset
 #: view:account.asset.asset:0 field:account.asset.asset,name:0
@@ -59,7 +59,7 @@ msgstr ""
 #: view:asset.asset.report:0 field:asset.asset.report,asset_id:0
 #: model:ir.model,name:account_asset.model_account_asset_asset
 msgid "Asset"
-msgstr ""
+msgstr "Tillgång"
 
 #. module: account_asset
 #: help:account.asset.asset,prorata:0 help:account.asset.category,prorata:0
@@ -67,34 +67,36 @@ msgid ""
 "Indicates that the first depreciation entry for this asset have to be done "
 "from the purchase date instead of the first January"
 msgstr ""
+"Anger att den första avskrivningen för denna tillgång skall ske från "
+"inköpsdatum i stället för första januari"
 
 #. module: account_asset
 #: field:account.asset.history,name:0
 msgid "History name"
-msgstr ""
+msgstr "Historienamn"
 
 #. module: account_asset
 #: field:account.asset.asset,company_id:0
 #: field:account.asset.category,company_id:0 view:asset.asset.report:0
 #: field:asset.asset.report,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Bolag"
 
 #. module: account_asset
 #: view:asset.modify:0
 msgid "Modify"
-msgstr ""
+msgstr "Ändra"
 
 #. module: account_asset
 #: selection:account.asset.asset,state:0 view:asset.asset.report:0
 #: selection:asset.asset.report,state:0
 msgid "Running"
-msgstr ""
+msgstr "Kör"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,amount:0
 msgid "Depreciation Amount"
-msgstr ""
+msgstr "Avskrivningsbelopp"
 
 #. module: account_asset
 #: view:asset.asset.report:0
@@ -102,24 +104,24 @@ msgstr ""
 #: model:ir.model,name:account_asset.model_asset_asset_report
 #: model:ir.ui.menu,name:account_asset.menu_action_asset_asset_report
 msgid "Assets Analysis"
-msgstr ""
+msgstr "Tillgångsanalys"
 
 #. module: account_asset
 #: field:asset.modify,name:0
 msgid "Reason"
-msgstr ""
+msgstr "Orsak"
 
 #. module: account_asset
 #: field:account.asset.asset,method_progress_factor:0
 #: field:account.asset.category,method_progress_factor:0
 msgid "Degressive Factor"
-msgstr ""
+msgstr "Avskrivnings faktor"
 
 #. module: account_asset
 #: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_list_normal
 #: model:ir.ui.menu,name:account_asset.menu_action_account_asset_asset_list_normal
 msgid "Asset Categories"
-msgstr ""
+msgstr "Tillgångskategori"
 
 #. module: account_asset
 #: view:asset.depreciation.confirmation.wizard:0
@@ -127,35 +129,37 @@ msgid ""
 "This wizard will post the depreciation lines of running assets that belong "
 "to the selected period."
 msgstr ""
+"Denna guide vill lagra avskrivningsrader för aktuella tillgångar som tillhör "
+"vald period."
 
 #. module: account_asset
 #: field:account.asset.asset,account_move_line_ids:0
 #: field:account.move.line,entry_ids:0
 #: model:ir.actions.act_window,name:account_asset.act_entries_open
 msgid "Entries"
-msgstr ""
+msgstr "Poster"
 
 #. module: account_asset
 #: view:account.asset.asset:0
 #: field:account.asset.asset,depreciation_line_ids:0
 msgid "Depreciation Lines"
-msgstr ""
+msgstr "Avskrivningsrad"
 
 #. module: account_asset
 #: help:account.asset.asset,salvage_value:0
 msgid "It is the amount you plan to have that you cannot depreciate."
-msgstr ""
+msgstr "Belopp som enligt plan inte kan avskrivas"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,depreciation_date:0
 #: view:asset.asset.report:0 field:asset.asset.report,depreciation_date:0
 msgid "Depreciation Date"
-msgstr ""
+msgstr "Avskrivningsdatutm"
 
 #. module: account_asset
 #: field:account.asset.category,account_asset_id:0
 msgid "Asset Account"
-msgstr ""
+msgstr "Tillgångskonto"
 
 #. module: account_asset
 #: field:asset.asset.report,posted_value:0
@@ -218,7 +222,7 @@ msgstr ""
 #. module: account_asset
 #: constraint:account.invoice:0
 msgid "Invalid BBA Structured Communication !"
-msgstr ""
+msgstr "Ogiltig BBA-strukturerad kommunikation!"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -258,7 +262,7 @@ msgstr ""
 #. module: account_asset
 #: help:account.asset.asset,method_number:0
 msgid "Calculates Depreciation within specified interval"
-msgstr ""
+msgstr "Beräknar avskrivning inom angivet intervall"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -278,7 +282,7 @@ msgstr ""
 #. module: account_asset
 #: help:account.asset.asset,method_period:0
 msgid "State here the time during 2 depreciations, in months"
-msgstr ""
+msgstr "Ange tiden mellan två avskrivningar, i månader"
 
 #. module: account_asset
 #: constraint:account.asset.asset:0
@@ -678,7 +682,7 @@ msgstr ""
 #: field:account.asset.depreciation.line,move_check:0
 #: view:asset.asset.report:0 field:asset.asset.report,move_check:0
 msgid "Posted"
-msgstr ""
+msgstr "Sparad"
 
 #. module: account_asset
 #: help:account.asset.asset,state:0
@@ -693,7 +697,7 @@ msgstr ""
 #. module: account_asset
 #: field:account.asset.category,name:0
 msgid "Name"
-msgstr ""
+msgstr "Namn"
 
 #. module: account_asset
 #: help:account.asset.category,open_asset:0
@@ -705,41 +709,41 @@ msgstr ""
 #. module: account_asset
 #: view:account.asset.asset:0
 msgid "Set to Draft"
-msgstr ""
+msgstr "Sätt till preliminär"
 
 #. module: account_asset
 #: selection:account.asset.asset,method:0
 #: selection:account.asset.category,method:0
 msgid "Linear"
-msgstr ""
+msgstr "Linjär"
 
 #. module: account_asset
 #: view:asset.asset.report:0
 msgid "Month-1"
-msgstr ""
+msgstr "Månad-1"
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_asset_depreciation_line
 msgid "Asset depreciation line"
-msgstr ""
+msgstr "Tillgångsavskrivningsrad"
 
 #. module: account_asset
 #: field:account.asset.asset,category_id:0 view:account.asset.category:0
 #: field:asset.asset.report,asset_category_id:0
 #: model:ir.model,name:account_asset.model_account_asset_category
 msgid "Asset category"
-msgstr ""
+msgstr "Tillgångskategori"
 
 #. module: account_asset
 #: view:asset.asset.report:0
 msgid "Assets purchased in last month"
-msgstr ""
+msgstr "Tillgångar inköpta under senaste månaden"
 
 #. module: account_asset
 #: code:addons/account_asset/wizard/wizard_asset_compute.py:49
 #, python-format
 msgid "Created Asset Moves"
-msgstr ""
+msgstr "Skapade tillgångsändringar"
 
 #. module: account_asset
 #: constraint:account.move.line:0
@@ -768,25 +772,25 @@ msgstr ""
 #: selection:account.asset.history,method_time:0
 #: field:asset.modify,method_number:0
 msgid "Number of Depreciations"
-msgstr ""
+msgstr "Antal avskrivningar"
 
 #. module: account_asset
 #: view:account.asset.asset:0
 msgid "Create Move"
-msgstr ""
+msgstr "Skapa lagertransaktion"
 
 #. module: account_asset
 #: view:asset.depreciation.confirmation.wizard:0
 msgid "Post Depreciation Lines"
-msgstr ""
+msgstr "Lagra avskrivningsrader"
 
 #. module: account_asset
 #: view:account.asset.asset:0
 msgid "Confirm Asset"
-msgstr ""
+msgstr "Bekräfta tillgång"
 
 #. module: account_asset
 #: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_tree
 #: model:ir.ui.menu,name:account_asset.menu_action_account_asset_asset_tree
 msgid "Asset Hierarchy"
-msgstr ""
+msgstr "Tillgångshierarki"
