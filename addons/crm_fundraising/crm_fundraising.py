@@ -69,11 +69,6 @@ class crm_fundraising(base_stage, osv.osv):
             'duration': fields.float('Duration'),
             'ref': fields.reference('Reference', selection=crm._links_get, size=128),
             'ref2': fields.reference('Reference 2', selection=crm._links_get, size=128),
-            'state': fields.selection(crm.AVAILABLE_STATES, 'Status', size=16, readonly=True,
-                                  help='The state is set to \'Draft\', when a case is created.\
-                                  \nIf the case is in progress the state is set to \'Open\'.\
-                                  \nWhen the case is over, the state is set to \'Done\'.\
-                                  \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
             'state': fields.related('stage_id', 'state', type="selection", store=True,
                     selection=crm.AVAILABLE_STATES, string="State", readonly=True,
                     help='The state is set to \'Draft\', when a case is created.\
@@ -151,14 +146,14 @@ class crm_fundraising(base_stage, osv.osv):
     # OpenChatter methods and notifications
     # ---------------------------------------------------
 
+    def case_get_note_msg_prefix(self, cr, uid, id, context=None):
+        """ Override of default prefix for notifications. """
+        return 'Fundraising'
+
     def create_send_note(self, cr, uid, ids, context=None):
         msg = '%s has been <b>created</b>.' % (self.case_get_note_msg_prefix(cr, uid, ids, context=context))
         self.message_append_note(cr, uid, ids, body=msg, context=context)
         return True
-
-    def case_get_note_msg_prefix(self, cr, uid, id, context=None):
-        """ Override of default prefix for notifications. """
-        return 'Fundraising'
 
     def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
         """ Override of the (void) default notification method. """
