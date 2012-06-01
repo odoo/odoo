@@ -954,7 +954,7 @@ class task(base_stage, osv.osv):
             if not task.date_end:
                 vals['date_end'] = fields.datetime.now()
             self.case_set(cr, uid, [task.id], 'done', vals, context=context)
-            #self.case_close_send_note(cr, uid, [task.id], context=context)
+            self.case_close_send_note(cr, uid, [task.id], context=context)
         return True
 
     def do_reopen(self, cr, uid, ids, context=None):
@@ -973,7 +973,7 @@ class task(base_stage, osv.osv):
                     'ref_doc2': 'project.project,%d' % project.id,
                 }, context=context)
             self.case_set(cr, uid, [task.id], 'open', {}, context=context)
-            #self.do_open_send_note(cr, uid, [task.id], context)
+            self.case_open_send_note(cr, uid, [task.id], context)
         return True
 
     def do_cancel(self, cr, uid, ids, context=None):
