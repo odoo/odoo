@@ -180,12 +180,14 @@
                                         <!-- TODO the 'groups' attribute doesn't work in kanban views -->
                                         <li groups="base.group_user">Cost: <field name="standard_price"></field></li>
                                     </ul>
-                                    <a name="%(action_receive_move)d" type="action">
-                                        <t t-if="record.reception_count.value">Receptions(<t t-esc="record.reception_count.value"/>)</t>
-                                    </a>
-                                    <a name="%(action_deliver_move)d" type="action">
-                                        <t t-if="record.delivery_count.value">Deliveries(<t t-esc="record.delivery_count.value"/>)</t>
-                                    </a>
+                                    <div groups="base.group_user">
+                                        <a name="%(action_receive_move)d" type="action">
+                                            <t t-if="record.reception_count.value">Receptions(<t t-esc="record.reception_count.value"/>)</t>
+                                        </a>
+                                        <a name="%(action_deliver_move)d" type="action">
+                                            <t t-if="record.delivery_count.value">Deliveries(<t t-esc="record.delivery_count.value"/>)</t>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                             <script>
