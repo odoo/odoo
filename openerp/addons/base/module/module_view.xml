@@ -133,7 +133,6 @@
                     </div>
                 </div>
                 <sheet string="Module" layout="auto">
-                    <field name="icon" widget='image' nolabel="1" rowspan="6" colspan="1"/>
                     <group colspan="2" col="2" class="oe_form_group_label_border">
                         <field name="shortdesc" string="Application Name"/>
                         <field name="category_id"/>
@@ -141,6 +140,9 @@
                         <field name="license"/>
                         <field name="website" select="2" widget="url" string="Author Website"/>
                         <field name="installed_version"/>
+                    </group>
+                    <group colspan="2" col="1">
+                        <field name="icon" widget='image' nolabel="1"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Description">
