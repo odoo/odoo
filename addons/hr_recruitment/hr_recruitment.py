@@ -293,40 +293,6 @@ class hr_applicant(base_stage, osv.Model):
             return stage_ids[0]
         return False
 
-    def stage_previous(self, cr, uid, ids, context=None):
-        """ This function computes previous stage for case from its current stage
-            using available stage for that case type
-        """
-        stage_obj = self.pool.get('hr.recruitment.stage')
-        for case in self.browse(cr, uid, ids, context=context):
-            department = (case.department_id.id or False)
-            st = case.stage_id.id  or False
-            stage_ids = stage_obj.search(cr, uid, ['|',('department_id','=',department),('department_id','=',False)], context=context)
-            if st and stage_ids.index(st):
-                self.write(cr, uid, [case.id], {'stage_id': stage_ids[stage_ids.index(st)-1]}, context=context)
-            else:
-                self.write(cr, uid, [case.id], {'stage_id': False}, context=context)
-        return True
-
-    def stage_next(self, cr, uid, ids, context=None):
-        """ This function computes next stage for case from its current stage
-             using available stage for that case type
-        """
-        stage_obj = self.pool.get('hr.recruitment.stage')
-        for case in self.browse(cr, uid, ids, context=context):
-            department = (case.department_id.id or False)
-            st = case.stage_id.id  or False
-            stage_ids = stage_obj.search(cr, uid, ['|',('department_id','=',department),('department_id','=',False)], context=context)
-            val = False
-            if st and len(stage_ids) != stage_ids.index(st)+1:
-                val = stage_ids[stage_ids.index(st)+1]
-            elif (not st) and stage_ids:
-                val = stage_ids[0]
-            else:
-                val = False
-            self.write(cr, uid, [case.id], {'stage_id': val}, context=context)
-        return True
-
     def action_makeMeeting(self, cr, uid, ids, context=None):
         """
         This opens Meeting's calendar view to schedule meeting on current Opportunity
@@ -530,12 +496,6 @@ class hr_applicant(base_stage, osv.Model):
         """
         return self.set_priority(cr, uid, ids, '3')
 
-    def write(self, cr, uid, ids, vals, context=None):
-        if 'stage_id' in vals and vals['stage_id']:
-            stage = self.pool.get('hr.recruitment.stage').browse(cr, uid, vals['stage_id'], context=context)
-            self.message_append_note(cr, uid, ids, body=_("Stage changed to <b>%s</b>.") % stage.name, context=context)
-        return super(hr_applicant,self).write(cr, uid, ids, vals, context=context)
-
     # -------------------------------------------------------
     # OpenChatter methods and notifications
     # -------------------------------------------------------
@@ -553,7 +513,13 @@ class hr_applicant(base_stage, osv.Model):
             if obj.state == 'draft' and obj.user_id:
                 result[obj.id] = [obj.user_id.id]
         return result
-    
+
+    def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
+        """ Override of the (void) default notification method. """
+        if not stage_id: return True
+        stage_name = self.pool.get('hr.recruitment.stage').name_get(cr, uid, [stage_id], context=context)[0][1]
+        return self.message_append_note(cr, uid, ids, body= _("Stage changed to <b>%s</b>.") % (stage_name), context=context)
+
     def case_get_note_msg_prefix(self, cr, uid, id, context=None):
 		return 'Applicant'
 
