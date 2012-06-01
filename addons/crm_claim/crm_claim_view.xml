@@ -79,12 +79,6 @@
                     <field name="date_deadline" invisible="1"/>
                     <field name="date_closed" invisible="1"/>
                     <field name="state" groups="base.group_no_one"/>
-                    <button name="case_open" string="Open" type="object"
-                        states="draft,pending" icon="gtk-go-forward"/>
-                    <button name="case_close" string="Done" type="object"
-                        states="draft,open,pending" icon="gtk-close"/>
-                    <button name="case_refuse" string="Refuse" type="object"
-                        states="draft,open,pending" icon="gtk-cancel"/>
                 </tree>
             </field>
         </record>

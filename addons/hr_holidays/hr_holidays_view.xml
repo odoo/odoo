@@ -177,8 +177,6 @@
                     <field name="user_id" invisible="1"/>
                     <!--field name="type"/-->
                     <field name="state"/>
-                    <button string="Approve" name="validate" states="confirm" type="workflow" icon="gtk-apply" groups="base.group_hr_user,base.group_hr_manager"/>
-                    <button string="Validate" name="second_validate" states="validate1" type="workflow" icon="gtk-apply" groups="base.group_hr_user,base.group_hr_manager"/>
                 </tree>
             </field>
         </record>
@@ -234,9 +232,6 @@
                     <field name="manager_id" invisible="1"/>
                     <field name="user_id" invisible="1"/>
                     <field name="state"/>
-                    <button string="Submit to Manager" name="confirm" states="draft" type="workflow" icon="gtk-yes"/>
-                    <button string="Approve" name="validate" states="confirm" type="workflow" icon="gtk-apply" groups="base.group_hr_user"/>
-                    <button string="Refuse" name="refuse" states="confirm" type="workflow" icon="gtk-no" groups="base.group_hr_user"/>
                 </tree>
             </field>
         </record>
@@ -262,8 +257,6 @@
                     <field name="manager_id" invisible="1"/>
                     <field name="user_id" invisible="1"/>
                     <!--field name="type"/-->
-                    <button string="Approve" name="validate" states="confirm" type="workflow" icon="gtk-apply" groups="base.group_hr_user"/>
-                    <button string="Validate" name="second_validate" states="validate1" type="workflow" icon="gtk-apply" groups="base.group_hr_user"/>
                 </tree>
             </field>
         </record>
