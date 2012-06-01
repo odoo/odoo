@@ -397,7 +397,7 @@ class purchase_order(osv.osv):
             'account_analytic_id': order_line.account_analytic_id.id or False,
         }
 
-    def action_cancel_draft(self, cr, uid, ids, *args):
+    def action_cancel_draft(self, cr, uid, ids, context=None):
         if not len(ids):
             return False
         self.write(cr, uid, ids, {'state':'draft','shipped':0})
@@ -406,7 +406,7 @@ class purchase_order(osv.osv):
             # Deleting the existing instance of workflow for PO
             wf_service.trg_delete(uid, 'purchase.order', p_id, cr)
             wf_service.trg_create(uid, 'purchase.order', p_id, cr)
-        self.draft_send_note(cr, uid, ids, context=None)
+        self.draft_send_note(cr, uid, ids, context=context)
         return True
 
     def action_invoice_create(self, cr, uid, ids, context=None):
