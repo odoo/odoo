@@ -42,6 +42,7 @@ user-wise as well as month wise.
                     "account_analytic_analysis_view.xml",
                     "account_analytic_analysis_menu.xml",
                     "account_analytic_analysis_cron.xml",
+                    "account_analytic_analysis_report.xml"
                     ],
     'demo_xml': [],
     "css" : [
