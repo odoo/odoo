@@ -342,6 +342,7 @@ def get_sys_logs(cr, uid):
         "contracts": [c.name for c in contracts],
         "language": user.context_lang,
     }
+    msg.update(pool.get("res.company").read(cr,uid,[1],["name","email","phone"])[0])
 
     add_arg = {"timeout":30} if sys.version_info >= (2,6) else {}
     arguments = {'arg0': msg, "action": "update",}
