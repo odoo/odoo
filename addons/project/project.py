@@ -46,8 +46,8 @@ class project_task_type(osv.osv):
                         help="This stage is not visible, for example in status bar or kanban view, when there are no records in that stage to display."),
     }
     _defaults = {
-        'state': 'draft',
         'sequence': 1,
+        'state': 'draft',
         'fold': False,
     }
     _order = 'sequence'
@@ -243,7 +243,6 @@ class project(osv.osv):
         task_obj = self.pool.get('project.task')
         task_ids = task_obj.search(cr, uid, [('project_id', 'in', ids), ('state', 'not in', ('cancelled', 'done'))])
         task_obj.case_close(cr, uid, task_ids, context=context)
-        #task_obj.write(cr, uid, task_ids, {'state': 'done', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S'), 'remaining_hours': 0.0})
         self.write(cr, uid, ids, {'state':'close'}, context=context)
         self.set_close_send_note(cr, uid, ids, context=context)
         return True
@@ -252,7 +251,6 @@ class project(osv.osv):
         task_obj = self.pool.get('project.task')
         task_ids = task_obj.search(cr, uid, [('project_id', 'in', ids), ('state', '!=', 'done')])
         task_obj.case_cancel(cr, uid, task_ids, context=context)
-        #task_obj.write(cr, uid, task_ids, {'state': 'cancelled', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S'), 'remaining_hours': 0.0})
         self.write(cr, uid, ids, {'state':'cancelled'}, context=context)
         self.set_cancel_send_note(cr, uid, ids, context=context)
         return True
@@ -522,7 +520,7 @@ class task(base_stage, osv.osv):
     def _get_default_stage_id(self, cr, uid, context=None):
         """ Gives default stage_id """
         project_id = self._get_default_project_id(cr, uid, context=context)
-        return self.stage_find(cr, uid, [], False, [('state', '=', 'draft')], context=context)
+        return self.stage_find(cr, uid, [], project_id, [('state', '=', 'draft')], context=context)
 
     def _resolve_project_id_from_context(self, cr, uid, context=None):
         """ Returns ID of project based on the value of 'default_project_id'
@@ -531,8 +529,7 @@ class task(base_stage, osv.osv):
         """
         if context is None: context = {}
         if type(context.get('default_project_id')) in (int, long):
-            project_id = context['default_project_id']
-            return project_id
+            return context['default_project_id']
         if isinstance(context.get('default_project_id'), basestring):
             project_name = context['default_project_id']
             project_ids = self.pool.get('project.project').name_search(cr, uid, name=project_name, context=context)
@@ -581,7 +578,7 @@ class task(base_stage, osv.osv):
 
     _group_by_full = {
         'stage_id': _read_group_stage_ids,
-        'user_id': _read_group_user_id
+        'user_id': _read_group_user_id,
     }
 
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
@@ -752,7 +749,7 @@ class task(base_stage, osv.osv):
         'sequence': 10,
         'active': True,
         'user_id': lambda obj, cr, uid, context: uid,
-        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'project.task', context=c)
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'project.task', context=c),
     }
 
     _order = "priority, sequence, date_start, name, id"
@@ -1130,9 +1127,9 @@ class task(base_stage, osv.osv):
             vals_reset_kstate = dict(vals, kanban_state='normal')
             for t in self.browse(cr, uid, ids, context=context):
                 #TO FIX:Kanban view doesn't raise warning 
-#                stages = [stage.id for stage in t.project_id.type_ids]
-#                if new_stage not in stages:
-#                    raise osv.except_osv(_('Warning !'), _('Stage is not defined in the project.'))
+                #stages = [stage.id for stage in t.project_id.type_ids]
+                #if new_stage not in stages:
+                    #raise osv.except_osv(_('Warning !'), _('Stage is not defined in the project.'))
                 write_vals = vals_reset_kstate if t.stage_id != new_stage else vals
                 super(task,self).write(cr, uid, [t.id], write_vals, context=context)
             result = True
@@ -1140,7 +1137,6 @@ class task(base_stage, osv.osv):
             result = super(task,self).write(cr, uid, ids, vals, context=context)
         if ('stage_id' in vals) or ('remaining_hours' in vals) or ('user_id' in vals) or ('state' in vals) or ('kanban_state' in vals):
             self._store_history(cr, uid, ids, context=context)
-            self.state_change_send_note(cr, uid, ids, context)
         return result
 
     def unlink(self, cr, uid, ids, context=None):
@@ -1200,6 +1196,11 @@ class task(base_stage, osv.osv):
                 sub_ids.append(obj.manager_id.id)
         return self.pool.get('res.users').read(cr, uid, sub_ids, context=context)
 
+    def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
+        """ Override of the (void) default notification method. """
+        stage_name = self.pool.get('project_task_type').name_get(cr, uid, [stage_id], context=context)[0][1]
+        return self.message_append_note(cr, uid, ids, body= _("Stage changed to <b>%s</b>.") % (stage_name), context=context)
+
     def create_send_note(self, cr, uid, ids, context=None):
         return self.message_append_note(cr, uid, ids, body=_("Task has been <b>created</b>."), context=context)
 
@@ -1207,45 +1208,9 @@ class task(base_stage, osv.osv):
         msg = _('Task has been set as <b>draft</b>.')
         return self.message_append_note(cr, uid, ids, body=msg, context=context)
 
-    def case_open_send_note(self, cr, uid, ids, context=None):
-        #for id in ids:
-            #msg = _('%s has been <b>opened</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
-            #self.message_append_note(cr, uid, [id], body=msg, context=context)
-        return True
-
-    def case_close_send_note(self, cr, uid, ids, context=None):
-        #for id in ids:
-            #msg = _('%s has been <b>closed</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
-            #self.message_append_note(cr, uid, [id], body=msg, context=context)
-        return True
-
-    def case_cancel_send_note(self, cr, uid, ids, context=None):
-        #for id in ids:
-            #msg = _('%s has been <b>canceled</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
-            #self.message_append_note(cr, uid, [id], body=msg, context=context)
-        return True
-
-    def case_pending_send_note(self, cr, uid, ids, context=None):
-        #for id in ids:
-            #msg = _('%s is now <b>pending</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
-            #self.message_append_note(cr, uid, [id], body=msg, context=context)
-        return True
-
-    def case_reset_send_note(self, cr, uid, ids, context=None):
-        #for id in ids:
-            #msg = _('%s has been <b>renewed</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
-            #self.message_append_note(cr, uid, [id], body=msg, context=context)
-        return True
-
     def do_delegation_send_note(self, cr, uid, ids, context=None):
         for task in self.browse(cr, uid, ids, context=context):
             msg = _('Task has been <b>delegated</b> to <em>%s</em>.') % (task.user_id.name)
-            self.message_append_note(cr, uid, [task.id], body=msg, context=context)
-        return True
-
-    def state_change_send_note(self, cr, uid, ids, context=None):
-        for task in self.browse(cr, uid, ids, context=context):
-            msg = _('Stage changed to <b>%s</b>') % (task.stage_id.name)
             self.message_append_note(cr, uid, [task.id], body=msg, context=context)
         return True
 
