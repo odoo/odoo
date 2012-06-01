@@ -124,7 +124,7 @@
                        <separator orientation="vertical"/>
                        <field name="name" string="Project Name"/>
                        <field name="user_id" string="Project Manager">
-                            <filter string="Projects in which I am a manager" domain="[('user_id','=',uid)]" help="Projects in which I am a manager" icon="terp-personal"/>
+                            <filter string="Project(s) Manager" domain="[('user_id','=',uid)]" help="Projects in which I am a manager" icon="terp-personal"/>
                        </field>
                        <field name="partner_id" string="Partner"/>
                    </group>
@@ -344,7 +344,7 @@
                                     name="planned_hours"
                                     widget="float_time"
                                     attrs="{'readonly':[('state','!=','draft')]}"
-                                    groups="project.group_time_work_estimation_tasks"									
+                                    groups="project.group_time_work_estimation_tasks"
                                     on_change="onchange_planned(planned_hours, effective_hours)"/>
                                 <field
                                     name="effective_hours"
