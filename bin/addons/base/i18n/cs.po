@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-03-07 05:42+0000\n"
-"X-Generator: Launchpad (build 14907)\n"
+"X-Launchpad-Export-Date: 2012-05-08 05:24+0000\n"
+"X-Generator: Launchpad (build 15204)\n"
 
 #. module: base
 #: view:ir.filters:0
@@ -48,7 +48,7 @@ msgid ""
 "%s, which is not a valid SQL table name."
 msgstr ""
 "Druhý parametr pole many2many %s musí být SQL tabulka ! Použili jste %s, což "
-"není platné jméno SQL tabulky."
+"není platný název SQL tabulky."
 
 #. module: base
 #: view:ir.values:0
@@ -60,7 +60,7 @@ msgstr "Metadata"
 #: field:ir.ui.view,arch:0
 #: field:ir.ui.view.custom,arch:0
 msgid "View Architecture"
-msgstr "Architektura zobrazení"
+msgstr "Architektura náhledu(View Architecture)"
 
 #. module: base
 #: field:base.language.import,code:0
@@ -85,7 +85,7 @@ msgstr "SMS brána Clickatell"
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Hungarian / Magyar"
-msgstr "Maďarština / Magyar"
+msgstr "Maďarština/Maďarsko"
 
 #. module: base
 #: selection:ir.model.fields,select_level:0
@@ -119,8 +119,8 @@ msgid ""
 "You can not write in this document (%s) ! Be sure your user belongs to one "
 "of these groups: %s."
 msgstr ""
-"Nemůžete zapisovat do tohoto dokumentu (%s)! Ujistěte se, že váš uživatel "
-"patří do některé z těchto skupin: %s."
+"Nemůžete zapisat dokument (%s) ! Ujistěte se, že váš uživatel patří do jedné "
+"ze skupin: %s."
 
 #. module: base
 #: help:ir.model.fields,domain:0
@@ -129,13 +129,13 @@ msgid ""
 "specified as a Python expression defining a list of triplets. For example: "
 "[('color','=','red')]"
 msgstr ""
-"Volitelná doména k omezení možných hodnot pro pole, specifikovaná jako výraz "
-"v Pythonu obsahující seznam trojic. Například: [('color','=','red')]"
+"Volitelná doména k omezení možných hodnot pro vztahy polí, zadáno jako výraz "
+"Pythonu určující seznam trojic. Např. [('color','=','red')]"
 
 #. module: base
 #: field:res.partner,ref:0
 msgid "Reference"
-msgstr "Odkazy"
+msgstr "Odkaz"
 
 #. module: base
 #: field:ir.actions.act_window,target:0
@@ -155,9 +155,8 @@ msgid ""
 "Properties of base fields cannot be altered in this manner! Please modify "
 "them through Python code, preferably through a custom addon!"
 msgstr ""
-"Vlastnosti základních polí (base fields) nemohou být takto měněny! "
-"Modifikujte je pomocí kódu v Pythonu, nejlépe prostřednictvím vlastního add-"
-"onu!"
+"Tímto způsobem nemůžou být změněny vlastnosti základních polí! Prosíme "
+"upravte je přes kód Pythonu, přednostně přes vlastní doplněk!"
 
 #. module: base
 #: code:addons/osv.py:129
@@ -216,7 +215,7 @@ msgstr "Inuktitut / ᐃᓄᒃᑎᑐᑦ"
 #. module: base
 #: view:res.partner:0
 msgid "Search Partner"
-msgstr "Hledat společníka"
+msgstr "Hledat partnera"
 
 #. module: base
 #: code:addons/base/res/res_user.py:132
@@ -256,7 +255,7 @@ msgstr "Maximální velikost"
 #: field:res.partner,subname:0
 #: field:res.partner.address,name:0
 msgid "Contact Name"
-msgstr "Jméno kontaktu"
+msgstr "Název kontaktu"
 
 #. module: base
 #: code:addons/base/module/wizard/base_export_language.py:56
@@ -271,7 +270,7 @@ msgstr ""
 #. module: base
 #: sql_constraint:res.lang:0
 msgid "The name of the language must be unique !"
-msgstr "Jméno jazyka musí být jedinečné !"
+msgstr "Název jazyka musí být jedinečný !"
 
 #. module: base
 #: selection:res.request,state:0
@@ -281,7 +280,7 @@ msgstr "Aktivní"
 #. module: base
 #: field:ir.actions.wizard,wiz_name:0
 msgid "Wizard Name"
-msgstr "Jméno průvodce"
+msgstr "Název průvodce"
 
 #. module: base
 #: code:addons/orm.py:2526
@@ -401,8 +400,8 @@ msgid ""
 "If you check this, then the second time the user prints with same attachment "
 "name, it returns the previous report."
 msgstr ""
-"Pokud toto zaškrtnute, příště když uživatel bude tisknout přílohu se stejným "
-"názvem, vrátí se mu předchozí report."
+"Pokud toto zaškrtnete, vrátí předchozí výkaz, pokud uživatel podruhé "
+"vytiskne stejné jméno přílohy."
 
 #. module: base
 #: code:addons/orm.py:904
@@ -495,7 +494,7 @@ msgstr "Různí dodavatelé"
 #: code:addons/base/ir/ir_model.py:287
 #, python-format
 msgid "Custom fields must have a name that starts with 'x_' !"
-msgstr "Vlastní pole musí mít jméno začínající s 'x_' !"
+msgstr "Vlastní pole musí mít název začínající s 'x_' !"
 
 #. module: base
 #: help:ir.actions.server,action_id:0
@@ -522,7 +521,7 @@ msgstr "Popis modelu"
 #: help:ir.actions.act_window,src_model:0
 msgid ""
 "Optional model name of the objects on which this action should be visible"
-msgstr "Volitelné jméno modelu objektů, u kterých má tato akce být dostupná"
+msgstr "Volitelný název modelu objektů, u kterých má tato akce být dostupná"
 
 #. module: base
 #: field:workflow.transition,trigger_expr_id:0
@@ -605,7 +604,7 @@ msgstr "Zobrazení průvodce"
 #. module: base
 #: model:res.country,name:base.kh
 msgid "Cambodia, Kingdom of"
-msgstr "Kambodžské království"
+msgstr "Kambodža, Královstí"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_sequence_form
@@ -653,7 +652,7 @@ msgstr ""
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_4
 msgid "Basic Partner"
-msgstr "Základní společník"
+msgstr "Základní partner"
 
 #. module: base
 #: report:ir.module.reference.graph:0
@@ -663,7 +662,7 @@ msgstr ","
 #. module: base
 #: view:res.partner:0
 msgid "My Partners"
-msgstr "Moji společníci"
+msgstr "Moji partneři"
 
 #. module: base
 #: view:ir.actions.report.xml:0
@@ -799,7 +798,7 @@ msgstr "Archív TGZ"
 #. module: base
 #: view:res.lang:0
 msgid "%B - Full month name."
-msgstr "%B - Plné jméno měsíce."
+msgstr "%B - Celý název měsíce."
 
 #. module: base
 #: field:ir.actions.todo,type:0
@@ -971,7 +970,7 @@ msgstr "URL akce"
 #. module: base
 #: field:base.module.import,module_name:0
 msgid "Module Name"
-msgstr "Jméno modulu"
+msgstr "Název modulu"
 
 #. module: base
 #: model:res.country,name:base.mh
@@ -1129,7 +1128,7 @@ msgstr "Vytvořit _nabídku"
 #. module: base
 #: field:res.payterm,name:0
 msgid "Payment Term (short name)"
-msgstr "Platební období (krátké jméno)"
+msgstr "Platební období (zkratka)"
 
 #. module: base
 #: model:ir.model,name:base.model_res_bank
@@ -1761,7 +1760,7 @@ msgstr "Madagaskar"
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
 msgstr ""
-"Jméno objektu musí začínat znakem x_ a nesmí obsahovat žádný speciální znak!"
+"Název objektu musí začínat znakem x_ a nesmí obsahovat žádný speciální znak!"
 
 #. module: base
 #: field:ir.actions.configuration.wizard,note:0
@@ -1803,7 +1802,7 @@ msgstr "Anguilla"
 #. module: base
 #: field:ir.ui.view_sc,name:0
 msgid "Shortcut Name"
-msgstr "Jméno zkratky"
+msgstr "Název zkratky"
 
 #. module: base
 #: help:ir.actions.act_window,limit:0
@@ -1816,7 +1815,7 @@ msgid ""
 "Provide the field name that the record id refers to for the write operation. "
 "If it is empty it will refer to the active id of the object."
 msgstr ""
-"Poskytuje jméno pole, na které odkazuje id záznamu, pro operaci zápisu. "
+"Poskytuje název pole, na které odkazuje id záznamu, pro operaci zápisu. "
 "Pokud je prázdné tak odkazuje na aktivní id objektu."
 
 #. module: base
@@ -2006,7 +2005,7 @@ msgid ""
 "you are working on will be maintained."
 msgstr ""
 "Zobrazit nebo spravovat seznam všech zemí, které mohou být přiřazeny k "
-"záznamům vašich společníků. Můžete vytvořit nebo odstranit země, abyste se "
+"záznamům vašich partnerů. Můžete vytvořit nebo odstranit země, abyste se "
 "ujistili, že ty, se kterými pracujete budou udržována."
 
 #. module: base
@@ -2164,7 +2163,7 @@ msgstr "Kalendář"
 #. module: base
 #: field:res.partner.address,partner_id:0
 msgid "Partner Name"
-msgstr "Jméno společníka"
+msgstr "Název partnera"
 
 #. module: base
 #: field:workflow.activity,signal_send:0
@@ -2244,7 +2243,7 @@ msgstr "Hlavní společnost"
 #. module: base
 #: field:ir.ui.menu,web_icon_hover:0
 msgid "Web Icon File (hover)"
-msgstr "Jméno webové ikony (vznášející se)"
+msgstr "Název webové ikony (při najetí myší)"
 
 #. module: base
 #: view:ir.actions.server:0
@@ -2291,7 +2290,7 @@ msgid ""
 "Reference of the target resource, whose model/table depends on the 'Resource "
 "Name' field."
 msgstr ""
-"Odkaz cílového zdroje, jehož model/tabulka závisí na poli 'jméno zdroje'."
+"Odkaz cílového zdroje, jehož model/tabulka závisí na poli 'název zdroje'."
 
 #. module: base
 #: field:ir.model.fields,select_level:0
@@ -2516,7 +2515,7 @@ msgid ""
 msgstr ""
 "Tento průvodce vám pomůže přidat nový jazyk do vašeho systému OpenERP. Po "
 "načtení nového jazyka bude dostupný jako výchozí jazyk rozhraní pro "
-"uživatele a společníky."
+"uživatele a partnery."
 
 #. module: base
 #: view:ir.model:0
@@ -2768,7 +2767,7 @@ msgstr "Popis akce"
 #. module: base
 #: help:res.partner,customer:0
 msgid "Check this box if the partner is a customer."
-msgstr "Zaškrtněte toto pole pokud je společník zákazníkem."
+msgstr "Zaškrtněte toto pole pokud je partner zákazníkem."
 
 #. module: base
 #: model:ir.actions.act_window,name:base.res_lang_act_window
@@ -3593,13 +3592,13 @@ msgid ""
 "The internal user that is in charge of communicating with this partner if "
 "any."
 msgstr ""
-"Vnitřní uživatel, který má pověření komunikovat s tímto společníkem, pokud "
+"Vnitřní uživatel, který má pověření komunikovat s tímto partnerem, pokud "
 "nějaký je."
 
 #. module: base
 #: field:res.partner,parent_id:0
 msgid "Parent Partner"
-msgstr "Rodičovský společník"
+msgstr "Nadřazený partner"
 
 #. module: base
 #: view:ir.module.module:0
@@ -3729,7 +3728,7 @@ msgstr ""
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_3
 msgid "Starter Partner"
-msgstr "Počáteční společník"
+msgstr "Počáteční partner"
 
 #. module: base
 #: help:ir.model.fields,relation_field:0
@@ -3867,7 +3866,7 @@ msgstr "Typ banky"
 #: code:addons/base/res/res_users.py:96
 #, python-format
 msgid "The name of the group can not start with \"-\""
-msgstr "Jméno skupiny nemůže začínat s \"-\""
+msgstr "Název skupiny nemůže začínat \"-\""
 
 #. module: base
 #: view:ir.ui.view_sc:0
@@ -3968,7 +3967,7 @@ msgstr "Adresář"
 #. module: base
 #: field:wizard.ir.model.menu.create,name:0
 msgid "Menu Name"
-msgstr "Jméno nabídky"
+msgstr "Název nabídky"
 
 #. module: base
 #: view:ir.module.module:0
@@ -4005,7 +4004,7 @@ msgstr "Nastavení akcí klienta"
 #: model:ir.model,name:base.model_res_partner_address
 #: view:res.partner.address:0
 msgid "Partner Addresses"
-msgstr "Adresy společníků"
+msgstr "Adresy partnerů"
 
 #. module: base
 #: help:ir.model.fields,translate:0
@@ -4306,7 +4305,7 @@ msgstr "Botswana"
 #: model:ir.ui.menu,name:base.menu_partner_title_partner
 #: view:res.partner.title:0
 msgid "Partner Titles"
-msgstr "Jména společníků"
+msgstr "Jména partnerů"
 
 #. module: base
 #: help:ir.actions.act_window,auto_refresh:0
@@ -4316,7 +4315,7 @@ msgstr "Přidá automatické obnovení u pohledu"
 #. module: base
 #: help:res.partner,employee:0
 msgid "Check this box if the partner is an Employee."
-msgstr "Zaškrtněte toto políčko pokud je společník zaměstnanec."
+msgstr "Zaškrtněte toto políčko pokud je partner zaměstnanec."
 
 #. module: base
 #: field:ir.actions.report.xml,report_rml_content:0
@@ -4366,13 +4365,13 @@ msgid ""
 "Provide the field name where the record id is stored after the create "
 "operations. If it is empty, you can not track the new record."
 msgstr ""
-"Poskytuje jméno pole, kde je uloženo id záznamu po operacích vytvoření. "
-"Pokud je prázdné, nemůžete sledovat nové záznamy."
+"Poskytuje název pole, kde je uloženo id záznamu po vytvoření. Pokud "
+"ponecháte prázdné, nebudete moci sledovat nové záznamy."
 
 #. module: base
 #: help:ir.model.fields,relation:0
 msgid "For relationship fields, the technical name of the target model"
-msgstr "Pro vztažené pole, technické jméno cílového modelu"
+msgstr "Pro související pole, technický název cílového modelu"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -4576,7 +4575,7 @@ msgstr "Nepravda znamená pro všechny uživatele"
 #: code:addons/base/module/module.py:238
 #, python-format
 msgid "The name of the module must be unique !"
-msgstr "Jméno modulu musí být jedinečné !"
+msgstr "Název modulu musí být jedinečný !"
 
 #. module: base
 #: model:res.country,name:base.mz
@@ -4805,7 +4804,7 @@ msgstr "Čtení"
 #. module: base
 #: sql_constraint:res.country:0
 msgid "The name of the country must be unique !"
-msgstr "Jméno země musí být jedinečné !"
+msgstr "Název země musí být jedinečný !"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_country_state
@@ -4938,7 +4937,7 @@ msgstr "Změnit moje předvolby"
 #: code:addons/base/ir/ir_actions.py:167
 #, python-format
 msgid "Invalid model name in the action definition."
-msgstr "Neplatné jméno modulu v definici akce."
+msgstr "Neplatný název modulu v definici akce."
 
 #. module: base
 #: field:partner.sms.send,text:0
@@ -5181,7 +5180,7 @@ msgid ""
 "Keep empty to not save the printed reports. You can use a python expression "
 "with the object and time variables."
 msgstr ""
-"Toto je jméno souboru přílohy použité pro uchování výsledku tisku. "
+"Toto je název souboru přílohy použité pro uchování výsledku tisku. "
 "Ponechejte prázdné pro neuložení tisknutých výkazů. Můžete použít výraz "
 "pythonu s objekty a časy proměnných."
 
@@ -5289,7 +5288,7 @@ msgstr "workflow.transition"
 #. module: base
 #: view:res.lang:0
 msgid "%a - Abbreviated weekday name."
-msgstr "%a - Zkrácené jméno dne v týdnu."
+msgstr "%a - zkratka dne v týdnu."
 
 #. module: base
 #: report:ir.module.reference.graph:0
@@ -5364,7 +5363,7 @@ msgstr "Vlastní pohledy"
 #. module: base
 #: view:partner.sms.send:0
 msgid "Bulk SMS send"
-msgstr "Zaslat objemnou SMS"
+msgstr "Zaslat hromadnou SMS"
 
 #. module: base
 #: view:ir.sequence:0
@@ -5454,7 +5453,7 @@ msgstr "ir.actions.configuration.wizard"
 #. module: base
 #: view:res.lang:0
 msgid "%b - Abbreviated month name."
-msgstr "%b - Zkrácené jméno měsíce."
+msgstr "%b - zkratka měsíce."
 
 #. module: base
 #: field:res.partner,supplier:0
@@ -5505,7 +5504,7 @@ msgstr "Americká Samoa"
 #. module: base
 #: help:ir.actions.act_window,res_model:0
 msgid "Model name of the object to open in the view window"
-msgstr "Jméno modelu objektu pro otevření v okně pohledu"
+msgstr "Název modelu objektu pro otevření v okně pohledu"
 
 #. module: base
 #: field:res.log,secondary:0
@@ -5515,12 +5514,12 @@ msgstr "Vedlejší záznam"
 #. module: base
 #: field:ir.model.fields,selectable:0
 msgid "Selectable"
-msgstr "Vybratelné"
+msgstr "Lze vybrat"
 
 #. module: base
 #: view:res.request.link:0
 msgid "Request Link"
-msgstr "Odkaz požadavku"
+msgstr "Vyžádat odkaz"
 
 #. module: base
 #: view:ir.attachment:0
@@ -5532,7 +5531,7 @@ msgstr "URL"
 #. module: base
 #: help:res.country,name:0
 msgid "The full name of the country."
-msgstr "Celé jméno země."
+msgstr "Celý název země."
 
 #. module: base
 #: selection:ir.actions.server,state:0
@@ -5566,7 +5565,7 @@ msgstr "Reunion (Francouzský)"
 #, python-format
 msgid ""
 "New column name must still start with x_ , because it is a custom field!"
-msgstr "Jméno nového sloupce musí začínat s x_, protože jde o vlastní pole!"
+msgstr "Název nového sloupce musí začínat s x_, protože jde o vlastní pole!"
 
 #. module: base
 #: view:ir.model.access:0
@@ -6010,7 +6009,7 @@ msgstr "Prosíme zadejte volbu serveru --email-from !"
 #. module: base
 #: field:base.language.import,name:0
 msgid "Language Name"
-msgstr "Jméno jazyka"
+msgstr "Název jazyka"
 
 #. module: base
 #: selection:ir.property,type:0
@@ -6206,7 +6205,7 @@ msgstr "Mapy k ir_model_data, pro který je poskytnut tento překlad."
 #: view:workflow.activity:0
 #: field:workflow.activity,flow_stop:0
 msgid "Flow Stop"
-msgstr "Zatavení toku"
+msgstr "Zastavení toku"
 
 #. module: base
 #: selection:ir.cron,interval_type:0
@@ -6379,7 +6378,7 @@ msgstr ""
 #. module: base
 #: view:res.lang:0
 msgid "%A - Full weekday name."
-msgstr "%A - Celé jméno dne v týdnu"
+msgstr "%A - Název dne v týdnu"
 
 #. module: base
 #: selection:ir.cron,interval_type:0
@@ -6627,7 +6626,7 @@ msgstr ""
 #. module: base
 #: field:ir.model.fields,model:0
 msgid "Object Name"
-msgstr "Jméno objektu"
+msgstr "Název objektu"
 
 #. module: base
 #: help:ir.actions.server,srcmodel_id:0
@@ -6812,7 +6811,7 @@ msgstr ""
 #: model:ir.ui.menu,name:base.next_id_73
 #: model:ir.ui.menu,name:base.reporting_menu
 msgid "Reporting"
-msgstr "Hlášení"
+msgstr "Vykazování"
 
 #. module: base
 #: model:res.country,name:base.tg
@@ -6935,7 +6934,7 @@ msgstr ""
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_2
 msgid "OpenERP Partners"
-msgstr "Společníci OpenERP"
+msgstr "Partneři OpenERP"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_hr_manager
@@ -6968,7 +6967,7 @@ msgstr "Bělorusko"
 #: field:ir.actions.server,name:0
 #: field:ir.actions.url,name:0
 msgid "Action Name"
-msgstr "Jméno akce"
+msgstr "Název akce"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_res_users
@@ -7076,7 +7075,7 @@ msgstr "Načíst"
 #. module: base
 #: help:res.users,name:0
 msgid "The new user's real name, used for searching and most listings"
-msgstr "Skutečné jméno nového uživatele použité pro hledání a procházení"
+msgstr "Skutečné jméno nového uživatele, použivá se pro hledání a procházení"
 
 #. module: base
 #: code:addons/osv.py:150
@@ -7432,7 +7431,7 @@ msgstr "Stránky společníka"
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_5
 msgid "Gold Partner"
-msgstr "Zlatý společník"
+msgstr "Zlatý partner"
 
 #. module: base
 #: model:ir.model,name:base.model_res_partner
@@ -7442,7 +7441,7 @@ msgstr "Zlatý společník"
 #: selection:res.partner.title,domain:0
 #: model:res.request.link,name:base.req_link_partner
 msgid "Partner"
-msgstr "Společník"
+msgstr "Partner"
 
 #. module: base
 #: model:res.country,name:base.tr
@@ -7643,7 +7642,7 @@ msgstr "Podmínky"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_other_form
 msgid "Other Partners"
-msgstr "Jiní společníci"
+msgstr "Jiní partneři"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_currency_form
@@ -7655,7 +7654,7 @@ msgstr "Měny"
 #. module: base
 #: sql_constraint:res.groups:0
 msgid "The name of the group must be unique !"
-msgstr "Jméno skupiny musí být jedinečné !"
+msgstr "Název skupiny musí být jedinečný !"
 
 #. module: base
 #: view:ir.sequence:0
@@ -7876,7 +7875,7 @@ msgstr "Neodinstalovatelný"
 #. module: base
 #: view:res.partner.category:0
 msgid "Partner Category"
-msgstr "Kategorie společníků"
+msgstr "Kategorie partnerů"
 
 #. module: base
 #: view:ir.actions.server:0
@@ -8598,8 +8597,7 @@ msgstr "Zdroj"
 #. module: base
 #: help:res.partner.address,partner_id:0
 msgid "Keep empty for a private address, not related to partner."
-msgstr ""
-"Ponechejte prázdné pro soukromou adresu nesouvisející se společníkem."
+msgstr "Ponechejte prázdné pro soukromou adresu nesouvisející se partnerem."
 
 #. module: base
 #: model:res.country,name:base.vu
@@ -8776,7 +8774,7 @@ msgstr "Salvador"
 #: field:res.partner,phone:0
 #: field:res.partner.address,phone:0
 msgid "Phone"
-msgstr "Telefón"
+msgstr "Telefon"
 
 #. module: base
 #: field:ir.cron,active:0
@@ -8802,7 +8800,7 @@ msgstr "Thajsko"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_crm_config_lead
 msgid "Leads & Opportunities"
-msgstr "Směřování & Příležitosti"
+msgstr "Zájemci & Příležitosti"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -8976,7 +8974,7 @@ msgstr "base.module.configuration"
 #: field:base.language.export,name:0
 #: field:ir.attachment,datas_fname:0
 msgid "Filename"
-msgstr "Jméno souboru"
+msgstr "Název souboru"
 
 #. module: base
 #: field:ir.model,access_ids:0
@@ -9007,7 +9005,7 @@ msgstr "Argentina"
 #. module: base
 #: field:res.groups,full_name:0
 msgid "Group Name"
-msgstr "Jméno skupiny"
+msgstr "Název skupiny"
 
 #. module: base
 #: model:res.country,name:base.bh
@@ -9393,7 +9391,7 @@ msgstr "Mobilní č."
 #: model:ir.ui.menu,name:base.menu_partner_category_form
 #: view:res.partner.category:0
 msgid "Partner Categories"
-msgstr "Kategorie společníků"
+msgstr "Kategorie partnerů"
 
 #. module: base
 #: view:base.module.upgrade:0
@@ -9509,7 +9507,7 @@ msgstr "Instance pracovních postupů"
 #: code:addons/base/res/res_partner.py:284
 #, python-format
 msgid "Partners: "
-msgstr "Společníci: "
+msgstr "Partneři: "
 
 #. module: base
 #: model:res.country,name:base.kp
@@ -9535,7 +9533,7 @@ msgstr "Kód BIC/Swift"
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_1
 msgid "Prospect"
-msgstr "Výhled"
+msgstr "Prospekt"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -9545,7 +9543,7 @@ msgstr "Polština / Język polski"
 #. module: base
 #: field:ir.exports,name:0
 msgid "Export Name"
-msgstr "Jméno exportu"
+msgstr "Název exportu"
 
 #. module: base
 #: help:res.partner.address,type:0

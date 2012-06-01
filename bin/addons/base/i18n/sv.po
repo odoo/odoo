@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-03-07 05:46+0000\n"
-"X-Generator: Launchpad (build 14907)\n"
+"X-Launchpad-Export-Date: 2012-05-08 05:28+0000\n"
+"X-Generator: Launchpad (build 15204)\n"
 
 #. module: base
 #: view:ir.filters:0
@@ -203,7 +203,7 @@ msgstr "Räkna upp nummer"
 #: model:ir.actions.act_window,name:base.action_res_company_tree
 #: model:ir.ui.menu,name:base.menu_action_res_company_tree
 msgid "Company's Structure"
-msgstr "Företagsstruktur"
+msgstr "Bolagsstruktur"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -462,7 +462,7 @@ msgstr "Palau"
 #. module: base
 #: view:res.partner:0
 msgid "Sales & Purchases"
-msgstr "Försäljning och inköp"
+msgstr "Kundorder och inköp"
 
 #. module: base
 #: view:ir.translation:0
@@ -1077,7 +1077,7 @@ msgstr "Inget språk med koden %s existerar"
 #: code:addons/base/publisher_warranty/publisher_warranty.py:163
 #, python-format
 msgid "Error during communication with the publisher warranty server."
-msgstr "Fel vid kommunikation med servern för 'publisher warranty'."
+msgstr "Fel vid kommunikation med servern för 'utgivarens underhållsavtal'."
 
 #. module: base
 #: help:ir.actions.server,email:0
@@ -1107,7 +1107,7 @@ msgid ""
 "system. After the contract has been registered, you will be able to send "
 "issues directly to OpenERP."
 msgstr ""
-"Denna guide hjälper dig att registrera ett garantikontrakt från utgivaren i "
+"Denna guide hjälper dig att registrera ett utgivarens underhållsavtal för "
 "ditt OpenERP-system. Sedan kontraktet registrerats kan du skicka ärenden "
 "direkt till utgivaren."
 
@@ -1694,8 +1694,8 @@ msgid ""
 "order in Object, and you can have loop on the sales order line. Expression = "
 "`object.order_line`."
 msgstr ""
-"Skriv in de fält/uttryck som returnernar listan. Välj t ex 'säljorder' i "
-"'Object', och du kan loopa över säljordrar. Uttryck är av formen "
+"Skriv in de fält/uttryck som returnernar listan. Välj t ex 'sale.order' i "
+"'Object', och du kan loopa över kundordrar. Uttryck är av formen "
 "object.order_line."
 
 #. module: base
@@ -1965,7 +1965,7 @@ msgstr "Upprepande händelser"
 #. module: base
 #: help:multi_company.default,company_id:0
 msgid "Company where the user is connected"
-msgstr "Företag där användaren är kopplad"
+msgstr "Bolag användaren är knuten till"
 
 #. module: base
 #: field:publisher_warranty.contract,date_stop:0
@@ -2031,7 +2031,7 @@ msgstr "Bangladesh"
 #. module: base
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr "Fel! Du kan inte skapa rekursiva företag."
+msgstr "Fel! Du kan inte skapa rekursiva bolagsstrukturer."
 
 #. module: base
 #: selection:publisher_warranty.contract,state:0
@@ -2226,7 +2226,7 @@ msgstr "Beroenden"
 #. module: base
 #: field:multi_company.default,company_id:0
 msgid "Main Company"
-msgstr "Huvudföretag"
+msgstr "Huvudbolag"
 
 #. module: base
 #: field:ir.ui.menu,web_icon_hover:0
@@ -2536,7 +2536,7 @@ msgstr ""
 #. module: base
 #: field:res.company,name:0
 msgid "Company Name"
-msgstr "Företagsnamn"
+msgstr "Bolagsnamn"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_country
@@ -3628,10 +3628,10 @@ msgid ""
 msgstr ""
 "En kund är någon du gör affärer med, ett företag eller en organisation. En "
 "kund kan ha flera kontakter eller adresser för de personer som arbetar där. "
-"Du kan använda historiefliken för att följa alla transaktioner relaterade "
-"till en viss kund: säljordrar, e-post, offerter, krav etc. Om du använder "
+"Du kan använda historikfliken för att följa alla händelser relaterade till "
+"en viss kund: ordrar, e-post, offerter, krav etc. Om du använder "
 "epostbryggan, eller Thunderbird-plugin, glöm inte att registrera så att "
-"inkommande epost hamnar hos rätt kund,"
+"inkommande epost hamnar hos rätt kund."
 
 #. module: base
 #: field:ir.actions.report.xml,name:0
@@ -4677,7 +4677,7 @@ msgstr ""
 #. module: base
 #: help:res.users,company_id:0
 msgid "The company this user is currently working for."
-msgstr "Företaget som användaren arbetar för."
+msgstr "Bolaget användaren arbetar för"
 
 #. module: base
 #: model:ir.model,name:base.model_wizard_ir_model_menu_create
@@ -4761,7 +4761,7 @@ msgstr "Detta fönster"
 #. module: base
 #: view:publisher_warranty.contract:0
 msgid "Publisher Warranty Contracts"
-msgstr ""
+msgstr "Utgivarens underhållsavtal"
 
 #. module: base
 #: help:res.log,name:0
@@ -5235,11 +5235,11 @@ msgid ""
 "installed the CRM, with the history tab, you can track all the interactions "
 "with a partner such as opportunities, emails, or sales orders issued."
 msgstr ""
-"Kunder (de kallas även partners på andra ställen i systemet) hjälper diga "
-"att underhålla adresserna till företagen oavsett om de är prospekts, kunder "
+"Kunder (de kallas även företag på andra ställen i systemet) hjälper diga att "
+"underhålla adresserna till företagen oavsett om de är prospekts, kunder "
 "och/eller leverantörer. Kundsidan används för att visa information för att "
 "kommunicera med dina kunder i form av adresser, kontakter, prislistor och "
-"mycket annat? Om du installerat CRM-modulen så visas en historikflik där kan "
+"mycket annat. Om du installerat CRM-modulen så visas en historikflik där kan "
 "du följa kommunikation med kunden i form av oppurtunities, mail och "
 "kundorder mm."
 
@@ -5468,7 +5468,7 @@ msgstr "_Stäng"
 #. module: base
 #: field:multi_company.default,company_dest_id:0
 msgid "Default Company"
-msgstr "Standardföretag"
+msgstr "Standardbolag"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -5731,7 +5731,7 @@ msgstr "Kunde inte hitta föregående ir.actions.todo"
 #. module: base
 #: view:ir.actions.act_window:0
 msgid "General Settings"
-msgstr "Generella inställningar"
+msgstr "Globala inställningar"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_administration_shortcut
@@ -6302,8 +6302,7 @@ msgstr ""
 #. module: base
 #: constraint:res.users:0
 msgid "The chosen company is not in the allowed companies for this user"
-msgstr ""
-"Det valda företaget är inte bland de tillåtna företagen för denna användaren"
+msgstr "Detta bolag är inte tillåtet för den här användaren"
 
 #. module: base
 #: model:res.country,name:base.gi
@@ -7482,7 +7481,7 @@ msgstr "Diverse"
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_10
 msgid "Open Source Service Company"
-msgstr "Tjänsteföretag inom open source"
+msgstr "Tjänsteföretag inom fri programvara"
 
 #. module: base
 #: model:res.country,name:base.kg
@@ -8092,7 +8091,7 @@ msgstr "Bulgaria"
 #. module: base
 #: view:publisher_warranty.contract.wizard:0
 msgid "Publisher warranty contract successfully registered!"
-msgstr "Utgivarens underhållskontrakt registrerat, inga fel."
+msgstr "Utgivarens underhållsavtal registrerat, inga fel."
 
 #. module: base
 #: model:res.country,name:base.ao
@@ -8537,7 +8536,7 @@ msgstr "Du kan inte ha två användare med samma användarid !"
 #. module: base
 #: model:ir.model,name:base.model_multi_company_default
 msgid "Default multi company"
-msgstr "Standard flerföretag"
+msgstr "Standard flerbolag"
 
 #. module: base
 #: view:res.request:0
@@ -8943,7 +8942,7 @@ msgstr "Slovakiska republiken"
 #. module: base
 #: model:ir.ui.menu,name:base.publisher_warranty
 msgid "Publisher Warranty"
-msgstr ""
+msgstr "Utgivarens underhållsavtal"
 
 #. module: base
 #: model:res.country,name:base.aw
@@ -8985,7 +8984,7 @@ msgstr "Segmentering"
 #: view:res.users:0
 #: field:res.users,company_id:0
 msgid "Company"
-msgstr "Företag"
+msgstr "Bolag"
 
 #. module: base
 #: view:res.users:0
@@ -8995,7 +8994,7 @@ msgstr "Epost & signatur"
 #. module: base
 #: view:publisher_warranty.contract:0
 msgid "Publisher Warranty Contract"
-msgstr "Utgivarens garantikontrakt"
+msgstr "Utgivarens underhållsavtal"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -9392,7 +9391,7 @@ msgstr "Kontoägare"
 #: code:addons/base/res/res_users.py:270
 #, python-format
 msgid "Company Switch Warning"
-msgstr ""
+msgstr "Varning bolagsbyte"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_widget_wizard
