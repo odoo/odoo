@@ -207,23 +207,38 @@ class purchase_order(osv.osv):
     def default_get(self, cr, uid, fields, context=None):
         if not context:
             context = {}
+        val_list = []
+        requisition_id = {}
         product_obj = self.pool.get('product.product')
-        pur_req_line_obj = self.pool.get('purchase.requisition.line')
+        requisition_line_obj = self.pool.get('purchase.requisition.line')
         purchase_order_line_obj = self.pool.get('purchase.order.line')
         res = super(purchase_order, self).default_get(cr, uid, fields, context=context)
         product_ids = context.get('product_ids', False)
-        val_list = []
         if product_ids:
             for id in product_ids:
                 if  id[0] == 4:
-                    product_data = pur_req_line_obj.browse(cr, uid, id[1], context=context)
-                    line_vals={'product_id': product_data.product_id.id, 'product_qty': product_data.product_qty, 'name': product_data.product_id.name}
+                    requisition_data = requisition_line_obj.browse(cr, uid, id[1], context=context)
+                    requisition_id.update({'requisition_id': requisition_data.requisition_id.id})
+                    line_vals={'product_id': requisition_data.product_id.id, 'product_qty': requisition_data.product_qty, 'name': requisition_data.product_id.name}
                 elif id[0] == 0:
-                   product_data = id[2] 
+                   product_data = id[2]
                    name = product_obj.browse(cr, uid, product_data.get('product_id'), context=context).name
                    line_vals = {'product_id': product_data.get('product_id'), 'product_qty': product_data.get('product_qty'), 'name': name}
-                val_list.append((0,0,line_vals))   
-        res.update({'order_line': val_list})
+                val_list.append((0,0,line_vals))
+        res.update({'order_line': val_list, 'requisition_id': requisition_id.get('requisition_id')})
+        return res
+        
+    def onchange_partner_id(self, cr, uid, ids, partner_id, requisition_id):
+        res = {}
+        res = super(purchase_order, self).onchange_partner_id(cr, uid, ids, partner_id)
+        res_partner = self.pool.get('res.partner')
+        value = {'partner_id': ''}
+        requisition_pool = self.pool.get('purchase.requisition')
+        supplier = res_partner.browse(cr, uid, partner_id)
+        if requisition_id: 
+            requisition = requisition_pool.browse(cr, uid, requisition_id)
+            if supplier.id in filter(lambda x: x, [rfq.state <> 'cancel' and rfq.partner_id.id or None for rfq in requisition.purchase_ids]):
+                 raise osv.except_osv(_('Warning'), _('You have already one %s purchase order for this partner, you must cancel this purchase order to create a new quotation.') % rfq.state)
         return res
         
     def wkf_confirm_order(self, cr, uid, ids, context=None):

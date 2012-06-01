@@ -9,9 +9,14 @@
         <field name="model">purchase.order</field>
         <field name="inherit_id" ref="purchase.purchase_order_form"/>
         <field name="arch" type="xml">
+          <data>
             <field name="shipped" position="after">
                 <field name="requisition_id"/>
             </field>
+            <field name= 'partner_id' position="replace">
+            <field name="partner_id" on_change="onchange_partner_id(partner_id, requisition_id)" context="{'search_default_supplier':1,'default_supplier':1,'default_customer':0}"  options='{"quick_create": false}'/>
+            </field>
+            </data>
         </field>
     </record>
 
@@ -49,10 +54,11 @@
                <field name="exclusive"/>
                <field name="user_id"/>
                <field name="date_start"/>
-               <field name="warehouse_id" widget="selection" groups="stock.group_locations"/>
-               <field name="date_end"/>
-               <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                <field name="origin"/>
+               <field name="date_end"/>
+               <field name="warehouse_id" widget="selection" groups="stock.group_locations"/>
+              
+               <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                 </group>
                 <notebook colspan="4">
                     <page string="Products">
