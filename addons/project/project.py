@@ -1198,7 +1198,7 @@ class task(base_stage, osv.osv):
 
     def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
         """ Override of the (void) default notification method. """
-        stage_name = self.pool.get('project_task_type').name_get(cr, uid, [stage_id], context=context)[0][1]
+        stage_name = self.pool.get('project.task.type').name_get(cr, uid, [stage_id], context=context)[0][1]
         return self.message_append_note(cr, uid, ids, body= _("Stage changed to <b>%s</b>.") % (stage_name), context=context)
 
     def create_send_note(self, cr, uid, ids, context=None):
