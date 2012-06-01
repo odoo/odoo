@@ -462,7 +462,7 @@
                     <field name="location_dest_id" groups="stock.group_locations"/>
                     <field name="create_date" groups="base.group_no_one"/>
                     <field name="date" string="Date" groups="base.group_no_one"/>
-                     <field name="date_expected" string="Date Expected"/>
+                    <field name="date_expected" string="Date Expected"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -697,7 +697,6 @@
                     <field name="invoice_state"/>
                     <field name="stock_journal_id" widget="selection"/>
                     <field name="state"/>
-                    <button name="action_process" states="assigned" groups="stock.group_stock_user" string="Process" type="object" icon="gtk-go-forward"/>
                 </tree>
             </field>
         </record>
@@ -1039,8 +1038,6 @@
                     <field name="invoice_state"/>
                     <field name="stock_journal_id" widget="selection"/>
                     <field name="state"/>
-                    <button name="action_process" states="assigned" string="Process" type="object" icon="gtk-go-forward"/>
-                    <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel" icon="gtk-cancel" confirm="This operation will cancel the shipment. Do you want to continue?" />
                 </tree>
             </field>
         </record>
@@ -1349,8 +1346,6 @@
                         states="draft,assigned,confirmed,done"/>
                     <field name="date" groups="base.group_no_one"/>
                     <field name="state"/>
-                    <button name="action_assign" states="confirmed" string="Set Available" type="object" icon="gtk-yes"/>
-                    <button name="action_done" string="Process" type="object" states="confirmed,assigned" icon="gtk-go-forward"/>
                 </tree>
             </field>
         </record>
@@ -1367,7 +1362,6 @@
                     <field name="product_qty" />
                     <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
                     <field name="date" groups="base.group_no_one" />
-                    <button name="action_done" states="confirmed,assigned" string="Process" type="object" icon="gtk-go-forward"/>
                 </tree>
             </field>
         </record>
