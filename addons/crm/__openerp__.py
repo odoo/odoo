@@ -57,6 +57,7 @@ Creates a dashboard for CRM that includes:
     'depends': [
         'base_action_rule',
         'base_setup',
+        'base_status',
         'process',
         'mail',
         'base_calendar',
@@ -66,7 +67,6 @@ Creates a dashboard for CRM that includes:
     ],
     'init_xml': [
         'crm_data.xml',
-        'crm_meeting_data.xml',
         'crm_lead_data.xml',
         'crm_meeting_data.xml',
         'crm_phonecall_data.xml',
