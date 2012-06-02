@@ -169,7 +169,7 @@ class purchase_requisition(osv.osv):
     def get_needaction_user_ids(self, cr, uid, ids, context=None):
         result = dict.fromkeys(ids, [])
         for obj in self.browse(cr, uid, ids, context=context):
-            if (obj.state == 'draft'):
+            if (obj.state == 'draft') and obj.user_id:
                 result[obj.id] = [obj.user_id.id]
         return result
 
