@@ -26,6 +26,58 @@ from osv.orm import except_orm
 import tools
 
 class ir_attachment(osv.osv):
+    def _name_get_resname(self, cr, uid, ids, object, method, context):
+        data = {}
+        for attachment in self.browse(cr, uid, ids, context=context):
+            model_object = attachment.res_model
+            res_id = attachment.res_id
+            if model_object and res_id:
+                model_pool = self.pool.get(model_object)
+                res = model_pool.name_get(cr,uid,[res_id],context)
+                res_name = res and res[0][1] or False
+                if res_name:
+                    field = self._columns.get('res_name',False)
+                    if field and len(res_name) > field.size:
+                        res_name = res_name[:field.size-3] + '...' 
+                data[attachment.id] = res_name
+            else:
+                data[attachment.id] = False
+        return data
+
+    _name = 'ir.attachment'
+    _columns = {
+        'name': fields.char('Attachment Name',size=256, required=True),
+        'datas': fields.binary('Data'),
+        'datas_fname': fields.char('File Name',size=256),
+        'description': fields.text('Description'),
+        'res_name': fields.function(_name_get_resname, type='char', size=128,
+                string='Resource Name', store=True),
+        'res_model': fields.char('Resource Object',size=64, readonly=True,
+                help="The database object this attachment will be attached to"),
+        'res_id': fields.integer('Resource ID', readonly=True,
+                help="The record id this is attached to"),
+        'url': fields.char('Url', size=512, oldname="link"),
+        'type': fields.selection(
+                [ ('url','URL'), ('binary','Binary'), ],
+                'Type', help="Binary File or external URL", required=True, change_default=True),
+
+        'create_date': fields.datetime('Date Created', readonly=True),
+        'create_uid':  fields.many2one('res.users', 'Owner', readonly=True),
+        'company_id': fields.many2one('res.company', 'Company', change_default=True),
+    }
+
+    _defaults = {
+        'type': 'binary',
+        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'ir.attachment', context=c),
+    }
+
+    def _auto_init(self, cr, context=None):
+        super(ir_attachment, self)._auto_init(cr, context)
+        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('ir_attachment_res_idx',))
+        if not cr.fetchone():
+            cr.execute('CREATE INDEX ir_attachment_res_idx ON ir_attachment (res_model, res_id)')
+            cr.commit()
+
     def check(self, cr, uid, ids, mode, context=None, values=None):
         """Restricts the access to an ir.attachment, according to referred model
         In the 'document' module, it is overriden to relax this hard rule, since
@@ -119,58 +171,6 @@ class ir_attachment(osv.osv):
     def action_get(self, cr, uid, context=None):
         return self.pool.get('ir.actions.act_window').for_xml_id(
             cr, uid, 'base', 'action_attachment', context=context)
-
-    def _name_get_resname(self, cr, uid, ids, object, method, context):
-        data = {}
-        for attachment in self.browse(cr, uid, ids, context=context):
-            model_object = attachment.res_model
-            res_id = attachment.res_id
-            if model_object and res_id:
-                model_pool = self.pool.get(model_object)
-                res = model_pool.name_get(cr,uid,[res_id],context)
-                res_name = res and res[0][1] or False
-                if res_name:
-                    field = self._columns.get('res_name',False)
-                    if field and len(res_name) > field.size:
-                        res_name = res_name[:field.size-3] + '...' 
-                data[attachment.id] = res_name
-            else:
-                data[attachment.id] = False
-        return data
-
-    _name = 'ir.attachment'
-    _columns = {
-        'name': fields.char('Attachment Name',size=256, required=True),
-        'datas': fields.binary('Data'),
-        'datas_fname': fields.char('File Name',size=256),
-        'description': fields.text('Description'),
-        'res_name': fields.function(_name_get_resname, type='char', size=128,
-                string='Resource Name', store=True),
-        'res_model': fields.char('Resource Object',size=64, readonly=True,
-                help="The database object this attachment will be attached to"),
-        'res_id': fields.integer('Resource ID', readonly=True,
-                help="The record id this is attached to"),
-        'url': fields.char('Url', size=512, oldname="link"),
-        'type': fields.selection(
-                [ ('url','URL'), ('binary','Binary'), ],
-                'Type', help="Binary File or external URL", required=True, change_default=True),
-
-        'create_date': fields.datetime('Date Created', readonly=True),
-        'create_uid':  fields.many2one('res.users', 'Owner', readonly=True),
-        'company_id': fields.many2one('res.company', 'Company', change_default=True),
-    }
-
-    _defaults = {
-        'type': 'binary',
-        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'ir.attachment', context=c),
-    }
-
-    def _auto_init(self, cr, context=None):
-        super(ir_attachment, self)._auto_init(cr, context)
-        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('ir_attachment_res_idx',))
-        if not cr.fetchone():
-            cr.execute('CREATE INDEX ir_attachment_res_idx ON ir_attachment (res_model, res_id)')
-            cr.commit()
 
 ir_attachment()
 
