@@ -27,9 +27,9 @@ class l10n_installer(osv.osv_memory):
     _inherit = 'account.installer'
     _columns = {
         'company_type':fields.selection([('partnership_private_company', 'Partnership/Private Firm'),
-                                         ('public_company', 'Public Firm')], 'Company Type', required=True),        
+                                         ('public_company', 'Public Firm')], 'Company Type', required=True, 
+                                        help='Select your company Type according to your need to install account chart'),        
     }
-
     _defaults = {
         'company_type': 'public_company',
     }
@@ -40,13 +40,22 @@ class l10n_installer(osv.osv_memory):
             context = {}
         for res in self.read(cr, uid, ids, context=context):
             if res['charts'] =='l10n_in' and res['company_type']=='public_company':
-                path = tools.file_open(opj('l10n_in', 'l10n_in_public_firm_chart.xml'))
-                tools.convert_xml_import(cr, 'l10n_in', path, {}, 'init', True, None)
-                path.close() 
+                acc_file_path = tools.file_open(opj('l10n_in', 'l10n_in_public_firm_chart.xml'))
+                tools.convert_xml_import(cr, 'l10n_in', acc_file_path, {}, 'init', True, None)
+                acc_file_path.close() 
+                
+                tax_file_path = tools.file_open(opj('l10n_in', 'l10n_in_public_firm_tax_template.xml'))
+                tools.convert_xml_import(cr, 'l10n_in', tax_file_path, {}, 'init', True, None)
+                tax_file_path.close()  
+                               
             if res['charts'] =='l10n_in' and res['company_type']=='partnership_private_company':
-                path = tools.file_open(opj('l10n_in', 'l10n_in_partnership_private_chart.xml'))
-                tools.convert_xml_import(cr, 'l10n_in', path, {}, 'init', True, None)
-                path.close()  
+                acc_file_path = tools.file_open(opj('l10n_in', 'l10n_in_partnership_private_chart.xml'))
+                tools.convert_xml_import(cr, 'l10n_in', acc_file_path, {}, 'init', True, None)
+                acc_file_path.close()  
+
+                tax_file_path = tools.file_open(opj('l10n_in', 'l10n_in_private_firm_tax_template.xml'))
+                tools.convert_xml_import(cr, 'l10n_in', tax_file_path, {}, 'init', True, None)
+                tax_file_path.close()                
         return res
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
