@@ -1330,13 +1330,9 @@ $colour4: #8a89ba
 
         .oe_form_field_char input,
         .oe_form_field_text textarea,
-        .oe_form_field_email input,
         .oe_form_field_url input,
         .oe_form_field_selection select
             width: inherit
-
-        .oe_form_field_many2one input
-            width: 100%
 
         .oe_form_field_float input
             width: 100px
@@ -1494,7 +1490,8 @@ $colour4: #8a89ba
             // Hack due to absolute positioning of kanban view messing with o2m
             position: static
         .oe_form_field_with_button
-            display: inline-block
+            input
+                width: 100%
             > .oe_button
                 float: right
                 -webkit-border-top-left-radius: 0px

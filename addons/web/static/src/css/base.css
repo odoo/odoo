@@ -142,7 +142,7 @@
   border: 1px solid #ababab;
   color: #404040;
   margin: 0;
-  padding: 4px 12px;
+  padding: 3px 12px;
   font-size: 13px;
   text-align: center;
   background-color: #efefef;
@@ -1678,13 +1678,9 @@
 }
 .openerp .oe_form .oe_form_field_char input,
 .openerp .oe_form .oe_form_field_text textarea,
-.openerp .oe_form .oe_form_field_email input,
 .openerp .oe_form .oe_form_field_url input,
 .openerp .oe_form .oe_form_field_selection select {
   width: inherit;
-}
-.openerp .oe_form .oe_form_field_many2one input {
-  width: 100%;
 }
 .openerp .oe_form .oe_form_field_float input {
   width: 100px;
@@ -1863,8 +1859,8 @@
 .openerp .oe_form .oe_form_group_cell .oe_kanban_view {
   position: static;
 }
-.openerp .oe_form .oe_form_field_with_button {
-  display: inline-block;
+.openerp .oe_form .oe_form_field_with_button input {
+  width: 100%;
 }
 .openerp .oe_form .oe_form_field_with_button > .oe_button {
   float: right;
