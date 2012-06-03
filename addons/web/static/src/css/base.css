@@ -1,4 +1,4 @@
-@charset "UTF-8";
+@charset "utf-8";
 @font-face {
   font-family: "mnmliconsRegular";
   src: url("/web/static/src/font/mnmliconsv21-webfont.eot") format("eot");
@@ -1554,7 +1554,8 @@
 .openerp .oe_form_button_save_dirty:hover {
   background: #ed6f6a;
 }
-.openerp .oe_form_topbar {
+.openerp .oe_form header {
+  position: relative;
   border-bottom: 1px solid #cacaca;
   background-color: #fcfcfc;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#fcfcfc), to(#dedede));
@@ -1566,19 +1567,20 @@
   padding: 0 8px;
   line-height: 30px;
 }
-.openerp .oe_form_topbar button {
+.openerp .oe_form header button {
   font-size: 12px;
+  float: left;
   height: 24px !important;
   line-height: 24px;
   vertical-align: top;
   padding: 0 10px;
   margin: 3px 4px 3px 0;
 }
-.openerp .oe_form_topbar button span.i {
+.openerp .oe_form header button span.i {
   line-height: 20px;
   height: 24px;
 }
-.openerp .oe_form_topbar ul {
+.openerp .oe_form header ul {
   height: 30px;
   padding: 0;
   margin: 0;
@@ -1586,7 +1588,7 @@
   border-left: 1px solid #cacaca;
   border-right: 1px solid #cacaca;
 }
-.openerp .oe_form_topbar ul li {
+.openerp .oe_form header ul li {
   padding: 0;
   margin: 0;
   float: left;
@@ -1595,35 +1597,39 @@
   height: 30px;
   padding: 0 12px;
 }
-.openerp .oe_form_topbar ul li:first-child {
+.openerp .oe_form header ul li:first-child {
   border-left: 1px solid #cacaca;
 }
-.openerp .oe_form_topbar ul li a {
+.openerp .oe_form header ul li a {
   color: #4c4c4c;
 }
-.openerp .oe_form_topbar ul li a:hover {
+.openerp .oe_form header ul li a:hover {
   color: black;
 }
-.openerp .oe_form_topbar .oe_form_steps img {
+.openerp .oe_form header .oe_form_steps {
+  display: inline-block;
+  float: right;
+}
+.openerp .oe_form header .oe_form_steps img {
   margin: 0 8px;
   vertical-align: top;
 }
-.openerp .oe_form_topbar .oe_form_steps li {
+.openerp .oe_form header .oe_form_steps li {
   border-right: none;
   padding: 0;
 }
-.openerp .oe_form_topbar .oe_form_steps li:first-child {
+.openerp .oe_form header .oe_form_steps li:first-child {
   margin-left: 12px;
   border-left: none;
 }
-.openerp .oe_form_topbar .oe_form_steps li:last-child {
+.openerp .oe_form header .oe_form_steps li:last-child {
   margin-right: 12px;
 }
-.openerp .oe_form_topbar .oe_form_steps_active {
+.openerp .oe_form header .oe_form_steps_active {
   font-weight: bold;
   color: #b33630;
 }
-.openerp .oe_form_topbar.oe_form_topbar_hifirst button:first-child, .openerp button.oe_form_button_hi {
+.openerp header.oe_form_topbar_hifirst button:first-child, .openerp button.oe_form_button_hi {
   color: white;
   background: #dc5f59;
   background: -moz-linear-gradient(#dc5f59, #b33630);
@@ -1633,7 +1639,7 @@
   -webkit-box-shadow: none;
   -box-shadow: none;
 }
-.openerp .oe_form_topbar.oe_form_topbar_hifirst button:first-child:hover, .openerp button.oe_form_button_hi:hover {
+.openerp header.oe_form_topbar_hifirst button:first-child:hover, .openerp button.oe_form_button_hi:hover {
   background: #df6b66;
   background: -moz-linear-gradient(#df6b66, #bf3a33);
   background: -webkit-gradient(linear, left top, left bottom, from(#df6b66), to(#bf3a33));
@@ -1647,41 +1653,54 @@
   padding: 8px 0;
   border-bottom: 1px solid #dddddd;
 }
-.openerp .oe_application .oe_form_sheet_width, .openerp .oe_application .oe_form_bottom {
+.openerp .oe_application .oe_form_sheet_width, .openerp .oe_application footer {
   min-width: 650px;
-  max-width: 980px;
+  max-width: 960px;
   margin: 0 auto;
 }
 .openerp .oe_application .oe_form_sheet {
-  padding: 8px 8px 8px 8px;
+  padding: 18px;
   background: white;
-  min-height: 420px;
+  min-height: 330px;
   border: 1px solid #afafb6;
   -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   -box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
-.openerp .oe_form .oe_form_group_cell {
-  line-height: 18px;
-  padding: 2px;
-  height: 20px;
+.openerp .oe_form_editable .oe_form_editable_hidden {
+  display: none;
 }
-.openerp .oe_form .oe_form_group_cell > .oe_form_field_many2one,
-.openerp .oe_form .oe_form_group_cell > .oe_form_field_many2one input,
-.openerp .oe_form .oe_form_group_cell > .oe_form_field_char input,
-.openerp .oe_form .oe_form_group_cell > .oe_form_field_text textarea,
-.openerp .oe_form .oe_form_group_cell > .oe_form_field_email,
-.openerp .oe_form .oe_form_group_cell > .oe_form_field_email input,
-.openerp .oe_form .oe_form_group_cell > .oe_form_field_url,
-.openerp .oe_form .oe_form_group_cell > .oe_form_field_url input,
-.openerp .oe_form .oe_form_group_cell > .oe_form_field_float input,
-.openerp .oe_form .oe_form_group_cell > .oe_form_field_selection select,
-.openerp .oe_form .oe_form_group_cell > div > .oe_datepicker_root,
-.openerp .oe_form .oe_form_group_cell > div > .oe_datepicker_root > input.oe_datepicker_master {
+.openerp .oe_form_readonly .oe_form_readonly_hidden {
+  display: none;
+}
+.openerp .oe_form .oe_form_field_text {
   width: 100%;
 }
-.openerp .oe_form .oe_form_group_cell.oe_form_group_nested {
-  padding: 0;
+.openerp .oe_form .oe_form_field_char input,
+.openerp .oe_form .oe_form_field_text textarea,
+.openerp .oe_form .oe_form_field_email input,
+.openerp .oe_form .oe_form_field_url input,
+.openerp .oe_form .oe_form_field_selection select {
+  width: inherit;
+}
+.openerp .oe_form .oe_form_field_many2one input {
+  width: 100%;
+}
+.openerp .oe_form .oe_form_field_float input {
+  width: 100px;
+}
+.openerp .oe_form h1 .oe_form_field_float input {
+  width: 140px;
+}
+.openerp .oe_form h2 .oe_form_field_float input {
+  width: 120px;
+}
+.openerp .oe_form h1, .openerp .oe_form h2, .openerp .oe_form h3, .openerp .oe_form h4, .openerp .oe_form h5, .openerp .oe_form h6 {
+  margin: 0 0 4px 0;
+}
+.openerp .oe_form h1 input, .openerp .oe_form h2 input, .openerp .oe_form h3 input, .openerp .oe_form h4 input, .openerp .oe_form h5 input, .openerp .oe_form h6 input {
+  height: inherit !important;
+  font-size: inherit;
 }
 .openerp .oe_form .oe_form_label_help[for], .openerp .oe_form .oe_form_label[for] {
   font-weight: bold;
@@ -1696,8 +1715,32 @@
   top: -4px;
   padding: 0 2px;
 }
-.openerp .oe_form textarea {
+.openerp .oe_form .oe_form_field_text textarea {
   resize: vertical;
+}
+.openerp .oe_form .oe_form_field {
+  width: 100%;
+  display: inline-block;
+  padding: 2px 0px 2px 0px;
+  line-height: 18px;
+}
+.openerp .oe_form .oe_form_field input {
+  margin: 0px;
+}
+.openerp .oe_form .oe_form_field_integer {
+  width: 180px;
+}
+.openerp .oe_form .oe_form_field_float {
+  width: 180px;
+}
+.openerp .oe_form .oe_form_field_date {
+  width: 7em;
+}
+.openerp .oe_form .oe_form_field_datetime {
+  width: 11em;
+}
+.openerp .oe_form .oe_form_inline {
+  width: auto;
 }
 .openerp .oe_form input[type="text"],
 .openerp .oe_form input[type="password"],
@@ -1716,7 +1759,6 @@
   -ms-box-sizing: border-box;
   box-sizing: border-box;
   padding: 0 2px;
-  margin: 0 2px;
   border: 1px solid #999999;
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
@@ -1768,9 +1810,6 @@
 .openerp .oe_form .oe_form_field_boolean {
   padding-top: 4px;
 }
-.openerp .oe_form .oe_form_field_datetime input {
-  min-width: 11em;
-}
 .openerp .oe_form .oe_form_field_many2manytags .text-wrap {
   width: 100% !important;
 }
@@ -1808,17 +1847,6 @@
   background-color: #ff6666 !important;
   border: 1px solid #dd0000 !important;
 }
-.openerp .oe_form .oe_button.oe_field_button {
-  display: block;
-  -webkit-border-top-left-radius: 0px;
-  -webkit-border-bottom-left-radius: 0px;
-  -moz-border-radius-topleft: 0px;
-  -moz-border-radius-bottomleft: 0px;
-  border-top-left-radius: 0px;
-  border-bottom-left-radius: 0px;
-  margin-right: -1px;
-  height: 22px;
-}
 .openerp .oe_form .oe_input_icon {
   cursor: pointer;
   margin: 3px 0 0 -21px;
@@ -1835,9 +1863,38 @@
 .openerp .oe_form .oe_form_group_cell .oe_kanban_view {
   position: static;
 }
+.openerp .oe_form .oe_form_field_with_button {
+  display: inline-block;
+}
+.openerp .oe_form .oe_form_field_with_button > .oe_button {
+  float: right;
+  -webkit-border-top-left-radius: 0px;
+  -webkit-border-bottom-left-radius: 0px;
+  -moz-border-radius-topleft: 0px;
+  -moz-border-radius-bottomleft: 0px;
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+  height: 22px;
+}
+.openerp .oe_form .oe_form_field_with_button > div {
+  position: relative;
+  overflow: hidden;
+}
+.openerp .oe_form .oe_form_title {
+  width: 65%;
+}
+.openerp .oe_form .oe_form_button_box {
+  width: 200px;
+  text-align: center;
+}
+.openerp .oe_form .oe_form_group {
+  margin: 5px 0px 5px 0px;
+}
+.openerp .oe_form .oe_form_group_cell .oe_kanban_view {
+  position: static;
+}
 .openerp .oe_form .oe_form_button.oe_button {
   height: 22px;
-  color: #4c4c4c;
 }
 .openerp .oe_form .oe_form_button.oe_button span {
   position: relative;
@@ -1847,15 +1904,10 @@
   vertical-align: -3px;
   padding: 0 2px;
 }
-.openerp .oe_form .oe_form_group_cell > .oe_form_button.oe_button {
-  display: block;
-  white-space: nowrap;
-  min-width: 100%;
-  width: 100%;
-}
 .openerp .oe_form .oe-binary-file-set {
   overflow: hidden;
   position: relative;
+  display: inline-block;
   width: 45px;
   height: 30px;
 }
@@ -1871,6 +1923,9 @@
   -ms-filter: "alpha(opacity=0)";
   margin: 0;
   padding: 0;
+}
+.openerp .oe_form .oe_binary_image {
+  display: inline-block;
 }
 .openerp .oe_horizontal_border {
   border-bottom: 1px solid black;
@@ -1941,8 +1996,15 @@
 .openerp .oe_form_notebook_page {
   padding: 0;
 }
+.openerp div.ui-tabs {
+  padding: 3px 0px 3px 0px;
+}
 .openerp .ui-tabs-hide {
   display: none;
+}
+.openerp .oe_form .oe_form_field_progressbar {
+  display: inline-block;
+  min-width: 70px;
 }
 .openerp .oe_form .oe_form_field_progressbar.ui-progressbar {
   height: 22px;
@@ -1984,22 +2046,16 @@
 .openerp .oe-select-create-popup-view-form > .oe_formview > .oe_form_pager {
   display: none;
 }
-.openerp .oe_form .oe_form_title, .openerp .oe_form .oe_form_title input {
-  font-size: 20px;
-  font-weight: bold;
-  height: 30px;
-}
-.openerp .oe_form .oe_form_group_odd_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell:nth-child(odd),
-.openerp .oe_form .oe_form_group_label_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell_label {
+.openerp .oe_form td.oe_form_group_cell_label {
   border-right: 1px solid #dddddd;
+  padding: 2px 0px 2px 0px;
 }
-.openerp .oe_form .oe_form_group_odd_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell:nth-child(odd) label,
-.openerp .oe_form .oe_form_group_label_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell_label label {
+.openerp .oe_form td.oe_form_group_cell_label label {
+  line-height: 18px;
   display: block;
   min-width: 120px;
 }
-.openerp .oe_form .oe_form_group_odd_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell,
-.openerp .oe_form .oe_form_group_label_border > tbody > tr.oe_form_group_row > td.oe_form_group_cell {
+.openerp .oe_form td.oe_form_group_cell + .oe_form_group_cell {
   padding-left: 8px;
 }
 .openerp .oe_form .oe_form_subtotal_footer {
@@ -2090,7 +2146,7 @@
 .openerp .oe-listview-content > tbody > tr > td.oe_list_checkbox:first-child:after, .openerp .oe-listview-content > tbody > tr th.oe_list_checkbox:first-child:after {
   border-width: 0;
 }
-.openerp .oe-listview-content > tbody > tr > td.oe-number {
+.openerp .oe-listview-content > tbody > tr > td.oe_number {
   text-align: right !important;
 }
 .openerp .oe-listview-content > tbody > tr:nth-child(odd) {
