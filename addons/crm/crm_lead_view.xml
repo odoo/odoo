@@ -239,18 +239,15 @@
                                 <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                             </ul>
                             <div class="oe_kanban_content">
-                                <h3>
-                                    <field name="partner_id"/>
-                                    <t t-if="record.planned_revenue.raw_value">
-                                        - <t t-esc="Math.round(record.planned_revenue.value)"/>
-                                        <field name="company_currency"/>
-                                    </t>
-                                </h3>
                                 <div>
-                                    <b> <field name="partner_address_name"/> </b>
+                                    <b><field name="name"/></b>
+                                    <t t-if="record.planned_revenue.raw_value">
+                                        - <b><t t-esc="Math.round(record.planned_revenue.value)"/>
+                                        <field name="company_currency"/></b>
+                                    </t>
                                 </div>
                                 <div>
-                                    <field name="name"/>
+                                    <field name="partner_id"/>
                                 </div>
                                 <div style="padding-left: 0.5em">
                                     <i>
@@ -405,7 +402,7 @@
                         <h2>
                             <field name="planned_revenue" class="oe_form_inline"/>
                             <field name="company_currency" class="oe_form_readonly_hidden oe_form_inline"/> at 
-                            <field name="probability" class="oe_form_inline"/> % success rate
+                            <field name="probability" class="oe_form_inline"/> %% success rate
                         </h2>
                     </div>
                     <group>
