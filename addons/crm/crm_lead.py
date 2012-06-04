@@ -756,64 +756,6 @@ class crm_lead(base_stage, osv.osv):
                 'type': 'ir.actions.act_window',
         }
 
-
-    def message_new(self, cr, uid, msg, custom_values=None, context=None):
-        """Automatically calls when new email message arrives"""
-        res_id = super(crm_lead, self).message_new(cr, uid, msg, custom_values=custom_values, context=context)
-        subject = msg.get('subject')  or _("No Subject")
-        body = msg.get('body_text')
-
-        msg_from = msg.get('from')
-        priority = msg.get('priority')
-        vals = {
-            'name': subject,
-            'email_from': msg_from,
-            'email_cc': msg.get('cc'),
-            'description': body,
-            'user_id': False,
-        }
-        if priority:
-            vals['priority'] = priority
-        vals.update(self.message_partner_by_email(cr, uid, msg.get('from', False)))
-        self.write(cr, uid, [res_id], vals, context)
-        return res_id
-
-    def message_update(self, cr, uid, ids, msg, vals=None, default_act='pending', context=None):
-        if isinstance(ids, (str, int, long)):
-            ids = [ids]
-        if vals == None:
-            vals = {}
-        super(crm_lead, self).message_update(cr, uid, ids, msg, context=context)
-
-        if msg.get('priority') in dict(crm.AVAILABLE_PRIORITIES):
-            vals['priority'] = msg.get('priority')
-        maps = {
-            'cost':'planned_cost',
-            'revenue': 'planned_revenue',
-            'probability':'probability'
-        }
-        vls = {}
-        for line in msg['body_text'].split('\n'):
-            line = line.strip()
-            res = tools.misc.command_re.match(line)
-            if res and maps.get(res.group(1).lower()):
-                key = maps.get(res.group(1).lower())
-                vls[key] = res.group(2).lower()
-        vals.update(vls)
-
-        # Unfortunately the API is based on lists
-        # but we want to update the state based on the
-        # previous state, so we have to loop:
-        for case in self.browse(cr, uid, ids, context=context):
-            values = dict(vals)
-            if case.state in CRM_LEAD_PENDING_STATES:
-                #re-open
-                values.update(state=crm.AVAILABLE_STATES[1][0])
-                if not case.date_open:
-                    values['date_open'] = time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
-            res = self.write(cr, uid, [case.id], values, context=context)
-        return res
-
     def action_makeMeeting(self, cr, uid, ids, context=None):
         """
         This opens Meeting's calendar view to schedule meeting on current Opportunity
@@ -868,7 +810,63 @@ class crm_lead(base_stage, osv.osv):
             if stage.on_change:
                 vals['probability'] = stage.probability
         return super(crm_lead,self).write(cr, uid, ids, vals, context)
-    
+
+    # ----------------------------------------
+    # Mail Gateway
+    # ----------------------------------------
+
+    def message_new(self, cr, uid, msg, custom_values=None, context=None):
+        """ mail_thread message_new that is called by the mailgateway:
+            - create a new record of the related model
+            - add the message to the thread
+            This override also updates the lead according to the email.
+        """
+        res_id = super(crm_lead, self).message_new(cr, uid, msg, custom_values=custom_values, context=context)
+        
+        name = msg.get('subject') or _("No Subject")
+        description = msg.get('body')
+        email_from = msg.get('from')
+        email_cc = msg.get('cc')
+        vals = {
+            'name': name,
+            'email_from': email_from,
+            'email_cc': email_cc,
+            'description': description,
+            'user_id': False,
+        }
+        if msg.get('priority') in dict(crm.AVAILABLE_PRIORITIES):
+            vals['priority'] = msg.get('priority')
+        vals.update(self.message_partner_by_email(cr, uid, msg.get('from', False), context=context))
+        self.write(cr, uid, [res_id], vals, context=context)
+        return res_id
+
+    def message_update(self, cr, uid, ids, msg, vals=None, default_act='pending', context=None):
+        """ mail_thread message_update that is called by the mailgateway:
+            - add the message to the thread
+            This override also updates the lead according to the email.
+        """
+        if isinstance(ids, (str, int, long)):
+            ids = [ids]
+        if vals == None:
+            vals = {}
+        update_res = super(crm_lead, self).message_update(cr, uid, ids, msg, context=context)
+
+        if msg.get('priority') in dict(crm.AVAILABLE_PRIORITIES):
+            vals['priority'] = msg.get('priority')
+        maps = {
+            'cost':'planned_cost',
+            'revenue': 'planned_revenue',
+            'probability':'probability'
+        }
+        for line in msg['body_text'].split('\n'):
+            line = line.strip()
+            res = tools.misc.command_re.match(line)
+            if res and maps.get(res.group(1).lower()):
+                key = maps.get(res.group(1).lower())
+                vals[key] = res.group(2).lower()
+        self.write(cr, uid, ids, vals, context=context)
+        return update_res
+
     # ----------------------------------------
     # OpenChatter methods and notifications
     # ----------------------------------------
