@@ -535,6 +535,8 @@ class mail_thread(osv.osv):
             res_id = create_record(msg)
         #To forward the email to other followers
         self.message_forward(cr, uid, model, [res_id], msg_txt, context=context)
+        # Set as Unread
+        self.message_mark_as_unreadcr, uid, [res_id], context=context)
         return res_id
 
     def message_new(self, cr, uid, msg_dict, custom_values=None, context=None):
