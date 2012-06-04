@@ -6,24 +6,26 @@
             <field name="model">base.config.settings</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="General Settings" layout="manual">
+                <form string="General Settings">
                     <header>
                         <button string="Apply" type="object" name="execute"/>
                         <button string="Cancel" special="cancel"/>
                     </header>
-                    <sheet layout="auto">
-                        <separator string="Company Settings" colspan="4"/>
-                        <field name="module_multi_company"/>
+                    <group>
+                        <group string="Company Settings">
+                            <field name="module_multi_company"/>
+                        </group>
 
-                        <separator string="Others" colspan="4"/>
-                        <label string="Outgoing Mail Servers"/>
-                        <button type="action" name="%(base.action_ir_mail_server_list)d"
-                            string="Configure" icon="gtk-execute"/>
-                        <newline/>
-                        <field name="module_share"/>
-                        <newline/>
-                        <field name="module_portal"/>
-                    </sheet>
+                        <group string="Others">
+                            <label string="Outgoing Mail Servers"/>
+                            <button type="action" name="%(base.action_ir_mail_server_list)d"
+                                string="Configure" icon="gtk-execute"/>
+                        </group>
+                        <group string="External Accesses">
+                            <field name="module_share"/>
+                            <field name="module_portal"/>
+                        </group>
+                    </group>
                 </form>
             </field>
         </record>

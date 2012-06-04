@@ -923,7 +923,6 @@ class task(base_stage, osv.osv):
     
     def case_close(self, cr, uid, ids, context=None):
         """ Closes Task """
-        request = self.pool.get('res.request')
         if not isinstance(ids, list): ids = [ids]
         for task in self.browse(cr, uid, ids, context=context):
             vals = {}
@@ -956,7 +955,6 @@ class task(base_stage, osv.osv):
         return self.case_cancel(cr, uid, ids, context=context)
     
     def case_cancel(self, cr, uid, ids, context=None):
-        request = self.pool.get('res.request')
         tasks = self.browse(cr, uid, ids, context=context)
         self._check_child_task(cr, uid, ids, context=context)
         for task in tasks:
