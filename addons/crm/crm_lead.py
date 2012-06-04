@@ -262,7 +262,7 @@ class crm_lead(base_stage, osv.osv):
     def get_needaction_user_ids(self, cr, uid, ids, context=None):
         result = dict.fromkeys(ids, [])
         for obj in self.browse(cr, uid, ids, context=context):
-            if obj.thread_is_read == False and hasattr(obj, 'user_id') and obj.user_id:
+            if obj.message_thread_read == False and obj.user_id:
                 result[obj.id] = [obj.user_id.id]
         return result
 

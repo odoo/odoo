@@ -34,7 +34,7 @@ import xmlrpclib
 
 _logger = logging.getLogger(__name__)
 
-class mail_thread(osv.osv):
+class mail_thread(osv.Model):
     '''Mixin model, meant to be inherited by any model that needs to
        act as a discussion topic on which messages can be attached.
        Public methods are prefixed with ``message_`` in order to avoid
@@ -73,8 +73,12 @@ class mail_thread(osv.osv):
         'message_ids': fields.function(_get_message_ids, method=True,
                         type='one2many', obj='mail.message', string='Temp messages', _fields_id = 'res_id',
                         help="Functional field holding messages related to the current document."),
-        'thread_is_read': fields.boolean('Read',
+        'message_thread_read': fields.boolean('Read',
                         help="When checked, new messages require your attention."),
+    }
+    
+    _defaults = {
+        'message_thread_read': True,
     }
 
     #------------------------------------------------------
@@ -524,7 +528,7 @@ class mail_thread(osv.osv):
                     if res_id:
                         res_id = res_id.group(1)
                 if res_id:
-                    res_id = int(res_id)
+                    res_id = res_id
                     if model_pool.exists(cr, uid, res_id):
                         if hasattr(model_pool, 'message_update'):
                             model_pool.message_update(cr, uid, [res_id], msg, {}, context=context)
@@ -532,11 +536,11 @@ class mail_thread(osv.osv):
                         # referenced thread was not found, we'll have to create a new one
                         res_id = False
         if not res_id:
-            res_id = create_record(msg)
-        #To forward the email to other followers
+            res_id = int(create_record(msg))
+        # To forward the email to other followers
         self.message_forward(cr, uid, model, [res_id], msg_txt, context=context)
         # Set as Unread
-        self.message_mark_as_unread(cr, uid, [res_id], context=context)
+        model_pool.message_mark_as_unread(cr, uid, [res_id], context=context)
         return res_id
 
     def message_new(self, cr, uid, msg_dict, custom_values=None, context=None):
@@ -806,18 +810,10 @@ class mail_thread(osv.osv):
     #------------------------------------------------------
     
     def message_mark_as_read(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'thread_is_read': True}, context=context)
+        return self.write(cr, uid, ids, {'message_thread_read': True}, context=context)
     
     def message_mark_as_unread(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'thread_is_read': False}, context=context)
-
-    def get_needaction_user_ids(self, cr, uid, ids, context=None):
-        result = dict.fromkeys(ids, [])
-        for obj in self.browse(cr, uid, ids, context=context):
-            if obj.thread_is_read == False and hasattr(obj, 'user_id') and obj.user_id:
-                result[obj.id] = [obj.user_id.id]
-        print 'needaction: %s' % (str(result))
-        return result
+        return self.write(cr, uid, ids, {'message_thread_read': False}, context=context)
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
