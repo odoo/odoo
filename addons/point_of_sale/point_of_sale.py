@@ -61,7 +61,7 @@ class pos_config(osv.osv):
                 "to store the data in the browser, instead of localStore mechanism. "\
                 "It's more efficient but works on the Chrome browser only."
             ),
-        'iface_led' : fields.boolean('LED Interface'),
+        'iface_led' : fields.boolean('Help Notification'),
         'iface_cashdrawer' : fields.boolean('Cashdrawer Interface'),
         'iface_payment_terminal' : fields.boolean('Payment Terminal Interface'),
         'iface_electronic_scale' : fields.boolean('Electronic Scale Interface'),
