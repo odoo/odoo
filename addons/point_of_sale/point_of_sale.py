@@ -427,28 +427,32 @@ class pos_order(osv.osv):
     _order = "id desc"
 
     def create_from_ui(self, cr, uid, orders, context=None):
+        #pdb.set_trace()
         #_logger.info("orders: %r", orders)
-        list = []
-        for order in orders:
+        order_ids = []
+        for tmp_order in orders:
+
+            order = tmp_order['data']
+
             # order :: {'name': 'Order 1329148448062', 'amount_paid': 9.42, 'lines': [[0, 0, {'discount': 0, 'price_unit': 1.46, 'product_id': 124, 'qty': 5}], [0, 0, {'discount': 0, 'price_unit': 0.53, 'product_id': 62, 'qty': 4}]], 'statement_ids': [[0, 0, {'journal_id': 7, 'amount': 9.42, 'name': '2012-02-13 15:54:12', 'account_id': 12, 'statement_id': 21}]], 'amount_tax': 0, 'amount_return': 0, 'amount_total': 9.42}
             order_obj = self.pool.get('pos.order')
             # get statements out of order because they will be generated with add_payment to ensure
             # the module behavior is the same when using the front-end or the back-end
-            if not order['data']['statement_ids']:
+            if not order['statement_ids']:
                 continue
-            statement_ids = order['data'].pop('statement_ids')
+            statement_ids = order.pop('statement_ids')
             order_id = self.create(cr, uid, order, context)
-            list.append(order_id)
+            order_ids.append(order_id)
             # call add_payment; refer to wizard/pos_payment for data structure
             # add_payment launches the 'paid' signal to advance the workflow to the 'paid' state
             data = {
                 'journal': statement_ids[0][2]['journal_id'],
-                'amount': order['data']['amount_paid'],
-                'payment_name': order['data']['name'],
+                'amount': order['amount_paid'],
+                'payment_name': order['name'],
                 'payment_date': statement_ids[0][2]['name'],
             }
             order_obj.add_payment(cr, uid, order_id, data, context=context)
-        return list
+        return order_ids
 
     def unlink(self, cr, uid, ids, context=None):
         for rec in self.browse(cr, uid, ids, context=context):
