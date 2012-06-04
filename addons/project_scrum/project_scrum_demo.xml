@@ -265,7 +265,6 @@
             <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
             <field name="project_id" ref="project.project_project_9"/>
             <field name="name">Review all English Terms</field>
-            <field name="state">done</field>
             <field eval="time.strftime('%Y-%m-%d')" name="date_end"/>
             <field name="product_backlog_id" ref="scrum_product_backlog_3"/>
         </record>
@@ -274,7 +273,6 @@
             <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
             <field name="project_id" ref="project.project_project_9"/>
             <field name="name">Review all french terms</field>
-          	<field name="state">done</field>
             <field eval="time.strftime('%Y-%m-%d')" name="date_end"/>
             <field name="product_backlog_id" ref="scrum_product_backlog_3"/>
         </record>
@@ -283,7 +281,6 @@
             <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
             <field name="project_id" ref="project.project_project_9"/>
             <field name="name">Analytic Accounting features</field>
-          	<field name="state">done</field>
             <field eval="time.strftime('%Y-%m-%d')" name="date_end"/>
             <field name="product_backlog_id" ref="scrum_product_backlog_1"/>
         </record>
@@ -292,7 +289,6 @@
             <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
             <field name="project_id" ref="project.project_project_9"/>
             <field name="name">Test and improve automatic migration system</field>
-            <field name="state">open</field>
             <field name="product_backlog_id" ref="scrum_product_backlog_0"/>
         </record>
         <record id="scrum_task_7" model="project.task">
@@ -300,7 +296,6 @@
             <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
             <field name="project_id" ref="project.project_project_9"/>
             <field name="name">General accounting features</field>
-            <field name="state">open</field>
             <field name="product_backlog_id" ref="scrum_product_backlog_1"/>
         </record>
         <record id="scrum_task_8" model="project.task">
@@ -316,7 +311,6 @@
             <field name="project_id" ref="project.project_project_9"/>
             <field name="description">Cash book, general ledger, accounts list, aged trial balance</field>
              <field name="name">Accounting Report General</field>
-             <field name="state">open</field>
 			<field eval="[(6,0,[ref('scrum_task_8')])]" name="child_ids"/>
             <field name="product_backlog_id" ref="scrum_product_backlog_1"/>
         </record>
@@ -332,7 +326,6 @@
             <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
             <field name="project_id" ref="project.project_project_9"/>
             <field name="name">Accounting Report Analytic</field>
- 			<field name="state">open</field>
             <field name="product_backlog_id" ref="scrum_product_backlog_1"/>
         </record>
         <record id="scrum_task_12" model="project.task">
@@ -340,7 +333,6 @@
             <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
             <field name="project_id" ref="project.project_project_9"/>
             <field name="name">Bugfix - memory leak</field>
-          	<field name="state">done</field>
             <field eval="time.strftime('%Y-%m-%d')" name="date_end"/>
             <field name="product_backlog_id" ref="scrum_product_backlog_4"/>
         </record>
@@ -349,7 +341,6 @@
             <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
             <field name="project_id" ref="project.project_project_9"/>
             <field name="name">Bugfix - Translations</field>
-			<field name="state">open</field>
 			 <field eval="[(6,0,[ref('scrum_task_12')])]" name="child_ids"/>
             <field name="product_backlog_id" ref="scrum_product_backlog_4"/>
         </record>
@@ -358,7 +349,6 @@
             <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
             <field name="project_id" ref="project.project_project_9"/>
             <field name="name">Finish the automated plugin system</field>
-            <field name="state">pending</field>
             <field name="product_backlog_id" ref="scrum_product_backlog_2"/>
         </record>
         <record id="scrum_task_15" model="project.task">
@@ -373,7 +363,6 @@
             <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
             <field name="project_id" ref="project.project_project_9"/>
             <field name="name">Test 3.2.0 before releasing</field>
- 			<field name="state">open</field>
             <field name="product_backlog_id" ref="scrum_product_backlog_5"/>
         </record>
         <record id="scrum_task_17" model="project.task">
@@ -382,7 +371,6 @@
             <field name="project_id" ref="project.project_project_9"/>
             <field name="description">default values, onchange, required, add on top or bottom and shortcuts (Ctrl S, Ctrl X, ...)</field>
             <field name="name">Editable trees</field>
-			<field name="state">open</field>
             <field name="product_backlog_id" ref="scrum_product_backlog_7"/>
         </record>
 
