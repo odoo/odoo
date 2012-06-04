@@ -33,7 +33,6 @@ installed.
     'depends': ['event','portal'],
     'data': [
         'security/portal_security.xml',
-        "board_portal_event_view.xml",
         'portal_event_view.xml',
         'security/ir.model.access.csv',
     ],
