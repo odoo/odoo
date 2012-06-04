@@ -19,10 +19,10 @@
 #
 ##############################################################################
 
+from base_status.base_state import base_state
 from crm import crm
-from osv import fields, osv
-import time
 from crm import wizard
+from osv import fields, osv
 import tools
 from tools.translate import _
 
@@ -34,7 +34,7 @@ CRM_HELPDESK_STATES = (
 
 wizard.mail_compose_message.SUPPORTED_MODELS.append('crm.helpdesk')
 
-class crm_helpdesk(crm.crm_case, osv.osv):
+class crm_helpdesk(base_state, osv.osv):
     """ Helpdesk Cases """
 
     _name = "crm.helpdesk"
@@ -77,20 +77,23 @@ class crm_helpdesk(crm.crm_case, osv.osv):
                                   \nIf the case is in progress the state is set to \'Open\'.\
                                   \nWhen the case is over, the state is set to \'Done\'.\
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
-            'message_ids': fields.one2many('mail.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
     }
 
     _defaults = {
         'active': lambda *a: 1,
-        'user_id': crm.crm_case._get_default_user,
-        'partner_id': crm.crm_case._get_default_partner,
-        'email_from': crm.crm_case. _get_default_email,
+        'user_id': lambda s, cr, uid, c: s._get_default_user(cr, uid, c),
+        'partner_id': lambda s, cr, uid, c: s._get_default_partner(cr, uid, c),
+        'email_from': lambda s, cr, uid, c: s._get_default_email(cr, uid, c),
         'state': lambda *a: 'draft',
-        'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
-        'section_id': crm.crm_case. _get_section,
+        'date': lambda *a: fields.datetime.now(),
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
     }
+
+    def create(self, cr, uid, vals, context=None):
+        obj_id = super(crm_helpdesk, self).create(cr, uid, vals, context)
+        self.create_send_note(cr, uid, [obj_id], context=context)
+        return obj_id
 
     def message_new(self, cr, uid, msg_dict, custom_values=None, context=None):
         """Automatically called when new email message arrives"""
@@ -142,5 +145,18 @@ class crm_helpdesk(crm.crm_case, osv.osv):
             res = self.write(cr, uid, [case.id], values, context=context)
         return res
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+    # ******************************
+    # OpenChatter
+    # ******************************
 
+    def case_get_note_msg_prefix(self, cr, uid, id, context=None):
+        """ override of default base_state method. """
+        return 'Case'
+
+    def create_send_note(self, cr, uid, ids, context=None):
+        msg = _('Case has been <b>created</b>.')
+        self.message_append_note(cr, uid, ids, body=msg, context=context)
+        return True
+
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
