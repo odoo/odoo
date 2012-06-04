@@ -72,6 +72,8 @@ class mail_thread(osv.osv):
     _columns = {
         'message_ids': fields.function(_get_message_ids, method=True,
                         type='one2many', obj='mail.message', string='Temp messages', _fields_id = 'res_id'),
+        'thread_read': fields.boolean('Read',
+                        help="When checked, new messages require your attention."),
     }
 
     #------------------------------------------------------
