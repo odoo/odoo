@@ -61,10 +61,25 @@ def uninstall_module(module_name):
     reload_registry()
 
 class test_uninstall(unittest2.TestCase):
-    """ Test install/uninstall of a test module. """
+    """
+    Test the install/uninstall of a test module. The module is available in
+    `openerp.tests` which should be present in the addons-path.
+    """
 
-    def test_00_nothing(self):
-        """ Test the assumption the test module is not installed yet. """
+    def test_01_install(self):
+        """ Check a few things showing the module is installed. """
+        install_module('test_uninstall')
+        assert get_module('test_uninstall.model')
+
+        assert search_registry('ir.model.data',
+            [('module', '=', 'test_uninstall')])
+
+        assert search_registry('ir.model.fields',
+            [('model', '=', 'test_uninstall.model')])
+
+    def test_02_install(self):
+        """ Check a few things showing the module is uninstalled. """
+        uninstall_module('test_uninstall')
         assert not get_module('test_uninstall.model')
 
         assert not search_registry('ir.model.data',
@@ -72,6 +87,7 @@ class test_uninstall(unittest2.TestCase):
 
         assert not search_registry('ir.model.fields',
             [('model', '=', 'test_uninstall.model')])
+
 
 
 if __name__ == '__main__':
