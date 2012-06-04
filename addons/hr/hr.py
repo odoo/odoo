@@ -105,7 +105,7 @@ class hr_job(osv.osv):
             },
             multi='no_of_employee'),
         'no_of_recruitment': fields.float('Expected in Recruitment'),
-        'employee_ids': fields.one2many('hr.employee', 'job_id', 'Employees'),
+        'employee_ids': fields.one2many('hr.employee', 'job_id', 'Employees', groups='base.group_user'),
         'description': fields.text('Job Description'),
         'requirements': fields.text('Requirements'),
         'department_id': fields.many2one('hr.department', 'Department'),
