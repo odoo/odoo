@@ -727,12 +727,15 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         },
         addPaymentLine: function(cashRegister) {
             var newPaymentline;
+            console.log('addPaymentLine:',cashRegister);
             newPaymentline = new module.Paymentline(cashRegister);
             /* TODO: Should be 0 for cash-like accounts */
+            //FIXME the following 'set' call calls this method once again via callback
+            // events. Are we sure that it's what we want ???
             newPaymentline.set({
                 amount: this.getDueLeft()
             });
-            return (this.get('paymentLines')).add(newPaymentline);
+            this.get('paymentLines').add(newPaymentline);
         },
         getName: function() {
             return this.get('name');

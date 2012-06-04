@@ -406,13 +406,19 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.pos_widget.action_bar.set_help_visible(true,function(){self.pos_widget.screen_selector.show_popup('help');});
             this.pos_widget.action_bar.set_logout_visible(false);
 
-            this.pos.proxy.payment_request(this.pos.get('selectedOrder').getTotal(),'card','info');    //TODO TOTAL
+            this.pos.proxy.payment_request(this.pos.get('selectedOrder').getDueLeft(),'card','info');    //TODO TOTAL
 
             this.intervalID = setInterval(function(){
                 var payment = self.pos.proxy.is_payment_accepted();
                 if(payment === 'payment_accepted'){
                     clearInterval(this.intervalID);
+
                     var currentOrder = self.pos.get('selectedOrder');
+
+                    //TODO get the correct cashregister
+                    var cashregister = this.pos.get('cashRegisters').models[0];
+                    currentOrder.addPaymentLine(cashregister);
+
                     self.pos.push_order(currentOrder.exportAsJSON()).then(function() {
                         currentOrder.destroy();
                         self.pos.proxy.transaction_end();
@@ -775,6 +781,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.renderElement();
         },
         addPaymentLine: function(newPaymentLine) {
+            console.log('addPaymentLine:',newPaymentLine);
             var x = new module.PaymentlineWidget(null, {
                     payment_line: newPaymentLine
                 });
