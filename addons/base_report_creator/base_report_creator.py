@@ -174,6 +174,17 @@ class report_result(osv.osv):
         report = self.pool.get('base_report_creator.report').browse(cr, user, context.get('report_id'), context=context)
         cr.execute(report.sql_query)
         result = cr.dictfetchall()
+
+        # Filter out results outside of ids - it's a quick hack to respect `ids` without
+        # having to alter the SQL query of the report
+        id_set = set(ids)
+        result = [r for r in result if r['id'] in id_set]
+
+        # Replace `None` values with `False` in result, as it cannot be serialized in XML-RPC
+        for r in result:
+            for key, value in r.iteritems():
+                if value is None:
+                    r[key] = False
         return result
 
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
