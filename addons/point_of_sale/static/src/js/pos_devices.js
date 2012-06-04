@@ -4,8 +4,15 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
     var QWeb = instance.web.qweb;   //TODO FIXME this should NOT be of any use in this file
 
     window.debug_devices = new (instance.web.Class.extend({
+        active: false,
         payment_status: 'waiting_for_payment',
         weight: 0,
+        activate: function(){
+            this.active = true;
+        },
+        deactivate: function(){
+            this.active = false;
+        },
         accept_payment: function(){ this.payment_status = 'payment_accepted'; },
         reject_payment: function(){ this.payment_status = 'payment_rejected'; },
         delay_payment:  function(){ this.payment_status = 'waiting_for_payment'; },
@@ -34,7 +41,11 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             var success_callback = function(result){};  //console.log('PROXY SUCCESS:'+name+': ',result); }
             var error_callback = function(result){};    // console.log('PROXY ERROR:'+name+': ',result); }
             //console.log('PROXY: '+name);
-            this.connection.rpc('/pos/'+name, params || {}, callback || success_callback, error_callback);
+            if(debug_devices.active){
+                console.log('PROXY:',name,params);
+            }else{
+                this.connection.rpc('/pos/'+name, params || {}, callback || success_callback, error_callback);
+            }
         },
         
         //a product has been scanned and recognized with success
@@ -60,6 +71,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         //the client is starting to weight
         weighting_start: function(){
             this.weight = 0;
+            debug_devices.weigth = 0;
             this.weighting = true;
             this.message('weighting_start');
         },
@@ -69,13 +81,17 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         // and a weighting_end()
         weighting_read_kg: function(){
             var self = this;
-            this.message('weighting_read_kg',{},function(weight){
-                if(self.weighting){
-                    console.log('PROXY SUCCESSFULLY READ WEIGHT:',weight);
-                    self.weight = weight;
-                }
-            });
-            return self.weight;
+            if(debug_devices.active){
+                return debug_devices.weight;
+            }else{
+                this.message('weighting_read_kg',{},function(weight){
+                    if(self.weighting){
+                        console.log('PROXY SUCCESSFULLY READ WEIGHT:',weight);
+                        self.weight = weight;
+                    }
+                });
+                return self.weight;
+            }
         },
 
         // the client has finished weighting products
@@ -91,6 +107,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         payment_request: function(price, method, info){
             this.paying = true;
             this.payment_status = 'waiting_for_payment';
+            debug_devices.payment_status = 'waiting_for_payment';
             this.message('payment_request',{'price':price,'method':method,'info':info});
         },
 
@@ -99,12 +116,16 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         // returns 'waiting_for_payment' | 'payment_accepted' | 'payment_rejected'
         is_payment_accepted: function(){
             var self = this;
-            this.message('is_payment_accepted', {}, function(payment_status){
-                if(self.paying){
-                    self.payment_status = payment_status;
-                }
-            });
-            return self.payment_status;
+            if(debug_devices.active){
+                return debug_devices.payment_status;
+            }else{
+                this.message('is_payment_accepted', {}, function(payment_status){
+                    if(self.paying){
+                        self.payment_status = payment_status;
+                    }
+                });
+                return self.payment_status;
+            }
         },
 
         // the client cancels his payment

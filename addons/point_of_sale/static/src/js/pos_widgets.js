@@ -400,6 +400,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         init: function(parent, options){
             var self = this;
             this._super(parent,options);
+            this.product_type = options.product_type || 'all';  // 'all' | 'weightable'
             this.onlyWeightable = options.onlyWeightable || false;
             this.category = this.pos.root_category;
             this.breadcrumb = [];
@@ -425,7 +426,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             if(this.category !== this.pos.root_category){
                 this.breadcrumb.push(this.category);
             }
-            if(this.onlyWeightable){
+            if(this.product_type === 'weightable'){
                 this.subcategories = [];
                 for(var i = 0; i < this.category.childrens.length; i++){
                     if(this.category.childrens[i].weightable_product_list.length > 0){
@@ -448,6 +449,11 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 self.search_and_categories(category);
             });
         },
+        
+        set_product_type: function(type){       // 'all' | 'weightable'
+            this.product_type = type;
+            this.reset_category();
+        },
 
         // resets the current category to the root category
         reset_category: function(){
@@ -465,7 +471,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
 
             // find all products belonging to the current category
             var products = [];
-            if(this.onlyWeightable){
+            if(this.product_type === 'weightable'){
                 products = all_products.filter( function(product){
                     return self.category.weightable_product_set[product.id];
                 });
@@ -770,6 +776,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this._super(arguments[0],{});
             
             this.pos = new module.PosModel(this.session);
+            window.pos = this.pos;
             this.pos_widget = this; //So that pos_widget's childs have pos_widget set automatically
 
             this.numpad_visible = true;

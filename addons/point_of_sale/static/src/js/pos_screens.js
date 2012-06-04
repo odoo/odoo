@@ -303,6 +303,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         start: function(){
             this.product_categories_widget = new module.ProductCategoriesWidget(this,{
                 pos:this.pos,
+                product_type: 'weightable',
             });
             this.product_categories_widget.replace($('.placeholder-ProductCategoriesWidget'));
 
@@ -464,11 +465,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
             this.pos_widget.action_bar.add_new_button(
                 {
-                    label:'scan',
-                    click: function(){
-                        self.pos_widget.screen_selector.set_current_screen('scan');
-                    }
-                },{
                     label: 'weight',
                     icon: '/point_of_sale/static/src/img/icons/png48/scale.png',
                     click: function(){  

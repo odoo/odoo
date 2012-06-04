@@ -29,14 +29,22 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             });
         },
         _get: function(key, default_) {
-            var txt = localStorage[key];
+            var txt = localStorage['oe_pos_dao_'+key];
             if (! txt)
                 return default_;
             return JSON.parse(txt);
         },
         _set: function(key, value) {
-            localStorage[key] = JSON.stringify(value);
+            localStorage['oe_pos_dao_'+key] = JSON.stringify(value);
         },
+        reset_stored_data: function(){
+            for(key in localStorage){
+                if(key.indexOf('oe_pos_dao_') === 0){
+                    delete localStorage[key];
+                }
+            }
+        },
+
     });
 
     var fetch = function(osvModel, fields, domain){
@@ -65,6 +73,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.session = session;                 
             this.categories = {};
             this.root_category = null;
+            this.weightable_categories = [];                    // a flat list of all categories that directly contain weightable products
             this.barcode_reader = new module.BarcodeReader({'pos': this});  // used to read barcodes
             this.proxy = new module.ProxyDevice();             // used to communicate to the hardware devices via a local proxy
 
@@ -85,10 +94,11 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 'user':             null,
 
                 'orders':           new module.OrderCollection(),
-                'products':         new module.ProductCollection(),
+                //this is the product list as seen by the product list widgets, it will change based on the category filters
+                'products':         new module.ProductCollection(), 
                 'cashRegisters':    null, 
 
-                'product_list':     null,
+                'product_list':     null,   // the list of all products. 
                 'bank_statements':  null,
                 'taxes':            null,
                 'pos_session':      null,
@@ -109,7 +119,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             
             var prod_def = fetch( 
                 'product.product', 
-                undefined, //['name', 'list_price', 'pos_categ_id', 'taxes_id','product_image_small', 'ean13'],
+                ['name', 'list_price', 'pos_categ_id', 'taxes_id','product_image_small', 'ean13', 'to_weight'],
                 [['pos_categ_id','!=', false]] 
                 ).then(function(result){
                     self.set({'product_list': result});
@@ -314,12 +324,12 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 if(operations.length === 0){
                     return $.when();
                 }
-                var op = operations[0];
+                var order = operations[0];
 
                  // we prevent the default error handler and assume errors
                  // are a normal use case, except we stop the current iteration
 
-                 return (new instance.web.Model('pos.order')).get_func('create_from_ui')([op])
+                 return (new instance.web.Model('pos.order')).get_func('create_from_ui')([order])
                             .fail(function(unused, event){
                                 // wtf ask niv
                                 event.preventDefault();
@@ -395,6 +405,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 cat.product_set = {};   // [product.id] === true if product is in category
                 cat.weightable_product_list = [];
                 cat.weightable_product_set = {};
+                cat.weightable = false; //true if directly contains weightable products
             }
 
             this.root_category = root_category;
@@ -408,10 +419,20 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 if(cat){
                     cat.product_list.push(product);
                     cat.product_set[product.id] = true;
-                    if(product.weightable){
+                    if(product.to_weight){
                         cat.weightable_product_list.push(product);
                         cat.weightable_product_set[product.id] = true;
+                        cat.weightable = true;
                     }
+                }
+            }
+
+            // we build a flat list of all categories that directly contains weightable products
+            this.weightable_categories = [];
+            for(var i = 0, len = categories.length; i < len; i++){
+                var cat = categories[i];
+                if(cat.weightable){
+                    this.weightable_categories.push(cat);
                 }
             }
             
@@ -739,7 +760,8 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 amount_tax: this.getTax(),
                 amount_return: this.getChange(),
                 lines: orderLines,
-                statement_ids: paymentLines
+                statement_ids: paymentLines,
+                pos_session_id: this.pos.get('pos_session').id,
             };
         },
     });
