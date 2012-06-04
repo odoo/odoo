@@ -543,7 +543,8 @@ class res_config_settings(osv.osv_memory):
             ir_module.button_immediate_install(cr, uid, to_install_ids, context)
         if to_uninstall_ids:
             # Module unInstallation.
-            ir_module.module_uninstall(cr, uid, to_uninstall_ids, context)
+            dep_ids = ir_module.downstream_dependencies(cr, uid, to_uninstall_ids, context=context)
+            ir_module.module_uninstall(cr, uid, to_uninstall_ids + dep_ids , context)
             cr.commit()
             _logger.info('Reloading registry once more after uninstalling modules')
             pooler.restart_pool(cr.dbname, update_module=True)
