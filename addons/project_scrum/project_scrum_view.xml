@@ -53,7 +53,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form layout="manual">
-                <div class="oe_form_topbar">
+                <header>
                     <button type="object" string="Open" name="button_open" states="draft,pending"/>
                     <button type="object" string="Close" name="button_close" states="open,pending"/>
                     <button type="object" string="Pending" name="button_pending" states="open"/>
@@ -61,7 +61,7 @@
                     <button type="object" string="Set to Draft" name="button_draft" states="cancel,done"/>
                     <button type="object" string="Cancel" name="button_cancel" states="draft,open,pending"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,open"/>
-                </div>
+                </header>
                 <sheet string="Product backlog" layout="auto">
                     <group colspan="4" col="8" class="oe_form_header">
                         <field name="name" select="1"/>
@@ -225,7 +225,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form layout="manual">
-                <div class="oe_form_topbar">
+                <header>
                     <button type="object" string="Open" name="button_open" states="draft,pending"/>
                     <button type="object" string="Close" name="button_close" states="open,pending"/>
                     <button type="object" string="Pending" name="button_pending" states="open"/>
@@ -233,7 +233,7 @@
                                    string="Burndown Chart" type="action"/>
                     <button type="object" string="Set to Draft" name="button_draft" states="cancel,done"/>
                     <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,open"/>
-                </div>
+                </header>
                 <sheet string="Scrum Sprint" layout="auto">
                     <group colspan="4" col="6" class="oe_form_header">
                         <field name="name" select="1"/>

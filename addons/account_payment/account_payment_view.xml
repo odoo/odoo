@@ -101,13 +101,13 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form layout="manual">
-                <div class="oe_form_topbar">
+                <header>
                     <button name="open" states="draft" string="Confirm Payments" />
                     <button name="set_done" states="open" string="Make Payments" type="object"/>
                     <button name="set_to_draft" states="cancel" string="Set to draft" type="object"/>
                     <button name="cancel" states="draft,open" string="Cancel"/>
                     <field name="state" select="1" widget="statusbar" nolabel="1" statusbar_visible="draft,open"/>
-                </div>
+                </header>
                 <sheet string="Payment order" layout="auto">
                     <group col="6" colspan="4" class="oe_form_header">
                       <field name="reference"/>

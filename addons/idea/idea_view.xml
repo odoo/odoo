@@ -183,12 +183,12 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form layout="manual">
-            <div class="oe_form_topbar">
+            <header>
                 <button name="idea_open" string="Open" states="draft"/>
                 <button name="idea_close" string="Accept" states="open"/>
                 <button name="idea_cancel" string="Refuse" states="open" />
                 <field name="state" widget="statusbar" statusbar_visible="draft,open,close"/>
-            </div>
+            </header>
             <sheet string="New Idea" layout="auto">
             <group col="6" colspan="4" class="oe_form_header">
                 <field name="name" select="1" />

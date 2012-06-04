@@ -12,11 +12,11 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form layout="manual">
-                <div class="oe_form_topbar">
+                <header>
                     <button name="create_period" states="draft" string="Create Monthly Periods" type="object"/>
                     <button name="create_period3" states="draft" string="Create 3 Months Periods" type="object"/>
                     <field name="state" select="1" widget="statusbar" nolabel="1" />
-                </div>
+                </header>
                 <sheet string="Fiscalyear" layout="auto">
                     <group class="oe_form_header">
                     <field name="name"/>
@@ -94,10 +94,10 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form layout="manual">
-                <div class="oe_form_topbar">
+                <header>
                     <button name="action_draft" states="done" string="Set to Draft" type="object" groups="account.group_account_manager"/>
                     <field name="state" widget="statusbar" nolabel="1"/>
-                </div>
+                </header>
                 <sheet string="Period" layout="auto">
                 <group class="oe_form_header">
                     <field name="name"/>
@@ -595,12 +595,12 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form layout="manual">
-                <div class="oe_form_topbar">
+                <header>
                     <button name="button_confirm_bank" states="draft" string="Confirm" type="object" />
                     <button name="button_dummy" states="draft" string="Compute" type="object"/>
                     <button name="button_cancel" states="confirm" string="Cancel" type="object"/>
                     <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,confirm"/>
-                </div>
+                </header>
                 <sheet string="Bank Statement" layout="auto">
                     <group col="7" colspan="4" class="oe_form_header">
                         <field name="name" select="1"/>
@@ -657,12 +657,12 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form layout="manual">
-                <div class="oe_form_topbar">
+                <header>
                     <button name="button_confirm_bank" states="draft" string="Confirm" type="object" />
                     <button name="button_dummy" states="draft" string="Compute" type="object"/>
                     <button name="button_cancel" states="confirm" string="Cancel" type="object"/>
                     <field name="state"  widget="statusbar" nolabel="1" statusbar_visible="draft,confirm"/>
-                </div>
+                </header>
                 <sheet string="Bank Statement" layout="auto">
                     <group col="7" colspan="4" class="oe_form_header">
                         <field name="name" select="1"/>
@@ -1349,11 +1349,11 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form layout="manual">
-                <div class="oe_form_topbar">
+                <header>
                     <button name="button_validate" states="draft" string="Post" type="object"/>
                     <button name="button_cancel" states="posted" string="Cancel" type="object"/>
                     <field name="state" select="1" widget="statusbar" nolabel="1" />
-                </div>
+                </header>
                 <sheet string="Journal Entries" layout="auto">
                     <group colspan="4" col="6" class="oe_form_header">
                         <field name="name" readonly="True"/>
@@ -2617,12 +2617,12 @@ action = pool.get('res.config').next(cr, uid, [], context)
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form layout="manual">
-                <div class="oe_form_topbar">
+                <header>
                     <button name="button_confirm_cash" states="open" string="Close CashBox" type="object"/>
                     <button name="button_open" states="draft" string="Open CashBox" type="object"/>
                     <button name="button_cancel" states="confirm,open" string="Cancel" type="object" groups="base.group_extended"/>
                     <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,confirm"/>
-                </div>
+                </header>
                 <sheet string="Statement" layout="auto">
                     <group col="6" colspan="4" class="oe_form_header">
                         <field name="name" select="1"/>

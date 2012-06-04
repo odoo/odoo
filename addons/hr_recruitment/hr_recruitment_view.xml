@@ -71,7 +71,7 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form layout="manual">
-            <div class="oe_form_topbar">
+            <header>
                 <button name="%(action_hr_recruitment_hired_employee)d" string="Hire" type="action"
                         states="open,pending"/>
                 <button name="case_open" string="Open" type="object"
@@ -87,7 +87,7 @@
                 <button name="stage_next" string="Next" type="object"
                         states="open" icon="gtk-go-forward"/>
                 <field name="stage_id" widget="statusbar"/>
-            </div>
+            </header>
             <sheet string="Jobs - Recruitment Form" layout="auto">
                 <group colspan="4" col="4">
                     <field name="name" string="Subject"/>

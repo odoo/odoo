@@ -68,7 +68,7 @@
         <field name="inherit_id" eval="False"/>
         <field name="arch" type="xml">
             <form layout="manual">
-            <div class="oe_form_topbar">
+            <header>
                 <button name="button_start_working" string="Start" states="draft"/>
                 <button name="button_resume" string="Resume" states="pause"/>
                 <button name="button_done" string="Finished" states="startworking"/>
@@ -76,7 +76,7 @@
                 <button name="button_draft" string="Set Draft" states="cancel"/>
                 <button name="button_cancel" string="Cancel" states="draft,startworking"/>
                 <field name="state" widget="statusbar" statusbar_visible="draft,startworking"/>
-            </div>
+            </header>
             <sheet string="Work Orders" layout="auto">
                 <group col="6" colspan="4" class="oe_form_header">
                     <field colspan="4" name="name" select="1"/>

@@ -9,7 +9,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form layout="manual">
-                    <div class="oe_form_topbar">
+                    <header>
                         <button name="do_tentative"
                             states="needs-action,declined,accepted"
                             string="Uncertain" type="object"
@@ -27,7 +27,7 @@
                             states="needs-action,tentative,accepted"
                             type="object" />
                         <field name="state" widget="statusbar" nolabel="1" statusbar_visible="tentative,needs-action,accepted" statusbar_colors='{"proforma":"blue"}'/>
-                    </div>
+                    </header>
                     <sheet string="Invitation details" layout="auto">
                         <group col="6" colspan="4">
                             <field name="email" string="Invitation To"/>
@@ -211,7 +211,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form layout="manual">
-                <div class="oe_form_topbar">
+                <header>
                     <button name="do_confirm"
                         string="Confirm"
                         states="tentative,cancelled"
@@ -228,7 +228,7 @@
                         type="object"
                         />
                     <field name="state" widget="statusbar" nolabel="1" statusbar_visible="tentative,confirmed" statusbar_colors='{"proforma":"blue"}'/>
-                </div>
+                </header>
                 <sheet string="Events" layout="auto">
                     <group col="6" colspan="4">
                         <field name="name" select="1" string="Summary"

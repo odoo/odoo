@@ -89,7 +89,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form layout="manual">
-                <div class="oe_form_topbar">
+                <header>
                     <button name="case_open" string="Open" type="object"
                             states="draft,pending"/>
                     <button name="case_close" string="Done" type="object"
@@ -106,7 +106,7 @@
                             states="draft,open,pending"/>
                     <field name="stage_id" widget="statusbar"
                             on_change="onchange_stage_id(stage_id)"/>
-                </div>
+                </header>
                 <sheet string="Claims" layout="auto">
                     <group>
                         <field name="name" />

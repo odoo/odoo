@@ -24,11 +24,11 @@
             <field name="model">lunch.order</field>
             <field name="arch" type="xml">
                 <form layout="manual">
-                <div class="oe_form_topbar">
+                <header>
                     <button name="%(action_lunch_order_confirm)d" string="Confirm Order" type="action" attrs="{'invisible':[('state','=','confirmed')]}"/>
                     <button name="%(action_lunch_order_cancel)d" string="Cancel Order" type="action"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed"/>
-                </div>
+                </header>
                 <sheet string="Order" layout="auto">
                     <field name="user_id" select="1"/>
                     <field name="date" select="1"/>
