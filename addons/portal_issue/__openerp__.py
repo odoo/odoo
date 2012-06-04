@@ -31,7 +31,7 @@ portal are installed.
     """,
     'author': 'OpenERP SA',
     'depends': ['project_issue','portal'],
-    'update_xml': [
+    'data': [
         'security/portal_security.xml',
         'security/ir.model.access.csv',
         'portal_issue_view.xml',

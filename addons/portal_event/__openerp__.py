@@ -31,7 +31,7 @@ installed.
     """,
     'author': 'OpenERP SA',
     'depends': ['event','portal'],
-    'update_xml': [
+    'data': [
         'security/portal_security.xml',
         "board_portal_event_view.xml",
         'portal_event_view.xml',
@@ -40,6 +40,5 @@ installed.
     'installable': True,
     'auto_install':True,
     'category':'Hidden',
-
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

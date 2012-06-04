@@ -31,7 +31,7 @@ installed.
     """,
     'author': 'OpenERP SA',
     'depends': ['sale','portal'],
-    'update_xml': [
+    'data': [
         'security/portal_security.xml',
         'portal_sale_view.xml',
         "security/ir.model.access.csv",

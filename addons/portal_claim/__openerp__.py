@@ -31,7 +31,7 @@ installed.
     """,
     'author': 'OpenERP SA',
     'depends': ['crm_claim','portal'],
-    'update_xml': [
+    'data': [
         'security/portal_security.xml',
         'portal_claim_view.xml',
         "security/ir.model.access.csv",
