@@ -463,15 +463,17 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.pos_widget.action_bar.set_help_visible(true,function(){self.pos_widget.screen_selector.show_popup('help');});
             this.pos_widget.action_bar.set_logout_visible(false);
 
-            this.pos_widget.action_bar.add_new_button(
-                {
-                    label: 'weight',
-                    icon: '/point_of_sale/static/src/img/icons/png48/scale.png',
-                    click: function(){  
-                        self.pos_widget.screen_selector.set_current_screen('scale_invite');
-                    }
-                }
-            );
+            if(this.pos.use_scale){
+                console.log('welcome weight');
+                this.pos_widget.action_bar.add_new_button({
+                        label: 'weight',
+                        icon: '/point_of_sale/static/src/img/icons/png48/scale.png',
+                        click: function(){  
+                            self.pos_widget.screen_selector.set_current_screen('scale_invite');
+                        }
+                    });
+            }
+
             this.pos.barcode_reader.set_action_callbacks({
                 'product': function(ean){
                     self.pos.proxy.transaction_start(); 
@@ -520,21 +522,24 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.pos_widget.action_bar.set_help_visible(true,function(){self.pos_widget.screen_selector.show_popup('help');});
             this.pos_widget.action_bar.set_logout_visible(false);
 
-            this.pos_widget.action_bar.add_new_button(
-                {
-                    label: 'weight',
-                    icon: '/point_of_sale/static/src/img/icons/png48/scale.png',
-                    click: function(){  //TODO Go to ask for weighting screen
-                        self.pos_widget.screen_selector.set_current_screen('scale_invite');
-                    }
-                },{
+            if(self.pos.use_scale){
+                this.pos_widget.action_bar.add_new_button({
+                        label: 'weight',
+                        icon: '/point_of_sale/static/src/img/icons/png48/scale.png',
+                        click: function(){  //TODO Go to ask for weighting screen
+                            self.pos_widget.screen_selector.set_current_screen('scale_invite');
+                        }
+                    });
+            }
+
+            this.pos_widget.action_bar.add_new_button({
                     label: 'pay',
                     icon: '/point_of_sale/static/src/img/icons/png48/go-next.png',
                     click: function(){
                         self.pos_widget.screen_selector.set_current_screen('client_payment'); //TODO what stuff ?
                     }
-                }
-            );
+                });
+
             this.pos.barcode_reader.set_action_callbacks({
                 'product': function(ean){
                     if(self.pos_widget.scan_product(ean)){
@@ -576,22 +581,26 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.pos_widget.set_cashier_controls_visible(true);
             this.pos_widget.action_bar.set_total_visible(true);
             this.pos_widget.action_bar.set_help_visible(false);
-            this.pos_widget.action_bar.set_logout_visible(true, function(){ 
-                self.pos_widget.screen_selector.set_user_mode('client');
-            });
+
+                this.pos_widget.action_bar.set_logout_visible(true, function(){ 
+                    self.pos_widget.screen_selector.set_user_mode('client');
+                });
+
             this.product_categories_widget.reset_category();
             //this.pos_widget.onscreen_keyboard.connect();
 
             this.pos_widget.order_widget.set_numpad_state(this.pos_widget.numpad.state);
-            this.pos_widget.action_bar.add_new_button(
-                {
-                    label: 'weight',
-                    icon: '/point_of_sale/static/src/img/icons/png48/scale.png',
-                    click: function(){  
-                        self.pos_widget.screen_selector.set_current_screen('scale_product');
-                    }
-                }
-            );
+
+            if(this.pos.use_scale){
+                this.pos_widget.action_bar.add_new_button({
+                        label: 'weight',
+                        icon: '/point_of_sale/static/src/img/icons/png48/scale.png',
+                        click: function(){  
+                            self.pos_widget.screen_selector.set_current_screen('scale_product');
+                        }
+                    });
+            }
+
             this.pos.barcode_reader.set_action_callbacks({
                 'product': function(ean){
                     if(self.pos_widget.scan_product(ean)){
@@ -741,7 +750,11 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.pos.push_order(currentOrder.exportAsJSON()) 
                 .then(function() {
                     self.validate_button.$element.removeAttr('disabled');
-                    self.pos_widget.screen_selector.set_current_screen('receipt');
+                    if(self.pos.use_proxy_printer){
+                        self.pos.get('selectedOrder').destroy();    //finish order and go back to scan screen
+                    }else{
+                        self.pos_widget.screen_selector.set_current_screen('receipt');
+                    }
                 });
         },
         bindPaymentLineEvents: function() {

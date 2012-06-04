@@ -1073,8 +1073,9 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                             }
                         },
                         close: function() {
-                            if (confirm)
+                            if (confirm){
                                 close();
+                            }
                         }
                     });
                 } else {
@@ -1084,6 +1085,14 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
         close: function() {
             this.pos.barcode_reader.disconnect();
+            return new session.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_pos_close_statement']], ['res_id']).pipe(
+                    _.bind(function(res) {
+                return this.rpc('/web/action/load', {'action_id': res[0]['res_id']}).pipe(_.bind(function(result) {
+                    var action = result.result;
+                    action.context = _.extend(action.context || {}, {'cancel_action': {type: 'ir.actions.client', tag: 'default_home'}});
+                    this.do_action(action);
+                }, this));
+            }, this));
         },
         destroy: function() {
             instance.webclient.set_content_full_screen(false);

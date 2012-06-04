@@ -173,12 +173,14 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                                 [['id','=', pos_session.config_id[0]]]
                             ).then(function(result){
                                 self.set({'pos_config': result[0]});
-                                this.use_scale              = result[0].iface_electronic_scale  || false;
-                                this.use_proxy_printer      = result[0].iface_print_via_proxy   || false;
-                                this.use_virtual_keyboard   = result[0].iface_vkeyboard         || false;
-                                this.use_websql             = result[0].iface_websql            || false;
-                                this.use_barcode_scanner    = result[0].iface_barscan           || false;
-                                this.use_selfcheckout       = result[0].iface_self_checkout     || false;
+                                console.log('POSXOFNFIG:',result[0]);
+                                self.use_scale              = result[0].iface_electronic_scale  || false;
+                                self.use_proxy_printer      = result[0].iface_print_via_proxy   || false;
+                                self.use_virtual_keyboard   = result[0].iface_vkeyboard         || false;
+                                self.use_websql             = result[0].iface_websql            || false;
+                                self.use_barcode_scanner    = result[0].iface_barscan           || false;
+                                self.use_selfcheckout       = result[0].iface_self_checkout     || false;
+                                console.log('URERRUFUEGHHHHH');
                             });
 
                         var bank_def = fetch(
@@ -506,6 +508,23 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 if (qty == 0)
                     this.trigger('killme');
             }, this);
+        },
+
+        // we override the attributes set to prevent some out of range values
+        set: function(attributes, options){
+            if(attributes.discount > 100){
+                attributes.discount = 100;
+            }else if(attributes.discount < 0){
+                attributes.discount = 0;
+            }
+            if(attributes.quantity < 0){
+                attributes.quantity = 0;
+            }
+            if(attributes.list_price < 0){
+                attributes.list_price = 0;
+            }
+            Backbone.Model.prototype.set.call(this,attributes,options);
+            return this;
         },
 
         // when we add an new orderline we want to merge it with the last line to see reduce the number of items
