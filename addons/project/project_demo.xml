@@ -77,7 +77,7 @@
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">Prepare Requirements Document</field>
-            <field name="type_id" ref="project_tt_specification"/>
+            <field name="stage_id" ref="project_tt_specification"/>
             <field name="color">3</field>
         </record>
 
@@ -88,7 +88,7 @@
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">Make SRS</field>
-            <field name="type_id" ref="project_tt_specification"/>
+            <field name="stage_id" ref="project_tt_specification"/>
         </record>
 
         <record id="project_task_3" model="project.task">
@@ -99,7 +99,7 @@
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">Design Use Cases</field>
             <field name="date_deadline" eval="time.strftime('%Y-%m-24')"/>
-            <field name="type_id" ref="project_tt_specification"/>
+            <field name="stage_id" ref="project_tt_specification"/>
         </record>
 
         <record id="project_task_4" model="project.task">
@@ -112,7 +112,7 @@
             <field name="description">Use the account_budget module</field>
             <field name="date_deadline" eval="time.strftime('%Y-%m-19')"/>
             <field name="color">3</field>
-            <field name="type_id" ref="project_tt_specification"/>
+            <field name="stage_id" ref="project_tt_specification"/>
         </record>
 
         <record id="project_task_5" model="project.task">
@@ -125,7 +125,7 @@
             <field name="kanban_state">done</field>
             <field name="priority">0</field>
             <field name="date_deadline" eval="time.strftime('%Y-%m-%d')"/>
-            <field name="type_id" ref="project_tt_specification"/>
+            <field name="stage_id" ref="project_tt_specification"/>
         </record>
 
         <record id="project_task_6" model="project.task">
@@ -135,7 +135,7 @@
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">Risk Management Planning</field>
-            <field name="type_id" ref="project_tt_specification"/>
+            <field name="stage_id" ref="project_tt_specification"/>
         </record>
 
         <record id="project_task_7" model="project.task">
@@ -145,7 +145,7 @@
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">Create Project Schedules</field>
-            <field name="type_id" ref="project_tt_specification"/>
+            <field name="stage_id" ref="project_tt_specification"/>
         </record>
 
         <record id="project_task_8" model="project.task">
@@ -156,7 +156,7 @@
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">Dataflow Design</field>
             <field name="priority">0</field>
-            <field name="type_id" ref="project_tt_specification"/>
+            <field name="stage_id" ref="project_tt_specification"/>
         </record>
 
         <record id="project_task_9" model="project.task">
@@ -166,7 +166,7 @@
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">User Interface Design</field>
-            <field name="type_id" ref="project_tt_specification"/>
+            <field name="stage_id" ref="project_tt_specification"/>
         </record>
 
         <record id="project_task_10" model="project.task">
@@ -177,7 +177,7 @@
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">Develop Module in Sale Management</field>
             <field name="kanban_state">blocked</field>
-             <field name="type_id" ref="project_tt_development"/>
+            <field name="stage_id" ref="project_tt_development"/>
         </record>
 
         <record id="project_task_11" model="project.task">
@@ -187,7 +187,7 @@
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">Develop module in Warehouse</field>
-            <field name="type_id" ref="project_tt_merge"/>
+            <field name="stage_id" ref="project_tt_merge"/>
         </record>
 
         <function model="project.task" name="do_close" eval="[ref('project_task_11')], {'install_mode': True}"/>
@@ -199,7 +199,7 @@
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">Integrate Modules</field>
-            <field name="type_id" ref="project_tt_development"/>
+            <field name="stage_id" ref="project_tt_development"/>
         </record>
 
         <function model="project.task" name="do_close" eval="[ref('project_task_12')], {'install_mode': True}"/>
@@ -211,7 +211,7 @@
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">Unit Testing</field>
-            <field name="type_id" ref="project_tt_development"/>
+            <field name="stage_id" ref="project_tt_development"/>
         </record>
 
         <function model="project.task" name="do_pending" eval="[ref('project_task_13')], {'install_mode': True}"/>
@@ -223,8 +223,7 @@
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">Regression Test</field>
-            <field name="type_id" ref="project_tt_development"/> 
-            <field name="state">pending</field> 
+            <field name="stage_id" ref="project_tt_development"/> 
         </record>
 
         <record id="project_task_15" model="project.task">
@@ -234,7 +233,7 @@
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">Documentation</field>
-            <field name="type_id" ref="project_tt_specification"/>
+            <field name="stage_id" ref="project_tt_specification"/>
             <field name="date_start">2011-02-06</field>
         </record>
 
@@ -247,7 +246,7 @@
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">Performance Tuning</field>
             <field name="description">Test on Runbot</field>
-             <field name="type_id" ref="project_tt_specification"/>
+             <field name="stage_id" ref="project_tt_specification"/>
         </record>
         <function model="project.task" name="do_open" eval="[ref('project_task_16')], {'install_mode': True}"/>
 
@@ -258,7 +257,7 @@
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">Deploy and Review on Customer System</field>
-            <field name="type_id" ref="project_tt_specification"/>
+            <field name="stage_id" ref="project_tt_specification"/>
         </record>
         <function model="project.task" name="do_open" eval="[ref('project_task_17')], {'install_mode': True}"/>
 
@@ -269,7 +268,7 @@
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">Training and Presentation</field>
-            <field name="type_id" ref="project_tt_specification"/>
+            <field name="stage_id" ref="project_tt_specification"/>
         </record>
 
         <!--
@@ -322,7 +321,7 @@
         <record id="project_task_116" model="project.task">
             <field name="planned_hours">38.0</field>
             <field name="remaining_hours">38.0</field>
-            <field name="type_id" ref="project_tt_development"/>
+            <field name="stage_id" ref="project_tt_development"/>
             <field name="user_id" eval="False"/>
             <field name="project_id" ref="project_project_22"/>
             <field name="description">BoM, After sales returns, interventions. Traceability.</field>
@@ -334,7 +333,7 @@
             <field name="planned_hours">16.0</field>
             <field name="remaining_hours">16.0</field>
             <field name="user_id" eval="False"/>
-            <field name="type_id" ref="project_tt_development"/>
+            <field name="stage_id" ref="project_tt_development"/>
             <field name="project_id" ref="project_project_23"/>
             <field name="name">Data importation + Doc</field>
         </record>
@@ -344,7 +343,7 @@
             <field name="planned_hours">16.0</field>
             <field name="remaining_hours">16.0</field>
             <field name="user_id" eval="False"/>
-            <field name="type_id" ref="project_tt_development"/>
+            <field name="stage_id" ref="project_tt_development"/>
             <field name="project_id" ref="project_project_23"/>
             <field name="name">Modifications asked by the customer.</field>
         </record>
@@ -353,7 +352,7 @@
         <record id="project_task_184" model="project.task">
             <field name="planned_hours">16.0</field>
             <field name="remaining_hours">16.0</field>
-            <field name="type_id" ref="project_tt_testing"/>
+            <field name="stage_id" ref="project_tt_testing"/>
             <field name="user_id" eval="False"/>
             <field name="priority">0</field>
             <field name="project_id" ref="project_project_21"/>
@@ -364,7 +363,7 @@
             <field name="sequence">15</field>
             <field name="planned_hours">8.0</field>
             <field name="remaining_hours">8.0</field>
-            <field name="type_id" ref="project_tt_testing"/>
+            <field name="stage_id" ref="project_tt_testing"/>
             <field name="user_id" eval="False"/>
             <field name="project_id" ref="project_project_21"/>
             <field name="name">Internal testing + Software Install</field>
@@ -374,7 +373,7 @@
             <field name="sequence">17</field>
             <field name="planned_hours">16.0</field>
             <field name="remaining_hours">16.0</field>
-            <field name="type_id" ref="project_tt_development"/>
+            <field name="stage_id" ref="project_tt_development"/>
             <field name="user_id" eval="False"/>
             <field name="priority">2</field>
             <field name="project_id" ref="project_project_21"/>
@@ -389,7 +388,7 @@
             <field name="user_id" eval="False"/>
             <field name="project_id" ref="project_project_23"/>
             <field name="name">Parameters</field>
-            <field name="type_id" ref="project_tt_specification"/>
+            <field name="stage_id" ref="project_tt_specification"/>
         </record>
         <function model="project.task" name="do_open" eval="[ref('project_task_189')], {'install_mode': True}"/>
         
@@ -398,10 +397,9 @@
             <field name="planned_hours">32.0</field>
             <field name="remaining_hours">32.0</field>
             <field name="user_id" eval="False"/>
-            <field name="state">open</field>
             <field name="project_id" ref="project_project_21"/>
             <field name="name">Start of the doc redaction + MRP</field>
-            <field name="type_id" ref="project_tt_testing"/>
+            <field name="stage_id" ref="project_tt_testing"/>
         </record>
 
         <!-- Schedule tasks to assign users and dates -->
