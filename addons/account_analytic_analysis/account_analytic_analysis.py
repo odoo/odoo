@@ -235,10 +235,13 @@ class account_analytic_account(osv.osv):
             return res
 
         if child_ids:
-            cr.execute("select hel.analytic_account,SUM(hel.unit_amount*hel.unit_quantity) from hr_expense_line as hel\
-                        LEFT JOIN hr_expense_expense as he ON he.id = hel.expense_id\
-                        where he.state = 'paid' and hel.analytic_account IN %s \
-                        GROUP BY hel.analytic_account",(child_ids,))
+            cr.execute("SELECT hel.analytic_account,SUM(hel.unit_amount*hel.unit_quantity)\
+                    FROM hr_expense_line AS hel\
+                    LEFT JOIN hr_expense_expense AS he \
+                        ON he.id = hel.expense_id\
+                    WHERE he.state = 'paid' \
+                         AND hel.analytic_account IN %s \
+                    GROUP BY hel.analytic_account",(child_ids,))
             for account_id, sum in cr.fetchall():
                 res[account_id] = sum
         res_final = res
@@ -254,10 +257,13 @@ class account_analytic_account(osv.osv):
             return res
 
         if child_ids:
-            cr.execute("select hel.analytic_account, SUM(hel.unit_amount*hel.unit_quantity) from hr_expense_line as hel\
-                        LEFT JOIN hr_expense_expense as he ON he.id = hel.expense_id\
-                        where he.state = 'invoiced' and hel.analytic_account IN %s \
-                        GROUP BY hel.analytic_account",(child_ids,))
+            cr.execute("SELECT hel.analytic_account, SUM(hel.unit_amount*hel.unit_quantity) \
+                    FROM hr_expense_line AS hel\
+                    LEFT JOIN hr_expense_expense AS he \
+                        ON he.id = hel.expense_id\
+                    WHERE he.state = 'invoiced' \
+                        AND hel.analytic_account IN %s \
+                    GROUP BY hel.analytic_account",(child_ids,))
             for account_id, sum in cr.fetchall():
                 res[account_id] = sum
         res_final = res
