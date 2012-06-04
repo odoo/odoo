@@ -74,10 +74,26 @@ class view(osv.osv):
     _order = "priority,name"
 
     def _check_xml(self, cr, uid, ids, context=None):
+        def root_view(record):
+            if not record.inherit_id:
+                return record
+            else:
+                parent = self.browse(cr, uid, record.inherit_id.id, context)
+                return root_view(parent)
+        def call_view(record):
+            try:
+                root = root_view(record)
+                self.pool.get(root.model).fields_view_get(cr, uid, view_id=root.id, view_type=root.type, context=context)
+                return True
+            except:
+                _logger.exception("Can't obtain view description for model: %s (view id: %s).", record.model, record.id)
+                return False
         for view in self.browse(cr, uid, ids, context):
+            return call_view(view)
+
+            # TODO The following code should be executed (i.e. no early return above).
+            # TODO The view.rng file can be read only once!
             eview = etree.fromstring(view.arch.encode('utf8'))
-            if eview.get('layout') or eview.get('validate'):
-                continue
             frng = tools.file_open(os.path.join('base','rng','view.rng'))
             try:
                 relaxng_doc = etree.parse(frng)
