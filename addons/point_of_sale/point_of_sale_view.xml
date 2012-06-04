@@ -882,8 +882,8 @@
                         <field name="user_id" />
                         <field name="name" />
                         <newline/>
-                        <field name="start_at" />
-                        <field name="stop_at" />
+                        <field name="start_at" attrs="{'insivible' : [('state', '=', 'opening_control')]}"/>
+                        <field name="stop_at" attrs="{'insivible' : [('state', '=', 'opening_control')]}"/>
                         <separator string="Cash Control" colspan="4"/>
                             <field name="cash_register_id" invisible="1" />
                             <field name="opening_details_ids" colspan="4" nolabel="1" attrs="{'invisible' : [('state', 'not in', ('opening_control',))]}">
@@ -918,8 +918,9 @@
                                     <field name="cash_register_difference" />
                                 </group>
                             </group>
-                            <separator string="Summary by Payment Methods" colspan="4"/>
-                            <field name="statement_ids" colspan="4" nolabel="1">
+
+                            <separator string="Summary by Payment Methods" colspan="4" attrs="{'invisible' : [('state', '=', 'opening_control')]}"/>
+                            <field name="statement_ids" colspan="4" nolabel="1" attrs="{'invisible' : [('state', '=', 'opening_control')]}">
                                 <tree string="Statements">
                                     <field name="name" />
                                     <field name="journal_id" />
