@@ -115,7 +115,6 @@ class crm_claim(base_stage, osv.osv):
                       When the case is over, the state is set to \'Done\'.\
                       If the case needs to be reviewed then the state is \
                       set to \'Pending\'.'),
-        'message_ids': fields.one2many('mail.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
     }
 
     _defaults = {
@@ -159,6 +158,11 @@ class crm_claim(base_stage, osv.osv):
             return stage_ids[0]
         return False
 
+    def create(self, cr, uid, vals, context=None):
+        obj_id = super(crm_claim, self).create(cr, uid, vals, context)
+        self.create_send_note(cr, uid, [obj_id], context=context)
+        return obj_id
+
     def case_refuse(self, cr, uid, ids, context=None):
         """ Mark the case as refused: state=done and case_refused=True """
         for lead in self.browse(cr, uid, ids):
@@ -166,7 +170,7 @@ class crm_claim(base_stage, osv.osv):
             if stage_id:
                 self.case_set(cr, uid, [lead.id], values_to_update={}, new_stage_id=stage_id, context=context)
         return self.case_refuse_send_note(cr, uid, ids, context=context)
-    
+
     def onchange_partner_id(self, cr, uid, ids, part, email=False):
         """This function returns value of partner address based on partner
            :param part: Partner's id
@@ -241,11 +245,13 @@ class crm_claim(base_stage, osv.osv):
         """ Override of default prefix for notifications. """
         return 'Claim'
 
+    def create_send_note(self, cr, uid, ids, context=None):
+        msg = _('Claim has been <b>created</b>.')
+        return self.message_append_note(cr, uid, ids, body=msg, context=context)
+
     def case_refuse_send_note(self, cr, uid, ids, context=None):
-        for id in ids:
-            msg = _('%s has been <b>refused</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
-            self.message_append_note(cr, uid, [id], body=msg, context=context)
-        return True
+        msg = _('Claim has been <b>refused</b>.')
+        return self.message_append_note(cr, uid, ids, body=msg, context=context)
 
     def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
         """ Override of the (void) default notification method. """
