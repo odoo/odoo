@@ -756,12 +756,12 @@
                         <button string="Set to Inactive" name="set_inactive" type="object" states="active" />
                         <button string="Set to Deprecated" name="set_deprecate" type="object" states="active,inactive" />
                         <div class="oe_right">
-                                <field name="state" widget="statusbar" statusbar_visible="active,inactive,deprecated" statusbar_colors='{"deprecated" : "red"}' nolabel="1"/>
+                            <field name="state" widget="statusbar" statusbar_visible="active,inactive,deprecated" statusbar_colors='{"deprecated" : "red"}' nolabel="1"/>
                         </div>
                     </div>
 
                     <sheet layout="auto">
-                        <field name="name" placeholder="POS/0001"/>
+                        <field name="name"/>
                         <field name="shop_id" widget="selection" />
                         <field name="journal_id" widget="selection" />
                         <field name="sequence_id" readonly="1"/>
