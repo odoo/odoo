@@ -189,7 +189,7 @@ class crm_lead(base_stage, osv.osv):
             select=True, help="Optional linked partner, usually after conversion of the lead"),
 
         'id': fields.integer('ID', readonly=True),
-        'name': fields.char('Subject', size=64, select=1),
+        'name': fields.char('Subject', size=64, required=True, select=1),
         'active': fields.boolean('Active', required=False),
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
