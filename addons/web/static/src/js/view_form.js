@@ -1957,7 +1957,7 @@ instance.web.form.FieldFloat = instance.web.form.FieldChar.extend({
 });
 
 instance.web.DateTimeWidget = instance.web.OldWidget.extend({
-    template: "web.datetimepicker",
+    template: "web.datepicker",
     jqueryui_object: 'datetimepicker',
     type_of_date: "datetime",
     init: function(parent) {
@@ -2038,12 +2038,11 @@ instance.web.DateTimeWidget = instance.web.OldWidget.extend({
 
 instance.web.DateWidget = instance.web.DateTimeWidget.extend({
     jqueryui_object: 'datepicker',
-    template: "web.datepicker",
     type_of_date: "date"
 });
 
 instance.web.form.FieldDatetime = instance.web.form.AbstractField.extend(_.extend({}, instance.web.form.ReinitializeFieldMixin, {
-    tagName: "span",
+    template: "FieldDatetime",
     build_widget: function() {
         return new instance.web.DateTimeWidget(this);
     },
@@ -2089,6 +2088,7 @@ instance.web.form.FieldDatetime = instance.web.form.AbstractField.extend(_.exten
 }));
 
 instance.web.form.FieldDate = instance.web.form.FieldDatetime.extend({
+    template: "FieldDate",
     build_widget: function() {
         return new instance.web.DateWidget(this);
     }
