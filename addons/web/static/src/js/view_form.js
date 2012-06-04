@@ -3558,6 +3558,7 @@ instance.web.form.Many2ManyQuickCreate = instance.web.Widget.extend({
         var self = this;
         self.$text.val("");
         self.trigger('added', id);
+        this.m2m.dataset_changed();
     },
 });
 }
@@ -3612,7 +3613,7 @@ instance.web.form.AbstractFormPopup = instance.web.OldWidget.extend({
             width: '90%',
             min_width: '800px',
             close: function() {
-                self.check_exit();
+                self.check_exit(true);
             },
             title: this.options.title || "",
         }, this.$element).open();
@@ -3670,9 +3671,10 @@ instance.web.form.AbstractFormPopup = instance.web.OldWidget.extend({
     },
     on_select_elements: function(element_ids) {
     },
-    check_exit: function() {
+    check_exit: function(no_destroy) {
         if (this.created_elements.length > 0) {
             this.on_select_elements(this.created_elements);
+            this.created_elements = [];
         }
         this.destroy();
     },
