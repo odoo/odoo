@@ -443,19 +443,14 @@
             <field name="arch" type="xml">
                 <search string="Search Partner">
                    <group col='10' colspan='4'>
+                        <field name="name" filter_domain="['|','|',('name','ilike',self),('parent_id','ilike',self),('ref','=',self)]"/>
+                        <field name="parent_id" filter_domain="[('parent_id','child_of',[self])]"/>
+                        <field name="category_id"/>
+                        <field name="user_id"/>
+                        <filter help="My Partners" icon="terp-personal+" domain="[('user_id','=',uid)]"/>
+                        <separator orientation="vertical"/>
                         <filter string="Persons" name="type_person" icon="terp-personal" domain="[('is_company','=',0)]"/>
                         <filter string="Companies" name="type_company" icon="terp-partner" domain="[('is_company','=',1)]"/>
-                        <separator orientation="vertical"/>
-                        <filter string="Customers" name="customer" icon="terp-personal" domain="[('customer','=',1)]" help="Customer Partners"/>
-                        <filter string="Suppliers" name="supplier" icon="terp-personal" domain="[('supplier','=',1)]" help="Supplier Partners"/>
-                        <separator orientation="vertical"/>
-                        <field name="name" select="1"/>
-                        <!--field name="address" select="1"/-->
-                        <!--field name="country" select="1"/-->
-                        <field name="category_id" select="1"/>
-                        <field name="user_id" select="1">
-                            <filter help="My Partners" icon="terp-personal+" domain="[('user_id','=',uid)]"/>
-                        </field>
                    </group>
                    <newline />
                    <group expand="0" string="Group By...">
@@ -527,7 +522,13 @@
             <field name="view_mode">kanban,tree,form</field>
             <field name="context">{"search_default_customer":1}</field>
             <field name="search_view_id" ref="view_res_partner_filter"/>
-            <field name="help">A customer is an entity you do business with, like a company or an organization. A customer can have several contacts or addresses which are the people working for this company. You can use the history tab, to follow all transactions related to a customer: sales order, emails, opportunities, claims, etc. If you use the email gateway, the Outlook or the Thunderbird plugin, don't forget to register emails to each contact so that the gateway will automatically attach incoming emails to the right partner.</field>
+            <field name="help">
+                Click on "Create" to add a new contact in your address book.
+                &lt;p&gt;
+                A contact is either a person or a company; a person can be linked to a company as a contact of that company.
+                &lt;p&gt;
+                You will be able to follow documents and history of your contacts (invoices, meetings, projects, etc.)
+            </field>
         </record>
         <record id="action_partner_form_view1" model="ir.actions.act_window.view">
             <field eval="0" name="sequence"/>
