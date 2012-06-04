@@ -542,7 +542,11 @@ class res_config_settings(osv.osv_memory):
         if to_install_ids:
             ir_module.button_immediate_install(cr, uid, to_install_ids, context)
         if to_uninstall_ids:
-            ir_module.button_uninstall(cr, uid, to_uninstall_ids, context)
+            # Module unInstallation.
+            ir_module.module_uninstall(cr, uid, to_uninstall_ids, context)
+            cr.commit()
+            _logger.info('Reloading registry once more after uninstalling modules')
+            pooler.restart_pool(cr.dbname, update_module=True)
 
         # force client-side reload (update user menu and current view)
         return {
