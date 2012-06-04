@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:49+0000\n"
-"PO-Revision-Date: 2012-05-31 03:33+0000\n"
+"PO-Revision-Date: 2012-06-02 04:49+0000\n"
 "Last-Translator: Akira Hiyama <Unknown>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-05-31 04:54+0000\n"
-"X-Generator: Launchpad (build 15322)\n"
+"X-Launchpad-Export-Date: 2012-06-03 04:47+0000\n"
+"X-Generator: Launchpad (build 15342)\n"
 
 #. module: mrp
 #: view:mrp.routing.workcenter:0
@@ -343,7 +343,7 @@ msgstr "デフォルト単位"
 #: sql_constraint:mrp.production:0
 #: sql_constraint:stock.picking:0
 msgid "Reference must be unique per Company!"
-msgstr "参照は会社内で固有でなければいけません"
+msgstr "参照は会社ごとに固有でなければいけません。"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:139
@@ -387,9 +387,9 @@ msgid ""
 "sales person creates a sales order, he can relate it to several properties "
 "and OpenERP will automatically select the BoM to use according the needs."
 msgstr ""
-"同じ製品で異なった構築方法を持つ場合、OpenERPのプロパティは製品製造のための正しい部品表を選択するのに使用されます。それぞれの部品表には幾つかのプロ"
-"パティを割り当てることができます。販売員が販売オーダーを作成した時、彼はそれを幾つかのプロパティに関連付けることができ、そして、OpenERPは要求によっ"
-"て使用する部品表を自動的に選択します。"
+"同じ製品で異なった構築方法を持つ場合、OpenERPの属性は製品製造のための正しい部品表を選択するのに使用されます。それぞれの部品表には幾つかの属性を割り"
+"当てることができます。販売員が販売オーダーを作成した時、彼はそれを幾つかの属性に関連付けることができ、そして、OpenERPは要求によって使用する部品表を"
+"自動的に選択します。"
 
 #. module: mrp
 #: help:mrp.production,picking_id:0
@@ -460,7 +460,7 @@ msgstr "会社名は固有でなければいけません。"
 msgid ""
 "Define specific property groups that can be assigned to the properties of "
 "your bill of materials."
-msgstr "部品表のプロパティに割り当てることができる特定のプロパティグループを定義して下さい。"
+msgstr "部品表の属性に割り当てることができる特定の属性グループを定義して下さい。"
 
 #. module: mrp
 #: help:mrp.workcenter,costs_cycle:0
@@ -932,7 +932,7 @@ msgstr "時間数"
 #: view:mrp.property:0
 #: view:mrp.property.group:0
 msgid "Property Group"
-msgstr "プロパティグループ"
+msgstr "属性グループ"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -1601,7 +1601,7 @@ msgstr "承認"
 #. module: mrp
 #: view:mrp.property.group:0
 msgid "Properties categories"
-msgstr "プロパティの分類"
+msgstr "属性の分類"
 
 #. module: mrp
 #: help:mrp.production.workcenter.line,sequence:0
@@ -2072,7 +2072,7 @@ msgstr "部品表"
 #: view:procurement.order:0
 #: field:procurement.order,property_ids:0
 msgid "Properties"
-msgstr "プロパティ"
+msgstr "属性"
 
 #. module: mrp
 #: view:mrp.routing.workcenter:0
@@ -2120,12 +2120,12 @@ msgstr "作業オーダー"
 #. module: mrp
 #: view:board.board:0
 msgid "Procurements in Exception"
-msgstr "例外の調達"
+msgstr "調達の例外"
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_minimumstockprocure0
 msgid "'Minimum stock rule' material"
-msgstr "材料の最上在庫ルール"
+msgstr "材料の最小在庫ルール"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_price
@@ -2190,7 +2190,7 @@ msgstr "次の生産オーダー"
 #: model:ir.actions.act_window,name:mrp.mrp_property_group_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_property_group_action
 msgid "Property Groups"
-msgstr "プロパティグループ"
+msgstr "属性グループ"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_procurestockableproduct0
