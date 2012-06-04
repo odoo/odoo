@@ -109,7 +109,7 @@
 			</table>
 		    </group>
 		    <group colspan="4" class="oe_form_group_label_border">
-				<field name="pricelist_id" attrs="{'invisible': ['|',('invoice_on_timesheets','!=',True),('charge_expenses','!=',True)]}"/>
+				<field name="pricelist_id" attrs="{'invisible': [('invoice_on_timesheets','!=',True),('charge_expenses','!=',True)]}"/>
 			    <field name="to_invoice" widget="selection" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/>
 		    </group>
                 </xpath>
