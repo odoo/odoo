@@ -7,17 +7,16 @@
             <field name="model">base.module.upgrade</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-            <form string="System Update">
-            <group colspan="2" col="4">
-            <label align="0.0" string="Your system will be updated." colspan="4"/>
-            <label align="0.0" string="Note that this operation might take a few minutes." colspan="4"/>
-            <separator string="Modules to Update" colspan="4"/>
-            <field name="module_info" nolabel="1" colspan="4"/>
-             <separator string="" colspan="4"/>
-            <button special="cancel" string="Cancel" icon="gtk-cancel"/>
-            <button name="upgrade_module" string="Update" type="object" icon="gtk-go-forward"/>
-            </group>
-             </form>
+                <form string="System Update">
+                    <header>
+                        <button name="upgrade_module" string="Update" type="object" icon="gtk-go-forward"/>
+                        <button special="cancel" string="Cancel" icon="gtk-cancel"/>
+                    </header>
+                    <label string="Your system will be updated."/>
+                    <label string="Note that this operation might take a few minutes."/>
+                    <separator string="Modules to Update"/>
+                    <field name="module_info"/>
+                </form>
             </field>
         </record>
 
@@ -37,22 +36,21 @@
            id="menu_view_base_module_upgrade"
            parent="menu_management"
            sequence="3"/>
-       
+
        <record id="view_base_module_upgrade_install" model="ir.ui.view">
             <field name="name">Module Upgrade Install</field>
             <field name="model">base.module.upgrade</field>
             <field name="type">form</field>
             <field name="priority" eval="20"/>
             <field name="arch" type="xml">
-            <form string="Apply Scheduled Upgrades">
-            <separator string="System update completed" colspan="4"/>
-            <label align="0.0" string="The selected modules have been updated / installed !" colspan="4"/>
-            <label align="0.0" string="We suggest to reload the menu tab to see the new menus (Ctrl+T then Ctrl+R)." colspan="4"/>
-             <separator string="" colspan="4"/>
-                <newline/>
-                <button special="cancel" string="Cancel" icon="gtk-cancel"/>
-                <button name="config" string="Start configuration" type="object" icon="gtk-ok"/>
-             </form>
+                <form string="Apply Scheduled Upgrades">
+                    <header>
+                        <button name="config" string="Start configuration" type="object" icon="gtk-ok"/>
+                        <button special="cancel" string="Cancel" icon="gtk-cancel"/>
+                    </header>
+                    <label string="The selected modules have been updated / installed !"/>
+                    <label string="We suggest to reload the menu tab to see the new menus (Ctrl+T then Ctrl+R)."/>
+                </form>
             </field>
         </record>
 

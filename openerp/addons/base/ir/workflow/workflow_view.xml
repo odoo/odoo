@@ -14,15 +14,14 @@
       <field name="model">workflow</field>
       <field name="type">form</field>
       <field name="arch" type="xml">
-        <form string="Workflow">
-            <group col="6" colspan="4" >
+          <form string="Workflow">
+              <group col="4">
                   <field name="name"/>
                   <field name="osv"/>
                   <field name="on_create"/>
               </group>
-          <separator colspan="4" string="Activities"/>
-          <field colspan="4" name="activities" nolabel="1"/>
-        </form>
+              <field name="activities"/>
+          </form>
       </field>
     </record>
 
@@ -94,56 +93,49 @@
       <field name="type">form</field>
       <field name="arch" type="xml">
         <form string="Activity">
-            <group col="6" colspan="4">
-                <field name="name"/>
-                <field name="wkf_id"/>
-                <field name="kind"/>
+            <group>
+                <group>
+                    <field name="name"/>
+                    <field name="wkf_id"/>
+                    <field name="kind"/>
+                </group>
+                <group>
+                    <field name="flow_start"/>
+                    <field name="flow_stop"/>
+                </group>
             </group>
-          <group  colspan="2">
-            <field name="flow_start"/>
-            <field name="flow_stop"/>
-          </group>
-          <notebook colspan="4">
+            <notebook>
             <page string="Properties">
-              <group colspan="4" col="6">
-                <group colspan="1" col="2">
-                  <separator string="Subflow" colspan="2"/>
+              <group>
+                <group string="Subflow">
                   <field name="subflow_id" attrs="{'readonly':[('kind','&lt;&gt;','subflow')]}"/>
                   <field name="signal_send"/>
                 </group>
-                <group colspan="1" col="2">
-                  <separator string="Conditions" colspan="2"/>
+                <group string="Conditions">
                   <field name="split_mode"/>
                   <field name="join_mode"/>
                 </group>
-                <group colspan="1" col="2">
-                  <separator string="Actions" colspan="2"/>
+                <group string="Actions">
                   <field name="action_id"/>
                   <field name="action" attrs="{'readonly':[('kind','=','dummy')]}"/>
                 </group>
               </group>
             </page>
             <page string="Transitions">
-              <group colspan="4" col="4">
-                <group col="2" colspan="2">
-                  <field name="in_transitions" nolabel="1" height="400">
-                    <tree string="Incoming Transitions">
-                      <field name="act_from"/>
-                      <field name="signal"/>
-                      <field name="condition"/>
-                    </tree>
-                  </field>
-                </group>
-                <group col="2" colspan="2">
-                  <field name="out_transitions" nolabel="1" height="400">
-                    <tree string="Outgoing Transitions">
-                      <field name="act_to"/>
-                      <field name="signal"/>
-                      <field name="condition"/>
-                    </tree>
-                  </field>
-                </group>
-              </group>
+                <field name="in_transitions">
+                  <tree string="Incoming Transitions">
+                    <field name="act_from"/>
+                    <field name="signal"/>
+                    <field name="condition"/>
+                  </tree>
+                </field>
+                <field name="out_transitions">
+                  <tree string="Outgoing Transitions">
+                    <field name="act_to"/>
+                    <field name="signal"/>
+                    <field name="condition"/>
+                  </tree>
+                </field>
             </page>
           </notebook>
         </form>
@@ -210,13 +202,13 @@
       <field name="type">form</field>
       <field name="arch" type="xml">
         <form string="Transition">
-            <group col="6" colspan ="4">
+            <group col="6">
                 <field name="act_from"/>
                 <field name="act_to"/>
                 <field name="signal"/>
                 <field name="condition"/>
                 <field name="trigger_model"/>
-                  <field name="trigger_expr_id"/>
+                <field name="trigger_expr_id"/>
                 <field name="group_id"/>
             </group>
         </form>
@@ -271,10 +263,12 @@
       <field name="type">form</field>
       <field name="arch" type="xml">
         <form string="Workflow Instances">
-          <field name="wkf_id" readonly="1"/>
-          <field name="res_id" readonly="1"/>
-          <field name="res_type" readonly="1"/>
-          <field name="state" readonly="1"/>
+          <group col="4">
+              <field name="wkf_id"/>
+              <field name="res_id"/>
+              <field name="res_type"/>
+              <field name="state"/>
+          </group>
         </form>
       </field>
     </record>
@@ -329,11 +323,13 @@
       <field name="type">form</field>
       <field name="arch" type="xml">
         <form string="Workflow Workitems">
-          <field name="wkf_id" readonly="1"/>  
-          <field name="act_id" readonly="1"/>
-          <field name="subflow_id" readonly="1"/>
-          <field name="inst_id" readonly="1"/>
-          <field name="state" readonly="1"/>
+          <group col="4">
+              <field name="wkf_id"/>
+              <field name="act_id"/>
+              <field name="subflow_id"/>
+              <field name="inst_id"/>
+              <field name="state"/>
+          </group>
         </form>
       </field>
     </record>

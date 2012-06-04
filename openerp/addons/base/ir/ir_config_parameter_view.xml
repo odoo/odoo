@@ -29,8 +29,10 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="System Parameters">
-                    <field name="key" colspan="4"/>
-                    <field name="value" colspan="4"/>
+                    <group>
+                        <field name="key"/>
+                        <field name="value"/>
+                    </group>
                 </form>
             </field>
         </record>

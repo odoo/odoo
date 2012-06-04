@@ -5,29 +5,15 @@
       <field name="model">res.config</field>
       <field name="type">form</field>
       <field name="arch" type="xml">
-       <form>
-         <group colspan="4" col="8">
-           <group colspan="1" width="220">
-             <field name="config_logo" widget="image" width="220" height="130" nolabel="1"/>
-             <newline/>
-             <label align="0.0" string="description" width="200" colspan="2"/>
-           </group>
-           <separator string="vsep" orientation="vertical" colspan="1" rowspan="12"/>
-           <group colspan="6">
-             <separator string="title" colspan="4"/>
-             <group string="res_config_contents"/>
-           </group>
-         </group>
-         <group colspan="8" col="8">
-           <separator string="" colspan="6"/>
-           <group colspan="4" width="220">
-           </group>
-           <button name="action_skip" icon="gtk-jump-to" special="cancel"
-                   type="object" string="Cancel" colspan="1"/>
-           <button name="action_next" icon="gtk-go-forward"
-                   type="object" string="Apply" colspan="1"/>
-         </group>
-        </form>
+          <form>
+             <header>
+               <button name="action_skip" icon="gtk-jump-to" special="cancel"
+                       type="object" string="Cancel" colspan="1"/>
+               <button name="action_next" icon="gtk-go-forward"
+                       type="object" string="Apply" colspan="1"/>
+             </header>
+             <group string="res_config_contents" col="4"/>
+          </form>
       </field>
     </record>
 
@@ -37,18 +23,12 @@
       <field name="type">form</field>
       <field name="arch" type="xml">
         <form string="Next Configuration Step">
-          <image name="gtk-dialog-info"/>
-          <group>
-            <field name="note" nolabel="1" colspan="4" width="500"/>
-            <group colspan="4" col="8">
-              <field name="progress" widget="progressbar"/>
-              <label string="" colspan="4"/>
-              <group colspan="1" col="2">
+            <header>
                 <button name="action_next" icon="gtk-go-forward"
                         type="object" string="Continue"/>
-              </group>
-            </group>
-          </group>
+
+            </header>
+            <field name="note"/>
         </form>
       </field>
     </record>
@@ -59,29 +39,14 @@
       <field name="type">form</field>
       <field name="arch" type="xml">
         <form>
-          <group colspan="4" col="8">
-            <group colspan="1" width="220" height="250">
-              <field name="config_logo" widget="image" width="220" height="130" nolabel="1" colspan="1"/>
-              <newline/>
-              <label align="0.0" string="description" width="200" colspan="2"/>
-            </group>
-            <separator string="vsep" orientation="vertical" colspan="1" rowspan="12"/>
-            <group colspan="6">
-              <separator string="title" colspan="4"/>
-              <group colspan="8"/>
-            </group>
-          </group>
-          <group colspan="8" col="8">
-            <separator string="" colspan="8"/>
-            <group colspan="4" width="220">
-            </group>
-            <button name="action_skip" icon="gtk-jump-to" special="cancel"
-                    type="object" string="Cancel" colspan="1"/>
-            <button name="action_next" icon="gtk-go-forward"
-                    type="object" string="Install Modules" colspan="1"/>
-          </group>
+            <header>
+                <button name="action_skip" icon="gtk-jump-to" special="cancel"
+                        type="object" string="Cancel" colspan="1"/>
+                <button name="action_next" icon="gtk-go-forward"
+                        type="object" string="Install Modules" colspan="1"/>
+            </header>
+            <separator string="title" colspan="4"/>
         </form>
-
       </field>
     </record>
 

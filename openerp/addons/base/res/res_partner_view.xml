@@ -61,43 +61,6 @@
             <field name="view_id" ref="view_partner_address_tree"/>
         </record>
 
-        <record id="view_partner_address_form1" model="ir.ui.view">
-            <field name="name">res.partner.address.form1</field>
-            <field name="model">res.partner.address</field>
-            <field name="type">form</field>
-            <field eval="8" name="priority"/>
-            <field name="arch" type="xml">
-                <form string="Address">
-                    <group colspan="4" col="6">
-                        <field name="partner_id" colspan="2"/>
-                        <field name="active"/>
-                        <field name="company_id" groups="base.group_multi_company" widget="selection" colspan="2"/>
-                        <newline/>
-                        <field name="name"/>
-                        <field domain="[('domain', '=', 'contact')]" name="title"/>
-                        <field name="function"/>
-                    </group>
-                      <group colspan="2" col="2">
-                        <separator string="Postal Address" colspan="4" col="4"/>
-                        <field name="type"/>
-                        <field name="street"/>
-                        <field name="street2"/>
-                        <field name="zip"/>
-                        <field name="city"/>
-                        <field name="country_id"/>
-                        <field name="state_id"/>
-                      </group>
-                      <group colspan="2" col="2">
-                        <separator string="Communication" colspan="4" col="4"/>
-                        <field name="phone"/>
-                        <field name="fax"/>
-                        <field name="mobile"/>
-                        <field name="email" widget="email"/>
-                     </group>
-                </form>
-            </field>
-        </record>
-
         <record model="ir.ui.view" id="contacts_kanban_view">
         <field name="name">res.partner.address.kanban</field>
         <field name="model">res.partner.address</field>
@@ -192,40 +155,6 @@
         </record>
 
         <!--
-          =========================================
-          the short form used in the partner form
-          =========================================
-        -->
-        <record id="view_partner_address_form2" model="ir.ui.view">
-            <field name="name">res.partner.address.form2</field>
-            <field name="model">res.partner.address</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Contacts">
-                    <field name="name" select="1"/>
-                    <field domain="[('domain', '=', 'contact')]" name="title"/>
-                    <field name="street"/>
-                    <field name="street2"/>
-                    <field name="type"/>
-                    <field name="function"/>
-                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                    <newline/>
-                    <field name="zip"/>
-                    <field name="city"/>
-                    <newline/>
-                    <field completion="1" name="country_id" select="1"/>
-                    <field name="state_id"/>
-                    <newline/>
-                    <field name="phone"/>
-                    <field name="fax"/>
-                    <newline/>
-                    <field name="mobile"/>
-                    <field name="email" widget="email"/>
-                </form>
-            </field>
-        </record>
-
-        <!--
           =======================
           Partner Titles
           =======================
@@ -247,9 +176,11 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Partner Titles">
-                    <field name="name" select="1"/>
-                    <field name="shortcut" select="1"/>
-                    <field name="domain"/>
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="shortcut"/>
+                        <field name="domain"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -317,52 +248,68 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Partners" validate="0">
-                    <group col="8" colspan="4">
-                        <group col="2">
-                            <field name="photo" widget='image' nolabel="1"/>
-                        </group>
-                        <group colspan="4">
-                            <h2><field name="name" required="1" nolabel="1" colspan="4" placeholder="Customer Name"/></h2><newline/>
-                                <field name="function" attrs="{'invisible': [('is_company', '=', True)]}"/>
-                                <field name="title" size="0" domain="[('domain', '=', 'contact')]"/>
-                                <field name="parent_id" string="Company" attrs="{'invisible': [('is_company','=', True)]}"
-                                    domain="[('is_company', '=', True)]" context="{'default_is_company': True}"
+                    <field name="photo" widget='image' class="oe_form_avatar oe_right"/>
+                    <div class="oe_right oe_form_button_box" name="buttons">
+
+                    </div>
+                    <div class="oe_form_title">
+                        <div class="oe_form_readonly_hidden">
+                            <label for="name"/> 
+                            (<field name="is_company" on_change="onchange_type(is_company)" class="oe_form_inline"/> <label for="is_company"/>)
+                        </div>
+                        <h1>
+                            <field name="name" placeholder="Customer Name" class="oe_form_inline"/>,
+                            <field name="title" domain="[('domain', '=', 'contact')]"/>
+                        </h1>
+                        <div class="oe_form_readonly_hidden">
+                            <label for="parent_id"/> 
+                        </div>
+                        <h2>
+                            <field name="parent_id" string="Company" attrs="{'invisible': [('is_company','=', True)]}"
+                                domain="[('is_company', '=', True)]" context="{'default_is_company': True}"
+                                class="oe_form_inline"
+                                on_change="onchange_address(use_parent_address, parent_id)"/>, 
+                            <field name="function" attrs="{'invisible': [('is_company', '=', True)]}" class="oe_form_inline"/>
+                        </h2>
+                        <field name="category_id" widget="many2many_tags"/>
+                    </div>
+
+                    <group>
+                        <group>
+                            <label for="type"/>
+                            <div>
+                                <field class="oe_form_inline"
+                                    name="type" attrs="{'invisible': [('is_company','=', True)]}"/>
+                                <label for="use_parent_address"/>
+                                <field name="use_parent_address" attrs="{'invisible': [('parent_id', '=', False)]}"
+                                    class="oe_form_inline"
                                     on_change="onchange_address(use_parent_address, parent_id)"/>
+                            </div>
+
+                            <label for="street" string="Address"/>
+                            <div>
+                                <field name="street" placeholder="Street..."/>
+                                <field name="street2"/>
+                                <div>
+                                    <field name="zip" class="oe_form_inline" placeholder="ZIP"/>
+                                    <field name="city" class="oe_form_inline" placeholder="City"/>
+                                </div>
+                                <field name="state_id" placeholder="State"/>
+                                <field name="country_id" placeholder="Country"/>
+                            </div>
+                            <field name="website" widget="url" placeholder="www.openerp.com"/>
                         </group>
-                        <group col="2">
-                            <field name="is_company" on_change="onchange_type(is_company)"/>
-                            <field name="customer"/>
-                            <field name="supplier"/>
+                        <group>
+                            <field name="phone" colspan="4" placeholder="+32.81.81.37.00"/>
+                            <field name="mobile" colspan="4"/>
+                            <field name="fax" colspan="4"/>
+                            <field name="email" widget="email" colspan="4"/>
                         </group>
                     </group>
+
                     <notebook colspan="4">
-                        <page string="General">
-                            <group colspan="2">
-                                <separator string="Address" colspan="4"/>
-                                <field name="type" string="Type" attrs="{'invisible': [('is_company','=', True)]}"/>
-                                <group colspan="2">
-                                    <field name="use_parent_address" attrs="{'invisible': [('parent_id', '=', False)]}"
-                                        on_change="onchange_address(use_parent_address, parent_id)"/>
-                                </group>
-                                <newline/>
-                                <field name="street" colspan="4"/>
-                                <field name="street2" colspan="4"/>
-                                <field name="zip"/>
-                                <field name="city"/>
-                                <field name="country_id"/>
-                                <field name="state_id"/>
-                            </group>
-                            <group colspan="2">
-                                <separator string="Communication" colspan="4"/>
-                                <field name="phone" colspan="4" placeholder="+32.81.81.37.00"/>
-                                <field name="mobile" colspan="4"/>
-                                <field name="fax" colspan="4"/>
-                                <field name="email" widget="email" colspan="4"/>
-                                <field name="website" widget="url" colspan="4" placeholder="www.openerp.com"/>
-                                <field name="ref" colspan="4"/>
-                            </group>
-                            <group colspan="4" attrs="{'invisible': [('is_company','=', False)]}">
-                            <field name="child_ids" context="{'default_parent_id': active_id}" nolabel="1" mode="kanban,list">
+                        <page string="Contacts">
+                            <field name="child_ids" context="{'default_parent_id': active_id}" mode="kanban">
                                 <kanban>
                                     <field name="color"/>
                                     <field name="name"/>
@@ -412,24 +359,25 @@
                                     </templates>
                                 </kanban>
                             </field>
-                            </group>
                         </page>
                         <page string="Sales &amp; Purchases" attrs="{'invisible': [('customer', '=', False), ('supplier', '=', False)]}">
-                            <separator string="General Information" colspan="4"/>
-                            <field name="lang" colspan="4"/>
-                            <field name="user_id"/>
-                            <field name="active"/>
-                            <field name="date"/>
-                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                            <newline/>
+                            <group>
+                                <group/>
+                                    <field name="lang"/>
+                                    <field name="user_id"/>
+                                    <field name="date"/>
+                                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                </group>
+                                <group>
+                                    <field name="customer"/>
+                                    <field name="supplier"/>
+                                    <field name="active"/>
+                                    <field name="ref"/>
+                                </group>
+                            </group>
                         </page>
-                        <page string="History" invisible="True">
-                        </page>
-                        <page string="Categories">
-                            <field name="category_id" colspan="4" nolabel="1" widget="many2many_tags"/>
-                        </page>
-                        <page string="Notes">
-                            <field name="comment" colspan="4" nolabel="1" placeholder="Internal notes about this customer..."/>
+                        <page string="Internal Notes">
+                            <field name="comment" placeholder="Internal notes about this customer..."/>
                         </page>
                     </notebook>
                 </form>
@@ -597,7 +545,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Payment Term">
-                    <field colspan="4" name="name"/>
+                    <field name="name"/>
                 </form>
             </field>
         </record>
@@ -619,10 +567,11 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Partner Category">
-                    <field name="name" select="1"/>
-                    <field name="active"/>
-                    <field name="parent_id"/>
-                    <separator colspan="4" string="Partners"/>
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="active"/>
+                        <field name="parent_id"/>
+                    </group>
                     <field colspan="4" name="partner_ids" nolabel="1"/>
                 </form>
             </field>

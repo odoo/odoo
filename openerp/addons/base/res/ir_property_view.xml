@@ -25,32 +25,20 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Parameters">
-                    <separator colspan="4" string="Property"/>
-                    <field name="name" select="1"/>
-                    <field name="company_id" select="1" groups="base.group_multi_company"/>
-                    <separator colspan="4" string="Field Information"/>
-                    <field colspan="4" name="fields_id" select="1"/>
-                    <field colspan="4" name="type"/>
-                    <group colspan="4" attrs="{'invisible' : [('type', 'not in', ('integer', 'boolean'))]}">
-                        <field colspan="4" name="value_integer" widget="integer"/>
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                        <newline/>
+                        <field name="fields_id"/>
+                        <field name="type"/>
+                        <field name="res_id"/>
                     </group>
-                    <group colspan="4" attrs="{'invisible' : [('type', '!=', 'float')]}">
-                        <field colspan="4" name="value_float" />
-                    </group>
-                    <group colspan="4" attrs="{'invisible' : [('type', 'not in', ('date', 'datetime'))]}">
-                        <field colspan="4" name="value_datetime" />
-                    </group>
-                    <group colspan="4" attrs="{'invisible' : [('type', 'not in', ('char', 'text'))]}">
-                        <field colspan="4" name="value_text" />
-                    </group>
-                    <group colspan="4" attrs="{'invisible' : [('type', '!=', 'many2one')]}">
-                        <field colspan="4" name="value_reference" />
-                    </group>
-                    <group colspan="4" attrs="{'invisible' : [('type', '!=', 'binary')]}">
-                        <field colspan="4" name="value_binary" />
-                    </group>
-                    <separator colspan="4" string="Resource"/>
-                    <field colspan="4" name="res_id"/>
+                    <field name="value_integer" attrs="{'invisible' : [('type', 'not in', ('integer', 'boolean'))]}"/>
+                    <field name="value_float"  attrs="{'invisible' : [('type', '!=', 'float')]}"/>
+                    <field name="value_datetime"  attrs="{'invisible' : [('type', 'not in', ('date', 'datetime'))]}"/>
+                    <field name="value_text"  attrs="{'invisible' : [('type', 'not in', ('char', 'text'))]}"/>
+                    <field name="value_reference"  attrs="{'invisible' : [('type', '!=', 'many2one')]}"/>
+                    <field name="value_binary"  attrs="{'invisible' : [('type', '!=', 'binary')]}"/>
                 </form>
             </field>
         </record>

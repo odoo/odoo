@@ -8,26 +8,30 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Bank">
-                    <group colspan="4" col="6">
+                    <group col="6">
                         <field name="name" select="1"/>
                         <field name="bic" select="1"/>
                         <field name="active" select="2"/>
                     </group>
-                    <newline/>
-                    <group  colspan="2" col="4">
-                        <separator string="Address" colspan="4"/>
-                        <field name="street" select="2"/>
-                        <field name="street2" select="2"/>
-                        <field name="zip"/>
-                        <field name="city"/>
-                        <field name="country" select="2"/>
-                        <field name="state" select="2"/>
-                    </group>
-                    <group colspan="2" col="2">
-                        <separator string="Communication" colspan="2"/>
-                        <field name="phone"/>
-                        <field name="fax"/>
-                        <field name="email" widget="email"/>
+                    <group>
+                        <group string="Address">
+                            <label for="street" string="Address"/>
+                            <div>
+                                <field name="street" placeholder="Street..."/>
+                                <field name="street2"/>
+                                <div>
+                                    <field name="zip" class="oe_form_inline" placeholder="ZIP"/>
+                                    <field name="city" class="oe_form_inline" placeholder="City"/>
+                                </div>
+                                <field name="state" placeholder="State"/>
+                                <field name="country" placeholder="Country"/>
+                            </div>
+                        </group>
+                        <group string="Communication">
+                            <field name="phone"/>
+                            <field name="fax"/>
+                            <field name="email" widget="email"/>
+                        </group>
                     </group>
                 </form>
             </field>
@@ -60,10 +64,12 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Bank Account Type">
-                    <field name="name"/>
-                    <field name="code"/>
-                    <field name="field_ids" colspan="4"/>
-                    <field name="format_layout" colspan="4"/>
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="code"/>
+                    </group>
+                    <field name="field_ids"/>
+                    <field name="format_layout"/>
                 </form>
             </field>
         </record>
@@ -85,28 +91,27 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Bank account">
-                    <group colspan="4" col="6">
+                    <group col="4">
                         <field name="state"/>
                         <field name="company_id" on_change="onchange_company_id(company_id)" invisible="context.get('company_hide', True)" widget="selection"/>
-                        <field name="footer" attrs="{'invisible': [('company_id','=',False)]}"/>
-                        <newline/>
                         <field name="acc_number"/>
+                        <field name="footer" attrs="{'invisible': [('company_id','=',False)]}"/>
                     </group>
-                    <group name="owner" colspan="2" col="2">
-                        <separator colspan="4" string="Bank Account Owner"/>
-                        <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
-                        <field name="owner_name"/>
-                        <field name="street"/>
-                        <field name="city"/>
-                        <field name="zip"/>
-                        <field name="country_id"/>
-                        <field name="state_id"/>
-                    </group>
-                    <group name="bank" colspan="2" col="2">
-                        <separator colspan="2" string="Information About the Bank"/>
-                        <field name="bank" on_change="onchange_bank_id(bank)"/>
-                        <field name="bank_name" attrs="{'required': [('company_id','&lt;&gt;',False)]}"/>
-                        <field name="bank_bic"/>
+                    <group>
+                        <group name="owner" string="Bank Account Owner">
+                            <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
+                            <field name="owner_name"/>
+                            <field name="street"/>
+                            <field name="city"/>
+                            <field name="zip"/>
+                            <field name="country_id"/>
+                            <field name="state_id"/>
+                        </group>
+                        <group name="bank" string="Information About the Bank">
+                            <field name="bank" on_change="onchange_bank_id(bank)"/>
+                            <field name="bank_name" attrs="{'required': [('company_id','&lt;&gt;',False)]}"/>
+                            <field name="bank_bic"/>
+                        </group>
                     </group>
 
                 </form>
