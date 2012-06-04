@@ -327,6 +327,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     return $.when();
                 }
                 var order = operations[0];
+                console.log('Pushing Order:',order);
 
                  // we prevent the default error handler and assume errors
                  // are a normal use case, except we stop the current iteration
