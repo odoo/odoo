@@ -66,10 +66,7 @@
                     <button name="done" states="confirm" string="Approve" type="workflow" groups="base.group_hr_user"/>
                     <button name="action_set_to_draft" states="done" string="Set to Draft" type="object"/>
                     <button name="cancel" states="confirm" string="Refuse" type="workflow" groups="base.group_hr_user"/>
-                    <div class="oe_right">
-                        <field name="state" widget="statusbar" nolabel="1" statusbar_visible="new,confirm,done"/>
-                    </div>
-                    <div class="oe_clear"/>
+                    <field name="state" widget="statusbar" statusbar_visible="new,confirm,done"/>
                 </div>
                 <sheet string="Timesheet" layout="auto">
                     <group colspan="4" col="6" class="oe_form_header">

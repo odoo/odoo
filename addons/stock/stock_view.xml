@@ -1378,10 +1378,7 @@
                     <button name="force_assign" states="confirmed" string="Set Available" type="object"/>
                     <button name="%(action_partial_move_server)d" string="Process" type="action" states="assigned"/>
                     <button name="action_cancel" states="assigned,confirmed" string="_Cancel" type="object"/>
-                    <div class="oe_right">
-                        <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" statusbar_colors='{"waiting":"blue","confirmed":"blue"}'/>
-                    </div>
-                    <div class="oe_clear"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" statusbar_colors='{"waiting":"blue","confirmed":"blue"}'/>
                 </div>
                 <sheet string="Receive Products" layout="auto">
                     <group colspan="4" col="7">

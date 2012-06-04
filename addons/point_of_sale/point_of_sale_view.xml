@@ -22,10 +22,7 @@
                     <button name="%(action_report_pos_receipt)d" string="Reprint" type="action" states="paid,done,invoiced"/>
                     <button name="refund" string="Return Products" type="object"
                         attrs="{'invisible':[('state','=','draft')]}"/>
-                    <div class="oe_right">
-                        <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,paid,done" statusbar_colors='{"cancel":"red"}'/>
-                    </div>
-                    <div class="oe_clear"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,paid,done" statusbar_colors='{"cancel":"red"}'/>
                 </div>
                 <sheet string="PoS Orders" layout="auto">
                     <group col="7" colspan="4" class="oe_form_header">

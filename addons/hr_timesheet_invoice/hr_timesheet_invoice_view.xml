@@ -28,11 +28,8 @@
                         <button name="set_close" string="Close" type="object" states="open,pending"/>
                         <button name="set_open" string="Re-open project" type="object" states="pending,cancelled,close,draft"/>
                         <button name="set_cancel" string="Cancel" type="object" states="open,pending"/>
-                        <div class="oe_right">
-                            <field name="state" readonly="1" widget="statusbar" nolabel="1"
+                        <field name="state" readonly="1" widget="statusbar"
                             statusbar_visible="open,pending,close" statusbar_colors='{"pending":"red", "template":"blue"}'/>
-                        </div>
-                        <div class="oe_clear"/>
                     </div>
                 </xpath>
             </field>

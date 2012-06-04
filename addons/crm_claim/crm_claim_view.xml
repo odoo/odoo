@@ -104,11 +104,8 @@
                             states="cancel,done"/>
                     <button name="case_cancel" string="Cancel" type="object"
                             states="draft,open,pending"/>
-                    <div class="oe_right">
-                        <field name="stage_id" nolabel="1" widget="statusbar"
+                    <field name="stage_id" widget="statusbar"
                             on_change="onchange_stage_id(stage_id)"/>
-                    </div>
-                    <div class="oe_clear"/>
                 </div>
                 <sheet string="Claims" layout="auto">
                     <group>

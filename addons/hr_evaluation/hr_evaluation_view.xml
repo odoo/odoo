@@ -161,10 +161,7 @@
                     <button name="button_done" string="Done" states="progress" type="object"/>
                     <button name="button_draft" string="Reset to Draft" states="cancel" type="object"/>
                     <button name="button_cancel" string="Cancel" states="draft,wait,progress" type="object"/>
-                    <div class="oe_right">
-                        <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,progress,wait,done" statusbar_colors='{"progress":"blue"}'/>
-                    </div>
-                    <div class="oe_clear"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,progress,wait,done" statusbar_colors='{"progress":"blue"}'/>
                 </div>
                 <sheet string="Appraisal" layout="auto">
                     <group col="4" colspan="3">

@@ -72,10 +72,7 @@
                         states="cancel" icon="gtk-convert"/>
                 <button name="case_cancel" string="Cancel" type="object"
                         states="draft,open,pending" icon="gtk-cancel"/>
-                <div class="oe_right">
-                    <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,open,done" select="1"/>
-                </div>
-                <div class="oe_clear"/>
+                <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,open,done"/>
             </div>
             <sheet string="Phone Call" layout="auto">
                  <group colspan="6" col="7">

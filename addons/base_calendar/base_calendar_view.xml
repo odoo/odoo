@@ -26,10 +26,7 @@
                         <button name="do_decline" string="Decline"
                             states="needs-action,tentative,accepted"
                             type="object" />
-                        <div class="oe_right">
-                            <field name="state" widget="statusbar" nolabel="1" statusbar_visible="tentative,needs-action,accepted" statusbar_colors='{"proforma":"blue"}'/>
-                        </div>
-                        <div class="oe_clear"/>
+                        <field name="state" widget="statusbar" nolabel="1" statusbar_visible="tentative,needs-action,accepted" statusbar_colors='{"proforma":"blue"}'/>
                     </div>
                     <sheet string="Invitation details" layout="auto">
                         <group col="6" colspan="4">
@@ -230,10 +227,7 @@
                         states="tentative,confirmed"
                         type="object"
                         />
-                    <div class="oe_right">
-                        <field name="state" widget="statusbar" nolabel="1" statusbar_visible="tentative,confirmed" statusbar_colors='{"proforma":"blue"}'/>
-                    </div>
-                    <div class="oe_clear"/>
+                    <field name="state" widget="statusbar" nolabel="1" statusbar_visible="tentative,confirmed" statusbar_colors='{"proforma":"blue"}'/>
                 </div>
                 <sheet string="Events" layout="auto">
                     <group col="6" colspan="4">

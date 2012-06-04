@@ -640,10 +640,7 @@
                     <button name="button_recreate" states="picking_except" string="Recreate Picking"/>
                     <button name="button_cancel" states="draft,ready,in_production,picking_except" string="Cancel"/>
                     <button name="action_cancel" type="object" states="confirmed" string="Cancel"/>
-                    <div class="oe_right">
-                        <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,ready,in_production,done" statusbar_colors='{"picking_except":"red","confirmed":"blue"}'/>
-                    </div>
-                    <div class="oe_clear"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,ready,in_production,done" statusbar_colors='{"picking_except":"red","confirmed":"blue"}'/>
                 </div>
                 <sheet string="Manufacturing Orders" layout="auto">
                     <group colspan="4" col="7">

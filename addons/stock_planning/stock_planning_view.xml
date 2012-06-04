@@ -16,10 +16,7 @@
                 <div class="oe_form_topbar">
                     <button name="button_open" string="Open" states="draft" type="object"/>
                     <button name="button_close" string="Close" states="open" type="object"/>
-                    <div class="oe_right">
-                        <field name="state" select="1" widget="statusbar" nolabel="1" statusbar_visible="draft,open"/>
-                    </div>
-                    <div class="oe_clear"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,open"/>
                 </div>
                 <sheet string="Stock Periods" layout="auto">
                     <group class="oe_form_header">
@@ -87,10 +84,7 @@
                 <form layout="manual">
                 <div class="oe_form_topbar">
                     <button name="action_validate" string="Approve" states="draft" type="object" />
-                    <div class="oe_right">
-                        <field name="state" widget="statusbar" nolabel="1"/>
-                    </div>
-                    <div class="oe_clear"/>
+                    <field name="state" widget="statusbar"/>
                 </div>
                 <sheet string="Stock and Sales Forecast" layout="auto">
                     <group colspan = "4" col = "4" class="oe_form_header">

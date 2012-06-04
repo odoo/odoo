@@ -267,10 +267,7 @@
                     <button string="Set to Draft" name="draft" states="cancel"/>
                     <button string="Compute Sheet" name="compute_sheet" type="object" states="draft"/>
                     <button string="Cancel" name="cancel_sheet" states="draft,hr_check,confirm,verify"/>
-                    <div class="oe_right">
-                        <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,confirm"/>
-                    </div>
-                    <div class="oe_clear"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
                 </div>
                 <sheet string="Payslip" layout="auto">
                     <group col="6" colspan="4" class="oe_form_header">
@@ -729,10 +726,7 @@
                     <button name="close_payslip_run" type="object" string="Close" states="draft"/>
                     <button name="%(action_hr_payslip_by_employees)d" type="action" states="draft" string="Generate Payslips" />
                     <button string="Set to Draft" name="draft_payslip_run" type="object" states="close"/>
-                    <div class="oe_right">
-                        <field name="state" widget="statusbar" nolabel="1"/>
-                    </div>
-                    <div class="oe_clear"/>
+                    <field name="state" widget="statusbar"/>
                 </div>
                 <sheet string="Payslips Batches" layout="auto">
                     <group col="6" colspan="4" class="oe_form_header">

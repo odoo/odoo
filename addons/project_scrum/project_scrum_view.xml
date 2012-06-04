@@ -60,10 +60,7 @@
                     <button type="action" string="Convert to Task" name="%(action_scrum_backlog_to_task)d" states="pending"/>
                     <button type="object" string="Set to Draft" name="button_draft" states="cancel,done"/>
                     <button type="object" string="Cancel" name="button_cancel" states="draft,open,pending"/>
-                    <div class="oe_right">
-                        <field name="state" select="1" widget="statusbar" nolabel="1" statusbar_visible="draft,open"/>
-                    </div>
-                    <div class="oe_clear"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,open"/>
                 </div>
                 <sheet string="Product backlog" layout="auto">
                     <group colspan="4" col="8" class="oe_form_header">
@@ -235,10 +232,7 @@
                     <button name="%(project_scrum.report_scrum_sprint_burndown_chart)d"
                                    string="Burndown Chart" type="action"/>
                     <button type="object" string="Set to Draft" name="button_draft" states="cancel,done"/>
-                    <div class="oe_right">
-                        <field name="state" readonly="1" widget="statusbar" nolabel="1" statusbar_visible="draft,open"/>
-                    </div>
-                    <div class="oe_clear"/>
+                    <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,open"/>
                 </div>
                 <sheet string="Scrum Sprint" layout="auto">
                     <group colspan="4" col="6" class="oe_form_header">

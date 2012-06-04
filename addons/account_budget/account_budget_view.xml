@@ -111,10 +111,7 @@
                     <button string="Done" name="done" states="validate" type="workflow"   />
                     <button name="draft" states="cancel" string="Reset to Draft" type="workflow"/>
                     <button string="Cancel" name="cancel" states="confirm,validate" type="workflow"/>
-                    <div class="oe_right">
-                        <field name="state" select="1" widget="statusbar" nolabel="1" statusbar_visible="draft,confirm"/>
-                    </div>
-                    <div class="oe_clear"/>
+                    <field name="state" select="1" widget="statusbar" nolabel="1" statusbar_visible="draft,confirm"/>
                 </div>
                 <sheet string="Budget" layout="auto">
                 <group class="oe_form_header">

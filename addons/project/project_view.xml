@@ -27,10 +27,7 @@
                     <button string="New Project Based on Template" name="duplicate_template"  type="object" states="template" context="{'parent_id':parent_id}"/>
                     <button name="reset_project" string="Reset as Project" type="object" states="template"/>
                     <button name="set_cancel" string="Cancel" type="object" states="open,pending"/>
-                    <div class="oe_right">
-                        <field name="state" nolabel="1" widget="statusbar" statusbar_visible="open,close" statusbar_colors='{"pending":"blue"}' select="1" readonly="1"/>
-                    </div>
-                    <div class="oe_clear"/>
+                    <field name="state" widget="statusbar" statusbar_visible="open,close" statusbar_colors='{"pending":"blue"}' readonly="1"/>
                 </div>
                 <sheet string="Project" layout="auto">
                     <group colspan="6" col="6">
@@ -323,10 +320,7 @@
                                 states="open,pending" icon="gtk-go-back" attrs="{'invisible': [('stage_id','=', False)]}"/>
                         <button name="stage_next" string="Next Stage" type="object"
                                 states="open,pending" icon="gtk-go-forward" attrs="{'invisible': [('stage_id','=', False)]}"/>
-                        <div class="oe_right">
-                            <field name="stage_id" nolabel="1" widget="statusbar"/>
-                        </div>
-                        <div class="oe_clear"/>
+                        <field name="stage_id" widget="statusbar"/>
                     </div>
                     <sheet string="Task edition" layout="auto">
                     <group colspan="6" col="6">

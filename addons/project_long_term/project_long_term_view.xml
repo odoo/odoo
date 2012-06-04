@@ -148,10 +148,7 @@
                     <button string="Pending" name="set_pending" states="open"/>
                     <button string="Draft" name="set_draft" states="open"/>
                     <button string="Cancel" name="set_cancel" states="draft,open,pending"/>
-                    <div class="oe_right">
-                        <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}' select="1"/>
-                    </div>
-                    <div class="oe_clear"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
                 </div>
                 <sheet string="Project Phase" layout="auto">
                     <group colspan="6" col="6">
