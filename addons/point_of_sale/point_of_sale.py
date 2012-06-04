@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+import pdb
 
 import time
 from datetime import datetime
@@ -385,9 +386,12 @@ class pos_session(osv.osv):
         wf_service = netsvc.LocalService("workflow")
 
         for session in self.browse(cr, uid, ids, context=context):
-            order_ids = [order.id for order in session.order_ids if order.state != 'paid']
+            order_ids = [order.id for order in session.order_ids if order.state == 'paid']
 
             move_id = self.pool.get('account.move').create(cr, uid, {'ref' : session.name, 'journal_id' : session.config_id.journal_id.id, }, context=context)
+            print "### move_id: %r" % (move_id,)
+            print "order_ids: %r" % (order_ids,)
+
             self.pool.get('pos.order')._create_account_move_line(cr, uid, order_ids, session, move_id, context=context)
 
             for order in session.order_ids:
@@ -825,12 +829,9 @@ class pos_order(osv.osv):
         user_proxy = self.pool.get('res.users')
         property_obj = self.pool.get('ir.property')
 
-        products = None
         period = account_period_obj.find(cr, uid, context=context)[0]
 
-        session_ids = set(order.session_id for order in self.browse(cr, uid, ids, context=context))
-        # import pdb
-        # pdb.set_trace()
+        #session_ids = set(order.session_id for order in self.browse(cr, uid, ids, context=context))
 
         if session and not all(session.id == order.session_id.id for order in self.browse(cr, uid, ids, context=context)):
             raise osv.except_osv(_('Error!'), _('The selected orders do not have the same session !'))
@@ -900,14 +901,22 @@ class pos_order(osv.osv):
                 else:
                     return
 
-                grouped_data.setdefault(key, [values])
+                grouped_data.setdefault(key, [])
+
+                # if not have_to_group_by or (not grouped_data[key]):
+                #     grouped_data[key].append(values)
+                # else:
+                #     pass
 
                 if have_to_group_by:
-                    current_value = grouped_data[key][0]
-                    current_value['quantity'] += values.get('quantity', 0)
-                    current_value['credit'] += values.get('credit', 0.0)
-                    current_value['debit'] += values.get('debit', 0.0)
-                    current_value['tax_amount'] += values.get('tax_amount', 0.0)
+                    if not grouped_data[key]:
+                        grouped_data[key].append(values)
+                    else:
+                        current_value = grouped_data[key][0]
+                        current_value['quantity'] = current_value.get('quantity', 0.0) +  values.get('quantity', 0.0)
+                        current_value['credit'] = current_value.get('credit', 0.0) + values.get('credit', 0.0)
+                        current_value['debit'] = current_value.get('debit', 0.0) + values.get('debit', 0.0)
+                        current_value['tax_amount'] = current_value.get('tax_amount', 0.0) + values.get('tax_amount', 0.0)
                 else:
                     grouped_data[key].append(values)
 
