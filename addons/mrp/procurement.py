@@ -43,7 +43,7 @@ class procurement_order(osv.osv):
             cr.execute('update procurement_order set message=%s where id=%s', (_('No BoM defined for this product !'), procurement.id))
             for (id, name) in self.name_get(cr, uid, procurement.id):
                 message = _("Procurement '%s' has an exception: 'No BoM defined for this product !'") % name
-                self.log(cr, uid, id, message)
+                self.message_append_note(cr, uid, [procurement.id], body=message, context=context)
             return False
         return True
     
@@ -97,6 +97,7 @@ class procurement_order(osv.osv):
             })
             res[procurement.id] = produce_id
             self.write(cr, uid, [procurement.id], {'state': 'running'})
+            self.running_send_note(cr, uid, ids, context=context)
             bom_result = production_obj.action_compute(cr, uid,
                     [produce_id], properties=[x.id for x in procurement.property_ids])
             wf_service.trg_validate(uid, 'mrp.production', produce_id, 'button_confirm', cr)
