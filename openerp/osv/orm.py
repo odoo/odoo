@@ -4120,11 +4120,16 @@ class BaseModel(object):
                 del vals[self._inherits[table]]
 
             record_id = tocreate[table].pop('id', None)
-
+            
+            # When linking/creating parent records, force context without 'no_store_function' key that
+            # defers stored functions computing, as these won't be computed in batch at the end of create(). 
+            parent_context = dict(context)
+            parent_context.pop('no_store_function', None)
+            
             if record_id is None or not record_id:
-                record_id = self.pool.get(table).create(cr, user, tocreate[table], context=context)
+                record_id = self.pool.get(table).create(cr, user, tocreate[table], context=parent_context)
             else:
-                self.pool.get(table).write(cr, user, [record_id], tocreate[table], context=context)
+                self.pool.get(table).write(cr, user, [record_id], tocreate[table], context=parent_context)
 
             upd0 += ',' + self._inherits[table]
             upd1 += ',%s'
