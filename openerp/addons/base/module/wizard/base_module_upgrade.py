@@ -38,6 +38,7 @@ class base_module_upgrade(osv.osv_memory):
         if view_type != 'form':
             return res
 
+        context = {} if context is None else context
         record_id = context and context.get('active_id', False) or False
         active_model = context.get('active_model')
         if (not record_id) or (not active_model):
