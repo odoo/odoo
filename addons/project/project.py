@@ -1257,7 +1257,7 @@ class account_analytic_account(osv.osv):
     def project_create(self,cr,uid,analytic_account_id,vals,context=None):
         res = {}
         project_pool = self.pool.get('project.project')
-        project_id = project_pool.name_search(cr, uid, name=vals.get('name'))
+        project_id = project_pool.search(cr, uid, [('name','=',vals.get('name'))])
         if not project_id:
             res['name'] = vals.get('name')
             res['analytic_account_id'] = analytic_account_id

@@ -396,7 +396,7 @@
             <field name="name">account.analytic.account.issue.form.inherit</field>
             <field name="model">account.analytic.account</field>
             <field name="type">form</field>
-            <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
+            <field name="inherit_id" ref="project.analytic_account_inherited_form"/>
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
                 <xpath expr='//separator[@name="project_sep"]' position='replace'>
@@ -405,6 +405,9 @@
             	<group name="project" position="inside">
             	    <field name="use_issues"/>
             	</group>
+            	<xpath expr='//field[@name="members"]' position='replace'>
+                    <field name="members" colspan="4" nolabel="1" attrs="{'invisible': [('use_tasks','!=',1),('use_issues','!=',1)]}"/>
+                </xpath>
             </field>
         </record>
     </data>
