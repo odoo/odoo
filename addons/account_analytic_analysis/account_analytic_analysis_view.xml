@@ -34,12 +34,6 @@
             res_model="sale.order.line"
             src_model="account.analytic.account"
             />
-         <act_window
-            id="action_timesheet_lines_tree"
-            name="Timesheet Lines"
-            res_model="account.analytic.line"
-            src_model="account.analytic.account"
-            />
             
         <record id="hr_timesheet.account_analytic_account_form_form" model="ir.ui.view">
             <field name="name">account.analytic.account.invoice.form.inherit</field>
@@ -90,7 +84,7 @@
 				<td class="oe_amount_center oe_th_110px oe_border_right"><field name="remaining_hours" nolabel="1" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
 				<td class="oe_amount_center oe_th_110px"><field name="hours_qtt_non_invoiced" nolabel="1" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
 				<td width="10px"></td>
-				<td class="oe_th_150px"><button class= "oe_btn_width" name="%(action_timesheet_lines_tree)d" string="Timesheets" type="action" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
+				<td class="oe_th_150px"><button class= "oe_btn_width" name="%(hr_timesheet.act_hr_timesheet_line_evry1_all_form)d" string="Timesheets" type="action" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
 				<td class="oe_th_150px"><button class= "oe_btn_width" name="%(hr_timesheet_invoice.act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice)d" string="Invoice Timesheets" type="action" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
 			    </tr>
 			    <tr>
@@ -115,8 +109,8 @@
 			</table>
 		    </group>
 		    <group colspan="4" class="oe_form_group_label_border">
-			<field name="pricelist_id" />
-			<field name="to_invoice" widget="selection" />
+				<field name="pricelist_id" attrs="{'invisible': ['|',('invoice_on_timesheets','!=',True),('charge_expenses','!=',True)]}"/>
+			    <field name="to_invoice" widget="selection" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/>
 		    </group>
                 </xpath>
             </field>
@@ -138,8 +132,8 @@
                         </group>
 			<group colspan="2" col= "2" class="oe_form_group_label_border">
                             <separator colspan="2" string="Invoice Rate"/>
-                            <field name="pricelist_id" />
-			    <field name="to_invoice" widget="selection" />
+                            <field name="pricelist_id" attrs="{'invisible': ['|',('invoice_on_timesheets','=',0),('charge_expenses','=',0)]}"/>
+			    <field name="to_invoice" widget="selection" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/>
                         </group> 
 			<group col="6" colspan="2" class="oe_form_group_label_border">
                             <field name="quantity_max"/><field name="company_uom_id" nolabel="1" readonly="1"/><field name="remaining_hours" string="/ Remaining"/>
@@ -177,7 +171,7 @@
 				    <td class="oe_amount_center oe_th_110px oe_border_right"><field name="remaining_hours" nolabel="1" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
 				    <td class="oe_amount_center oe_th_110px"><field name="hours_qtt_non_invoiced" nolabel="1" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
 				    <td width="10px"></td>
-				    <td class="oe_th_150px"><button class= "oe_btn_width" name="%(action_timesheet_lines_tree)d" string="Timesheets" type="action" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
+				    <td class="oe_th_150px"><button class= "oe_btn_width" name="%(hr_timesheet.act_hr_timesheet_line_evry1_all_form)d" string="Timesheets" type="action" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
 				    <td class="oe_th_150px"><button class= "oe_btn_width" name="%(hr_timesheet_invoice.act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice)d" string="Invoice Timesheets" type="action" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
 				</tr>
 				<tr>
