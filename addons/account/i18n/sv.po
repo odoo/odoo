@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2012-05-31 16:33+0000\n"
+"PO-Revision-Date: 2012-06-01 08:19+0000\n"
 "Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
 "Language-Team: Svenska <swedish@openerp.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-06-01 05:50+0000\n"
+"X-Launchpad-Export-Date: 2012-06-02 06:16+0000\n"
 "X-Generator: Launchpad (build 15342)\n"
 
 #. module: account
@@ -870,6 +870,10 @@ msgid ""
 "or Loss you'd realized if those transactions were ended today. Only for "
 "accounts having a secondary currency set."
 msgstr ""
+"När du gör flera valutatransaktioner kan du förlora eller vinna en viss "
+"mängd på grund av förändringar i växelkursen. Denna meny ger dig en prognos "
+"för vinsten eller förlusten du skulle insett om dessa transaktioner "
+"avslutades idag. Endast för konton som har en sekundär valuta satt."
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -914,7 +918,7 @@ msgstr "Beräkning"
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Cancel: refund invoice and reconcile"
-msgstr ""
+msgstr "Avbryt: kreditera faktura och avstäm"
 
 #. module: account
 #: field:account.cashbox.line,pieces:0
@@ -2185,6 +2189,8 @@ msgid ""
 "You can not modify the company of this journal as its related record exist "
 "in journal items"
 msgstr ""
+"Du kan inte ändra bolag på denna journal eftersom den innehåller "
+"transaktioner."
 
 #. module: account
 #: report:account.invoice:0
@@ -2379,6 +2385,8 @@ msgid ""
 "In order to delete a bank statement, you must first cancel it to delete "
 "related journal items."
 msgstr ""
+"För att radera ett bankuttdrag, måste du först avbryta relaterade "
+"transaktioner."
 
 #. module: account
 #: field:account.invoice,payment_term:0
@@ -2598,6 +2606,7 @@ msgstr ""
 msgid ""
 "This report gives you an overview of the situation of a specific journal"
 msgstr ""
+"Denna rapport ger en översikt för situationen för en specifik journal"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_line_reconcile_writeoff
