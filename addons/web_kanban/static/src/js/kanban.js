@@ -14,7 +14,13 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
     number_of_color_schemes: 10,
     init: function (parent, dataset, view_id, options) {
         this._super(parent, dataset, view_id, options);
-        _.defaults(this.options, {"quick_creatable": true, "creatable": true, "create_text": undefined});
+        _.defaults(this.options, {
+            "quick_creatable": true,
+            "creatable": true,
+            "create_text": undefined,
+            "read_only_mode": false,
+            "confirm_on_delete": true,
+        });
         this.fields_view = {};
         this.fields_keys = [];
         this.group_by = null;
@@ -550,7 +556,8 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
     render: function() {
         this.qweb_context = {
             record: this.record,
-            widget: this
+            widget: this,
+            read_only_mode: this.view.options.read_only_mode,
         };
         for (var p in this) {
             if (_.str.startsWith(p, 'kanban_')) {
@@ -653,12 +660,18 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
     },
     do_action_delete: function($action) {
         var self = this;
-        if (confirm(_t("Are you sure you want to delete this record ?"))) {
-            return $.when(this.view.dataset.unlink([this.id])).then(function() {
+        function do_it() {
+            return $.when(self.view.dataset.unlink([self.id])).then(function() {
                 self.group.remove_record(self.id);
                 self.destroy();
             });
-        }
+        };
+        if (this.view.options.confirm_on_delete) {
+            if (confirm(_t("Are you sure you want to delete this record ?"))) {
+                return do_it();
+            }
+        } else
+            return do_it();
     },
     do_action_edit: function($action) {
         var self = this;
