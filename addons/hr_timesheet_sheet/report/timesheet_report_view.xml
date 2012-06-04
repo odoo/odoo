@@ -49,20 +49,6 @@
             <field name="arch" type="xml">
                 <search string="Timesheet">
                     <group>
-                        <filter icon="terp-go-year" string="Year"
-                                name="year"
-                                domain="[('date_current','&lt;=', time.strftime('%%Y-%%m-%%d')),('date_current','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
-                                help="Timesheet in current year"/>
-                        <separator orientation="vertical"/>								
-                        <filter icon="terp-go-month" string=" Month "
-                                name="month"
-                                domain="[('date_current','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date_current','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
-                                help="Timesheet in current month"/>
-                        <filter icon="terp-go-month"
-                            string=" Month-1 "
-                            domain="[('date_current','&lt;=', (datetime.date (int(time.strftime('%%Y')), datetime.date.today().month, 1) - datetime.timedelta (days = 1)).strftime('%%Y-%%m-%%d')),('date_current','&gt;',(datetime.date (int(time.strftime('%%Y')), datetime.date.today().month-1, 1)).strftime('%%Y-%%m-%%d'))]"
-                            help="Timesheet of last month"/>
-                        <separator orientation="vertical"/>
                         <filter icon="terp-document-new"
                                 string="Draft"
                                 domain="[('state','=','draft')]"/>
@@ -87,6 +73,7 @@
                         <separator orientation="vertical"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                         <newline/>
+                        <field name="date_current"/>
                         <field name="date_to"/>
                         <field name="date_from"/>
                     </group>

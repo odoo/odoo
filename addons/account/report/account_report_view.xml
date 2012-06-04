@@ -149,9 +149,6 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Sales by Account">
-					<filter icon="terp-go-year" string="This Year" domain="[('name','=',time.strftime('%%Y'))]" help="This year's Sales by type"/>
-					<filter icon="terp-go-month" string="This Month" domain="[('month','=',time.strftime('%%m'))]" help="This months' Sales by type"/>
-					<separator orientation="vertical"/>
 					<field name="name"/>
 					<field name="month"/>
                </search>
@@ -215,9 +212,6 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Sales by Account">
-					<filter icon="terp-go-year" string="This Year" domain="[('name','=',time.strftime('%%Y'))]" help="All Months Sales by type"/>
-					<filter icon="terp-go-month" string="This Month" domain="[('month','=',time.strftime('%%m'))]" help="This Months Sales by type"/>
-					<separator orientation="vertical"/>
 					<field name="name"/>
 					<field name="month"/>
                </search>

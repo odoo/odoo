@@ -32,21 +32,6 @@
         <field name="arch" type="xml">
             <search string="Campaign Analysis">
                    <group>
-                    <filter icon="terp-go-year" name="year"
-                            string="Year"
-                            domain="[('year','=',time.strftime('%%Y'))]"/>
-                    <separator orientation="vertical"/>
-
-                    <filter icon="terp-go-month"
-                            string="Month" name="This Month"
-                            domain="[('month','=',time.strftime('%%m'))]"/>
-                    <filter icon="terp-go-month" string="    Month-1    "
-                            domain="[('create_date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"/>
-
-                    <filter icon="terp-go-today"
-                            string="Today"
-                            domain="[('date','=',time.strftime('%%Y/%%m/%%d'))]"/>
-                    <separator orientation="vertical"/>
                     <filter icon="terp-gtk-go-back-rtl"
                             string="To Do"
                             domain="[('state','=','todo')]"/>
@@ -62,6 +47,7 @@
                     <field name="segment_id"/>
                     <field name="partner_id"/>
                     <field name="country_id"/>
+                    <field name="date"/>
                 </group>
                 <newline/>
                 <group expand="0" string="Group By...">

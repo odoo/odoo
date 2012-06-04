@@ -63,8 +63,6 @@
             <field name="arch" type="xml">
                 <search string="Timesheet">
                     <group>
-                        <filter name="today" icon="terp-go-today" domain="[('date', '=', time.strftime('%%Y-%%m-%%d'))]" string="Today"/>
-                        <separator orientation="vertical"/>
                         <field name="user_id"/>
                         <field name="account_id"/>
                         <field name="date"/>

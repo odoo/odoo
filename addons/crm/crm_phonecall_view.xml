@@ -192,31 +192,21 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Phonecalls">
-               <filter icon="terp-go-today" string="Today"
-                   domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d 23:59:59')),
-                    ('date','&gt;=',time.strftime('%%Y-%%m-%%d 00:00:00'))]"
-                   name="today"
-                   help="Todays's Phonecalls"
-               />
-               <filter icon="terp-go-week"
-                   string="7 Days"
-                   help="Phonecalls during last 7 days"
-                   domain="[('date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
-               />
-
-               <separator orientation="vertical"/>
                <field name="name"/>
                <field name="partner_id"/>
                <field name="user_id">
-                   <filter icon="terp-personal-"
+                   <filter string="Unassigned Phonecalls"
+                       icon="terp-personal-"
                        domain="[('user_id','=',False)]"
                        help="Unassigned Phonecalls" />
                </field>
                <field name="section_id"
                    widget="selection" string="Sales Team">
-                   <filter icon="terp-personal+"
-                       domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
+                   <filter string="My Sales Team(s)"
+                        icon="terp-personal+"
+                        domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                        help="My Sales Team(s)" />
+               <field name="date"/>
                </field>
                <newline/>
                <group expand="0" string="Group By...">
@@ -241,32 +231,23 @@
         <field name="arch" type="xml">
             <search string="Scheduled Phonecalls">
                <filter icon="terp-gtk-go-back-rtl" string="To Do" name="current" domain="[('state','=','open')]"/>
-               <separator orientation="vertical"/>
-               <filter icon="terp-go-today" string="Today"
-                   domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d 23:59:59')),
-                    ('date','&gt;=',time.strftime('%%Y-%%m-%%d 00:00:00'))]"
-                   name="today"
-                   help="Todays's Phonecalls"
-               />
-               <filter icon="terp-go-week"
-                   string="7 Days"
-                   help="Phonecalls during last 7 days"
-                   domain="[('date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
-               />
 
                <separator orientation="vertical"/>
                <field name="name"/>
                <field name="partner_id"/>
                <field name="user_id">
-                   <filter icon="terp-personal-"
+                   <filter string="Unassigned Phonecalls"
+                       icon="terp-personal-"
                        domain="[('user_id','=',False)]"
                        help="Unassigned Phonecalls" />
                </field>
                <field name="section_id"
                    widget="selection" string="Sales Team">
-                   <filter icon="terp-personal+"
-                       domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
+                   <filter string="My Sales Team(s)"
+                        icon="terp-personal+"
+                        domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                        help="My Sales Team(s)" />
+               <field name="date"/>
                </field>
                <newline/>
                <group expand="0" string="Group By...">

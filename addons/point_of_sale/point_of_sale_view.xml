@@ -143,11 +143,9 @@
                     <filter icon="terp-check" string="Invoiced" domain="[('state','=','invoiced')]"/>
                     <filter icon="gtk-convert" string="Posted" domain="[('state','=','done')]"/>
                     <separator orientation="vertical"/>
-                    <filter icon="terp-go-month" string="Today" domain="[('date_order','&gt;=',datetime.date.today().strftime('%%Y-%%m-%%d 00:00:00')),('date_order','&lt;=',datetime.date.today().strftime('%%Y-%%m-%%d 23:59:59'))]"/>
-                    <filter icon="gtk-go-forward" string="Yesterday" domain="[('date_order','&lt;',datetime.date.today().strftime('%%Y-%%m-%%d 00:00:00')),('date_order','&gt;=',(datetime.date.today() - relativedelta(days=1)).strftime('%%Y-%%m-%%d 00:00:00'))]"/>
-                    <separator orientation="vertical"/>
                     <field name="name"/>
                     <field name="user_id"/>
+                    <field name="date_order"/>
                     <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Customer" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>

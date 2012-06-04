@@ -18,17 +18,7 @@
             <field name="arch" type="xml">
                 <search string="Mail message Analysis">
                     <group>
-                    <filter icon="terp-go-year" string="  Year  "
-                        domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;=',time.strftime('%%Y-01-01'))]"
-                        help="Messages created in current year"/>
-                    <filter icon="terp-go-month" string="   Month   "
-                        name="month"
-                        domain="[('create_date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
-                        help="Messages created in current month"/>
-                    <filter icon="terp-go-month"
-                         string="    Month-1    "
-                         domain="[('create_date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
-                         help="Messages created in last month"/>
+                        <field name="create_date"/>
                    </group>
                    <newline/>
                    <group  expand="1" string="Group By...">
