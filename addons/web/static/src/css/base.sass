@@ -1511,7 +1511,13 @@ $colour4: #8a89ba
                 overflow: hidden
 
         .oe_form_title
-            width: 65%
+            width: 55%
+        .oe_form_title:after
+            content: "."
+            display: block
+            height: 0
+            clear: both
+            visibility: hidden
         .oe_form_button_box
             width: 200px
             text-align: center

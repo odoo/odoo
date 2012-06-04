@@ -34,7 +34,7 @@
   background: white;
   /* http://www.quirksmode.org/dom/inputfile.html
    * http://stackoverflow.com/questions/2855589/replace-input-type-file-by-an-image
-   */
+   */ */
 }
 .openerp a {
   text-decoration: none;
@@ -1884,7 +1884,14 @@
   overflow: hidden;
 }
 .openerp .oe_form .oe_form_title {
-  width: 65%;
+  width: 55%;
+}
+.openerp .oe_form .oe_form_title:after {
+  content: ".";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
 }
 .openerp .oe_form .oe_form_button_box {
   width: 200px;
