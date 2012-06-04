@@ -180,7 +180,6 @@ class purchase_requisition_line(osv.osv):
     _name = "purchase.requisition.line"
     _description="Purchase Requisition Line"
     _rec_name = 'product_id'
-
     _columns = {
         'product_id': fields.many2one('product.product', 'Product' ),
         'product_uom_id': fields.many2one('product.uom', 'Product Unit of Measure'),
@@ -222,13 +221,13 @@ class purchase_order(osv.osv):
         res = super(purchase_order, self).default_get(cr, uid, fields, context=context)
         product_ids = context.get('product_ids', False)
         if product_ids:
-            for id in product_ids:
-                if  id[0] == 4:
-                    requisition_data = requisition_line_obj.browse(cr, uid, id[1], context=context)
+            for list_ids in product_ids:
+                if  list_ids[0] == 4:
+                    requisition_data = requisition_line_obj.browse(cr, uid, list_ids[1], context=context)
                     requisition_id.update({'requisition_id': requisition_data.requisition_id.id})
                     line_vals={'product_id': requisition_data.product_id.id, 'product_qty': requisition_data.product_qty, 'name': requisition_data.product_id.name}
-                elif id[0] == 0:
-                   product_data = id[2]
+                elif list_ids[0] == 0:
+                   product_data = list_ids[2]
                    name = product_obj.browse(cr, uid, product_data.get('product_id'), context=context).name
                    line_vals = {'product_id': product_data.get('product_id'), 'product_qty': product_data.get('product_qty'), 'name': name}
                 val_list.append((0,0,line_vals))
@@ -239,7 +238,6 @@ class purchase_order(osv.osv):
         res = {}
         res = super(purchase_order, self).onchange_partner_id(cr, uid, ids, partner_id)
         res_partner = self.pool.get('res.partner')
-        value = {'partner_id': ''}
         requisition_pool = self.pool.get('purchase.requisition')
         supplier = res_partner.browse(cr, uid, partner_id)
         if requisition_id: 
