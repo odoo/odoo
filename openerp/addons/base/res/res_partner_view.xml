@@ -7,154 +7,6 @@
                 <menuitem id="menu_config_address_book" parent="menu_base_config" name="Address Book" sequence="40" groups="group_system"/>
 
         <!--
-          =====================
-          Partner Address
-          =====================
-        -->
-
-        <record id="view_res_partner_address_filter" model="ir.ui.view">
-            <field name="name">res.partner.address.select</field>
-            <field name="model">res.partner.address</field>
-            <field name="type">search</field>
-            <field name="arch" type="xml">
-                <search string="Search Contact">
-                    <group>
-                        <filter string="Customer" name="customer" icon="terp-personal" domain="[('is_customer_add','=','1')]" />
-                        <filter string="Supplier" name="supplier"  icon="terp-personal" domain="[('is_supplier_add','=','1')]" />
-                        <separator orientation="vertical"/>
-                        <field name="partner_id" string="Partner"/>
-                        <field name="name" />
-                        <field name="country_id" />
-                    </group>
-                    <newline/>
-                    <group expand="0" string="Group By...">
-                       <filter string="Partner" icon="terp-personal" domain="[]" context="{'group_by' : 'partner_id'}" />
-                       <filter string="Country" icon="terp-go-home" domain="[]" context="{'group_by' : 'country_id'}" />
-                       <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'type'}" />
-                   </group>
-                 </search>
-            </field>
-        </record>
-
-        <record id="view_partner_address_tree" model="ir.ui.view">
-            <field name="name">res.partner.address.tree</field>
-            <field name="model">res.partner.address</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Partner Addresses">
-                    <field name="partner_id"/>
-                    <field name="name"/>
-                    <field name="phone"/>
-                    <field name="email"/>
-                    <field name="zip"/>
-                    <field name="city"/>
-                    <field name="country_id"/>
-                    <field name="type"/>
-                </tree>
-            </field>
-        </record>
-        <record id="action_partner_addess_tree" model="ir.actions.act_window">
-            <field name="name">Partner Contacts</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.partner.address</field>
-            <field name="view_type">tree</field>
-            <field name="view_id" ref="view_partner_address_tree"/>
-        </record>
-
-        <record model="ir.ui.view" id="contacts_kanban_view">
-        <field name="name">res.partner.address.kanban</field>
-        <field name="model">res.partner.address</field>
-        <field name="type">kanban</field>
-        <field name="arch" type="xml">
-            <kanban>
-                <field name="color"/>
-                <field name="name"/>
-                <field name="email"/>
-                <templates>
-                    <t t-name="kanban-box">
-                        <t t-set="color" t-value="kanban_color(record.color.raw_value || record.name.raw_value)"/>
-                        <div t-att-class="color + (record.color.raw_value == 1 ? ' oe_kanban_color_alert' : '')">
-                            <div class="oe_kanban_box oe_kanban_color_border">
-                                <div class="oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_auto_height">
-                                    <table class="oe_kanban_table">
-                                        <tr>
-                                            <td class="oe_kanban_title1" align="left" valign="middle">
-                                                <field name="name"/>
-                                            </td>
-                                            <td valign="top" width="22">
-                                                <img t-att-src="kanban_gravatar(record.email.value, 22)" class="oe_kanban_gravatar"/>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </div>
-                                <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger oe_kanban_color_border">
-                                    <table class="oe_kanban_table">
-                                        <tr>
-                                            <td valign="top" width="22" align="left">
-                                                <img src="/base/static/src/img/kanban_partner.png" width="64" height="64"/>
-                                            </td>
-                                            <td valign="top" align="left">
-                                                <div class="oe_kanban_title2">
-                                                    <field name="title"/>
-                                                    <t t-if="record.title.raw_value and record.function.raw_value">,</t>
-                                                    <field name="function"/>
-                                                </div>
-                                                <div class="oe_kanban_title3">
-                                                    <field name="partner_id"/>
-                                                    <t t-if="record.partner_id.raw_value and record.country_id.raw_value">,</t>
-                                                    <field name="country_id"/>
-                                                </div>
-                                                <div class="oe_kanban_title3">
-                                                    <i><field name="email"/>
-                                                    <t t-if="record.phone.raw_value and record.email.raw_value">,</t>
-                                                    <field name="phone"/></i>
-                                                </div>
-                                            </td>
-                                         </tr>
-                                    </table>
-                                </div>
-                                <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
-                                    <div class="oe_kanban_left">
-                                        <a string="Edit" icon="gtk-edit" type="edit"/>
-                                        <a string="Change Color" icon="color-picker" type="color" name="color"/>
-                                        <a title="Mail" t-att-href="'mailto:'+record.email.value" style="text-decoration: none;" >
-                                            <img src="/web/static/src/img/icons/terp-mail-message-new.png" border="0" width="16" height="16"/>
-                                        </a>
-                                    </div>
-                                    <br class="oe_kanban_clear"/>
-                                </div>
-                            </div>
-                        </div>
-                    </t>
-                </templates>
-            </kanban>
-        </field>
-    </record>
-
-        <record id="action_partner_address_form" model="ir.actions.act_window">
-            <field name="name">Addresses</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.partner.address</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,kanban</field>
-            <field name="context">{"search_default_customer":1}</field>
-            <field name="search_view_id" ref="view_res_partner_address_filter"/>
-            <field name="help">Customers (also called Partners in other areas of the system) helps you manage your address book of companies whether they are prospects, customers and/or suppliers. The partner form allows you to track and record all the necessary information to interact with your partners from the company address to their contacts as well as pricelists, and much more. If you installed the CRM, with the history tab, you can track all the interactions with a partner such as opportunities, emails, or sales orders issued.</field>
-        </record>
-        <record id="action_partner_address_form_view1" model="ir.actions.act_window.view">
-            <field eval="10" name="sequence"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="view_partner_address_tree"/>
-            <field name="act_window_id" ref="action_partner_address_form"/>
-        </record>
-        <record id="action_partner_address_form_view2" model="ir.actions.act_window.view">
-            <field eval="20" name="sequence"/>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="view_partner_address_form1"/>
-            <field name="act_window_id" ref="action_partner_address_form"/>
-        </record>
-
-        <!--
           =======================
           Partner Titles
           =======================
@@ -248,40 +100,40 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Partners" validate="0">
+                <sheet>
                     <field name="photo" widget='image' class="oe_form_avatar oe_right"/>
                     <div class="oe_right oe_form_button_box" name="buttons">
 
                     </div>
                     <div class="oe_form_title">
                         <div class="oe_form_readonly_hidden">
-                            <label for="name"/> 
-                            (<field name="is_company" on_change="onchange_type(is_company)" class="oe_form_inline"/> <label for="is_company"/>)
+                            <label for="name" string="Customer Name"/> 
+                            (<field name="is_company" on_change="onchange_type(is_company)" class="oe_form_inline"/> <label for="is_company" string="Is a Company?"/>)
                         </div>
                         <h1>
-                            <field name="name" placeholder="Customer Name" class="oe_form_inline"/>,
-                            <field name="title" domain="[('domain', '=', 'contact')]"/>
+                            <field name="name"/>
                         </h1>
-                        <div class="oe_form_readonly_hidden">
-                            <label for="parent_id"/> 
+                        <div attrs="{'invisible': [('is_company','=', True)]}">
+                            <label for="parent_id" class="oe_form_readonly_hidden"/>
                         </div>
-                        <h2>
-                            <field name="parent_id" string="Company" attrs="{'invisible': [('is_company','=', True)]}"
+                        <h2 attrs="{'invisible': [('is_company','=', True)]}">
+                            <field name="parent_id" string="Company"
                                 domain="[('is_company', '=', True)]" context="{'default_is_company': True}"
                                 class="oe_form_inline"
                                 on_change="onchange_address(use_parent_address, parent_id)"/>, 
-                            <field name="function" attrs="{'invisible': [('is_company', '=', True)]}" class="oe_form_inline"/>
+                            <field name="function" class="oe_form_inline" placeholder="Sales Manager"/>
                         </h2>
-                        <field name="category_id" widget="many2many_tags"/>
+                        <field name="category_id" widget="many2many_tags" placeholder="Tags..."/>
                     </div>
 
                     <group>
                         <group>
-                            <label for="type"/>
-                            <div>
+                            <label for="type" attrs="{'invisible': [('parent_id','=', False)]}"/>
+                            <div attrs="{'invisible': [('parent_id','=', False)]}">
                                 <field class="oe_form_inline"
-                                    name="type" attrs="{'invisible': [('is_company','=', True)]}"/>
+                                    name="type"/>
                                 <label for="use_parent_address"/>
-                                <field name="use_parent_address" attrs="{'invisible': [('parent_id', '=', False)]}"
+                                <field name="use_parent_address"
                                     class="oe_form_inline"
                                     on_change="onchange_address(use_parent_address, parent_id)"/>
                             </div>
@@ -300,10 +152,11 @@
                             <field name="website" widget="url" placeholder="www.openerp.com"/>
                         </group>
                         <group>
-                            <field name="phone" colspan="4" placeholder="+32.81.81.37.00"/>
-                            <field name="mobile" colspan="4"/>
-                            <field name="fax" colspan="4"/>
-                            <field name="email" widget="email" colspan="4"/>
+                            <field name="phone" placeholder="+32.81.81.37.00"/>
+                            <field name="mobile"/>
+                            <field name="fax"/>
+                            <field name="email" widget="email"/>
+                            <field name="title" domain="[('domain', '=', 'contact')]" attrs="{'invisible': [('is_company','=', True)]}"/>
                         </group>
                     </group>
 
@@ -362,7 +215,7 @@
                         </page>
                         <page string="Sales &amp; Purchases" attrs="{'invisible': [('customer', '=', False), ('supplier', '=', False)]}">
                             <group>
-                                <group/>
+                                <group>
                                     <field name="lang"/>
                                     <field name="user_id"/>
                                     <field name="date"/>
@@ -380,6 +233,7 @@
                             <field name="comment" placeholder="Internal notes about this customer..."/>
                         </page>
                     </notebook>
+                </sheet>
                 </form>
             </field>
         </record>
@@ -572,7 +426,6 @@
                         <field name="active"/>
                         <field name="parent_id"/>
                     </group>
-                    <field colspan="4" name="partner_ids" nolabel="1"/>
                 </form>
             </field>
         </record>
@@ -637,12 +490,6 @@
         </record>
 
         <menuitem action="action_partner_category_form" id="menu_partner_category_form" name="Partner Categories" sequence="4" parent="menu_config_address_book" groups="base.group_no_one"/>
-
-        <act_window domain="[('partner_id', '=', active_id)]" context="{'default_partner_id':active_id}"
-            id="act_res_partner_event" name="Events"
-            res_model="res.partner.event"
-            src_model="res.partner"
-            />
 
     </data>
 </openerp>

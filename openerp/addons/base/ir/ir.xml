@@ -463,7 +463,7 @@
                                     <field name="filter"/>
                                 </group>
                             </group>
-                            <group string="Help"/>
+                            <group string="Help">
                                 <field colspan="2" name="help" nolabel="1"/>
                             </group>
                             <group string="Views">
@@ -1512,7 +1512,7 @@
                         <field name="global"/>
                         <field name="groups" nolabel="1" colspan="4"/>
                     </group>
-                    <group string="Interaction between rules"/>
+                    <group string="Interaction between rules">
                         <label  colspan="2"
                             string="Global rules (non group-specific) are restrictions, and cannot be bypassed. Group-local rules grant additional permissions, but are constrained within the bounds of global ones. The first group rules restrict further than global rules, but any additional group rule will add more permissions"/>
                         <label colspan="2"
@@ -1603,7 +1603,7 @@
                             <field name="code"/>
                         </page>
                         <page string="Trigger" attrs="{'invisible':[('state','!=','trigger')]}">
-                            <group string="Trigger Configuration" col="4"/>
+                            <group string="Trigger Configuration" col="4">
                                 <field name="wkf_model_id" attrs="{'required':[('state','=','trigger')]}"/>
                                 <field name="trigger_obj_id" context="{'key':''}" 
                                        domain="[('model_id','=',model_id),('ttype','in',['many2one','int'])]"
@@ -1656,7 +1656,7 @@
                             <label string="If you use a formula type, use a python expression using the variable 'object'." align="0.0"/>
                         </page>
                         <page string="Iteration Actions" attrs="{'invisible':[('state','!=','loop')]}">
-                            <group col="4"/>
+                            <group col="4">
                                 <field name="expression" attrs="{'required':[('state','=','loop')]}"/>
                                 <field name="loop_action" domain="[('state','!=','loop')]" attrs="{'required':[('state','=','loop')]}"/>
                             </group>

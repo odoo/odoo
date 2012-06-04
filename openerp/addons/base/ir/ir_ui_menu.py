@@ -255,6 +255,9 @@ class ir_ui_menu(osv.osv):
 
         return res
 
+    def _get_needaction_info(self, cr, uid, id, domain=[], context={}):
+        return [False, 0]
+
     def _get_needaction(self, cr, uid, ids, field_names, args, context=None):
         if context is None:
             context = {}

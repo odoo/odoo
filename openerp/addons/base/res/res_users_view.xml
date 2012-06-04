@@ -79,8 +79,8 @@
                 <form string="Users">
                     <field name="id" invisible="1"/>
                     <sheet>
-                        <div class="oe_right oe_form_avatar">
-                            <field name="avatar" widget='image' nolabel="1" on_change="onchange_avatar(avatar)"/>
+                        <div class="oe_right">
+                            <field name="avatar" widget='image' nolabel="1" on_change="onchange_avatar(avatar)" class="oe_form_avatar"/>
                         </div>
                         <div class="oe_form_title">
                             <label for="name" class="oe_form_readonly_hidden"/>
@@ -106,18 +106,20 @@
                                         <field name="context_tz"/>
                                         <field name="menu_tips"/>
                                     </group>
-                                    <group>
+                                    <group groups="base.group_no_one">
                                         <field name="action_id"/>
                                         <field domain="[('usage','=','menu')]" name="menu_id" required="True"/>
                                     </group>
                                 </group>
-                                <group string="Email Preferences">
+                                <group>
                                     <field name="user_email" widget="email"/>
                                     <field name="signature"/>
                                 </group>
                             </page>
                             <page string="Access Rights">
+                                <group col="4">
                                 <field name="groups_id"/>
+                                </group>
                             </page>
                             <page string="Allowed Companies" groups="base.group_multi_company">
                                 <field name="company_ids"/>
