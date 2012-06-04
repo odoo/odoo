@@ -250,6 +250,7 @@ class account_voucher(osv.osv):
 
     _name = 'account.voucher'
     _description = 'Accounting Voucher'
+    _inherit = ['mail.thread']
     _order = "date desc, id desc"
 #    _rec_name = 'number'
     _columns = {
@@ -1249,6 +1250,8 @@ class account_voucher(osv.osv):
                 'state': 'posted',
                 'number': name,
             })
+            message = _("voucher  '%s' is posted.") % name
+            self.message_append_note(cr, uid, [voucher.id], body=message, context=context)
             if voucher.journal_id.entry_posted:
                 move_pool.post(cr, uid, [move_id], context={})
             # We automatically reconcile the account move lines.
@@ -1257,6 +1260,12 @@ class account_voucher(osv.osv):
                     move_line_pool.reconcile_partial(cr, uid, rec_ids, writeoff_acc_id=voucher.writeoff_acc_id.id, writeoff_period_id=voucher.period_id.id, writeoff_journal_id=voucher.journal_id.id)
         return True
 
+    def create(self, cr, uid, vals, context=None):
+        voucher =  super(account_voucher, self).create(cr, uid, vals, context=context)
+        if voucher:
+            self.create_send_note(cr, uid, [voucher], context=context)
+        return voucher
+    
     def copy(self, cr, uid, id, default={}, context=None):
         default.update({
             'state': 'draft',
@@ -1269,6 +1278,21 @@ class account_voucher(osv.osv):
         if 'date' not in default:
             default['date'] = time.strftime('%Y-%m-%d')
         return super(account_voucher, self).copy(cr, uid, id, default, context)
+
+    # --------------------------------------
+    # OpenChatter methods and notifications
+    # --------------------------------------
+    
+    def _get_document_type(self, type):
+        type_dict = {
+                'payment': 'Supplier Payment',
+                'purchase': 'Purchase Receipt',
+        }
+        return type_dict.get(type, 'Invoice')
+
+    def create_send_note(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            self.message_append_note(cr, uid, [obj.id],body=_("%s <b>created</b>.") % (self._get_document_type(obj.type)), context=context)
 
 account_voucher()
 

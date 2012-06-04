@@ -145,7 +145,7 @@
             <field name="arch" type="xml">
                 <form layout="manual">
                 <div class="oe_form_topbar">
-                    <button name="proforma_voucher" string="Validate" states="draft" invisible="context.get('line_type', False)"/>
+                    <button name="proforma_voucher" string="Validate" states="draft" invisible="context.get('line_type', False)" class="oe_form_button_hi"/>
                     <button name="cancel_voucher" string="Cancel" states="draft,proforma"  invisible="context.get('line_type', False)"/>
                     <button name="cancel_voucher" string="Unreconcile" type="object" states="posted" invisible="context.get('line_type', False)" confirm="Are you sure to unreconcile and cancel this record ?"/>
                     <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" invisible="context.get('line_type', False)"/>
@@ -188,8 +188,8 @@
                                     <field name="date_original" readonly="1"/>
                                     <field name="date_due" readonly="1"/>
                                     <field name="amount_original" readonly="1"/>
-                                    <field name="amount_unreconciled" readonly="1"/>
-                                    <field name="reconcile" on_change="onchange_reconcile(reconcile, amount, amount_unreconciled, context)"/>
+                                    <field name="amount_unreconciled" readonly="1" groups="base.group_account_user"/>
+                                    <field name="reconcile" on_change="onchange_reconcile(reconcile, amount, amount_unreconciled, context)" groups="base.group_account_user"/>
                                     <field name="amount" sum="Total Allocation" on_change="onchange_amount(amount, amount_unreconciled, context)"/>
                                 </tree>
                             </field>
@@ -204,8 +204,8 @@
                                     <field name="date_original" readonly="1"/>
                                     <field name="date_due" readonly="1"/>
                                     <field name="amount_original" readonly="1"/>
-                                    <field name="amount_unreconciled" readonly="1"/>
-                                    <field name="reconcile" on_change="onchange_reconcile(reconcile, amount, amount_unreconciled, context)"/>
+                                    <field name="amount_unreconciled" readonly="1" groups="base.group_account_user"/>
+                                    <field name="reconcile" on_change="onchange_reconcile(reconcile, amount, amount_unreconciled, context)" groups="base.group_account_user"/>
                                     <field name="amount" sum="Total Allocation" on_change="onchange_amount(amount, amount_unreconciled, context)"/>
                                 </tree>
                             </field>
@@ -261,6 +261,9 @@
                         </page>
                     </notebook>
                     </sheet>
+                    <div class="oe_form_sheet_width">
+                        <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"/>
+                    </div>
                 </form>
             </field>
         </record>
@@ -274,7 +277,7 @@
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_voucher_filter_vendor_pay"/>
             <field name="target">current</field>
-            <field name="help">The supplier payment form allows you to track the payment you do to your suppliers. When you select a supplier, the payment method and an amount for the payment, OpenERP will propose to reconcile your payment with the open supplier invoices or bills.</field>
+            <field name="help">Click on "Create" to register a supplier payment. Track payments you do to your supplier and amounts you pay</field>
         </record>
         <record id="action_vendor_payment_tree" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
