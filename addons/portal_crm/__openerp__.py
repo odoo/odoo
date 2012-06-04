@@ -26,7 +26,8 @@
     'category': 'Tools',
     'complexity': "easy",
     'description': """
-    This module adds the menu if crm and portal are installed.
+This module adds crm menu and features (contact form) to your portal if crm and 
+portal are installed.
     """,
     'author': 'OpenERP SA',
     'depends': ['crm','portal'],
