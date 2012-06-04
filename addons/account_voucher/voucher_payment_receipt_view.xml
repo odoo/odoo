@@ -165,8 +165,8 @@
                             on_change="onchange_journal(journal_id, line_dr_ids, False, partner_id, date, amount, type, company_id, context)"
                             string="Payment Method"/>
                         <field name="date" select="1" invisible="context.get('line_type', False)" on_change="onchange_date(date, currency_id, payment_rate_currency_id, amount, company_id, context)"/>
-                        <field name="reference" select="1" invisible="context.get('line_type', False)" string="Payment Ref"/>
-                        <field name="name" colspan="2" invisible="context.get('line_type', False)"/>
+                        <field name="reference" select="1" invisible="context.get('line_type', False)" string="Payment Ref" placeholder="003/10"/>
+                        <field name="name" colspan="2" invisible="context.get('line_type', False)" placeholder="Invoice SAJ/0042"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                         <field name="account_id"
                             widget="selection"
@@ -323,8 +323,8 @@
                             on_change="onchange_journal(journal_id, line_cr_ids, False, partner_id, date, amount, type, company_id, context)"
                             string="Payment Method"/>
                         <field name="date" select="1" invisible="context.get('line_type', False)" on_change="onchange_date(date, currency_id, payment_rate_currency_id, amount, company_id, context)"/>
-                        <field name="reference" select="1" invisible="context.get('line_type', False)" string="Payment Ref"/>
-                        <field name="name" colspan="2" invisible="context.get('line_type', False)"/>
+                        <field name="reference" select="1" invisible="context.get('line_type', False)" string="Payment Ref" placeholder="003/10"/>
+                        <field name="name" colspan="2" invisible="context.get('line_type', False)" placeholder="Invoice SAJ/0042"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                         <field name="account_id"
                             widget="selection"
