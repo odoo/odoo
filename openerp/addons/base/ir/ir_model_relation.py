@@ -16,9 +16,9 @@ class ir_model_relation(Model):
     _columns = {
         'name': fields.char('Relation Name', required=True, size=128, select=1,
             help="PostgreSQL table name implementing a many2many relation."),
-        'model': fields.many2one('ir.model', string='Model Name',
+        'model': fields.many2one('ir.model', string='Model',
             required=True, select=1),
-        'module': fields.many2one('ir.module.module', string='Module Name',
+        'module': fields.many2one('ir.module.module', string='Module',
             required=True, select=1),
         'date_update': fields.datetime('Update Date'),
         'date_init': fields.datetime('Initialization Date')

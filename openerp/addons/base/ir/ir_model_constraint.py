@@ -16,9 +16,9 @@ class ir_model_constraint(Model):
     _columns = {
         'name': fields.char('Constraint', required=True, size=128, select=1,
             help="PostgreSQL constraint or foreign key name."),
-        'model': fields.many2one('ir.model', string='Model Name',
+        'model': fields.many2one('ir.model', string='Model',
             required=True, select=1),
-        'module': fields.many2one('ir.module.module', string='Module Name',
+        'module': fields.many2one('ir.module.module', string='Module',
             required=True, select=1),
         'type': fields.char('Constraint Type', required=True, size=1, select=1,
             help="Type of the constraint: `f` for a foreign key, "

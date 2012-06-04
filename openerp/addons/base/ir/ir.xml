@@ -1159,6 +1159,35 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="view_model_relation_form">
+            <field name="name">ir.model.relation.form</field>
+            <field name="model">ir.model.relation</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="ManyToMany Relations">
+                    <field name="name"/>
+                    <field name="module"/>
+                    <field name="model"/>
+                    <newline/>
+                    <field name="date_update" />
+                    <field name="date_init" />
+                </form>
+            </field>
+        </record>
+
+        <record id="view_model_relation_list" model="ir.ui.view">
+            <field name="name">ir.model.relation.list</field>
+            <field name="model">ir.model.relation</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="ManyToMany Relations">
+                    <field name="name"/>
+                    <field name="module"/>
+                    <field name="model"/>
+                </tree>
+            </field>
+        </record>
+
         <record id="action_model_model" model="ir.actions.act_window">
             <field name="name">Models</field>
             <field name="res_model">ir.model</field>
@@ -1193,7 +1222,16 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_model_constraint_list"/>
         </record>
-        <menuitem action="action_model_constraint" id="ir_model_constraint_menu" parent="base.next_id_5"
+        <menuitem action="action_model_constraint" id="ir_model_constraint_menu" parent="base.next_id_9"
+                  groups="base.group_no_one"/>
+
+        <record id="action_model_relation" model="ir.actions.act_window">
+            <field name="name">ManyToMany Relations</field>
+            <field name="res_model">ir.model.relation</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_model_relation_list"/>
+        </record>
+        <menuitem action="action_model_relation" id="ir_model_relation_menu" parent="base.next_id_9"
                   groups="base.group_no_one"/>
 
         <!-- Translations -->
