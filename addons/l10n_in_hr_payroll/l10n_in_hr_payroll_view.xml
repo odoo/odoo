@@ -49,6 +49,19 @@
             </field>
         </record>
 
+        <record id="view_hr_bank_advice_tree" model="ir.ui.view">
+            <field name="name">hr.payroll.advice.tree</field>
+            <field name="model">hr.payroll.advice</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Bank Advice">
+                    <field name="number" select="1"/>
+                    <field name="name" select="1"/>
+                    <field name="date" select="1"/>
+                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                </tree>
+            </field>
+        </record>
         <record id="view_hr_bank_advice_form" model="ir.ui.view">
             <field name="name">hr.payroll.advice.form</field>
             <field name="model">hr.payroll.advice</field>
@@ -104,14 +117,6 @@
             id="hr_menu_payment_advice"
             parent="hr_payroll.menu_hr_root_payroll"
         />
-
-        <record id="action_view_hr_bank_advice_tree" model="ir.actions.act_window">
-            <field name="name">Payment Advice</field>
-            <field name="res_model">hr.payroll.advice</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_hr_bank_advice_tree"/>
-        </record>
 
     </data>
 </openerp>
