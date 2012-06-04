@@ -4055,11 +4055,11 @@ instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
     template: 'FieldBinaryImage',
     initialize_content: function() {
         this._super();
-        this.$placeholder = $(".oe_form_field-binary-image-placeholder", this.$element);
-        if (!this.get("effective_readonly"))
-            this.$element.find('.oe-binary').show();
-        else
-            this.$element.find('.oe-binary').hide();
+        if (!this.get("effective_readonly")) {
+            this.$element.find('.oe_form_field_image_controls').show();
+        } else {
+            this.$element.find('.oe_form_field_image_controls').hide();
+        }
     },
     set_value: function(value_) {
         this._super.apply(this, arguments);
@@ -4075,8 +4075,9 @@ instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
         } else {
             url = "/web/static/src/img/placeholder.png";
         }
-        var rendered = QWeb.render("FieldBinaryImage-img", {widget: this, url: url});;
-        this.$placeholder.html(rendered);
+        var img = QWeb.render("FieldBinaryImage-img", { widget: this, url: url });
+        this.$element.find('> img').remove();
+        this.$element.prepend(img);
     },
     on_file_change: function() {
         this.render_value();

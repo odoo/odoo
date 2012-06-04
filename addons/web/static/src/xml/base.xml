@@ -1042,9 +1042,8 @@
     <div class="oe_clear"/>
 </t>
 <t t-name="FieldBinaryImage">
-    <span class="oe_form_field oe_binary_image">
-        <div class="oe_form_field-binary-image-placeholder"></div>
-        <div class="oe-binary">
+    <span class="oe_form_field oe_form_field_image">
+        <div class="oe_form_field_image_controls">
             <div class="oe-binary-file-set">
                 <form class="oe-binary-form" t-att-target="widget.iframe"
                     method="post" enctype="multipart/form-data" action="/web/binary/upload">
@@ -1062,21 +1061,20 @@
             <button class="oe_button oe-binary-file-clear" type="button" title="Clear">
                 <img t-att-src='_s + "/web/static/src/img/icons/STOCK_MISSING_IMAGE.png"'/>
             </button>
+            <div class="oe-binary-progress" style="display: none">
+                <img t-att-src='_s + "/web/static/src/img/throbber.gif"' width="16" height="16"/>
+                <b>Uploading ...</b>
+            </div>
+            <iframe t-att-id="widget.iframe" t-att-name="widget.iframe" style="display: none"/>
         </div>
-        <div class="oe-binary-progress" style="display: none">
-            <img t-att-src='_s + "/web/static/src/img/throbber.gif"' width="16" height="16"/>
-            <b>Uploading ...</b>
-        </div>
-        <iframe t-att-id="widget.iframe" t-att-name="widget.iframe" style="display: none"/>
     </span>
 </t>
 <t t-name="FieldBinaryImage-img">
-    <img t-att-src='url' class="oe-binary-image field_image"
+    <img t-att-src='url'
         t-att-border="widget.readonly ? 0 : 1"
         t-att-name="widget.name"
         t-att-width="widget.node.attrs.img_width || widget.node.attrs.width"
         t-att-height="widget.node.attrs.img_height || widget.node.attrs.height"
-        t-att-style="'max-width: ' + (widget.$element.width() > 60 ? widget.$element.width() : 60) + 'px'"
     />
 </t>
 <t t-name="FieldBinaryFile">

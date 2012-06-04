@@ -1928,8 +1928,35 @@
   margin: 0;
   padding: 0;
 }
-.openerp .oe_form .oe_binary_image {
+.openerp .oe_form .oe_form_field_image {
+  padding: 0;
+  position: relative;
   display: inline-block;
+  width: auto;
+  vertical-align: top;
+}
+.openerp .oe_form .oe_form_field_image > img {
+  min-width: 100px;
+}
+.openerp .oe_form .oe_form_field_image .oe_form_field_image_controls {
+  position: absolute;
+  top: 1px;
+  padding: 3px 0 0 0;
+  margin: 0 1px;
+  filter: alpha(opacity=70);
+  opacity: 0.7;
+  width: 99%;
+  text-align: center;
+  background: url(/web/static/src/img/form_sheetbg.png);
+  border-bottom: 1px dotted black;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.openerp .oe_form .oe_form_field_image:hover .oe_form_field_image_controls {
+  filter: alpha(opacity=100);
+  opacity: 1;
 }
 .openerp .oe_horizontal_border {
   border-bottom: 1px solid black;
