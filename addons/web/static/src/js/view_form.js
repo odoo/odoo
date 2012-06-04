@@ -1136,6 +1136,7 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
                             $td.addClass('oe_vertical_separator').attr('width', '1');
                             $td.empty();
                             row_cols-= $td.attr('colspan') || 1;
+                            total--;
                         }
                         break;
                     case 'label':
@@ -1158,20 +1159,22 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
                             }
                             $td.attr('width', width);
                             $child.removeAttr('width');
+                            row_cols-= $td.attr('colspan') || 1;
                         } else {
                             to_compute.push($td);
                         }
-                        row_cols-= $td.attr('colspan') || 1;
 
                 }
             });
-            var unit = Math.floor(total / row_cols);
-            if (!row_cols && !$(this).is('.oe_form_group_row_incomplete')) {
-                _.each(to_compute, function($td, i) {
-                    var width = parseInt($td.attr('colspan'), 10) * unit;
-                    $td.attr('width', ((i == to_compute.length - 1) ? total : width) + '%');
-                    total -= width;
-                });
+            if (row_cols) {
+                var unit = Math.floor(total / row_cols);
+                if (!$(this).is('.oe_form_group_row_incomplete')) {
+                    _.each(to_compute, function($td, i) {
+                        var width = parseInt($td.attr('colspan'), 10) * unit;
+                        $td.attr('width', width + '%');
+                        total -= width;
+                    });
+                }
             }
         });
         _.each(children, function(el) {
