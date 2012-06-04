@@ -64,6 +64,7 @@ class purchase_requisition(osv.osv):
             'name': self.pool.get('ir.sequence').get(cr, uid, 'purchase.order.requisition'),
         })
         return super(purchase_requisition, self).copy(cr, uid, id, default, context)
+    
     def tender_cancel(self, cr, uid, ids, context=None):
         purchase_order_obj = self.pool.get('purchase.order')
         for purchase in self.browse(cr, uid, ids, context=context):
@@ -71,19 +72,40 @@ class purchase_requisition(osv.osv):
                 if str(purchase_id.state) in('draft','wait'):
                     purchase_order_obj.action_cancel(cr,uid,[purchase_id.id])
         self.write(cr, uid, ids, {'state': 'cancel'})
+        self.cancel_send_note(cr, uid, ids, context=context)
         return True
 
     def tender_in_progress(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'in_progress'} ,context=context)
+        self.in_progress_send_note(cr, uid, ids, context=context)
         return True
 
     def tender_reset(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'draft'})
+        self.reset_send_note(cr, uid, ids, context=context)
         return True
 
     def tender_done(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'done', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
+        self.done_to_send_note(cr, uid, ids, context=context)
         return True
+
+    def in_progress_send_note(self, cr, uid, ids, context=None):
+        for requisition in self.browse(cr, uid, ids, context=context):
+                self.message_append_note(cr, uid, [requisition.id], body=_("Draft Requistion  is <b>Sent to Suppliers</b>."), context=context)
+    
+    def reset_send_note(self, cr, uid, ids, context=None):
+        self.message_append_note(cr, uid, ids, body=_("""Purchase Requisition <b>set to Draft</b>."""), context=context)
+     
+    def done_to_send_note(self, cr, uid, ids, context=None):
+        self.message_append_note(cr, uid, ids, body=_("Purchase Requisition has been  <b>Done</b>."), context=context)
+        
+    def draft_send_note(self, cr, uid, ids, context=None):
+        return self.message_append_note(cr, uid, ids, body=_("Purchase Requisition has been set to <b>draft</b>."), context=context)
+    
+    def cancel_send_note(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            self.message_append_note(cr, uid, [obj.id], body=_("Purchase Requisition has been <b>cancelled</b>."), context=context)
 
     def _planned_date(self, requisition, delay=0.0):
         company = requisition.company_id
@@ -172,6 +194,15 @@ class purchase_requisition(osv.osv):
             if (obj.state == 'draft') and obj.user_id:
                 result[obj.id] = [obj.user_id.id]
         return result
+    
+    def create_send_note(self, cr, uid, ids, context=None):
+        return self.message_append_note(cr, uid, ids, body=_("Purchase Requisition has been <b>created</b>."), context=context)  
+
+    def create(self, cr, uid, vals, context=None):
+        requisition =  super(purchase_requisition, self).create(cr, uid, vals, context=context)
+        if requisition:
+            self.create_send_note(cr, uid, [requisition], context=context)
+        return requisition
 
 purchase_requisition()
 
@@ -210,42 +241,7 @@ class purchase_order(osv.osv):
     _columns = {
         'requisition_id' : fields.many2one('purchase.requisition','Purchase Requisition')
     }
-    def default_get(self, cr, uid, fields, context=None):
-        if not context:
-            context = {}
-        val_list = []
-        requisition_id = {}
-        product_obj = self.pool.get('product.product')
-        requisition_line_obj = self.pool.get('purchase.requisition.line')
-        purchase_order_line_obj = self.pool.get('purchase.order.line')
-        res = super(purchase_order, self).default_get(cr, uid, fields, context=context)
-        product_ids = context.get('product_ids', False)
-        if product_ids:
-            for list_ids in product_ids:
-                if  list_ids[0] == 4:
-                    requisition_data = requisition_line_obj.browse(cr, uid, list_ids[1], context=context)
-                    requisition_id.update({'requisition_id': requisition_data.requisition_id.id})
-                    line_vals={'product_id': requisition_data.product_id.id, 'product_qty': requisition_data.product_qty, 'name': requisition_data.product_id.name}
-                elif list_ids[0] == 0:
-                   product_data = list_ids[2]
-                   name = product_obj.browse(cr, uid, product_data.get('product_id'), context=context).name
-                   line_vals = {'product_id': product_data.get('product_id'), 'product_qty': product_data.get('product_qty'), 'name': name}
-                val_list.append((0,0,line_vals))
-        res.update({'order_line': val_list, 'requisition_id': requisition_id.get('requisition_id')})
-        return res
-        
-    def onchange_partner_id(self, cr, uid, ids, partner_id, requisition_id):
-        res = {}
-        res = super(purchase_order, self).onchange_partner_id(cr, uid, ids, partner_id)
-        res_partner = self.pool.get('res.partner')
-        requisition_pool = self.pool.get('purchase.requisition')
-        supplier = res_partner.browse(cr, uid, partner_id)
-        if requisition_id: 
-            requisition = requisition_pool.browse(cr, uid, requisition_id)
-            if supplier.id in filter(lambda x: x, [rfq.state <> 'cancel' and rfq.partner_id.id or None for rfq in requisition.purchase_ids]):
-                 raise osv.except_osv(_('Warning'), _('You have already one %s purchase order for this partner, you must cancel this purchase order to create a new quotation.') % rfq.state)
-        return res
-        
+
     def wkf_confirm_order(self, cr, uid, ids, context=None):
         res = super(purchase_order, self).wkf_confirm_order(cr, uid, ids, context=context)
         proc_obj = self.pool.get('procurement.order')
