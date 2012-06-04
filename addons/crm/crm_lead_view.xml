@@ -544,15 +544,12 @@
             <search string="Search Opportunities">
                 <filter icon="terp-check"
                     string="New"  help="New Opportunities"
-                    name="new"
                     domain="[('state','=','draft')]"/>
                 <filter icon="terp-camera_test"
                     string="Open"  help="Open Opportunities"
-                    name="open"
                     domain="[('state','=','open')]"/>
                 <filter icon="terp-gtk-media-pause"
                     string="Pending"  help="Pending Opportunities"
-                    name="pending"
                     domain="[('state','=','pending')]"/>
                 <separator orientation="vertical"/>
                 <field name="name" string="Opportunity / Customer"
@@ -563,6 +560,8 @@
                         domain="[('user_id','=', False)]"
                         help="Unassigned Opportunities" />
                 </field>
+                <field name="country"/>
+                <field name="partner_id"/>
                 <field name="section_id"
                     context="{'invisible_section': False, 'default_section_id': self}">
                     <filter string="My Sales Team(s)"  icon="terp-personal+"
