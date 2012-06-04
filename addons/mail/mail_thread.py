@@ -71,8 +71,9 @@ class mail_thread(osv.osv):
     # OpenChatter: message_ids is a dummy field that should not be used
     _columns = {
         'message_ids': fields.function(_get_message_ids, method=True,
-                        type='one2many', obj='mail.message', string='Temp messages', _fields_id = 'res_id'),
-        'thread_read': fields.boolean('Read',
+                        type='one2many', obj='mail.message', string='Temp messages', _fields_id = 'res_id',
+                        help="Functional field holding messages related to the current document."),
+        'thread_is_read': fields.boolean('Read',
                         help="When checked, new messages require your attention."),
     }
 
@@ -81,10 +82,11 @@ class mail_thread(osv.osv):
     #------------------------------------------------------
 
     def create(self, cr, uid, vals, context=None):
-        """Automatically subscribe the creator"""
-        thread_id = super(mail_thread, self).create(cr, uid, vals, context=context);
-        self.message_subscribe(cr, uid, [thread_id], [uid], context=context)
-        return thread_id;
+        """Automatically subscribe the creator """
+        thread_id = super(mail_thread, self).create(cr, uid, vals, context=context)
+        if thread_id:
+            self.message_subscribe(cr, uid, [thread_id], [uid], context=context)
+        return thread_id
 
     def write(self, cr, uid, ids, vals, context=None):
         """Automatically subscribe the writer"""
@@ -103,8 +105,6 @@ class mail_thread(osv.osv):
            a foreign key with a 'cascade' ondelete attribute.
            Notifications will be deleted with messages
         """
-        if context is None:
-            context = {}
         subscr_obj = self.pool.get('mail.subscription')
         msg_obj = self.pool.get('mail.message')
         # delete subscriptions
@@ -121,13 +121,14 @@ class mail_thread(osv.osv):
     #------------------------------------------------------
 
     def message_create(self, cr, uid, thread_id, vals, context=None):
-        """OpenSocial: wrapper of mail.message create method
+        """ OpenChatter: wrapper of mail.message create method
            - creates the mail.message
            - automatically subscribe the message writer
            - push the message to subscribed users
         """
         if context is None:
             context = {}
+        
         message_obj = self.pool.get('mail.message')
         subscription_obj = self.pool.get('mail.subscription')
         notification_obj = self.pool.get('mail.notification')
@@ -792,5 +793,16 @@ class mail_thread(osv.osv):
             notif_msg_ids = msg_ids
         to_del_notif_ids = notif_obj.search(cr, uid, ['&', ('user_id', '=', uid), ('message_id', 'in', notif_msg_ids)], context=context)
         return notif_obj.unlink(cr, uid, to_del_notif_ids, context=context)
+
+    #------------------------------------------------------
+    # Thread_state
+    #------------------------------------------------------
+    
+    def message_mark_as_read(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'thread_is_read': True}, context=context)
+    
+    def message_mark_as_unread(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'thread_is_read': False}, context=context)
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
