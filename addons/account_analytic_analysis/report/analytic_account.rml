@@ -113,15 +113,22 @@
       <lineStyle kind="LINEBELOW" colorName="#cccccc" start="2,-1" stop="2,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#cccccc" start="3,-1" stop="3,-1"/>
     </blockTableStyle>
+    <blockTableStyle id="Table11">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table13">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBELOW" colorName="#cccccc" start="0,-1" stop="0,-1"/>
+    </blockTableStyle>
     <initialize>
       <paraStyle name="all" alignment="justify"/>
     </initialize>
     <paraStyle name="P1" fontName="Helvetica" fontSize="13.0" leading="16" alignment="JUSTIFY"/>
-    <paraStyle name="P2" fontName="Helvetica-Bold" fontSize="2.0" leading="3" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P3" fontName="Helvetica" fontSize="15.0" leading="19" alignment="CENTER"/>
-    <paraStyle name="P4" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT"/>
-    <paraStyle name="P5" fontName="Helvetica" fontSize="2.0" leading="3" alignment="LEFT"/>
-    <paraStyle name="P6" fontName="Helvetica-Bold" fontSize="2.0" leading="3" alignment="LEFT" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="P2" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT"/>
+    <paraStyle name="P3" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT"/>
+    <paraStyle name="P4" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="Standard" fontName="Helvetica"/>
     <paraStyle name="Heading" fontName="Helvetica" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
     <paraStyle name="Text body" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
@@ -353,29 +360,29 @@
       <para style="terp_default_1">
         <font color="white"> </font>
       </para>
-      <blockTable colWidths="121.0,121.0,121.0,121.0" style="Table8">
+      <blockTable colWidths="120.0,120.0,120.0,121.0" style="Table8">
         <tr>
           <td>
             <para style="terp_tblheader_Details">Validity</para>
           </td>
           <td>
-            <para style="P4">
+            <para style="P2">
               <font color="white"> </font>
             </para>
           </td>
           <td>
-            <para style="P4">
+            <para style="P2">
               <font color="white"> </font>
             </para>
           </td>
           <td>
-            <para style="P4">
+            <para style="P2">
               <font color="white"> </font>
             </para>
           </td>
         </tr>
       </blockTable>
-      <blockTable colWidths="121.0,121.0,121.0,121.0" style="Table9">
+      <blockTable colWidths="120.0,120.0,120.0,121.0" style="Table9">
         <tr>
           <td>
             <para style="terp_tblheader_General_Centre">Date Start</para>
@@ -407,6 +414,44 @@
           </td>
         </tr>
       </blockTable>
+      <para style="terp_default_1">
+        <font color="white"> </font>
+      </para>
+      <blockTable colWidths="120.0,120.0,120.0,121.0" style="Table11">
+        <tr>
+          <td>
+            <para style="terp_tblheader_Details">Terms &amp; Conditions</para>
+          </td>
+          <td>
+            <para style="P2">
+              <font color="white"> </font>
+            </para>
+          </td>
+          <td>
+            <para style="P2">
+              <font color="white"> </font>
+            </para>
+          </td>
+          <td>
+            <para style="P2">
+              <font color="white"> </font>
+            </para>
+          </td>
+        </tr>
+      </blockTable>
+      <blockTable colWidths="482.0" style="Table13">
+        <tr>
+          <td>
+            <para style="P4">[[ account.description ]]</para>
+            <para style="P4">
+              <font color="white"> </font>
+            </para>
+          </td>
+        </tr>
+      </blockTable>
+      <para style="Standard">
+        <font color="white"> </font>
+      </para>
       <para style="Standard">
         <font color="white"> </font>
       </para>
@@ -419,3 +464,4 @@
     </para>
   </story>
 </document>
+
