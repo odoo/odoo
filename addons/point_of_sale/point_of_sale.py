@@ -389,8 +389,6 @@ class pos_session(osv.osv):
             order_ids = [order.id for order in session.order_ids if order.state == 'paid']
 
             move_id = self.pool.get('account.move').create(cr, uid, {'ref' : session.name, 'journal_id' : session.config_id.journal_id.id, }, context=context)
-            print "### move_id: %r" % (move_id,)
-            print "order_ids: %r" % (order_ids,)
 
             self.pool.get('pos.order')._create_account_move_line(cr, uid, order_ids, session, move_id, context=context)
 
@@ -565,9 +563,7 @@ class pos_order(osv.osv):
     }
 
     def create(self, cr, uid, values, context=None):
-        print "#CREATE: %r" % (values,)
         values['name'] = self.pool.get('ir.sequence').get(cr, uid, 'pos.order')
-        #values['session_id'] = 40
         return super(pos_order, self).create(cr, uid, values, context=context)
 
     def test_paid(self, cr, uid, ids, context=None):
@@ -1018,11 +1014,8 @@ class pos_order(osv.osv):
 
             order.write({'state':'done', 'account_move': move_id})
 
-
-        print "grouped_data: %r" % (grouped_data,)
         for group_key, group_data in grouped_data.iteritems():
             for value in group_data:
-                print "value: %r" % (value,)
                 account_move_line_obj.create(cr, uid, value, context=context)
 
         return True
