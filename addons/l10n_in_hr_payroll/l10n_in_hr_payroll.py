@@ -20,12 +20,28 @@
 ##############################################################################
 
 import time
+from datetime import date
 from datetime import datetime
-from calendar import isleap
+from datetime import timedelta
 from dateutil.relativedelta import relativedelta
+
+from tools.translate import _
+from calendar import isleap
 
 from osv import fields, osv
 import decimal_precision as dp
+
+def prev_bounds(cdate=False):
+    when = date.fromtimestamp(time.mktime(time.strptime(cdate,"%Y-%m-%d")))
+    this_first = date(when.year, when.month, 1)
+    month = when.month + 1
+    year = when.year
+    if month > 12:
+        month = 1
+        year += 1
+    next_month = date(year, month, 1)
+    prev_end = next_month - timedelta(days=1)
+    return this_first, prev_end
 
 class hr_contract_in(osv.osv):
     _inherit = 'hr.contract'
@@ -89,5 +105,102 @@ class hr_employee(osv.osv):
         'number_of_year':fields.function(_compute_year, string='No. of Years of Service', type="float", store=True, help="Total years of work experience."),
                 }
 hr_employee()
+
+class payroll_advice(osv.osv):
+    '''
+    Bank Advice Note
+    '''
+
+    _name = 'hr.payroll.advice'
+    _description = 'Bank Advice Note'
+    _columns = {
+        'name':fields.char('Name', size=2048, required=True, readonly=False),
+        'note': fields.text('Description'),
+        'date': fields.date('Date'),
+        'state':fields.selection([
+            ('draft','Draft Sheet'),
+            ('confirm','Confirm Sheet'),
+            ('cancel','Reject'),
+        ],'State', select=True, readonly=True),
+        'number':fields.char('Number', size=64, required=False, readonly=True),
+        'line_ids':fields.one2many('hr.payroll.advice.line', 'advice_id', 'Employee Salary', required=False),
+        'chaque_nos':fields.char('Chaque Nos', size=256, required=False, readonly=False),
+        'company_id':fields.many2one('res.company', 'Company', required=False),
+        'bank_id':fields.many2one('res.bank', 'Bank', required=False, help="Select the Bank Address from whcih the salary is going to be paid"),
+    }
+    _defaults = {
+        'date': lambda *a: time.strftime('%Y-%m-%d'),
+        'state': lambda *a: 'draft',
+        'company_id': lambda self, cr, uid, context: \
+                self.pool.get('res.users').browse(cr, uid, uid,
+                    context=context).company_id.id,
+    }
+
+    def compute_advice(self, cr, uid, ids, context=None):
+        payslip_pool = self.pool.get('hr.payslip')
+        advice_line_pool = self.pool.get('hr.payroll.advice.line')
+        sequence_pool = self.pool.get('ir.sequence')
+        payslip_line_pool = self.pool.get('hr.payslip.line')
+
+        for advice in self.browse(cr, uid, ids, context=context):
+            dates = prev_bounds(advice.date)
+            slip_ids = payslip_pool.search(cr, uid, [ ('date_from','<=',advice.date),('date_to','>=',advice.date),('date_from','=',dates[0]),('date_to','=',dates[1])], context=context)
+            if not slip_ids:
+                    raise osv.except_osv(_('Error !'), _('You can get only current month payslips') % (slip_ids))
+        for slip in payslip_pool.browse(cr, uid, slip_ids, context=context):
+            line_ids = payslip_line_pool.search(cr, uid, [ ('slip_id','in',slip_ids),('code','=',"NET")], context=context)
+            for line in slip.line_ids:
+                if not slip.employee_id.bank_account_id:
+                    raise osv.except_osv(_('Error !'), _('Please define bank account for the %s employee') % (slip.employee_id.name))
+                advice_line= {
+                        'advice_id':advice.id,
+                        'name':slip.employee_id.bank_account_id.acc_number,
+                        'employee_id':slip.employee_id.id,
+                        'bysal':line.total
+                        }
+            id = advice_line_pool.create(cr, uid, advice_line, context=context)
+        number = self.pool.get('ir.sequence').get(cr, uid, 'advice.line')
+        self.write(cr, uid, ids, {'state':'confirm','number':number}, context=context)
+
+    def confirm_sheet(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'state':'confirm'}, context=context)
+        return True
+
+    def set_to_draft(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'state':'draft'}, context=context)
+        return True
+
+    def cancel_sheet(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'state':'cancel'}, context=context)
+        return True
+
+    def onchange_company_id(self, cr, uid, ids, company_id=False, context=None):
+        res = {}
+        if company_id:
+            company = self.pool.get('res.company').browse(cr, uid, company_id, context=context)
+            if company.partner_id.bank_ids:
+                res.update({'bank': company.partner_id.bank_ids[0].bank.name})
+        return {
+            'value':res
+        }
+
+payroll_advice()
+
+class payroll_advice_line(osv.osv):
+    '''
+    Bank Advice Lines
+    '''
+
+    _name = 'hr.payroll.advice.line'
+    _description = 'Bank Advice Lines'
+    _columns = {
+        'advice_id':fields.many2one('hr.payroll.advice', 'Bank Advice', required=False),
+        'name':fields.char('Bank Account A/C', size=64, required=True, readonly=False),
+        'employee_id':fields.many2one('hr.employee', 'Employee', required=True),
+        'amount': fields.float('Amount', digits_compute=dp.get_precision('Payroll')),
+        'bysal': fields.float('By Salary', digits_compute=dp.get_precision('Payroll')),
+    }
+
+payroll_advice_line()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
