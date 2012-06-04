@@ -262,11 +262,10 @@ class crm_lead(base_stage, osv.osv):
     def get_needaction_user_ids(self, cr, uid, ids, context=None):
         result = dict.fromkeys(ids, [])
         for obj in self.browse(cr, uid, ids, context=context):
-            # salesman must perform an action when in draft mode
-            if obj.state == 'draft' and obj.user_id:
+            if obj.thread_is_read == False and hasattr(obj, 'user_id') and obj.user_id:
                 result[obj.id] = [obj.user_id.id]
         return result
-    
+
     def create(self, cr, uid, vals, context=None):
         obj_id = super(crm_lead, self).create(cr, uid, vals, context)
         self.create_send_note(cr, uid, [obj_id], context=context)
@@ -816,56 +815,47 @@ class crm_lead(base_stage, osv.osv):
     # ----------------------------------------
 
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
-        """ mail_thread message_new that is called by the mailgateway:
-            - create a new record of the related model
-            - add the message to the thread
-            This override also updates the lead according to the email.
+        """ Overrides mail_thread message_new that is called by the mailgateway
+            through message_process.
+            This override updates the document according to the email.
         """
-        res_id = super(crm_lead, self).message_new(cr, uid, msg, custom_values=custom_values, context=context)
-        
-        name = msg.get('subject') or _("No Subject")
-        description = msg.get('body')
-        email_from = msg.get('from')
-        email_cc = msg.get('cc')
-        vals = {
-            'name': name,
-            'email_from': email_from,
-            'email_cc': email_cc,
-            'description': description,
+        if custom_values is None: custom_values = {}
+        custom_values.update({
+            'name':  msg.get('subject') or _("No Subject"),
+            'description': msg.get('body_text'),
+            'email_from': msg.get('from'),
+            'email_cc': msg.get('cc'),
             'user_id': False,
-        }
+        })
         if msg.get('priority') in dict(crm.AVAILABLE_PRIORITIES):
-            vals['priority'] = msg.get('priority')
-        vals.update(self.message_partner_by_email(cr, uid, msg.get('from', False), context=context))
-        self.write(cr, uid, [res_id], vals, context=context)
-        return res_id
+            custom_values['priority'] = msg.get('priority')
+        custom_values.update(self.message_partner_by_email(cr, uid, msg.get('from', False), context=context))
+        return super(crm_lead, self).message_new(cr, uid, msg, custom_values=custom_values, context=context)
 
-    def message_update(self, cr, uid, ids, msg, vals=None, default_act='pending', context=None):
-        """ mail_thread message_update that is called by the mailgateway:
-            - add the message to the thread
-            This override also updates the lead according to the email.
+    def message_update(self, cr, uid, ids, msg, update_vals=None, context=None):
+        """ Overrides mail_thread message_update that is called by the mailgateway
+            through message_process.
+            This method updates the document according to the email.
         """
         if isinstance(ids, (str, int, long)):
             ids = [ids]
-        if vals == None:
-            vals = {}
-        update_res = super(crm_lead, self).message_update(cr, uid, ids, msg, context=context)
+        if update_vals is None: update_vals = {}
 
         if msg.get('priority') in dict(crm.AVAILABLE_PRIORITIES):
             vals['priority'] = msg.get('priority')
         maps = {
             'cost':'planned_cost',
             'revenue': 'planned_revenue',
-            'probability':'probability'
+            'probability':'probability',
         }
-        for line in msg['body_text'].split('\n'):
+        for line in msg.get('body_text', '').split('\n'):
             line = line.strip()
             res = tools.misc.command_re.match(line)
             if res and maps.get(res.group(1).lower()):
                 key = maps.get(res.group(1).lower())
                 vals[key] = res.group(2).lower()
-        self.write(cr, uid, ids, vals, context=context)
-        return update_res
+
+        return super(crm_lead, self).message_update(cr, uid, ids, msg, update_vals=update_vals, context=context)
 
     # ----------------------------------------
     # OpenChatter methods and notifications

@@ -571,29 +571,34 @@ class mail_thread(osv.osv):
         fields = model_pool.fields_get(cr, uid, context=context)
         data = model_pool.default_get(cr, uid, fields, context=context)
         if 'name' in fields and not data.get('name'):
-            data['name'] = msg_dict.get('from','')
+            data['name'] = msg_dict.get('from', '')
         if custom_values and isinstance(custom_values, dict):
             data.update(custom_values)
         res_id = model_pool.create(cr, uid, data, context=context)
         self.message_append_dict(cr, uid, [res_id], msg_dict, context=context)
         return res_id
 
-    def message_update(self, cr, uid, ids, msg_dict, vals={}, default_act=None, context=None):
-        """Called by ``message_process`` when a new message is received
-           for an existing thread. The default behavior is to create a
-           new mail.message in the given thread (by calling
-           ``message_append_dict``)
-           Additional behavior may be implemented by overriding this
-           method.
+    def message_update(self, cr, uid, ids, msg_dict, update_vals=None, context=None):
+        """ Called by ``message_process`` when a new message is received
+            for an existing thread. The default behavior is to create a
+            new mail.message in the given thread (by calling
+            ``message_append_dict``)
+            Additional behavior may be implemented by overriding this
+            method.
 
-           :param dict msg_dict: a map containing the email details and
+            :param dict msg_dict: a map containing the email details and
                                 attachments. See ``message_process`` and
                                 ``mail.message.parse()`` for details.
-           :param dict context: if a ``thread_model`` value is present
+            :param dict vals: a dict containing values to update records
+                              given their ids; if the dict is None or is
+                              void, no write operation is performed.
+            :param dict context: if a ``thread_model`` value is present
                                 in the context, its value will be used
                                 to determine the model of the thread to
                                 update (instead of the current model).
         """
+        if update_vals:
+            self.write(cr, uid, ids, update_vals, context=context)
         return self.message_append_dict(cr, uid, ids, msg_dict, context=context)
 
     def message_thread_followers(self, cr, uid, ids, context=None):
@@ -805,6 +810,14 @@ class mail_thread(osv.osv):
     
     def message_mark_as_unread(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'thread_is_read': False}, context=context)
+
+    def get_needaction_user_ids(self, cr, uid, ids, context=None):
+        result = dict.fromkeys(ids, [])
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.thread_is_read == False and hasattr(obj, 'user_id') and obj.user_id:
+                result[obj.id] = [obj.user_id.id]
+        print 'needaction: %s' % (str(result))
+        return result
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
