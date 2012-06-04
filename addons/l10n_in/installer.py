@@ -28,7 +28,7 @@ class l10n_installer(osv.osv_memory):
     _columns = {
         'company_type':fields.selection([('partnership_private_company', 'Partnership/Private Firm'),
                                          ('public_company', 'Public Firm')], 'Company Type', required=True, 
-                                        help='Select your company Type according to your need to install account chart'),        
+                                        help='Select your company Type according to your need to install Chart Of Account'),        
     }
     _defaults = {
         'company_type': 'public_company',
@@ -48,7 +48,7 @@ class l10n_installer(osv.osv_memory):
                 tools.convert_xml_import(cr, 'l10n_in', tax_file_path, {}, 'init', True, None)
                 tax_file_path.close()  
                                
-            if res['charts'] =='l10n_in' and res['company_type']=='partnership_private_company':
+            elif res['charts'] =='l10n_in' and res['company_type']=='partnership_private_company':
                 acc_file_path = tools.file_open(opj('l10n_in', 'l10n_in_partnership_private_chart.xml'))
                 tools.convert_xml_import(cr, 'l10n_in', acc_file_path, {}, 'init', True, None)
                 acc_file_path.close()  
