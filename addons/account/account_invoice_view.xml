@@ -276,7 +276,7 @@
                 </div>
                 <sheet string="Invoice" layout="auto">
                     <group colspan="4" col="8" class="oe_form_header">
-                    <field name="journal_id" groups="base.group_user" on_change="onchange_journal_id(journal_id, context)" widget="selection"/>
+                    <field name="journal_id" groups="account.group_account_user" on_change="onchange_journal_id(journal_id, context)" widget="selection"/>
                     <field name="number"/>
                     <field name="type" invisible="1"/>
                     <field name="currency_id" width="50"/>
