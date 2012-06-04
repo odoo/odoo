@@ -300,7 +300,7 @@
                                 <field name="tax_line" nolabel="1">
                                     <tree editable="bottom" string="Taxes">
                                         <field name="name"/>
-                                        <field name="account_id" groups="account.group_account_invoice"/>
+                                        <field name="account_id" groups="account.group_account_user"/>
                                         <field name="base" on_change="base_change(base,parent.currency_id,parent.company_id,parent.date_invoice)" readonly="1"/>
                                         <field name="amount" on_change="amount_change(amount,parent.currency_id,parent.company_id,parent.date_invoice)"/>
                                         <field invisible="True" name="base_amount"/>
@@ -319,7 +319,7 @@
                                 <field name="amount_tax"/>
                                 <field name="reconciled"/>
                                 <field name="amount_total"/>
-                                <field name="residual"/>
+                                <field name="residual" groups="account.group_account_user"/>
                             </group>
                         </page>
                         <page string="Other Info">
