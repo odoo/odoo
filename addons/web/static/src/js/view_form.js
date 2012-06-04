@@ -3099,7 +3099,7 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(_.
         if (this.get("effective_readonly"))
             return;
         var self = this;
-        self. $text = $("textarea", this.$element);
+        self.$text = $("textarea", this.$element);
         self.$text.textext({
             plugins : 'tags arrow autocomplete',
             autocomplete: {
@@ -3151,19 +3151,6 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(_.
                     return _.extend(el, {index:i});
                 })});
             });
-        }).bind('tagClick', function(e, tag, value, callback) {
-            var pop = new instance.web.form.FormOpenPopup(self.view);
-            pop.show_element(
-                self.field.relation,
-                value.id,
-                self.build_context(),
-                {
-                    title: _t("Open: ") + (self.string || self.name)
-                }
-            );
-            pop.on_write_completed.add_last(function() {
-                self.render_value();
-            });
         }).bind('hideDropdown', function() {
             self._drop_shown = false;
         }).bind('showDropdown', function() {
@@ -3207,17 +3194,6 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(_.
                 self.tags.addTags(_.map(data, function(el) {return {name: el[1], id:el[0]};}));
             } else {
                 self.$element.html(QWeb.render("FieldMany2ManyTags.box", {elements: data}));
-                $(".oe_form_field_many2manytags_box", self.$element).click(function() {
-                    var index = Number($(this).data("index"));
-                    self.do_action({
-                        type: 'ir.actions.act_window',
-                        res_model: self.field.relation,
-                        res_id: self.get("value")[index],
-                        context: self.build_context(),
-                        views: [[false, 'form']],
-                        target: 'current'
-                    });
-                });
             }
         };
         if (! self.get('values') || self.get('values').length > 0) {
