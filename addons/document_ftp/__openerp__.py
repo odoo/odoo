@@ -24,7 +24,6 @@
     'name': 'Shared Repositories (FTP)',
     'version': '1.99',
     'category': 'Knowledge Management',
-    'complexity': "normal",
     'description': """
 This is a support FTP Interface with document management system.
 ================================================================
@@ -40,7 +39,8 @@ FTP client.
     'update_xml': [
         'wizard/ftp_configuration_view.xml',
         'wizard/ftp_browse_view.xml',
-        'security/ir.model.access.csv'
+        'security/ir.model.access.csv',
+        'res_config_view.xml',
     ],
     'demo_xml': [],
     'test': [

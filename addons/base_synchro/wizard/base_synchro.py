@@ -234,7 +234,6 @@ class base_synchro(osv.osv_memory):
             self.pool.get('base.synchro.obj').write(cr, uid, [object.id], {'synchronize_date': dt})
         end_date = time.strftime('%Y-%m-%d, %Hh %Mm %Ss')
         if syn_obj.user_id:
-            request = pooler.get_pool(cr.dbname).get('res.request')
             if not self.report:
                 self.report.append('No exception.')
             summary = '''Here is the synchronization report:
@@ -249,12 +248,8 @@ Records created: %d
 Exceptions:
             '''% (start_date,end_date,self.report_total, self.report_write,self.report_create)
             summary += '\n'.join(self.report)
-            request.create(cr, uid, {
-                'name' : "Synchronization report",
-                'act_from' : uid,
-                'act_to' : syn_obj.user_id.id,
-                'body': summary,
-            })
+            # Chatter: old res.request transformed into a message added to the destination user
+            self.pool.get('res.users').message_append_note(cr, uid, [syn_obj.user_id.id], body=summary, subject=_('Synchronization Report'), context=context)
             return True
 
     def upload_download_multi_thread(self, cr, uid, data, context=None):

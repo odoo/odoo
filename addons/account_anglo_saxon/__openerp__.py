@@ -23,7 +23,6 @@
     "version": "1.2",
     "author": "OpenERP SA, Veritos",
     "website": "http://tinyerp.com - http://veritos.nl",
-    'complexity': "normal",
     "description": """
 This module supports the Anglo-Saxon accounting methodology by changing the accounting logic with stock transactions.
 =====================================================================================================================

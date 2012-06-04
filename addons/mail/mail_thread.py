@@ -61,30 +61,30 @@ class mail_thread(osv.osv):
     '''
     _name = 'mail.thread'
     _description = 'Email Thread'
-    
+
     def _get_message_ids(self, cr, uid, ids, name, arg, context=None):
         res = {}
         for id in ids:
             res[id] = self._message_load_ids(cr, uid, [id], context=context)
         return res
-    
-    # OpenChatter: message_ids_social is a dummy field that should not be used
+
+    # OpenChatter: message_ids is a dummy field that should not be used
     _columns = {
-        'message_ids_social': fields.function(_get_message_ids, method=True,
+        'message_ids': fields.function(_get_message_ids, method=True,
                         type='one2many', obj='mail.message', string='Temp messages', _fields_id = 'res_id'),
     }
 
     #------------------------------------------------------
     # Automatic subscription when creating/reading
     #------------------------------------------------------
-    
+
     def create(self, cr, uid, vals, context=None):
         """Automatically subscribe the creator"""
         thread_id = super(mail_thread, self).create(cr, uid, vals, context=context)
         if thread_id:
             self.message_subscribe(cr, uid, [thread_id], [uid], context=context)
         return thread_id
-    
+
     def write(self, cr, uid, ids, vals, context=None):
         """Automatically subscribe the writer"""
         if isinstance(ids, (int, long)):
@@ -93,7 +93,7 @@ class mail_thread(osv.osv):
         if write_res:
             self.message_subscribe(cr, uid, ids, [uid], context=context)
         return write_res;
-    
+
     def unlink(self, cr, uid, ids, context=None):
         """Override unlink, to automatically delete
            - subscriptions
@@ -110,13 +110,13 @@ class mail_thread(osv.osv):
         # delete messages and notifications
         msg_to_del_ids = msg_obj.search(cr, uid, [('model', '=', self._name), ('res_id', 'in', ids)], context=context)
         msg_obj.unlink(cr, uid, msg_to_del_ids, context=context)
-        
+
         return super(mail_thread, self).unlink(cr, uid, ids, context=context)
-    
+
     #------------------------------------------------------
     # Generic message api
     #------------------------------------------------------
-    
+
     def message_create(self, cr, uid, thread_id, vals, context=None):
         """OpenChatter: wrapper of mail.message create method
            - creates the mail.message
@@ -206,7 +206,7 @@ class mail_thread(osv.osv):
         for model_name in self.pool.obj_list():
             model = self.pool.get(model_name)
             if 'mail.thread' in getattr(model, '_inherit', []):
-                ret_dict[model_name] = model._description        
+                ret_dict[model_name] = model._description
         return ret_dict
 
     def message_append(self, cr, uid, threads, subject, body_text=None, body_html=None,
@@ -255,7 +255,7 @@ class mail_thread(osv.osv):
                              to determine the model of the thread to
                              update (instead of the current model).
         """
-        if context is None: 
+        if context is None:
             context = {}
         if attachments is None:
             attachments = {}
@@ -326,7 +326,7 @@ class mail_thread(osv.osv):
                     'headers': headers,
                     'reply_to': reply_to,
                     'original': original, })
-            
+
             new_msg_ids.append(self.message_create(cr, uid, thread.id, data, context=context))
         return new_msg_ids
 
@@ -448,7 +448,9 @@ class mail_thread(osv.osv):
         if count or get_ids:
             return load_res
         else:
-            return self.pool.get('mail.message').read(cr, uid, load_res, context=context)
+			messages = self.pool.get('mail.message').read(cr, uid, load_res, context=context)
+			messages = sorted(messages, key=lambda d: (-d['id']))
+			return messages
     
     def get_pushed_messages(self, cr, uid, ids, fetch_ancestors=False, ancestor_ids=None,
                             limit=100, offset=0, msg_search_domain=[], context=None):
@@ -482,7 +484,7 @@ class mail_thread(osv.osv):
         if (fetch_ancestors): msg_ids = self._message_load_add_ancestor_ids(cr, uid, ids, msg_ids, ancestor_ids, context=context)
         msgs = msg_obj.read(cr, uid, msg_ids, context=context)
         return msgs
-        
+
     #------------------------------------------------------
     # Email specific
     #------------------------------------------------------
@@ -576,7 +578,7 @@ class mail_thread(osv.osv):
 
     def message_new(self, cr, uid, msg_dict, custom_values=None, context=None):
         """Called by ``message_process`` when a new message is received
-           for a given thread model, if the message did not belong to 
+           for a given thread model, if the message did not belong to
            an existing thread.
            The default behavior is to create a new record of the corresponding
            model (based on some very basic info extracted from the message),
@@ -702,7 +704,7 @@ class mail_thread(osv.osv):
            The keys used in the returned dict are meant to map
            to usual names for relationships towards a partner
            and one of its addresses.
-           
+
            :param email: email address for which a partner
                          should be searched for.
            :rtype: dict
@@ -752,7 +754,7 @@ class mail_thread(osv.osv):
             for msg_id in msg_ids:
                 notification_obj.create(cr, uid, {'user_id': user.id, 'message_id': msg_id}, context=context)
         return True
-    
+
     def log(self, cr, uid, id, message, secondary=False, context=None):
         _logger.warning("log() is deprecated. As this module inherit from \
                         mail.thread, the message will be managed by this \
@@ -779,11 +781,11 @@ class mail_thread(osv.osv):
         return self.message_append(cr, uid, ids, subject, body_html, body_text,
                                     type, subtype, parent_id=parent_id,
                                     content_subtype=content_subtype, context=context)
-    
+
     #------------------------------------------------------
     # Subscription mechanism
     #------------------------------------------------------
-    
+
     def message_get_subscribers(self, cr, uid, ids, get_ids=False, context=None):
         """ Returns the current document followers. Basically this method
             checks in mail.subscription for entries with mathing res_model,
@@ -799,12 +801,12 @@ class mail_thread(osv.osv):
             return user_ids
         else:
             return self.pool.get('res.users').read(cr, uid, user_ids, fields=['id', 'name', 'avatar'], context=context)
-    
+
     def message_is_subscriber(self, cr, uid, ids, user_id = None, context=None):
         subscr_obj = self.pool.get('mail.subscription')
         sub_user_id = uid if user_id is None else user_id
         return (subscr_obj.search(cr, uid, [('res_model', '=', self._name), ('res_id', 'in', ids), ('user_id', '=', sub_user_id)], count=True, context=context) > 0)
-    
+
     def message_subscribe(self, cr, uid, ids, user_ids = None, context=None):
         subscription_obj = self.pool.get('mail.subscription')
         to_subscribe_uids = [uid] if user_ids is None else user_ids
@@ -844,7 +846,7 @@ class mail_thread(osv.osv):
     #------------------------------------------------------
     # Notification API
     #------------------------------------------------------
-    
+
     def message_create_notify_by_email(self, cr, uid, new_msg_values, user_to_notify_ids, context=None):
         """ When creating a new message and pushing notifications, emails
             must be send if users have chosen to receive notifications
@@ -923,7 +925,7 @@ class mail_thread(osv.osv):
             'res_id': False,
         })
         return values
-    
+
     def message_remove_pushed_notifications(self, cr, uid, ids, msg_ids, remove_childs=True, context=None):
         notif_obj = self.pool.get('mail.notification')
         msg_obj = self.pool.get('mail.message')

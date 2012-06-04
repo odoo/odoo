@@ -1,35 +1,41 @@
 <?xml version="1.0"?>
 <openerp>
-<data>
+    <data>
 
-    <!-- Stage Search view -->
-    <record id="crm_lead_stage_search" model="ir.ui.view">
-        <field name="name">Stage - Search</field>
-        <field name="model">crm.case.stage</field>
-        <field name="type">search</field>
-        <field name="arch" type="xml">
-            <search string="Stage Search">
-                <field name="name"/>
-            </search>
-        </field>
-    </record>
+        <!--
+            CRM CASE STAGE
+            -->
 
-    <!--Lead Stage Form view -->
-    <record id="crm_lead_stage_act" model="ir.actions.act_window">
-        <field name="name">Stages</field>
-        <field name="res_model">crm.case.stage</field>
-        <field name="view_type">form</field>
-        <field name="view_id" ref="crm.crm_case_stage_tree"/>
-        <field name="help">Add specific stages to leads and opportunities allowing your sales to better organise their sales pipeline. Stages will allow them to easily track how a specific lead or opportunity is positioned in the sales cycle.</field>
-    </record>
+        <!-- Stage Search view -->
+        <record id="crm_lead_stage_search" model="ir.ui.view">
+            <field name="name">Stage - Search</field>
+            <field name="model">crm.case.stage</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Stage Search">
+                    <field name="name"/>
+                    <field name="state"/>
+                    <field name="type"/>
+                </search>
+            </field>
+        </record>
 
-     <menuitem action="crm_lead_stage_act" id="menu_crm_lead_stage_act" name="Stages"
-        groups="base.group_no_one" sequence="0"
-        parent="base.menu_crm_config_lead" />
+        <!-- Stage Form view -->
+        <record id="crm_lead_stage_act" model="ir.actions.act_window">
+            <field name="name">Stages</field>
+            <field name="res_model">crm.case.stage</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="crm.crm_case_stage_tree"/>
+            <field name="help">Add specific stages to leads and opportunities allowing your sales to better organise their sales pipeline. Stages will allow them to easily track how a specific lead or opportunity is positioned in the sales cycle.</field>
+        </record>
 
+        <menuitem action="crm_lead_stage_act" id="menu_crm_lead_stage_act" name="Stages" sequence="0" parent="base.menu_crm_config_lead" />
 
-        <!-- Lead/Opportunity Categories Action -->
+        <!--
+            LEADS/OPPORTUNITIES CATEGORIES
+            -->
 
+        <!-- Categories Form View -->
         <record id="crm_lead_categ_action" model="ir.actions.act_window">
             <field name="name">Categories</field>
             <field name="res_model">crm.case.categ</field>
@@ -44,6 +50,9 @@
             id="menu_crm_lead_categ" name="Categories"
             parent="base.menu_crm_config_lead" sequence="1" groups="base.group_no_one"/>
 
+        <!--
+            LEADS
+            -->
 
         <!-- CRM Lead Form View  -->
         <record model="ir.ui.view" id="crm_case_form_view_leads">
@@ -53,15 +62,19 @@
         <field name="arch" type="xml">
             <form string="Leads Form" layout="manual">
                 <div class="oe_form_topbar">
-                    <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" icon="gtk-cancel" />
-                    <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward" />
-                    <button name="case_mark_lost" string="Close" states="open,pending" type="object" icon="gtk-close" />
-                    <button name="case_pending" string="Pending" states="open" type="object" icon="gtk-media-pause" />
-                    <button name="case_escalate" string="Escalate" states="open,pending" type="object" icon="gtk-go-up" />
-                    <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert" />
+                    <button name="%(crm.action_crm_lead2opportunity_partner)d" string="Convert to Opportunity" type="action"
+                            states="draft,open,pending" help="Convert to Opportunity"/>
+                    <button name="case_escalate" string="Escalate" type="object"
+                            states="draft,open,pending"/>
+                    <button name="case_reset" string="Reset" type="object"
+                            states="cancel"/>
+                    <button name="case_cancel" string="Cancel" type="object"
+                            states="draft,open,pending"/>
                     <div class="oe_right">
-                        <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
+                        <field name="stage_id" nolabel="1" widget="statusbar"
+                            on_change="onchange_stage_id(stage_id)"/>
                     </div>
+                    <div class="oe_clear"/>
                 </div>
                 <sheet layout="auto">
                 <group colspan="4" col="7">
@@ -70,24 +83,9 @@
                     <field name="categ_id"
                         widget="selection"
                         domain="[('object_id.model','=','crm.lead')]"/>
-                    <button
-                         name="%(crm.action_crm_lead2opportunity_partner)d"
-                         string="Convert to Opportunity"
-                         help="Convert to Opportunity" icon="gtk-go-forward"
-                         type="action"
-                         />
                     <newline />
                     <field name="user_id" />
                     <field name="section_id" widget="selection" />
-                    <field name="stage_id" domain="section_id and [('section_ids', '=', section_id)] or []" />
-                    <group col="2" colspan="1">
-                        <button name="stage_previous" string=""
-                            states="open,pending,draft" type="object"
-                            icon="gtk-go-back" context="{'stage_type': 'lead'}" />
-                        <button name="stage_next" string=""
-                            states="open,pending,draft" type="object"
-                            icon="gtk-go-forward" context="{'stage_type': 'lead'}" />
-                    </group>
                     <field name="type" invisible="1"/>
                 </group>
                 <notebook colspan="4">
@@ -138,6 +136,7 @@
                         <field name="type_id" select="1" widget="selection"/>
                         <field name="channel_id" select="1" widget="selection"/>
                         <field name="referred"/>
+                        <field name="state" groups="base.group_no_one"/>
                     </group>
                     <group colspan="2" col="2">
                         <separator string="Mailings" colspan="2" col="2"/>
@@ -152,77 +151,54 @@
                  </page>
                 </notebook>
                 </sheet>
-                <div class="oe_form_sheet_width">
-                    <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
+                <div class="oe_form_bottom">
+                    <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"/>
                 </div>
             </form>
         </field>
-    </record>
+        </record>
 
-    <!-- CRM Lead Tree View -->
+        <!-- CRM Lead Tree View -->
+        <record model="ir.ui.view" id="crm_case_tree_view_leads">
+            <field name="name">Leads</field>
+            <field name="model">crm.lead</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Leads" fonts="bold:needaction_pending==True" colors="blue:state=='pending';grey:state in ('cancel', 'done')">
+                    <field name="needaction_pending" invisible="1"/>
+                    <field name="date_deadline" invisible="1"/>
+                    <field name="create_date" groups="base.group_no_one"/>
+                    <field name="name" string="Subject"/>
+                    <field name="contact_name"/>
+                    <field name="country_id" invisible="context.get('invisible_country', True)" />
+                    <field name="email_from"/>
+                    <field name="phone"/>
+                    <field name="stage_id"/>
+                    <field name="categ_id" invisible="1"/>
+                    <field name="section_id" invisible="context.get('invisible_section', True)" />
+                    <field name="state" groups="base.group_no_one"/>
+                    <field name="type_id" invisible="1"/>
+                    <field name="referred" invisible="1"/>
+                    <field name="channel_id" invisible="1"/>
+                    <field name="subjects" invisible="1"/>
+                </tree>
+            </field>
+        </record>
 
-    <record model="ir.ui.view" id="crm_case_tree_view_leads">
-        <field name="name">Leads</field>
-        <field name="model">crm.lead</field>
-        <field name="type">tree</field>
-        <field name="arch" type="xml">
-            <tree string="Leads" fonts="bold:needaction_pending==True" colors="blue:state=='pending';grey:state in ('cancel', 'done')">
-                <field name="needaction_pending" invisible="1"/>
-                <field name="date_deadline" invisible="1"/>
-                <field name="create_date" groups="base.group_no_one"/>
-                <field name="name" string="Subject"/>
-                <field name="contact_name"/>
-                <field name="country_id" invisible="context.get('invisible_country', True)" />
-                <field name="email_from"/>
-                <field name="phone"/>
-
-                <field name="categ_id" invisible="1"/>
-                <field name="type_id" invisible="1"/>
-                <field name="referred" invisible="1"/>
-                <field name="channel_id" invisible="1"/>
-                <field name="subjects" invisible="1"/>
-
-                <field name="stage_id"/>
-                <button name="stage_previous" string="Previous Stage"
-                    states="open,pending" type="object" icon="gtk-go-back" />
-                <button name="stage_next" string="Next Stage"
-                    states="open,pending" type="object"
-                    icon="gtk-go-forward" />
-                <field name="section_id" invisible="context.get('invisible_section', True)" />
-                <field name="user_id" />
-                <field name="state" />
-                <button name="case_open" string="Open"
-                    states="draft,pending" type="object"
-                    icon="gtk-go-forward" />
-                <button name="case_close" string="Close"
-                    states="open,draft,pending" type="object"
-                    icon="gtk-close" />
-                <button name="%(crm.action_crm_lead2opportunity_partner)d"
-                    string="Convert to Opportunity"
-                    states="draft,open,pending" icon="gtk-index"
-                    type="action" />
-                <button name="case_escalate" string="Escalate"
-                    states="open,draft,pending" type="object"
-                    icon="gtk-go-up" />
-            </tree>
-        </field>
-    </record>
-
-    <!-- CRM Lead Calendar View -->
-
-    <record model="ir.ui.view" id="crm_case_calendar_view_leads">
-        <field name="name">CRM - Leads Calendar</field>
-        <field name="model">crm.lead</field>
-        <field name="type">calendar</field>
-        <field name="priority" eval="2"/>
-        <field name="arch" type="xml">
-            <calendar string="Leads Generation"
-                date_start="date_action" color="user_id">
-                <field name="name" />
-                <field name="partner_name" />
-            </calendar>
-        </field>
-    </record>
+        <!-- CRM Lead Calendar View -->
+        <record model="ir.ui.view" id="crm_case_calendar_view_leads">
+            <field name="name">CRM - Leads Calendar</field>
+            <field name="model">crm.lead</field>
+            <field name="type">calendar</field>
+            <field name="priority" eval="2"/>
+            <field name="arch" type="xml">
+                <calendar string="Leads Generation"
+                    date_start="date_action" color="user_id">
+                    <field name="name" />
+                    <field name="partner_name" />
+                </calendar>
+            </field>
+        </record>
 
     <!-- CRM Lead Kanban View  -->
     <record model="ir.ui.view" id="crm_case_kanban_view_leads">
@@ -231,7 +207,7 @@
         <field name="type">kanban</field>
         <field name="arch" type="xml">
             <kanban default_group_by="stage_id">
-                <field name="state"/>
+                <field name="state" groups="base.group_no_one"/>
                 <field name="color"/>
                 <field name="priority"/>
                 <field name="planned_revenue" sum="Expected Revenues"/>
@@ -248,65 +224,63 @@
                         </ul>
                     </t>
                     <t t-name="kanban-box">
-                        <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())" t-set="border">oe_kanban_color_red</t>
-                        <div t-attf-class="#{kanban_color(record.color.raw_value)} #{border || ''}">
-                            <div class="oe_kanban_box oe_kanban_color_border">
-                                <table class="oe_kanban_table oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
-                                <tr>
-                                    <td align="left" valign="middle" width="16">
-                                        <a t-if="record.priority.raw_value == 1" icon="star-on" type="object" name="set_normal_priority"/>
-                                        <a t-if="record.priority.raw_value != 1" icon="star-off" type="object" name="set_high_priority" style="opacity:0.6; filter:alpha(opacity=60);"/>
-                                    </td>
-                                    <td align="left" valign="middle" class="oe_kanban_title" tooltip="lead_details">
-                                        <field name="partner_id"/>
-                                        <t t-if="record.planned_revenue.raw_value">
-                                            - <t t-esc="Math.round(record.planned_revenue.value)"/>
-                                            <field name="company_currency"/>
-                                        </t>
-                                    </td>
-                                    <td valign="top" width="22">
-                                        <img t-att-src="kanban_image('res.users', 'avatar', record.user_id.raw_value[0])"  t-att-title="record.user_id.value"
-                                        width="22" height="22" class="oe_kanban_gravatar"/>
-                                    </td>
-                                </tr>
-                                </table>
-
-                                <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger">
-                                    <div>
-                                        <b>
-                                            <a t-if="record.partner_address_email.raw_value" t-attf-href="mailto:#{record.partner_address_email.raw_value}">
-                                                <field name="partner_address_name"/>
-                                            </a>
-                                            <field t-if="!record.partner_address_email.raw_value" name="partner_address_name"/>
-                                        </b>
-                                    </div>
-                                    <div>
-                                        <field name="name"/>
-                                    </div>
-                                    <div style="padding-left: 0.5em">
-                                        <i><field name="date_action"/><t t-if="record.date_action.raw_value"> : </t><field name="title_action"/></i>
-                                    </div>
+                        <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card">
+                            <a class="oe_kanban_menuaction oe_i">B</a>
+                            <ul class="oe_kanban_menu">
+                                <li><a type="edit" >Edit...</a></li>
+                                <li><a type="delete">Delete</a></li>
+                                <li><a name="%(mail.action_email_compose_message_wizard)d" type="action">Send New Email</a></li>
+                                <li><a name="%(opportunity2phonecall_act)d" type="action">Log Call</a></li>
+                                <li><a name="action_makeMeeting" type="object">Schedule Meeting</a></li>
+                                <li><a name="%(crm.action_crm_add_note)d" context="{'model': 'crm.lead' }" type="action">Add Internal Note</a></li>
+                                <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                            </ul>
+                            <div class="oe_kanban_content">
+                                <h3>
+                                    <field name="partner_id"/>
+                                    <t t-if="record.planned_revenue.raw_value">
+                                        - <t t-esc="Math.round(record.planned_revenue.value)"/>
+                                        <field name="company_currency"/>
+                                    </t>
+                                </h3>
+                                <div>
+                                    <b> <field name="partner_address_name"/> </b>
                                 </div>
-
-                                <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
-                                    <div class="oe_kanban_left">
-                                        <a string="Edit" icon="gtk-edit" type="edit"/>
-                                        <a string="Change Color" icon="color-picker" type="color" name="color"/>
-                                        <a string="Send New Email" name="%(mail.action_email_compose_message_wizard)d" icon="terp-mail-message-new" type="action"/>
-                                        <a string="Log Call" name="%(opportunity2phonecall_act)d" icon="terp-call-start" type="action"/>
-                                        <a string="Schedule Meeting" name="action_makeMeeting" type="object" icon="stock_calendar"/>
-                                        <a string="Add Internal Note" name="%(crm.action_crm_add_note)d" context="{'model': 'crm.lead' }" icon="terp-document-new" type="action"/>
-                                    </div>
-                                    <div class="oe_kanban_right">
-                                        <a name="case_mark_lost" string="Mark Lost" states="open,pending" type="object" icon="kanban-stop" />
-                                        <a name="case_pending" string="Pending" states="draft,open" type="object" icon="kanban-pause" />
-                                        <a name="case_open" string="Open" states="pending" type="object" icon="gtk-media-play" />
-                                        <a name="case_mark_won" string="Mark Won" states="open,pending" type="object" icon="kanban-apply" />
-                                    </div>
-                                    <br class="oe_kanban_clear"/>
+                                <div>
+                                    <field name="name"/>
+                                </div>
+                                <div style="padding-left: 0.5em">
+                                    <i>
+                                        <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())" t-set="red">oe_kanban_text_red</t>
+                                        <span t-attf-class="#{red || ''}">
+                                            <field name="date_action"/>
+                                        </span>
+                                        <t t-if="record.date_action.raw_value"> : </t>
+                                        <field name="title_action"/>
+                                    </i>
+                                </div>
+                                <div class="oe_right">
+                                    <a t-if="record.priority.raw_value == 1" icon="star-on" type="object" name="set_normal_priority"/>
+                                    <a t-if="record.priority.raw_value != 1" icon="star-off" type="object" name="set_high_priority" style="opacity:0.7; filter:alpha(opacity=70);"/>
+                                    <!--
+                                    <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())" t-set="red">oe_kaban_status_red</t>
+                                    <span t-attf-class="oe_kanban_status #{red}"> </span>
+                                    -->
+                                    <img t-att-src="kanban_image('res.users', 'avatar', record.user_id.raw_value[0])" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
+                                </div>
+                                <div class="oe_kanban_footer_left">
                                 </div>
                             </div>
+                            <div class="oe_clear"></div>
                         </div>
+                        <!--
+                            <div class="oe_kanban_right">
+                                <a name="case_mark_lost" string="Mark Lost" states="open,pending" type="object" icon="kanban-stop" />
+                                <a name="case_pending" string="Pending" states="draft,open" type="object" icon="kanban-pause" />
+                                <a name="case_open" string="Open" states="pending" type="object" icon="gtk-media-play" />
+                                <a name="case_mark_won" string="Mark Won" states="open,pending" type="object" icon="kanban-apply" />
+                            </div>
+                        -->
                     </t>
                 </templates>
             </kanban>
@@ -314,7 +288,6 @@
     </record>
 
     <!-- CRM Lead Search View -->
-
     <record id="view_crm_case_leads_filter" model="ir.ui.view">
         <field name="name">CRM - Leads Search</field>
         <field name="model">crm.lead</field>
@@ -355,7 +328,7 @@
                     context="{'invisible_section': False}">
                     <filter icon="terp-personal+"
                         context="{'invisible_section': False}"
-                        domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
+                        domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                         help="My Sales Team(s)"/>
                     <filter icon="terp-personal+"
                         context="{'invisible_section': False}"
@@ -368,7 +341,7 @@
                 </field>
                 <newline/>
                 <group expand="0" string="Group By...">
-                    <filter string="Salesman" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
+                    <filter string="Salesperson" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                     <filter string="Team" icon="terp-personal+" domain="[]" context="{'group_by':'section_id'}"/>
                     <filter string="Referrer" icon="terp-personal" domain="[]" context="{'group_by':'referred'}"/>
                     <separator orientation="vertical"/>
@@ -379,7 +352,7 @@
                         domain="[]" context="{'group_by':'channel_id'}" />
                     <separator orientation="vertical"/>
                     <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
-                    <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                    <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     <separator orientation="vertical" groups="base.group_no_one"/>
                     <filter string="Creation" help="Create date" icon="terp-go-month"
                         domain="[]" context="{'group_by':'create_date'}" groups="base.group_no_one"/>
@@ -389,6 +362,10 @@
     </record>
 
 
+    <!--
+        OPPORTUNITY
+        -->
+
     <!-- Opportunities Form View -->
     <record model="ir.ui.view" id="crm_case_form_view_oppor">
         <field name="name">Opportunities</field>
@@ -397,27 +374,38 @@
         <field name="priority">20</field>
         <field name="arch" type="xml">
             <form string="Opportunities" layout="manual">
-                <div class="oe_form_topbar">
-                    <button name="case_cancel" string="Cancel" states="draft" type="object" icon="gtk-cancel" />
-                    <button name="case_mark_lost" string="Mark Lost" states="open,pending" type="object" icon="gtk-cancel" />
-                    <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert" />
-                    <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward" />
-                    <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause" />
-                    <button name="case_escalate" string="Escalate" states="open,pending" type="object" icon="gtk-go-up" />
-                    <button name="case_mark_won" string="Mark Won" states="open,pending" type="object" icon="gtk-apply" />
+                <div class="oe_form_topbar oe_form_topbar_hifirst">
+                    <button name="case_open" string="Open" type="object"
+                            states="draft"/>
+                    <button name="case_mark_won" string="Mark Won" type="object"
+                            states="draft,open"/>
+                    <button name="case_mark_lost" string="Mark Lost" type="object"
+                            states="draft,open"/>
+                    <button name="case_reset" string="Reset to Draft" type="object"
+                            states="cancel"/>
+                    <button name="case_escalate" string="Escalate" type="object"
+                            states="open"/>
+                    <button name="stage_previous" string="Previous" type="object"
+                            states="open" icon="gtk-go-back" context="{'stage_type': 'opportunity'}"/>
+                    <button name="stage_next" string="Next" type="object"  
+                            states="open" icon="gtk-go-forward" context="{'stage_type': 'opportunity'}"/>
                     <div class="oe_right">
-                        <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
+                        <field name="stage_id" nolabel="1" widget="statusbar"
+                            on_change="onchange_stage_id(stage_id)"/>
                     </div>
+                    <div class="oe_clear"/>
                 </div>
                 <sheet layout="auto">
-                <group colspan="4" col="3">
-                    <field name="name" required="1" nolabel="1" class="oe_form_title" width="80%%"/>
-                    <button string="Schedule/Log Call"
-                        name="%(opportunity2phonecall_act)d" icon="terp-call-start"
-                        type="action"/>
-                    <button string="Schedule Meeting" icon="gtk-redo"
-                        name="action_makeMeeting"
-                        type="object"/>
+                <group colspan="4" col="2" width="auto">
+                    <field name="name" required="1" nolabel="1" class="oe_form_title"/>
+                    <div class="oe_text_right">
+                        <button string="Schedule/Log Call"
+                            name="%(opportunity2phonecall_act)d" icon="terp-call-start"
+                            type="action"/>
+                        <button string="Schedule Meeting" icon="gtk-redo"
+                            name="action_makeMeeting"
+                            type="object"/>
+                    </div>
                 </group>
                 <group colspan="4" col="4" class="oe_form_group_label_border" style="margin-top: 20px;">
                     <field name="user_id"/>
@@ -451,25 +439,13 @@
                         </group>
                     </group>
                     <group col="2" colspan="2" class="oe_form_group_label_border">
-                        <separator colspan="2" string="Categorization"/>
+                        <separator colspan="2" string="Category"/>
                         <field name="section_id" colspan="1" widget="selection"/>
                         <field name="categ_id" select="1"
                             string="Category" widget="selection"
                             domain="[('object_id.model', '=', 'crm.lead')]" />
-
-                        <label string="Stage" for="stage_id" align="1.0"/>
-                        <group colspan="1" col="3">
-                            <field name="stage_id" nolabel="1"
-                                on_change="onchange_stage_id(stage_id)"
-                                domain="section_id and [('section_ids', '=', section_id)] or []" width="60%%"/>
-                            <button name="stage_previous"
-                                states="draft,open,pending" type="object"
-                                icon="gtk-go-back" string="" context="{'stage_type': 'opportunity'}"/>
-                            <button name="stage_next" states="draft,open,pending"
-                                type="object" icon="gtk-go-forward" string="" context="{'stage_type': 'opportunity'}"/>
-                        </group>
-
-                        <field name="priority" string="Priority"/>
+                        <field name="state"/>
+                        <field name="priority"/>
                     </group>
 
                     <separator colspan="4" string="Details"/>
@@ -522,48 +498,42 @@
                 </page>
                 </notebook>
                 </sheet>
-                <div class="oe_form_sheet_width">
-                    <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
+                <div class="oe_form_bottom">
+                    <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"/>
                 </div>
             </form>
         </field>
     </record>
 
-    <!-- Opportunities Tree View -->
-    <record model="ir.ui.view" id="crm_case_tree_view_oppor">
-        <field name="name">Opportunities Tree</field>
-        <field name="model">crm.lead</field>
-        <field name="type">tree</field>
-        <field name="arch" type="xml">
-            <tree string="Opportunities" fonts="bold:needaction_pending==True" colors="blue:state=='pending' and not(date_deadline and (date_deadline &lt; current_date));gray:state in ('cancel', 'done');red:date_deadline and (date_deadline &lt; current_date)">
-                <field name="needaction_pending" invisible="1"/>
-                <field name="date_deadline" invisible="1"/>
-                <field name="create_date" groups="base.group_no_one"/>
-                <field name="name" string="Opportunity"/>
-                <field name="partner_id" string="Customer"/>
-                <field name="country_id" invisible="context.get('invisible_country', True)" />
-                <field name="date_action"/>
-                <field name="title_action" />
-                <field name="channel_id" invisible="1"/>
-                <field name="type_id" invisible="1"/>
-                <field name="subjects" invisible="1"/>
-                <field name="stage_id"/>
-                <button name="stage_previous" string="Previous Stage" states="open,pending" type="object" icon="gtk-go-back" />
-                <button name="stage_next" string="Next Stage" states="open,pending" type="object" icon="gtk-go-forward" />
-                <field name="planned_revenue" sum="Expected Revenues"/>
-                <field name="probability" widget="progressbar" avg="Avg. of Probability"/>
-                <field name="section_id" invisible="context.get('invisible_section', True)" />
-                <field name="user_id"/>
-                <field name="priority" invisible="1"/>
-                <field name="categ_id" invisible="1"/>
-                <field name="state"/>
-                <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward" />
-                <button name="case_pending" string="Pending" states="open,draft" type="object" icon="gtk-media-pause" />
-                <button name="case_mark_lost" string="Lost" states="open,pending" type="object" icon="gtk-cancel" />
-                <button name="case_mark_won" string="Won" states="open,pending" type="object" icon="gtk-apply" />
-            </tree>
-        </field>
-    </record>
+        <!-- Opportunities Tree View -->
+        <record model="ir.ui.view" id="crm_case_tree_view_oppor">
+            <field name="name">Opportunities Tree</field>
+            <field name="model">crm.lead</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Opportunities" fonts="bold:needaction_pending==True" colors="blue:state=='pending' and not(date_deadline and (date_deadline &lt; current_date));gray:state in ('cancel', 'done');red:date_deadline and (date_deadline &lt; current_date)">
+                    <field name="needaction_pending" invisible="1"/>
+                    <field name="date_deadline" invisible="1"/>
+                    <field name="create_date" groups="base.group_no_one"/>
+                    <field name="name" string="Opportunity"/>
+                    <field name="partner_id" string="Customer"/>
+                    <field name="country_id" invisible="context.get('invisible_country', True)" />
+                    <field name="date_action"/>
+                    <field name="title_action" />
+                    <field name="channel_id" invisible="1"/>
+                    <field name="type_id" invisible="1"/>
+                    <field name="subjects" invisible="1"/>
+                    <field name="stage_id"/>
+                    <field name="planned_revenue" sum="Expected Revenues"/>
+                    <field name="probability" widget="progressbar" avg="Avg. of Probability"/>
+                    <field name="section_id" invisible="context.get('invisible_section', True)" />
+                    <field name="user_id"/>
+                    <field name="priority" invisible="1"/>
+                    <field name="categ_id" invisible="1"/>
+                    <field name="state" groups="base.group_no_one"/>
+                </tree>
+            </field>
+        </record>
 
 
     <!-- Opportunities Search View -->
@@ -594,10 +564,9 @@
                         help="Unassigned Opportunities" />
                 </field>
                 <field name="section_id"
-                    context="{'invisible_section': False}"
-                    widget="selection">
+                    context="{'invisible_section': False, 'default_section_id': self}">
                     <filter icon="terp-personal+"
-                        domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
+                        domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                         context="{'invisible_section': False}"
                         help="My Sales Team(s)" />
                     <filter icon="terp-personal+"
@@ -605,10 +574,9 @@
                         domain="[]"
                         help="Show Sales Team"/>
                 </field>
-
                 <newline/>
                 <group expand="0" string="Group By..." colspan="16">
-                    <filter string="Salesman" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}" />
+                    <filter string="Salesperson" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}" />
                     <filter string="Team" help="Sales Team" icon="terp-personal+" domain="[]" context="{'group_by':'section_id'}"/>
                     <filter string="Customer" help="Partner" icon="terp-personal+" domain="[]" context="{'group_by':'partner_id'}"/>
                     <separator orientation="vertical" />
@@ -617,7 +585,7 @@
                     <filter string="Category" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'categ_id'}" />
                     <filter string="Campaign" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'type_id'}"/>
                     <filter string="Channel" icon="terp-call-start" domain="[]" context="{'group_by':'channel_id'}" />
-                    <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                    <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     <separator orientation="vertical" />
                     <filter string="Creation" icon="terp-go-month" domain="[]" context="{'group_by':'create_date'}" groups="base.group_no_one"/>
                     <filter string="Exp.Closing" icon="terp-go-month" help="Expected Closing" domain="[]" context="{'group_by':'date_deadline'}" />
@@ -626,19 +594,19 @@
         </field>
     </record>
 
-    <!-- crm.lead Opportunities Graph View -->
-    <record model="ir.ui.view" id="crm_case_graph_view_opportunity">
-        <field name="name">CRM - Opportunity Graph</field>
-        <field name="model">crm.lead</field>
-        <field name="type">graph</field>
-        <field name="arch" type="xml">
-            <graph string="Opportunity by Categories" type="bar" orientation="horizontal">
-                <field name="categ_id"/>
-                <field name="planned_revenue" operator="+"/>
-                <field name="state" group="True"/>
-            </graph>
-        </field>
-    </record>
+        <!-- crm.lead Opportunities Graph View -->
+        <record model="ir.ui.view" id="crm_case_graph_view_opportunity">
+            <field name="name">CRM - Opportunity Graph</field>
+            <field name="model">crm.lead</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph string="Opportunity by Categories" type="bar" orientation="horizontal">
+                    <field name="categ_id"/>
+                    <field name="planned_revenue" operator="+"/>
+                    <field name="state" group="True"/>
+                </graph>
+            </field>
+        </record>
 
-</data>
+    </data>
 </openerp>

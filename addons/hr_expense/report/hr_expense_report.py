@@ -63,7 +63,7 @@ class hr_expense_report(osv.osv):
             ('invoiced', 'Invoiced'),
             ('paid', 'Reimbursed'),
             ('cancelled', 'Cancelled')],
-            'State', readonly=True),
+            'Status', readonly=True),
     }
     _order = 'date desc'
     def init(self, cr):

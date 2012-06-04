@@ -42,17 +42,17 @@
       <field name="type">form</field>
       <field name="arch" type="xml">
         <data>
-          <xpath expr="/form/notebook/page[@name='statement_line_ids']/field[@name='line_ids']/tree/field[@name='date']" position="after">
+          <xpath expr="//page[@name='statement_line_ids']/field[@name='line_ids']/tree/field[@name='date']" position="after">
             <field name="val_date"/>
           </xpath>
-          <xpath expr="/form/notebook/page[@name='statement_line_ids']/field[@name='line_ids']/tree/field[@name='amount']" position="after">
+          <xpath expr="//page[@name='statement_line_ids']/field[@name='line_ids']/tree/field[@name='amount']" position="after">
             <field name="globalisation_id" string="Glob. Id"/>
             <field name="state" invisible="1"/>
           </xpath>
-          <xpath expr="/form/notebook/page[@name='statement_line_ids']/field[@name='line_ids']/form/field[@name='date']" position="after">
+          <xpath expr="//page[@name='statement_line_ids']/field[@name='line_ids']/form/field[@name='date']" position="after">
             <field name="val_date"/>
           </xpath>
-          <xpath expr="/form/notebook/page[@name='statement_line_ids']/field[@name='line_ids']/form/field[@name='amount']" position="after">
+          <xpath expr="//page[@name='statement_line_ids']/field[@name='line_ids']/form/field[@name='amount']" position="after">
             <field name="globalisation_id"/>
             <field name="state" invisible="1"/>
           </xpath>

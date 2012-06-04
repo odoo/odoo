@@ -26,7 +26,6 @@
     "author": "OpenERP SA",
     "category": "Human Resources",
     "sequence": 28,
-    'complexity': "easy",
     "website": "http://www.openerp.com",
     "description": """
 This module allows you to manage leaves and leaves' requests.

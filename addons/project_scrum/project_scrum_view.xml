@@ -43,10 +43,6 @@
                     <field name="expected_hours" sum="Planned hours" widget="float_time" string="Total Planned Hours"/>
                     <field name="effective_hours" sum="Spent hours" widget="float_time" string="Total Spent Hours"/>
                     <field name="state"/>
-                    <button type="object" string="Open" name="button_open" states="draft,pending" icon="terp-camera_test"/>
-                    <button type="object" string="Pending" name="button_pending" states="open" icon="gtk-media-pause"/>
-                    <button type="action" string="Convert to Task" name="%(action_scrum_backlog_to_task)d" states="pending" icon="terp-stock_effects-object-colorize"/>
-                    <button type="object" string="Close" name="button_close" states="open,pending" icon="terp-dialog-close"/>
                 </tree>
             </field>
         </record>
@@ -56,8 +52,21 @@
             <field name="model">project.scrum.product.backlog</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Product backlog">
-                    <group colspan="4" col="8">
+                <form layout="manual">
+                <div class="oe_form_topbar">
+                    <button type="object" string="Open" name="button_open" states="draft,pending"/>
+                    <button type="object" string="Close" name="button_close" states="open,pending"/>
+                    <button type="object" string="Pending" name="button_pending" states="open"/>
+                    <button type="action" string="Convert to Task" name="%(action_scrum_backlog_to_task)d" states="pending"/>
+                    <button type="object" string="Set to Draft" name="button_draft" states="cancel,done"/>
+                    <button type="object" string="Cancel" name="button_cancel" states="draft,open,pending"/>
+                    <div class="oe_right">
+                        <field name="state" select="1" widget="statusbar" nolabel="1" statusbar_visible="draft,open"/>
+                    </div>
+                    <div class="oe_clear"/>
+                </div>
+                <sheet string="Product backlog" layout="auto">
+                    <group colspan="4" col="8" class="oe_form_header">
                         <field name="name" select="1"/>
                         <field name="project_id" select="1"/>
                         <field domain="[('project_id','=',project_id), ('state','in', ['draft','open'])]" name="sprint_id" select="1"/>
@@ -93,7 +102,7 @@
                                         <field name="type_id" invisible="context.get('set_visible',False)"/>
                                         <field name="date_start" invisible="1"/>
                                         <field name="date_end" invisible="1"/>
-                                        <button name="next_type" invisible="context.get('set_visible',False)"
+                                        <button name="stage_next" invisible="context.get('set_visible',False)"
                                             states="draft,open,pending"
                                             string="Change Stage"
                                             type="object"
@@ -109,15 +118,7 @@
                             </field>
                         </page>
                     </notebook>
-                    <group col="8" colspan="4">
-                        <field name="state" select="1" readonly="1"/>
-                        <button type="object" string="Cancel" name="button_cancel" states="draft,open,pending" icon="gtk-stop"/>
-                        <button type="object" string="Open" name="button_open" states="draft,pending" icon="terp-camera_test"/>
-                        <button type="action" string="Convert to Task" name="%(action_scrum_backlog_to_task)d" states="pending" icon="gtk-execute"/>
-                        <button type="object" string="Pending" name="button_pending" states="open" icon="gtk-media-pause"/>
-                        <button type="object" string="Close" name="button_close" states="open,pending" icon="terp-dialog-close"/>
-                        <button type="object" string="Set to Draft" name="button_draft" states="cancel,done" icon="gtk-convert"/>
-                    </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -167,7 +168,7 @@
                         <filter string="Project" icon="terp-folder-violet" domain="[]" context="{'group_by':'project_id'}"/>
                         <filter string="Sprint" icon="terp-gtk-jump-to-ltr" domain="[]" context="{'group_by':'sprint_id'}"/>
                         <separator orientation="vertical"/>
-                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     </group>
                 </search>
             </field>
@@ -218,12 +219,6 @@
                     <field name="effective_hours" sum="Effective hours" widget="float_time"/>
                     <field name="expected_hours" sum="Planned hours" widget="float_time"/>
                     <field name="state"/>
-                    <button type="object" string="Open" name="button_open" states="draft,pending" icon="terp-camera_test"/>
-                    <button type="object" string="Pending" name="button_pending" states="open" icon="gtk-media-pause"/>
-                    <button type="object" string="Close" name="button_close" states="open,pending" icon="terp-dialog-close"/>
-                    <button type="object" string="Set to Draft" name="button_draft" states="cancel,done" icon="gtk-convert"/>
-                    <button name="%(project_scrum.report_scrum_sprint_burndown_chart)d" states="open,draft,close,cancel"
-                                    string="Burndown Chart" type="action" icon="gtk-print"/>
                 </tree>
             </field>
         </record>
@@ -232,8 +227,21 @@
             <field name="model">project.scrum.sprint</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Scrum Sprint">
-                    <group colspan="4" col="6">
+                <form layout="manual">
+                <div class="oe_form_topbar">
+                    <button type="object" string="Open" name="button_open" states="draft,pending"/>
+                    <button type="object" string="Close" name="button_close" states="open,pending"/>
+                    <button type="object" string="Pending" name="button_pending" states="open"/>
+                    <button name="%(project_scrum.report_scrum_sprint_burndown_chart)d"
+                                   string="Burndown Chart" type="action"/>
+                    <button type="object" string="Set to Draft" name="button_draft" states="cancel,done"/>
+                    <div class="oe_right">
+                        <field name="state" readonly="1" widget="statusbar" nolabel="1" statusbar_visible="draft,open"/>
+                    </div>
+                    <div class="oe_clear"/>
+                </div>
+                <sheet string="Scrum Sprint" layout="auto">
+                    <group colspan="4" col="6" class="oe_form_header">
                         <field name="name" select="1"/>
                         <field name="project_id" on_change="onchange_project_id(project_id)"/>
                     </group>
@@ -298,15 +306,10 @@
                             <field colspan="4" name="retrospective" nolabel="1"/>
                         </page>
                     </notebook>
-                    <group col="8" colspan="4">
-                        <field name="state" readonly="1"/>
-                        <button name="%(project_scrum.report_scrum_sprint_burndown_chart)d"
-                                    string="Burndown Chart" type="action" icon="gtk-print"/>
-                        <button type="object" string="Open" name="button_open" states="draft,pending" icon="terp-camera_test"/>
-                        <button type="object" string="Pending" name="button_pending" states="open" icon="gtk-media-pause"/>
-                        <button type="object" string="Close" name="button_close" states="open,pending" icon="terp-dialog-close"/>
-                        <button type="object" string="Set to Draft" name="button_draft" states="cancel,done" icon="gtk-convert"/>
-                    </group>
+                    </sheet>
+                    <div class="oe_form_sheet_width">
+                        <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"/>
+                    </div>
                 </form>
             </field>
         </record>
@@ -334,7 +337,7 @@
                         <separator orientation="vertical"/>
                         <filter string="Project" icon="terp-folder-violet" domain="[]" context="{'group_by':'project_id'}"/>
                         <separator orientation="vertical"/>
-                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Month" icon="terp-go-month" domain="[]" context="{'group_by':'date_start'}" help="Sprint Month"/>
                     </group>
@@ -568,7 +571,7 @@
             <field name="type">search</field>
             <field name="inherit_id" ref="project.view_task_search_form"/>
             <field name="arch" type="xml">
-                <field name="project_id" position="after">
+                <field name="user_id" position="before">
                     <field name="sprint_id" context="{'sprint_invisible':False}">
                         <filter icon="terp-check" context="{'sprint_invisible':False}" domain="[('sprint_id.state','in',('draft','open'))]" help="Current Sprints"/>
                         <filter icon="gtk-find" context="{'sprint_invisible':False}" domain="[]" help="View Sprints"/>

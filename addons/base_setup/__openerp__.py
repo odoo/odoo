@@ -24,7 +24,6 @@
     'name': 'Initial Setup Tools',
     'version': '1.0',
     'category': 'Hidden',
-    'complexity': "easy",
     'description': """
 This module helps to configure the system at the installation of a new database.
 ================================================================================
@@ -36,7 +35,7 @@ Shows you a list of applications features to install from.
     'website': 'http://www.openerp.com',
     'depends': ['base'],
     'init_xml': [],
-    'update_xml': ['security/ir.model.access.csv', 'base_setup_views.xml' ],
+    'update_xml': ['security/ir.model.access.csv', 'base_setup_views.xml', 'res_config_view.xml'],
     'demo_xml': [],
     'installable': True,
     'auto_install': True,

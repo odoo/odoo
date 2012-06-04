@@ -24,7 +24,6 @@
     'version': '1.0',
     'category': 'Human Resources',
     "sequence": 24,
-    'complexity': "easy",
     'description': """
 Manages job positions and the recruitment process.
 ==================================================
@@ -38,7 +37,14 @@ system to store and search in your CV base.
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'images': ['images/hr_recruitment_analysis.jpeg','images/hr_recruitment_applicants.jpeg'],
-    'depends': ['decimal_precision', 'hr', 'survey', 'crm', 'fetchmail'],
+    'depends': [
+        'base_status',
+        'decimal_precision',
+        'hr',
+        'survey',
+        'crm',
+        'fetchmail',
+    ],
     'update_xml': [
         'wizard/hr_recruitment_phonecall_view.xml',
         'wizard/hr_recruitment_employee_hired.xml',

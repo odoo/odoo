@@ -23,7 +23,6 @@
     'name': 'Followup Management',
     'version': '1.0',
     'category': 'Accounting & Finance',
-    'complexity': "normal",
     'description': """
 Module to automate letters for unpaid invoices, with multi-level recalls.
 ==========================================================================

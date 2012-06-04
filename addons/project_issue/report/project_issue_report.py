@@ -38,7 +38,7 @@ class project_issue_report(osv.osv):
     _columns = {
         'name': fields.char('Year', size=64, required=False, readonly=True),
         'section_id':fields.many2one('crm.case.section', 'Sale Team', readonly=True),
-        'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
+        'state': fields.selection(AVAILABLE_STATES, 'Status', size=16, readonly=True),
         'month':fields.selection([('01', 'January'), ('02', 'February'), \
                                   ('03', 'March'), ('04', 'April'),\
                                   ('05', 'May'), ('06', 'June'), \
@@ -51,7 +51,7 @@ class project_issue_report(osv.osv):
         'creation_date': fields.date('Creation Date', readonly=True),
         'date_closed': fields.date('Date of Closing', readonly=True),
         'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id),('object_id.model', '=', 'project.issue')]"),
-        'type_id': fields.many2one('project.task.type', 'Stage'),
+        'stage_id': fields.many2one('project.task.type', 'Stage'),
         'nbr': fields.integer('# of Issues', readonly=True),
         'working_hours_open': fields.float('Avg. Working Hours to Open', readonly=True),
         'working_hours_close': fields.float('Avg. Working Hours to Close', readonly=True),
@@ -87,7 +87,7 @@ class project_issue_report(osv.osv):
                     c.working_hours_close,
                     c.section_id,
                     c.categ_id,
-                    c.type_id,
+                    c.stage_id,
                     to_char(c.date_closed, 'YYYY-mm-dd') as date_closed,
                     c.company_id as company_id,
                     c.priority as priority,

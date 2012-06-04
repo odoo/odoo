@@ -23,7 +23,16 @@
             <field name="name">Order</field>
             <field name="model">lunch.order</field>
             <field name="arch" type="xml">
-                <form string="Order">
+                <form layout="manual">
+                <div class="oe_form_topbar">
+                    <button name="%(action_lunch_order_confirm)d" string="Confirm Order" type="action" attrs="{'invisible':[('state','=','confirmed')]}"/>
+                    <button name="%(action_lunch_order_cancel)d" string="Cancel Order" type="action"/>
+                    <div class="oe_right">
+                        <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,confirmed"/>
+                    </div>
+                    <div class="oe_clear"/>
+                </div>
+                <sheet string="Order" layout="auto">
                     <field name="user_id" select="1"/>
                     <field name="date" select="1"/>
                     <field name="product" select="1" on_change="onchange_product(product)"/>
@@ -31,13 +40,7 @@
                     <field name="descript"/>
                     <field name="price"/>
                     <field name="cashmove"/>
-                    <newline/>
-                   <separator string="" colspan="4"/>
-                    <group colspan="4" col="4">
-                        <field name="state" widget="statusbar" statusbar_visible="draft,confirmed"/>
-                        <button name="%(action_lunch_order_confirm)d" string="Confirm Order" type="action" icon="gtk-ok" attrs="{'invisible':[('state','=','confirmed')]}"/>
-                        <button name="%(action_lunch_order_cancel)d" string="Cancel Order" type="action" icon="gtk-cancel"/>
-                    </group>
+                </sheet>
                 </form>
             </field>
         </record>
@@ -57,16 +60,6 @@
                     <field name="category"/>
                     <field name="price" sum="Total price"/>
                     <field name="state"/>
-                    <button colspan="1"
-                              name="%(action_lunch_order_cancel)d"
-                              string="Cancel Order"
-                              type="action" states="confirmed"
-                              icon="gtk-cancel" />
-                    <button colspan="1"
-                              name="%(action_lunch_order_confirm)d"
-                              string="Confirm Order"
-                              type="action" states="draft"
-                              icon="terp-gtk-go-back-rtl" />
                 </tree>
             </field>
         </record>
@@ -337,7 +330,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Box Amount by User">
-                     <field name="date" invisible="1"/>
+                    <field name="date" invisible="1"/>
                     <field name="year" invisible="1"/>
                     <field name="day" invisible="1"/>
                     <field name="month" invisible="1"/>

@@ -23,6 +23,10 @@
                 <page string="History" position="inside">
                     <field name="emails" colspan="4" nolabel="1"/>
                 </page>
+                <xpath expr="/form/notebook" position="after">
+                    <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"
+                            options='{"thread_level": 1}'/>
+                </xpath>
             </field>
         </record>
 

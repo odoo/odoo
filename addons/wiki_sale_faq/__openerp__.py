@@ -23,7 +23,6 @@
     'name': 'Wiki: Sale FAQ',
     'version': '1.0',
     'category': 'Customer Relationship Management',
-    'complexity': "easy",
     'description': """
 This module provides a Wiki Sales FAQ Template.
 ===============================================

@@ -57,27 +57,5 @@
 
        <menuitem action="open_module_tree_department" id="menu_hr_department_tree" parent="hr.menu_hr_configuration" sequence="5"/>
 
-       <record model="ir.ui.view" id="view_users_form_inherit">
-            <field name="name">res.users.form</field>
-            <field name="type">form</field>
-            <field name="model">res.users</field>
-            <field name="inherit_id" ref="base.view_users_form"/>
-            <field name="arch" type="xml">
-                <group name="default_filters" position="inside">
-                    <field name="context_department_id" completion="1" widget="selection" string="Department"/>
-                </group>
-            </field>
-        </record>
-        <record model="ir.ui.view" id="view_department_form_simple_modif_inherited1">
-            <field name="name">view.department.form.hr.inherited1</field>
-            <field name="model">res.users</field>
-            <field name="inherit_id" ref="base.view_users_form_simple_modif" />
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <group name="default_filters" position="inside">
-                    <field name="context_department_id" widget="selection" readonly="0"/>
-                </group>
-            </field>
-        </record>
         </data>
 </openerp>

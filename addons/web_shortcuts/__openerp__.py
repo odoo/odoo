@@ -22,7 +22,6 @@
     'name': 'Web Shortcuts',
     'version': '1.0',
     'category': 'Tools',
-    'complexity': "easy",
     'description': """
 Enable shortcuts feature in the web client
 ==========================================

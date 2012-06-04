@@ -24,7 +24,6 @@
     'name': 'Tasks on CRM',
     'version': '1.0',
     "category": 'Customer Relationship Management',
-    'complexity': "easy",
     'description': """
 Todo list for CRM leads and opportunities.
     """,
