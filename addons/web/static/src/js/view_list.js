@@ -1338,7 +1338,7 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                     } else if (column.id in group.aggregates) {
                         var r = {};
                         r[column.id] = {value: group.aggregates[column.id]};
-                        $('<td class="oe-number">')
+                        $('<td class="oe_number">')
                             .html(instance.web.format_cell(
                                 r, column, {process_modifiers: false}))
                             .appendTo($row);
