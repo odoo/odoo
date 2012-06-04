@@ -474,9 +474,10 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
             .find('.oe_kanban_remaining').text(this.dataset.size() - this.records.length);
     },
     remove_record: function(id, remove_from_dataset) {
-        for (var i = 0, ii = this.records.length; i < ii; i++) {
+        for (var i = 0; i < this.records.length; i++) {
             if (this.records[i]['id'] === id) {
                 this.records.splice(i, 1);
+                i--;
             }
         }
     },

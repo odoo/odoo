@@ -1075,21 +1075,11 @@
     </div>
 </t>
 <t t-name="FieldStatus.content">
-    <ul class="oe-arrow-list">
-        <t t-set="size" t-value="widget.to_show.length"/>
-        <t t-foreach="_.range(size)" t-as="i">
-            <li t-att-class="widget.to_show[i][0] === widget.selected_value ? 'oe-arrow-list-selected' : ''">
-                <span class="oe-arrow-list-before" t-if="i &gt; 0"></span><span><t t-esc="widget.to_show[i][1]"/></span><span class="oe-arrow-list-after" t-if="i &lt; size - 1"></span>
-            </li>
-        </t>
-    </ul>
-</t>
-<t t-name="FieldStatus.content">
     <ul class="oe_form_steps">
         <t t-set="size" t-value="widget.to_show.length"/>
         <t t-foreach="_.range(size)" t-as="i">
             <li t-att-class="widget.to_show[i][0] === widget.selected_value ? 'oe_form_steps_active' : ''">
-                <t t-esc="widget.to_show[i][1]"/>
+                <span><t t-esc="widget.to_show[i][1]"/></span>
                 <img t-att-src='_s + "/web/static/src/img/form_steps.png"' class="oe_form_steps_arrow" t-if="i &lt; size - 1"/>
             </li>
         </t>
@@ -1310,7 +1300,7 @@
 <div t-name="SearchView.FacetView"
      class="oe_searchview_facet"
      tabindex="0"
-    ><span class="oe_facet_remove">✖</span
+    ><span class="oe_facet_remove">x</span
     ><span class="oe_facet_category oe_i" t-if="widget.model.has('icon')">
         <t t-esc="widget.model.get('icon')"/>
     </span
@@ -1475,19 +1465,25 @@
         </t>
     </t>
 </t>
-<div t-name="SearchView.Filters" class="oe_searchview_filters">
+<div t-name="SearchView.Filters" class="oe_searchview_section">
 
 </div>
-<div t-name="SearchView.CustomFilters" class="oe_searchview_custom">
-    <ul class="oe_searchview_custom_list"/>
-    <h4 class="oe_searchview_custom_title">
-        <label for="oe_searchview_custom_input">Save search</label></h4>
-    <form>
-        <input id="oe_searchview_custom_input"/>
-        <button>Save</button><br/>
-        <label for="oe_searchview_custom_public">Share with all users:</label>
-        <input id="oe_searchview_custom_public" type="checkbox"/>
-    </form>
+<div t-name="SearchView.CustomFilters" class="oe_searchview_section">
+    <div>
+        <h3><span class="oe_i">M</span> Custom Filters</h3>
+        <ul class="oe_searchview_custom_list"/>
+        <div class="oe_searchview_custom">
+          <h4>Save current filter</h4>
+          <form>
+            <p><input id="oe_searchview_custom_input" placeholder="Filter name"/></p>
+            <p><input id="oe_searchview_custom_public" type="checkbox"/>
+              <label for="oe_searchview_custom_public">Share with all users</label></p>
+            <button>Save</button>
+          </form>
+        </div>
+    </div>
+    <div>
+    </div>
 </div>
 <div t-name="SearchView.advanced" class="oe_searchview_advanced">
     <h4>Advanced Search</h4>
@@ -1495,7 +1491,7 @@
         <ul>
 
         </ul>
-        <button class="oe_add_condition" type="button">Add a condition</button>
+        <button class="oe_add_condition button" type="button">Add a condition</button><br/>
         <button class="oe_apply" type="submit">Apply</button>
     </form>
 </div>
@@ -1512,7 +1508,7 @@
         </select>
         <select class="searchview_extended_prop_op"/>
         <span class="searchview_extended_prop_value"/>
-        <button type="button" class="searchview_extended_delete_prop">Delete</button>
+        <a class="searchview_extended_delete_prop button">x</a>
     </li>
 </t>
 <t t-name="SearchView.extended_search.proposition.char">
