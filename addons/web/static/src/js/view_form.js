@@ -1004,7 +1004,7 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
         this.process($new_sheet);
     },
     process_form: function($form) {
-        if ($form.find('> sheet').length == 0) {
+        if ($form.find('> sheet').length === 0) {
             $form.addClass('oe_form_nosheet');
         }
         var $new_form = this.render_element('FormRenderingForm', $form.getAttributes());
