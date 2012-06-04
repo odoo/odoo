@@ -77,7 +77,6 @@ class crm_helpdesk(base_state, osv.osv):
                                   \nIf the case is in progress the state is set to \'Open\'.\
                                   \nWhen the case is over, the state is set to \'Done\'.\
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
-            'message_ids': fields.one2many('mail.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
     }
 
     _defaults = {
@@ -90,6 +89,11 @@ class crm_helpdesk(base_state, osv.osv):
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
     }
+
+    def create(self, cr, uid, vals, context=None):
+        obj_id = super(crm_helpdesk, self).create(cr, uid, vals, context)
+        self.create_send_note(cr, uid, [obj_id], context=context)
+        return obj_id
 
     def message_new(self, cr, uid, msg_dict, custom_values=None, context=None):
         """Automatically called when new email message arrives"""
@@ -144,9 +148,15 @@ class crm_helpdesk(base_state, osv.osv):
     # ******************************
     # OpenChatter
     # ******************************
-    
+
     def case_get_note_msg_prefix(self, cr, uid, id, context=None):
-        return 'Helpdesk'
+        """ override of default base_state method. """
+        return 'Case'
+
+    def create_send_note(self, cr, uid, ids, context=None):
+        msg = _('Case has been <b>created</b>.')
+        self.message_append_note(cr, uid, ids, body=msg, context=context)
+        return True
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
