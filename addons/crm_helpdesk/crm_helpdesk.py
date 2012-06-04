@@ -113,8 +113,7 @@ class crm_helpdesk(base_state, osv.osv):
             'user_id': False,
         })
         custom_values.update(self.message_partner_by_email(cr, uid, msg.get('from'), context=context))
-        self.write(cr, uid, [res_id], vals, context)
-        return super(crm_helpdesk,self).message_new(cr, uid, msg_dict, custom_values=custom_values, context=context)
+        return super(crm_helpdesk,self).message_new(cr, uid, msg, custom_values=custom_values, context=context)
 
     def message_update(self, cr, uid, ids, msg, update_vals=None, context=None):
         """ Overrides mail_thread message_update that is called by the mailgateway
