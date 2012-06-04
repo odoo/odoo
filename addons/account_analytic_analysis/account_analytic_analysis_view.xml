@@ -77,7 +77,7 @@
 				<td class="oe_th_150px"><button class= "oe_btn_width" name="%(sale.action_order_line_tree2)d" string="Lines To Invoice" type="action" context="{'default_project_id': active_id,'search_default_project_id': active_id}" attrs="{'invisible': [('fix_price_invoices','=',0)]}"/></td>
 			    </tr>
 			    <tr>
-				<th class="oe_border_right">Inv. On Timesheets</th>
+				<th class="oe_border_right">Invoice On Timesheets</th>
 				<td><field name="invoice_on_timesheets" nolabel="1"/></td>
 				<td class="oe_amount_center oe_th_110px"><field name="quantity_max" nolabel="1" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
 				<td class="oe_amount_center oe_th_110px"><field name="hours_qtt_invoiced" nolabel="1" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
@@ -109,8 +109,8 @@
 			</table>
 		    </group>
 		    <group colspan="4" class="oe_form_group_label_border">
-				<field name="pricelist_id" attrs="{'invisible': ['|',('invoice_on_timesheets','!=',True),('charge_expenses','!=',True)]}"/>
-			    <field name="to_invoice" widget="selection" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/>
+			<field name="pricelist_id" attrs="{'invisible': ['|',('invoice_on_timesheets','!=',True),('charge_expenses','!=',True)]}"/>
+			<field name="to_invoice" widget="selection" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/>
 		    </group>
                 </xpath>
             </field>
@@ -124,7 +124,7 @@
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
             	<xpath expr='//page[@name="team"]' position='after'>
-            	    <page string="Contract data">
+            	    <page string="Contract Data">
                         <group colspan="2" col= "2" class="oe_form_group_label_border">
                             <separator colspan="2" string="Validity"/>
                             <field name="date_start"/>

@@ -362,6 +362,16 @@
                     <field name="project_escalation_id"/>
                     <field name="reply_to"/>
                 </field>
+                <xpath expr='//page[@name="team"]' position='replace'>
+                    <page name="team" string="Team" attrs="{'invisible':[('use_tasks','=', 0),('use_issues','=', 0)]}">
+                        <field colspan="4" name="members" nolabel="1" help="Project's members are users who can have an access to the tasks related to this project.">
+                            <tree string="Members">
+                                <field name="name"/>
+                                <field name="user_email"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
             </field>
        </record>
         
