@@ -158,12 +158,7 @@ class wizard(osv.osv_memory):
                 existing_users = user_obj.browse(cr, ROOT_UID, existing_uids)
                 existing_logins = [user.login for user in existing_users]
                 new_users_data = []
-                if u.has_portal_user==False:
-                    new_users_data = []
-                    if u.user_email in existing_logins:
-                        portal_uids = user_obj.search(cr, ROOT_UID, [('login','=',u.user_email),('partner_id', '=', u.partner_id.id)])
-                        user_obj.unlink(cr,uid,portal_uids)
-                else:
+                if u.has_portal_user:
                     if u.user_email not in existing_logins:
                         new_users_data.append({
                                 'name': u.name,
@@ -177,7 +172,11 @@ class wizard(osv.osv_memory):
                             } )
                     portal_obj.write(cr, ROOT_UID, [wiz.portal_id.id],
                         {'users': [(0, 0, data) for data in new_users_data]}, context0)
-
+                else:
+                    new_users_data = []
+                    if u.user_email in existing_logins:
+                        portal_uids = user_obj.search(cr, ROOT_UID, [('login','=',u.user_email),('partner_id', '=', u.partner_id.id)])
+                        user_obj.unlink(cr,uid,portal_uids)
             # send email to all users (translated in their language)
             data = {
                 'company': user.company_id.name,

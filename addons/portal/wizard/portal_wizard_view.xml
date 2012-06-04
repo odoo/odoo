@@ -3,7 +3,7 @@
     <data>
         <!-- wizard action on res.partner -->
         <act_window id="partner_wizard_action"
-            name="Add Portal Access"
+            name="Portal Access Management Wizard"
             src_model="res.partner"
             res_model="res.portal.wizard"
             view_type="form" view_mode="form"
@@ -12,7 +12,7 @@
 
         <!-- wizard view -->
         <record id="wizard_view" model="ir.ui.view">
-            <field name="name">Add Portal Access</field>
+            <field name="name">Portal Access Management Wizard</field>
             <field name="model">res.portal.wizard</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
