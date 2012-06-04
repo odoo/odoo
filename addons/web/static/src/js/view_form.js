@@ -3410,6 +3410,8 @@ instance.web.form.FieldMany2ManyKanban = instance.web.form.AbstractField.extend(
                     'create_text': _t("Add"),
                     'creatable': self.get("effective_readonly") ? false : true,
                     'quick_creatable': self.get("effective_readonly") ? false : true,
+                    'read_only_mode': self.get("effective_readonly") ? true : false,
+                    'confirm_on_delete': false,
             });
         var embedded = (this.field.views || {}).kanban;
         if (embedded) {
