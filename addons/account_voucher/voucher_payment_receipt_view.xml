@@ -345,8 +345,8 @@
                                     <field name="date_original" readonly="1"/>
                                     <field name="date_due" readonly="1"/>
                                     <field name="amount_original" readonly="1"/>
-                                    <field name="amount_unreconciled" readonly="1"/>
-                                    <field name="reconcile" on_change="onchange_reconcile(reconcile, amount, amount_unreconciled, context)"/>
+                                    <field name="amount_unreconciled" readonly="1" groups="account.group_account_user"/>
+                                    <field name="reconcile" on_change="onchange_reconcile(reconcile, amount, amount_unreconciled, context)" groups="account.group_account_user"/>
                                     <field name="amount" sum="Total Allocation" on_change="onchange_amount(amount, amount_unreconciled, context)" string="Allocation"/>
                                 </tree>
                             </field>
