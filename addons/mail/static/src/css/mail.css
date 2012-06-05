@@ -42,12 +42,21 @@
 }
 
 .openerp div.oe_mail_thread_subthread img {
-    width: 30px;
-    height: 30px;
+    width: 28px;
+    height: 28px;
+}
+
+.openerp div.oe_mail_msg_content {
+    width: 486px;
+}
+
+.openerp div.oe_mail_msg_content li{
+    float: left;
+    margin-right: 3px;
 }
 
 .openerp div.oe_mail_thread_subthread div.oe_mail_msg_content {
-    margin-left: 40px;
+    width: 440px;
 }
 
 .openerp div.oe_mail_wall_more {
@@ -141,17 +150,16 @@
 }
 
 .openerp div.oe_mail_thread_subthread {
-    margin-top: 8px;
-    padding-left: 5%;
+    margin-left: 66px;
+}
+
+.openerp div.oe_mail_thread_subthread li.oe_mail_thread_msg:last-child {
+    margin-bottom: 8px;
 }
 
 .openerp div.oe_mail_thread_more {
     display: none;
     border-bottom: 1px solid #D2D9E7;
-}
-
-.openerp li.oe_mail_thread_msg {
-    padding: 1px;
 }
 
 .openerp li.oe_mail_thread_msg:after {
@@ -167,23 +175,15 @@
 }
 
 .openerp .oe_mail_msg_notification, .openerp .oe_mail_msg_comment, .openerp .oe_mail_msg_email {
-    padding: 4px;
-    -moz-border-radius: 4px;
-    -webkit-border-radius: 4px;
-    -o-border-radius: 4px;
-    -ms-border-radius: 4px;
-    border-radius: 4px;
+    padding: 8px;
 }
 
-.openerp li.oe_mail_thread_msg > .oe_mail_msg_comment {
-    background: #eee;
+.openerp li.oe_mail_thread_msg > .oe_mail_msg_comment, .openerp .oe_mail_msg_notification {
+    background: white;
+    border-top: 1px solid #ccc
 }
 
 .openerp div.oe_mail_thread_subthread .oe_mail_msg_comment {
-    background: white;
-}
-
-.openerp .oe_mail_msg_notification {
     background: #eee;
 }
 
@@ -194,7 +194,7 @@
 }
 
 .openerp .oe_mail_msg_content {
-    margin-left: 60px;
+    float: left;
 }
 
 .openerp .oe_mail_msg_content:after {
@@ -204,9 +204,8 @@
 }
 
 .openerp img.oe_mail_msg_image {
-    margin-right: 8px;
-    width: 45px;
-    height: 45px;
+    width: 50px;
+    height: 50px;
     text-align: center;
     overflow: hidden;
     -moz-border-radius: 4px;
@@ -240,7 +239,6 @@
 
 .openerp li.oe_mail {
     list-style-type: none;
-    margin-bottom: 2px;
 }
 
 .openerp input.oe_mail, textarea.oe_mail {
@@ -282,7 +280,7 @@
     font-weight: bold;
 }
 
-.openerp .oe_mail_oe_space {
-    margin-left: 15px;
-    margin-right: 4px;
-}
+/*.openerp .oe_mail_oe_space:after {*/
+    /*content: " · ";*/
+    /*margin-right: 2px;*/
+/*}*/
