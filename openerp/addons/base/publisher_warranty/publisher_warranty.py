@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 OpenERP S.A. (<http://www.openerp.com>).
+#    Copyright (C) 2004-2012 OpenERP S.A. (<http://www.openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -162,7 +162,7 @@ class publisher_warranty_contract(osv.osv):
                 _logger.debug("Exception while sending a get logs messages", exc_info=1)
                 raise osv.except_osv(_("Error"), _("Error during communication with the publisher warranty server."))
 
-            contracts = result["contracts"]
+            contracts = result.get("contracts", [])
             for contract in contracts:
                 c_id = self.search(cr, uid, [("name","=",contract)])[0]
                 # for backward compatibility
@@ -187,7 +187,7 @@ class publisher_warranty_contract(osv.osv):
 
 
             limit_date = (datetime.datetime.now() - _PREVIOUS_LOG_CHECK).strftime(misc.DEFAULT_SERVER_DATETIME_FORMAT)
-            for message in result["messages"]:
+            for message in result.get("messages", []):
                 ids = self.pool.get("res.log").search(cr, uid, [("res_model", "=", "publisher_warranty.contract"),
                                                           ("create_date", ">=", limit_date),
                                                           ("name", "=", message)])
@@ -354,9 +354,11 @@ def get_sys_logs(cr, uid):
     finally:
         uo.close()
 
-    result = safe_eval(submit_result) if submit_result else {}
+    if not submit_result:
+        raise IOError('Invalid result')
+
+    result = safe_eval(submit_result)
 
     return result
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
