@@ -183,15 +183,12 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form layout="manual">
-            <div class="oe_form_topbar">
+            <header>
                 <button name="idea_open" string="Open" states="draft"/>
                 <button name="idea_close" string="Accept" states="open"/>
                 <button name="idea_cancel" string="Refuse" states="open" />
-                <div class="oe_right">
-                    <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,open,close"/>
-                </div>
-                <div class="oe_clear"/>
-            </div>
+                <field name="state" widget="statusbar" statusbar_visible="draft,open,close"/>
+            </header>
             <sheet string="New Idea" layout="auto">
             <group col="6" colspan="4" class="oe_form_header">
                 <field name="name" select="1" />
@@ -267,10 +264,6 @@
             <field name="count_comments"/>
             <field name="count_votes"/>
             <field name="state"/>
-             <button name="idea_open" string="Open" states="draft" icon="terp-gtk-go-back-rtl"/>
-            <button name="%(idea.action_idea_post_vote)d" icon="gtk-execute" type="action" states="open" string="Submit Vote"/>
-            <button name="idea_close" string="Accept" states="open" icon="gtk-jump-to"/>
-            <button name="idea_cancel" string="Refuse" states="open"  icon="gtk-cancel"/>
         </tree>
         </field>
     </record>

@@ -50,8 +50,6 @@
                 <field name="partner_phone"/>
                 <field name="job_id"/>
                 <field name="stage_id"/>
-                <button name="stage_previous" string="Previous" states="open,pending" type="object" icon="gtk-go-back"/>
-                <button name="stage_next" string="Next" states="open,pending" type="object" icon="gtk-go-forward"/>
                 <field name="title_action" invisible="context.get('invisible_next_action', True)"/>
                 <field name="date_action" invisible="context.get('invisible_next_date', True)"/>
                 <field name="source_id" invisible="1"/>
@@ -63,8 +61,6 @@
                 <field name="department_id" invisible="context.get('invisible_department', True)"/>
                 <field name="user_id"/>
                 <field name="state" groups="base.group_no_one"/>
-                <button name="case_open" string="In Progress" states="draft,pending" type="object" icon="gtk-go-forward" groups="base.group_no_one"/>
-                <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause" groups="base.group_no_one"/>
             </tree>
         </field>
     </record>
@@ -75,7 +71,7 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form layout="manual">
-            <div class="oe_form_topbar">
+            <header>
                 <button name="%(action_hr_recruitment_hired_employee)d" string="Hire" type="action"
                         states="open,pending"/>
                 <button name="case_open" string="Open" type="object"
@@ -90,11 +86,8 @@
                         states="open" icon="gtk-go-back"/>
                 <button name="stage_next" string="Next" type="object"
                         states="open" icon="gtk-go-forward"/>
-                <div class="oe_right">
-                    <field name="stage_id" nolabel="1" widget="statusbar"/>
-                </div>
-                <div class="oe_clear"/>
-            </div>
+                <field name="stage_id" widget="statusbar"/>
+            </header>
             <sheet string="Jobs - Recruitment Form" layout="auto">
                 <group colspan="4" col="4">
                     <field name="name" string="Subject"/>
@@ -159,7 +152,7 @@
                 </notebook>
             </sheet>
             <div class="oe_form_bottom">
-                <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
+                <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"/>
             </div>
             </form>
         </field>

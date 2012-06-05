@@ -64,17 +64,14 @@
             <field name="priority">1</field>
             <field name="arch" type="xml">
                 <form layout="manual">
-                <div class="oe_form_topbar">
+                <header>
                     <button string="Submit to Manager" name="confirm" states="draft" type="workflow"/>
                     <button string="Approve" name="validate" states="confirm" type="workflow" groups="base.group_hr_user"/>
                     <button string="Validate" name="second_validate" states="validate1" type="workflow" groups="base.group_hr_user"/>
                     <button string="Refuse" name="refuse" states="confirm,validate1" type="workflow" groups="base.group_hr_user,base.group_hr_manager"/>
                     <button string="Reset to New" name="set_to_draft" states="refuse,validate" type="object" groups="base.group_hr_user"/>
-                    <div class="oe_right">
-                        <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,confirm,validate" statusbar_colors='{"confirm":"blue","validate1":"blue","refuse":"red"}'/>
-                    </div>
-                    <div class="oe_clear"/>
-                </div>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate" statusbar_colors='{"confirm":"blue","validate1":"blue","refuse":"red"}'/>
+                </header>
                 <sheet string="Leave Request" layout="auto">
                     <group col="8" colspan="4">
                     <field name="name" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}"/>
@@ -103,7 +100,7 @@
                     </notebook>
                 </sheet>
                 <div class="oe_form_sheet_width">
-                    <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
+                    <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"/>
                 </div>
                 </form>
             </field>
@@ -116,17 +113,14 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form layout="manual">
-                <div class="oe_form_topbar">
+                <header>
                     <button string="Submit to Manager" name="confirm" states="draft" type="workflow"/>
                     <button string="Approve" name="validate" states="confirm" type="workflow" groups="base.group_hr_user"/>
                     <button string="Validate" name="second_validate" states="validate1" type="workflow" groups="base.group_hr_user"/>
                     <button string="Refuse" name="refuse" states="confirm,validate1" type="workflow" groups="base.group_hr_user"/>
                     <button string="Reset to New" name="set_to_draft" states="cancel,validate,refuse" type="object" groups="base.group_hr_user"/>
-                    <div class="oe_right">
-                        <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,confirm,validate" statusbar_colors='{"confirm":"blue","validate1":"blue","refuse":"red"}'/>
-                    </div>
-                    <div class="oe_clear"/>
-                </div>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate" statusbar_colors='{"confirm":"blue","validate1":"blue","refuse":"red"}'/>
+                </header>
                 <sheet string="Allocation Request" layout="auto">
                 <group col="8" colspan="4" class="oe_form_header">
                     <field name="name"/>
@@ -153,7 +147,7 @@
                 </notebook>
             </sheet>
             <div class="oe_form_sheet_width">
-                <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
+                <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"/>
             </div>
             </form>
             </field>
@@ -177,8 +171,6 @@
                     <field name="user_id" invisible="1"/>
                     <!--field name="type"/-->
                     <field name="state"/>
-                    <button string="Approve" name="validate" states="confirm" type="workflow" icon="gtk-apply" groups="base.group_hr_user,base.group_hr_manager"/>
-                    <button string="Validate" name="second_validate" states="validate1" type="workflow" icon="gtk-apply" groups="base.group_hr_user,base.group_hr_manager"/>
                 </tree>
             </field>
         </record>
@@ -234,9 +226,6 @@
                     <field name="manager_id" invisible="1"/>
                     <field name="user_id" invisible="1"/>
                     <field name="state"/>
-                    <button string="Submit to Manager" name="confirm" states="draft" type="workflow" icon="gtk-yes"/>
-                    <button string="Approve" name="validate" states="confirm" type="workflow" icon="gtk-apply" groups="base.group_hr_user"/>
-                    <button string="Refuse" name="refuse" states="confirm" type="workflow" icon="gtk-no" groups="base.group_hr_user"/>
                 </tree>
             </field>
         </record>
@@ -262,8 +251,6 @@
                     <field name="manager_id" invisible="1"/>
                     <field name="user_id" invisible="1"/>
                     <!--field name="type"/-->
-                    <button string="Approve" name="validate" states="confirm" type="workflow" icon="gtk-apply" groups="base.group_hr_user"/>
-                    <button string="Validate" name="second_validate" states="validate1" type="workflow" icon="gtk-apply" groups="base.group_hr_user"/>
                 </tree>
             </field>
         </record>

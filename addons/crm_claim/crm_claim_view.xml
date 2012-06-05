@@ -79,12 +79,6 @@
                     <field name="date_deadline" invisible="1"/>
                     <field name="date_closed" invisible="1"/>
                     <field name="state" groups="base.group_no_one"/>
-                    <button name="case_open" string="Open" type="object"
-                        states="draft,pending" icon="gtk-go-forward" groups="base.group_user"/>
-                    <button name="case_close" string="Done" type="object"
-                        states="draft,open,pending" icon="gtk-close" groups="base.group_user"/>
-                    <button name="case_refuse" string="Refuse" type="object"
-                        states="draft,open,pending" icon="gtk-cancel" groups="base.group_user"/>
                 </tree>
             </field>
         </record>
@@ -95,7 +89,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form layout="manual">
-                <div class="oe_form_topbar">
+                <header>
                     <span groups="base.group_user">
                         <button name="case_open" string="Open" type="object"
                                 states="draft,pending"/>
@@ -112,12 +106,9 @@
                         <button name="case_cancel" string="Cancel" type="object"
                                 states="draft,open,pending"/>
                     </span>
-                    <div class="oe_right">
-                        <field name="stage_id" nolabel="1" widget="statusbar"
+                    <field name="stage_id" widget="statusbar"
                             on_change="onchange_stage_id(stage_id)"/>
-                    </div>
-                    <div class="oe_clear"/>
-                </div>
+                </header>
                 <sheet string="Claims" layout="auto">
                     <group>
                         <field name="name"/>
@@ -174,32 +165,12 @@
                                     <field name="resolution" colspan="2" nolabel="1"/>
                                 </group>
                             </page>
-                            <page string="Communication &amp; History">
-                                <group colspan="4">
-                                    <field colspan="4" name="email_cc" string="Global CC" widget="char"/>
-                                </group>
-                                <field name="message_ids" colspan="4" nolabel="1" mode="tree" readonly="1">
-                                    <tree string="History">
-                                        <field name="display_text" string="History Information"/>
-                                        <field name="email_from" invisible="1"/>
-                                        <button
-                                            string="Reply" attrs="{'invisible': [('email_from', '=', False)]}"
-                                            name="%(mail.action_email_compose_message_wizard)d"
-                                            context="{'mail.compose.message.mode':'reply'}"
-                                            icon="terp-mail-replied" type="action"/>
-                                    </tree>
-                                </field>
-                                <button string="Add Internal Note"
-                                    name="%(crm.action_crm_add_note)d"
-                                    context="{'model': 'crm.lead' }"
-                                    icon="terp-document-new" type="action"/>
-                                <button string="Send New Email"
-                                    name="%(mail.action_email_compose_message_wizard)d"
-                                    icon="terp-mail-message-new" type="action"/>
-                            </page>
                         </notebook>
                     </group>
                 </sheet>
+                <div class="oe_form_sheet_width">
+                    <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"/>
+                </div>
                 </form>
             </field>
         </record>

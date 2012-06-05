@@ -28,7 +28,7 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form layout="manual">
-               <div class="oe_form_topbar">
+               <header>
                    <button name="repair_confirm" states="draft" string="Confirm Repair"/>
                    <button name="repair_ready" states="confirmed" string="Start Repair"/>
                    <button name="action_repair_start" states="ready" string="Start Repair"/>
@@ -40,11 +40,8 @@
                    <button name="%(action_cancel_repair)d" states="confirmed,2binvoiced,ready,under_repair" string="Cancel Repair" type="action"/>
                    <button name="%(action_cancel_repair)d" states="invoice_except" string="Cancel Repair" type="action"/>
                    <button name="cancel" states="draft" string="Cancel Repair"/>
-                   <div class="oe_right">
-                         <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,confirmed,ready" />
-                   </div>
-                   <div class="oe_clear"/>
-               </div>
+                   <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,ready" />
+               </header>
                <sheet string="Repairs order" layout="auto">
                 <group col="6" colspan="4" class="oe_form_header">
                     <field name="name"/>

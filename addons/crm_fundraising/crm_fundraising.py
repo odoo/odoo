@@ -23,6 +23,7 @@ from base_status.base_stage import base_stage
 from crm import crm
 from crm import wizard
 from osv import fields, osv
+from tools.translate import _
 
 wizard.mail_compose_message.SUPPORTED_MODELS.append('crm.fundraising')
 
@@ -76,7 +77,6 @@ class crm_fundraising(base_stage, osv.osv):
                         When the case is over, the state is set to \'Done\'.\
                         If the case needs to be reviewed then the state is \
                         set to \'Pending\'.'),
-            'message_ids': fields.one2many('mail.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
         }
 
     _defaults = {
@@ -122,6 +122,11 @@ class crm_fundraising(base_stage, osv.osv):
             return stage_ids[0]
         return False
 
+    def create(self, cr, uid, vals, context=None):
+        obj_id = super(crm_fundraising, self).create(cr, uid, vals, context)
+        self.create_send_note(cr, uid, [obj_id], context=context)
+        return obj_id
+
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
         """Automatically called when new email message arrives"""
         res_id = super(crm_fundraising,self).message_new(cr, uid, msg, custom_values=custom_values, context=context)
@@ -145,6 +150,11 @@ class crm_fundraising(base_stage, osv.osv):
     def case_get_note_msg_prefix(self, cr, uid, id, context=None):
         """ Override of default prefix for notifications. """
         return 'Fundraising'
+
+    def create_send_note(self, cr, uid, ids, context=None):
+        msg = _('Fundraising has been <b>created</b>.')
+        self.message_append_note(cr, uid, ids, body=msg, context=context)
+        return True
 
     def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
         """ Override of the (void) default notification method. """
