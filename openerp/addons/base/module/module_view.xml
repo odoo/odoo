@@ -133,16 +133,18 @@
                     </div>
                 </div>
                 <sheet string="Module" layout="auto">
-                    <group colspan="2" col="2" class="oe_form_group_label_border">
-                        <field name="shortdesc" string="Application Name"/>
-                        <field name="category_id"/>
-                        <field name="author" select="2"/>
-                        <field name="license"/>
-                        <field name="website" select="2" widget="url" string="Author Website"/>
-                        <field name="installed_version"/>
-                    </group>
+                    <group colspan="4" col="4">
+                        <group colspan="2" col="2" class="oe_form_group_label_border">
+                            <field name="shortdesc" string="Application Name"/>
+                            <field name="category_id"/>
+                            <field name="author" select="2"/>
+                            <field name="license"/>
+                            <field name="website" select="2" widget="url" string="Author Website"/>
+                            <field name="installed_version"/>
+                        </group>
                     <group colspan="2" col="1">
                         <field name="image" widget='image' nolabel="1"/>
+                    </group>
                     </group>
                     <notebook colspan="4">
                         <page string="Description">
