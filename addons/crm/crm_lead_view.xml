@@ -70,11 +70,17 @@
                             states="cancel"/>
                     <button name="case_cancel" string="Cancel" type="object"
                             states="draft,open,pending"/>
+                    <button name="message_mark_as_unread" string="Mark Unread" type="object"
+                            attrs="{'invisible':[('message_thread_read', '==', False)]}"/>
+                    <button name="message_mark_as_read" string="Mark Read" type="object"
+                            attrs="{'invisible':[('message_thread_read', '==', True)]}"/>
                     <field name="stage_id" widget="statusbar"
                             on_change="onchange_stage_id(stage_id)"/>
                 </header>
                 <sheet layout="auto">
                 <group colspan="4" col="7">
+                    <field name="message_thread_read"/>
+                    <newline/>
                     <field name="name"/>
                     <field name="priority"/>
                     <field name="categ_id"

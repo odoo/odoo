@@ -474,7 +474,7 @@ openerp.mail = function(session) {
         },
         
         fetch_subscribers: function () {
-            return this.ds.call('message_get_subscribers', [[this.view.datarecord.id]]).then(this.proxy('display_subscribers'));
+            return this.ds.call('message_read_subscribers', [[this.view.datarecord.id]]).then(this.proxy('display_subscribers'));
         },
         
         display_subscribers: function (records) {
