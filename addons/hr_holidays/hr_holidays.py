@@ -373,7 +373,7 @@ class hr_holidays(osv.osv):
 
     def message_get_subscribers(self, cr, uid, ids, context=None):
         """ Override to add employee and its manager. """
-        user_ids = super(project_issue, self).message_get_subscribers(cr, uid, ids, context=context)
+        user_ids = super(hr_holidays, self).message_get_subscribers(cr, uid, ids, context=context)
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.user_id and not obj.user_id.id in user_ids:
                 user_ids.append(obj.user_id.id)
