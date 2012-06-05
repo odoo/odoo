@@ -19,25 +19,3 @@
 #
 ##############################################################################
 
-
-{
-    'name': 'Portal Issue',
-    'version': '0.1',
-    'category': 'Tools',
-    'complexity': "easy",
-    'description': """
-This module adds issue menu and features to your portal if project_issue and 
-portal are installed.
-    """,
-    'author': 'OpenERP SA',
-    'depends': ['project_issue','portal'],
-    'data': [
-        'security/portal_security.xml',
-        'security/ir.model.access.csv',
-        'portal_issue_view.xml',
-    ],
-    'installable': True,
-    'auto_install':True,
-    'category':'Hidden',
-}
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
