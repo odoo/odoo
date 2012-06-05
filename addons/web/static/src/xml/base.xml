@@ -1264,7 +1264,6 @@
     <optgroup label="-- Actions --">
         <option value="advanced_filter">Add Advanced Filter</option>
         <option value="save_filter">Save Filter</option>
-        <option value="add_to_dashboard">Add to Dashboard</option>
         <option value="manage_filters">Manage Filters</option>
     </optgroup>
 </t>
@@ -1422,6 +1421,14 @@
     </div>
     <div>
     </div>
+</div>
+<div t-name="SearchView.addtodashboard" class="">
+    <h4>Add to Dashboard</h4>
+    <ul>
+        <select class="">
+            <t t-js="dict">console.warn('Unhandled widget', dict);</t>
+        </select>
+    </ul>
 </div>
 <div t-name="SearchView.advanced" class="oe_searchview_advanced">
     <h4>Advanced Search</h4>

@@ -635,6 +635,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         (new instance.web.search.CustomFilters(this));
         // add Advanced to this.inputs
         (new instance.web.search.Advanced(this));
+        (new instance.web.search.AddToDashboard(this));
 
         // build drawer
         var drawer_started = $.when.apply(
@@ -691,53 +692,6 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         } else {
             select.val('');
         }
-    },
-    on_add_to_dashboard: function() {
-        this.$element.find(".oe_search-view-filters-management")[0].selectedIndex = 0;
-        var self = this,
-            menu = instance.webclient.menu,
-            $dialog = $(QWeb.render("SearchView.add_to_dashboard", {
-                dashboards : menu.data.data.children,
-                selected_menu_id : menu.$element.find('a.active').data('menu')
-            }));
-        $dialog.find('input').val(this.fields_view.name);
-        instance.web.dialog($dialog, {
-            modal: true,
-            title: _t("Add to Dashboard"),
-            buttons: [
-                {text: _t("Cancel"), click: function() {
-                    $(this).dialog("close");
-                }},
-                {text: _t("OK"), click: function() {
-                    $(this).dialog("close");
-                    var menu_id = $(this).find("select").val(),
-                        title = $(this).find("input").val(),
-                        data = self.build_search_data(),
-                        context = new instance.web.CompoundContext(),
-                        domain = new instance.web.CompoundDomain();
-                    _.each(data.contexts, function(x) {
-                        context.add(x);
-                    });
-                    _.each(data.domains, function(x) {
-                           domain.add(x);
-                    });
-                    self.rpc('/web/searchview/add_to_dashboard', {
-                        menu_id: menu_id,
-                        action_id: self.getParent().action.id,
-                        context_to_save: context,
-                        domain: domain,
-                        view_mode: self.getParent().active_view,
-                        name: title
-                    }, function(r) {
-                        if (r === false) {
-                            self.do_warn("Could not add filter to dashboard");
-                        } else {
-                            self.do_notify("Filter added to dashboard", '');
-                        }
-                    });
-                }}
-            ]
-        });
     },
     /**
      * Extract search data from the view's facets.
@@ -1671,6 +1625,24 @@ instance.web.search.Filters = instance.web.search.Input.extend({
         }));
     }
 });
+instance.web.search.AddToDashboard = instance.web.search.Input.extend({
+    template: 'SearchView.addtodashboard',
+    _in_drawer: true,
+    init: function(){
+        var menu = instance.webclient.menu;
+        var menu_id = menu.$secondary_menus.find("li.oe_active a").data('menu')
+        this._super.apply(this, arguments);
+    },
+    start: function () {
+        var self = this;
+        this.$element.on('click', 'h4', this.proxy('show_option'))
+    },
+    show_option:function(){
+        self.$element.toggleClass('oe_opened');
+        console.log(this);
+    }
+    
+})
 instance.web.search.Advanced = instance.web.search.Input.extend({
     template: 'SearchView.advanced',
     _in_drawer: true,
