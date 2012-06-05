@@ -132,120 +132,22 @@
     <menuitem action="action_order_report_all" id="menu_report_product_all" parent="base.next_id_64" sequence="10"/>
 
     <!--This views used in board_sale module -->
-    <record id="view_sales_by_partner_graph" model="ir.ui.view">
-         <field name="name">sales.by.partner.graph</field>
-         <field name="model">sale.report</field>
-         <field name="type">graph</field>
-         <field name="arch" type="xml">
-             <graph string="Sales by Partner" type="bar">
-                 <field name="partner_id" />
-                 <field name="price_total" operator="+"/>
-             </graph>
-         </field>
-    </record>
 
-   <record id="action_sales_by_partner" model="ir.actions.act_window">
-        <field name="name">Sales per Customer in last 90 days</field>
-        <field name="res_model">sale.report</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">graph,tree</field>
-        <field name="domain">[('state','=','done'),('date','&lt;=', time.strftime('%Y-%m-%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=90)).strftime('%Y-%m-%d'))]</field>
-        <field name="view_id" ref="view_sales_by_partner_graph"/>
-        <field name="context">{'search_default_Customer':1}</field>
-    </record>
-
-    <record id="view_sales_by_salesman_graph" model="ir.ui.view">
-         <field name="name">sales.by.salesman.graph</field>
-         <field name="model">sale.report</field>
-         <field name="type">graph</field>
-         <field name="arch" type="xml">
-             <graph string="Sales by Salesman" type="bar">
-                 <field name="user_id" />
-                 <field name="price_total" operator="+"/>
-             </graph>
-         </field>
-    </record>
-
-   <record id="action_sales_by_salesman" model="ir.actions.act_window">
-        <field name="name">Sales by Salesman in last 90 days</field>
-        <field name="res_model">sale.report</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">graph,tree</field>
-        <field name="domain">[('state','in',('manual','progress','done')),('date','&lt;=', time.strftime('%Y-%m-%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=90)).strftime('%Y-%m-%d'))]</field>
-        <field name="view_id" ref="view_sales_by_salesman_graph"/>
-        <field name="context">{'search_default_User':1}</field>
-    </record>
-
-    <record id="view_sales_product_total_price_graph" model="ir.ui.view">
-         <field name="name">sold.product.total.price.graph</field>
-         <field name="model">sale.report</field>
-         <field name="type">graph</field>
-         <field name="arch" type="xml">
-             <graph string="Sales by Product Category" type="bar">
-                 <field name="categ_id" />
-                 <field name="price_total" operator="+"/>
-             </graph>
-         </field>
-    </record>
-
-   <record id="action_sales_product_total_price" model="ir.actions.act_window">
-        <field name="name">Sales by Product's Category in last 90 days</field>
-        <field name="res_model">sale.report</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">graph,tree</field>
-        <field name="domain">[('state','in',('manual','progress','done')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=90)).strftime('%Y-%m-%d'))]</field>
-        <field name="view_id" ref="view_sales_product_total_price_graph"/>
-        <field name="context">{'search_default_Category':1}</field>
-    </record>
-
-    <record id="view_sales_by_month_tree" model="ir.ui.view">
-        <field name="name">view.sales.by.month.tree</field>
-        <field name="model">sale.report</field>
-        <field name="type">tree</field>
-        <field name="arch" type="xml">
-            <tree string="Sales By Month">
-                <field name="month" />
-                <field name="product_id" />
-                <field name="price_total" />
-                <field name="user_id" invisible="1"/>
-                <field name="partner_id" invisible="1"/>
-                <field name="product_uom" invisible="1"/>
-                <field name="categ_id" invisible="1"/>
-                <field name="analytic_account_id" invisible="1" groups="analytic.group_analytic_accounting"/>
-                <field name="state" invisible="1"/>
-                <field name="shop_id" invisible="1"/>
-                <field name="company_id" invisible="1" groups="base.group_multi_company"/>
-                <field name="day" invisible="1"/>
-                <field name="year" invisible="1"/>
-                <field name="date" invisible="1"/>
-            </tree>
-        </field>
-    </record>
-    <record id="action_view_sales_by_month" model="ir.actions.act_window">
-        <field name="name">Sales by Month</field>
-        <field name="res_model">sale.report</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,graph</field>
-        <field name="domain">[('state','in',('manual','progress','done')),('year','=', time.strftime('%Y'))]</field>
-        <field name="context">{'search_default_order_month':1,'group_by_no_leaf':0,'group_by':['month', 'product_id']}</field>
-        <field name="view_id" ref="view_sales_by_month_tree"/>
-    </record>
-
-     <record id="view_top_quotations_tree" model="ir.ui.view">
-            <field name="name">sale.top.quotations.tree</field>
-            <field name="model">sale.order</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Quotations">
-                    <field name="date_order"/>
-                    <field name="name"/>
-                    <field name="partner_id"/>
-                    <field name="user_id" />
-                    <field name="amount_untaxed" />
-                    <field name="amount_total"/>
-                </tree>
-            </field>
-        </record>
+	<record id="view_top_quotations_tree" model="ir.ui.view">
+		<field name="name">sale.top.quotations.tree</field>
+		<field name="model">sale.order</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Quotations">
+				<field name="date_order"/>
+				<field name="name"/>
+				<field name="partner_id"/>
+				<field name="user_id" />
+				<field name="amount_untaxed" />
+				<field name="amount_total"/>
+			</tree>
+		</field>
+	</record>
 
     <record id="action_quotation_for_sale" model="ir.actions.act_window">
         <field name="name">Quotations</field>
@@ -253,7 +155,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('state','=','draft')]</field>
-          <field name="view_id" ref="view_top_quotations_tree"/>
+        <field name="view_id" ref="view_top_quotations_tree"/>
     </record>
 
 </data>
