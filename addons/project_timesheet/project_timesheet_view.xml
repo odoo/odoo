@@ -36,25 +36,17 @@
                     <field name="currency_id"/>
                     <field name="partner_id"/>
                 </field>
-                <xpath expr="//div[@id='list']" position="inside">
-                    <a t-if="record.use_timesheets.raw_value" class="oe_project_buttons"
-                        id="3" name="open_timesheets" type="object">Timesheets(<field name="timesheet_count"/>)</a>
+                <xpath expr="//div[contains(@class, 'oe_kanban_project_list')]" position="inside">
+                    <a t-if="record.use_timesheets.raw_value"
+                        name="open_timesheets" type="object">Timesheets(<field name="timesheet_count"/>)</a>
                 </xpath>
-                <xpath expr="//tr[@id='deadline']" position="before">
-                    <t t-if="record.partner_id.raw_value">
-                        <tr>
-                            <th align="left">Amount to invoice</th>
-                            <td align="left">
-                                <field name="amount_to_invoice"/> <t t-esc="record.currency_id.raw_value[1].split(' ')[1][1]"/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th align="left">Time to Invoice</th>
-                            <td align="left">
-                                <field name="time_to_invoice"/> <field name="company_uom_id"/>
-                            </td>
-                        </tr>
-                    </t>
+                <xpath expr="//div[contains(@class, 'oe_kanban_project_deadline')]" position="before">
+                    <div class="oe_kanban_project_fields oe_kanban_project_invoice" t-if="record.partner_id.raw_value">
+                        <div>Amount to invoice</div>
+                        <div><field name="amount_to_invoice"/> <t t-esc="record.currency_id.raw_value[1].split(' ')[1][1]"/></div>
+                        <div>Time to Invoice</div>
+                        <div><field name="time_to_invoice"/> <field name="company_uom_id"/></div>
+                    </div>
                 </xpath>
             </field>
         </record>
