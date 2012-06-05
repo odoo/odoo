@@ -188,7 +188,7 @@ class mail_thread(osv.Model):
         body = new_msg_vals.get('body_html', '') if new_msg_vals.get('subtype', 'plain') == 'html' else new_msg_vals.get('body_text', '')
         for thread_id in thread_ids:
             # add subscribers
-            notif_user_ids += [user['id'] for user in self.message_get_subscribers(cr, uid, [thread_id], context=context)]
+            notif_user_ids += self.message_get_subscribers(cr, uid, [thread_id], context=context)
             # add users requested via parsing message (@login)
             notif_user_ids += self.message_parse_users(cr, uid, [thread_id], body, context=context)
             # add users requested to perform an action (need_action mechanism)
