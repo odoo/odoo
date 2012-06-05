@@ -60,7 +60,7 @@
                                 <pre class="oe_edi_inner_note"><t t-esc="invoice_line.note"/></pre>
                             </t>
                         </td>
-                        <td align="right"><t t-esc="_.str.sprintf('%.2f',invoice_line.quantity)"/> <t t-esc="invoice_line.uos_id[1]"/></td>
+                        <td align="right"><t t-esc="_.str.sprintf('%.2f',invoice_line.quantity)"/> <t t-if="invoice_line.uos_id" t-esc="invoice_line.uos_id[1]"/></td>
                         <td align="right"><t t-esc="_.str.sprintf('%.2f',invoice_line.price_unit)"/></td>
                         <td align="right"><t t-esc="_.str.sprintf('%.2f',invoice_line.discount)"/></td>
                         <td align="right"><t t-esc="_.str.sprintf('%.2f',invoice_line.price_subtotal)"/> <t t-esc="doc.currency.code"/></td>
