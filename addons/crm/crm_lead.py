@@ -669,7 +669,7 @@ class crm_lead(base_stage, osv.osv):
 
     def _send_mail_to_salesman(self, cr, uid, lead, context=None):
         """
-        Send mail to salesman with updated Lead details.
+        Send mail to salesman with updated Lead details.`
         @ lead: browse record of 'crm.lead' object.
         """
         #TOFIX: mail template should be used here instead of fix subject, body text.
