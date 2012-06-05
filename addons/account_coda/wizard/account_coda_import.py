@@ -172,7 +172,7 @@ class account_coda_import(osv.osv_memory):
                         return (err_code, err_string)
                     raise osv.except_osv(_('Data Error!'), err_string)
                 coda_statement['description'] = line[90:125].strip()
-                cba_filter = lambda x: ((coda_statement['acc_number'] in (x['iban'] or '')) or (coda_statement['acc_number'] == x['acc_number'])) \
+                cba_filter = lambda x: (coda_statement['acc_number'] in _get_acc_numbers(x['acc_number'])) \
                     and (coda_statement['currency'] == x['currency_name']) and (coda_statement['description'] == (x['description1'] or x['description2'] or ''))
                 coda_bank =  filter(cba_filter, coda_bank_table)
                 if coda_bank:
@@ -955,9 +955,18 @@ def str2float(str):
         return 0.0
 
 def list2float(lst):
-            try:
-                return str2float((lambda s : s[:-3] + '.' + s[-3:])(lst))
-            except:
-                return 0.0
+    try:
+        return str2float((lambda s : s[:-3] + '.' + s[-3:])(lst))
+    except:
+        return 0.0
+
+def _get_acc_numbers(acc_number):
+    #TODO this method is needed because the iban and bank account fields have been merged together. But sometimes we
+    #   need to retrieve the normal bank account from the IBAN. This should be globalized and defined as a method on the
+    #   bank account class. Each country part of the IBAN area should define its own code to do so.
+    acc_number = acc_number.replace(' ', '')
+    if acc_number.lower().startswith('be'):
+        return [acc_number[4:], acc_number]
+    return [acc_number]
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
