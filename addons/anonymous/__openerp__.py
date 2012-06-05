@@ -12,4 +12,7 @@
  'js': [
     'static/src/js/anonymous.js',
  ],
+ 'qweb': [
+     'static/src/xml/anonymous.xml',
+ ],
 }
