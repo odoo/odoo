@@ -95,70 +95,66 @@
                         states="open" icon="gtk-go-back"/>
                 <button name="stage_next" string="Next" type="object"
                         states="open" icon="gtk-go-forward"/>
-                <field name="stage_id" widget="statusbar"/>
+                <field name="stage_id" widget="statusbar" domain="['|',('department_id','=',department_id),('department_id','=',False)]"/>
             </header>
             <sheet string="Jobs - Recruitment Form" layout="auto">
-                <group col="7" colspan="4">
-                    <field name="name" string="Subject"/>
-                    <field name="partner_name"/>
-                    <field name="priority" string="Appreciation"/>
-                    <newline/>
-                    <group col="4" colspan="2">
-                        <field name="stage_id" domain="['|',('department_id','=',department_id),('department_id','=',False)]"/>
-                        <button name="stage_previous" string="" type="object" icon="gtk-go-back"/>
-                        <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
-                    </group>
-                    <field name="job_id" on_change="onchange_job(job_id)"/>
-                    <field name="department_id" widget="selection" on_change="onchange_department_id(department_id)"/>
-                </group>
-                <group col="11" colspan="4">
-                        <field name="user_id"/>
-                        <field name="title_action"/>
-                        <field name="date_action"/>
+                <group colspan="4" col="10">
+                    <h1><field name="name" colspan="4" nolabel="1"/></h1>
+					<h1><button name="action_makeMeeting" type="object" colspan="2" string="Shedule Interview" icon="gtk-index"/>
+					<button name="%(survey.action_view_survey_question_message)d" string="Start Interview" type="action" icon="gtk-execute" context="{'survey_id': survey, 'response_id': [response], 'response_no':0 ,'active' : response, 'object' : 'hr.applicant'}" attrs="{'invisible':[('survey','=',False)]}" help="Answer related job question"/>
+					<button name="action_print_survey" string="Print Interview" type="object" icon="gtk-print" attrs="{'invisible':[('survey','=',False)]}" help="Print interview report"/></h1>
+				</group>
+				<field name="type_id" nolabel="1" placeholder="Degree"/>
+				<group colspan="4" col="4">
+                        <field name="partner_name"/>
+                        <field name="job_id" on_change="onchange_job(job_id)"/>
+						<field name="user_id"/>
+						<field name="priority" string="Appreciation"/>
+						<field name="title_action"/>
+						<field name="department_id" widget="selection" on_change="onchange_department_id(department_id)"/>
+						<field name="date_action"/>
                         <field name="survey" invisible="1"/>
-                        <button name="action_makeMeeting" type="object" string="Meeting" icon="gtk-index" help="Create meeting"/>
-                        <button name="action_print_survey" string="Print Interview" type="object" icon="gtk-print" attrs="{'invisible':[('survey','=',False)]}" help="Print interview report"/>
-                        <button name="%(survey.action_view_survey_question_message)d" string="Answer" type="action" icon="gtk-execute" context="{'survey_id': survey, 'response_id': [response], 'response_no':0 ,'active' : response, 'object' : 'hr.applicant'}" attrs="{'invisible':[('survey','=',False)]}" help="Answer related job question"/>
                         <field name="response" invisible="1"/>
                 </group>
+                <field name="state" groups="base.group_no_one"/>
                 <notebook colspan="4">
-                    <page string="Job Info">
-                        <group col="3" colspan="2">
-                            <separator colspan="3" string="Contact"/>
-                            <field name="partner_id" on_change="onchange_partner_id(partner_id, email_from)" colspan="2"/>
-                            <button string="Create Contact"
-                                    name="%(action_hr_recruitment_partner_create)d"
-                                    icon="gtk-index" type="action" attrs="{'invisible':[('partner_id','!=',False)]}"/>
-                            <field name="email_from" colspan="2"/>
-                            <button string="Send New Email" name="%(mail.action_email_compose_message_wizard)d" icon="terp-mail-message-new" type="action" attrs="{'invisible':[('email_from','=',False)]}"/>
-                            <field name="partner_phone" colspan="3"/>
-                            <field name="partner_mobile" colspan="3"/>
+                    <page string="Application">
+                        <group col="12" colspan="6">
+                            <group col="3" colspan="4" class="oe_form_group_label_border">
+                                <separator colspan="4" string="Contact"/>
+                                <field name="partner_id" colspan="1"
+                                       on_change="onchange_partner_id(partner_id, email_from)"/>
+                                <button string=""
+                                        name="%(action_hr_recruitment_partner_create)d"
+                                        icon="gtk-index" 
+                                        type="action" colspan="1"
+                                        attrs="{'invisible':[('partner_id','!=',False)]}"/>
+                                <field name="email_from" colspan="1"/>
+                                <button string="" 
+                                        name="%(mail.action_email_compose_message_wizard)d" 
+                                        icon="terp-mail-message-new" 
+                                        type="action" colspan="1"
+                                        attrs="{'invisible':[('email_from','=',False)]}"/>
+                                <field name="partner_phone" colspan="3"/>
+                                <field name="partner_mobile" colspan="3"/>
+                            </group>
+                            <group col="2" colspan="4" class="oe_form_group_label_border">
+                                <separator colspan="2" string="Reference"/>
+                                <field name="source_id"/>
+                                <field name="reference"/>
+                            </group>
+                            <group col="3" colspan="4" class="oe_form_group_label_border">
+                                <separator colspan="3" string="Contracts"/>
+                                <field name="availability" colspan="3"/>
+                                <field name="salary_expected"/>
+                                <field name="salary_expected_extra" nolabel="1"/>
+                                <field name="salary_proposed"/>
+                                <field name="salary_proposed_extra" nolabel="1"/>
+                            </group>
                         </group>
-                        <group col="3" colspan="2">
-                            <separator colspan="3" string="Contract Data"/>
-                            <field name="availability" colspan="3"/>
-                            <field name="salary_expected"/>
-                            <field name="salary_expected_extra" nolabel="1"/>
-                            <field name="salary_proposed"/>
-                            <field name="salary_proposed_extra" nolabel="1"/>
-                        </group>
-                        <group col="2" colspan="2">
-                            <separator colspan="2" string="Qualification"/>
-                            <field name="type_id"/>
-                            <field name="source_id"/>
-                            <field name="reference"/>
-                        </group>
-                        <group col="2" colspan="2">
-                           <separator colspan="2" string="Dates"/>
-                           <field name="create_date"/>
-                           <field name="write_date"/>
-                           <field name="date_closed"/>
-                           <field name="date_open"/>
-                        </group>
+                        <separator colspan="3" string="Details"/>
+                        <field name="description" nolabel="1" colspan="4"/>
                    </page>
-                 <page string="Notes">
-                     <field name="description" nolabel="1" colspan="4"/>
-                 </page>
                 </notebook>
             </sheet>
             <div class="oe_form_bottom">
@@ -167,7 +163,6 @@
             </form>
         </field>
     </record>
-
 
     <record model="ir.ui.view" id="crm_case_graph_view_job">
         <field name="name">Jobs - Recruitment Graph</field>
