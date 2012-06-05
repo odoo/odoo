@@ -450,6 +450,7 @@ class survey_question_wiz(osv.osv_memory):
             
             # hr.applicant: if survey answered directly in system: attach report to applicant
             if context.get('active_model') == 'hr.applicant':
+                self.pool.get('hr.applicant').write(cr,uid,[context.get('active_ids')[0]],{'response':context.get('response_id')})
                 result = base64.b64encode(result)
                 file_name = file_name + '.pdf'
                 ir_attachment = self.pool.get('ir.attachment').create(cr, uid, 
