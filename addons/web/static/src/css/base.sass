@@ -1715,22 +1715,22 @@ $colour4: #8a89ba
         td.oe_form_group_cell + .oe_form_group_cell
             padding-left: 8px
         .oe_form_subtotal_footer
+            width: auto
             float: right
-            > div
+            td.oe_form_group_cell
                 text-align: right
-                padding: 3px
-            label
-                font-weight: normal !important
-            span
-                display: inline-block
-                min-width: 80px
-                text-align: right
+                padding: 0
+            td.oe_form_group_cell_label
+                border: none
+            .oe_form_field
+                width: auto !important
             .oe_form_subtotal_footer_separator
                 border-top: 1px solid #cacaca
                 font-size: 120%
                 font-weight: bold
-                label
-                    font-weight: bold !important
+            label.oe_form_subtotal_footer_separator
+                font-weight: bold !important
+                padding: 2px 8px 2px 0px !important
     // }}}
     // ListView {{{
     .oe-listview-content
