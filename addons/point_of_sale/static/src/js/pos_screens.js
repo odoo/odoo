@@ -322,6 +322,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 this.pos_widget.action_bar.set_total_visible(true);
                 this.pos_widget.action_bar.set_help_visible(true,function(){self.pos_widget.screen_selector.show_popup('help');});
                 this.pos_widget.action_bar.set_logout_visible(false);
+                this.pos_widget.action_bar.set_close_visible(false);
                 //this.pos_widget.onscreen_keyboard.connect();
 
                 this.product_categories_widget.reset_category();
@@ -357,6 +358,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 this.pos_widget.set_cashier_controls_visible(true);
                 this.pos_widget.action_bar.set_total_visible(true);
                 this.pos_widget.action_bar.set_help_visible(false);
+                this.pos_widget.action_bar.set_close_visible(false);
                 //this.pos_widget.onscreen_keyboard.connect();
 
                 this.product_categories_widget.reset_category();
@@ -405,6 +407,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.pos_widget.action_bar.set_total_visible(true);
             this.pos_widget.action_bar.set_help_visible(true,function(){self.pos_widget.screen_selector.show_popup('help');});
             this.pos_widget.action_bar.set_logout_visible(false);
+            this.pos_widget.action_bar.set_close_visible(false);
 
             this.pos.proxy.payment_request(this.pos.get('selectedOrder').getDueLeft(),'card','info');    //TODO TOTAL
 
@@ -414,9 +417,17 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     clearInterval(this.intervalID);
 
                     var currentOrder = self.pos.get('selectedOrder');
+                    
+                    //we get the first cashregister marked as self-checkout
+                    var selfCheckoutRegisters = [];
+                    for(var i = 0; i < this.pos.get('cashRegisters').models.length; i++){
+                        var cashregister = this.pos.get('cashRegisters').models[i];
+                        if(cashregister.self_checkout_payment_method){
+                            selfCheckoutRegisters.push(cashregister);
+                        }
+                    }
 
-                    //TODO get the correct cashregister
-                    var cashregister = this.pos.get('cashRegisters').models[0];
+                    var cashregister = selfCheckoutRegisters[0] || this.pos.get('cashRegisters').models[0];
                     currentOrder.addPaymentLine(cashregister);
 
                     self.pos.push_order(currentOrder.exportAsJSON()).then(function() {
@@ -468,6 +479,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.pos_widget.action_bar.set_total_visible(false);
             this.pos_widget.action_bar.set_help_visible(true,function(){self.pos_widget.screen_selector.show_popup('help');});
             this.pos_widget.action_bar.set_logout_visible(false);
+            this.pos_widget.action_bar.set_close_visible(false);
 
             if(this.pos.use_scale){
                 console.log('welcome weight');
@@ -527,6 +539,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.pos_widget.action_bar.set_total_visible(true);
             this.pos_widget.action_bar.set_help_visible(true,function(){self.pos_widget.screen_selector.show_popup('help');});
             this.pos_widget.action_bar.set_logout_visible(false);
+            this.pos_widget.action_bar.set_close_visible(false);
 
             if(self.pos.use_scale){
                 this.pos_widget.action_bar.add_new_button({
@@ -587,6 +600,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.pos_widget.set_cashier_controls_visible(true);
             this.pos_widget.action_bar.set_total_visible(true);
             this.pos_widget.action_bar.set_help_visible(false);
+            this.pos_widget.action_bar.set_close_visible(false);
 
                 this.pos_widget.action_bar.set_logout_visible(true, function(){ 
                     self.pos_widget.screen_selector.set_user_mode('client');
@@ -658,6 +672,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.pos_widget.set_cashier_controls_visible(true);
             this.pos_widget.action_bar.set_total_visible(true);
             this.pos_widget.action_bar.set_help_visible(false);
+            this.pos_widget.action_bar.set_close_visible(false);
             this.pos_widget.action_bar.set_logout_visible(true, function(){ 
                 self.pos_widget.screen_selector.set_user_mode('client');
             });
@@ -717,6 +732,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.pos_widget.set_cashier_controls_visible(true);
             this.pos_widget.action_bar.set_total_visible(true);
             this.pos_widget.action_bar.set_help_visible(false);
+            this.pos_widget.action_bar.set_close_visible(false);
             this.pos_widget.action_bar.set_logout_visible(true, function(){ 
                 self.pos_widget.screen_selector.set_user_mode('client');
             });

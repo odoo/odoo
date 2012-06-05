@@ -173,14 +173,12 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                                 [['id','=', pos_session.config_id[0]]]
                             ).then(function(result){
                                 self.set({'pos_config': result[0]});
-                                console.log('POSXOFNFIG:',result[0]);
                                 self.use_scale              = result[0].iface_electronic_scale  || false;
                                 self.use_proxy_printer      = result[0].iface_print_via_proxy   || false;
                                 self.use_virtual_keyboard   = result[0].iface_vkeyboard         || false;
                                 self.use_websql             = result[0].iface_websql            || false;
                                 self.use_barcode_scanner    = result[0].iface_barscan           || false;
                                 self.use_selfcheckout       = result[0].iface_self_checkout     || false;
-                                console.log('URERRUFUEGHHHHH');
                             });
 
                         var bank_def = fetch(
@@ -208,6 +206,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                                     for(var j = 0, jlen = journals.length; j < jlen; j++){
                                         if(bank_statements[i].journal_id[0] === journals[j].id){
                                             bank_statements[i].journal = journals[j];
+                                            bank_statements[i].self_checkout_payment_method = journals[j].self_checkout_payment_method;
                                         }
                                     }
                                 }

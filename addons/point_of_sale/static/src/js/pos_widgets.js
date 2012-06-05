@@ -333,6 +333,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.total_visibility = true;
             this.help_visibility  = true;
             this.logout_visibility  = true;
+            this.close_visibility  = true;
         },
         destroy_buttons:function(){
             for(var i = 0; i < this.button_list.length; i++){
@@ -388,6 +389,19 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             }
             if(visible && action){
                 this.$element.find('.logout-button').off('click').click(action);
+            }
+        },
+        set_close_visible: function(visible,action){
+            if(visible !== this.close_visibility){
+                this.close_visibility = visible;
+                if(visible){
+                    this.$element.find('.close-button').show();
+                }else{
+                    this.$element.find('.close-button').hide();
+                }
+            }
+            if(visible && action){
+                this.$element.find('.close-button').off('click').click(action);
             }
         },
         set_total_value: function(value){
