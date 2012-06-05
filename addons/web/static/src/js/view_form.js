@@ -1048,6 +1048,7 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
             "modifiers": JSON.stringify({invisible: field_modifiers.invisible}),
             "string": $field.attr('string'),
             "help": $field.attr('help'),
+            "class": $field.attr('class'),
         });
         $label.insertBefore($field);
         if (field_colspan > 1) {
