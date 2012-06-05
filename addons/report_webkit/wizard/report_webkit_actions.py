@@ -53,7 +53,7 @@ class report_webkit_actions(osv.osv_memory):
          @param context: A standard dictionary 
          @return: New arch of view.
         """
-        if context is None:context={}
+        if not context: context = {}
         res = super(report_webkit_actions, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
         record_id = context and context.get('active_id', False) or False
         active_model = context.get('active_model')
