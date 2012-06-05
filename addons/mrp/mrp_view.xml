@@ -891,39 +891,41 @@
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_mrp_production_filter"/>
         </record>
+        
+        <!-- Where is object in py file?-->
 
-        <record id="mrp_production_lot_form_view" model="ir.ui.view">
-            <field name="name">mrp.production.lot.line.form</field>
-            <field name="model">mrp.production.lot.line</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Production Products">
-                    <field colspan="4" name="move_id" on_change="onchange_lot_line_id(lot_id)"/>
-                    <field name="name"/>
-                    <field name="product_id"/>
-                    <field name="product_qty"/>
-                    <field name="product_uom"/>
-                    <field name="product_uos_qty" groups="product.group_uos"/>
-                    <field name="product_uos" groups="product.group_uos"/>
-                    <field name="tracking_id"/>
-                </form>
-            </field>
-        </record>
-        <record id="mrp_production_lot_tree_view" model="ir.ui.view">
-            <field name="name">mrp.production.lot.line.tree</field>
-            <field name="model">mrp.production.lot.line</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Production Products Consommation">
-                    <field name="product_id"/>
-                    <field name="product_qty"/>
-                    <field name="product_uom"/>
-                    <field name="product_uos_qty" groups="product.group_uos"/>
-                    <field name="product_uos" groups="product.group_uos"/>
-                    <field name="tracking_id"/>
-                </tree>
-            </field>
-        </record>
+        <!--<record id="mrp_production_lot_form_view" model="ir.ui.view">-->
+        <!--    <field name="name">mrp.production.lot.line.form</field>-->
+        <!--    <field name="model">mrp.production.lot.line</field>-->
+        <!--    <field name="type">form</field>-->
+        <!--    <field name="arch" type="xml">-->
+        <!--        <form string="Production Products">-->
+        <!--            <field colspan="4" name="move_id" on_change="onchange_lot_line_id(lot_id)"/>-->
+        <!--            <field name="name"/>-->
+        <!--            <field name="product_id"/>-->
+        <!--            <field name="product_qty"/>-->
+        <!--            <field name="product_uom"/>-->
+        <!--            <field name="product_uos_qty" groups="product.group_uos"/>-->
+        <!--            <field name="product_uos" groups="product.group_uos"/>-->
+        <!--            <field name="tracking_id"/>-->
+        <!--        </form>-->
+        <!--    </field>-->
+        <!--</record>-->
+        <!--<record id="mrp_production_lot_tree_view" model="ir.ui.view">-->
+        <!--    <field name="name">mrp.production.lot.line.tree</field>-->
+        <!--    <field name="model">mrp.production.lot.line</field>-->
+        <!--    <field name="type">tree</field>-->
+        <!--    <field name="arch" type="xml">-->
+        <!--        <tree string="Production Products Consommation">-->
+        <!--            <field name="product_id"/>-->
+        <!--            <field name="product_qty"/>-->
+        <!--            <field name="product_uom"/>-->
+        <!--            <field name="product_uos_qty" groups="product.group_uos"/>-->
+        <!--            <field name="product_uos" groups="product.group_uos"/>-->
+        <!--            <field name="tracking_id"/>-->
+        <!--        </tree>-->
+        <!--    </field>-->
+        <!--</record>-->
 
         <record id="mrp_production_product_form_view" model="ir.ui.view">
             <field name="name">mrp.production.product.line.form</field>
