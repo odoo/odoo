@@ -12,23 +12,25 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="AuditTrail Rule">
-                    <field name="name" select="1" required="1"/>
-                    <field name="object_id" select="1"/>
-                    <field name="log_read"/>
-                    <field name="log_write"/>
-                    <field name="log_unlink"/>
-                    <field name="log_create"/>
-                    <field name="log_action"/>
-                    <field name="log_workflow"/>
-                    <separator string="Users (if User is not added then it will applicable for all users)"  colspan="4" />
-                    <field name="user_id" select="1" colspan="4" nolabel="1" />
-                    <field name="action_id" colspan="4" readonly="1" groups="base.group_no_one"/>
-                    <field name="state" select="1" readonly="1" />
-                    <group colspan="2" col="2">
+                    <header>
                         <button string="_Subscribe" name="subscribe" icon="gtk-ok"
                             type="object" states="draft" />
                         <button string="UnSubscribe" name="unsubscribe" icon="gtk-cancel"
                             type="object" states="subscribed" />
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <group col="4">
+                        <field name="name" select="1" required="1"/>
+                        <field name="object_id" select="1"/>
+                        <field name="log_read"/>
+                        <field name="log_write"/>
+                        <field name="log_unlink"/>
+                        <field name="log_create"/>
+                        <field name="log_action"/>
+                        <field name="log_workflow"/>
+                        <separator string="Users (if User is not added then it will applicable for all users)"  colspan="4" />
+                        <field name="user_id" select="1" colspan="4" nolabel="1" />
+                        <field name="action_id" colspan="4" readonly="1" groups="base.group_no_one"/>
                     </group>
                 </form>
             </field>

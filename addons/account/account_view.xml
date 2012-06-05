@@ -2463,10 +2463,11 @@ action = pool.get('res.config').next(cr, uid, [], context)
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Fiscal Position Template">
-                    <field name="name"/>
-                    <field name="chart_template_id"/>
-                    <newline/>
-                    <field name="tax_ids" colspan="4" nolabel="1">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="chart_template_id"/>
+                    </group>
+                    <field name="tax_ids">
                         <tree string="Taxes Mapping" editable="bottom">
                             <field name="tax_src_id" domain="[('parent_id','=',False)]"/>
                             <field name="tax_dest_id" domain="[('parent_id','=',False)]"/>
@@ -2476,7 +2477,7 @@ action = pool.get('res.config').next(cr, uid, [], context)
                             <field name="tax_dest_id" domain="[('parent_id','=',False)]"/>
                         </form>
                     </field>
-                    <field name="account_ids" colspan="4" nolabel="1">
+                    <field name="account_ids">
                         <tree string="Accounts Mapping" editable="bottom">
                             <field name="account_src_id"/>
                             <field name="account_dest_id"/>
@@ -2544,19 +2545,19 @@ action = pool.get('res.config').next(cr, uid, [], context)
                     <button name="button_cancel" states="confirm,open" string="Cancel" type="object" groups="base.group_extended"/>
                     <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,confirm"/>
                 </header>
-                <sheet string="Statement" layout="auto">
-                    <group col="6" colspan="4" class="oe_form_header">
-                        <field name="name" select="1"/>
+                <sheet string="Statement">
+                    <group col="4">
+                        <field name="name"/>
                         <field name='company_id' widget="selection" groups="base.group_multi_company" />
-                        <field name="journal_id" on_change="onchange_journal_id(journal_id)" select="1" widget="selection"/>
-                        <field name="user_id" select="1" readonly="1"/>
-                        <field name="period_id" select="1"/>
+                        <field name="journal_id" on_change="onchange_journal_id(journal_id)" widget="selection"/>
+                        <field name="user_id" readonly="1"/>
+                        <field name="period_id"/>
                         <field name="currency" invisible="1"/>
                     </group>
 
-                    <notebook colspan="4">
+                    <notebook>
                         <page string="Cash Transactions" attrs="{'invisible': [('state','=','draft')]}">
-                            <field colspan="4" name="line_ids" nolabel="1" context="{'date':date}">
+                            <field name="line_ids" context="{'date':date}">
                                 <tree editable="bottom" string="Statement lines">
                                     <field name="sequence" invisible="1"/>
                                     <field name="date"/>
@@ -2569,23 +2570,25 @@ action = pool.get('res.config').next(cr, uid, [], context)
                                     <field name="amount"/>
                                 </tree>
                                 <form string="Statement lines">
-                                    <field name="date"/>
-                                    <field name="name"/>
-                                    <field name="ref"/>
-                                    <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
-                                    <field name="type" on_change="onchange_type(partner_id, type)"/>
-                                    <field domain="[('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view'), ('company_id', '=', parent.company_id)]" name="account_id"/>
-                                    <field name="analytic_account_id" domain="[('company_id', '=', parent.company_id), ('type', '&lt;&gt;', 'view')]" groups="analytic.group_analytic_accounting" />
-                                    <field name="amount"/>
-                                    <field name="sequence"/>
-                                    <separator colspan="4" string="Notes"/>
-                                    <field colspan="4" name="note" nolabel="1"/>
+                                    <group col="4">
+                                        <field name="date"/>
+                                        <field name="name"/>
+                                        <field name="ref"/>
+                                        <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
+                                        <field name="type" on_change="onchange_type(partner_id, type)"/>
+                                        <field domain="[('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view'), ('company_id', '=', parent.company_id)]" name="account_id"/>
+                                        <field name="analytic_account_id" domain="[('company_id', '=', parent.company_id), ('type', '&lt;&gt;', 'view')]" groups="analytic.group_analytic_accounting" />
+                                        <field name="amount"/>
+                                        <field name="sequence"/>
+                                    </group>
+                                    <separator string="Notes"/>
+                                    <field name="note"/>
                                 </form>
                             </field>
                         </page>
                         <page string="CashBox">
-                            <group col="2" colspan="2" expand="1">
-                                <field name="starting_details_ids" nolabel="1" colspan="2" attrs="{'readonly':[('state','!=','draft')]}">
+                            <group>
+                                <field name="starting_details_ids" attrs="{'readonly':[('state','!=','draft')]}" nolabel="1">
                                     <tree string = "Opening Balance" editable="bottom">
                                         <field name="pieces"/>
                                         <field name="number" on_change="on_change_sub(pieces,number, parent.balance_end)"/>
@@ -2597,9 +2600,7 @@ action = pool.get('res.config').next(cr, uid, [], context)
                                         <field name="subtotal"/>
                                     </form>
                                 </field>
-                            </group>
-                            <group col="2" colspan="2" expand="1">
-                                <field name="ending_details_ids" nolabel="1" colspan="2" attrs="{'readonly':[('state','!=','open')]}">
+                                <field name="ending_details_ids" attrs="{'readonly':[('state','!=','open')]}" nolabel="1">
                                     <tree string = "Closing Balance" editable="bottom">
                                         <field name="pieces"/>
                                         <field name="number" on_change="on_change_sub(pieces,number, parent.balance_end)"/>
@@ -2614,22 +2615,19 @@ action = pool.get('res.config').next(cr, uid, [], context)
                             </group>
                         </page>
                         <page string="Journal Entries" attrs="{'invisible': [('state','!=','confirm')]}">
-                            <field colspan="4" name="move_line_ids" nolabel="1" string="Journal Entries"/>
+                            <field name="move_line_ids" string="Journal Entries"/>
                         </page>
                     </notebook>
-                    <group col="6" colspan="4">
-                        <group col="2" colspan="2">
-                            <separator string="Dates" colspan="4"/>
-                            <field name="date" select="1" attrs="{'readonly':[('state','!=','draft')]}"  on_change="onchange_date(date, company_id)"/>
-                            <field name="closing_date" select="1" readonly="1"/>
+                    <group col="3">
+                        <group string="Dates">
+                            <field name="date" attrs="{'readonly':[('state','!=','draft')]}"  on_change="onchange_date(date, company_id)"/>
+                            <field name="closing_date" readonly="1"/>
                         </group>
-                        <group col="2" colspan="2">
-                            <separator string="Opening Balance" colspan="4"/>
+                        <group string="Opening Balance">
                             <field name="balance_start" readonly="1" string="Opening Balance"/>
                             <field name="total_entry_encoding"/>
                         </group>
-                        <group col="2" colspan="2">
-                            <separator string="Closing Balance" colspan="4"/>
+                        <group string="Closing Balance">
                             <field name="balance_end"/>
                             <field name="balance_end_cash"/>
                         </group>
@@ -2701,7 +2699,7 @@ action = pool.get('res.config').next(cr, uid, [], context)
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Account Report">
-                    <group col="6" colspan="4">
+                    <group col="4">
                         <field name="name"/>
                         <field name="parent_id"/>
                         <field name="sequence"/>
@@ -2709,19 +2707,14 @@ action = pool.get('res.config').next(cr, uid, [], context)
                         <field name="sign"/>
                         <field name="style_overwrite"/>
                     </group>
-                    <notebook colspan="6">
+                    <notebook>
                         <page string="Report">
-                            <group colspan="4" col="4">
-                                <field name="display_detail" attrs="{'invisible': [('type','not in',['accounts','account_type'])]}"  colspan="2"/>
-                                <label string="" colspan="2"/>
+                            <group>
+                                <field name="display_detail" attrs="{'invisible': [('type','not in',['accounts','account_type'])]}"/>
+                                <field name="account_report_id" attrs="{'invisible': [('type', '!=', 'account_report')]}"/>
                             </group>
-                            <newline/>
-                            <field name="account_ids" nolabel="1" colspan="6" attrs="{'invisible': [('type', '!=', 'accounts')]}"/>
-                            <newline/>
-                            <field name="account_report_id" attrs="{'invisible': [('type', '!=', 'account_report')]}"/>
-                            <newline/>
-                            <field name="account_type_ids" nolabel="1" attrs="{'invisible': [('type', '!=', 'account_type')]}"/>
-                            <newline/>
+                            <field name="account_ids" attrs="{'invisible': [('type', '!=', 'accounts')]}"/>
+                            <field name="account_type_ids" attrs="{'invisible': [('type', '!=', 'account_type')]}"/>
                         </page>
                     </notebook>
                 </form>

@@ -20,19 +20,20 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Follow-Up Steps">
-                  <group col="6" colspan="4">
-                     <field name="name"/>
-                     <field name="delay"/>
-                     <field name="start"/>
-                  </group>
-                    <newline/>
-                    <separator string="Message" colspan="4"/>
-                    <field colspan="4" name="description" nolabel="1"/>
-                    <separator string="Legend" colspan="4"/>
-                    <label string="%%(partner_name)s: Partner Name" colspan="2"/>
-                    <label string="%%(date)s: Current Date" colspan="2"/>
-                    <label string="%%(user_signature)s: User Name" colspan="2"/>
-                    <label string="%%(company_name)s: User's Company Name" colspan="2"/>
+                    <group col="4">
+                       <field name="name"/>
+                       <field name="delay"/>
+                       <field name="start"/>
+                    </group>
+                    <separator string="Message"/>
+                    <field name="description"/>
+                    <separator string="Legend"/>
+                    <group>
+                        <label string="%%(partner_name)s: Partner Name"/>
+                        <label string="%%(date)s: Current Date"/>
+                        <label string="%%(user_signature)s: User Name"/>
+                        <label string="%%(company_name)s: User's Company Name"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -43,10 +44,11 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Follow-Up">
-                    <field name="name"/>
-                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                    <newline/>
-                    <field colspan="4" name="followup_line" nolabel="1"/>
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                    </group>
+                    <field name="followup_line"/>
                 </form>
             </field>
         </record>
