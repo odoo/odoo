@@ -15,7 +15,6 @@
             </field>
         </record>
 
-
         <record id="account_analytic_planning_stat_view_tree" model="ir.ui.view">
             <field name="name">report.account.analytic.planning.stat.tree</field>
             <field name="model">report_account_analytic.planning.stat</field>
@@ -77,9 +76,9 @@
 			<field name="inherit_id" ref="project.board_project_form"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
-            <xpath expr="/form/board/column/action[@string='My Remaining Hours by Project']" position="after">
-                <action name="%(action_account_analytic_planning_stat_form)d" string="Planning Statistics"/>
-            </xpath>
+	            <xpath expr="/form/board/column/action[@string='My Remaining Hours by Project']" position="after">
+	                <action name="%(action_account_analytic_planning_stat_form)d" string="Planning Statistics"/>
+	            </xpath>
             </field>
         </record>
 
