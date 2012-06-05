@@ -15,7 +15,6 @@
             <field name="name">turnover.by.month.tree</field>
             <field name="model">account.invoice.report</field>
             <field name="type">tree</field>
-            <!-- Lower priority to avoid conflicting with default accounting views for reports -->
             <field name="priority" eval="32"/>
             <field name="arch" type="xml">
                 <tree string="Monthly Turnover">
@@ -27,7 +26,6 @@
         <record id="view_turnover_by_month_graph" model="ir.ui.view">
             <field name="name">turnover.by.month.graph</field>
             <field name="model">account.invoice.report</field>
-            <!-- Lower priority to avoid conflicting with default accounting views for reports -->
             <field name="priority" eval="32"/>
             <field name="type">graph</field>
             <field name="arch" type="xml">
@@ -75,6 +73,7 @@
                 </form>
             </field>
         </record>
+
         <record id="open_board_sales" model="ir.actions.act_window">
             <field name="name">Sales</field>
             <field name="res_model">board.board</field>
