@@ -28,12 +28,10 @@
             <field name="view_id" ref="board_mrp_manager_form"/>
         </record>
 
-        <menuitem id="menus_dash_mrp" name="Manufacturing"
-            parent="base.menu_reporting_dashboard" sequence="15"/>
         <menuitem
             action="open_board_manufacturing" icon="terp-graph"
-            id="menu_board_manufacturing" parent="menus_dash_mrp"
-            sequence="1"/>
+            id="menu_board_manufacturing" parent="base.menu_reporting_dashboard"
+            sequence="45"/>
 
     </data>
 </openerp>
