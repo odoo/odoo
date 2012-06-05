@@ -239,7 +239,7 @@
                         <page string="Bill Information">
                             <field name="line_dr_ids" on_change="onchange_price(line_dr_ids, tax_id, partner_id)" context="{'journal_id':journal_id,'partner_id':partner_id}" colspan="4" nolabel="1" height="180">
                                 <tree string="Expense Lines" editable="bottom">
-                                    <field name="account_id" widget="selection" domain="[('user_type.report_type','=','expense'), ('type','!=','view')]"  groups="base.group_account_user"/>
+                                    <field name="account_id" widget="selection" domain="[('user_type.report_type','=','expense'), ('type','!=','view')]"  groups="account.group_account_user"/>
                                     <field name="name"/>
                                     <field name="amount"/>
                                     <field name="account_analytic_id" groups="analytic.group_analytic_accounting"/>

@@ -156,7 +156,7 @@
                 </div>
                 <sheet string="Supplier Invoice" layout="auto">
                     <group col="8" colspan="4" class="oe_form_header">
-                        <field name="journal_id" on_change="onchange_journal_id(journal_id)" widget="selection" groups="base.group_account_user"/>
+                        <field name="journal_id" on_change="onchange_journal_id(journal_id)" widget="selection" groups="account.group_account_user"/>
                         <field name="number" readonly="1"/>
                         <field name="type" invisible="1"/>
                         <field name="currency_id" width="50"/>
