@@ -41,7 +41,7 @@ class account_coda_import(osv.osv_memory):
     _defaults = {
         'coda_fname': lambda *a: '',
     }
-        
+
     def coda_parsing(self, cr, uid, ids, context=None, batch=False, codafile=None, codafilename=None):
         if context is None:
             context = {}
@@ -52,12 +52,12 @@ class account_coda_import(osv.osv_memory):
             data=self.browse(cr,uid,ids)[0]
             try:
                 codafile = data.coda_data
-                codafilename = data.coda_fname            
+                codafilename = data.coda_fname
             except:
                 raise osv.except_osv(_('Error!'), _('Wizard in incorrect state. Please hit the Cancel button!'))
                 return {}
 
-        currency_obj = self.pool.get('res.currency')    
+        currency_obj = self.pool.get('res.currency')
         coda_bank_account_obj = self.pool.get('coda.bank.account')
         trans_type_obj = self.pool.get('account.coda.trans.type')
         trans_code_obj = self.pool.get('account.coda.trans.code')
@@ -85,7 +85,7 @@ class account_coda_import(osv.osv_memory):
             coda_bank.update({'journal_code': coda_bank['journal'] and journal_obj.browse(cr, uid, coda_bank['journal'][0], context=context).code or ''})
             coda_bank.update({'iban': partner_bank_obj.browse(cr, uid, coda_bank['bank_id'][0], context=context).iban})
             coda_bank.update({'acc_number': partner_bank_obj.browse(cr, uid, coda_bank['bank_id'][0], context=context).acc_number})
-            coda_bank.update({'currency_name': currency_obj.browse(cr, uid, coda_bank['currency'][0], context=context).name})            
+            coda_bank.update({'currency_name': currency_obj.browse(cr, uid, coda_bank['currency'][0], context=context).name})
         trans_type_table = trans_type_obj.read(cr, uid, trans_type_obj.search(cr, uid, []), context=context)
         trans_code_table = trans_code_obj.read(cr, uid, trans_code_obj.search(cr, uid, []), context=context)
         trans_category_table = trans_category_obj.read(cr, uid, trans_category_obj.search(cr, uid, []), context=context)
@@ -96,9 +96,8 @@ class account_coda_import(osv.osv_memory):
         err_log = ''
         coda_statements = []
         recordlist = unicode(base64.decodestring(codafile), 'windows-1252', 'strict').split('\n')
-        
+
         for line in recordlist:
-            
             if not line:
                 pass
             elif line[0] == '0':
@@ -109,7 +108,7 @@ class account_coda_import(osv.osv_memory):
                 st_line_seq = 0
                 glob_lvl_stack = [0]
                 # header data
-                coda_statement['currency'] = 'EUR'   # default currency                
+                coda_statement['currency'] = 'EUR'   # default currency
                 coda_statement['version'] = line[127]
                 coda_version = line[127]
                 if coda_version not in ['1','2']:
@@ -130,7 +129,7 @@ class account_coda_import(osv.osv_memory):
                     raise osv.except_osv(_('Data Error!'), err_string)
                 coda_statement['period_id'] = period_id[0]
                 coda_statement['state'] = 'draft'
-        
+
                 coda_id = coda_obj.search(cr, uid,[
                     ('name', '=', codafilename),
                     ('coda_creation_date', '=', coda_statement['date']),
@@ -142,7 +141,7 @@ class account_coda_import(osv.osv_memory):
                     if batch:
                         return (err_code, err_string)
                     raise osv.except_osv(_('Warning !'), err_string)
-                
+
             elif line[0] == '1':
                 if coda_version == '1':
                     coda_statement['acc_number'] = line[5:17]
@@ -150,7 +149,7 @@ class account_coda_import(osv.osv_memory):
                         coda_statement['currency'] = line[18:21]
                 elif line[1] == '0':                                # Belgian bank account BBAN structure
                     coda_statement['acc_number'] = line[5:17]
-                    coda_statement['currency'] = line[18:21]             
+                    coda_statement['currency'] = line[18:21]
                 elif line[1] == '1':    # foreign bank account BBAN structure
                     err_string = _('\nForeign bank accounts with BBAN structure are not supported !')
                     err_code = 'R1001'
@@ -181,7 +180,7 @@ class account_coda_import(osv.osv_memory):
                     coda_statement['type'] = coda_bank['state']
                     coda_statement['journal_id'] = coda_bank['journal'] and coda_bank['journal'][0]
                     coda_statement['currency_id'] = coda_bank['currency'][0]
-                    coda_statement['coda_bank_account_id'] = coda_bank['id']                   
+                    coda_statement['coda_bank_account_id'] = coda_bank['id']
                     def_pay_acc = coda_bank['def_payable'][0]
                     def_rec_acc = coda_bank['def_receivable'][0]
                     awaiting_acc = coda_bank['awaiting_account'][0]
@@ -199,13 +198,13 @@ class account_coda_import(osv.osv_memory):
                 bal_start = list2float(line[43:58])             # old balance data
                 if line[42] == '1':    # 1= Debit
                     bal_start = - bal_start
-                coda_statement['balance_start'] = bal_start            
+                coda_statement['balance_start'] = bal_start
                 coda_statement['acc_holder'] = line[64:90]
                 coda_statement['paper_seq_number'] = line[2:5]
                 coda_statement['coda_seq_number'] = line[125:128]
                 if coda_bank['coda_st_naming']:
                     coda_statement['name'] = coda_bank['coda_st_naming'] % {
-                       'code': coda_bank['journal_code'] or '',                                                    
+                       'code': coda_bank['journal_code'] or '',
                        'year': time.strftime('%Y'),
                        'y': time.strftime('%y'),
                        'coda': line[125:128],
@@ -213,7 +212,7 @@ class account_coda_import(osv.osv_memory):
                     }
                 else:
                     coda_statement['name'] = '/'
-                    
+
             elif line[0] == '2':
                 # movement data record 2
                 if line[1] == '1':
@@ -222,7 +221,7 @@ class account_coda_import(osv.osv_memory):
                     st_line_seq = st_line_seq + 1
                     st_line['sequence'] = st_line_seq
                     st_line['type'] = 'general'
-                    st_line['reconcile'] = False         
+                    st_line['reconcile'] = False
                     st_line['struct_comm_type'] = ''
                     st_line['struct_comm_type_desc'] = ''
                     st_line['struct_comm_101'] = ''
@@ -230,15 +229,14 @@ class account_coda_import(osv.osv_memory):
                     st_line['partner_id'] = 0
                     st_line['account_id'] = 0
                     st_line['counterparty_name'] = ''
-                    st_line['counterparty_bic'] = ''                    
+                    st_line['counterparty_bic'] = ''
                     st_line['counterparty_number'] = ''
-                    st_line['counterparty_currency'] = ''                    
+                    st_line['counterparty_currency'] = ''
                     st_line['glob_lvl_flag'] = False
                     st_line['globalisation_id'] = 0
                     st_line['globalisation_code'] = ''
                     st_line['globalisation_amount'] = False
                     st_line['amount'] = False
-                          
                     st_line['ref'] = line[2:10]
                     st_line['trans_ref'] = line[10:31]
                     st_line_amt = list2float(line[32:47])
@@ -248,7 +246,7 @@ class account_coda_import(osv.osv_memory):
                     glob_lvl_flag = int(line[124])
                     if glob_lvl_flag > 0: 
                         if glob_lvl_stack[-1] == glob_lvl_flag: 
-                            st_line['glob_lvl_flag'] = glob_lvl_flag                            
+                            st_line['glob_lvl_flag'] = glob_lvl_flag
                             st_line['amount'] = st_line_amt
                             glob_lvl_stack.pop()
                         else:
@@ -269,8 +267,8 @@ class account_coda_import(osv.osv_memory):
                         err_code = 'R2001'
                         if batch:
                             return (err_code, err_string)
-                        raise osv.except_osv(_('Data Error!'), err_string)                    
-                    st_line['trans_type_desc'] = trans_type[0]['description']                         
+                        raise osv.except_osv(_('Data Error!'), err_string)
+                    st_line['trans_type_desc'] = trans_type[0]['description']
                     st_line['trans_family'] = line[54:56]
                     trans_family =  filter(lambda x: (x['type'] == 'family') and (st_line['trans_family'] == x['code']), trans_code_table)
                     if not trans_family:
@@ -278,7 +276,7 @@ class account_coda_import(osv.osv_memory):
                         err_code = 'R2002'
                         if batch:
                             return (err_code, err_string)
-                        raise osv.except_osv(_('Data Error!'), err_string)                    
+                        raise osv.except_osv(_('Data Error!'), err_string)
                     st_line['trans_family_desc'] = trans_family[0]['description']
                     st_line['trans_code'] = line[56:58]
                     trans_code =  filter(lambda x: (x['type'] == 'code') and (st_line['trans_code'] == x['code']) and (trans_family[0]['id'] == x['parent_id'][0]), 
@@ -292,8 +290,8 @@ class account_coda_import(osv.osv_memory):
                     if trans_category:
                         st_line['trans_category_desc'] = trans_category[0]['description']
                     else:
-                        st_line['trans_category_desc'] = _('Transaction Category unknown, please consult your bank.')       
-                    # positions 61-115 : communication                
+                        st_line['trans_category_desc'] = _('Transaction Category unknown, please consult your bank.')
+                    # positions 61-115 : communication
                     if line[61] == '1':
                         st_line['struct_comm_type'] = line[62:65]
                         comm_type =  filter(lambda x: st_line['struct_comm_type'] == x['code'], comm_type_table)
@@ -302,7 +300,7 @@ class account_coda_import(osv.osv_memory):
                             err_code = 'R2003'
                             if batch:
                                 return (err_code, err_string)
-                            raise osv.except_osv(_('Data Error!'), err_string)                    
+                            raise osv.except_osv(_('Data Error!'), err_string)
                         st_line['struct_comm_type_desc'] = comm_type[0]['description']
                         st_line['communication'] = st_line['name'] = line[65:115]
                         if st_line['struct_comm_type'] == '101':
@@ -322,7 +320,7 @@ class account_coda_import(osv.osv_memory):
                         err_code = 'R2004'
                         if batch:
                             return (err_code, err_string)
-                        raise osv.except_osv(_('Error!'), err_string)                    
+                        raise osv.except_osv(_('Error!'), err_string)
                     coda_statement['coda_statement_lines'][st_line_seq]['name'] += line[10:63]
                     coda_statement['coda_statement_lines'][st_line_seq]['communication'] += line[10:63]
                     coda_statement['coda_statement_lines'][st_line_seq]['counterparty_bic'] = line[98:109].strip()                    
@@ -334,7 +332,7 @@ class account_coda_import(osv.osv_memory):
                         err_code = 'R2005'
                         if batch:
                             return (err_code, err_string)
-                        raise osv.except_osv(_('Error!'), err_string)                    
+                        raise osv.except_osv(_('Error!'), err_string)
                     st_line = coda_statement_lines[st_line_seq]
                     if coda_version == '1':
                         counterparty_number = line[10:22]
@@ -346,7 +344,7 @@ class account_coda_import(osv.osv_memory):
                             counterparty_currency = line[23:26].strip()
                         else:
                             counterparty_number = line[10:44].strip()
-                            counterparty_currency = line[44:47].strip()                           
+                            counterparty_currency = line[44:47].strip()
                         counterparty_name = line[47:82].strip()
                         st_line['name'] += line[82:125]
                         st_line['communication'] += line[82:125]
@@ -355,14 +353,14 @@ class account_coda_import(osv.osv_memory):
                     st_line['counterparty_name'] = counterparty_name
                     if counterparty_currency not in [coda_bank['currency_name'], '']:
                         err_string = _('\nCODA parsing error on movement data record 2.3, seq nr %s!'    \
-                            '\nPlease report this issue via your OpenERP support channel.') % line[2:10]                   
+                            '\nPlease report this issue via your OpenERP support channel.') % line[2:10]
                         err_code = 'R2006'
                         if batch:
                             return (err_code, err_string)
-                        raise osv.except_osv(_('Error!'), err_string)    
+                        raise osv.except_osv(_('Error!'), err_string)
 
                     # partner matching and reconciliation 
-                    if st_line['type'] == 'general':                    
+                    if st_line['type'] == 'general':
                         match = False
                         bank_ids = False
                         # prepare reconciliation for bba scor
@@ -379,7 +377,7 @@ class account_coda_import(osv.osv_memory):
                                 else:
                                     st_line['account_id'] = partner.property_account_receivable.id or def_rec_acc
                                     st_line['type'] = 'customer'
-                                if invoice.type in ['in_invoice', 'out_invoice']:                                             
+                                if invoice.type in ['in_invoice', 'out_invoice']:
                                     iml_ids = move_line_obj.search(cr, uid, [('move_id', '=', invoice.move_id.id), ('reconcile_id', '=', False), ('account_id.reconcile', '=', True)])
                                 if iml_ids:
                                     st_line['reconcile'] = iml_ids[0]
@@ -437,7 +435,7 @@ class account_coda_import(osv.osv_memory):
                     err_code = 'R2007'
                     if batch:
                         return (err_code, err_string)
-                    raise osv.except_osv(_('Data Error!'), err_string)    
+                    raise osv.except_osv(_('Data Error!'), err_string)
 
             elif line[0] == '3':
                 # information data record 3
@@ -461,8 +459,8 @@ class account_coda_import(osv.osv_memory):
                         err_code = 'R3001'
                         if batch:
                             return (err_code, err_string)
-                        raise osv.except_osv(_('Data Error!'), err_string)                    
-                    info_line['trans_type_desc'] = trans_type[0]['description']                         
+                        raise osv.except_osv(_('Data Error!'), err_string)
+                    info_line['trans_type_desc'] = trans_type[0]['description']
                     info_line['trans_family'] = line[32:34]
                     trans_family =  filter(lambda x: (x['type'] == 'family') and (info_line['trans_family'] == x['code']), trans_code_table)
                     if not trans_family:
@@ -470,7 +468,7 @@ class account_coda_import(osv.osv_memory):
                         err_code = 'R3002'
                         if batch:
                             return (err_code, err_string)
-                        raise osv.except_osv(_('Data Error!'), err_string)                    
+                        raise osv.except_osv(_('Data Error!'), err_string)
                     info_line['trans_family_desc'] = trans_family[0]['description']
                     info_line['trans_code'] = line[34:36]
                     trans_code =  filter(lambda x: (x['type'] == 'code') and (info_line['trans_code'] == x['code']) and (trans_family[0]['id'] == x['parent_id']), 
@@ -485,7 +483,7 @@ class account_coda_import(osv.osv_memory):
                         info_line['trans_category_desc'] = trans_category[0]['description']
                     else:
                         info_line['trans_category_desc'] = _('Transaction Category unknown, please consult your bank.')       
-                    # positions 40-113 : communication                
+                    # positions 40-113 : communication
                     if line[39] == '1':
                         info_line['struct_comm_type'] = line[40:43]
                         comm_type = filter(lambda x: info_line['struct_comm_type'] == x['code'], comm_type_table)
@@ -511,7 +509,7 @@ class account_coda_import(osv.osv_memory):
                         if batch:
                             return (err_code, err_string)
                         raise osv.except_osv(_('Error!'), err_string)
-                    coda_statement['coda_statement_lines'][st_line_seq]['name'] += line[10:115]                        
+                    coda_statement['coda_statement_lines'][st_line_seq]['name'] += line[10:115]
                     coda_statement['coda_statement_lines'][st_line_seq]['communication'] += line[10:115]
                 elif line[1] == '3':
                     # information data record 3.3
@@ -524,7 +522,7 @@ class account_coda_import(osv.osv_memory):
                         raise osv.except_osv(_('Error!'), err_string)
                     coda_statement['coda_statement_lines'][st_line_seq]['name'] += line[10:100]
                     coda_statement['coda_statement_lines'][st_line_seq]['communication'] += line[10:100]
-                   
+
             elif line[0] == '4':
                 # free communication data record 4
                 comm_line = {}
@@ -549,7 +547,7 @@ class account_coda_import(osv.osv_memory):
                 coda_statement['balance_plus'] = list2float(line[37:52])
                 if not bal_end:
                     coda_statement['balance_end_real'] = coda_statement['balance_start'] + coda_statement['balance_plus'] - coda_statement['balance_min']
-                if coda_parsing_note:                
+                if coda_parsing_note:
                     coda_statement['coda_parsing_note'] = '\nStatement Line matching results:' + coda_parsing_note
                 else:
                     coda_statement['coda_parsing_note'] = ''
@@ -557,11 +555,11 @@ class account_coda_import(osv.osv_memory):
         #end for
 
         err_string = ''
-        err_code = ''        
+        err_code = ''
         coda_id = 0
         coda_note = ''
         line_note = ''
-        
+
         try:
             coda_id = coda_obj.create(cr, uid,{
                 'name' : codafilename,
@@ -571,7 +569,7 @@ class account_coda_import(osv.osv_memory):
                 'user_id': uid,
                 })
             context.update({'coda_id': coda_id})
-    
+
         except osv.except_osv, e:
             cr.rollback()
             err_string = _('\nApplication Error : ') + str(e)
@@ -590,19 +588,16 @@ class account_coda_import(osv.osv_memory):
         nb_err = 0
         err_string = ''
         coda_st_ids = []
-        bk_st_ids = []      
-        
-        for statement in coda_statements:
-            
-            # The CODA Statement info is written to two objects: 'coda.bank.statement' and 'account.bank.statement'
+        bk_st_ids = []
 
+        for statement in coda_statements:
+            # The CODA Statement info is written to two objects: 'coda.bank.statement' and 'account.bank.statement'
             try:
-                
                 coda_st_id = coda_st_obj.create(cr, uid, {
                     'name': statement['name'],
                     'type': statement['type'],
                     'coda_bank_account_id': statement['coda_bank_account_id'],
-                    'currency': statement['currency_id'],                    
+                    'currency': statement['currency_id'],
                     'journal_id': statement['journal_id'],
                     'coda_id': coda_id,
                     'date': statement['date'],
@@ -642,7 +637,7 @@ class account_coda_import(osv.osv_memory):
                     })
                     bk_st_ids.append(bk_st_id)
                     coda_st_obj.write(cr, uid, [coda_st_id], {'statement_id': bk_st_id}, context=context)
-    
+
                 glob_id_stack = [(0, '', 0, '')]          # stack with tuples (glob_lvl_flag, glob_code, glob_id, glob_name)
                 lines = statement['coda_statement_lines']
                 st_line_seq = 0
@@ -651,9 +646,7 @@ class account_coda_import(osv.osv_memory):
                     line = lines[x]
 
                     # handling non-transactional records : line['type'] in ['information', 'communication']
-                    
                     if line['type'] == 'information':
-
                         line['globalisation_id'] = glob_id_stack[-1][2]
                         line_note = _('Transaction Type' ': %s - %s'                \
                             '\nTransaction Family: %s - %s'                         \
@@ -667,25 +660,22 @@ class account_coda_import(osv.osv_memory):
                               line['trans_category'], line['trans_category_desc'],
                               line['struct_comm_type'], line['struct_comm_type_desc'],
                               line['communication'])
-    
+
                         coda_st_line_id = coda_st_line_obj.create(cr, uid, {
                                    'sequence': line['sequence'],
-                                   'ref': line['ref'],                                           
+                                   'ref': line['ref'],
                                    'name': line['name'].strip() or '/',
-                                   'type' : 'information',               
-                                   'date': line['entry_date'],                
+                                   'type' : 'information',
+                                   'date': line['entry_date'],
                                    'statement_id': coda_st_id,
                                    'note': line_note,
                                    })
-                            
-                    elif line['type'] == 'communication':
 
-                        line_note = _('Free Communication:\n %s')                  \
-                            %(line['communication'])
-    
+                    elif line['type'] == 'communication':
+                        line_note = _('Free Communication:\n %s') % (line['communication'])
                         coda_st_line_id = coda_st_line_obj.create(cr, uid, {
                                    'sequence': line['sequence'],
-                                   'ref': line['ref'],                                                 
+                                   'ref': line['ref'],
                                    'name': line['name'].strip() or '/',
                                    'type' : 'communication',
                                    'date': statement['date'],
@@ -694,9 +684,7 @@ class account_coda_import(osv.osv_memory):
                                    })
 
                     # handling transactional records, # line['type'] in ['globalisation', 'general', 'supplier', 'customer'] 
-
                     else:
-                    
                         glob_lvl_flag = line['glob_lvl_flag']
                         if glob_lvl_flag: 
                             if glob_id_stack[-1][0] == glob_lvl_flag: 
@@ -706,7 +694,7 @@ class account_coda_import(osv.osv_memory):
                                 glob_name = line['name'].strip() or '/'
                                 glob_code = seq_obj.get(cr, uid, 'statement.line.global')
                                 glob_id = glob_obj.create(cr, uid, {
-                                    'code': glob_code,                                                                
+                                    'code': glob_code,
                                     'name': glob_name,
                                     'type': 'coda',
                                     'parent_id': glob_id_stack[-1][2],
@@ -714,7 +702,7 @@ class account_coda_import(osv.osv_memory):
                                 })
                                 line['globalisation_id'] = glob_id
                                 glob_id_stack.append((glob_lvl_flag, glob_code, glob_id, glob_name))
-    
+
                         line_note = _('Partner name: %s \nPartner Account Number: %s' \
                             '\nTransaction Type: %s - %s'                             \
                             '\nTransaction Family: %s - %s'                           \
@@ -729,54 +717,50 @@ class account_coda_import(osv.osv_memory):
                               line['trans_category'], line['trans_category_desc'],
                               line['struct_comm_type'], line['struct_comm_type_desc'],
                               line['communication'])
-    
+
                         if line['type'] == 'globalisation':
-                            
                             coda_st_line_id = coda_st_line_obj.create(cr, uid, {
                                    'sequence': line['sequence'],
-                                   'ref': line['ref'],                                                  
+                                   'ref': line['ref'],
                                    'name': line['name'].strip() or '/',
                                    'type' : 'globalisation',
-                                   'val_date' : line['val_date'], 
+                                   'val_date' : line['val_date'],
                                    'date': line['entry_date'],
-                                   'globalisation_level': line['glob_lvl_flag'],  
-                                   'globalisation_amount': line['globalisation_amount'],                                                      
-                                   'globalisation_id': line['globalisation_id'], 
+                                   'globalisation_level': line['glob_lvl_flag'],
+                                   'globalisation_amount': line['globalisation_amount'],
+                                   'globalisation_id': line['globalisation_id'],
                                    'partner_id': line['partner_id'] or 0,
                                    'account_id': line['account_id'],
                                    'statement_id': coda_st_id,
                                    'note': line_note,
                                    })
 
-                        else:       # line['type'] in ['general', 'supplier', 'customer']                        
-
+                        else:       # line['type'] in ['general', 'supplier', 'customer']
                             if glob_lvl_flag == 0: 
                                 line['globalisation_id'] = glob_id_stack[-1][2]
-                            if not line['account_id']:                               
-                                    line['account_id'] = awaiting_acc
-                                                                
+                            if not line['account_id']:
+                                line['account_id'] = awaiting_acc
                             coda_st_line_id = coda_st_line_obj.create(cr, uid, {
                                    'sequence': line['sequence'],
-                                   'ref': line['ref'],                                                   
+                                   'ref': line['ref'],
                                    'name': line['name'] or '/',
                                    'type' : line['type'],
-                                   'val_date' : line['val_date'], 
+                                   'val_date' : line['val_date'],
                                    'date': line['entry_date'],
                                    'amount': line['amount'],
                                    'partner_id': line['partner_id'] or 0,
                                    'counterparty_name': line['counterparty_name'],
-                                   'counterparty_bic': line['counterparty_bic'],                     
-                                   'counterparty_number': line['counterparty_number'],   
-                                   'counterparty_currency': line['counterparty_currency'],                                    
+                                   'counterparty_bic': line['counterparty_bic'],
+                                   'counterparty_number': line['counterparty_number'],
+                                   'counterparty_currency': line['counterparty_currency'],
                                    'account_id': line['account_id'],
-                                   'globalisation_level': line['glob_lvl_flag'],  
-                                   'globalisation_id': line['globalisation_id'], 
+                                   'globalisation_level': line['glob_lvl_flag'],
+                                   'globalisation_id': line['globalisation_id'],
                                    'statement_id': coda_st_id,
                                    'note': line_note,
                                    })
 
                             if statement['type'] == 'normal':
-                                
                                 st_line_seq += 1
                                 voucher_id = False
                                 line_name = line['name'].strip()
@@ -825,23 +809,23 @@ class account_coda_import(osv.osv_memory):
 
                                 bank_st_line_id = bank_st_line_obj.create(cr, uid, {
                                        'sequence': st_line_seq,
-                                       'ref': line['ref'],                                                   
+                                       'ref': line['ref'],
                                        'name': line_name,
                                        'type' : line['type'],
-                                       'val_date' : line['val_date'], 
+                                       'val_date' : line['val_date'],
                                        'date': line['entry_date'],
                                        'amount': line['amount'],
                                        'partner_id': line['partner_id'] or 0,
                                        'counterparty_name': line['counterparty_name'],
-                                       'counterparty_bic': line['counterparty_bic'],                     
-                                       'counterparty_number': line['counterparty_number'],   
-                                       'counterparty_currency': line['counterparty_currency'],                                                                           
+                                       'counterparty_bic': line['counterparty_bic'],
+                                       'counterparty_number': line['counterparty_number'],
+                                       'counterparty_currency': line['counterparty_currency'],
                                        'account_id': line['account_id'],
                                        'globalisation_id': line['globalisation_id'], 
                                        'statement_id': bk_st_id,
                                        'voucher_id': voucher_id,
                                        'note': line_note,
-                                        })   
+                                        }) 
                 # end 'for x in lines'
 
                 coda_st_obj.write(cr, uid, [coda_st_id], {}, context=context)           # calculate balance
@@ -854,9 +838,9 @@ class account_coda_import(osv.osv_memory):
                         break
                     else:
                         statement['coda_parsing_note'] += '\n' + err_string
-                              
-                if statement['type'] == 'normal':                          
-                    bank_st_obj.button_dummy(cr, uid, [bk_st_id], context=context)      # calculate balance   
+
+                if statement['type'] == 'normal':
+                    bank_st_obj.button_dummy(cr, uid, [bk_st_id], context=context)      # calculate balance
                     journal_name = journal.name
                 else:
                     journal_name = _('None')
@@ -901,7 +885,7 @@ class account_coda_import(osv.osv_memory):
                     'Unknown Error while processing Statement %s\n%s' % (statement.get('name', '/'),tb))
 
         # end 'for statement in coda_statements'
-                          
+
         coda_note_header = _('CODA File is Imported  :')
         coda_note_footer = _('\n\nNumber of statements : ') + str(len(coda_st_ids))
         err_log = err_log + _('\nNumber of errors : ') + str(nb_err) + '\n'
@@ -918,12 +902,12 @@ class account_coda_import(osv.osv_memory):
                 err_code = 'G0002'
                 return (err_code, err_string)
             raise osv.except_osv(_('CODA Import failed !'), err_string)
-            
+
         context.update({ 'bk_st_ids': bk_st_ids})
         model_data_ids = mod_obj.search(cr, uid, [('model', '=', 'ir.ui.view'), ('name', '=', 'account_coda_import_result_view')], context=context)
         resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
         self.write(cr, uid, ids, {'note': note}, context=context)
-        
+
         return {
             'name': _('Import CODA File result'),
             'res_id': ids[0],
@@ -958,7 +942,7 @@ class account_coda_import(osv.osv_memory):
         domain += [('id','in', context.get('bk_st_ids', False))]
         action.update({'domain': domain})
         return action
-        
+
 account_coda_import()
 
 def str2date(date_str):
