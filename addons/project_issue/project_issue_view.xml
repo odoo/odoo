@@ -51,7 +51,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form layout="manual">
-                <div class="oe_form_topbar">
+                <header>
                     <button name="case_open" string="Open" type="object"
                             states="draft,pending"/>
                     <button name="case_close" string="Done" type="object"
@@ -70,11 +70,8 @@
                             attrs="{'invisible': [('stage_id','=', False)]}"/>
                     <button name="case_cancel" string="Cancel" type="object"
                             states="draft,open,pending"/>
-                    <div class="oe_right">
-                        <field name="stage_id" nolabel="1" widget="statusbar"/>
-                    </div>
-                    <div class="oe_clear"/>
-                </div>
+                    <field name="stage_id" widget="statusbar"/>
+                </header>
                 <sheet string="Issue Tracker Form" layout="auto">
                     <group colspan="4" col="6">
                         <field name="name"/>
@@ -164,8 +161,8 @@
             <field name="arch" type="xml">
                 <search string="Issue Tracker Search">
                     <group>
-                        <filter string="New" icon="terp-document-new" name="draft" domain="[('state','=','draft')]" help="New Issues"/>
-                        <filter string="To Do" name="todo" domain="[('state','=','open')]" help="To Do Issues" icon="terp-check"/>
+                        <filter string="New" icon="terp-document-new" domain="[('state','=','draft')]" help="New Issues"/>
+                        <filter string="To Do" domain="[('state','=','open')]" help="To Do Issues" icon="terp-check"/>
                         <filter string="Pending" domain="[('state','=','pending')]"  help="Pending Issues" icon="terp-gtk-media-pause"/>
                         <separator orientation="vertical"/>
                         <field name="name" string="Issue / Partner" filter_domain="['|', '|', ('partner_id','ilike',self), ('email_from','ilike',self), ('name','ilike',self)]"/>

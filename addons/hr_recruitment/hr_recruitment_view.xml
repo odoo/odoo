@@ -71,7 +71,7 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form layout="manual">
-            <div class="oe_form_topbar">
+            <header>
                 <button name="%(action_hr_recruitment_hired_employee)d" string="Hire" type="action"
                         states="open,pending"/>
                 <button name="case_open" string="Open" type="object"
@@ -86,11 +86,8 @@
                         states="open" icon="gtk-go-back"/>
                 <button name="stage_next" string="Next" type="object"
                         states="open" icon="gtk-go-forward"/>
-                <div class="oe_right">
-                    <field name="stage_id" nolabel="1" widget="statusbar"/>
-                </div>
-                <div class="oe_clear"/>
-            </div>
+                <field name="stage_id" widget="statusbar"/>
+            </header>
             <sheet string="Jobs - Recruitment Form" layout="auto">
                 <group colspan="4" col="4">
                     <field name="name" string="Subject"/>
@@ -181,11 +178,11 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Jobs">
-               <filter icon="terp-document-new" string="New" name="filter_new" 
+               <filter icon="terp-document-new" string="New" 
                    domain="[('state','=','draft')]"
                    help="All Initial Jobs"
                />
-               <filter icon="terp-camera_test" string="In Progress" name="filter_inprogress"
+               <filter icon="terp-camera_test" string="In Progress" 
                    domain="[('state','=','open')]"
                    help="Open Jobs"
                />

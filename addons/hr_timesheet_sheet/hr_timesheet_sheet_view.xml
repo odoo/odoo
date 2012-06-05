@@ -61,16 +61,13 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form layout="manual">
-                <div class="oe_form_topbar">
+                <header>
                     <button name="button_confirm" states="draft" string="Submited to Manager" type="object"/>
                     <button name="done" states="confirm" string="Approve" type="workflow" groups="base.group_hr_user"/>
                     <button name="action_set_to_draft" states="done" string="Set to Draft" type="object"/>
                     <button name="cancel" states="confirm" string="Refuse" type="workflow" groups="base.group_hr_user"/>
-                    <div class="oe_right">
-                        <field name="state" widget="statusbar" nolabel="1" statusbar_visible="new,confirm,done"/>
-                    </div>
-                    <div class="oe_clear"/>
-                </div>
+                    <field name="state" widget="statusbar" statusbar_visible="new,confirm,done"/>
+                </header>
                 <sheet string="Timesheet" layout="auto">
                     <group colspan="4" col="6" class="oe_form_header">
                         <field name="employee_id" on_change="onchange_employee_id(employee_id)"/>
@@ -253,7 +250,7 @@
             <field name="inherit_id" ref="hr_attendance.view_hr_attendance_filter" />
             <field name="arch" type="xml">
                 <field name="action" position="after">
-                    <field name="sheet_id" select="1" />
+                    <field name="sheet_id"/>
                 </field>
             </field>
         </record>

@@ -63,7 +63,7 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form layout="manual">
-            <div class="oe_form_topbar">
+            <header>
                 <button name="case_open" string="Confirm" type="object"
                         states="draft,pending" icon="gtk-go-forward"/>
                 <button name="case_close" string="Held" type="object"
@@ -72,11 +72,8 @@
                         states="cancel" icon="gtk-convert"/>
                 <button name="case_cancel" string="Cancel" type="object"
                         states="draft,open,pending" icon="gtk-cancel"/>
-                <div class="oe_right">
-                    <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,open,done" select="1"/>
-                </div>
-                <div class="oe_clear"/>
-            </div>
+                <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,open,done"/>
+            </header>
             <sheet string="Phone Call" layout="auto">
                  <group colspan="6" col="7">
                     <field name="name" required="1"/>

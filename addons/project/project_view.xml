@@ -19,7 +19,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Project" layout="manual">
-                <div class="oe_form_topbar">
+                <header>
                     <button name="set_done" string="Done" type="object" states="open,pending"/>
                     <button name="set_open" string="Re-open project" type="object" states="pending,cancelled,close"/>
                     <button name="set_pending" string="Pending" type="object" states="open"/>
@@ -27,11 +27,8 @@
                     <button string="New Project Based on Template" name="duplicate_template"  type="object" states="template" context="{'parent_id':parent_id}"/>
                     <button name="reset_project" string="Reset as Project" type="object" states="template"/>
                     <button name="set_cancel" string="Cancel" type="object" states="open,pending"/>
-                    <div class="oe_right">
-                        <field name="state" nolabel="1" widget="statusbar" statusbar_visible="open,close" statusbar_colors='{"pending":"blue"}' select="1" readonly="1"/>
-                    </div>
-                    <div class="oe_clear"/>
-                </div>
+                    <field name="state" widget="statusbar" statusbar_visible="open,close" statusbar_colors='{"pending":"blue"}' readonly="1"/>
+                </header>
                 <sheet string="Project" layout="auto">
                     <group colspan="6" col="6">
                         <field name="name" string="Project Name" select="1"/>
@@ -163,7 +160,7 @@
         </record>
 
         <act_window
-            context="{'search_default_project_id': [active_id], 'default_project_id': active_id}"
+            context="{'search_default_project_id': active_id, 'default_project_id': active_id}"
             id="act_project_project_2_project_task_all"
             name="Tasks"
             res_model="project.task"
@@ -304,7 +301,7 @@
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Project" layout="manual">
-                    <div class="oe_form_topbar">
+                    <header>
                         <button name="do_open" string="Start Task" type="object"
                                 states="draft,pending"/>
                         <button name="%(action_project_task_reevaluate)d" string="Reactivate" type="action"
@@ -323,11 +320,8 @@
                                 states="open,pending" icon="gtk-go-back" attrs="{'invisible': [('stage_id','=', False)]}"/>
                         <button name="stage_next" string="Next Stage" type="object"
                                 states="open,pending" icon="gtk-go-forward" attrs="{'invisible': [('stage_id','=', False)]}"/>
-                        <div class="oe_right">
-                            <field name="stage_id" nolabel="1" widget="statusbar"/>
-                        </div>
-                        <div class="oe_clear"/>
-                    </div>
+                        <field name="stage_id" widget="statusbar"/>
+                    </header>
                     <sheet string="Task edition" layout="auto">
                     <group colspan="6" col="6">
                         <field name="name" select="1"/>
@@ -578,6 +572,7 @@
                         <separator orientation="vertical"/>
                         <field name="name"/>
                         <filter name="project" string="Project" domain="[('project_id.user_id','=',uid)]" help="My Projects" icon="terp-check"/>
+                        <field name="project_id"/>
                         <field name="user_id">
                             <filter string="My Tasks" domain="[('user_id','=',uid)]"  help="My Tasks" icon="terp-personal" />
                             <filter string="Unassigned Tasks" domain="[('user_id','=',False)]"  help="Unassigned Tasks" icon="terp-personal-" />
@@ -715,9 +710,9 @@
         <menuitem id="menu_project_config_project" name="Stages" parent="project.menu_definitions" sequence="1"/>
 
         <menuitem action="open_task_type_form" name="Task Stages" id="menu_task_types_view" parent="menu_project_config_project" sequence="2"/>
-        <menuitem action="open_view_project_all" id="menu_projects" name="Projects" parent="menu_project_management" sequence="1" groups="base.group_no_one"/>
+        <menuitem action="open_view_project_all" id="menu_projects" name="Projects" parent="menu_project_management" sequence="1"/>
 
-        <act_window context="{'search_default_user_id': [active_id], 'default_user_id': active_id}" id="act_res_users_2_project_project" name="User's projects" res_model="project.project" src_model="res.users" view_mode="tree,form" view_type="form"/>
+        <act_window context="{'search_default_user_id': active_id, 'default_user_id': active_id}" id="act_res_users_2_project_project" name="User's projects" res_model="project.project" src_model="res.users" view_mode="tree,form" view_type="form"/>
 
          <record id="task_company" model="ir.ui.view">
             <field name="name">res.company.task.config</field>
