@@ -1250,14 +1250,18 @@ class account_voucher(osv.osv):
                 'state': 'posted',
                 'number': name,
             })
-            message = _("voucher  '%s' is posted.") % name
+
+            message = _("%s '%s' is <b>posted</b>.") % (self._get_document_type(voucher.type),name) 
             self.message_append_note(cr, uid, [voucher.id], body=message, context=context)
             if voucher.journal_id.entry_posted:
                 move_pool.post(cr, uid, [move_id], context={})
             # We automatically reconcile the account move lines.
+            reconcile = False
             for rec_ids in rec_list_ids:
                 if len(rec_ids) >= 2:
-                    move_line_pool.reconcile_partial(cr, uid, rec_ids, writeoff_acc_id=voucher.writeoff_acc_id.id, writeoff_period_id=voucher.period_id.id, writeoff_journal_id=voucher.journal_id.id)
+                    reconcile = move_line_pool.reconcile_partial(cr, uid, rec_ids, writeoff_acc_id=voucher.writeoff_acc_id.id, writeoff_period_id=voucher.period_id.id, writeoff_journal_id=voucher.journal_id.id)
+            if reconcile:
+                self.reconcile_send_note(cr, uid, [voucher.id], context=context)
         return True
 
     def create(self, cr, uid, vals, context=None):
@@ -1287,12 +1291,18 @@ class account_voucher(osv.osv):
         type_dict = {
                 'payment': 'Supplier Payment',
                 'purchase': 'Purchase Receipt',
+                'sale': 'Sales Receipt',
+                'receipt': 'Customer Payment',
         }
-        return type_dict.get(type, 'Invoice')
+        return type_dict.get(type, 'payment')
 
     def create_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             self.message_append_note(cr, uid, [obj.id],body=_("%s <b>created</b>.") % (self._get_document_type(obj.type)), context=context)
+    
+    def reconcile_send_note(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            self.message_append_note(cr, uid, [obj.id],body=_("%s <b>Reconciled</b>.") % (self._get_document_type(obj.type)), context=context)
 
 account_voucher()
 
