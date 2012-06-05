@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-05-31 13:21+0000\n"
+"PO-Revision-Date: 2012-06-04 15:24+0000\n"
 "Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-06-01 05:50+0000\n"
-"X-Generator: Launchpad (build 15342)\n"
+"X-Launchpad-Export-Date: 2012-06-05 05:17+0000\n"
+"X-Generator: Launchpad (build 15353)\n"
 
 #. module: sale
 #: field:sale.config.picking_policy,timesheet:0
@@ -27,6 +27,8 @@ msgid ""
 "Sale Order Lines that are confirmed, done or in exception state and haven't "
 "yet been invoiced"
 msgstr ""
+"Godkända kundorderrader, klara eller i status undantag och ännu ej är "
+"fakturerade"
 
 #. module: sale
 #: view:board.board:0
@@ -122,6 +124,8 @@ msgid ""
 "cancel a sale order, you must first cancel related picking or delivery "
 "orders."
 msgstr ""
+"För att radera en bekräftad kundorder, måste du först avbryta den ! För att "
+"avbryta en kundorder, måste även relaterad plockning och leveranser avbrytas."
 
 #. module: sale
 #: model:process.node,name:sale.process_node_saleprocurement0
@@ -324,6 +328,18 @@ msgid ""
 "  - The 'Invoice based on deliveries' choice is used to create an invoice "
 "during the picking process."
 msgstr ""
+"Fakturapolicy används för att synkronisera faktura och leverans.\n"
+"- Den \"Betala innan leverans '-valet kommer först generera fakturan och "
+"sedan generera plockningsorder efter betalningen av denna faktura.\n"
+"- Den \"Leverera och faktura vid behov\" kommer att skapa plockorder direkt "
+"och vänta på att användaren manuellt klicka på \"Faktura\" för att generera "
+"förslag till fakturan baseras på försäljning ordning eller försäljning "
+"linjer beställer.\n"
+"- Den \"faktura på order efter leverans 'Choice kommer att generera utkastet "
+"faktura baserad på försäljning ordning efter alla plocklistor har "
+"avslutats.\n"
+"- Den \"faktura baserat på leveranser val används för att skapa en faktura "
+"under plockprocessen."
 
 #. module: sale
 #: code:addons/sale/sale.py:1171
@@ -459,12 +475,14 @@ msgid ""
 "The salesman confirms the quotation. The state of the sales order becomes "
 "'In progress' or 'Manual in progress'."
 msgstr ""
+"Säljaren bekräftar offerten. Status på ordern går över i 'pågår' eller "
+"'manuell pågående'."
 
 #. module: sale
 #: code:addons/sale/sale.py:1074
 #, python-format
 msgid "You cannot cancel a sale order line that has already been invoiced!"
-msgstr ""
+msgstr "Du kan inte avbryta en orderrad som redan är fakturerad!"
 
 #. module: sale
 #: code:addons/sale/sale.py:1079
@@ -1537,7 +1555,7 @@ msgstr "Månad"
 #. module: sale
 #: model:email.template,subject:sale.email_template_edi_sale
 msgid "${object.company_id.name} Order (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name} Order (Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: view:sale.order.line:0 field:sale.order.line,product_id:0

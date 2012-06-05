@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:37+0000\n"
-"PO-Revision-Date: 2012-05-23 08:14+0000\n"
+"PO-Revision-Date: 2012-06-04 10:51+0000\n"
 "Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-05-24 21:35+0000\n"
-"X-Generator: Launchpad (build 15288)\n"
+"X-Launchpad-Export-Date: 2012-06-05 05:17+0000\n"
+"X-Generator: Launchpad (build 15353)\n"
 
 #. module: product
 #: model:product.template,name:product.product_product_ram512_product_template
@@ -32,6 +32,8 @@ msgid ""
 "Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
 "Item!"
 msgstr ""
+"Fel ! Du kan inte knyta huvudprislistan som tilläggsprislista i en "
+"prislistepost!"
 
 #. module: product
 #: help:product.pricelist.item,product_tmpl_id:0
@@ -55,6 +57,14 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location typed as "
 "'internal'."
 msgstr ""
+"Prognosticerad kvantitet (beräknas som kvantiteten på Hand - Utgående + "
+"Inkommande) I ett sammanhang med en enda Stock Location, omfattar detta "
+"varor som lagrats på denna plats, eller någon av sina barn. I ett sammanhang "
+"med en enda Warehouse omfattar denna varor finns lagrade i Stock platsen för "
+"denna Warehouse, eller någon av dess barn. I ett sammanhang med en enda "
+"butik, omfattar denna varor finns lagrade i Stock Placering av lager av den "
+"här butiken, eller någon av dess barn. Annars omfattar detta varor som "
+"lagras i något lager läge skrivit som \"interna\".Ångra ändringarna"
 
 #. module: product
 #: model:product.category,name:product.cat1
@@ -254,6 +264,8 @@ msgid ""
 "Create a product form for everything you buy or sell. Specify a supplier if "
 "the product can be purchased."
 msgstr ""
+"Skapa ett produktformulär för allt du köper eller säljer. Ange en leverantör "
+"om produkten kan köpas."
 
 #. module: product
 #: view:product.uom:0
@@ -264,7 +276,7 @@ msgstr ""
 #: code:addons/product/product.py:418
 #, python-format
 msgid "Products: "
-msgstr "Produkter "
+msgstr "Produkter: "
 
 #. module: product
 #: field:product.category,parent_id:0

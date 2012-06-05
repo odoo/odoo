@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2012-06-01 08:19+0000\n"
+"PO-Revision-Date: 2012-06-04 13:10+0000\n"
 "Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
 "Language-Team: Svenska <swedish@openerp.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-06-02 06:16+0000\n"
-"X-Generator: Launchpad (build 15342)\n"
+"X-Launchpad-Export-Date: 2012-06-05 05:17+0000\n"
+"X-Generator: Launchpad (build 15353)\n"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -104,7 +104,7 @@ msgstr "wizard.multi.charts.accounts"
 #. module: account
 #: view:account.move:0
 msgid "Total Debit"
-msgstr "Total Debit"
+msgstr "Summa Debet"
 
 #. module: account
 #: view:account.unreconcile:0
@@ -430,8 +430,8 @@ msgid ""
 "This field contains the informatin related to the numbering of the journal "
 "entries of this journal."
 msgstr ""
-"Detta fält innehåller information i samband med numreringen av journalposter "
-"av denna journal."
+"Detta fält innehåller information knuten till numreringen av journalens "
+"verifikat."
 
 #. module: account
 #: field:account.journal,default_debit_account_id:0
@@ -846,6 +846,8 @@ msgstr "Unreconciliation"
 #: view:account.payment.term.line:0
 msgid "At 14 net days 2 percent, remaining amount at 30 days end of month."
 msgstr ""
+"Vid 14 nettodagar 2 procent, återstående belopp vid 30 dagar i slutet av "
+"månaden."
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_journal_report
@@ -1141,6 +1143,7 @@ msgstr ""
 msgid ""
 "You have to provide an account for the write off/exchange difference entry !"
 msgstr ""
+"Du måste registrera ett konto för avskrivning av transaktionens differens !"
 
 #. module: account
 #: view:account.tax:0
@@ -1205,6 +1208,8 @@ msgid ""
 "Total amount (in Secondary currency) for transactions held in secondary "
 "currency for this account."
 msgstr ""
+"Totalt belopp (i sekundär valuta) för transaktioner i sekundär valuta för "
+"detta konto"
 
 #. module: account
 #: field:account.fiscal.position.tax,tax_dest_id:0
@@ -1534,7 +1539,7 @@ msgid ""
 "entry per accounting document: invoice, refund, supplier payment, bank "
 "statements, etc."
 msgstr ""
-"Ett verifikat består av flera transaktioner, som alla är antingen debit-"
+"Ett verifikat består av flera transaktioner, som alla är antingen debet-"
 "eller kredit-transaktion. OpenERP skapar automatiskt ett verifikat per "
 "redovisningsdokument: faktura, återbetalning, leverantör betalning, "
 "kontoutdrag, etc."
@@ -1629,7 +1634,7 @@ msgstr "Sök kontoutdrag"
 #. module: account
 #: view:account.move.line:0
 msgid "Unposted Journal Items"
-msgstr "Icke bokförda objekttransaktioner"
+msgstr "Icke bokförda transaktioner"
 
 #. module: account
 #: view:account.chart.template:0
@@ -1762,7 +1767,7 @@ msgid ""
 "on an account."
 msgstr ""
 "Visar bolagets kontoplan per bokföringsår och vald period. Du får en "
-"komplett trädvy över alla verifikationer per konto genom att klicka på ett "
+"komplett trädvy över alla transaktioner per konto genom att klicka på ett "
 "konto."
 
 #. module: account
@@ -1855,7 +1860,7 @@ msgstr "Fel!"
 #. module: account
 #: sql_constraint:account.move.line:0
 msgid "Wrong credit or debit value in accounting entry !"
-msgstr "Fel kredit- eller debitvärde i bokföringstransaktionerna."
+msgstr "Fel kredit- eller debetvärde i bokföringstransaktionerna."
 
 #. module: account
 #: view:account.invoice.report:0
@@ -2038,7 +2043,7 @@ msgstr "Du kan gömma momsen utan att ta bort den om denna är falsk."
 #. module: account
 #: view:account.analytic.line:0
 msgid "Analytic Journal Items related to a sale journal."
-msgstr "Objektjournal med poster relaterade till inköpsjournalen"
+msgstr "Objektjournal med transaktioner relaterade till inköpsjournalen"
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -2795,10 +2800,10 @@ msgid ""
 "Note that journal entries that are automatically created by the system are "
 "always skipping that state."
 msgstr ""
-"Markera den här rutan om du inte vill att nya journalposter att passera "
-"genom \"utkast\" läget och i stället går direkt till \"bokförd\" utan någon "
+"Markera den här rutan om du inte vill att nya verifikat skall passera genom "
+"\"utkast\"-läget och i stället går direkt till \"bokförd\" utan någon "
 "manuell validering.\n"
-"Observera att journalposter som automatiskt skapas av systemet alltid hoppar "
+"Observera att verifikat som automatiskt skapas av systemet alltid hoppar "
 "över detta tillstånd."
 
 #. module: account
@@ -3199,8 +3204,8 @@ msgid ""
 "This wizard will validate all journal entries of a particular journal and "
 "period. Once journal entries are validated, you can not update them anymore."
 msgstr ""
-"Denna assistent kommer att validera alla journalposter för en specifik "
-"journal och period. När en journalpost är validerad går den ej att updatera."
+"Denna assistent kommer att bokföra alla verifikat för en specifik journal "
+"och period. När ett verifikat väl är bokfört går det inte längre att ändra."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_chart_template_form
@@ -3430,6 +3435,8 @@ msgid ""
 "All selected journal entries will be validated and posted. It means you "
 "won't be able to modify their accounting fields anymore."
 msgstr ""
+"Alla valda transaktioner kommer bli bokförda. Detta innebär att du inte kan "
+"ändra dessa när detta är gjort."
 
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_transfers
@@ -3664,6 +3671,8 @@ msgid ""
 "based on partner payment term!\n"
 "Please define partner on it!"
 msgstr ""
+"Förfallodagen på inmatningsraden som genereras av klassraden  \"%s\" klass "
+"\"%s\" bygger på företagets betalningsvillkor! Vänligen ange företag på det!"
 
 #. module: account
 #: code:addons/account/account_move_line.py:837
@@ -3794,7 +3803,7 @@ msgstr "#Poster"
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Create a draft Refund"
-msgstr ""
+msgstr "Skapa preleminär återbetalning"
 
 #. module: account
 #: view:account.state.open:0
@@ -3902,7 +3911,7 @@ msgstr "Bokföring"
 #. module: account
 #: view:account.entries.report:0
 msgid "Journal Entries with period in current year"
-msgstr "Journalposter med period inom året"
+msgstr "Verifikat med period inom året"
 
 #. module: account
 #: help:account.central.journal,amount_currency:0
@@ -3939,6 +3948,10 @@ msgid ""
 "debit/credit accounts, of type 'situation' and with a centralized "
 "counterpart."
 msgstr ""
+"Det bästa praxis här är att använda en journal tillägnad att innehålla årets "
+"ingående balanser. Observera att du bör fastställa den med "
+"standardinställningarna debet / kredit-konton av typen \"situation\" och med "
+"en centraliserad motpart."
 
 #. module: account
 #: view:account.installer:0
@@ -4505,7 +4518,7 @@ msgstr "Det fungerar som standardkonto för kreditbelopp"
 #: view:validate.account.move:0
 #: view:validate.account.move.lines:0
 msgid "Post Journal Entries"
-msgstr "Bokför journalposter"
+msgstr "Bokför verifikat"
 
 #. module: account
 #: selection:account.invoice,state:0
@@ -4696,7 +4709,7 @@ msgstr "Fakturerad"
 #. module: account
 #: view:account.move:0
 msgid "Posted Journal Entries"
-msgstr "Bokförda journalposter"
+msgstr "Bokförda verifikat"
 
 #. module: account
 #: view:account.use.model:0
@@ -4767,7 +4780,7 @@ msgstr "Öppningsperiod"
 #. module: account
 #: view:account.move:0
 msgid "Journal Entries to Review"
-msgstr "Journalposter att granska"
+msgstr "Verifikat att granska"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -4803,7 +4816,7 @@ msgstr "Tax Application"
 #: model:ir.ui.menu,name:account.menu_eaction_account_moves_sale
 #, python-format
 msgid "Journal Items"
-msgstr "Journalrader"
+msgstr "Transaktioner"
 
 #. module: account
 #: code:addons/account/account.py:1088
@@ -6340,7 +6353,7 @@ msgstr "Likviditet"
 #: model:ir.actions.act_window,name:account.action_account_analytic_journal_open_form
 #: model:ir.ui.menu,name:account.account_analytic_journal_entries
 msgid "Analytic Journal Items"
-msgstr "Analysjournal transaktioner"
+msgstr "Objekttransaktioner"
 
 #. module: account
 #: view:account.fiscalyear.close:0
@@ -6608,7 +6621,7 @@ msgstr ""
 #: code:addons/account/account_move_line.py:1043
 #, python-format
 msgid "Total debit"
-msgstr "Total debit"
+msgstr "Total debet"
 
 #. module: account
 #: code:addons/account/account_move_line.py:808
@@ -6654,7 +6667,7 @@ msgstr "Pythonkod"
 #. module: account
 #: view:account.entries.report:0
 msgid "Journal Entries with period in current period"
-msgstr "Journalposter i aktuell period"
+msgstr "Verifikat i aktuell period"
 
 #. module: account
 #: help:account.journal,update_posted:0
@@ -6782,7 +6795,7 @@ msgstr ""
 #: model:ir.ui.menu,name:account.menu_action_move_journal_line_form
 #: model:ir.ui.menu,name:account.menu_finance_entries
 msgid "Journal Entries"
-msgstr "Journalposter"
+msgstr "Verifikat"
 
 #. module: account
 #: help:account.partner.ledger,page_split:0
@@ -7148,7 +7161,7 @@ msgstr "Account Tax Template"
 #. module: account
 #: view:account.journal.select:0
 msgid "Are you sure you want to open Journal Entries?"
-msgstr "Är du säker på att du vill öppna journalposten?"
+msgstr "Är du säker på att du vill öppna verifikatet?"
 
 #. module: account
 #: view:account.state.open:0
@@ -7198,7 +7211,7 @@ msgstr "Bokföringsutdrag"
 #. module: account
 #: help:account.journal,default_debit_account_id:0
 msgid "It acts as a default account for debit amount"
-msgstr "Det fungerar som standardkonto för debitbelopp"
+msgstr "Det fungerar som standardkonto för debetbelopp"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_journal_period_tree
@@ -7482,7 +7495,7 @@ msgstr "Valfri information"
 #: code:addons/account/wizard/account_fiscalyear_close.py:84
 #, python-format
 msgid "The journal must have default credit and debit account"
-msgstr "The journal must have default credit and debit account"
+msgstr "Journalen måste ha standard kredit och debet-konton"
 
 #. module: account
 #: report:account.general.journal:0
@@ -7559,7 +7572,7 @@ msgstr ""
 #. module: account
 #: view:account.move:0
 msgid "Unposted Journal Entries"
-msgstr "Icke bokförda journalposter"
+msgstr "Icke bokförda verifikat"
 
 #. module: account
 #: view:product.product:0
@@ -7665,7 +7678,7 @@ msgstr "Case Code"
 #. module: account
 #: view:validate.account.move:0
 msgid "Post Journal Entries of a Journal"
-msgstr "Bokför journalposter"
+msgstr "Bokför verifikat"
 
 #. module: account
 #: view:product.product:0
@@ -10155,7 +10168,7 @@ msgstr "Leverantörsfaktura"
 #: report:account.vat.declaration:0
 #: field:report.account.receivable,debit:0
 msgid "Debit"
-msgstr "Debit"
+msgstr "Debet"
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -10304,7 +10317,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_periodical_processing_billing
 msgid "Billing"
-msgstr "Debitering"
+msgstr "Fakturering"
 
 #. module: account
 #: view:account.account:0
@@ -10371,11 +10384,11 @@ msgid ""
 "created by the system on document validation (invoices, bank statements...) "
 "and will be created in 'Posted' state."
 msgstr ""
-"Alla manuellt skapade nya journalposter är vanligtvis i statusen \"icke "
+"Alla manuellt skapade nya verifikat är vanligtvis i statusen \"icke "
 "bokförda\", men du kan ställa in alternativet att hoppa över detta tillstånd "
-"på journalen posterna är knuten till. I så fall kommer de att bete sig som "
-"journalposter skapas automatiskt av systemet på dokumentvalidering "
-"(fakturor, kontoutdrag ...) och kommer att skapas i \"bokfört\" tillstånd."
+"på journalen posterna är knuten till. I så fall kommer de att bete sig som i "
+"systemet automatiskt skapade transaktioner på dokumentvalidering (fakturor, "
+"kontoutdrag ...) som skapas i \"bokfört\" tillstånd."
 
 #. module: account
 #: view:account.fiscal.position.template:0
@@ -10721,7 +10734,7 @@ msgstr "Framtida"
 #. module: account
 #: view:account.move.line:0
 msgid "Search Journal Items"
-msgstr "Sök journaltransaktioner"
+msgstr "Sök transaktioner"
 
 #. module: account
 #: help:account.tax,base_sign:0
@@ -10771,7 +10784,7 @@ msgid ""
 "certain amount of information. They have to be certified by an external "
 "auditor annually."
 msgstr ""
-"Skapa och hantera de konton du behöver för att registrera journalposter. Ett "
+"Skapa och hantera de konton du behöver för att registrera verifikat. Ett "
 "konto är en del av en huvudbok som låter ditt företag att registrera alla "
 "typer av debet och kredit transaktioner. Företag presenterar sina "
 "årsredovisningar i två huvuddelar: den balans-och resultaträkningen "

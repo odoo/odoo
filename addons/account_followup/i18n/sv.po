@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2012-02-17 09:10+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"PO-Revision-Date: 2012-06-04 09:48+0000\n"
+"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-05-17 05:29+0000\n"
-"X-Generator: Launchpad (build 15259)\n"
+"X-Launchpad-Export-Date: 2012-06-05 05:17+0000\n"
+"X-Generator: Launchpad (build 15353)\n"
 
 #. module: account_followup
 #: view:account_followup.followup:0
@@ -43,6 +43,7 @@ msgstr "Uppföljning"
 msgid ""
 "Check if you want to print followups without changing followups level."
 msgstr ""
+"Kryssa om du vill skriva ut uppföljning utan att skifta uppföljningsnivå."
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line2
@@ -67,6 +68,22 @@ msgid ""
 "\n"
 "Best Regards,\n"
 msgstr ""
+"\n"
+"Kära % (partner_name), \n"
+"\n"
+"Vi är besvikna över att, trots påminnelse, så är ditt konto överfraget. Det "
+"är viktigt att omedelbar betalning sker, annars måste vi överväga att "
+"blockera ditt konto, vilket innebär att vi inte längre kommer att kunna "
+"förse ditt företag med (varor / tjänster). Vänligen vidta lämpliga åtgärder "
+"för att genomföra denna betalning under de närmaste 8 dagar. \n"
+"\n"
+"Om det finns ett problem med att betala faktura som vi inte är medvetna om, "
+"tveka inte att kontakta vår ekonomiavdelning på (+32) .10.68.94.39. så att "
+"vi kan lösa saken snabbt. \n"
+"\n"
+"Detaljer om förfallna betalningar nedan. \n"
+"\n"
+"Vänliga hälsningar,\n"
 
 #. module: account_followup
 #: field:account_followup.followup,company_id:0
@@ -91,6 +108,7 @@ msgstr "E-postrubrik"
 msgid ""
 "Follow up on the reminders sent over to your partners for unpaid invoices."
 msgstr ""
+"Följ upp påminnelser skickade till dina kunder för icke betalda fakturor."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -101,7 +119,7 @@ msgstr "Legend"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Follow up Entries with period in current year"
-msgstr ""
+msgstr "Följ upp transaktioner med period i innevarande år"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -111,7 +129,7 @@ msgstr "Ok"
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Amount"
-msgstr ""
+msgstr "Belopp"
 
 #. module: account_followup
 #: sql_constraint:account.move.line:0
@@ -145,6 +163,8 @@ msgid ""
 "The date of your Journal Entry is not in the defined period! You should "
 "change the date or remove this constraint from the journal."
 msgstr ""
+"Verifikatsdatumet är inte inom den definierade perioden! Du bör ändra datum "
+"eller ta bort denna begränsning från journalen."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -216,6 +236,10 @@ msgid ""
 "You can send them the default message for unpaid invoices or manually enter "
 "a message should you need to remind them of a specific information."
 msgstr ""
+"Denna funktion gör att du kan skicka påminnelser till partner med väntande "
+"fakturor. Du kan skicka dem standardmeddelandet för obetalda fakturor eller "
+"manuellt skriva in ett meddelande om du skulle behöva påminna dem om en "
+"specifik information."
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -338,7 +362,7 @@ msgstr "Uppföljning statistik per partner"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "Message"
-msgstr ""
+msgstr "Meddelande"
 
 #. module: account_followup
 #: field:account_followup.stat,blocked:0
@@ -416,7 +440,7 @@ msgstr "Skicka bekräftelse epost"
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Total:"
-msgstr ""
+msgstr "Summa:"
 
 #. module: account_followup
 #: constraint:res.company:0
