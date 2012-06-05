@@ -1,0 +1,459 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- Partnership/Private account chart -->
+		
+        <record model="account.account.template" id="root">
+            <field name="name">Partnership/Private Firm Chart of Account</field>
+            <field name="code">0</field>
+            <field name="type">view</field>
+			<field eval="0" name="parent_id"/>
+            <field name="user_type" ref="account.data_account_type_view"/>
+            <field name="reconcile" eval="False"/>
+        </record>
+
+        <record model="account.account.template" id="balance_sheet">
+            <field name="name">Balance Sheet</field>
+            <field name="code">1</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="account.data_account_type_view"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="root"/>
+        </record>  
+
+		<!-- Assets -->
+		
+        <record model="account.account.template" id="assets">
+            <field name="name">Assets</field>
+            <field name="code">10</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="balance_sheet"/>
+        </record>
+
+       <record model="account.account.template" id="cash">
+            <field name="name">Cash</field>
+            <field name="code">101</field>
+            <field name="type">liquidity</field>
+            <field name="user_type" ref="account.data_account_type_cash"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="assets"/>
+            <field name="note">Checking account balance (as shown in company records), currency, coins, checks received from customers but not yet deposited.</field>
+        </record> 
+
+        <record model="account.account.template" id="accounts_receivable">
+            <field name="name">Accounts Receivable</field>
+            <field name="code">120</field>
+            <field name="type">receivable</field>
+            <field name="user_type" ref="account.data_account_type_receivable"/>
+            <field name="reconcile" eval="True"/>
+            <field name="parent_id" ref="assets"/>
+            <field name="note">Amounts owed to the company for services performed or products sold but not yet paid for.</field>
+        </record>
+		
+        <record model="account.account.template" id="merchandise_inventory">
+            <field name="name">Merchandise Inventory</field>
+            <field name="code">140</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="reconcile" eval="True"/>
+            <field name="parent_id" ref="assets"/>
+            <field name="note">Cost of merchandise purchased but has not yet been sold.</field>
+        </record>
+		
+        <record model="account.account.template" id="supplies">
+            <field name="name">Supplies</field>
+            <field name="code">150</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="reconcile" eval="True"/>
+            <field name="parent_id" ref="assets"/>
+            <field name="note">Cost of supplies that have not yet been used. Supplies that have been used are recorded in Supplies Expense.</field>
+        </record>		
+					
+        <record model="account.account.template" id="prepaid_insurance">
+            <field name="name">Prepaid Insurance</field>
+            <field name="code">160</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="reconcile" eval="True"/>
+            <field name="parent_id" ref="assets"/>
+            <field name="note">Cost of insurance that is paid in advance and includes a future accounting period.</field>
+        </record>
+		
+        <record model="account.account.template" id="land">
+            <field name="name">Land</field>
+            <field name="code">170</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="reconcile" eval="True"/>
+            <field name="parent_id" ref="assets"/>
+            <field name="note">Cost to acquire and prepare land for use by the company.</field>
+        </record>
+		
+        <record model="account.account.template" id="buildings">
+            <field name="name">Buildings</field>
+            <field name="code">175</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="reconcile" eval="True"/>
+            <field name="parent_id" ref="assets"/>
+            <field name="note">Cost to purchase or construct buildings for use by the company.</field>
+        </record>				
+						 
+        <record model="account.account.template" id="accumulated_depreciation">
+            <field name="name">Accumulated Depreciation - Buildings</field>
+            <field name="code">178</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="reconcile" eval="True"/>
+            <field name="parent_id" ref="assets"/>
+            <field name="note">Amount of the buildings' cost that has been allocated to Depreciation Expense since the time the building was acquired.</field>
+        </record>
+		
+        <record model="account.account.template" id="equipment">
+            <field name="name">Equipment</field>
+            <field name="code">180</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="reconcile" eval="True"/>
+            <field name="parent_id" ref="assets"/>
+            <field name="note">Cost to acquire and prepare equipment for use by the company.</field>
+        </record>
+		
+        <record model="account.account.template" id="accumulated_depreciation_equipment">
+            <field name="name">Accumulated Depreciation - Equipment</field>
+            <field name="code">188</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="reconcile" eval="True"/>
+            <field name="parent_id" ref="assets"/>
+            <field name="note">Amount of equipment's cost that has been allocated to Depreciation Expense since the time the equipment was acquired.</field>
+        </record>			
+		
+		<!-- Liabilities -->
+		
+        <record model="account.account.template" id="liabilities">
+            <field name="name">Liabilities</field>
+            <field name="code">20</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="balance_sheet"/>
+        </record>
+		
+        <record model="account.account.template" id="notes_payable">
+            <field name="name">Notes Payable</field>
+            <field name="code">210</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="liabilities"/>
+            <field name="note">The amount of principal due on a formal written promise to pay. Loans from banks are included in this account.</field>
+        </record>	 
+
+        <record model="account.account.template" id="accounts_payable">
+            <field name="name">Accounts Payable</field>
+            <field name="code">215</field>
+            <field name="type">payable</field>
+            <field name="user_type" ref="account.data_account_type_payable"/>
+            <field name="reconcile" eval="True"/>
+            <field name="parent_id" ref="liabilities"/>
+            <field name="note">Amount owed to suppliers who provided goods and services to the company but did not require immediate payment in cash.</field>
+        </record>
+		
+        <record model="account.account.template" id="wages_payable">
+            <field name="name">Wages Payable</field>
+            <field name="code">220</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="liabilities"/>
+            <field name="note">Amount owed to employees for hours worked but not yet paid.</field>
+        </record>
+		
+        <record model="account.account.template" id="interest_payable">
+            <field name="name">Interest Payable</field>
+            <field name="code">230</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="liabilities"/>
+            <field name="note">Amount owed for interest on Notes Payable up until the date of the balance sheet. This is computed by multiplying the amount of the note times the effective interest rate times the time period.</field>
+        </record>
+		
+        <record model="account.account.template" id="unearned_revenues">
+            <field name="name">Unearned Revenues</field>
+            <field name="code">240</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="liabilities"/>
+            <field name="note">Amounts received in advance of delivering goods or providing services. When the goods are delivered or services are provided, this liability amount decreases.</field>
+        </record>
+		
+        <record model="account.account.template" id="mortgage_loan_payable">
+            <field name="name">Mortgage Loan Payable</field>
+            <field name="code">250</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="liabilities"/>
+            <field name="note">A formal loan that involves a lien on real estate until the loan is repaid.</field>
+        </record>		
+						
+	 <!--  Owner's Equity Accounts -->	
+	 
+        <record model="account.account.template" id="29">
+            <field name="name">Owner's Equity Accounts</field>
+            <field name="code">29</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="balance_sheet"/>
+        </record>
+				
+      <!--  <record model="account.account.template" id="290">
+            <field name="name">Mary Smith, Capital</field>
+            <field name="code">290</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="29"/>
+            <field name="note">Amount the owner invested in the company (through cash or other assets) plus earnings of the company not withdrawn by the owner.</field>
+        </record>
+		
+        <record model="account.account.template" id="295">
+            <field name="name">Mary Smith, Drawing</field>
+            <field name="code">295</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="29"/>
+            <field name="note">Amount that the owner of the sole proprietorship has withdrawn for personal use during the current accounting year. At the end of the year, the amount in this account will be transferred into Mary Smith, Capital (account 290). </field>
+        </record>
+						-->
+		 <!-- Profit And Loss Account -->
+		 
+        <record model="account.account.template" id="profit_loss">
+            <field name="name">Profit And Loss</field>
+            <field name="code">3</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="account.data_account_type_view"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="root"/>
+        </record>  
+		
+		 <!-- Income -->		
+
+        <record model="account.account.template" id="income">
+            <field name="name">Income</field>
+            <field name="code">30</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="account.data_account_type_income"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="profit_loss"/>
+        </record>
+		
+		
+		<!-- Income Operating Revenues -->
+		
+        <record model="account.account.template" id="operating_revenue_accounts">
+            <field name="name">Operating Revenue Accounts</field>
+            <field name="code">31</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="account.data_account_type_income"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="income"/>
+        </record>
+		
+        <record model="account.account.template" id="service_revenues">
+            <field name="name">Service Revenues</field>
+            <field name="code">310</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_income"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="operating_revenue_accounts"/>
+            <field name="note">Amounts earned from providing services to clients, either for cash or on credit. When a service is provided on credit, both this account and Accounts Receivable will increase. When a service is provided for immediate cash, both this account and Cash will increase.</field>
+        </record>	
+		
+        <record model="account.account.template" id="product_sales">
+            <field name="name">Product Sales</field>
+            <field name="code">311</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_income"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="operating_revenue_accounts"/>
+            <field name="note">Sales of product account</field>
+        </record>			
+		
+        <record model="account.account.template" id="non_operating_revenue_gains">
+            <field name="name">Non-Operating Revenue and Gains</field>
+            <field name="code">80</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="account.data_account_type_income"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="income"/>
+        </record>
+
+        <record model="account.account.template" id="interest_revenues">
+            <field name="name">Interest Revenues</field>
+            <field name="code">810</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_income"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="non_operating_revenue_gains"/>
+            <field name="note">Interest and dividends earned on bank accounts, investments or notes receivable. This account is increased when the interest is earned and either Cash or Interest Receivable is also increased.</field>
+        </record>
+		
+        <record model="account.account.template" id="gain_sale_assets">
+            <field name="name">Gain on Sale of Assets</field>
+            <field name="code">811</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_income"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="non_operating_revenue_gains"/>
+            <field name="note">Occurs when the company sells one of its assets (other than inventory) for more than the asset's book value.</field>
+        </record>			
+		 								
+		 <!-- Expenses -->		
+
+        <record model="account.account.template" id="expense">
+            <field name="name">Expense</field>
+            <field name="code">50</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="profit_loss"/>
+        </record>
+
+        <record model="account.account.template" id="operating_expense_accounts">
+            <field name="name">Operating Expense Accounts</field>
+            <field name="code">51</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="expense"/>
+        </record>
+		
+        <record model="account.account.template" id="salaries_expense">
+            <field name="name">Salaries Expense</field>
+            <field name="code">500</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="operating_expense_accounts"/>
+            <field name="note">Expenses incurred for the work performed by salaried employees during the accounting period. These employees normally receive a fixed amount on a weekly, monthly, or annual basis.</field>
+        </record>		
+		
+        <record model="account.account.template" id="wages_expense">
+            <field name="name">Wages Expense</field>
+            <field name="code">510</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="operating_expense_accounts"/>
+            <field name="note">Expenses incurred for the work performed by non-salaried employees during the accounting period. These employees receive an hourly rate of pay.</field>
+        </record>
+		
+        <record model="account.account.template" id="supplies_expense">
+            <field name="name">Supplies Expense</field>
+            <field name="code">540</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="operating_expense_accounts"/>
+            <field name="note">Cost of supplies used up during the accounting period.</field>
+        </record>
+		
+        <record model="account.account.template" id="rent_expense">
+            <field name="name">Rent Expense</field>
+            <field name="code">560</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="operating_expense_accounts"/>
+            <field name="note">Cost of occupying rented facilities during the accounting period.</field>
+        </record>	
+		
+        <record model="account.account.template" id="utilities_expense">
+            <field name="name">Utilities Expense</field>
+            <field name="code">570</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="operating_expense_accounts"/>
+            <field name="note">Costs for electricity, heat, water, and sewer that were used during the accounting period.</field>
+        </record>
+		
+        <record model="account.account.template" id="telephone_expense">
+            <field name="name">Telephone Expense</field>
+            <field name="code">576</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="operating_expense_accounts"/>
+            <field name="note">Cost of telephone used during the current accounting period.</field>
+        </record>
+		
+        <record model="account.account.template" id="advertising_expense">
+            <field name="name">Advertising Expense</field>
+            <field name="code">610</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="operating_expense_accounts"/>
+            <field name="note">Costs incurred by the company during the accounting period for ads, promotions, and other selling and expenses (other than salaries).</field>
+        </record>										
+				
+				
+        <record model="account.account.template" id="depreciation_expense">
+            <field name="name">Depreciation Expense</field>
+            <field name="code">750</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="operating_expense_accounts"/>
+            <field name="note">Cost of long-term assets allocated to expense during the current accounting period.</field>
+        </record>
+		
+		<!-- Other -->
+		
+        <record model="account.account.template" id="non_operating_losses">
+            <field name="name">Non-Operating Expenses and Losses</field>
+            <field name="code">90</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="profit_loss"/>
+        </record>	
+		
+        <record model="account.account.template" id="960">
+            <field name="name">Loss on Sale of Assets</field>
+            <field name="code">960</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="non_operating_losses"/>
+            <field name="note">Occurs when the company sells one of its assets (other than inventory) for less than the asset's book value.</field>
+        </record>			
+		
+        <!-- Chart template -->
+		
+        <record id="indian_chart_template_private" model="account.chart.template">
+            <field name="name">India - Chart of Accounts for Partnership/Private Firm</field>
+            <field name="account_root_id" ref="root"/>
+            <field name="tax_code_root_id" ref="vat_code_tax"/>
+            <field name="bank_account_view_id" ref="cash"/>
+            <field name="property_account_receivable" ref="accounts_receivable"/>
+            <field name="property_account_payable" ref="accounts_payable"/>
+            <field name="property_account_expense_categ" ref="salaries_expense"/>
+            <field name="property_account_income_categ" ref="service_revenues"/>
+            <field name="property_reserve_and_surplus_account" ref="service_revenues"/>
+        </record>  
+				
+
+    </data>
+</openerp>
