@@ -431,7 +431,11 @@
             <field name="search_view_id" ref="view_voucher_filter_customer_pay"/>
             <field name="view_id" eval="False"/>
             <field name="target">current</field>
-            <field name="help">Sales payment allows you to register the payments you receive from your customers. In order to record a payment, you must enter the customer, the payment method (=the journal) and the payment amount. OpenERP will propose to you automatically the reconciliation of this payment with the open invoices or sales receipts.</field>
+            <field name="help">
+                Click on create to register a payment.
+                &lt;p&gt;
+                Enter the customer and the payment method and then, either create manually a payment record or OpenERP will propose to you automatically the reconciliation of this payment with the open invoices or sales receipts.
+            </field>
         </record>
         <record id="action_vendor_receipt_tree" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
