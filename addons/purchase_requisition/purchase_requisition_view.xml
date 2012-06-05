@@ -21,22 +21,8 @@
         <field name="model">purchase.order</field>
         <field name="inherit_id" ref="purchase.view_purchase_order_filter"/>
         <field name="arch" type="xml">
-            <xpath expr="/search/group/filter[@name='not_invoiced']" position="after">
-             <separator orientation="vertical"/>
-             <filter icon="terp-gtk-jump-to-rtl" string="Requisition" domain="[('requisition_id','!=',False)]"  help="Purchase Orders with requisition"/>
-            </xpath>
-        </field>
-    </record>
-
-    <record model="ir.ui.view" id="request_for_quotation_inherit">
-        <field name="name">request.for.quotation.select.inherit</field>
-        <field name="type">form</field>
-        <field name="model">purchase.order</field>
-        <field name="inherit_id" ref="purchase.view_request_for_quotation_filter"/>
-        <field name="arch" type="xml">
-            <xpath expr="/search/group/filter[@name='not_invoiced']" position="after">
-             <separator orientation="vertical"/>
-             <filter icon="terp-gtk-jump-to-rtl" string="Requisition" domain="[('requisition_id','!=',False)]"  help="Purchase Orders with requisition"/>
+            <xpath expr="//filter[@name='approved']" position="after">
+                <filter icon="terp-gtk-jump-to-rtl" string="Requisition" domain="[('requisition_id','!=',False)]"  help="Purchase Orders with requisition"/>
             </xpath>
         </field>
     </record>
@@ -47,16 +33,13 @@
         <field name="model">purchase.requisition</field>
         <field name="arch" type="xml">
             <form layout="manual">
-            <div class="oe_form_topbar">
+            <header>
                 <button name="tender_in_progress" states="draft" string="Start" type="object" />
                 <button name="tender_reset" states="done,cancel" string="Reset to Draft" type="object" />
                 <button name="tender_done" states="in_progress" string="Done" type="object" />
                 <button name="tender_cancel" states="draft,in_progress" string="Cancel" type="object" />
-                <div class="oe_right">
-                    <field name="state" nolabel="1" select="1" readonly ="1" widget="statusbar" statusbar_visible="draft,in_progress,done" statusbar_colors='{"in_progress":"blue"}'/>
-                </div>
-                <div class="oe_clear"/>
-            </div>
+                <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,in_progress,done" statusbar_colors='{"in_progress":"blue"}'/>
+            </header>
             <sheet string="Purchase Requisition" layout="auto">
                 <group colspan="4" col="6">
                     <field name="name"/>

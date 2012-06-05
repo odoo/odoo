@@ -81,17 +81,14 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form layout="manual">
-                <div class="oe_form_topbar">
+                <header>
                     <button name="proforma_voucher" string="Validate" states="draft"/>
                     <button name="%(act_pay_voucher)d" context="{'narration':narration, 'title':'Customer Payment', 'type':'receipt', 'partner_id':partner_id, 'reference':reference, 'amount':amount}" type="action" string="Pay" attrs="{'invisible':['|',('pay_now','=','pay_now'),'|',('state','=','draft'), ('paid','=',True)]}"/>
                     <button name="cancel_voucher" string="Cancel" states="draft,proforma" />
                     <button name="cancel_voucher" string="Cancel" type="object" states="posted" confirm="Are you sure to confirm this record ?"/>
                     <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft"/>
-                    <div class="oe_right">
-                        <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue"}'/>
-                    </div>
-                    <div class="oe_clear"/>
-                </div>
+                    <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue"}'/>
+                </header>
                 <sheet string="Sales Receipt" layout="auto">
                     <group col="6" colspan="4" class="oe_form_header">
                         <field name="partner_id" domain="[('customer','=',True)]" required="1" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)" string="Customer" context="{'search_default_customer': 1}"/>
@@ -210,17 +207,14 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form layout="manual">
-                <div class="oe_form_topbar">
+                <header>
                     <button name="proforma_voucher" string="Validate" states="draft"/>
                     <button name="%(act_pay_bills)d" context="{'narration':narration, 'title':'Bill Payment', 'type':'payment', 'partner_id': partner_id, 'reference':reference}" type="action" string="Pay Bill" attrs="{'invisible':['|',('pay_now','=','pay_now'),'|',('state','=','draft'), ('paid','=',True)]}"/>
                     <button name="cancel_voucher" string="Cancel" states="draft,proforma" />
                     <button name="cancel_voucher" string="Cancel" type="object" states="posted" confirm="Are you sure to confirm this record ?"/>
                     <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft"/>
-                    <div class="oe_right">
-                        <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue"}'/>
-                    </div>
-                    <div class="oe_clear"/>
-                </div>
+                    <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue"}'/>
+                </header>
                 <sheet string="Supplier Voucher" layout="auto">
                     <field name="pay_now" invisible="1"/>
                     <group col="6" colspan="4" class="oe_form_header">

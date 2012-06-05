@@ -101,16 +101,13 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form layout="manual">
-                <div class="oe_form_topbar">
+                <header>
                     <button name="open" states="draft" string="Confirm Payments" />
                     <button name="set_done" states="open" string="Make Payments" type="object"/>
                     <button name="set_to_draft" states="cancel" string="Set to draft" type="object"/>
                     <button name="cancel" states="draft,open" string="Cancel"/>
-                    <div class="oe_right">
-                        <field name="state" select="1" widget="statusbar" nolabel="1" statusbar_visible="draft,open"/>
-                    </div>
-                    <div class="oe_clear"/>
-                </div>
+                    <field name="state" select="1" widget="statusbar" nolabel="1" statusbar_visible="draft,open"/>
+                </header>
                 <sheet string="Payment order" layout="auto">
                     <group col="6" colspan="4" class="oe_form_header">
                       <field name="reference"/>
@@ -193,9 +190,6 @@
                     <field name="date_done"/>
                     <field name="total"/>
                     <field name="state"/>
-                    <button name="cancel" states="draft,open" string="Cancel" icon="gtk-cancel"/>
-                    <button name="open" states="draft" string="Confirm Payments"  icon="gtk-apply"/>
-                    <button name="set_done" states="open" string="Make Payments"  type ="object" icon="gtk-execute"/>
                 </tree>
             </field>
         </record>
