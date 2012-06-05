@@ -475,11 +475,12 @@ def Project():
         return result
 
     def message_get_subscribers(self, cr, uid, ids, context=None):
-        sub_ids = self.message_get_subscribers_ids(cr, uid, ids, context=context);
+        """ Override to add responsible user. """
+        user_ids = super(project, self).message_get_subscribers(cr, uid, ids, context=context)
         for obj in self.browse(cr, uid, ids, context=context):
-            if obj.user_id:
-                sub_ids.append(obj.user_id.id)
-        return self.pool.get('res.users').read(cr, uid, sub_ids, context=context)
+            if obj.user_id and not obj.user_id.id in user_ids:
+                user_ids.append(obj.user_id.id)
+        return user_ids
 
     def create(self, cr, uid, vals, context=None):
         obj_id = super(project, self).create(cr, uid, vals, context=context)
@@ -1152,13 +1153,14 @@ class task(base_stage, osv.osv):
         return result
 
     def message_get_subscribers(self, cr, uid, ids, context=None):
-        sub_ids = self.message_get_subscribers_ids(cr, uid, ids, context=context);
+        """ Override to add responsible user and project manager. """
+        user_ids = super(project_task, self).message_get_subscribers(cr, uid, ids, context=context)
         for obj in self.browse(cr, uid, ids, context=context):
-            if obj.user_id:
-                sub_ids.append(obj.user_id.id)
-            if obj.manager_id:
-                sub_ids.append(obj.manager_id.id)
-        return self.pool.get('res.users').read(cr, uid, sub_ids, context=context)
+            if obj.user_id and not obj.user_id.id in user_ids:
+                user_ids.append(obj.user_id.id)
+            if obj.manager_id and not obj.manager_id.id in user_ids:
+                user_ids.append(obj.manager_id.id)
+        return user_ids
 
     def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
         """ Override of the (void) default notification method. """

@@ -751,51 +751,76 @@ class mail_thread(osv.Model):
     # Subscription mechanism
     #------------------------------------------------------
 
-    def message_get_subscribers_ids(self, cr, uid, ids, context=None):
+    def message_get_subscribers(self, cr, uid, ids, context=None):
+        """ Returns the current document followers. Basically this method
+            checks in mail.subscription for entries with matching res_model,
+            res_id.
+        
+            :param get_ids: if set to True, return the ids of users; if set
+                            to False, returns the result of a read in res.users
+        """
         subscr_obj = self.pool.get('mail.subscription')
         subscr_ids = subscr_obj.search(cr, uid, ['&', ('res_model', '=', self._name), ('res_id', 'in', ids)], context=context)
-        subs = subscr_obj.read(cr, uid, subscr_ids, context=context)
-        return [sub['user_id'][0] for sub in subs]
+        return [sub['user_id'][0] for sub in subscr_obj.read(cr, uid, subscr_ids, ['user_id'], context=context)]
 
-    def message_get_subscribers(self, cr, uid, ids, context=None):
-        user_ids = self.message_get_subscribers_ids(cr, uid, ids, context=context)
-        users = self.pool.get('res.users').read(cr, uid, user_ids, fields=['id', 'name', 'avatar'], context=context)
-        return users
+    def message_read_subscribers(self, cr, uid, ids, fields=['id', 'name', 'avatar'], context=None):
+        """ Returns the current document followers as a read result. Used
+            mainly for Chatter having only one method to call to have
+            details about users.
+        """
+        user_ids = self.message_get_subscribers(cr, uid, ids, context=context)
+        return self.pool.get('res.users').read(cr, uid, user_ids, fields=fields, context=context)
 
     def message_is_subscriber(self, cr, uid, ids, user_id = None, context=None):
-        users = self.message_get_subscribers(cr, uid, ids, context=context)
+        """ Check if uid or user_id (if set) is a subscriber to the current
+            document.
+            
+            :param user_id: if set, check is done on user_id; if not set
+                            check is done on uid
+        """
         sub_user_id = uid if user_id is None else user_id
-        if sub_user_id in [user['id'] for user in users]:
+        if sub_user_id in self.message_get_subscribers(cr, uid, ids, context=context):
             return True
         return False
 
     def message_subscribe(self, cr, uid, ids, user_ids = None, context=None):
+        """ Subscribe the user (or user_ids) to the current document.
+            
+            :param user_ids: a list of user_ids; if not set, subscribe
+                             uid instead
+        """
         subscription_obj = self.pool.get('mail.subscription')
         to_subscribe_uids = [uid] if user_ids is None else user_ids
         create_ids = []
         for id in ids:
+            already_subscribed_user_ids = self.message_get_subscribers(cr, uid, [id], context=context)
             for user_id in to_subscribe_uids:
-                if self.message_is_subscriber(cr, uid, [id], user_id=user_id, context=context): continue
+                if user_id in already_subscribed_user_ids: continue
                 create_ids.append(subscription_obj.create(cr, uid, {'res_model': self._name, 'res_id': id, 'user_id': user_id}, context=context))
         return create_ids
 
     def message_unsubscribe(self, cr, uid, ids, user_ids = None, context=None):
-        if not user_ids and not uid in self.message_get_subscribers_ids(cr, uid, ids, context=context):
+        """ Unsubscribe the user (or user_ids) from the current document.
+            
+            :param user_ids: a list of user_ids; if not set, subscribe
+                             uid instead
+        """
+        # Trying to unsubscribe somebody not in subscribers: returns False
+        # if special management is needed; allows to know that an automatically
+        # subscribed user tries to unsubscribe and allows to warn him
+        if not user_ids and not uid in self.message_get_subscribers(cr, uid, ids, context=context):
             return False
         subscription_obj = self.pool.get('mail.subscription')
         to_unsubscribe_uids = [uid] if user_ids is None else user_ids
         to_delete_sub_ids = subscription_obj.search(cr, uid,
                         ['&', '&', ('res_model', '=', self._name), ('res_id', 'in', ids), ('user_id', 'in', to_unsubscribe_uids)], context=context)
-        subscription_obj.unlink(cr, uid, to_delete_sub_ids, context=context)
-        return True
+        return subscription_obj.unlink(cr, uid, to_delete_sub_ids, context=context)
 
     #------------------------------------------------------
     # Notification API
     #------------------------------------------------------
 
     def message_remove_pushed_notifications(self, cr, uid, ids, msg_ids, remove_childs=True, context=None):
-        if context is None:
-            context = {}
         notif_obj = self.pool.get('mail.notification')
         msg_obj = self.pool.get('mail.message')
         if remove_childs:
