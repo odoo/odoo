@@ -1382,15 +1382,15 @@ instance.web.form.InvisibilityChangerMixin = {
         _.bind(check, this)();
     },
     start: function() {
-        var check_visibility = function() {
-            if (this.get("effective_invisible")) {
-                this.$element.hide();
-            } else {
-                this.$element.show();
-            }
-        };
-        this.on("change:effective_invisible", this, check_visibility);
-        _.bind(check_visibility, this)();
+        this.on("change:effective_invisible", this, this._check_visibility);
+        this._check_visibility();
+    },
+    _check_visibility: function() {
+        if (this.get("effective_invisible")) {
+            this.$element.hide();
+        } else {
+            this.$element.show();
+        }
     },
 };
 
@@ -1737,6 +1737,8 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(_.extend({
             this.on("change:required", this, this._set_required);
             this._set_required();
         }
+        this._check_visibility();
+        this._check_css_flags();
     },
     /**
      * Private. Do not use.
