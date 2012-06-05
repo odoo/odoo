@@ -28,7 +28,7 @@ class l10n_installer(osv.osv_memory):
     _columns = {
         'company_type':fields.selection([('partnership_private_company', 'Partnership/Private Firm'),
                                          ('public_company', 'Public Firm')], 'Company Type', required=True, 
-                                        help='Select your company Type according to your need to install Chart Of Account'),        
+                                        help='Company Type is used to install Indian chart of accounts as per your type of business.'),        
     }
     _defaults = {
         'company_type': 'public_company',

@@ -4,7 +4,7 @@
 	<data noupdate="1">
 	
 	<!-- Tax Account -->
-    <record model="account.account.template" id="216">
+    <record model="account.account.template" id="sales_tax_payable">
         <field name="name">Sales Tax Payable</field>
         <field name="code">216</field>
         <field name="type">payable</field>
@@ -13,7 +13,7 @@
         <field name="parent_id" ref="liabilities"/>
     </record>
 	
-	<record model="account.account.template" id="217">
+	<record model="account.account.template" id="vat_payable">
         <field name="name">VAT Payable</field>
         <field name="code">217</field>
         <field name="type">payable</field>
@@ -22,7 +22,7 @@
         <field name="parent_id" ref="liabilities"/>
     </record>
 	
-    <record model="account.account.template" id="218">
+    <record model="account.account.template" id="service_tax_payable">
         <field name="name">Service Tax Payable</field>
         <field name="code">218</field>
         <field name="type">payable</field>
@@ -31,7 +31,7 @@
         <field name="parent_id" ref="liabilities"/>
     </record>
 	
-    <record model="account.account.template" id="219">
+    <record model="account.account.template" id="exice_duty_payable">
         <field name="name">Exice Duty Payable</field>
         <field name="code">219</field>
         <field name="type">payable</field>
@@ -50,8 +50,8 @@
         <field name="amount">0.15</field>
         <field name="type">percent</field>
         <field name="type_tax_use">sale</field>
-        <field name="account_collected_id" ref="216"/>
-        <field name="account_paid_id" ref="216"/> 		
+        <field name="account_collected_id" ref="sales_tax_payable"/>
+        <field name="account_paid_id" ref="sales_tax_payable"/> 		
         <field name="base_code_id" ref="vat_code_base_due"/>
         <field name="tax_code_id" ref="vat_code_due_tva"/>
         <field name="ref_base_code_id" ref="vat_code_receivable_net"/>
@@ -67,8 +67,8 @@
         <field name="amount">0.12</field>
         <field name="type">percent</field>
         <field name="type_tax_use">sale</field>
-        <field name="account_collected_id" ref="216"/>
-        <field name="account_paid_id" ref="216"/> 		
+        <field name="account_collected_id" ref="sales_tax_payable"/>
+        <field name="account_paid_id" ref="sales_tax_payable"/> 		
         <field name="base_code_id" ref="vat_code_base_due"/>
         <field name="tax_code_id" ref="vat_code_due_tva"/>
         <field name="ref_base_code_id" ref="vat_code_receivable_net"/>
@@ -86,8 +86,8 @@
         <field name="amount">0.05</field>
         <field name="type">percent</field>
         <field name="type_tax_use">all</field>
-        <field name="account_collected_id" ref="217"/>
-        <field name="account_paid_id" ref="217"/> 		
+        <field name="account_collected_id" ref="vat_payable"/>
+        <field name="account_paid_id" ref="vat_payable"/> 		
         <field name="base_code_id" ref="vat_code_base_due"/>
         <field name="base_sign">1</field>
         <field name="tax_code_id" ref="vat_code_due_tva"/>
@@ -107,8 +107,8 @@
         <field name="amount">0.15</field>
         <field name="type">percent</field>
         <field name="type_tax_use">all</field>
-        <field name="account_collected_id" ref="217"/>
-        <field name="account_paid_id" ref="217"/> 		
+        <field name="account_collected_id" ref="vat_payable"/>
+        <field name="account_paid_id" ref="vat_payable"/> 		
         <field name="base_code_id" ref="vat_code_base_due"/>
         <field name="base_sign">1</field>
         <field name="tax_code_id" ref="vat_code_due_tva"/>
@@ -128,8 +128,8 @@
         <field name="amount">0.8</field>
         <field name="type">percent</field>
         <field name="type_tax_use">all</field>
-        <field name="account_collected_id" ref="217"/>
-        <field name="account_paid_id" ref="217"/> 		
+        <field name="account_collected_id" ref="vat_payable"/>
+        <field name="account_paid_id" ref="vat_payable"/> 		
         <field name="base_code_id" ref="vat_code_base_due"/>
         <field name="tax_code_id" ref="vat_code_due_tva"/>
         <field name="ref_base_code_id" ref="vat_code_receivable_net"/>
@@ -147,8 +147,8 @@
         <field name="amount">0.10</field>
         <field name="type">percent</field>
         <field name="type_tax_use">sale</field>
-        <field name="account_collected_id" ref="219"/>
-        <field name="account_paid_id" ref="219"/> 		
+        <field name="account_collected_id" ref="exice_duty_payable"/>
+        <field name="account_paid_id" ref="exice_duty_payable"/> 		
         <field name="base_code_id" ref="vat_code_base_due"/>
         <field name="base_sign">1</field>
         <field name="tax_code_id" ref="vat_code_due_tva"/>
@@ -190,8 +190,8 @@
         <field name="include_base_amount" eval="True"/>
         <field name="amount">0.12</field>
         <field name="type">percent</field>
-        <field name="account_collected_id" ref="218"/>
-        <field name="account_paid_id" ref="218"/> 			
+        <field name="account_collected_id" ref="service_tax_payable"/>
+        <field name="account_paid_id" ref="service_tax_payable"/> 			
         <field name="base_code_id" ref="vat_code_base_due"/>
         <field name="tax_code_id" ref="vat_code_due_tva"/>
         <field name="ref_base_code_id" ref="vat_code_receivable_net"/>
