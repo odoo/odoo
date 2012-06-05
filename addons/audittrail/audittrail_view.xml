@@ -96,15 +96,18 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="AuditTrail Logs">
-                    <field name="timestamp" select="1" required="1" readonly="1"/>
-                    <field name="user_id" select="1" readonly="1"/>
-                    <field name="method" select="1" readonly="1"/>
-                    <field name="name" readonly="1" select="1"/>
-                    <field name="res_id" readonly="1"/>
-                    <field name="object_id" select="1" readonly="1"/>
-                    <field name="line_ids" colspan="4" mode="tree,form"
-                        widget="one2many_list" readonly="1" nolabel="1">
+                    <group col="4">
+                        <field name="timestamp" required="1" readonly="1"/>
+                        <field name="user_id" readonly="1"/>
+                        <field name="method" readonly="1"/>
+                        <field name="name" readonly="1"/>
+                        <field name="res_id" readonly="1"/>
+                        <field name="object_id" readonly="1"/>
+                    </group>
+                    <field name="line_ids" mode="tree,form"
+                        widget="one2many_list" readonly="1">
                         <form string="Log Lines">
+                            <group col="4">
                             <field name="field_id" colspan="4"
                                 readonly="1" />
                             <newline />
@@ -130,6 +133,7 @@
                                 colspan="2" readonly="1" />
                             <field name="new_value_text" nolabel="1"
                                 colspan="2" readonly="1" />
+                            </group>
                         </form>
                         <tree string="Log Lines">
                             <field name="field_description" />
