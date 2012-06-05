@@ -9,7 +9,7 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page[@string='History']" position="attributes">
+                <xpath expr="//page[@string='History']" position="attributes">
                     <attribute name="invisible">False</attribute>
                 </xpath>
             </field>
@@ -23,7 +23,7 @@
                 <page string="History" position="inside">
                     <field name="emails" colspan="4" nolabel="1"/>
                 </page>
-                <xpath expr="/form/notebook" position="after">
+                <xpath expr="/form/sheet/notebook" position="after">
                     <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"
                             options='{"thread_level": 1}'/>
                 </xpath>
