@@ -67,6 +67,29 @@
                 <search string="Messages Search">
                     <field name="user_id"/>
                     <field name="body"/>
+                    <field name="type"/>
+                    <filter icon="terp-personal+" string="My Feeds"
+                            name="my_feeds" help="My Feeds"
+                            domain="[('user_id','=',uid)]"/>
+                    <filter icon="terp-personal+" string="Comments"
+                            name="comments" help="Comments"
+                            domain="[('type', '=', 'comment')]"/>
+                    <filter icon="terp-personal+" string="Notifications"
+                            name="notifications" help="Notifications"
+                            domain="[('type', '=', 'notification')]"/>
+                    <filter icon="terp-personal+" string="Emails"
+                            name="emails" help="Emails"
+                            domain="[('type', '=', 'email')]"/>
+                    <filter icon="terp-go-today" string="Today"
+                            name="today" help="Today"
+                            domain="[   ('date', '&lt;=', datetime.date.today().strftime('%%Y-%%m-%%d 23:59:59')),
+                                        ('date', '&gt;=', datetime.date.today().strftime('%%Y-%%m-%%d 00:00:00'))
+                                    ]"/>
+                    <filter icon="terp-go-week" string="This week"
+                            name="7_days" help="This week"
+                            domain="[   ('date', '&lt;=', datetime.date.today().strftime('%%Y-%%m-%%d 23:59:59')),
+                                        ('date', '&gt;=', (datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d 00:00:00'))
+                                    ]"/>
                 </search>
             </field>
         </record>
