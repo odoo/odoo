@@ -248,10 +248,41 @@ class account_voucher(osv.osv):
             res[voucher.id] =  voucher.amount / rate
         return res
 
+    # -----------------------------------------
+    # OpenChatter notifications and need_action
+    # -----------------------------------------
+
+    def _get_document_type(self, type):
+        type_dict = {
+            'sale': 'Sales Receipt',
+            'purchase': 'Purchase Receipt',
+            'payment': 'Supplier Payment',
+            'receipt': 'Customer Payment',
+        }
+        return type_dict.get(type, 'Voucher')
+
+    def create(self, cr, uid, vals, context=None):
+        res = super(account_voucher, self).create(cr, uid, vals, context)
+        self.create_send_note(cr, uid, [res], context=context)
+        return res
+
+    def create_send_note(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            self.message_append_note(cr, uid, [obj.id],body=_("%s <b>created</b>.") % (self._get_document_type(obj.type)), context=context)
+
+    def posted_send_note(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            self.message_append_note(cr, uid, [obj.id], body=_("%s <b>is posted</b>.") % (self._get_document_type(obj.type)), context=context)
+
+    def reconcile_send_note(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            self.message_append_note(cr, uid, [obj.id], body=_("%s <b>is reconciled</b>.") % (self._get_document_type(obj.type)), context=context)
+
     _name = 'account.voucher'
     _description = 'Accounting Voucher'
     _order = "date desc, id desc"
 #    _rec_name = 'number'
+    _inherit = ['mail.thread']
     _columns = {
         'type':fields.selection([
             ('sale','Sale'),
@@ -556,7 +587,7 @@ class account_voucher(osv.osv):
         @return: Returns a dict which contains new values, and context
         """
         def _remove_noise_in_o2m():
-            """if the line is partially reconciled, then we must pay attention to display it only once and 
+            """if the line is partially reconciled, then we must pay attention to display it only once and
                 in the good o2m.
                 This function returns True if the line is considered as noise and should not be displayed
             """
@@ -780,6 +811,7 @@ class account_voucher(osv.osv):
 
     def proforma_voucher(self, cr, uid, ids, context=None):
         self.action_move_line_create(cr, uid, ids, context=context)
+        self.posted_send_note(cr, uid, ids, context=context)
         return {'type': 'ir.actions.act_window_close'}
 
     def action_cancel_draft(self, cr, uid, ids, context=None):
@@ -1521,4 +1553,31 @@ def resolve_o2m_operations(cr, uid, target_osv, operations, fields, context):
     return results
 
 
+class account_move_line(osv.osv):
+    _inherit = 'account.move.line'
+
+    def get_voucher_ids(self, cr, uid, ids, context=None):
+        voucher_obj = self.pool.get('account.voucher')
+        move_lines = self.browse(cr, uid, ids, context=context)
+        moves = []
+        for move in move_lines:
+            moves.append(move.move_id.id)
+
+        voucher_ids = voucher_obj.search(cr, uid, [('move_id', 'in', moves)], context=context)
+        return voucher_ids
+
+    def reconcile(self, cr, uid, ids, type='auto', writeoff_acc_id=False, writeoff_period_id=False, writeoff_journal_id=False, context=None):
+        voucher_obj = self.pool.get('account.voucher')
+        res = super(account_move_line, self).reconcile(cr, uid, ids, type=type, writeoff_acc_id=writeoff_acc_id, writeoff_period_id=writeoff_period_id, writeoff_journal_id=writeoff_journal_id, context=context)
+        voucher_ids = self.get_voucher_ids(cr, uid, ids, context=context)
+        voucher_obj.reconcile_send_note(cr, uid, voucher_ids, context=context)
+        return res
+
+    def reconcile_partial(self, cr, uid, ids, type='auto', context=None, writeoff_acc_id=False, writeoff_period_id=False, writeoff_journal_id=False):
+        voucher_obj = self.pool.get('account.voucher')
+        res = super(account_move_line, self).reconcile_partial(cr, uid, ids, type=type, context=context, writeoff_acc_id=writeoff_acc_id, writeoff_period_id=writeoff_period_id, writeoff_journal_id=writeoff_journal_id)
+        voucher_ids = self.get_voucher_ids(cr, uid, ids, context=context)
+        return res
+
+account_move_line()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
