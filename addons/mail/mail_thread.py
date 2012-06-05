@@ -165,7 +165,7 @@ class mail_thread(osv.Model):
         body = new_msg_vals.get('body_html', '') if new_msg_vals.get('content_subtype') == 'html' else new_msg_vals.get('body_text', '')
         
         # get subscribers
-        user_sub_ids = self.message_get_subscribers(cr, uid, thread_ids, True, context=context)
+        user_sub_ids = self.message_get_subscribers(cr, uid, thread_ids, context=context)
         
         # get hiden subscriptions
         subscription_ids = subscription_obj.search(cr, uid, [('res_model', '=', self._name), ('res_id', 'in', thread_ids), ('user_id', 'in', user_sub_ids)], context=context)
