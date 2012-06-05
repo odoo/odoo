@@ -2754,9 +2754,12 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
                 }
                 view.options.not_interactible_on_create = true;
             } else if (view.view_type === "kanban") {
+                view.options.confirm_on_delete = false;
                 if (self.get("effective_readonly")) {
                     view.options.action_buttons = false;
                     view.options.quick_creatable = false;
+                    view.options.creatable = false;
+                    view.options.read_only_mode = true;
                 }
             }
             views.push(view);
@@ -3106,7 +3109,7 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(_.
         if (this.get("effective_readonly"))
             return;
         var self = this;
-        self. $text = $("textarea", this.$element);
+        self.$text = $("textarea", this.$element);
         self.$text.textext({
             plugins : 'tags arrow autocomplete',
             autocomplete: {
@@ -3158,19 +3161,6 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(_.
                     return _.extend(el, {index:i});
                 })});
             });
-        }).bind('tagClick', function(e, tag, value, callback) {
-            var pop = new instance.web.form.FormOpenPopup(self.view);
-            pop.show_element(
-                self.field.relation,
-                value.id,
-                self.build_context(),
-                {
-                    title: _t("Open: ") + (self.string || self.name)
-                }
-            );
-            pop.on_write_completed.add_last(function() {
-                self.render_value();
-            });
         }).bind('hideDropdown', function() {
             self._drop_shown = false;
         }).bind('showDropdown', function() {
@@ -3178,7 +3168,7 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(_.
         });
         self.tags = self.$text.textext()[0].tags();
         $("textarea", this.$element).focusout(function() {
-            $("textarea", this.$element).val("");
+            self.$text.trigger("setInputData", "");
         }).keydown(function(e) {
             if (event.keyCode === 9 && self._drop_shown) {
                 self.$text.textext()[0].autocomplete().selectFromDropdown();
@@ -3214,17 +3204,6 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(_.
                 self.tags.addTags(_.map(data, function(el) {return {name: el[1], id:el[0]};}));
             } else {
                 self.$element.html(QWeb.render("FieldMany2ManyTags.box", {elements: data}));
-                $(".oe_form_field_many2manytags_box", self.$element).click(function() {
-                    var index = Number($(this).data("index"));
-                    self.do_action({
-                        type: 'ir.actions.act_window',
-                        res_model: self.field.relation,
-                        res_id: self.get("value")[index],
-                        context: self.build_context(),
-                        views: [[false, 'form']],
-                        target: 'current'
-                    });
-                });
             }
         };
         if (! self.get('values') || self.get('values').length > 0) {
@@ -3417,6 +3396,8 @@ instance.web.form.FieldMany2ManyKanban = instance.web.form.AbstractField.extend(
                     'create_text': _t("Add"),
                     'creatable': self.get("effective_readonly") ? false : true,
                     'quick_creatable': self.get("effective_readonly") ? false : true,
+                    'read_only_mode': self.get("effective_readonly") ? true : false,
+                    'confirm_on_delete': false,
             });
         var embedded = (this.field.views || {}).kanban;
         if (embedded) {
@@ -3563,6 +3544,7 @@ instance.web.form.Many2ManyQuickCreate = instance.web.Widget.extend({
         var self = this;
         self.$text.val("");
         self.trigger('added', id);
+        this.m2m.dataset_changed();
     },
 });
 }
@@ -3617,7 +3599,7 @@ instance.web.form.AbstractFormPopup = instance.web.OldWidget.extend({
             width: '90%',
             min_width: '800px',
             close: function() {
-                self.check_exit();
+                self.check_exit(true);
             },
             title: this.options.title || "",
         }, this.$element).open();
@@ -3675,9 +3657,10 @@ instance.web.form.AbstractFormPopup = instance.web.OldWidget.extend({
     },
     on_select_elements: function(element_ids) {
     },
-    check_exit: function() {
+    check_exit: function(no_destroy) {
         if (this.created_elements.length > 0) {
             this.on_select_elements(this.created_elements);
+            this.created_elements = [];
         }
         this.destroy();
     },
