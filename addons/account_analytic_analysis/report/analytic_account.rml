@@ -56,7 +56,11 @@
       <lineStyle kind="LINEABOVE" colorName="#cccccc" start="5,0" stop="5,0"/>
       <lineStyle kind="LINEBELOW" colorName="#cccccc" start="5,-1" stop="5,-1"/>
     </blockTableStyle>
-    <blockTableStyle id="Table3">
+    <blockTableStyle id="Table4">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table5">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
       <lineStyle kind="LINEBEFORE" colorName="#cccccc" start="0,0" stop="0,-1"/>
@@ -72,18 +76,22 @@
       <lineStyle kind="LINEAFTER" colorName="#cccccc" start="3,0" stop="3,-1"/>
       <lineStyle kind="LINEABOVE" colorName="#cccccc" start="3,0" stop="3,0"/>
       <lineStyle kind="LINEBELOW" colorName="#cccccc" start="3,-1" stop="3,-1"/>
-      <lineStyle kind="LINEBEFORE" colorName="#cccccc" start="0,1" stop="0,-1"/>
-      <lineStyle kind="LINEABOVE" colorName="#cccccc" start="0,1" stop="0,1"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table7">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBEFORE" colorName="#cccccc" start="0,0" stop="0,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#cccccc" start="0,0" stop="0,0"/>
       <lineStyle kind="LINEBELOW" colorName="#cccccc" start="0,-1" stop="0,-1"/>
-      <lineStyle kind="LINEBEFORE" colorName="#cccccc" start="1,1" stop="1,-1"/>
-      <lineStyle kind="LINEABOVE" colorName="#cccccc" start="1,1" stop="1,1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#cccccc" start="1,0" stop="1,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#cccccc" start="1,0" stop="1,0"/>
       <lineStyle kind="LINEBELOW" colorName="#cccccc" start="1,-1" stop="1,-1"/>
-      <lineStyle kind="LINEBEFORE" colorName="#cccccc" start="2,1" stop="2,-1"/>
-      <lineStyle kind="LINEABOVE" colorName="#cccccc" start="2,1" stop="2,1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#cccccc" start="2,0" stop="2,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#cccccc" start="2,0" stop="2,0"/>
       <lineStyle kind="LINEBELOW" colorName="#cccccc" start="2,-1" stop="2,-1"/>
-      <lineStyle kind="LINEBEFORE" colorName="#cccccc" start="3,1" stop="3,-1"/>
-      <lineStyle kind="LINEAFTER" colorName="#cccccc" start="3,1" stop="3,-1"/>
-      <lineStyle kind="LINEABOVE" colorName="#cccccc" start="3,1" stop="3,1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#cccccc" start="3,0" stop="3,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#cccccc" start="3,0" stop="3,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#cccccc" start="3,0" stop="3,0"/>
       <lineStyle kind="LINEBELOW" colorName="#cccccc" start="3,-1" stop="3,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Table6">
@@ -134,11 +142,7 @@
     <paraStyle name="P1" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT"/>
     <paraStyle name="P2" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="P3" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
-    <paraStyle name="P4" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="JUSTIFY" spaceBefore="6.0" spaceAfter="6.0"/>
-    <paraStyle name="P5" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
-    <paraStyle name="P6" fontName="Helvetica"/>
-    <paraStyle name="P7" fontName="Helvetica" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P8" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT"/>
+    <paraStyle name="P4" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
     <paraStyle name="Standard" fontName="Helvetica"/>
     <paraStyle name="Heading" fontName="Helvetica" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
     <paraStyle name="Text body" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
@@ -227,62 +231,85 @@
           </td>
         </tr>
       </blockTable>
-      <para style="P6">
-        <font color="white"> </font>
-      </para>
-      <blockTable colWidths="121.0,110.0,126.0,124.0" style="Table3">
+      <blockTable colWidths="121.0,120.0,121.0,121.0" style="Table4">
         <tr>
           <td>
-            <para style="P3">Date Start</para>
+            <para style="terp_tblheader_Details">Validity</para>
           </td>
           <td>
-            <para style="P5">Date End</para>
+            <para style="P1">
+              <font color="white"> </font>
+            </para>
           </td>
           <td>
-            <para style="P5">Maximum Time</para>
+            <para style="P1">
+              <font color="white"> </font>
+            </para>
           </td>
           <td>
-            <para style="P5">Remaining Time</para>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <para style="P7">[[ account.date_start ]]</para>
-          </td>
-          <td>
-            <para style="P7">[ account.date ]]</para>
-          </td>
-          <td>
-            <para style="P7">[[ account.quantity_max ]]</para>
-          </td>
-          <td>
-            <para style="P7">[[ account.remaining_hours ]]</para>
+            <para style="P1">
+              <font color="white"> </font>
+            </para>
           </td>
         </tr>
       </blockTable>
-      <para style="P6">
-        <font color="white"> </font>
-      </para>
-      <blockTable colWidths="141.0,75.0,69.0,82.0,115.0" style="Table6">
+      <blockTable colWidths="120.0,120.0,120.0,121.0" style="Table5">
         <tr>
           <td>
-            <para style="P4">Invoicing</para>
+            <para style="terp_tblheader_General_Centre">
+              <font face="Helvetica" size="9.0">Date Start</font>
+            </para>
           </td>
           <td>
-            <para style="terp_tblheader_Details_Centre">Total Cost</para>
+            <para style="P3">Date End</para>
           </td>
           <td>
-            <para style="terp_tblheader_Details_Centre">Invoiced</para>
+            <para style="P3">Maximum Time</para>
           </td>
           <td>
-            <para style="terp_tblheader_Details_Centre">Remaining</para>
-          </td>
-          <td>
-            <para style="terp_tblheader_Details_Centre">Ready To Invoice</para>
+            <para style="P3">Remaining Time</para>
           </td>
         </tr>
       </blockTable>
-      <blockTable colWidths="141.0,75.0,69.0,82.0,115.0" style="Table2">
+      <blockTable colWidths="120.0,120.0,120.0,121.0" style="Table7">
+        <tr>
+          <td>
+            <para style="terp_default_Centre_8">[[ account.date_start ]]</para>
+          </td>
+          <td>
+            <para style="terp_default_Centre_8">[[ account.date ]]</para>
+          </td>
+          <td>
+            <para style="terp_default_Centre_8">[[ account.quantity_max ]]</para>
+          </td>
+          <td>
+            <para style="terp_default_Centre_8">[[ account.remaining_hours ]]</para>
+          </td>
+        </tr>
+      </blockTable>
+      <para style="terp_default_1">
+        <font color="white"> </font>
+      </para>
+      <blockTable colWidths="120.0,88.0,85.0,87.0,102.0" style="Table6">
+        <tr>
+          <td>
+            <para style="terp_tblheader_Details_Centre">Invoicing</para>
+          </td>
+          <td>
+            <para style="P4">Total Cost</para>
+          </td>
+          <td>
+            <para style="P4">Invoiced</para>
+          </td>
+          <td>
+            <para style="P4">Remaining</para>
+          </td>
+          <td>
+            <para style="P4">Ready To Invoice</para>
+          </td>
+        </tr>
+      </blockTable>
+      <blockTable colWidths="118.0,88.0,85.0,87.0,103.0" style="Table2">
         <tr>
           <td>
             <para style="terp_default_8">Fix Price Invoices</para>
@@ -322,16 +349,16 @@
             <para style="terp_default_8">Charge Expenses</para>
           </td>
           <td>
-            <para style="terp_default_Centre_8">[[account.expense_max]]</para>
+            <para style="terp_default_Centre_8">[[account.expence_max]]</para>
           </td>
           <td>
-            <para style="terp_default_Centre_8">[[account.expense_invoiced]]</para>
+            <para style="terp_default_Centre_8">[[account.expence_invoice]]</para>
           </td>
           <td>
-            <para style="terp_default_Centre_8">[[account.remaining_expense]]</para>
+            <para style="terp_default_Centre_8">[[account.expence_max]]</para>
           </td>
           <td>
-            <para style="terp_default_Centre_8">[[account.expense_to_invoice]]</para>
+            <para style="terp_default_Centre_8">[[account.expence_max]]</para>
           </td>
         </tr>
         <tr>
@@ -390,16 +417,7 @@
       <para style="Standard">
         <font color="white"> </font>
       </para>
-      <para style="Standard">
-        <font color="white"> </font>
-      </para>
-      <para style="Standard">
-        <font color="white"> </font>
-      </para>
     </section>
-    <para style="Standard">
-      <font color="white"> </font>
-    </para>
   </story>
 </document>
 
