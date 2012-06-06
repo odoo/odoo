@@ -13,19 +13,17 @@
                 <separator string="title" position="attributes">
                     <attribute name="string">Configure Your Chart of Accounts</attribute>
                 </separator>
-                <!-- Removed description from main view.-->
                 
-                <!--<xpath expr="//label[@string='description']" position="attributes">-->
-                <!--    <attribute name="string">The default Chart of Accounts is matching your country selection. If no certified Chart of Accounts exists for your specified country, a generic one can be installed and will be selected by default.</attribute>-->
-                <!--</xpath>-->
+				<xpath expr="//label[@string='description']" position="attributes">
+				   <attribute name="string">The default Chart of Accounts is matching your country selection. If no certified Chart of Accounts exists for your specified country, a generic one can be installed and will be selected by default.</attribute>
+                </xpath>
                 <xpath expr="//button[@string='Install Modules']" position="attributes">
                     <attribute name="string">Configure</attribute>
                 </xpath>
-                <!-- Removed vsep from main view.-->
-                <!--<xpath expr="//separator[@string=&quot;vsep&quot;]" position="attributes">-->
-                <!--    <attribute name="rowspan">23</attribute>-->
-                <!--    <attribute name="string"/>-->
-                <!--</xpath>-->
+				<xpath expr="//separator[@string=&quot;vsep&quot;]" position="attributes">
+				   <attribute name="rowspan">23</attribute>
+				   <attribute name="string"/>
+                </xpath>
                 <group colspan="8" position="inside">
                     <group colspan="4" width="600">
                             <field name="charts"/>
