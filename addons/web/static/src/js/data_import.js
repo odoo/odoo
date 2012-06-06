@@ -55,7 +55,8 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
                 .filter(function (field) {
                     return field.required &&
                            !_.include(self.fields_with_defaults, field.id); })
-                .pluck('name')
+                .pluck('id')
+                .uniq()
                 .value();
             convert_fields(self);
             self.all_fields.sort();
@@ -265,10 +266,14 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
         fields = fields || this.fields;
         var f;
         f = _(fields).detect(function (field) {
-            // TODO: levenshtein between header and field.string
             return field.name === name
-                || field.string.toLowerCase() === name.toLowerCase();
         });
+        if (!f) {
+            f = _(fields).detect(function (field) {
+                // TODO: levenshtein between header and field.string
+                return field.string.toLowerCase() === name.toLowerCase();
+            });
+        }
         if (f) { return f.name; }
 
         // if ``name`` is a path (o2m), we need to recurse through its .fields
@@ -278,9 +283,13 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
         var column_name = name.substring(0, index);
         f = _(fields).detect(function (field) {
             // field.name for o2m is $foo/id, so we want to match on id
-            return field.id === column_name
-                || field.string.toLowerCase() === column_name.toLowerCase()
+            return field.id === column_name;
         });
+        if (!f) {
+            f = _(fields).detect(function (field) {
+                return field.string.toLowerCase() === column_name.toLowerCase();
+            });
+        }
         if (!f) { return undefined; }
 
         // if we found a matching field for the first path section, recurse in
@@ -348,11 +357,25 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
 
     },
     check_required: function() {
-        if (!this.required_fields.length) { return true; }
+        var self = this;
+        if (!self.required_fields.length) { return true; }
+
+        // Resolve field id based on column name, as there may be
+        // several ways to provide the value for a given field and
+        // thus satisfy the requirement. 
+        // (e.g. m2o_id or m2o_id/id columns may be provided)
+        var resolve_field_id = function(column_name) {
+            var f = _.detect(self.fields, function(field) {
+                return field.name === column_name;
+            });
+            if (!f) { return column_name; };
+            return f.id;
+        };
 
         var selected_fields = _(this.$element.find('.sel_fields').get()).chain()
             .pluck('value')
             .compact()
+            .map(resolve_field_id)
             .value();
 
         var missing_fields = _.difference(this.required_fields, selected_fields);
