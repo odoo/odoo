@@ -1,61 +1,22 @@
 <?xml version="1.0"?>
 <openerp>
      <data>
-        <!-- crm user dashboard -->
-        <record model="ir.ui.view" id="crm_case_my_open_oppor">
-            <field name="name">Opportunities</field>
-            <field name="model">crm.lead</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Opportunities"  colors="blue:state=='pending';grey:state in ('cancel', 'done');red:date_deadline and (date_deadline &lt; current_date)">
-                    <field name="create_date" string="Creation Date"/>
-                    <field name="name" string="Opportunity"/>
-                    <field name="partner_id" string="Customer"/>
-                    <field name="title_action" />
-                    <field name="stage_id"/>
-                    <field name="planned_revenue" sum="Total of Planned Revenue"/>
-                    <field name="probability" widget="progressbar" avg="Avg. of Probability"/>
-                    <field name="date_deadline" invisible="1"/>
-                     <field name="user_id"/>
-                     <field name="state"/>
-                </tree>
-            </field>
-        </record>
-        
+        <!--My Opportunities Action -->
         <record model="ir.actions.act_window" id="act_my_oppor">
             <field name="name">My Opportunities</field>
             <field name="res_model">crm.lead</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('user_id','=',uid),('type', '=', 'opportunity')]</field>
-            <field name="context">{'default_user_id': uid, 'default_type': 'opportunity'}</field>
+            <field name="view_mode">tree</field>
+            <field name="domain">[('user_id','=',uid),('type', '=', 'opportunity'),('state','not in',('cancel','done'))]</field>
+            <field name="view_id" ref="crm.crm_case_tree_view_oppor"/>
         </record>
-        
-        <!--All/My Lead Tree view -->
-        <record model="ir.ui.view" id="crm_tree_view_all_leads11">
-            <field name="name">Leads</field>
-            <field name="model">crm.lead</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Leads" >
-                    <field name="create_date" string="Creation Date"/>
-                    <field name="name"/>
-                    <field name="contact_name"/>
-                    <field name="email_from"/>
-                    <field name="phone"/>
-                    <field name="stage_id"/>
-                    <field name="user_id"/>
-                    <field name="state" string="Status"/>
-                </tree>
-            </field>
-        </record>
-        
+                
         <!--New Lead Tree view Action -->
         <record model="ir.actions.act_window" id="act_crm_tag_tree_view_leads_all">
             <field name="name">New Lead</field>
             <field name="res_model">crm.lead</field>
             <field name="view_mode">tree</field>
-            <field name="view_id" ref="crm_tree_view_all_leads11"/>
+            <field name="domain">[('user_id','=',uid),('state','=','draft'),('type','=','lead')]</field>
+            <field name="view_id" ref="crm.crm_case_tree_view_leads"/>
         </record>
 
         <!-- crm mananger dashboard -->
@@ -129,7 +90,7 @@
                         <column>
                             <action string="New Leads" name="%(act_crm_tag_tree_view_leads_all)d"/>
                             <action string="My Opportunities" name="%(act_my_oppor)d"/>
-                            <action string="My/All Scheduled Meeting for the Current Month" name="%(crm_case_confirmed_meet)d"/>
+                            <action string="My Next Meetings" name="%(crm_case_confirmed_meet)d"/>
                         </column>
                         <column>
                             <action string="Planned Revenue by Stage and User" name="%(act_oppor_stage_user)d"/>
