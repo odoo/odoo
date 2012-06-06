@@ -112,7 +112,7 @@ class mail_group(osv.osv):
         'responsible_id': fields.many2one('res.users', string='Responsible',
                             ondelete='set null', required=True, select=1,
                             help="Responsible of the group that has all rights on the record."),
-        'public': fields.boolean('Public', help='This group is visible by non members. \
+        'public': fields.boolean('Visible by non members', help='This group is visible by non members. \
                             Invisible groups can add members through the invite button.'),
         'models': fields.many2many('ir.model', rel='mail_group_ir_model_rel',
                             id1='mail_group_id', id2='model_id',
