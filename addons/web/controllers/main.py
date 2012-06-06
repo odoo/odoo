@@ -683,10 +683,10 @@ def clean_action(req, action, do_not_eval=False):
 
     if not do_not_eval:
         # values come from the server, we can just eval them
-        if isinstance(action.get('context'), basestring):
+        if action.get('context') and isinstance(action.get('context'), basestring):
             action['context'] = eval( action['context'], eval_ctx ) or {}
 
-        if isinstance(action.get('domain'), basestring):
+        if action.get('domain') and isinstance(action.get('domain'), basestring):
             action['domain'] = eval( action['domain'], eval_ctx ) or []
     else:
         if 'context' in action:
@@ -719,7 +719,7 @@ def generate_views(action):
 
     :param dict action: action descriptor dictionary to generate a views key for
     """
-    view_id = action.get('view_id', False)
+    view_id = action.get('view_id') or False
     if isinstance(view_id, (list, tuple)):
         view_id = view_id[0]
 
