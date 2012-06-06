@@ -144,16 +144,13 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form layout="manual">
-                <div class="oe_form_topbar">
+                <header>
                     <button name="proforma_voucher" string="Validate" states="draft" invisible="context.get('line_type', False)"/>
                     <button name="cancel_voucher" string="Cancel" states="draft,proforma"  invisible="context.get('line_type', False)"/>
                     <button name="cancel_voucher" string="Unreconcile" type="object" states="posted" invisible="context.get('line_type', False)" confirm="Are you sure to unreconcile and cancel this record ?"/>
                     <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" invisible="context.get('line_type', False)"/>
-                    <div class="oe_right">
-                        <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue"}'/>
-                    </div>
-                    <div class="oe_clear"/>
-                </div>
+                    <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue"}'/>
+                </header>
                 <sheet string="Bill Payment" layout="auto">
                     <group col="6" colspan="4" class="oe_form_header">
                         <field name="partner_id" required="1" invisible="context.get('line_type', False)" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)" context="{'invoice_currency':currency_id, 'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"  string="Supplier"/>
@@ -165,8 +162,8 @@
                             on_change="onchange_journal(journal_id, line_dr_ids, False, partner_id, date, amount, type, company_id, context)"
                             string="Payment Method"/>
                         <field name="date" select="1" invisible="context.get('line_type', False)" on_change="onchange_date(date, currency_id, payment_rate_currency_id, amount, company_id, context)"/>
-                        <field name="reference" select="1" invisible="context.get('line_type', False)" string="Payment Ref"/>
-                        <field name="name" colspan="2" invisible="context.get('line_type', False)"/>
+                        <field name="reference" select="1" invisible="context.get('line_type', False)" string="Payment Ref" placeholder="003/10"/>
+                        <field name="name" colspan="2" invisible="context.get('line_type', False)" placeholder="Invoice SAJ/0042"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                         <field name="account_id"
                             widget="selection"
@@ -301,16 +298,13 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form layout="manual">
-                <div class="oe_form_topbar">
+                <header>
                     <button name="proforma_voucher" string="Validate" states="draft" invisible="context.get('line_type', False)" class="oe_form_button_hi"/>
                     <button name="cancel_voucher" string="Cancel" states="draft,proforma"  invisible="context.get('line_type', False)"/>
                     <button name="cancel_voucher" string="Unreconcile" type="object" states="posted" invisible="context.get('line_type', False)" confirm="Are you sure to unreconcile and cancel this record ?"/>
                     <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" invisible="context.get('line_type', False)"/>
-                    <div class="oe_right">
-                        <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue"}'/>
-                    </div>
-                    <div class="oe_clear"/>
-                </div>
+                    <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue"}'/>
+                </header>
                 <sheet string="Customer Payment" layout="auto">
                     <group col="6" colspan="4" class="oe_form_header">
                         <field name="partner_id" domain="[('customer','=',True)]" required="1" invisible="context.get('line_type', False)" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)" string="Customer" context="{'search_default_customer': 1}"/>
@@ -326,8 +320,8 @@
                             on_change="onchange_journal(journal_id, line_cr_ids, False, partner_id, date, amount, type, company_id, context)"
                             string="Payment Method"/>
                         <field name="date" select="1" invisible="context.get('line_type', False)" on_change="onchange_date(date, currency_id, payment_rate_currency_id, amount, company_id, context)"/>
-                        <field name="reference" select="1" invisible="context.get('line_type', False)" string="Payment Ref"/>
-                        <field name="name" colspan="2" invisible="context.get('line_type', False)"/>
+                        <field name="reference" select="1" invisible="context.get('line_type', False)" string="Payment Ref" placeholder="003/10"/>
+                        <field name="name" colspan="2" invisible="context.get('line_type', False)" placeholder="Invoice SAJ/0042"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                         <field name="account_id"
                             widget="selection"
