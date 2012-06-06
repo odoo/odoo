@@ -270,13 +270,9 @@ class account_voucher(osv.osv):
         for obj in self.browse(cr, uid, ids, context=context):
             self.message_append_note(cr, uid, [obj.id],body=_("%s <b>created</b>.") % (self._get_document_type(obj.type)), context=context)
 
-    def posted_send_note(self, cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids, context=context):
-            self.message_append_note(cr, uid, [obj.id], body=_("%s <b>is posted</b>.") % (self._get_document_type(obj.type)), context=context)
-
     def reconcile_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_append_note(cr, uid, [obj.id], body=_("%s <b>is reconciled</b>.") % (self._get_document_type(obj.type)), context=context)
+            self.message_append_note(cr, uid, [obj.id], body=_("%s is <b>reconciled</b>.") % (self._get_document_type(obj.type)), context=context)
 
     _name = 'account.voucher'
     _description = 'Accounting Voucher'
@@ -1281,12 +1277,17 @@ class account_voucher(osv.osv):
                 'state': 'posted',
                 'number': name,
             })
+            message = _("%s '%s' is <b>posted</b>.") % (self._get_document_type(voucher.type), name)
+            self.message_append_note(cr, uid, [voucher.id], body=message, context=context)
             if voucher.journal_id.entry_posted:
                 move_pool.post(cr, uid, [move_id], context={})
             # We automatically reconcile the account move lines.
+            reconcile = False
             for rec_ids in rec_list_ids:
                 if len(rec_ids) >= 2:
-                    move_line_pool.reconcile_partial(cr, uid, rec_ids, writeoff_acc_id=voucher.writeoff_acc_id.id, writeoff_period_id=voucher.period_id.id, writeoff_journal_id=voucher.journal_id.id)
+                    reconcile = move_line_pool.reconcile_partial(cr, uid, rec_ids, writeoff_acc_id=voucher.writeoff_acc_id.id, writeoff_period_id=voucher.period_id.id, writeoff_journal_id=voucher.journal_id.id)
+                if reconcile:
+                    self.reconcile_send_note(cr, uid, [voucher.id], context=context)
         return True
 
     def copy(self, cr, uid, id, default={}, context=None):
@@ -1553,31 +1554,4 @@ def resolve_o2m_operations(cr, uid, target_osv, operations, fields, context):
     return results
 
 
-class account_move_line(osv.osv):
-    _inherit = 'account.move.line'
-
-    def get_voucher_ids(self, cr, uid, ids, context=None):
-        voucher_obj = self.pool.get('account.voucher')
-        move_lines = self.browse(cr, uid, ids, context=context)
-        moves = []
-        for move in move_lines:
-            moves.append(move.move_id.id)
-
-        voucher_ids = voucher_obj.search(cr, uid, [('move_id', 'in', moves)], context=context)
-        return voucher_ids
-
-    def reconcile(self, cr, uid, ids, type='auto', writeoff_acc_id=False, writeoff_period_id=False, writeoff_journal_id=False, context=None):
-        voucher_obj = self.pool.get('account.voucher')
-        res = super(account_move_line, self).reconcile(cr, uid, ids, type=type, writeoff_acc_id=writeoff_acc_id, writeoff_period_id=writeoff_period_id, writeoff_journal_id=writeoff_journal_id, context=context)
-        voucher_ids = self.get_voucher_ids(cr, uid, ids, context=context)
-        voucher_obj.reconcile_send_note(cr, uid, voucher_ids, context=context)
-        return res
-
-    def reconcile_partial(self, cr, uid, ids, type='auto', context=None, writeoff_acc_id=False, writeoff_period_id=False, writeoff_journal_id=False):
-        voucher_obj = self.pool.get('account.voucher')
-        res = super(account_move_line, self).reconcile_partial(cr, uid, ids, type=type, context=context, writeoff_acc_id=writeoff_acc_id, writeoff_period_id=writeoff_period_id, writeoff_journal_id=writeoff_journal_id)
-        voucher_ids = self.get_voucher_ids(cr, uid, ids, context=context)
-        return res
-
-account_move_line()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
