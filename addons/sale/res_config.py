@@ -103,7 +103,14 @@ class sale_configuration(osv.osv_memory):
         'module_project': fields.boolean("Project"),
         'decimal_precision': fields.integer('Decimal Precision on Price'),
     }
-
+    def _check_decimal(self, cr, uid, ids, context=None):
+        decimal = self.browse(cr, uid, ids, context=context)[0].decimal_precision
+        if decimal > 20:
+            return False
+        return True
+    _constraints = [
+        (_check_decimal, 'Digits must be between 0 and  20 ', ['decimal_precision']),
+    ]
     def default_get(self, cr, uid, fields, context=None):
         ir_model_data = self.pool.get('ir.model.data')
         res = super(sale_configuration, self).default_get(cr, uid, fields, context)
