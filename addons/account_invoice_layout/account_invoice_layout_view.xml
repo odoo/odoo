@@ -12,7 +12,7 @@
                 <field name="name" position="before">
                     <field name="state" on_change="onchange_invoice_line_view(state)" />
                     <field name="sequence"/>
-            	</field>
+                </field>
             </field>
         </record>
 
@@ -96,11 +96,10 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Messages">
-                <separator string="Write a notification or a wishful message." colspan="4"/>
-                <field name="name" colspan="2" />
-                <newline/>
-                <separator string="Special Message" colspan="4"/>
-                <field name="msg" nolabel="1" colspan="2"/>
+                <separator string="Write a notification or a wishful message."/>
+                <field name="name"/>
+                <separator string="Special Message"/>
+                <field name="msg"/>
             </form>
         </field>
     </record>
