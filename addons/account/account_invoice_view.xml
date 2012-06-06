@@ -489,7 +489,11 @@
             <field name="domain">[('type','=','out_refund')]</field>
             <field name="context">{'default_type':'out_refund', 'type':'out_refund', 'journal_type': 'sale_refund'}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
-            <field name="help">With Customer Refunds you can manage the credit notes for your customers. A refund is a document that credits an invoice completely or partially. You can easily generate refunds and reconcile them directly from the invoice form.</field>
+            <field name="help">
+                Click here to create a new customer refund.
+                &lt;p&gt;
+                A refund is a document that credits an invoice completely or partially. You can also generate refunds and reconcile them directly from the invoice form.
+            </field>
         </record>
 
         <record id="action_invoice_tree3_view1" model="ir.actions.act_window.view">
