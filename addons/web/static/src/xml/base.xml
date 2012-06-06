@@ -1274,16 +1274,6 @@
         <p>(Any existing filter with the same name will be replaced)</p>
     </div>
 </t>
-<t t-name="SearchView.add_to_dashboard">
-    <div class="oe_form">
-        <p><b>Select Dashboard to add this filter to:</b></p>
-        <select style="width: 100%; margin-right: 1em;">
-            <option t-foreach="dashboards" t-as="menu" t-att-value="menu.id" t-att-selected="(menu.id == selected_menu_id) || undefined"><t t-esc="menu.name"/></option>
-        </select>
-        <p><b>Title of new Dashboard item:</b></p>
-        <input type="text" style="width: 100%; margin-right: 1em;"/>
-    </div>
-</t>
 <t t-name="SearchView.render_lines">
     <table class="oe-searchview-render-line" border="0" cellspacing="0" cellpadding="0"
            t-foreach="lines" t-as="line">
@@ -1422,13 +1412,22 @@
     <div>
     </div>
 </div>
-<div t-name="SearchView.addtodashboard" class="">
+<div t-name="SearchView.addtodashboard" class="oe_searchview_advanced">
     <h4>Add to Dashboard</h4>
+    <form>
     <ul>
-        <select class="">
-            <t t-js="dict">console.warn('Unhandled widget', dict);</t>
+        <li>
+         <select title = "Select Dashboard to add this filter to" style="width: 30%; margin-right: 1em;">
+            <option t-foreach="widget.menu_data" t-as="menu" t-att-value="menu.id" t-att-selected="(menu.id == widget.selected_menu_id) || undefined"><t t-esc="menu.name"/>
+            </option>
         </select>
+        
+         <input placeholder ="Title of new Dashboard item" title = "Title of new Dashboard item" type="text" style="width: 30%; margin-right: 1em;"/>
+         <button class="oe_apply" type="submit">save</button>
+         <a style="width: 30%;" class="searchview_extended_delete_prop button">x</a>
+        </li>
     </ul>
+    </form>
 </div>
 <div t-name="SearchView.advanced" class="oe_searchview_advanced">
     <h4>Advanced Search</h4>
