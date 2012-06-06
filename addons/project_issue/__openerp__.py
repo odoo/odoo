@@ -38,6 +38,7 @@ and decide on their status as they evolve.
     'website': 'http://www.openerp.com',
     'images': ['images/issue_analysis.jpeg','images/project_issue.jpeg'],
     'depends': [
+        'base_status', 
         'crm',
         'project',
     ],

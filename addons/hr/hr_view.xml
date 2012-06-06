@@ -350,15 +350,12 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form layout="manual">
-                <div class="oe_form_topbar">
+                <header>
                     <button name="job_recruitement" string="In Recruitement" states="open" type="object"/>
                     <button name="job_open" string="In Position" states="old,recruit" type="object"/>
                     <button name="job_old" string="Mark as Old" states="open,recruit" type="object"/>
-                    <div class="oe_right">
-                        <field name="state" widget="statusbar" nolabel="1" statusbar_visible="recruit,open"/>
-                    </div>
-                    <div class="oe_clear"/>
-                </div>
+                    <field name="state" widget="statusbar" statusbar_visible="recruit,open"/>
+                </header>
                 <sheet string="Job" layout="auto">
                     <group col="6" colspan="4">
                     <field name="name" />
