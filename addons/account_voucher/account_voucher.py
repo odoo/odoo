@@ -1302,7 +1302,7 @@ class account_voucher(osv.osv):
     
     def reconcile_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_append_note(cr, uid, [obj.id],body=_("%s <b>Reconciled</b>.") % (self._get_document_type(obj.type)), context=context)
+            self.message_append_note(cr, uid, [obj.id],body=_("%s <b>reconciled</b>.") % (self._get_document_type(obj.type)), context=context)
 
 account_voucher()
 
