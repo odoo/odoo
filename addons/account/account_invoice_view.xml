@@ -465,7 +465,9 @@
             <field name="domain">[('type','=','in_invoice')]</field>
             <field name="context">{'default_type': 'in_invoice', 'type': 'in_invoice', 'journal_type': 'purchase'}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
-            <field name="help">Click here to create Supplier invoice.you can control the invoice from your supplier according to what you purchased or received. OpenERP can also generate draft invoices automatically from purchase orders or receipts.</field>
+            <field name="help">Click here to create Supplier invoice.
+                    &lt;p&gt;
+                    you can control the invoice from your supplier according to what you purchased or received. OpenERP can also generate draft invoices automatically from purchase orders or receipts.</field>
         </record>
         <menuitem action="action_invoice_tree2" id="menu_action_invoice_tree2" parent="menu_finance_payables"/>
 
@@ -504,7 +506,9 @@
             <field name="domain">[('type','=','in_refund')]</field>
             <field name="context">{'default_type': 'in_refund', 'type': 'in_refund', 'journal_type': 'purchase_refund'}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
-            <field name="help">Click here to create a new supplier refund.Track Refund you receive from your supplier. You can also generate refunds and reconcile them directly from the invoice form</field>
+            <field name="help">Click here to create a new supplier refund.
+                    &lt;p&gt;
+                    Track Refund you receive from your supplier. You can also generate refunds and reconcile them directly from the invoice form</field>
         </record>
         <menuitem action="action_invoice_tree4" id="menu_action_invoice_tree4" parent="menu_finance_payables"/>
 
