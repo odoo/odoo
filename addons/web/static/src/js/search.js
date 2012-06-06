@@ -1193,7 +1193,7 @@ openerp.web.search.ExtendedSearchGroup = openerp.web.OldWidget.extend({
         }).compact().value();
         var choice = this.$element.find(".searchview_extended_group_choice").val();
         var op = choice == "all" ? "&" : "|";
-        return choice == "none" ? ['!'] : [].concat(
+        return (choice == "none" ? ['!'] : []).concat(
             _.map(_.range(_.max([0,props.length - 1])), function() { return op; }),
             props);
     },
