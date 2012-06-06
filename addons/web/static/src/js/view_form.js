@@ -2595,6 +2595,11 @@ openerp.web.form.One2ManyListView = openerp.web.ListView.extend({
             form_view_options: {'not_interactible_on_create':true},
             readonly: self.o2m.is_readonly()
         });
+        pop.dataset.call_button = function() {
+            var button_result = self.o2m.dataset.call_button.apply(self.o2m.dataset, arguments);
+            self.o2m.reload_current_view();
+            return button_result;
+        }
         pop.on_write.add(function(id, data) {
             self.o2m.dataset.write(id, data, {}, function(r) {
                 self.o2m.reload_current_view();
