@@ -124,13 +124,13 @@
                                 <separator colspan="4" string="Contact"/>
                                 <field name="partner_id" colspan="1"
                                        on_change="onchange_partner_id(partner_id, email_from)"/>
-                                <button string=""
+                                <button string="Create Contact"
                                         name="%(action_hr_recruitment_partner_create)d"
                                         icon="gtk-index" 
                                         type="action" colspan="1"
                                         attrs="{'invisible':[('partner_id','!=',False)]}"/>
                                 <field name="email_from" colspan="1"/>
-                                <button string="" 
+                                <button string="Mail" 
                                         name="%(mail.action_email_compose_message_wizard)d" 
                                         icon="terp-mail-message-new" 
                                         type="action" colspan="1"
