@@ -24,14 +24,11 @@
             <field name="model">lunch.order</field>
             <field name="arch" type="xml">
                 <form layout="manual">
-                <div class="oe_form_topbar">
+                <header>
                     <button name="%(action_lunch_order_confirm)d" string="Confirm Order" type="action" attrs="{'invisible':[('state','=','confirmed')]}"/>
                     <button name="%(action_lunch_order_cancel)d" string="Cancel Order" type="action"/>
-                    <div class="oe_right">
-                        <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,confirmed"/>
-                    </div>
-                    <div class="oe_clear"/>
-                </div>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed"/>
+                </header>
                 <sheet string="Order" layout="auto">
                     <field name="user_id" select="1"/>
                     <field name="date" select="1"/>
@@ -60,16 +57,6 @@
                     <field name="category"/>
                     <field name="price" sum="Total price"/>
                     <field name="state"/>
-                    <button colspan="1"
-                              name="%(action_lunch_order_cancel)d"
-                              string="Cancel Order"
-                              type="action" states="confirmed"
-                              icon="gtk-cancel" />
-                    <button colspan="1"
-                              name="%(action_lunch_order_confirm)d"
-                              string="Confirm Order"
-                              type="action" states="draft"
-                              icon="terp-gtk-go-back-rtl" />
                 </tree>
             </field>
         </record>
@@ -340,7 +327,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Box Amount by User">
-                     <field name="date" invisible="1"/>
+                    <field name="date" invisible="1"/>
                     <field name="year" invisible="1"/>
                     <field name="day" invisible="1"/>
                     <field name="month" invisible="1"/>

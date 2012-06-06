@@ -30,7 +30,7 @@ Synchronization with all objects.
 
 Configure servers and trigger synchronization with its database objects.
 """,
-    "depends": ["base"],
+    "depends": ["base", "mail"],
     "demo_xml": [],
     "update_xml": [
         "wizard/base_synchro_view.xml",
