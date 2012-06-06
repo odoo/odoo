@@ -632,7 +632,7 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
             return false;
         });
 
-        this.$element.on('click', this.on_card_clicked);
+        this.$element.find('.oe_kanban_global_click').on('click', this.on_card_clicked);
     },
     on_card_clicked: function() {
         this.view.trigger('hide_menus');
@@ -665,7 +665,7 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
                 self.group.remove_record(self.id);
                 self.destroy();
             });
-        };
+        }
         if (this.view.options.confirm_on_delete) {
             if (confirm(_t("Are you sure you want to delete this record ?"))) {
                 return do_it();
