@@ -51,46 +51,51 @@
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <form string="Group Form" layout="manual">
-                    <sheet layout="auto" style="min-height: 0; max-height: none;">
-                        <group colspan="1">
-                            <field name="photo" widget='image' nolabel="1" on_change="onchange_photo(photo)"/>
-                        </group>
-                        <group colspan="3" col="6">
-                            <h2><field name="name" nolabel="1" colspan="4"/></h2>
-                            <newline/>
-                            <group colspan="2" col="2">
-                                <field name="responsible_id" colspan="2"/>
-                                <label string="Visible by non members" colspan="1"/>
-                                <field name="public" nolabel="1"/>
-                                <field name="push_to_groups" colspan="2" attrs="{'invisible':[('groups','=',False)]}"/>
-                            </group>
-                            <group colspan="4" col="4">
-                                <field name="description" colspan="4" nolabel="1"/>
-                            </group>
-                        </group>
+                    <sheet layout="auto" class="openerp_vive_les_frites">
                         <group colspan="4" col="4">
-                            <p><a href="#" class="oe_mail_group_advanced">See advanced options for groups</a></p>
-                            <newline/>
-                            <div class="oe_mail_group_advanced_details">
-                                <group colspan="4" col="6">
-                                    <field name="models" colspan="3">
+                            <group colspan="1" col="2">
+                                <field name="photo" widget='image' nolabel="1" on_change="onchange_photo(photo)"/>
+                            </group>
+                            <group colspan="3" col="6">
+                                <h2><field name="name" nolabel="1" colspan="4"/></h2>
+                                <newline/>
+                                <group colspan="2" col="2">
+                                    <field name="responsible_id" colspan="2"/>
+                                    <label string="Visible by non members" colspan="1"/>
+                                    <field name="public" nolabel="1"/>
+                                    <field name="push_to_groups" colspan="2" attrs="{'invisible':[('groups','=',False)]}"/>
+                                </group>
+                                <group colspan="4" col="4">
+                                    <field name="description" colspan="4" nolabel="1"/>
+                                </group>
+                            </group>
+                        </group>
+                        <p><a href="#" class="oe_mail_group_advanced">See advanced options for groups</a></p>
+                        <newline/>
+                        <div class="oe_mail_group_advanced_details">
+                            <group colspan="4" col="4">
+                                <group colspan="2" col="3">
+                                    <h3>Models for automatic message fetching</h3>
+                                    <field name="models" colspan="3" nolabel="1">
                                         <tree string="Document models">
                                             <field name="name"/>
                                         </tree>
                                     </field>
-                                    <field name="groups" colspan="3">
+                                </group>
+                                <group colspan="2" col="3">
+                                    <h3>User groups for message forwarding</h3>
+                                    <field name="groups" colspan="3" nolabel="1">
                                         <tree string="Document groups">
                                             <field name="name"/>
                                         </tree>
                                     </field>
                                 </group>
-                            </div>
-                        </group>
+                            </group>
+                        </div>
                         <script>
                             $('a.oe_mail_group_advanced').click(function() {
-                                var lapin = ($(this)).parents('.oe_form_autolayout').eq(0);
-                                console.log(lapin);
-                                lapin.find('div.oe_mail_group_advanced_details').toggle();
+                                var parent_node = ($(this)).parents('.oe_form_sheet').eq(0);
+                                parent_node.find('div.oe_mail_group_advanced_details').toggle();
                             });
                         </script>
                     </sheet>
