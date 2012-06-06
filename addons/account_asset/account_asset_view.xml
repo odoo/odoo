@@ -87,9 +87,9 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,open"/>
                 </header>
                 <sheet>
-                    <label for="name">
+                    <label for="name"/>
                     <h1><field name="name"/></h1>
-                    <label for="category_id">
+                    <label for="category_id"/>
                     <h2><field name="category_id" on_change="onchange_category_id(category_id)"/></h2>
                     <notebook colspan="4">
                         <page string="General">
@@ -105,7 +105,7 @@
                                 <field name="value_residual"/>
                                 <field name="currency_id"/>
                             </group>
-                            </group>
+                            <group>
                                 <field name="partner_id"/>
                                 <field name="purchase_date"/>
                                 <field name="parent_id"/>
