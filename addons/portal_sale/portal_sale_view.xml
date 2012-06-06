@@ -34,8 +34,10 @@
         <menuitem name="Products" id="portal_products" parent="portal.portal_orders" 
             action="product_normal_action" sequence="40"/>
 
-        <menuitem name="Invoice" id="portal_invoices" parent="portal.portal_invoices_payements" action="account.action_invoice_tree1" sequence="10"/>
-        <menuitem name="Refund/Payments" id="portal_payments" parent="portal.portal_invoices_payements" action="account_voucher.action_vendor_receipt" sequence="20"/>
+        <menuitem name="Invoice" id="portal_invoices" parent="portal.portal_invoices_payements" 
+            action="account.action_invoice_tree1" sequence="10"/>
+        <menuitem name="Refund/Payments" id="portal_payments" parent="portal.portal_invoices_payements" 
+            action="account_voucher.action_vendor_receipt" sequence="20"/>
 
     </data>
 </openerp>

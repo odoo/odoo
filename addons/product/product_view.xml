@@ -62,6 +62,7 @@
                 </tree>
             </field>
         </record>
+
         <record id="product_normal_form_view" model="ir.ui.view">
             <field name="name">product.normal.form</field>
             <field name="model">product.product</field>
@@ -133,9 +134,8 @@
                                 <field name="uos_coeff"/>
                                 <field name="mes_type"/>
                             </group>
-
                         </page>
-                        <page string="Procurement &amp; Locations">
+                        <page string="Procurement &amp; Locations" groups="base.group_user">
                             <group colspan="2" col="2" name="delay">
                                 <separator string="Delays" colspan="2"/>
                                 <field name="sale_delay" attrs="{'readonly':[('sale_ok','=',0)]}"/>
@@ -154,12 +154,11 @@
                                 <field name="active"/>
                                 <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             </group>
-
                         </page>
                         <page string="Suppliers" groups="base.group_user">
                             <field colspan="4" name="seller_ids" nolabel="1" context="{'uom_id': uom_id}"/>
                         </page>
-                        <page string="Descriptions">
+                        <page string="Descriptions" groups="base.group_user">
                             <separator string="Description" groups="base.group_user"/>
                             <field colspan="4" name="description" nolabel="1" groups="base.group_user"/>
                             <separator string="Sale Description"/>
@@ -193,9 +192,9 @@
                             </field>
                         </page>
                     </notebook>
-                <div class="oe_form_sheet_width">
-                    <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"/>
-                </div>
+                    <div class="oe_form_sheet_width">
+                        <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"/>
+                    </div>
                 </form>
             </field>
         </record>
