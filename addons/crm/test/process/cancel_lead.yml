@@ -6,8 +6,11 @@
 -
   I check cancelled lead.
 -
-  !assert {model: crm.lead, id: crm.crm_case_itisatelesalescampaign0, string: Lead is in cancel state}:
-    - state == "cancel"
+  !python {model: crm.lead}: |
+    lead = self.browse(cr, uid, ref('crm_case_itisatelesalescampaign0'))
+    assert lead.stage_id.id == ref('crm.stage_lead7'), "Stage should be 'Dead' and is %s." % (lead.stage_id.name)
+    assert lead.state == 'cancel', "Opportunity is not in 'cancel' state."
+    assert lead.probability == 0.0, 'Opportunity probability is wrong and should be 0.0.'
 -
   I reset cancelled lead into unqualified lead.
 -
@@ -19,35 +22,24 @@
   !assert {model: crm.lead, id: crm.crm_case_itisatelesalescampaign0, string: Lead is in draft state}:
     - state == "draft"
 -
-  I put unqualified lead into pending.
+  I re-open the lead
 -
   !python {model: crm.lead}: |
-    self.case_pending(cr, uid, [ref("crm_case_itisatelesalescampaign0")])
+    self.case_open(cr, uid, [ref("crm_case_itisatelesalescampaign0")])
 -
-  I check status of pending lead.
+ I check stage and state of the re-opened lead
 -
-  !assert {model: crm.lead, id: crm.crm_case_itisatelesalescampaign0, string: Lead is in pending state}:
-    - state == "pending"
+  !python {model: crm.lead}: |
+    lead = self.browse(cr, uid, ref('crm.crm_case_itisatelesalescampaign0'))
+    assert lead.stage_id.id == ref('crm.stage_lead2'), "Opportunity stage should be 'Qualification'."
+    assert lead.state == 'open', "Opportunity should be in 'open' state."
 -
   I escalate the lead to parent team.
 -
   !python {model: crm.lead}: |
     self.case_escalate(cr, uid, [ref("crm_case_itisatelesalescampaign0")])
 -
-  I check lead escalate to parent team.
+  I check the lead is correctly escalated to the parent team.
 -
   !assert {model: crm.lead, id: crm.crm_case_itisatelesalescampaign0, string: Escalate lead to parent team}:
     - section_id.name == "Sales Department"
--
-  I mark as lost the opportunity.
--
-  !python {model: crm.lead}: |
-    self.case_mark_lost(cr, uid, [ref("crm_case_itisatelesalescampaign0")])
--
-  I check opportunity after lost.
--
-  !python {model: crm.lead}: |
-    lead = self.browse(cr, uid, ref('crm_case_itisatelesalescampaign0'))
-    assert lead.state == 'done', "lead is not done state"
-    assert lead.stage_id.id == ref('crm.stage_lead6'), 'Stage is not changed!'
-    assert lead.probability == 0.0, 'Probability is wrong!'
