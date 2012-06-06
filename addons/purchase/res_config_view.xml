@@ -15,7 +15,7 @@
                         <separator string="Invoicing" colspan="4"/>
                         <field name="default_invoice_method"/>
                         <field name="decimal_precision"/>
-
+                      <group>
                         <separator string="Purchase Order" colspan="4"/>
                         <field name="group_purchase_pricelist"/>
                         <field name="group_uom"/>
@@ -23,9 +23,8 @@
                         <field name="module_purchase_requisition"/>
                         <field name="module_warning"/>
                         <field name="module_purchase_analytic_plans"/>
-
-                        <separator string="Products" colspan="4"/>
-                        <field name="module_product_manufacturer"/>
+                      </group>  
+                     
                     </sheet>
                 </form>
             </field>
@@ -56,6 +55,22 @@
                     <field name="group_analytic_account_for_purchases"/>
                     <field name="module_purchase_analytic_plans"/>
                 </group>
+            </field>
+        </record>
+        
+        <record id="view_stock_config" model="ir.ui.view">
+            <field name="name">stock settings</field>
+            <field name="model">stock.config.settings</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="stock.view_stock_config_settings"/>
+            <field name="priority" eval="18"/>
+            <field name="arch" type="xml">
+               	<group name="module_claim" position="after">
+               		<separator string="Products" colspan="4"/>
+               		<group>
+               			<field name="module_product_manufacturer"/>
+               		</group>
+               	</group>        
             </field>
         </record>
 
