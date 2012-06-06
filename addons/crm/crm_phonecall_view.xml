@@ -43,10 +43,14 @@
                     states="open,pending" icon="gtk-redo"
                      name="action_make_meeting" type="object" />
                 <field name="state"/>
-                <button name="case_cancel" string="Cancel" states="open,pending" type="object" icon="gtk-cancel"/>
-                <button name="case_open" string="Todo" states="pending" type="object" icon="gtk-go-forward"/>
-                <button name="case_close" string="Held" states="open,pending" type="object" icon="gtk-jump-to"/>
-                <button name="case_pending" string="Not Held" states="open" type="object" icon="gtk-media-pause"/>
+                <button name="case_open" string="Confirm" type="object"
+                        states="draft,pending" icon="gtk-go-forward"/>
+                <button name="case_close" string="Held" type="object"
+                        states="open,pending" icon="gtk-jump-to"/>
+                <button name="case_cancel" string="Cancel" type="object"
+                        states="draft,open,pending" icon="gtk-cancel"/>
+                <button name="case_reset" string="Reset to Todo" type="object"
+                        states="cancel" icon="gtk-convert"/>
             </tree>
         </field>
     </record>
@@ -58,7 +62,19 @@
         <field name="model">crm.phonecall</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Phone Call">
+            <form layout="manual">
+            <header>
+                <button name="case_open" string="Confirm" type="object"
+                        states="draft,pending" icon="gtk-go-forward"/>
+                <button name="case_close" string="Held" type="object"
+                        states="open,pending" icon="gtk-jump-to"/>
+                <button name="case_reset" string="Reset to Todo" type="object"
+                        states="cancel" icon="gtk-convert"/>
+                <button name="case_cancel" string="Cancel" type="object"
+                        states="draft,open,pending" icon="gtk-cancel"/>
+                <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,open,done"/>
+            </header>
+            <sheet string="Phone Call" layout="auto">
                  <group colspan="6" col="7">
                     <field name="name" required="1"/>
                     <field name="partner_phone"/>
@@ -103,25 +119,10 @@
                 </group>
                 <separator string="Description" colspan="4" />
                 <field name="description" nolabel="1" colspan="4" />
-                <separator colspan="4" />
-                <group col="8" colspan="4">
-                    <field name="state" widget="statusbar" statusbar_visible="open,done" statusbar_colors='{"pending":"red"}' select="1"/>
-                    <button name="case_cancel" string="Cancel"
-                        states="open,pending" type="object"
-                        icon="gtk-cancel" />
-                    <button name="case_open" string="Todo"
-                        states="pending" type="object"
-                        icon="gtk-go-forward" />
-                    <button name="case_pending" string="Not Held"
-                        states="open" type="object" icon="gtk-media-pause" />
-                    <button name="case_close" string="Held"
-                        states="open,pending" type="object"
-                        icon="gtk-jump-to" />
-                    <button name="case_reset" string="Reset to Todo"
-                        states="cancel" type="object"
-                        icon="gtk-convert" />
-                </group>
-                <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
+            </sheet>
+            <div class="oe_form_sheet_width">
+                <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"/>
+            </div>
             </form>
         </field>
     </record>
@@ -211,7 +212,7 @@
                <field name="section_id"
                    widget="selection" string="Sales Team">
                    <filter icon="terp-personal+"
-                       domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
+                       domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                        help="My Sales Team(s)" />
                </field>
                <newline/>
@@ -261,7 +262,7 @@
                <field name="section_id"
                    widget="selection" string="Sales Team">
                    <filter icon="terp-personal+"
-                       domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
+                       domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                        help="My Sales Team(s)" />
                </field>
                <newline/>

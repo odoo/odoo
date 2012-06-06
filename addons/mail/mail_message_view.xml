@@ -190,7 +190,7 @@
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
-                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="User" name="User" icon="terp-personal" context="{'group_by':'user_id'}"/>
                         <separator orientation="vertical"/>
@@ -234,7 +234,7 @@
         <menuitem name="Feeds" id="menu_email_message_all" parent="base.menu_email" action="action_view_all_messages_short" groups="base.group_no_one"/>
 
         <record id="action_mail_all_feeds" model="ir.actions.client">
-            <field name="name">Wall</field>
+            <field name="name">News Feed</field>
             <field name="tag">mail.all_feeds</field>
             <field name="params" eval="{'search_view_id': ref('view_message_search_wall')}"/>
         </record>

@@ -19,13 +19,15 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+from base_status.base_stage import base_stage
 from crm import crm
 from crm import wizard
+from osv import fields, osv
+from tools.translate import _
 
 wizard.mail_compose_message.SUPPORTED_MODELS.append('crm.fundraising')
 
-class crm_fundraising(crm.crm_case, osv.osv):
+class crm_fundraising(base_stage, osv.osv):
     """ Fund Raising Cases """
 
     _name = "crm.fundraising"
@@ -68,14 +70,62 @@ class crm_fundraising(crm.crm_case, osv.osv):
             'duration': fields.float('Duration'),
             'ref': fields.reference('Reference', selection=crm._links_get, size=128),
             'ref2': fields.reference('Reference 2', selection=crm._links_get, size=128),
-            'state': fields.selection(crm.AVAILABLE_STATES, 'State', size=16, readonly=True,
-                                  help='The state is set to \'Draft\', when a case is created.\
-                                  \nIf the case is in progress the state is set to \'Open\'.\
-                                  \nWhen the case is over, the state is set to \'Done\'.\
-                                  \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
-            'message_ids': fields.one2many('mail.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
+            'state': fields.related('stage_id', 'state', type="selection", store=True,
+                    selection=crm.AVAILABLE_STATES, string="State", readonly=True,
+                    help='The state is set to \'Draft\', when a case is created.\
+                        If the case is in progress the state is set to \'Open\'.\
+                        When the case is over, the state is set to \'Done\'.\
+                        If the case needs to be reviewed then the state is \
+                        set to \'Pending\'.'),
         }
 
+    _defaults = {
+            'active': 1,
+            'user_id':  lambda s, cr, uid, c: s._get_default_user(cr, uid, c),
+            'partner_id':  lambda s, cr, uid, c: s._get_default_partner(cr, uid, c),
+            'email_from': lambda s, cr, uid, c: s._get_default_email(cr, uid, c),
+            'section_id': lambda s, cr, uid, c: s._get_default_section_id(cr, uid, c),
+            'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.case', context=c),
+            'priority': crm.AVAILABLE_PRIORITIES[2][0],
+            'probability': 0.0,
+            'planned_cost': 0.0,
+            'planned_revenue': 0.0,
+    }
+
+    def stage_find(self, cr, uid, cases, section_id, domain=[], order='sequence', context=None):
+        """ Override of the base.stage method
+            Parameter of the stage search taken from the lead:
+            - section_id: if set, stages must belong to this section or
+              be a default case
+        """
+        if isinstance(cases, (int, long)):
+            cases = self.browse(cr, uid, cases, context=context)
+        # collect all section_ids
+        section_ids = []
+        if section_id:
+            section_ids.append(section_id)
+        for case in cases:
+            if case.section_id:
+                section_ids.append(case.section_id.id)
+        # OR all section_ids and OR with case_default
+        search_domain = []
+        if section_ids:
+            search_domain += [('|')] * len(section_ids)
+            for section_id in section_ids:
+                search_domain.append(('section_ids', '=', section_id))
+        search_domain.append(('case_default', '=', True))
+        # AND with the domain in parameter
+        search_domain += list(domain)
+        # perform search, return the first found
+        stage_ids = self.pool.get('crm.case.stage').search(cr, uid, search_domain, order=order, context=context)
+        if stage_ids:
+            return stage_ids[0]
+        return False
+
+    def create(self, cr, uid, vals, context=None):
+        obj_id = super(crm_fundraising, self).create(cr, uid, vals, context)
+        self.create_send_note(cr, uid, [obj_id], context=context)
+        return obj_id
 
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
         """Automatically called when new email message arrives"""
@@ -93,21 +143,23 @@ class crm_fundraising(crm.crm_case, osv.osv):
         self.write(cr, uid, [res_id], vals, context=context)
         return res_id
 
+    # ---------------------------------------------------
+    # OpenChatter methods and notifications
+    # ---------------------------------------------------
 
-    _defaults = {
-            'active': 1,
-            'user_id': crm.crm_case._get_default_user,
-            'partner_id': crm.crm_case._get_default_partner,
-            'email_from': crm.crm_case. _get_default_email,
-            'state': 'draft',
-            'section_id': crm.crm_case. _get_section,
-            'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.case', context=c),
-            'priority': crm.AVAILABLE_PRIORITIES[2][0],
-            'probability': 0.0,
-            'planned_cost': 0.0,
-            'planned_revenue': 0.0,
-    }
+    def case_get_note_msg_prefix(self, cr, uid, id, context=None):
+        """ Override of default prefix for notifications. """
+        return 'Fundraising'
 
+    def create_send_note(self, cr, uid, ids, context=None):
+        msg = _('Fundraising has been <b>created</b>.')
+        self.message_append_note(cr, uid, ids, body=msg, context=context)
+        return True
+
+    def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
+        """ Override of the (void) default notification method. """
+        stage_name = self.pool.get('crm.case.stage').name_get(cr, uid, [stage_id], context=context)[0][1]
+        return self.message_append_note(cr, uid, ids, body= _("Stage changed to <b>%s</b>.") % (stage_name), context=context)
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

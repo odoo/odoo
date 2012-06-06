@@ -28,7 +28,7 @@
                         <filter string="Customer" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
                         <filter string="Period" icon="terp-go-month" domain="[]" context="{'group_by':'period_id','visible':True}"/>
-                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     </group>
                 </search>
             </field>
@@ -61,7 +61,7 @@
                         <filter string="Supplier" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
                         <filter string="Period" icon="terp-go-month" domain="[]" context="{'group_by':'period_id','visible':True}"/>
-                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     </group>
                 </search>
             </field>
@@ -143,8 +143,16 @@
             <field name="model">account.voucher</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Bill Payment">
-                    <group col="6" colspan="4">
+                <form layout="manual">
+                <header>
+                    <button name="proforma_voucher" string="Validate" states="draft" invisible="context.get('line_type', False)"/>
+                    <button name="cancel_voucher" string="Cancel" states="draft,proforma"  invisible="context.get('line_type', False)"/>
+                    <button name="cancel_voucher" string="Unreconcile" type="object" states="posted" invisible="context.get('line_type', False)" confirm="Are you sure to unreconcile and cancel this record ?"/>
+                    <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" invisible="context.get('line_type', False)"/>
+                    <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue"}'/>
+                </header>
+                <sheet string="Bill Payment" layout="auto">
+                    <group col="6" colspan="4" class="oe_form_header">
                         <field name="partner_id" required="1" invisible="context.get('line_type', False)" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)" context="{'invoice_currency':currency_id, 'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"  string="Supplier"/>
                         <field name="amount" invisible="context.get('line_type', False)" on_change="onchange_amount(amount, payment_rate, partner_id, journal_id, currency_id, type, date, payment_rate_currency_id, company_id, context)"/>
                         <field name="journal_id"
@@ -154,8 +162,8 @@
                             on_change="onchange_journal(journal_id, line_dr_ids, False, partner_id, date, amount, type, company_id, context)"
                             string="Payment Method"/>
                         <field name="date" select="1" invisible="context.get('line_type', False)" on_change="onchange_date(date, currency_id, payment_rate_currency_id, amount, company_id, context)"/>
-                        <field name="reference" select="1" invisible="context.get('line_type', False)" string="Payment Ref"/>
-                        <field name="name" colspan="2" invisible="context.get('line_type', False)"/>
+                        <field name="reference" select="1" invisible="context.get('line_type', False)" string="Payment Ref" placeholder="003/10"/>
+                        <field name="name" colspan="2" invisible="context.get('line_type', False)" placeholder="Invoice SAJ/0042"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                         <field name="account_id"
                             widget="selection"
@@ -249,13 +257,7 @@
                             </field>
                         </page>
                     </notebook>
-                    <group col="10" colspan="4">
-                        <field name="state" widget="statusbar" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue"}'/>
-                        <button name="cancel_voucher" string="Cancel" states="draft,proforma"  icon="gtk-cancel" invisible="context.get('line_type', False)"/>
-                        <button name="cancel_voucher" string="Unreconcile" type="object" states="posted" icon="terp-stock_effects-object-colorize" invisible="context.get('line_type', False)" confirm="Are you sure to unreconcile and cancel this record ?"/>
-                        <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" icon="terp-stock_effects-object-colorize" invisible="context.get('line_type', False)"/>
-                        <button name="proforma_voucher" string="Validate" states="draft" icon="gtk-go-forward" invisible="context.get('line_type', False)"/>
-                    </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -292,8 +294,16 @@
             <field name="model">account.voucher</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Customer Payment">
-                    <group col="6" colspan="4">
+                <form layout="manual">
+                <header>
+                    <button name="proforma_voucher" string="Validate" states="draft" invisible="context.get('line_type', False)"/>
+                    <button name="cancel_voucher" string="Cancel" states="draft,proforma"  invisible="context.get('line_type', False)"/>
+                    <button name="cancel_voucher" string="Unreconcile" type="object" states="posted" invisible="context.get('line_type', False)" confirm="Are you sure to unreconcile and cancel this record ?"/>
+                    <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" invisible="context.get('line_type', False)"/>
+                    <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue"}'/>
+                </header>
+                <sheet string="Customer Payment" layout="auto">
+                    <group col="6" colspan="4" class="oe_form_header">
                         <field name="partner_id" domain="[('customer','=',True)]" required="1" invisible="context.get('line_type', False)" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)" string="Customer" context="{'search_default_customer': 1}"/>
                         <field name="currency_id" invisible="1"/>
                         <field name="amount"
@@ -307,8 +317,8 @@
                             on_change="onchange_journal(journal_id, line_cr_ids, False, partner_id, date, amount, type, company_id, context)"
                             string="Payment Method"/>
                         <field name="date" select="1" invisible="context.get('line_type', False)" on_change="onchange_date(date, currency_id, payment_rate_currency_id, amount, company_id, context)"/>
-                        <field name="reference" select="1" invisible="context.get('line_type', False)" string="Payment Ref"/>
-                        <field name="name" colspan="2" invisible="context.get('line_type', False)"/>
+                        <field name="reference" select="1" invisible="context.get('line_type', False)" string="Payment Ref" placeholder="003/10"/>
+                        <field name="name" colspan="2" invisible="context.get('line_type', False)" placeholder="Invoice SAJ/0042"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                         <field name="account_id"
                             widget="selection"
@@ -401,13 +411,7 @@
                             </field>
                         </page>
                     </notebook>
-                    <group col="10" colspan="4">
-                        <field name="state" widget="statusbar" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue"}'/>
-                        <button name="cancel_voucher" string="Cancel" states="draft,proforma"  icon="gtk-cancel" invisible="context.get('line_type', False)"/>
-                        <button name="cancel_voucher" string="Unreconcile" type="object" states="posted" invisible="context.get('line_type', False)" icon="terp-stock_effects-object-colorize" confirm="Are you sure to unreconcile and cancel this record ?"/>
-                        <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" icon="terp-stock_effects-object-colorize" invisible="context.get('line_type', False)"/>
-                        <button name="proforma_voucher" string="Validate" states="draft" icon="gtk-go-forward" invisible="context.get('line_type', False)"/>
-                    </group>
+                    </sheet>
                 </form>
             </field>
         </record>
