@@ -171,13 +171,7 @@ class account_analytic_account(osv.osv):
         'date_start': fields.date('Date Start'),
         'date': fields.date('Date End', select=True),
         'company_id': fields.many2one('res.company', 'Company', required=False), #not required because we want to allow different companies to use the same chart of account, except for leaf accounts.
-        'state': fields.selection([('template', 'Template'),('draft','New'),('open','Open'), ('cancelled', 'Cancelled'),('pending','Pending'),('close','Closed')], 'Status', required=True,
-                                  help='* When an account is created its in \'Draft\' state.\
-                                  \n* If any associated partner is there, it can be in \'Open\' state.\
-                                  \n* If any pending balance is there it can be in \'Pending\'. \
-                                  \n* And finally when all the transactions are over, it can be in \'Close\' state. \
-                                  \n* The project can be in either if the states \'Template\' and \'Running\'.\n If it is template then we can make projects based on the template projects. If its in \'Running\' state it is a normal project.\
-                                 \n If it is to be reviewed then the state is \'Pending\'.\n When the project is completed the state is set to \'Done\'.'),
+        'state': fields.selection([('template', 'Template'),('draft','New'),('open','In Progress'), ('cancelled', 'Cancelled'),('pending','To Renew'),('close','Closed')], 'Status', required=True,),
         'currency_id': fields.function(_currency, fnct_inv=_set_company_currency,
             store = {
                 'res.company': (_get_analytic_account, ['currency_id'], 10),
