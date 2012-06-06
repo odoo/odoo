@@ -31,18 +31,6 @@ from calendar import isleap
 from osv import fields, osv
 import decimal_precision as dp
 
-def prev_bounds(cdate=False):
-    when = date.fromtimestamp(time.mktime(time.strptime(cdate,"%Y-%m-%d")))
-    this_first = date(when.year, when.month, 1)
-    month = when.month + 1
-    year = when.year
-    if month > 12:
-        month = 1
-        year += 1
-    next_month = date(year, month, 1)
-    prev_end = next_month - timedelta(days=1)
-    return this_first, prev_end
-
 class hr_contract_in(osv.osv):
     _inherit = 'hr.contract'
     _description = 'contract'
@@ -142,25 +130,31 @@ class payroll_advice(osv.osv):
         sequence_pool = self.pool.get('ir.sequence')
         payslip_line_pool = self.pool.get('hr.payslip.line')
 
+        DATETIME_FORMAT = "%Y-%m-%d"
+
         for advice in self.browse(cr, uid, ids, context=context):
-            dates = prev_bounds(advice.date)
-            slip_ids = payslip_pool.search(cr, uid, [ ('date_from','<=',advice.date),('date_to','>=',advice.date),('date_from','=',dates[0]),('date_to','=',dates[1])], context=context)
+            old_line_ids = advice_line_pool.search(cr, uid, [('advice_id','=',advice.id)], context=context)
+            if old_line_ids:
+                advice_line_pool.unlink(cr, uid, old_line_ids, context=context)
+            slip_ids = payslip_pool.search(cr, uid, [('date_from','<=',advice.date),('date_to','>=',advice.date)], context=context)
             if not slip_ids:
-                    raise osv.except_osv(_('Error !'), _('You can get only current month payslips') % (slip_ids))
-        for slip in payslip_pool.browse(cr, uid, slip_ids, context=context):
-            line_ids = payslip_line_pool.search(cr, uid, [ ('slip_id','in',slip_ids),('code','=',"NET")], context=context)
-            for line in slip.line_ids:
-                if not slip.employee_id.bank_account_id:
-                    raise osv.except_osv(_('Error !'), _('Please define bank account for the %s employee') % (slip.employee_id.name))
-                advice_line= {
-                        'advice_id':advice.id,
-                        'name':slip.employee_id.bank_account_id.acc_number,
-                        'employee_id':slip.employee_id.id,
-                        'bysal':line.total
-                        }
-            id = advice_line_pool.create(cr, uid, advice_line, context=context)
-        number = self.pool.get('ir.sequence').get(cr, uid, 'advice.line')
-        self.write(cr, uid, ids, {'state':'confirm','number':number}, context=context)
+                advice_date = datetime.strptime(advice.date,DATETIME_FORMAT)
+                a_date = advice_date.strftime('%B')+'-'+advice_date.strftime('%Y')
+                raise osv.except_osv(_('Error !'), _('No payslips for %s') % (a_date))
+            for slip in payslip_pool.browse(cr, uid, slip_ids, context=context):
+                line_ids = payslip_line_pool.search(cr, uid, [ ('slip_id','in',slip_ids),('code','=',"NET")], context=context)
+                for line in slip.line_ids:
+                    if not slip.employee_id.bank_account_id:
+                        raise osv.except_osv(_('Error !'), _('Please define bank account for the %s employee') % (slip.employee_id.name))
+                    advice_line= {
+                            'advice_id':advice.id,
+                            'name':slip.employee_id.bank_account_id.acc_number,
+                            'employee_id':slip.employee_id.id,
+                            'bysal':line.total
+                            }
+                id = advice_line_pool.create(cr, uid, advice_line, context=context)
+        number = self.pool.get('ir.sequence').get(cr, uid, 'payment.advice')
+        self.write(cr, uid, ids, {'number':number}, context=context)
 
     def confirm_sheet(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'confirm'}, context=context)
@@ -195,9 +189,8 @@ class payroll_advice_line(osv.osv):
     _description = 'Bank Advice Lines'
     _columns = {
         'advice_id':fields.many2one('hr.payroll.advice', 'Bank Advice', required=False),
-        'name':fields.char('Bank Account A/C', size=64, required=True, readonly=False),
+        'name':fields.char('Bank Account No.', size=64, required=True, readonly=False),
         'employee_id':fields.many2one('hr.employee', 'Employee', required=True),
-        'amount': fields.float('Amount', digits_compute=dp.get_precision('Payroll')),
         'bysal': fields.float('By Salary', digits_compute=dp.get_precision('Payroll')),
     }
 
