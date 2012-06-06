@@ -971,11 +971,11 @@ openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.Lis
      * @returns {Object} object with the keys ``ids`` and ``records``, holding respectively the ids of all selected records and the records themselves.
      */
     get_selection: function () {
+        var result = {ids: [], records: []};
         if (!this.options.selectable) {
-            return [];
+            return result;
         }
         var records = this.records;
-        var result = {ids: [], records: []};
         this.$current.find('th.oe-record-selector input:checked')
                 .closest('tr').each(function () {
             var record = records.get($(this).data('id'));
