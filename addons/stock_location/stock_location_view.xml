@@ -51,7 +51,7 @@
                             </tree>
                             <form string="Pulled Paths">
                                 <separator string="Conditions" colspan="4"/>
-                                <field name="name" colspan="4"/>
+                                <field name="name" colspan="4" placeholder="Fulfill needs on location X from location Y "/>
                                 <field name="location_id"/>
                                 <separator string="Action Type" colspan="4"/>
                                 <field name="type_proc"/>
@@ -81,7 +81,7 @@
                             </tree>
                             <form string="Pushed flows">
                                 <group colspan="4" col="6">
-                                    <field name="name"/>
+                                    <field name="name" placeholder="When receiving at location X, move to location Y"/>
                                     <field name="location_from_id"/>
                                     <field name="location_dest_id"/>
                                     <field name="auto"/>
