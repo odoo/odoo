@@ -2054,13 +2054,22 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
 
             // search more... if more results that max
             if (values.length > self.limit) {
+                var open_search_popup = function(data) {
+                    self._change_int_value(null);
+                    self._search_create_popup("search", data);
+                };
                 values = values.slice(0, self.limit);
                 values.push({label: _t("<em>   Search More...</em>"), action: function() {
-                    dataset.name_search(search_val, self.build_domain(), 'ilike'
-                    , false, function(data) {
-                        self._change_int_value(null);
-                        self._search_create_popup("search", data);
-                    });
+                    if (!search_val) {
+                        // search optimisation - in case user didn't enter any text we
+                        // do not need to prefilter records; for big datasets (ex: more
+                        // that 10.000 records) calling name_search() could be very very
+                        // expensive!
+                        open_search_popup();
+                        return;
+                    }
+                    dataset.name_search(search_val, self.build_domain(),
+                                        'ilike', false, open_search_popup);
                 }});
             }
             // quick create
