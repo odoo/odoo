@@ -261,17 +261,14 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form layout="manual">
-                <div class="oe_form_topbar">
+                <header>
                     <button string="Confirm" name="hr_verify_sheet" states="draft"/>
                     <button string="Refund" name="refund_sheet" states="confirm,done" type='object'/>
                     <button string="Set to Draft" name="draft" states="cancel"/>
                     <button string="Compute Sheet" name="compute_sheet" type="object" states="draft"/>
                     <button string="Cancel" name="cancel_sheet" states="draft,hr_check,confirm,verify"/>
-                    <div class="oe_right">
-                        <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,confirm"/>
-                    </div>
-                    <div class="oe_clear"/>
-                </div>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
+                </header>
                 <sheet string="Payslip" layout="auto">
                     <group col="6" colspan="4" class="oe_form_header">
                         <field name="employee_id" on_change="onchange_employee_id(date_from, date_to, employee_id, contract_id)"/>
@@ -727,15 +724,12 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form layout="manual">
-                <div class="oe_form_topbar">
+                <header>
                     <button name="close_payslip_run" type="object" string="Close" states="draft"/>
                     <button name="%(action_hr_payslip_by_employees)d" type="action" states="draft" string="Generate Payslips" />
                     <button string="Set to Draft" name="draft_payslip_run" type="object" states="close"/>
-                    <div class="oe_right">
-                        <field name="state" widget="statusbar" nolabel="1"/>
-                    </div>
-                    <div class="oe_clear"/>
-                </div>
+                    <field name="state" widget="statusbar"/>
+                </header>
                 <sheet string="Payslips Batches" layout="auto">
                     <group col="6" colspan="4" class="oe_form_header">
                         <field name="name" colspan="4"/>

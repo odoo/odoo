@@ -51,16 +51,13 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
             <form string="Events" layout="manual">
-                <div class="oe_form_topbar">
+                <header>
                     <button string="Confirm Event" name="button_confirm" states="draft" type="object"/>
                     <button string="Event Ended" name="button_done" states="confirm" type="object"/>
                     <button string="Set To Draft" name="button_draft" states="cancel,done" type="object"/>
                     <button string="Cancel Event" name="button_cancel" states="draft,confirm" type="object"/>
-                    <div class="oe_right">
-                        <field name="state" select="1" nolabel="1" widget="statusbar" statusbar_visible="draft,confirm,done"/>
-                    </div>
-                    <div class="oe_clear"/>
-                </div>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done"/>
+                </header>
                 <sheet layout="manual">
 
 
@@ -130,7 +127,10 @@
                             </field>
                     </page>
                     </notebook>
-                </sheet>
+                    </sheet>
+                    <div class="oe_form_sheet_width">
+                        <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"/>
+                    </div>
             </form>
             </field>
         </record>
@@ -153,10 +153,6 @@
                     <field name="main_speaker_id" groups="base.extended"/>
                     <field name="user_id"/>
                     <field name="state"/>
-                    <button string="Confirm Event" help="Confirm Event" name="button_confirm" states="draft" type="object" icon="gtk-apply"/>
-                    <button string="Event Done" help="Event Done" name="button_done" states="confirm" type="object" icon="gtk-jump-to"/>
-                    <button string="Cancel Event" help="Cancel Event" name="button_cancel" states="draft,confirm" type="object" icon="gtk-cancel"/>
-                    <button string="Set To Draft" help="Set To Draft" name="button_draft" states="cancel,done" type="object" icon="gtk-convert"/>
                 </tree>
             </field>
         </record>
@@ -346,10 +342,6 @@
                     <field name="user_id"/>
                     <field name="origin"/>
                     <field name="state"/>
-                    <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
-                    <button name="registration_open" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
-                    <button name="button_reg_close" string="Attended" states="open" type="object" icon="gtk-apply"/>
-                    <button string="Set To Unconfirmed" name="do_draft" states="cancel,done" type="object" icon="gtk-convert"/>
                 </tree>
             </field>
         </record>
@@ -360,16 +352,13 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form layout="manual">
-                <div class="oe_form_topbar">
+                <header>
                     <button name="registration_open" string="Confirm" states="draft" type="object"/>
                     <button name="button_reg_close" string="Attended" states="open" type="object"/>
                     <button string="Set To Unconfirmed" name="do_draft" states="cancel,done" type="object"/>
                     <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object"/>
-                    <div class="oe_right">
-                        <field name="state" select="1" nolabel="1" colspan="2" widget="statusbar" statusbar_visible="draft,open,done"/>
-                    </div>
-                    <div class="oe_clear"/>
-                </div>
+                    <field name="state" select="1" nolabel="1" colspan="2" widget="statusbar" statusbar_visible="draft,open,done"/>
+                </header>
                 <sheet string="Registration" layout="auto">
                     <group col="6" colspan="4">
                         <field name="event_id" on_change="onchange_event(event_id, context)" domain="[('state','in',('draft','confirm'))]"/>
@@ -414,7 +403,10 @@
                            </page>
 
                     </notebook>
-                </sheet>
+                    </sheet>
+                    <div class="oe_form_sheet_width">
+                        <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"/>
+                    </div>
                 </form>
             </field>
         </record>
