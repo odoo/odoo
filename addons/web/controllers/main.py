@@ -1903,10 +1903,14 @@ class Import(View):
             return '<script>window.top.%s(%s);</script>' % (
                 jsonp, simplejson.dumps({'error': {'message': error}}))
 
-        # skip ignored records
-        data_record = itertools.islice(
-            csv.reader(csvfile, quotechar=str(csvdel), delimiter=str(csvsep)),
-            skip, None)
+        # skip ignored records (@skip parameter)
+        # then skip empty lines (not valid csv)
+        # nb: should these operations be reverted?
+        rows_to_import = itertools.ifilter(
+            None,
+            itertools.islice(
+                csv.reader(csvfile, quotechar=str(csvdel), delimiter=str(csvsep)),
+                skip, None))
 
         # if only one index, itemgetter will return an atom rather than a tuple
         if len(indices) == 1: mapper = lambda row: [row[indices[0]]]
@@ -1918,7 +1922,7 @@ class Import(View):
             # decode each data row
             data = [
                 [record.decode(csvcode) for record in row]
-                for row in itertools.imap(mapper, data_record)
+                for row in itertools.imap(mapper, rows_to_import)
                 # don't insert completely empty rows (can happen due to fields
                 # filtering in case of e.g. o2m content rows)
                 if any(row)
