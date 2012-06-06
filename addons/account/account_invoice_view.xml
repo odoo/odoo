@@ -39,7 +39,7 @@
                     <field name="quantity"/>
                     <field name="uos_id" groups="product.group_uom"/>
                     <field name="price_unit"/>
-                    <field name="discount"/>
+                    <field name="discount" groups="sale.group_discount_per_so_line"/>
                     <field name="price_subtotal"/>
                 </tree>
             </field>
@@ -60,7 +60,7 @@
                     </group>
                     <field name="price_unit"/>
                     <field domain="[('company_id', '=', parent.company_id), ('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id" on_change="onchange_account_id(product_id, parent.partner_id, parent.type, parent.fiscal_position,account_id)"/>
-                    <field name="discount"/>
+                    <field name="discount" groups="sale.group_discount_per_so_line"/>
                     <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id), ('parent_id', '!=', False)]" name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
                     <field name="company_id" groups="base.group_multi_company" readonly="1"/>
                     <separator string="Notes" colspan="4"/>
