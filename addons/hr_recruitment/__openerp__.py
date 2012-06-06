@@ -54,6 +54,7 @@ system to store and search in your CV base.
         'security/hr_recruitment_security.xml',
         'security/ir.model.access.csv',
         'report/hr_recruitment_report_view.xml',
+        'board_hr_recruitment_statistical_view.xml',
         'hr_recruitment_installer_view.xml',
         'res_config_view.xml',
      ],
