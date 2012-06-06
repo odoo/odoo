@@ -78,7 +78,7 @@
                         <group colspan="1" col="2">
                             <separator string="Codes" colspan="2"/>
                             <field name="default_code"/>
-                            <field name="ean13"/>
+                            <field name="ean13" placeholder="5901234123457" />
                         </group>
                         <group colspan="1" col="2">
                             <separator string="Characteristics" colspan="2"/>
@@ -163,9 +163,9 @@
                             <separator string="Description"/>
                             <field colspan="4" name="description" nolabel="1"/>
                             <separator string="Sale Description"/>
-                            <field colspan="4" name="description_sale" nolabel="1"/>
+                            <field colspan="4" name="description_sale" nolabel="1" placeholder="This note will be displayed on quotations..."/>
                             <separator string="Purchase Description"/>
-                            <field colspan="4" name="description_purchase" nolabel="1"/>
+                            <field colspan="4" name="description_purchase" nolabel="1" placeholder="This note will be displayed on requests for quotation..."/>
                         </page>
                         <page groups="product.group_stock_packaging" string="Packaging">
                             <field colspan="4" name="packaging" nolabel="1">
