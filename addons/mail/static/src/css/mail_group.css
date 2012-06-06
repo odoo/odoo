@@ -14,8 +14,20 @@ div.oe_mail_group_advanced_details {
 .oe_form_sheetbg.openerp_mail_group_sheet .oe_form_sheet {
   min-height: 0px;
   max-height: none;
+  padding: 0px 18px;
+  max-width: 80%;
 }
 
+/* Resize group logo */
+.oe_form_sheetbg.openerp_mail_group_sheet .oe_form_field_image > img {
+  max-width: 100px;
+  max-height: 100px;
+}
+
+/* Resize group description */
+.oe_form_sheetbg.openerp_mail_group_sheet .oe_form_field_text > textarea {
+  height: 40px;
+}
 
 /* ------------------------------ */
 /* Group Kanban                   */

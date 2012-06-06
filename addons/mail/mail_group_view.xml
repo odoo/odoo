@@ -52,26 +52,24 @@
             <field name="arch" type="xml">
                 <form string="Group Form" layout="manual">
                     <sheet layout="auto" class="openerp_mail_group_sheet">
-                        <group colspan="4" col="4">
+                        <group colspan="4" col="8">
                             <group colspan="1" col="2">
                                 <field name="photo" widget='image' nolabel="1" on_change="onchange_photo(photo)"/>
                             </group>
-                            <group colspan="3" col="6">
+                            <group colspan="7" col="6">
                                 <h2><field name="name" nolabel="1" colspan="4"/></h2>
                                 <newline/>
-                                <group colspan="2" col="2">
+                                <group colspan="4" col="4">
+                                    <field name="description" colspan="4" nolabel="1"/>
+                                </group>
+                                <group colspan="2" col="2" class="oe_form_readonly_hidden">
                                     <field name="responsible_id" colspan="2"/>
                                     <field name="public" colspan="2"/>
                                     <field name="push_to_groups" colspan="2" attrs="{'invisible':[('groups','=',False)]}"/>
                                 </group>
-                                <group colspan="4" col="4">
-                                    <field name="description" colspan="4" nolabel="1"/>
-                                </group>
                             </group>
                         </group>
-                        <p><a href="#" class="oe_mail_group_advanced">See advanced options for groups</a></p>
-                        <newline/>
-                        <div class="oe_mail_group_advanced_details">
+                        <div class="oe_form_readonly_hidden">
                             <group colspan="4" col="4">
                                 <group colspan="2" col="3">
                                     <h3>Models for automatic message fetching</h3>
@@ -91,12 +89,6 @@
                                 </group>
                             </group>
                         </div>
-                        <script>
-                            $('a.oe_mail_group_advanced').click(function() {
-                                var parent_node = ($(this)).parents('.oe_form_sheet').eq(0);
-                                parent_node.find('div.oe_mail_group_advanced_details').toggle();
-                            });
-                        </script>
                     </sheet>
                     <div class="oe_form_sheet_width">
                         <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"
