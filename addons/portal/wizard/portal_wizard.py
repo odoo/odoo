@@ -158,21 +158,22 @@ class wizard(osv.osv_memory):
                 existing_users = user_obj.browse(cr, ROOT_UID, existing_uids)
                 existing_logins = [user.login for user in existing_users]
                 new_users_data = []
-                if u.has_portal_user:
-                    if u.user_email not in existing_logins:
-                        new_users_data.append({
-                                'name': u.name,
-                                'login': u.user_email,
-                                'password': random_password(),
-                                'user_email': u.user_email,
-                                'context_lang': u.lang,
-                                'share': True,
-                                'action_id': wiz.portal_id.home_action_id and wiz.portal_id.home_action_id.id or False,
-                                'partner_id': u.partner_id and u.partner_id.id,
-                            } )
-                    portal_obj.write(cr, ROOT_UID, [wiz.portal_id.id],
-                        {'users': [(0, 0, data) for data in new_users_data]}, context0)
-                else:
+                
+                if u.user_email not in existing_logins:
+                    new_users_data.append({
+                            'name': u.name,
+                            'login': u.user_email,
+                            'password': random_password(),
+                            'user_email': u.user_email,
+                            'context_lang': u.lang,
+                            'share': True,
+                            'action_id': wiz.portal_id.home_action_id and wiz.portal_id.home_action_id.id or False,
+                            'partner_id': u.partner_id and u.partner_id.id,
+                        } )
+                portal_obj.write(cr, ROOT_UID, [wiz.portal_id.id],
+                    {'users': [(0, 0, data) for data in new_users_data]}, context0)
+                
+                if not u.has_portal_user:
                     new_users_data = []
                     if u.user_email in existing_logins:
                         portal_uids = user_obj.search(cr, ROOT_UID, [('login','=',u.user_email),('partner_id', '=', u.partner_id.id)])
@@ -243,6 +244,10 @@ class wizard_user(osv.osv_memory):
         (_check_email, 'Invalid email address', ['email']),
     ]
 
+    _defaults = {  
+        'lang': lambda self,cr,uid,c: self.browse(cr, uid, uid, c).partner_id.lang or 'en_US',
+        }
+    
 wizard_user()
 
 
