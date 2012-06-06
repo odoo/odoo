@@ -65,10 +65,12 @@ class synchronize_google(osv.osv_memory):
     _name = 'synchronize.google.import'
 
     def _get_group(self, cr, uid, context=None):
-        # why this method is call when module is load???
+
+        # all the selection field which have method are called at load time. why ?
+        
         res = []
         if context:
-            user_obj = self.pool.get('res.users').browse(cr, uid, uid,context)
+            user_obj = self.pool.get('res.users').browse(cr, uid, uid,context=context)
             google=self.pool.get('google.login')
             if not user_obj.gmail_user or not user_obj.gmail_password:
                 raise osv.except_osv(_('Warning !'), _("No Google Username or password Defined for user.\nPlease define in user view"))

@@ -51,10 +51,10 @@
             <field name="globalisation_id" string="Glob. Id"/>
             <field name="state" invisible="1"/>
           </xpath>
-          <xpath expr="//field[@name='date']" position="after">
+          <xpath expr="//page[@name='statement_line_ids']/field[@name='line_ids']/form/group/field[@name='date']" position="after">
             <field name="val_date"/>
           </xpath>
-          <xpath expr="//field[@name='amount']" position="after">
+          <xpath expr="//page[@name='statement_line_ids']/field[@name='line_ids']/form/group/field[@name='amount']" position="after">
             <field name="globalisation_id"/>
             <field name="state" invisible="1"/>
           </xpath>
