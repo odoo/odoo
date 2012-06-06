@@ -83,27 +83,7 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_document_wall_tree">
-            <field name="name">report.document.wall.tree</field>
-            <field name="model">report.document.wall</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Wall of Shame">
-                    <field name="user_id" select="1"/>
-                    <field name="month" select="1"/>
-                    <field name="last"/>
-                </tree>
-            </field>
-        </record>
-
-        <record model="ir.actions.act_window" id="action_view_wall">
-            <field name="name">Wall of Shame</field>
-            <field name="res_model">report.document.wall</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-
-        <!--<menuitem name="Wall of Shame" id="menu_action_view_my_document_report_shame" parent="menu_action_view_my_document_report" action="action_view_wall"/>-->
+      
 
 <!--***************************************************************************************-->
 
@@ -112,7 +92,7 @@
             <field name="model">report.document.user</field>
             <field name="type">graph</field>
             <field name="arch" type="xml">
-                <graph string="Files by Resource Type" type="pie">
+                <graph string="Files by Resource Type" type="bar">
                     <field name="type" />
                     <field name="nbr" operator="+"/>
                 </graph>
@@ -127,7 +107,7 @@
             <field name="model">report.document.file</field>
             <field name="type">graph</field>
             <field name="arch" type="xml">
-                <graph string="File Size by Month" type="bar">
+                <graph string="File Size by Month" type="line">
                     <field name="month"/>
                     <field name="file_size" operator="+"/>
                 </graph>
@@ -161,7 +141,7 @@
             <field name="model">report.document.user</field>
             <field name="type">graph</field>
             <field name="arch" type="xml">
-                <graph string="Files by Month" type="bar">
+                <graph string="Files by Month" type="pie">
                     <field name="month" />
                     <field name="nbr" operator="+"/>
 <!--                    <field name="name" operator="+"/>-->
@@ -194,26 +174,6 @@
 
 
 <!--***************************************************************************************-->
-
-    <record model="ir.ui.view" id="view_user_graph">
-            <field name="name">report.document.user.graph</field>
-            <field name="model">report.document.user</field>
-            <field name="type">graph</field>
-            <field name="arch" type="xml">
-                <graph string="Files by users" type="bar">
-                    <field name="user" />
-                    <field name="nbr" operator="+"/>
-                </graph>
-            </field>
-        </record>
-
-        <record model="ir.actions.act_window" id="action_view_user_graph">
-            <field name="name">Files By Users</field>
-            <field name="res_model">report.document.user</field>
-            <field name="view_id" ref="view_user_graph"></field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree</field>
-        </record>
 
 
 <!--***************************************************************************************-->
