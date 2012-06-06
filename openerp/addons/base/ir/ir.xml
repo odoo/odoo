@@ -206,7 +206,7 @@
                     <field name="name"/>
                     <field name="code"/>
                     <separator orientation="vertical"/>
-                    <field name="company_id" select="1" groups="base.group_multi_company"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </search>
             </field>
         </record>
@@ -254,8 +254,8 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Sequences Type">
-                    <field name="name" select="1"/>
-                    <field name="code" select="1"/>
+                    <field name="name"/>
+                    <field name="code"/>
                 </search>
             </field>
         </record>
@@ -818,14 +818,13 @@
                             string="Binary"
                             domain="[('type','=','binary')]"/>
                         <separator orientation="vertical"/>
-                        <filter icon="terp-go-month" string="Month"
-                            domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;=',time.strftime('%%Y-%%m-01'))]"/>
-                        <separator orientation="vertical"/>
                         <field name="name"/>
                         <field name="type"/>
                         <field name="datas_fname"/>
+                        <field name="create_date"/>
                         <field name="create_uid">
-                            <filter icon="terp-personal"
+                            <filter string="My Document(s)"
+                                icon="terp-personal"
                                 domain="[('create_uid','=',uid)]"
                                 help="Filter on my documents" />
                         </field>
@@ -1169,9 +1168,9 @@
                         string="Untranslated"
                         domain="['|',('value', '=', False),('value','=','')]"/>
                     <separator orientation="vertical"/>
-                    <field name="lang" select="1"/>
-                    <field name="src" select="1"/>
-                    <field name="value" select="1"/>
+                    <field name="lang"/>
+                    <field name="src"/>
+                    <field name="value"/>
                 </search>
             </field>
         </record>
@@ -1476,7 +1475,7 @@
                         <filter string="Write Access" icon="terp-tools" domain="[('perm_write','=',True)]"/>
                         <separator orientation="vertical"/>
                         <field name="name"/>
-                          <field name="model_id"/>
+                        <field name="model_id"/>
                         <field name="group_id"/>
                 </group>
                 <newline/>
