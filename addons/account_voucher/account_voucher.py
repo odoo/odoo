@@ -354,7 +354,7 @@ class account_voucher(osv.osv):
         'amount': _get_amount,
         'type':_get_type,
         'state': 'draft',
-        'pay_now': 'pay_later',
+        'pay_now': 'pay_now',
         'name': '',
         'date': lambda *a: time.strftime('%Y-%m-%d'),
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.voucher',context=c),
