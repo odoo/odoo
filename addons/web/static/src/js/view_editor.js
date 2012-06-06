@@ -52,10 +52,11 @@ instance.web.ViewEditor =   instance.web.OldWidget.extend({
         this.view_edit_dialog.on_close.add_last(function(){window.location.reload();});
         this.main_view_id = this.parent.fields_view.view_id;
         this.action_manager = new instance.web.ActionManager(this);
-        this.action_manager.appendTo(this.view_edit_dialog);
         $.when(this.action_manager.do_action(action)).then(function() {
             var viewmanager = self.action_manager.inner_viewmanager,
                 controller = viewmanager.views[viewmanager.active_view].controller;
+            self.action_manager.appendTo(self.view_edit_dialog.$element);
+            self.action_manager.renderElement(self.view_edit_dialog);
             controller.on_loaded.add_last(function(){
                 $(controller.groups).bind({
                     'selected': function(e, ids, records) {
@@ -706,12 +707,12 @@ instance.web.ViewEditor =   instance.web.OldWidget.extend({
                          case "After":
                             self.edit_xml_dialog.$element.
                                 find("tr[id='viewedit-"+after_append+"']").after(clone);
-                            $(arch1).after(update_values[0]);
+                            $(arch1).after($(update_values[0]));
                             child_list.splice(index + 1, 0, object_xml);
                             break;
                         case "Before":
                             tr_click.before(clone);
-                            $(arch1).before(update_values[0]);
+                            $(arch1).before($(update_values[0]));
                             child_list.splice(index - 1, 0, object_xml);
                             break;
                         case "Inside":
@@ -722,7 +723,7 @@ instance.web.ViewEditor =   instance.web.OldWidget.extend({
                                         self.do_parent_img_hide_show(this);
                                 }));
                             }
-                            $(arch1).append(update_values[0]);
+                            $(arch1).append($(update_values[0]));
                             self.edit_xml_dialog.$element.
                                 find("tr[id='viewedit-"+after_append+"']").after(clone);
                             obj.child_id.push(object_xml);
@@ -839,6 +840,7 @@ instance.web.ViewEditor =   instance.web.OldWidget.extend({
             'string' : {'name':'string', 'string': 'String', 'type': 'char'},
             'required' : {'name':'required', 'string': 'Required', 'type': 'boolean'},
             'readonly' : {'name':'readonly', 'string': 'Readonly', 'type': 'boolean'},
+            'invisible' : {'name':'invisible', 'string': 'Invisible', 'type': 'boolean'},
             'domain' : {'name':'domain', 'string': 'Domain', 'type': 'char'},
             'context' : {'name':'context', 'string': 'Context', 'type': 'char'},
             'limit' : {'name':'limit', 'string': 'Limit', 'type': 'float'},
@@ -1134,12 +1136,12 @@ instance.web.ViewEditor.FieldFloat = instance.web.ViewEditor.FieldChar.extend({
 });
 
 var _PROPERTIES = {
-    'field' : ['name', 'string', 'required', 'readonly', 'domain', 'context', 'nolabel', 'completion',
+    'field' : ['name', 'string', 'required', 'readonly','invisible', 'domain', 'context', 'nolabel', 'completion',
                'colspan', 'widget', 'eval', 'ref', 'on_change', 'attrs', 'groups'],
     'form' : ['string', 'col', 'link'],
     'notebook' : ['colspan', 'position', 'groups'],
     'page' : ['string', 'states', 'attrs', 'groups'],
-    'group' : ['string', 'col', 'colspan', 'states', 'attrs', 'groups'],
+    'group' : ['string', 'col', 'colspan','invisible', 'states', 'attrs', 'groups'],
     'image' : ['filename', 'width', 'height', 'groups'],
     'separator' : ['string', 'colspan', 'groups'],
     'label': ['string', 'align', 'colspan', 'groups'],
