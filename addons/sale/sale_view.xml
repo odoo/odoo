@@ -135,6 +135,7 @@
                     </group>
                     <notebook colspan="5">
                         <page string="Sales Order">
+                        <group col="4">
                             <field name="partner_id" on_change="onchange_partner_id(partner_id)" domain="[('customer','=',True)]" context="{'search_default_customer':1}" />
                             <field domain="[('parent_id','=',partner_id)]" name="partner_invoice_id" groups="sale.group_delivery_invoice_address" options='{"quick_create": false}'/>
                             <field domain="[('parent_id','=',partner_id)]" name="partner_shipping_id" groups="sale.group_delivery_invoice_address" options='{"quick_create": false}'/>
@@ -211,23 +212,17 @@
                                     <field name="price_subtotal" groups="base.group_sale_notes_subtotal"/>
                                 </tree>
                             </field>
-                            <group colspan="2" col="4" name="bellow_the_lines_hook">
+                            <group colspan="3" col="4" name="bellow_the_lines_hook">
                             </group>
-                            <div class="oe_form_subtotal_footer" colspan="2">
-                                <div>
-                                    <field name="amount_untaxed" sum="Untaxed amount"/>
-                                </div>
-                                <div>
-                                    <field name="amount_tax"/>
-                                </div>
-                                <div class="oe_form_subtotal_footer_separator">
-                                    <field name="amount_total"/>
-                                </div>
-                            </div>
-                            <div class="oe_clear"/>
+                            <group class="oe_form_subtotal_footer" colspan="1" col="2">
+                                <field name="amount_untaxed" sum="Untaxed amount"/>
+                                <field name="amount_tax"/>
+                                <field name="amount_total" class="oe_form_subtotal_footer_separator"/>
+                            </group>
 
                             <separator colspan="4" string="Notes"/>
                             <field colspan="4" name="note" nolabel="1" placeholder="Our quotation is valid for 30 days..."/>
+                        </group>
                         </page>
                         <page string="Other Information">
                             <group colspan="2" col="2" name="logistics">
