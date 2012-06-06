@@ -65,6 +65,7 @@ class synchronize_google(osv.osv_memory):
     _name = 'synchronize.google.import'
 
     def _get_group(self, cr, uid, context=None):
+        # why this method is call when module is load???
         res = []
         if context:
             user_obj = self.pool.get('res.users').browse(cr, uid, uid,context)
