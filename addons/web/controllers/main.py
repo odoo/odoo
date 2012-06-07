@@ -1510,6 +1510,10 @@ class Binary(openerpweb.Controller):
 
 class Action(openerpweb.Controller):
     _cp_path = "/web/action"
+    
+    action_mapping = {
+        "ir.actions.act_url": "ir.actions.url",
+    }
 
     @openerpweb.jsonrequest
     def load(self, req, action_id, do_not_eval=False):
@@ -1522,7 +1526,9 @@ class Action(openerpweb.Controller):
             if action_type[0]['type'] == 'ir.actions.report.xml':
                 ctx.update({'bin_size': True})
             ctx.update(context)
-            action = req.session.model(action_type[0]['type']).read([action_id], False, ctx)
+            action_model = action_type[0]['type']
+            action_model = Action.action_mapping.get(action_model, action_model)
+            action = req.session.model(action_model).read([action_id], False, ctx)
             if action:
                 value = clean_action(req, action[0], do_not_eval)
         return {'result': value}
