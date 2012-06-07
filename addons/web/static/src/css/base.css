@@ -1571,12 +1571,18 @@ label.error {
 .openerp .oe_form_frame_cell.oe_form_separator_vertical {
     border-left: 1px solid #666;
 }
-.openerp td.required input, .openerp td.required select, .openerp td.required textarea {
+.openerp td.required input,
+.openerp td.required select,
+.openerp td.required textarea
+.openerp td.required table.oe-listview-content {
     background-color: #D2D2FF !important;
 }
 .openerp td.invalid input, .openerp td.invalid select, .openerp td.invalid textarea {
     background-color: #F66 !important;
     border: 1px solid #D00 !important;
+}
+.openerp td.invalid table.oe-listview-content {
+    border: 1px solid #FF6666 !important;
 }
 .openerp div.oe-progressbar span {
     position: absolute;

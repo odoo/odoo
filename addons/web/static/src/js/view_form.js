@@ -2681,7 +2681,7 @@ openerp.web.form.FieldMany2Many = openerp.web.form.Field.extend({
         return [commands.replace_with(this.dataset.ids)];
     },
     validate: function() {
-        this.invalid = false;
+        this.invalid = this.required && _(this.dataset.ids).isEmpty();
     },
     is_readonly: function() {
         return this.readonly || this.force_readonly;
