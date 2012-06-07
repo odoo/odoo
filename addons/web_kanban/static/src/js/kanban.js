@@ -632,7 +632,9 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
             return false;
         });
 
-        this.$element.find('.oe_kanban_global_click').on('click', this.on_card_clicked);
+        if (this.$element.find('.oe_kanban_global_click').length) {
+            this.$element.on('click', this.on_card_clicked);
+        }
     },
     on_card_clicked: function() {
         this.view.trigger('hide_menus');
