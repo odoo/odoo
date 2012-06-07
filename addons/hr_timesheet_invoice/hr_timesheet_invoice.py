@@ -77,8 +77,8 @@ class account_analytic_account(osv.osv):
     _defaults = {
         'pricelist_id': lambda self, cr, uid, ctx: ctx.get('pricelist_id', False),
     }
-    def on_change_partner_id(self, cr, uid, ids,partner_id, context={}):
-        res = super(account_analytic_account,self).on_change_partner_id(cr, uid, ids,partner_id, context=context)
+    def on_change_partner_id(self, cr, uid, ids,partner_id, name, context={}):
+        res = super(account_analytic_account,self).on_change_partner_id(cr, uid, ids,partner_id, name, context=context)
         part = self.pool.get('res.partner').browse(cr, uid, partner_id,context=context)
         pricelist = part.property_product_pricelist and part.property_product_pricelist.id or False
         if pricelist:res['value']['pricelist_id'] = pricelist

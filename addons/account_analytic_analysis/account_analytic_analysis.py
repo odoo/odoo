@@ -467,7 +467,7 @@ class account_analytic_account(osv.osv):
         'charge_expenses' : fields.boolean('Charge Expenses'),
         'month_ids': fields.function(_analysis_all, multi='analytic_analysis', type='many2many', relation='account_analytic_analysis.summary.month', string='Month'),
         'user_ids': fields.function(_analysis_all, multi='analytic_analysis', type="many2many", relation='account_analytic_analysis.summary.user', string='User'),
-        'template_id':fields.many2one('account.analytic.account', 'Template Of Contract'),
+        'template_id':fields.many2one('account.analytic.account', 'Template of Contract'),
         'expense_invoiced' : fields.function(_expense_invoiced_calc, type="float"),
         'expense_to_invoice' : fields.function(_expense_to_invoice_calc, type='float'),
         'remaining_expense' : fields.function(_remaining_expnse_calc, type="float"), 
