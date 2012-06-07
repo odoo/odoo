@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <openerp>
      <data>
-        <!--My Opportunities Action -->
+        <!-- CRM dashboard -->
         <record model="ir.actions.act_window" id="act_my_oppor">
             <field name="name">My Opportunities</field>
             <field name="res_model">crm.lead</field>
@@ -10,7 +10,6 @@
             <field name="view_id" ref="crm.crm_case_tree_view_oppor"/>
         </record>
 
-        <!--New Lead Tree view Action -->
         <record model="ir.actions.act_window" id="act_crm_tag_tree_view_leads_all">
             <field name="name">New Leads</field>
             <field name="res_model">crm.lead</field>
@@ -19,8 +18,6 @@
             <field name="view_id" ref="crm.crm_case_tree_view_leads"/>
         </record>
 
-        <!-- crm mananger dashboard -->
-         <!--Planned Revenue By User pie graph -->
         <record model="ir.ui.view" id="view_crm_opportunity_stage_graph">
             <field name="name">Opportunities By Stage - Graph</field>
             <field name="model">crm.lead.report</field>
@@ -31,8 +28,7 @@
                     <field name="nbr" operator="+"/>
                 </graph>
             </field>
-        </record><!--CRM Dashboard-->
-        <!--Planned Revenue By User pie graph action-->
+        </record>
 
         <record model="ir.actions.act_window" id="act_opportunity_stage">
             <field name="name">Opportunities By Stage</field>
@@ -69,7 +65,6 @@
             <field name="context">{'search_default_Stage':1}</field>
         </record>
 
-        <!-- Metting calendar Action-->
         <record model="ir.actions.act_window" id="crm_case_confirmed_meet">
             <field name="name">Meetings</field>
             <field name="res_model">crm.meeting</field>
@@ -79,7 +74,7 @@
             <field name="domain">[('state','=','open'),('date','&gt;',datetime.date.today().strftime("%Y-%m-%d %H:%M:%S"))]</field>
             <field name="search_view_id" ref="view_crm_case_meetings_filter"/>
         </record>
-        <!--CRM Dashboard-->
+
         <record model="ir.ui.view" id="board_crm_statistical_form">
             <field name="name">CRM - Statistical Dashboard Form</field>
             <field name="model">board.board</field>
@@ -101,7 +96,6 @@
             </field>
         </record>
 
-        <!--CRM Dashboard Action-->
         <record model="ir.actions.act_window" id="open_board_statistical_dash">
             <field name="name">CRM Dashboard</field>
             <field name="res_model">board.board</field>
@@ -111,7 +105,6 @@
             <field name="view_id" ref="board_crm_statistical_form"/>
         </record>
 
-        <!--CRM Dashboard Action-->
         <menuitem
             id="menu_board_statistics_dash"
             parent="base.menu_reporting_dashboard"
