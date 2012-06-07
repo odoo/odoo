@@ -387,14 +387,21 @@ openerp.web.Database = openerp.web.OldWidget.extend(/** @lends openerp.web.Datab
         self.$option_id.find("form[name=create_db_form]").validate({
             submitHandler: function (form) {
                 var fields = $(form).serializeArray();
+                var form_obj = self.to_object(fields);
+                if(_(self.db_list).contains(form_obj['db_name'])){
+                    self.display_error({
+                        title: _t("Create database"),
+                        error: _.str.sprintf(_t("Database %s already exist"), form_obj['db_name'])
+                    });
+                    return;
+                }
                 self.rpc("/web/database/create", {'fields': fields}, function(result) {
                     if (self.db_list) {
-                        self.db_list.push(self.to_object(fields)['db_name']);
+                        self.db_list.push(form_obj['db_name']);
                         self.db_list.sort();
                         self.widget_parent.set_db_list(self.db_list);
                     }
 
-                    var form_obj = self.to_object(fields);
                     self.widget_parent.do_login(
                             form_obj['db_name'],
                             'admin',
