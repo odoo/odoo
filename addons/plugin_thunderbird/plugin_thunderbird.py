@@ -34,13 +34,10 @@ class plugin_thunderbird_installer(osv.osv_memory):
         'pdf_file':fields.char('Installation Manual', size=264, help="The documentation file :- how to install Thunderbird Plug-in.", readonly=True),
         'description':fields.text('Description', readonly=True)
     }
-
-    _defaults = {
-        'thunderbird' : True,
-        'name' : 'openerp_plugin.xpi',
-        'pdf_file' : 'http://doc.openerp.com/book/2/2_6_Comms/2_6_Comms_thunderbird.html',
-        'plugin_file' : '/plugin_thunderbird/static/openerp_plugin.xpi',
-        'description' : """
+    def default_get(self, cr, uid, fields, context=None):
+        res = {}
+        plugin_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')  + '/plugin_thunderbird/static/openerp_plugin.xpi'
+        description = """
 Thunderbird plugin installation:
     1.  Save the Thunderbird plug-in.
     2.  From the Thunderbird menubar: Tools ­> Add-ons -> Screwdriver/Wrench Icon -> Install add-on from file...
@@ -50,5 +47,11 @@ Thunderbird plugin installation:
     7.  From the Thunderbird menubar: OpenERP -> Configuration.
     8.  Configure your openerp server.
 """
-    }
+        res['thunderbird'] = True,
+        res['name'] = 'openerp_plugin.xpi'
+        res['plugin_file'] = plugin_url
+        res['pdf_file'] = 'http://doc.openerp.com/book/2/2_6_Comms/2_6_Comms_thunderbird.html',
+        res['description'] = description
+        return res
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
