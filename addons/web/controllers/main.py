@@ -1292,7 +1292,7 @@ class SearchView(View):
          all_dashboard = []
          Model = req.session.model('ir.actions.act_window')
          Dashboard_Menus = req.session.model('ir.values')
-         Dashboard_act_window = Model.search_read([('res_model','=',"board.board"), ('view_id','!=', False) ],['name','id'])
+         Dashboard_act_window = Model.search_read([('res_model','=',"board.board")],['name','id'])
          for i in Dashboard_act_window:
              tuple_of_dashboard = "ir.actions.act_window," + str(i["id"])
              menu_id = Dashboard_Menus.search_read([('value','=',tuple_of_dashboard)],['res_id'])
