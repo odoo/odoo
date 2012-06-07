@@ -123,7 +123,12 @@ class stock_return_picking(osv.osv_memory):
             if m.state == 'done':
                 return_history[m.id] = 0
                 for rec in m.move_history_ids2:
-                    return_history[m.id] += (rec.product_qty * rec.product_uom.factor)
+                    # only take into account 'product return' stock move
+                    # (i.e move with exact opposite of ours:
+                    #     (location, dest location) = (dest location, location))
+                    if rec.location_dest_id.id == m.location_id.id \
+                        and rec.location_id.id == m.location_dest_id.id:
+                        return_history[m.id] += (rec.product_qty * rec.product_uom.factor)
         return return_history
 
     def create_returns(self, cr, uid, ids, context=None):
