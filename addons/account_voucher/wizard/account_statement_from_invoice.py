@@ -85,6 +85,7 @@ class account_statement_from_invoice_lines(osv.osv_memory):
                             'currency_id':statement.currency.id,
                             'date':line.date,
                             'amount':abs(amount),
+                            'payment_rate': result['value']['payment_rate'],
                             'period_id':statement.period_id.id}
             voucher_id = voucher_obj.create(cr, uid, voucher_res, context=context)
 
