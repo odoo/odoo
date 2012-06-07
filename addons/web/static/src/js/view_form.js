@@ -3287,6 +3287,9 @@ instance.web.form.FieldMany2Many = instance.web.form.AbstractField.extend({
         self.reload_content();
         this.is_setted.resolve();
     },
+    get_value: function() {
+        return [commands.replace_with(this.get('value'))];
+    },
     load_view: function() {
         var self = this;
         this.list_view = new instance.web.form.Many2ManyListView(this, this.dataset, false, {
@@ -3316,7 +3319,7 @@ instance.web.form.FieldMany2Many = instance.web.form.AbstractField.extend({
         });
     },
     dataset_changed: function() {
-        this.set({'value': [commands.replace_with(this.dataset.ids)]});
+        this.set({'value': this.dataset.ids});
     },
 });
 
