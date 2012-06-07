@@ -364,6 +364,7 @@ session.web.ViewManager =  session.web.OldWidget.extend(/** @lends session.web.V
      * @returns {$.Deferred} switching end signal
      */
     on_prev_view: function (options) {
+    	var options = options || {};
         var current_view = this.views_history.pop();
         var previous_view = this.views_history[this.views_history.length - 1] || options['default'];
         if (options.created && current_view === 'form' && previous_view === 'list') {
