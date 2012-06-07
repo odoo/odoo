@@ -1,27 +1,6 @@
 <?xml version="1.0"?>
 <openerp>
      <data>
-        <record model="ir.ui.view" id="my_deshboard_kanban_view">
-        <field name="name">My Dashboard Kanban</field>
-        <field name="model">board.borad</field>
-        <field name="type">kanban</field>
-        <field name="arch" type="xml">
-            <kanban >
-                <templates>
-                    <t t-name="kanban-box">
-                    </t>
-                </templates>
-            </kanban>
-        </field>
-        </record>
-        <record model="ir.actions.act_window" id="action_my_dashboard_kanban_view">
-            <field name="name">My Dashboard</field>
-            <field name="res_model">board.board</field>
-            <field name="view_mode">kanban</field>
-            <field name="view_id" ref="my_deshboard_kanban_view"/>
-            <field name="help">Hello Testing</field>
-        </record>
-
         <!--My Dashboard-->
         <record model="ir.ui.view" id="board_my_dash_view">
             <field name="name">My Dashboard</field>
@@ -57,7 +36,6 @@ in the sequence you want. You can Remove any board by clicking cross button.
         <!--My Dashboard Menu-->
         <menuitem 
             id="menu_board_my_dash"
-            name="My Dashboard"
             parent="base.menu_reporting_dashboard"
             action="open_board_my_dash_action"
             sequence="0"/>
