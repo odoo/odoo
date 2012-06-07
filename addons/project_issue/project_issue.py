@@ -522,13 +522,6 @@ class project_issue(base_stage, osv.osv):
     # OpenChatter methods and notifications
     # -------------------------------------------------------
     
-    def get_needaction_user_ids(self, cr, uid, ids, context=None):
-        result = dict.fromkeys(ids, [])
-        for obj in self.browse(cr, uid, ids, context=context):
-            if obj.state == 'draft' and obj.user_id:
-                result[obj.id] = [obj.user_id.id]
-        return result
-    
     def message_get_subscribers(self, cr, uid, ids, context=None):
         """ Override to add responsible user. """
         user_ids = super(project_issue, self).message_get_subscribers(cr, uid, ids, context=context)
