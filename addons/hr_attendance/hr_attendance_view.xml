@@ -8,10 +8,12 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Employee attendances">
-                    <field name="employee_id"  />
-                    <field name="name"  />
-                    <field name="action"  />
-                    <field name="action_desc"  />
+                    <group>
+                        <field name="employee_id"/>
+                        <field name="name"/>
+                        <field name="action"/>
+                        <field name="action_desc"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -89,8 +91,10 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Define attendance reason">
-                    <field colspan="4" name="name" select="1"/>
-                    <field name="action_type" select="1"/>
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="action_type"/>
+                    </group>
                 </form>
             </field>
         </record>

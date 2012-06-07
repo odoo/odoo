@@ -27,13 +27,13 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Category of ideas">
-                    <group col="6" colspan="4">
-                        <field name="name" select="1"/>
-                        <field name="parent_id" select="1"/>
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="parent_id"/>
                         <field name="visibility"/>
                     </group>
-                    <separator string="Description" colspan="4"/>
-                    <field name="summary" colspan="4" nolabel="1"/>
+                    <separator string="Description"/>
+                    <field name="summary"/>
                 </form>
             </field>
         </record>
@@ -100,21 +100,6 @@
         <field name="value" eval="'ir.actions.act_window,'+str(action_idea_idea_categ_open)" />
     </record>
 
-<!-- Idea statistics Form View [where is python class for this view ?]-->
-
-    <!--<record model="ir.ui.view" id="view_idea_stat_form">-->
-    <!--    <field name="name">idea.stat.form</field>-->
-    <!--    <field name="model">idea.stat</field>-->
-    <!--    <field name="type">form</field>-->
-    <!--    <field name="arch" type="xml">-->
-    <!--        <form string="stat">-->
-    <!--            <field name="avgscore" />-->
-    <!--            <field name="nbr_comments" />-->
-    <!--            <field name="nbr_votes" />-->
-    <!--        </form>-->
-    <!--    </field>-->
-    <!--</record>-->
-
 <!--Vote For Idea Tree View -->
 
     <record model="ir.ui.view" id="view_idea_vote_tree">
@@ -139,14 +124,13 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
         <form string="Votes">
-            <group colspan="4">
-                <field name="user_id" select="1" />
+            <group col="4">
+                <field name="user_id"/>
                 <field name="date"/>
-                <newline/>
                 <field name="score"/>
             </group>
-            <separator string="Comments:" colspan="4"/>
-            <field name="comment" colspan="4" nolabel="1"/>
+            <separator string="Comments"/>
+            <field name="comment"/>
         </form>
         </field>
     </record>
@@ -182,27 +166,31 @@
         <field name="model">idea.idea</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form layout="manual">
-            <header>
-                <button name="idea_open" string="Open" states="draft"/>
-                <button name="idea_close" string="Accept" states="open"/>
-                <button name="idea_cancel" string="Refuse" states="open" />
-                <field name="state" widget="statusbar" statusbar_visible="draft,open,close"/>
-            </header>
-            <sheet string="New Idea" layout="auto">
-            <group col="6" colspan="4" class="oe_form_header">
-                <field name="name" select="1" />
-                <field name="category_id" select="1"/>
-                <field name="open_date" select="1"/>
+            <form string="Idea">
+                <header>
+                    <button name="idea_open" string="Open" states="draft"/>
+                    <button name="idea_close" string="Accept" states="open"/>
+                    <button name="idea_cancel" string="Refuse" states="open" />
+                    <field name="state" widget="statusbar" statusbar_visible="draft,open,close"/>
+                </header>
+            <sheet>
+            <label for="name" class="oe_form_readonly_hidden"/>
+            <h1><field name="name"/></h1>
+            <label for="category_id"/>
+            <h2><field name="category_id"/></h2>
+
+            <group col="4">
+                <field name="open_date"/>
                 <field name="user_id" attrs="{'invisible':[('visibility','=',False)]}"/>
                 <field name="visibility" invisible="1"/>
                 <field name="vote_avg" widget="progressbar"/>
-                <group col="4" colspan="2">
+                <label name="my_vote">
+                <div>
                     <field name="my_vote" readonly="1"/>
                     <button name="%(idea.action_idea_post_vote)d" icon="gtk-execute" states="open"  type="action" string="Submit Vote"/>
-                </group>
+                </div>
             </group>
-            <notebook colspan="4">
+            <notebook>
                 <page string="Idea Detail">
                     <field name="description" nolabel="1" colspan="4" widget="text_wiki"/>
                 </page>

@@ -11,13 +11,13 @@
                     <field name="partner_id" on_change="on_change_partner_id(partner_id, context)"/>
                 </field>
                 <group name="contract" position="after">
-                    <group colspan="2" col="2" name="invoice_data">
+                    <group name="invoice_data">
                         <separator colspan="2" string="Invoicing Data"/>
                         <field name="to_invoice" widget="selection"/>
                         <field name="pricelist_id" groups="product.group_sale_pricelist" domain="[('type','=','sale')]" attrs="{'required':[('to_invoice','!=',False)]}"/>
                         <field name="amount_max"/>
                     </group>
-                    <group colspan="2" col="2" name="invoice_stats">
+                    <group name="invoice_stats">
                         <separator colspan="4" string="Invoicing Statistics"/>
                         <field name="amount_invoiced"/>
                     </group>
@@ -159,9 +159,11 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Type of invoicing">
-                    <field colspan="1" name="name"/>
-                    <field colspan="1" name="customer_name"/>
-                    <field colspan="2" name="factor"/>
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="customer_name"/>
+                        <field name="factor"/>
+                    </group>
                 </form>
             </field>
         </record>

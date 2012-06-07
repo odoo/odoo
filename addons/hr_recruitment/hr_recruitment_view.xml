@@ -70,7 +70,7 @@
         <field name="model">hr.applicant</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form layout="manual">
+            <form string="Jobs - Recruitment Form">
             <header>
                 <button name="%(action_hr_recruitment_hired_employee)d" string="Hire" type="action"
                         states="open,pending"/>
@@ -88,8 +88,8 @@
                         states="open" icon="gtk-go-forward"/>
                 <field name="stage_id" widget="statusbar"/>
             </header>
-            <sheet string="Jobs - Recruitment Form" layout="auto">
-                <group colspan="4" col="4">
+            <sheet>
+                <group col="4">
                     <field name="name" string="Subject"/>
                     <group colspan="2" col="4">
                         <field name="partner_name"/>
@@ -112,42 +112,42 @@
                 </group>
                 <notebook colspan="4">
                     <page string="Job Info">
-                        <group col="3" colspan="2">
-                            <separator colspan="3" string="Contact"/>
-                            <field name="partner_id" on_change="onchange_partner_id(partner_id, email_from)"/>
-                            <button string="Create Partner"
-                                    name="%(action_hr_recruitment_partner_create)d"
-                                    icon="gtk-index" type="action" attrs="{'readonly':[('partner_id','!=',False)]}" groups="base.group_partner_manager"/>
-                            <newline/>
-                            <field name="email_from" colspan="3"/>
-                            <field name="partner_phone" colspan="3"/>
-                            <field name="partner_mobile" colspan="3"/>
-                        </group>
-                        <group col="3" colspan="2">
-                            <separator colspan="3" string="Contract Data"/>
-                            <field name="availability" colspan="3"/>
-                            <field name="salary_expected"/>
-                            <field name="salary_expected_extra" nolabel="1"/>
-                            <field name="salary_proposed"/>
-                            <field name="salary_proposed_extra" nolabel="1"/>
-                        </group>
-                        <group col="2" colspan="2">
-                            <separator colspan="2" string="Qualification"/>
-                            <field name="type_id"/>
-                            <field name="priority" string="Appreciation"/>
-                            <field name="source_id"/>
-                            <field name="reference"/>
-                        </group>
-                        <group col="2" colspan="2">
-                           <separator colspan="2" string="Dates"/>
-                           <field name="create_date"/>
-                           <field name="write_date"/>
-                           <field name="date_closed"/>
-                           <field name="date_open"/>
+                        <group>
+                            <group string="Contact">
+                                <label for="partner_id">
+                                <div>
+                                    <field name="partner_id" on_change="onchange_partner_id(partner_id, email_from)"/>
+                                    <button string="Create Partner"
+                                        name="%(action_hr_recruitment_partner_create)d"
+                                        icon="gtk-index" type="action" attrs="{'readonly':[('partner_id','!=',False)]}" groups="base.group_partner_manager"/>
+                                </div>
+                                <field name="email_from"/>
+                                <field name="partner_phone"/>
+                                <field name="partner_mobile"/>
+                            </group>
+                            <group string="Contract Data">
+                                <field name="availability"/>
+                                <field name="salary_expected"/>
+                                <field name="salary_expected_extra" nolabel="1"/>
+                                <field name="salary_proposed"/>
+                                <field name="salary_proposed_extra" nolabel="1"/>
+                            </group>
+                            <group string="Qualification">
+                                <field name="type_id"/>
+                                <field name="priority" string="Appreciation"/>
+                                <field name="source_id"/>
+                                <field name="reference"/>
+                            </group>
+                            <group string="Dates">
+                               <field name="create_date"/>
+                               <field name="write_date"/>
+                               <field name="date_closed"/>
+                               <field name="date_open"/>
+                            </group>
                         </group>
                    </page>
                  <page string="Notes">
-                     <field name="description" nolabel="1" colspan="4"/>
+                     <field name="description"/>
                  </page>
                 </notebook>
             </sheet>
@@ -379,15 +379,14 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Stage">
-                <group colspan="4" col="6">
-                    <separator string="Stage Definition" colspan="6"/>
-                    <field name="name" select="1"/>
+                <group col="4" string="Stage Definition">
+                    <field name="name"/>
                     <field name="department_id"/>
                     <field name="sequence"/>
                     <field name="state"/>
                 </group>
-                <separator string="Requirements" colspan="4"/>
-                <field name="requirements" nolabel="1" colspan="4"/>
+                <separator string="Requirements"/>
+                <field name="requirements"/>
             </form>
         </field>
     </record>
@@ -431,8 +430,10 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Degree">
-                    <field name="name" select="1"/>
+                <group>
+                    <field name="name"/>
                     <field name="sequence"/>
+                </group>
             </form>
         </field>
     </record>
@@ -471,7 +472,9 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Sources of Applicants">
-                <field name="name"/>
+                <group>
+                    <field name="name"/>
+                </group>
             </form>
         </field>
     </record>
