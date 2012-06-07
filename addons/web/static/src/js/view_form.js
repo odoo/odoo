@@ -208,8 +208,9 @@ instance.web.FormView = instance.web.View.extend(_.extend({}, instance.web.form.
             }
         }
     },
-    do_show: function () {
+    do_show: function (options) {
         var self = this;
+        options = options || {};
         if (this.sidebar) {
             this.sidebar.$element.show();
         }
@@ -233,6 +234,9 @@ instance.web.FormView = instance.web.View.extend(_.extend({}, instance.web.form.
                 }).pipe(self.on_record_loaded);
             }
             result.pipe(function() {
+                if (options.editable) {
+                    self.set({mode: "edit"});
+                }
                 self.$element.css('visibility', 'visible');
             });
             return result;

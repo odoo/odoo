@@ -267,7 +267,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
      * @param {Boolean} [no_store=false] don't store the view being switched to on the switch stack
      * @returns {jQuery.Deferred} new view loading promise
      */
-    on_mode_switch: function(view_type, no_store) {
+    on_mode_switch: function(view_type, no_store, view_options) {
         var self = this;
         var view = this.views[view_type];
         var view_promise;
@@ -330,7 +330,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                 var controller = self.views[view_name].controller;
                 if (controller) {
                     if (view_name === view_type) {
-                        controller.do_show();
+                        controller.do_show(view_options || {});
                     } else {
                         controller.do_hide();
                     }
@@ -347,8 +347,8 @@ instance.web.ViewManager =  instance.web.Widget.extend({
      * to be extended by child classes to change the default behavior, which simply
      * consist to switch to the asked view.
      */
-    switch_view: function(view_type, no_store) {
-        return this.on_mode_switch(view_type, no_store);
+    switch_view: function(view_type, no_store, options) {
+        return this.on_mode_switch(view_type, no_store, options);
     },
     /**
      * Returns to the view preceding the caller view in this manager's
@@ -651,10 +651,10 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
         }, action || {});
         this.do_action(action);
     },
-    on_mode_switch: function (view_type, no_store) {
+    on_mode_switch: function (view_type, no_store, options) {
         var self = this;
 
-        return $.when(this._super(view_type, no_store)).then(function () {
+        return $.when(this._super.apply(this, arguments)).then(function () {
             var controller = self.views[self.active_view].controller,
                 fvg = controller.fields_view,
                 view_id = (fvg && fvg.view_id) || '--';
