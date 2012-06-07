@@ -100,7 +100,7 @@
             <sheet string="Jobs - Recruitment Form" layout="auto">
                 <group colspan="4" col="10">
                     <h1><field name="name" colspan="4" nolabel="1"/></h1>
-					<h1><button name="action_makeMeeting" type="object" colspan="2" string="Shedule Interview" icon="gtk-index"/>
+					<h1><button name="action_makeMeeting" type="object" colspan="2" string="Schedule Interview" icon="gtk-index" help="Schedule interview with this applicant"/>
 					<button name="%(survey.action_view_survey_question_message)d" string="Start Interview" type="action" icon="gtk-execute" context="{'survey_id': survey, 'response_id': [response], 'response_no':0 ,'active' : response, 'object' : 'hr.applicant'}" attrs="{'invisible':[('survey','=',False)]}" help="Answer related job question"/>
 					<button name="action_print_survey" string="Print Interview" type="object" icon="gtk-print" attrs="{'invisible':[('survey','=',False)]}" help="Print interview report"/></h1>
 				</group>
