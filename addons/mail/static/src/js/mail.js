@@ -537,13 +537,13 @@ openerp.mail = function(session) {
         display_subscribers: function (records) {
             var self = this;
             this.is_subscriber = false;
-            var sub_node = this.$element.find('div.oe_mail_recthread_followers')
-            sub_node.empty();
-            $('<h4/>').html('Followers (' + records.length + ')').appendTo(sub_node);
+            var user_list = this.$element.find('ul.oe_mail_followers_display').empty();
+            this.$element.find('div.oe_mail_recthread_followers h4').html('Followers (' + records.length + ')');
             _(records).each(function (record) {
                 if (record.id == self.session.uid) { self.is_subscriber = true; }
                 var mini_url = self.thread_get_avatar('res.users', 'avatar', record.id);
-                $('<img class="oe_mail_oe_left oe_mail_msg_image" src="' + mini_url + '" title="' + record.name + '" alt="' + record.name + '"/>').appendTo(sub_node);
+                $('<li><img class="oe_mail_oe_left oe_mail_msg_image" src="' + mini_url + '"/>' +
+                  '<a href="#" class="intlink oe_mail_oe_intlink" data-res-model="res.users" data-res-id="' + record.id + '">' + record.name + '</a></li>').appendTo(user_list);
             });
             if (self.is_subscriber) {
                 self.$element.find('button.oe_mail_button_follow').hide();
