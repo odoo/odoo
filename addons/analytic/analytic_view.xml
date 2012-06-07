@@ -13,7 +13,7 @@
                             <field name="name" string="Contract/Project Name"/>
                             <field name="partner_id" on_change="on_change_partner_id(partner_id, name)" required="True"/>
                             <field name="code"/>
-                            <field name="user_id"/>
+                            <field name="manager_id"/>
                             <field name="company_id" on_change="on_change_company(company_id)" select="2" widget="selection" groups="base.group_multi_company" attrs="{'required': [('type','&lt;&gt;','view')]}"/>
                             <field name="type" select="2"/>
                             <field name="parent_id" on_change="on_change_parent(parent_id)" attrs="{'invisible': [('type','in',['contract','template'])]}"/>

@@ -168,7 +168,8 @@ class account_analytic_account(osv.osv):
         'quantity': fields.function(_debit_credit_bal_qtty, type='float', string='Quantity', multi='debit_credit_bal_qtty'),
         'quantity_max': fields.float('Maximum Time', help='Sets the higher limit of time to work on the contract.'),
         'partner_id': fields.many2one('res.partner', 'Customer'),
-        'user_id': fields.many2one('res.users', 'Account Manager'),
+        'user_id': fields.many2one('res.users', 'Project Manager'),
+        'manager_id': fields.many2one('res.users', 'Account Manager'),
         'date_start': fields.date('Date Start'),
         'date': fields.date('Date End', select=True),
         'company_id': fields.many2one('res.company', 'Company', required=False), #not required because we want to allow different companies to use the same chart of account, except for leaf accounts.
@@ -185,7 +186,7 @@ class account_analytic_account(osv.osv):
             part = self.pool.get('res.partner').browse(cr, uid, partner_id,context=context)
             if not name:
                 res['name'] = part.name
-            if part.user_id:res['user_id'] = part.user_id.id
+            if part.user_id:res['manager_id'] = part.user_id.id
         return {'value': res}
 
     def _default_company(self, cr, uid, context=None):
