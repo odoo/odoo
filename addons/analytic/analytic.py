@@ -20,6 +20,7 @@
 ##############################################################################
 
 import time
+from lxml import etree
 
 from osv import fields, osv
 from tools.translate import _
@@ -222,6 +223,20 @@ class account_analytic_account(osv.osv):
         default['code'] = False
         default['line_ids'] = []
         return super(account_analytic_account, self).copy(cr, uid, id, default, context=context)
+
+    def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        res = super(account_analytic_account, self).fields_view_get(cr, user, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
+        if view_type == 'form':
+            doc = etree.XML(res['arch'])
+            nodes = doc.xpath("//field[@name='name']")
+            if context.get('default_type') == 'contract':
+                for node in nodes:
+                    node.set('string', 'Contract/Project Name')
+            if context.get('default_type') == 'template':
+                for node in nodes:
+                    node.set('string', 'Template/Project Name')
+            res['arch'] = etree.tostring(doc)
+        return res
 
     def on_change_company(self, cr, uid, id, company_id):
         if not company_id:

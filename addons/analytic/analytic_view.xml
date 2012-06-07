@@ -10,7 +10,7 @@
                 <form  layout="manual">
                     <sheet string="Analytic account" layout="auto">
                         <group colspan="4" col="4" class="oe_form_group_label_border">
-                            <field name="name" string="Contract/Project Name"/>
+                            <field name="name"/>
                             <field name="partner_id" on_change="on_change_partner_id(partner_id, name)" attrs="{'required':[('type','!=','template')]}"/>
                             <field name="code"/>
                             <field name="user_id"/>
