@@ -166,7 +166,7 @@ class account_analytic_account(osv.osv):
         'credit': fields.function(_debit_credit_bal_qtty, type='float', string='Credit', multi='debit_credit_bal_qtty', digits_compute=dp.get_precision('Account')),
         'quantity': fields.function(_debit_credit_bal_qtty, type='float', string='Quantity', multi='debit_credit_bal_qtty'),
         'quantity_max': fields.float('Maximum Time', help='Sets the higher limit of time to work on the contract.'),
-        'partner_id': fields.many2one('res.partner', 'Customer'),
+        'partner_id': fields.many2one('res.partner', 'Customer', required=True),
         'user_id': fields.many2one('res.users', 'Account Manager'),
         'date_start': fields.date('Date Start'),
         'date': fields.date('Date End', select=True),
