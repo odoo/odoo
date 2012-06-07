@@ -199,8 +199,9 @@ class wizard(osv.osv_memory):
             if add_users and add_users not in portal_user :
                 portal_obj.write(cr, ROOT_UID, [wiz.portal_id.id],
                     {'users': [(6, 0, add_users)]}, context0)
-            if removeuser  : 
-                portal_obj.write(cr, ROOT_UID, [wiz.portal_id.id,{'users': [(3, data) for data in removeuser]}, context0)
+            if removeuser:
+                portal_obj.write(cr, ROOT_UID, [wiz.portal_id.id],
+                    {'users': [(0, 0, data) for data in removeuser]}, context0)
             data = {
                 'company': user.company_id.name,
                 'message': wiz.message or "",
