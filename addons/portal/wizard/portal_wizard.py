@@ -178,7 +178,7 @@ class wizard(osv.osv_memory):
                 existing_uids = user_obj.search(cr, ROOT_UID, login_cond)
                 existing_users = user_obj.browse(cr, ROOT_UID, existing_uids)
                 existing_logins = [user.login for user in existing_users]
-                if existing_uids and existing_uids[0] not in portal_user:
+                if existing_uids and existing_uids[0] not in portal_user or u.has_portal_user:
                     add_users.append(existing_uids[0])
                 if existing_uids and u.has_portal_user==False and existing_uids[0] in portal_user:
                     removeuser.append(existing_uids[0])
@@ -201,7 +201,7 @@ class wizard(osv.osv_memory):
                     {'users': [(6, 0, add_users)]}, context0)
             if removeuser:
                 portal_obj.write(cr, ROOT_UID, [wiz.portal_id.id],
-                    {'users': [(0, 0, data) for data in removeuser]}, context0)
+                    {'users': [(3, data) for data in removeuser]}, context0)
             data = {
                 'company': user.company_id.name,
                 'message': wiz.message or "",
