@@ -81,7 +81,7 @@ class hr_holidays_status(osv.osv):
         'max_leaves': fields.function(_user_left_days, string='Maximum Allowed', help='This value is given by the sum of all holidays requests with a positive value.', multi='user_left_days'),
         'leaves_taken': fields.function(_user_left_days, string='Leaves Already Taken', help='This value is given by the sum of all holidays requests with a negative value.', multi='user_left_days'),
         'remaining_leaves': fields.function(_user_left_days, string='Remaining Leaves', help='Maximum Leaves Allowed - Leaves Already Taken', multi='user_left_days'),
-        'double_validation': fields.boolean('Apply Double Validation', help="If its True then its Allocation/Request have to be validated by second validator")
+        'double_validation': fields.boolean('Apply Double Validation', help="If its True then the Allocation/Leave Requests for this type will require a second validation to be approved")
     }
     _defaults = {
         'color_name': 'red',
