@@ -488,13 +488,18 @@ class account_analytic_account(osv.osv):
             res['value']['date_start'] = str(template.date_start)
         if template.date:
             res['value']['date'] = str(template.date)
+        res['value']['fix_price_invoices'] = template.fix_price_invoices
+        res['value']['invoice_on_timesheets'] = template.invoice_on_timesheets
+        res['value']['charge_expenses'] = template.charge_expenses
         res['value']['quantity_max'] = template.quantity_max
         res['value']['remaining_hours'] = template.remaining_hours
+        res['value']['amount_max'] = template.amount_max
+        res['value']['expense_max'] = template.expense_max
         res['value']['to_invoice'] = template.to_invoice.id
         res['value']['pricelist_id'] = template.pricelist_id.id
         res['value']['description'] = template.description
         return res
-    
+
     def open_hr_expense(self, cr, uid, ids, context=None):
         account = self.browse(cr, uid, ids[0], context)
         data_obj = self.pool.get('ir.model.data')
