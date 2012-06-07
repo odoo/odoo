@@ -146,7 +146,7 @@ class ir_needaction_mixin(osv.osv):
         """ Returns the user_ids that have to perform an action
             :return: dict { record_id: [user_ids], }
         """
-        return dict.fromkeys(ids, [])
+        return dict((id,set()) for id in ids)
     
     def create(self, cr, uid, values, context=None):
         rel_obj = self.pool.get('ir.needaction_users_rel')
