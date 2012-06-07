@@ -110,7 +110,7 @@ class hr_job(osv.osv):
         'requirements': fields.text('Requirements'),
         'department_id': fields.many2one('hr.department', 'Department'),
         'company_id': fields.many2one('res.company', 'Company'),
-        'state': fields.selection([('open', 'In Position'),('recruit', 'In Recruitement'),('old', 'Old')], 'Status', readonly=True, required=True),
+        'state': fields.selection([('open', 'In Position'),('recruit', 'In Recruitement'),('done', 'Done')], 'Status', readonly=True, required=True, help='By default all job are \'In position\', set it \'In Recruitment\' if recruitment process is going on for this job position.'),
     }
     _defaults = {
         'expected_employees': 1,
@@ -128,10 +128,6 @@ class hr_job(osv.osv):
             context = {}
         return {'value': {'expected_employees': no_of_recruitment + no_of_employee}}
 
-    def job_old(self, cr, uid, ids, *args):
-        self.write(cr, uid, ids, {'state': 'old', 'no_of_recruitment': 0})
-        return True
-
     def job_recruitement(self, cr, uid, ids, *args):
         for job in self.browse(cr, uid, ids):
             no_of_recruitment = job.no_of_recruitment == 0 and 1 or job.no_of_recruitment
@@ -139,7 +135,7 @@ class hr_job(osv.osv):
         return True
 
     def job_open(self, cr, uid, ids, *args):
-        self.write(cr, uid, ids, {'state': 'open', 'no_of_recruitment': 0})
+        self.write(cr, uid, ids, {'state': 'done', 'no_of_recruitment': 0})
         return True
 
 hr_job()
