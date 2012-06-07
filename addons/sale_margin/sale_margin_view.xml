@@ -8,7 +8,7 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form" />
         <field name="arch" type="xml">
-            <xpath expr="//div[@class='oe_form_subtotal_footer_separator']" position="after">
+            <xpath expr="//div[@class='oe_form_subtotal_footer']" position="after">
                 <div>
                     <field name="margin"/>
                 </div>
