@@ -21,11 +21,11 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Carrier">
-                    <group colspan="4" col="4" name="general">
-                        <field name="name" select="1"/>
-                        <field name="partner_id" select="1"/>
-                        <field name="product_id" select="1"/>
-                        <field name="active" select="1"/>
+                    <group col="4" name="general">
+                        <field name="name"/>
+                        <field name="partner_id"/>
+                        <field name="product_id"/>
+                        <field name="active"/>
                         <separator string="Pricing Information" colspan="4"/>
                         <group colspan="4" col="4">
                             <field name="normal_price" attrs="{'readonly':[('use_detailed_pricelist', '=', True)]}"/>
@@ -36,26 +36,32 @@
                         <newline/>
                         <field name="use_detailed_pricelist"/>
                     </group>
-                        <field name="pricelist_ids" nolabel="1" attrs="{'invisible':[('use_detailed_pricelist','=',False)]}" mode="tree,form">
+                    <field name="pricelist_ids" attrs="{'invisible':[('use_detailed_pricelist','=',False)]}" mode="tree,form">
                          <tree string="Delivery grids">
                               <field name="sequence"/>
                               <field name="name"/>
                          </tree>
                         <form string="Delivery grids">
-                             <field name="name" select="1"/>
-                             <field name="active" select="1"/>
-                             <field name="sequence" select="1"/>
-                             <notebook colspan="4">
+                             <group col="4">
+                                 <field name="name"/>
+                                 <field name="active"/>
+                                 <field name="sequence"/>
+                             </group>
+                             <notebook>
                                <page string="Grid definition">
-                                  <field colspan="4" name="line_ids" nolabel="1" select="1"/>
+                                  <field name="line_ids"/>
                                </page>
                                <page string="Destination">
-                                   <separator colspan="4" string="Countries"/>
-                                   <field colspan="4" name="country_ids" nolabel="1"/>
-                                   <separator colspan="4" string="States"/>
-                                   <field colspan="4" name="state_ids" nolabel="1"/>
-                                   <field name="zip_from"/>
-                                   <field name="zip_to"/>
+                                   <group string="Countries">
+                                       <field colspan="2" name="country_ids" nolabel="1"/>
+                                   </group>
+                                   <group string="States">
+                                       <field colspan="2" name="state_ids" nolabel="1"/>
+                                   </group>
+                                   <group col="4">
+                                       <field name="zip_from"/>
+                                       <field name="zip_to"/>
+                                   </group>
                                </page>
                              </notebook>
                        </form>
@@ -94,21 +100,25 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Delivery grids">
-                    <field name="name" select="1"/>
-                    <field name="active" select="1"/>
-                    <field name="carrier_id" select="1"/>
-                    <field name="sequence" select="1"/>
-                    <notebook colspan="4">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="active"/>
+                        <field name="carrier_id"/>
+                        <field name="sequence"/>
+                    </group>
+                    <notebook>
                         <page string="Grid definition">
-                            <field colspan="4" name="line_ids" nolabel="1" select="1"/>
+                            <field name="line_ids"/>
                         </page>
                         <page string="Destination">
-                            <separator colspan="4" string="Countries"/>
-                            <field colspan="4" name="country_ids" nolabel="1"/>
-                            <separator colspan="4" string="States"/>
-                            <field colspan="4" name="state_ids" nolabel="1"/>
-                            <field name="zip_from"/>
-                            <field name="zip_to"/>
+                            <group string="Countries">
+                                <field name="country_ids"/>
+                            </group>
+                            <group string="States">
+                                <field colspan="2" name="state_ids" nolabel="1"/>
+                                <field name="zip_from"/>
+                                <field name="zip_to"/>
+                            </group>
                         </page>
                     </notebook>
                 </form>
@@ -130,18 +140,19 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Grid Lines">
-                    <group colspan="5" col="5">
-                        <field colspan="4" name="name" select="1"/>
-                        <newline/>
-                        <field name="type" string="Condition"/>
-                        <field name="operator" nolabel="1"/>
-                        <field name="max_value" nolabel="1"/>
+                    <field colspan="4" name="name" select="1"/>
+                    <div>
+                        <label string="condition" for="type"/>
+                        <field name="type" class="oe_form_inline"/>
+                        <field name="operator" class="oe_form_inline"/>
+                        <field name="max_value" class="oe_form_inline"/>
+                    </div>
+                    <group col="4">
+                        <field name="list_price"/>
+                        <field name="standard_price"/>
+                        <field name="price_type"/>
+                        <field name="variable_factor" attrs="{'invisible':[('price_type','=','fixed')]}"/>
                     </group>
-                    <newline/>
-                    <field name="list_price"/>
-                    <field name="standard_price"/>
-                    <field name="price_type"/>
-                    <field name="variable_factor" attrs="{'invisible':[('price_type','=','fixed')]}"/>
                 </form>
             </field>
         </record>

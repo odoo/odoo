@@ -8,15 +8,14 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Storage Media">
-                <group colspan="4" col="6">
-                    <field name="name" select="1" colspan="4"/>
+                <group col="4">
+                    <field name="name" colspan="4"/>
                     <field name="type"/>
-                    <newline/>
                     <field name="user_id"/>
                     <field name="online"/>
                     <field name="readonly"/>
                 </group>
-                <group colspan="2" attrs="{'invisible':[('type','in',['db', 'db64'])]}">
+                <group attrs="{'invisible':[('type','in',['db', 'db64'])]}">
                     <field name="path"/>
                 </group>
             </form>
@@ -71,16 +70,19 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Directories" col="4">
-                <field name="name" select="1" colspan="4"/>
-                <field name="parent_id"/>
-                <field name="storage_id" widget="selection" />
-                <field name="user_id"/>
-                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                <group col="4">
+                    <field name="name"/>
+                    <field name="parent_id"/>
+                    <field name="storage_id"/>
+                    <field name="user_id"/>
+                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                </group>
                 <notebook colspan="4">
                 <page string="Definition">
-                    <separator string="Directory Type" colspan="4"/>
-                    <field name="type"/>
-                    <group colspan="4" col="4" attrs="{'invisible': [('type','!=','ressource')]}">
+                    <group string="Directory Type" colspan="4"/>
+                        <field name="type"/>
+                    </group>
+                    <group col="4" attrs="{'invisible': [('type','!=','ressource')]}">
                         <field name="ressource_type_id"  on_change="onchange_content_id(ressource_type_id)"
                             attrs="{'required': [('type','=','ressource')] }"/>
                         <newline/>
@@ -89,11 +91,11 @@
                         <newline/>
                         <field name="domain" attrs="{'required': [('type','=','ressource')], 'readonly': [('type','=','static')]}"/>
                     </group>
-                    <group colspan="4" col="4">
+                    <group col="4">
                         <field name="ressource_parent_type_id"/>
                         <field name="ressource_id" select="2" readonly="1"/>
                     </group>
-                    <group colspan="4" col="2" attrs="{'invisible': [('type','!=','ressource'),('ressource_parent_type_id','=',False)]}">
+                    <group col="2" attrs="{'invisible': [('type','!=','ressource'),('ressource_parent_type_id','=',False)]}">
                         <field name="resource_find_all"/>
                     </group>
 
@@ -102,14 +104,16 @@
                     <label colspan="4" string="For each entry here, virtual files will appear in this folder." />
                     <field name="content_ids" nolabel="1" colspan="4" >
                         <form string="Contents">
-                            <field name="name"/>
-                            <field name="sequence"/>
-                            <field name="prefix"/>
-                            <field name="suffix"/>
-                            <field name="extension"/>
-                            <field name="include_name"/>
-                            <separator string="PDF Report" colspan="4"/>
-                            <field name="report_id" domain="[('model_id','=',parent.ressource_type_id)]"/>
+                            <group col="4">
+                                <field name="name"/>
+                                <field name="sequence"/>
+                                <field name="prefix"/>
+                                <field name="suffix"/>
+                                <field name="extension"/>
+                                <field name="include_name"/>
+                                <separator string="PDF Report" colspan="4"/>
+                                <field name="report_id" domain="[('model_id','=',parent.ressource_type_id)]"/>
+                            </group>
                         </form>
                         <tree string="Contents">
                             <field name="sequence" string="Seq."/>
@@ -127,8 +131,10 @@
                             <field name="expr"/>
                         </tree>
                         <form string="Fields">
-                            <field name="field"/>
-                            <field name="expr"/>
+                            <group col="4">
+                                <field name="field"/>
+                                <field name="expr"/>
+                            </group>
                         </form>
                     </field>
                 </page>
@@ -233,53 +239,44 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Documents">
-                <group colspan="4" col="6">
-                    <field name="name" select="1" colspan="4" />
+                <group col="4">
+                    <field name="name"/>
                     <field name="parent_id"/>
-                    <newline/>
                     <field name="user_id"/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                 </group>
                 <notebook colspan="4">
                 <page string="Attachment">
-                    <group col="2" colspan="2">
-                        <separator string="Data" colspan="2"/>
-                        <field name="type"/>
-                        <newline />
-                        <group col="2" colspan="2" attrs="{'invisible':[('type','=','url')]}">
-                            <field name="datas" filename="datas_fname"/>
-                            <field name="datas_fname" select="1"/>
+                    <group>
+                        <group string="Data">
+                            <field name="type"/>
+                            <newline />
+                            <field name="datas" filename="datas_fname" attrs="{'invisible':[('type','=','url')]}"/>
+                            <field name="datas_fname" attrs="{'invisible':[('type','=','url')]}"/>
+                            <field name="url" widget="url" attrs="{'invisible':[('type','=','binary')]}"/>
                         </group>
-                        <group col="2" colspan="2" attrs="{'invisible':[('type','=','binary')]}">
-                            <field name="url" widget="url"/>
-                        </group>
-                    </group>
-                    <group col="2" colspan="2">
-                    <field name="res_id" invisible="True"/>
-                        <group col="2" colspan="2" attrs="{'invisible': [('res_id','=',0)]}">
-                            <separator string="Attached to" colspan="2"/>
-                            <field name="res_model" readonly="True" invisible="True"/>
-                            <field name="res_name" readonly="1"/>
-                        </group>
-                        <separator string="Related to" colspan="2"/>
+                        <group>
+                            <field name="res_id" invisible="True"/>
+                            <field name="res_model" readonly="True" invisible="True" attrs="{'invisible': [('res_id','=',0)]}"/>
+                            <field name="res_name" readonly="1" attrs="{'invisible': [('res_id','=',0)]}"/>
+                            <separator string="Related to" colspan="2"/>
                             <field name="partner_id"/>
-                    </group>
-                    <group col="2" colspan="2" groups="base.group_no_one">
-                        <separator string="Created" colspan="2"/>
-                        <field name="create_uid" readonly="1"/>
-                        <field name="create_date" readonly="1"/>
-                    </group>
-                    <group col="2" colspan="2" groups="base.group_no_one">
-                        <separator string="Modified" colspan="2"/>
-                        <field name="write_uid" readonly="1"/>
-                        <field name="write_date" readonly="1"/>
+                        </group>
+                        <group groups="base.group_no_one" string="Created">
+                            <field name="create_uid" readonly="1"/>
+                            <field name="create_date" readonly="1"/>
+                        </group>
+                        <group groups="base.group_no_one" string="Modified">
+                            <field name="write_uid" readonly="1"/>
+                            <field name="write_date" readonly="1"/>
+                        </group>
                     </group>
                 </page>
                 <page string="Indexed Content - experimental" groups="base.group_no_one">
-                    <field name="index_content" colspan="4" nolabel="1"/>
+                    <field name="index_content"/>
                 </page>
                 <page string="Notes">
-                    <field colspan="4" name="description" nolabel="1"/>
+                    <field name="description"/>
                 </page>
                 </notebook>
             </form>
