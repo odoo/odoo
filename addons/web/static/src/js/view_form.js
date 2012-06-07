@@ -495,7 +495,8 @@ instance.web.FormView = instance.web.View.extend(_.extend({}, instance.web.form.
             this.on_form_changed();
         }
         if (!_.isEmpty(result.warning)) {
-        	instance.web.dialog($(QWeb.render("CrashManagerWarning", result.warning)), {
+        	instance.web.dialog($(QWeb.render("CrashManager.warning", result.warning)), {
+                title:result.warning.title,
                 modal: true,
                 buttons: [
                     {text: _t("Ok"), click: function() { $(this).dialog("close"); }}
