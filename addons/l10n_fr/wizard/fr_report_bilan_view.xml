@@ -8,14 +8,13 @@
             <field name="model">account.bilan.report</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-            	<form string="Bilan Report">
-	               <field name="fiscalyear_id"/>
-	               <separator colspan="4"/>
-                    <group colspan="4" col="6">
-                        <button special="cancel" string="Cancel" icon="gtk-cancel"/>
+                <form string="Bilan Report">
+                   <header>
                         <button name="print_bilan_report" string="Print" type="object" icon="gtk-ok"/>
-                    </group>
-	             </form>
+                        <button special="cancel" string="Cancel" icon="gtk-cancel"/>
+                   </header>
+                   <field name="fiscalyear_id"/>
+                 </form>
             </field>
         </record>
 
