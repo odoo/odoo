@@ -78,7 +78,7 @@ class project(osv.osv):
                members = self.pool.get('res.users').browse(cr, uid, vals.get('members')[0][-1], context)
            else:
                members = project_id.members or False
-           select = vals.get('privacy_visility') or project_id.privacy_visility or False
+           select = vals.get('privacy_visibility') or project_id.privacy_visibility or False
            if select=='follower' and members:
                member_list = [member.id for member in members]
                followers = self.message_get_subscribers_ids(cr, uid, ids, context=context)
@@ -220,7 +220,7 @@ class project(osv.osv):
         'type_ids': fields.many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', 'Tasks Stages', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'task_count': fields.function(_task_count, type='integer', string="Open Tasks"),
         'color': fields.integer('Color Index'),
-        'privacy_visility': fields.selection([('public','Public'), ('follower','Followers Only')], 'Privacy / Visility', select=True),
+        'privacy_visibility': fields.selection([('public','Public'), ('follower','Followers Only')], 'Privacy / Visibility', select=True),
      }
     
     def dummy(self, cr, uid, ids, context):

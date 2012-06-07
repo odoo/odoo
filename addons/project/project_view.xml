@@ -46,7 +46,7 @@
                             <field name="user_id" string="Project Manager" select="1" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>
                             <field name="analytic_account_id" invisible="1" required="0"/>
                             <field name="parent_id" invisible="1" string="Parent" domain="[('id','!=',analytic_account_id)]" context="{'current_model': 'project.project'}"/>
-                            <field name="privacy_visility"/>
+                            <field name="privacy_visibility"/>
                             <!--<field name="date_start" string="Start Date" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>-->
                             <!--<field name="date" string="End Date" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>-->
                             <!--<field name="progress_rate" widget="progressbar"/>-->
