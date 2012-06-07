@@ -402,12 +402,6 @@
             	<group name="project" position="inside">
             	    <field name="use_issues"/>
             	</group>
-            	<xpath expr='//group[@name="members"]' position='replace'>
-                    <group colspan="4" attrs="{'invisible': [('use_tasks','!=',1),('use_issues','!=',1)]}" name="members">
-                        <separator colspan="4" string="Team"/>
-                        <field name="members" colspan="4" nolabel="1"/>
-                    </group>
-                </xpath>
             </field>
         </record>
     </data>
