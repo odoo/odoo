@@ -643,6 +643,9 @@ instance.web.FormView = instance.web.View.extend(_.extend({}, instance.web.form.
             }
             if (form_invalid) {
                 self.set({'display_invalid_fields': true});
+                for (var f in self.fields) {
+                    self.fields[f]._check_css_flags();
+                }
                 first_invalid_field.focus();
                 self.on_invalid();
                 return $.Deferred().reject();
@@ -1899,7 +1902,7 @@ instance.web.form.FieldChar = instance.web.form.AbstractField.extend(_.extend({}
         return true;
     },
     is_false: function() {
-        return this.get('value') === '';
+        return this.get('value') === '' || this._super();
     },
     focus: function() {
         this.delay_focus(this.$element.find('input:first'));
@@ -2108,7 +2111,7 @@ instance.web.form.FieldDatetime = instance.web.form.AbstractField.extend(_.exten
         return true;
     },
     is_false: function() {
-        return this.get('value') === '';
+        return this.get('value') === '' || this._super();
     },
     focus: function() {
         if (this.datewidget && this.datewidget.$input)
@@ -2158,7 +2161,7 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(_.extend({}
         return true;
     },
     is_false: function() {
-        return this.get('value') === '';
+        return this.get('value') === '' || this._super();
     },
     focus: function($element) {
         this.delay_focus(this.$textarea);
