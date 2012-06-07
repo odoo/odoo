@@ -42,7 +42,7 @@
             <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
-                <xpath expr='//field[@name="partner_id"]' position='after'>
+                <xpath expr='//field[@name="type"]' position='after'>
                     <field name="template_id" on_change="on_change_template(template_id)"  domain="[('type','=','template')]" attrs="{'invisible': [('type','in',['view', 'normal','template'])]}" context="{'default_type' : 'template'}"/>
                 </xpath>
                 <xpath expr='//field[@name="date"]' position="after">
