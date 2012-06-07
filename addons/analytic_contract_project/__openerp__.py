@@ -20,12 +20,14 @@
 ##############################################################################
 
 {
-    "name" : "Extend Project Contract",
+    "name" : "Contract Management In Project",
     "version": "1.1",
     "author" : "OpenERP SA",
     "website" : "http://www.openerp.com",
     "depends" : ["project", "account_analytic_analysis"],
-    "description": """  """,
+    "description": """
+        Add "Contract Data" in project view.
+    """,
     "init_xml" : [],
     "update_xml": ["analytic_contract_project_view.xml"],
     'demo_xml': [],
