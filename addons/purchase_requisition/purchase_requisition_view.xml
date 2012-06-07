@@ -66,13 +66,6 @@
                                 <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             </form>
                         </field>
-                         <group colspan="4" col="4">
-                            <button name="%(action_purchase_requisition_partner)d" string="Request a Quotation" type="action" icon="gtk-execute"
-                            attrs="{'invisible': [('line_ids','=',False),('state', 'not in', ('in_progress'))]}"/>
-                            <group cosplan="4" col="4">
-                                <label   string="" />
-                            </group>
-                        </group>                            
                         <separator colspan="4" string="Quotations"/>
                         <field colspan="4" name="purchase_ids" nolabel="1" mode="tree,form" readonly="1" >
                             <tree string="Purchase Order">
@@ -89,6 +82,13 @@
                                 <button name="purchase_approve" states="confirmed" string="Approved by Supplier" icon="gtk-ok"/>
                             </tree>
                          </field>
+                         <group colspan="4" col="4">
+                            <button name="%(action_purchase_requisition_partner)d" string="Request a Quotation" type="action" icon="gtk-execute"
+                            attrs="{'invisible': [('line_ids','=',False),('state', 'not in', ('in_progress'))]}"/>
+                            <group cosplan="4" col="4">
+                                <label   string="" />
+                            </group>
+                        </group>                             
                     </page>
                     <page string="Notes">
                         <field name="description" colspan="4" nolabel="1"/>
