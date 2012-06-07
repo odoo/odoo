@@ -1308,7 +1308,6 @@ class SearchView(View):
                    if not k.startswith('search_default_'))
         ctx['dashboard_merge_domains_contexts'] = False # TODO: replace this 6.1 workaround by attribute on <action/>
         domain = common.nonliterals.CompoundDomain(domain)
-        print "domainnnnn",domain
         domain.session = req.session
         domain = domain.evaluate()
 
