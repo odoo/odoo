@@ -259,7 +259,7 @@ class account_voucher(osv.osv):
             'payment': 'Supplier Payment',
             'receipt': 'Customer Payment',
         }
-        return type_dict.get(type, 'Voucher')
+        return type_dict.get(type, 'Payment')
 
     def create(self, cr, uid, vals, context=None):
         res = super(account_voucher, self).create(cr, uid, vals, context=context)
