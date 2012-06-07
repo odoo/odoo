@@ -40,19 +40,15 @@ Once installed, check the menu 'Ideas' in the 'Tools' main menu.""",
     'update_xml': [
         'security/idea_security.xml',
         'security/ir.model.access.csv',
-        'wizard/idea_post_vote_view.xml',
         'idea_view.xml',
         'idea_workflow.xml',
-        'report/report_vote_view.xml',
     ],
     'demo_xml': [
         "idea_data.xml"
     ],
     'test':[
-        'test/test_idea.yml'
     ],
     'installable': True,
-    'certificate': '0071515601309',
-    'images': ['images/1_ideas.jpeg','images/2_idea_categories.jpeg','images/3_vote_idea.jpeg'],
+    'images': [],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
