@@ -7,31 +7,38 @@
             <div class="menu-section">
                 Graph Mode:
             </div>
-            <ul class="graph-menu">
-                <li><a href="#" id="graph_pie">Pie</a></li>
+            <ul class="graph-menu oe_graph_options">
+                <li><a href="#" data-mode="pie">Pie</a></li>
                 <li>
-                    <a href="#" id="graph_bar">Bars</a>
+                    <a href="#" data-mode="bar" data-legend="top"
+                       data-stacked="true">Bars</a>
                     <div class="oe_i graph-menu-options">
-                        <a href="#" id="graph_bar_stacked" title="Stacked Bars">w</a>
-                        <a href="#" id="graph_bar_not_stacked" title="Multiple Bars">O</a>
+                        <a href="#" data-mode="bar" data-legend="top"
+                           data-stacked="true" title="Stacked Bars">w</a>
+                        <a href="#" data-mode="bar" data-legend="top"
+                           data-stacked="false" title="Multiple Bars">O</a>
                     </div>
                 </li>
-                <li><a href="#" id="graph_line">Lines</a></li>
-                <li><a href="#" id="graph_area">Areas</a>
+                <li><a href="#" data-mode="line">Lines</a></li>
+                <li><a href="#" data-mode="area" data-legend="top"
+                        data-stacked="true">Areas</a>
                     <div class="oe_i graph-menu-options">
-                        <a href="#" id="graph_area_stacked" title="Stacked Areas">w</a>
-                        <a href="#" id="graph_area_not_stacked" title="Multiple Areas">O</a>
+                        <a href="#" data-mode="area" data-legend="top"
+                            data-stacked="true" title="Stacked Areas">w</a>
+                        <a href="#" data-mode="area" data-legend="top"
+                            data-stacked="false" title="Multiple Areas">O</a>
                     </div>
                 </li>
-                <li><a href="#" id="graph_radar">Radar</a></li>
+                <li><a href="#" data-mode="radar" data-legend="inside"
+                        data-orientation="0">Radar</a></li>
             </ul>
             <div class="menu-section">
                 Legend:
             </div>
-            <ul class="graph-menu">
-                <li><a href="#" id="graph_legend_no">Hide</a></li>
-                <li><a href="#" id="graph_legend_inside">Inside</a></li>
-                <li><a href="#" id="graph_legend_top">Top</a></li>
+            <ul class="graph-menu oe_graph_options">
+                <li><a href="#" data-legend="no">Hide</a></li>
+                <li><a href="#" data-legend="inside">Inside</a></li>
+                <li><a href="#" data-legend="top">Top</a></li>
             </ul>
             <div class="menu-section">
                 Actions:

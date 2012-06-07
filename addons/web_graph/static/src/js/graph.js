@@ -6,6 +6,16 @@ openerp.web_graph = function (instance) {
 
 var _lt = instance.web._lt;
 
+// removed ``undefined`` values
+var filter_values = function (o) {
+    var out = {};
+    for (var k in o) {
+        if (!o.hasOwnProperty(k) || o[k] === undefined) { continue; }
+        out[k] = o[k];
+    }
+    return out;
+};
+
 instance.web.views.add('graph', 'instance.web_graph.GraphView');
 instance.web_graph.GraphView = instance.web.View.extend({
     template: "GraphView",
@@ -55,35 +65,16 @@ instance.web_graph.GraphView = instance.web.View.extend({
         })[0];
 
         var graph_render = this.proxy('graph_render');
-        this.$element.find("#graph_bar,#graph_bar_stacked").click(
-            {mode: 'bar', stacked: true, legend: 'top'}, graph_render);
+        this.$element.on('click', '.oe_graph_options a', function (evt) {
+            var $el = $(evt.target);
 
-        this.$element.find("#graph_bar_not_stacked").click(
-            {mode: 'bar', stacked: false, legend: 'top'}, graph_render);
-
-        this.$element.find("#graph_area,#graph_area_stacked").click(
-            {mode: "area", stacked: true, legend: "top"}, graph_render);
-
-        this.$element.find("#graph_area_not_stacked").click(
-            {mode: "area", stacked: false, legend: "top"}, graph_render);
-
-        this.$element.find("#graph_radar").click(
-            {orientation: 0, mode: "radar", legend: "inside"}, graph_render);
-
-        this.$element.find("#graph_pie").click(
-            {mode: "pie", legend: "inside"}, graph_render);
-
-        this.$element.find("#graph_legend_top").click(
-            {legend: "top"}, graph_render);
-
-        this.$element.find("#graph_legend_inside").click(
-            {legend: "inside"}, graph_render);
-
-        this.$element.find("#graph_legend_no").click(
-            {legend: "no"}, graph_render);
-
-        this.$element.find("#graph_line").click(
-            {mode: "line"}, graph_render);
+            self.graph_render({data: filter_values({
+                mode: $el.data('mode'),
+                legend: $el.data('legend'),
+                orientation: $el.data('orientation'),
+                stacked: $el.data('stacked')
+            })});
+        });
 
         this.$element.find("#graph_show_data").click(function () {
             self.spreadsheet = ! self.spreadsheet;
@@ -262,20 +253,19 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
         // Update styles of menus
 
-        this.$element.find("a[id^='graph_']").removeClass("active");
-        this.$element.find("a[id='graph_"+this.mode+"']").addClass("active");
-        this.$element.find("a[id='graph_"+this.mode+(this.stacked?"_stacked":"_not_stacked")+"']").addClass("active");
+        this.$element.find("a").removeClass("active");
 
-        if (this.legend == 'inside') {
-            this.$element.find("a[id='graph_legend_inside']").addClass("active");
-        } else if (this.legend == 'top') {
-            this.$element.find("a[id='graph_legend_top']").addClass("active");
-        } else {
-            this.$element.find("a[id='graph_legend_no']").addClass("active");
+        var $active = this.$element.find('a[data-mode=' + this.mode + ']');
+        if ($active.length > 1) {
+            $active = $active.filter('[data-stacked=' + this.stacked + ']');
         }
+        $active = $active.add(
+            this.$element.find('a:not([data-mode])[data-legend=' + this.legend + ']'));
+
+        $active.addClass('active');
 
         if (this.spreadsheet) {
-            this.$element.find("a[id='graph_show_data']").addClass("active");
+            this.$element.find("#graph_show_data").addClass("active");
         }
         return this.graph;
     },
