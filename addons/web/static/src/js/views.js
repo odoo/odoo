@@ -706,11 +706,8 @@ instance.web.Sidebar = instance.web.Widget.extend({
         this.items = {
             'print' : [],
             'files' : [],
-            'other' : [
-                    { label: _t("Import"), callback: view.on_sidebar_import },
-                    { label: _t("Export"), callback: view.on_sidebar_export }
-            ]
-        }
+            'other' : []
+        };
         if (this.session.uid === 1) {
             var item = { label: _t("Translate"), callback: view.on_sidebar_translate, title: _t("Technical translation") };
             this.items.other.push(item);
