@@ -259,13 +259,6 @@ class crm_lead(base_stage, osv.osv):
         'color': 0,
     }
 
-    def get_needaction_user_ids(self, cr, uid, ids, context=None):
-        result = dict.fromkeys(ids, [])
-        for obj in self.browse(cr, uid, ids, context=context):
-            if obj.message_thread_read == False and obj.user_id:
-                result[obj.id] = [obj.user_id.id]
-        return result
-
     def create(self, cr, uid, vals, context=None):
         obj_id = super(crm_lead, self).create(cr, uid, vals, context)
         self.create_send_note(cr, uid, [obj_id], context=context)

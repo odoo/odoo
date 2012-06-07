@@ -170,6 +170,9 @@ class mail_thread(osv.Model):
         # create message
         msg_id = message_obj.create(cr, uid, vals, context=context)
 
+        # Set as unread if writer is not the document responsible
+        #model_pool.message_mark_as_unread(cr, uid, [res_id], context=context)
+        
         # special: if install mode, do not push demo data
         if context.get('install_mode', False):
             return True
@@ -539,8 +542,6 @@ class mail_thread(osv.Model):
             res_id = int(create_record(msg))
         # To forward the email to other followers
         self.message_forward(cr, uid, model, [res_id], msg_txt, context=context)
-        # Set as Unread
-        model_pool.message_mark_as_unread(cr, uid, [res_id], context=context)
         return res_id
 
     def message_new(self, cr, uid, msg_dict, custom_values=None, context=None):
@@ -833,12 +834,36 @@ class mail_thread(osv.Model):
     #------------------------------------------------------
     # Thread_state
     #------------------------------------------------------
-    
+
     def message_mark_as_read(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'message_thread_read': True}, context=context)
     
+    def message_create_mark_as_unread(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            if hasattr(obj, 'user_id') and (not obj.user_id or (obj.user_id and obj.user_id.id != uid)):
+                self.mark_as_unread(cr, uid, [obj.id], context=None)
+    
     def message_mark_as_unread(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'message_thread_read': False}, context=context)
+
+
+class ir_needaction_mixin(osv.Model):
+    """ Update of res.users class
+        - add a preference about sending emails about notificatoins
+        - make a new user follow itself
+    """
+    _name = 'ir.needaction_mixin'
+    _inherit = ['ir.needaction_mixin']
+    
+    def get_needaction_user_ids(self, cr, uid, ids, context=None):
+        """ Returns the user_ids that have to perform an action
+            :return: dict { record_id: [user_ids], }
+        """
+        result = super(ir_needaction_mixin, self).get_needaction_user_ids(cr, uid, ids, context=context)
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.message_thread_read == False and obj.user_id:
+                result[obj.id].add(obj.user_id.id)
+        return result
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

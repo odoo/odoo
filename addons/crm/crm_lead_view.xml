@@ -171,7 +171,6 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Leads" fonts="bold:needaction_pending==True" colors="blue:state=='pending';grey:state in ('cancel', 'done')">
-                    <field name="needaction_pending" invisible="1"/>
                     <field name="date_deadline" invisible="1"/>
                     <field name="create_date" groups="base.group_no_one"/>
                     <field name="name"/>
@@ -187,6 +186,7 @@
                     <field name="referred" invisible="1"/>
                     <field name="channel_id" invisible="1"/>
                     <field name="subjects" invisible="1"/>
+                    <field name="needaction_pending" invisible="1"/>
                 </tree>
             </field>
         </record>
