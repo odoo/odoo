@@ -72,7 +72,7 @@
                         <field name="employee_id" />
                         <field name="job_id"/>
                         <field name="wage"/>
-                        <field name="type_id" widget="selection"/>
+                        <field name="type_id"/>
                     </group>
                     <notebook colspan='4'>
                     <page string="Information" name="information">
@@ -176,7 +176,7 @@
             <field name="search_view_id" ref="hr_contract_type_view_search"/>
         </record>
 
-        <menuitem action="action_hr_contract_type" id="hr_menu_contract_type" parent="next_id_56" sequence="6"/>
+        <menuitem action="action_hr_contract_type" id="hr_menu_contract_type" parent="next_id_56" sequence="6" groups="base.group_no_one"/>
         <menuitem action="action_hr_contract" id="hr_menu_contract" parent="hr.menu_hr_main" name="Contracts" sequence="4" groups="base.group_hr_manager"/>
 
         <!-- Contracts Button on Employee Form -->

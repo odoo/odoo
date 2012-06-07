@@ -187,7 +187,7 @@ class hr_applicant(base_stage, osv.Model):
         'email_from': fields.char('Email', size=128, help="These people will receive email."),
         'email_cc': fields.text('Watchers Emails', size=252, help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
         'probability': fields.float('Probability'),
-        'partner_id': fields.many2one('res.partner', 'Partner'),
+        'partner_id': fields.many2one('res.partner', 'Contact Name'),
         'create_date': fields.datetime('Creation Date', readonly=True, select=True),
         'write_date': fields.datetime('Update Date', readonly=True),
         'stage_id': fields.many2one ('hr.recruitment.stage', 'Stage',
@@ -221,7 +221,7 @@ class hr_applicant(base_stage, osv.Model):
         'department_id': fields.many2one('hr.department', 'Department'),
         'survey': fields.related('job_id', 'survey_id', type='many2one', relation='survey', string='Survey'),
         'response': fields.integer("Response"),
-        'reference': fields.char('Refered By', size=128),
+        'reference': fields.char('Referred By', size=128),
         'source_id': fields.many2one('hr.recruitment.source', 'Source'),
         'day_open': fields.function(_compute_day, string='Days to Open', \
                                 multi='day_open', type="float", store=True),
@@ -321,12 +321,13 @@ class hr_applicant(base_stage, osv.Model):
             if id3:
                 id3 = data_obj.browse(cr, uid, id3, context=context).res_id
 
-            context = {
+            context.update({
+                'default_applicant_id': opp.id,
                 'default_partner_id': opp.partner_id and opp.partner_id.id or False,
                 'default_email_from': opp.email_from,
                 'default_state': 'open',
                 'default_name': opp.name
-            }
+            })
             value = {
                 'name': ('Meetings'),
                 'domain': "[('user_id','=',%s)]" % (uid),
@@ -557,6 +558,30 @@ class hr_job(osv.osv):
     _columns = {
         'survey_id': fields.many2one('survey', 'Interview Form', help="Choose an interview form for this job position and you will be able to print/answer this interview from all applicants who apply for this job"),
     }
+    
+    def action_print_survey(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        datas = {}
+        record = self.browse(cr, uid, ids, context=context)[0]
+        if record.survey_id:
+            datas['ids'] = [record.survey_id.id]
+        datas['model'] = 'survey.print'
+        context.update({'response_id': [0], 'response_no': 0,})
+        return {
+                'type': 'ir.actions.report.xml',
+                'report_name': 'survey.form',
+                'datas': datas,
+                'context' : context,
+                'nodestroy':True,
+            }
+   
+hr_job()
 
+class crm_meeting(osv.osv):
+    _inherit = 'crm.meeting'
+    _columns = {
+        'applicant_id': fields.many2one('hr.applicant','Applicant Meeting'),
+    }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
