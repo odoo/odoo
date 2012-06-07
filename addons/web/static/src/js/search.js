@@ -1628,42 +1628,36 @@ instance.web.search.Filters = instance.web.search.Input.extend({
 instance.web.search.AddToDashboard = instance.web.search.Input.extend({
     template: 'SearchView.addtodashboard',
     _in_drawer: true,
-    init: function(){
-        var menu = instance.webclient.menu;
-        console.log("menu",menu);
-        this.menu_data = _.map(menu.data.data.children,
-                    function(menu){ 
-                        console.log(menu);
-                        var obj = {}; obj["id"] = menu.id; obj["name"] = menu.name; return obj;
-                        //support after update of _.underscore.js lib 1.3.3
-                        //return _.pick(menu, 'id', 'name');
-                        });
-        this.selected_menu_id = menu.$element.find('a.oe_active').data('menu');
-        this._super.apply(this, arguments);
-    },
     start: function () {
         var self = this;
         this.$element
         .on('click', 'h4', this.proxy('show_option'))
         .on('submit', 'form', function (e) {e.preventDefault(); self.add_dashboard();});
         this.$element.find('.searchview_extended_delete_prop').click(function () {self.$element.toggleClass('oe_opened');});
+        return this.rpc('/web/searchview/get_all_dashboard', {}, function(r) {self.menu_data = r;}).pipe(this.proxy("render_data"))
+    },
+    render_data: function(){
+        var self = this;
+        var selection = instance.web.qweb.render("SearchView.addtodashboard.selection",{selections:this.menu_data});
+        this.$element.find("input").before(selection)
     },
     add_dashboard:function(){
+        var self = this,getParent = this.getParent(),view_parent = this.view.getParent();
+        if(!view_parent.action || !this.$element.find("select").val())
+            return this.do_warn("Can't add dashboard item");
+        data = getParent.build_search_data(),
+        context = new instance.web.CompoundContext(getParent.dataset.get_context() || []),
+        domain = new instance.web.CompoundDomain(getParent.dataset.get_domain() || []);
         this.$element.toggleClass('oe_opened');
-        var menu_id = this.$element.find("select").val();
-        var ds_name = this.$element.find("input").val();
-        data = this.getParent().build_search_data();
-        context = new instance.web.CompoundContext(),
-        domain = new instance.web.CompoundDomain();
         _.each(data.contexts, function(x) {context.add(x);});
         _.each(data.domains, function(x) {domain.add(x);});
         this.rpc('/web/searchview/add_to_dashboard', {
-                        menu_id: menu_id,
-                        action_id: this.view.getParent().action.id,
+                        menu_id: this.$element.find("select").val(),
+                        action_id: view_parent.action.id,
                         context_to_save: context,
                         domain: domain,
-                        view_mode: this.view.getParent().active_view,
-                        name: ds_name
+                        view_mode: view_parent.active_view,
+                        name: this.$element.find("input").val()
                     }, function(r) {
                         if (r === false) {
                             self.do_warn("Could not add filter to dashboard");
@@ -1676,10 +1670,8 @@ instance.web.search.AddToDashboard = instance.web.search.Input.extend({
         this.$element.toggleClass('oe_opened');
         if (! this.$element.hasClass('oe_opened'))
             return;
-        var action_id = this.view.getParent().action.id;
-        this.$element.find("input").val(this.getParent().fields_view.name );
+        this.$element.find("input").val(this.getParent().fields_view.name || "" );
     }
-    
 })
 instance.web.search.Advanced = instance.web.search.Input.extend({
     template: 'SearchView.advanced',

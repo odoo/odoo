@@ -1417,11 +1417,6 @@
     <form>
     <ul>
         <li>
-         <select title = "Select Dashboard to add this filter to" style="width: 30%; margin-right: 1em;">
-            <option t-foreach="widget.menu_data" t-as="menu" t-att-value="menu.id" t-att-selected="(menu.id == widget.selected_menu_id) || undefined"><t t-esc="menu.name"/>
-            </option>
-        </select>
-        
          <input placeholder ="Title of new Dashboard item" title = "Title of new Dashboard item" type="text" style="width: 30%; margin-right: 1em;"/>
          <button class="oe_apply" type="submit">save</button>
          <a style="width: 30%;" class="searchview_extended_delete_prop button">x</a>
@@ -1429,6 +1424,13 @@
     </ul>
     </form>
 </div>
+<t t-name="SearchView.addtodashboard.selection">
+    <select  title = "Select Dashboard to add this filter to" style="width: 40%; margin-right: 1em;">
+        <t t-foreach="selections" t-as="element">
+        <option t-att-value="element.res_id"><t t-esc="element.name"/></option>
+        </t>
+    </select>
+</t>
 <div t-name="SearchView.advanced" class="oe_searchview_advanced">
     <h4>Advanced Search</h4>
     <form>
