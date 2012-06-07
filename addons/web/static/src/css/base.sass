@@ -1375,7 +1375,8 @@ $colour4: #8a89ba
             resize: vertical
         .oe_form_field
             width: 100%
-            display: inline-block
+            // Using !important because jQuery's $.fn.show() will set display to 'inline' for spans
+            display: inline-block !important
             padding: 2px 2px 2px 0px
             line-height: 18px
             input
