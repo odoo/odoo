@@ -153,7 +153,7 @@
             <field name="inherit_id" ref="account.view_partner_property_form"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                 <xpath expr="/page/group/field[@name='bank_ids']/tree/field[@name='acc_number']" position="before">
+                 <xpath expr="//field[@name='bank_ids']/tree/field[@name='acc_number']" position="before">
                     <field name="state" />
                     <field name="bank" />
                 </xpath>
