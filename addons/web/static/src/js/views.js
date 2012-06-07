@@ -743,6 +743,11 @@ instance.web.Sidebar = instance.web.Widget.extend({
         var self = this;
         self.$element.html(QWeb.render('Sidebar', {widget: self}));
         this.$element.find('ul').hide();
+
+        // Hides Sidebar sections when item list is empty
+        this.$('.oe_form_dropdown_section').each(function() {
+            $(this).toggle(!!$(this).find('li').length);
+        });
     },
     /**
      * For each item added to the section:
