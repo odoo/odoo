@@ -1410,11 +1410,7 @@ instance.web.form.InvisibilityChangerMixin = {
         this._check_visibility();
     },
     _check_visibility: function() {
-        if (this.get("effective_invisible")) {
-            this.$element.hide();
-        } else {
-            this.$element.show();
-        }
+        this.$element.toggleClass('oe_form_invisible', this.get("effective_invisible"));
     },
 };
 
