@@ -1191,19 +1191,40 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
             var $page = $(this);
             var page_attrs = $page.getAttributes();
             page_attrs.id = _.uniqueId('notebook_page_');
-            pages.push(page_attrs);
             var $new_page = self.render_element('FormRenderingNotebookPage', page_attrs);
             $page.contents().appendTo($new_page);
             $page.before($new_page).remove();
-            self.handle_common_properties($new_page, $page);
+            var ic = self.handle_common_properties($new_page, $page).invisibility_changer;
+            page_attrs.__page = $new_page;
+            page_attrs.__ic = ic;
+            pages.push(page_attrs);
+            
+            $new_page.children().each(function() {
+                self.process($(this));
+            });
         });
         var $new_notebook = this.render_element('FormRenderingNotebook', { pages : pages });
         $notebook.contents().appendTo($new_notebook);
         $notebook.before($new_notebook).remove();
-        $new_notebook.children().each(function() {
-            self.process($(this));
-        });
+        self.process($($new_notebook.children()[0]));
+        //tabs and invisibility handling
         $new_notebook.tabs();
+        _.each(pages, function(page, i) {
+            if (! page.__ic)
+                return;
+            page.__ic.on("change:effective_invisible", null, function() {
+                var current = $new_notebook.tabs("option", "selected");
+                if (! pages[current].__ic || ! pages[current].__ic.get("effective_invisible"))
+                    return;
+                var first_visible = _.find(_.range(pages.length), function(i2) {
+                    return (! pages[i2].__ic) || (! pages[i2].__ic.get("effective_invisible"));
+                });
+                if (first_visible !== undefined) {
+                    $new_notebook.tabs('select', first_visible);
+                }
+            });
+        });
+                
         this.handle_common_properties($new_notebook, $notebook);
         return $new_notebook;
     },
@@ -1241,10 +1262,12 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
     handle_common_properties: function($new_element, $node) {
         var str_modifiers = $node.attr("modifiers") || "{}"
         var modifiers = JSON.parse(str_modifiers);
+        var ic = null;
         if (modifiers.invisible !== undefined)
-            new instance.web.form.InvisibilityChanger(this.view, this.view, modifiers.invisible, $new_element);
+            ic = new instance.web.form.InvisibilityChanger(this.view, this.view, modifiers.invisible, $new_element);
         $new_element.addClass($node.attr("class") || "");
         $new_element.attr('style', $node.attr('style'));
+        return {invisibility_changer: ic,};
     },
 });
 
