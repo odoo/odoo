@@ -55,7 +55,9 @@ ATTENTION:
         'report/document_report_view.xml',
         'board_document_view.xml',
     ],
-    'demo_xml': [ 'document_demo.xml','board_document_demo.xml'],
+    'demo_xml': [
+        'document_demo.xml',
+    ],
     'test': [
         'test/document_test2.yml',
     ],
