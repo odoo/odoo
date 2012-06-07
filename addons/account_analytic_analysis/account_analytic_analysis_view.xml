@@ -4,30 +4,9 @@
 
         <!--
         Analytic Account form
+        -->
 
-        Remove information on Account data => because they move on analysis sheet
-        create a page with invoicing informations
-       
-        <record id="account_analytic_account_invoice_stat_form" model="ir.ui.view">
-            <field name="name">account.analytic.account.invoice.stat.form.inherit</field>
-            <field name="model">account.analytic.account</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="hr_timesheet_invoice.account_analytic_account_form_form"/>
-            <field eval="18" name="priority"/>
-            <field name="arch" type="xml">
-                <group name="invoice_stats" position="inside">
-                    <field name="hours_qtt_non_invoiced" attrs="{'invisible': [('to_invoice','=',0)]}"/>
-                    <field name="ca_to_invoice" attrs="{'invisible': [('to_invoice','=',0)]}"/>
-                    <label string="" colspan="1"/>
-                    <button
-                        name="%(hr_timesheet_invoice.action_hr_timesheet_invoice_create_final)d"
-                        string="Create Invoice"
-                        type="action"
-                        attrs="{'readonly':[('ca_to_invoice','=',0.0)], 'invisible': [('to_invoice','=',0)]}"
-                        icon="gtk-go-forward"/>
-                </group>
-            </field>
-        </record> -->
+
         <act_window
             id="action_sales_order_line"
             name="Sales Order Lines"
@@ -78,7 +57,7 @@
                         <tr>
 			    <th class="oe_border_right">Invoice On Timesheets</th>
 			    <td><field name="invoice_on_timesheets" nolabel="1"/></td>
-			    <td><field class="oe_th_110px" name="quantity_max" nolabel="1" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
+			    <td><field class="oe_th_110px" name="hours_qtt_est" nolabel="1" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
 			    <td class="oe_th_110px"><field name="hours_qtt_invoiced" nolabel="1" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
 			    <td class="oe_th_110px oe_border_right"><field name="remaining_hours" nolabel="1" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
 			    <td class="oe_th_110px"><field name="hours_qtt_non_invoiced" nolabel="1" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
@@ -86,17 +65,7 @@
 			    <td><button class= "oe_btn_width" name="%(hr_timesheet.act_hr_timesheet_line_evry1_all_form)d" string="Timesheets" type="action" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
 			    <td><button class= "oe_btn_width" name="%(hr_timesheet_invoice.act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice)d" string="Invoice Timesheets" type="action" attrs="{'invisible': [('invoice_on_timesheets','=',0)]}"/></td>
                         </tr>
-                        <tr>
-			    <th class="oe_border_right">Charge Expenses</th>
-			    <td><field name="charge_expenses" nolabel="1"/></td>
-			    <td><field class="oe_th_110px" name="expense_max" nolabel="1" attrs="{'invisible': [('charge_expenses','=',0)]}"/></td>
-			    <td class="oe_th_110px"><field name="expense_invoiced" nolabel="1" attrs="{'invisible': [('charge_expenses','=',0)]}"/></td>
-			    <td class="oe_th_110px oe_border_right"><field name="remaining_expense" nolabel="1" attrs="{'invisible': [('charge_expenses','=',0)]}"/></td>
-			    <td class="oe_th_110px"><field name="expense_to_invoice" nolabel="1" attrs="{'invisible': [('charge_expenses','=',0)]}"/></td>
-			    <td width="10px"></td>
-			    <td><button class= "oe_btn_width" name="open_hr_expense" string="Expenses" type="object" attrs="{'invisible': [('charge_expenses','=',0)]}"/></td>
-			    <td><button class= "oe_btn_width" name="hr_to_invoiced_expense" string="Invoice Expenses" type="object" attrs="{'invisible': [('charge_expenses','=',0)]}"/></td>
-                        </tr>
+                        <div name="end_of_tabl_hook"/>
                         <tr>
 			    <th class="oe_border_right">Total</th>
 			    <td width="10px"></td>

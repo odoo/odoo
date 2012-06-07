@@ -25,32 +25,23 @@
     'version': '1.1',
     'category': 'Sales Management',
     'description': """
-This module is for modifying account analytic view to show important data to project manager of services companies.
-===================================================================================================================
+This module is for modifying account analytic view to show some data related to the hr_expense module.
+======================================================================================================
 
-Adds menu to show relevant information to each manager.
-You can also view the report of account analytic summary
-user-wise as well as month wise.
 """,
-    "author": "Camptocamp",
-    "website": "http://www.camptocamp.com/",
-    "images": ["images/bill_tasks_works.jpeg","images/overpassed_accounts.jpeg"],
-    "depends": ["hr_timesheet_invoice", "sale","project"], #although sale is technically not required to install this module, all menuitems are located under 'Sales' application
+    "author": "OpenERP S.A.",
+    "website": "http://www.openerp.com/",
+    "depends": ["hr_expense","account_analytic_analysis"],
     "init_xml": [],
     "update_xml": [
-                    "security/ir.model.access.csv",
-                    "account_analytic_analysis_view.xml",
-                    "account_analytic_analysis_menu.xml",
-                    "account_analytic_analysis_cron.xml",
-                    "account_analytic_analysis_report.xml"
+                    "analytic_contract_hr_expense_view.xml",
                     ],
     'demo_xml': [],
     "css" : [
-             "static/src/css/account_analytic.css",
              ],
     'installable': True,
-    'auto_install': False,
-    'certificate': '0042927202589',
+    'auto_install': True,
+    'certificate': '',
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
