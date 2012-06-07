@@ -25,7 +25,7 @@
     "author" : "OpenERP SA",
     "website" : "http://www.openerp.com",
     "category": 'Hidden/Dependency',
-    "depends" : ["base", "decimal_precision"],
+    "depends" : ["base", "decimal_precision", "mail"],
     "description": """
 Module for defining analytic accounting object.
 ===============================================

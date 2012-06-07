@@ -27,6 +27,7 @@ import decimal_precision as dp
 
 class account_analytic_account(osv.osv):
     _name = 'account.analytic.account'
+    _inherit = ['mail.thread']
     _description = 'Analytic Account'
 
     def _compute_level_tree(self, cr, uid, ids, child_ids, res, field_names, context=None):
