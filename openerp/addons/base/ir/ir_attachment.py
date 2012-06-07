@@ -26,6 +26,19 @@ from osv.orm import except_orm
 import tools
 
 class ir_attachment(osv.osv):
+    """Attachments are used to link binary files or url to any openerp document.
+
+    External attachment storage
+    ---------------------------
+    
+    The 'data' function field (_data_get,data_set) is implemented using
+    _file_read, _file_write and _file_delete which can be overridden to
+    implement other storage engines, shuch methods should check for other
+    location pseudo uri (example: hdfs://hadoppserver)
+    
+    The default implementation is the file:dirname location that stores files
+    on the local filesystem using name based on their sha1 hash
+    """
     def _name_get_resname(self, cr, uid, ids, object, method, context):
         data = {}
         for attachment in self.browse(cr, uid, ids, context=context):
@@ -44,26 +57,106 @@ class ir_attachment(osv.osv):
                 data[attachment.id] = False
         return data
 
+    # 'data' field implementation
+    def _full_path(self, cr, uid, location, path)
+        # location = 'file:filestore'
+        assert location.startswith('file:'), "Unhandled filestore location %s" % location
+        location = location[5:]
+
+        # sanitize location name and path
+        location = re.sub('[.]','',location)
+        location = path.strip('/\\')
+
+        path = re.sub('[.]','',path)
+        path = path.strip('/\\')
+        return os.path.join(tools.config['root_path'], location, cr.dbname, path)
+
+    def _file_read(self, cr, uid, location, fname, bin_size=False)
+        full_path = self._full_path(cr, uid, location, fname)
+        r = ''
+        try:
+            if bin_size:
+                r = os.path.filesize(full_path)
+            else:
+                r = open(full_path).read().encode('base64')
+        except IOError:
+            _logger.error("_read_file reading %s",full_path)
+        return r
+
+    def _file_write(self, cr, uid, location, value):
+        bin_value = value.decode('base64')
+        fname = hashlib.sha1(bin_value).hexdigest()
+        # scatter files across 1024 dirs
+        # we use '/' in the db (even on windows)
+        fname = fname[:3] + '/' + fname
+        full_path = self._full_path(cr, uid, location, fname)
+        try:
+            dirname = os.path.dirname(full_path)
+            if not os.path.isdir(dirname):
+                os.makedirs(dirname)
+            open(full_path,'wb').write(bin_value)
+        except IOError:
+            _logger.error("_file_write writing %s",full_path)
+        return fname
+
+    def _file_delete(self, cr, uid, location, fname, threshold=1):
+        count = self.search(cr, 1, [('store_fname','=',fname)], count=True)
+        if count <= threshold:
+            full_path = self._full_path(cr, uid, location, fname)
+            try:
+                os.unlink(full_path)
+            except IOError:
+                _logger.error("_file_delete could not unlink %s",full_path)
+
+    def _data_get(self, cr, uid, ids, name, arg, context=None):
+        if context is None:
+            context = {}
+        result = {}
+        location = self.pool.get('ir.config_parameter').get_param('ir_attachment.location')
+        bin_size = context.get('bin_size', False)
+        for i in self.browse(cr, uid, ids, context=context):
+            if location and i.store_fname:
+                result[i.id] = self._file_read(cr, uid, location, i.store_fname, bin_size)
+            else:
+                result[i.id] = i.db_datas
+        return result
+
+    def _data_set(self, cr, uid, id, name, value, arg, context=None):
+        if not value:
+            return True
+        if context is None:
+            context = {}
+        result = {}
+        location = self.pool.get('ir.config_parameter').get_param('ir_attachment.location')
+        bin_size = context.get('bin_size', False)
+        if path:
+            i = self.browse(cr, uid, id, context=context)
+            if i.store_fname:
+                self._file_delete(cr, uid, location, i.store_fname)
+            fname = self._file_write(cr, uid, location, value)
+            self.write(cr, uid, [id], {'store_fname': fname}, context=context)
+        else:
+            self.write(cr, uid, [id], {'db_datas': value}, context=context)
+        return True
+
     _name = 'ir.attachment'
     _columns = {
         'name': fields.char('Attachment Name',size=256, required=True),
-        'datas': fields.binary('Data'),
         'datas_fname': fields.char('File Name',size=256),
         'description': fields.text('Description'),
-        'res_name': fields.function(_name_get_resname, type='char', size=128,
-                string='Resource Name', store=True),
-        'res_model': fields.char('Resource Object',size=64, readonly=True,
-                help="The database object this attachment will be attached to"),
-        'res_id': fields.integer('Resource ID', readonly=True,
-                help="The record id this is attached to"),
-        'url': fields.char('Url', size=512, oldname="link"),
-        'type': fields.selection(
-                [ ('url','URL'), ('binary','Binary'), ],
-                'Type', help="Binary File or external URL", required=True, change_default=True),
-
+        'res_name': fields.function(_name_get_resname, type='char', size=128, string='Resource Name', store=True),
+        'res_model': fields.char('Resource Model',size=64, readonly=True, help="The database object this attachment will be attached to"),
+        'res_id': fields.integer('Resource ID', readonly=True, help="The record id this is attached to"),
         'create_date': fields.datetime('Date Created', readonly=True),
         'create_uid':  fields.many2one('res.users', 'Owner', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', change_default=True),
+        'type': fields.selection( [ ('url','URL'), ('binary','Binary'), ],
+                'Type', help="Binary File or URL", required=True, change_default=True),
+        'url': fields.char('Url', size=1024),
+        # al: For the moment I keepi those shitty field names for backward compatibility with document
+        'datas': fields.function(_data_get, fnct_inv=_data_set, string='File Content', type="binary", nodrop=True),
+        'store_fname': fields.char('Stored Filename', size=256),
+        'db_datas': fields.binary('Database Data'),
     }
 
     _defaults = {
