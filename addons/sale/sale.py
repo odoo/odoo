@@ -726,6 +726,26 @@ class sale_order(osv.osv):
             self.cancel_send_note(cr, uid, [sale.id], context=None)
         self.write(cr, uid, ids, {'state': 'cancel'})
         return True
+    
+    def action_button_confirm(self, cr, uid, ids, context=None):
+        assert len(ids) == 1, 'This option should only be used for a single id at a time'
+        wf_service = netsvc.LocalService('workflow')
+        wf_service.trg_validate(uid, 'sale.order', ids[0], 'order_confirm', cr)
+
+        # redisplay the record as a sale order
+        view_ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'sale', 'view_order_form')
+        view_id = view_ref and view_ref[1] or False,
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Sales Order'),
+            'res_model': 'sale.order',
+            'res_id': ids[0],
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': view_id,
+            'target': 'current',
+            'nodestroy': True,
+        }
 
     def action_wait(self, cr, uid, ids, context=None):
         for o in self.browse(cr, uid, ids):
