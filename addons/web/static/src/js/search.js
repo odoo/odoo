@@ -1644,7 +1644,7 @@ instance.web.search.AddToDashboard = instance.web.search.Input.extend({
     add_dashboard:function(){
         var self = this,getParent = this.getParent(),view_parent = this.view.getParent();
         if(!view_parent.action || !this.$element.find("select").val())
-            return this.do_warn("Can't add dashboard item");
+            return this.do_warn("Can't find dashboard action");
         data = getParent.build_search_data(),
         context = new instance.web.CompoundContext(getParent.dataset.get_context() || []),
         domain = new instance.web.CompoundDomain(getParent.dataset.get_domain() || []);
@@ -1652,19 +1652,19 @@ instance.web.search.AddToDashboard = instance.web.search.Input.extend({
         _.each(data.contexts, function(x) {context.add(x);});
         _.each(data.domains, function(x) {domain.add(x);});
         this.rpc('/web/searchview/add_to_dashboard', {
-                        menu_id: this.$element.find("select").val(),
-                        action_id: view_parent.action.id,
-                        context_to_save: context,
-                        domain: domain,
-                        view_mode: view_parent.active_view,
-                        name: this.$element.find("input").val()
-                    }, function(r) {
-                        if (r === false) {
-                            self.do_warn("Could not add filter to dashboard");
-                        } else {
-                            self.do_notify("Filter added to dashboard", '');
-                        }
-                    });
+            menu_id: this.$element.find("select").val(),
+            action_id: view_parent.action.id,
+            context_to_save: context,
+            domain: domain,
+            view_mode: view_parent.active_view,
+            name: this.$element.find("input").val()
+        }, function(r) {
+            if (r === false) {
+                self.do_warn("Could not add filter to dashboard");
+            } else {
+                self.do_notify("Filter added to dashboard", '');
+            }
+        });
     },
     show_option:function(){
         this.$element.toggleClass('oe_opened');
@@ -1672,7 +1672,7 @@ instance.web.search.AddToDashboard = instance.web.search.Input.extend({
             return;
         this.$element.find("input").val(this.getParent().fields_view.name || "" );
     }
-})
+});
 instance.web.search.Advanced = instance.web.search.Input.extend({
     template: 'SearchView.advanced',
     _in_drawer: true,
