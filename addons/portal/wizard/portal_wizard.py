@@ -91,11 +91,21 @@ class wizard(osv.osv_memory):
     def _default_user_ids(self, cr, uid, context):
         """ determine default user_ids from the active records """
         def create_user_from_address(address):
-            return {    # a user config based on a contact (address)
+            has_portal=False
+            portal_id = context.get('portal_id',False)
+            if portal_id:
+                portal_users = self.pool.get('res.portal').browse(cr,uid,portal_id).group_id.users
+                active_user = [u.login for u in portal_users]
+                if address.email in active_user:
+                    has_portal = True
+
+            return  {    # a user config based on a contact (address)
                 'name': address.name,
                 'user_email': extract_email(address.email),
                 'lang': address.parent_id and address.parent_id.lang or 'en_US',
                 'partner_id': address.parent_id and address.parent_id.id,
+                'has_portal_user':has_portal,
+                'portal_id': context.get('portal_id', False)
             }
         
         user_ids = []
@@ -116,6 +126,32 @@ class wizard(osv.osv_memory):
         'user_ids': _default_user_ids
     }
 
+    def onchange_portal_id(self, cr, uid, ids, portal_id=False, context=None):
+        if not portal_id:
+            return {'value': {}}
+        user_obj = self.pool.get('res.users')
+        context.update({'portal_id':portal_id})
+        user_list = self._default_user_ids(cr, uid, context=context)
+    
+        contact_user = [u['user_email'] for u in user_list]
+
+        #add active portal user to portal wizard
+        portal_users = self.pool.get('res.portal').browse(cr,uid,portal_id).group_id.users
+        active_user =[]
+        for u in portal_users:
+            if u.partner_id.id == context['active_id'] and u.user_email not in contact_user:
+                active_user.append({
+                    'name': u.name,
+                    'user_email': u.user_email,
+                    'lang': u.context_lang or 'en_US',
+                    'partner_id': u.partner_id.id or False,
+                    'has_portal_user':True,
+                })
+        if active_user:
+            user_list.extend(active_user)
+            
+        return {'value': {'user_ids': user_list}}
+
     def action_create(self, cr, uid, ids, context=None):
         """ create new users in portal(s), and notify them by email """
         # we copy the context to change the language for translating emails
@@ -133,26 +169,38 @@ class wizard(osv.osv_memory):
         portal_obj = self.pool.get('res.portal')
         for wiz in self.browse(cr, uid, ids, context):
             # determine existing users
-            login_cond = [('login', 'in', [u.user_email for u in wiz.user_ids])]
-            existing_uids = user_obj.search(cr, ROOT_UID, login_cond)
-            existing_users = user_obj.browse(cr, ROOT_UID, existing_uids)
-            existing_logins = [u.login for u in existing_users]
-            
-            # create new users in portal (skip existing logins)
-            new_users_data = [ {
-                    'name': u.name,
-                    'login': u.user_email,
-                    'password': random_password(),
-                    'user_email': u.user_email,
-                    'context_lang': u.lang,
-                    'share': True,
-                    'action_id': wiz.portal_id.home_action_id and wiz.portal_id.home_action_id.id or False,
-                    'partner_id': u.partner_id and u.partner_id.id,
-                } for u in wiz.user_ids if u.user_email not in existing_logins ]
-            portal_obj.write(cr, ROOT_UID, [wiz.portal_id.id],
-                {'users': [(0, 0, data) for data in new_users_data]}, context0)
-            
-            # send email to all users (translated in their language)
+            portal_user=[user.id for user in wiz.portal_id.group_id.users]
+            add_users=[]
+            removeuser=[]
+            new_users_data = []
+            for u in wiz.user_ids:
+                login_cond = [('login', 'in', [u.user_email])]
+                existing_uids = user_obj.search(cr, ROOT_UID, login_cond)
+                existing_users = user_obj.browse(cr, ROOT_UID, existing_uids)
+                existing_logins = [user.login for user in existing_users]
+                if existing_uids and existing_uids[0] not in portal_user:
+                    add_users.append(existing_uids[0])
+                if existing_uids and u.has_portal_user==False and existing_uids[0] in portal_user:
+                    removeuser.append(existing_uids[0])
+                if u.user_email not in existing_logins:
+                    new_users_data.append({
+                            'name': u.name,
+                            'login': u.user_email,
+                            'password': random_password(),
+                            'user_email': u.user_email,
+                            'context_lang': u.lang,
+                            'share': True,
+                            'action_id': wiz.portal_id.home_action_id and wiz.portal_id.home_action_id.id or False,
+                            'partner_id': u.partner_id and u.partner_id.id,
+                        } )
+            if new_users_data:
+                portal_obj.write(cr, ROOT_UID, [wiz.portal_id.id],
+                    {'users': [(0, 0, data) for data in new_users_data]}, context0)
+            if add_users and add_users not in portal_user :
+                portal_obj.write(cr, ROOT_UID, [wiz.portal_id.id],
+                    {'users': [(6, 0, add_users)]}, context0)
+            if removeuser  : 
+                portal_obj.write(cr, ROOT_UID, [wiz.portal_id.id], {'users': [(3, removeuser[0])]}, context0)                
             data = {
                 'company': user.company_id.name,
                 'message': wiz.message or "",
@@ -205,6 +253,7 @@ class wizard_user(osv.osv_memory):
             help="The language for the user's user interface"),
         'partner_id': fields.many2one('res.partner',
             string='Partner'),
+        'has_portal_user':fields.boolean('Has portal access')
     }
 
     def _check_email(self, cr, uid, ids):
@@ -217,6 +266,10 @@ class wizard_user(osv.osv_memory):
         (_check_email, 'Invalid email address', ['email']),
     ]
 
+    _defaults = {  
+        'lang': lambda self,cr,uid,c: self.browse(cr, uid, uid, c).partner_id.lang or 'en_US',
+        }
+    
 wizard_user()
 
 
