@@ -262,13 +262,13 @@ class account_voucher(osv.osv):
         return type_dict.get(type, 'Voucher')
 
     def create(self, cr, uid, vals, context=None):
-        res = super(account_voucher, self).create(cr, uid, vals, context)
+        res = super(account_voucher, self).create(cr, uid, vals, context=context)
         self.create_send_note(cr, uid, [res], context=context)
         return res
 
     def create_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_append_note(cr, uid, [obj.id],body=_("%s <b>created</b>.") % (self._get_document_type(obj.type)), context=context)
+            self.message_append_note(cr, uid, [obj.id], body=_("%s <b>created</b>.") % (self._get_document_type(obj.type)), context=context)
 
     def reconcile_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
@@ -807,7 +807,6 @@ class account_voucher(osv.osv):
 
     def proforma_voucher(self, cr, uid, ids, context=None):
         self.action_move_line_create(cr, uid, ids, context=context)
-        self.posted_send_note(cr, uid, ids, context=context)
         return {'type': 'ir.actions.act_window_close'}
 
     def action_cancel_draft(self, cr, uid, ids, context=None):
