@@ -52,10 +52,11 @@ instance.web.ViewEditor =   instance.web.OldWidget.extend({
         this.view_edit_dialog.on_close.add_last(function(){window.location.reload();});
         this.main_view_id = this.parent.fields_view.view_id;
         this.action_manager = new instance.web.ActionManager(this);
-        this.action_manager.appendTo(this.view_edit_dialog);
         $.when(this.action_manager.do_action(action)).then(function() {
             var viewmanager = self.action_manager.inner_viewmanager,
                 controller = viewmanager.views[viewmanager.active_view].controller;
+            self.action_manager.appendTo(self.view_edit_dialog.$element);
+            self.action_manager.renderElement(self.view_edit_dialog);
             controller.on_loaded.add_last(function(){
                 $(controller.groups).bind({
                     'selected': function(e, ids, records) {
@@ -630,11 +631,9 @@ instance.web.ViewEditor =   instance.web.OldWidget.extend({
                     insert = _.intersection(_.flatten(temp_obj.att_list),_.uniq(check_list));
                 if (insert.length == _.uniq(check_list).length ) {return xml_child;}
             });
+            xml_arch = QWeb.load_xml(arch.arch);
         }
-        arch_to_pass = _.filter($(arch.arch), function (child) {
-            return child.nodeType == 1;
-        });
-        return self.do_save_xml(arch_to_pass[0], obj[0].child_id[0],obj[0].child_id, move_direct, update_values,arch);
+        return self.do_save_xml(xml_arch.documentElement, obj[0].child_id[0],obj[0].child_id, move_direct, update_values,arch);
     },
     get_object_by_id: function(id, one_object, result) {
         var self = this;
@@ -708,12 +707,12 @@ instance.web.ViewEditor =   instance.web.OldWidget.extend({
                          case "After":
                             self.edit_xml_dialog.$element.
                                 find("tr[id='viewedit-"+after_append+"']").after(clone);
-                            $(arch1).after(update_values[0]);
+                            $(arch1).after($(update_values[0]));
                             child_list.splice(index + 1, 0, object_xml);
                             break;
                         case "Before":
                             tr_click.before(clone);
-                            $(arch1).before(update_values[0]);
+                            $(arch1).before($(update_values[0]));
                             child_list.splice(index - 1, 0, object_xml);
                             break;
                         case "Inside":
@@ -724,7 +723,7 @@ instance.web.ViewEditor =   instance.web.OldWidget.extend({
                                         self.do_parent_img_hide_show(this);
                                 }));
                             }
-                            $(arch1).append(update_values[0]);
+                            $(arch1).append($(update_values[0]));
                             self.edit_xml_dialog.$element.
                                 find("tr[id='viewedit-"+after_append+"']").after(clone);
                             obj.child_id.push(object_xml);
@@ -841,6 +840,7 @@ instance.web.ViewEditor =   instance.web.OldWidget.extend({
             'string' : {'name':'string', 'string': 'String', 'type': 'char'},
             'required' : {'name':'required', 'string': 'Required', 'type': 'boolean'},
             'readonly' : {'name':'readonly', 'string': 'Readonly', 'type': 'boolean'},
+            'invisible' : {'name':'invisible', 'string': 'Invisible', 'type': 'boolean'},
             'domain' : {'name':'domain', 'string': 'Domain', 'type': 'char'},
             'context' : {'name':'context', 'string': 'Context', 'type': 'char'},
             'limit' : {'name':'limit', 'string': 'Limit', 'type': 'float'},
@@ -891,7 +891,7 @@ instance.web.ViewEditor =   instance.web.OldWidget.extend({
                 var value = _.detect(arch_val[0]['att_list'],function(res) {
                     return res instanceof Array? _.include(res, widget.name): false;
                 });
-                
+
                 value = value instanceof Array ? value[1] : value;
                 self.edit_node_dialog.$element.find('table[id=rec_table]').append('<tr><td align="right">' + widget.string + ':</td>' + type_widget.render() + '</tr>');
                 type_widget.start();
@@ -983,14 +983,14 @@ instance.web.ViewEditor =   instance.web.OldWidget.extend({
         self.add_node_dialog.$element.find('#new_field').click(function() {
             model_data = new instance.web.DataSetSearch(self,'ir.model', null, null);
             model_data.read_slice([], {domain: [['model','=', self.model]]}).then(function(result) {
-                self.render_new_field(result[0].id);
+                self.render_new_field(result[0]);
             });
         });
     },
-    render_new_field :function(id){
+    render_new_field :function( result ) {
         var self = this;
         var action = {
-            context: {'default_model_id': id, 'manual': true},
+            context: {'default_model_id': result.id, 'manual': true, 'module' : result.modules},
             res_model: "ir.model.fields",
             views: [[false, 'form']],
             type: 'ir.actions.act_window',
@@ -1007,7 +1007,7 @@ instance.web.ViewEditor =   instance.web.OldWidget.extend({
             });
             controller.do_save.add_last(function(){
                 action_manager.destroy();
-                var value =controller.fields.name.value;
+                var value =controller.fields.name.get('value');
                 self.add_node_dialog.$element.find('select[id=field_value]').append($("<option selected></option>").attr("value",value).text(value));
                     _.detect(self.add_widget,function(widget){
                         widget.name == "field_value"? widget.selection.push(value): false;
@@ -1136,12 +1136,12 @@ instance.web.ViewEditor.FieldFloat = instance.web.ViewEditor.FieldChar.extend({
 });
 
 var _PROPERTIES = {
-    'field' : ['name', 'string', 'required', 'readonly', 'domain', 'context', 'nolabel', 'completion',
+    'field' : ['name', 'string', 'required', 'readonly','invisible', 'domain', 'context', 'nolabel', 'completion',
                'colspan', 'widget', 'eval', 'ref', 'on_change', 'attrs', 'groups'],
     'form' : ['string', 'col', 'link'],
     'notebook' : ['colspan', 'position', 'groups'],
     'page' : ['string', 'states', 'attrs', 'groups'],
-    'group' : ['string', 'col', 'colspan', 'states', 'attrs', 'groups'],
+    'group' : ['string', 'col', 'colspan','invisible', 'states', 'attrs', 'groups'],
     'image' : ['filename', 'width', 'height', 'groups'],
     'separator' : ['string', 'colspan', 'groups'],
     'label': ['string', 'align', 'colspan', 'groups'],

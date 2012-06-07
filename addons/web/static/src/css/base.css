@@ -34,7 +34,7 @@
   background: white;
   /* http://www.quirksmode.org/dom/inputfile.html
    * http://stackoverflow.com/questions/2855589/replace-input-type-file-by-an-image
-   */ */
+   */
 }
 .openerp a {
   text-decoration: none;
@@ -1123,7 +1123,7 @@
   left: 0px;
   padding: 8px;
   border: 1px solid #afafb6;
-  width: 120px;
+  min-width: 120px;
   overflow-x: hidden;
   z-index: 900;
   text-align: left;
@@ -1629,7 +1629,7 @@
   font-weight: bold;
   color: #b33630;
 }
-.openerp header.oe_form_topbar_hifirst button:first-child, .openerp button.oe_form_button_hi {
+.openerp .oe_form_readonly header.oe_form_topbar_hifirst button:first-child, .openerp .oe_form_readonly button.oe_form_button_hi {
   color: white;
   background: #dc5f59;
   background: -moz-linear-gradient(#dc5f59, #b33630);
@@ -1639,7 +1639,7 @@
   -webkit-box-shadow: none;
   -box-shadow: none;
 }
-.openerp header.oe_form_topbar_hifirst button:first-child:hover, .openerp button.oe_form_button_hi:hover {
+.openerp .oe_form_readonly header.oe_form_topbar_hifirst button:first-child:hover, .openerp .oe_form_readonly button.oe_form_button_hi:hover {
   background: #df6b66;
   background: -moz-linear-gradient(#df6b66, #bf3a33);
   background: -webkit-gradient(linear, left top, left bottom, from(#df6b66), to(#bf3a33));
@@ -1723,7 +1723,7 @@
 }
 .openerp .oe_form .oe_form_field {
   width: 100%;
-  display: inline-block;
+  display: inline-block !important;
   padding: 2px 2px 2px 0px;
   line-height: 18px;
 }
@@ -1829,7 +1829,6 @@
   color: black;
   padding: 0px 3px 0px 3px;
   margin: 0 2px 2px 0;
-  cursor: pointer;
   height: 16px;
   font: 11px "lucida grande", tahoma, verdana, arial, sans-serif;
 }
@@ -2097,27 +2096,27 @@
   padding-left: 8px;
 }
 .openerp .oe_form .oe_form_subtotal_footer {
+  width: auto;
   float: right;
 }
-.openerp .oe_form .oe_form_subtotal_footer > div {
+.openerp .oe_form .oe_form_subtotal_footer td.oe_form_group_cell {
   text-align: right;
-  padding: 3px;
+  padding: 0;
 }
-.openerp .oe_form .oe_form_subtotal_footer label {
-  font-weight: normal !important;
+.openerp .oe_form .oe_form_subtotal_footer td.oe_form_group_cell_label {
+  border: none;
 }
-.openerp .oe_form .oe_form_subtotal_footer span {
-  display: inline-block;
-  min-width: 80px;
-  text-align: right;
+.openerp .oe_form .oe_form_subtotal_footer .oe_form_field {
+  width: auto !important;
 }
 .openerp .oe_form .oe_form_subtotal_footer .oe_form_subtotal_footer_separator {
   border-top: 1px solid #cacaca;
   font-size: 120%;
   font-weight: bold;
 }
-.openerp .oe_form .oe_form_subtotal_footer .oe_form_subtotal_footer_separator label {
+.openerp .oe_form .oe_form_subtotal_footer label.oe_form_subtotal_footer_separator {
   font-weight: bold !important;
+  padding: 2px 8px 2px 0px !important;
 }
 .openerp .oe-listview-content {
   width: 100%;
@@ -2282,6 +2281,28 @@
   width: 49%;
   float: right;
   color: #333333;
+}
+
+.openerp .oe_view_editor {
+  width: 100%;
+  border-collapse: collapse;
+  margin-left: -12px;
+  width: 100%;
+  background-color: white;
+  border-spacing: 0;
+}
+.openerp .oe_view_editor td {
+  text-align: center;
+  white-space: nowrap;
+  border: 1px solid #d8d8d8;
+  cursor: pointer;
+  font-size: 90%;
+}
+.openerp .oe_view_editor_field td {
+  border: 0px !important;
+}
+.openerp .oe_view_editor tr:hover {
+  background-color: #ecebf2;
 }
 
 .kitten-mode-activated {

@@ -895,7 +895,7 @@ $colour4: #8a89ba
         left: 0px
         padding: 8px
         border: 1px solid #afafb6
-        width: 120px
+        min-width: 120px
         overflow-x: hidden
         z-index: 900
         text-align: left
@@ -1298,23 +1298,24 @@ $colour4: #8a89ba
         .oe_form_steps_active
             font-weight: bold 
             color: #b33630
-    header.oe_form_topbar_hifirst button:first-child, button.oe_form_button_hi
-        color: white
-        background: #DC5F59
-        background: -moz-linear-gradient(#DC5F59, #B33630)
-        background: -webkit-gradient(linear, left top, left bottom, from(#DC5F59), to(#B33630))
-        background: -webkit-linear-gradient(#DC5F59, #B33630)
-        -moz-box-shadow: none
-        -webkit-box-shadow: none
-        -box-shadow: none
-    header.oe_form_topbar_hifirst button:first-child:hover, button.oe_form_button_hi:hover
-        background: #DF6B66
-        background: -moz-linear-gradient( #DF6B66, #BF3A33)
-        background: -webkit-gradient(linear, left top, left bottom, from( #DF6B66), to( #BF3A33))
-        background: -webkit-linear-gradient( #DF6B66, #BF3A33)
-        -moz-box-shadow: 0 0 1px rgba(0, 0, 0, 0.2)
-        -webkit-box-shadow: 0 0 1px rgba(0, 0, 0, 0.2)
-        -box-shadow: 0 0 1px rgba(0, 0, 0, 0.2)
+    .oe_form_readonly
+        header.oe_form_topbar_hifirst button:first-child, button.oe_form_button_hi
+            color: white
+            background: #DC5F59
+            background: -moz-linear-gradient(#DC5F59, #B33630)
+            background: -webkit-gradient(linear, left top, left bottom, from(#DC5F59), to(#B33630))
+            background: -webkit-linear-gradient(#DC5F59, #B33630)
+            -moz-box-shadow: none
+            -webkit-box-shadow: none
+            -box-shadow: none
+        header.oe_form_topbar_hifirst button:first-child:hover, button.oe_form_button_hi:hover
+            background: #DF6B66
+            background: -moz-linear-gradient( #DF6B66, #BF3A33)
+            background: -webkit-gradient(linear, left top, left bottom, from( #DF6B66), to( #BF3A33))
+            background: -webkit-linear-gradient( #DF6B66, #BF3A33)
+            -moz-box-shadow: 0 0 1px rgba(0, 0, 0, 0.2)
+            -webkit-box-shadow: 0 0 1px rgba(0, 0, 0, 0.2)
+            -box-shadow: 0 0 1px rgba(0, 0, 0, 0.2)
     .oe_application
         .oe_form_sheetbg
             background: url(/web/static/src/img/form_sheetbg.png)
@@ -1387,7 +1388,8 @@ $colour4: #8a89ba
             resize: vertical
         .oe_form_field
             width: 100%
-            display: inline-block
+            // Using !important because jQuery's $.fn.show() will set display to 'inline' for spans
+            display: inline-block !important
             padding: 2px 2px 2px 0px
             line-height: 18px
             input
@@ -1475,7 +1477,6 @@ $colour4: #8a89ba
                 color: black
                 padding: 0px 3px 0px 3px
                 margin: 0 2px 2px 0
-                cursor: pointer
                 height: 16px
                 font: 11px "lucida grande", tahoma, verdana, arial, sans-serif
             .text-core .text-wrap .text-dropdown .text-list .text-suggestion em
@@ -1727,22 +1728,22 @@ $colour4: #8a89ba
         td.oe_form_group_cell + .oe_form_group_cell
             padding-left: 8px
         .oe_form_subtotal_footer
+            width: auto
             float: right
-            > div
+            td.oe_form_group_cell
                 text-align: right
-                padding: 3px
-            label
-                font-weight: normal !important
-            span
-                display: inline-block
-                min-width: 80px
-                text-align: right
+                padding: 0
+            td.oe_form_group_cell_label
+                border: none
+            .oe_form_field
+                width: auto !important
             .oe_form_subtotal_footer_separator
                 border-top: 1px solid #cacaca
                 font-size: 120%
                 font-weight: bold
-                label
-                    font-weight: bold !important
+            label.oe_form_subtotal_footer_separator
+                font-weight: bold !important
+                padding: 2px 8px 2px 0px !important
     // }}}
     // ListView {{{
     .oe-listview-content
@@ -1876,6 +1877,25 @@ $colour4: #8a89ba
         float: right
         color: #333
     // }}}
+//view editor
+.openerp
+    .oe_view_editor
+        width: 100%
+        border-collapse: collapse
+        margin-left: -12px
+        width: 100%
+        background-color: white
+        border-spacing: 0
+        td
+            text-align: center
+            white-space: nowrap
+            border: 1px solid #D8D8D8
+            cursor: pointer
+            font-size: 90%
+    .oe_view_editor_field td
+        border: 0px !important
+    .oe_view_editor tr:hover
+        background-color: #ecebf2
 
 .kitten-mode-activated
     background-image: url(http://placekitten.com/g/1365/769)

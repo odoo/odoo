@@ -1048,6 +1048,7 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
             "modifiers": JSON.stringify({invisible: field_modifiers.invisible}),
             "string": $field.attr('string'),
             "help": $field.attr('help'),
+            "class": $field.attr('class'),
         });
         $label.insertBefore($field);
         if (field_colspan > 1) {
@@ -1190,19 +1191,40 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
             var $page = $(this);
             var page_attrs = $page.getAttributes();
             page_attrs.id = _.uniqueId('notebook_page_');
-            pages.push(page_attrs);
             var $new_page = self.render_element('FormRenderingNotebookPage', page_attrs);
             $page.contents().appendTo($new_page);
             $page.before($new_page).remove();
-            self.handle_common_properties($new_page, $page);
+            var ic = self.handle_common_properties($new_page, $page).invisibility_changer;
+            page_attrs.__page = $new_page;
+            page_attrs.__ic = ic;
+            pages.push(page_attrs);
+            
+            $new_page.children().each(function() {
+                self.process($(this));
+            });
         });
         var $new_notebook = this.render_element('FormRenderingNotebook', { pages : pages });
         $notebook.contents().appendTo($new_notebook);
         $notebook.before($new_notebook).remove();
-        $new_notebook.children().each(function() {
-            self.process($(this));
-        });
+        self.process($($new_notebook.children()[0]));
+        //tabs and invisibility handling
         $new_notebook.tabs();
+        _.each(pages, function(page, i) {
+            if (! page.__ic)
+                return;
+            page.__ic.on("change:effective_invisible", null, function() {
+                var current = $new_notebook.tabs("option", "selected");
+                if (! pages[current].__ic || ! pages[current].__ic.get("effective_invisible"))
+                    return;
+                var first_visible = _.find(_.range(pages.length), function(i2) {
+                    return (! pages[i2].__ic) || (! pages[i2].__ic.get("effective_invisible"));
+                });
+                if (first_visible !== undefined) {
+                    $new_notebook.tabs('select', first_visible);
+                }
+            });
+        });
+                
         this.handle_common_properties($new_notebook, $notebook);
         return $new_notebook;
     },
@@ -1240,10 +1262,12 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
     handle_common_properties: function($new_element, $node) {
         var str_modifiers = $node.attr("modifiers") || "{}"
         var modifiers = JSON.parse(str_modifiers);
+        var ic = null;
         if (modifiers.invisible !== undefined)
-            new instance.web.form.InvisibilityChanger(this.view, this.view, modifiers.invisible, $new_element);
+            ic = new instance.web.form.InvisibilityChanger(this.view, this.view, modifiers.invisible, $new_element);
         $new_element.addClass($node.attr("class") || "");
         $new_element.attr('style', $node.attr('style'));
+        return {invisibility_changer: ic,};
     },
 });
 
@@ -1381,15 +1405,15 @@ instance.web.form.InvisibilityChangerMixin = {
         _.bind(check, this)();
     },
     start: function() {
-        var check_visibility = function() {
-            if (this.get("effective_invisible")) {
-                this.$element.hide();
-            } else {
-                this.$element.show();
-            }
-        };
-        this.on("change:effective_invisible", this, check_visibility);
-        _.bind(check_visibility, this)();
+        this.on("change:effective_invisible", this, this._check_visibility);
+        this._check_visibility();
+    },
+    _check_visibility: function() {
+        if (this.get("effective_invisible")) {
+            this.$element.hide();
+        } else {
+            this.$element.show();
+        }
     },
 };
 
@@ -1736,6 +1760,8 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(_.extend({
             this.on("change:required", this, this._set_required);
             this._set_required();
         }
+        this._check_visibility();
+        this._check_css_flags();
     },
     /**
      * Private. Do not use.
@@ -2753,9 +2779,12 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
                 }
                 view.options.not_interactible_on_create = true;
             } else if (view.view_type === "kanban") {
+                view.options.confirm_on_delete = false;
                 if (self.get("effective_readonly")) {
                     view.options.action_buttons = false;
                     view.options.quick_creatable = false;
+                    view.options.creatable = false;
+                    view.options.read_only_mode = true;
                 }
             }
             views.push(view);
@@ -3105,7 +3134,7 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(_.
         if (this.get("effective_readonly"))
             return;
         var self = this;
-        self. $text = $("textarea", this.$element);
+        self.$text = $("textarea", this.$element);
         self.$text.textext({
             plugins : 'tags arrow autocomplete',
             autocomplete: {
@@ -3157,19 +3186,6 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(_.
                     return _.extend(el, {index:i});
                 })});
             });
-        }).bind('tagClick', function(e, tag, value, callback) {
-            var pop = new instance.web.form.FormOpenPopup(self.view);
-            pop.show_element(
-                self.field.relation,
-                value.id,
-                self.build_context(),
-                {
-                    title: _t("Open: ") + (self.string || self.name)
-                }
-            );
-            pop.on_write_completed.add_last(function() {
-                self.render_value();
-            });
         }).bind('hideDropdown', function() {
             self._drop_shown = false;
         }).bind('showDropdown', function() {
@@ -3177,7 +3193,7 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(_.
         });
         self.tags = self.$text.textext()[0].tags();
         $("textarea", this.$element).focusout(function() {
-            $("textarea", this.$element).val("");
+            self.$text.trigger("setInputData", "");
         }).keydown(function(e) {
             if (event.keyCode === 9 && self._drop_shown) {
                 self.$text.textext()[0].autocomplete().selectFromDropdown();
@@ -3213,17 +3229,6 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(_.
                 self.tags.addTags(_.map(data, function(el) {return {name: el[1], id:el[0]};}));
             } else {
                 self.$element.html(QWeb.render("FieldMany2ManyTags.box", {elements: data}));
-                $(".oe_form_field_many2manytags_box", self.$element).click(function() {
-                    var index = Number($(this).data("index"));
-                    self.do_action({
-                        type: 'ir.actions.act_window',
-                        res_model: self.field.relation,
-                        res_id: self.get("value")[index],
-                        context: self.build_context(),
-                        views: [[false, 'form']],
-                        target: 'current'
-                    });
-                });
             }
         };
         if (! self.get('values') || self.get('values').length > 0) {
@@ -3416,6 +3421,8 @@ instance.web.form.FieldMany2ManyKanban = instance.web.form.AbstractField.extend(
                     'create_text': _t("Add"),
                     'creatable': self.get("effective_readonly") ? false : true,
                     'quick_creatable': self.get("effective_readonly") ? false : true,
+                    'read_only_mode': self.get("effective_readonly") ? true : false,
+                    'confirm_on_delete': false,
             });
         var embedded = (this.field.views || {}).kanban;
         if (embedded) {
@@ -3562,6 +3569,7 @@ instance.web.form.Many2ManyQuickCreate = instance.web.Widget.extend({
         var self = this;
         self.$text.val("");
         self.trigger('added', id);
+        this.m2m.dataset_changed();
     },
 });
 }
@@ -3616,7 +3624,7 @@ instance.web.form.AbstractFormPopup = instance.web.OldWidget.extend({
             width: '90%',
             min_width: '800px',
             close: function() {
-                self.check_exit();
+                self.check_exit(true);
             },
             title: this.options.title || "",
         }, this.$element).open();
@@ -3674,9 +3682,10 @@ instance.web.form.AbstractFormPopup = instance.web.OldWidget.extend({
     },
     on_select_elements: function(element_ids) {
     },
-    check_exit: function() {
+    check_exit: function(no_destroy) {
         if (this.created_elements.length > 0) {
             this.on_select_elements(this.created_elements);
+            this.created_elements = [];
         }
         this.destroy();
     },
