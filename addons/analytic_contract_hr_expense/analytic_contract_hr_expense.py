@@ -117,6 +117,14 @@ class account_analytic_account(osv.osv):
         'est_expenses': fields.float('Estimation of Expenses to Invoice'),
     }
 
+    def on_change_template(self, cr, uid, id, template_id, context=None):
+        res = super(account_analytic_account, self).on_change_template(cr, uid, id, template_id, context=context)
+        if template_id and 'value' in res:
+            template = self.browse(cr, uid, template_id, context=context)
+            res['value']['charge_expenses'] = template.charge_expenses
+            res['value']['expense_max'] = template.expense_max
+        return res
+
     def open_hr_expense(self, cr, uid, ids, context=None):
         account = self.browse(cr, uid, ids[0], context)
         data_obj = self.pool.get('ir.model.data')

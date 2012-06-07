@@ -432,22 +432,20 @@ class account_analytic_account(osv.osv):
         'toinvoice_total' : fields.function(_sum_of_fields, type="float",multi="sum_of_all"),
     }
 
-    def on_change_template(self, cr, uid, id, template_id):
+    def on_change_template(self, cr, uid, id, template_id, context=None):
         if not template_id:
             return {}
         res = {'value':{}}
-        template = self.browse(cr, uid, template_id)
+        template = self.browse(cr, uid, template_id, context=context)
         if template.date_start:
             res['value']['date_start'] = str(template.date_start)
         if template.date:
             res['value']['date'] = str(template.date)
         res['value']['fix_price_invoices'] = template.fix_price_invoices
         res['value']['invoice_on_timesheets'] = template.invoice_on_timesheets
-        res['value']['charge_expenses'] = template.charge_expenses
         res['value']['quantity_max'] = template.quantity_max
         res['value']['remaining_hours'] = template.remaining_hours
         res['value']['amount_max'] = template.amount_max
-        res['value']['expense_max'] = template.expense_max
         res['value']['to_invoice'] = template.to_invoice.id
         res['value']['pricelist_id'] = template.pricelist_id.id
         res['value']['description'] = template.description
