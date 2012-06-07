@@ -47,7 +47,7 @@ class ir_model_constraint(Model):
         ids.reverse()
         to_unlink = []
         for data in self.browse(cr, uid, ids, context):
-            model = data.model.name
+            model = data.model.model
             model_obj = self.pool.get(model)
             name = openerp.tools.ustr(data.name)
             typ = data.type
