@@ -627,12 +627,12 @@
                 <xpath expr='//separator[@name="project_sep"]' position='replace'>
                     <separator colspan="2" string="Project" name="project_sep"/>
                 </xpath>
-                <xpath expr='//separator[@name="description"]' position='before'>
+<!--                <xpath expr='//separator[@name="description"]' position='before'>
                     <group colspan="4" attrs="{'invisible': [('use_tasks','!=',1)]}" name="members">
                         <separator colspan="4" string="Team"/>
                         <field name="members" colspan="4" nolabel="1"/>
                     </group>
-                </xpath>
+                </xpath>-->
             	<xpath expr='//group[@name="project"]' position='inside'>
                     <field name="use_tasks" />
                 </xpath>
