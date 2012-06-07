@@ -21,6 +21,9 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         // whether the view rows can be reordered (via vertical drag & drop)
         'reorderable': true,
         'action_buttons': true,
+        // if true, the view can't be editable, ignoring the view's and the context's
+        // instructions
+        'read_only': false,
     },
     /**
      * Core class for list-type displays.

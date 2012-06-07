@@ -3777,7 +3777,8 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
             self.view_list = new instance.web.form.SelectCreateListView(self,
                     self.dataset, false,
                     _.extend({'deletable': false,
-                        'selectable': !self.options.disable_multiple_selection
+                        'selectable': !self.options.disable_multiple_selection,
+                        'read_only': true,
                     }, self.options.list_view_options || {}));
             self.view_list.popup = self;
             self.view_list.appendTo($(".oe-select-create-popup-view-list", self.$element)).pipe(function() {
